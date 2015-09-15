@@ -1,30 +1,72 @@
-From: Thomas Elste <thomas.elste-cSCHQGRfioA@public.gmane.org>
-Subject: tps65023: add device tree support
-Date: Tue, 15 Sep 2015 15:33:54 +0200
-Message-ID: <1442324035-16414-1-git-send-email-thomas.elste@imms.de>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH-v2 0/3] mmc: sdhci-pxav3: Fix tabbing issue
+Date: Tue, 15 Sep 2015 19:36:11 +0530
+Message-ID: <55F825D3.9070501@linaro.org>
+References: <1441625471-16315-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <CAPDyKFov6uADy_o944hZS9es6hkr4WM9EV1t9MXe94TcwEHuwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFov6uADy_o944hZS9es6hkr4WM9EV1t9MXe94TcwEHuwQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-the following patch adds device tree support for TPS6502[0,1,3]
-regulators. It is largely based on the DT code of the other TPS
-regulator drivers and a previous patch I found here:
-
-http://article.gmane.org/gmane.linux.drivers.devicetree/102864/
-
-Tested on a custom board with AM3505 CPU.
 
 
-Best regards
-Thomas
+On Tuesday 15 September 2015 05:58 PM, Ulf Hansson wrote:
+> On 7 September 2015 at 13:31, Vaibhav Hiremath
+> <vaibhav.hiremath@linaro.org> wrote:
+>> Trivial patch-series, which fixes the tabbing issue in the driver,
+>> uses the BIT macro for bit fields and prints notice on -EPROBE_DEFER
+>> in sdhci_add_host() function on regulator unavailability.
+>>
+>> V1 => V2
+>> ========
+>>   - Fixed all comments from Joe, mostly alignment changes
+>>   - Separated BIT macro usage patch into new one.
+>>   - changed error to kernel notice for EPROBE_DEFER in sdhci_add_host()
+>>
+>> Note: This patch-series should get merged before another series -
+>>
+>> [PATCH-v2 0/7] mmc: sdhci-pxav3: Enable support for PXA1928 SDCHI controller
+>>
+>> Vaibhav Hiremath (3):
+>>    mmc: sdhci-pxav3: Fix tabbing issue
+>>    mmc: sdhci-pxav3: Use BIT macro for bit field definitions
+>>    mmc: sdhci: print notice on -EPROBE_DEFER in sdhci_add_host() fn
+>>
+>>   drivers/mmc/host/sdhci-pxav3.c | 46 +++++++++++++++++++++---------------------
+>>   drivers/mmc/host/sdhci.c       |  5 ++++-
+>>   2 files changed, 27 insertions(+), 24 deletions(-)
+>>
+>> --
+>> 1.9.1
+>>
+>
+> Hi Vaibhav,
+>
+> FYI, I won't be picking up any of these patches. Primarily because I
+> don't think they improves the code and other people also seems to
+> agree to that.
+>
+> Regarding patch1 and similar patches which deals with only fixing
+> checkpatch warnings/errors. In most cases I don't like such changes,
+> as they makes it harder to use "git blame" when you want to find out
+> which commit that introduced a change.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Honestly, I also agree with you.
+But recently I have been told to do these changed to get my
+main/feature changes accepted :)
+
+No issues, I am OK to drop them.
+These are just beautification changes and as you rightly
+said it makes 'git blame' difficult to find original change commit.
+
+
+Thanks,
+Vaibhav
