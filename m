@@ -1,57 +1,513 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: set up trigger type for edt-ft5x06
- interrupts
-Date: Tue, 15 Sep 2015 08:40:58 -0700
-Message-ID: <20150915154058.GA4215@atomide.com>
-References: <5044530af510d6686e78f8dfa912d89ef824f899.1442079408.git.dmitry.torokhov@gmail.com>
- <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov@gmail.com>
- <20150914212426.GA9968@saruman.tx.rr.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 0/2] drm/dsi: DSI for devices with different control bus
+Date: Tue, 15 Sep 2015 10:43:45 -0500
+Message-ID: <55F83CB1.5070102@kernel.org>
+References: <1439993828.31432.28.camel@pengutronix.de>
+ <20150819143452.GH15607@ulmo.nvidia.com>
+ <1439995944.31432.34.camel@pengutronix.de>
+ <20150819150207.GJ15607@ulmo.nvidia.com> <55D5548E.9030608@codeaurora.org>
+ <20150820114815.GB7479@ulmo.nvidia.com> <55D6C07D.4050405@codeaurora.org>
+ <55ED7921.2030103@codeaurora.org> <55EEB82C.2070805@samsung.com>
+ <55F12007.6020307@codeaurora.org> <20150910073252.GA8756@ulmo.nvidia.com>
+ <55F7F3DA.20702@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150914212426.GA9968-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55F7F3DA.20702@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [150914 14:28]:
-> On Sat, Sep 12, 2015 at 10:45:51AM -0700, Dmitry Torokhov wrote:
-> > Now that the driver respects IRQ trigger settings from device tree, let's
-> > fix them up in individual DTSes (note that the driver is still compatible
-> > with older DTSes).
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/am437x-sk-evm.dts   | 2 +-
-> >  arch/arm/boot/dts/imx28-tx28.dts      | 3 ++-
-> >  arch/arm/boot/dts/imx53-tx53-x03x.dts | 3 ++-
-> >  arch/arm/boot/dts/imx6qdl-tx6.dtsi    | 3 ++-
-> >  4 files changed, 7 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-> > index c17097d..d83fdcd 100644
-> > --- a/arch/arm/boot/dts/am437x-sk-evm.dts
-> > +++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-> > @@ -471,7 +471,7 @@
-> >  
-> >  		reg = <0x38>;
-> >  		interrupt-parent = <&gpio0>;
-> > -		interrupts = <31 0>;
-> > +		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+On 09/15/2015 05:32 AM, Archit Taneja wrote:
+> Hi Rob, Mark,
 > 
-> for AM437x SK:
-> 
-> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> 
-> Seems like there are no changes considering driver was always using
-> IRQF_TRIGGER_FALLING.
+> We've been trying to figure out the right way to represent a class
+> of display encoder devices in DT.
 
-Should not cause merge conflicts AFAIK:
+I've been meaning to reply on this.
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> These devices have registers that are generally configured via i2c. Once
+> the device is configured, it takes in video data from the mipi
+> dsi bus.
+> 
+> Until now, all the devices we've supported devices that can be are
+> configured by the dsi bus itself, and hence, we've been able to
+> represent them in DT as children under the dsi host.
+> 
+> For the above class of devices (using both i2c and dsi), we aren't
+> able to conclude upon what's the better approach among the two:
+> 
+> 1. Represent the device via 2 different nodes in DT. One would be
+> a child under an i2c adapter, the other a child of a dsi host. We
+> would have two device drivers, one i2c client, and the other a
+> mipi dsi device.
+> 
+> 2. Represent the device as an i2c client in DT. Provide an api
+> to create "dummy" dsi devices. The i2c client driver would use
+> this api to register a dsi device, and link itself with the dsi
+> host.
+> 
+> What do you think would be the way to go here? I guess you
+> might have faced something similar in other subsystems.
+
+The closest thing I can think of are WiFi/BT combo chips that use
+SDIO+UART. In that case, 2 nodes makes sense as these chips are
+essentially 2 independent functions in a single chip and both interfaces
+are control interfaces (as well as data). This case is a bit different
+with both interfaces being tied to the same function.
+
+So in this case, I think option 2 is the right way for the reasons
+already outlined in this thread. I think there needs to be more
+consistency in how the of-graph connections are defined with the core
+doing more of the graph traversing. So having an i2c device plus
+of-graph seems more consistent with other non-DSI cases.
+
+The main open issue seemed to be setting the VC. At least for the
+ADV7533, it can be whatever you want it to be. The host and device just
+need to agree. I see no need for that to be in DT at least in this case.
+But then I'm not sure what are typical constraints for VC assignment.
+I'd guess that constraints are on the device side and hosts can support
+whatever the device wants. If so, then it can purely be up to the driver
+to set.
+
+Implementation-wise, I don't think that I'd call this a dummy device.
+There are multiple ways for devices to get created in the driver model.
+DT is just one way. You are just creating the device in a different way
+outside of DT which is fine.
+
+Rob
+
+> I've given a relatively brief description of the problem. There
+> were some more nitty gritties discussed in this thread before.
+> 
+> Thierry, Andrzej, Lucas,
+> 
+> Please feel free to add your comments if I have missed out on
+> something.
+> 
+> Thanks,
+> Archit
+> 
+> On 09/10/2015 01:02 PM, Thierry Reding wrote:
+>> On Thu, Sep 10, 2015 at 11:45:35AM +0530, Archit Taneja wrote:
+>>>
+>>>
+>>> On 09/08/2015 03:57 PM, Andrzej Hajda wrote:
+>>>> On 09/07/2015 01:46 PM, Archit Taneja wrote:
+>>>>> Thierry,
+>>>>>
+>>>>> On 08/21/2015 11:39 AM, Archit Taneja wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 08/20/2015 05:18 PM, Thierry Reding wrote:
+>>>>>>> On Thu, Aug 20, 2015 at 09:46:14AM +0530, Archit Taneja wrote:
+>>>>>>>> Hi Thierry, Lucas,
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 08/19/2015 08:32 PM, Thierry Reding wrote:
+>>>>>>>>> On Wed, Aug 19, 2015 at 04:52:24PM +0200, Lucas Stach wrote:
+>>>>>>>>>> Am Mittwoch, den 19.08.2015, 16:34 +0200 schrieb Thierry Reding:
+>>>>>>>>>>> On Wed, Aug 19, 2015 at 04:17:08PM +0200, Lucas Stach wrote:
+>>>>>>>>>>>> Hi Thierry, Archit,
+>>>>>>>>>>>>
+>>>>>>>>>> [...]
+>>>>>>>>>>>>> Perhaps a better way would be to invert this relationship.
+>>>>>>>>>>>>> According to
+>>>>>>>>>>>>> your proposal we'd have to have DT like this:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>      i2c@... {
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          dsi-device@... {
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>              dsi-bus = <&dsi>;
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>          };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>      };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>      dsi@... {
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>      };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Inversing the relationship would become something like this:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>      i2c@... {
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>      };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>      dsi@... {
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          peripheral@... {
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>              i2c-bus = <&i2c>;
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>          };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>      };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Both of those aren't fundamentally different, and they both
+>>>>>>>>>>>>> have
+>>>>>>>>>>>>> the
+>>>>>>>>>>>>> disavantage of lacking ways to transport configuration data
+>>>>>>>>>>>>> that
+>>>>>>>>>>>>> the
+>>>>>>>>>>>>> other bus needs to instantiate the dummy device (such as
+>>>>>>>>>>>>> the reg
+>>>>>>>>>>>>> property for example, denoting the I2C slave address or the
+>>>>>>>>>>>>> DSI
+>>>>>>>>>>>>> VC).
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> So how about we create two devices in the device tree and fuse
+>>>>>>>>>>>>> them at
+>>>>>>>>>>>>> the driver level:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>      i2c@... {
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          i2cdsi: dsi-device@... {
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>          };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>      };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>      dsi@... {
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          peripheral@... {
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>              control = <&i2cdsi>;
+>>>>>>>>>>>>>              ...
+>>>>>>>>>>>>>          };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>          ...
+>>>>>>>>>>>>>      };
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> This way we'll get both an I2C device and a DSI device that we
+>>>>>>>>>>>>> can fully
+>>>>>>>>>>>>> describe using the standard device tree bindings. At driver
+>>>>>>>>>>>>> time
+>>>>>>>>>>>>> we can
+>>>>>>>>>>>>> get the I2C device from the phandle in the control property of
+>>>>>>>>>>>>> the DSI
+>>>>>>>>>>>>> device and use it to execute I2C transactions.
+>>>>>>>>>>>>>
+>>>>>>>>>>>> I don't really like to see that you are inventing
+>>>>>>>>>>>> yet-another-way to
+>>>>>>>>>>>> handle devices connected to multiple buses.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Devicetree is structured along the control buses, even if the
+>>>>>>>>>>>> devices
+>>>>>>>>>>>> are connected to multiple buses, in the DT they are always
+>>>>>>>>>>>> children of
+>>>>>>>>>>>> the bus that is used to control their registers from the CPUs
+>>>>>>>>>>>> perspective. So a DSI encoder that is controlled through i2c is
+>>>>>>>>>>>> clearly
+>>>>>>>>>>>> a child of the i2c master controller and only of that one.
+>>>>>>>>>>>
+>>>>>>>>>>> I think that's a flawed interpretation of what's going on
+>>>>>>>>>>> here. The
+>>>>>>>>>>> device in fact has two interfaces: one is I2C, the other is DSI.
+>>>>>>>>>>> In my
+>>>>>>>>>>> opinion that's reason enough to represent it as two logical
+>>>>>>>>>>> devices.
+>>>>>>>>>>>
+>>>>>>>>>> Does it really have 2 control interfaces that are used at the
+>>>>>>>>>> same
+>>>>>>>>>> time?
+>>>>>>>>>> Or is the DSI connection a passive data bus if the register
+>>>>>>>>>> control
+>>>>>>>>>> happens through i2c?
+>>>>>>>>>
+>>>>>>>>> The interfaces may not be used at the same time, and the DSI
+>>>>>>>>> interface
+>>>>>>>>> may even be crippled, but the device is still addressable from
+>>>>>>>>> the DSI
+>>>>>>>>> host controller, if for nothing else than for routing the video
+>>>>>>>>> stream.
+>>>>>>>>>
+>>>>>>>>>>>> If you need to model connections between devices that are not
+>>>>>>>>>>>> reflected
+>>>>>>>>>>>> through the control bus hierarchy you should really consider
+>>>>>>>>>>>> using the
+>>>>>>>>>>>> standardized of-graph bindings.
+>>>>>>>>>>>> (Documentation/devicetree/bindings/graph.txt)
+>>>>>>>>>>>
+>>>>>>>>>>> The problem is that the original proposal would instantiate a
+>>>>>>>>>>> dummy
+>>>>>>>>>>> device, so it wouldn't be represented in DT at all. So unless
+>>>>>>>>>>> you
+>>>>>>>>>>> do add
+>>>>>>>>>>> two logical devices to DT (one for each bus interface), you
+>>>>>>>>>>> don't
+>>>>>>>>>>> have
+>>>>>>>>>>> anything to glue together with an OF graph.
+>>>>>>>>>>>
+>>>>>>>>>> I see that the having dummy device is the least desirable
+>>>>>>>>>> solution.
+>>>>>>>>>> But
+>>>>>>>>>> if there is only one control bus to the device I think it
+>>>>>>>>>> should be
+>>>>>>>>>> one
+>>>>>>>>>> device sitting beneath the control bus.
+>>>>>>>>>>
+>>>>>>>>>> You can then use of-graph to model the data path between the DSI
+>>>>>>>>>> encoder
+>>>>>>>>>> and device.
+>>>>>>>>>
+>>>>>>>>> But you will be needing a device below the DSI host controller to
+>>>>>>>>> represent that endpoint of the connection. The DSI host controller
+>>>>>>>>> itself is in no way connected to the I2C adapter. You would
+>>>>>>>>> have to
+>>>>>>>>> add some sort of quirk to the DSI controller binding to allow
+>>>>>>>>> it to
+>>>>>>>>
+>>>>>>>> Thanks for the review.
+>>>>>>>>
+>>>>>>>> I implemented this to support ADV7533 DSI to HDMI encoder chip,
+>>>>>>>> which
+>>>>>>>> has a DSI video bus and an i2c control bus.
+>>>>>>>>
+>>>>>>>> There weren't any quirks as such in the device tree when I tried to
+>>>>>>>> implement this. The DT seems to manage fine without a node
+>>>>>>>> corresponding to a mipi_dsi_device:
+>>>>>>>>
+>>>>>>>> i2c_adap@.. {
+>>>>>>>>      adv7533@.. {
+>>>>>>>>
+>>>>>>>>          port {
+>>>>>>>>              adv_in: endpoint {
+>>>>>>>>                  remote-endpoint = <&dsi_out>;
+>>>>>>>>              };
+>>>>>>>>          };
+>>>>>>>>      };
+>>>>>>>> };
+>>>>>>>>
+>>>>>>>> dsi_host@.. {
+>>>>>>>>      ...
+>>>>>>>>      ...
+>>>>>>>>
+>>>>>>>>      port {
+>>>>>>>>          dsi_out: endpoint {
+>>>>>>>>              remote-endpoint = <&adv_in>;
+>>>>>>>>          }
+>>>>>>>>      };
+>>>>>>>> };
+>>>>>>>>
+>>>>>>>> It's the i2c driver's job to parse the graph and retrieve the
+>>>>>>>> phandle to the dsi host. Using this, it can proceed with
+>>>>>>>> registering itself to this host using the new dsi funcs. This
+>>>>>>>> patch does the same for the adv7533 i2c driver:
+>>>>>>>>
+>>>>>>>> http://www.spinics.net/lists/dri-devel/msg86840.html
+>>>>>>>>
+>>>>>>>>> hook up with a control endpoint. And then you'll need more quirks
+>>>>>>>>> to describe what kind of DSI device this is.
+>>>>>>>>
+>>>>>>>> Could you explain what you meant by this? I.e. describing the kind
+>>>>>>>> of DSI device?
+>>>>>>>
+>>>>>>> Describing the number of lanes, specifying the virtual channel, mode
+>>>>>>> flags, etc. You could probably set the number of lanes and mode
+>>>>>>> flags
+>>>>>>> via the I2C driver, but especially the virtual channel cannot be set
+>>>>>>> because it isn't known to the I2C DT branch of the device.
+>>>>>>
+>>>>>> I agree with the VC part. It could be a DT entry within the i2c
+>>>>>> client
+>>>>>> node, but that does make it seem like a quirk. The 'reg' way under
+>>>>>> the
+>>>>>> DSI host is definitely better to populate the virtual channel.
+>>>>>>
+>>>>>>>
+>>>>>>>> The dsi device created isn't really a dummy device as such. It's
+>>>>>>>> dummy in the sense that there isn't a real dsi driver associated
+>>>>>>>> with it. The dsi device is still used to attach to a mipi dsi host,
+>>>>>>>> the way normal dsi devices do.
+>>>>>>>
+>>>>>>> I understand, but I don't see why it has to be instantiated by
+>>>>>>> the I2C
+>>>>>>> driver, that's what I find backwards. There is already a standard
+>>>>>>> way
+>>>>>>> for instantiating DSI devices, why not use it?
+>>>>>>
+>>>>>> I assumed we could either represent the device using an i2c
+>>>>>> driver, or
+>>>>>> dsi, but not both. Hence, I came up with this approach.
+>>>>>>
+>>>>>>>
+>>>>>>>>> On the other hand if you properly instantiate the DSI device
+>>>>>>>>> you can
+>>>>>>>>> easily write a driver for it, and the driver will set up the
+>>>>>>>>> correct
+>>>>>>>>> properties as implied by the compatible string. Once you have
+>>>>>>>>> that you
+>>>>>>>>> can easily hook it up to the I2C control interface in whatever
+>>>>>>>>> way you
+>>>>>>>>> like, be that an OF graph or just a simple unidirectional link by
+>>>>>>>>> phandle.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> With the fused approach you suggested, we would have 2 drivers:
+>>>>>>>> one i2c
+>>>>>>>> and the other dsi. The i2c client driver would be more or less
+>>>>>>>> minimal,
+>>>>>>>> preparing an i2c_client device for the dsi driver to use. Is my
+>>>>>>>> understanding correct?
+>>>>>>>
+>>>>>>> Correct. That's kind of similar to the way an HDMI encoder driver
+>>>>>>> would
+>>>>>>> use an I2C adapter to query EDID. The i2c_client device would be
+>>>>>>> a means
+>>>>>>> for the DSI driver to access the control interface.
+>>>>>>
+>>>>>> Okay.
+>>>>>>
+>>>>>> Although, I'm not sure about the HDMI encoder example. An HDMI
+>>>>>> encoder would read off edid directly from the adapter(with an address
+>>>>>> specified), it wouldn't need to create an i2c client device.
+>>>>>> Therefore,
+>>>>>> an HDMI encoder wouldn't need to have a separate node for i2c in DT.
+>>>>>>
+>>>>>>>
+>>>>>>>> We can do without dummy dsi devices with this method. But,
+>>>>>>>> representing
+>>>>>>>> a device with 2 DT nodes seems a bit off. We'd also need to
+>>>>>>>> compatible
+>>>>>>>> strings for the same device, one for the i2c part, and the other
+>>>>>>>> for
+>>>>>>>> the dsi part.
+>>>>>>>
+>>>>>>> I agree that this somewhat stretches the capabilities of device
+>>>>>>> tree.
+>>>>>>> Another alternative I guess would be to not have a compatible
+>>>>>>> string for
+>>>>>>> the I2C device at all (that's technically not valid, I guess)
+>>>>>>> because we
+>>>>>>> really don't need an I2C driver for the device. What we really
+>>>>>>> need is a
+>>>>>>> DSI driver with a means to talk over some I2C bus with some other
+>>>>>>> part
+>>>>>>> of its device.
+>>>>>>
+>>>>>> I think what the driver should 'really' be is a bit subjective,
+>>>>>> and can
+>>>>>> vary based on what the buses are used for in the device. For the
+>>>>>> Toshiba
+>>>>>> chip that Jani mentioned, it tends more towards a DSI driver.
+>>>>>> Whereas,
+>>>>>> for an ADV75xx chip, it's closer to an I2C driver since only I2C
+>>>>>> can be
+>>>>>> used to configure the chip registers.
+>>>>>>
+>>>>>> Although, I agree with the point you made about the DSI bus here:
+>>>>>>
+>>>>>> "and the DSI interface may even be crippled, but the device is still
+>>>>>> addressable from the DSI host controller, if for nothing else than
+>>>>>> for
+>>>>>> routing the video stream."
+>>>>>>
+>>>>>> The fact that the data on the DSI bus contains routing information
+>>>>>> (i.e,
+>>>>>> virtual channel number) always gives it some 'control' aspect.
+>>>>>>
+>>>>>>>
+>>>>>>>>   From an adv75xx driver perspective, it should also support the
+>>>>>>>> ADV7511
+>>>>>>>> chip, which is a RGB/DPI to HDMI encoder. For adv7511, we don't
+>>>>>>>> need a
+>>>>>>>> DSI DT node. It would be a bit inconsistent to have the bindings
+>>>>>>>> require both DSI and I2C nodes for one chip, and only I2C node
+>>>>>>>> for the
+>>>>>>>> other, with both chips being supported by the same driver.
+>>>>>>>
+>>>>>>> Why would that be inconsistent? That sounds like the most accurate
+>>>>>>> representation of the hardware to me.
+>>>>>>
+>>>>>> Inconsistent wasn't the right term. I should have used 'uncommon' :)
+>>>>>> It's common for two chips of the same family to have a different set
+>>>>>> optional properties in DT, but it's not common for two chips of the
+>>>>>> same family to be represented by a different number of devices in
+>>>>>> DT.
+>>>>>>
+>>>>>> I don't have an issue with the fused approach you suggested, as long
+>>>>>> as people are okay with the DT parts. Especially the part of
+>>>>>> needing 2
+>>>>>> compatible strings in the DT.
+>>>>>
+>>>>> I implemented the ADV7533 driver with the approach you suggested above
+>>>>> (2 drivers for 2 different components of the chip). I posted it out
+>>>>> just a while back (with you in loop).
+>>>>>
+>>>>> The DT node with this apporach would look like this:
+>>>>>
+>>>>> https://github.com/boddob/linux/blob/c24cbf63a6998d00095c10122ce5e37b764c7dba/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi#L162
+>>>>>
+>>>>>
+>>>>> The main irritant with the '2 driver' approach is that we need to
+>>>>> share the per-device driver data with them. For ADV7533, I've made
+>>>>> the i2c driver allocate driver data (struct adv7511).
+>>>>>
+>>>>> The dsi driver gets the driver data in the following way:
+>>>>>
+>>>>> - The i2c driver sets the driver data as its client data using
+>>>>>     i2c_set_clientdata()
+>>>>> - Parse the i2c-control phandle to get the corresponding i2c client.
+>>>>> - Extract the adv7511 struct by getting i2c_get_clientdata()
+>>>>>
+>>>>> This way of getting the same driver data is a bit strange, but it
+>>>>> works. For this, we do need to ensure that the dsi driver defers
+>>>>> as long as the i2c driver isn't probed.
+>>>>>
+>>>>> I've now implemented both approaches for the driver. The first using
+>>>>> a dummy dsi device, and this one using 2 drivers (with both being
+>>>>> represented in DT). The advantage of the latter is that we don't need
+>>>>> to create any dummy device stuff, the disadvantage is that DT is a bit
+>>>>> uncommon.
+>>>>>
+>>>>> Can we now come to a conclusion on what approach is better?
+>>>>
+>>>> DSI by design is data bus which can be used additionally as a
+>>>> control bus, but
+>>>> in this particular case it is purely data bus. So of-graph bindings
+>>>> seem to be
+>>>> better choice. As already Lucas Stach said DT hierarchy should
+>>>> describe control
+>>>> buses and of-graph bindings should describe data bus. Argument that
+>>>> hw has two
+>>>> interfaces does not seem to be valid here - it has only one control
+>>>> interface.
+>>>> The other one is only for data, representing every data interface
+>>>> using DT
+>>>> hierarchy would lead to inflation of pseudo devices.
+>>>>
+>>>> On the other side I do not see dummy device approach ideal solution,
+>>>> I guess
+>>>> lightweight framework providing DSI hosts detached from Linux device
+>>>> model could
+>>>> work better here.
+>>>> The only problem here is that it should coexist somehow with dsi bus
+>>>> used to
+>>>> control devices. Anyway implementing it shouldn't be hard, question
+>>>> is if it
+>>>> would be eventually accepted :) I guess we can live for now with
+>>>> dummy devs.
+>>>>
+>>>> Summarizing I would prefer version with dummy devices, as it seems more
+>>>> compatible with DT design.
+>>>
+>>> Thanks for the feedback. I'll spin a newer version of the dummy dsi dev
+>>> patches after waiting for some more comments.
+>>
+>> Let's wait for someone from the device tree maintainers to comment
+>> instead of going around in circles.
+>>
+>> Thierry
+>>
+> 
