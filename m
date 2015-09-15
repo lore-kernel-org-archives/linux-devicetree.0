@@ -1,208 +1,526 @@
-From: xuyiping <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH V3 3/3] reset: hi6220: Reset driver for hisilicon hi6220
- SoC
-Date: Tue, 15 Sep 2015 15:10:51 +0800
-Message-ID: <55F7C47B.3090305@hisilicon.com>
-References: <1442289504-183550-1-git-send-email-puck.chen@hisilicon.com>
- <1442289504-183550-3-git-send-email-puck.chen@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2 Square board
+Date: Tue, 15 Sep 2015 08:57:21 +0200
+Message-ID: <1442300242-510-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442289504-183550-3-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The Radxa Rock 2 Square board is a combination of the Radxa Rock 2 SoM
+with the Square baseboard. Add a dtsi for the SoM which can be included
+into the dts for the various baseboards (e.g. full and square) and a dts
+for the square board.
 
+Currently supported are serial console, wired networking, hdmi output,
+eMMC and SD storage and USB.
 
-On 2015/9/15 11:58, Chen Feng wrote:
-> Add reset driver for hi6220-hikey board,this driver supply deassert
-> of IP. on hi6220 SoC.
->
-> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->   drivers/reset/Kconfig                  |   1 +
->   drivers/reset/Makefile                 |   1 +
->   drivers/reset/hisilicon/Kconfig        |   5 ++
->   drivers/reset/hisilicon/Makefile       |   1 +
->   drivers/reset/hisilicon/hi6220_reset.c | 121 +++++++++++++++++++++++++++++++++
->   5 files changed, 129 insertions(+)
->   create mode 100644 drivers/reset/hisilicon/Kconfig
->   create mode 100644 drivers/reset/hisilicon/Makefile
->   create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
->
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 0615f50..df37212 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
->   	  If unsure, say no.
->
->   source "drivers/reset/sti/Kconfig"
-> +source "drivers/reset/hisilicon/Kconfig"
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 157d421..331d7b2 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->   obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
->   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->   obj-$(CONFIG_ARCH_STI) += sti/
-> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
-> diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
-> new file mode 100644
-> index 0000000..26bf95a
-> --- /dev/null
-> +++ b/drivers/reset/hisilicon/Kconfig
-> @@ -0,0 +1,5 @@
-> +config COMMON_RESET_HI6220
-> +	tristate "Hi6220 Reset Driver"
-> +	depends on (ARCH_HISI && RESET_CONTROLLER)
-> +	help
-> +	  Build the Hisilicon Hi6220 reset driver.
-> diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
-> new file mode 100644
-> index 0000000..c932f86
-> --- /dev/null
-> +++ b/drivers/reset/hisilicon/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
-> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-> new file mode 100644
-> index 0000000..3d3de94
-> --- /dev/null
-> +++ b/drivers/reset/hisilicon/hi6220_reset.c
-> @@ -0,0 +1,121 @@
-> +/*
-> + * Hisilicon Hi6220 reset controller driver
-> + *
-> + * Copyright (c) 2015 Hisilicon Limited.
-> + *
-> + * Author: Feng Chen <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/bitops.h>
-> +#include <linux/of.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/reset.h>
-> +#include <linux/sizes.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define ASSET_OFFSET            0x300
-> +#define DEASSET_OFFSET          0x304
-> +
-> +#define to_reset_data(x) container_of(x, struct hi6220_reset_data, rc_dev)
-> +
-> +struct hi6220_reset_data {
-> +	spinlock_t			reset_lock; /*device spin-lock*/
+Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-	it looks useless
+---
 
-> +	void __iomem			*asset_base;
-> +	void __iomem			*deasset_base;
-> +	struct reset_controller_dev	rc_dev;
-> +};
-> +
-> +static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
-> +			       unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +
-> +	unsigned long flags;
-> +	int bank = idx >> 8;
-> +	int offset = idx & 0xff;
-> +
-> +	spin_lock_irqsave(&data->reset_lock, flags);
-> +
-> +	writel(BIT(offset), data->asset_base + (bank * 0x10));
-> +
-> +	spin_unlock_irqrestore(&data->reset_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
-> +				 unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +
-> +	unsigned long flags;
-> +	int bank = idx >> 8;
-> +	int offset = idx & 0xff;
-> +
-> +	spin_lock_irqsave(&data->reset_lock, flags);
-> +
-> +	writel(BIT(offset), data->deasset_base + (bank * 0x10));
-> +
-> +	spin_unlock_irqrestore(&data->reset_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops hi6220_reset_ops = {
-> +	.assert = hi6220_reset_assert,
-> +	.deassert = hi6220_reset_deassert,
-> +};
-> +
-> +static int hi6220_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct hi6220_reset_data *data;
-> +	struct resource *res;
-> +	void __iomem *src_base;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	src_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(src_base))
-> +		return PTR_ERR(src_base);
-> +
-> +	spin_lock_init(&data->reset_lock);
-> +
-> +	data->asset_base = src_base + ASSET_OFFSET;
-> +	data->deasset_base = src_base + DEASSET_OFFSET;
-> +	data->rc_dev.nr_resets = SZ_4K;
-	
-	use the max index of the reset bit
+Changes in v2:
+- Use gpio bank numbers directly instead RK_GPIO<number>
+- Use radxa,rock2-square as compatibility string and document it in
+  rockchip.txt
+- Fix ordering in memory node
+- Don't add broken-cd in the emmc node, unneeded as non-removable is set
+- coding-style fixes (double empty lines, comment style)
+- Removed redundant status properity in the act8846 node
+- Use emmc reset power-sequence to ensure proper MMC card reset
 
-> +	data->rc_dev.ops = &hi6220_reset_ops;
-> +	data->rc_dev.of_node = pdev->dev.of_node;
-> +
-> +	reset_controller_register(&data->rc_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id hi6220_reset_match[] = {
-> +	{ .compatible = "hisilicon,hi6220_reset_ctl" },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver hi6220_reset_driver = {
-> +	.probe = hi6220_reset_probe,
-> +	.driver = {
-> +		.name = "reset-hi6220",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = hi6220_reset_match,
-> +	},
-> +};
-> +
-> +static int __init hi6220_reset_init(void)
-> +{
-> +	return platform_driver_register(&hi6220_reset_driver);
-> +}
-> +
-> +postcore_initcall(hi6220_reset_init);
->
+ Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi            | 277 +++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-rock2-square.dts          | 165 ++++++++++++
+ 4 files changed, 447 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3288-rock2-som.dtsi
+ create mode 100644 arch/arm/boot/dts/rk3288-rock2-square.dts
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index af58cd7..40ba0eb 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -17,6 +17,10 @@ Rockchip platforms device tree bindings
+     Required root node properties:
+       - compatible = "radxa,rock", "rockchip,rk3188";
+ 
++- Radxa Rock2 Square board:
++    Required root node properties:
++      - compatible = "radxa,rock2-square", "rockchip,rk3288";
++
+ - Firefly Firefly-RK3288 board:
+     Required root node properties:
+       - compatible = "firefly,firefly-rk3288", "rockchip,rk3288";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 233159d..1ed8ec1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -507,6 +507,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3288-firefly-beta.dtb \
+ 	rk3288-firefly.dtb \
+ 	rk3288-r89.dtb \
++	rk3288-rock2-square.dtb \
+ 	rk3288-veyron-jerry.dtb \
+ 	rk3288-veyron-minnie.dtb \
+ 	rk3288-veyron-pinky.dtb \
+diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+new file mode 100644
+index 0000000..bebaed7
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+@@ -0,0 +1,277 @@
++/*
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/pwm/pwm.h>
++#include "rk3288.dtsi"
++
++/ {
++	memory {
++		reg = <0x0 0x80000000>;
++		device_type = "memory";
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		pinctrl-0 = <&emmc_reset>;
++		pinctrl-names = "default";
++		reset-gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
++	};
++
++	ext_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "ext_gmac";
++	};
++
++	vcc_sys: vsys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sys";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&cpu0 {
++	cpu0-supply = <&vdd_cpu>;
++};
++
++&emmc {
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	disable-wp;
++	non-removable;
++	num-slots = <1>;
++	mmc-pwrseq = <&emmc_pwrseq>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
++	vmmc-supply = <&vcc_io>;
++	status = "okay";
++};
++
++&gmac {
++	assigned-clocks = <&cru SCLK_MAC>;
++	assigned-clock-parents = <&ext_gmac>;
++	clock_in_out = "input";
++	phy-mode = "rgmii";
++	phy-supply = <&vccio_pmu>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins &phy_rst>;
++	snps,reset-gpio = <&gpio4 8 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 30000>;
++	rx_delay = <0x10>;
++	tx_delay = <0x30>;
++};
++
++&i2c0 {
++	status = "okay";
++
++	act8846: act8846@5a {
++		compatible = "active-semi,act8846";
++		reg = <0x5a>;
++		inl1-supply = <&vcc_io>;
++		inl2-supply = <&vcc_sys>;
++		inl3-supply = <&vcc_20>;
++		vp1-supply = <&vcc_sys>;
++		vp2-supply = <&vcc_sys>;
++		vp3-supply = <&vcc_sys>;
++		vp4-supply = <&vcc_sys>;
++
++		regulators {
++			vcc_ddr: REG1 {
++				regulator-name = "VCC_DDR";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++			};
++
++			vcc_io: REG2 {
++				regulator-name = "VCC_IO";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vdd_log: REG3 {
++				regulator-name = "VDD_LOG";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++			};
++
++			vcc_20: REG4 {
++				regulator-name = "VCC_20";
++				regulator-min-microvolt = <2000000>;
++				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
++			};
++
++			vccio_sd: REG5 {
++				regulator-name = "VCCIO_SD";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vdd10_lcd: REG6 {
++				regulator-name = "VDD10_LCD";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++			};
++
++			vcca_codec: REG7 {
++				regulator-name = "VCCA_CODEC";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vcca_tp: REG8 {
++				regulator-name = "VCCA_TP";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vccio_pmu: REG9 {
++				regulator-name = "VCCIO_PMU";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vdd_10: REG10 {
++				regulator-name = "VDD_10";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-always-on;
++			};
++
++			vcc_18: REG11 {
++				regulator-name = "VCC_18";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			vcc18_lcd: REG12 {
++				regulator-name = "VCC18_LCD";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++		};
++	};
++
++	vdd_cpu: syr827@40 {
++		compatible = "silergy,syr827";
++		reg = <0x40>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-enable-ramp-delay = <300>;
++		regulator-name = "vdd_cpu";
++		regulator-min-microvolt = <850000>;
++		regulator-max-microvolt = <1350000>;
++		regulator-ramp-delay = <8000>;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vdd_gpu: syr828@41 {
++		compatible = "silergy,syr828";
++		reg = <0x41>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-always-on;
++		regulator-enable-ramp-delay = <300>;
++		regulator-min-microvolt = <850000>;
++		regulator-max-microvolt = <1350000>;
++		regulator-name = "vdd_gpu";
++		regulator-ramp-delay = <8000>;
++		vin-supply = <&vcc_sys>;
++	};
++};
++
++&wdt {
++	status = "okay";
++};
++
++&tsadc {
++	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
++	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
++	status = "okay";
++};
++
++&pinctrl {
++	pcfg_output_high: pcfg-output-high {
++		output-high;
++	};
++
++	emmc {
++			emmc_reset: emmc-reset {
++				rockchip,pins = <3 9 RK_FUNC_GPIO &pcfg_pull_none>;
++			};
++	};
++
++	gmac {
++		phy_rst: phy-rst {
++			rockchip,pins = <4 8 RK_FUNC_GPIO  &pcfg_output_high>;
++		};
++	};
++};
++
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+new file mode 100644
+index 0000000..bce50cd
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -0,0 +1,165 @@
++/*
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "rk3288-rock2-som.dtsi"
++
++/ {
++	model = "Radxa Rock 2 Square";
++	compatible = "radxa,rock2-square", "rockchip,rk3288";
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
++
++	vcc_usb_host: vcc-host-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		/* Always on as the rockchip usb phy doesn't have a vbus-supply
++		 * property
++		 */
++		regulator-always-on;
++		regulator-name = "vcc_host";
++	};
++
++	vcc_sd: sdmmc-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdmmc_pwr>;
++		regulator-name = "vcc_sd";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc_io>;
++	};
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	card-detect-delay = <200>;
++	disable-wp;	/* wp not hooked up */
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	vmmc-supply = <&vcc_sd>;
++	vqmmc-supply = <&vccio_sd>;
++	status = "okay";
++};
++
++&gmac {
++	status = "ok";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c5>;
++	status = "okay";
++};
++
++&i2c0 {
++	hym8563@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "xin32k";
++		interrupt-parent = <&gpio0>;
++		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int>;
++
++	};
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&pinctrl {
++	pmic {
++		pmic_int: pmic-int {
++			rockchip,pins = <0 4 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	usb {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	sdmmc {
++		sdmmc_pwr: sdmmc-pwr {
++			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
++};
+-- 
+2.5.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
