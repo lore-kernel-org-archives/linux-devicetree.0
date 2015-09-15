@@ -1,47 +1,51 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 1/6] mfd: arizona: Add TST_CAP bits for headphone
- detection
-Date: Tue, 15 Sep 2015 10:33:27 +0100
-Message-ID: <20150915093327.GI11200@ck-lbox>
-References: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1441973658-26234-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20150911122451.GB11200@ck-lbox>
- <20150911123757.GC11200@ck-lbox>
- <55F798F3.3030405@samsung.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v6 2/2] pwm: Add support for R-Car PWM Timer
+Date: Tue, 15 Sep 2015 10:00:34 +0000
+Message-ID: <SG2PR06MB0919E0F37382CC1C39586520D85C0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1439957639-4816-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1439957639-4816-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20150819100732.GC26627@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F798F3.3030405@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: lee.jones@linaro.org, myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 01:05:07PM +0900, Chanwoo Choi wrote:
-> Hi Charles,
+Hi Thierry,
+
+> Sent: Wednesday, August 19, 2015 8:01 PM
 > 
-> Your following patch-set[1][2] receive the ack message about almost patches.
-> But, a few patches[3][4][5] must need the ack message from each maintainer.
-> [1] http://www.spinics.net/lists/devicetree/msg93383.html
-> [2] https://lkml.org/lkml/2015/8/11/145
-> [3] patch1 is included in patch-set[1]
-> : [PATCH v3 1/6] mfd: arizona: Add TST_CAP bits for headphone detection
-> [4] patch6 is included in patch-set[1]
-> : [PATCH v2 6/6] mfd: arizona: Update DT binding documentation for jack detection
-> [5] patch5 is included in patch-set[2]
-> [PATCH RESEND 5/5] mfd: arizona: Update DT doc for new mic detection bindings
+> Hi Thierry,
+> 
+> > Sent: Wednesday, August 19, 2015 7:08 PM
+> >
+> > On Wed, Aug 19, 2015 at 01:13:59PM +0900, Yoshihiro Shimoda wrote:
+> > > This patch adds support for R-Car SoCs PWM Timer. The PWM timer of
+> > > R-Car H2 has 7 channels. So, we can use the channels if we describe
+> > > device tree nodes.
+> > >
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> > > ---
+> > >  drivers/pwm/Kconfig    |  11 ++
+> > >  drivers/pwm/Makefile   |   1 +
+> > >  drivers/pwm/pwm-rcar.c | 265 +++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 277 insertions(+)
+> > >  create mode 100644 drivers/pwm/pwm-rcar.c
+> >
+> > Found a couple more things. No need to respin for any of these, I can
+> > make the changes when applying, but I'd like confirmation on a couple
+> > of things below.
+> 
+> Thank you!
 
-:-) Getting a DT ack is not an easy thing, like gold dust those
-are.
+I could not find this driver in the latest your linux-pwm.git / for-next branch.
+Should I send v7 patch?
 
-If we are going to make merging anything dependent on an ack from
-the DT guys I will probably merge these two series of patches,
-then resplit (and resend) them into changes that affect DT and
-those that don't. That way at least we can get something in, as I
-am starting to carry a fair backlog of changes on this one and it
-reduces the amount of diff that the very busy DT guys will need
-to look at.
+Best regards,
+Yoshihiro Shimoda
 
-Thanks,
-Charles
