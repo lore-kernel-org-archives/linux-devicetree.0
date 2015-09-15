@@ -1,43 +1,196 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
-Date: Tue, 15 Sep 2015 15:08:01 +0200
-Message-ID: <CAAObsKAgMu=Y8C=7uJhNq1uWyE2rtu4uNj-d3V3kXEHfRpBqfg@mail.gmail.com>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com>
- <20150807121913.GS20873@sirena.org.uk> <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
- <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com>
- <20150911095748.GC12027@sirena.org.uk> <CAAObsKAaxBJUH=u-2VSDGUQ6CsqpATpF-48LHEtvd3FD3_prsQ@mail.gmail.com>
- <20150911153530.GM20922@sirena.org.uk>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/9] phy: ti-pipe3: introduce local struct device* in probe
+Date: Tue, 15 Sep 2015 18:34:23 +0530
+Message-ID: <1442322271-26230-2-git-send-email-kishon@ti.com>
+References: <1442322271-26230-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20150911153530.GM20922@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442322271-26230-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: rogerq-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 September 2015 at 17:35, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Sep 11, 2015 at 04:06:07PM +0200, Tomeu Vizoso wrote:
->
->> Once a platform device (with the platform bus as its parent) is
->> retrieved from the deferred queue, both the parent and the device in
->> question are locked (because of the USB stuff mentioned below). If
->> that device depends on another device whose parent is the platform bus
->> and we try to probe it (useless, but I don't see a good way of
->> avoiding it) then we'll deadlock when device_attach locks that device.
->
-> Ugh, that's nasty.  Trying to fix this would most likely devolve into
-> trying to shove things onto the deferred list in the right order but
-> that's definitely a very different solution with problems.
+No functional change. Introduce local struct device pointer in
+probe and replace using &pdev->dev/phy->dev with the local
+device pointer. This is in preparation to split ti_pipe3_probe
+and add separate functions for getting mem resource, getting
+sysctrl and getting clocks.
 
-Well, that's effectively what my "ordered probing" series did (and
-indeed didn't have this problem and parents were made sure to have
-probed before their children), but if we want to have dependency
-information before the probe starts, then we cannot reuse the
-implementation of the DT bindings that we already have in the resource
-getters as this series do.
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ drivers/phy/phy-ti-pipe3.c |   54 ++++++++++++++++++++++----------------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-Regards,
+diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+index 93bc112..c511105 100644
+--- a/drivers/phy/phy-ti-pipe3.c
++++ b/drivers/phy/phy-ti-pipe3.c
+@@ -319,40 +319,41 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 	struct platform_device *control_pdev;
+ 	const struct of_device_id *match;
+ 	struct clk *clk;
++	struct device *dev = &pdev->dev;
+ 
+-	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+ 	if (!phy)
+ 		return -ENOMEM;
+ 
+-	phy->dev		= &pdev->dev;
++	phy->dev		= dev;
+ 
+ 	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
+-		match = of_match_device(ti_pipe3_id_table, &pdev->dev);
++		match = of_match_device(ti_pipe3_id_table, dev);
+ 		if (!match)
+ 			return -EINVAL;
+ 
+ 		phy->dpll_map = (struct pipe3_dpll_map *)match->data;
+ 		if (!phy->dpll_map) {
+-			dev_err(&pdev->dev, "no DPLL data\n");
++			dev_err(dev, "no DPLL data\n");
+ 			return -EINVAL;
+ 		}
+ 
+ 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+ 						   "pll_ctrl");
+-		phy->pll_ctrl_base = devm_ioremap_resource(&pdev->dev, res);
++		phy->pll_ctrl_base = devm_ioremap_resource(dev, res);
+ 		if (IS_ERR(phy->pll_ctrl_base))
+ 			return PTR_ERR(phy->pll_ctrl_base);
+ 
+-		phy->sys_clk = devm_clk_get(phy->dev, "sysclk");
++		phy->sys_clk = devm_clk_get(dev, "sysclk");
+ 		if (IS_ERR(phy->sys_clk)) {
+-			dev_err(&pdev->dev, "unable to get sysclk\n");
++			dev_err(dev, "unable to get sysclk\n");
+ 			return -EINVAL;
+ 		}
+ 	}
+ 
+-	phy->refclk = devm_clk_get(phy->dev, "refclk");
++	phy->refclk = devm_clk_get(dev, "refclk");
+ 	if (IS_ERR(phy->refclk)) {
+-		dev_err(&pdev->dev, "unable to get refclk\n");
++		dev_err(dev, "unable to get refclk\n");
+ 		/* older DTBs have missing refclk in SATA PHY
+ 		 * so don't bail out in case of SATA PHY.
+ 		 */
+@@ -361,9 +362,9 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
+-		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
++		phy->wkupclk = devm_clk_get(dev, "wkupclk");
+ 		if (IS_ERR(phy->wkupclk)) {
+-			dev_err(&pdev->dev, "unable to get wkupclk\n");
++			dev_err(dev, "unable to get wkupclk\n");
+ 			return PTR_ERR(phy->wkupclk);
+ 		}
+ 	} else {
+@@ -371,14 +372,14 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
+ 							"syscon-pllreset");
+ 		if (IS_ERR(phy->dpll_reset_syscon)) {
+-			dev_info(&pdev->dev,
++			dev_info(dev,
+ 				 "can't get syscon-pllreset, sata dpll won't idle\n");
+ 			phy->dpll_reset_syscon = NULL;
+ 		} else {
+ 			if (of_property_read_u32_index(node,
+ 						       "syscon-pllreset", 1,
+ 						       &phy->dpll_reset_reg)) {
+-				dev_err(&pdev->dev,
++				dev_err(dev,
+ 					"couldn't get pllreset reg. offset\n");
+ 				return -EINVAL;
+ 			}
+@@ -387,30 +388,30 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 
+ 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
+ 
+-		clk = devm_clk_get(phy->dev, "dpll_ref");
++		clk = devm_clk_get(dev, "dpll_ref");
+ 		if (IS_ERR(clk)) {
+-			dev_err(&pdev->dev, "unable to get dpll ref clk\n");
++			dev_err(dev, "unable to get dpll ref clk\n");
+ 			return PTR_ERR(clk);
+ 		}
+ 		clk_set_rate(clk, 1500000000);
+ 
+-		clk = devm_clk_get(phy->dev, "dpll_ref_m2");
++		clk = devm_clk_get(dev, "dpll_ref_m2");
+ 		if (IS_ERR(clk)) {
+-			dev_err(&pdev->dev, "unable to get dpll ref m2 clk\n");
++			dev_err(dev, "unable to get dpll ref m2 clk\n");
+ 			return PTR_ERR(clk);
+ 		}
+ 		clk_set_rate(clk, 100000000);
+ 
+-		clk = devm_clk_get(phy->dev, "phy-div");
++		clk = devm_clk_get(dev, "phy-div");
+ 		if (IS_ERR(clk)) {
+-			dev_err(&pdev->dev, "unable to get phy-div clk\n");
++			dev_err(dev, "unable to get phy-div clk\n");
+ 			return PTR_ERR(clk);
+ 		}
+ 		clk_set_rate(clk, 100000000);
+ 
+-		phy->div_clk = devm_clk_get(phy->dev, "div-clk");
++		phy->div_clk = devm_clk_get(dev, "div-clk");
+ 		if (IS_ERR(phy->div_clk)) {
+-			dev_err(&pdev->dev, "unable to get div-clk\n");
++			dev_err(dev, "unable to get div-clk\n");
+ 			return PTR_ERR(phy->div_clk);
+ 		}
+ 	} else {
+@@ -419,13 +420,13 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 
+ 	control_node = of_parse_phandle(node, "ctrl-module", 0);
+ 	if (!control_node) {
+-		dev_err(&pdev->dev, "Failed to get control device phandle\n");
++		dev_err(dev, "Failed to get control device phandle\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	control_pdev = of_find_device_by_node(control_node);
+ 	if (!control_pdev) {
+-		dev_err(&pdev->dev, "Failed to get control device\n");
++		dev_err(dev, "Failed to get control device\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -434,7 +435,7 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 	omap_control_phy_power(phy->control_dev, 0);
+ 
+ 	platform_set_drvdata(pdev, phy);
+-	pm_runtime_enable(phy->dev);
++	pm_runtime_enable(dev);
+ 
+ 	/*
+ 	 * Prevent auto-disable of refclk for SATA PHY due to Errata i783
+@@ -446,13 +447,12 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	generic_phy = devm_phy_create(phy->dev, NULL, &ops);
++	generic_phy = devm_phy_create(dev, NULL, &ops);
+ 	if (IS_ERR(generic_phy))
+ 		return PTR_ERR(generic_phy);
+ 
+ 	phy_set_drvdata(generic_phy, phy);
+-	phy_provider = devm_of_phy_provider_register(phy->dev,
+-			of_phy_simple_xlate);
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+ 	if (IS_ERR(phy_provider))
+ 		return PTR_ERR(phy_provider);
+ 
+-- 
+1.7.9.5
 
-Tomeu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
