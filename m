@@ -1,58 +1,22 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 5/6] Documentation: DT: Add HiSilicon PCIe host binding
-Date: Tue, 15 Sep 2015 14:43:53 -0500
-Message-ID: <55F874F9.1060804@kernel.org>
-References: <1442321361-174300-1-git-send-email-wangzhou1@hisilicon.com>
- <1442321361-174300-6-git-send-email-wangzhou1@hisilicon.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next 0/2] driver: net: xgene: Enable 2nd 10GbE port
+ on APM X-Gene SoC
+Date: Tue, 15 Sep 2015 12:48:04 -0700 (PDT)
+Message-ID: <20150915.124804.1866228386336351704.davem@davemloft.net>
+References: <1441752627-9326-1-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442321361-174300-6-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1441752627-9326-1-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: isubramanian@apm.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2015 07:49 AM, Zhou Wang wrote:
-> This patch adds related DTS binding document for HiSilicon PCIe host driver.
-> 
-> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> new file mode 100644
-> index 0000000..2afc9d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> @@ -0,0 +1,46 @@
-> +HiSilicon PCIe host bridge DT description
-> +
-> +HiSilicon PCIe host controller is based on Designware PCI core.
-> +It shares common functions with PCIe Designware core driver and inherits
-> +common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> +
-> +Additional properties are described here:
-> +
-> +Required properties:
-> +- compatible: Should contain "hisilicon,hip05-pcie".
-> +- reg: Should contain rc_dbi, subctrl, config registers location and length.
-> +- reg-names: Must include the following entries:
-> +  "rc_dbi": controller configuration registers;
-> +  "subctrl": whole PCIe hosts configuration registers;
-> +  "config": PCIe configuration space registers.
-> +- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
-> +- port-id: Should be 0, 1, 2 or 3.
+From: Iyappan Subramanian <isubramanian@apm.com>
+Date: Tue,  8 Sep 2015 15:50:25 -0700
 
-What is port-id for? Use of instance indexes need to have good reason.
+> This patch adds support for 2nd 10GbE on APM X-Gene SoC
 
-Rob
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied, thanks.
