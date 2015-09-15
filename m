@@ -1,47 +1,80 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: Re: [PATCH v2 1/2] input: Add Qualcomm PM8941 power key driver
-Date: Tue, 15 Sep 2015 14:36:25 +0300
-Message-ID: <1442316985.15519.7.camel@linaro.org>
-References: <1422058747-13486-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1422058747-13486-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] Documentation: add DT bindings for ARM SCPI
+ sensors
+Date: Tue, 15 Sep 2015 12:37:22 +0100
+Message-ID: <1442317042.2917.29.camel@linaro.org>
+References: <1442235619-4029-1-git-send-email-punit.agrawal@arm.com>
+	 <1442235619-4029-2-git-send-email-punit.agrawal@arm.com>
+	 <20150914131448.GC7002@leverpostej>
+	 <9hhh9mxf7lg.fsf@e105922-lin.cambridge.arm.com>
+	 <20150914134949.GE7002@leverpostej>
+	 <9hhk2rtdq1f.fsf@e105922-lin.cambridge.arm.com>
+	 <1442251092.2850.53.camel@linaro.org>
+	 <9hhy4g89g64.fsf@e105922-lin.cambridge.arm.com>
+	 <1442313962.2917.25.camel@linaro.org> <20150915110330.GA6507@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1422058747-13486-2-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150915110330.GA6507@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Fri, 2015-01-23 at 16:19 -0800, Bjorn Andersson wrote:
-> From: Courtney Cavin cavin@sonymobile.com>
+On Tue, 2015-09-15 at 12:03 +0100, Mark Rutland wrote:
+> On Tue, Sep 15, 2015 at 11:46:02AM +0100, Jon Medhurst (Tixy) wrote:
+> > On Tue, 2015-09-15 at 10:37 +0100, Punit Agrawal wrote:
+> > > "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+> > > 
+> > > > On Mon, 2015-09-14 at 15:38 +0100, Punit Agrawal wrote:
+> > > >> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+> > > >> 
+> > [...]
+> > > >> The way the SCP interface is defined, the sensor identifiers are
+> > > >> contiguous,
+> > > >
+> > > > Is there any documentation other than DUI0922A? [1] From what I can seen
+> > > > that just says it's a 16-bit value and doesn't put any particular
+> > > > constraints on its value.
+> > > 
+> > > Although not explicitly stated, if you look at the Get Sensor Capability
+> > > [2] and Get Sensor Info [3] commands you can indirectly infer that the
+> > > Sensor IDs are contiguous.
+> > 
+> > I personally wouldn't even indirectly infer they are contiguous from
+> > what the document says. If I were implementing the firmware I would feel
+> > quite in my rights to, for example, use the top 8 bits of the ID for a
+> > sensor type and the bottom 8 for an index, if that made dispatching of
+> > requests more efficient. Or if some optional hardware was detected as
+> > missing, leaving some holes in ID space.
+> > 
+> > As a specification of a 'standard' the document seems to be rather
+> > lacking. So, Sensor ID should be documented as being "an unsigned
+> > integer less than then number of sensors returned by the Get Sensor
+> > Capability command", or something like that. I guess clocks and other
+> > devices suffer from similar lack of specificity.
 > 
-> Signed-off-by: Courtney Cavin cavin@sonymobile.com>
-> Signed-off-by: Bjorn Andersson andersson@sonymobile.com>
-> 
+> I think from the PoV of the binding, this doesn't matter. The value is
+> just an arbitrary opaue token written down in a spec, that the FW
+> understands how to interpret.
 
-<snip>
-
-> 
-> +config INPUT_PM8941_PWRKEY
-> +       tristate "Qualcomm PM8941 power key support"
-> +       depends on MFD_SPMI_PMIC
-> +       help
-> +                       Say Y here if you want support for the power key usually found
-> +                       on boards using a Qualcomm PM8941 compatible PMIC.
-> +
-
-Hi Bjorn, Courtney, 
-
-Do you plan to extend this driver to support RESIN_N PMIC input?
+True, it's the Linux implementation in following patches that has
+assumptions, e.g. for loops iterating over id's 0..N-1
  
-It looks like the same downstream "qcom,qpnp-power-on" handle
-this functionality for recent PMIC versions.
+> 
+> I only asked about how the IDs were organised because I thought there
+> was additional translation in the kernel, but this is not the case.
+> 
+> The only potential problem is bit-width. Punit, I assume the value is
+> 32-bit (or less) in the messages to the FW?
 
-What will be the best way to add this new functionality, extend
-this driver, write new one...?
+It's 16 bit.
 
-Regards,
-Ivan
+-- 
+Tixy
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
