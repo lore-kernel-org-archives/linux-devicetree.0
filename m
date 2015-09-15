@@ -1,70 +1,44 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/3] Documentation: bindings: brcmstb: Document write-pairing
-Date: Tue, 15 Sep 2015 11:14:58 -0700
-Message-ID: <1442340900-15320-2-git-send-email-f.fainelli@gmail.com>
-References: <1442340900-15320-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442340900-15320-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH 6/6] PCI: generic: Allow bus default MSI controller to
+ be specified.
+Date: Tue, 15 Sep 2015 11:25:25 -0700
+Message-ID: <55F86295.9030409@caviumnetworks.com>
+References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com> <1442013719-5001-7-git-send-email-ddaney.cavm@gmail.com> <20150915175327.GM31157@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150915175327.GM31157@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <david.daney@cavium.com>, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Document the hif-cpubiuctrl node a bit more, and add a documentation
-entry for the optional "brcm,write-pairing" property.
+On 09/15/2015 10:53 AM, Will Deacon wrote:
+> On Sat, Sep 12, 2015 at 12:21:59AM +0100, David Daney wrote:
+>> From: David Daney <david.daney@cavium.com>
+>>
+>> If the device tree node for the bus has a "msi-parent" property, use
+>> that as the default MSI controller for devices on the bus.  Add device
+>> tree binding documentation describing the new property.
+>>
+>> This allows the pci-host-generic driver to be used in systems with
+>> multiple MSI controllers.
+>>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> ---
+>>   .../devicetree/bindings/pci/host-generic-pci.txt          |  5 +++++
+>>   drivers/pci/host/pci-host-generic.c                       | 15 +++++++++++++--
+>>   2 files changed, 18 insertions(+), 2 deletions(-)
+>
+> I don't think you need this anymore with 4.3-rc1. The core IRQ subsystem
+> should take care of parsing and configuring the MSI parents.
 
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes in v2:
+I will re-test and see if I can make it work.
 
-- added a description of what the BIU stands for and what write pairing is
-- fixed the compatible string description
+David Daney
 
- .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt     | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-index 430608ec09f0..8ac28eb4a5a1 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-@@ -20,6 +20,25 @@ system control is required:
-     - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
-     - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
- 
-+hif-cpubiuctrl node
-+-------------------
-+SoCs with Broadcom Brahma15 ARM-based CPUs have a specific Bus Interface Unit
-+(BIU) block which controls and interfaces the CPU complex to the different
-+Memory Controller Ports (MCP), one per memory controller (MEMC). This BIU block
-+offers a feature called Write Pairing which consists in collapsing two adjacent
-+cache lines into a single (bursted) write transaction towards the memory
-+controller (MEMC) to maximize write bandwidth.
-+
-+Required properties:
-+
-+    - compatible: must be "brcm,bcm7445-hif-cpubiuctrl", "syscon"
-+
-+Optional properties:
-+
-+    - brcm,write-pairing:
-+	Boolean property, which when present indicates that the chip
-+	supports write-pairing.
-+
- example:
-     rdb {
-         #address-cells = <1>;
-@@ -35,6 +54,7 @@ example:
-         hif_cpubiuctrl: syscon@3e2400 {
-             compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
-             reg = <0x3e2400 0x5b4>;
-+            brcm,write-pairing;
-         };
- 
-         hif_continuation: syscon@452000 {
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Will
+>
