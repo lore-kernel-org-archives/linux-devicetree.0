@@ -1,59 +1,182 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/9] phy: use syscon framework APIs to set ctrl mod reg
-Date: Tue, 15 Sep 2015 18:34:22 +0530
-Message-ID: <1442322271-26230-1-git-send-email-kishon@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 2/9] phy: ti-pipe3: move clk initialization to a separate function
+Date: Tue, 15 Sep 2015 18:34:24 +0530
+Message-ID: <1442322271-26230-3-git-send-email-kishon@ti.com>
+References: <1442322271-26230-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
-Cc: rogerq-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442322271-26230-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, kishon@ti.com
+Cc: rogerq@ti.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tony@atomide.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This series is basically to deprecate using phy-omap-control and use
-syscon APIs to program the control module registers.
+No functional change. Moved clock initialization done in probe to a
+separate function as part of cleaning up ti_pipe3_probe.
 
-Changes from v1:
-*) cleanup ti_pipe3_probe in multiple steps
-*) other minor cleanups
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/phy/phy-ti-pipe3.c |  127 +++++++++++++++++++++++++-------------------
+ 1 file changed, 72 insertions(+), 55 deletions(-)
 
-Changes from [1] in PHY patches include
-*) cleanup ti_pipe3_probe
-*) have mask, power_on and power_off values in usb_phy_data for
-   omap-usb2 phy
-
-Did basic enumeration testing to make sure the patch series doesn't
-cause any regressions.
-
-All the testing was done both before applying the dt patches and after
-applying the dt patches (dt patches will be posted shortly).
-
-[1] -> https://lkml.org/lkml/2015/6/23/189
-
-Kishon Vijay Abraham I (9):
-  phy: ti-pipe3: introduce local struct device* in probe
-  phy: ti-pipe3: move clk initialization to a separate function
-  phy: ti-pipe3: move sysctrl initialization to a separate function
-  phy: ti-pipe3: move mem resource initialization to a separate
-    function
-  phy: ti-pipe3: use ti_pipe3_power_off to power off the PHY during
-    probe
-  phy: ti-pipe3: use *syscon* framework API to power on/off the PHY
-  phy: ti-pipe3: use *syscon* framework API to set PCS value of the PHY
-  phy: omap-usb2: use omap_usb_power_off to power off the PHY during
-    probe
-  phy: omap-usb2: use *syscon* framework API to power on/off the PHY
-
- Documentation/devicetree/bindings/phy/ti-phy.txt |   20 +-
- drivers/phy/phy-omap-usb2.c                      |   96 +++++--
- drivers/phy/phy-ti-pipe3.c                       |  304 ++++++++++++++++------
- include/linux/phy/omap_usb.h                     |   23 ++
- 4 files changed, 340 insertions(+), 103 deletions(-)
-
+diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+index c511105..3379a4d 100644
+--- a/drivers/phy/phy-ti-pipe3.c
++++ b/drivers/phy/phy-ti-pipe3.c
+@@ -308,48 +308,11 @@ static const struct phy_ops ops = {
+ 
+ static const struct of_device_id ti_pipe3_id_table[];
+ 
+-static int ti_pipe3_probe(struct platform_device *pdev)
++static int ti_pipe3_get_clk(struct ti_pipe3 *phy)
+ {
+-	struct ti_pipe3 *phy;
+-	struct phy *generic_phy;
+-	struct phy_provider *phy_provider;
+-	struct resource *res;
+-	struct device_node *node = pdev->dev.of_node;
+-	struct device_node *control_node;
+-	struct platform_device *control_pdev;
+-	const struct of_device_id *match;
+ 	struct clk *clk;
+-	struct device *dev = &pdev->dev;
+-
+-	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+-	if (!phy)
+-		return -ENOMEM;
+-
+-	phy->dev		= dev;
+-
+-	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
+-		match = of_match_device(ti_pipe3_id_table, dev);
+-		if (!match)
+-			return -EINVAL;
+-
+-		phy->dpll_map = (struct pipe3_dpll_map *)match->data;
+-		if (!phy->dpll_map) {
+-			dev_err(dev, "no DPLL data\n");
+-			return -EINVAL;
+-		}
+-
+-		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						   "pll_ctrl");
+-		phy->pll_ctrl_base = devm_ioremap_resource(dev, res);
+-		if (IS_ERR(phy->pll_ctrl_base))
+-			return PTR_ERR(phy->pll_ctrl_base);
+-
+-		phy->sys_clk = devm_clk_get(dev, "sysclk");
+-		if (IS_ERR(phy->sys_clk)) {
+-			dev_err(dev, "unable to get sysclk\n");
+-			return -EINVAL;
+-		}
+-	}
++	struct device *dev = phy->dev;
++	struct device_node *node = dev->of_node;
+ 
+ 	phy->refclk = devm_clk_get(dev, "refclk");
+ 	if (IS_ERR(phy->refclk)) {
+@@ -369,25 +332,17 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 		}
+ 	} else {
+ 		phy->wkupclk = ERR_PTR(-ENODEV);
+-		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
+-							"syscon-pllreset");
+-		if (IS_ERR(phy->dpll_reset_syscon)) {
+-			dev_info(dev,
+-				 "can't get syscon-pllreset, sata dpll won't idle\n");
+-			phy->dpll_reset_syscon = NULL;
+-		} else {
+-			if (of_property_read_u32_index(node,
+-						       "syscon-pllreset", 1,
+-						       &phy->dpll_reset_reg)) {
+-				dev_err(dev,
+-					"couldn't get pllreset reg. offset\n");
+-				return -EINVAL;
+-			}
++	}
++
++	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
++		phy->sys_clk = devm_clk_get(dev, "sysclk");
++		if (IS_ERR(phy->sys_clk)) {
++			dev_err(dev, "unable to get sysclk\n");
++			return -EINVAL;
+ 		}
+ 	}
+ 
+ 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
+-
+ 		clk = devm_clk_get(dev, "dpll_ref");
+ 		if (IS_ERR(clk)) {
+ 			dev_err(dev, "unable to get dpll ref clk\n");
+@@ -418,6 +373,68 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 		phy->div_clk = ERR_PTR(-ENODEV);
+ 	}
+ 
++	return 0;
++}
++
++static int ti_pipe3_probe(struct platform_device *pdev)
++{
++	struct ti_pipe3 *phy;
++	struct phy *generic_phy;
++	struct phy_provider *phy_provider;
++	struct resource *res;
++	struct device_node *node = pdev->dev.of_node;
++	struct device_node *control_node;
++	struct platform_device *control_pdev;
++	const struct of_device_id *match;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	phy->dev		= dev;
++
++	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
++		match = of_match_device(ti_pipe3_id_table, dev);
++		if (!match)
++			return -EINVAL;
++
++		phy->dpll_map = (struct pipe3_dpll_map *)match->data;
++		if (!phy->dpll_map) {
++			dev_err(dev, "no DPLL data\n");
++			return -EINVAL;
++		}
++
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						   "pll_ctrl");
++		phy->pll_ctrl_base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(phy->pll_ctrl_base))
++			return PTR_ERR(phy->pll_ctrl_base);
++	}
++
++	if (of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
++		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
++							"syscon-pllreset");
++		if (IS_ERR(phy->dpll_reset_syscon)) {
++			dev_info(dev,
++				 "can't get syscon-pllreset, sata dpll won't idle\n");
++			phy->dpll_reset_syscon = NULL;
++		} else {
++			if (of_property_read_u32_index(node,
++						       "syscon-pllreset", 1,
++						       &phy->dpll_reset_reg)) {
++				dev_err(dev,
++					"couldn't get pllreset reg. offset\n");
++				return -EINVAL;
++			}
++		}
++	}
++
++	ret = ti_pipe3_get_clk(phy);
++	if (ret)
++		return ret;
++
+ 	control_node = of_parse_phandle(node, "ctrl-module", 0);
+ 	if (!control_node) {
+ 		dev_err(dev, "Failed to get control device phandle\n");
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
