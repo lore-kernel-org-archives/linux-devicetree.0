@@ -1,35 +1,48 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: Enable EC vboot context support on Peach
- boards
-Date: Tue, 15 Sep 2015 09:00:42 +0900
-Message-ID: <55F75FAA.9000007@samsung.com>
-References: <1442234049-18637-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1442234049-18637-4-git-send-email-emilio.lopez@collabora.co.uk>
+From: Scott Wood <scottwood@freescale.com>
+Subject: [PATCH] arm64: dts: fsl-ls2085a: Add serial aliases
+Date: Mon, 14 Sep 2015 19:48:27 -0500
+Message-ID: <20150915004827.GA19862@home.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1442234049-18637-4-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio.lopez@collabora.co.uk>, gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.09.2015 21:34, Emilio L=C3=B3pez wrote:
-> The Peach boards use the EC to store the vboot context information,
-> so add the corresponding properties on the EC node to indicate so.
->=20
-> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
-> ---
->=20
-> Changes from v1:
->  - none
->=20
->  arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
->  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
->  2 files changed, 2 insertions(+)
+These will allow U-Boot to set linux,stdout-path in /chosen based on
+the active console device, which will allow devicetree-based earlycon.
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Scott Wood <scottwood@freescale.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+index e281ceb..eae454e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+@@ -55,6 +55,11 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		serial0 = &serial0;
++		serial1 = &serial1;
++	};
++
+ 	cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+-- 
+2.1.4
