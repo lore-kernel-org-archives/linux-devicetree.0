@@ -1,61 +1,218 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v3 01/10] dt: power: bq24257-charger: Cover additional
- devices
-Date: Tue, 15 Sep 2015 08:57:59 -0500
-Message-ID: <20150915135751.GA27134@borg>
-References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
- <1442003202-1430-2-git-send-email-dannenberg@ti.com>
- <55F66514.1080909@samsung.com>
- <20150914135430.GA21442@borg>
- <55F7CF44.3010102@samsung.com>
- <20150915090537.GB3166@lpalcu-desk>
+From: Thomas Elste <thomas.elste-cSCHQGRfioA@public.gmane.org>
+Subject: [PATCH] regulator: tps65023: add device tree support
+Date: Tue, 15 Sep 2015 15:33:55 +0200
+Message-ID: <1442324035-16414-2-git-send-email-thomas.elste@imms.de>
+References: <1442324035-16414-1-git-send-email-thomas.elste@imms.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150915090537.GB3166@lpalcu-desk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442324035-16414-1-git-send-email-thomas.elste-cSCHQGRfioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 12:05:37PM +0300, Laurentiu Palcu wrote:
-> On Tue, Sep 15, 2015 at 04:56:52PM +0900, Krzysztof Kozlowski wrote:
-[...]
-> > In this case - the 2XTMR_EN - I assume that for certain batteries or
-> > boards you want to extend the time of charging in case of special
-> > conditions?
-> 
-> FWIW, I don't see any real benefit in manually changing the 2X timer at
-> all. The default setting is decent enough. The chip will automatically
-> switch to 2X timer in certain conditions: for example, when the
-> temperature threshold is exceeded and the charge current is
-> automatically lowered. This makes sense since it'll take the battery
-> more time to charge at a lower current.
+Add device tree based initialization support for tps65023 regulators.
+Add device tree binding document for tps65023 regulators.
 
-Laurentiu,
-your comment just made me go double-check the applicable datasheets and
-realize that the timer 2x extension feature is by default enabled (not
-disabled as I originally thought) which is great. With that, we do have
-good coverage for the "special" charging conditions and don't
-need to expose access to this feature at this time. Will remove it.
+Signed-off-by: Thomas Elste <thomas.elste-cSCHQGRfioA@public.gmane.org>
+---
+ .../devicetree/bindings/regulator/tps65023.txt     | 58 +++++++++++++++
+ drivers/regulator/tps65023-regulator.c             | 83 +++++++++++++++++++++-
+ 2 files changed, 139 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65023.txt
 
-> It would probably make more sense to add a DT property to change the
-> 'Safety Timer Time Limit' device property (which can be 0.75hrs, 6hrs,
-> 9hrs or totally disabled) than the 2XTMR.
-> 
-> I omitted both when I originally added support for this chip since the
-> 6hrs default safety timer seemed more than enough to charge a nowadays
-> battery, even at 500mA (provided by a standard USB port). But, future
-> batteries might (and probably will) have higher capacities and will take
-> longer to charge.
-
-Agreed, 6hrs should cover most use cases. And it'll be easy enough to
-add on this property when needed.
-
-Regards,
+diff --git a/Documentation/devicetree/bindings/regulator/tps65023.txt b/Documentation/devicetree/bindings/regulator/tps65023.txt
+new file mode 100644
+index 0000000..bdd0d96
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps65023.txt
+@@ -0,0 +1,58 @@
++TPS65023 family of regulators
++
++Required properties:
++- compatible: Must be one of the following.
++	"ti,tps65020",
++	"ti,tps65021",
++	"ti,tps65023",
++- reg: I2C slave address
++- regulators: list of regulators provided by this controller, must be named
++  after their hardware counterparts: VDCDC[1-3] and LDO[1-2]
++- regulators: This is the list of child nodes that specify the regulator
++  initialization data for defined regulators. The definition for each of
++  these nodes is defined using the standard binding for regulators found at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Example:
++
++	tps65023@48 {
++		compatible = "ti,tps65023";
++		reg = <0x48>;
++
++		regulators {
++			VDCDC1 {
++				regulator-name = "vdd_mpu";
++				regulator-always-on;
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++			};
++
++			VDCDC2 {
++				regulator-name = "vdd_core";
++				regulator-always-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			VDCDC3 {
++				regulator-name = "vdd_io";
++				regulator-always-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++
++			LDO1 {
++				regulator-name = "vdd_usb18";
++				regulator-always-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++
++			LDO2 {
++				regulator-name = "vdd_usb33";
++				regulator-always-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++		};
++	};
+diff --git a/drivers/regulator/tps65023-regulator.c b/drivers/regulator/tps65023-regulator.c
+index 5cc19b4..5247d23 100644
+--- a/drivers/regulator/tps65023-regulator.c
++++ b/drivers/regulator/tps65023-regulator.c
+@@ -19,9 +19,12 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/i2c.h>
+ #include <linux/slab.h>
+ #include <linux/regmap.h>
+@@ -199,6 +202,63 @@ static const struct regmap_config tps65023_regmap_config = {
+ 	.val_bits = 8,
+ };
+ 
++static const struct of_device_id tps65023_of_match[] = {
++	{ .compatible = "ti,tps65020"},
++	{ .compatible = "ti,tps65021"},
++	{ .compatible = "ti,tps65023"},
++	{},
++};
++MODULE_DEVICE_TABLE(of, tps65023_of_match);
++
++static struct of_regulator_match tps65023_matches[] = {
++	{ .name = "VDCDC1"},
++	{ .name = "VDCDC2"},
++	{ .name = "VDCDC3"},
++	{ .name = "LDO1"},
++	{ .name = "LDO2"},
++};
++
++static struct regulator_init_data*
++	of_get_tps65023_platform_data(struct device *dev)
++{
++	struct regulator_init_data *reg_data;
++	struct device_node *np = dev->of_node;
++	struct device_node *regulators;
++	struct of_regulator_match *matches;
++	int idx, count, ret;
++
++	regulators = of_get_child_by_name(np, "regulators");
++	if (!regulators) {
++		dev_err(dev, "Regulator node not found\n");
++		return NULL;
++	}
++
++	count = ARRAY_SIZE(tps65023_matches);
++	matches = tps65023_matches;
++
++	ret = of_regulator_match(dev, regulators, matches, count);
++	of_node_put(regulators);
++	if (ret < 0) {
++		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
++		return NULL;
++	}
++
++	reg_data = devm_kzalloc(dev, sizeof(*reg_data) *
++			TPS65023_NUM_REGULATOR, GFP_KERNEL);
++	if (!reg_data)
++		return NULL;
++
++	for (idx = 0; idx < count; idx++) {
++		if (!matches[idx].init_data || !matches[idx].of_node)
++			continue;
++
++		memcpy(&reg_data[idx], matches[idx].init_data,
++				sizeof(struct regulator_init_data));
++	}
++
++	return reg_data;
++}
++
+ static int tps_65023_probe(struct i2c_client *client,
+ 				     const struct i2c_device_id *id)
+ {
+@@ -211,13 +271,31 @@ static int tps_65023_probe(struct i2c_client *client,
+ 	int i;
+ 	int error;
+ 
++	if (client->dev.of_node) {
++		const struct of_device_id *match;
++
++		match = of_match_device(of_match_ptr(tps65023_of_match),
++				&client->dev);
++		if (!match) {
++			dev_err(&client->dev, "No device match found\n");
++			return -ENODEV;
++		}
++	}
++
+ 	/**
+ 	 * init_data points to array of regulator_init structures
+ 	 * coming from the board-evm file.
+ 	 */
+ 	init_data = dev_get_platdata(&client->dev);
+-	if (!init_data)
+-		return -EIO;
++
++	/* if not provided by board file, check for OF entry */
++	if (IS_ENABLED(CONFIG_OF) && !init_data && client->dev.of_node)
++		init_data = of_get_tps65023_platform_data(&client->dev);
++
++	if (!init_data) {
++		dev_err(&client->dev, "No platform data\n");
++		return -EINVAL;
++	}
+ 
+ 	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
+ 	if (!tps)
+@@ -410,6 +488,7 @@ MODULE_DEVICE_TABLE(i2c, tps_65023_id);
+ static struct i2c_driver tps_65023_i2c_driver = {
+ 	.driver = {
+ 		.name = "tps65023",
++		.of_match_table = of_match_ptr(tps65023_of_match),
+ 	},
+ 	.probe = tps_65023_probe,
+ 	.id_table = tps_65023_id,
+-- 
+2.3.6
 
 --
-Andreas Dannenberg
-Texas Instruments Inc
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
