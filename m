@@ -1,527 +1,289 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2 Square board
-Date: Tue, 15 Sep 2015 08:57:21 +0200
-Message-ID: <1442300242-510-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] powerpc/dts: Add DT alias for Freescale eSPI controller
+Date: Tue, 15 Sep 2015 07:51:08 +0000
+Message-ID: <CY1PR0301MB0780386D9EE54B15390F44178B5C0@CY1PR0301MB0780.namprd03.prod.outlook.com>
+References: <1439985305-27193-1-git-send-email-B48286@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439985305-27193-1-git-send-email-B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Hu Vincent <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Radxa Rock 2 Square board is a combination of the Radxa Rock 2 SoM
-with the Square baseboard. Add a dtsi for the SoM which can be included
-into the dts for the various baseboards (e.g. full and square) and a dts
-for the square board.
-
-Currently supported are serial console, wired networking, hdmi output,
-eMMC and SD storage and USB.
-
-Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-
----
-
-Changes in v2:
-- Use gpio bank numbers directly instead RK_GPIO<number>
-- Use radxa,rock2-square as compatibility string and document it in
-  rockchip.txt
-- Fix ordering in memory node
-- Don't add broken-cd in the emmc node, unneeded as non-removable is set
-- coding-style fixes (double empty lines, comment style)
-- Removed redundant status properity in the act8846 node
-- Use emmc reset power-sequence to ensure proper MMC card reset
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/rk3288-rock2-som.dtsi            | 277 +++++++++++++++++++++
- arch/arm/boot/dts/rk3288-rock2-square.dts          | 165 ++++++++++++
- 4 files changed, 447 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-rock2-som.dtsi
- create mode 100644 arch/arm/boot/dts/rk3288-rock2-square.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index af58cd7..40ba0eb 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -17,6 +17,10 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "radxa,rock", "rockchip,rk3188";
- 
-+- Radxa Rock2 Square board:
-+    Required root node properties:
-+      - compatible = "radxa,rock2-square", "rockchip,rk3288";
-+
- - Firefly Firefly-RK3288 board:
-     Required root node properties:
-       - compatible = "firefly,firefly-rk3288", "rockchip,rk3288";
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 233159d..1ed8ec1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -507,6 +507,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-firefly-beta.dtb \
- 	rk3288-firefly.dtb \
- 	rk3288-r89.dtb \
-+	rk3288-rock2-square.dtb \
- 	rk3288-veyron-jerry.dtb \
- 	rk3288-veyron-minnie.dtb \
- 	rk3288-veyron-pinky.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-new file mode 100644
-index 0000000..bebaed7
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-@@ -0,0 +1,277 @@
-+/*
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include <dt-bindings/pwm/pwm.h>
-+#include "rk3288.dtsi"
-+
-+/ {
-+	memory {
-+		reg = <0x0 0x80000000>;
-+		device_type = "memory";
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		pinctrl-0 = <&emmc_reset>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	ext_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
-+	};
-+
-+	vcc_sys: vsys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu0-supply = <&vdd_cpu>;
-+};
-+
-+&emmc {
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	disable-wp;
-+	non-removable;
-+	num-slots = <1>;
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
-+	vmmc-supply = <&vcc_io>;
-+	status = "okay";
-+};
-+
-+&gmac {
-+	assigned-clocks = <&cru SCLK_MAC>;
-+	assigned-clock-parents = <&ext_gmac>;
-+	clock_in_out = "input";
-+	phy-mode = "rgmii";
-+	phy-supply = <&vccio_pmu>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins &phy_rst>;
-+	snps,reset-gpio = <&gpio4 8 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 30000>;
-+	rx_delay = <0x10>;
-+	tx_delay = <0x30>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	act8846: act8846@5a {
-+		compatible = "active-semi,act8846";
-+		reg = <0x5a>;
-+		inl1-supply = <&vcc_io>;
-+		inl2-supply = <&vcc_sys>;
-+		inl3-supply = <&vcc_20>;
-+		vp1-supply = <&vcc_sys>;
-+		vp2-supply = <&vcc_sys>;
-+		vp3-supply = <&vcc_sys>;
-+		vp4-supply = <&vcc_sys>;
-+
-+		regulators {
-+			vcc_ddr: REG1 {
-+				regulator-name = "VCC_DDR";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_io: REG2 {
-+				regulator-name = "VCC_IO";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_log: REG3 {
-+				regulator-name = "VDD_LOG";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_20: REG4 {
-+				regulator-name = "VCC_20";
-+				regulator-min-microvolt = <2000000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
-+			};
-+
-+			vccio_sd: REG5 {
-+				regulator-name = "VCCIO_SD";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd10_lcd: REG6 {
-+				regulator-name = "VDD10_LCD";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-always-on;
-+			};
-+
-+			vcca_codec: REG7 {
-+				regulator-name = "VCCA_CODEC";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vcca_tp: REG8 {
-+				regulator-name = "VCCA_TP";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vccio_pmu: REG9 {
-+				regulator-name = "VCCIO_PMU";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_10: REG10 {
-+				regulator-name = "VDD_10";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_18: REG11 {
-+				regulator-name = "VCC_18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc18_lcd: REG12 {
-+				regulator-name = "VCC18_LCD";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+
-+	vdd_cpu: syr827@40 {
-+		compatible = "silergy,syr827";
-+		reg = <0x40>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-enable-ramp-delay = <300>;
-+		regulator-name = "vdd_cpu";
-+		regulator-min-microvolt = <850000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-ramp-delay = <8000>;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vdd_gpu: syr828@41 {
-+		compatible = "silergy,syr828";
-+		reg = <0x41>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-always-on;
-+		regulator-enable-ramp-delay = <300>;
-+		regulator-min-microvolt = <850000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-name = "vdd_gpu";
-+		regulator-ramp-delay = <8000>;
-+		vin-supply = <&vcc_sys>;
-+	};
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
-+
-+&tsadc {
-+	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
-+	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	emmc {
-+			emmc_reset: emmc-reset {
-+				rockchip,pins = <3 9 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+	};
-+
-+	gmac {
-+		phy_rst: phy-rst {
-+			rockchip,pins = <4 8 RK_FUNC_GPIO  &pcfg_output_high>;
-+		};
-+	};
-+};
-+
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-new file mode 100644
-index 0000000..bce50cd
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -0,0 +1,165 @@
-+/*
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-rock2-som.dtsi"
-+
-+/ {
-+	model = "Radxa Rock 2 Square";
-+	compatible = "radxa,rock2-square", "rockchip,rk3288";
-+
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
-+
-+	vcc_usb_host: vcc-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		/* Always on as the rockchip usb phy doesn't have a vbus-supply
-+		 * property
-+		 */
-+		regulator-always-on;
-+		regulator-name = "vcc_host";
-+	};
-+
-+	vcc_sd: sdmmc-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc_pwr>;
-+		regulator-name = "vcc_sd";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_io>;
-+	};
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	card-detect-delay = <200>;
-+	disable-wp;	/* wp not hooked up */
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vccio_sd>;
-+	status = "okay";
-+};
-+
-+&gmac {
-+	status = "ok";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c5>;
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	hym8563@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "xin32k";
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int>;
-+
-+	};
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pmic {
-+		pmic_int: pmic-int {
-+			rockchip,pins = <0 4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	usb {
-+		host_vbus_drv: host-vbus-drv {
-+			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sdmmc {
-+		sdmmc_pwr: sdmmc-pwr {
-+			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
--- 
-2.5.1
-
+SGksDQoNCkFueSByZXNwb25zZSwgcGxlYXNlIGNvbW1lbnQuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogWmhpcWlhbmcgSG91IFttYWlsdG86QjQ4Mjg2QGZyZWVzY2Fs
+ZS5jb21dDQo+IFNlbnQ6IDIwMTXE6jjUwjE5yNUgMTk6NTUNCj4gVG86IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0K
+PiBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOyBpamMrZGV2aWNldHJl
+ZUBoZWxsaW9uLm9yZy51aw0KPiBDYzogSHUgTWluZ2thaS1CMjEyODQ7IEhvdSBaaGlxaWFuZy1C
+NDgyODYNCj4gU3ViamVjdDogW1BBVENIXSBwb3dlcnBjL2R0czogQWRkIERUIGFsaWFzIGZvciBG
+cmVlc2NhbGUgZVNQSSBjb250cm9sbGVyDQo+IA0KPiBGcm9tOiBIb3UgWmhpcWlhbmcgPEI0ODI4
+NkBmcmVlc2NhbGUuY29tPg0KPiANCj4gQWRkIGFsaWFzZXMgZm9yIGVTUEkgZGV2aWNlIG5vZGUg
+dG8gYXNzaWduIHRoZSBhbGlhcyBpZCB0byB0aGUgYnVzIG51bWJlcg0KPiBvZiBzcGlfbWFzdGVy
+Lg0KPiANCj4gRm9yIHRoZSBwbGF0Zm9ybXMgdXNlZCB0aGUgZGV2aWNlIHRyZWUsIHRoZSBidXMg
+bnVtYmVycyBhcmUgZHluYW1pY2FsbHkNCj4gYXNzaWduZWQgYW5kIGFyZSBub3QgcHJlZGljdGFi
+bGUuIEhvd2V2ZXIsIHNvbWV0aW1lcyBpdCBtdXN0IGJlIGZpZ3VyZWQNCj4gb3V0LCBlLmcuIHVz
+aW5nIG10ZHBhcnRzIGluIGNtZGxpbmUgdG8gc3BlY2lmeSB0aGUgbGF5b3V0IG9mIHNwaSBmbGFz
+aC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8QjQ4Mjg2QGZyZWVzY2FsZS5j
+b20+DQo+IC0tLQ0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXByZS5kdHNp
+ICAgIHwgMSArDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2ktcHJlLmR0c2kg
+ICAgfCAxICsNCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kgICAg
+ICB8IDIgKy0NCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXBvc3QuZHRz
+aSB8IDIgKy0NCj4gYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9tcGM4NTM2c2ktcHJlLmR0c2kg
+IHwgMSArDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIwc2ktcG9zdC5kdHNpICAg
+fCAyICstDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIwc2ktcHJlLmR0c2kgICAg
+fCAxICsNCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjFzaS1wb3N0LmR0c2kgICB8
+IDIgKy0NCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjFzaS1wcmUuZHRzaSAgICB8
+IDEgKw0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMnNpLXBvc3QuZHRzaSAgIHwg
+MiArLQ0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMnNpLXByZS5kdHNpICAgIHwg
+MSArDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIzc2ktcG9zdC5kdHNpICAgfCAy
+ICstDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIzc2ktcHJlLmR0c2kgICAgfCAx
+ICsNCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgICB8IDIg
+Ky0NCj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wcmUuZHRzaSAgICB8IDEg
+Kw0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaSAgIHwgMiAr
+LQ0KPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXByZS5kdHNpICAgIHwgMSAr
+DQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpICAgfCAyICst
+DQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcHJlLmR0c2kgICAgfCAxICsN
+Cj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgICB8IDIgKy0N
+Cj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wcmUuZHRzaSAgICB8IDEgKw0K
+PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRzaSAgIHwgMiArLQ0K
+PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXByZS5kdHNpICAgIHwgMSArDQo+
+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNpICAgfCAyICstDQo+
+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDJ4c2ktcHJlLmR0c2kgICAgfCAxICsNCj4g
+IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4g
+IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNHhzaS1wcmUuZHRzaSAgICB8IDEgKw0KPiAg
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaSAgIHwgMiArLQ0KPiAg
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4eHNpLXByZS5kdHNpICAgIHwgMSArDQo+ICBh
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpICAgfCAyICstDQo+ICBh
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcHJlLmR0c2kgICAgfCAxICsNCj4gIDMx
+IGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wcmUuZHRzaQ0K
+PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ0MjBzaS1wcmUuZHRzaQ0KPiBpbmRleCAz
+MzhhZjdlLi43ZTE2NGRhIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L2I0NDIwc2ktcHJlLmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQy
+MHNpLXByZS5kdHNpDQo+IEBAIC01NCw2ICs1NCw3IEBADQo+ICAJCWRtYTAgPSAmZG1hMDsNCj4g
+IAkJZG1hMSA9ICZkbWExOw0KPiAgCQlzZGhjID0gJnNkaGM7DQo+ICsJCXNwaTAgPSAmc3BpMDsN
+Cj4gIAl9Ow0KPiANCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L2I0ODYwc2ktcHJlLmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2kt
+cHJlLmR0c2kNCj4gaW5kZXggMTk0OGY3My4uYjZlMTcyNCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9w
+b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXByZS5kdHNpDQo+ICsrKyBiL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wcmUuZHRzaQ0KPiBAQCAtNTQsNiArNTQsNyBAQA0KPiAg
+CQlkbWEwID0gJmRtYTA7DQo+ICAJCWRtYTEgPSAmZG1hMTsNCj4gIAkJc2RoYyA9ICZzZGhjOw0K
+PiArCQlzcGkwID0gJnNwaTA7DQo+ICAJfTsNCj4gDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9w
+b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kNCj4gaW5kZXggNjAzOTEwYS4uNmZiZDY1MSAxMDA2NDQN
+Cj4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQ0KPiArKysg
+Yi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0c2ktcG9zdC5kdHNpDQo+IEBAIC00MzksNyAr
+NDM5LDcgQEANCj4gIAl9Ow0KPiANCj4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+
+IC0Jc3BpQDExMDAwMCB7DQo+ICsJc3BpMDogc3BpQDExMDAwMCB7DQo+ICAJCWZzbCxlc3BpLW51
+bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gIAl9Ow0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvbXBjODUzNnNpLXBvc3QuZHRzaQ0KPiBpbmRleCBjOGIyZGFhLi4xYzFjMWZl
+IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL21wYzg1MzZzaS1wb3N0
+LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9tcGM4NTM2c2ktcG9zdC5k
+dHNpDQo+IEBAIC0xNjQsNyArMTY0LDcgQEANCj4gIC9pbmNsdWRlLyAicHEzLWR1YXJ0LTAuZHRz
+aSINCj4gDQo+ICAvaW5jbHVkZS8gInBxMy1lc3BpLTAuZHRzaSINCj4gLQlzcGlANzAwMCB7DQo+
+ICsJc3BpMDogc3BpQDcwMDAgew0KPiAgCQlmc2wsZXNwaS1udW0tY2hpcHNlbGVjdHMgPSA8ND47
+DQo+ICAJfTsNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL21w
+Yzg1MzZzaS1wcmUuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNp
+LXByZS5kdHNpDQo+IGluZGV4IDE1MjkwNmYuLjhhNmI3ZTcgMTAwNjQ0DQo+IC0tLSBhL2FyY2gv
+cG93ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXByZS5kdHNpDQo+ICsrKyBiL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXByZS5kdHNpDQo+IEBAIC01MSw2ICs1MSw3IEBA
+DQo+ICAJCXBjaTEgPSAmcGNpMTsNCj4gIAkJcGNpMiA9ICZwY2kyOw0KPiAgCQlwY2kzID0gJnBj
+aTM7DQo+ICsJCXNwaTAgPSAmc3BpMDsNCj4gIAl9Ow0KPiANCj4gIAljcHVzIHsNCj4gZGlmZiAt
+LWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjBzaS1wb3N0LmR0c2kNCj4gYi9h
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIwc2ktcG9zdC5kdHNpDQo+IGluZGV4IDY0MmRj
+M2EuLjJlZTJjMGYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEw
+MjBzaS1wb3N0LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMHNp
+LXBvc3QuZHRzaQ0KPiBAQCAtMTI3LDcgKzEyNyw3IEBADQo+ICAvaW5jbHVkZS8gInBxMy1kdWFy
+dC0wLmR0c2kiDQo+IA0KPiAgL2luY2x1ZGUvICJwcTMtZXNwaS0wLmR0c2kiDQo+IC0Jc3BpQDcw
+MDAgew0KPiArCXNwaTA6IHNwaUA3MDAwIHsNCj4gIAkJZnNsLGVzcGktbnVtLWNoaXBzZWxlY3Rz
+ID0gPDQ+Ow0KPiAgCX07DQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
+L2ZzbC9wMTAyMHNpLXByZS5kdHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAy
+MHNpLXByZS5kdHNpDQo+IGluZGV4IGZlZDljNGMuLmU0MGVlZjggMTAwNjQ0DQo+IC0tLSBhL2Fy
+Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjBzaS1wcmUuZHRzaQ0KPiArKysgYi9hcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL3AxMDIwc2ktcHJlLmR0c2kNCj4gQEAgLTUwLDYgKzUwLDcgQEAN
+Cj4gIAkJZXRoZXJuZXQyID0gJmVuZXQyOw0KPiAgCQlwY2kwID0gJnBjaTA7DQo+ICAJCXBjaTEg
+PSAmcGNpMTsNCj4gKwkJc3BpMCA9ICZzcGkwOw0KPiAgCX07DQo+IA0KPiAgCWNwdXMgew0KPiBk
+aWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMXNpLXBvc3QuZHRzaQ0K
+PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjFzaS1wb3N0LmR0c2kNCj4gaW5kZXgg
+NDA3Y2I1Zi4uMjZmZmNiNSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9wMTAyMXNpLXBvc3QuZHRzaQ0KPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Ax
+MDIxc2ktcG9zdC5kdHNpDQo+IEBAIC0xMjcsNyArMTI3LDcgQEANCj4gIC9pbmNsdWRlLyAicHEz
+LWR1YXJ0LTAuZHRzaSINCj4gDQo+ICAvaW5jbHVkZS8gInBxMy1lc3BpLTAuZHRzaSINCj4gLQlz
+cGlANzAwMCB7DQo+ICsJc3BpMDogc3BpQDcwMDAgew0KPiAgCQlmc2wsZXNwaS1udW0tY2hpcHNl
+bGVjdHMgPSA8ND47DQo+ICAJfTsNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL3AxMDIxc2ktcHJlLmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L3AxMDIxc2ktcHJlLmR0c2kNCj4gaW5kZXggMzYxNjFiNS4uMGU0MTVmNiAxMDA2NDQNCj4gLS0t
+IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMXNpLXByZS5kdHNpDQo+ICsrKyBiL2Fy
+Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjFzaS1wcmUuZHRzaQ0KPiBAQCAtNTAsNiArNTAs
+NyBAQA0KPiAgCQlldGhlcm5ldDIgPSAmZW5ldDI7DQo+ICAJCXBjaTAgPSAmcGNpMDsNCj4gIAkJ
+cGNpMSA9ICZwY2kxOw0KPiArCQlzcGkwID0gJnNwaTA7DQo+ICAJfTsNCj4gDQo+ICAJY3B1cyB7
+DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIyc2ktcG9zdC5k
+dHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMnNpLXBvc3QuZHRzaQ0KPiBp
+bmRleCBlYmYyMDIyLi5iMjIwZTNlIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9k
+dHMvZnNsL3AxMDIyc2ktcG9zdC5kdHNpDQo+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvcDEwMjJzaS1wb3N0LmR0c2kNCj4gQEAgLTE1OSw3ICsxNTksNyBAQA0KPiAgL2luY2x1ZGUv
+ICJwcTMtaTJjLTEuZHRzaSINCj4gIC9pbmNsdWRlLyAicHEzLWR1YXJ0LTAuZHRzaSINCj4gIC9p
+bmNsdWRlLyAicHEzLWVzcGktMC5kdHNpIg0KPiAtCXNwaUA3MDAwIHsNCj4gKwlzcGkwOiBzcGlA
+NzAwMCB7DQo+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gIAl9Ow0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjJzaS1wcmUuZHRz
+aQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjJzaS1wcmUuZHRzaQ0KPiBpbmRl
+eCAxOTU2ZGVhLi44NGYzMjIyIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL3AxMDIyc2ktcHJlLmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9w
+MTAyMnNpLXByZS5kdHNpDQo+IEBAIC01MCw2ICs1MCw3IEBADQo+ICAJCXBjaTAgPSAmcGNpMDsN
+Cj4gIAkJcGNpMSA9ICZwY2kxOw0KPiAgCQlwY2kyID0gJnBjaTI7DQo+ICsJCXNwaTAgPSAmc3Bp
+MDsNCj4gIAl9Ow0KPiANCj4gIAljcHVzIHsNCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL3AxMDIzc2ktcG9zdC5kdHNpDQo+IGluZGV4IGRhNmQzZmMuLmQ3ZjIxYzggMTAwNjQ0DQo+
+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kNCj4gKysr
+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyM3NpLXBvc3QuZHRzaQ0KPiBAQCAtMTg5
+LDcgKzE4OSw3IEBADQo+ICAvaW5jbHVkZS8gInBxMy1kdWFydC0wLmR0c2kiDQo+IA0KPiAgL2lu
+Y2x1ZGUvICJwcTMtZXNwaS0wLmR0c2kiDQo+IC0Jc3BpQDcwMDAgew0KPiArCXNwaTA6IHNwaUA3
+MDAwIHsNCj4gIAkJZnNsLGVzcGktbnVtLWNoaXBzZWxlY3RzID0gPDQ+Ow0KPiAgCX07DQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyM3NpLXByZS5kdHNp
+DQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyM3NpLXByZS5kdHNpDQo+IGluZGV4
+IDEzMmExNTIuLjcwNjAxZWM4IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL3AxMDIzc2ktcHJlLmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9w
+MTAyM3NpLXByZS5kdHNpDQo+IEBAIC00OCw2ICs0OCw3IEBADQo+ICAJCXBjaTAgPSAmcGNpMDsN
+Cj4gIAkJcGNpMSA9ICZwY2kxOw0KPiAgCQlwY2kyID0gJnBjaTI7DQo+ICsJCXNwaTAgPSAmc3Bp
+MDsNCj4gDQo+ICAJCWNyeXB0byA9ICZjcnlwdG87DQo+ICAJCXNlY19qcjAgPSAmc2VjX2pyMDsN
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0
+c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpDQo+IGlu
+ZGV4IDA0YWQxNzcuLjhlZGQyYmMgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0
+cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9wMjA0MXNpLXBvc3QuZHRzaQ0KPiBAQCAtMzc2LDcgKzM3Niw3IEBADQo+ICAJfTsNCj4gDQo+
+ICAvaW5jbHVkZS8gInFvcmlxLWVzcGktMC5kdHNpIg0KPiAtCXNwaUAxMTAwMDAgew0KPiArCXNw
+aTA6IHNwaUAxMTAwMDAgew0KPiAgCQlmc2wsZXNwaS1udW0tY2hpcHNlbGVjdHMgPSA8ND47DQo+
+ICAJfTsNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQx
+c2ktcHJlLmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcHJlLmR0
+c2kNCj4gaW5kZXggYjFlYTE0Ny4uNDc2YzAzMiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBj
+L2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXByZS5kdHNpDQo+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvcDIwNDFzaS1wcmUuZHRzaQ0KPiBAQCAtNTMsNiArNTMsNyBAQA0KPiAgCQlwY2kw
+ID0gJnBjaTA7DQo+ICAJCXBjaTEgPSAmcGNpMTsNCj4gIAkJcGNpMiA9ICZwY2kyOw0KPiArCQlz
+cGkwID0gJnNwaTA7DQo+ICAJCXVzYjAgPSAmdXNiMDsNCj4gIAkJdXNiMSA9ICZ1c2IxOw0KPiAg
+CQlkbWEwID0gJmRtYTA7DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L3AzMDQxc2ktcG9zdC5kdHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNp
+LXBvc3QuZHRzaQ0KPiBpbmRleCAyY2FiMThhLi5jMzhiZjY3IDEwMDY0NA0KPiAtLS0gYS9hcmNo
+L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpDQo+ICsrKyBiL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kNCj4gQEAgLTQwMyw3ICs0MDMsNyBA
+QA0KPiAgCX07DQo+IA0KPiAgL2luY2x1ZGUvICJxb3JpcS1lc3BpLTAuZHRzaSINCj4gLQlzcGlA
+MTEwMDAwIHsNCj4gKwlzcGkwOiBzcGlAMTEwMDAwIHsNCj4gIAkJZnNsLGVzcGktbnVtLWNoaXBz
+ZWxlY3RzID0gPDQ+Ow0KPiAgCX07DQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jv
+b3QvZHRzL2ZzbC9wMzA0MXNpLXByZS5kdHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9wMzA0MXNpLXByZS5kdHNpDQo+IGluZGV4IGRjNWY0YjMuLmU3ZjI5MGYgMTAwNjQ0DQo+IC0t
+LSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wcmUuZHRzaQ0KPiArKysgYi9h
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcHJlLmR0c2kNCj4gQEAgLTU0LDYgKzU0
+LDcgQEANCj4gIAkJcGNpMSA9ICZwY2kxOw0KPiAgCQlwY2kyID0gJnBjaTI7DQo+ICAJCXBjaTMg
+PSAmcGNpMzsNCj4gKwkJc3BpMCA9ICZzcGkwOw0KPiAgCQl1c2IwID0gJnVzYjA7DQo+ICAJCXVz
+YjEgPSAmdXNiMTsNCj4gIAkJZG1hMCA9ICZkbWEwOw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kNCj4gaW5kZXggZGZjNzZiYy4uMTVkZDBjNCAxMDA2
+NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaQ0K
+PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpDQo+IEBA
+IC00NzUsNyArNDc1LDcgQEANCj4gIAl9Ow0KPiANCj4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0w
+LmR0c2kiDQo+IC0Jc3BpQDExMDAwMCB7DQo+ICsJc3BpMDogc3BpQDExMDAwMCB7DQo+ICAJCWZz
+bCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gIAl9Ow0KPiANCj4gZGlmZiAtLWdpdCBh
+L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wcmUuZHRzaQ0KPiBiL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wcmUuZHRzaQ0KPiBpbmRleCAzOGJkZTA5Li4xMTBk
+M2JjIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcHJl
+LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXByZS5kdHNp
+DQo+IEBAIC01Myw2ICs1Myw3IEBADQo+ICAJCXBjaTAgPSAmcGNpMDsNCj4gIAkJcGNpMSA9ICZw
+Y2kxOw0KPiAgCQlwY2kyID0gJnBjaTI7DQo+ICsJCXNwaTAgPSAmc3BpMDsNCj4gIAkJdXNiMCA9
+ICZ1c2IwOw0KPiAgCQl1c2IxID0gJnVzYjE7DQo+ICAJCWRtYTAgPSAmZG1hMDsNCj4gZGlmZiAt
+LWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kNCj4gYi9h
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpDQo+IGluZGV4IGI3Nzky
+M2EuLjExMGM4YmUgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUw
+MjBzaS1wb3N0LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNp
+LXBvc3QuZHRzaQ0KPiBAQCAtMzkwLDcgKzM5MCw3IEBADQo+ICAJfTsNCj4gDQo+ICAvaW5jbHVk
+ZS8gInFvcmlxLWVzcGktMC5kdHNpIg0KPiAtCXNwaUAxMTAwMDAgew0KPiArCXNwaTA6IHNwaUAx
+MTAwMDAgew0KPiAgCQlmc2wsZXNwaS1udW0tY2hpcHNlbGVjdHMgPSA8ND47DQo+ICAJfTsNCj4g
+DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcHJlLmR0
+c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcHJlLmR0c2kNCj4gaW5k
+ZXggMWNjNjFlMS4uOGI4NDZjYSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
+L2ZzbC9wNTAyMHNpLXByZS5kdHNpDQo+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+cDUwMjBzaS1wcmUuZHRzaQ0KPiBAQCAtNTQsNiArNTQsNyBAQA0KPiAgCQlwY2kxID0gJnBjaTE7
+DQo+ICAJCXBjaTIgPSAmcGNpMjsNCj4gIAkJcGNpMyA9ICZwY2kzOw0KPiArCQlzcGkwID0gJnNw
+aTA7DQo+ICAJCXVzYjAgPSAmdXNiMDsNCj4gIAkJdXNiMSA9ICZ1c2IxOw0KPiAgCQlkbWEwID0g
+JmRtYTA7DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2kt
+cG9zdC5kdHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRz
+aQ0KPiBpbmRleCA2ZDIxNDUyLi41NDE3NDM5IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMv
+Ym9vdC9kdHMvZnNsL3A1MDQwc2ktcG9zdC5kdHNpDQo+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvcDUwNDBzaS1wb3N0LmR0c2kNCj4gQEAgLTM2OCw3ICszNjgsNyBAQA0KPiAgCX07
+DQo+IA0KPiAgL2luY2x1ZGUvICJxb3JpcS1lc3BpLTAuZHRzaSINCj4gLQlzcGlAMTEwMDAwIHsN
+Cj4gKwlzcGkwOiBzcGlAMTEwMDAwIHsNCj4gIAkJZnNsLGVzcGktbnVtLWNoaXBzZWxlY3RzID0g
+PDQ+Ow0KPiAgCX07DQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9wNTA0MHNpLXByZS5kdHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNp
+LXByZS5kdHNpDQo+IGluZGV4IGIwNDhhMmIuLjAyOGMxMWIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gv
+cG93ZXJwYy9ib290L2R0cy9mc2wvcDUwNDBzaS1wcmUuZHRzaQ0KPiArKysgYi9hcmNoL3Bvd2Vy
+cGMvYm9vdC9kdHMvZnNsL3A1MDQwc2ktcHJlLmR0c2kNCj4gQEAgLTUzLDYgKzUzLDcgQEANCj4g
+IAkJcGNpMCA9ICZwY2kwOw0KPiAgCQlwY2kxID0gJnBjaTE7DQo+ICAJCXBjaTIgPSAmcGNpMjsN
+Cj4gKwkJc3BpMCA9ICZzcGkwOw0KPiAgCQl1c2IwID0gJnVzYjA7DQo+ICAJCXVzYjEgPSAmdXNi
+MTsNCj4gIAkJZG1hMCA9ICZkbWEwOw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3Qv
+ZHRzL2ZzbC90MTAyM3NpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+dDEwMjNzaS1wb3N0LmR0c2kNCj4gaW5kZXggZGYxZjA2OC4uYTE0ZDQwMCAxMDA2NDQNCj4gLS0t
+IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyM3NpLXBvc3QuZHRzaQ0KPiArKysgYi9h
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNpDQo+IEBAIC0yODQsNyAr
+Mjg0LDcgQEANCj4gIC9pbmNsdWRlLyAiZWxvMy1kbWEtMS5kdHNpIg0KPiANCj4gIC9pbmNsdWRl
+LyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+IC0Jc3BpQDExMDAwMCB7DQo+ICsJc3BpMDogc3BpQDEx
+MDAwMCB7DQo+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gIAl9Ow0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwMnhzaS1wcmUuZHRz
+aQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwMnhzaS1wcmUuZHRzaQ0KPiBpbmRl
+eCAxZjFhOWY4Li5kYTY1NmFlIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL3QxMDJ4c2ktcHJlLmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90
+MTAyeHNpLXByZS5kdHNpDQo+IEBAIC01NCw2ICs1NCw3IEBADQo+ICAJCXBjaTAgPSAmcGNpMDsN
+Cj4gIAkJcGNpMSA9ICZwY2kxOw0KPiAgCQlwY2kyID0gJnBjaTI7DQo+ICsJCXNwaTAgPSAmc3Bp
+MDsNCj4gIAkJdXNiMCA9ICZ1c2IwOw0KPiAgCQl1c2IxID0gJnVzYjE7DQo+ICAJCXNkaGMgPSAm
+c2RoYzsNCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1w
+b3N0LmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDQwc2ktcG9zdC5kdHNp
+DQo+IGluZGV4IDllOWY3ZTIuLmEwMTg2MzkgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3Qv
+ZHRzL2ZzbC90MTA0MHNpLXBvc3QuZHRzaQ0KPiBAQCAtNDg3LDcgKzQ4Nyw3IEBADQo+ICAvaW5j
+bHVkZS8gImVsbzMtZG1hLTAuZHRzaSINCj4gIC9pbmNsdWRlLyAiZWxvMy1kbWEtMS5kdHNpIg0K
+PiAgL2luY2x1ZGUvICJxb3JpcS1lc3BpLTAuZHRzaSINCj4gLQlzcGlAMTEwMDAwIHsNCj4gKwlz
+cGkwOiBzcGlAMTEwMDAwIHsNCj4gIAkJZnNsLGVzcGktbnVtLWNoaXBzZWxlY3RzID0gPDQ+Ow0K
+PiAgCX07DQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0
+eHNpLXByZS5kdHNpDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0eHNpLXByZS5k
+dHNpDQo+IGluZGV4IGJiYjcwMjUuLmQxMzY4YWIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvdDEwNHhzaS1wcmUuZHRzaQ0KPiArKysgYi9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL3QxMDR4c2ktcHJlLmR0c2kNCj4gQEAgLTUzLDYgKzUzLDcgQEANCj4gIAkJcGNp
+MSA9ICZwY2kxOw0KPiAgCQlwY2kyID0gJnBjaTI7DQo+ICAJCXBjaTMgPSAmcGNpMzsNCj4gKwkJ
+c3BpMCA9ICZzcGkwOw0KPiAgCQl1c2IwID0gJnVzYjA7DQo+ICAJCXVzYjEgPSAmdXNiMTsNCj4g
+IAkJc2RoYyA9ICZzZGhjOw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC90MjA4MXNpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFz
+aS1wb3N0LmR0c2kNCj4gaW5kZXggMzJjNzkwYS4uM2VhMmFkZiAxMDA2NDQNCj4gLS0tIGEvYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaQ0KPiArKysgYi9hcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpDQo+IEBAIC01OTEsNyArNTkxLDcg
+QEANCj4gIAl9Ow0KPiANCj4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+IC0Jc3Bp
+QDExMDAwMCB7DQo+ICsJc3BpMDogc3BpQDExMDAwMCB7DQo+ICAJCWZzbCxlc3BpLW51bS1jaGlw
+c2VsZWN0cyA9IDw0PjsNCj4gIAl9Ow0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvdDIwOHhzaS1wcmUuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvdDIwOHhzaS1wcmUuZHRzaQ0KPiBpbmRleCBlNzFjZWIwLi5lYzg3YTBlIDEwMDY0NA0KPiAt
+LS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4c2ktcHJlLmR0c2kNCj4gKysrIGIv
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4eHNpLXByZS5kdHNpDQo+IEBAIC01NSw2ICs1
+NSw3IEBADQo+ICAJCXBjaTEgPSAmcGNpMTsNCj4gIAkJcGNpMiA9ICZwY2kyOw0KPiAgCQlwY2kz
+ID0gJnBjaTM7DQo+ICsJCXNwaTAgPSAmc3BpMDsNCj4gIAkJdXNiMCA9ICZ1c2IwOw0KPiAgCQl1
+c2IxID0gJnVzYjE7DQo+ICAJCWRtYTAgPSAmZG1hMDsNCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1wb3N0LmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpDQo+IGluZGV4IGQ4MDYzNjAuLjk3OGIxNmUgMTAw
+NjQ0DQo+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1wb3N0LmR0c2kN
+Cj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXBvc3QuZHRzaQ0KPiBA
+QCAtMTAzMyw3ICsxMDMzLDcgQEANCj4gIC9pbmNsdWRlLyAiZWxvMy1kbWEtMi5kdHNpIg0KPiAN
+Cj4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+IC0Jc3BpQDExMDAwMCB7DQo+ICsJ
+c3BpMDogc3BpQDExMDAwMCB7DQo+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsN
+Cj4gIAl9Ow0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQy
+NDBzaS1wcmUuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1wcmUu
+ZHRzaQ0KPiBpbmRleCAyNjFhM2FiYi4uYmU1NjE5NSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNpLXByZS5kdHNpDQo+ICsrKyBiL2FyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvdDQyNDBzaS1wcmUuZHRzaQ0KPiBAQCAtNTUsNiArNTUsNyBAQA0KPiAgCQlw
+Y2kxID0gJnBjaTE7DQo+ICAJCXBjaTIgPSAmcGNpMjsNCj4gIAkJcGNpMyA9ICZwY2kzOw0KPiAr
+CQlzcGkwID0gJnNwaTA7DQo+ICAJCWRtYTAgPSAmZG1hMDsNCj4gIAkJZG1hMSA9ICZkbWExOw0K
+PiAgCQlkbWEyID0gJmRtYTI7DQo+IC0tDQo+IDIuMS4wLjI3Lmc5NmRiMzI0DQogDQpUaGFua3Ms
+DQpaaGlxaWFuZw0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
