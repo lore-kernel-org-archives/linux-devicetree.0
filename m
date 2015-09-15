@@ -1,256 +1,47 @@
-From: Aleksei Mamlin <mamlinav@gmail.com>
-Subject: Re: [PATCH v5 3/9] Input: goodix - reset device at init
-Date: Tue, 15 Sep 2015 12:48:17 +0300
-Message-ID: <20150915124817.8c53e274e178800edc5767bf@gmail.com>
-References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
-	<1441636583-14188-4-git-send-email-irina.tirdea@intel.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 1/6] mfd: arizona: Add TST_CAP bits for headphone
+ detection
+Date: Tue, 15 Sep 2015 10:33:27 +0100
+Message-ID: <20150915093327.GI11200@ck-lbox>
+References: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1441973658-26234-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20150911122451.GB11200@ck-lbox>
+ <20150911123757.GC11200@ck-lbox>
+ <55F798F3.3030405@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441636583-14188-4-git-send-email-irina.tirdea@intel.com>
+Content-Disposition: inline
+In-Reply-To: <55F798F3.3030405@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: lee.jones@linaro.org, myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  7 Sep 2015 17:36:17 +0300
-Irina Tirdea <irina.tirdea@intel.com> wrote:
-
-> After power on, it is recommended that the driver resets the device.
-> The reset procedure timing is described in the datasheet and is used
-> at device init (before writing device configuration) and
-> for power management. It is a sequence of setting the interrupt
-> and reset pins high/low at specific timing intervals. This procedure
-> also includes setting the slave address to the one specified in the
-> ACPI/device tree.
+On Tue, Sep 15, 2015 at 01:05:07PM +0900, Chanwoo Choi wrote:
+> Hi Charles,
 > 
-> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
-> driver gt9xx.c for Android (publicly available in Android kernel
-> trees for various devices).
-> 
-> For reset the driver needs to control the interrupt and
-> reset gpio pins (configured through ACPI/device tree). For devices
-> that do not have the gpio pins declared, the functionality depending
-> on these pins will not be available, but the device can still be used
-> with basic functionality.
-> 
-> Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> ---
->  .../bindings/input/touchscreen/goodix.txt          |   5 +
->  drivers/input/touchscreen/goodix.c                 | 136 +++++++++++++++++++++
->  2 files changed, 141 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index 8ba98ee..c0715f8 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -12,6 +12,8 @@ Required properties:
->   - reg			: I2C address of the chip. Should be 0x5d or 0x14
->   - interrupt-parent	: Interrupt controller to which the chip is connected
->   - interrupts		: Interrupt to which the chip is connected
-> + - gpios		: GPIOS the chip is connected to: first one is the
-> +			  interrupt gpio and second one the reset gpio.
->  
->  Example:
->  
-> @@ -23,6 +25,9 @@ Example:
->  			reg = <0x5d>;
->  			interrupt-parent = <&gpio>;
->  			interrupts = <0 0>;
-> +
-> +			gpios = <&gpio1 0 0>, /* INT */
-> +				<&gpio1 1 0>; /* RST */
->  		};
->  
->  		/* ... */
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index 7be6eab..8edfc06 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -17,6 +17,7 @@
->  #include <linux/acpi.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> +#include <linux/gpio.h>
->  #include <linux/i2c.h>
->  #include <linux/input.h>
->  #include <linux/input/mt.h>
-> @@ -37,6 +38,8 @@ struct goodix_ts_data {
->  	unsigned int int_trigger_type;
->  	bool rotated_screen;
->  	int cfg_len;
-> +	struct gpio_desc *gpiod_int;
-> +	struct gpio_desc *gpiod_rst;
->  };
->  
->  #define GOODIX_MAX_HEIGHT		4096
-> @@ -89,6 +92,30 @@ static const struct dmi_system_id rotated_screen[] = {
->  	{}
->  };
->  
-> +/*
-> + * ACPI table specifies gpio pins in this order: first rst pin and
-> + * then interrupt pin.
-> + */
-> +static const struct dmi_system_id goodix_rst_pin_first[] = {
-> +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
-> +	{
-> +		.ident = "WinBook TW100",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
-> +		}
-> +	},
-> +	{
-> +		.ident = "WinBook TW700",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
-> +		},
-> +	},
-> +#endif
-> +	{}
-> +};
-> +
->  /**
->   * goodix_i2c_read - read data from a register of the i2c slave device.
->   *
-> @@ -237,6 +264,102 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int goodix_int_sync(struct goodix_ts_data *ts)
-> +{
-> +	int error;
-> +
-> +	error = gpiod_direction_output(ts->gpiod_int, 0);
-> +	if (error)
-> +		return error;
-> +	msleep(50);				/* T5: 50ms */
-> +
-> +	return gpiod_direction_input(ts->gpiod_int);
-> +}
-> +
-> +/**
-> + * goodix_reset - Reset device during power on
-> + *
-> + * @ts: goodix_ts_data pointer
-> + */
-> +static int goodix_reset(struct goodix_ts_data *ts)
-> +{
-> +	int error;
-> +
-> +	/* begin select I2C slave addr */
-> +	error = gpiod_direction_output(ts->gpiod_rst, 0);
-> +	if (error)
-> +		return error;
-> +	msleep(20);				/* T2: > 10ms */
-> +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
-> +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
-> +	if (error)
-> +		return error;
-> +	usleep_range(100, 2000);		/* T3: > 100us */
-> +	error = gpiod_direction_output(ts->gpiod_rst, 1);
-> +	if (error)
-> +		return error;
-> +	usleep_range(6000, 10000);		/* T4: > 5ms */
-> +	/* end select I2C slave addr */
-> +	error = gpiod_direction_input(ts->gpiod_rst);
-> +	if (error)
-> +		return error;
-> +	return goodix_int_sync(ts);
-> +}
-> +
-> +/**
-> + * goodix_get_gpio_config - Get GPIO config from ACPI/DT
-> + *
-> + * @ts: goodix_ts_data pointer
-> + */
-> +static int goodix_get_gpio_config(struct goodix_ts_data *ts,
-> +				  const struct i2c_device_id *i2c_id)
-> +{
-> +	int error;
-> +	struct device *dev;
-> +	struct gpio_desc *gpiod;
-> +	/* Default gpio pin order: irq, rst */
-> +	int irq_idx = 0, rst_idx = 1;
-> +
-> +	if (!ts->client)
-> +		return -EINVAL;
-> +	dev = &ts->client->dev;
-> +
-> +	if (dmi_check_system(goodix_rst_pin_first)) {
-> +		dev_dbg(&ts->client->dev,
-> +			"Applying 'reverse gpio pin order' quirk\n");
-> +		rst_idx = 0;
-> +		irq_idx = 1;
-> +	}
-> +
-> +	/* Get interrupt GPIO pin number */
-> +	gpiod = devm_gpiod_get_index(dev, NULL, irq_idx, GPIOD_IN);
-> +	if (IS_ERR(gpiod)) {
-> +		error = PTR_ERR(gpiod);
-> +		if (error != -EPROBE_DEFER)
-> +			dev_warn(dev, "Failed to get GPIO %d: %d\n",
-> +				 irq_idx, error);
-> +		if (error == -ENOENT)
-> +			return 0;
-> +		return error;
-> +	}
-> +	ts->gpiod_int = gpiod;
-> +
-> +	/* Get the reset line GPIO pin number */
-> +	gpiod = devm_gpiod_get_index(dev, NULL, rst_idx, GPIOD_IN);
-> +	if (IS_ERR(gpiod)) {
-> +		error = PTR_ERR(gpiod);
-> +		if (error != -EPROBE_DEFER)
-> +			dev_warn(dev, "Failed to get GPIO %d: %d\n",
-> +				 rst_idx, error);
-> +		if (error == -ENOENT)
-> +			return 0;
-> +		return error;
-> +	}
-> +	ts->gpiod_rst = gpiod;
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * goodix_read_config - Read the embedded configuration of the panel
->   *
-> @@ -419,6 +542,19 @@ static int goodix_ts_probe(struct i2c_client *client,
->  
->  	ts->cfg_len = goodix_get_cfg_len(id_info);
->  
-> +	error = goodix_get_gpio_config(ts, id);
-> +	if (error)
-> +		return error;
-> +
-> +	if (ts->gpiod_int && ts->gpiod_rst) {
-> +		/* reset the controller */
-> +		error = goodix_reset(ts);
-> +		if (error) {
-> +			dev_err(&client->dev, "Controller reset failed.\n");
-> +			return error;
-> +		}
-> +	}
-> +
+> Your following patch-set[1][2] receive the ack message about almost patches.
+> But, a few patches[3][4][5] must need the ack message from each maintainer.
+> [1] http://www.spinics.net/lists/devicetree/msg93383.html
+> [2] https://lkml.org/lkml/2015/8/11/145
+> [3] patch1 is included in patch-set[1]
+> : [PATCH v3 1/6] mfd: arizona: Add TST_CAP bits for headphone detection
+> [4] patch6 is included in patch-set[1]
+> : [PATCH v2 6/6] mfd: arizona: Update DT binding documentation for jack detection
+> [5] patch5 is included in patch-set[2]
+> [PATCH RESEND 5/5] mfd: arizona: Update DT doc for new mic detection bindings
 
-On devices with devicetree, such as ARM tablets, we can set I2C address via DT, so driver should reset controller and set right address.
-If we don't do this we get "I2C communication failure: -6".
+:-) Getting a DT ack is not an easy thing, like gold dust those
+are.
 
-Also, most of touchscreen drivers tries to reset controllers before start communicating, so we need do the same.
+If we are going to make merging anything dependent on an ack from
+the DT guys I will probably merge these two series of patches,
+then resplit (and resend) them into changes that affect DT and
+those that don't. That way at least we can get something in, as I
+am starting to carry a fair backlog of changes on this one and it
+reduces the amount of diff that the very busy DT guys will need
+to look at.
 
->  	goodix_read_config(ts);
->  
->  	error = goodix_request_input_dev(ts, version_info, id_info);
-> -- 
-> 1.9.1
-> 
-
-
--- 
-Thanks and regards,
-Aleksei Mamlin
+Thanks,
+Charles
