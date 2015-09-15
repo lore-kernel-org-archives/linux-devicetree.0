@@ -1,97 +1,47 @@
 From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 4/6] PCI: generic: Correct, and avoid overflow, in bus_max
- calculation.
-Date: Tue, 15 Sep 2015 11:02:54 -0700
-Message-ID: <55F85D4E.9020604@caviumnetworks.com>
-References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com> <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com> <20150915174934.GL31157@arm.com>
+Subject: Re: [PATCH 0/6] PCI: generic: Misc. bug fixes and enhanced support
+ for MSI.
+Date: Tue, 15 Sep 2015 11:06:59 -0700
+Message-ID: <55F85E43.5070207@caviumnetworks.com>
+References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150915174934.GL31157@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <david.daney@cavium.com>, lorenzo.pieralisi@arm.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2015 10:49 AM, Will Deacon wrote:
-> On Sat, Sep 12, 2015 at 12:21:57AM +0100, David Daney wrote:
->> From: David Daney <david.daney@cavium.com>
->>
->> There are two problems with the bus_max calculation:
->>
->> 1) The u8 data type can overflow for large config space windows.
->>
->> 2) The calculation is incorrect for a bus range that doesn't start at
->>     zero.
->>
->> Since the configuration space is relative to bus zero, make bus_max
->> just be the size of the config window scaled by bus_shift.  Then clamp
->> it to a maximum of 255, per PCI.  Use a data type of int to avoid
->> overflow problems.
->>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> ---
->>   drivers/pci/host/pci-host-generic.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
->> index cd6f898..fce5bf7 100644
->> --- a/drivers/pci/host/pci-host-generic.c
->> +++ b/drivers/pci/host/pci-host-generic.c
->> @@ -164,7 +164,7 @@ out_release_res:
->>   static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->>   {
->>   	int err;
->> -	u8 bus_max;
->> +	int bus_max;
->>   	resource_size_t busn;
->>   	struct resource *bus_range;
->>   	struct device *dev = pci->host.dev.parent;
->> @@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->>   	}
->>
->>   	/* Limit the bus-range to fit within reg */
->> -	bus_max = pci->cfg.bus_range->start +
->> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
->> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
->> +	if (bus_max > 255)
->> +		bus_max = 255;
->>   	pci->cfg.bus_range->end = min_t(resource_size_t,
->>   					pci->cfg.bus_range->end, bus_max);
+On 09/11/2015 04:21 PM, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
 >
-> Hmm, this is changing the meaning of the bus-range property in the
-> device-tree, which really needs to match what IEEE Std 1275-1994 requires.
-
-I doesn't change the bus-range.
-
+> While using the pci-host-generic driver to add PCI support for the
+> Cavium ThunderX processors, several bugs were discovered.  We also
+> need the ability to specify a per-bus MSI controller, so support for
+> that was added.
 >
-> My understanding was that the bus-range could be used to offset the config
-> space, which is why it's subtracted from the bus number in
-> gen_pci_map_cfg_bus_[e]cam.
+> David Daney (6):
+>    PCI: Make global and export pdev_fixup_irq().
+>    PCI: generic: Only fixup irqs for bus we are creating.
+>    PCI: generic: Quit clobbering our pci_ops.
+>    PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+>    PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
+>    PCI: generic: Allow bus default MSI controller to be specified.
+>
 
-There is an inconsistency in the current code.  The calculation of the 
-cfg.win[?] pointers is done such that the beginning of the config space 
-specified in the "reg" property corresponds to bus 0.
-
-The calculation that I am changing, was done such that the beginning of 
-the config space specified in the "reg" property corresponds to the 
-first bus of the "bus-range"
-
-Which is correct?  I assumed that the config space specified in the 
-"reg" property corresponds to bus 0.  Based on this assumption, I made 
-the bus_max calculation match.
-
-Due to hardware peculiarities, our bus-range starts at a non-zero bus 
-number.  So, something has to be done to make all the code agree on a 
-single interpretation of the meaning "reg" property.
-
-> Also, why is your config space so large that
-> we end up overflowing bus_max?
-
-It isn't.  The part of the patch that changes the type from u8 to int 
-was just to add some sanity.  The  code was easily susceptible to 
-overflow failures, it seemed best to change to int.
-
+Based on feedback on this first revision of the patches, I plan on 
+sending an updated patch set in a few days.  In the mean time, keep 
+sending feedback...
 
 David Daney
+
+
+
+>   .../devicetree/bindings/pci/host-generic-pci.txt   |  5 ++
+>   drivers/pci/host/pci-host-generic.c                | 55 +++++++++++++++-------
+>   drivers/pci/setup-irq.c                            |  7 +--
+>   include/linux/pci.h                                |  3 ++
+>   4 files changed, 50 insertions(+), 20 deletions(-)
+>
