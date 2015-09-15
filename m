@@ -1,64 +1,41 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] reset: hisilicon: document hisi-hi6220 reset
- controllers bindings
-Date: Tue, 15 Sep 2015 11:11:22 +0200
-Message-ID: <1442308282.3979.32.camel@pengutronix.de>
-References: <1442289504-183550-1-git-send-email-puck.chen@hisilicon.com>
-	 <1442289504-183550-2-git-send-email-puck.chen@hisilicon.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 0/5] New Atmel PIO4 pinctrl/gpio driver
+Date: Tue, 15 Sep 2015 11:15:05 +0200
+Message-ID: <20150915091505.GP32379@odux.rfo.atmel.com>
+References: <1439281685-3020-1-git-send-email-ludovic.desroches@atmel.com>
+ <20150907131210.GC32379@odux.rfo.atmel.com>
+ <20150915085703.GA4018@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442289504-183550-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150915085703.GA4018@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 15.09.2015, 11:58 +0800 schrieb Chen Feng:
-> Add DT bindings documentation for hi6220 SoC reset controller.
+Hi Sascha,
+
+On Tue, Sep 15, 2015 at 10:57:03AM +0200, Sascha Hauer wrote:
+> Hi Ludovic,
 > 
-> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  .../bindings/reset/hisilicon,hi6220-reset.txt      | 97 ++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+> On Mon, Sep 07, 2015 at 03:12:10PM +0200, Ludovic Desroches wrote:
+> > Hi Sascha,
+> > 
+> > Any comments about this version? Maybe you missed it since you answered
+> > me on the RFC version. Of course I'll do the changes you requested for
+> > the next version (remove gpio_request_*() stuff and add macros for gpio
+> > muxing case).
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-> new file mode 100644
-> index 0000000..200dc8e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-> @@ -0,0 +1,97 @@
-> +Hisilicon System Reset Controller
-> +======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +The reset controller node must be a sub-node of the chip controller
-> +node on SoCs.
-> +
-> +Required properties:
-> +- compatible: may be "hisilicon,hi6220_reset_ctl"
+> The binding looks good to me. I wonder where the pinmux defines have
+> gone, they were part of the last series but not of this one.
 
-+- compatible: may be "hisilicon,hi6220-reset-ctl"
+It was because I planned to send it when I will add pinctrl of all the
+devices.
 
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- #reset-cells: 1, see below
-> +
-> +Example:
->+
-> +	reset_ctrl: reset_ctrl@f7030000 {
-> +		compatible = "hisilicon,hi6220_reset_ctl";
+I'll add it for the next version since you agree the bindings.
 
-+		compatible = "hisilicon,hi6220-reset-ctl";
+Regards
 
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ludovic
