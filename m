@@ -1,69 +1,137 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] PCI: generic: Only fixup irqs for bus we are
- creating.
-Date: Tue, 15 Sep 2015 18:36:55 +0100
-Message-ID: <20150915173654.GJ31157@arm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 3/6] PCI: generic: Quit clobbering our pci_ops.
+Date: Tue, 15 Sep 2015 18:40:38 +0100
+Message-ID: <20150915174038.GK31157@arm.com>
 References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
- <1442013719-5001-3-git-send-email-ddaney.cavm@gmail.com>
+ <1442013719-5001-4-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1442013719-5001-3-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <1442013719-5001-4-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <david.daney@cavium.com>, lorenzo.pieralisi@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Sat, Sep 12, 2015 at 12:21:56AM +0100, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> The pci-host-generic driver keeps a global struct pci_ops which it
+> then patches with the .map_bus method appropriate for the bus device.
+> A problem arises when the driver is used for two different types of
+> bus devices, the .map_bus method for the last device probed clobbers
+> the method for all previous devices.  The result, only the last bus
+> device probed has the proper .map_bus, and the others fail.
+> 
+> Move the struct pci_ops into the bus specific structure, and
+> initialize it when the bus device is probed.  Keep a copy of the
+> gen_pci_cfg_bus_ops structure, instead of a pointer to a global copy,
+> to future proof against the addition of bus specific elements to
+> struct pci_ops.
 
-On Sat, Sep 12, 2015 at 12:21:55AM +0100, David Daney wrote:
-> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> Use pci_walk_bus() to restrict the fixup irq actions to only the bus
-> being created.
-> 
-> If we create multiple buses with pci-host-generic, or there are buses
-> created by other drivers, we don't want to call pci_fixup_irqs() which
-> operates on all devices, not just the devices on the bus being added.
-> The consequence is that either the fixups are done more than once, or
-> in some cases incorrect fixups could be applied.
-> 
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/pci/host/pci-host-generic.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-> index 265dd25..a0fb241 100644
-> --- a/drivers/pci/host/pci-host-generic.c
-> +++ b/drivers/pci/host/pci-host-generic.c
-> @@ -205,6 +205,12 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->  	return 0;
->  }
->  
-> +static int gen_pci_fixup_irq_cb(struct pci_dev *dev, void *arg)
-> +{
-> +	pdev_fixup_irq(dev, pci_common_swizzle, of_irq_parse_and_map_pci);
-> +	return 0;
-> +}
-> +
->  static int gen_pci_probe(struct platform_device *pdev)
->  {
->  	int err;
-> @@ -262,7 +268,7 @@ static int gen_pci_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> +	pci_walk_bus(bus, gen_pci_fixup_irq_cb, NULL);
+This looks ok to me:
 
-Any chance we could put something in the core PCI code for this? I think
-any host controller wanting to work with arm64 is potentially going to
-run into the same problem.
+  Acked-by: Will Deacon <will.deacon@arm.com>
 
 Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  drivers/pci/host/pci-host-generic.c | 31 +++++++++++++++++--------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index a0fb241..cd6f898 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -27,7 +27,7 @@
+>  
+>  struct gen_pci_cfg_bus_ops {
+>  	u32 bus_shift;
+> -	void __iomem *(*map_bus)(struct pci_bus *, unsigned int, int);
+> +	struct pci_ops ops;
+>  };
+>  
+>  struct gen_pci_cfg_windows {
+> @@ -35,7 +35,7 @@ struct gen_pci_cfg_windows {
+>  	struct resource				*bus_range;
+>  	void __iomem				**win;
+>  
+> -	const struct gen_pci_cfg_bus_ops	*ops;
+> +	struct gen_pci_cfg_bus_ops		ops;
+>  };
+>  
+>  /*
+> @@ -65,7 +65,11 @@ static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
+>  
+>  static struct gen_pci_cfg_bus_ops gen_pci_cfg_cam_bus_ops = {
+>  	.bus_shift	= 16,
+> -	.map_bus	= gen_pci_map_cfg_bus_cam,
+> +	.ops		= {
+> +		.map_bus	= gen_pci_map_cfg_bus_cam,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+>  };
+>  
+>  static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
+> @@ -80,12 +84,11 @@ static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
+>  
+>  static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
+>  	.bus_shift	= 20,
+> -	.map_bus	= gen_pci_map_cfg_bus_ecam,
+> -};
+> -
+> -static struct pci_ops gen_pci_ops = {
+> -	.read	= pci_generic_config_read,
+> -	.write	= pci_generic_config_write,
+> +	.ops		= {
+> +		.map_bus	= gen_pci_map_cfg_bus_ecam,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+>  };
+>  
+>  static const struct of_device_id gen_pci_of_match[] = {
+> @@ -175,7 +178,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  
+>  	/* Limit the bus-range to fit within reg */
+>  	bus_max = pci->cfg.bus_range->start +
+> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
+> +		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+>  	pci->cfg.bus_range->end = min_t(resource_size_t,
+>  					pci->cfg.bus_range->end, bus_max);
+>  
+> @@ -193,7 +196,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	bus_range = pci->cfg.bus_range;
+>  	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
+>  		u32 idx = busn - bus_range->start;
+> -		u32 sz = 1 << pci->cfg.ops->bus_shift;
+> +		u32 sz = 1 << pci->cfg.ops.bus_shift;
+>  
+>  		pci->cfg.win[idx] = devm_ioremap(dev,
+>  						 pci->cfg.res.start + busn * sz,
+> @@ -240,8 +243,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	of_id = of_match_node(gen_pci_of_match, np);
+> -	pci->cfg.ops = of_id->data;
+> -	gen_pci_ops.map_bus = pci->cfg.ops->map_bus;
+> +	pci->cfg.ops = *(struct gen_pci_cfg_bus_ops *)of_id->data;
+>  	pci->host.dev.parent = dev;
+>  	INIT_LIST_HEAD(&pci->host.windows);
+>  	INIT_LIST_HEAD(&pci->resources);
+> @@ -262,7 +264,8 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  	if (!pci_has_flag(PCI_PROBE_ONLY))
+>  		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+>  
+> -	bus = pci_scan_root_bus(dev, 0, &gen_pci_ops, pci, &pci->resources);
+> +	bus = pci_scan_root_bus(dev, 0,
+> +				&pci->cfg.ops.ops, pci, &pci->resources);
+>  	if (!bus) {
+>  		dev_err(dev, "Scanning rootbus failed");
+>  		return -ENODEV;
+> -- 
+> 1.7.11.7
+> 
