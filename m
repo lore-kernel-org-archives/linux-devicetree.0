@@ -1,67 +1,85 @@
-From: bayi.cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Wed, 16 Sep 2015 00:37:46 +0800
-Message-ID: <1442335066.27250.25.camel@mhfsdcap03>
-References: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
- <1441705796-11365-3-git-send-email-bayi.cheng@mediatek.com>
- <20150909063701.GD18700@pengutronix.de>
- <20150909150050.44d2b197@ipc1.ka-ro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20150909150050.44d2b197-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: [PATCH v4 0/5] SCPI sensors support
+Date: Tue, 15 Sep 2015 17:50:56 +0100
+Message-ID: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, edubezval@gmail.com, sudeep.holla@arm.com, liviu.dudau@arm.com, linux@roeck-us.net, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE1LTA5LTA5IGF0IDE1OjAwICswMjAwLCBMb3RoYXIgV2HDn21hbm4gd3JvdGU6
-Cj4gSGksCj4gCj4gPiA+ICsJd3JpdGViKGxlbiwgbXQ4MTczX25vci0+YmFzZSArIE1US19OT1Jf
-Q05UX1JFRyk7Cj4gPiA+ICsJcmV0dXJuIG10ODE3M19ub3JfZXhlY3V0ZV9jbWQobXQ4MTczX25v
-ciwgTVRLX05PUl9QUkdfQ01EKTsKPiA+ID4gK30KPiA+ID4gKwo+ID4gPiArc3RhdGljIGludCBt
-dDgxNzNfbm9yX2dldF9wYXJhKHN0cnVjdCBtdDgxNzNfbm9yICptdDgxNzNfbm9yLCB1OCAqYnVm
-LCBpbnQgbGVuKQo+ID4gPiArewo+ID4gPiArCWlmIChsZW4gPiAxKSB7Cj4gPiA+ICsJCS8qIHJl
-YWQgSkVERUMgSUQgbmVlZCA0IGJ5dGVzIGNvbW1hbmRzICovCj4gPiA+ICsJCW10ODE3M19ub3Jf
-c2V0X2NtZChtdDgxNzNfbm9yLCAwLCAzMiwgU1BJTk9SX09QX1JESUQpOwo+ID4gPiArCQlidWZb
-Ml0gPSByZWFkYihtdDgxNzNfbm9yLT5iYXNlICsgTVRLX05PUl9TSFJFRzBfUkVHKTsKPiA+ID4g
-KwkJYnVmWzFdID0gcmVhZGIobXQ4MTczX25vci0+YmFzZSArIE1US19OT1JfU0hSRUcxX1JFRyk7
-Cj4gPiA+ICsJCWJ1ZlswXSA9IHJlYWRiKG10ODE3M19ub3ItPmJhc2UgKyBNVEtfTk9SX1NIUkVH
-Ml9SRUcpOwo+ID4gPiArCX0gZWxzZSB7Cj4gPiA+ICsJCWlmIChtdDgxNzNfbm9yX2V4ZWN1dGVf
-Y21kKG10ODE3M19ub3IsIE1US19OT1JfUkRTUl9DTUQpKSB7Cj4gPiA+ICsJCQlkZXZfZXJyKG10
-ODE3M19ub3ItPmRldiwgInJlYWQgc3RhdHVzIGZhaWxlZCFcbiIpOwo+ID4gPiArCQkJcmV0dXJu
-IC1FSU5WQUw7Cj4gPiA+ICsJCX0KPiA+ID4gKwkJKmJ1ZiA9IHJlYWRiKG10ODE3M19ub3ItPmJh
-c2UgKyBNVEtfTk9SX1JEU1JfUkVHKTsKPiA+ID4gKwl9Cj4gPiA+ICsJcmV0dXJuIDA7Cj4gPiA+
-ICt9Cj4gPiA+ICsKPiA+ID4gKy8qIGNtZDEgc2VudCB0byBub3IgZmxhc2gsIGNtZDIgd3JpdGUg
-dG8gbm9yIGNvbnRyb2xsZXIgKi8KPiA+ID4gK3N0YXRpYyBpbnQgbXQ4MTczX25vcl9zZXRfcGFy
-YShzdHJ1Y3QgbXQ4MTczX25vciAqbXQ4MTczX25vciwgaW50IGNtZDEsCj4gPiA+ICsJCQkgICAg
-ICAgaW50IGNtZDIpCj4gPiA+ICt7Cj4gPiA+ICsJaWYgKG10ODE3M19ub3Jfc2V0X2NtZChtdDgx
-NzNfbm9yLCAwLCA4LCBTUElOT1JfT1BfV1JFTikpIHsKPiA+ID4gKwkJZGV2X2VycihtdDgxNzNf
-bm9yLT5kZXYsCj4gPiA+ICsJCQkid3JpdGUgZW5hYmxlIGZhaWxlZCBpbiB3cml0ZSBwcm90ZWN0
-IVxuIik7Cj4gPiA+ICsJCXJldHVybiAtRUlOVkFMOwo+ID4gPiArCX0KPiA+ID4gKwl3cml0ZWIo
-Y21kMSwgbXQ4MTczX25vci0+YmFzZSArIE1US19OT1JfUFJHREFUQTVfUkVHKTsKPiA+ID4gKwl3
-cml0ZWIoOCwgbXQ4MTczX25vci0+YmFzZSArIE1US19OT1JfQ05UX1JFRyk7Cj4gPiA+ICsJaWYg
-KG10ODE3M19ub3JfZXhlY3V0ZV9jbWQobXQ4MTczX25vciwgY21kMikpIHsKPiA+ID4gKwkJZGV2
-X2VycihtdDgxNzNfbm9yLT5kZXYsICJleGVjdXRlIGNtZCBmYWlsZWQhXG4iKTsKPiA+IAo+ID4g
-bXQ4MTczX25vcl9leGVjdXRlX2NtZCgpIHdpbGwgYWxyZWFkeSBoYXZlIHByaW50ZWQgYW4gZXJy
-b3IgbWVzc2FnZS4KPiA+IAo+IEFuZCBtdDgxNzNfbm9yX2V4ZWN1dGVfY21kKCkvbXQ4MTczX25v
-cl9zZXRfY21kKCkgcmV0dXJuZWQgYW4gZXJyb3IKPiBjb2RlIHdoaWNoIHNob3VsZCBiZSBwcm9t
-b3RlZCB0byB0aGUgY2FsbGVyIHJhdGhlciB0aGFuCj4gaW52ZW50aW5nIGEgbmV3IG9uZS4KPiBU
-aGUgc2FtZSBmb3Igb3RoZXIgaW5zdGFuY2VzIG9mIHRoaXMgY29kZSBmcmFnbWVudC4KU29ycnkg
-Zm9yIGxhdGVyIHJlcGx5ICxhbmQgVGhhbmtzIGZvciB5b3VyIGluc3RydWN0LCBhbmQgSSB3aWxs
-IHByb21vdGUKdGhlIGVycm9yIGNvZGUgdG8gdGhlIGNhbGxlci4gCj4gCj4gCj4gTG90aGFyIFdh
-w59tYW5uCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QKPiBMaW51eC1tZWRpYXRla0BsaXN0cy5p
-bmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1tZWRpYXRlawoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QKTGludXgtbWVkaWF0ZWtAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LW1lZGlhdGVrCg==
+Hi,
+
+This series adds support for SCPI based sensors for ARM development
+platform. In addition to supporting sensors, when a temperature sensor
+is discovered the driver registers the sensor with the thermal
+framework.
+
+The sensor patches here have been split out from a longer series
+adding support for registering power model based cooling devices for
+the CPU via device tree. Earliers postings can be seen at [0], [1], [2].
+
+Patches 1-3 create a hwmon sensor driver for sensors provided by SCPI
+firmware. Patch 4 adds support for the temperature sensors to register
+with the thermal framework. This allows setting up platform thermals
+using OF thermal bindings.
+
+The last patch adds support for the sensors in the Juno r0 device
+tree.
+
+The patches depend on SCPI and mailbox patches[3] from Sudeep. The
+SCPI protocol document with details of the sensor interface can be
+found at [4].
+
+I'd like to aim for merging the patches with the SCPI changes if
+possible. The hwmon patches have been acked by Guenter. If there
+aren't any objections, I would like to request acks for the binding
+updates in Patch 1.
+
+Thanks,
+Punit
+
+Changes v3 -> v4
+  - clarified binding regarding use of sensor identifier
+
+Changes v2 -> v3
+  - split out the sensor patches (posted here)
+  - rebase onto v4.3-rc1
+  
+Changes v1 -> v2
+  - added documentation for the scpi-hwmon driver
+  - replaced static allocation of platform structure in scpi-hwmon.c
+    with dynamic allocation
+  - re-structured registering of thermal zones to better handle
+    error conditions
+  - reduced chattiness in scpi-hwmon.c
+  - corrected sensor numbering to align with hwmon documentation
+  - dynamic allocation of attributes and attribute groups
+
+[0] http://thread.gmane.org/gmane.linux.kernel/2002152
+[1] http://thread.gmane.org/gmane.linux.kernel/2011466
+[2] http://thread.gmane.org/gmane.linux.power-management.general/65475
+[3] http://thread.gmane.org/gmane.linux.kernel/2009735
+[4] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+
+Punit Agrawal (5):
+  Documentation: add DT bindings for ARM SCPI sensors
+  firmware: arm_scpi: Extend to support sensors
+  hwmon: Support sensors exported via ARM SCP interface
+  hwmon: Support thermal zones registration for SCP temperature sensors
+  arm64: dts: Add sensor node to Juno dt
+
+ Documentation/devicetree/bindings/arm/arm,scpi.txt |  38 +++
+ Documentation/hwmon/scpi-hwmon                     |  33 +++
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |   5 +
+ drivers/firmware/arm_scpi.c                        |  60 +++++
+ drivers/hwmon/Kconfig                              |   8 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/scpi-hwmon.c                         | 288 +++++++++++++++++++++
+ include/linux/scpi_protocol.h                      |  17 ++
+ 8 files changed, 450 insertions(+)
+ create mode 100644 Documentation/hwmon/scpi-hwmon
+ create mode 100644 drivers/hwmon/scpi-hwmon.c
+
+-- 
+2.5.1
