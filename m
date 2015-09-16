@@ -1,42 +1,49 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 0/6] Arizona Extcon Update Device Bindings
-Date: Wed, 16 Sep 2015 10:56:38 +0100
-Message-ID: <1442397404-7579-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 6/6] mfd: arizona: Update DT binding documentation for jack detection
+Date: Wed, 16 Sep 2015 10:56:44 +0100
+Message-ID: <1442397404-7579-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1442397404-7579-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, lee.jones@linaro.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442397404-7579-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add additional bindings for both inverting the polarity of the jack
+detection pins and allowing the use of a second jack detection pin. Note
+that the second jack detection pin is hard wired in the chip so can only
+be enabled through the binding, rather than a pin being specified.
 
-This patch chain adds device bindings for the jack and
-microphone detection system specific settings.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-Some of the bindings in this chain depend on features that
-are being added in the following chain of patches:
-
-https://lkml.org/lkml/2015/9/16/244
-
-Thanks,
-Charles
-
-Charles Keepax (6):
-  extcon: arizona: Add device binding to enable ADC mode micdet
-  extcon: arizona: Add device binding for the general purpose switch
-  extcon: arizona: Add device binding for jack detect polarity
-    inversion
-  extcon: arizona: Add device binding for second jack detect pin on
-    GPIO5
-  mfd: arizona: Update DT binding documentation for mic detection
-  mfd: arizona: Update DT binding documentation for jack detection
-
- Documentation/devicetree/bindings/mfd/arizona.txt |   27 +++++++++++++++++++++
- drivers/extcon/extcon-arizona.c                   |   13 ++++++++++
- include/dt-bindings/mfd/arizona.h                 |    5 ++++
- 3 files changed, 45 insertions(+), 0 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index b98a11b..cb3a652 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -73,6 +73,12 @@ Optional properties:
+     If this node is not mentioned or if the value is unknown, then
+     headphone detection mode is set to HPDETL.
+ 
++  - wlf,use-jd-gpio : Use GPIO input along with JD1 for dual pin jack
++    detection.
++  - wlf,use-jd-gpio-nopull : Internal pull on GPIO is disabled when used for
++    jack detection.
++  - wlf,jd-invert : Invert the polarity of the jack detection switch
++
+   - wlf,micd-software-compare : Use a software comparison to determine mic
+     presence
+   - wlf,micd-detect-debounce : Additional software microphone detection
 -- 
 1.7.2.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
