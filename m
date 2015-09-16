@@ -1,130 +1,110 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] dmaengine: xgene-dma: Fix overwritting DMA tx ring
-Date: Wed, 16 Sep 2015 13:33:23 +0530
-Message-ID: <1442390603-21129-1-git-send-email-rsahu@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 09/10] power: bq24257: Add various device-specific sysfs
+ properties
+Date: Wed, 16 Sep 2015 17:10:06 +0900
+Message-ID: <55F923DE.5010809@samsung.com>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-10-git-send-email-dannenberg@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1442339914-25843-10-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes an over flow issue with the TX ring descriptor. Each
-descriptor is 32B in size and an operation requires 2 of these
-descriptors.
+On 16.09.2015 02:58, Andreas Dannenberg wrote:
+> This patch adds support for enabling/disabling optional device specific
+> features through sysfs properties at runtime.
+> 
+> * High-impedance mode enable/disable
+> * Sysoff enable/disable
+> 
+> Refer to the respective device datasheets for more information:
+> 
+> http://www.ti.com/product/bq24250
+> http://www.ti.com/product/bq24251
+> http://www.ti.com/product/bq24257
+> 
+> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> ---
+>  drivers/power/bq24257_charger.c | 53 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> index 517a522..a0cb33c 100644
+> --- a/drivers/power/bq24257_charger.c
+> +++ b/drivers/power/bq24257_charger.c
+> @@ -794,12 +794,65 @@ static ssize_t bq24257_show_in_dpm_voltage(struct device *dev,
+>  			 bq24257_vindpm_map[bq->init_data.vindpm]);
+>  }
+>  
+> +static ssize_t bq24257_sysfs_show_enable(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 char *buf)
+> +{
+> +	struct power_supply *psy = dev_get_drvdata(dev);
+> +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
+> +	int ret;
+> +
+> +	if (strcmp(attr->attr.name, "high_impedance_enable") == 0)
+> +		ret = bq24257_field_read(bq, F_HZ_MODE);
+> +	else if (strcmp(attr->attr.name, "sysoff_enable") == 0)
+> +		ret = bq24257_field_read(bq, F_SYSOFF);
+> +	else
+> +		return -EINVAL;
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
+> +}
+> +
+> +static ssize_t bq24257_sysfs_set_enable(struct device *dev,
+> +					struct device_attribute *attr,
+> +					const char *buf,
+> +					size_t count)
+> +{
+> +	struct power_supply *psy = dev_get_drvdata(dev);
+> +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
+> +	long val;
+> +	int ret;
+> +
+> +	if (kstrtol(buf, 10, &val) < 0)
+> +		return -EINVAL;
+> +
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/dma/xgene-dma.c | 37 +++++++++++--------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
+There is no validation for input number. Although this is harmless but
+one may expect that writing value of 1, 2 or 3 would give the same
+result. But it would not. Value of 2 would be equal to 0, right?
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index b23e8d5..21ba2cc 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -59,7 +59,6 @@
- #define XGENE_DMA_RING_MEM_RAM_SHUTDOWN		0xD070
- #define XGENE_DMA_RING_BLK_MEM_RDY		0xD074
- #define XGENE_DMA_RING_BLK_MEM_RDY_VAL		0xFFFFFFFF
--#define XGENE_DMA_RING_DESC_CNT(v)		(((v) & 0x0001FFFE) >> 1)
- #define XGENE_DMA_RING_ID_GET(owner, num)	(((owner) << 6) | (num))
- #define XGENE_DMA_RING_DST_ID(v)		((1 << 10) | (v))
- #define XGENE_DMA_RING_CMD_OFFSET		0x2C
-@@ -379,14 +378,6 @@ static u8 xgene_dma_encode_xor_flyby(u32 src_cnt)
- 	return flyby_type[src_cnt];
- }
+> +	if (strcmp(attr->attr.name, "high_impedance_enable") == 0)
+> +		ret = bq24257_field_write(bq, F_HZ_MODE, val);
+> +	else if (strcmp(attr->attr.name, "sysoff_enable") == 0)
+> +		ret = bq24257_field_write(bq, F_SYSOFF, val);
+> +	else
+> +		return -EINVAL;
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return count;
+> +}
+> +
+>  static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
+>  static DEVICE_ATTR(in_dpm_voltage, S_IRUGO, bq24257_show_in_dpm_voltage, NULL);
 
--static u32 xgene_dma_ring_desc_cnt(struct xgene_dma_ring *ring)
--{
--	u32 __iomem *cmd_base = ring->cmd_base;
--	u32 ring_state = ioread32(&cmd_base[1]);
--
--	return XGENE_DMA_RING_DESC_CNT(ring_state);
--}
--
- static void xgene_dma_set_src_buffer(__le64 *ext8, size_t *len,
- 				     dma_addr_t *paddr)
- {
-@@ -659,15 +650,12 @@ static void xgene_dma_clean_running_descriptor(struct xgene_dma_chan *chan,
- 	dma_pool_free(chan->desc_pool, desc, desc->tx.phys);
- }
+This applies to previous patches actually: DEVICE_ATTR_RO?
 
--static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
--				   struct xgene_dma_desc_sw *desc_sw)
-+static void xgene_chan_xfer_request(struct xgene_dma_chan *chan,
-+				    struct xgene_dma_desc_sw *desc_sw)
- {
-+	struct xgene_dma_ring *ring = &chan->tx_ring;
- 	struct xgene_dma_desc_hw *desc_hw;
+> +static DEVICE_ATTR(high_impedance_enable, S_IWUSR | S_IRUGO,
+> +		   bq24257_sysfs_show_enable, bq24257_sysfs_set_enable);
+> +static DEVICE_ATTR(sysoff_enable, S_IWUSR | S_IRUGO,
+> +		   bq24257_sysfs_show_enable, bq24257_sysfs_set_enable);
 
--	/* Check if can push more descriptor to hw for execution */
--	if (xgene_dma_ring_desc_cnt(ring) > (ring->slots - 2))
--		return -EBUSY;
--
- 	/* Get hw descriptor from DMA tx ring */
- 	desc_hw = &ring->desc_hw[ring->head];
+DEVICE_ATTR_RW?
 
-@@ -694,11 +682,13 @@ static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
- 		memcpy(desc_hw, &desc_sw->desc2, sizeof(*desc_hw));
- 	}
+Best regards,
+Krzysztof
 
-+	/* Increment the pending transaction count */
-+	chan->pending += ((desc_sw->flags &
-+			  XGENE_DMA_FLAG_64B_DESC) ? 2 : 1);
-+
- 	/* Notify the hw that we have descriptor ready for execution */
- 	iowrite32((desc_sw->flags & XGENE_DMA_FLAG_64B_DESC) ?
- 		  2 : 1, ring->cmd);
--
--	return 0;
- }
-
- /**
-@@ -710,7 +700,6 @@ static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
- static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
- {
- 	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
--	int ret;
-
- 	/*
- 	 * If the list of pending descriptors is empty, then we
-@@ -735,18 +724,13 @@ static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
- 		if (chan->pending >= chan->max_outstanding)
- 			return;
-
--		ret = xgene_chan_xfer_request(&chan->tx_ring, desc_sw);
--		if (ret)
--			return;
-+		xgene_chan_xfer_request(chan, desc_sw);
-
- 		/*
- 		 * Delete this element from ld pending queue and append it to
- 		 * ld running queue
- 		 */
- 		list_move_tail(&desc_sw->node, &chan->ld_running);
--
--		/* Increment the pending transaction count */
--		chan->pending++;
- 	}
- }
-
-@@ -821,7 +805,8 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
- 		 * Decrement the pending transaction count
- 		 * as we have processed one
- 		 */
--		chan->pending--;
-+		chan->pending -= ((desc_sw->flags &
-+				  XGENE_DMA_FLAG_64B_DESC) ? 2 : 1);
-
- 		/*
- 		 * Delete this node from ld running queue and append it to
-@@ -1482,7 +1467,7 @@ static int xgene_dma_create_chan_rings(struct xgene_dma_chan *chan)
- 		 tx_ring->id, tx_ring->num, tx_ring->desc_vaddr);
-
- 	/* Set the max outstanding request possible to this channel */
--	chan->max_outstanding = rx_ring->slots;
-+	chan->max_outstanding = tx_ring->slots;
-
- 	return ret;
- }
---
-1.8.2.1
