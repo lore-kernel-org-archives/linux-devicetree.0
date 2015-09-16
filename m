@@ -1,104 +1,31 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/4] of: overlay: global sysfs enable attribute
-Date: Wed, 16 Sep 2015 19:09:09 +0300
-Message-ID: <1442419751-4846-3-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1442419751-4846-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442419751-4846-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 0/2] of: Dynamic DT updates
+Date: Wed, 16 Sep 2015 19:11:04 +0300
+Message-ID: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-A throw once master enable switch to protect against any
-further overlay applications if the administrator desires so.
+The two patches add a new API for using changeset which
+makes things considerably easier.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- drivers/of/overlay.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+This patchset applies against Linus's tree as of today and
+is dependent on the previous patchset I've send out earlier.
+"of: overlay: kobject & sysfs'ation"
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index eeb3ec2..62cfb99 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -21,6 +21,7 @@
- #include <linux/err.h>
- #include <linux/idr.h>
- #include <linux/sysfs.h>
-+#include <linux/atomic.h>
- 
- #include "of_private.h"
- 
-@@ -55,8 +56,12 @@ struct of_overlay {
- 	struct kobject kobj;
- };
- 
-+/* master enable switch; once set to 0 can't be re-enabled */
-+static atomic_t ov_enable = ATOMIC_INIT(1);
-+
- static int of_overlay_apply_one(struct of_overlay *ov,
- 		struct device_node *target, const struct device_node *overlay);
-+static int overlay_removal_is_ok(struct of_overlay *ov);
- 
- static int of_overlay_apply_single_property(struct of_overlay *ov,
- 		struct device_node *target, struct property *prop)
-@@ -339,6 +344,35 @@ void of_overlay_release(struct kobject *kobj)
- 	kfree(ov);
- }
- 
-+static ssize_t enable_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	return snprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&ov_enable));
-+}
-+
-+static ssize_t enable_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	int ret;
-+	bool new_enable;
-+
-+	ret = strtobool(buf, &new_enable);
-+	if (ret != 0)
-+		return ret;
-+	/* if we've disabled it, no going back */
-+	if (atomic_read(&ov_enable) == 0)
-+		return -EPERM;
-+	atomic_set(&ov_enable, (int)new_enable);
-+	return count;
-+}
-+
-+static struct kobj_attribute enable_attr = __ATTR_RW(enable);
-+
-+static const struct attribute *overlay_global_attrs[] = {
-+	&enable_attr.attr,
-+	NULL
-+};
-+
- static struct kobj_type of_overlay_ktype = {
- 	.release = of_overlay_release,
- };
-@@ -360,6 +394,10 @@ int of_overlay_create(struct device_node *tree)
- 	struct of_overlay *ov;
- 	int err, id;
- 
-+	/* administratively disabled */
-+	if (!atomic_read(&ov_enable))
-+		return -EPERM;
-+
- 	/* allocate the overlay structure */
- 	ov = kzalloc(sizeof(*ov), GFP_KERNEL);
- 	if (ov == NULL)
-@@ -596,5 +634,8 @@ int of_overlay_init(void)
- 	if (!ov_kset)
- 		return -ENOMEM;
- 
--	return 0;
-+	rc = sysfs_create_files(&ov_kset->kobj, overlay_global_attrs);
-+	WARN(rc, "%s: error adding global attributes\n", __func__);
-+
-+	return rc;
- }
+Changes since v1:
+* Dropped the indirect and target root patches until we
+figure out what to do with the DT connector.
+
+Pantelis Antoniou (2):
+  of: dynamic: Add __of_node_dupv()
+  of: changesets: Introduce changeset helper methods
+
+ drivers/of/dynamic.c | 280 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/of.h   |  74 ++++++++++++++
+ 2 files changed, 348 insertions(+), 6 deletions(-)
+
 -- 
 1.7.12
