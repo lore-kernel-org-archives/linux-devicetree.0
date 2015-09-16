@@ -1,106 +1,59 @@
-From: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2] of: Check for overlap in reserved memory regions
-Date: Tue, 15 Sep 2015 18:30:36 -0700
-Message-ID: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] arm64: mt8173.dtsi: correct i2c node names
+Date: Wed, 16 Sep 2015 09:35:25 +0800
+Message-ID: <1442367325-55819-1-git-send-email-yingjoe.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Any overlap in the reserved memory regions (those specified in the
-reserved-memory DT node) is a bug.  These bugs might go undetected as
-long as the contested region isn't used simultaneously by multiple
-software agents, which makes such bugs hard to debug.  Fix this by
-printing a scary warning during boot if overlap is detected.
+Node name in device tree should describe general class of the
+device. Correct incorrect i2c node names.
 
-Signed-off-by: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
-v1..v2:
-  - Suggestions from Rob Herring (remove superfluous array and
-    print statement)
+This is based on v4.3-rc1.
+All the other i2c node names are correct.
 ---
- drivers/of/of_reserved_mem.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 726ebe792813..62f467b8ccae 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -1,7 +1,7 @@
- /*
-  * Device tree based initialization code for reserved memory.
-  *
-- * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
-+ * Copyright (c) 2013, 2015 The Linux Foundation. All Rights Reserved.
-  * Copyright (c) 2013,2014 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  * Author: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-@@ -20,6 +20,7 @@
- #include <linux/mm.h>
- #include <linux/sizes.h>
- #include <linux/of_reserved_mem.h>
-+#include <linux/sort.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index d18ee42..7f360b7 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -365,7 +365,7 @@
+ 			status = "disabled";
+ 		};
  
- #define MAX_RESERVED_REGIONS	16
- static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
-@@ -197,12 +198,52 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
- 	return -ENOENT;
- }
+-		i2c3: i2c3@11010000 {
++		i2c3: i2c@11010000 {
+ 			compatible = "mediatek,mt8173-i2c";
+ 			reg = <0 0x11010000 0 0x70>,
+ 			      <0 0x11000280 0 0x80>;
+@@ -381,7 +381,7 @@
+ 			status = "disabled";
+ 		};
  
-+static int __init __rmem_cmp(const void *a, const void *b)
-+{
-+	const struct reserved_mem *ra = a, *rb = b;
-+
-+	return ra->base - rb->base;
-+}
-+
-+static void __init __rmem_check_for_overlap(void)
-+{
-+	int i;
-+
-+	if (reserved_mem_count < 2)
-+		return;
-+
-+	sort(reserved_mem, reserved_mem_count, sizeof(reserved_mem[0]),
-+	     __rmem_cmp, NULL);
-+	for (i = 0; i < reserved_mem_count - 1; i++) {
-+		struct reserved_mem *this, *next;
-+
-+		this = &reserved_mem[i];
-+		next = &reserved_mem[i + 1];
-+		if (!(this->base && next->base))
-+			continue;
-+		if (this->base + this->size > next->base) {
-+			phys_addr_t this_end, next_end;
-+
-+			this_end = this->base + this->size;
-+			next_end = next->base + next->size;
-+			WARN(1,
-+			     "Reserved memory: OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
-+			     this->name, &this->base, &this_end,
-+			     next->name, &next->base, &next_end);
-+		}
-+	}
-+}
-+
- /**
-  * fdt_init_reserved_mem - allocate and init all saved reserved memory regions
-  */
- void __init fdt_init_reserved_mem(void)
- {
- 	int i;
-+
-+	/* check for overlapping reserved regions */
-+	__rmem_check_for_overlap();
-+
- 	for (i = 0; i < reserved_mem_count; i++) {
- 		struct reserved_mem *rmem = &reserved_mem[i];
- 		unsigned long node = rmem->fdt_node;
+-		i2c4: i2c4@11011000 {
++		i2c4: i2c@11011000 {
+ 			compatible = "mediatek,mt8173-i2c";
+ 			reg = <0 0x11011000 0 0x70>,
+ 			      <0 0x11000300 0 0x80>;
+@@ -397,7 +397,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		i2c6: i2c6@11013000 {
++		i2c6: i2c@11013000 {
+ 			compatible = "mediatek,mt8173-i2c";
+ 			reg = <0 0x11013000 0 0x70>,
+ 			      <0 0x11000080 0 0x80>;
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
