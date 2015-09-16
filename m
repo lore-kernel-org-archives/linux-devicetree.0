@@ -1,59 +1,107 @@
-From: =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@freescale.com>
-Subject: Re: [PATCH] ARM: dts: ls1021a: add crypto node
-Date: Wed, 16 Sep 2015 18:28:41 +0300
-Message-ID: <55F98AA9.1030607@freescale.com>
-References: <1439365361-24129-1-git-send-email-horia.geanta@freescale.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] spi: introduce mmap read support for spi flash devices
+Date: Wed, 16 Sep 2015 17:30:36 +0200
+Message-ID: <CAOMqctRWCkVg8gthkkkgg7_6=c00SORNx7_6_NperxXfgGf5xA@mail.gmail.com>
+References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
+ <1441355402-6837-2-git-send-email-vigneshr@ti.com> <CAD6G_RT8Q+Uyp1ZjzHf54Tno1wHm0SmLKEwRAe2gkdp772FD9A@mail.gmail.com>
+ <20150914183553.GE12027@sirena.org.uk> <CAD6G_RQOazkS7KHrG75wgMXx1cH_pKjx43Mve6fz1qOJGPpq9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1439365361-24129-1-git-send-email-horia.geanta@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Zhengxiong Jin <Jason.Jin@freescale.com>, linux-arm-kernel@lists.infradead.org, Alison Wang <alison.wang@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD6G_RQOazkS7KHrG75wgMXx1cH_pKjx43Mve6fz1qOJGPpq9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-cGluZwoKT24gOC8xMi8yMDE1IDEwOjQyIEFNLCBIb3JpYSBHZWFudMSDIHdyb3RlOgo+IFNpZ25l
-ZC1vZmYtYnk6IEhvcmlhIEdlYW50xIMgPGhvcmlhLmdlYW50YUBmcmVlc2NhbGUuY29tPgo+IC0t
-LQo+ICBhcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kgfCA0MCArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0MCBpbnNlcnRpb25z
-KCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+IGluZGV4IDk3M2E0OTYyMDdmYy4uNWJkNjRh
-NGRmNGQzIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+ICsr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+IEBAIC02Myw2ICs2Myw3IEBACj4g
-IAkJc2VyaWFsNCA9ICZscHVhcnQ0Owo+ICAJCXNlcmlhbDUgPSAmbHB1YXJ0NTsKPiAgCQlzeXNj
-bGsgPSAmc3lzY2xrOwo+ICsJCWNyeXB0byA9ICZjcnlwdG87Cj4gIAl9Owo+ICAKPiAgCWNwdXMg
-ewo+IEBAIC0xNDgsNiArMTQ5LDQ1IEBACj4gIAkJCWJpZy1lbmRpYW47Cj4gIAkJfTsKPiAgCj4g
-KwkJY3J5cHRvOiBjcnlwdG9AMTcwMDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLHNlYy12
-NS4wIiwgImZzbCxzZWMtdjQuMCI7Cj4gKwkJCWZzbCxzZWMtZXJhID0gPDc+Owo+ICsJCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gKwkJCXJlZwkJID0g
-PDB4MCAweDE3MDAwMDAgMHgwIDB4MTAwMDAwPjsKPiArCQkJcmFuZ2VzCQkgPSA8MHgwIDB4MCAw
-eDE3MDAwMDAgMHgxMDAwMDA+Owo+ICsJCQlpbnRlcnJ1cHRzCSA9IDxHSUNfU1BJIDEwNyBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKPiArCj4gKwkJCXNlY19qcjA6IGpyQDEwMDAwIHsKPiArCQkJCWNv
-bXBhdGlibGUgPSAiZnNsLHNlYy12NS4wLWpvYi1yaW5nIiwKPiArCQkJCSAgICAgImZzbCxzZWMt
-djQuMC1qb2ItcmluZyI7Cj4gKwkJCQlyZWcgPSA8MHgxMDAwMCAweDEwMDAwPjsKPiArCQkJCWlu
-dGVycnVwdHMgPSA8R0lDX1NQSSAxMDMgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKwkJCX07Cj4g
-Kwo+ICsJCQlzZWNfanIxOiBqckAyMDAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gImZzbCxzZWMt
-djUuMC1qb2ItcmluZyIsCj4gKwkJCQkgICAgICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOwo+ICsJ
-CQkJcmVnID0gPDB4MjAwMDAgMHgxMDAwMD47Cj4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-MTA0IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCQl9Owo+ICsKPiArCQkJc2VjX2pyMjoganJA
-MzAwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjAtam9iLXJpbmciLAo+ICsJ
-CQkJICAgICAiZnNsLHNlYy12NC4wLWpvYi1yaW5nIjsKPiArCQkJCXJlZyA9IDwweDMwMDAwIDB4
-MTAwMDA+Owo+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwNSBJUlFfVFlQRV9MRVZFTF9I
-SUdIPjsKPiArCQkJfTsKPiArCj4gKwkJCXNlY19qcjM6IGpyQDQwMDAwIHsKPiArCQkJCWNvbXBh
-dGlibGUgPSAiZnNsLHNlYy12NS4wLWpvYi1yaW5nIiwKPiArCQkJCSAgICAgImZzbCxzZWMtdjQu
-MC1qb2ItcmluZyI7Cj4gKwkJCQlyZWcgPSA8MHg0MDAwMCAweDEwMDAwPjsKPiArCQkJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSAxMDYgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKwkJCX07Cj4gKwo+
-ICsJCX07Cj4gKwo+ICAJCWNsb2NrZ2VuOiBjbG9ja2luZ0AxZWUxMDAwIHsKPiAgCQkJI2FkZHJl
-c3MtY2VsbHMgPSA8MT47Cj4gIAkJCSNzaXplLWNlbGxzID0gPDE+Owo+IAoKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 16 September 2015 at 14:46, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org> wrote:
+> On 15 September 2015 at 00:05, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Sep 04, 2015 at 04:55:33PM +0530, Jagan Teki wrote:
+>>> On 4 September 2015 at 13:59, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> wrote:
+>>
+>>> > + * @spi_mtd_mmap_read: some spi-controller hardwares provide memory
+>>> > + *                     mapped interface to communicate with mtd flashes.
+>>> > + *                     For this, spi  controller needs to know flash
+>>> > + *                     memory settings like read command to use, dummy
+>>> > + *                     bytes and address width. Once these settings are
+>>> > + *                     populated in hardware registers, any read
+>>> > + *                     accesses to flash's memory map region(as defined
+>>> > + *                     by SoC) through memcpy or mem-to-mem DMA copy
+>>> > + *                     will be handled by controller hardware. The
+>>> > + *                     hardware will automatically generate spi signals
+>>> > + *                     required to read data from flash and present it
+>>> > + *                     to CPU or DMA. SPI master drivers can use this
+>>> > + *                     callback to implement memory mapped read
+>>> > + *                     interface. Flash driver (like m25p80) requests
+>>> > + *                     memory mapped read via this method. The interface
+>>> > + *                     should  only be used mtd flashes and cannot be
+>>> > + *                     used with other spi devices.
+>>
+>> This comment is *way* too verbose - probably you just need up to the
+>> "Once" here.
+>>
+>>> > +       int (*spi_mtd_mmap_read)(struct  spi_device *spi,
+>>> > +                                loff_t from, size_t len, size_t *retlen,
+>>> > +                                u_char *buf, u8 read_opcode,
+>>> > +                                u8 addr_width, u8 dummy_bytes);
+>>
+>>> This looks un-manageable to know spi core or master knows what are the
+>>> command or opcode used by spi-nor flash and also I think mmap support
+>>> seems to be flash related or any justification this is spi bus
+>>> master/controller feature?
+>>
+>> There seem to be a reasonable number of SPI controllers out there which
+>> have as an extension the ability to do memory mapped reads but are
+>> otherwise perfectly normal SPI controllers and which rely on that for
+>> everything except reads.
+>
+> This is true, but exposing direct spi-nor arguments or features like
+> read_opcode, addr_width or dummy_byte to spi layer isn't fine? because
+> for spi layer there is a spi to flash transition mtd m25p80.c is there
+> to handle is it?
+
+For the TI SPI controller this is programmable. So instead of
+composing a SPI message that sends the opcode (and address and dummy
+bytes) you set the opcode in a controller register and then perform
+the memory read which sends the configured opcode to the flash memory.
+So this needs to be exposed in an API which the m25p80 driver can use.
+
+On 16 September 2015 at 12:08, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> wrote:
+>
+>
+> On 09/15/2015 12:07 AM, Mark Brown wrote:
+>> On Fri, Sep 04, 2015 at 01:59:58PM +0530, Vignesh R wrote:
+>>> In addition to providing direct access to SPI bus, some spi controller
+>>> hardwares (like ti-qspi) provide special memory mapped port
+>>> to accesses SPI flash devices in order to increase read performance.
+>>> This means the controller can automatically send the SPI signals
+>>> required to read data from the SPI flash device.
+>>
+>> Sorry, also meant to say here: as I kind of indicated in response to the
+>> flash patch I'd expect to see the SPI core know something about this and
+>> export an API for this which is integrated with things like the existing
+>> message queue.
+>>
+>
+>
+> Adding an API to SPI core makes sense to me. This can take care of spi
+> bus locking and runtime pm.
+> But, I didn't get how to integrate with existing message queue. Memory
+> mapped read by-passes message queue of SPI core. Could you please
+> explain a bit more on integrating with message queue? Did you mean
+> locking the existing message queue when memory mapped read is being
+> requested?
+
+Presumably when you have a function in SPI core for this it takes the
+same lock transfer_one does so either you do mmap transfer or normal
+SPI transfer. You can probably manually sync on transfer completion in
+a driver that uses both normal SPI messages and mmap transfer - which
+m25p80 does anyway.
+
+Thanks
+
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
