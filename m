@@ -1,104 +1,58 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] of: overlay: add per overlay sysfs attributes
-Date: Wed, 16 Sep 2015 11:45:04 -0500
-Message-ID: <CAL_Jsq+N43c-A175QC0L9jpEP9ZptugDLChMEJgs76=1NEP3Mw@mail.gmail.com>
-References: <1442419751-4846-1-git-send-email-pantelis.antoniou@konsulko.com> <1442419751-4846-4-git-send-email-pantelis.antoniou@konsulko.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 4/5] ASoC: davinci-mcasp: Get rid of bclk_lrclk_ratio
+ in private data
+Date: Wed, 16 Sep 2015 18:01:07 +0100
+Message-ID: <20150916170107.GK12027@sirena.org.uk>
+References: <cover.1441806963.git.jsarha@ti.com>
+ <f23dab7c68fe1cc899a8bc95cb5c3c5bd1038e18.1441806963.git.jsarha@ti.com>
+ <55F12E4E.9020607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442419751-4846-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aH2JhRPj1O1v615i"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55F12E4E.9020607-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, misael.lopez-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 11:09 AM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> The two default overlay attributes are:
->
-> * A targets sysfs attribute listing the targets of the installed
-> overlay. The targets list the path on the kernel's device tree
-> where each overlay fragment is applied to
->
-> * A per overlay can_remove sysfs attribute that reports whether
-> the overlay can be removed or not due to another overlapping overlay.
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
 
-How about an answer to my v4 questions?
+--aH2JhRPj1O1v615i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Thu, Sep 10, 2015 at 10:16:30AM +0300, Jyri Sarha wrote:
+> On 09/09/15 21:27, Jyri Sarha wrote:
 
->  drivers/of/overlay.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 62cfb99..cff3c05 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -373,8 +373,61 @@ static const struct attribute *overlay_global_attrs[] = {
->         NULL
->  };
->
-> +static ssize_t can_remove_show(struct kobject *kobj,
-> +               struct kobj_attribute *attr, char *buf)
-> +{
-> +       struct of_overlay *ov = kobj_to_overlay(kobj);
-> +
-> +       return snprintf(buf, PAGE_SIZE, "%d\n", overlay_removal_is_ok(ov));
-> +}
-> +
-> +static ssize_t targets_show(struct kobject *kobj,
-> +               struct kobj_attribute *attr, char *buf)
-> +{
-> +       struct of_overlay *ov = kobj_to_overlay(kobj);
-> +       struct of_overlay_info *ovinfo;
-> +       char *s, *e;
-> +       ssize_t ret;
-> +       int i, len;
-> +
-> +       s = buf;
-> +       e = buf + PAGE_SIZE;
-> +
-> +       mutex_lock(&of_mutex);
-> +
-> +       /* targets */
-> +       for (i = 0; i < ov->count; i++) {
-> +               ovinfo = &ov->ovinfo_tab[i];
-> +
-> +               len = snprintf(s, e - s, "%s\n",
-> +                               of_node_full_name(ovinfo->target));
-> +               if (len == 0) {
-> +                       ret = -ENOSPC;
-> +                       goto err;
-> +               }
-> +               s += len;
-> +       }
-> +
-> +       /* the buffer is zero terminated */
-> +       ret = s - buf;
-> +err:
-> +       mutex_unlock(&of_mutex);
-> +       return ret;
-> +}
-> +
-> +static struct kobj_attribute can_remove_attr = __ATTR_RO(can_remove);
-> +static struct kobj_attribute targets_attr = __ATTR_RO(targets);
-> +
-> +static struct attribute *overlay_attrs[] = {
-> +       &can_remove_attr.attr,
-> +       &targets_attr.attr,
-> +       NULL
-> +};
-> +
->  static struct kobj_type of_overlay_ktype = {
->         .release = of_overlay_release,
-> +       .sysfs_ops = &kobj_sysfs_ops,   /* default kobj sysfs ops */
-> +       .default_attrs = overlay_attrs,
->  };
->
->  static struct kset *ov_kset;
-> --
-> 1.7.12
->
+> >+			dev_warn(mcasp->dev,
+> >+				 "%s(): BCLK/LRCLK %d is not divisible by %d tdm slots",
+> >+				 div, mcasp->tdm_slots);
+>=20
+> Oops, there is a __func__ missing here.
+
+The patch is basically fine but please send a new version with this
+fixed!
+
+--aH2JhRPj1O1v615i
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV+aBTAAoJECTWi3JdVIfQvNkH/jy5GvBKmPbJK4chSwOzBkVk
+A6XRMLRpMspKv3fe0F6rSDX6jpC6707RXkHoJqbFREw7o6F0AFcEbyZ/6LFx5O3U
+ufWsC1bLSyH6G4rxNfPWYMMljrNrKQjDKf41YKYc84NCAP95FsVyRiFMpdaPTKCY
+7OfL+vn688QS2VVlM6yshYeP0CVjNQNjUwah9yXUssBtfCMMyYJ2tuHYz658EENA
+C3mJjHU/tvXpffKUe5j/kgHnwhzNq0B3KkNqleTFpX1pNH0+qGFbvTNZd+A+R8dk
+D3+5sd4/P96kFIxi7X9O5u8w/eNyJWbaW4dC1obklaskt/67F+mJv7mE/dsaxGM=
+=al72
+-----END PGP SIGNATURE-----
+
+--aH2JhRPj1O1v615i--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
