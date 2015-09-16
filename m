@@ -1,43 +1,49 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH] ARM: dts: Fix LEDs on exynos5422-odroidxu3
-Date: Thu, 17 Sep 2015 08:13:37 +0900
-Message-ID: <55F9F7A1.9050709@kernel.org>
-References: <1441205288-22047-1-git-send-email-k.kozlowski.k@gmail.com> <55F9F6A6.6080206@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7794: add USB PHY DT support
+Date: Thu, 17 Sep 2015 02:15:58 +0300
+Message-ID: <55F9F82E.4000809@cogentembedded.com>
+References: <1442100737.hcefR9HyDq@wasted.cogentembedded.com>
+ <1590842.9hQm6l1zli@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <55F9F6A6.6080206@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1590842.9hQm6l1zli@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/15 08:09, Kukjin Kim wrote:
-> On 09/02/15 23:48, Krzysztof Kozlowski wrote:
->> The LEDs on Odroid XU3 family boards could not properly probe because PWM
->> outputs were reduced only to PWM for fan. Fix this to:
->>  - Odroid XU3 and XU3-Lite: 4 outputs (although the PWM for MIPI
->>    probably is redundant because board does not have MIPI connector
->>    available);
->>  - Odroid XU4: 2 outputs.
->>
->> This fixes warnings on dmesg:
->> [    4.838712] samsung-pwm 12dd0000.pwm: tried to request PWM channel 1 without output
->> [    4.838725] leds_pwm pwmleds: unable to request PWM for green:mmc0: -22
->> [    4.838767] leds_pwm: probe of pwmleds failed with error -22
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
->>
->> ---
->>
->> Patch depends/is rebased on latest DTS for Odroid XU4 board:
->>  - http://www.spinics.net/lists/arm-kernel/msg442474.html
->>  - http://www.spinics.net/lists/arm-kernel/msg442475.html
->> ---
-> 
-> Applied, thanks.
-> 
-Oops, I mean already this change is included in your another patch.
+Hello.
 
-- Kukjin
+On 09/13/2015 01:50 AM, Sergei Shtylyov wrote:
+
+> Define the R8A7794 generic part of the USB PHY device node. It is up to the
+> board file to enable the device.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+>   arch/arm/boot/dts/r8a7794.dtsi |   19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+> @@ -690,6 +690,25 @@
+>   				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
+>   	};
+>
+> +	usbphy: usb-phy@e6590100 {
+> +		compatible = "renesas,usb-phy-r8a7794";
+> +		reg = <0 0xe6590100 0 0x100>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clocks = <&mstp7_clks R8A7794_CLK_HSUSB>;
+> +		clock-names = "usbhs";
+
+    Forgot to add "power-domains" prop here. :-(
+
+MBR, Sergei
+
