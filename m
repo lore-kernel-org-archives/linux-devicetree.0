@@ -1,123 +1,63 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v4 09/10] power: bq24257: Add various device-specific
- sysfs properties
-Date: Wed, 16 Sep 2015 14:54:53 -0500
-Message-ID: <20150916195449.GF27772@beast>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-10-git-send-email-dannenberg@ti.com>
- <55F923DE.5010809@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: tps65023: add device tree support
+Date: Wed, 16 Sep 2015 20:56:12 +0100
+Message-ID: <20150916195612.GT12027@sirena.org.uk>
+References: <1442324035-16414-1-git-send-email-thomas.elste@imms.de>
+ <1442324035-16414-2-git-send-email-thomas.elste@imms.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/IQVaKKkotH/ITY5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55F923DE.5010809@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1442324035-16414-2-git-send-email-thomas.elste-cSCHQGRfioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Elste <thomas.elste-cSCHQGRfioA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 05:10:06PM +0900, Krzysztof Kozlowski wrote:
-> On 16.09.2015 02:58, Andreas Dannenberg wrote:
-> > This patch adds support for enabling/disabling optional device specific
-> > features through sysfs properties at runtime.
-> > 
-> > * High-impedance mode enable/disable
-> > * Sysoff enable/disable
-> > 
-> > Refer to the respective device datasheets for more information:
-> > 
-> > http://www.ti.com/product/bq24250
-> > http://www.ti.com/product/bq24251
-> > http://www.ti.com/product/bq24257
-> > 
-> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> > ---
-> >  drivers/power/bq24257_charger.c | 53 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> > 
-> > diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> > index 517a522..a0cb33c 100644
-> > --- a/drivers/power/bq24257_charger.c
-> > +++ b/drivers/power/bq24257_charger.c
-> > @@ -794,12 +794,65 @@ static ssize_t bq24257_show_in_dpm_voltage(struct device *dev,
-> >  			 bq24257_vindpm_map[bq->init_data.vindpm]);
-> >  }
-> >  
-> > +static ssize_t bq24257_sysfs_show_enable(struct device *dev,
-> > +					 struct device_attribute *attr,
-> > +					 char *buf)
-> > +{
-> > +	struct power_supply *psy = dev_get_drvdata(dev);
-> > +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> > +	int ret;
-> > +
-> > +	if (strcmp(attr->attr.name, "high_impedance_enable") == 0)
-> > +		ret = bq24257_field_read(bq, F_HZ_MODE);
-> > +	else if (strcmp(attr->attr.name, "sysoff_enable") == 0)
-> > +		ret = bq24257_field_read(bq, F_SYSOFF);
-> > +	else
-> > +		return -EINVAL;
-> > +
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
-> > +}
-> > +
-> > +static ssize_t bq24257_sysfs_set_enable(struct device *dev,
-> > +					struct device_attribute *attr,
-> > +					const char *buf,
-> > +					size_t count)
-> > +{
-> > +	struct power_supply *psy = dev_get_drvdata(dev);
-> > +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> > +	long val;
-> > +	int ret;
-> > +
-> > +	if (kstrtol(buf, 10, &val) < 0)
-> > +		return -EINVAL;
-> > +
-> 
-> There is no validation for input number. Although this is harmless but
-> one may expect that writing value of 1, 2 or 3 would give the same
-> result. But it would not. Value of 2 would be equal to 0, right?
 
-You are right 2 would result in 0. Changing where the value gets passed
-into bq24257_field_write() from "val" to "(bool)val" will make this more
-forgiving.
+--/IQVaKKkotH/ITY5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > +	if (strcmp(attr->attr.name, "high_impedance_enable") == 0)
-> > +		ret = bq24257_field_write(bq, F_HZ_MODE, val);
-> > +	else if (strcmp(attr->attr.name, "sysoff_enable") == 0)
-> > +		ret = bq24257_field_write(bq, F_SYSOFF, val);
-> > +	else
-> > +		return -EINVAL;
-> > +
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return count;
-> > +}
-> > +
-> >  static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
-> >  static DEVICE_ATTR(in_dpm_voltage, S_IRUGO, bq24257_show_in_dpm_voltage, NULL);
-> 
-> This applies to previous patches actually: DEVICE_ATTR_RO?
+On Tue, Sep 15, 2015 at 03:33:55PM +0200, Thomas Elste wrote:
 
-Ok. Will simplify.
+> +static struct regulator_init_data*
+> +	of_get_tps65023_platform_data(struct device *dev)
+> +{
+> +	struct regulator_init_data *reg_data;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *regulators;
+> +	struct of_regulator_match *matches;
+> +	int idx, count, ret;
+> +
+> +	regulators = of_get_child_by_name(np, "regulators");
+> +	if (!regulators) {
+> +		dev_err(dev, "Regulator node not found\n");
+> +		return NULL;
+> +	}
 
-> 
-> > +static DEVICE_ATTR(high_impedance_enable, S_IWUSR | S_IRUGO,
-> > +		   bq24257_sysfs_show_enable, bq24257_sysfs_set_enable);
-> > +static DEVICE_ATTR(sysoff_enable, S_IWUSR | S_IRUGO,
-> > +		   bq24257_sysfs_show_enable, bq24257_sysfs_set_enable);
-> 
-> DEVICE_ATTR_RW?
+There's now core support for this so no need to open code in the driver
+- set of_match and regulators_node in the regulator_desc instead.
 
-Ditto.
+--/IQVaKKkotH/ITY5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJV+clcAAoJECTWi3JdVIfQG74H/318H5uaTRRL/JWgPPMMf4Tu
+6ODviKHVg5SvS8K9Lj/rXG7HjLNOF7xtStdhZ5xQvjFOVyF9Z74XrYJBxRLRkkDU
+KPcnNYDlZ/ZvOiLl3gddPGk8iK4iHUIh54ERp+XoOnQf/Dr/Lzb+6hFT8iqCeC4v
+I7mq5xCWfYj7c3SUX+VdLXOnHLIsmaWZEIJzFSu/i3/ZouYXaHvu21IsotcwjDQP
+XUO0/efMlQcrJUBQeHYpCTfiQ0ae/C9h5lwUmi+I1pyulrByfRIM2lHhVTAMP+gm
+j1nen2zgKCRz9d4AGcCM7XRqQ6GLB7isb6qUtX3q5WYGD1KNIE+xne20sAqoQEs=
+=3trV
+-----END PGP SIGNATURE-----
+
+--/IQVaKKkotH/ITY5--
 --
-Andreas Dannenberg
-Texas Instruments Inc
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
