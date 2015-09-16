@@ -1,47 +1,130 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: Fix tipo in st,clkgen-pll documentation
-Date: Wed, 16 Sep 2015 09:42:58 +0200
-Message-ID: <1442389379-9298-2-git-send-email-gabriel.fernandez@linaro.org>
-References: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH] dmaengine: xgene-dma: Fix overwritting DMA tx ring
+Date: Wed, 16 Sep 2015 13:33:23 +0530
+Message-ID: <1442390603-21129-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-replace "sst,plls-c32-cx_x" by "st,plls-c32-cx_x"
+This patch fixes an over flow issue with the TX ring descriptor. Each
+descriptor is 32B in size and an operation requires 2 of these
+descriptors.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
 ---
- Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/xgene-dma.c | 37 +++++++++++--------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-index d8b168e..e2c6db0 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-@@ -21,8 +21,8 @@ Required properties:
- 	"st,stih416-plls-c32-ddr",	"st,clkgen-plls-c32"
- 	"st,stih407-plls-c32-a0",	"st,clkgen-plls-c32"
- 	"st,stih407-plls-c32-a9",	"st,clkgen-plls-c32"
--	"sst,plls-c32-cx_0",		"st,clkgen-plls-c32"
--	"sst,plls-c32-cx_1",		"st,clkgen-plls-c32"
-+	"st,plls-c32-cx_0",		"st,clkgen-plls-c32"
-+	"st,plls-c32-cx_1",		"st,clkgen-plls-c32"
- 
- 	"st,stih415-gpu-pll-c32",	"st,clkgengpu-pll-c32"
- 	"st,stih416-gpu-pll-c32",	"st,clkgengpu-pll-c32"
--- 
-1.9.1
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index b23e8d5..21ba2cc 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -59,7 +59,6 @@
+ #define XGENE_DMA_RING_MEM_RAM_SHUTDOWN		0xD070
+ #define XGENE_DMA_RING_BLK_MEM_RDY		0xD074
+ #define XGENE_DMA_RING_BLK_MEM_RDY_VAL		0xFFFFFFFF
+-#define XGENE_DMA_RING_DESC_CNT(v)		(((v) & 0x0001FFFE) >> 1)
+ #define XGENE_DMA_RING_ID_GET(owner, num)	(((owner) << 6) | (num))
+ #define XGENE_DMA_RING_DST_ID(v)		((1 << 10) | (v))
+ #define XGENE_DMA_RING_CMD_OFFSET		0x2C
+@@ -379,14 +378,6 @@ static u8 xgene_dma_encode_xor_flyby(u32 src_cnt)
+ 	return flyby_type[src_cnt];
+ }
+
+-static u32 xgene_dma_ring_desc_cnt(struct xgene_dma_ring *ring)
+-{
+-	u32 __iomem *cmd_base = ring->cmd_base;
+-	u32 ring_state = ioread32(&cmd_base[1]);
+-
+-	return XGENE_DMA_RING_DESC_CNT(ring_state);
+-}
+-
+ static void xgene_dma_set_src_buffer(__le64 *ext8, size_t *len,
+ 				     dma_addr_t *paddr)
+ {
+@@ -659,15 +650,12 @@ static void xgene_dma_clean_running_descriptor(struct xgene_dma_chan *chan,
+ 	dma_pool_free(chan->desc_pool, desc, desc->tx.phys);
+ }
+
+-static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
+-				   struct xgene_dma_desc_sw *desc_sw)
++static void xgene_chan_xfer_request(struct xgene_dma_chan *chan,
++				    struct xgene_dma_desc_sw *desc_sw)
+ {
++	struct xgene_dma_ring *ring = &chan->tx_ring;
+ 	struct xgene_dma_desc_hw *desc_hw;
+
+-	/* Check if can push more descriptor to hw for execution */
+-	if (xgene_dma_ring_desc_cnt(ring) > (ring->slots - 2))
+-		return -EBUSY;
+-
+ 	/* Get hw descriptor from DMA tx ring */
+ 	desc_hw = &ring->desc_hw[ring->head];
+
+@@ -694,11 +682,13 @@ static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
+ 		memcpy(desc_hw, &desc_sw->desc2, sizeof(*desc_hw));
+ 	}
+
++	/* Increment the pending transaction count */
++	chan->pending += ((desc_sw->flags &
++			  XGENE_DMA_FLAG_64B_DESC) ? 2 : 1);
++
+ 	/* Notify the hw that we have descriptor ready for execution */
+ 	iowrite32((desc_sw->flags & XGENE_DMA_FLAG_64B_DESC) ?
+ 		  2 : 1, ring->cmd);
+-
+-	return 0;
+ }
+
+ /**
+@@ -710,7 +700,6 @@ static int xgene_chan_xfer_request(struct xgene_dma_ring *ring,
+ static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
+ {
+ 	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
+-	int ret;
+
+ 	/*
+ 	 * If the list of pending descriptors is empty, then we
+@@ -735,18 +724,13 @@ static void xgene_chan_xfer_ld_pending(struct xgene_dma_chan *chan)
+ 		if (chan->pending >= chan->max_outstanding)
+ 			return;
+
+-		ret = xgene_chan_xfer_request(&chan->tx_ring, desc_sw);
+-		if (ret)
+-			return;
++		xgene_chan_xfer_request(chan, desc_sw);
+
+ 		/*
+ 		 * Delete this element from ld pending queue and append it to
+ 		 * ld running queue
+ 		 */
+ 		list_move_tail(&desc_sw->node, &chan->ld_running);
+-
+-		/* Increment the pending transaction count */
+-		chan->pending++;
+ 	}
+ }
+
+@@ -821,7 +805,8 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 		 * Decrement the pending transaction count
+ 		 * as we have processed one
+ 		 */
+-		chan->pending--;
++		chan->pending -= ((desc_sw->flags &
++				  XGENE_DMA_FLAG_64B_DESC) ? 2 : 1);
+
+ 		/*
+ 		 * Delete this node from ld running queue and append it to
+@@ -1482,7 +1467,7 @@ static int xgene_dma_create_chan_rings(struct xgene_dma_chan *chan)
+ 		 tx_ring->id, tx_ring->num, tx_ring->desc_vaddr);
+
+ 	/* Set the max outstanding request possible to this channel */
+-	chan->max_outstanding = rx_ring->slots;
++	chan->max_outstanding = tx_ring->slots;
+
+ 	return ret;
+ }
+--
+1.8.2.1
