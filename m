@@ -1,53 +1,92 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] doc: dt-binding: ci-hdrc-usb2: add i.mx specific
- binding "need-three-clocks"
-Date: Wed, 16 Sep 2015 08:54:25 -0500
-Message-ID: <55F97491.5060105@kernel.org>
-References: <1442368183-8103-1-git-send-email-peter.chen@freescale.com>
- <1442368183-8103-2-git-send-email-peter.chen@freescale.com>
+From: Peng Fan <van.freenix@gmail.com>
+Subject: Re: [PATCH] drivers: of: check input parameter name for
+ __of_find_property
+Date: Wed, 16 Sep 2015 21:55:47 +0800
+Message-ID: <20150916135545.GA28742@linux-4gyl.site>
+References: <1441979043-19694-1-git-send-email-van.freenix@gmail.com>
+ <55F83FAC.5080002@kernel.org>
+ <20150916001650.GA28082@linux-4gyl.site>
+ <55F8D3AF.9070503@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442368183-8103-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F8D3AF.9070503@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2015 08:49 PM, Peter Chen wrote:
-> Some SoCs needs three clock to let controller work, but others only
-> need one, add one property to differentiate this.
+On Tue, Sep 15, 2015 at 09:27:59PM -0500, Rob Herring wrote:
+> On 09/15/2015 07:16 PM, Peng Fan wrote:
+> > Hi Rob,
+> > 
+> > On Tue, Sep 15, 2015 at 10:56:28AM -0500, Rob Herring wrote:
+> >> On 09/11/2015 08:44 AM, Peng Fan wrote:
+> >>> Check input parameter 'name' for __of_find_property. If name is NULL,
+> >>> of_prop_cmp->strcasecmp may trigger panic.
+> >>
+> >> Arguably that could be a feature. Do you have a usecase where name being
+> >> NULL is valid and panicking is a problem?
+> > 
+> > In drivers/pinctrl/devicetree.c
+> > 
+> > 195                 propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
+> > 196                 prop = of_find_property(np, propname, &size);
+> > 197                 kfree(propname);
+> > 198                 if (!prop)
+> > 199                         break;
+> > 
+> > If propname is NULL, of_find_property may trigger panic. Anyway propname should be checked
+> > before passing to of_find_property.
+> 
+> propname will only be NULL if the memory allocation failed which gives
+> you a big warning message. I don't think you would want to continue on
+> in this case.
+> 
+> So I'm inclined to leave this as is with passing NULL to
+> of_find_property to always be an error and fatal.
 
-A given licensed IP block is going to have the same number of clock
-inputs from SOC to SOC. So different numbers of clocks is a bit suspect.
-I guess there can be variations in bus clocks or other outside logic.
+of_find_property has EXPORT_SYMBOL, it maybe called in different places. And it should handle the case that name is NULL, right?
+If passing NULL to of_find_property is an error, then why check parameter 'np' like "if (!np)" in of_find_property?
+
+Regards,
+Peng.
 
 > 
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> Rob
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> index f15a317..4900092 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -54,6 +54,9 @@ i.mx specific properties
->    argument that indicate usb controller index
->  - disable-over-current: disable over current detect
->  - external-vbus-divider: enables off-chip resistor divider for Vbus
-> +- need-three-clocks: the SoC before imx6 series (except for imx23/imx28)
-> +  needs three clcoks for controller, others only need one. Without this
-> +  property, the driver will consider this controller only need one clock.
-
-That's pretty ugly and unnecessary. Either use the compatible string to
-determine if you have 3 clocks or just always try to retrieve the 3
-clocks in the driver and fall back to 1.
-
-Rob
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > I did not met panic message. I wrote this patch when I was reading the piece code.
+> > I think the name parameter should be checked before doing string compare.
+> > 
+> > Regards,
+> > Peng.
+> > 
+> >>
+> >> Rob
+> >>
+> >>>
+> >>> Signed-off-by: Peng Fan <van.freenix@gmail.com>
+> >>> Cc: Rob Herring <robh+dt@kernel.org>
+> >>> Cc: Frank Rowand <frowand.list@gmail.com>
+> >>> Cc: Grant Likely <grant.likely@linaro.org>
+> >>> ---
+> >>>  drivers/of/base.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> >>> index 8b5a187..e41436d 100644
+> >>> --- a/drivers/of/base.c
+> >>> +++ b/drivers/of/base.c
+> >>> @@ -215,7 +215,7 @@ static struct property *__of_find_property(const struct device_node *np,
+> >>>  {
+> >>>  	struct property *pp;
+> >>>  
+> >>> -	if (!np)
+> >>> +	if (!np || !name)
+> >>>  		return NULL;
+> >>>  
+> >>>  	for (pp = np->properties; pp; pp = pp->next) {
+> >>>
+> >>
+> 
