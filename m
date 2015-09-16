@@ -1,52 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: r8a7794: add HS-USB DT support
-Date: Thu, 17 Sep 2015 02:53:58 +0300
-Message-ID: <49756124.B9jeO4ArbL@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am57xx-beagle-x15: Update Phy supplies
+Date: Wed, 16 Sep 2015 16:57:28 -0700
+Message-ID: <20150916235727.GC4215@atomide.com>
+References: <1441308226-26690-1-git-send-email-nm@ti.com>
+ <55F98690.6070601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55F98690.6070601-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the R8A7794 generic part of the HS-USB device node.
-It is up to the board file to enable the device.
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [150916 08:15]:
+> Hi Tony,
+> 
+> On 09/03/2015 02:23 PM, Nishanth Menon wrote:
+> > Originally, all the SoC PHY rails were supplied by LDO3. However, as a
+> > result of characterization, it was determined that this posed a risk in
+> > extreme load  conditions. Hence the PHY rails are split between two
+> > different LDOs. Update the related node as a result
+> > 
+> > LDO3/VDDA_1V8_PHYA supplies vdda_usb1, vdda_usb2, vdda_sata, vdda_usb3
+> > LDO4/VDDA_1V8_PHYB supplies vdda_pcie1, vdda_pcie0, vdda_hdmi, vdda_pcie
+> > 
+> > NOTE: We break compatibility with pre-production boards with this change
+> > since, the PMIC LDO4 is disabled at OTP level.
+> > 
+> > The new configuration is the plan of record and all pre-production
+> > boards are supposed to be replaced with the latest boards matching the
+> > mentioned configuration.
+> > 
+> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> > ---
+> 
+> Gentle ping. Some very few 10 something boards have been created and
+> stopped production till the latest modifications were done (PMIC USB
+> interrupt, LDO4 etc) - and all of those boards are now getting
+> scrapped.. If there are any (as per tracking information, there should
+> not be any), TI should be contacted to have them replaced.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-This patch is against  'renesas-devel-20150914-v4.3-rc1' tag  of Simon Horman's
-'renesas.git' repo plus the R8A7794/ PCI USB and USB PHY support patches posted
-last week.
-
- arch/arm/boot/dts/r8a7794.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -718,6 +718,18 @@
- 		};
- 	};
+Sounds OK to me as they are TI internal protos.
  
-+	hsusb: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7794";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7794_CLK_HSUSB>;
-+		power-domains = <&cpg_clocks>;
-+		renesas,buswait = <4>;
-+		phys = <&usb0 1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
-+
- 	usbphy: usb-phy@e6590100 {
- 		compatible = "renesas,usb-phy-r8a7794";
- 		reg = <0 0xe6590100 0 0x100>;
+> Is it possible for us to consider this patch in 4.3 cycle - given that
+> we are this close, might have been great to see 4.3 vanilla function on
+> the production platform.
 
+Applying into omap-for-v4.3/fixes thanks.
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
