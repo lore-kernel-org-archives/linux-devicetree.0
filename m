@@ -1,119 +1,45 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v8 0/5] Mediatek xHCI support
-Date: Wed, 16 Sep 2015 14:44:19 +0800
-Message-ID: <1442385864-4368-1-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [RFC PATCH v8 06/10] arm: exynos_defconfig: remove CONFIG_MMC_DW_IDMAC
+Date: Wed, 16 Sep 2015 14:42:37 +0800
+Message-ID: <1442385757-825-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1442385625-26775-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442385625-26775-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jh80.chung@samsung.com, ulf.hansson@linaro.org
+Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
->From e731877598e7564171bea62955b4e50b04d88d34 Mon Sep 17 00:00:00 2001
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Date: Wed, 16 Sep 2015 14:24:11 +0800
-Subject: [PATCH v8 0/5] Mediatek xHCI support
+DesignWare MMC Controller's transfer mode should be decided
+at runtime instead of compile-time. So we remove this config
+option and read dw_mmc's register to select DMA master.
 
-The patch supports MediaTek's xHCI controller.
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
 
-There are some differences from xHCI spec:
-1. The interval is specified in 250 * 8ns increments for Interrupt Moderation
-Interval(IMODI) of the Interrupter Moderation(IMOD) register, it is 8 times as
-much as that defined in xHCI spec.
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-2. For the value of TD Size in Normal TRB, MTK's xHCI controller defines a
-number of packets that remain to be transferred for a TD after processing all
-Max packets in all previous TRBs,that means don't include the current TRB's,
-but in xHCI spec it includes the current ones.
+ arch/arm/configs/exynos_defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-3. To minimize the scheduling effort for synchronous endpoints in xHC, the MTK
-architecture defines some extra SW scheduling parameters for HW. According to
-these parameters provided by SW, the xHC can easily decide whether a
-synchronous endpoint should be scheduled in a specific uFrame. The extra SW
-scheduling parameters are put into reserved DWs in Slot and Endpoint Context.
-And a bandwidth scheduler algorithm is added to support such feature.
-
-A usb3.0 phy driver is also added which used by mt65xx SoCs platform, it
-supports two usb2.0 ports and one usb3.0 port.
-
-depend on the patch for TDS calculation:
-https://patchwork.kernel.org/patch/7140041/
-
-Change in v8:
-1. use struct overlay for ippc register
-2. change usb wakeup as optional feature
-3. add TDS quirk into unified TDS calculation function
-
-Change in v7:
-1. remove xHCI timing setting which only for FPGA
-2. revise xHCI scheduler algorithms
-3. replace "usb" by "USB" in xHCI binding file
-
-Change in v6:
-1. get register base address of port in probe instead of of_xlate
-2. enable clock in phy_init instead of probe
-
-Change in v5:
-1. descripte more exactly for each specifiers in xHCI binding
-2. make use of new multi-phy feature for phy driver
-
-Change in v4:
-1. descripte more exactly for each specifiers in binding file
-2. use BIT() to define a bit mask mcro
-
-Change in v3:
-1. implement generic phy
-2. move opperations for IPPC and wakeup from phy driver to xHCI driver
-3. seperate quirk functions into a single C file to fix up dependence issue
-
-Change in v2:
-1. Rebase to 4.2-rc1
-2. Remove probe phy before add usb_hcd patch from this series due to 4.2-rc1
-   already fix this issue
-3. add xhci mac clocks
-4. add suspend/resume
-5. support remote wakeup
-
-
-Chunfeng Yun (5):
-  dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
-  dt-bindings: Add a binding for Mediatek xHCI host controller
-  usb: phy: add usb3.0 phy driver for mt65xx SoCs
-  xhci: mediatek: support MTK xHCI host controller
-  arm64: dts: mediatek: add xHCI & usb phy for mt8173
-
- .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |  68 ++
- .../devicetree/bindings/usb/mt8173-xhci.txt        |  52 ++
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  16 +
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  43 ++
- drivers/phy/Kconfig                                |   9 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-mt65xx-usb3.c                      | 456 +++++++++++++
- drivers/usb/host/Kconfig                           |   9 +
- drivers/usb/host/Makefile                          |   4 +
- drivers/usb/host/xhci-mtk-sch.c                    | 419 ++++++++++++
- drivers/usb/host/xhci-mtk.c                        | 744 +++++++++++++++++++++
- drivers/usb/host/xhci-mtk.h                        | 156 +++++
- drivers/usb/host/xhci-ring.c                       |  22 +-
- drivers/usb/host/xhci.c                            |  19 +-
- drivers/usb/host/xhci.h                            |   1 +
- 15 files changed, 2012 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
- create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
- create mode 100644 drivers/phy/phy-mt65xx-usb3.c
- create mode 100644 drivers/usb/host/xhci-mtk-sch.c
- create mode 100644 drivers/usb/host/xhci-mtk.c
- create mode 100644 drivers/usb/host/xhci-mtk.h
-
---
-1.8.1.1.dirty
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index 1ff2bfa..13ba48c 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -166,7 +166,6 @@ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_S3C=y
+ CONFIG_MMC_SDHCI_S3C_DMA=y
+ CONFIG_MMC_DW=y
+-CONFIG_MMC_DW_IDMAC=y
+ CONFIG_MMC_DW_EXYNOS=y
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_MAX77686=y
+-- 
+2.3.7
