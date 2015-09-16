@@ -1,49 +1,53 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH 2/2] arm64: dts: mt8173: add timer node
-Date: Wed, 16 Sep 2015 10:04:55 +0800
-Message-ID: <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
-References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Wang Dongsheng <Dongsheng.Wang@freescale.com>
+Subject: RE: [PATCH v2 1/2] fsl: Add binding for RCPM
+Date: Wed, 16 Sep 2015 02:15:45 +0000
+Message-ID: <SN1PR0301MB1616C48FB3D990BCA45289AB9D5B0@SN1PR0301MB1616.namprd03.prod.outlook.com>
+References: <1442307339-15225-1-git-send-email-dongsheng.wang@freescale.com>
+ <1442361398.2909.164.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1442361398.2909.164.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Zhao C.H." <chenhui.zhao@freescale.com>, Huan Wang <alison.wang@freescale.com>, Yuantian Tang <Yuantian.Tang@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Jin Jason <Jason.Jin@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Kurtz <djkurtz@chromium.org>
-
-Add device node to enable GPT timer. This timer will be
-used as sched clock source.
-
-Change-Id: Idc4e3f0ee80b5c36cae6f0f2328f94aafcca1253
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index d18ee42..d763803 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -238,6 +238,15 @@
- 			reg = <0 0x10007000 0 0x100>;
- 		};
- 
-+		timer: timer@10008000 {
-+			compatible = "mediatek,mt8173-timer",
-+				     "mediatek,mt6577-timer";
-+			reg = <0 0x10008000 0 0x1000>;
-+			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_CLK_13M>,
-+				 <&topckgen CLK_TOP_RTC_SEL>;
-+		};
-+
- 		pwrap: pwrap@1000d000 {
- 			compatible = "mediatek,mt8173-pwrap";
- 			reg = <0 0x1000d000 0 0x1000>;
--- 
-1.9.1
+SGkgU2NvdHQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBT
+Y290dC1CMDc0MjENCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTYsIDIwMTUgNzo1NyBB
+TQ0KPiBUbzogV2FuZyBEb25nc2hlbmctQjQwNTM0DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7DQo+IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBXYW5nIEh1YW4tQjE4
+OTY1OyBKaW4NCj4gWmhlbmd4aW9uZy1SNjQxODg7IFpoYW8gQ2hlbmh1aS1CMzUzMzY7IFRhbmcg
+WXVhbnRpYW4tQjI5OTgzDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSBmc2w6IEFkZCBi
+aW5kaW5nIGZvciBSQ1BNDQo+IA0KPiBPbiBUdWUsIDIwMTUtMDktMTUgYXQgMTY6NTUgKzA4MDAs
+IERvbmdzaGVuZyBXYW5nIHdyb3RlOg0KPiA+ICsqIEZyZWVzY2FsZSBSQ1BNIFdha2V1cCBTb3Vy
+Y2UgRGV2aWNlIFRyZWUgQmluZGluZ3MNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICtSZXF1aXJlZCByY3BtLXdha2V1cCBwcm9wZXJ0eSBzaG91
+bGQgYmUgYWRkZWQgdG8gYSBkZXZpY2Ugbm9kZSBpZiB0aGUNCj4gPiBkZXZpY2UNCj4gPiArY2Fu
+IGJlIHVzZWQgYXMgYSB3YWtldXAgc291cmNlLg0KPiA+ICsNCj4gPiArICAtIHJjcG0td2FrZXVw
+OiBUaGUgdmFsdWUgb2YgdGhlIHByb3BlcnR5IGNvbnNpc3RzIG9mIDMgY2VsbHMuIFRoZSBmaXJz
+dA0KPiA+IGNlbGwNCj4gPiArICAgICBpcyBhIHBvaW50ZXIgdG8gdGhlIHJjcG0gbm9kZSwgdGhl
+IHNlY29uZCBjZWxsIGlzIHRoZSBiaXQgbWFzayB0aGF0DQo+ID4gKyAgICAgc2hvdWxkIGJlIHNl
+dCBpbiBJUFBERVhQQ1IwLCBhbmQgdGhlIGxhc3QgY2VsbCBpcyBmb3IgSVBQREVYUENSMS4NCj4g
+PiArICAgICBOb3RlOiBJZiB0aGUgcGxhdGZvcm0gaGFzIG5vIElQUERFWFBDUjEgcmVnaXN0ZXIs
+IHB1dCBhIHplcm8gaGVyZS4NCj4gDQo+IFdoYXQgaWYgYSBmdXR1cmUgcGxhdGZvcm0gaGFzIG1v
+cmUgdGhhbiB0d28gb2YgdGhlc2UgcmVnaXN0ZXJzPw0KDQpUaG9zZSByZWdpc3RlcnMgYXJlIG9u
+bHkgdXNlZCBmb3Igd2FrZXVwIGRldmljZSwgd2UgaGF2ZSBhIGxvdCBvZiBhdmFpbGFibGUgYml0
+DQpmb3IgZmVhdHVyZS4gRm9yIGV4YW1wbGUsIEluIExTMTAyMWEgcGxhdGZvcm0gb25seSA3Yml0
+cyBoYXMgdXNlZCBpbiB0aGUgcmVnaXN0ZXJzLA0KYW5kIDU3Yml0cyBpcyByZXNlcnZlZC4NCg0K
+UmVnYXJkcywNCi1Eb25nc2hlbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3Rz
+Lm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRl
+dg==
