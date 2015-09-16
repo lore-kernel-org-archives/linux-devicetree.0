@@ -1,72 +1,90 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
- boot log
-Date: Wed, 16 Sep 2015 13:01:18 -0400
-Message-ID: <55F9A05E.4090000@ti.com>
-References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com> <55EA673F.8010904@oracle.com> <55F06075.6050405@ti.com> <55F8600D.2070701@ti.com> <55F88B81.2000308@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55F88B81.2000308-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH REPOST v6 0/8] ARM64: juno: add SCPI mailbox protocol, clock and CPUFreq support
+Date: Wed, 16 Sep 2015 18:16:31 +0100
+Message-ID: <1442423799-23892-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2015 05:20 PM, santosh shilimkar wrote:
-> On 9/15/2015 11:14 AM, Murali Karicheri wrote:
->> On 09/09/2015 12:38 PM, Murali Karicheri wrote:
->>> On 09/04/2015 11:53 PM, santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org wrote:
->>>> On 9/4/15 5:46 PM, Murali Karicheri wrote:
->>>>> To help the user, print the PDSP file name as part of
->>>>> knav_queue_load_pdsp(). This will be useful for users to know what
->>>>> version of the firmware is loaded to PDSP. Also update the
->>>>> document for the location of the QMSS accumulator PDSP firmware.
->>>>>
->>>>> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->>>>> ---
->>>>
->>>> Looks fine. Will pick both the patches.
->>>>
->>>
->>> Thanks Santhosh.
->>>
->>> Is there a requirement to add the firmware to linux-firmware.git. Right
->>> now I have provided link to ti git repo that has the firmware. I have
->>> the patch ready in case this is required. Do you know?
->>>
->>> Murali
->>>> Regards,
->>>> Santosh
->>>>
->>>>
->>>
->>>
->> Santosh,
->>
->> I have checked v4.3-rc1 and I don't see it. Did you send the pull
->> request?
->>
-> They are in the queue fo 4.4-rc1. They were too late for 4.3.
-> You might know already, typically as a rule of thumb followed
-> on arm-soc, we need to get patches reviewed/acked by rc4 to make
-> it for next merge window.
-> Ofcourse genuine bug fixes can make it to the same cycle.
-Is there a branch where you have applied the patches that you can 
-provide me? I want to send it to internal list for merge.
+Hi ARM-SoC guys,
 
-Murali
->
-> Regards,
-> Santosh
->
->
+Olof had confused this with PSCI[0]. I assume the confusion is now
+resolved ? I have now rebased the series on top of v4.3-rc1 and just
+resending them again.
 
+Please pull this series for v4.4
+
+You can access it from:
+	git://linux-arm.org/linux-skn.git juno_dvfs
+
+BUT the ARM external git repository is still unreliable and hence I am
+avoiding pull request. Can I request to pull it from the mails directly
+instead ? Extremely sorry for the inconvenience.
+
+Regards,
+Sudeep
+
+This patch series adds support for:
+  1. SCPI(System Control and Power Interface) mailbox protocol driver.
+     It uses ARM MHU mailbox controller driver on Juno but can work with
+     any mailbox controllers using standard mailbox APIs
+  2. Add support for clocks provided by SCP firmware through the SCPI
+     interface
+  3. Using the existing arm_big_little cpufreq driver and the newly
+     added SCPI clock driver, it also adds support for CPU DVFS on
+     ARM64 JUNO development platforms.
+
+The SCPI protocol document is available @[1]
+
+[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/364229.html
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+v1: https://lkml.org/lkml/2015/4/27/232
+v2: https://lkml.org/lkml/2015/5/14/470
+v3: https://lkml.org/lkml/2015/5/27/220
+v4: https://lkml.org/lkml/2015/6/8/178
+v5: https://lkml.org/lkml/2015/7/23/270
+v6: https://lkml.org/lkml/2015/7/31/692
+
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+
+Sudeep Holla (8):
+  Documentation: add DT binding for ARM System Control and Power
+    Interface(SCPI) protocol
+  firmware: add support for ARM System Control and Power Interface(SCPI)
+    protocol
+  clk: add support for clocks provided by SCP(System Control Processor)
+  clk: scpi: add support for cpufreq virtual device
+  cpufreq: arm_big_little: add SCPI interface driver
+  arm64: dts: add SRAM, MHU mailbox and SCPI support on Juno
+  arm64: dts: add CPU topology on Juno
+  arm64: dts: add clock support for all the cpus
+
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 150 +++++
+ MAINTAINERS                                        |  10 +
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |  54 ++
+ arch/arm64/boot/dts/arm/juno-r1.dts                |  32 +
+ arch/arm64/boot/dts/arm/juno.dts                   |  32 +
+ drivers/clk/Kconfig                                |  10 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-scpi.c                             | 325 ++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  10 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/scpi-cpufreq.c                     | 124 ++++
+ drivers/firmware/Kconfig                           |  19 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/arm_scpi.c                        | 711 +++++++++++++++++++++
+ include/linux/scpi_protocol.h                      |  61 ++
+ 15 files changed, 1541 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+ create mode 100644 drivers/clk/clk-scpi.c
+ create mode 100644 drivers/cpufreq/scpi-cpufreq.c
+ create mode 100644 drivers/firmware/arm_scpi.c
+ create mode 100644 include/linux/scpi_protocol.h
 
 -- 
-Murali Karicheri
-Linux Kernel, Keystone
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
