@@ -1,68 +1,106 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v9 5/6] Documentation: DT: Add HiSilicon PCIe host binding
-Date: Wed, 16 Sep 2015 09:14:16 +0800
-Message-ID: <55F8C268.2020809@hisilicon.com>
-References: <1442321361-174300-1-git-send-email-wangzhou1@hisilicon.com> <1442321361-174300-6-git-send-email-wangzhou1@hisilicon.com> <55F874F9.1060804@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2] of: Check for overlap in reserved memory regions
+Date: Tue, 15 Sep 2015 18:30:36 -0700
+Message-ID: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55F874F9.1060804-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/9/16 3:43, Rob Herring wrote:
-> On 09/15/2015 07:49 AM, Zhou Wang wrote:
->> This patch adds related DTS binding document for HiSilicon PCIe host driver.
->>
->> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> ---
->>  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 46 ++++++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
->> new file mode 100644
->> index 0000000..2afc9d1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
->> @@ -0,0 +1,46 @@
->> +HiSilicon PCIe host bridge DT description
->> +
->> +HiSilicon PCIe host controller is based on Designware PCI core.
->> +It shares common functions with PCIe Designware core driver and inherits
->> +common properties defined in
->> +Documentation/devicetree/bindings/pci/designware-pci.txt.
->> +
->> +Additional properties are described here:
->> +
->> +Required properties:
->> +- compatible: Should contain "hisilicon,hip05-pcie".
->> +- reg: Should contain rc_dbi, subctrl, config registers location and length.
->> +- reg-names: Must include the following entries:
->> +  "rc_dbi": controller configuration registers;
->> +  "subctrl": whole PCIe hosts configuration registers;
->> +  "config": PCIe configuration space registers.
->> +- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
->> +- port-id: Should be 0, 1, 2 or 3.
-> 
-> What is port-id for? Use of instance indexes need to have good reason.
-> 
-> Rob
+Any overlap in the reserved memory regions (those specified in the
+reserved-memory DT node) is a bug.  These bugs might go undetected as
+long as the contested region isn't used simultaneously by multiple
+software agents, which makes such bugs hard to debug.  Fix this by
+printing a scary warning during boot if overlap is detected.
 
-There are four PCIe controllers in HiSilicon Hip05 SoC, port-id just indicates
-which one we use. And we will use port-id to locate related registers in driver.
+Signed-off-by: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+v1..v2:
+  - Suggestions from Rob Herring (remove superfluous array and
+    print statement)
+---
+ drivers/of/of_reserved_mem.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
-Thanks,
-Zhou
-
->
-> 
-> .
-> 
-
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 726ebe792813..62f467b8ccae 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -1,7 +1,7 @@
+ /*
+  * Device tree based initialization code for reserved memory.
+  *
+- * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
++ * Copyright (c) 2013, 2015 The Linux Foundation. All Rights Reserved.
+  * Copyright (c) 2013,2014 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+  * Author: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+@@ -20,6 +20,7 @@
+ #include <linux/mm.h>
+ #include <linux/sizes.h>
+ #include <linux/of_reserved_mem.h>
++#include <linux/sort.h>
+ 
+ #define MAX_RESERVED_REGIONS	16
+ static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+@@ -197,12 +198,52 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+ 	return -ENOENT;
+ }
+ 
++static int __init __rmem_cmp(const void *a, const void *b)
++{
++	const struct reserved_mem *ra = a, *rb = b;
++
++	return ra->base - rb->base;
++}
++
++static void __init __rmem_check_for_overlap(void)
++{
++	int i;
++
++	if (reserved_mem_count < 2)
++		return;
++
++	sort(reserved_mem, reserved_mem_count, sizeof(reserved_mem[0]),
++	     __rmem_cmp, NULL);
++	for (i = 0; i < reserved_mem_count - 1; i++) {
++		struct reserved_mem *this, *next;
++
++		this = &reserved_mem[i];
++		next = &reserved_mem[i + 1];
++		if (!(this->base && next->base))
++			continue;
++		if (this->base + this->size > next->base) {
++			phys_addr_t this_end, next_end;
++
++			this_end = this->base + this->size;
++			next_end = next->base + next->size;
++			WARN(1,
++			     "Reserved memory: OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
++			     this->name, &this->base, &this_end,
++			     next->name, &next->base, &next_end);
++		}
++	}
++}
++
+ /**
+  * fdt_init_reserved_mem - allocate and init all saved reserved memory regions
+  */
+ void __init fdt_init_reserved_mem(void)
+ {
+ 	int i;
++
++	/* check for overlapping reserved regions */
++	__rmem_check_for_overlap();
++
+ 	for (i = 0; i < reserved_mem_count; i++) {
+ 		struct reserved_mem *rmem = &reserved_mem[i];
+ 		unsigned long node = rmem->fdt_node;
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
