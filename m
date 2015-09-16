@@ -1,42 +1,53 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH v2 3/7] MAINTAINERS: Add an entry for pinctrl-at91-pio4
-Date: Wed, 16 Sep 2015 17:36:59 +0200
-Message-ID: <1442417823-15850-4-git-send-email-ludovic.desroches@atmel.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
+Date: Wed, 16 Sep 2015 17:37:00 +0200
+Message-ID: <1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
 References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: s.hauer@pengutronix.de, linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, Ludovic Desroches <ludovic.desroches@atmel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442417823-15850-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an entry for the Atmel PIO4 controller driver.
+Add pio4 controller node to enable pinmux and gpio.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sama5d2.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 169ad39..ec41bfe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8166,6 +8166,13 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	drivers/pinctrl/pinctrl-at91.*
- 
-+PIN CONTROLLER - ATMEL AT91 PIO4
-+M:	Ludovic Desroches <ludovic.desroches@atmel.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-gpio@vger.kernel.org
-+S:	Supported
-+F:	drivers/pinctrl/pinctrl-at91-pio4.*
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 034cd48..cc05cde 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -921,6 +921,20 @@
+ 				clocks = <&twi1_clk>;
+ 				status = "disabled";
+ 			};
 +
- PIN CONTROLLER - INTEL
- M:	Mika Westerberg <mika.westerberg@linux.intel.com>
- M:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
++			pioA: pinctrl@fc038000 {
++				compatible = "atmel,sama5d2-pinctrl";
++				reg = <0xfc038000 0x600>;
++				interrupts = <18 IRQ_TYPE_LEVEL_HIGH 7>,
++					     <68 IRQ_TYPE_LEVEL_HIGH 7>,
++					     <69 IRQ_TYPE_LEVEL_HIGH 7>,
++					     <70 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&pioA_clk>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.5.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
