@@ -1,83 +1,51 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v5 2/5] dt/bindings: add bindings for optee
-Date: Wed, 16 Sep 2015 09:13:31 +0200
-Message-ID: <20150916071330.GA4515@ermac>
-References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
- <1439973629-19505-3-git-send-email-jens.wiklander@linaro.org>
- <55F89D93.4080608@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F89D93.4080608@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: [RESEND PATCH 0/2] ST PLL fixes for 4.3-rc2
+Date: Wed, 16 Sep 2015 09:42:57 +0200
+Message-ID: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 05:37:07PM -0500, Rob Herring wrote:
-> On 08/19/2015 03:40 AM, Jens Wiklander wrote:
-> > Introduces optee prefix and adds bindings for ARM TrustZone based OP-TEE
-> > implementation.
-> > 
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/optee/optee.txt     | 17 +++++++++++++++++
-> 
-> How about bindings/arm/firmware/... where the *other* TZ binding is located.
+This patch set fixes a kernel crash :
 
-OK, I'll move it.
+[    2.433152] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.2.0-rc7-next-20150821 #134
+[    2.440713] Hardware name: STiH415/416 SoC with Flattened Device Tree
+[    2.447173] [<c00183ac>] (unwind_backtrace) from [<c0013cac>] (show_stack+0x10/0x14)
+[    2.454914] [<c0013cac>] (show_stack) from [<c0284f80>] (dump_stack+0x8c/0x9c)
+[    2.462145] [<c0284f80>] (dump_stack) from [<c0283a54>] (Ldiv0+0x8/0x10)
+[    2.468845] [<c0283a54>] (Ldiv0) from [<c0690e90>] (flexgen_round_rate+0x54/0x68)
+[    2.476327] [<c0690e90>] (flexgen_round_rate) from [<c06791f4>] (clk_calc_new_rates+0x1bc/0x22c)
+[    2.485109] [<c06791f4>] (clk_calc_new_rates) from [<c0679804>] (clk_core_set_rate_nolock+0x44/0xac)
+[    2.494235] [<c0679804>] (clk_core_set_rate_nolock) from [<c0679890>] (clk_set_rate+0x24/0x34)
+[    2.502845] [<c0679890>] (clk_set_rate) from [<c064f848>] (st_mmcss_cconfig+0x5c/0xfc)
+[    2.510763] [<c064f848>] (st_mmcss_cconfig) from [<c064fab0>] (sdhci_st_probe+0xec/0x1fc)
+[    2.518946] [<c064fab0>] (sdhci_st_probe) from [<c04334c8>] (platform_drv_probe+0x44/0xa4)
+[    2.527209] [<c04334c8>] (platform_drv_probe) from [<c0431bf4>] (driver_probe_device+0x204/0x2f0)
+[    2.536077] [<c0431bf4>] (driver_probe_device) from [<c0431d6c>] (__driver_attach+0x8c/0x90)
+[    2.544510] [<c0431d6c>] (__driver_attach) from [<c0430098>] (bus_for_each_dev+0x68/0x9c)
+[    2.552682] [<c0430098>] (bus_for_each_dev) from [<c0431320>] (bus_add_driver+0x19c/0x214)
+[    2.560941] [<c0431320>] (bus_add_driver) from [<c0432574>] (driver_register+0x78/0xf8)
+[    2.568941] [<c0432574>] (driver_register) from [<c000ab90>] (do_one_initcall+0x8c/0x1d4)
+[    2.577115] [<c000ab90>] (do_one_initcall) from [<c0b98ddc>] (kernel_init_freeable+0x158/0x1f8)
+[    2.585818] [<c0b98ddc>] (kernel_init_freeable) from [<c07b9350>] (kernel_init+0x8/0xe8)
+[    2.593905] [<c07b9350>] (kernel_init) from [<c00108a8>] (ret_from_fork+0x14/0x2c)
+[    2.601467] Division by zero in kernel.
 
-> 
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
-> >  2 files changed, 18 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/optee/optee.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/optee/optee.txt b/Documentation/devicetree/bindings/optee/optee.txt
-> > new file mode 100644
-> > index 0000000..4a6ff10
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/optee/optee.txt
-> > @@ -0,0 +1,17 @@
-> > +OP-TEE Device Tree Bindings
-> > +
-> > +OP-TEE is a piece of software using hardware features to provide a Trusted
-> > +Execution Environment. The security can be provided with ARM TrustZone, but
-> > +also by virtualization or a separate chip. As there's no single OP-TEE
-> 
-> I don't see how the Linux side would not need to know what the
-> communication channel is whether it is smc, hvc, or something else.
+This kernel crash is due to a broken compatibility with this commit:
+commit 5eb26c605909 ("ARM: STi: DT: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x")
 
-I assume you're missing something similar to the "method" property
-defined for PSCI. I'll add that.
+Gabriel Fernandez (2):
+  dt-bindings: Fix tipo in st,clkgen-pll documentation
+  drivers: clk: st: Rename st_pll3200c32_407_c0_x into
+    st_pll3200c32_cx_x
 
-> 
-> > +vendor we're using "optee" as the first part of compatible property,
-> > +indicating the OP-TEE protocol is used when communicating with the secure
-> > +world.
-> > +
-> > +* OP-TEE based on ARM TrustZone required properties:
-> > +
-> > +- compatible="optee,optee-tz"
-> > +
-> > +Example:
-> > +	optee {
-> > +		compatible="optee,optee-tz";
-> > +	};
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 8033919..17c2a7e 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -141,6 +141,7 @@ nvidia	NVIDIA
-> >  nxp	NXP Semiconductors
-> >  onnn	ON Semiconductor Corp.
-> >  opencores	OpenCores.org
-> > +optee	OP-TEE, Open Portable Trusted Execution Environment
-> >  ortustech	Ortus Technology Co., Ltd.
-> >  ovti	OmniVision Technologies
-> >  panasonic	Panasonic Corporation
-> > 
-> 
+ Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt |  4 ++--
+ drivers/clk/st/clkgen-fsyn.c                                 |  8 ++++----
+ drivers/clk/st/clkgen-pll.c                                  | 12 ++++++------
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-Thanks,
-Jens
+-- 
+1.9.1
+
