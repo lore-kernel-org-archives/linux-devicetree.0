@@ -1,50 +1,82 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] doc: dt-binding: ci-hdrc-usb2: add i.mx specific
- binding "need-three-clocks"
-Date: Wed, 16 Sep 2015 00:23:26 -0300
-Message-ID: <CAOMZO5Aj_Txbg-nNH_xoAd=eCW9yfP6GMEE=H8jKvuoH9=e-ag@mail.gmail.com>
-References: <1442368183-8103-1-git-send-email-peter.chen@freescale.com>
-	<1442368183-8103-2-git-send-email-peter.chen@freescale.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v9 5/6] Documentation: DT: Add HiSilicon PCIe host binding
+Date: Wed, 16 Sep 2015 11:24:31 +0800
+Message-ID: <55F8E0EF.3040900@hisilicon.com>
+References: <1442321361-174300-1-git-send-email-wangzhou1@hisilicon.com> <1442321361-174300-6-git-send-email-wangzhou1@hisilicon.com> <55F874F9.1060804@kernel.org> <55F8C268.2020809@hisilicon.com> <55F8D12D.50107@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442368183-8103-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <55F8D12D.50107@kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 10:49 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Some SoCs needs three clock to let controller work, but others only
-> need one, add one property to differentiate this.
->
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> index f15a317..4900092 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -54,6 +54,9 @@ i.mx specific properties
->    argument that indicate usb controller index
->  - disable-over-current: disable over current detect
->  - external-vbus-divider: enables off-chip resistor divider for Vbus
-> +- need-three-clocks: the SoC before imx6 series (except for imx23/imx28)
-> +  needs three clcoks for controller, others only need one. Without this
-> +  property, the driver will consider this controller only need one clock.
+On 2015/9/16 10:17, Rob Herring wrote:
+> On 09/15/2015 08:14 PM, Zhou Wang wrote:
+>> On 2015/9/16 3:43, Rob Herring wrote:
+>>> On 09/15/2015 07:49 AM, Zhou Wang wrote:
+>>>> This patch adds related DTS binding document for HiSilicon PCIe host driver.
+>>>>
+>>>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+>>>> ---
+>>>>  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 46 ++++++++++++++++++++++
+>>>>  1 file changed, 46 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>>>> new file mode 100644
+>>>> index 0000000..2afc9d1
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>>>> @@ -0,0 +1,46 @@
+>>>> +HiSilicon PCIe host bridge DT description
+>>>> +
+>>>> +HiSilicon PCIe host controller is based on Designware PCI core.
+>>>> +It shares common functions with PCIe Designware core driver and inherits
+>>>> +common properties defined in
+>>>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+>>>> +
+>>>> +Additional properties are described here:
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should contain "hisilicon,hip05-pcie".
+>>>> +- reg: Should contain rc_dbi, subctrl, config registers location and length.
+>>>> +- reg-names: Must include the following entries:
+>>>> +  "rc_dbi": controller configuration registers;
+>>>> +  "subctrl": whole PCIe hosts configuration registers;
+>>>> +  "config": PCIe configuration space registers.
+>>>> +- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
+>>>> +- port-id: Should be 0, 1, 2 or 3.
+>>>
+>>> What is port-id for? Use of instance indexes need to have good reason.
+>>>
+>>> Rob
+>>
+>> There are four PCIe controllers in HiSilicon Hip05 SoC, port-id just indicates
+>> which one we use. And we will use port-id to locate related registers in driver.
+> 
+> Just having multiple instances is not a reason. So looking at the
+> driver, port-id is used to calculate register addresses for these registers:
+> 
+> #define PCIE_SUBCTRL_MODE_REG                           0x2800
+> #define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
+> 
+> Is the base address of subctrl the same on all 4 ports? If so, you
 
-Looking at mx31, mx35, mx25 reference manuals we see that they don't
-really need three usb clocks.
+Yes, same subctrl address for 4 ports. Will use syscon to access subctrl
+registers in next version.
 
-Also, if we look at the old drivers/usb/host/ehci-mxc.c we only
-require 'ipg' and 'ahb' clocks.
+Many thanks for pointing this,
+Zhou
 
-So it would be better to just require these two clocks and if they are
-not found on dts, then we fall back to requesting clk_get(NULL),
-without the need of an extra property.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> should not have overlapping resources in the DT. Either split these 2
+> registers into 2 reg regions (for each register) or use syscon to
+> provide access to the region.
+> 
+> Rob
+> 
+> 
+> .
+> 
