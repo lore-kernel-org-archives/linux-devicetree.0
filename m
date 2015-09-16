@@ -1,104 +1,97 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/3] devicetree: bindings: use input-event-codes.h for
- evdev codes
-Date: Wed, 16 Sep 2015 10:43:23 -0400
-Message-ID: <55F9800B.70200@redhat.com>
-References: <1442064372-3030-1-git-send-email-hdegoede@redhat.com>
- <1442064372-3030-3-git-send-email-hdegoede@redhat.com>
- <1442316292.3549.386.camel@hellion.org.uk> <55F97C3D.5020702@redhat.com>
- <1442414443.18856.110.camel@hellion.org.uk>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am57xx-beagle-x15: Update Phy supplies
+Date: Wed, 16 Sep 2015 10:11:12 -0500
+Message-ID: <55F98690.6070601@ti.com>
+References: <1441308226-26690-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1442414443.18856.110.camel@hellion.org.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Ian Campbell <ijc@hellion.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441308226-26690-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tony,
 
-On 09/16/2015 10:40 AM, Ian Campbell wrote:
-> On Wed, 2015-09-16 at 10:27 -0400, Hans de Goede wrote:
->> Hi,
->>
->> On 09/15/2015 07:24 AM, Ian Campbell wrote:
->>> On Sat, 2015-09-12 at 15:26 +0200, Hans de Goede wrote:
->>>> Add a symlink to uapi/linux/input-event-codes.h, and include that
->>>> instead
->>>> of (re)defining all the evdev type and code values in
->>>> dt-bindings/input/input.h. This way we do not need to keep all the
->>>> event codes synced manually.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>>    include/dt-bindings/input/input-event-codes.h |   1 +
->>>>    include/dt-bindings/input/input.h             | 510 +--------------
->>>> -----
->>>> ------
->>>>    2 files changed, 2 insertions(+), 509 deletions(-)
->>>>    create mode 120000 include/dt-bindings/input/input-event-codes.h
->>>>
->>>> diff --git a/include/dt-bindings/input/input-event-codes.h
->>>> b/include/dt
->>>> -bindings/input/input-event-codes.h
->>>> new file mode 120000
->>>> index 0000000..693bbcd
->>>> --- /dev/null
->>>> +++ b/include/dt-bindings/input/input-event-codes.h
->>>> @@ -0,0 +1 @@
->>>> +../../uapi/linux/input-event-codes.h
->>>> \ No newline at end of file
->>>
->>> Hrm, I think this is going to cause trouble for the split DT repository
->>> at
->>> https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-reba
->>> sing.git/
->>>
->>> Since ../../ == include in both trees I think I can make it work by
->>> including include/uapi/linux in the conversion, either wholesale
->>> (easiest)
->>> or partially (potentially cleaner).
->>>
->>> Any opinions on that?
->>
->> The intend of the symlink was that the conversion script would copy the target,
->> rather then follow the symlink. This sorta assumes that there are will be not
->> symlinks under dt-bindings which link to files inside dt-bindings and thus
->> should be preserved as symlinks.
->>
->> If the copy done in the script will follow the symlink then nothing should
->> really change for the split DT repo.
->
-> Interesting idea. I'll see if I can make the conversion routine do that.
->
-> TBH I have a horrid feeling that this is going to be beyond git rewrite
-> -branch, at least in the mode it is used in today.
->
->>> In principal I ought to regenerate the tree from scratch such that
->>> include/uapi/linux was "always" there and has history but I think we
->>> can
->>> live with it just appearing at some point in time wen the conversion
->>> script
->>> was updated?
->>>
->>> AIUI these values are required to only be used with properties whose
->>> names
->>> are of the form "linux,*", otherwise there would be strong complaints
->>> about
->>> include Linux uapi stuff into a generic device-tree binding.
->>
->> Correct, these values are only for linux,* properties, which is why I
->> initially put them in a file named dt-bindings/input/linux-event-codes.h
->
-> I think that would be a better name for the symlink (but not the target of
-> that symlink) and usage in the .dts*, given it's (hopefully) going to turn
-> into a regular file in the exported repo.
+On 09/03/2015 02:23 PM, Nishanth Menon wrote:
+> Originally, all the SoC PHY rails were supplied by LDO3. However, as a
+> result of characterization, it was determined that this posed a risk in
+> extreme load  conditions. Hence the PHY rails are split between two
+> different LDOs. Update the related node as a result
+> 
+> LDO3/VDDA_1V8_PHYA supplies vdda_usb1, vdda_usb2, vdda_sata, vdda_usb3
+> LDO4/VDDA_1V8_PHYB supplies vdda_pcie1, vdda_pcie0, vdda_hdmi, vdda_pcie
+> 
+> NOTE: We break compatibility with pre-production boards with this change
+> since, the PMIC LDO4 is disabled at OTP level.
+> 
+> The new configuration is the plan of record and all pre-production
+> boards are supposed to be replaced with the latest boards matching the
+> mentioned configuration.
+> 
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> ---
 
-Ok I can fix this in a next version of the patch-set (once we've figured
-out how to deal with all this exactly).
+Gentle ping. Some very few 10 something boards have been created and
+stopped production till the latest modifications were done (PMIC USB
+interrupt, LDO4 etc) - and all of those boards are now getting
+scrapped.. If there are any (as per tracking information, there should
+not be any), TI should be contacted to have them replaced.
 
+Is it possible for us to consider this patch in 4.3 cycle - given that
+we are this close, might have been great to see 4.3 vanilla function on
+the production platform.
+
+>  arch/arm/boot/dts/am57xx-beagle-x15.dts |   13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> index 3a05b94f59ed..ede7fb73c717 100644
+> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> @@ -432,7 +432,7 @@
+>  				};
+>  
+>  				ldo3_reg: ldo3 {
+> -					/* VDDA_1V8_PHY */
+> +					/* VDDA_1V8_PHYA */
+>  					regulator-name = "ldo3";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> @@ -440,6 +440,15 @@
+>  					regulator-boot-on;
+>  				};
+>  
+> +				ldo4_reg: ldo4 {
+> +					/* VDDA_1V8_PHYB */
+> +					regulator-name = "ldo4";
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +				};
+> +
+>  				ldo9_reg: ldo9 {
+>  					/* VDD_RTC */
+>  					regulator-name = "ldo9";
+> @@ -681,7 +690,7 @@
+>  
+>  &hdmi {
+>  	status = "ok";
+> -	vdda-supply = <&ldo3_reg>;
+> +	vdda-supply = <&ldo4_reg>;
+>  
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&hdmi_pins>;
+> 
+
+
+-- 
 Regards,
-
-Hans
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
