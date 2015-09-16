@@ -1,47 +1,89 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] dt/bindings: bcm2835: add binding documentation for bcm2835-aux
-Date: Wed, 16 Sep 2015 07:25:51 +0200
-Message-ID: <77103FCE-5756-45AF-B764-310E51097781@martin.sperl.org>
-References: <1440405608-3995-1-git-send-email-kernel@martin.sperl.org> <1440405608-3995-4-git-send-email-kernel@martin.sperl.org> <55DD1A13.7010705@wwwdotorg.org> <9D45476C-88E2-4F76-AB55-9D0C7194E29C@martin.sperl.org> <55F8EC22.7020909@wwwdotorg.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 05/10] power: bq24257: Add SW-based approach for Power
+ Good determination
+Date: Wed, 16 Sep 2015 14:41:13 +0900
+Message-ID: <55F900F9.90306@samsung.com>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-6-git-send-email-dannenberg@ti.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55F8EC22.7020909-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1442339914-25843-6-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-> On 16.09.2015, at 06:12, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+On 16.09.2015 02:58, Andreas Dannenberg wrote:
+> A software-based approach for determining the charger's input voltage
+> "Power Good" state is introduced for devices like the bq24250 which
+> don't have a dedicated hardware pin for that purpose. This SW-based
+> approach is also used for other devices (with dedicated PG pin) as a
+> fall back solution if that pin is not configured to be used through
+> "pg-gpios".
 > 
-> On 09/04/2015 01:26 AM, Martin Sperl wrote:
->> 
->>> On 26.08.2015, at 03:44, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>> 
->>> On 08/24/2015 02:40 AM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
->>> 
->>>> +Example:
->>>> +
->>>> +aux_enable: aux_enable@0x7e215004 {
->>>> +	compatible = "bcrm,bcm2835-aux";
->>>> +	reg = <0x7e215004 0x04>;
->>> 
->>> I'd expect that to be <0x7e215000 0x8>;
->> 
->> The reason is that we just handle enable with this driver,
->> which just requires access to the 0x7e215004 register.
->> 
->> The 0x7e215000 register (interrupt mask) could be used by a
->> cascaded interrupt-controller, but as the spi and uart drivers
->> can run with shared interrupts this is not a necessity.
+> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> ---
+>  drivers/power/bq24257_charger.c | 49 ++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 43 insertions(+), 6 deletions(-)
 > 
-> The DT is supposed to describe the HW, not any particular SW's use of
-> the HW. If the HW block has 2 registers, so must the DT reg property.
+> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> index 55e4ee4..d7488cf 100644
+> --- a/drivers/power/bq24257_charger.c
+> +++ b/drivers/power/bq24257_charger.c
+> @@ -103,6 +103,7 @@ struct bq24257_device {
+>  	struct mutex lock; /* protect state data */
+>  
+>  	bool in_ilimit_autoset_disable;
+> +	bool pg_gpio_disable;
+>  };
+>  
+>  static bool bq24257_is_volatile_reg(struct device *dev, unsigned int reg)
+> @@ -356,7 +357,26 @@ static int bq24257_get_chip_state(struct bq24257_device *bq,
+>  
+>  	state->fault = ret;
+>  
+> -	state->power_good = !gpiod_get_value_cansleep(bq->pg);
+> +	if (bq->pg_gpio_disable)
+> +		/*
+> +		 * If we have a chip without a dedicated power-good GPIO or
+> +		 * some other explicit bit that would provide this information
+> +		 * assume the power is good if there is no supply related
+> +		 * fault - and not good otherwise. There is a possibility for
+> +		 * other errors to mask that power in fact is not good but this
+> +		 * is probably the best we can do here.
+> +		 */
+> +		switch (state->fault) {
+> +		case FAULT_INPUT_OVP:
+> +		case FAULT_INPUT_UVLO:
+> +		case FAULT_INPUT_LDO_LOW:
+> +			state->power_good = false;
+> +			break;
+> +		default:
+> +			state->power_good = true;
+> +		}
+> +	else
+> +		state->power_good = !gpiod_get_value_cansleep(bq->pg);
+>  
+>  	return 0;
+>  }
+> @@ -676,7 +696,7 @@ static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
+>  {
+>  	bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0, GPIOD_IN);
+>  	if (IS_ERR(bq->pg)) {
+> -		dev_err(bq->dev, "could not probe PG pin\n");
+> +		dev_info(bq->dev, "could not probe PG pin\n");
 
-Please look at V6 of the patch-series, that uses Erics clock-patch.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think if pg-gpio is provided (e.g. by DTS) but it is invalid (return
+value != ENOENT) then it is an error you could print. The driver will
+fallback to the software method but still user/developer may want to
+notice the error (e.g. error in DTS).
+
+Anyway it is up to you, rest looks good:
+
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
+
