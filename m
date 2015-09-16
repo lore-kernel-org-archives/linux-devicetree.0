@@ -1,211 +1,79 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH REPOST v6 1/8] Documentation: add DT binding for ARM System Control and Power Interface(SCPI) protocol
-Date: Wed, 16 Sep 2015 18:16:32 +0100
-Message-ID: <1442423799-23892-2-git-send-email-sudeep.holla@arm.com>
-References: <1442423799-23892-1-git-send-email-sudeep.holla@arm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
+Date: Wed, 16 Sep 2015 18:18:31 +0100
+Message-ID: <20150916171831.GS28771@arm.com>
+References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
+ <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
+ <20150819165009.GC10297@arm.com>
+ <20150820113729.GA25962@ermac>
+ <20150821092430.GC30930@arm.com>
+ <20150821114331.GA11701@ermac>
+ <20150914083029.GA13963@ermac>
+ <20150915182645.GQ31157@arm.com>
+ <20150915210557.GA31578@ermac>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442423799-23892-1-git-send-email-sudeep.holla@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20150915210557.GA31578@ermac>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Liviu Dudau <Liviu.Dudau@arm.com>, devicetree@vger.kernel.org
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, "valentin.manea@huawei.com" <valentin.manea@huawei.com>, Mark Rutland <Mark.Rutland@arm.com>, "javier@javigon.com" <javier@javigon.com>, "emmanuel.michel@st.com" <emmanuel.michel@st.com>, Michal Simek <michal.simek@xilinx.com>, "jean-michel.delorme@st.com" <jean-michel.delorme@st.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds devicetree binding for System Control and Power
-Interface (SCPI) Message Protocol used between the Application Cores(AP)
-and the System Control Processor(SCP). The MHU peripheral provides a
-mechanism for inter-processor communication between SCP's M3 processor
-and AP.
+On Tue, Sep 15, 2015 at 10:05:59PM +0100, Jens Wiklander wrote:
+> On Tue, Sep 15, 2015 at 07:26:45PM +0100, Will Deacon wrote:
+> > On Mon, Sep 14, 2015 at 09:30:30AM +0100, Jens Wiklander wrote:
+> > > On Fri, Aug 21, 2015 at 01:43:31PM +0200, Jens Wiklander wrote:
+> > > > On Fri, Aug 21, 2015 at 10:24:30AM +0100, Will Deacon wrote:
+> > > > > On Thu, Aug 20, 2015 at 12:37:29PM +0100, Jens Wiklander wrote:
+> > > > > > On Wed, Aug 19, 2015 at 05:50:09PM +0100, Will Deacon wrote:
+> > > > > > > On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
+> > > > > > > > +       mov     x28, x0
+> > > > > > > > +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+> > > > > > > > +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+> > > > > > > > +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
+> > > > > > > > +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
+> > > > > > > > +       smc     #0
+> > > > > > > > +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+> > > > > > > > +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+> > > > > > > > +       ldp     x28, x30, [sp], #16
+> > > > > > > > +       ret
+> > > > > > > > +ENDPROC(smccc_call32)
+> > > > > > > 
+> > > > > > > Could we deal with this like we do for PSCI instead? (see
+> > > > > > > __invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
+> > > > > > > and stick this in there too.
+> > > > > > 
+> > > > > > I assume you're referring to when to use "hvc" and "smc".
+> > > > > 
+> > > > > No, I mean use a C prototype to avoid marshalling the parameters in assembly
+> > > > > like this. As Rutland pointed out, the return value is a bit messy, but
+> > > > > the arguments align nicely with the PCS afaict.
+> > > > 
+> > > > If possible I'd like the function to have the same prototype for both
+> > > > arm and arm64. For arm it's not possible to supply more than 4
+> > > > parameters. To fully support SMC Calling Convention we need to be able
+> > > > to pass 8 parameters and have 4 return values. The OP-TEE driver in this
+> > > > patch set depends on this. I don't see how we can avoid the marshalling
+> > > > here.
+> > > > 
+> > > > We could have two versions of the SMCCC functions, one simplified which
+> > > > only uses registers and one complete like this one with marshalling.
+> > > 
+> > > Will, what do think about this?
+> > 
+> > I still think you should make use of a C prototype to avoid explicit
+> > parameter marshalling in assembly. If you want to maintain a compatible
+> > API between arm and arm64, then you can easily have an intermediate
+> > function in arm64 that sits between the API entry point and the assembly.
+> 
+> Yes, I see how that's convenient for passing argument values in
+> registers, but that doesn't help with storing the returned values in
+> x0..x3 into something accessible in C. Am I missing something?
 
-SCP offers control and management of the core/cluster power states,
-various power domain DVFS including the core/cluster, certain system
-clocks configuration, thermal sensors and many others.
+Your approach using a struct looked fine to me, just place it after the
+parameters and use it only for the return values. Then __invoke_psci*
+can wrap this and unpack r0/x0 from the structure.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-CC: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/arm/arm,scpi.txt | 150 +++++++++++++++++++++
- MAINTAINERS                                        |   6 +
- 2 files changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-new file mode 100644
-index 000000000000..f0024605f416
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-@@ -0,0 +1,150 @@
-+System Control and Power Interface (SCPI) Message Protocol
-+----------------------------------------------------------
-+
-+Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
-+("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
-+by Linux to initiate various system control and power operations.
-+
-+Required properties:
-+
-+- compatible : should be "arm,scpi"
-+- mboxes: List of phandle and mailbox channel specifiers
-+	  All the channels reserved by remote SCP firmware for use by
-+	  SCPI message protocol should be specified in any order
-+- shmem : List of phandle pointing to the shared memory(SHM) area between the
-+	  processors using these mailboxes for IPC, one for each mailbox
-+	  SHM can be any memory reserved for the purpose of this communication
-+	  between the processors.
-+
-+See Documentation/devicetree/bindings/mailbox/mailbox.txt
-+for more details about the generic mailbox controller and
-+client driver bindings.
-+
-+Clock bindings for the clocks based on SCPI Message Protocol
-+------------------------------------------------------------
-+
-+This binding uses the common clock binding[1].
-+
-+Container Node
-+==============
-+Required properties:
-+- compatible : should be "arm,scpi-clocks"
-+	       All the clocks provided by SCP firmware via SCPI message
-+	       protocol much be listed as sub-nodes under this node.
-+
-+Sub-nodes
-+=========
-+Required properties:
-+- compatible : shall include one of the following
-+	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
-+		These clocks don't provide an entire range of values between the
-+		limits but only discrete points within the range. The firmware
-+		provides the mapping for each such operating frequency and the
-+		index associated with it. The firmware also manages the
-+		voltage scaling appropriately with the clock scaling.
-+	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
-+		range within the specified range. The firmware provides the
-+		range of values within a specified range.
-+
-+Other required properties for all clocks(all from common clock binding):
-+- #clock-cells : Should be 1. Contains the Clock ID value used by SCPI commands.
-+- clock-output-names : shall be the corresponding names of the outputs.
-+- clock-indices: The identifying number for the clocks(i.e.clock_id) in the
-+	node. It can be non linear and hence provide the mapping of identifiers
-+	into the clock-output-names array.
-+
-+SRAM and Shared Memory for SCPI
-+-------------------------------
-+
-+A small area of SRAM is reserved for SCPI communication between application
-+processors and SCP.
-+
-+Required properties:
-+- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
-+
-+The rest of the properties should follow the generic mmio-sram description
-+found in ../../misc/sysram.txt
-+
-+Each sub-node represents the reserved area for SCPI.
-+
-+Required sub-node properties:
-+- reg : The base offset and size of the reserved area with the SRAM
-+- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
-+	       shared memory on Juno platforms
-+
-+[0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Example:
-+
-+sram: sram@50000000 {
-+	compatible = "arm,juno-sram-ns", "mmio-sram";
-+	reg = <0x0 0x50000000 0x0 0x10000>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0 0x0 0x50000000 0x10000>;
-+
-+	cpu_scp_lpri: scp-shmem@0 {
-+		compatible = "arm,juno-scp-shmem";
-+		reg = <0x0 0x200>;
-+	};
-+
-+	cpu_scp_hpri: scp-shmem@200 {
-+		compatible = "arm,juno-scp-shmem";
-+		reg = <0x200 0x200>;
-+	};
-+};
-+
-+mailbox: mailbox0@40000000 {
-+	....
-+	#mbox-cells = <1>;
-+};
-+
-+scpi_protocol: scpi@2e000000 {
-+	compatible = "arm,scpi";
-+	mboxes = <&mailbox 0 &mailbox 1>;
-+	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-+
-+	clocks {
-+		compatible = "arm,scpi-clocks";
-+
-+		scpi_dvfs: scpi_clocks@0 {
-+			compatible = "arm,scpi-dvfs-clocks";
-+			#clock-cells = <1>;
-+			clock-indices = <0>, <1>, <2>;
-+			clock-output-names = "atlclk", "aplclk","gpuclk";
-+		};
-+		scpi_clk: scpi_clocks@3 {
-+			compatible = "arm,scpi-variable-clocks";
-+			#clock-cells = <1>;
-+			clock-indices = <3>, <4>;
-+			clock-output-names = "pxlclk0", "pxlclk1";
-+		};
-+	};
-+};
-+
-+cpu@0 {
-+	...
-+	reg = <0 0>;
-+	clocks = <&scpi_dvfs 0>;
-+};
-+
-+hdlcd@7ff60000 {
-+	...
-+	reg = <0 0x7ff60000 0 0x1000>;
-+	clocks = <&scpi_clk 4>;
-+};
-+
-+In the above example, the #clock-cells is set to 1 as required.
-+scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
-+1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
-+and pxlclk1 with 3 and 4 as clock-indices.
-+
-+The first consumer in the example is cpu@0 and it has '0' as the clock
-+specifier which points to the first entry in the output clocks of
-+scpi_dvfs i.e. "atlclk".
-+
-+Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
-+clock. '4' in the clock specifier here points to the second entry
-+in the output clocks of scpi_clocks  i.e. "pxlclk1"
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7ba7ab749c85..be7d5c14729b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9149,6 +9149,12 @@ W:	http://www.sunplus.com
- S:	Supported
- F:	arch/score/
- 
-+SYSTEM CONTROL & POWER INTERFACE (SCPI) Message Protocol drivers
-+M:	Sudeep Holla <sudeep.holla@arm.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/arm/arm,scpi.txt
-+
- SCSI CDROM DRIVER
- M:	Jens Axboe <axboe@kernel.dk>
- L:	linux-scsi@vger.kernel.org
--- 
-1.9.1
+Will
