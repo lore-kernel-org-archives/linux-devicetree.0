@@ -1,86 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers: of: check input parameter name for
- __of_find_property
-Date: Tue, 15 Sep 2015 21:27:59 -0500
-Message-ID: <55F8D3AF.9070503@kernel.org>
-References: <1441979043-19694-1-git-send-email-van.freenix@gmail.com>
- <55F83FAC.5080002@kernel.org> <20150916001650.GA28082@linux-4gyl.site>
+From: Wang Dongsheng <Dongsheng.Wang@freescale.com>
+Subject: RE: [PATCH v2 1/2] fsl: Add binding for RCPM
+Date: Wed, 16 Sep 2015 02:30:09 +0000
+Message-ID: <SN1PR0301MB161688E3AF527ADC76AB2B8F9D5B0@SN1PR0301MB1616.namprd03.prod.outlook.com>
+References: <1442307339-15225-1-git-send-email-dongsheng.wang@freescale.com>
+ <1442361398.2909.164.camel@freescale.com>
+ <SN1PR0301MB1616C48FB3D990BCA45289AB9D5B0@SN1PR0301MB1616.namprd03.prod.outlook.com>
+ <1442369955.2909.166.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150916001650.GA28082-12w76u+6CWdQVMFFLWfSwA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1442369955.2909.166.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Zhao C.H." <chenhui.zhao@freescale.com>, Huan Wang <alison.wang@freescale.com>, Yuantian Tang <Yuantian.Tang@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Jin Jason <Jason.Jin@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2015 07:16 PM, Peng Fan wrote:
-> Hi Rob,
-> 
-> On Tue, Sep 15, 2015 at 10:56:28AM -0500, Rob Herring wrote:
->> On 09/11/2015 08:44 AM, Peng Fan wrote:
->>> Check input parameter 'name' for __of_find_property. If name is NULL,
->>> of_prop_cmp->strcasecmp may trigger panic.
->>
->> Arguably that could be a feature. Do you have a usecase where name being
->> NULL is valid and panicking is a problem?
-> 
-> In drivers/pinctrl/devicetree.c
-> 
-> 195                 propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
-> 196                 prop = of_find_property(np, propname, &size);
-> 197                 kfree(propname);
-> 198                 if (!prop)
-> 199                         break;
-> 
-> If propname is NULL, of_find_property may trigger panic. Anyway propname should be checked
-> before passing to of_find_property.
-
-propname will only be NULL if the memory allocation failed which gives
-you a big warning message. I don't think you would want to continue on
-in this case.
-
-So I'm inclined to leave this as is with passing NULL to
-of_find_property to always be an error and fatal.
-
-Rob
-
-> I did not met panic message. I wrote this patch when I was reading the piece code.
-> I think the name parameter should be checked before doing string compare.
-> 
-> Regards,
-> Peng.
-> 
->>
->> Rob
->>
->>>
->>> Signed-off-by: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>  drivers/of/base.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>> index 8b5a187..e41436d 100644
->>> --- a/drivers/of/base.c
->>> +++ b/drivers/of/base.c
->>> @@ -215,7 +215,7 @@ static struct property *__of_find_property(const struct device_node *np,
->>>  {
->>>  	struct property *pp;
->>>  
->>> -	if (!np)
->>> +	if (!np || !name)
->>>  		return NULL;
->>>  
->>>  	for (pp = np->properties; pp; pp = pp->next) {
->>>
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2NvdHQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBT
+Y290dC1CMDc0MjENCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTYsIDIwMTUgMTA6MTkg
+QU0NCj4gVG86IFdhbmcgRG9uZ3NoZW5nLUI0MDUzNA0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiByb2JoK2R0QGtlcm5l
+bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgV2FuZyBIdWFuLUIx
+ODk2NTsgSmluDQo+IFpoZW5neGlvbmctUjY0MTg4OyBaaGFvIENoZW5odWktQjM1MzM2OyBUYW5n
+IFl1YW50aWFuLUIyOTk4Mw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvMl0gZnNsOiBBZGQg
+YmluZGluZyBmb3IgUkNQTQ0KPiANCj4gT24gVHVlLCAyMDE1LTA5LTE1IGF0IDIxOjE1IC0wNTAw
+LCBXYW5nIERvbmdzaGVuZy1CNDA1MzQgd3JvdGU6DQo+ID4gSGkgU2NvdHQsDQo+ID4NCj4gPiA+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQy
+MQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTYsIDIwMTUgNzo1NyBBTQ0KPiA+
+ID4gVG86IFdhbmcgRG9uZ3NoZW5nLUI0MDUzNA0KPiA+ID4gQ2M6IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gPiA+IHJvYmgrZHRA
+a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBXYW5nIEh1
+YW4tDQo+ID4gPiBCMTg5NjU7IEppbg0KPiA+ID4gWmhlbmd4aW9uZy1SNjQxODg7IFpoYW8gQ2hl
+bmh1aS1CMzUzMzY7IFRhbmcgWXVhbnRpYW4tQjI5OTgzDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BB
+VENIIHYyIDEvMl0gZnNsOiBBZGQgYmluZGluZyBmb3IgUkNQTQ0KPiA+ID4NCj4gPiA+IE9uIFR1
+ZSwgMjAxNS0wOS0xNSBhdCAxNjo1NSArMDgwMCwgRG9uZ3NoZW5nIFdhbmcgd3JvdGU6DQo+ID4g
+PiA+ICsqIEZyZWVzY2FsZSBSQ1BNIFdha2V1cCBTb3VyY2UgRGV2aWNlIFRyZWUgQmluZGluZ3MN
+Cj4gPiA+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4g
+PiA+ID4gK1JlcXVpcmVkIHJjcG0td2FrZXVwIHByb3BlcnR5IHNob3VsZCBiZSBhZGRlZCB0byBh
+IGRldmljZSBub2RlIGlmDQo+ID4gPiA+ICt0aGUNCj4gPiA+ID4gZGV2aWNlDQo+ID4gPiA+ICtj
+YW4gYmUgdXNlZCBhcyBhIHdha2V1cCBzb3VyY2UuDQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgLSBy
+Y3BtLXdha2V1cDogVGhlIHZhbHVlIG9mIHRoZSBwcm9wZXJ0eSBjb25zaXN0cyBvZiAzIGNlbGxz
+Lg0KPiA+ID4gPiArIFRoZQ0KPiA+ID4gPiBmaXJzdA0KPiA+ID4gPiBjZWxsDQo+ID4gPiA+ICsg
+ICAgIGlzIGEgcG9pbnRlciB0byB0aGUgcmNwbSBub2RlLCB0aGUgc2Vjb25kIGNlbGwgaXMgdGhl
+IGJpdA0KPiA+ID4gPiArIG1hc2sNCj4gPiA+ID4gdGhhdA0KPiA+ID4gPiArICAgICBzaG91bGQg
+YmUgc2V0IGluIElQUERFWFBDUjAsIGFuZCB0aGUgbGFzdCBjZWxsIGlzIGZvciBJUFBERVhQQ1Ix
+Lg0KPiA+ID4gPiArICAgICBOb3RlOiBJZiB0aGUgcGxhdGZvcm0gaGFzIG5vIElQUERFWFBDUjEg
+cmVnaXN0ZXIsIHB1dCBhIHplcm8gaGVyZS4NCj4gPiA+DQo+ID4gPiBXaGF0IGlmIGEgZnV0dXJl
+IHBsYXRmb3JtIGhhcyBtb3JlIHRoYW4gdHdvIG9mIHRoZXNlIHJlZ2lzdGVycz8NCj4gPg0KPiA+
+IFRob3NlIHJlZ2lzdGVycyBhcmUgb25seSB1c2VkIGZvciB3YWtldXAgZGV2aWNlLCB3ZSBoYXZl
+IGEgbG90IG9mDQo+ID4gYXZhaWxhYmxlIGJpdCBmb3IgZmVhdHVyZS4gRm9yIGV4YW1wbGUsIElu
+IExTMTAyMWEgcGxhdGZvcm0gb25seSA3Yml0cw0KPiA+IGhhcyB1c2VkIGluIHRoZSByZWdpc3Rl
+cnMsIGFuZCA1N2JpdHMgaXMgcmVzZXJ2ZWQuDQo+IA0KPiBTdGlsbCwgaXQnZCBiZSBiZXR0ZXIg
+dG8gZm9yIHRoZSByY3BtIG5vZGUgdG8gYWR2ZXJ0aXNlIHRoZSBudW1iZXIgb2YgY2VsbHMgaXQN
+Cj4gZXhwZWN0cy4NCg0KRm9yIHRoZSBmb3Jlc2VlYWJsZSBmdXR1cmUgaXQgc2hvdWxkIGJlIGVu
+b3VnaCB0byB1c2UsIGV2ZW4gaWYgbm90IGVub3VnaCB0byB1c2UgaW4NCnRoZSBmdXR1cmUgYXQg
+dGhhdCB0aW1lIHdlIGNhbiB1cGRhdGUgdGhlIGJpbmRpbmcuDQoNClJlZ2FyZHMsDQotRG9uZ3No
+ZW5nDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
+eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
