@@ -1,39 +1,32 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v2 1/2] fsl: Add binding for RCPM
-Date: Tue, 15 Sep 2015 18:56:38 -0500
-Message-ID: <1442361398.2909.164.camel@freescale.com>
-References: <1442307339-15225-1-git-send-email-dongsheng.wang@freescale.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 01/10] dt: power: bq24257-charger: Cover additional
+ devices
+Date: Wed, 16 Sep 2015 09:10:06 +0900
+Message-ID: <55F8B35E.6010706@samsung.com>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-2-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442307339-15225-1-git-send-email-dongsheng.wang@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dongsheng Wang <dongsheng.wang@freescale.com>
-Cc: devicetree@vger.kernel.org, Chenhui Zhao <chenhui.zhao@freescale.com>, alison.wang@freescale.com, Tang Yuantian <Yuantian.Tang@freescale.com>, robh+dt@kernel.org, jason.jin@freescale.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1442339914-25843-2-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-15 at 16:55 +0800, Dongsheng Wang wrote:
-> +* Freescale RCPM Wakeup Source Device Tree Bindings
-> +-------------------------------------------
-> +Required rcpm-wakeup property should be added to a device node if the 
-> device
-> +can be used as a wakeup source.
-> +
-> +  - rcpm-wakeup: The value of the property consists of 3 cells. The first 
-> cell
-> +     is a pointer to the rcpm node, the second cell is the bit mask that
-> +     should be set in IPPDEXPCR0, and the last cell is for IPPDEXPCR1.
-> +     Note: If the platform has no IPPDEXPCR1 register, put a zero here.
+On 16.09.2015 02:58, Andreas Dannenberg wrote:
+> Extend the bq24257 charger's device tree documentation to cover the
+> bq24250 and bq24251 devices as well feature additions.
+> 
+> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> ---
+>  .../devicetree/bindings/power/bq24257.txt          | 55 ++++++++++++++++++++--
+>  1 file changed, 50 insertions(+), 5 deletions(-)
+> 
 
-What if a future platform has more than two of these registers?
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
--Scott
+Best regards,
+Krzysztof
+
