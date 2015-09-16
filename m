@@ -1,92 +1,94 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] PCI: generic: Only fixup irqs for bus we are
- creating.
-Date: Wed, 16 Sep 2015 11:32:32 +0100
-Message-ID: <20150916103232.GB17510@red-moon>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/6] PCI: generic: Correct, and avoid overflow, in
+ bus_max calculation.
+Date: Wed, 16 Sep 2015 11:41:53 +0100
+Message-ID: <20150916104152.GC28771@arm.com>
 References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
- <1442013719-5001-3-git-send-email-ddaney.cavm@gmail.com>
- <20150915173654.GJ31157@arm.com>
- <55F85A24.2010600@caviumnetworks.com>
+ <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com>
+ <20150915174934.GL31157@arm.com>
+ <55F85D4E.9020604@caviumnetworks.com>
+ <20150915183500.GR31157@arm.com>
+ <55F86764.4060502@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55F85A24.2010600-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <55F86764.4060502-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 06:49:24PM +0100, David Daney wrote:
-> On 09/15/2015 10:36 AM, Will Deacon wrote:
-> > Hi David,
+On Tue, Sep 15, 2015 at 07:45:56PM +0100, David Daney wrote:
+> On 09/15/2015 11:35 AM, Will Deacon wrote:
+> > On Tue, Sep 15, 2015 at 07:02:54PM +0100, David Daney wrote:
+> >> On 09/15/2015 10:49 AM, Will Deacon wrote:
+> >>> On Sat, Sep 12, 2015 at 12:21:57AM +0100, David Daney wrote:
+> >>>>    	/* Limit the bus-range to fit within reg */
+> >>>> -	bus_max = pci->cfg.bus_range->start +
+> >>>> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> >>>> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> >>>> +	if (bus_max > 255)
+> >>>> +		bus_max = 255;
+> >>>>    	pci->cfg.bus_range->end = min_t(resource_size_t,
+> >>>>    					pci->cfg.bus_range->end, bus_max);
+> >>>
+> >>> Hmm, this is changing the meaning of the bus-range property in the
+> >>> device-tree, which really needs to match what IEEE Std 1275-1994 requires.
+> >>
+> >> I doesn't change the bus-range.
 > >
-> > On Sat, Sep 12, 2015 at 12:21:55AM +0100, David Daney wrote:
-> >> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Use pci_walk_bus() to restrict the fixup irq actions to only the bus
-> >> being created.
-> >>
-> >> If we create multiple buses with pci-host-generic, or there are buses
-> >> created by other drivers, we don't want to call pci_fixup_irqs() which
-> >> operates on all devices, not just the devices on the bus being added.
-> >> The consequence is that either the fixups are done more than once, or
-> >> in some cases incorrect fixups could be applied.
-> >>
-> >> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>   drivers/pci/host/pci-host-generic.c | 8 +++++++-
-> >>   1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-> >> index 265dd25..a0fb241 100644
-> >> --- a/drivers/pci/host/pci-host-generic.c
-> >> +++ b/drivers/pci/host/pci-host-generic.c
-> >> @@ -205,6 +205,12 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
-> >>   	return 0;
-> >>   }
-> >>
-> >> +static int gen_pci_fixup_irq_cb(struct pci_dev *dev, void *arg)
-> >> +{
-> >> +	pdev_fixup_irq(dev, pci_common_swizzle, of_irq_parse_and_map_pci);
-> >> +	return 0;
-> >> +}
-> >> +
-> >>   static int gen_pci_probe(struct platform_device *pdev)
-> >>   {
-> >>   	int err;
-> >> @@ -262,7 +268,7 @@ static int gen_pci_probe(struct platform_device *pdev)
-> >>   		return -ENODEV;
-> >>   	}
-> >>
-> >> -	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> >> +	pci_walk_bus(bus, gen_pci_fixup_irq_cb, NULL);
+> > Not directly, but pci->cfg.bus_range is a resource populated from the
+> > "bus-range" property in the device-tree, so it's changing how the driver
+> > uses that property.
 > >
-> > Any chance we could put something in the core PCI code for this? I think
-> > any host controller wanting to work with arm64 is potentially going to
-> > run into the same problem.
+> >>> My understanding was that the bus-range could be used to offset the config
+> >>> space, which is why it's subtracted from the bus number in
+> >>> gen_pci_map_cfg_bus_[e]cam.
+> >>
+> >> There is an inconsistency in the current code.  The calculation of the
+> >> cfg.win[?] pointers is done such that the beginning of the config space
+> >> specified in the "reg" property corresponds to bus 0.
+> >
+> > I don't follow you here. The mapping functions explicitly subtract the
+> > start of the bus range when calculating the window offset:
+> >
+> >    resource_size_t idx = bus->number - pci->cfg.bus_range->start;
+> >
+> > so if I have bus-range = <128 255>; then bus 128 lives at the start of
+> > the configuration space described by the reg property, not bus 0.
+> >
+> > Sorry if I'm being thick; I just can't see the inconsistency.
+> >
 > 
-> Good idea.
+> Here is the current code:
 > 
-> I will move the walking code into setup-irq.c (the current home of 
-> pci_fixup_irqs()), and make it part of patch 1/6.
+> >> 	bus_range = pci->cfg.bus_range;
+> >> 	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
+> >> 		u32 idx = busn - bus_range->start;
+> 
+> The index is offset by the bus range start...
+> 
+> >> 		u32 sz = 1 << pci->cfg.ops.bus_shift;
+> >>
+> >> 		pci->cfg.win[idx] = devm_ioremap(dev,
+> >> 						 pci->cfg.res.start + busn * sz,
+> >> 						 sz);
+> 
+> But, the offset into the "reg" property is the raw bus number.
+> 
+> 
+> >> 		if (!pci->cfg.win[idx])
+> >> 			return -ENOMEM;
+> >> 	}
+> 
+> 
+> I hope that makes it more clear.
 
-For arm64 we could even compile out pci_fixup_irqs() since the IRQ mapping
-is done in pcibios_add_device() through DT, I agree on CONFIG_ARM this
-needs fixing though, so yes, make it common code and patch all host
-controllers that make use of pci_fixup_irqs() since that's a common
-issue as far as I can see (ARM pcibios works around it by having a
-IRQ mapping function per bus and it provides an API to initialize
-multiple host controllers at once and fixing up IRQs before devices
-are added, still, for host controllers that do not use that
-functionality - eg drivers/pci/host/pcie-designware.c - if there are
-multiple host controllers instances we run into the same problem).
+Got it. So we should be using idx instead of busn in the devm_ioremap
+call above.
 
-Side note: do you have any PCI host controller where mapping IRQs through
-of_irq_parse_and_map_pci() does not work ? If yes, why ?
-
-Cheers,
-Lorenzo
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
