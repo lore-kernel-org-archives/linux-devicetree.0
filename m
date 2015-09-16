@@ -1,163 +1,64 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v4 07/10] power: bq24257: Add input DPM voltage threshold
- setting support
-Date: Wed, 16 Sep 2015 14:40:47 -0500
-Message-ID: <20150916194044.GD27772@beast>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-8-git-send-email-dannenberg@ti.com>
- <55F906CC.8090609@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
+ amplifier driver
+Date: Wed, 16 Sep 2015 20:42:34 +0100
+Message-ID: <20150916194234.GR12027@sirena.org.uk>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
+ <20150903114316.GV12027@sirena.org.uk>
+ <55EC0AFE.3080809@atmel.com>
+ <20150907162548.GW5313@sirena.org.uk>
+ <55EEAC0D.7010003@atmel.com>
+ <20150908122340.GC9751@sirena.org.uk>
+ <55F78C79.30102@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="C8VkwhTltIEgspDW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55F906CC.8090609@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <55F78C79.30102-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 03:06:04PM +0900, Krzysztof Kozlowski wrote:
-> On 16.09.2015 02:58, Andreas Dannenberg wrote:
-> > A new optional device property called "ti,in-dpm-voltage" is introduced
-> > to allow configuring the input voltage threshold for the devices'
-> > dynamic power path management (DPM) feature. In short, it can be used to
-> > prevent the input voltage from dropping below a certain value as current
-> > is drawn to charge the battery or supply the system.
-> > 
-> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> > ---
-> >  drivers/power/bq24257_charger.c | 44 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> > 
-> > diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> > index 47af858..84a8945 100644
-> > --- a/drivers/power/bq24257_charger.c
-> > +++ b/drivers/power/bq24257_charger.c
-> > @@ -76,6 +76,7 @@ struct bq24257_init_data {
-> >  	u8 iterm;	/* termination current */
-> >  	u8 in_ilimit;	/* input current limit */
-> >  	u8 vovp;	/* over voltage protection voltage */
-> > +	u8 vindpm;	/* VDMP input threshold voltage */
-> >  };
-> >  
-> >  struct bq24257_state {
-> > @@ -206,6 +207,13 @@ static const u32 bq24257_vovp_map[] = {
-> >  
-> >  #define BQ24257_VOVP_MAP_SIZE		ARRAY_SIZE(bq24257_vovp_map)
-> >  
-> > +static const u32 bq24257_vindpm_map[] = {
-> > +	4200000, 4280000, 4360000, 4440000, 4520000, 4600000, 4680000,
-> > +	4760000
-> > +};
-> > +
-> > +#define BQ24257_VINDPM_MAP_SIZE		ARRAY_SIZE(bq24257_vindpm_map)
-> > +
-> >  static int bq24257_field_read(struct bq24257_device *bq,
-> >  			      enum bq24257_fields field_id)
-> >  {
-> > @@ -432,6 +440,17 @@ enum bq24257_vovp {
-> >  	VOVP_10500
-> >  };
-> >  
-> > +enum bq24257_vindpm {
-> > +	VINDPM_4200,
-> > +	VINDPM_4280,
-> > +	VINDPM_4360,
-> > +	VINDPM_4440,
-> > +	VINDPM_4520,
-> > +	VINDPM_4600,
-> > +	VINDPM_4680,
-> > +	VINDPM_4760
-> > +};
-> 
-> Same as patch 6/10... but now see the use case - to choose default value
-> not by index of array but from this enum.
-> 
-> I see the idea behind so skip that comment from 6/10.
 
-OK.
+--C8VkwhTltIEgspDW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > +
-> >  enum bq24257_port_type {
-> >  	PORT_TYPE_DCP,		/* Dedicated Charging Port */
-> >  	PORT_TYPE_CDP,		/* Charging Downstream Port */
-> > @@ -615,6 +634,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
-> >  		{F_VBAT, bq->init_data.vbat},
-> >  		{F_ITERM, bq->init_data.iterm},
-> >  		{F_VOVP, bq->init_data.vovp},
-> > +		{F_VINDPM, bq->init_data.vindpm},
-> >  	};
-> >  
-> >  	/*
-> > @@ -648,6 +668,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
-> >  		/* program fixed input current limit */
-> >  		ret = bq24257_field_write(bq, F_IILIMIT,
-> >  					  bq->init_data.in_ilimit);
-> > +
-> 
-> Not part of this patch. It confuses the reviewer of patch. If you need
-> cleanups, make them separate.
+On Tue, Sep 15, 2015 at 11:11:53AM +0800, Wu, Songjun wrote:
 
-Artifact. This should not be there.
+> I try to use one entry, but there is a problem.
+> It's about 'driver_data' in struct device.
+> In function snd_soc_register_card, the parameter 'card' will be set to
+> 'driver_data' by the code 'dev_set_drvdata(card->dev, card)'.
+> Then some resources(eg. regmap, clock) also need be recorded by
+> 'driver_data'. One entry could only has one 'driver_data'. I think the best
+> way is to create two entries, like the current dts.
+> What's your opinion?
 
-> >  		if (ret < 0)
-> >  			return ret;
-> >  	} else if (!state.power_good)
-> > @@ -695,10 +716,23 @@ static ssize_t bq24257_show_ovp_voltage(struct device *dev,
-> >  			 bq24257_vovp_map[bq->init_data.vovp]);
-> >  }
-> >  
-> > +static ssize_t bq24257_show_in_dpm_voltage(struct device *dev,
-> > +					   struct device_attribute *attr,
-> > +					   char *buf)
-> > +{
-> > +	struct power_supply *psy = dev_get_drvdata(dev);
-> > +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> > +
-> > +	return scnprintf(buf, PAGE_SIZE, "%d\n",
-> > +			 bq24257_vindpm_map[bq->init_data.vindpm]);
-> 
-> Same as patch 6/10.
+Look at the recently applied sunxi driver for an example of how to do
+this - it's a similar piece of hardware (entirely in the SoC and so on).
 
-OK.
+--C8VkwhTltIEgspDW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJV+cYpAAoJECTWi3JdVIfQT8AH/A6lavo8bmUgkGD8dpaf3OOb
+qNrQjOox4qyznhBb3IuWP1llsWM/5D56MzWJXdKa5kIjTU1w19xQ+JwbxZIcmjOc
+T1TyiIkofBVW505jGUFrLgoRKEDa0iSDjBI4EmqRl3jB0IVCYooWWp8z01VWOX9i
+RjNCijLDfYM8wo6/WtFyz9T4QCFVcgpO90lGU8aO9zgm0u1QSH7hvPbdG5x6S4dt
+n7v1/BJ2bPGtDuq/UajHTnJsubN3diGzVc8o8SmX2ENW2eODmetOS8UtwNZd3XLU
+Qy6fvknhFCPJ0sxb5r76zIw39v8Uiugokn2fi/YooynU/oyKiernMkZQjqD/ps4=
+=pOy3
+-----END PGP SIGNATURE-----
+
+--C8VkwhTltIEgspDW--
 --
-Andreas Dannenberg
-Texas Instruments Inc
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> > +}
-> > +
-> >  static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
-> > +static DEVICE_ATTR(in_dpm_voltage, S_IRUGO, bq24257_show_in_dpm_voltage, NULL);
-> >  
-> >  static struct attribute *bq24257_charger_attr[] = {
-> >  	&dev_attr_ovp_voltage.attr,
-> > +	&dev_attr_in_dpm_voltage.attr,
-> >  	NULL,
-> >  };
-> >  
-> > @@ -801,6 +835,16 @@ static int bq24257_fw_probe(struct bq24257_device *bq)
-> >  						      bq24257_vovp_map,
-> >  						      BQ24257_VOVP_MAP_SIZE);
-> >  
-> > +	ret = device_property_read_u32(bq->dev, "ti,in-dpm-voltage",
-> > +				       &property);
-> > +	if (ret < 0)
-> > +		bq->init_data.vindpm = VINDPM_4360;
-> > +	else
-> > +		bq->init_data.vindpm =
-> > +				bq24257_find_idx(property,
-> > +						 bq24257_vindpm_map,
-> > +						 BQ24257_VINDPM_MAP_SIZE);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > 
-> 
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
