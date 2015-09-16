@@ -1,113 +1,46 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
-Date: Tue, 15 Sep 2015 20:54:42 -0700
-Message-ID: <55F8E802.7090008@wwwdotorg.org>
-References: <1439303153-12171-1-git-send-email-sjg@chromium.org>
- <1439312701.2451.3.camel@lynxeye.de>
- <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
- <CAPnjgZ0hzyjy=8o8ocaGCoOC7Js4CirhystidbvtabzbhRi4RQ@mail.gmail.com>
- <CAL_Jsq++ihz6svJAKWwT7-=KyJvyWXjdf=tZb4aDGgV_Dc=-Nw@mail.gmail.com>
- <CAPnjgZ3ubK_5j4AV4wO6xgoRf8iN+G8YSQm0pSW5fVzwpxYu5Q@mail.gmail.com>
- <CAL_JsqJ-N+nFEMEEmg4O45DVF0g382fUvjGTH=fP_HbgK38aKw@mail.gmail.com>
- <CAPnjgZ2L1TOOmiUSKk-=gpAUt8tvZU1SkGBmdbHJR1tBhE2nTA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt/bindings: bcm2835: add binding documentation
+ for bcm2835-aux
+Date: Tue, 15 Sep 2015 21:12:18 -0700
+Message-ID: <55F8EC22.7020909@wwwdotorg.org>
+References: <1440405608-3995-1-git-send-email-kernel@martin.sperl.org>
+ <1440405608-3995-4-git-send-email-kernel@martin.sperl.org>
+ <55DD1A13.7010705@wwwdotorg.org>
+ <9D45476C-88E2-4F76-AB55-9D0C7194E29C@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ2L1TOOmiUSKk-=gpAUt8tvZU1SkGBmdbHJR1tBhE2nTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <9D45476C-88E2-4F76-AB55-9D0C7194E29C-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, lak <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lk <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2015 11:27 AM, Simon Glass wrote:
-> Hi Rob,
+On 09/04/2015 01:26 AM, Martin Sperl wrote:
 > 
-> On 25 August 2015 at 10:22, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Aug 15, 2015 at 8:46 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>> Hi Rob,
->>>
->>> On 14 August 2015 at 14:29, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Fri, Aug 14, 2015 at 1:34 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>> -linux-tegra
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 12 August 2015 at 07:21, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>>> Hi Lucas,
->>>>>>
->>>>>> On 11 August 2015 at 11:05, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org> wrote:
->>>>>>> Hi Simon,
->>>>>>>
->>>>>>> why did you send this to the Tegra ML?
->>>>>>>
->>>>>>> Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
->>>>>>>> This updates the device tree from the kernel version to something suitable
->>>>>>>> for U-Boot:
->>>>>>>>
->>>>>>>> - Add stdout-path alias for console
->>>>>>>> - Mark the /soc node to be available pre-relocation so that the early
->>>>>>>> serial console works (we need the 'ranges' property to be available)
-
-[... discussion of u-boot,dm-pre-reloc property]
->>>> Can't the need for that property change over time? Either as more
->>>> drivers are converted to DM you need to add this or you add some
->>>> feature that depends on a driver (e.g. get a board rev or boot mode
->>>> from GPIO). You would have backwards compatibility issues with this.
->>>> I'm somewhat less worried about that for u-boot as we should be
->>>> bundling the dtb and bootloader rather than kernel and dtb. For the
->>>> UART, you can just get which UART to initialize early from
->>>> stdout-path. But for other cases, couldn't you just have the platform
->>>> provide the list of needed drivers. Then when u-boot needs change, you
->>>> just change u-boot.
->>>
->>> Yes U-Boot and its device tree are normally built from the same tree
->>> at the same time. We don't expect to have to support an older or newer
->>> device tree with the same U-Boot binary. So I don't see a problem
->>> here.
+>> On 26.08.2015, at 03:44, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 >>
->> My point is that if I had to pick how bootloader+dtb+kernel are
->> bundled or not, I would rather see the dtb in sync with the bootloader
->> rather than the kernel. But I can't decide that for everyone and
->> neither can you. You still have a compatibility problem and that has
->> to be addressed.
+>> On 08/24/2015 02:40 AM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+>>
+>>> +Example:
+>>> +
+>>> +aux_enable: aux_enable@0x7e215004 {
+>>> +	compatible = "bcrm,bcm2835-aux";
+>>> +	reg = <0x7e215004 0x04>;
+>>
+>> I'd expect that to be <0x7e215000 0x8>;
 > 
-> What are you getting at here? If I move to a new kernel and still use
-> an old device tree I may be missing features, or fail to boot. Don't
-> do that!
-
-One of the central points of DT is that it is an ABI. As such, moving to
-a new kernel and continuing to use the same old DTB *MUST NOT* break
-anything. Of course, you won't get any features enabled/described in any
-new DT if you don't use it.
-
-...
-> After reading your email I am none the wiser about what you are suggesting.
+> The reason is that we just handle enable with this driver,
+> which just requires access to the 0x7e215004 register.
 > 
-> This is not a screwy case. Every board will have a console. In some
-> cases it is inside a 'soc {' node and in some cases it is not. The
-> pure solution would be to mark every UART node with
-> u-boot,dm-pre-reloc and we can do that if you prefer. It isn't
-> necessary though for the reasons I previously explained.
-> 
-> It seems reasonable that U-Boot should be able to add private
-> properties to the device tree, intended for U-Boot, just as Linux
-> does. What is the problem here?
+> The 0x7e215000 register (interrupt mask) could be used by a
+> cascaded interrupt-controller, but as the spi and uart drivers
+> can run with shared interrupts this is not a necessity.
 
-Why is that reasonable? DT is intended to describe the HW. It is
-supposed to be OS-agnostic. Having U-Boot-specific properties completely
-goes against that.
+The DT is supposed to describe the HW, not any particular SW's use of
+the HW. If the HW block has 2 registers, so must the DT reg property.
 
-What Linux-specific properties are you referring to? The only one I
-recall you mentioning (although I'm missing a lot of sleep right now) is
-the keycodes in the input binding. While the DT property name for those
-is linux,... and the values happen to match internal Linux numbering,
-there's absolutely nothing Linux specific about the /concept/ of a
-keycode, and some numbering scheme had to be picked. There's nothing
-practical or conceptual stopping any other OS/SW-stack from translating
-those Linux IDs into something internally meaningful. Conversely, the
-concept of e.g. "u-boot,dm-pre-reloc" is not something that translates
-at all to any other OS/WW-stack.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
