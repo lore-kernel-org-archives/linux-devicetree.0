@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 2/6] doc: dt-binding: ci-hdrc-usb2: add i.mx specific binding "need-three-clocks"
-Date: Wed, 16 Sep 2015 13:20:45 +0800
-Message-ID: <1442380849-8500-3-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v2 3/6] ARM: dts: imx27.dtsi: change the clock information for usb
+Date: Wed, 16 Sep 2015 13:20:46 +0800
+Message-ID: <1442380849-8500-4-git-send-email-peter.chen@freescale.com>
 References: <1442380849-8500-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,31 +9,94 @@ Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1442380849-8500-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs needs three clock to let controller work, but others only
-need one, add one property to differentiate this.
+For imx27, it needs three clocks to let the controller work,
+the old code is wrong, and usbmisc has not included clock handling
+code any more. Without this patch, it will cause below data
+abort when accessing usbmisc registers.
+
+usbcore: registered new interface driver usb-storage
+Unhandled fault: external abort on non-linefetch (0x008) at 0xf4424600
+pgd = c0004000
+[f4424600] *pgd=10000452(bad)
+Internal error: : 8 [#1] PREEMPT ARM
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 4.1.0-next-20150701-dirty #3089
+Hardware name: Freescale i.MX27 (Device Tree Support)
+task: c7832b60 ti: c783e000 task.ti: c783e000
+PC is at usbmisc_imx27_init+0x4c/0xbc
+LR is at usbmisc_imx27_init+0x40/0xbc
+pc : [<c03cb5c0>]    lr : [<c03cb5b4>]    psr: 60000093
+sp : c783fe08  ip : 00000000  fp : 00000000
+r10: c0576434  r9 : 0000009c  r8 : c7a773a0
+r7 : 01000000  r6 : 60000013  r5 : c7a776f0  r4 : c7a773f0
+r3 : f4424600  r2 : 00000000  r1 : 00000001  r0 : 00000001
+Flags: nZCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 0005317f  Table: a0004000  DAC: 00000017
+Process swapper (pid: 1, stack limit = 0xc783e190)
+Stack: (0xc783fe08 to 0xc7840000)
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Reported-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+
 ---
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx27.dtsi | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index f15a317..f405452 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -54,6 +54,9 @@ i.mx specific properties
-   argument that indicate usb controller index
- - disable-over-current: disable over current detect
- - external-vbus-divider: enables off-chip resistor divider for Vbus
-+- need-three-clocks: the SoC before imx6 series (except for imx23/imx28)
-+  needs three clcoks for controller, others only need one. Without this
-+  property, the driver will consider the controller only needs one clock.
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index feb9d34..93e3e14 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -486,7 +486,11 @@
+ 				compatible = "fsl,imx27-usb";
+ 				reg = <0x10024000 0x200>;
+ 				interrupts = <56>;
+-				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
++				need-three-clocks;
++				clocks = <&clks IMX27_CLK_USB_IPG_GATE>,
++					<&clks IMX27_CLK_USB_AHB_GATE>,
++					<&clks IMX27_CLK_USB_DIV>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				status = "disabled";
+ 			};
+@@ -495,7 +499,11 @@
+ 				compatible = "fsl,imx27-usb";
+ 				reg = <0x10024200 0x200>;
+ 				interrupts = <54>;
+-				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
++				need-three-clocks;
++				clocks = <&clks IMX27_CLK_USB_IPG_GATE>,
++					<&clks IMX27_CLK_USB_AHB_GATE>,
++					<&clks IMX27_CLK_USB_DIV>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				dr_mode = "host";
+ 				status = "disabled";
+@@ -505,7 +513,11 @@
+ 				compatible = "fsl,imx27-usb";
+ 				reg = <0x10024400 0x200>;
+ 				interrupts = <55>;
+-				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
++				need-three-clocks;
++				clocks = <&clks IMX27_CLK_USB_IPG_GATE>,
++					<&clks IMX27_CLK_USB_AHB_GATE>,
++					<&clks IMX27_CLK_USB_DIV>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 2>;
+ 				dr_mode = "host";
+ 				status = "disabled";
+@@ -515,7 +527,6 @@
+ 				#index-cells = <1>;
+ 				compatible = "fsl,imx27-usbmisc";
+ 				reg = <0x10024600 0x200>;
+-				clocks = <&clks IMX27_CLK_USB_AHB_GATE>;
+ 			};
  
- Example:
- 
+ 			sahara2: sahara@10025000 {
 -- 
 1.9.1
 
