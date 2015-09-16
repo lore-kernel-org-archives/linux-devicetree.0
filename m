@@ -1,44 +1,54 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v8 10/10] arm: zx_defconfig: remove CONFIG_MMC_DW_IDMAC
-Date: Wed, 16 Sep 2015 14:43:28 +0800
-Message-ID: <1442385808-1433-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1442385625-26775-1-git-send-email-shawn.lin@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Wed, 16 Sep 2015 07:52:46 +0100
+Message-ID: <20150916065246.GA3218@x1>
+References: <20150909075930.GB3260@x1>
+ <20150909083031.GB5266@linux>
+ <20150909133930.GE3260@x1>
+ <20150909160212.GJ5266@linux>
+ <20150909163620.GF3260@x1>
+ <55F0C5AB.5060609@kernel.org>
+ <20150910005722.GA15099@codeaurora.org>
+ <20150910010426.GM5266@linux>
+ <20150910083146.GG3260@x1>
+ <20150916043328.GA29943@linux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442385625-26775-1-git-send-email-shawn.lin@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <20150916043328.GA29943@linux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jh80.chung@samsung.com, ulf.hansson@linaro.org
-Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DesignWare MMC Controller's transfer mode should be decided
-at runtime instead of compile-time. So we remove this config
-option and read dw_mmc's register to select DMA master.
+On Wed, 16 Sep 2015, Viresh Kumar wrote:
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+> On 10-09-15, 09:31, Lee Jones wrote:
+> > I think you answered your own question.
+> >=20
+> > No users =3D=3D !ABI =3D=3D Strip it out.
+>=20
+> Okay, as I have delayed things enough for you, didn't wanted to do
+> that anymore. And so worked on it despite very tight schedule :)
+>=20
+> Below is the refreshed binding changes (I have split that into 3
+> patches, but kept the diff here for simplicity).
+>=20
+> Other than that, all code changes you need to test your driver are
+> pushed here:
+>=20
+> https://git.linaro.org/people/viresh.kumar/linux.git opp/supported-hw=
+-prop-name-v1
+>=20
+> I am not gonna post the patches to the lists, until the time existing
+> patches get reviewed.
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Thanks dude.
 
- arch/arm/configs/zx_defconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/configs/zx_defconfig b/arch/arm/configs/zx_defconfig
-index b200bb0..ab683fb 100644
---- a/arch/arm/configs/zx_defconfig
-+++ b/arch/arm/configs/zx_defconfig
-@@ -83,7 +83,6 @@ CONFIG_MMC=y
- CONFIG_MMC_UNSAFE_RESUME=y
- CONFIG_MMC_BLOCK_MINORS=16
- CONFIG_MMC_DW=y
--CONFIG_MMC_DW_IDMAC=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
--- 
-2.3.7
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
