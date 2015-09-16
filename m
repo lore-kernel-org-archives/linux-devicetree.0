@@ -1,45 +1,104 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 0/2] of: Dynamic DT updates
-Date: Wed, 16 Sep 2015 11:43:51 -0500
-Message-ID: <CAL_JsqJORsJ8aA3DLuHAVovKX-wdx8m7_NCYA4kheumvyxScTg@mail.gmail.com>
-References: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] of: overlay: add per overlay sysfs attributes
+Date: Wed, 16 Sep 2015 11:45:04 -0500
+Message-ID: <CAL_Jsq+N43c-A175QC0L9jpEP9ZptugDLChMEJgs76=1NEP3Mw@mail.gmail.com>
+References: <1442419751-4846-1-git-send-email-pantelis.antoniou@konsulko.com> <1442419751-4846-4-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442419751-4846-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 11:11 AM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> The two patches add a new API for using changeset which
-> makes things considerably easier.
+On Wed, Sep 16, 2015 at 11:09 AM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> The two default overlay attributes are:
 >
-> This patchset applies against Linus's tree as of today and
-> is dependent on the previous patchset I've send out earlier.
-> "of: overlay: kobject & sysfs'ation"
+> * A targets sysfs attribute listing the targets of the installed
+> overlay. The targets list the path on the kernel's device tree
+> where each overlay fragment is applied to
+>
+> * A per overlay can_remove sysfs attribute that reports whether
+> the overlay can be removed or not due to another overlapping overlay.
+>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
 
-Oh good, I'll ignore it until that is merged. ;) Seriously, this
-doesn't really look dependent. It doesn't involve ABIs either, so it
-is easier.
+How about an answer to my v4 questions?
 
 Rob
 
+>  drivers/of/overlay.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 >
-> Changes since v1:
-> * Dropped the indirect and target root patches until we
-> figure out what to do with the DT connector.
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 62cfb99..cff3c05 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -373,8 +373,61 @@ static const struct attribute *overlay_global_attrs[] = {
+>         NULL
+>  };
 >
-> Pantelis Antoniou (2):
->   of: dynamic: Add __of_node_dupv()
->   of: changesets: Introduce changeset helper methods
+> +static ssize_t can_remove_show(struct kobject *kobj,
+> +               struct kobj_attribute *attr, char *buf)
+> +{
+> +       struct of_overlay *ov = kobj_to_overlay(kobj);
+> +
+> +       return snprintf(buf, PAGE_SIZE, "%d\n", overlay_removal_is_ok(ov));
+> +}
+> +
+> +static ssize_t targets_show(struct kobject *kobj,
+> +               struct kobj_attribute *attr, char *buf)
+> +{
+> +       struct of_overlay *ov = kobj_to_overlay(kobj);
+> +       struct of_overlay_info *ovinfo;
+> +       char *s, *e;
+> +       ssize_t ret;
+> +       int i, len;
+> +
+> +       s = buf;
+> +       e = buf + PAGE_SIZE;
+> +
+> +       mutex_lock(&of_mutex);
+> +
+> +       /* targets */
+> +       for (i = 0; i < ov->count; i++) {
+> +               ovinfo = &ov->ovinfo_tab[i];
+> +
+> +               len = snprintf(s, e - s, "%s\n",
+> +                               of_node_full_name(ovinfo->target));
+> +               if (len == 0) {
+> +                       ret = -ENOSPC;
+> +                       goto err;
+> +               }
+> +               s += len;
+> +       }
+> +
+> +       /* the buffer is zero terminated */
+> +       ret = s - buf;
+> +err:
+> +       mutex_unlock(&of_mutex);
+> +       return ret;
+> +}
+> +
+> +static struct kobj_attribute can_remove_attr = __ATTR_RO(can_remove);
+> +static struct kobj_attribute targets_attr = __ATTR_RO(targets);
+> +
+> +static struct attribute *overlay_attrs[] = {
+> +       &can_remove_attr.attr,
+> +       &targets_attr.attr,
+> +       NULL
+> +};
+> +
+>  static struct kobj_type of_overlay_ktype = {
+>         .release = of_overlay_release,
+> +       .sysfs_ops = &kobj_sysfs_ops,   /* default kobj sysfs ops */
+> +       .default_attrs = overlay_attrs,
+>  };
 >
->  drivers/of/dynamic.c | 280 +++++++++++++++++++++++++++++++++++++++++++++++++--
->  include/linux/of.h   |  74 ++++++++++++++
->  2 files changed, 348 insertions(+), 6 deletions(-)
->
+>  static struct kset *ov_kset;
 > --
 > 1.7.12
 >
