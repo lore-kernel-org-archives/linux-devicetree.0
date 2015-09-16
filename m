@@ -1,32 +1,71 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 01/10] dt: power: bq24257-charger: Cover additional
- devices
-Date: Wed, 16 Sep 2015 09:10:06 +0900
-Message-ID: <55F8B35E.6010706@samsung.com>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-2-git-send-email-dannenberg@ti.com>
+From: Peng Fan <van.freenix@gmail.com>
+Subject: Re: [PATCH] drivers: of: check input parameter name for
+ __of_find_property
+Date: Wed, 16 Sep 2015 08:16:51 +0800
+Message-ID: <20150916001650.GA28082@linux-4gyl.site>
+References: <1441979043-19694-1-git-send-email-van.freenix@gmail.com>
+ <55F83FAC.5080002@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1442339914-25843-2-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F83FAC.5080002@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.09.2015 02:58, Andreas Dannenberg wrote:
-> Extend the bq24257 charger's device tree documentation to cover the
-> bq24250 and bq24251 devices as well feature additions.
+Hi Rob,
+
+On Tue, Sep 15, 2015 at 10:56:28AM -0500, Rob Herring wrote:
+> On 09/11/2015 08:44 AM, Peng Fan wrote:
+> > Check input parameter 'name' for __of_find_property. If name is NULL,
+> > of_prop_cmp->strcasecmp may trigger panic.
 > 
-> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> ---
->  .../devicetree/bindings/power/bq24257.txt          | 55 ++++++++++++++++++++--
->  1 file changed, 50 insertions(+), 5 deletions(-)
+> Arguably that could be a feature. Do you have a usecase where name being
+> NULL is valid and panicking is a problem?
+
+In drivers/pinctrl/devicetree.c
+
+195                 propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
+196                 prop = of_find_property(np, propname, &size);
+197                 kfree(propname);
+198                 if (!prop)
+199                         break;
+
+If propname is NULL, of_find_property may trigger panic. Anyway propname should be checked
+before passing to of_find_property.
+
+I did not met panic message. I wrote this patch when I was reading the piece code.
+I think the name parameter should be checked before doing string compare.
+
+Regards,
+Peng.
+
 > 
-
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-Best regards,
-Krzysztof
-
+> Rob
+> 
+> > 
+> > Signed-off-by: Peng Fan <van.freenix@gmail.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: Grant Likely <grant.likely@linaro.org>
+> > ---
+> >  drivers/of/base.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index 8b5a187..e41436d 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -215,7 +215,7 @@ static struct property *__of_find_property(const struct device_node *np,
+> >  {
+> >  	struct property *pp;
+> >  
+> > -	if (!np)
+> > +	if (!np || !name)
+> >  		return NULL;
+> >  
+> >  	for (pp = np->properties; pp; pp = pp->next) {
+> > 
+> 
