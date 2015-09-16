@@ -1,56 +1,227 @@
-From: eu@felipetonello.com
-Subject: [PATCH] ARM: dts: fix usb pin control for imx-rex dts
-Date: Wed, 16 Sep 2015 18:40:32 +0100
-Message-ID: <1442425232-21451-1-git-send-email-eu@felipetonello.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "Felipe F. Tonello" <eu@felipetonello.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v4 02/10] power: bq24257: Add basic support for
+ bq24250/bq24251
+Date: Wed, 16 Sep 2015 14:02:47 -0500
+Message-ID: <20150916190241.GA27772@beast>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-3-git-send-email-dannenberg@ti.com>
+ <55F8B57F.1020502@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F8B57F.1020502@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Felipe F. Tonello" <eu@felipetonello.com>
+On Wed, Sep 16, 2015 at 09:19:11AM +0900, Krzysztof Kozlowski wrote:
+> On 16.09.2015 02:58, Andreas Dannenberg wrote:
+> > This patch adds basic support for bq24250 and bq24251 which are very
+> > similar to the bq24257 the driver was originally written for. Basic
+> > support means the ability to select a device through Kconfig, DT and
+> > ACPI, an instance variable allowing to check which chip is active, and
+> > the reporting back of the selected device through the
+> > POWER_SUPPLY_PROP_MODEL_NAME power supply sysfs property.
+> > 
+> > This patch by itself is not sufficient to actually use those two added
+> > devices in a real-world setting due to some feature differences which
+> > are addressed by other patches in this series.
+> > 
+> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> > ---
+> >  drivers/power/Kconfig           |  5 +++--
+> >  drivers/power/bq24257_charger.c | 46 +++++++++++++++++++++++++++++++++++++++--
+> >  2 files changed, 47 insertions(+), 4 deletions(-)
+> 
+> Two comments below, but they are just suggestions/questions. The code
+> code now looks good:
+> 
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> > 
+> > diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+> > index f8758d6..7ecd9b6 100644
+> > --- a/drivers/power/Kconfig
+> > +++ b/drivers/power/Kconfig
+> > @@ -397,12 +397,13 @@ config CHARGER_BQ24190
+> >  	  Say Y to enable support for the TI BQ24190 battery charger.
+> >  
+> >  config CHARGER_BQ24257
+> > -	tristate "TI BQ24257 battery charger driver"
+> > +	tristate "TI BQ24250/24251/24257 battery charger driver"
+> >  	depends on I2C
+> >  	depends on GPIOLIB || COMPILE_TEST
+> >  	depends on REGMAP_I2C
+> >  	help
+> > -	  Say Y to enable support for the TI BQ24257 battery charger.
+> > +	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+> > +	  chargers.
+> >  
+> >  config CHARGER_BQ24735
+> >  	tristate "TI BQ24735 battery charger support"
+> > diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> > index 5859bc7..1b3ddfb 100644
+> > --- a/drivers/power/bq24257_charger.c
+> > +++ b/drivers/power/bq24257_charger.c
+> > @@ -13,6 +13,10 @@
+> >   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >   * GNU General Public License for more details.
+> >   *
+> > + * Datasheets:
+> > + * http://www.ti.com/product/bq24250
+> > + * http://www.ti.com/product/bq24251
+> > + * http://www.ti.com/product/bq24257
+> >   */
+> >  
+> >  #include <linux/module.h>
+> > @@ -41,6 +45,18 @@
+> >  
+> >  #define BQ24257_ILIM_SET_DELAY		1000	/* msec */
+> >  
+> > +enum bq2425x_chip {
+> > +	BQ24250,
+> > +	BQ24251,
+> > +	BQ24257,
+> > +};
+> > +
+> > +static const char *const bq2425x_chip_name[] = {
+> > +	"bq24250",
+> > +	"bq24251",
+> > +	"bq24257",
+> > +};
+> > +
+> >  enum bq24257_fields {
+> >  	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
+> >  	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
+> > @@ -71,6 +87,8 @@ struct bq24257_device {
+> >  	struct device *dev;
+> >  	struct power_supply *charger;
+> >  
+> > +	enum bq2425x_chip chip;
+> > +
+> >  	struct regmap *rmap;
+> >  	struct regmap_field *rmap_fields[F_MAX_FIELDS];
+> >  
+> > @@ -249,6 +267,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
+> >  		val->strval = BQ24257_MANUFACTURER;
+> >  		break;
+> >  
+> > +	case POWER_SUPPLY_PROP_MODEL_NAME:
+> > +		val->strval = bq2425x_chip_name[bq->chip];
+> 
+> You have now here strict relation between number of elements in
+> bq2425x_chip_name and possible types of devices (enum values). Consider
+> adding a comment at beginning or a BUILD_BUG_ON to prevent mismatches in
+> the future (like someone will add a new value in enum but will forgot to
+> add device name).
 
-This fixes a duplicated pin control causing this error:
+Good suggestion, will look into this.
+ 
+> > +		break;
+> > +
+> >  	case POWER_SUPPLY_PROP_ONLINE:
+> >  		val->intval = state.power_good;
+> >  		break;
+> > @@ -569,6 +591,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
+> >  
+> >  static enum power_supply_property bq24257_power_supply_props[] = {
+> >  	POWER_SUPPLY_PROP_MANUFACTURER,
+> > +	POWER_SUPPLY_PROP_MODEL_NAME,
+> >  	POWER_SUPPLY_PROP_STATUS,
+> >  	POWER_SUPPLY_PROP_ONLINE,
+> >  	POWER_SUPPLY_PROP_HEALTH,
+> > @@ -666,6 +689,7 @@ static int bq24257_probe(struct i2c_client *client,
+> >  {
+> >  	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+> >  	struct device *dev = &client->dev;
+> > +	const struct acpi_device_id *acpi_id;
+> >  	struct bq24257_device *bq;
+> >  	int ret;
+> >  	int i;
+> > @@ -682,6 +706,18 @@ static int bq24257_probe(struct i2c_client *client,
+> >  	bq->client = client;
+> >  	bq->dev = dev;
+> >  
+> > +	if (ACPI_HANDLE(dev)) {
+> > +		acpi_id = acpi_match_device(dev->driver->acpi_match_table,
+> > +					    &client->dev);
+> > +		if (!acpi_id) {
+> > +			dev_err(dev, "Failed to match ACPI device\n");
+> > +			return -ENODEV;
+> > +		}
+> > +		bq->chip = (enum bq2425x_chip)acpi_id->driver_data;
+> > +	} else {
+> > +		bq->chip = (enum bq2425x_chip)id->driver_data;
+> > +	}
+> > +
+> >  	mutex_init(&bq->lock);
+> >  
+> >  	bq->rmap = devm_regmap_init_i2c(client, &bq24257_regmap_config);
+> > @@ -823,19 +859,25 @@ static const struct dev_pm_ops bq24257_pm = {
+> >  };
+> >  
+> >  static const struct i2c_device_id bq24257_i2c_ids[] = {
+> > -	{ "bq24257", 0 },
+> > +	{ "bq24250", BQ24250 },
+> > +	{ "bq24251", BQ24251 },
+> > +	{ "bq24257", BQ24257 },
+> >  	{},
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, bq24257_i2c_ids);
+> >  
+> >  static const struct of_device_id bq24257_of_match[] = {
+> > +	{ .compatible = "ti,bq24250", },
+> > +	{ .compatible = "ti,bq24251", },
+> >  	{ .compatible = "ti,bq24257", },
+> >  	{ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, bq24257_of_match);
+> >  
+> >  static const struct acpi_device_id bq24257_acpi_match[] = {
+> > -	{"BQ242570", 0},
+> > +	{ "BQ242500", BQ24250 },
+> > +	{ "BQ242510", BQ24251 },
+> > +	{ "BQ242570", BQ24257 },
+> 
+> The last "0" in each device name (in string) is on purpose?
 
-imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_GPIO_1 already
-requested by regulators:regulator@2; cannot claim for 2184000.usb
-imx6q-pinctrl 20e0000.iomuxc: pin-137 (2184000.usb) status -22
-imx6q-pinctrl 20e0000.iomuxc: could not request pin 137
-(MX6Q_PAD_GPIO_1) from group usbotggrp  on device 20e0000.iomuxc
-imx_usb 2184000.usb: Error applying setting, reverse things
-back
-imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_EIM_D31 already
-requested by regulators:regulator@1; cannot claim for 2184200.usb
-imx6q-pinctrl 20e0000.iomuxc: pin-52 (2184200.usb) status -22
-imx6q-pinctrl 20e0000.iomuxc: could not request pin 52 (MX6Q_PAD_EIM_D31)
-from group usbh1grp  on device 20e0000.iomuxc
-imx_usb 2184200.usb: Error applying setting, reverse things
-back
+I had the same question when I first picked up the work on this driver
+and asked Laurentiu about this aspect offline and apparently it's
+related to an ACPI requirement. Here is his reply in its entirety:
 
-Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
----
- arch/arm/boot/dts/imx6qdl-rex.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+---Quote Laurentiu Begin---
+If the driver had been developed starting from an actual end product, we
+would have used the actual ACPI ID, provided by the product FW. However,
+since our development "device" was a combination of EVM, USB-to-I2C
+bridge and QEMU, we had the liberty to choose whatever ACPI ID we
+wanted, provided that if an actual product using this chip appeared, we
+could always add the new ACPI ID to bq24257_acpi_match[] and have the
+driver working.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-index 3373fd9..a503562 100644
---- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-@@ -35,7 +35,6 @@
- 			compatible = "regulator-fixed";
- 			reg = <1>;
- 			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_usbh1>;
- 			regulator-name = "usbh1_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
-@@ -47,7 +46,6 @@
- 			compatible = "regulator-fixed";
- 			reg = <2>;
- 			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_usbotg>;
- 			regulator-name = "usb_otg_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--- 
-2.1.4
+The ACPI specification states: "A valid ACPI ID must be of the form
+"NNNN####" where N is an uppercase letter or a digit ('0'-'9') and # is
+a hex digit." But it does not strictly forbids one to use another
+combination as long as it's 8 characters long.
+
+The only specification compliant combination that came to mind was
+"TIBQ2425" but it missed the last digit... Hence, I decided to use
+"BQ242570" for the time being. At least it contains the entire chip
+name
+---Quote Laurentiu End---
+
+This all made sense so I simply extended the scheme that was used.
+
+Regards,
+Andreas
+
+> 
+> Best regards,
+> Krzysztof
+> 
+> >  	{},
+> >  };
+> >  MODULE_DEVICE_TABLE(acpi, bq24257_acpi_match);
+> > 
+> 
