@@ -1,54 +1,109 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v8 04/10] mips: pistachio_defconfig: remove CONFIG_MMC_DW_IDMAC
-Date: Wed, 16 Sep 2015 14:42:05 +0800
-Message-ID: <1442385725-30114-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1442385625-26775-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1442385625-26775-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: jh80.chung@samsung.com, ulf.hansson@linaro.org
-Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v8 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
+Date: Wed, 16 Sep 2015 14:44:20 +0800
+Message-ID: <1442385864-4368-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1442385864-4368-1-git-send-email-chunfeng.yun@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1442385864-4368-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DesignWare MMC Controller's transfer mode should be decided
-at runtime instead of compile-time. So we remove this config
-option and read dw_mmc's register to select DMA master.
+add a DT binding documentation of usb3.0 phy for MT65xx
+SoCs from Mediatek.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Acked-by: Govindraj Raja <govindraj.raja@imgtec.com>
-Acked-by: Ralf Baechle <ralf@linux-mips.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
+ .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- arch/mips/configs/pistachio_defconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/mips/configs/pistachio_defconfig b/arch/mips/configs/pistachio_defconfig
-index 642b509..8b74291 100644
---- a/arch/mips/configs/pistachio_defconfig
-+++ b/arch/mips/configs/pistachio_defconfig
-@@ -257,7 +257,6 @@ CONFIG_MMC=y
- CONFIG_MMC_BLOCK_MINORS=16
- CONFIG_MMC_TEST=m
- CONFIG_MMC_DW=y
--CONFIG_MMC_DW_IDMAC=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_RTC_CLASS=y
+diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+new file mode 100644
+index 0000000..00100cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+@@ -0,0 +1,68 @@
++mt65xx USB3.0 PHY binding
++--------------------------
++
++This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
++
++Required properties (controller (parent) node):
++ - compatible	: should be "mediatek,mt8173-u3phy"
++ - reg		: offset and length of register for phy, exclude port's
++		  register.
++ - clocks	: a list of phandle + clock-specifier pairs, one for each
++		  entry in clock-names
++ - clock-names	: must contain
++		  "u3phya_ref": for reference clock of usb3.0 analog phy.
++
++Required nodes	: a sub-node is required for each port the controller
++		  provides. Address range information including the usual
++		  'reg' property is used inside these nodes to describe
++		  the controller's topology.
++
++Required properties (port (child) node):
++- reg		: address and length of the register set for the port.
++- #phy-cells	: should be 1 (See second example)
++		  cell after port phandle is phy type from:
++			- PHY_TYPE_USB2
++			- PHY_TYPE_USB3
++
++Example:
++
++u3phy: usb-phy@11290000 {
++	compatible = "mediatek,mt8173-u3phy";
++	reg = <0 0x11290000 0 0x800>;
++	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
++	clock-names = "u3phya_ref";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	ranges;
++	status = "okay";
++
++	phy_port0: port@11290800 {
++		reg = <0 0x11290800 0 0x800>;
++		#phy-cells = <1>;
++		status = "okay";
++	};
++
++	phy_port1: port@11291000 {
++		reg = <0 0x11291000 0 0x800>;
++		#phy-cells = <1>;
++		status = "okay";
++	};
++};
++
++Specifying phy control of devices
++---------------------------------
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type;
++phy-names for each port are optional.
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++usb30: usb@11270000 {
++	...
++	phys = <&phy_port0 PHY_TYPE_USB3>;
++	phy-names = "usb3-0";
++	...
++};
 -- 
-2.3.7
+1.8.1.1.dirty
