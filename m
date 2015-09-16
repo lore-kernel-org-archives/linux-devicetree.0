@@ -1,65 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] spi: introduce mmap read support for spi flash
- devices
-Date: Wed, 16 Sep 2015 16:24:21 +0100
-Message-ID: <20150916152421.GL11268@sirena.org.uk>
-References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
- <1441355402-6837-2-git-send-email-vigneshr@ti.com>
- <CAD6G_RT8Q+Uyp1ZjzHf54Tno1wHm0SmLKEwRAe2gkdp772FD9A@mail.gmail.com>
- <20150914183553.GE12027@sirena.org.uk>
- <CAD6G_RQOazkS7KHrG75wgMXx1cH_pKjx43Mve6fz1qOJGPpq9w@mail.gmail.com>
+From: =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@freescale.com>
+Subject: Re: [PATCH] ARM: dts: ls1021a: add crypto node
+Date: Wed, 16 Sep 2015 18:28:41 +0300
+Message-ID: <55F98AA9.1030607@freescale.com>
+References: <1439365361-24129-1-git-send-email-horia.geanta@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BFVE2HhgxTpCzM8t"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD6G_RQOazkS7KHrG75wgMXx1cH_pKjx43Mve6fz1qOJGPpq9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1439365361-24129-1-git-send-email-horia.geanta@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Zhengxiong Jin <Jason.Jin@freescale.com>, linux-arm-kernel@lists.infradead.org, Alison Wang <alison.wang@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-
---BFVE2HhgxTpCzM8t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Sep 16, 2015 at 06:16:55PM +0530, Jagan Teki wrote:
-> On 15 September 2015 at 00:05, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-> > There seem to be a reasonable number of SPI controllers out there which
-> > have as an extension the ability to do memory mapped reads but are
-> > otherwise perfectly normal SPI controllers and which rely on that for
-> > everything except reads.
-
-> This is true, but exposing direct spi-nor arguments or features like
-> read_opcode, addr_width or dummy_byte to spi layer isn't fine? because
-> for spi layer there is a spi to flash transition mtd m25p80.c is there
-> to handle is it?
-
-The m25p80 driver is a generic, SPI level piece of code not a driver for
-specific controller hardware.  The controller hardware drivers live in
-the SPI subsystem.  In order to support this memory mapped feature we
-need the controller drivers to expose an interface for controlling it.
-
---BFVE2HhgxTpCzM8t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV+YmkAAoJECTWi3JdVIfQHf0IAIACpwZyIQQHENTwLqckYkld
-Dh8gtSVtQ5ONVXG6fKdztQivwKTFw4Kh/BcmQYMUv6Glf/dhPHOA5dhDF+AmbRUb
-Ld7f06b6n4aAk3URhR2EEFJSlCpHGcz099t6VONILlPss+N7/x4kZcHbGEs6DQvu
-omKwGZN3UsLJiSKcibZiJjCzbBFcyf0rtv1RA6PzbO7jt4TeDHZ/4fM8wZ81jc89
-onYapT+fWg8i7A8EwAeWSaPi3rQny1dZZ/MiCZqEZnrHFcTd7zMPI08TK6r4hsHN
-CI6iVWgwxGgZX1XGUP9hMR6tDLu0CwAoK7N/RlMrZFI2gkggs8he3c4dbmDLM2s=
-=F3z7
------END PGP SIGNATURE-----
-
---BFVE2HhgxTpCzM8t--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cGluZwoKT24gOC8xMi8yMDE1IDEwOjQyIEFNLCBIb3JpYSBHZWFudMSDIHdyb3RlOgo+IFNpZ25l
+ZC1vZmYtYnk6IEhvcmlhIEdlYW50xIMgPGhvcmlhLmdlYW50YUBmcmVlc2NhbGUuY29tPgo+IC0t
+LQo+ICBhcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kgfCA0MCArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0MCBpbnNlcnRpb25z
+KCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+IGluZGV4IDk3M2E0OTYyMDdmYy4uNWJkNjRh
+NGRmNGQzIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+ICsr
+KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQo+IEBAIC02Myw2ICs2Myw3IEBACj4g
+IAkJc2VyaWFsNCA9ICZscHVhcnQ0Owo+ICAJCXNlcmlhbDUgPSAmbHB1YXJ0NTsKPiAgCQlzeXNj
+bGsgPSAmc3lzY2xrOwo+ICsJCWNyeXB0byA9ICZjcnlwdG87Cj4gIAl9Owo+ICAKPiAgCWNwdXMg
+ewo+IEBAIC0xNDgsNiArMTQ5LDQ1IEBACj4gIAkJCWJpZy1lbmRpYW47Cj4gIAkJfTsKPiAgCj4g
+KwkJY3J5cHRvOiBjcnlwdG9AMTcwMDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLHNlYy12
+NS4wIiwgImZzbCxzZWMtdjQuMCI7Cj4gKwkJCWZzbCxzZWMtZXJhID0gPDc+Owo+ICsJCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gKwkJCXJlZwkJID0g
+PDB4MCAweDE3MDAwMDAgMHgwIDB4MTAwMDAwPjsKPiArCQkJcmFuZ2VzCQkgPSA8MHgwIDB4MCAw
+eDE3MDAwMDAgMHgxMDAwMDA+Owo+ICsJCQlpbnRlcnJ1cHRzCSA9IDxHSUNfU1BJIDEwNyBJUlFf
+VFlQRV9MRVZFTF9ISUdIPjsKPiArCj4gKwkJCXNlY19qcjA6IGpyQDEwMDAwIHsKPiArCQkJCWNv
+bXBhdGlibGUgPSAiZnNsLHNlYy12NS4wLWpvYi1yaW5nIiwKPiArCQkJCSAgICAgImZzbCxzZWMt
+djQuMC1qb2ItcmluZyI7Cj4gKwkJCQlyZWcgPSA8MHgxMDAwMCAweDEwMDAwPjsKPiArCQkJCWlu
+dGVycnVwdHMgPSA8R0lDX1NQSSAxMDMgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKwkJCX07Cj4g
+Kwo+ICsJCQlzZWNfanIxOiBqckAyMDAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gImZzbCxzZWMt
+djUuMC1qb2ItcmluZyIsCj4gKwkJCQkgICAgICJmc2wsc2VjLXY0LjAtam9iLXJpbmciOwo+ICsJ
+CQkJcmVnID0gPDB4MjAwMDAgMHgxMDAwMD47Cj4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MTA0IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCQl9Owo+ICsKPiArCQkJc2VjX2pyMjoganJA
+MzAwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsc2VjLXY1LjAtam9iLXJpbmciLAo+ICsJ
+CQkJICAgICAiZnNsLHNlYy12NC4wLWpvYi1yaW5nIjsKPiArCQkJCXJlZyA9IDwweDMwMDAwIDB4
+MTAwMDA+Owo+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwNSBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsKPiArCQkJfTsKPiArCj4gKwkJCXNlY19qcjM6IGpyQDQwMDAwIHsKPiArCQkJCWNvbXBh
+dGlibGUgPSAiZnNsLHNlYy12NS4wLWpvYi1yaW5nIiwKPiArCQkJCSAgICAgImZzbCxzZWMtdjQu
+MC1qb2ItcmluZyI7Cj4gKwkJCQlyZWcgPSA8MHg0MDAwMCAweDEwMDAwPjsKPiArCQkJCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSAxMDYgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKwkJCX07Cj4gKwo+
+ICsJCX07Cj4gKwo+ICAJCWNsb2NrZ2VuOiBjbG9ja2luZ0AxZWUxMDAwIHsKPiAgCQkJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47Cj4gIAkJCSNzaXplLWNlbGxzID0gPDE+Owo+IAoKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
