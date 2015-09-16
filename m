@@ -1,69 +1,72 @@
-From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/5] spi: introduce mmap read support for spi flash devices
-Date: Wed, 16 Sep 2015 18:16:55 +0530
-Message-ID: <CAD6G_RQOazkS7KHrG75wgMXx1cH_pKjx43Mve6fz1qOJGPpq9w@mail.gmail.com>
-References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
-	<1441355402-6837-2-git-send-email-vigneshr@ti.com>
-	<CAD6G_RT8Q+Uyp1ZjzHf54Tno1wHm0SmLKEwRAe2gkdp772FD9A@mail.gmail.com>
-	<20150914183553.GE12027@sirena.org.uk>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
+	allocator.
+Date: Wed, 16 Sep 2015 13:55:35 +0100
+Message-ID: <20150916125535.GI28771@arm.com>
+References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
+	<1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
+	<20150721171101.GN31095@arm.com>
+	<1442233500.19588.35.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150914183553.GE12027-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442233500.19588.35.camel@mhfsdcap03>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
 List-Id: devicetree@vger.kernel.org
 
-On 15 September 2015 at 00:05, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Sep 04, 2015 at 04:55:33PM +0530, Jagan Teki wrote:
->> On 4 September 2015 at 13:59, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> wrote:
->
->> > + * @spi_mtd_mmap_read: some spi-controller hardwares provide memory
->> > + *                     mapped interface to communicate with mtd flashes.
->> > + *                     For this, spi  controller needs to know flash
->> > + *                     memory settings like read command to use, dummy
->> > + *                     bytes and address width. Once these settings are
->> > + *                     populated in hardware registers, any read
->> > + *                     accesses to flash's memory map region(as defined
->> > + *                     by SoC) through memcpy or mem-to-mem DMA copy
->> > + *                     will be handled by controller hardware. The
->> > + *                     hardware will automatically generate spi signals
->> > + *                     required to read data from flash and present it
->> > + *                     to CPU or DMA. SPI master drivers can use this
->> > + *                     callback to implement memory mapped read
->> > + *                     interface. Flash driver (like m25p80) requests
->> > + *                     memory mapped read via this method. The interface
->> > + *                     should  only be used mtd flashes and cannot be
->> > + *                     used with other spi devices.
->
-> This comment is *way* too verbose - probably you just need up to the
-> "Once" here.
->
->> > +       int (*spi_mtd_mmap_read)(struct  spi_device *spi,
->> > +                                loff_t from, size_t len, size_t *retlen,
->> > +                                u_char *buf, u8 read_opcode,
->> > +                                u8 addr_width, u8 dummy_bytes);
->
->> This looks un-manageable to know spi core or master knows what are the
->> command or opcode used by spi-nor flash and also I think mmap support
->> seems to be flash related or any justification this is spi bus
->> master/controller feature?
->
-> There seem to be a reasonable number of SPI controllers out there which
-> have as an extension the ability to do memory mapped reads but are
-> otherwise perfectly normal SPI controllers and which rely on that for
-> everything except reads.
+Hello Yong,
 
-This is true, but exposing direct spi-nor arguments or features like
-read_opcode, addr_width or dummy_byte to spi layer isn't fine? because
-for spi layer there is a spi to flash transition mtd m25p80.c is there
-to handle is it?
+On Mon, Sep 14, 2015 at 01:25:00PM +0100, Yong Wu wrote:
+> On Tue, 2015-07-21 at 18:11 +0100, Will Deacon wrote:
+> > > +       ret = _arm_short_map(data, iova, paddr, pgdprot, pteprot, large);
+> > > +
+> > > +       tlb->tlb_add_flush(iova, size, true, data->iop.cookie);
+> > > +       tlb->tlb_sync(data->iop.cookie);
+> > 
+> > In _arm_short_map, it looks like you can only go from invalid -> valid,
+> > so why do you need to flush the TLB here?
+> 
+> Hi Will,
+>    Here is about flush-tlb after map iova, I have deleted it in v4
+> following this suggestion. But We meet a problem about it.
 
-thanks!
--- 
-Jagan | openedev.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+> Take a example with JPEG. the test steps is:
+> a).JPEG HW decode a picture with the source iova,like 0xfd780000.
+> b).JPEG HW decode done, It will unmap the iova(write 0 in pagetable and
+> flush tlb).
+> c).JPEG HW decode the second picture, whose source iova is also
+> 0xfd780000.
+>    Then our HW maybe fail due to it will auto prefetch, It may prefecth
+> between the step b) and c). then the HW may fetch the pagetable content
+> which has been unmapped in step b). then the HW will get the iova's
+> physical address is 0, It will translation fault!
+
+Oh no! So-called "negative caching" is certainly prohibited by the ARM
+architecture, but if you've built it then we can probably work around it
+as an additional quirk. I assume the prefetcher stops prefetching when
+it sees an invalid descriptor?
+
+>     So I think our HW need flush-tlb after map iova. Could we add a
+> QUIRK like "IO_PGTABLE_QUIRK_AUTO_PREFETCH_ENABLE" for it?
+> If it's not allowed, we will have to add this in our internal function
+> mtk_iommu_map of mtk_iommu.c.
+
+Actually, this type of quirk is ringing bells with me (I think another
+IOMMU needed something similar in the past), so maybe just add
+IO_PGTABLE_QUIRK_TLBI_ON_MAP?
+
+Will
