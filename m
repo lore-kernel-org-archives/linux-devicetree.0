@@ -1,110 +1,29 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 09/10] power: bq24257: Add various device-specific sysfs
- properties
-Date: Wed, 16 Sep 2015 17:10:06 +0900
-Message-ID: <55F923DE.5010809@samsung.com>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-10-git-send-email-dannenberg@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1442339914-25843-10-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+From: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [v7 PATCH 0/2] Add support and documentation for UPISEMI us5182d als and proximity sensor
+Date: Wed, 16 Sep 2015 11:14:10 +0300
+Message-ID: <1442391252-7368-1-git-send-email-adriana.reus@intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.09.2015 02:58, Andreas Dannenberg wrote:
-> This patch adds support for enabling/disabling optional device specific
-> features through sysfs properties at runtime.
-> 
-> * High-impedance mode enable/disable
-> * Sysoff enable/disable
-> 
-> Refer to the respective device datasheets for more information:
-> 
-> http://www.ti.com/product/bq24250
-> http://www.ti.com/product/bq24251
-> http://www.ti.com/product/bq24257
-> 
-> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> ---
->  drivers/power/bq24257_charger.c | 53 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
-> 
-> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> index 517a522..a0cb33c 100644
-> --- a/drivers/power/bq24257_charger.c
-> +++ b/drivers/power/bq24257_charger.c
-> @@ -794,12 +794,65 @@ static ssize_t bq24257_show_in_dpm_voltage(struct device *dev,
->  			 bq24257_vindpm_map[bq->init_data.vindpm]);
->  }
->  
-> +static ssize_t bq24257_sysfs_show_enable(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 char *buf)
-> +{
-> +	struct power_supply *psy = dev_get_drvdata(dev);
-> +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> +	int ret;
-> +
-> +	if (strcmp(attr->attr.name, "high_impedance_enable") == 0)
-> +		ret = bq24257_field_read(bq, F_HZ_MODE);
-> +	else if (strcmp(attr->attr.name, "sysoff_enable") == 0)
-> +		ret = bq24257_field_read(bq, F_SYSOFF);
-> +	else
-> +		return -EINVAL;
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
-> +}
-> +
-> +static ssize_t bq24257_sysfs_set_enable(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf,
-> +					size_t count)
-> +{
-> +	struct power_supply *psy = dev_get_drvdata(dev);
-> +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> +	long val;
-> +	int ret;
-> +
-> +	if (kstrtol(buf, 10, &val) < 0)
-> +		return -EINVAL;
-> +
+This series adds basic support for this als and proximity sensor
+and devicetree docs.
 
-There is no validation for input number. Although this is harmless but
-one may expect that writing value of 1, 2 or 3 would give the same
-result. But it would not. Value of 2 would be equal to 0, right?
+Adriana Reus (2):
+  iio: light: Add support for UPISEMI uS5182d als and proximity sensor
+  devicetree: Add documentation for UPISEMI us5182d ALS and Proximity
+    sensor
 
-> +	if (strcmp(attr->attr.name, "high_impedance_enable") == 0)
-> +		ret = bq24257_field_write(bq, F_HZ_MODE, val);
-> +	else if (strcmp(attr->attr.name, "sysoff_enable") == 0)
-> +		ret = bq24257_field_write(bq, F_SYSOFF, val);
-> +	else
-> +		return -EINVAL;
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
->  static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
->  static DEVICE_ATTR(in_dpm_voltage, S_IRUGO, bq24257_show_in_dpm_voltage, NULL);
+ .../devicetree/bindings/iio/light/us5182d.txt      |  34 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/light/Kconfig                          |  10 +
+ drivers/iio/light/Makefile                         |   1 +
+ drivers/iio/light/us5182d.c                        | 507 +++++++++++++++++++++
+ 5 files changed, 553 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
+ create mode 100644 drivers/iio/light/us5182d.c
 
-This applies to previous patches actually: DEVICE_ATTR_RO?
-
-> +static DEVICE_ATTR(high_impedance_enable, S_IWUSR | S_IRUGO,
-> +		   bq24257_sysfs_show_enable, bq24257_sysfs_set_enable);
-> +static DEVICE_ATTR(sysoff_enable, S_IWUSR | S_IRUGO,
-> +		   bq24257_sysfs_show_enable, bq24257_sysfs_set_enable);
-
-DEVICE_ATTR_RW?
-
-Best regards,
-Krzysztof
-
+-- 
+1.9.1
