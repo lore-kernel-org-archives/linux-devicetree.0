@@ -1,67 +1,39 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] of: Dynamic DT updates
-Date: Wed, 16 Sep 2015 22:09:04 +0300
-Message-ID: <2A27041A-599E-4D43-955F-89D5D3D4944E@konsulko.com>
-References: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqJORsJ8aA3DLuHAVovKX-wdx8m7_NCYA4kheumvyxScTg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJORsJ8aA3DLuHAVovKX-wdx8m7_NCYA4kheumvyxScTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: santosh shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
+ boot log
+Date: Wed, 16 Sep 2015 12:13:37 -0700
+Message-ID: <55F9BF61.4080200@oracle.com>
+References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
+ <55EA673F.8010904@oracle.com> <55F06075.6050405@ti.com>
+ <55F8600D.2070701@ti.com> <55F88B81.2000308@oracle.com>
+ <55F9A05E.4090000@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55F9A05E.4090000@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 9/16/2015 10:01 AM, Murali Karicheri wrote:
+> On 09/15/2015 05:20 PM, santosh shilimkar wrote:
+>> On 9/15/2015 11:14 AM, Murali Karicheri wrote:
+>>> On 09/09/2015 12:38 PM, Murali Karicheri wrote:
 
-> On Sep 16, 2015, at 19:43 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
-:
->=20
-> On Wed, Sep 16, 2015 at 11:11 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> The two patches add a new API for using changeset which
->> makes things considerably easier.
->>=20
->> This patchset applies against Linus's tree as of today and
->> is dependent on the previous patchset I've send out earlier.
->> "of: overlay: kobject & sysfs'ation"
->=20
-> Oh good, I'll ignore it until that is merged. ;) Seriously, this
-> doesn't really look dependent. It doesn't involve ABIs either, so it
-> is easier.
->=20
-
-Oops. Sorry this dependency was for the patches that they were dropped.
-This series is stand-alone.
-
-> Rob
->=20
->>=20
-
-Regards
-
-=E2=80=94 Pantelis
-
->> Changes since v1:
->> * Dropped the indirect and target root patches until we
->> figure out what to do with the DT connector.
->>=20
->> Pantelis Antoniou (2):
->>  of: dynamic: Add __of_node_dupv()
->>  of: changesets: Introduce changeset helper methods
->>=20
->> drivers/of/dynamic.c | 280 +++++++++++++++++++++++++++++++++++++++++=
-++++++++--
->> include/linux/of.h   |  74 ++++++++++++++
->> 2 files changed, 348 insertions(+), 6 deletions(-)
->>=20
->> --
->> 1.7.12
->>=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[..]
+>>> Santosh,
+>>>
+>>> I have checked v4.3-rc1 and I don't see it. Did you send the pull
+>>> request?
+>>>
+>> They are in the queue fo 4.4-rc1. They were too late for 4.3.
+>> You might know already, typically as a rule of thumb followed
+>> on arm-soc, we need to get patches reviewed/acked by rc4 to make
+>> it for next merge window.
+>> Ofcourse genuine bug fixes can make it to the same cycle.
+> Is there a branch where you have applied the patches that you can
+> provide me? I want to send it to internal list for merge.
+>
+Yes. I will push it out later this week. Will drop you
+note when I do that.
