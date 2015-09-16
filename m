@@ -1,44 +1,57 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 08/10] power: bq24257: Allow input current limit sysfs
- access
-Date: Wed, 16 Sep 2015 15:31:06 +0900
-Message-ID: <55F90CAA.5090701@samsung.com>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-9-git-send-email-dannenberg@ti.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 1/6] doc: dt-binding: ci-hdrc-usb2: split vendor specific properties
+Date: Wed, 16 Sep 2015 13:20:44 +0800
+Message-ID: <1442380849-8500-2-git-send-email-peter.chen@freescale.com>
+References: <1442380849-8500-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1442339914-25843-9-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442380849-8500-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.09.2015 02:58, Andreas Dannenberg wrote:
-> This patch allows reading (and writing, if the D+/D- USB signal-based
-> charger type detection is disabled) of the input current limit through
-> the POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT sysfs property. This allows
-> userspace to see what charger was detected and to re-configure the
-> maximum current drawn from the external supply at runtime based on
-> system-level knowledge or user input.
-> 
-> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> ---
->  drivers/power/bq24257_charger.c | 67 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
+Each vendor may have its specific properties, they are not belonged
+to common optional properties, split them from common's.
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-BTW you are exposing more and more sysfs attributes which are userspace
-interfaces. They should be documented:
-Documentation/SubmitChecklist - point 19
-Documentation/ABI/README
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index d543e8e..f15a317 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -26,10 +26,6 @@ Optional properties:
+ - vbus-supply: reference to the VBUS regulator
+ - maximum-speed: limit the maximum connection speed to "full-speed".
+ - tpl-support: TPL (Targeted Peripheral List) feature for targeted hosts
+-- fsl,usbmisc: (FSL only) phandler of non-core register device, with one
+-  argument that indicate usb controller index
+-- disable-over-current: (FSL only) disable over current detect
+-- external-vbus-divider: (FSL only) enables off-chip resistor divider for Vbus
+ - itc-setting: interrupt threshold control register control, the setting
+   should be aligned with ITC bits at register USBCMD.
+ - ahb-burst-config: it is vendor dependent, the required value should be
+@@ -53,6 +49,12 @@ Optional properties:
+ - phy-clkgate-delay-us: the delay time (us) between putting the PHY into
+   low power mode and gating the PHY clock.
+ 
++i.mx specific properties
++- fsl,usbmisc: phandler of non-core register device, with one
++  argument that indicate usb controller index
++- disable-over-current: disable over current detect
++- external-vbus-divider: enables off-chip resistor divider for Vbus
++
+ Example:
+ 
+ 	usb@f7ed0000 {
+-- 
+1.9.1
 
-Although not all new drivers (and perhaps not all reviewers) follow this
-rule...
-
-Best regards,
-Krzysztof
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
