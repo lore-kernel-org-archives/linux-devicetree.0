@@ -1,92 +1,79 @@
-From: Peng Fan <van.freenix@gmail.com>
-Subject: Re: [PATCH] drivers: of: check input parameter name for
- __of_find_property
-Date: Wed, 16 Sep 2015 21:55:47 +0800
-Message-ID: <20150916135545.GA28742@linux-4gyl.site>
-References: <1441979043-19694-1-git-send-email-van.freenix@gmail.com>
- <55F83FAC.5080002@kernel.org>
- <20150916001650.GA28082@linux-4gyl.site>
- <55F8D3AF.9070503@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 2/3] devicetree: bindings: use input-event-codes.h for
+ evdev codes
+Date: Wed, 16 Sep 2015 10:27:09 -0400
+Message-ID: <55F97C3D.5020702@redhat.com>
+References: <1442064372-3030-1-git-send-email-hdegoede@redhat.com>
+ <1442064372-3030-3-git-send-email-hdegoede@redhat.com>
+ <1442316292.3549.386.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F8D3AF.9070503@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1442316292.3549.386.camel@hellion.org.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Ian Campbell <ijc@hellion.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 09:27:59PM -0500, Rob Herring wrote:
-> On 09/15/2015 07:16 PM, Peng Fan wrote:
-> > Hi Rob,
-> > 
-> > On Tue, Sep 15, 2015 at 10:56:28AM -0500, Rob Herring wrote:
-> >> On 09/11/2015 08:44 AM, Peng Fan wrote:
-> >>> Check input parameter 'name' for __of_find_property. If name is NULL,
-> >>> of_prop_cmp->strcasecmp may trigger panic.
-> >>
-> >> Arguably that could be a feature. Do you have a usecase where name being
-> >> NULL is valid and panicking is a problem?
-> > 
-> > In drivers/pinctrl/devicetree.c
-> > 
-> > 195                 propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
-> > 196                 prop = of_find_property(np, propname, &size);
-> > 197                 kfree(propname);
-> > 198                 if (!prop)
-> > 199                         break;
-> > 
-> > If propname is NULL, of_find_property may trigger panic. Anyway propname should be checked
-> > before passing to of_find_property.
-> 
-> propname will only be NULL if the memory allocation failed which gives
-> you a big warning message. I don't think you would want to continue on
-> in this case.
-> 
-> So I'm inclined to leave this as is with passing NULL to
-> of_find_property to always be an error and fatal.
+Hi,
 
-of_find_property has EXPORT_SYMBOL, it maybe called in different places. And it should handle the case that name is NULL, right?
-If passing NULL to of_find_property is an error, then why check parameter 'np' like "if (!np)" in of_find_property?
+On 09/15/2015 07:24 AM, Ian Campbell wrote:
+> On Sat, 2015-09-12 at 15:26 +0200, Hans de Goede wrote:
+>> Add a symlink to uapi/linux/input-event-codes.h, and include that instead
+>> of (re)defining all the evdev type and code values in
+>> dt-bindings/input/input.h. This way we do not need to keep all the
+>> event codes synced manually.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   include/dt-bindings/input/input-event-codes.h |   1 +
+>>   include/dt-bindings/input/input.h             | 510 +-------------------
+>> ------
+>>   2 files changed, 2 insertions(+), 509 deletions(-)
+>>   create mode 120000 include/dt-bindings/input/input-event-codes.h
+>>
+>> diff --git a/include/dt-bindings/input/input-event-codes.h b/include/dt
+>> -bindings/input/input-event-codes.h
+>> new file mode 120000
+>> index 0000000..693bbcd
+>> --- /dev/null
+>> +++ b/include/dt-bindings/input/input-event-codes.h
+>> @@ -0,0 +1 @@
+>> +../../uapi/linux/input-event-codes.h
+>> \ No newline at end of file
+>
+> Hrm, I think this is going to cause trouble for the split DT repository at
+> https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+>
+> Since ../../ == include in both trees I think I can make it work by
+> including include/uapi/linux in the conversion, either wholesale (easiest)
+> or partially (potentially cleaner).
+>
+> Any opinions on that?
+
+The intend of the symlink was that the conversion script would copy the target,
+rather then follow the symlink. This sorta assumes that there are will be not
+symlinks under dt-bindings which link to files inside dt-bindings and thus
+should be preserved as symlinks.
+
+If the copy done in the script will follow the symlink then nothing should
+really change for the split DT repo.
+
+
+>
+> In principal I ought to regenerate the tree from scratch such that
+> include/uapi/linux was "always" there and has history but I think we can
+> live with it just appearing at some point in time wen the conversion script
+> was updated?
+>
+> AIUI these values are required to only be used with properties whose names
+> are of the form "linux,*", otherwise there would be strong complaints about
+> include Linux uapi stuff into a generic device-tree binding.
+
+Correct, these values are only for linux,* properties, which is why I
+initially put them in a file named dt-bindings/input/linux-event-codes.h
 
 Regards,
-Peng.
 
-> 
-> Rob
-> 
-> > I did not met panic message. I wrote this patch when I was reading the piece code.
-> > I think the name parameter should be checked before doing string compare.
-> > 
-> > Regards,
-> > Peng.
-> > 
-> >>
-> >> Rob
-> >>
-> >>>
-> >>> Signed-off-by: Peng Fan <van.freenix@gmail.com>
-> >>> Cc: Rob Herring <robh+dt@kernel.org>
-> >>> Cc: Frank Rowand <frowand.list@gmail.com>
-> >>> Cc: Grant Likely <grant.likely@linaro.org>
-> >>> ---
-> >>>  drivers/of/base.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> >>> index 8b5a187..e41436d 100644
-> >>> --- a/drivers/of/base.c
-> >>> +++ b/drivers/of/base.c
-> >>> @@ -215,7 +215,7 @@ static struct property *__of_find_property(const struct device_node *np,
-> >>>  {
-> >>>  	struct property *pp;
-> >>>  
-> >>> -	if (!np)
-> >>> +	if (!np || !name)
-> >>>  		return NULL;
-> >>>  
-> >>>  	for (pp = np->properties; pp; pp = pp->next) {
-> >>>
-> >>
-> 
+Hans
