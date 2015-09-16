@@ -1,57 +1,93 @@
-From: Thomas Pietrowski <thopiekar@gmail.com>
-Subject: Re: [PATCH RESEND v6 0/3] dts: thermal: Odroid U3: Provide support
- for Odroid U3 fan
-Date: Wed, 16 Sep 2015 13:00:05 +0200
-Message-ID: <CAE-5t2sUqu+KBU_-oj1posMfA99wGNKjHk4yA4-o-7HcKGo5nQ@mail.gmail.com>
-References: <1425470624-25793-1-git-send-email-l.majewski@samsung.com>
-	<1439298440-15882-1-git-send-email-l.majewski@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/6] PCI: generic: Correct, and avoid overflow, in
+ bus_max calculation.
+Date: Wed, 16 Sep 2015 12:28:52 +0100
+Message-ID: <20150916112852.GC17510@red-moon>
+References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
+ <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com>
+ <20150915174934.GL31157@arm.com>
+ <55F85D4E.9020604@caviumnetworks.com>
+ <20150915183500.GR31157@arm.com>
+ <55F86764.4060502@caviumnetworks.com>
+ <20150916104152.GC28771@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1439298440-15882-1-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150916104152.GC28771-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Will this patchset be released with 4.3.x?
+On Wed, Sep 16, 2015 at 11:41:53AM +0100, Will Deacon wrote:
 
-2015-08-11 15:07 GMT+02:00 Lukasz Majewski <l.majewski@samsung.com>:
-> Presented patches add support for Odroid's U3 optional CPU FAN, which uses PWM
-> subsystem for low level control.
->
-> This patch is a resend of previously send series:
-> https://lkml.org/lkml/2015/3/4/726
->
-> The "hwmon" part of this series has been already added to upstream.
-> Unfortunately, the DTS files for Odroid U3 device have NOT been added to
-> mainline repository.
->
-> Those patches were tested at Exynos4412 - Odroid U3 board.
->
-> Patches were applied on:
-> kernel_samsung -> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
->
-> kernel_samsung/for-next (Linux v4.2-rc1)
-> SHA1: 366c21fdd7b1e71a47a6fa969f2e9a014c981aff
->
-> Kamil Debski (1):
->   ARM: dts: Add pwm-fan node to the Odroid-U3 board
->
-> Lukasz Majewski (2):
->   Documentation: dts: Documentation entry to explain how to use PWM FAN
->     as a cooling device
->   ARM: dts: Add properties to use pwm-fan device as a cooling device in
->     Odroid U3
->
->  .../devicetree/bindings/hwmon/pwm-fan.txt          | 29 ++++++++++++++-
->  arch/arm/boot/dts/exynos4412-odroidu3.dts          | 43 ++++++++++++++++++++++
->  2 files changed, 70 insertions(+), 2 deletions(-)
->
-> --
-> 2.0.0.rc2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> > Here is the current code:
+> > 
+> > >> 	bus_range = pci->cfg.bus_range;
+> > >> 	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
+> > >> 		u32 idx = busn - bus_range->start;
+> > 
+> > The index is offset by the bus range start...
+> > 
+> > >> 		u32 sz = 1 << pci->cfg.ops.bus_shift;
+> > >>
+> > >> 		pci->cfg.win[idx] = devm_ioremap(dev,
+> > >> 						 pci->cfg.res.start + busn * sz,
+> > >> 						 sz);
+> > 
+> > But, the offset into the "reg" property is the raw bus number.
+> > 
+> > 
+> > >> 		if (!pci->cfg.win[idx])
+> > >> 			return -ENOMEM;
+> > >> 	}
+> > 
+> > 
+> > I hope that makes it more clear.
+> 
+> Got it. So we should be using idx instead of busn in the devm_ioremap
+> call above.
+
+I think that's not what's specified in the PCI firmware specification,
+at least for the MMCFG regions. For MMCFG regions (quoting the specs)
+the "base address of the memory mapped configuration space always
+corresponds to bus number 0 (regardless of the start bus number decoded
+by the host bridge)..."
+
+For the x86 implementation have a look at:
+
+arch/x86/pci/mmconfig_64.c mcfg_ioremap()
+
+static void __iomem *mcfg_ioremap(struct pci_mmcfg_region *cfg)
+{
+	void __iomem *addr;
+	u64 start, size;
+	int num_buses;
+
+	start = cfg->address + PCI_MMCFG_BUS_OFFSET(cfg->start_bus);
+	num_buses = cfg->end_bus - cfg->start_bus + 1;
+	size = PCI_MMCFG_BUS_OFFSET(num_buses);
+	addr = ioremap_nocache(start, size);
+	if (addr)
+		addr -= PCI_MMCFG_BUS_OFFSET(cfg->start_bus);
+	return addr;
+}
+
+The MCFG config accessors add back the PCI_MMCFG_BUS_OFFSET(cfg->start_bus)
+to the virtual address so that the proper virtual address is used when
+issuing the config cycles, that's my understanding.
+
+So IMO we have to define what "reg" represents for ECAM in DT, we can't
+leave this open to interpretation (and I think makng MCFG and DT config
+work the same way would be ideal).
+
+Thoughts appreciated, I will countercheck on my side.
+
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
