@@ -1,247 +1,68 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 4/4] usb: chipidea: imx: refine clock operations to adapt for all platforms
-Date: Wed, 16 Sep 2015 09:49:43 +0800
-Message-ID: <1442368183-8103-4-git-send-email-peter.chen@freescale.com>
-References: <1442368183-8103-1-git-send-email-peter.chen@freescale.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/3] regulators: axp20x: Rename supply names for
+ AXP221 DC1SW and DC5LDO
+Date: Wed, 16 Sep 2015 11:05:31 +0800
+Message-ID: <1442372732-27434-3-git-send-email-wens@csie.org>
+References: <1442372732-27434-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442368183-8103-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBD5Z4OXQKGQEX3YVEHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1442372732-27434-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some i.mx platforms need three clocks to let controller work, but
-others only need one, refine clock operation to adapt for all
-platforms.
+The DC1SW and DC5LDO regulators in the AXP221 are internally chained
+to DCDC1 and DCDC5, hence the names. The original bindings used the
+parent regulator names for the supply regulator property. This causes
+some confusion when we actually use it in the dts:
 
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+	axp221 {
+		/* self supplying? */
+		dcdc1-supply = <&dcdc1>;
+		dcdc5-supply = <&dcdc5>;
+
+		dcdc1: dcdc1 {
+			...
+		};
+
+		dcdc5: dcdc5 {
+			...
+		};
+	};
+
+Change them to the downstream regulator names, or "dc1sw" and "dc5ldo"
+respectively.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/usb/chipidea/ci_hdrc_imx.c | 138 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 120 insertions(+), 18 deletions(-)
+ drivers/regulator/axp20x-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index c038bca..e88a212 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -78,6 +78,12 @@ struct ci_hdrc_imx_data {
- 	struct imx_usbmisc_data *usbmisc_data;
- 	bool supports_runtime_pm;
- 	bool in_lpm;
-+	/* SoC before i.mx6 (except imx23/imx28) needs three clks */
-+	bool need_three_clks;
-+	struct clk *clk_ipg;
-+	struct clk *clk_ahb;
-+	struct clk *clk_per;
-+	/* --------------------------------- */
- };
- 
- /* Common functions shared by usbmisc drivers */
-@@ -129,6 +135,105 @@ static struct imx_usbmisc_data *usbmisc_get_init_data(struct device *dev)
- }
- 
- /* End of common functions shared by usbmisc drivers*/
-+static int imx_get_clks(struct device *dev)
-+{
-+	struct ci_hdrc_imx_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (data->need_three_clks) {
-+		data->clk_ipg = devm_clk_get(dev, "ipg");
-+		if (IS_ERR(data->clk_ipg)) {
-+			ret = PTR_ERR(data->clk_ipg);
-+			dev_err(dev,
-+				"Failed to get ipg clock, err=%d\n", ret);
-+			return ret;
-+		}
-+
-+		data->clk_ahb = devm_clk_get(dev, "ahb");
-+		if (IS_ERR(data->clk_ahb)) {
-+			ret = PTR_ERR(data->clk_ahb);
-+			dev_err(dev,
-+				"Failed to get ahb clock, err=%d\n", ret);
-+			return ret;
-+		}
-+
-+		data->clk_per = devm_clk_get(dev, "per");
-+		if (IS_ERR(data->clk_per)) {
-+			ret = PTR_ERR(data->clk_per);
-+			dev_err(dev,
-+				"Failed to get per clock, err=%d\n", ret);
-+			return ret;
-+		}
-+	} else {
-+		data->clk = devm_clk_get(dev, NULL);
-+		if (IS_ERR(data->clk)) {
-+			ret = PTR_ERR(data->clk);
-+			dev_err(dev,
-+				"Failed to get clock, err=%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int imx_prepare_enable_clks(struct device *dev)
-+{
-+	struct ci_hdrc_imx_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (data->need_three_clks) {
-+		ret = clk_prepare_enable(data->clk_ipg);
-+		if (ret) {
-+			dev_err(dev,
-+				"Failed to prepare/enable ipg clk, err=%d\n",
-+				ret);
-+			return ret;
-+		}
-+
-+		ret = clk_prepare_enable(data->clk_ahb);
-+		if (ret) {
-+			dev_err(dev,
-+				"Failed to prepare/enable ahb clk, err=%d\n",
-+				ret);
-+			clk_disable_unprepare(data->clk_ipg);
-+			return ret;
-+		}
-+
-+		ret = clk_prepare_enable(data->clk_per);
-+		if (ret) {
-+			dev_err(dev,
-+				"Failed to prepare/enable per clk, err=%d\n",
-+				ret);
-+			clk_disable_unprepare(data->clk_ahb);
-+			clk_disable_unprepare(data->clk_ipg);
-+			return ret;
-+		}
-+	} else {
-+		ret = clk_prepare_enable(data->clk);
-+		if (ret) {
-+			dev_err(dev,
-+				"Failed to prepare/enable clk, err=%d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static void imx_disable_unprepare_clks(struct device *dev)
-+{
-+	struct ci_hdrc_imx_data *data = dev_get_drvdata(dev);
-+
-+	if (data->need_three_clks) {
-+		clk_disable_unprepare(data->clk_per);
-+		clk_disable_unprepare(data->clk_ipg);
-+		clk_disable_unprepare(data->clk_ahb);
-+	} else {
-+		clk_disable_unprepare(data->clk);
-+	}
-+}
- 
- static int ci_hdrc_imx_probe(struct platform_device *pdev)
- {
-@@ -142,28 +247,27 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id =
- 			of_match_device(ci_hdrc_imx_dt_ids, &pdev->dev);
- 	const struct ci_hdrc_imx_platform_flag *imx_platform_flag = of_id->data;
-+	struct device_node *np = pdev->dev.of_node;
- 
- 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
- 
-+	platform_set_drvdata(pdev, data);
- 	data->usbmisc_data = usbmisc_get_init_data(&pdev->dev);
- 	if (IS_ERR(data->usbmisc_data))
- 		return PTR_ERR(data->usbmisc_data);
- 
--	data->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(data->clk)) {
--		dev_err(&pdev->dev,
--			"Failed to get clock, err=%ld\n", PTR_ERR(data->clk));
--		return PTR_ERR(data->clk);
--	}
-+	if (of_find_property(np, "need-three-clocks", NULL))
-+		data->need_three_clks = true;
- 
--	ret = clk_prepare_enable(data->clk);
--	if (ret) {
--		dev_err(&pdev->dev,
--			"Failed to prepare or enable clock, err=%d\n", ret);
-+	ret = imx_get_clks(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = imx_prepare_enable_clks(&pdev->dev);
-+	if (ret)
- 		return ret;
--	}
- 
- 	data->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "fsl,usbphy", 0);
- 	if (IS_ERR(data->phy)) {
-@@ -206,8 +310,6 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 		goto disable_device;
- 	}
- 
--	platform_set_drvdata(pdev, data);
--
- 	if (data->supports_runtime_pm) {
- 		pm_runtime_set_active(&pdev->dev);
- 		pm_runtime_enable(&pdev->dev);
-@@ -220,7 +322,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- disable_device:
- 	ci_hdrc_remove_device(data->ci_pdev);
- err_clk:
--	clk_disable_unprepare(data->clk);
-+	imx_disable_unprepare_clks(&pdev->dev);
- 	return ret;
- }
- 
-@@ -234,7 +336,7 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
- 		pm_runtime_put_noidle(&pdev->dev);
- 	}
- 	ci_hdrc_remove_device(data->ci_pdev);
--	clk_disable_unprepare(data->clk);
-+	imx_disable_unprepare_clks(&pdev->dev);
- 
- 	return 0;
- }
-@@ -246,7 +348,7 @@ static int imx_controller_suspend(struct device *dev)
- 
- 	dev_dbg(dev, "at %s\n", __func__);
- 
--	clk_disable_unprepare(data->clk);
-+	imx_disable_unprepare_clks(dev);
- 	data->in_lpm = true;
- 
- 	return 0;
-@@ -264,7 +366,7 @@ static int imx_controller_resume(struct device *dev)
- 		return 0;
- 	}
- 
--	ret = clk_prepare_enable(data->clk);
-+	ret = imx_prepare_enable_clks(dev);
- 	if (ret)
- 		return ret;
- 
-@@ -279,7 +381,7 @@ static int imx_controller_resume(struct device *dev)
- 	return 0;
- 
- clk_disable:
--	clk_disable_unprepare(data->clk);
-+	imx_disable_unprepare_clks(dev);
- 	return ret;
- }
- 
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 01bf3476a791..27ebee8e224c 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -196,10 +196,10 @@ static const struct regulator_desc axp22x_regulators[] = {
+ 	AXP_DESC(AXP22X, DCDC5, "dcdc5", "vin5", 1000, 2550, 50,
+ 		 AXP22X_DCDC5_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(4)),
+ 	/* secondary switchable output of DCDC1 */
+-	AXP_DESC_SW(AXP22X, DC1SW, "dc1sw", "dcdc1", 1600, 3400, 100,
++	AXP_DESC_SW(AXP22X, DC1SW, "dc1sw", "dc1sw", 1600, 3400, 100,
+ 		    AXP22X_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(7)),
+ 	/* LDO regulator internally chained to DCDC5 */
+-	AXP_DESC(AXP22X, DC5LDO, "dc5ldo", "dcdc5", 700, 1400, 100,
++	AXP_DESC(AXP22X, DC5LDO, "dc5ldo", "dc5ldo", 700, 1400, 100,
+ 		 AXP22X_DC5LDO_V_OUT, 0x7, AXP22X_PWR_OUT_CTRL1, BIT(0)),
+ 	AXP_DESC(AXP22X, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
+ 		 AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(6)),
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.1
