@@ -1,114 +1,56 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 4/6] PCI: generic: Correct, and avoid overflow, in bus_max
- calculation.
-Date: Wed, 16 Sep 2015 10:39:23 -0700
-Message-ID: <55F9A94B.4070702@caviumnetworks.com>
-References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com> <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com> <20150915174934.GL31157@arm.com> <55F85D4E.9020604@caviumnetworks.com> <20150915183500.GR31157@arm.com> <55F86764.4060502@caviumnetworks.com> <20150916104152.GC28771@arm.com> <20150916112852.GC17510@red-moon> <20150916172935.GT28771@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: eu@felipetonello.com
+Subject: [PATCH] ARM: dts: fix usb pin control for imx-rex dts
+Date: Wed, 16 Sep 2015 18:40:32 +0100
+Message-ID: <1442425232-21451-1-git-send-email-eu@felipetonello.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150916172935.GT28771@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <david.daney@cavium.com>
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "Felipe F. Tonello" <eu@felipetonello.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2015 10:29 AM, Will Deacon wrote:
-> Hi Lorenzo,
->
-> On Wed, Sep 16, 2015 at 12:28:52PM +0100, Lorenzo Pieralisi wrote:
->> On Wed, Sep 16, 2015 at 11:41:53AM +0100, Will Deacon wrote:
->>>> Here is the current code:
->>>>
->>>>>> 	bus_range = pci->cfg.bus_range;
->>>>>> 	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
->>>>>> 		u32 idx = busn - bus_range->start;
->>>>
->>>> The index is offset by the bus range start...
->>>>
->>>>>> 		u32 sz = 1 << pci->cfg.ops.bus_shift;
->>>>>>
->>>>>> 		pci->cfg.win[idx] = devm_ioremap(dev,
->>>>>> 						 pci->cfg.res.start + busn * sz,
->>>>>> 						 sz);
->>>>
->>>> But, the offset into the "reg" property is the raw bus number.
->>>>
->>>>
->>>>>> 		if (!pci->cfg.win[idx])
->>>>>> 			return -ENOMEM;
->>>>>> 	}
->>>>
->>>>
->>>> I hope that makes it more clear.
->>>
->>> Got it. So we should be using idx instead of busn in the devm_ioremap
->>> call above.
->>
->> I think that's not what's specified in the PCI firmware specification,
->> at least for the MMCFG regions. For MMCFG regions (quoting the specs)
->> the "base address of the memory mapped configuration space always
->> corresponds to bus number 0 (regardless of the start bus number decoded
->> by the host bridge)..."
->>
->> For the x86 implementation have a look at:
->>
->> arch/x86/pci/mmconfig_64.c mcfg_ioremap()
->>
->> static void __iomem *mcfg_ioremap(struct pci_mmcfg_region *cfg)
->> {
->> 	void __iomem *addr;
->> 	u64 start, size;
->> 	int num_buses;
->>
->> 	start = cfg->address + PCI_MMCFG_BUS_OFFSET(cfg->start_bus);
->> 	num_buses = cfg->end_bus - cfg->start_bus + 1;
->> 	size = PCI_MMCFG_BUS_OFFSET(num_buses);
->> 	addr = ioremap_nocache(start, size);
->> 	if (addr)
->> 		addr -= PCI_MMCFG_BUS_OFFSET(cfg->start_bus);
->> 	return addr;
->> }
->>
->> The MCFG config accessors add back the PCI_MMCFG_BUS_OFFSET(cfg->start_bus)
->> to the virtual address so that the proper virtual address is used when
->> issuing the config cycles, that's my understanding.
->
-> Ok. I think that whether the config space mapping or the config accessors
-> do the fixup should remain an implementation detail, but the resource
-> identifying config space should be dealt with consistently.
->
-> So that means the reg property should describe everything from bus 0,
-> but then we only map the region corresponding to the bus-range.
->
->> So IMO we have to define what "reg" represents for ECAM in DT, we can't
->> leave this open to interpretation (and I think makng MCFG and DT config
->> work the same way would be ideal).
+From: "Felipe F. Tonello" <eu@felipetonello.com>
 
-I will update the 
-Documentation/devicetree/bindings/pci/host-generic-pci.txt to reflect 
-this interpretation.
+This fixes a duplicated pin control causing this error:
 
->
-> If we define reg to cover the whole config space from bus 0 onwards,
-> then I think the driver should work as-is today. It's slightly odd, in
-> that there may be a prefix of config space that maps to god-knows-where,
-> but it's consistent with ACPI and doesn't require us to change the driver.
->
-> David?
+imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_GPIO_1 already
+requested by regulators:regulator@2; cannot claim for 2184000.usb
+imx6q-pinctrl 20e0000.iomuxc: pin-137 (2184000.usb) status -22
+imx6q-pinctrl 20e0000.iomuxc: could not request pin 137
+(MX6Q_PAD_GPIO_1) from group usbotggrp  on device 20e0000.iomuxc
+imx_usb 2184000.usb: Error applying setting, reverse things
+back
+imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_EIM_D31 already
+requested by regulators:regulator@1; cannot claim for 2184200.usb
+imx6q-pinctrl 20e0000.iomuxc: pin-52 (2184200.usb) status -22
+imx6q-pinctrl 20e0000.iomuxc: could not request pin 52 (MX6Q_PAD_EIM_D31)
+from group usbh1grp  on device 20e0000.iomuxc
+imx_usb 2184200.usb: Error applying setting, reverse things
+back
 
-I agree with this approach for two reasons:
+Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
+---
+ arch/arm/boot/dts/imx6qdl-rex.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-1) My interpretation of relevant specifications agrees with Lorenzo's
-
-2) It is less work for me, as this is how my firmware is currently 
-configured.
-
-This patch 4/6 is still necessary, as the bus_max calculation is broken 
-for non-zero start_bus.
-
-I anticipate sending a new version of the patch set later today (PDT). 
-I will add any Acked-by/Reviewed-by that I receive to the new set.
-
-David Daney
+diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+index 3373fd9..a503562 100644
+--- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+@@ -35,7 +35,6 @@
+ 			compatible = "regulator-fixed";
+ 			reg = <1>;
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_usbh1>;
+ 			regulator-name = "usbh1_vbus";
+ 			regulator-min-microvolt = <5000000>;
+ 			regulator-max-microvolt = <5000000>;
+@@ -47,7 +46,6 @@
+ 			compatible = "regulator-fixed";
+ 			reg = <2>;
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_usbotg>;
+ 			regulator-name = "usb_otg_vbus";
+ 			regulator-min-microvolt = <5000000>;
+ 			regulator-max-microvolt = <5000000>;
+-- 
+2.1.4
