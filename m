@@ -1,94 +1,73 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC] Potential issue with GPIO/IRQ flags
-Date: Thu, 17 Sep 2015 10:53:31 -0500
-Message-ID: <55FAE1FB.4070300@ti.com>
-References: <CAL_JsqKSfx4y_3VGhP5mR1-NJB0cJw5JLjhUk3hs92jM=usHPQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKSfx4y_3VGhP5mR1-NJB0cJw5JLjhUk3hs92jM=usHPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: [PATCH v4 0/3] Add DT support for netxbig LEDs
+Date: Thu, 17 Sep 2015 17:59:28 +0200
+Message-ID: <1442505571-9744-1-git-send-email-simon.guinot@sequanux.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@sculo.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2015 08:26 PM, Rob Herring wrote:
-> On Wed, Sep 16, 2015 at 4:07 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
->> Hello all,
->>
->> I've noticed that in a few DT bindings GPIO_ACTIVE_* defines are
->> incorrectly used as interrupt flags. GPIO_ACTIVE_*'s are defined
->> in:
->>
->> include/dt-bindings/gpio/gpio.h
->>
->> and are used to describe GPIO pins. IRQ types are defined in:
->>
->> include/dt-bindings/interrupt-controller/irq.h
->>
->> and are flags for IRQ pins.
->
-> It is perfectly valid for the meaning of the field to be defined by
-> the interrupt controller, and gpio interrupts could do something
-> different. We've tried to standardize this though.
->
+Hello,
 
-Sure, but in this case these are not what the interrupt controller
-is expecting.
+This patch series adds DT support for the LEDs found on the Kirkwood-based
+LaCie boards 2Big and 5Big Network v2.
 
->> These seem to have been mixed up in a few places, take for example:
->> arch/arm/boot/dts/tegra124-jetson-tk1.dts. On line 1393 we see the
->> correct usage, but just before on line 1384 we see the issue.
->> GPIO_ACTIVE_HIGH is defined as 0, the same as IRQ_TYPE_NONE. If
->> this IRQ was not hard-coded with the correct edge in the driver
->> this would not work. What the author probably wanted was
->> IRQ_TYPE_LEVEL_HIGH.
->>
->> Now lets look at commit c21e678b256b, in this the IRQ flags did not
->> matter as the correct flag was hard-coded (IRQF_TRIGGER_LOW), this
->> patch moves this to the DT, but changed the flag to GPIO_ACTIVE_LOW
->> instead of the desired IRQ_TYPE_LEVEL_LOW. GPIO_ACTIVE_LOW is defined
->> as 1, or IRQ_TYPE_EDGE_RISING in IRQ flags, which is not the
->> equivalent to IRQF_TRIGGER_LOW the author was probably looking for.
->>
->> A quick grep (git grep "interrupt.*GPIO_ACTIVE_") shows several more
->> instances of this. I found this by using one of these files as an
->> example and giving myself a lot of problems, so I would like to fix
->> this before it spreads anymore.
->>
->> I have a couple of ideas of how to go at this, first would be to
->> just replace the incorrect flags with what was intended, but for
->> some of these I don't know what was intended and do not have the
->> board to test.
->>
->> My other solution would be to just change all instances of the GPIO
->> flags to their value corresponding IRQ flags:
->>
->> - interrupts = <11 GPIO_ACTIVE_LOW>;
->> + interrupts = <11 IRQ_TYPE_EDGE_RISING>;
->>
->> this would not make any functional change as the defines would
->> still evaluate to the same value, but would make it obvious where
->> a problem may be and that they should probably be checked and
->> corrected, maybe we could even put a comment after:
->>
->> - interrupts = <11 GPIO_ACTIVE_LOW>;
->> + interrupts = <11 IRQ_TYPE_EDGE_RISING>; // FIXME: Check IRQ type
->>
->> Well, what do you think?
->
-> This seems fine. It is no less wrong.
->
+Changes for v2:
+- Check timer mode value retrieved from DT.
+- In netxbig_leds_get_of_pdata, don't use unsigned long variables to get
+  timer delay values from DT with function of_property_read_u32_index.
+  Instead, use a temporary u32 variable. This allows to silence a static
+  checker warning.
+- Make timer property optional in the binding documentation. It is now
+  aligned with the driver code.
 
-I'm not sure what you mean here.
+Changes for v3:
+- Fix pointer usage with the temporary u32 variable while calling
+  of_property_read_u32_index.
 
-Regards,
-Andrew
+Changes for v4:
+- In DT binding document netxbig-gpio-ext.txt, detail byte order for
+  registers and latch mechanism for "enable-gpio".
+- In leds-netxbig.c, add some error messages.
+- In leds-netxbig.c, fix some "sizeof" style issues.
+- In leds-netxbig.c, in netxbig_leds_get_of_pdata(), move the
+  of_property_read_string() calls after the error-prone checks.
+- Add some Acked-by.
 
-> Rob
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jacek,
+
+I did not convert the bright-max DT property into led-max-microamp.
+The reason is that I can't translate the bright-max values into
+microamperes. Therefore, it looks more consistent to keep the same
+naming prefix for the bright-addr and bright-max DT properties.
+
+Thanks,
+
+Simon
+
+Simon Guinot (3):
+  leds: netxbig: add device tree binding
+  ARM: Kirkwood: add LED DT entries for netxbig boards
+  ARM: mvebu: remove static LED setup for netxbig boards
+
+ .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |  22 ++
+ .../devicetree/bindings/leds/leds-netxbig.txt      |  92 ++++++++
+ arch/arm/boot/dts/kirkwood-net5big.dts             |  60 +++++
+ arch/arm/boot/dts/kirkwood-netxbig.dtsi            |  80 +++++++
+ arch/arm/mach-mvebu/Kconfig                        |   7 -
+ arch/arm/mach-mvebu/Makefile                       |   1 -
+ arch/arm/mach-mvebu/board.h                        |  21 --
+ arch/arm/mach-mvebu/kirkwood.c                     |   4 -
+ arch/arm/mach-mvebu/netxbig.c                      | 191 ---------------
+ drivers/leds/leds-netxbig.c                        | 258 +++++++++++++++++++--
+ include/dt-bindings/leds/leds-netxbig.h            |  18 ++
+ 11 files changed, 509 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-netxbig.txt
+ delete mode 100644 arch/arm/mach-mvebu/board.h
+ delete mode 100644 arch/arm/mach-mvebu/netxbig.c
+ create mode 100644 include/dt-bindings/leds/leds-netxbig.h
+
+-- 
+2.1.4
