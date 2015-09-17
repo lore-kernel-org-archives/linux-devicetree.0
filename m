@@ -1,33 +1,94 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v5 01/23] driver core: Add pre_probe callback to bus_type
-Date: Thu, 17 Sep 2015 11:52:02 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1509171150410.1270-100000@iolanthe.rowland.org>
-References: <1442494637-3674-2-git-send-email-tomeu.vizoso@collabora.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC] Potential issue with GPIO/IRQ flags
+Date: Thu, 17 Sep 2015 10:53:31 -0500
+Message-ID: <55FAE1FB.4070300@ti.com>
+References: <CAL_JsqKSfx4y_3VGhP5mR1-NJB0cJw5JLjhUk3hs92jM=usHPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1442494637-3674-2-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKSfx4y_3VGhP5mR1-NJB0cJw5JLjhUk3hs92jM=usHPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Sep 2015, Tomeu Vizoso wrote:
+On 09/16/2015 08:26 PM, Rob Herring wrote:
+> On Wed, Sep 16, 2015 at 4:07 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+>> Hello all,
+>>
+>> I've noticed that in a few DT bindings GPIO_ACTIVE_* defines are
+>> incorrectly used as interrupt flags. GPIO_ACTIVE_*'s are defined
+>> in:
+>>
+>> include/dt-bindings/gpio/gpio.h
+>>
+>> and are used to describe GPIO pins. IRQ types are defined in:
+>>
+>> include/dt-bindings/interrupt-controller/irq.h
+>>
+>> and are flags for IRQ pins.
+>
+> It is perfectly valid for the meaning of the field to be defined by
+> the interrupt controller, and gpio interrupts could do something
+> different. We've tried to standardize this though.
+>
 
-> Some buses (eg. AMBA) need access to some HW resources (it may need a
-> clock to be enabled so a device ID can be read) before a device can be
-> matched to a driver.
-> 
-> The pre_probe callback allows the device-driver core to request the bus
-> to perform this initialization and can defer the probe if any of the
-> resources needed are missing.
-> 
-> This gives us more flexibility when setting the order in which devices
-> are probed because the resources needed to get the matching information
-> don't need to be available by the time that the bus devices are
-> registered.
+Sure, but in this case these are not what the interrupt controller
+is expecting.
 
-Can't the subsystem do this itself in its matching routine?
+>> These seem to have been mixed up in a few places, take for example:
+>> arch/arm/boot/dts/tegra124-jetson-tk1.dts. On line 1393 we see the
+>> correct usage, but just before on line 1384 we see the issue.
+>> GPIO_ACTIVE_HIGH is defined as 0, the same as IRQ_TYPE_NONE. If
+>> this IRQ was not hard-coded with the correct edge in the driver
+>> this would not work. What the author probably wanted was
+>> IRQ_TYPE_LEVEL_HIGH.
+>>
+>> Now lets look at commit c21e678b256b, in this the IRQ flags did not
+>> matter as the correct flag was hard-coded (IRQF_TRIGGER_LOW), this
+>> patch moves this to the DT, but changed the flag to GPIO_ACTIVE_LOW
+>> instead of the desired IRQ_TYPE_LEVEL_LOW. GPIO_ACTIVE_LOW is defined
+>> as 1, or IRQ_TYPE_EDGE_RISING in IRQ flags, which is not the
+>> equivalent to IRQF_TRIGGER_LOW the author was probably looking for.
+>>
+>> A quick grep (git grep "interrupt.*GPIO_ACTIVE_") shows several more
+>> instances of this. I found this by using one of these files as an
+>> example and giving myself a lot of problems, so I would like to fix
+>> this before it spreads anymore.
+>>
+>> I have a couple of ideas of how to go at this, first would be to
+>> just replace the incorrect flags with what was intended, but for
+>> some of these I don't know what was intended and do not have the
+>> board to test.
+>>
+>> My other solution would be to just change all instances of the GPIO
+>> flags to their value corresponding IRQ flags:
+>>
+>> - interrupts = <11 GPIO_ACTIVE_LOW>;
+>> + interrupts = <11 IRQ_TYPE_EDGE_RISING>;
+>>
+>> this would not make any functional change as the defines would
+>> still evaluate to the same value, but would make it obvious where
+>> a problem may be and that they should probably be checked and
+>> corrected, maybe we could even put a comment after:
+>>
+>> - interrupts = <11 GPIO_ACTIVE_LOW>;
+>> + interrupts = <11 IRQ_TYPE_EDGE_RISING>; // FIXME: Check IRQ type
+>>
+>> Well, what do you think?
+>
+> This seems fine. It is no less wrong.
+>
 
-Alan Stern
+I'm not sure what you mean here.
 
+Regards,
+Andrew
+
+> Rob
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
