@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 10/11] clocksource: sh_cmt: Remove unused 32-bit CMT bindings
-Date: Thu, 17 Sep 2015 18:55:01 +0900
-Message-ID: <20150917095501.5369.97124.sendpatchset@little-apple>
+Subject: [PATCH v2 11/11] devicetree: bindings: Remove deprecated properties
+Date: Thu, 17 Sep 2015 18:55:11 +0900
+Message-ID: <20150917095511.5369.41259.sendpatchset@little-apple>
 References: <20150917095325.5369.73893.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
@@ -12,10 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Remove the 32-bit CMT compat strings to reduce maintenance burden.
-
-It should be fine to break DT compatibility because the 32-bit
-32-bit CMT DT binding was never part of any upstream DTS file.
+The deprecated DT properies are part of the GIT history,
+no need to keep them around any longer.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
@@ -23,17 +21,26 @@ Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
  Changes since V1:
  - New patch
 
- drivers/clocksource/sh_cmt.c |    2 --
- 1 file changed, 2 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- 0005/drivers/clocksource/sh_cmt.c
-+++ work/drivers/clocksource/sh_cmt.c	2015-09-17 18:06:35.940513000 +0900
-@@ -957,8 +957,6 @@ static const struct platform_device_id s
- MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+--- 0011/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 18:08:17.000513000 +0900
+@@ -35,8 +35,6 @@ Required Properties:
+     - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
+ 		These are fallbacks for r8a73a4 and all the R-Car Gen2
+ 		entries	listed above.
+-
+-    - "renesas,cmt-48-gen2" is <deprecated>, use "renesas,cmt[01]-*" instead.
+     
+   - reg: base address and length of the registers block for the timer module.
+   - interrupts: interrupt-specifier for the timer, one per channel.
+@@ -44,8 +42,6 @@ Required Properties:
+     in clock-names.
+   - clock-names: must contain "fck" for the functional clock.
  
- static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
--	{ .compatible = "renesas,cmt-32", .data = &sh_cmt_info[SH_CMT_32BIT] },
--	{ .compatible = "renesas,cmt-32-fast", .data = &sh_cmt_info[SH_CMT_32BIT_FAST] },
- 	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
- 	{ .compatible = "renesas,cmt-48-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
- 	{ .compatible = "renesas,cmt0-rcar-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
+-  - renesas,channels-mask: <deprecated>, information kept in device driver.
+-
+ 
+ Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 
