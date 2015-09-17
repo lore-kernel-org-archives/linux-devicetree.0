@@ -1,75 +1,86 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v2 6/9] pinctrl: rockchip: add support for the rk3036
-Date: Thu, 17 Sep 2015 18:34:20 +0800
-Message-ID: <1442486060-1770-1-git-send-email-zhengxing@rock-chips.com>
-References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, zhengxing@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+From: Ian Campbell <ijc@hellion.org.uk>
+Subject: Re: [PATCH 2/3] devicetree: bindings: use input-event-codes.h for
+ evdev codes
+Date: Thu, 17 Sep 2015 12:00:17 +0100
+Message-ID: <1442487617.18856.177.camel@hellion.org.uk>
+References: <1442064372-3030-1-git-send-email-hdegoede@redhat.com>
+	 <1442064372-3030-3-git-send-email-hdegoede@redhat.com>
+	 <1442316292.3549.386.camel@hellion.org.uk> <55F97C3D.5020702@redhat.com>
+	 <1442414443.18856.110.camel@hellion.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1442414443.18856.110.camel@hellion.org.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new type for rk3036 and many parts of pinctrl rk3036 are similar
-with rk2928's.
+On Wed, 2015-09-16 at 15:40 +0100, Ian Campbell wrote:
+> > The intend of the symlink was that the conversion script would copy the target,
+> > rather then follow the symlink. This sorta assumes that there are will be not
+> > symlinks under dt-bindings which link to files inside dt-bindings and thus
+> > should be preserved as symlinks.
+> > 
+> > If the copy done in the script will follow the symlink then nothing should
+> > really change for the split DT repo.
+> 
+> Interesting idea. I'll see if I can make the conversion routine do that.
+> 
+> TBH I have a horrid feeling that this is going to be beyond git rewrite
+> -branch, at least in the mode it is used in today.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
----
+It seems that it is possible, after a fashion.
 
-Changes in v2: None
+The downside is that either _all_ symlinks (which end up in the output) get
+flattened or some sort of black/whitelisting is needed in the conversion
+scripts themselves (potentially leading to issues or discontinuities) as
+new stuff arrives).
 
- .../bindings/pinctrl/rockchip,pinctrl.txt          |    1 +
- drivers/pinctrl/pinctrl-rockchip.c                 |   17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+It isn't possible AFAICT tell if a symlink points to something outside of
+the converted set of paths and adjust, at least not without an unreasonable
+amount of overhead on each commit during the rewrite.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-index 391ef4b..c73f2bb 100644
---- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-@@ -22,6 +22,7 @@ Required properties for iomux controller:
-   - compatible: one of "rockchip,rk2928-pinctrl", "rockchip,rk3066a-pinctrl"
- 		       "rockchip,rk3066b-pinctrl", "rockchip,rk3188-pinctrl"
- 		       "rockchip,rk3288-pinctrl", "rockchip,rk3368-pinctrl"
-+		       "rockchip,rk3036-pinctrl"
-   - rockchip,grf: phandle referencing a syscon providing the
- 	 "general register files"
- 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c5246c0..9c49510 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -2089,6 +2089,21 @@ static struct rockchip_pin_ctrl rk2928_pin_ctrl = {
- 		.pull_calc_reg		= rk2928_calc_pull_reg_and_bit,
- };
- 
-+static struct rockchip_pin_bank rk3036_pin_banks[] = {
-+	PIN_BANK(0, 32, "gpio0"),
-+	PIN_BANK(1, 32, "gpio1"),
-+	PIN_BANK(2, 32, "gpio2"),
-+};
-+
-+static struct rockchip_pin_ctrl rk3036_pin_ctrl = {
-+		.pin_banks		= rk3036_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3036_pin_banks),
-+		.label			= "RK3036-GPIO",
-+		.type			= RK2928,
-+		.grf_mux_offset		= 0xa8,
-+		.pull_calc_reg		= rk2928_calc_pull_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3066a_pin_banks[] = {
- 	PIN_BANK(0, 32, "gpio0"),
- 	PIN_BANK(1, 32, "gpio1"),
-@@ -2207,6 +2222,8 @@ static struct rockchip_pin_ctrl rk3368_pin_ctrl = {
- static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 	{ .compatible = "rockchip,rk2928-pinctrl",
- 		.data = (void *)&rk2928_pin_ctrl },
-+	{ .compatible = "rockchip,rk3036-pinctrl",
-+		.data = (void *)&rk3036_pin_ctrl },
- 	{ .compatible = "rockchip,rk3066a-pinctrl",
- 		.data = (void *)&rk3066a_pin_ctrl },
- 	{ .compatible = "rockchip,rk3066b-pinctrl",
--- 
-1.7.9.5
+Since this new file would be the first symlink in the converted repo I took
+the former approach in my lash up to try it out, which was essentially to
+insert the below script into the middle of the "git ls-files | rewrite
+-paths.sed" pipeline which is called by git filter-branch --index-filter.
+Not pretty but it does seem to work.
 
+I want to avoid switching to --tree-filter if at all possible because it
+checks out the tree and is therefore a _little_ I/O intensive ;-)
 
+Ian.
+
+#!/bin/bash
+
+set -e
+
+while read mode object stage path ; do
+    case "$mode" in
+	120000)
+	    # symbolic link
+	    deref=$(echo $GIT_COMMIT:$path | git cat-file --batch-check='deref-ok %(objectname)' --follow-symlinks)
+	    case "$deref" in
+		deref-ok*)
+		    echo -e "100644 ${deref#deref-ok } $stage\t$path"
+		    ;;
+		dangling*) # skip
+		    ;;
+		*) # the rest, missing etc
+		    echo >&2 "Failed to parse symlink $GIT_COMMIT:$path $deref"
+		    exit 1
+		    ;;
+	    esac
+	    ;;
+	100*)
+	    # Regular file, just pass through
+	    echo -e "$mode $object $stage\t$path"
+	    ;;
+	*)
+	    echo >&2 "Unhandled ls-tree entry: $line"
+	    exit 1
+	    ;;
+    esac
+done
