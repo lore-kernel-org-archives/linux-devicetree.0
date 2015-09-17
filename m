@@ -1,46 +1,70 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 11/11] devicetree: bindings: Remove deprecated properties
-Date: Thu, 17 Sep 2015 18:55:11 +0900
-Message-ID: <20150917095511.5369.41259.sendpatchset@little-apple>
-References: <20150917095325.5369.73893.sendpatchset@little-apple>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v2 08/11] scsi: ufs: make ufshcd_config_pwr_mode of non-static
+ func
+Date: Thu, 17 Sep 2015 15:15:34 +0530
+Message-ID: <1442483137-32376-9-git-send-email-alim.akhtar@samsung.com>
+References: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
+In-reply-to: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+From: Seungwon Jeon <essuuj@gmail.com>
 
-The deprecated DT properies are part of the GIT history,
-no need to keep them around any longer.
+This makes ufshcd_config_pwr_mode non-static so that other vendors
+like exynos can use the same.
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 ---
+ drivers/scsi/ufs/ufshcd.c |    5 ++---
+ drivers/scsi/ufs/ufshcd.h |    2 ++
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
- Changes since V1:
- - New patch
-
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |    4 ----
- 1 file changed, 4 deletions(-)
-
---- 0011/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 18:08:17.000513000 +0900
-@@ -35,8 +35,6 @@ Required Properties:
-     - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
- 		These are fallbacks for r8a73a4 and all the R-Car Gen2
- 		entries	listed above.
--
--    - "renesas,cmt-48-gen2" is <deprecated>, use "renesas,cmt[01]-*" instead.
-     
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
-@@ -44,8 +42,6 @@ Required Properties:
-     in clock-names.
-   - clock-names: must contain "fck" for the functional clock.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index ccf7c83..da52c45 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -185,8 +185,6 @@ static int ufshcd_uic_hibern8_ctrl(struct ufs_hba *hba, bool en);
+ static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);
+ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba);
+ static irqreturn_t ufshcd_intr(int irq, void *__hba);
+-static int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+-		struct ufs_pa_layer_attr *desired_pwr_mode);
+ static int ufshcd_change_power_mode(struct ufs_hba *hba,
+ 			     struct ufs_pa_layer_attr *pwr_mode);
  
--  - renesas,channels-mask: <deprecated>, information kept in device driver.
--
+@@ -2597,7 +2595,7 @@ static int ufshcd_change_power_mode(struct ufs_hba *hba,
+  * @hba: per-adapter instance
+  * @desired_pwr_mode: desired power configuration
+  */
+-static int ufshcd_config_pwr_mode(struct ufs_hba *hba,
++int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+ 		struct ufs_pa_layer_attr *desired_pwr_mode)
+ {
+ 	struct ufs_pa_layer_attr final_params = { 0 };
+@@ -2613,6 +2611,7 @@ static int ufshcd_config_pwr_mode(struct ufs_hba *hba,
  
- Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(ufshcd_config_pwr_mode);
  
+ /**
+  * ufshcd_complete_dev_init() - checks device readiness
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 2fd0c3c..83fe605 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -636,6 +636,8 @@ extern int ufshcd_dme_set_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			       u8 attr_set, u32 mib_val, u8 peer);
+ extern int ufshcd_dme_get_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			       u32 *mib_val, u8 peer);
++extern int ufshcd_config_pwr_mode(struct ufs_hba *hba,
++			struct ufs_pa_layer_attr *desired_pwr_mode);
+ 
+ /* UIC command interfaces for DME primitives */
+ #define DME_LOCAL	0
+-- 
+1.7.10.4
