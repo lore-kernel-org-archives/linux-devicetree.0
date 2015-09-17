@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 01/11] devicetree: bindings: Remove sh7372 CMT binding
-Date: Thu, 17 Sep 2015 18:53:34 +0900
-Message-ID: <20150917095334.5369.70615.sendpatchset@little-apple>
+Subject: [PATCH v2 02/11] clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT case
+Date: Thu, 17 Sep 2015 18:53:44 +0900
+Message-ID: <20150917095344.5369.2009.sendpatchset@little-apple>
 References: <20150917095325.5369.73893.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
@@ -12,12 +12,11 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Remove the sh7372 CMT compat string to reduce maintenance burden.
-
-It should be fine to break DT compatibility because:
-1) The sh7372 SoC support has been removed from upstream
-2) The sh7372 CMT DT binding was never part of upstream DTS
-3) The CMT driver never matches on the sh7372 binding
+Always use 0x3f as channel mask for the SH_CMT_48BIT type of devices.
+Once this patch is applied the "renesas,channels-mask" property will
+be ignored by the driver for older devices matching SH_CMT_48BIT. In
+the future when all CMT types store channel mask in the driver then
+we will be able to deprecate and remove "renesas,channels-mask" from DTS.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -26,48 +25,47 @@ Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 
  Changes since V1:
- - Removed all references to sh7372
+ - Fixed compile error - thanks Geert!
  - Added Acked-by and Tested-by from Geert
  - Added Acked-by from Laurent
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+drivers/clocksource/sh_cmt.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- 0001/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:22:52.420513000 +0900
-@@ -14,32 +14,26 @@ Required Properties:
-   - compatible: must contain one or more of the following:
-     - "renesas,cmt-32-r8a7740" for the r8a7740 32-bit CMT
- 		(CMT0)
--    - "renesas,cmt-32-sh7372" for the sh7372 32-bit CMT
--		(CMT0)
-     - "renesas,cmt-32-sh73a0" for the sh73a0 32-bit CMT
- 		(CMT0)
-     - "renesas,cmt-32" for all 32-bit CMT without fast clock support
--		(CMT0 on sh7372, sh73a0 and r8a7740)
-+		(CMT0 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-* entries.
+--- 0001/drivers/clocksource/sh_cmt.c
++++ work/drivers/clocksource/sh_cmt.c	2015-09-17 17:25:15.820513000 +0900
+@@ -74,6 +74,8 @@ enum sh_cmt_model {
+ struct sh_cmt_info {
+ 	enum sh_cmt_model model;
  
-     - "renesas,cmt-32-fast-r8a7740" for the r8a7740 32-bit CMT with fast
- 		clock support (CMT[234])
--    - "renesas,cmt-32-fast-sh7372" for the sh7372 32-bit CMT with fast
--		clock support (CMT[234])
-     - "renesas,cmt-32-fast-sh73a0" for the sh73A0 32-bit CMT with fast
- 		clock support (CMT[234])
-     - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
--		(CMT[234] on sh7372, sh73a0 and r8a7740)
-+		(CMT[234] on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-fast-* entries.
++	unsigned long channels_mask;
++
+ 	unsigned long width; /* 16 or 32 bit version of hardware block */
+ 	unsigned long overflow_bit;
+ 	unsigned long clear_bits;
+@@ -212,6 +214,7 @@ static const struct sh_cmt_info sh_cmt_i
+ 	},
+ 	[SH_CMT_48BIT] = {
+ 		.model = SH_CMT_48BIT,
++		.channels_mask = 0x3f,
+ 		.width = 32,
+ 		.overflow_bit = SH_CMT32_CMCSR_CMF,
+ 		.clear_bits = ~(SH_CMT32_CMCSR_CMF | SH_CMT32_CMCSR_OVF),
+@@ -972,9 +975,14 @@ static int sh_cmt_setup(struct sh_cmt_de
+ 		id = of_match_node(sh_cmt_of_table, pdev->dev.of_node);
+ 		cmt->info = id->data;
  
--    - "renesas,cmt-48-sh7372" for the sh7372 48-bit CMT
--		(CMT1)
-     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48" for all non-second generation 48-bit CMT
--		(CMT1 on sh7372, sh73a0 and r8a7740)
-+		(CMT1 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-48-* entries.
- 
-     - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
+-		ret = sh_cmt_parse_dt(cmt);
+-		if (ret < 0)
+-			return ret;
++		/* prefer in-driver channel configuration over DT */
++		if (cmt->info->channels_mask) {
++			cmt->hw_channels = cmt->info->channels_mask;
++		} else {
++			ret = sh_cmt_parse_dt(cmt);
++			if (ret < 0)
++				return ret;
++		}
+ 	} else if (pdev->dev.platform_data) {
+ 		struct sh_timer_config *cfg = pdev->dev.platform_data;
+ 		const struct platform_device_id *id = pdev->id_entry;
