@@ -1,78 +1,149 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH RFC 6/8] drm: hisilicon: Add support for fbdev
-Date: Thu, 17 Sep 2015 07:52:10 -0400
-Message-ID: <CAF6AEGs1_9JsCfnbW=-PCunyapMGK4EB3eRzRLg9ZCpuQ-NEbA@mail.gmail.com>
-References: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1442309834-21420-7-git-send-email-kong.kongxinwei@hisilicon.com>
- <55F862A1.30308@kernel.org>
- <CAGd==05f+XVg4ZSDihftjB2wcOGkAou=AxXYXB+1=ckM2J6EBQ@mail.gmail.com>
+From: Shannon Zhao <zhaoshenglong@huawei.com>
+Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub parameters
+Date: Thu, 17 Sep 2015 19:43:40 +0800
+Message-ID: <55FAA76C.4070607@huawei.com>
+References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGd==05f+XVg4ZSDihftjB2wcOGkAou=AxXYXB+1=ckM2J6EBQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, "Yanglong (James)" <james.yanglong@hisilicon.com>, Rob Herring <robh@kernel.org>, Yinshengbao <yinshengbao@hisilicon.com>, xuyiping@hisilicon.com, Jonathan Corbet <corbet@lwn.net>, Min Yi <yimin@huawei.com>, xuwei5@hisilicon.com, Wang Fei <w.f@huawei.com>, qijiwen@hisilicon.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, bintian.wang@huawei.com, puck.chen@hisilicon.com, Yanhaifeng <yanhaifeng@hisilicon.com>, Dechun Fang <fangdechun@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, gongyu@h
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: xen-devel@lists.xen.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-doc@vger.kernel.org, freebsd-arm@freebsd.org, matt.fleming@intel.com, ard.biesheuvel@linaro.org, leif.lindholm@linaro.org, ian.campbell@citrix.com, stefano.stabellini@eu.citrix.com, julien.grall@citrix.com, jbeulich@suse.com, christoffer.dall@linaro.org, peter.huangpeng@huawei.com, shannon.zhao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBTZXAgMTYsIDIwMTUgYXQgNTo0OCBBTSwgWGlubGlhbmcgTGl1IDx4aW5saWFuZy5s
-aXVAbGluYXJvLm9yZz4gd3JvdGU6Cj4KPgo+IE9uIDE2IFNlcHRlbWJlciAyMDE1IGF0IDAyOjI1
-LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPiBIaSBSb2IsIHRoYW5rcyBh
-IGxvdCBmb3IgcmVwbHk6LSkKPgo+PiBPbiAwOS8xNS8yMDE1IDA0OjM3IEFNLCBYaW53ZWkgS29u
-ZyB3cm90ZToKPj4gPiBJZiB5b3UgY29uZmlnIERSTV9ISVNJX0ZCREVWIG9wdGlvbmFsLCB0aGlz
-IHBhdGNoIHdpbGwgb25seSBzdXBwb3J0Cj4+ID4gZmJkZXYKPj4gPiBtb2RlIHdoaWxlIGFsc28g
-c3VwcG9ydGluZyBkb3VibGUgYnVmZmVyLgo+Pgo+PiBUaGlzIGlzIGEgbG90IG9mIGR1cGxpY2F0
-ZWQgY29kZSBmcm9tIENNQSBmYmRldi4gSXMgZG91YmxlIGJ1ZmZlcmluZyB0aGUKPj4gb25seSBy
-ZWFzb24gd2h5IENNQSBmYmRldiBjYW4ndCBiZSB1c2VkIG9yIGFyZSB0aGVyZSBzb21lIG90aGVy
-Cj4+IGNvbnN0cmFpbnRzPwo+Cj4gWWVzLCBkb3VibGUgYnVmZmVyaW5nIGlzIHRoZSBtYWluIHJl
-YXNvbiB3ZSByZXdyaXRlIG91ciBvd24gZmJkZXYuCj4gQ01BIGZiZGV2IG9ubHkgY3JlYXRlIG9u
-ZSBidWZmZXIuIEJ1dCB3ZSBuZWVkIGF0IGxlYXN0ICBkb3VibGUgYnVmZmVyIGZvcgo+IHJ1bm5p
-bmcgQW5kcm9pZCB3aXRoIGZiZGV2Lgo+Cj4+IERvdWJsZSBidWZmZXJpbmcgaW4gZmJkZXYgaGFz
-IGFsd2F5cyBiZWVuIGEgaGFjaywgc28gSSdtCj4+IGd1ZXNzaW5nIHRoYXQgaXMgbm90IGEgZmVh
-dHVyZSB0aGF0IHNob3VsZCBiZSBhZGRlZCBoZXJlLgo+Pgo+IElmIHNvLCBJIHRoaW5rIGl0IGlz
-IGhhcmQgdG8gYmUgYWNjZXB0ZWQgZm9yIG15IGNtYSBmYmRldiBwYXRjaCB0byBzdXBwb3J0Cj4g
-bXVsdGkgYnVmZmVyLgo+IFRoaXMgZWFybHkgd2VlaywgSSBoYXZlIHNlbnQgYSBjbWEgZmJkZXYg
-cGF0Y2ggZm9yIHN1cHBvcnRpbmcgdGhpcy4gVGhlCj4gc3ViamVjdCBpcwo+ICJbUEFUQ0hdIGRy
-bS9jbWEtaGVscGVyOiBBZGQgbXVsdGkgYnVmZmVyIHN1cHBvcnQgZm9yIGNtYSBmYmRldiIuCj4g
-V2UgZG8gaGF2ZSBhIHN0cm9uZyB3aWxsIHRvIHN1cHBvcnQgdGhpcyBmZWF0dXJlLiBJIGRlc2Ny
-aWJlZCB0aGUgcmVhc29uIGluCj4gdGhlIHBhdGNoLiBQbGVhc2UgdGFrZSBhIGxvb2sgZm9yIG1l
-LiBUaGFuayB5b3UgdmVyeSBtdWNoLgoKZndpdywgZHJtX2dyYWxsb2MgaGFzIHN1cHBvcnQgZm9y
-IGttcy4gIEN1cnJlbnRseSBpdCBpcyBleHBlY3RlZCB0byBiZQpwYWlyZWQgdy8gYSBtZXNhIGdw
-dSBkcml2ZXIsIHdoaWNoIG1pZ2h0IG5vdCB3b3JrIGZvciBldmVyeW9uZSwgYnV0IEkKc3VwcG9z
-ZSB0aGUgZGlzcGxheSBwYXJ0IG9mIGl0IGNvdWxkIGJlIGV4dHJhY3RlZCBvdXQgZm9yIGEKZ3Jh
-bGxvYy5rbXMuc28gZm9yIHB1cmUgc3cgcmVuZGVyaW5nLi4gdGhhdCBtaWdodCBiZSBhIGJldHRl
-cgphcHByb2FjaC4KCmh0dHA6Ly9naXQuYW5kcm9pZC14ODYub3JnLz9wPXBsYXRmb3JtL2hhcmR3
-YXJlL2RybV9ncmFsbG9jLmdpdAoKQlIsCi1SCgo+IC1YaW5saWFuZwo+Cj4+IFJvYgo+Pgo+PiA+
-IFNpZ25lZC1vZmYtYnk6IFhpbmxpYW5nIExpdSA8eGlubGlhbmcubGl1QGxpbmFyby5vcmc+Cj4+
-ID4gU2lnbmVkLW9mZi1ieTogWGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBoaXNpbGljb24u
-Y29tPgo+PiA+IFNpZ25lZC1vZmYtYnk6IEFuZHkgR3JlZW4gPGFuZHkuZ3JlZW5AbGluYXJvLm9y
-Zz4KPj4gPiBTaWduZWQtb2ZmLWJ5OiBKaXdlbiBRaSA8cWlqaXdlbkBoaXNpbGljb24uY29tPgo+
-PiA+IFNpZ25lZC1vZmYtYnk6IFl1IEdvbmcgPGdvbmd5dUBoaXNpbGljb24uY29tPgo+PiA+IC0t
-LQo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcgICAgICAgICAgICAgIHwg
-IDEzICsKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9NYWtlZmlsZSAgICAgICAgICAg
-ICB8ICAgMyArLQo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Nvbm5l
-Y3Rvci5jIHwgICA0ICsKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9k
-cnYuYyAgICAgICB8ICAgOSArCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9k
-cm1fZHNpLmMgICAgICAgfCAgMTUgKwo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hp
-c2lfZHJtX2ZiLmggICAgICAgIHwgICA1ICsKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
-bi9oaXNpX2RybV9mYmRldi5jICAgICB8IDM5NQo+PiA+ICsrKysrKysrKysrKysrKysrKysrKysr
-KysKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9mYmRldi5oICAgICB8
-ICAyNCArKwo+PiA+ICA4IGZpbGVzIGNoYW5nZWQsIDQ2NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
-L2hpc2lfZHJtX2ZiZGV2LmMKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9oaXNpbGljb24vaGlzaV9kcm1fZmJkZXYuaAo+Pgo+Cj4KPiBfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+Cl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+>From the comments on this patch, IIUC, we don't object to the change
+brought by this patch. What we didn't reach an agreement is how to
+support runtime service for Dom0. Right? If so, I think this patch
+doesn't conflict with adding support for runtime service in the future.
+So could we move this patch forward? Then I could continue working on
+adding ARM ACPI support on Xen.
+
+Any comments?
+
+Thanks,
+-- 
+Shannon
+
+On 2015/9/10 16:41, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
+> 
+> These EFI stub parameters are used to internal communication between EFI
+> stub and Linux kernel and EFI stub creates these parameters. But for Xen
+> on ARM when booting with UEFI, Xen will create a minimal DT providing
+> these parameters for Dom0 and Dom0 is not only Linux kernel, but also
+> other OS (such as FreeBSD) which will be used in the future. So here
+> we plan to standardize the names by dropping the prefix "linux," and
+> make them common to other OS. Also this will not break the compatibility
+> since these parameters are used to internal communication between EFI
+> stub and kernel.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> ---
+> Look at [1] for the discussion about this in Xen ML. The purpose of this
+> patch is to standardize the names to make Linux ARM kernel work on Xen
+> with UEFI. Also it hopes other OS(e.g. FreeBSD), which will be used as
+> Dom0 on Xen, could support this mechanism as well.
+> 
+> [1]http://lists.xenproject.org/archives/html/xen-devel/2015-08/msg02250.html
+> 
+>  Documentation/arm/uefi.txt         | 10 +++++-----
+>  drivers/firmware/efi/efi.c         | 10 +++++-----
+>  drivers/firmware/efi/libstub/fdt.c | 10 +++++-----
+>  3 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/arm/uefi.txt b/Documentation/arm/uefi.txt
+> index d60030a..8c83243 100644
+> --- a/Documentation/arm/uefi.txt
+> +++ b/Documentation/arm/uefi.txt
+> @@ -45,18 +45,18 @@ following parameters:
+>  ________________________________________________________________________________
+>  Name                      | Size   | Description
+>  ================================================================================
+> -linux,uefi-system-table   | 64-bit | Physical address of the UEFI System Table.
+> +uefi-system-table         | 64-bit | Physical address of the UEFI System Table.
+>  --------------------------------------------------------------------------------
+> -linux,uefi-mmap-start     | 64-bit | Physical address of the UEFI memory map,
+> +uefi-mmap-start           | 64-bit | Physical address of the UEFI memory map,
+>                            |        | populated by the UEFI GetMemoryMap() call.
+>  --------------------------------------------------------------------------------
+> -linux,uefi-mmap-size      | 32-bit | Size in bytes of the UEFI memory map
+> +uefi-mmap-size            | 32-bit | Size in bytes of the UEFI memory map
+>                            |        | pointed to in previous entry.
+>  --------------------------------------------------------------------------------
+> -linux,uefi-mmap-desc-size | 32-bit | Size in bytes of each entry in the UEFI
+> +uefi-mmap-desc-size       | 32-bit | Size in bytes of each entry in the UEFI
+>                            |        | memory map.
+>  --------------------------------------------------------------------------------
+> -linux,uefi-mmap-desc-ver  | 32-bit | Version of the mmap descriptor format.
+> +uefi-mmap-desc-ver        | 32-bit | Version of the mmap descriptor format.
+>  --------------------------------------------------------------------------------
+>  linux,uefi-stub-kern-ver  | string | Copy of linux_banner from build.
+>  --------------------------------------------------------------------------------
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index d6144e3..3878715 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -481,11 +481,11 @@ static __initdata struct {
+>  	int offset;
+>  	int size;
+>  } dt_params[] = {
+> -	UEFI_PARAM("System Table", "linux,uefi-system-table", system_table),
+> -	UEFI_PARAM("MemMap Address", "linux,uefi-mmap-start", mmap),
+> -	UEFI_PARAM("MemMap Size", "linux,uefi-mmap-size", mmap_size),
+> -	UEFI_PARAM("MemMap Desc. Size", "linux,uefi-mmap-desc-size", desc_size),
+> -	UEFI_PARAM("MemMap Desc. Version", "linux,uefi-mmap-desc-ver", desc_ver)
+> +	UEFI_PARAM("System Table", "uefi-system-table", system_table),
+> +	UEFI_PARAM("MemMap Address", "uefi-mmap-start", mmap),
+> +	UEFI_PARAM("MemMap Size", "uefi-mmap-size", mmap_size),
+> +	UEFI_PARAM("MemMap Desc. Size", "uefi-mmap-desc-size", desc_size),
+> +	UEFI_PARAM("MemMap Desc. Version", "uefi-mmap-desc-ver", desc_ver)
+>  };
+>  
+>  struct param_info {
+> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+> index ef5d764..e94589a 100644
+> --- a/drivers/firmware/efi/libstub/fdt.c
+> +++ b/drivers/firmware/efi/libstub/fdt.c
+> @@ -118,31 +118,31 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
+>  	/* Add FDT entries for EFI runtime services in chosen node. */
+>  	node = fdt_subnode_offset(fdt, 0, "chosen");
+>  	fdt_val64 = cpu_to_fdt64((u64)(unsigned long)sys_table);
+> -	status = fdt_setprop(fdt, node, "linux,uefi-system-table",
+> +	status = fdt_setprop(fdt, node, "uefi-system-table",
+>  			     &fdt_val64, sizeof(fdt_val64));
+>  	if (status)
+>  		goto fdt_set_fail;
+>  
+>  	fdt_val64 = cpu_to_fdt64((u64)(unsigned long)memory_map);
+> -	status = fdt_setprop(fdt, node, "linux,uefi-mmap-start",
+> +	status = fdt_setprop(fdt, node, "uefi-mmap-start",
+>  			     &fdt_val64,  sizeof(fdt_val64));
+>  	if (status)
+>  		goto fdt_set_fail;
+>  
+>  	fdt_val32 = cpu_to_fdt32(map_size);
+> -	status = fdt_setprop(fdt, node, "linux,uefi-mmap-size",
+> +	status = fdt_setprop(fdt, node, "uefi-mmap-size",
+>  			     &fdt_val32,  sizeof(fdt_val32));
+>  	if (status)
+>  		goto fdt_set_fail;
+>  
+>  	fdt_val32 = cpu_to_fdt32(desc_size);
+> -	status = fdt_setprop(fdt, node, "linux,uefi-mmap-desc-size",
+> +	status = fdt_setprop(fdt, node, "uefi-mmap-desc-size",
+>  			     &fdt_val32, sizeof(fdt_val32));
+>  	if (status)
+>  		goto fdt_set_fail;
+>  
+>  	fdt_val32 = cpu_to_fdt32(desc_ver);
+> -	status = fdt_setprop(fdt, node, "linux,uefi-mmap-desc-ver",
+> +	status = fdt_setprop(fdt, node, "uefi-mmap-desc-ver",
+>  			     &fdt_val32, sizeof(fdt_val32));
+>  	if (status)
+>  		goto fdt_set_fail;
+> 
+
