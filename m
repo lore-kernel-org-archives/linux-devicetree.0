@@ -1,161 +1,115 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 08/11] ARM: shmobile: Remove CMT renesas,channels-mask from DTS
-Date: Thu, 17 Sep 2015 18:54:42 +0900
-Message-ID: <20150917095442.5369.63550.sendpatchset@little-apple>
-References: <20150917095325.5369.73893.sendpatchset@little-apple>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
+From: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 02/11] scsi: ufs: add quirk to contain unconformable utrd
+ field
+Date: Thu, 17 Sep 2015 15:15:28 +0530
+Message-ID: <1442483137-32376-3-git-send-email-alim.akhtar@samsung.com>
+References: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1442483137-32376-1-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+From: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Update the DTS to remove the now deprecated "renesas,channels-mask" property.
+UTRD(UTP Transfer Request Descriptor)'s field such as offset/length,
+especially response's has DWORD expression. This quirk can be specified
+for host controller not to conform standard.
 
-The channel information is now kept in the device driver and can easily
-be determined based on the compat string.
-
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
+ drivers/scsi/ufs/ufshcd.c |   28 +++++++++++++++++++++-------
+ drivers/scsi/ufs/ufshcd.h |    7 +++++++
+ 2 files changed, 28 insertions(+), 7 deletions(-)
 
- Changes since V1:
- - Rebased on top of power-domain changes
- - Added Acked-by and Tested-by from Geert
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index b0ade73..90f76e7 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1009,7 +1009,7 @@ ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
+  *
+  * Returns 0 in case of success, non-zero value in case of failure
+  */
+-static int ufshcd_map_sg(struct ufshcd_lrb *lrbp)
++static int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ {
+ 	struct ufshcd_sg_entry *prd_table;
+ 	struct scatterlist *sg;
+@@ -1023,8 +1023,13 @@ static int ufshcd_map_sg(struct ufshcd_lrb *lrbp)
+ 		return sg_segments;
+ 
+ 	if (sg_segments) {
+-		lrbp->utr_descriptor_ptr->prd_table_length =
+-					cpu_to_le16((u16) (sg_segments));
++		if (hba->quirks & UFSHCI_QUIRK_BYTE_ALIGN_UTRD)
++			lrbp->utr_descriptor_ptr->prd_table_length =
++				cpu_to_le16((u16)(sg_segments *
++					sizeof(struct ufshcd_sg_entry)));
++		else
++			lrbp->utr_descriptor_ptr->prd_table_length =
++				cpu_to_le16((u16) (sg_segments));
+ 
+ 		prd_table = (struct ufshcd_sg_entry *)lrbp->ucd_prdt_ptr;
+ 
+@@ -1347,7 +1352,7 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ 
+ 	/* form UPIU before issuing the command */
+ 	ufshcd_compose_upiu(hba, lrbp);
+-	err = ufshcd_map_sg(lrbp);
++	err = ufshcd_map_sg(hba, lrbp);
+ 	if (err) {
+ 		lrbp->cmd = NULL;
+ 		clear_bit_unlock(tag, &hba->lrb_in_use);
+@@ -2034,13 +2039,22 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
+ 		utrdlp[i].command_desc_base_addr_hi =
+ 				cpu_to_le32(upper_32_bits(cmd_desc_element_addr));
+ 
++		if (hba->quirks & UFSHCI_QUIRK_BYTE_ALIGN_UTRD) {
++			utrdlp[i].response_upiu_offset =
++				cpu_to_le16(response_offset);
++			utrdlp[i].prd_table_offset =
++				cpu_to_le16(prdt_offset);
++			utrdlp[i].response_upiu_length =
++				cpu_to_le16(ALIGNED_UPIU_SIZE);
++		} else {
+ 		/* Response upiu and prdt offset should be in double words */
+-		utrdlp[i].response_upiu_offset =
++			utrdlp[i].response_upiu_offset =
+ 				cpu_to_le16((response_offset >> 2));
+-		utrdlp[i].prd_table_offset =
++			utrdlp[i].prd_table_offset =
+ 				cpu_to_le16((prdt_offset >> 2));
+-		utrdlp[i].response_upiu_length =
++			utrdlp[i].response_upiu_length =
+ 				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
++		}
+ 
+ 		hba->lrb[i].utr_descriptor_ptr = (utrdlp + i);
+ 		hba->lrb[i].ucd_req_ptr =
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index c40a0e7..9ed4c9e 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -459,6 +459,13 @@ struct ufs_hba {
+ 	 */
+ 	#define UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		UFS_BIT(5)
+ 
++	/*
++	 * This quirk needs to be enabled if host controller doesn't conform
++	 * with UTRD. Some fields such as offset/length might not be in double word,
++	 * but in byte.
++	 */
++	#define UFSHCI_QUIRK_BYTE_ALIGN_UTRD			UFS_BIT(6)
++
+ 	unsigned int quirks;	/* Deviations from standard UFSHCI spec. */
+ 
+ 	wait_queue_head_t tm_wq;
+-- 
+1.7.10.4
 
- arch/arm/boot/dts/r8a73a4.dtsi |    3 ---
- arch/arm/boot/dts/r8a7740.dtsi |    3 ---
- arch/arm/boot/dts/r8a7790.dtsi |    6 ------
- arch/arm/boot/dts/r8a7791.dtsi |    6 ------
- arch/arm/boot/dts/r8a7793.dtsi |    6 ------
- arch/arm/boot/dts/r8a7794.dtsi |    6 ------
- arch/arm/boot/dts/sh73a0.dtsi  |    3 ---
- 7 files changed, 33 deletions(-)
-
---- 0010/arch/arm/boot/dts/r8a73a4.dtsi
-+++ work/arch/arm/boot/dts/r8a73a4.dtsi	2015-09-17 17:41:05.250513000 +0900
-@@ -120,9 +120,6 @@
- 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&pd_c5>;
--
--		renesas,channels-mask = <0xff>;
--
- 		status = "disabled";
- 	};
- 
---- 0001/arch/arm/boot/dts/r8a7740.dtsi
-+++ work/arch/arm/boot/dts/r8a7740.dtsi	2015-09-17 17:41:05.250513000 +0900
-@@ -60,9 +60,6 @@
- 		clocks = <&mstp3_clks R8A7740_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&pd_c5>;
--
--		renesas,channels-mask = <0x3f>;
--
- 		status = "disabled";
- 	};
- 
---- 0010/arch/arm/boot/dts/r8a7790.dtsi
-+++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-09-17 17:45:02.110513000 +0900
-@@ -226,9 +226,6 @@
- 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0x60>;
--
- 		status = "disabled";
- 	};
- 
-@@ -246,9 +243,6 @@
- 		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0xff>;
--
- 		status = "disabled";
- 	};
- 
---- 0010/arch/arm/boot/dts/r8a7791.dtsi
-+++ work/arch/arm/boot/dts/r8a7791.dtsi	2015-09-17 17:44:54.210513000 +0900
-@@ -209,9 +209,6 @@
- 		clocks = <&mstp1_clks R8A7791_CLK_CMT0>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0x60>;
--
- 		status = "disabled";
- 	};
- 
-@@ -229,9 +226,6 @@
- 		clocks = <&mstp3_clks R8A7791_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0xff>;
--
- 		status = "disabled";
- 	};
- 
---- 0010/arch/arm/boot/dts/r8a7793.dtsi
-+++ work/arch/arm/boot/dts/r8a7793.dtsi	2015-09-17 17:44:48.400513000 +0900
-@@ -69,9 +69,6 @@
- 		clocks = <&mstp1_clks R8A7793_CLK_CMT0>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0x60>;
--
- 		status = "disabled";
- 	};
- 
-@@ -89,9 +86,6 @@
- 		clocks = <&mstp3_clks R8A7793_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0xff>;
--
- 		status = "disabled";
- 	};
- 
---- 0010/arch/arm/boot/dts/r8a7794.dtsi
-+++ work/arch/arm/boot/dts/r8a7794.dtsi	2015-09-17 17:44:43.300513000 +0900
-@@ -161,9 +161,6 @@
- 		clocks = <&mstp1_clks R8A7794_CLK_CMT0>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0x60>;
--
- 		status = "disabled";
- 	};
- 
-@@ -181,9 +178,6 @@
- 		clocks = <&mstp3_clks R8A7794_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
--
--		renesas,channels-mask = <0xff>;
--
- 		status = "disabled";
- 	};
- 
---- 0001/arch/arm/boot/dts/sh73a0.dtsi
-+++ work/arch/arm/boot/dts/sh73a0.dtsi	2015-09-17 17:44:32.950513000 +0900
-@@ -84,9 +84,6 @@
- 		clocks = <&mstp3_clks SH73A0_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&pd_c5>;
--
--		renesas,channels-mask = <0x3f>;
--
- 		status = "disabled";
- 	};
- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
