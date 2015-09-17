@@ -1,64 +1,85 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree: bindings: Extend the bma180 bindings with
- bma250 info
-Date: Thu, 17 Sep 2015 14:40:57 -0500
-Message-ID: <55FB1749.3050403@kernel.org>
-References: <1442055169-16966-1-git-send-email-hdegoede@redhat.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of/irq: fix guards of of_irq_find_parent and of_msi_configure
+Date: Thu, 17 Sep 2015 14:48:34 -0500
+Message-ID: <CAL_JsqJWiUnAcLDtTmy4rq+fWJ_bfWOXV0k5Fe1tDn1b15HCXA@mail.gmail.com>
+References: <1441629437-23769-1-git-send-email-jogo@openwrt.org> <1441629437-23769-3-git-send-email-jogo@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442055169-16966-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441629437-23769-3-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2015 05:52 AM, Hans de Goede wrote:
-> The bma180 / bma250 accelerometers share a driver (at least under Linux),
-> so it makes sense to also have their bindings info in a single .txt.
-> 
-> This commit extends the bma180 bindings with bma250 bindings, specifically
-> it specifies how the 2 seperate interrupts the bma250 has must be listed
-> in devicetree. The existing bma180 driver is already fully compatible
-> with the specified bindings.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+On Mon, Sep 7, 2015 at 7:37 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> Only irq_of_parse_and_map is implemented differently on SPARC, so only
+> that one should be protected by the CONFIG_OF guard.
 
-Applied, thanks.
+of_irq_find_parent is only used by of_irq.c, so just make it static.
 
 Rob
 
+>
+> Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/iio/accel/bma180.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-> index c593357..4a3679d 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/bma180.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-> @@ -1,10 +1,11 @@
-> -* Bosch BMA180 triaxial acceleration sensor
-> +* Bosch BMA180 / BMA250 triaxial acceleration sensor
->  
->  http://omapworld.com/BMA180_111_1002839.pdf
-> +http://ae-bst.resource.bosch.com/media/products/dokumente/bma250/bst-bma250-ds002-05.pdf
->  
->  Required properties:
->  
-> -  - compatible : should be "bosch,bma180"
-> +  - compatible : should be "bosch,bma180" or "bosch,bma250"
->    - reg : the I2C address of the sensor
->  
->  Optional properties:
-> @@ -13,6 +14,9 @@ Optional properties:
->  
->    - interrupts : interrupt mapping for GPIO IRQ, it should by configured with
->  		flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
-> +		For the bma250 the first interrupt listed must be the one
-> +		connected to the INT1 pin, the second (optional) interrupt
-> +		listed must be the one connected to the INT2 pin.
->  
->  Example:
->  
-> 
+>  include/linux/of_irq.h | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index 7b81771..d6a6d2e 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -46,6 +46,8 @@ extern int of_irq_get(struct device_node *dev, int index);
+>  extern int of_irq_get_byname(struct device_node *dev, const char *name);
+>  extern int of_irq_to_resource_table(struct device_node *dev,
+>                 struct resource *res, int nr_irqs);
+> +extern struct device_node *of_irq_find_parent(struct device_node *child);
+> +extern void of_msi_configure(struct device *dev, struct device_node *np);
+>  #else
+>  static inline int of_irq_count(struct device_node *dev)
+>  {
+> @@ -64,6 +66,13 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+>  {
+>         return 0;
+>  }
+> +static inline void *of_irq_find_parent(struct device_node *child)
+> +{
+> +       return NULL;
+> +}
+> +static inline void of_msi_configure(struct device *dev, struct device_node *np)
+> +{
+> +}
+>  #endif
+>
+>  #if defined(CONFIG_OF)
+> @@ -73,7 +82,6 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+>   * so declare it here regardless of the CONFIG_OF_IRQ setting.
+>   */
+>  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+> -extern struct device_node *of_irq_find_parent(struct device_node *child);
+>
+>  #else /* !CONFIG_OF */
+>  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+> @@ -81,15 +89,6 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+>  {
+>         return 0;
+>  }
+> -
+> -static inline void *of_irq_find_parent(struct device_node *child)
+> -{
+> -       return NULL;
+> -}
+> -
+> -static inline void of_msi_configure(struct device *dev, struct device_node *np)
+> -{
+> -}
+>  #endif /* !CONFIG_OF */
+>
+>  #endif /* __OF_IRQ_H */
+> --
+> 2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
