@@ -1,7 +1,7 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v2 1/5] PCI: Add pci_bus_fixup_irqs().
-Date: Thu, 17 Sep 2015 15:02:08 -0700
-Message-ID: <1442527332-1174-2-git-send-email-ddaney.cavm@gmail.com>
+Subject: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+Date: Thu, 17 Sep 2015 15:02:11 -0700
+Message-ID: <1442527332-1174-5-git-send-email-ddaney.cavm@gmail.com>
 References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com>
@@ -12,71 +12,68 @@ List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-pci_bus_fixup_irqs() works like pci_fixup_irqs(), except it only does
-the fixups for devices on the specified bus.
+There are two problems with the bus_max calculation:
 
-Follow-on patch will use the new function.
+1) The u8 data type can overflow for large config space windows.
+
+2) The calculation is incorrect for a bus range that doesn't start at
+   zero.
+
+Since the configuration space is relative to bus zero, make bus_max
+just be the size of the config window scaled by bus_shift.  Then clamp
+it to a maximum of 255, per PCI.  Use a data type of int to avoid
+overflow problems.
+
+Update host-generic-pci.txt to clarify the semantics of the "reg"
+property with respect to non-zero starting bus numbers.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
-This patch didn't exist in v1 of the set.
+Change from v1: Added text to host-generic-pci.txt
 
- drivers/pci/setup-irq.c | 30 ++++++++++++++++++++++++++++++
- include/linux/pci.h     |  4 ++++
- 2 files changed, 34 insertions(+)
+ Documentation/devicetree/bindings/pci/host-generic-pci.txt | 4 +++-
+ drivers/pci/host/pci-host-generic.c                        | 7 ++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
-index 95c225b..189ad17 100644
---- a/drivers/pci/setup-irq.c
-+++ b/drivers/pci/setup-irq.c
-@@ -66,3 +66,33 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
- 		pdev_fixup_irq(dev, swizzle, map_irq);
- }
- EXPORT_SYMBOL_GPL(pci_fixup_irqs);
-+
-+struct pci_bus_fixup_cb_info {
-+	u8 (*swizzle)(struct pci_dev *, u8 *);
-+	int (*map_irq)(const struct pci_dev *, u8, u8);
-+};
-+
-+static int pci_bus_fixup_irq_cb(struct pci_dev *dev, void *arg)
-+{
-+	struct pci_bus_fixup_cb_info *info = arg;
-+
-+	pdev_fixup_irq(dev, info->swizzle, info->map_irq);
-+	return 0;
-+}
-+
-+/*
-+ * Fixup the irqs only for devices on the given bus using supplied
-+ * swizzle and map_irq function pointers
-+ */
-+void pci_bus_fixup_irqs(struct pci_bus *bus,
-+			u8 (*swizzle)(struct pci_dev *, u8 *),
-+			int (*map_irq)(const struct pci_dev *, u8, u8))
-+{
-+	struct pci_bus_fixup_cb_info info;
-+
-+	info.swizzle = swizzle;
-+	info.map_irq = map_irq;
-+	pci_walk_bus(bus, pci_bus_fixup_irq_cb, &info);
-+
-+}
-+EXPORT_SYMBOL_GPL(pci_bus_fixup_irqs);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index e90eb22..b505b50 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1120,6 +1120,10 @@ void pdev_enable_device(struct pci_dev *);
- int pci_enable_resources(struct pci_dev *, int mask);
- void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
- 		    int (*)(const struct pci_dev *, u8, u8));
-+void pci_bus_fixup_irqs(struct pci_bus *,
-+			u8 (*)(struct pci_dev *, u8 *),
-+			int (*)(const struct pci_dev *, u8, u8));
-+
- #define HAVE_PCI_REQ_REGIONS	2
- int __must_check pci_request_regions(struct pci_dev *, const char *);
- int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+index cf3e205..105a968 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+@@ -34,7 +34,9 @@ Properties of the host controller node:
+ - #size-cells    : Must be 2.
+ 
+ - reg            : The Configuration Space base address and size, as accessed
+-                   from the parent bus.
++                   from the parent bus.  The base address corresponds to
++                   bus zero, even though the "bus-range" property may specify
++                   a different starting bus number.
+ 
+ 
+ Properties of the /chosen node:
+diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+index 77cf4bd..0a9c453 100644
+--- a/drivers/pci/host/pci-host-generic.c
++++ b/drivers/pci/host/pci-host-generic.c
+@@ -164,7 +164,7 @@ out_release_res:
+ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+ {
+ 	int err;
+-	u8 bus_max;
++	int bus_max;
+ 	resource_size_t busn;
+ 	struct resource *bus_range;
+ 	struct device *dev = pci->host.dev.parent;
+@@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+ 	}
+ 
+ 	/* Limit the bus-range to fit within reg */
+-	bus_max = pci->cfg.bus_range->start +
+-		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
++	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
++	if (bus_max > 255)
++		bus_max = 255;
+ 	pci->cfg.bus_range->end = min_t(resource_size_t,
+ 					pci->cfg.bus_range->end, bus_max);
+ 
 -- 
 1.9.1
