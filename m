@@ -1,66 +1,33 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 0/4] PCI: arm64/powerpc: Fix parsing of
- linux,pci-probe-only
-Date: Thu, 17 Sep 2015 10:30:09 -0500
-Message-ID: <20150917153009.GH25767@google.com>
-References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v5 01/23] driver core: Add pre_probe callback to bus_type
+Date: Thu, 17 Sep 2015 11:52:02 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1509171150410.1270-100000@iolanthe.rowland.org>
+References: <1442494637-3674-2-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1442494637-3674-2-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 04, 2015 at 05:50:07PM +0100, Marc Zyngier wrote:
-> The pci-host-generic driver parses the linux,pci-probe-only property,
-> and assumes that it will have a boolean parameter.
-> 
-> Turns out that the Seattle DTS file has a naked "linux,pci-probe-only"
-> property, which leads to the driver dereferencing some unsuspecting
-> memory location. Nothing really bad happens (we end up reading some
-> other bit of DT, fortunately), but that not a reason to keep it this
-> way. Turns out that the Pseries code (where this code was lifted from)
-> may suffer from the same issue.
-> 
-> The first patch introduces a common (and fixed) version of that check
-> that can be used by drivers and architectures that require it. The two
-> following patches change the pci-host-generic driver and the powerpc
-> code to use it.
-> 
-> Finally, the bad property is removed from the Seatle DTS, because it
-> is simply not necessary (it actually prevents me from using SR-IOV,
-> which otherwise runs fine without the probe-only thing).
-> 
-> This has been tested on the offending Seattle board.
-> 
-> * From v3:
->   - Restrict the property lookup to /chosen (Rob)
->   - Acked-by on patch #4 from Suravee
->   - I swear this is the last time I rework these patches! ;-)
-> 
-> * From v2:
->   - Use of_property_read_u32 to safely read the property (Rob)
->   - Add a log message to indicate when we enable probe-only
->     (probably quite useful for debugging)
-> 
-> * From v1:
->   - Consolidate the parsing in of_pci.c (Bjorn)
-> 
-> Marc Zyngier (4):
->   of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
->   PCI: pci-host-generic: Fix lookup of linux,pci-probe-only property
->   powerpc: PCI: Fix lookup of linux,pci-probe-only property
->   arm64: dts: Drop linux,pci-probe-only from the Seattle DTS
-> 
->  arch/arm64/boot/dts/amd/amd-overdrive.dts |  1 -
->  arch/powerpc/platforms/pseries/setup.c    | 14 ++------------
->  drivers/of/of_pci.c                       | 28 ++++++++++++++++++++++++++++
->  drivers/pci/host/pci-host-generic.c       |  9 +--------
->  include/linux/of_pci.h                    |  3 +++
->  5 files changed, 34 insertions(+), 21 deletions(-)
+On Thu, 17 Sep 2015, Tomeu Vizoso wrote:
 
-Applied with the comment tweak and acks to pci/host-generic for v4.4,
-thanks!
+> Some buses (eg. AMBA) need access to some HW resources (it may need a
+> clock to be enabled so a device ID can be read) before a device can be
+> matched to a driver.
+> 
+> The pre_probe callback allows the device-driver core to request the bus
+> to perform this initialization and can defer the probe if any of the
+> resources needed are missing.
+> 
+> This gives us more flexibility when setting the order in which devices
+> are probed because the resources needed to get the matching information
+> don't need to be available by the time that the bus devices are
+> registered.
+
+Can't the subsystem do this itself in its matching routine?
+
+Alan Stern
+
