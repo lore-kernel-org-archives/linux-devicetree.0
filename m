@@ -1,62 +1,101 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH] gpio: mention in DT binding doc that <name>-gpio is also supported
-Date: Thu, 17 Sep 2015 03:33:58 +0200
-Message-ID: <1442453638-14246-1-git-send-email-javier@osg.samsung.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: ls1021a: add crypto node
+Date: Thu, 17 Sep 2015 10:20:40 +0800
+Message-ID: <20150917022040.GJ30746@tiger>
+References: <1439365361-24129-1-git-send-email-horia.geanta@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1439365361-24129-1-git-send-email-horia.geanta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The GPIO DT binding doc mentions that GPIO are mapped by defining
-a <name>-gpios property in the consumer device's node but a -gpio
-sufix is also supported after commit:
+On Wed, Aug 12, 2015 at 10:42:41AM +0300, Horia Geant=C4=83 wrote:
+> Signed-off-by: Horia Geant=C4=83 <horia.geanta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/ls1021a.dtsi | 40 ++++++++++++++++++++++++++++++++=
+++++++++
+>  1 file changed, 40 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls102=
+1a.dtsi
+> index 973a496207fc..5bd64a4df4d3 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -63,6 +63,7 @@
+>  		serial4 =3D &lpuart4;
+>  		serial5 =3D &lpuart5;
+>  		sysclk =3D &sysclk;
+> +		crypto =3D &crypto;
 
-dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
+The 'aliases' list is maintained alphabetically.  I moved it around and
+applied the patch.
 
-Update the DT binding documentation to match the implementation.
+Shawn
 
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
----
-Hello,
-
-The GPIO documentation was updated to mention that the -gpio sufix
-is also supported in patch https://lkml.org/lkml/2015/9/1/117 that
-already landed in Torvalds tree.
-
-I now noticed that the DT binding also only mentions -gpios so I'm
-posting this patch that adds -gpio to the DT binding documentation.
-
-Best regards,
-Javier
-
- Documentation/devicetree/bindings/gpio/gpio.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 5788d5cf1252..8db8c7bb96c1 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -13,10 +13,10 @@ properties, each containing a 'gpio-list':
- 	gpio-specifier : Array of #gpio-cells specifying specific gpio
- 			 (controller specific)
- 
--GPIO properties should be named "[<name>-]gpios", with <name> being the purpose
--of this GPIO for the device. While a non-existent <name> is considered valid
--for compatibility reasons (resolving to the "gpios" property), it is not allowed
--for new bindings.
-+GPIO properties should be named "[<name>-]gpios" or "[<name>-]gpio" with <name>
-+being the purpose of this GPIO for the device. While a non-existent <name> is
-+considered valid for compatibility reasons (resolving to the "gpios" property),
-+it is not allowed for new bindings.
- 
- GPIO properties can contain one or more GPIO phandles, but only in exceptional
- cases should they contain more than one. If your device uses several GPIOs with
--- 
-2.4.3
-
+>  	};
+> =20
+>  	cpus {
+> @@ -148,6 +149,45 @@
+>  			big-endian;
+>  		};
+> =20
+> +		crypto: crypto@1700000 {
+> +			compatible =3D "fsl,sec-v5.0", "fsl,sec-v4.0";
+> +			fsl,sec-era =3D <7>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <1>;
+> +			reg		 =3D <0x0 0x1700000 0x0 0x100000>;
+> +			ranges		 =3D <0x0 0x0 0x1700000 0x100000>;
+> +			interrupts	 =3D <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			sec_jr0: jr@10000 {
+> +				compatible =3D "fsl,sec-v5.0-job-ring",
+> +				     "fsl,sec-v4.0-job-ring";
+> +				reg =3D <0x10000 0x10000>;
+> +				interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			sec_jr1: jr@20000 {
+> +				compatible =3D "fsl,sec-v5.0-job-ring",
+> +				     "fsl,sec-v4.0-job-ring";
+> +				reg =3D <0x20000 0x10000>;
+> +				interrupts =3D <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			sec_jr2: jr@30000 {
+> +				compatible =3D "fsl,sec-v5.0-job-ring",
+> +				     "fsl,sec-v4.0-job-ring";
+> +				reg =3D <0x30000 0x10000>;
+> +				interrupts =3D <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			sec_jr3: jr@40000 {
+> +				compatible =3D "fsl,sec-v5.0-job-ring",
+> +				     "fsl,sec-v4.0-job-ring";
+> +				reg =3D <0x40000 0x10000>;
+> +				interrupts =3D <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +		};
+> +
+>  		clockgen: clocking@1ee1000 {
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+> --=20
+> 2.4.4
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
