@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v3 07/09] ARM: shmobile: Add function to prioritize DT SMP
-Date: Thu, 17 Sep 2015 15:33:48 +0900
-Message-ID: <20150917063348.26016.68456.sendpatchset@little-apple>
+Subject: [PATCH v3 08/09] ARM: shmobile: Prioritize r8a7790 DT APMU support
+Date: Thu, 17 Sep 2015 15:33:58 +0900
+Message-ID: <20150917063358.26016.8326.sendpatchset@little-apple>
 References: <20150917063240.26016.93772.sendpatchset@little-apple>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <20150917063240.26016.93772.sendpatchset@little-apple>
@@ -12,12 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Add a function to check if other DT based method is available, and
-if so return false to not hook up smp_ops from the machine vector.
-
-This results in that DT-based SMP support has priority over older
-C-based smp_ops code, and in case DT-based SMP support code does not
-exist in the DTB then the old smp_ops code will still work as-is.
+Adjust the r8a7790 SoC support code to not configure any non-DT SMP code
+in case the DT-based enable-method has been installed already.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
@@ -26,32 +22,18 @@ Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
  - None
 
  Changes since V1:
- - Reworked r8a7791-specific version to become reusable function.
+ - New patch.
 
- arch/arm/mach-shmobile/common.h  |    1 +
- arch/arm/mach-shmobile/platsmp.c |    7 +++++++
- 2 files changed, 8 insertions(+)
+ arch/arm/mach-shmobile/setup-r8a7790.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- 0001/arch/arm/mach-shmobile/common.h
-+++ work/arch/arm/mach-shmobile/common.h	2015-08-23 15:26:18.722366518 +0900
-@@ -11,6 +11,7 @@ extern void shmobile_smp_sleep(void);
- extern void shmobile_smp_hook(unsigned int cpu, unsigned long fn,
- 			      unsigned long arg);
- extern bool shmobile_smp_cpu_can_disable(unsigned int cpu);
-+extern bool shmobile_smp_init_fallback_ops(void);
- extern void shmobile_boot_scu(void);
- extern void shmobile_smp_scu_prepare_cpus(unsigned int max_cpus);
- extern void shmobile_smp_scu_cpu_die(unsigned int cpu);
---- 0001/arch/arm/mach-shmobile/platsmp.c
-+++ work/arch/arm/mach-shmobile/platsmp.c	2015-08-23 15:26:13.692366518 +0900
-@@ -36,3 +36,10 @@ bool shmobile_smp_cpu_can_disable(unsign
- 	return true; /* Hotplug of any CPU is supported */
- }
- #endif
-+
-+bool __init shmobile_smp_init_fallback_ops(void)
-+{
-+	/* fallback on PSCI/smp_ops if no other DT based method is detected */
-+	return platform_can_secondary_boot() ? true : false;
-+}
-+
+--- 0001/arch/arm/mach-shmobile/setup-r8a7790.c
++++ work/arch/arm/mach-shmobile/setup-r8a7790.c	2015-08-23 15:44:29.102366518 +0900
+@@ -28,6 +28,7 @@ static const char * const r8a7790_boards
+ };
+ 
+ DT_MACHINE_START(R8A7790_DT, "Generic R8A7790 (Flattened Device Tree)")
++	.smp_init	= shmobile_smp_init_fallback_ops,
+ 	.smp		= smp_ops(r8a7790_smp_ops),
+ 	.init_early	= shmobile_init_delay,
+ 	.init_time	= rcar_gen2_timer_init,
