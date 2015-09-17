@@ -1,42 +1,69 @@
-From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
- amplifier driver
-Date: Thu, 17 Sep 2015 11:07:20 +0800
-Message-ID: <55FA2E68.5010104@atmel.com>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
- <20150903114316.GV12027@sirena.org.uk> <55EC0AFE.3080809@atmel.com>
- <20150907162548.GW5313@sirena.org.uk> <55EEAC0D.7010003@atmel.com>
- <20150908122340.GC9751@sirena.org.uk> <55F78C79.30102@atmel.com>
- <20150916194234.GR12027@sirena.org.uk>
+From: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] soc: brcmstb: Add Bus Interface Unit control setup
+Date: Wed, 16 Sep 2015 23:08:46 -0700
+Message-ID: <CADtm3G6SkczVkFK0n=fpMCkocj_ijGWtHkfipTZZfp8deC=6zg@mail.gmail.com>
+References: <1442340900-15320-1-git-send-email-f.fainelli@gmail.com> <1442340900-15320-3-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150916194234.GR12027-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1442340900-15320-3-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 15, 2015 at 11:14 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Broadcom STB SoCs (brcmstb) require an early setup of their Bus
+> Interface Unit control register, this needs to happen before SMP is
+> brought up because it affects how the CPU complex will be interfaced to
+> the memory controller.
+>
+> Add support code which properly initializes the BIU registers based on
+> whether "brcm,write-pairing" is present in Device Tree, and take care of
+> saving and restoring credit register settings during system-wide
+> suspend/resume operations.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes in v2:
+>
+> - add a pr_fmt prefix which is more descriptive
+>
+>  drivers/soc/brcmstb/Makefile        |   2 +-
+>  drivers/soc/brcmstb/biuctrl.c       | 119 ++++++++++++++++++++++++++++++++++++
+>  include/linux/soc/brcmstb/brcmstb.h |  10 +++
+>  3 files changed, 130 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/soc/brcmstb/biuctrl.c
+>  create mode 100644 include/linux/soc/brcmstb/brcmstb.h
+>
+> [...]
+> diff --git a/drivers/soc/brcmstb/biuctrl.c b/drivers/soc/brcmstb/biuctrl.c
+> new file mode 100644
+> index 000000000000..1d4deada1c4d
+> --- /dev/null
+> +++ b/drivers/soc/brcmstb/biuctrl.c
+> @@ -0,0 +1,119 @@
+> [...]
+> +int __init brcmstb_biuctrl_init(void)
+> +{
+> +       int ret = 0;
+> +
+> +       ret = setup_hifcpubiuctrl_regs();
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = mcp_write_pairing_set();
+> +       if (ret) {
+> +               pr_err("MCP: Unable to disable write pairing!\n");
+> +               return ret;
 
+The return value isn't used in patch 3.  Is there a point to returning
+an error from this function in either of the above two locations,
+considering that?
 
-On 9/17/2015 03:42, Mark Brown wrote:
-> On Tue, Sep 15, 2015 at 11:11:53AM +0800, Wu, Songjun wrote:
->
->> I try to use one entry, but there is a problem.
->> It's about 'driver_data' in struct device.
->> In function snd_soc_register_card, the parameter 'card' will be set to
->> 'driver_data' by the code 'dev_set_drvdata(card->dev, card)'.
->> Then some resources(eg. regmap, clock) also need be recorded by
->> 'driver_data'. One entry could only has one 'driver_data'. I think the best
->> way is to create two entries, like the current dts.
->> What's your opinion?
->
-> Look at the recently applied sunxi driver for an example of how to do
-> this - it's a similar piece of hardware (entirely in the SoC and so on).
->
-Thank you, It really helps me. I will make a second version soon.
+Looks good otherwise.
+
+Acked-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
