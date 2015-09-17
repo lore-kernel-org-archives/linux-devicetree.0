@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v3 04/09] ARM: shmobile: r8a7793 boot address update
-Date: Thu, 17 Sep 2015 15:33:19 +0900
-Message-ID: <20150917063319.26016.37729.sendpatchset@little-apple>
+Subject: [PATCH v3 05/09] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
+Date: Thu, 17 Sep 2015 15:33:29 +0900
+Message-ID: <20150917063329.26016.8459.sendpatchset@little-apple>
 References: <20150917063240.26016.93772.sendpatchset@little-apple>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <20150917063240.26016.93772.sendpatchset@little-apple>
@@ -12,39 +12,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Extend the R-Car Gen2 PM code to include r8a7793 boot address
-configuration information. r8a7793 boots from ICRAM1.
+Add an APMU DT node for the r8a7790 SoC and use the enable-method to
+point out that the APMU should be used for SMP support.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 
  Changes from V2:
+ - None
+
+ Changes from V1:
  - New patch
 
- arch/arm/mach-shmobile/pm-rcar-gen2.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7790.dtsi |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- 0001/arch/arm/mach-shmobile/pm-rcar-gen2.c
-+++ work/arch/arm/mach-shmobile/pm-rcar-gen2.c	2015-09-16 22:08:12.610513000 +0900
-@@ -28,6 +28,7 @@
- /* On-chip RAM */
- #define MERAM		0xe8080000
- #define RAM		0xe6300000
-+#define ICRAM1		0xe63c0000
+--- 0001/arch/arm/boot/dts/r8a7790.dtsi
++++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-08-23 15:51:24.132366518 +0900
+@@ -43,6 +43,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "renesas,apmu";
  
- /* SYSC */
- #define SYSCIER 0x0c
-@@ -78,10 +79,12 @@ void __init rcar_gen2_pm_init(void)
- 	if (of_machine_is_compatible("renesas,r8a7790")) {
- 		boot_vector_addr = MERAM;
- 		syscier = 0x013111ef;
--
- 	} else if (of_machine_is_compatible("renesas,r8a7791")) {
- 		boot_vector_addr = RAM;
- 		syscier = 0x00111003;
-+	} else if (of_machine_is_compatible("renesas,r8a7793")) {
-+		boot_vector_addr = ICRAM1;
-+		syscier = 0x00111003;
- 	}
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+@@ -112,6 +113,18 @@
+ 		};
+ 	};
  
- 	/* RAM for jump stub, because BAR requires 256KB aligned address */
++	apmu@e6151000 {
++		compatible = "renesas,apmu-r8a7790", "renesas,apmu";
++		reg = <0 0xe6151000 0 0x188>;
++		cpus = <&cpu4 &cpu5 &cpu6 &cpu7>;
++	};
++
++	apmu@e6152000 {
++		compatible = "renesas,apmu-r8a7790", "renesas,apmu";
++		reg = <0 0xe6152000 0 0x188>;
++		cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
++	};
++
+ 	gic: interrupt-controller@f1001000 {
+ 		compatible = "arm,gic-400";
+ 		#interrupt-cells = <3>;
