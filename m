@@ -1,83 +1,78 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: mt8173: add timer node
-Date: Thu, 17 Sep 2015 22:56:56 +0800
-Message-ID: <1442501816.4784.3.camel@mtksdaap41>
-References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
-	 <55FAC570.8040307@arm.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v4 0/4] PCI: st: provide support for dw pcie
+Date: Thu, 17 Sep 2015 09:59:49 -0500
+Message-ID: <20150917145949.GF25767@google.com>
+References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FAC570.8040307-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-09-17 at 14:51 +0100, Sudeep Holla wrote:
+Hi Gabriel,
+
+On Thu, Aug 27, 2015 at 02:34:13PM +0200, Gabriel Fernandez wrote:
 > 
-> On 16/09/15 03:04, Yingjoe Chen wrote:
-> > From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >
-> > Add device node to enable GPT timer. This timer will be
-> > used as sched clock source.
-> >
+> This patchset is based on v4.2-rc1 and is based on 
+> [PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+> patchset from Zhou Wang.
 > 
-> Interesting any known issues with or advantage over the arch timers
-> to prefer it as sched clock source. I see even arch timers are present
-> in DT, hence the question. Or is it just a incorrect commit log ?
+> Changes in v4:
+>  - Remove pci: designware: remove my pci_common_init_dev() patch and
+> 	use [PATCH v8 3/6] PCI: designware: Add ARM64 support instead.
+> 	This patch is a good solution for me to disable IO support.
+>  - add __init to st_pcie_probe() and use module_init() instead
+> 	device_initcall() to prevent the probe function from being
+> 	deferred and to prevent module unloading.
 > 
-> How does this get selected as sched clock source ? I don't see
-> sched_clock_register in mtk_timer.c
+> Changes in v3:
+>  - Remove power management functions (was not fully tested)
+>  - Remove configuration space range from dt binding
+>  - Remove pci_common_init_dev() call in pcie-designware.c to avoid 
+>    default IO space declaration. 
 > 
-> To be clear, I am not against adding this timer support, but just want
-> to know is it preferred for sched clock source ? if yes why ? better
-> resolution ?
-
-Hi Sudeep,
-
-Thanks for your review.
-
-I hit the send too soon and missed cover letter, please see:
-http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002303.html
-
-The main reason to use GPT as sched clock is it won't stop during idle.
-
-
-> > Change-Id: Idc4e3f0ee80b5c36cae6f0f2328f94aafcca1253
+> Changes in v2:
+>  - comestic corrections in device tree binding
+>  - add pci-st.c into MAINTAINERS
+>  - remove st_pcie_ops structure to avoid another level of indirection
+>  - remove nasty busy-loop
+>  - remove useless test using virt_to_phys()
+>  - move disable io support into dw-pcie driver
 > 
-> ^ Should be dropped
+> I don't change the st_pcie_abort_handler() function because abort handling
+> is masked during boot.
 > 
-> > Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 9 +++++++++
-> >   1 file changed, 9 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index d18ee42..d763803 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -238,6 +238,15 @@
-> >   			reg = <0 0x10007000 0 0x100>;
-> >   		};
-> >
-> > +		timer: timer@10008000 {
-> > +			compatible = "mediatek,mt8173-timer",
 > 
-> Missing documentation ? I am referring upstream and it might be in some 
-> patches already queued perhaps ?
+> This patch-set introduces a STMicroelectronics PCIe controller.
+> It's based on designware PCIe driver.
+> 
+> Gabriel Fernandez (4):
+>   ARM: STi: Kconfig update for PCIe support
+>   PCI: st: Add Device Tree bindings for sti pcie
+>   PCI: st: Provide support for the sti PCIe controller
+>   MAINTAINERS: Add pci-st.c to ARCH/STI architecture
 
-This is documented in
-Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt.
-Do you mean I should add "mediatek,mt8173-timer" to that file?
+Rob had some questions, so I'm waiting for an update that responds to
+those.  When you post that, can you also squash the last two patches
+together?
 
-Joe.C
+Thanks,
+  Bjorn
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
+>  MAINTAINERS                                       |   1 +
+>  arch/arm/mach-sti/Kconfig                         |   2 +
+>  drivers/pci/host/Kconfig                          |   9 +
+>  drivers/pci/host/Makefile                         |   1 +
+>  drivers/pci/host/pci-st.c                         | 583 ++++++++++++++++++++++
+>  6 files changed, 649 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+>  create mode 100644 drivers/pci/host/pci-st.c
+> 
+> -- 
+> 1.9.1
+> 
