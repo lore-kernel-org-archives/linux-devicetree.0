@@ -1,66 +1,268 @@
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=WPWXAJRb0v4Kz2pCey042AaKPF-Xeaz=hU7PWGYK953g@mail.gmail.com>
-References: <1441229148-12095-1-git-send-email-dianders@chromium.org>
-	<CAL_JsqLLPCy6OpsP4NNjUA6+UxeTC-zGjGPPU+MLhUqFXSSGJQ@mail.gmail.com>
-	<CAD=FV=WPWXAJRb0v4Kz2pCey042AaKPF-Xeaz=hU7PWGYK953g@mail.gmail.com>
-Date: Thu, 3 Sep 2015 10:46:32 -0500
-Message-ID: <CAL_JsqJo7cfwRX8M+G7LACh+oxnSgB0iVYKgNZ8saQRbG4KjBw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: Add ddc i2c reference to veyron
+In-Reply-To: <1442512859-31633-2-git-send-email-ddaney.cavm@gmail.com>
+References: <1442512859-31633-1-git-send-email-ddaney.cavm@gmail.com>
+	<1442512859-31633-2-git-send-email-ddaney.cavm@gmail.com>
+Date: Thu, 17 Sep 2015 13:37:58 -0500
+Message-ID: <CAL_Jsq+TKWd_0HWqmn0a6OO=JVz_n81Tt5ghdoS8V8-Q2KC+Yg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Docs: dt: Add PCI MSI map bindings
 From: Rob Herring <robherring2@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Alexandru Stan <amstan@chromium.org>, Brian Norris <briannorris@chromium.org>, Yakir Yang <ykk@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Sep 2, 2015 at 7:22 PM, Doug Anderson <dianders@chromium.org> wrote:
-> Rob,
+On Thu, Sep 17, 2015 at 1:00 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
 >
-> On Wed, Sep 2, 2015 at 5:13 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On Wed, Sep 2, 2015 at 4:25 PM, Douglas Anderson <dianders@chromium.org> wrote:
->>> The ddc-i2c-bus property was missing from the veyron dtsi file since
->>> downstream the ddc-i2c-bus was still being specified in rk3288.dtsi and
->>> nobody noticed when the veyron dtsi was sent upstream.  Add it.
->>>
->>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>> ---
->>> Note: I noticed that this was wrong but I don't currently have
->>> graphics up and running on upstream on veyron.  Posting this anyway
->>> since it's pretty clear that it's needed.  If someone else wants to
->>> try it out that'd be nice, otherwise I'll put it on my list to figure
->>> out how to get myself setup for graphics upstream.  ;)
->>
->> Based on your other patch, this is temporary, right?
+> Currently msi-parent is used by a few bindings to describe the
+> relationship between a PCI root complex and a single MSI controller, but
+> this property does not have a generic binding document.
 >
-> Yes, though since I'm not personally working on the other patch series
-> upstream I can't say for how long the "temporary" is..  I mostly
-> posted the 2nd patch because it was clearly correct to add some
-> pinmuxing states and could land any time, so I thought I'd be helpful.
+> Additionally, msi-parent is insufficient to describe more complex
+> relationships between MSI controllers and devices under a root complex,
+> where devices may be able to target multiple MSI controllers, or where
+> MSI controllers use (non-probeable) sideband information to distinguish
+> devices.
 >
-> You're right that in the Chrome OS tree I turned right around and
-> effectively removed the "ddc-i2c-bus", but having it land first adds a
-> much better logical progression (make it the same as everyone else and
-> _then_ change it).  It also provides a revert path if something goes
-> wrong.  :)
+> This patch adds a generic binding for mapping PCI devices to MSI
+> controllers. This document covers msi-parent, and a new msi-map property
+> (specific to PCI*) which may be used to map devices (identified by their
+> Requester ID) to sideband data for each MSI controller that they may
+> target.
 >
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+>  1 file changed, 220 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
 >
->> I've been looking at DRM a lot lately. I think specifying the i2c bus
->> in the hdmi chip or IP block node is wrong. If the I2C host is
->> separate from the HDMI block, then it's only connection is to the HDMI
->> connector. So the I2C host to the connector relationship is what the
->> DT should describe. HPD gpio is similar. Now if the HDMI bridge
->> controls DDC and HPD directly, then we don't need to describe those
->> connections.
+> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> new file mode 100644
+> index 0000000..9b3cc81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> @@ -0,0 +1,220 @@
+> +This document describes the generic device tree binding for describing the
+> +relationship between PCI devices and MSI controllers.
+> +
+> +Each PCI device under a root complex is uniquely identified by its Requester ID
+> +(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+> +Function number.
+> +
+> +For the purpose of this document, when treated as a numeric value, a RID is
+> +formatted such that:
+> +
+> +* Bits [15:8] are the Bus number.
+> +* Bits [7:3] are the Device number.
+> +* Bits [2:0] are the Function number.
+> +* Any other bits required for padding must be zero.
+> +
+> +MSIs may be distinguished in part through the use of sideband data accompanying
+> +writes. In the case of PCI devices, this sideband data may be derived from the
+> +Requester ID. A mechanism is required to associate a device with both the MSI
+> +controllers it can address, and the sideband data that will be associated with
+> +its writes to those controllers.
+> +
+> +For generic MSI bindings, see
+> +Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+> +
+> +
+> +PCI root complex
+> +================
+> +
+> +Optional properties
+> +-------------------
+> +
+> +- msi-map: Maps a Requester ID to an MSI controller and associated
+> +  msi-specifier data. The property is an arbitrary number of tuples of
+> +  (rid-base,msi-controller,msi-base,length), where:
+> +
+> +  * rid-base is a single cell describing the first RID matched by the entry.
+> +
+> +  * msi-controller is a single phandle to an MSI controller
+> +
+> +  * msi-base is an msi-specifier describing the msi-specifier produced for the
+> +    first RID matched by the entry.
+> +
+> +  * length is a single cell describing how many consecutive RIDs are matched
+> +    following the rid-base.
+> +
+> +  Any RID r in the interval [rid-base, rid-base + length) is associated with
+> +  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
+> +
+> +- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
+> +  to an msi-specifier per the msi-map property.
+> +
+> +- msi-parent: Describes the MSI parent of the root complex itself. Where
+> +  the root complex and MSI controller do not pass sideband data with MSI
+> +  writes, this property may be used to describe the MSI controller(s)
+> +  used by PCI devices under the root complex, if defined as such in the
+> +  binding for the root complex.
+> +
+> +
+> +Example (1)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, identity-mapped.
+> +                */
+> +               msi-map = <0x0 &msi_a 0x0 0x10000>,
+> +       };
+> +};
+> +
+> +
+> +Example (2)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, masked to only the device and function bits.
+> +                */
+> +               msi-map = <0x0 &msi_a 0x0 0x100>,
+> +               msi-map-mask = <0xff>
+> +       };
+> +};
+> +
+> +
+> +Example (3)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, but the high bit of the bus number is
+> +                * ignored.
+> +                */
+> +               msi-map = <0x0000 &msi 0x0000 0x8000>,
+> +                         <0x8000 &msi 0x0000 0x8000>;
+> +       };
+> +};
+> +
+> +
+> +Example (4)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, but the high bit of the bus number is
+> +                * negated.
+> +                */
+> +               msi-map = <0x0000 &msi 0x8000 0x8000>,
+> +                         <0x8000 &msi 0x0000 0x8000>;
+> +       };
+> +};
+> +
+> +
+> +Example (5)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi_a: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       msi_b: msi-controller@b {
+> +               reg = <0xb 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       msi_c: msi-controller@c {
+> +               reg = <0xc 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@c {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to MSI controller a is the
+> +                * RID, but the high bit of the bus number is negated.
+> +                * The sideband data provided to MSI controller b is the
+> +                * RID, identity-mapped.
+> +                * MSI controller c is not addressable.
+> +                */
+> +               msi-map = <0x0000 &msi_a 0x8000 0x08000>,
+> +                         <0x8000 &msi_a 0x0000 0x08000>,
+> +                         <0x0000 &msi_b 0x0000 0x10000>;
+> +       };
+> +};
+> --
+> 1.9.1
 >
-> I will say that I know very very little about DRM.  Mostly I just
-> visit it when there's some bug I'm running into that I can't find a
-> better suited owner for.  ;)
->
-> I'm not sure I followed your whole paragraph.  Could you give a
-> fragment of DTS for how you'd imagine this ought to work?  Also: the
-> patch I submitted does match the current bindings if I understand it
-> right.  ...as is typical with device tree, if we want to change the
-> bindings we've got to have a really good reason because we'd either
-> need to figure out how to deal with existing DTBs in the field that
-> need to run with newer kernels (if those exist).
->
-> -Doug
