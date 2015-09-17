@@ -1,58 +1,47 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap5-uevm.dts: fix i2c5 pinctrl offsets
-Date: Wed, 16 Sep 2015 17:14:58 -0700
-Message-ID: <20150917001458.GF4215@atomide.com>
-References: <1442356471-13235-1-git-send-email-notasas@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 10/10] power: bq24257: Add platform data based
+ initialization
+Date: Thu, 17 Sep 2015 09:16:37 +0900
+Message-ID: <55FA0665.7010107@samsung.com>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-11-git-send-email-dannenberg@ti.com>
+ <55F928FE.5070706@samsung.com> <20150916201104.GG27772@beast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442356471-13235-1-git-send-email-notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20150916201104.GG27772@beast>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [150915 15:38]:
-> The i2c5 pinctrl offsets are wrong. If the bootloader doesn't set the
-> pins up, communication with tca6424a doesn't work (controller timeouts)
-> and it is not possible to enable HDMI.
+On 17.09.2015 05:11, Andreas Dannenberg wrote:
+> On Wed, Sep 16, 2015 at 05:31:58PM +0900, Krzysztof Kozlowski wrote:
+>>> @@ -1087,7 +1176,13 @@ static int bq24257_probe(struct i2c_client *client,
+>>>  		return ret;
+>>>  	}
+>>>  
+>>> -	if (client->irq <= 0)
+>>> +	/*
+>>> +	 * When using device firmware we either take the IRQ specified directly
+>>> +	 * or probe for a pin named BQ24257_STAT_IRQ. In case of using platform
+>>> +	 * data always run the IRQ pin probe function to finish IRQ and GPIO
+>>> +	 * setup based on the stat pin specified in the platform data.
+>>> +	 */
+>>
+>> Why?
 > 
-> Fixes: 9be495c42609 ("ARM: dts: omap5-evm: Add I2c pinctrl data")
-> Signed-off-by: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> The original driver would allow configuring the IRQ either through
+> client->irq or through a separete DT entry called "stat_gpios" (which
+> seems redundant... might it be required for ACPI? Or...?). I modeled the
+> configuration via pdata the same way, this way aligning the fields in
+> the pdata structure with the DT entries. Let me know if you have a
+> preference to simplify this.
+> 
 
-Thanks applying into omap-for-v4.3/fixes.
+Right, it makes sense now.
 
-Tony
+Best regards,
+Krzysztof
 
-> ---
->  arch/arm/boot/dts/omap5-uevm.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-> index 3cc8f35..3cb030f 100644
-> --- a/arch/arm/boot/dts/omap5-uevm.dts
-> +++ b/arch/arm/boot/dts/omap5-uevm.dts
-> @@ -174,8 +174,8 @@
->  
->  	i2c5_pins: pinmux_i2c5_pins {
->  		pinctrl-single,pins = <
-> -			0x184 (PIN_INPUT | MUX_MODE0)		/* i2c5_scl */
-> -			0x186 (PIN_INPUT | MUX_MODE0)		/* i2c5_sda */
-> +			0x186 (PIN_INPUT | MUX_MODE0)		/* i2c5_scl */
-> +			0x188 (PIN_INPUT | MUX_MODE0)		/* i2c5_sda */
->  		>;
->  	};
->  
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
