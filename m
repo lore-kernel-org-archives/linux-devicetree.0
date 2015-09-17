@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 09/11] devicetree: bindings: Remove unused 32-bit CMT bindings
-Date: Thu, 17 Sep 2015 18:54:52 +0900
-Message-ID: <20150917095452.5369.320.sendpatchset@little-apple>
+Subject: [PATCH v2 08/11] ARM: shmobile: Remove CMT renesas,channels-mask from DTS
+Date: Thu, 17 Sep 2015 18:54:42 +0900
+Message-ID: <20150917095442.5369.63550.sendpatchset@little-apple>
 References: <20150917095325.5369.73893.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
@@ -12,42 +12,150 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Remove the 32-bit CMT compat strings to reduce maintenance burden.
+Update the DTS to remove the now deprecated "renesas,channels-mask" property.
 
-It should be fine to break DT compatibility because the 32-bit
-32-bit CMT DT binding was never part of any upstream DTS file.
+The channel information is now kept in the device driver and can easily
+be determined based on the compat string.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 
  Changes since V1:
- - New patch
+ - Rebased on top of power-domain changes
+ - Added Acked-by and Tested-by from Geert
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   16 ---------------
- 1 file changed, 16 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi |    3 ---
+ arch/arm/boot/dts/r8a7740.dtsi |    3 ---
+ arch/arm/boot/dts/r8a7790.dtsi |    6 ------
+ arch/arm/boot/dts/r8a7791.dtsi |    6 ------
+ arch/arm/boot/dts/r8a7793.dtsi |    6 ------
+ arch/arm/boot/dts/r8a7794.dtsi |    6 ------
+ arch/arm/boot/dts/sh73a0.dtsi  |    3 ---
+ 7 files changed, 33 deletions(-)
 
---- 0008/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 18:04:35.060513000 +0900
-@@ -12,22 +12,6 @@ datasheets.
- Required Properties:
+--- 0010/arch/arm/boot/dts/r8a73a4.dtsi
++++ work/arch/arm/boot/dts/r8a73a4.dtsi	2015-09-17 17:41:05.250513000 +0900
+@@ -120,9 +120,6 @@
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
  
-   - compatible: must contain one or more of the following:
--    - "renesas,cmt-32-r8a7740" for the r8a7740 32-bit CMT
--		(CMT0)
--    - "renesas,cmt-32-sh73a0" for the sh73a0 32-bit CMT
--		(CMT0)
--    - "renesas,cmt-32" for all 32-bit CMT without fast clock support
--		(CMT0 on sh73a0 and r8a7740)
--		This is a fallback for the above renesas,cmt-32-* entries.
+--- 0001/arch/arm/boot/dts/r8a7740.dtsi
++++ work/arch/arm/boot/dts/r8a7740.dtsi	2015-09-17 17:41:05.250513000 +0900
+@@ -60,9 +60,6 @@
+ 		clocks = <&mstp3_clks R8A7740_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
 -
--    - "renesas,cmt-32-fast-r8a7740" for the r8a7740 32-bit CMT with fast
--		clock support (CMT[234])
--    - "renesas,cmt-32-fast-sh73a0" for the sh73A0 32-bit CMT with fast
--		clock support (CMT[234])
--    - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
--		(CMT[234] on sh73a0 and r8a7740)
--		This is a fallback for the above renesas,cmt-32-fast-* entries.
+-		renesas,channels-mask = <0x3f>;
 -
-     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
+ 		status = "disabled";
+ 	};
+ 
+--- 0010/arch/arm/boot/dts/r8a7790.dtsi
++++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-09-17 17:45:02.110513000 +0900
+@@ -226,9 +226,6 @@
+ 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -246,9 +243,6 @@
+ 		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0010/arch/arm/boot/dts/r8a7791.dtsi
++++ work/arch/arm/boot/dts/r8a7791.dtsi	2015-09-17 17:44:54.210513000 +0900
+@@ -209,9 +209,6 @@
+ 		clocks = <&mstp1_clks R8A7791_CLK_CMT0>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -229,9 +226,6 @@
+ 		clocks = <&mstp3_clks R8A7791_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0010/arch/arm/boot/dts/r8a7793.dtsi
++++ work/arch/arm/boot/dts/r8a7793.dtsi	2015-09-17 17:44:48.400513000 +0900
+@@ -69,9 +69,6 @@
+ 		clocks = <&mstp1_clks R8A7793_CLK_CMT0>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -89,9 +86,6 @@
+ 		clocks = <&mstp3_clks R8A7793_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0010/arch/arm/boot/dts/r8a7794.dtsi
++++ work/arch/arm/boot/dts/r8a7794.dtsi	2015-09-17 17:44:43.300513000 +0900
+@@ -161,9 +161,6 @@
+ 		clocks = <&mstp1_clks R8A7794_CLK_CMT0>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0x60>;
+-
+ 		status = "disabled";
+ 	};
+ 
+@@ -181,9 +178,6 @@
+ 		clocks = <&mstp3_clks R8A7794_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&cpg_clocks>;
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
+--- 0001/arch/arm/boot/dts/sh73a0.dtsi
++++ work/arch/arm/boot/dts/sh73a0.dtsi	2015-09-17 17:44:32.950513000 +0900
+@@ -84,9 +84,6 @@
+ 		clocks = <&mstp3_clks SH73A0_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
+-
+-		renesas,channels-mask = <0x3f>;
+-
+ 		status = "disabled";
+ 	};
+ 
