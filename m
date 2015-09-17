@@ -1,99 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] Potential issue with GPIO/IRQ flags
-Date: Thu, 17 Sep 2015 12:20:33 -0500
-Message-ID: <CAL_JsqKm2ttQ-rikuZYJ7=qVj+-z+Xf8PyiP16=Rh=GoBW9Zhg@mail.gmail.com>
-References: <CAL_JsqKSfx4y_3VGhP5mR1-NJB0cJw5JLjhUk3hs92jM=usHPQ@mail.gmail.com>
- <55FAE1FB.4070300@ti.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] PCI: arm64/powerpc: Fix parsing of linux,pci-probe-only
+Date: Thu, 17 Sep 2015 12:21:41 -0500
+Message-ID: <CAErSpo4KosLZa=YWvdVErEk-bNDr7witNEO76d1oJXdSmUP2yQ@mail.gmail.com>
+References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
+ <20150917153009.GH25767@google.com> <55FAF5B1.1030401@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FAE1FB.4070300-l0cyMroinI0@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55FAF5B1.1030401-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 10:53 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
-> On 09/16/2015 08:26 PM, Rob Herring wrote:
+On Thu, Sep 17, 2015 at 12:17 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 17/09/15 16:30, Bjorn Helgaas wrote:
+>> On Fri, Sep 04, 2015 at 05:50:07PM +0100, Marc Zyngier wrote:
+>>> The pci-host-generic driver parses the linux,pci-probe-only property,
+>>> and assumes that it will have a boolean parameter.
+>>>
+>>> Turns out that the Seattle DTS file has a naked "linux,pci-probe-only"
+>>> property, which leads to the driver dereferencing some unsuspecting
+>>> memory location. Nothing really bad happens (we end up reading some
+>>> other bit of DT, fortunately), but that not a reason to keep it this
+>>> way. Turns out that the Pseries code (where this code was lifted from)
+>>> may suffer from the same issue.
+>>>
+>>> The first patch introduces a common (and fixed) version of that check
+>>> that can be used by drivers and architectures that require it. The two
+>>> following patches change the pci-host-generic driver and the powerpc
+>>> code to use it.
+>>>
+>>> Finally, the bad property is removed from the Seatle DTS, because it
+>>> is simply not necessary (it actually prevents me from using SR-IOV,
+>>> which otherwise runs fine without the probe-only thing).
+>>>
+>>> This has been tested on the offending Seattle board.
+>>>
+>>> * From v3:
+>>>   - Restrict the property lookup to /chosen (Rob)
+>>>   - Acked-by on patch #4 from Suravee
+>>>   - I swear this is the last time I rework these patches! ;-)
+>>>
+>>> * From v2:
+>>>   - Use of_property_read_u32 to safely read the property (Rob)
+>>>   - Add a log message to indicate when we enable probe-only
+>>>     (probably quite useful for debugging)
+>>>
+>>> * From v1:
+>>>   - Consolidate the parsing in of_pci.c (Bjorn)
+>>>
+>>> Marc Zyngier (4):
+>>>   of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
+>>>   PCI: pci-host-generic: Fix lookup of linux,pci-probe-only property
+>>>   powerpc: PCI: Fix lookup of linux,pci-probe-only property
+>>>   arm64: dts: Drop linux,pci-probe-only from the Seattle DTS
+>>>
+>>>  arch/arm64/boot/dts/amd/amd-overdrive.dts |  1 -
+>>>  arch/powerpc/platforms/pseries/setup.c    | 14 ++------------
+>>>  drivers/of/of_pci.c                       | 28 ++++++++++++++++++++++++++++
+>>>  drivers/pci/host/pci-host-generic.c       |  9 +--------
+>>>  include/linux/of_pci.h                    |  3 +++
+>>>  5 files changed, 34 insertions(+), 21 deletions(-)
 >>
->> On Wed, Sep 16, 2015 at 4:07 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
->>>
->>> Hello all,
->>>
->>> I've noticed that in a few DT bindings GPIO_ACTIVE_* defines are
->>> incorrectly used as interrupt flags. GPIO_ACTIVE_*'s are defined
->>> in:
->>>
->>> include/dt-bindings/gpio/gpio.h
->>>
->>> and are used to describe GPIO pins. IRQ types are defined in:
->>>
->>> include/dt-bindings/interrupt-controller/irq.h
->>>
->>> and are flags for IRQ pins.
->>
->>
->> It is perfectly valid for the meaning of the field to be defined by
->> the interrupt controller, and gpio interrupts could do something
->> different. We've tried to standardize this though.
->>
+>> Applied with the comment tweak and acks to pci/host-generic for v4.4,
+>> thanks!
 >
-> Sure, but in this case these are not what the interrupt controller
-> is expecting.
-
-Understood. I was talking generally, not this specific case.
-
->>> These seem to have been mixed up in a few places, take for example:
->>> arch/arm/boot/dts/tegra124-jetson-tk1.dts. On line 1393 we see the
->>> correct usage, but just before on line 1384 we see the issue.
->>> GPIO_ACTIVE_HIGH is defined as 0, the same as IRQ_TYPE_NONE. If
->>> this IRQ was not hard-coded with the correct edge in the driver
->>> this would not work. What the author probably wanted was
->>> IRQ_TYPE_LEVEL_HIGH.
->>>
->>> Now lets look at commit c21e678b256b, in this the IRQ flags did not
->>> matter as the correct flag was hard-coded (IRQF_TRIGGER_LOW), this
->>> patch moves this to the DT, but changed the flag to GPIO_ACTIVE_LOW
->>> instead of the desired IRQ_TYPE_LEVEL_LOW. GPIO_ACTIVE_LOW is defined
->>> as 1, or IRQ_TYPE_EDGE_RISING in IRQ flags, which is not the
->>> equivalent to IRQF_TRIGGER_LOW the author was probably looking for.
->>>
->>> A quick grep (git grep "interrupt.*GPIO_ACTIVE_") shows several more
->>> instances of this. I found this by using one of these files as an
->>> example and giving myself a lot of problems, so I would like to fix
->>> this before it spreads anymore.
->>>
->>> I have a couple of ideas of how to go at this, first would be to
->>> just replace the incorrect flags with what was intended, but for
->>> some of these I don't know what was intended and do not have the
->>> board to test.
->>>
->>> My other solution would be to just change all instances of the GPIO
->>> flags to their value corresponding IRQ flags:
->>>
->>> - interrupts = <11 GPIO_ACTIVE_LOW>;
->>> + interrupts = <11 IRQ_TYPE_EDGE_RISING>;
->>>
->>> this would not make any functional change as the defines would
->>> still evaluate to the same value, but would make it obvious where
->>> a problem may be and that they should probably be checked and
->>> corrected, maybe we could even put a comment after:
->>>
->>> - interrupts = <11 GPIO_ACTIVE_LOW>;
->>> + interrupts = <11 IRQ_TYPE_EDGE_RISING>; // FIXME: Check IRQ type
->>>
->>> Well, what do you think?
->>
->>
->> This seems fine. It is no less wrong.
->>
+> Turns out that the 01.org infrastructure has picked up on a compilation
+> bug with randconfig. The following patch seems to fix it and should be
+> applied on the first patch:
 >
-> I'm not sure what you mean here.
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 485d625..2da5abc 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -6,6 +6,8 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/slab.h>
+>
+> +#include <asm-generic/pci-bridge.h>
+> +
+>  static inline int __of_pci_pci_compare(struct device_node *node,
+>                                        unsigned int data)
+>  {
+>
+> Sorry for the annoyance.
 
-In this example, the correct value is probably IRQ_TYPE_LEVEL_LOW or
-IRQ_TYPE_EDGE_FALLING if the original text was correct in its
-intentions (but broken in implementation). Since the change you
-propose doesn't change the actual dtb at all, if it was wrong before
-it will still be wrong.
-
-Rob
+Folded in and re-pushed, thanks!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
