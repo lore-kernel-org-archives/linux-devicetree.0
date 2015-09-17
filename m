@@ -1,34 +1,178 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: Re: [PATCH v5] dtb: Create a common home for cross-architecture
- dtsi files.
-Date: Thu, 17 Sep 2015 12:07:01 +0100
-Message-ID: <1442488021.18856.179.camel@citrix.com>
-References: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
-	 <1439287646.9747.212.camel@citrix.com>
-	 <CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
-	 <CAOesGMj46mvbdya1OQnZzL8VrxVwxAV3KoZZRtk3c0CTVx7d5w@mail.gmail.com>
-	 <CAL_Jsq+tUmRfvKE6vf+za6TsG_fhMWn5M2DDDLcCfkDt=KJGVg@mail.gmail.com>
-	 <CAOesGMigmaEviCDBAncomkq+uowr18B5FTOmOyBHsNz4p6F6Dw@mail.gmail.com>
-	 <CAL_JsqKu6B1Q1q38GFSkdAT+Gxg3=87uk8ZOGPH96Eni0cer_g@mail.gmail.com>
-	 <CAOesGMhj50wg5WyByC7kHp3joo-ahfYWWDLLudp=kyKMpxauhg@mail.gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH RFC 2/8] drm: hisilicon: Add new DRM driver for hisilicon
+ Soc
+Date: Thu, 17 Sep 2015 16:43:57 +0530
+Message-ID: <55FAA075.4090200@codeaurora.org>
+References: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1442309834-21420-3-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhj50wg5WyByC7kHp3joo-ahfYWWDLLudp=kyKMpxauhg@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Rob Herring <robherring2@gmail.com>
-Cc: "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1442309834-21420-3-git-send-email-kong.kongxinwei@hisilicon.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinwei Kong <kong.kongxinwei@hisilicon.com>, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xinliang.liu@linaro.org, andy.green@linaro.org, qijiwen@hisilicon.com, gongyu@hisilicon.com, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, yinshengbao@hisilicon.com, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, yimin@huawei.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, james.yanglong@hisilicon.com, fangdechun@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+Hi,
 
-On Mon, 2015-08-24 at 15:22 -0700, Olof Johansson wrote:
+On 9/15/2015 3:07 PM, Xinwei Kong wrote:
+> This patch creates this driver itself and register all the sub-components
+> which is from DTS inode, this driver uses components framework mechanism
+> to bind all the sub-components.
+>
+> This patch also introduces a memory manager for hisilison drm. As cma
+> framebuffer helpers can no more be used.
+>
+> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Signed-off-by: Andy Green <andy.green@linaro.org>
+> Signed-off-by: Jiwen Qi <qijiwen@hisilicon.com>
+> Signed-off-by: Yu Gong <gongyu@hisilicon.com>
+> ---
+>   arch/arm64/configs/defconfig             |   5 +
+>   drivers/gpu/drm/Kconfig                  |   2 +
+>   drivers/gpu/drm/Makefile                 |   1 +
+>   drivers/gpu/drm/hisilicon/Kconfig        |   9 ++
+>   drivers/gpu/drm/hisilicon/Makefile       |   7 ++
+>   drivers/gpu/drm/hisilicon/hisi_ade.c     | 166 +++++++++++++++++++++++++
+>   drivers/gpu/drm/hisilicon/hisi_drm_drv.c | 206 +++++++++++++++++++++++++++++++
+>   drivers/gpu/drm/hisilicon/hisi_drm_dsi.c | 131 ++++++++++++++++++++
+>   drivers/gpu/drm/hisilicon/hisi_drm_fb.c  | 156 +++++++++++++++++++++++
+>   drivers/gpu/drm/hisilicon/hisi_drm_fb.h  |  26 ++++
+>   10 files changed, 709 insertions(+)
+>   create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
+>   create mode 100644 drivers/gpu/drm/hisilicon/Makefile
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_ade.c
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_drv.c
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_fb.c
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_fb.h
+>
 
-A little while ago you were trying to explain the scheme you would like to
-see on IRC but my thick skull was getting in the way :-/ Then you had to
-run...
+<snip>
 
-So, ping?
+> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+> new file mode 100644
+> index 0000000..a8dbaad
+> --- /dev/null
+> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+> @@ -0,0 +1,131 @@
+> +/*
+> + * Hisilicon Terminal SoCs drm driver
+> + *
+> + * Copyright (c) 2014-2015 Hisilicon Limited.
+> + * Author: Xinwei Kong <kong.kongxinwei@hisilicon.com> for hisilicon
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/component.h>
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_encoder_slave.h>
+> +
+> +#define DSI_24BITS_1               (5)
+> +
+> +struct hisi_dsi {
+> +	u32 lanes;
+> +	u32 format;
+> +	u32 date_enable_pol;
+> +	u32 mode_flags;
+> +	u8 color_mode;
+> +	void *ctx;
+> +};
+> +
+> +struct hisi_dsi_context {
+> +	struct hisi_dsi dsi;
+> +	struct clk *dsi_cfg_clk;
+> +	struct drm_device *dev;
+> +
+> +	void __iomem *base;
+> +	int nominal_pixel_clk_kHz;
+> +};
+> +
+> +static int hisi_dsi_bind(struct device *dev, struct device *master,
+> +			 void *data)
+> +{
+> +	int ret = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +static void hisi_dsi_unbind(struct device *dev, struct device *master,
+> +			    void *data)
+> +{
+> +	/* do nothing */
+> +}
+> +
+> +static const struct component_ops hisi_dsi_ops = {
+> +	.bind	= hisi_dsi_bind,
+> +	.unbind	= hisi_dsi_unbind,
+> +};
+> +
+> +static int hisi_dsi_probe(struct platform_device *pdev)
+> +{
+> +	struct hisi_dsi_context *ctx;
+> +	struct hisi_dsi *dsi;
+> +	struct resource *res;
+> +	struct device_node *slave_node;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx) {
+> +		DRM_ERROR("failed to allocate hisi dsi context.\n");
+> +		ret = -ENOMEM;
+> +	}
+> +
+> +	ctx->dsi_cfg_clk = devm_clk_get(&pdev->dev, "pclk_dsi");
+> +	if (IS_ERR(ctx->dsi_cfg_clk)) {
+> +		DRM_ERROR("failed to parse the dsi config clock\n");
+> +		ret = PTR_ERR(ctx->dsi_cfg_clk);
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	ctx->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ctx->base)) {
+> +		DRM_ERROR("failed to remap dsi io region\n");
+> +		ret = PTR_ERR(ctx->base);
+> +	}
+> +
+> +	slave_node = of_parse_phandle(np, "encoder-slave", 0);
+> +	if (!slave_node) {
+> +		DRM_ERROR("failed to parse the slave encoder node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dsi = &ctx->dsi;
+> +	dsi->ctx = ctx;
+> +	dsi->lanes = 3;
+> +	dsi->date_enable_pol = 0;
+> +	dsi->color_mode = DSI_24BITS_1;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> +
+> +	return component_add(&pdev->dev, &hisi_dsi_ops);
+> +}
+> +
 
-Ian.
+The DSI driver should register the dsi host via 
+mipi_dsi_host_register(). That's the standard way of establishing a
+connection between a host and dsi peripherals.
+
+The dsi_context approach isn't something that will work very well.
+With this approach, you're forced to set DSI parameters like number of
+lanes, format, mode flags etc in the host driver, rather than receiving
+them from the connected device.
+
+Archit
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
