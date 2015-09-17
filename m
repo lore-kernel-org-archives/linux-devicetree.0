@@ -1,162 +1,45 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX SoCs.
-Date: Thu, 17 Sep 2015 15:41:33 -0700
-Message-ID: <1442529694-1792-3-git-send-email-ddaney.cavm@gmail.com>
-References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2
+ Square board
+Date: Fri, 18 Sep 2015 00:42:40 +0200
+Message-ID: <2262570.nZrIWP6lhh@diego>
+References: <1442300242-510-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
-Cc: David Daney <david.daney@cavium.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1442300242-510-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+Hi Sjoerd,
 
-The on-chip devices all have fixed bars.  So, fix them up.
+Am Dienstag, 15. September 2015, 08:57:21 schrieb Sjoerd Simons:
+> The Radxa Rock 2 Square board is a combination of the Radxa Rock 2 SoM
+> with the Square baseboard. Add a dtsi for the SoM which can be included
+> into the dts for the various baseboards (e.g. full and square) and a dts
+> for the square board.
+> 
+> Currently supported are serial console, wired networking, hdmi output,
+> eMMC and SD storage and USB.
+> 
+> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- drivers/pci/host/Kconfig          |  6 +++
- drivers/pci/host/Makefile         |  1 +
- drivers/pci/host/quirks-thunder.c | 95 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 102 insertions(+)
- create mode 100644 drivers/pci/host/quirks-thunder.c
+applied to my dts32 branch for 4.4 with the following small changes:
 
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index d5e58ba..20d700d 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -145,4 +145,10 @@ config PCIE_IPROC_BCMA
- 	  Say Y here if you want to use the Broadcom iProc PCIe controller
- 	  through the BCMA bus interface
- 
-+config PCI_QUIRKS_THUNDER
-+	bool "PCI quirks for Cavium ThunderX SoCs"
-+	depends on ARM64
-+	help
-+	  Say Y here to support ThunderX SoCs
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 140d66f..3ce7456 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -17,3 +17,4 @@ obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
- obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
- obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
- obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
-+obj-$(CONFIG_PCI_QUIRKS_THUNDER) += quirks-thunder.o
-diff --git a/drivers/pci/host/quirks-thunder.c b/drivers/pci/host/quirks-thunder.c
-new file mode 100644
-index 0000000..d615fd8
---- /dev/null
-+++ b/drivers/pci/host/quirks-thunder.c
-@@ -0,0 +1,95 @@
-+/*
-+ * PCIe quirks for Cavium Thunder SOC
-+ *
-+ * Copyright (C) 2014, 2015 Cavium Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+
-+#define PCI_DEVICE_ID_THUNDER_BRIDGE		0xa002
-+
-+/*
-+ * All PCIe devices in Thunder have fixed resources, shouldn't be
-+ * reassigned.
-+ */
-+static void thunder_pci_fixup_header(struct pci_dev *dev)
-+{
-+	int resno;
-+
-+	/* Only fixup Thunder on-chip devices. */
-+	if ((dev->device & 0xff00) != 0xa000)
-+		return;
-+
-+	for (resno = 0; resno < PCI_NUM_RESOURCES; resno++)
-+		if (dev->resource[resno].flags)
-+			dev->resource[resno].flags |= IORESOURCE_PCI_FIXED;
-+#ifdef CONFIG_PCI_IOV
-+	if (dev->device == 0xa01e) {
-+		dev->resource[PCI_IOV_RESOURCES + 0] = dev->resource[0];
-+		dev->resource[PCI_IOV_RESOURCES + 0].start += 0xa0000000;
-+		dev->resource[PCI_IOV_RESOURCES + 0].end =
-+			dev->resource[PCI_IOV_RESOURCES + 0].start + 0x200000 - 1;
-+		dev->resource[PCI_IOV_RESOURCES + 4] = dev->resource[0];
-+		dev->resource[PCI_IOV_RESOURCES + 4].start += 0xe0000000;
-+		dev->resource[PCI_IOV_RESOURCES + 4].end =
-+			dev->resource[PCI_IOV_RESOURCES + 4].start + 0x200000 - 1;
-+	}
-+#endif
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, PCI_ANY_ID, thunder_pci_fixup_header);
-+
-+static void thunder_pci_fixup_final(struct pci_dev *dev)
-+{
-+	struct resource *res;
-+	int resno;
-+
-+	/* Only fixup Thunder on-chip devices. */
-+	if ((dev->device & 0xff00) != 0xa000)
-+		return;
-+
-+	if (dev->device == PCI_DEVICE_ID_THUNDER_BRIDGE) {
-+		/*
-+		 * This bridge is just for the sake of supporting ARI
-+		 * for downstream devices. No resources are attached
-+		 * to it.  Copy upstream root bus resources to bridge
-+		 * which aide in resource claiming for downstream
-+		 * devices
-+		 */
-+
-+		struct pci_bus *bus;
-+		int resno;
-+
-+		bus = dev->subordinate;
-+		for (resno = 0; resno < PCI_BRIDGE_RESOURCE_NUM; resno++) {
-+			bus->resource[resno] = pci_bus_resource_n(bus->parent,
-+								  PCI_BRIDGE_RESOURCE_NUM + resno);
-+		}
-+
-+		for (resno = PCI_BRIDGE_RESOURCES;
-+		     resno <= PCI_BRIDGE_RESOURCE_END; resno++) {
-+			dev->resource[resno].start = dev->resource[resno].end = 0;
-+			dev->resource[resno].flags = 0;
-+		}
-+	} else {
-+		/*
-+		 * Claim the device's valid resources to set
-+		 * 'res->parent' hierarchy.
-+		 */
-+		for (resno = 0; resno < PCI_BRIDGE_RESOURCES; resno++) {
-+			res = &dev->resource[resno];
-+			if (res->parent || !(res->flags & IORESOURCE_MEM))
-+				continue;
-+			pci_claim_resource(dev, resno);
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CAVIUM, PCI_ANY_ID, thunder_pci_fixup_final);
-+
-+MODULE_DESCRIPTION("PCI quirks for Cavium Thunder ECAM based devices");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+- &vop{b/l}(_mmu) nodes only in the som.dtsi
+  -> removed duplicates
+- moved &tsadc and &wdt to alphabetical order
+
+
+Heiko
