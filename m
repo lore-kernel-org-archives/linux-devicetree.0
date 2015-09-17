@@ -1,57 +1,49 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 15/16] clk: shmobile: mstp: Consider "zb_clk" suitable
- for power management
-Date: Thu, 17 Sep 2015 15:24:54 -0700
-Message-ID: <20150917222454.GW23081@codeaurora.org>
-References: <1438691297-29235-1-git-send-email-geert+renesas@glider.be>
- <1438691297-29235-16-git-send-email-geert+renesas@glider.be>
- <20150917084446.GA8197@verge.net.au>
- <20150917085314.GA29509@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150917085314.GA29509@verge.net.au>
-Sender: linux-clk-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Michael Turquette <mturquette@baylibre.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] PCI: Add support for Cavium ThunderX RC and on-SoC devices.
+Date: Thu, 17 Sep 2015 15:41:31 -0700
+Message-ID: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17, Simon Horman wrote:
-> On Thu, Sep 17, 2015 at 05:45:18PM +0900, Simon Horman wrote:
-> > Hi Mike, Hi Stephen,
-> > 
-> > On Tue, Aug 04, 2015 at 02:28:16PM +0200, Geert Uytterhoeven wrote:
-> > > Currently the CPG/MSTP Clock Domain code looks for MSTP clocks to power
-> > > manage a device.
-> > > 
-> > > Unfortunately, on R-Mobile APE6 (r8a73a4) and SH-Mobile AG5 (sh73a0),
-> > > the Bus State Controller (BSC) is not power-managed by an MSTP clock,
-> > > but by a plain CPG clock (zb_clk).  Add a special case to handle this,
-> > > so the clock is properly managed, and devices connected to the BSC work
-> > > as expected.
-> > > 
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > 
-> > for one reason or another I seem to have this patch queued up in
-> > my renesas tree for v4.4, without any Acks.
-> > 
-> > I think it would be best if one of you took the patch instead.
-> > Though I'm also happy to take it with Acks.
-> > 
-> > Let me know how you would like to proceed.
-> 
-> Sorry to revise the above, I should have checked more closely
-> before I sent my previous email. I now see that I have an SoC patch
-> that depends on this one. So if possible I'd like to take this one
-> through my tree with an Ack or two.
-> 
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Sure.
+The Cavium ThunderX arm64 based SoC needs a little bit of special
+handling for both its PCIe Root Complexes as well as on-SoC devices
+(which all appear as PCIe devices).
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+1/3 - Small change to allow SRIOV BARs to be given fixed addresses in
+      the header fixup.
+
+2/3 - Add quirks to support fixed BAR addresses for all on-SoC devices,
+      including SRIOV BARs in the NIC.
+
+3/3 - Add config spaces accessors to pci-host-generic driver for ThunderX RC.
+
+This patch set depends on:
+
+https://lkml.org/lkml/2015/9/17/799
+
+David Daney (3):
+  PCI: Allow quirks to override SRIOV BARs.
+  PCI: Add quirks for devices found on Cavium ThunderX SoCs.
+  PCI: generic: Add support for Cavium ThunderX PCIe root complexes.
+
+ .../devicetree/bindings/pci/host-generic-pci.txt   |  8 +-
+ drivers/pci/host/Kconfig                           |  6 ++
+ drivers/pci/host/Makefile                          |  1 +
+ drivers/pci/host/pci-host-generic.c                | 29 +++++++
+ drivers/pci/host/quirks-thunder.c                  | 95 ++++++++++++++++++++++
+ drivers/pci/iov.c                                  |  9 +-
+ 6 files changed, 143 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/pci/host/quirks-thunder.c
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
