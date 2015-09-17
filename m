@@ -1,52 +1,61 @@
-From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
- boot log
-Date: Thu, 17 Sep 2015 09:18:10 -0700
-Message-ID: <55FAE7C2.8030004@oracle.com>
-References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
- <55EA673F.8010904@oracle.com> <55F06075.6050405@ti.com>
- <55F8600D.2070701@ti.com> <55F88B81.2000308@oracle.com>
- <55F9A05E.4090000@ti.com> <55F9BF61.4080200@oracle.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mt8173: add timer node
+Date: Thu, 17 Sep 2015 17:41:09 +0100
+Message-ID: <20150917164108.GF12808@leverpostej>
+References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
+ <55FAC570.8040307@arm.com>
+ <1442501816.4784.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55F9BF61.4080200-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442501816.4784.3.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Sudeep Holla <Sudeep.Holla@arm.com>, James Liao <jamesjj.liao@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, linux-arm-kernel@li
 List-Id: devicetree@vger.kernel.org
 
-On 9/16/15 12:13 PM, santosh shilimkar wrote:
-> On 9/16/2015 10:01 AM, Murali Karicheri wrote:
->> On 09/15/2015 05:20 PM, santosh shilimkar wrote:
->>> On 9/15/2015 11:14 AM, Murali Karicheri wrote:
->>>> On 09/09/2015 12:38 PM, Murali Karicheri wrote:
->
-> [..]
->>>> Santosh,
->>>>
->>>> I have checked v4.3-rc1 and I don't see it. Did you send the pull
->>>> request?
->>>>
->>> They are in the queue fo 4.4-rc1. They were too late for 4.3.
->>> You might know already, typically as a rule of thumb followed
->>> on arm-soc, we need to get patches reviewed/acked by rc4 to make
->>> it for next merge window.
->>> Ofcourse genuine bug fixes can make it to the same cycle.
->> Is there a branch where you have applied the patches that you can
->> provide me? I want to send it to internal list for merge.
->>
-> Yes. I will push it out later this week. Will drop you
-> note when I do that.
+On Thu, Sep 17, 2015 at 03:56:56PM +0100, Yingjoe Chen wrote:
+> On Thu, 2015-09-17 at 14:51 +0100, Sudeep Holla wrote:
+> > 
+> > On 16/09/15 03:04, Yingjoe Chen wrote:
+> > > From: Daniel Kurtz <djkurtz@chromium.org>
+> > >
+> > > Add device node to enable GPT timer. This timer will be
+> > > used as sched clock source.
+> > >
+> > 
+> > Interesting any known issues with or advantage over the arch timers
+> > to prefer it as sched clock source. I see even arch timers are present
+> > in DT, hence the question. Or is it just a incorrect commit log ?
+> > 
+> > How does this get selected as sched clock source ? I don't see
+> > sched_clock_register in mtk_timer.c
+> > 
+> > To be clear, I am not against adding this timer support, but just want
+> > to know is it preferred for sched clock source ? if yes why ? better
+> > resolution ?
+> 
+> Hi Sudeep,
+> 
+> Thanks for your review.
+> 
+> I hit the send too soon and missed cover letter, please see:
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002303.html
+> 
+> The main reason to use GPT as sched clock is it won't stop during idle.
 
-Rebased version against v4.3-rc1 are available below. They
-should also appear in linux-next soon.
+You don't mean sched clock, you just mean a clock_event_device.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+A sched_clock is a high-precision clocksource that is read from (which
+by definition requires the CPUs to be non-idle). It doesn't have
+anything to do with interrupts and therefore cannot wake devices from
+idle.
 
-for_4.4/dts
-for_4.4/drivers-soc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+While the clock_event_device for the generic timer can't necessarily
+wake CPUs from idle. The generic timer system counter counts even if
+CPUs are idle, so the generic timer is fine as a sched_clock. 
+
+Thanks,
+Mark.
