@@ -1,92 +1,31 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] PCI: arm64/powerpc: Fix parsing of linux,pci-probe-only
-Date: Thu, 17 Sep 2015 12:21:41 -0500
-Message-ID: <CAErSpo4KosLZa=YWvdVErEk-bNDr7witNEO76d1oJXdSmUP2yQ@mail.gmail.com>
-References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
- <20150917153009.GH25767@google.com> <55FAF5B1.1030401@arm.com>
+From: Florian Fainelli <fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] Documentation: bindings: brcmstb: Document write-pairing
+Date: Thu, 17 Sep 2015 10:28:25 -0700
+Message-ID: <55FAF839.2010304@broadcom.com>
+References: <1442340900-15320-1-git-send-email-f.fainelli@gmail.com> <1442340900-15320-2-git-send-email-f.fainelli@gmail.com> <CADtm3G4FNAdLT2CGU++pmMvs2M-bHAQ5GH+GwnLXknT2xTOCLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FAF5B1.1030401-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CADtm3G4FNAdLT2CGU++pmMvs2M-bHAQ5GH+GwnLXknT2xTOCLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 12:17 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 17/09/15 16:30, Bjorn Helgaas wrote:
->> On Fri, Sep 04, 2015 at 05:50:07PM +0100, Marc Zyngier wrote:
->>> The pci-host-generic driver parses the linux,pci-probe-only property,
->>> and assumes that it will have a boolean parameter.
->>>
->>> Turns out that the Seattle DTS file has a naked "linux,pci-probe-only"
->>> property, which leads to the driver dereferencing some unsuspecting
->>> memory location. Nothing really bad happens (we end up reading some
->>> other bit of DT, fortunately), but that not a reason to keep it this
->>> way. Turns out that the Pseries code (where this code was lifted from)
->>> may suffer from the same issue.
->>>
->>> The first patch introduces a common (and fixed) version of that check
->>> that can be used by drivers and architectures that require it. The two
->>> following patches change the pci-host-generic driver and the powerpc
->>> code to use it.
->>>
->>> Finally, the bad property is removed from the Seatle DTS, because it
->>> is simply not necessary (it actually prevents me from using SR-IOV,
->>> which otherwise runs fine without the probe-only thing).
->>>
->>> This has been tested on the offending Seattle board.
->>>
->>> * From v3:
->>>   - Restrict the property lookup to /chosen (Rob)
->>>   - Acked-by on patch #4 from Suravee
->>>   - I swear this is the last time I rework these patches! ;-)
->>>
->>> * From v2:
->>>   - Use of_property_read_u32 to safely read the property (Rob)
->>>   - Add a log message to indicate when we enable probe-only
->>>     (probably quite useful for debugging)
->>>
->>> * From v1:
->>>   - Consolidate the parsing in of_pci.c (Bjorn)
->>>
->>> Marc Zyngier (4):
->>>   of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
->>>   PCI: pci-host-generic: Fix lookup of linux,pci-probe-only property
->>>   powerpc: PCI: Fix lookup of linux,pci-probe-only property
->>>   arm64: dts: Drop linux,pci-probe-only from the Seattle DTS
->>>
->>>  arch/arm64/boot/dts/amd/amd-overdrive.dts |  1 -
->>>  arch/powerpc/platforms/pseries/setup.c    | 14 ++------------
->>>  drivers/of/of_pci.c                       | 28 ++++++++++++++++++++++++++++
->>>  drivers/pci/host/pci-host-generic.c       |  9 +--------
->>>  include/linux/of_pci.h                    |  3 +++
->>>  5 files changed, 34 insertions(+), 21 deletions(-)
+On 16/09/15 23:09, Gregory Fong wrote:
+> On Tue, Sep 15, 2015 at 11:14 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Document the hif-cpubiuctrl node a bit more, and add a documentation
+>> entry for the optional "brcm,write-pairing" property.
 >>
->> Applied with the comment tweak and acks to pci/host-generic for v4.4,
->> thanks!
->
-> Turns out that the 01.org infrastructure has picked up on a compilation
-> bug with randconfig. The following patch seems to fix it and should be
-> applied on the first patch:
->
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 485d625..2da5abc 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -6,6 +6,8 @@
->  #include <linux/of_pci.h>
->  #include <linux/slab.h>
->
-> +#include <asm-generic/pci-bridge.h>
-> +
->  static inline int __of_pci_pci_compare(struct device_node *node,
->                                        unsigned int data)
->  {
->
-> Sorry for the annoyance.
+>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Acked-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
 
-Folded in and re-pushed, thanks!
+Applied to devicetree/next, thanks!
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
