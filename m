@@ -1,39 +1,84 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v2 09/11] devicetree: bindings: Remove unused 32-bit CMT bindings
-Date: Thu, 17 Sep 2015 21:41:18 +0900
-Message-ID: <CANqRtoQ1UUdz1FoqrqkXAj6F9gudOfvgi-vDuAXxDs6Hy3wuXw@mail.gmail.com>
-References: <20150917095325.5369.73893.sendpatchset@little-apple>
-	<20150917095452.5369.320.sendpatchset@little-apple>
-	<55FAAEA8.1050102@cogentembedded.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2 6/9] pinctrl: rockchip: add support for the rk3036
+Date: Thu, 17 Sep 2015 14:47:14 +0200
+Message-ID: <3447784.I53PqELJZg@diego>
+References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com> <1442486060-1770-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55FAAEA8.1050102@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, SH-Linux <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1442486060-1770-1-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Xing Zheng <zhengxing@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Am Donnerstag, 17. September 2015, 18:34:20 schrieb Xing Zheng:
+> Add new type for rk3036 and many parts of pinctrl rk3036 are similar
+> with rk2928's.
+> 
+> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 
-On Thu, Sep 17, 2015 at 9:14 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
->
-> On 9/17/2015 12:54 PM, Magnus Damm wrote:
->
->> From: Magnus Damm <damm+renesas@opensource.se>
->>
->> Remove the 32-bit CMT compat strings to reduce maintenance burden.
->>
->> It should be fine to break DT compatibility because the 32-bit
->> 32-bit CMT DT binding was never part of any upstream DTS file.
->
->
->    Nit: "32-bit" repeated twice.
+very nice that the rk3036 pin-controller works with already established 
+infrastructure :-)
 
-Oops, will fix, thanks for reporting!
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-Cheers,
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../bindings/pinctrl/rockchip,pinctrl.txt          |    1 +
+>  drivers/pinctrl/pinctrl-rockchip.c                 |   17 +++++++++++++++++
+> 2 files changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt index
+> 391ef4b..c73f2bb 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> @@ -22,6 +22,7 @@ Required properties for iomux controller:
+>    - compatible: one of "rockchip,rk2928-pinctrl",
+> "rockchip,rk3066a-pinctrl" "rockchip,rk3066b-pinctrl",
+> "rockchip,rk3188-pinctrl"
+>  		       "rockchip,rk3288-pinctrl", "rockchip,rk3368-pinctrl"
+> +		       "rockchip,rk3036-pinctrl"
+>    - rockchip,grf: phandle referencing a syscon providing the
+>  	 "general register files"
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c
+> b/drivers/pinctrl/pinctrl-rockchip.c index c5246c0..9c49510 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -2089,6 +2089,21 @@ static struct rockchip_pin_ctrl rk2928_pin_ctrl = {
+>  		.pull_calc_reg		= rk2928_calc_pull_reg_and_bit,
+>  };
+> 
+> +static struct rockchip_pin_bank rk3036_pin_banks[] = {
+> +	PIN_BANK(0, 32, "gpio0"),
+> +	PIN_BANK(1, 32, "gpio1"),
+> +	PIN_BANK(2, 32, "gpio2"),
+> +};
+> +
+> +static struct rockchip_pin_ctrl rk3036_pin_ctrl = {
+> +		.pin_banks		= rk3036_pin_banks,
+> +		.nr_banks		= ARRAY_SIZE(rk3036_pin_banks),
+> +		.label			= "RK3036-GPIO",
+> +		.type			= RK2928,
+> +		.grf_mux_offset		= 0xa8,
+> +		.pull_calc_reg		= rk2928_calc_pull_reg_and_bit,
+> +};
+> +
+>  static struct rockchip_pin_bank rk3066a_pin_banks[] = {
+>  	PIN_BANK(0, 32, "gpio0"),
+>  	PIN_BANK(1, 32, "gpio1"),
+> @@ -2207,6 +2222,8 @@ static struct rockchip_pin_ctrl rk3368_pin_ctrl = {
+>  static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+>  	{ .compatible = "rockchip,rk2928-pinctrl",
+>  		.data = (void *)&rk2928_pin_ctrl },
+> +	{ .compatible = "rockchip,rk3036-pinctrl",
+> +		.data = (void *)&rk3036_pin_ctrl },
+>  	{ .compatible = "rockchip,rk3066a-pinctrl",
+>  		.data = (void *)&rk3066a_pin_ctrl },
+>  	{ .compatible = "rockchip,rk3066b-pinctrl",
 
-/ magnus
