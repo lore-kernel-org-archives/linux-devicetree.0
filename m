@@ -1,82 +1,53 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v2 06/11] scsi: ufs: add specific callback for nexus type
-Date: Thu, 17 Sep 2015 15:15:32 +0530
-Message-ID: <1442483137-32376-7-git-send-email-alim.akhtar@samsung.com>
-References: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH v2 09/11] devicetree: bindings: Remove unused 32-bit CMT bindings
+Date: Thu, 17 Sep 2015 18:54:52 +0900
+Message-ID: <20150917095452.5369.320.sendpatchset@little-apple>
+References: <20150917095325.5369.73893.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
+In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Seungwon Jeon <essuuj@gmail.com>
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Some host controller needs nexus type information for handling
-command. This change adds specific callback function to support
-vendor's implementation.
+Remove the 32-bit CMT compat strings to reduce maintenance burden.
 
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+It should be fine to break DT compatibility because the 32-bit
+32-bit CMT DT binding was never part of any upstream DTS file.
+
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
- drivers/scsi/ufs/ufshcd.c |    6 ++++++
- drivers/scsi/ufs/ufshcd.h |    6 ++++++
- 2 files changed, 12 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 0fcfa71..2f0de4b 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1377,6 +1377,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ Changes since V1:
+ - New patch
+
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   16 ---------------
+ 1 file changed, 16 deletions(-)
+
+--- 0008/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 18:04:35.060513000 +0900
+@@ -12,22 +12,6 @@ datasheets.
+ Required Properties:
  
- 	/* issue command to the controller */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	if (hba->vops && hba->vops->specify_nexus_t_xfer_req)
-+		hba->vops->specify_nexus_t_xfer_req(hba, tag, lrbp->cmd);
- 	ufshcd_send_command(hba, tag);
- out_unlock:
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-@@ -1577,6 +1579,8 @@ static int ufshcd_exec_dev_cmd(struct ufs_hba *hba,
- 	hba->dev_cmd.complete = &wait;
- 
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	if (hba->vops && hba->vops->specify_nexus_t_xfer_req)
-+		hba->vops->specify_nexus_t_xfer_req(hba, tag, lrbp->cmd);
- 	ufshcd_send_command(hba, tag);
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 
-@@ -3848,6 +3852,8 @@ static int ufshcd_issue_tm_cmd(struct ufs_hba *hba, int lun_id, int task_id,
- 	task_req_upiup->input_param2 = cpu_to_be32(task_id);
- 
- 	/* send command to the controller */
-+	if (hba->vops && hba->vops->specify_nexus_t_tm_req)
-+		hba->vops->specify_nexus_t_tm_req(hba, free_slot, tm_function);
- 	__set_bit(free_slot, &hba->outstanding_tasks);
- 	ufshcd_writel(hba, 1 << free_slot, REG_UTP_TASK_REQ_DOOR_BELL);
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index c6dc107..149d74e 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -257,6 +257,9 @@ struct ufs_pwr_mode_info {
-  * @pwr_change_notify: called before and after a power mode change
-  *			is carried out to allow vendor spesific capabilities
-  *			to be set.
-+ * @specify_nexus_t_xfer_req:
-+ * @specify_nexus_t_tm_req: called before command is issued to allow vendor
-+ *			specific handling to be set for nexus type.
-  * @suspend: called during host controller PM callback
-  * @resume: called during host controller PM callback
-  */
-@@ -273,6 +276,9 @@ struct ufs_hba_variant_ops {
- 	int	(*pwr_change_notify)(struct ufs_hba *,
- 					bool, struct ufs_pa_layer_attr *,
- 					struct ufs_pa_layer_attr *);
-+	void	(*specify_nexus_t_xfer_req)(struct ufs_hba *,
-+					    int, struct scsi_cmnd *);
-+	void	(*specify_nexus_t_tm_req)(struct ufs_hba *, int, u8);
- 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
- 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
- };
--- 
-1.7.10.4
+   - compatible: must contain one or more of the following:
+-    - "renesas,cmt-32-r8a7740" for the r8a7740 32-bit CMT
+-		(CMT0)
+-    - "renesas,cmt-32-sh73a0" for the sh73a0 32-bit CMT
+-		(CMT0)
+-    - "renesas,cmt-32" for all 32-bit CMT without fast clock support
+-		(CMT0 on sh73a0 and r8a7740)
+-		This is a fallback for the above renesas,cmt-32-* entries.
+-
+-    - "renesas,cmt-32-fast-r8a7740" for the r8a7740 32-bit CMT with fast
+-		clock support (CMT[234])
+-    - "renesas,cmt-32-fast-sh73a0" for the sh73A0 32-bit CMT with fast
+-		clock support (CMT[234])
+-    - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
+-		(CMT[234] on sh73a0 and r8a7740)
+-		This is a fallback for the above renesas,cmt-32-fast-* entries.
+-
+     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
+ 		(CMT1)
+     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
