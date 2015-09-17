@@ -1,19 +1,19 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 09/11] devicetree: bindings: Remove unused 32-bit CMT bindings
-Date: Thu, 17 Sep 2015 11:59:21 +0200
-Message-ID: <CAMuHMdV-42YpFLgLCxLnuNwussxfWpk3yEdS0R-bGpeF2QMyXw@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] clocksource: sh_cmt: Remove unused 32-bit CMT bindings
+Date: Thu, 17 Sep 2015 11:59:38 +0200
+Message-ID: <CAMuHMdWqk+dYsOPQTGy+WcE8cVSoUD_0dv8YO7m3nEoXLc-EMQ@mail.gmail.com>
 References: <20150917095325.5369.73893.sendpatchset@little-apple>
-	<20150917095452.5369.320.sendpatchset@little-apple>
+	<20150917095501.5369.97124.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150917095452.5369.320.sendpatchset@little-apple>
+In-Reply-To: <20150917095501.5369.97124.sendpatchset@little-apple>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Magnus Damm <magnus.damm@gmail.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 11:54 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+On Thu, Sep 17, 2015 at 11:55 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
 > From: Magnus Damm <damm+renesas@opensource.se>
 >
 > Remove the 32-bit CMT compat strings to reduce maintenance burden.
