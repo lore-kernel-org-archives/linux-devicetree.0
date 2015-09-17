@@ -1,169 +1,197 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH RFC 5/8] drm: hisilicon: fill interface function of
- encoder\connector part
-Date: Thu, 17 Sep 2015 17:09:37 +0530
-Message-ID: <55FAA679.2030902@codeaurora.org>
-References: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <1442309834-21420-6-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
+Date: Thu, 17 Sep 2015 13:44:42 +0200
+Message-ID: <CAPDyKFqgHwb7a+wbO_mB6NLGrYtQvTqeeHWhfaz_LX_DoMdmpA@mail.gmail.com>
+References: <1442212161-23234-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1442309834-21420-6-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xinwei Kong <kong.kongxinwei@hisilicon.com>, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xinliang.liu@linaro.org, andy.green@linaro.org, qijiwen@hisilicon.com, gongyu@hisilicon.com, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, yinshengbao@hisilicon.com, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, yimin@huawei.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, james.yanglong@hisilicon.com, fangdechun@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442212161-23234-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 14 September 2015 at 08:29, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch adds Generic PHY access for sdhci-of-arasan. Driver
+> can get PHY handler from dt-binding, and power-on/init the PHY.
+> Also we add pm ops for PHY here if CONFIG_PM_SLEEP is enabled.
+> Currently, it's just mandatory for arasan,sdhci-5.1.
 
+I am trying to understand how a PHY can be used together with a
+MMC/SD/SDIO controller. Normally the card connector doesn't hold any
+intelligence, so I wonder if PHY is correctly used here.
 
-On 9/15/2015 3:07 PM, Xinwei Kong wrote:
-> This patch enables the adv7533 module which is connecting hisilicon SOC
-> by dsi module. while using DSI module and adv7533 module to implement the
-> encoder/connector interface of DRM\KMS.
+Could you try to explain, HW-wise, what role the PHY has for you?
+
+Kind regards
+Uffe
+
 >
-> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
-> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Signed-off-by: Andy Green <andy.green@linaro.org>
-> Signed-off-by: Jiwen Qi <qijiwen@hisilicon.com>
-> Signed-off-by: Yu Gong <gongyu@hisilicon.com>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> Serise-changes: 2
+> - Keep phy as a mandatory requirement for arasan,sdhci-5.1
+>
 > ---
->   drivers/gpu/drm/hisilicon/Kconfig              |  10 +
->   drivers/gpu/drm/hisilicon/hisi_drm_connector.c |  34 ++
->   drivers/gpu/drm/hisilicon/hisi_drm_connector.h |   8 +
->   drivers/gpu/drm/hisilicon/hisi_drm_dsi.c       | 670 +++++++++++++++++++++++++
->   drivers/gpu/drm/hisilicon/hisi_drm_encoder.c   |  52 ++
->   drivers/gpu/drm/hisilicon/hisi_drm_encoder.h   |  19 +
->   drivers/gpu/drm/hisilicon/hisi_dsi_reg.h       |  91 ++++
->   7 files changed, 884 insertions(+)
->   create mode 100644 drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
 >
-
-<snip>
-
-> +struct hisi_connector_funcs hisi_dsi_connector_ops = {
-> +	.get_modes = dsi_connector_get_modes,
-> +};
-> +
-> +struct hisi_encoder_funcs hisi_dsi_encoder_ops = {
-> +	.mode_set = dsi_encoder_mode_set,
-> +	.enable = dsi_encoder_enable,
-> +	.disable = dsi_encoder_disable,
-> +};
-> +
->   static int hisi_dsi_bind(struct device *dev, struct device *master,
->   			 void *data)
->   {
-> @@ -52,8 +682,23 @@ static int hisi_dsi_bind(struct device *dev, struct device *master,
+> Changes in v2: None
 >
->   	hisi_drm_encoder_init(ctx->dev, &ctx->dsi.hisi_encoder.base.base);
+>  drivers/mmc/host/sdhci-of-arasan.c | 97 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
 >
-> +#ifdef CONFIG_DRM_HISI_HAS_SLAVE_ENCODER
-> +	ret = ctx->drm_i2c_driver->encoder_init(ctx->client, ctx->dev,
-> +						&ctx->dsi.hisi_encoder.base);
-> +	if (ret) {
-> +		DRM_ERROR("fail to init drm i2c encoder\n");
-> +		return ret;
-> +	}
-> +
-> +	if (!ctx->dsi.hisi_encoder.base.slave_funcs) {
-> +		DRM_ERROR("failed check encoder function\n");
-> +		return -ENODEV;
-> +	}
-> +#endif
-
-A slave encoder isn't supposed to be used this way. A slave encoder is
-supposed to register itself to drm as an encoder object. A slave
-encoder connects directly to a crtc, and operate like a normal encoder.
-In other words, a slave encoder isn't something that attaches to a
-'master' encoder as the driver does here. 'Slave encoder' here means
-that the encoder is a part of a different bus (like i2c etc).
-
-Currently, the driver is directly calling slave encoder ops in 
-hisi_drm_encoder.c.
-
-
-> +
->   	hisi_drm_connector_init(ctx->dev, &ctx->dsi.hisi_encoder.base.base,
->   				&ctx->dsi.hisi_connector.connector);
-> +
->   	return ret;
->   }
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 75379cb..2c13ef8 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -21,6 +21,7 @@
 >
-> @@ -102,6 +747,27 @@ static int hisi_dsi_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	}
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+>  #include "sdhci-pltfm.h"
 >
-> +#ifdef CONFIG_DRM_HISI_HAS_SLAVE_ENCODER
-> +	ctx->client = of_find_i2c_device_by_node(slave_node);
-> +	of_node_put(slave_node);
-> +	if (!ctx->client) {
-> +		DRM_ERROR("failed to find slave encoder i2c client\n");
-> +		return -EPROBE_DEFER;
-> +	}
-> +
-> +	if (!ctx->client->dev.driver) {
-> +		DRM_ERROR("%s: NULL client driver\n", __func__);
-> +		return -EPROBE_DEFER;
-> +	}
-> +
-> +	ctx->drm_i2c_driver = to_drm_i2c_encoder_driver(
-> +		to_i2c_driver(ctx->client->dev.driver));
-> +	if (IS_ERR(ctx->drm_i2c_driver)) {
-> +		DRM_ERROR("failed to initialize encoder driver");
-> +		return -EPROBE_DEFER;
-> +	}
-> +#endif
-> +
->   	dsi = &ctx->dsi;
->   	dsi->ctx = ctx;
->   	dsi->lanes = 3;
-> @@ -110,6 +776,10 @@ static int hisi_dsi_probe(struct platform_device *pdev)
->   	dsi->format = MIPI_DSI_FMT_RGB888;
->   	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+>  #define SDHCI_ARASAN_CLK_CTRL_OFFSET   0x2c
+> @@ -35,6 +36,7 @@
+>   */
+>  struct sdhci_arasan_data {
+>         struct clk      *clk_ahb;
+> +       struct phy      *phy;
+>  };
 >
-> +	dsi->hisi_encoder.ops = &hisi_dsi_encoder_ops;
-> +	dsi->hisi_connector.encoder = &dsi->hisi_encoder.base.base;
-> +	dsi->hisi_connector.ops = &hisi_dsi_connector_ops;
-> +
->   	return component_add(&pdev->dev, &hisi_dsi_ops);
->   }
+>  static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_host *host)
+> @@ -70,6 +72,62 @@ static struct sdhci_pltfm_data sdhci_arasan_pdata = {
 >
-> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c b/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c
-> index 89fc73d..acd73d8 100644
-> --- a/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c
-> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c
-> @@ -15,18 +15,49 @@
->
->   #include "hisi_drm_encoder.h"
->
-> +#define to_hisi_encoder(encoder) \
-> +	container_of(encoder, struct hisi_encoder, base.base)
+>  #ifdef CONFIG_PM_SLEEP
+>  /**
+> +  * sdhci_arasan_suspend_phy - Suspend phy method for the driver
+> +  * @phy:        Handler of phy structure
+> +  * Returns 0 on success and error value on error
+> +  *
+> +  * Put the phy in a deactive state.
+> +  */
+> +static int sdhci_arasan_suspend_phy(struct phy *phy)
+> +{
+> +       int ret;
 > +
->   void hisi_drm_encoder_disable(struct drm_encoder *encoder)
->   {
-> +	struct hisi_encoder *hencoder = to_hisi_encoder(encoder);
-> +	struct hisi_encoder_funcs *ops = hencoder->ops;
-> +	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
+> +       ret = phy_exit(phy);
+> +       if (ret < 0)
+> +               goto err_phy_exit;
 > +
-> +	if (ops->enable)
-> +		ops->disable(encoder);
+> +       ret = phy_power_off(phy);
+> +       if (ret < 0)
+> +               goto err_phy_pwr_off;
 > +
-> +	if (sfuncs && sfuncs->dpms)
-> +		sfuncs->dpms(encoder, DRM_MODE_DPMS_OFF);
->   }
+> +       return 0;
+> +
+> +err_phy_pwr_off:
+> +       phy_power_on(phy);
+> +err_phy_exit:
+> +       phy_init(phy);
+> +       return ret;
+> +}
+> +
+> +/**
+> +  * sdhci_arasan_resume_phy - Resume phy method for the driver
+> +  * @phy:        Handler of phy structure
+> +  * Returns 0 on success and error value on error
+> +  *
+> +  * Put the phy in a active state.
+> +  */
+> +static int sdhci_arasan_resume_phy(struct phy *phy)
+> +{
+> +       int ret;
+> +
+> +       ret = phy_power_on(phy);
+> +       if (ret < 0)
+> +               goto err_phy_pwr_on;
+> +
+> +       ret = phy_init(phy);
+> +       if (ret < 0)
+> +               goto err_phy_init;
+> +
+> +       return 0;
+> +
+> +err_phy_init:
+> +       phy_exit(phy);
+> +err_phy_pwr_on:
+> +       phy_power_off(phy);
+> +       return ret;
+> +}
+> +
+> +/**
+>   * sdhci_arasan_suspend - Suspend method for the driver
+>   * @dev:       Address of the device structure
+>   * Returns 0 on success and error value on error
+> @@ -91,6 +149,12 @@ static int sdhci_arasan_suspend(struct device *dev)
+>         clk_disable(pltfm_host->clk);
+>         clk_disable(sdhci_arasan->clk_ahb);
 >
-
-The encoder should represent only the DSI encoder hardware here. It
-shouldn't be calling slave encoder ops.
-
-What you want is to have the encoder connect to a bridge. Something
-like:
-
-crtc(ade)->encoder(dsi)->bridge(adv7533)->connector
-
-Archit
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +       if (sdhci_arasan->phy) {
+> +               ret = sdhci_arasan_suspend_phy(sdhci_arasan->phy);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> @@ -122,6 +186,12 @@ static int sdhci_arasan_resume(struct device *dev)
+>                 return ret;
+>         }
+>
+> +       if (sdhci_arasan->phy) {
+> +               ret = sdhci_arasan_resume_phy(sdhci_arasan->phy);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+> +
+>         return sdhci_resume_host(host);
+>  }
+>  #endif /* ! CONFIG_PM_SLEEP */
+> @@ -166,6 +236,33 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>                 goto clk_dis_ahb;
+>         }
+>
+> +       sdhci_arasan->phy = NULL;
+> +       if (of_device_is_compatible(pdev->dev.of_node,
+> +                                   "arasan,sdhci-5.1")) {
+> +               sdhci_arasan->phy = devm_phy_get(&pdev->dev,
+> +                                                "phy_arasan");
+> +               if (IS_ERR(sdhci_arasan->phy)) {
+> +                       ret = -ENODEV;
+> +                       dev_err(&pdev->dev, "No phy for arasan,sdhci-5.1.\n");
+> +                       goto clk_dis_ahb;
+> +               }
+> +
+> +               ret = phy_power_on(sdhci_arasan->phy);
+> +               if (ret < 0) {
+> +                       dev_err(&pdev->dev, "phy_power_on err.\n");
+> +                       phy_power_off(sdhci_arasan->phy);
+> +                       goto clk_dis_ahb;
+> +               }
+> +
+> +               ret = phy_init(sdhci_arasan->phy);
+> +               if (ret < 0) {
+> +                       dev_err(&pdev->dev, "phy_init err.\n");
+> +                       phy_exit(sdhci_arasan->phy);
+> +                       phy_power_off(sdhci_arasan->phy);
+> +                       goto clk_dis_ahb;
+> +               }
+> +       }
+> +
+>         host = sdhci_pltfm_init(pdev, &sdhci_arasan_pdata, 0);
+>         if (IS_ERR(host)) {
+>                 ret = PTR_ERR(host);
+> --
+> 2.3.7
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
