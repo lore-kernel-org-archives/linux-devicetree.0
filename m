@@ -1,85 +1,103 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/irq: fix guards of of_irq_find_parent and of_msi_configure
-Date: Thu, 17 Sep 2015 14:48:34 -0500
-Message-ID: <CAL_JsqJWiUnAcLDtTmy4rq+fWJ_bfWOXV0k5Fe1tDn1b15HCXA@mail.gmail.com>
-References: <1441629437-23769-1-git-send-email-jogo@openwrt.org> <1441629437-23769-3-git-send-email-jogo@openwrt.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
+ ..." messages.
+Date: Thu, 17 Sep 2015 14:53:44 -0500
+Message-ID: <55FB1A48.6000205@kernel.org>
+References: <1441839479-19298-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441629437-23769-3-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441839479-19298-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 7, 2015 at 7:37 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> Only irq_of_parse_and_map is implemented differently on SPARC, so only
-> that one should be protected by the CONFIG_OF guard.
+On 09/09/2015 05:57 PM, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> It is perfectly legitimate for a PCI device to have an
+> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
+> use interrupts, or on PCIe devices, where only MSI/MSI-X are
+> supported.
+> 
+> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
+> messages by moving the printing code into of_irq_parse_pci(), and only
+> emitting the message for cases where PCI_INTERRUPT_PIN == 0 is not the
+> cause for an early exit.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-of_irq_find_parent is only used by of_irq.c, so just make it static.
+Applied, thanks.
 
 Rob
 
->
-> Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 > ---
->  include/linux/of_irq.h | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
->
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 7b81771..d6a6d2e 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -46,6 +46,8 @@ extern int of_irq_get(struct device_node *dev, int index);
->  extern int of_irq_get_byname(struct device_node *dev, const char *name);
->  extern int of_irq_to_resource_table(struct device_node *dev,
->                 struct resource *res, int nr_irqs);
-> +extern struct device_node *of_irq_find_parent(struct device_node *child);
-> +extern void of_msi_configure(struct device *dev, struct device_node *np);
->  #else
->  static inline int of_irq_count(struct device_node *dev)
->  {
-> @@ -64,6 +66,13 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
->  {
->         return 0;
+> 
+> Changes in v3: Also print the message for failures in
+> of_irq_parse_raw() (also suggested by Frank Rowand).
+> 
+> Changes in v2: Move the print function in to of_irq_parse_pci() at a
+> common error exit point (as suggested by Frank Rowand).
+> 
+> 
+>  drivers/of/of_pci_irq.c | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+> index 1710d9d..2306313 100644
+> --- a/drivers/of/of_pci_irq.c
+> +++ b/drivers/of/of_pci_irq.c
+> @@ -38,8 +38,8 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+>  	 */
+>  	rc = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
+>  	if (rc != 0)
+> -		return rc;
+> -	/* No pin, exit */
+> +		goto err;
+> +	/* No pin, exit with no error message. */
+>  	if (pin == 0)
+>  		return -ENODEV;
+>  
+> @@ -53,8 +53,10 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+>  			ppnode = pci_bus_to_OF_node(pdev->bus);
+>  
+>  			/* No node for host bridge ? give up */
+> -			if (ppnode == NULL)
+> -				return -EINVAL;
+> +			if (ppnode == NULL) {
+> +				rc = -EINVAL;
+> +				goto err;
+> +			}
+>  		} else {
+>  			/* We found a P2P bridge, check if it has a node */
+>  			ppnode = pci_device_to_OF_node(ppdev);
+> @@ -86,7 +88,13 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+>  	out_irq->args[0] = pin;
+>  	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
+>  	laddr[1] = laddr[2] = cpu_to_be32(0);
+> -	return of_irq_parse_raw(laddr, out_irq);
+> +	rc = of_irq_parse_raw(laddr, out_irq);
+> +	if (rc)
+> +		goto err;
+> +	return 0;
+> +err:
+> +	dev_err(&pdev->dev, "of_irq_parse_pci() failed with rc=%d\n", rc);
+> +	return rc;
 >  }
-> +static inline void *of_irq_find_parent(struct device_node *child)
-> +{
-> +       return NULL;
-> +}
-> +static inline void of_msi_configure(struct device *dev, struct device_node *np)
-> +{
-> +}
->  #endif
->
->  #if defined(CONFIG_OF)
-> @@ -73,7 +82,6 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
->   * so declare it here regardless of the CONFIG_OF_IRQ setting.
->   */
->  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-> -extern struct device_node *of_irq_find_parent(struct device_node *child);
->
->  #else /* !CONFIG_OF */
->  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-> @@ -81,15 +89,6 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->  {
->         return 0;
+>  EXPORT_SYMBOL_GPL(of_irq_parse_pci);
+>  
+> @@ -105,10 +113,8 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+>  	int ret;
+>  
+>  	ret = of_irq_parse_pci(dev, &oirq);
+> -	if (ret) {
+> -		dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
+> +	if (ret)
+>  		return 0; /* Proper return code 0 == NO_IRQ */
+> -	}
+>  
+>  	return irq_create_of_mapping(&oirq);
 >  }
-> -
-> -static inline void *of_irq_find_parent(struct device_node *child)
-> -{
-> -       return NULL;
-> -}
-> -
-> -static inline void of_msi_configure(struct device *dev, struct device_node *np)
-> -{
-> -}
->  #endif /* !CONFIG_OF */
->
->  #endif /* __OF_IRQ_H */
-> --
-> 2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
