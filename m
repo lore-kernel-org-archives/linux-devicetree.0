@@ -1,247 +1,35 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] clk: rockchip: add dt-binding header for rk3036
-Date: Thu, 17 Sep 2015 11:25:36 +0200
-Message-ID: <4652891.YJvoSYeOLF@diego>
-References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com> <1442478540-15068-3-git-send-email-zhengxing@rock-chips.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [RESEND PATCH 0/2] ST PLL fixes for 4.3-rc2
+Date: Thu, 17 Sep 2015 11:47:00 +0200
+Message-ID: <55FA8C14.3020000@st.com>
+References: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
+ <20150916223051.GO23081@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442478540-15068-3-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20150916223051.GO23081@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 17. September 2015, 16:28:53 schrieb Xing Zheng:
-> Add the dt-bindings header for the rk3036, that gets shared between
-> the clock controller and the clock references in the dts.
-> 
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
-> Changes in v2: None
-> 
->  include/dt-bindings/clock/rk3036-cru.h |  198
-> ++++++++++++++++++++++++++++++++ 1 file changed, 198 insertions(+)
->  create mode 100644 include/dt-bindings/clock/rk3036-cru.h
-> 
-> diff --git a/include/dt-bindings/clock/rk3036-cru.h
-> b/include/dt-bindings/clock/rk3036-cru.h new file mode 100644
-> index 0000000..b0033ef
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/rk3036-cru.h
-> @@ -0,0 +1,198 @@
-> +/*
-> + * Copyright (c) 2014 MundoReader S.L.
-> + * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-you can probably drop that copyright line ... I didn't do anything here ;-)
-
-> + *
-> + * Copyright (c) 2015 Rockchip Electronics Co. Ltd.
-> + * Author: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_ROCKCHIP_RK3036_H
-> +#define _DT_BINDINGS_CLK_ROCKCHIP_RK3036_H
-> +
-> +/* core clocks */
-> +#define PLL_APLL		1
-> +#define PLL_DPLL		2
-> +#define PLL_GPLL		3
-> +#define ARMCLK			4
-> +
-> +/* sclk gates (special clocks) */
-
-you have a lot of gaps in the numbering ... intentional?
 
 
-otherwise
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On 09/17/2015 12:30 AM, Stephen Boyd wrote:
+> On 09/16, Gabriel Fernandez wrote:
+>> This patch set fixes a kernel crash :
+> [..]
+>> This kernel crash is due to a broken compatibility with this commit:
+>> commit 5eb26c605909 ("ARM: STi: DT: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x")
+> It isn't clear who's supposed to apply this because the To: list
+> is huge. Did you want to take this through arm-soc? If so, feel
+> free to take my acked-by on the second patch. The first patch
+> doesn't even apply to clk tree because the patch introducing the
+> typo didn't go through our tree.
+Indeed Stephen, I see it went through my tree (STi DT).
+So the first patch should be taken through arm-soc.
+The second patch, should be taken through yours I think.
 
-> +#define SCLK_GPU		64
-> +#define SCLK_SPI		65
-> +#define SCLK_SDMMC		68
-> +#define SCLK_SDIO		69
-> +#define SCLK_EMMC		71
-> +#define SCLK_NANDC		76
-> +#define SCLK_UART0		77
-> +#define SCLK_UART1		78
-> +#define SCLK_UART2		79
-> +#define SCLK_I2S		82
-> +#define SCLK_SPDIF		83
-> +#define SCLK_TIMER0		85
-> +#define SCLK_TIMER1		86
-> +#define SCLK_TIMER2		87
-> +#define SCLK_TIMER3		88
-> +#define SCLK_OTGPHY0		93
-> +#define SCLK_OTGPHY1		94
-> +#define SCLK_LCDC		100
-> +#define SCLK_HDMI		109
-> +#define SCLK_HEVC		111
-> +#define SCLK_I2S_OUT		113
-> +#define SCLK_SDMMC_DRV		114
-> +#define SCLK_SDIO_DRV		115
-> +#define SCLK_EMMC_DRV		117
-> +#define SCLK_SDMMC_SAMPLE	118
-> +#define SCLK_SDIO_SAMPLE	119
-> +#define SCLK_EMMC_SAMPLE	121
-> +#define SCLK_PVTM_CORE          123
-> +#define SCLK_PVTM_GPU           124
-> +#define SCLK_PVTM_VIDEO         125
-> +#define SCLK_MAC		151
-> +#define SCLK_MACREF		152
-> +#define SCLK_SFC		160
-> +
-> +#define DCLK_LCDC		190
-> +
-> +/* aclk gates */
-> +#define ACLK_DMAC2		194
-> +#define ACLK_LCDC		197
-> +#define ACLK_VIO		203
-> +#define ACLK_VCODEC		208
-> +#define ACLK_CPU		209
-> +#define ACLK_PERI		210
-> +
-> +/* pclk gates */
-> +#define PCLK_GPIO0		320
-> +#define PCLK_GPIO1		321
-> +#define PCLK_GPIO2		322
-> +#define PCLK_GRF		329
-> +#define PCLK_I2C0		332
-> +#define PCLK_I2C1		333
-> +#define PCLK_I2C2		334
-> +#define PCLK_SPI		338
-> +#define PCLK_UART0		341
-> +#define PCLK_UART1		342
-> +#define PCLK_UART2		343
-> +#define PCLK_PWM		350
-> +#define PCLK_TIMER		353
-> +#define PCLK_HDMI		360
-> +#define PCLK_CPU		362
-> +#define PCLK_PERI		363
-> +#define PCLK_DDRUPCTL		364
-> +#define PCLK_WDT		368
-> +
-> +/* hclk gates */
-> +#define HCLK_OTG0		449
-> +#define HCLK_OTG1		450
-> +#define HCLK_NANDC		453
-> +#define HCLK_SDMMC		456
-> +#define HCLK_SDIO		457
-> +#define HCLK_EMMC		459
-> +#define HCLK_I2S		462
-> +#define HCLK_LCDC		465
-> +#define HCLK_ROM		467
-> +#define HCLK_VIO_BUS		472
-> +#define HCLK_VCODEC		476
-> +#define HCLK_CPU		477
-> +#define HCLK_PERI		478
-> +
-> +#define CLK_NR_CLKS		(HCLK_PERI + 1)
-> +
-> +/* soft-reset indices */
-> +#define SRST_CORE0		0
-> +#define SRST_CORE1		1
-> +#define SRST_CORE0_DBG		4
-> +#define SRST_CORE1_DBG		5
-> +#define SRST_CORE0_POR		8
-> +#define SRST_CORE1_POR		9
-> +#define SRST_L2C		12
-> +#define SRST_TOPDBG		13
-> +#define SRST_STRC_SYS_A		14
-> +#define SRST_PD_CORE_NIU	15
-> +
-> +#define SRST_TIMER2		16
-> +#define SRST_CPUSYS_H		17
-> +#define SRST_AHB2APB_H		19
-> +#define SRST_TIMER3		20
-> +#define SRST_INTMEM		21
-> +#define SRST_ROM		22
-> +#define SRST_PERI_NIU		23
-> +#define SRST_I2S		24
-> +#define SRST_DDR_PLL		25
-> +#define SRST_GPU_DLL		26
-> +#define SRST_TIMER0		27
-> +#define SRST_TIMER1		28
-> +#define SRST_CORE_DLL		29
-> +#define SRST_EFUSE_P		30
-> +#define SRST_ACODEC_P		31
-> +
-> +#define SRST_GPIO0		32
-> +#define SRST_GPIO1		33
-> +#define SRST_GPIO2		34
-> +#define SRST_UART0		39
-> +#define SRST_UART1		40
-> +#define SRST_UART2		41
-> +#define SRST_I2C0		43
-> +#define SRST_I2C1		44
-> +#define SRST_I2C2		45
-> +#define SRST_SFC		47
-> +
-> +#define SRST_PWM0		48
-> +#define SRST_DAP		51
-> +#define SRST_DAP_SYS		52
-> +#define SRST_GRF		55
-> +#define SRST_PERIPHSYS_A	57
-> +#define SRST_PERIPHSYS_H	58
-> +#define SRST_PERIPHSYS_P	59
-> +#define SRST_CPU_PERI		61
-> +#define SRST_EMEM_PERI		62
-> +#define SRST_USB_PERI		63
-> +
-> +#define SRST_DMA2		64
-> +#define SRST_MAC		66
-> +#define SRST_NANDC		68
-> +#define SRST_USBOTG0		69
-> +#define SRST_OTGC0		71
-> +#define SRST_USBOTG1		72
-> +#define SRST_OTGC1		74
-> +#define SRST_DDRMSCH		79
-> +
-> +#define SRST_MMC0		81
-> +#define SRST_SDIO		82
-> +#define SRST_EMMC		83
-> +#define SRST_SPI0		84
-> +#define SRST_WDT		86
-> +#define SRST_DDRPHY		88
-> +#define SRST_DDRPHY_P		89
-> +#define SRST_DDRCTRL		90
-> +#define SRST_DDRCTRL_P		91
-> +
-> +#define SRST_HDMI_P		96
-> +#define SRST_VIO_BUS_H		99
-> +#define SRST_UTMI0		103
-> +#define SRST_UTMI1		104
-> +#define SRST_USBPOR		105
-> +
-> +#define SRST_VCODEC_A		112
-> +#define SRST_VCODEC_H		113
-> +#define SRST_VIO1_A		114
-> +#define SRST_HEVC		115
-> +#define SRST_VCODEC_NIU_A	116
-> +#define SRST_LCDC1_A		117
-> +#define SRST_LCDC1_H		118
-> +#define SRST_LCDC1_D		119
-> +#define SRST_GPU		120
-> +#define SRST_GPU_NIU_A		122
-> +
-> +#define SRST_DBG_P		131
-> +
-> +#endif
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Maxime
