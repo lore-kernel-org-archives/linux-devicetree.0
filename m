@@ -1,49 +1,46 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/3] PCI: Add support for Cavium ThunderX RC and on-SoC devices.
-Date: Thu, 17 Sep 2015 15:41:31 -0700
-Message-ID: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH 1/3] PCI: Allow quirks to override SRIOV BARs.
+Date: Thu, 17 Sep 2015 15:41:32 -0700
+Message-ID: <1442529694-1792-2-git-send-email-ddaney.cavm@gmail.com>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: David Daney <david.daney@cavium.com>
 
-The Cavium ThunderX arm64 based SoC needs a little bit of special
-handling for both its PCIe Root Complexes as well as on-SoC devices
-(which all appear as PCIe devices).
+Devices with fixed BARs can install BAR resources with
+IORESOURCE_PCI_FIXED from the header fixup.  Allow this to work with
+the SRIOV BARs as well by testing if the BAR resource has already been
+set before attempting to read it from the config space.
 
-1/3 - Small change to allow SRIOV BARs to be given fixed addresses in
-      the header fixup.
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ drivers/pci/iov.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-2/3 - Add quirks to support fixed BAR addresses for all on-SoC devices,
-      including SRIOV BARs in the NIC.
-
-3/3 - Add config spaces accessors to pci-host-generic driver for ThunderX RC.
-
-This patch set depends on:
-
-https://lkml.org/lkml/2015/9/17/799
-
-David Daney (3):
-  PCI: Allow quirks to override SRIOV BARs.
-  PCI: Add quirks for devices found on Cavium ThunderX SoCs.
-  PCI: generic: Add support for Cavium ThunderX PCIe root complexes.
-
- .../devicetree/bindings/pci/host-generic-pci.txt   |  8 +-
- drivers/pci/host/Kconfig                           |  6 ++
- drivers/pci/host/Makefile                          |  1 +
- drivers/pci/host/pci-host-generic.c                | 29 +++++++
- drivers/pci/host/quirks-thunder.c                  | 95 ++++++++++++++++++++++
- drivers/pci/iov.c                                  |  9 +-
- 6 files changed, 143 insertions(+), 5 deletions(-)
- create mode 100644 drivers/pci/host/quirks-thunder.c
-
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index ee0ebff..f8a6e1e 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -436,8 +436,13 @@ found:
+ 	nres = 0;
+ 	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
+ 		res = &dev->resource[i + PCI_IOV_RESOURCES];
+-		bar64 = __pci_read_base(dev, pci_bar_unknown, res,
+-					pos + PCI_SRIOV_BAR + i * 4);
++		if (res->flags)
++			/* Already populated by quirks, just set bar64. */
++			bar64 = (res->flags & IORESOURCE_MEM_64) ? 1 : 0;
++		else
++			bar64 = __pci_read_base(dev, pci_bar_unknown, res,
++						pos + PCI_SRIOV_BAR + i * 4);
++
+ 		if (!res->flags)
+ 			continue;
+ 		if (resource_size(res) & (PAGE_SIZE - 1)) {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
