@@ -1,128 +1,179 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v2 3/5] PCI: generic: Quit clobbering our pci_ops.
-Date: Thu, 17 Sep 2015 15:02:10 -0700
-Message-ID: <1442527332-1174-4-git-send-email-ddaney.cavm@gmail.com>
-References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
-Cc: David Daney <david.daney@cavium.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2 2/2] input: gpio_keys_polled: Add support for abs/rel axis
+Date: Thu, 17 Sep 2015 18:14:40 -0400
+Message-ID: <1442528080-28712-2-git-send-email-hdegoede@redhat.com>
+References: <1442528080-28712-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1442528080-28712-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+Add support for EV_ABS / EV_REL events to the gpio-keys-polled driver.
 
-The pci-host-generic driver keeps a global struct pci_ops which it
-then patches with the .map_bus method appropriate for the bus device.
-A problem arises when the driver is used for two different types of
-bus devices, the .map_bus method for the last device probed clobbers
-the method for all previous devices.  The result, only the last bus
-device probed has the proper .map_bus, and the others fail.
-
-Move the struct pci_ops into the bus specific structure, and
-initialize it when the bus device is probed.  Keep a copy of the
-gen_pci_cfg_bus_ops structure, instead of a pointer to a global copy,
-to future proof against the addition of bus specific elements to
-struct pci_ops.
-
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: David Daney <david.daney@cavium.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-No change from v1.
+Changes in v2:
+-Fix commit message to actually describe what the patch does
+ (fix patch squashing fail)
+---
+ drivers/input/keyboard/gpio_keys_polled.c | 88 +++++++++++++++++++++++++++----
+ 1 file changed, 79 insertions(+), 9 deletions(-)
 
- drivers/pci/host/pci-host-generic.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-index 9e9f1c3..77cf4bd 100644
---- a/drivers/pci/host/pci-host-generic.c
-+++ b/drivers/pci/host/pci-host-generic.c
-@@ -27,7 +27,7 @@
- 
- struct gen_pci_cfg_bus_ops {
- 	u32 bus_shift;
--	void __iomem *(*map_bus)(struct pci_bus *, unsigned int, int);
-+	struct pci_ops ops;
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index 870cfa6..62bdb1d 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -40,10 +40,36 @@ struct gpio_keys_polled_dev {
+ 	struct input_polled_dev *poll_dev;
+ 	struct device *dev;
+ 	const struct gpio_keys_platform_data *pdata;
++	unsigned long rel_axis_seen[BITS_TO_LONGS(REL_CNT)];
++	unsigned long abs_axis_seen[BITS_TO_LONGS(ABS_CNT)];
+ 	struct gpio_keys_button_data data[0];
  };
  
- struct gen_pci_cfg_windows {
-@@ -35,7 +35,7 @@ struct gen_pci_cfg_windows {
- 	struct resource				*bus_range;
- 	void __iomem				**win;
- 
--	const struct gen_pci_cfg_bus_ops	*ops;
-+	struct gen_pci_cfg_bus_ops		ops;
- };
- 
- /*
-@@ -65,7 +65,11 @@ static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
- 
- static struct gen_pci_cfg_bus_ops gen_pci_cfg_cam_bus_ops = {
- 	.bus_shift	= 16,
--	.map_bus	= gen_pci_map_cfg_bus_cam,
-+	.ops		= {
-+		.map_bus	= gen_pci_map_cfg_bus_cam,
-+		.read		= pci_generic_config_read,
-+		.write		= pci_generic_config_write,
+-static void gpio_keys_polled_check_state(struct input_dev *input,
++static void gpio_keys_button_event(struct input_polled_dev *dev,
++				   struct gpio_keys_button *button,
++				   int state)
++{
++	struct gpio_keys_polled_dev *bdev = dev->private;
++	struct input_dev *input = dev->input;
++	unsigned int type = button->type ?: EV_KEY;
++
++	if (type == EV_REL) {
++		if (state) {
++			input_event(input, type, button->code, button->value);
++			__set_bit(button->code, bdev->rel_axis_seen);
++		}
++	} else if (type == EV_ABS) {
++		if (state) {
++			input_event(input, type, button->code, button->value);
++			__set_bit(button->code, bdev->abs_axis_seen);
++		}
++	} else {
++		input_event(input, type, button->code, state);
++		input_sync(input);
 +	}
- };
++}
++
++static void gpio_keys_polled_check_state(struct input_polled_dev *dev,
+ 					 struct gpio_keys_button *button,
+ 					 struct gpio_keys_button_data *bdata)
+ {
+@@ -54,11 +80,9 @@ static void gpio_keys_polled_check_state(struct input_dev *input,
+ 	else
+ 		state = !!gpiod_get_value(button->gpiod);
  
- static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
-@@ -80,12 +84,11 @@ static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
+-	if (state != bdata->last_state) {
+-		unsigned int type = button->type ?: EV_KEY;
++	gpio_keys_button_event(dev, button, state);
  
- static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
- 	.bus_shift	= 20,
--	.map_bus	= gen_pci_map_cfg_bus_ecam,
--};
--
--static struct pci_ops gen_pci_ops = {
--	.read	= pci_generic_config_read,
--	.write	= pci_generic_config_write,
-+	.ops		= {
-+		.map_bus	= gen_pci_map_cfg_bus_ecam,
-+		.read		= pci_generic_config_read,
-+		.write		= pci_generic_config_write,
+-		input_event(input, type, button->code, state);
+-		input_sync(input);
++	if (state != bdata->last_state) {
+ 		bdata->count = 0;
+ 		bdata->last_state = state;
+ 	}
+@@ -71,15 +95,33 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ 	struct input_dev *input = dev->input;
+ 	int i;
+ 
++	memset(bdev->rel_axis_seen, 0, sizeof(bdev->rel_axis_seen));
++	memset(bdev->abs_axis_seen, 0, sizeof(bdev->abs_axis_seen));
++
+ 	for (i = 0; i < pdata->nbuttons; i++) {
+ 		struct gpio_keys_button_data *bdata = &bdev->data[i];
+ 
+-		if (bdata->count < bdata->threshold)
++		if (bdata->count < bdata->threshold) {
+ 			bdata->count++;
+-		else
+-			gpio_keys_polled_check_state(input, &pdata->buttons[i],
++			gpio_keys_button_event(dev, &pdata->buttons[i],
++					       bdata->last_state);
++		} else {
++			gpio_keys_polled_check_state(dev, &pdata->buttons[i],
+ 						     bdata);
++		}
 +	}
- };
++
++	for_each_set_bit(i, input->relbit, REL_CNT) {
++		if (!test_bit(i, bdev->rel_axis_seen))
++			input_event(input, EV_REL, i, 0);
++	}
++
++	for_each_set_bit(i, input->absbit, ABS_CNT) {
++		if (!test_bit(i, bdev->abs_axis_seen))
++			input_event(input, EV_ABS, i, 0);
+ 	}
++
++	input_sync(input);
+ }
  
- static const struct of_device_id gen_pci_of_match[] = {
-@@ -175,7 +178,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+ static void gpio_keys_polled_open(struct input_polled_dev *dev)
+@@ -152,6 +194,10 @@ static struct gpio_keys_platform_data *gpio_keys_polled_get_devtree_pdata(struct
+ 					     &button->type))
+ 			button->type = EV_KEY;
  
- 	/* Limit the bus-range to fit within reg */
- 	bus_max = pci->cfg.bus_range->start +
--		  (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
-+		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
- 	pci->cfg.bus_range->end = min_t(resource_size_t,
- 					pci->cfg.bus_range->end, bus_max);
++		if (fwnode_property_read_u32(child, "linux,input-value",
++					     (u32 *)&button->value))
++			button->value = 1;
++
+ 		button->wakeup =
+ 			fwnode_property_read_bool(child, "wakeup-source") ||
+ 			/* legacy name */
+@@ -168,6 +214,25 @@ static struct gpio_keys_platform_data *gpio_keys_polled_get_devtree_pdata(struct
+ 	return pdata;
+ }
  
-@@ -193,7 +196,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
- 	bus_range = pci->cfg.bus_range;
- 	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
- 		u32 idx = busn - bus_range->start;
--		u32 sz = 1 << pci->cfg.ops->bus_shift;
-+		u32 sz = 1 << pci->cfg.ops.bus_shift;
++static void gpio_keys_polled_set_abs_params(struct input_dev *input,
++	const struct gpio_keys_platform_data *pdata, unsigned int code)
++{
++	int i, min = 0, max = 0;
++
++	for (i = 0; i < pdata->nbuttons; i++) {
++		struct gpio_keys_button *button = &pdata->buttons[i];
++
++		if (button->type != EV_ABS || button->code != code)
++			continue;
++
++		if (button->value < min)
++			min = button->value;
++		if (button->value > max)
++			max = button->value;
++	}
++	input_set_abs_params(input, code, min, max, 0, 0);
++}
++
+ static const struct of_device_id gpio_keys_polled_of_match[] = {
+ 	{ .compatible = "gpio-keys-polled", },
+ 	{ },
+@@ -274,6 +339,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ 						pdata->poll_interval);
  
- 		pci->cfg.win[idx] = devm_ioremap(dev,
- 						 pci->cfg.res.start + busn * sz,
-@@ -234,8 +237,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 		input_set_capability(input, type, button->code);
++		if (type == EV_ABS)
++			gpio_keys_polled_set_abs_params(input, pdata,
++							button->code);
  	}
  
- 	of_id = of_match_node(gen_pci_of_match, np);
--	pci->cfg.ops = of_id->data;
--	gen_pci_ops.map_bus = pci->cfg.ops->map_bus;
-+	pci->cfg.ops = *(struct gen_pci_cfg_bus_ops *)of_id->data;
- 	pci->host.dev.parent = dev;
- 	INIT_LIST_HEAD(&pci->host.windows);
- 	INIT_LIST_HEAD(&pci->resources);
-@@ -256,7 +258,8 @@ static int gen_pci_probe(struct platform_device *pdev)
- 	if (!pci_has_flag(PCI_PROBE_ONLY))
- 		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+ 	bdev->poll_dev = poll_dev;
+@@ -290,9 +358,11 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
  
--	bus = pci_scan_root_bus(dev, 0, &gen_pci_ops, pci, &pci->resources);
-+	bus = pci_scan_root_bus(dev, 0,
-+				&pci->cfg.ops.ops, pci, &pci->resources);
- 	if (!bus) {
- 		dev_err(dev, "Scanning rootbus failed");
- 		return -ENODEV;
+ 	/* report initial state of the buttons */
+ 	for (i = 0; i < pdata->nbuttons; i++)
+-		gpio_keys_polled_check_state(input, &pdata->buttons[i],
++		gpio_keys_polled_check_state(poll_dev, &pdata->buttons[i],
+ 					     &bdev->data[i]);
+ 
++	input_sync(input);
++
+ 	return 0;
+ }
+ 
 -- 
-1.9.1
+2.4.3
+
