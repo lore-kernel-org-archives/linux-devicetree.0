@@ -1,7 +1,7 @@
 From: Chen Feng <puck.chen@hisilicon.com>
-Subject: [PATCH V4 2/3] reset: hi6220: Reset driver for hisilicon hi6220 SoC
-Date: Thu, 17 Sep 2015 20:00:01 +0800
-Message-ID: <1442491202-211336-2-git-send-email-puck.chen@hisilicon.com>
+Subject: [PATCH V4 3/3] arm64: dts: Add reset dts config for Hisilicon Hi6220 SoC
+Date: Thu, 17 Sep 2015 20:00:02 +0800
+Message-ID: <1442491202-211336-3-git-send-email-puck.chen@hisilicon.com>
 References: <1442491202-211336-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,169 +12,29 @@ To: p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pa
 Cc: bintian.wang@huawei.com, xuyiping@hisilicon.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com, kong.kongxinwei@hisilicon.com, yudongbin@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Add reset driver for hi6220-hikey board,this driver supply deassert
-of IP. on hi6220 SoC.
+Add reset controller for hi6220 hikey-board.
 
 Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
 ---
- drivers/reset/Kconfig                  |   1 +
- drivers/reset/Makefile                 |   1 +
- drivers/reset/hisilicon/Kconfig        |   5 ++
- drivers/reset/hisilicon/Makefile       |   1 +
- drivers/reset/hisilicon/hi6220_reset.c | 107 +++++++++++++++++++++++++++++++++
- 5 files changed, 115 insertions(+)
- create mode 100644 drivers/reset/hisilicon/Kconfig
- create mode 100644 drivers/reset/hisilicon/Makefile
- create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 0615f50..df37212 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
- 	  If unsure, say no.
- 
- source "drivers/reset/sti/Kconfig"
-+source "drivers/reset/hisilicon/Kconfig"
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 157d421..331d7b2 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
- obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
- obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_ARCH_STI) += sti/
-+obj-$(CONFIG_ARCH_HISI) += hisilicon/
-diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
-new file mode 100644
-index 0000000..26bf95a
---- /dev/null
-+++ b/drivers/reset/hisilicon/Kconfig
-@@ -0,0 +1,5 @@
-+config COMMON_RESET_HI6220
-+	tristate "Hi6220 Reset Driver"
-+	depends on (ARCH_HISI && RESET_CONTROLLER)
-+	help
-+	  Build the Hisilicon Hi6220 reset driver.
-diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
-new file mode 100644
-index 0000000..c932f86
---- /dev/null
-+++ b/drivers/reset/hisilicon/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
-diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-new file mode 100644
-index 0000000..eac9531
---- /dev/null
-+++ b/drivers/reset/hisilicon/hi6220_reset.c
-@@ -0,0 +1,107 @@
-+/*
-+ * Hisilicon Hi6220 reset controller driver
-+ *
-+ * Copyright (c) 2015 Hisilicon Limited.
-+ *
-+ * Author: Feng Chen <puck.chen@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 3f03380..3f055e2 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -167,5 +167,12 @@
+ 			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
 +
-+#include <linux/init.h>
-+#include <linux/bitops.h>
-+#include <linux/of.h>
-+#include <linux/reset-controller.h>
-+#include <linux/reset.h>
-+#include <linux/platform_device.h>
++		reset_ctrl: reset_ctrl@f7030000 {
++			compatible = "hisilicon,hi6220-reset-ctl";
++			reg = <0x0 0xf7030000 0x0 0x1000>;
++			#reset-cells = <1>;
++		};
 +
-+#define ASSERT_OFFSET            0x300
-+#define DEASSERT_OFFSET          0x304
-+#define MAX_INDEX                0x509
-+
-+#define to_reset_data(x) container_of(x, struct hi6220_reset_data, rc_dev)
-+
-+struct hi6220_reset_data {
-+	void __iomem			*assert_base;
-+	void __iomem			*deassert_base;
-+	struct reset_controller_dev	rc_dev;
-+};
-+
-+static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
-+			       unsigned long idx)
-+{
-+	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-+
-+	int bank = idx >> 8;
-+	int offset = idx & 0xff;
-+
-+	writel(BIT(offset), data->assert_base + (bank * 0x10));
-+
-+	return 0;
-+}
-+
-+static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
-+				 unsigned long idx)
-+{
-+	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-+
-+	int bank = idx >> 8;
-+	int offset = idx & 0xff;
-+
-+	writel(BIT(offset), data->deassert_base + (bank * 0x10));
-+
-+	return 0;
-+}
-+
-+static struct reset_control_ops hi6220_reset_ops = {
-+	.assert = hi6220_reset_assert,
-+	.deassert = hi6220_reset_deassert,
-+};
-+
-+static int hi6220_reset_probe(struct platform_device *pdev)
-+{
-+	struct hi6220_reset_data *data;
-+	struct resource *res;
-+	void __iomem *src_base;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	src_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(src_base))
-+		return PTR_ERR(src_base);
-+
-+	data->assert_base = src_base + ASSERT_OFFSET;
-+	data->deassert_base = src_base + DEASSERT_OFFSET;
-+	data->rc_dev.nr_resets = MAX_INDEX;
-+	data->rc_dev.ops = &hi6220_reset_ops;
-+	data->rc_dev.of_node = pdev->dev.of_node;
-+
-+	reset_controller_register(&data->rc_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id hi6220_reset_match[] = {
-+	{ .compatible = "hisilicon,hi6220-reset-ctl" },
-+	{ },
-+};
-+
-+static struct platform_driver hi6220_reset_driver = {
-+	.probe = hi6220_reset_probe,
-+	.driver = {
-+		.name = "reset-hi6220",
-+		.of_match_table = hi6220_reset_match,
-+	},
-+};
-+
-+static int __init hi6220_reset_init(void)
-+{
-+	return platform_driver_register(&hi6220_reset_driver);
-+}
-+
-+postcore_initcall(hi6220_reset_init);
+ 	};
+ };
 -- 
 1.9.1
