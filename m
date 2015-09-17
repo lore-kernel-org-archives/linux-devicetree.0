@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 06/11] ARM: shmobile: Update CMT compat string users in DTS
-Date: Thu, 17 Sep 2015 18:54:23 +0900
-Message-ID: <20150917095423.5369.73513.sendpatchset@little-apple>
+Subject: [PATCH v2 07/11] devicetree: bindings: Deprecate property, update example
+Date: Thu, 17 Sep 2015 18:54:33 +0900
+Message-ID: <20150917095433.5369.61472.sendpatchset@little-apple>
 References: <20150917095325.5369.73893.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
@@ -12,10 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Use recently updated r8a73a4 and R-Car Gen2 CMT0 and CMT1 compat strings.
-
-With this change in place we can keep device-specific configuration in
-the driver and the driver can be able to support CMT1 specific features.
+Deprecate "renesas,channels-mask" and update the r8a7790 CMT example.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -27,101 +24,47 @@ Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
  - Added Acked-by and Tested-by from Geert
  - Added Acked-by from Laurent
 
- arch/arm/boot/dts/r8a73a4.dtsi |    2 +-
- arch/arm/boot/dts/r8a7790.dtsi |    4 ++--
- arch/arm/boot/dts/r8a7791.dtsi |    4 ++--
- arch/arm/boot/dts/r8a7793.dtsi |    4 ++--
- arch/arm/boot/dts/r8a7794.dtsi |    4 ++--
- 5 files changed, 9 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   24 ++++++++++-----
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
---- 0001/arch/arm/boot/dts/r8a73a4.dtsi
-+++ work/arch/arm/boot/dts/r8a73a4.dtsi	2015-09-17 17:35:37.230513000 +0900
-@@ -114,7 +114,7 @@
- 	};
+--- 0009/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:39:47.080513000 +0900
+@@ -60,21 +60,31 @@ Required Properties:
+     in clock-names.
+   - clock-names: must contain "fck" for the functional clock.
  
- 	cmt1: timer@e6130000 {
--		compatible = "renesas,cmt-48-r8a73a4", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt1-r8a73a4", "renesas,cmt1-rcar-gen2";
- 		reg = <0 0xe6130000 0 0x1004>;
- 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
---- 0001/arch/arm/boot/dts/r8a7790.dtsi
-+++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-09-17 17:35:37.230513000 +0900
-@@ -219,7 +219,7 @@
- 	};
+-  - renesas,channels-mask: bitmask of the available channels.
++  - renesas,channels-mask: <deprecated>, information kept in device driver.
+ 
+ 
+-Example: R8A7790 (R-Car H2) CMT0 node
+-
+-	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
+-	them channels 0 and 1 in the documentation.
++Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
  
  	cmt0: timer@ffca0000 {
 -		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
 +		compatible = "renesas,cmt0-r8a7790", "renesas,cmt0-rcar-gen2";
  		reg = <0 0xffca0000 0 0x1004>;
  		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
-@@ -233,7 +233,7 @@
- 	};
+ 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
+ 		clock-names = "fck";
++	};
  
- 	cmt1: timer@e6130000 {
--		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
+-		renesas,channels-mask = <0x60>;
++	cmt1: timer@e6130000 {
 +		compatible = "renesas,cmt1-r8a7790", "renesas,cmt1-rcar-gen2";
- 		reg = <0 0xe6130000 0 0x1004>;
- 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
---- 0001/arch/arm/boot/dts/r8a7791.dtsi
-+++ work/arch/arm/boot/dts/r8a7791.dtsi	2015-09-17 17:35:37.230513000 +0900
-@@ -202,7 +202,7 @@
++		reg = <0 0xe6130000 0 0x1004>;
++		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
++		clock-names = "fck";
  	};
- 
- 	cmt0: timer@ffca0000 {
--		compatible = "renesas,cmt-48-r8a7791", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt0-r8a7791", "renesas,cmt0-rcar-gen2";
- 		reg = <0 0xffca0000 0 0x1004>;
- 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
-@@ -216,7 +216,7 @@
- 	};
- 
- 	cmt1: timer@e6130000 {
--		compatible = "renesas,cmt-48-r8a7791", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt1-r8a7791", "renesas,cmt1-rcar-gen2";
- 		reg = <0 0xe6130000 0 0x1004>;
- 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
---- 0001/arch/arm/boot/dts/r8a7793.dtsi
-+++ work/arch/arm/boot/dts/r8a7793.dtsi	2015-09-17 17:35:37.230513000 +0900
-@@ -62,7 +62,7 @@
- 	};
- 
- 	cmt0: timer@ffca0000 {
--		compatible = "renesas,cmt-48-r8a7793", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt0-r8a7793", "renesas,cmt0-rcar-gen2";
- 		reg = <0 0xffca0000 0 0x1004>;
- 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
-@@ -76,7 +76,7 @@
- 	};
- 
- 	cmt1: timer@e6130000 {
--		compatible = "renesas,cmt-48-r8a7793", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt1-r8a7793", "renesas,cmt1-rcar-gen2";
- 		reg = <0 0xe6130000 0 0x1004>;
- 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
---- 0001/arch/arm/boot/dts/r8a7794.dtsi
-+++ work/arch/arm/boot/dts/r8a7794.dtsi	2015-09-17 17:35:37.230513000 +0900
-@@ -154,7 +154,7 @@
- 	};
- 
- 	cmt0: timer@ffca0000 {
--		compatible = "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt0-r8a7794", "renesas,cmt0-rcar-gen2";
- 		reg = <0 0xffca0000 0 0x1004>;
- 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 143 IRQ_TYPE_LEVEL_HIGH>;
-@@ -168,7 +168,7 @@
- 	};
- 
- 	cmt1: timer@e6130000 {
--		compatible = "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt1-r8a7794", "renesas,cmt1-rcar-gen2";
- 		reg = <0 0xe6130000 0 0x1004>;
- 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
