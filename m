@@ -1,127 +1,191 @@
 From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH RESEND] ARM: dts: Move display-timings node from fimd to dp
-Date: Thu, 17 Sep 2015 14:48:39 +0200
-Message-ID: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Subject: [PATCH v5 0/23] On-demand device probing
+Date: Thu, 17 Sep 2015 14:56:54 +0200
+Message-ID: <1442494637-3674-1-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Sean Paul <seanpaul@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+Hello,
 
-This patch moves the display-timings node from fimd to dp to reflect the
-device tree bindings change.
+I have a problem with the panel on my Tegra Chromebook taking longer
+than expected to be ready during boot (St=C3=A9phane Marchesin reported=
+ what
+is basically the same issue in [0]), and have looked into ordered
+probing as a better way of solving this than moving nodes around in the
+DT or playing with initcall levels and linking order.
 
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-[tomeu.vizoso@collabora.com: Rebased]
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+While reading the thread [1] that Alexander Holler started with his
+series to make probing order deterministic, it occurred to me that it
+should be possible to achieve the same by probing devices as they are
+referenced by other devices.
 
----
+This basically reuses the information that is already implicit in the
+probe() implementations, saving us from refactoring existing drivers or
+adding information to DTBs.
 
-Hi,
+During review of v1 of this series Linus Walleij suggested that it
+should be the device driver core to make sure that dependencies are
+ready before probing a device. I gave this idea a try [2] but Mark Brow=
+n
+pointed out to the logic duplication between the resource acquisition
+and dependency discovery code paths (though I think it's fairly minor).
 
-looks like a long time ago the bindings were changed and the DTs for
-these boards weren't updated.
+To address that code duplication I experimented with Arnd's devm_probe
+[3] concept of having drivers declare their dependencies instead of
+acquiring them during probe, and while it worked [4], I don't think we
+end up winning anything when compared to just probing devices on-demand
+from resource getters.
 
-I have retaken Sean's forgotten patch and rebased it, but I have only
-tested on an Arndale that exynos-drm doesn't complain about missing
-timings.
+One remaining objection is to the "sprinkling" of calls to
+of_device_probe() in the resource getters of each subsystem, but I thin=
+k
+it's the right thing to do given that the storage of resources is
+currently subsystem-specific.
+
+We could avoid the above by moving resource storage into the core, but =
+I
+don't think there's a compelling case for that.
+
+I have tested this on boards with Tegra, iMX.6, Exynos, Rockchip and
+OMAP SoCs, and these patches were enough to eliminate all the deferred
+probes (except one in PandaBoard because omap_dma_system doesn't have a
+firmware node as of yet).
+
+Have submitted a branch [5][6][7] with these patches on top of today's
+linux-next (20150917) to kernelci.org and I don't see any issues that
+could be caused by them.
+
+With this series I get the kernel to output to the panel in 0.5s,
+instead of 2.8s.
 
 Regards,
 
 Tomeu
----
- arch/arm/boot/dts/exynos5250-arndale.dts  |  8 ++++----
- arch/arm/boot/dts/exynos5250-smdk5250.dts | 16 ++++++++--------
- arch/arm/boot/dts/exynos5420-smdk5420.dts |  7 ++++---
- 3 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index db3f65f3eb45..c000532c1444 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -129,10 +129,6 @@
- 	samsung,color-depth = <1>;
- 	samsung,link-rate = <0x0a>;
- 	samsung,lane-count = <4>;
--};
--
--&fimd {
--	status = "okay";
- 
- 	display-timings {
- 		native-mode = <&timing0>;
-@@ -152,6 +148,10 @@
- 	};
- };
- 
-+&fimd {
-+	status = "okay";
-+};
-+
- &hdmi {
- 	hpd-gpio = <&gpx3 7 GPIO_ACTIVE_LOW>;
- 	vdd_osc-supply = <&ldo10_reg>;
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index c625e71217aa..0f5dcd418af8 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -89,14 +89,6 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dp_hpd>;
- 	status = "okay";
--};
--
--&ehci {
--	samsung,vbus-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
--};
--
--&fimd {
--	status = "okay";
- 
- 	display-timings {
- 		native-mode = <&timing0>;
-@@ -116,6 +108,14 @@
- 	};
- };
- 
-+&ehci {
-+	samsung,vbus-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&fimd {
-+	status = "okay";
-+};
-+
- &hdmi {
- 	hpd-gpio = <&gpx3 7 GPIO_ACTIVE_HIGH>;
- };
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 98871f972c8a..7520d52f4e22 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -98,10 +98,7 @@
- 	samsung,link-rate = <0x0a>;
- 	samsung,lane-count = <4>;
- 	status = "okay";
--};
- 
--&fimd {
--	status = "okay";
- 	display-timings {
- 		native-mode = <&timing0>;
- 		timing0: timing@0 {
-@@ -118,6 +115,10 @@
- 	};
- };
- 
-+&fimd {
-+	status = "okay";
-+};
-+
- &hdmi {
- 	status = "okay";
- 	hpd-gpio = <&gpx3 7 0>;
--- 
+[0] http://lists.freedesktop.org/archives/dri-devel/2014-August/066527.=
+html
+
+[1] https://lkml.org/lkml/2014/5/12/452
+
+[2] https://lkml.org/lkml/2015/6/17/305
+
+[3] http://article.gmane.org/gmane.linux.ports.arm.kernel/277689
+
+[4] https://lkml.org/lkml/2015/7/21/441a
+
+[5] https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=3Don-dem=
+and-probes-v7
+
+[6] http://kernelci.org/boot/all/job/collabora/kernel/v4.3-rc1-2248-g11=
+5f59aaec1f/
+
+[7] http://kernelci.org/boot/all/job/next/kernel/next-20150917
+
+Changes in v5:
+- Reduce some code duplication by adding device_pre_probe()
+- Print a warning if pre_probe() returns an error
+- Set the pointer to struct device also for AMBA devices
+- Unset the pointer to struct device when the platform device is about
+  to be unregistered
+- Increase the reference count of the device before returning from
+  of_find_device_by_node()
+- Move the assignment to device_node->device for AMBA devices to anothe=
+r
+  commit.
+- Hold a reference to the struct device while it's in use in
+  of_device_probe().
+- Use regulator_class' klist of devices instead of regulator_list to
+  store and lookup regulator devices.
+
+Changes in v4:
+- Added bus.pre_probe callback so the probes of Primecell devices can b=
+e
+  deferred if their device IDs cannot be yet read because of the clock
+  driver not having probed when they are registered. Maybe this goes
+  overboard and the matching information should be in the DT if there i=
+s
+  one.
+- Rename of_platform_probe to of_device_probe
+- Use device_node.device instead of device_node.platform_dev
+- Take a reference to the regulator's device to prevent dangling
+  pointers
+- Add Kconfig DELAY_DEVICE_PROBES to allow disabling delayed probing in
+  machines with initcalls that depend on devices probing at a given tim=
+e.
+- Start processing deferred probes in device_initcall_sync
+- Also defer probes of AMBA devices registered from the DT as they can
+  also request resources.
+
+Changes in v3:
+- Set and use device_node.platform_dev instead of reversing the logic t=
+o
+  find the platform device that encloses a device node.
+- Drop the fwnode API to probe firmware nodes and add OF-only API for
+  now. I think this same scheme could be used for machines with ACPI,
+  but I haven't been able to find one that had to defer its probes beca=
+use
+  of the device probe order.
+- Avoid unlocking the regulator device's mutex if we don't have a devic=
+e
+
+Changes in v2:
+- Acquire regulator device lock before returning from
+  regulator_dev_lookup()
+
+Tomeu Vizoso (23):
+  driver core: Add pre_probe callback to bus_type
+  ARM: amba: Move reading of periphid to pre_probe()
+  of/platform: Point to struct device from device node
+  of: add function to allow probing a device from a OF node
+  gpio: Probe GPIO drivers on demand
+  gpio: Probe pinctrl devices on demand
+  regulator: core: Remove regulator_list
+  regulator: core: Drop redundant locking
+  regulator: core: Probe regulators on demand
+  drm: Probe panels on demand
+  drm/tegra: Probe dpaux devices on demand
+  i2c: core: Probe i2c adapters and devices on demand
+  pwm: Probe PWM chip devices on demand
+  backlight: Probe backlight devices on demand
+  usb: phy: Probe phy devices on demand
+  clk: Probe clk providers on demand
+  pinctrl: Probe pinctrl devices on demand
+  phy: core: Probe phy providers on demand
+  dma: of: Probe DMA controllers on demand
+  power-supply: Probe power supplies on demand
+  driver core: Allow deferring probes until late init
+  driver core: Start processing deferred probes earlier
+  of/platform: Defer probes of registered devices
+
+ drivers/amba/bus.c                  |  78 ++++++------
+ drivers/base/Kconfig                |  18 +++
+ drivers/base/dd.c                   |  50 +++++++-
+ drivers/clk/clk.c                   |   3 +
+ drivers/dma/of-dma.c                |   3 +
+ drivers/gpio/gpiolib-of.c           |   5 +
+ drivers/gpu/drm/drm_panel.c         |   3 +
+ drivers/gpu/drm/tegra/dpaux.c       |   3 +
+ drivers/i2c/i2c-core.c              |   4 +
+ drivers/of/device.c                 |  61 +++++++++
+ drivers/of/platform.c               |  30 +++--
+ drivers/phy/phy-core.c              |   3 +
+ drivers/pinctrl/devicetree.c        |   3 +
+ drivers/power/power_supply_core.c   |   3 +
+ drivers/pwm/core.c                  |   3 +
+ drivers/regulator/core.c            | 246 +++++++++++++++++++++++-----=
+--------
+ drivers/usb/phy/phy.c               |   3 +
+ drivers/video/backlight/backlight.c |   3 +
+ include/linux/device.h              |   6 +
+ include/linux/of.h                  |   1 +
+ include/linux/of_device.h           |   3 +
+ 21 files changed, 387 insertions(+), 145 deletions(-)
+
+--=20
 2.4.3
