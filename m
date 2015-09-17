@@ -1,43 +1,98 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 11/11] devicetree: bindings: Remove deprecated properties
-Date: Thu, 17 Sep 2015 12:04:14 +0200
-Message-ID: <CAMuHMdV5rgk0rcCz-8w6Jmq66iAnbA6RTUoFyXNU9CV6PcU4Dw@mail.gmail.com>
-References: <20150917095325.5369.73893.sendpatchset@little-apple>
-	<20150917095511.5369.41259.sendpatchset@little-apple>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150917095511.5369.41259.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 5/9] dt-bindings: add documentation of rk3036 clock controller
+Date: Thu, 17 Sep 2015 18:32:49 +0800
+Message-ID: <1442485969-1733-1-git-send-email-zhengxing@rock-chips.com>
+References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442478540-15068-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 11:55 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
->
-> The deprecated DT properies are part of the GIT history,
+Add the devicetree binding for the cru on the rk3036 which quite similar
+structured as previous clock controllers.
 
-properties
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-> no need to keep them around any longer.
+Changes in v2: None
 
-They're still in the driver because in-the-field R-Car Gen2 DTSes use them,
-right? You may add a comment in the driver, to prevent a janitor from
-re-adding them to the bindings.
+ .../bindings/clock/rockchip,rk3036-cru.txt         |   60 ++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+new file mode 100644
+index 0000000..ac3037a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+@@ -0,0 +1,60 @@
++* Rockchip RK3036 Clock and Reset Unit
++
++The RK3036 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
++
++Required Properties:
++
++- compatible: should be "rockchip,rk3036-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing pll rates are not changable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3036-cru.h headers and can be
++used in device tree sources. Similar macros exist for the reset sources in
++these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "xin32k" - rtc clock - optional,
++ - "ext_i2s" - external I2S clock - optional,
++ - "ext_hsadc" - external HSADC clock - optional,
++ - "ext_vip" - external VIP clock - optional,
++ - "ext_isp" - external ISP clock - optional,
++ - "ext_jtag" - external JTAG clock - optional
++
++Example: Clock controller node:
++
++	cru: cru@20000000 {
++		compatible = "rockchip,rk3036-cru";
++		reg = <0x20000000 0x1000>;
++		rockchip,grf = <&grf>;
++
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@20060000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x20060000 0x100>;
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		clocks = <&cru SCLK_UART0>;
++	};
+-- 
+1.7.9.5
 
-Nevertheless
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
