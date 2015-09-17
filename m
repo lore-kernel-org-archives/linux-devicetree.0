@@ -1,47 +1,58 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 10/10] power: bq24257: Add platform data based
- initialization
-Date: Thu, 17 Sep 2015 09:16:37 +0900
-Message-ID: <55FA0665.7010107@samsung.com>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-11-git-send-email-dannenberg@ti.com>
- <55F928FE.5070706@samsung.com> <20150916201104.GG27772@beast>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH]  ARM: dts: vfxxx: Add iio_hwmon node for ADC temperature
+ channel
+Date: Thu, 17 Sep 2015 09:04:16 +0800
+Message-ID: <20150917010416.GH30746@tiger>
+References: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
+ <20150906043232.GD30746@tiger>
+ <20150907084911.GA6877@Sanchayan-Arch.toradex.int>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150916201104.GG27772@beast>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150907084911.GA6877@Sanchayan-Arch.toradex.int>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maitysanchayan@gmail.com
+Cc: stefan@agner.ch, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.09.2015 05:11, Andreas Dannenberg wrote:
-> On Wed, Sep 16, 2015 at 05:31:58PM +0900, Krzysztof Kozlowski wrote:
->>> @@ -1087,7 +1176,13 @@ static int bq24257_probe(struct i2c_client *client,
->>>  		return ret;
->>>  	}
->>>  
->>> -	if (client->irq <= 0)
->>> +	/*
->>> +	 * When using device firmware we either take the IRQ specified directly
->>> +	 * or probe for a pin named BQ24257_STAT_IRQ. In case of using platform
->>> +	 * data always run the IRQ pin probe function to finish IRQ and GPIO
->>> +	 * setup based on the stat pin specified in the platform data.
->>> +	 */
->>
->> Why?
+On Mon, Sep 07, 2015 at 02:19:11PM +0530, maitysanchayan@gmail.com wrote:
+> Hi Shawn,
 > 
-> The original driver would allow configuring the IRQ either through
-> client->irq or through a separete DT entry called "stat_gpios" (which
-> seems redundant... might it be required for ACPI? Or...?). I modeled the
-> configuration via pdata the same way, this way aligning the fields in
-> the pdata structure with the DT entries. Let me know if you have a
-> preference to simplify this.
+> On 15-09-06 12:32:32, Shawn Guo wrote:
+> > On Thu, Aug 06, 2015 at 09:28:22PM +0530, Sanchayan Maity wrote:
+> > > Add iio_hwmon node to expose the temperature channel on Vybrid
+> > > as hardware monitor device using the iio_hwmon driver.
+> > > 
+> > > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> > > ---
+> > >  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> > > index 39173bb..0993d66 100644
+> > > --- a/arch/arm/boot/dts/vfxxx.dtsi
+> > > +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> > > @@ -597,5 +597,10 @@
+> > >  				status = "disabled";
+> > >  			};
+> > >  		};
+> > > +
+> > > +		iio_hwmon {
+> > 
+> > Hyphen rather than underscore should be used in node name.
 > 
+> As per iio-bindings.txt I did this. It is the same in imx23.dtsi and imx28.dtsi.
+> 
+> http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/iio/iio-bindings.txt#L85
+> http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx23.dtsi#L570
+> http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx28.dtsi#L1246
 
-Right, it makes sense now.
+Oh, sorry, all these should be caught earlier.
 
-Best regards,
-Krzysztof
+> 
+> So should this be changed?
 
+Yeah, that would be nice, if the change doesn't break anything.
+
+Shawn
