@@ -1,78 +1,111 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 0/4] PCI: st: provide support for dw pcie
-Date: Thu, 17 Sep 2015 09:59:49 -0500
-Message-ID: <20150917145949.GF25767@google.com>
-References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] dt-bindings: add documentation of rk3036 clock controller
+Date: Thu, 17 Sep 2015 17:09:53 +0200
+Message-ID: <14900712.fB7cIie92H@diego>
+References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com> <1442485969-1733-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442485969-1733-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Am Donnerstag, 17. September 2015, 18:32:49 schrieb Xing Zheng:
+> Add the devicetree binding for the cru on the rk3036 which quite similar
+> structured as previous clock controllers.
+> 
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../bindings/clock/rockchip,rk3036-cru.txt         |   60
+> ++++++++++++++++++++ 1 file changed, 60 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt new file
+> mode 100644
+> index 0000000..ac3037a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> @@ -0,0 +1,60 @@
+> +* Rockchip RK3036 Clock and Reset Unit
+> +
+> +The RK3036 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "rockchip,rk3036-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing pll rates are not changable, due to the missing pll lock
+> status. +
+> +Each clock is assigned an identifier and client nodes can use this
+> identifier +to specify the clock which they consume. All available clocks
+> are defined as +preprocessor macros in the dt-bindings/clock/rk3036-cru.h
+> headers and can be +used in device tree sources. Similar macros exist for
+> the reset sources in +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
+> + - "xin24m" - crystal input - required,
+> + - "xin32k" - rtc clock - optional,
 
-On Thu, Aug 27, 2015 at 02:34:13PM +0200, Gabriel Fernandez wrote:
-> 
-> This patchset is based on v4.2-rc1 and is based on 
-> [PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
-> patchset from Zhou Wang.
-> 
-> Changes in v4:
->  - Remove pci: designware: remove my pci_common_init_dev() patch and
-> 	use [PATCH v8 3/6] PCI: designware: Add ARM64 support instead.
-> 	This patch is a good solution for me to disable IO support.
->  - add __init to st_pcie_probe() and use module_init() instead
-> 	device_initcall() to prevent the probe function from being
-> 	deferred and to prevent module unloading.
-> 
-> Changes in v3:
->  - Remove power management functions (was not fully tested)
->  - Remove configuration space range from dt binding
->  - Remove pci_common_init_dev() call in pcie-designware.c to avoid 
->    default IO space declaration. 
-> 
-> Changes in v2:
->  - comestic corrections in device tree binding
->  - add pci-st.c into MAINTAINERS
->  - remove st_pcie_ops structure to avoid another level of indirection
->  - remove nasty busy-loop
->  - remove useless test using virt_to_phys()
->  - move disable io support into dw-pcie driver
-> 
-> I don't change the st_pcie_abort_handler() function because abort handling
-> is masked during boot.
-> 
-> 
-> This patch-set introduces a STMicroelectronics PCIe controller.
-> It's based on designware PCIe driver.
-> 
-> Gabriel Fernandez (4):
->   ARM: STi: Kconfig update for PCIe support
->   PCI: st: Add Device Tree bindings for sti pcie
->   PCI: st: Provide support for the sti PCIe controller
->   MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+The rk3036 does not seem to use a rtc clock, so this should probably go away
 
-Rob had some questions, so I'm waiting for an update that responds to
-those.  When you post that, can you also squash the last two patches
-together?
+> + - "ext_i2s" - external I2S clock - optional,
 
-Thanks,
-  Bjorn
+> + - "ext_hsadc" - external HSADC clock - optional,
+> + - "ext_vip" - external VIP clock - optional,
+> + - "ext_isp" - external ISP clock - optional,
+> + - "ext_jtag" - external JTAG clock - optional
+There do not seem to exist external clock sources for hsadc, vip, isp and jtag 
+in your clock tree?
 
->  Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
->  MAINTAINERS                                       |   1 +
->  arch/arm/mach-sti/Kconfig                         |   2 +
->  drivers/pci/host/Kconfig                          |   9 +
->  drivers/pci/host/Makefile                         |   1 +
->  drivers/pci/host/pci-st.c                         | 583 ++++++++++++++++++++++
->  6 files changed, 649 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
->  create mode 100644 drivers/pci/host/pci-st.c
-> 
-> -- 
-> 1.9.1
-> 
+missing here:
+- ext_gmac
+
+> +
+> +Example: Clock controller node:
+> +
+> +	cru: cru@20000000 {
+> +		compatible = "rockchip,rk3036-cru";
+> +		reg = <0x20000000 0x1000>;
+> +		rockchip,grf = <&grf>;
+> +
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
+> +
+> +Example: UART controller node that consumes the clock generated by the
+> clock +  controller:
+> +
+> +	uart0: serial@20060000 {
+> +		compatible = "snps,dw-apb-uart";
+> +		reg = <0x20060000 0x100>;
+> +		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +		clocks = <&cru SCLK_UART0>;
+> +	};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
