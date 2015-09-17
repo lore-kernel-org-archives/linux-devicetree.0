@@ -1,51 +1,39 @@
-From: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 11/11] scsi: ufs: Add exynos ufs platform data
-Date: Thu, 17 Sep 2015 15:15:37 +0530
-Message-ID: <1442483137-32376-12-git-send-email-alim.akhtar@samsung.com>
-References: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1442483137-32376-1-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH v2 10/11] clocksource: sh_cmt: Remove unused 32-bit CMT bindings
+Date: Thu, 17 Sep 2015 18:55:01 +0900
+Message-ID: <20150917095501.5369.97124.sendpatchset@little-apple>
+References: <20150917095325.5369.73893.sendpatchset@little-apple>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This adds ufs_hba_exynos_ops{} to platform data, so that
-exynos ufs driver can be probed.
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Remove the 32-bit CMT compat strings to reduce maintenance burden.
+
+It should be fine to break DT compatibility because the 32-bit
+32-bit CMT DT binding was never part of any upstream DTS file.
+
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
- drivers/scsi/ufs/ufshcd-pltfrm.c |    2 ++
- drivers/scsi/ufs/ufshcd.h        |    1 +
- 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index 7db9564..39dae76 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -373,6 +373,8 @@ static int ufshcd_pltfrm_remove(struct platform_device *pdev)
- 
- static const struct of_device_id ufs_of_match[] = {
- 	{ .compatible = "jedec,ufs-1.1"},
-+	{ .compatible = "samsung,exynos7-ufs",
-+	 .data	= &ufs_hba_exynos_ops},
- 	{},
- };
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 83fe605..15f2a7c 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -687,4 +687,5 @@ static inline int ufshcd_dme_peer_get(struct ufs_hba *hba,
- 
- int ufshcd_hold(struct ufs_hba *hba, bool async);
- void ufshcd_release(struct ufs_hba *hba);
-+extern const struct ufs_hba_variant_ops ufs_hba_exynos_ops;
- #endif /* End of Header */
--- 
-1.7.10.4
+ Changes since V1:
+ - New patch
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/clocksource/sh_cmt.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- 0005/drivers/clocksource/sh_cmt.c
++++ work/drivers/clocksource/sh_cmt.c	2015-09-17 18:06:35.940513000 +0900
+@@ -957,8 +957,6 @@ static const struct platform_device_id s
+ MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+ 
+ static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
+-	{ .compatible = "renesas,cmt-32", .data = &sh_cmt_info[SH_CMT_32BIT] },
+-	{ .compatible = "renesas,cmt-32-fast", .data = &sh_cmt_info[SH_CMT_32BIT_FAST] },
+ 	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
+ 	{ .compatible = "renesas,cmt-48-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
+ 	{ .compatible = "renesas,cmt0-rcar-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
