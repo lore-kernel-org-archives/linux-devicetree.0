@@ -1,106 +1,50 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] Add driver for the si514 clock generator chip
-Date: Thu, 17 Sep 2015 10:28:15 +0200
-Message-ID: <1442478495-23522-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@linaro.org, sboyd@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 2/9] clk: rockchip: add dt-binding header for rk3036
+Date: Thu, 17 Sep 2015 16:28:53 +0800
+Message-ID: <1442478540-15068-3-git-send-email-zhengxing@rock-chips.com>
+References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1442478540-15068-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the driver and devicetree documentation for the
-Silicon Labs SI514 clock generator chip. This is an I2C controlled
-oscilator capable of generating clock signals ranging from 100kHz
-to 250MHz.
+Add the dt-bindings header for the rk3036, that gets shared between
+the clock controller and the clock references in the dts.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- .../devicetree/bindings/clock/silabs,si514.txt     |  27 ++
- drivers/clk/Kconfig                                |  10 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-si514.c                            | 393 +++++++++++++++++++++
- 4 files changed, 431 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/silabs,si514.txt
- create mode 100644 drivers/clk/clk-si514.c
 
-diff --git a/Documentation/devicetree/bindings/clock/silabs,si514.txt b/Documentation/devicetree/bindings/clock/silabs,si514.txt
+Changes in v2: None
+
+ include/dt-bindings/clock/rk3036-cru.h |  198 ++++++++++++++++++++++++++++++++
+ 1 file changed, 198 insertions(+)
+ create mode 100644 include/dt-bindings/clock/rk3036-cru.h
+
+diff --git a/include/dt-bindings/clock/rk3036-cru.h b/include/dt-bindings/clock/rk3036-cru.h
 new file mode 100644
-index 0000000..05964d1
+index 0000000..b0033ef
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/silabs,si514.txt
-@@ -0,0 +1,27 @@
-+Binding for Silicon Labs 514 programmable I2C clock generator.
-+
-+Reference
-+This binding uses the common clock binding[1]. Details about the device can be
-+found in the datasheet[2].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Si514 datasheet
-+    http://www.silabs.com/Support%20Documents/TechnicalDocs/si514.pdf
-+
-+Required properties:
-+ - compatible: Shall be "silabs,si514"
-+ - reg: I2C device address.
-+ - #clock-cells: From common clock bindings: Shall be 0.
-+
-+Optional properties:
-+ - clock-output-names: From common clock bindings. Recommended to be "si514".
-+ - clock-frequency: Output frequency to generate. This defines the output
-+		    frequency set during boot. It can be reprogrammed during
-+		    runtime through the common clock framework.
-+
-+Example:
-+	si514: clock-generator@55 {
-+		reg = <0x55>;
-+		#clock-cells = <0>;
-+		compatible = "silabs,si514";
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 7a431f7..312bc70 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -68,6 +68,16 @@ config COMMON_CLK_SI5351
- 	  This driver supports Silicon Labs 5351A/B/C programmable clock
- 	  generators.
- 
-+config COMMON_CLK_SI514
-+	tristate "Clock driver for SiLabs 514 devices"
-+	depends on I2C
-+	depends on OF
-+	select REGMAP_I2C
-+	help
-+	---help---
-+	  This driver supports the Silicon Labs 514 programmable clock
-+	  generator.
-+
- config COMMON_CLK_SI570
- 	tristate "Clock driver for SiLabs 570 and compatible devices"
- 	depends on I2C
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f1b50db..505f5d7 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
- obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
-+obj-$(CONFIG_COMMON_CLK_SI514)		+= clk-si514.o
- obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
- obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
- obj-$(CONFIG_CLK_TWL6040)		+= clk-twl6040.o
-diff --git a/drivers/clk/clk-si514.c b/drivers/clk/clk-si514.c
-new file mode 100644
-index 0000000..ca70818
---- /dev/null
-+++ b/drivers/clk/clk-si514.c
-@@ -0,0 +1,393 @@
++++ b/include/dt-bindings/clock/rk3036-cru.h
+@@ -0,0 +1,198 @@
 +/*
-+ * Driver for Silicon Labs Si514 Programmable Oscillator
++ * Copyright (c) 2014 MundoReader S.L.
++ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 + *
-+ * Copyright (C) 2015 Topic Embedded Products
-+ *
-+ * Author: Mike Looijmans <mike.looijmans@topic.nl>
++ * Copyright (c) 2015 Rockchip Electronics Co. Ltd.
++ * Author: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -113,380 +57,185 @@ index 0000000..ca70818
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
++#ifndef _DT_BINDINGS_CLK_ROCKCHIP_RK3036_H
++#define _DT_BINDINGS_CLK_ROCKCHIP_RK3036_H
 +
-+/* I2C registers */
-+#define SI514_REG_LP		0
-+#define SI514_REG_M_FRAC1	5
-+#define SI514_REG_M_FRAC2	6
-+#define SI514_REG_M_FRAC3	7
-+#define SI514_REG_M_INT_FRAC	8
-+#define SI514_REG_M_INT		9
-+#define SI514_REG_HS_DIV	10
-+#define SI514_REG_LS_HS_DIV	11
-+#define SI514_REG_OE_STATE	14
-+#define SI514_REG_RESET		128
-+#define SI514_REG_CONTROL	132
++/* core clocks */
++#define PLL_APLL		1
++#define PLL_DPLL		2
++#define PLL_GPLL		3
++#define ARMCLK			4
 +
-+/* Register values */
-+#define SI514_RESET_RST		BIT(7)
++/* sclk gates (special clocks) */
++#define SCLK_GPU		64
++#define SCLK_SPI		65
++#define SCLK_SDMMC		68
++#define SCLK_SDIO		69
++#define SCLK_EMMC		71
++#define SCLK_NANDC		76
++#define SCLK_UART0		77
++#define SCLK_UART1		78
++#define SCLK_UART2		79
++#define SCLK_I2S		82
++#define SCLK_SPDIF		83
++#define SCLK_TIMER0		85
++#define SCLK_TIMER1		86
++#define SCLK_TIMER2		87
++#define SCLK_TIMER3		88
++#define SCLK_OTGPHY0		93
++#define SCLK_OTGPHY1		94
++#define SCLK_LCDC		100
++#define SCLK_HDMI		109
++#define SCLK_HEVC		111
++#define SCLK_I2S_OUT		113
++#define SCLK_SDMMC_DRV		114
++#define SCLK_SDIO_DRV		115
++#define SCLK_EMMC_DRV		117
++#define SCLK_SDMMC_SAMPLE	118
++#define SCLK_SDIO_SAMPLE	119
++#define SCLK_EMMC_SAMPLE	121
++#define SCLK_PVTM_CORE          123
++#define SCLK_PVTM_GPU           124
++#define SCLK_PVTM_VIDEO         125
++#define SCLK_MAC		151
++#define SCLK_MACREF		152
++#define SCLK_SFC		160
 +
-+#define SI514_CONTROL_FCAL	BIT(0)
-+#define SI514_CONTROL_OE	BIT(2)
++#define DCLK_LCDC		190
 +
-+#define SI514_MIN_FREQ	    100000U
-+#define SI514_MAX_FREQ	 250000000U
++/* aclk gates */
++#define ACLK_DMAC2		194
++#define ACLK_LCDC		197
++#define ACLK_VIO		203
++#define ACLK_VCODEC		208
++#define ACLK_CPU		209
++#define ACLK_PERI		210
 +
-+#define FXO				  31980000U
++/* pclk gates */
++#define PCLK_GPIO0		320
++#define PCLK_GPIO1		321
++#define PCLK_GPIO2		322
++#define PCLK_GRF		329
++#define PCLK_I2C0		332
++#define PCLK_I2C1		333
++#define PCLK_I2C2		334
++#define PCLK_SPI		338
++#define PCLK_UART0		341
++#define PCLK_UART1		342
++#define PCLK_UART2		343
++#define PCLK_PWM		350
++#define PCLK_TIMER		353
++#define PCLK_HDMI		360
++#define PCLK_CPU		362
++#define PCLK_PERI		363
++#define PCLK_DDRUPCTL		364
++#define PCLK_WDT		368
 +
-+#define FVCO_MIN		2080000000U
-+#define FVCO_MAX		2500000000U
++/* hclk gates */
++#define HCLK_OTG0		449
++#define HCLK_OTG1		450
++#define HCLK_NANDC		453
++#define HCLK_SDMMC		456
++#define HCLK_SDIO		457
++#define HCLK_EMMC		459
++#define HCLK_I2S		462
++#define HCLK_LCDC		465
++#define HCLK_ROM		467
++#define HCLK_VIO_BUS		472
++#define HCLK_VCODEC		476
++#define HCLK_CPU		477
++#define HCLK_PERI		478
 +
-+#define HS_DIV_MAX	1022
++#define CLK_NR_CLKS		(HCLK_PERI + 1)
 +
-+struct clk_si514 {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+	struct i2c_client *i2c_client;
-+};
-+#define to_clk_si514(_hw)	container_of(_hw, struct clk_si514, hw)
++/* soft-reset indices */
++#define SRST_CORE0		0
++#define SRST_CORE1		1
++#define SRST_CORE0_DBG		4
++#define SRST_CORE1_DBG		5
++#define SRST_CORE0_POR		8
++#define SRST_CORE1_POR		9
++#define SRST_L2C		12
++#define SRST_TOPDBG		13
++#define SRST_STRC_SYS_A		14
++#define SRST_PD_CORE_NIU	15
 +
-+/* Multiplier/divider settings */
-+struct clk_si514_muldiv {
-+	u32 m_frac;  /* 29-bit Fractional part of multiplier M */
-+	u8 m_int; /* Integer part of multiplier M, 65..78 */
-+	u8 ls_div_bits; /* 2nd divider, as 2^x */
-+	u16 hs_div; /* 1st divider, must be even and 10<=x<=1022 */
-+};
++#define SRST_TIMER2		16
++#define SRST_CPUSYS_H		17
++#define SRST_AHB2APB_H		19
++#define SRST_TIMER3		20
++#define SRST_INTMEM		21
++#define SRST_ROM		22
++#define SRST_PERI_NIU		23
++#define SRST_I2S		24
++#define SRST_DDR_PLL		25
++#define SRST_GPU_DLL		26
++#define SRST_TIMER0		27
++#define SRST_TIMER1		28
++#define SRST_CORE_DLL		29
++#define SRST_EFUSE_P		30
++#define SRST_ACODEC_P		31
 +
-+/* Enables or disables the output driver */
-+static int si514_enable_output(struct clk_si514 *data, bool enable)
-+{
-+	return regmap_update_bits(data->regmap, SI514_REG_CONTROL,
-+		SI514_CONTROL_OE, enable ? SI514_CONTROL_OE : 0);
-+}
++#define SRST_GPIO0		32
++#define SRST_GPIO1		33
++#define SRST_GPIO2		34
++#define SRST_UART0		39
++#define SRST_UART1		40
++#define SRST_UART2		41
++#define SRST_I2C0		43
++#define SRST_I2C1		44
++#define SRST_I2C2		45
++#define SRST_SFC		47
 +
-+/* Retrieve clock multiplier and dividers from hardware */
-+static int si514_get_muldiv(struct clk_si514 *data,
-+	struct clk_si514_muldiv *settings)
-+{
-+	int err;
-+	u8 reg[7];
++#define SRST_PWM0		48
++#define SRST_DAP		51
++#define SRST_DAP_SYS		52
++#define SRST_GRF		55
++#define SRST_PERIPHSYS_A	57
++#define SRST_PERIPHSYS_H	58
++#define SRST_PERIPHSYS_P	59
++#define SRST_CPU_PERI		61
++#define SRST_EMEM_PERI		62
++#define SRST_USB_PERI		63
 +
-+	err = regmap_bulk_read(data->regmap, SI514_REG_M_FRAC1,
-+			reg, ARRAY_SIZE(reg));
-+	if (err)
-+		return err;
++#define SRST_DMA2		64
++#define SRST_MAC		66
++#define SRST_NANDC		68
++#define SRST_USBOTG0		69
++#define SRST_OTGC0		71
++#define SRST_USBOTG1		72
++#define SRST_OTGC1		74
++#define SRST_DDRMSCH		79
 +
-+	settings->m_frac =
-+		reg[0] |
-+		((u32)reg[1] << 8) |
-+		((u32)reg[2] << 16) |
-+		((u32)(reg[3] & 0x1F) << 24);
-+	settings->m_int = ((reg[4] & 0x3f) << 3) | (reg[3] >> 5);
-+	settings->ls_div_bits = (reg[6] >> 4) & 0x07;
-+	settings->hs_div = ((u16)(reg[6] & 0x03) << 8) | reg[5];
-+	return 0;
-+}
++#define SRST_MMC0		81
++#define SRST_SDIO		82
++#define SRST_EMMC		83
++#define SRST_SPI0		84
++#define SRST_WDT		86
++#define SRST_DDRPHY		88
++#define SRST_DDRPHY_P		89
++#define SRST_DDRCTRL		90
++#define SRST_DDRCTRL_P		91
 +
-+/* Program clock settings into hardware */
-+static int si514_set_muldiv(struct clk_si514 *data,
-+	struct clk_si514_muldiv *settings)
-+{
-+	u8 lp;
-+	u8 reg[7];
-+	int err;
++#define SRST_HDMI_P		96
++#define SRST_VIO_BUS_H		99
++#define SRST_UTMI0		103
++#define SRST_UTMI1		104
++#define SRST_USBPOR		105
 +
-+	/* Calculate LP1/LP2 according to table 13 in the datasheet */
-+	/* 65.259980246 */
-+	if ((settings->m_int < 65) ||
-+		((settings->m_int == 65) && (settings->m_frac <= 139575831)))
-+		lp = 0x22;
-+	/* 67.859763463 */
-+	else if ((settings->m_int < 67) ||
-+		((settings->m_int == 67) && (settings->m_frac <= 461581994)))
-+		lp = 0x23;
-+	/* 72.937624981 */
-+	else if ((settings->m_int < 72) ||
-+		((settings->m_int == 72) && (settings->m_frac <= 503383578)))
-+		lp = 0x33;
-+	/* 75.843265046 */
-+	else if ((settings->m_int < 75) ||
-+		((settings->m_int == 75) && (settings->m_frac <= 452724474)))
-+		lp = 0x34;
-+	else
-+		lp = 0x44;
++#define SRST_VCODEC_A		112
++#define SRST_VCODEC_H		113
++#define SRST_VIO1_A		114
++#define SRST_HEVC		115
++#define SRST_VCODEC_NIU_A	116
++#define SRST_LCDC1_A		117
++#define SRST_LCDC1_H		118
++#define SRST_LCDC1_D		119
++#define SRST_GPU		120
++#define SRST_GPU_NIU_A		122
 +
-+	err = regmap_write(data->regmap, SI514_REG_LP, lp);
-+	if (err < 0)
-+		return err;
++#define SRST_DBG_P		131
 +
-+	reg[0] = settings->m_frac & 0xff;
-+	reg[1] = (settings->m_frac >> 8) & 0xff;
-+	reg[2] = (settings->m_frac >> 16) & 0xff;
-+	reg[3] = ((settings->m_frac >> 24) | (settings->m_int << 5)) & 0xff;
-+	reg[4] = (settings->m_int >> 3) & 0xff;
-+	reg[5] = (settings->hs_div) & 0xff;
-+	reg[6] = (((settings->hs_div) >> 8) |
-+			(settings->ls_div_bits << 4)) & 0xff;
-+
-+	err = regmap_bulk_write(data->regmap, SI514_REG_HS_DIV, reg + 5, 2);
-+	if (err < 0)
-+		return err;
-+	/* Writing to SI514_REG_M_INT_FRAC triggers the clock change, so that
-+	 * must be written last */
-+	return regmap_bulk_write(data->regmap, SI514_REG_M_FRAC1, reg, 5);
-+}
-+
-+/* Calculate divider settings for a given frequency */
-+static int si514_calc_muldiv(struct clk_si514_muldiv *settings,
-+	unsigned long frequency)
-+{
-+	u64 m;
-+	u32 ls_freq;
-+	u32 tmp;
-+	u8 res;
-+
-+	if ((frequency < SI514_MIN_FREQ) || (frequency > SI514_MAX_FREQ))
-+		return -EINVAL;
-+
-+	/* Determine the minimum value of LS_DIV and resulting target freq. */
-+	ls_freq = frequency;
-+	if (frequency >= (FVCO_MIN / HS_DIV_MAX))
-+		settings->ls_div_bits = 0;
-+	else {
-+		res = 1;
-+		tmp = 2 * HS_DIV_MAX;
-+		while (tmp <= (HS_DIV_MAX*32)) {
-+			if ((frequency * tmp) >= FVCO_MIN)
-+				break; /* We're done */
-+			++res;
-+			tmp <<= 1;
-+		}
-+		settings->ls_div_bits = res;
-+		ls_freq = frequency << res;
-+	}
-+
-+	/* Determine minimum HS_DIV, round up to even number */
-+	settings->hs_div = DIV_ROUND_UP(FVCO_MIN >> 1, ls_freq) << 1;
-+
-+	/* M = LS_DIV x HS_DIV x frequency / F_XO (in fixed-point) */
-+	m = ((u64)(ls_freq * settings->hs_div) << 29) + (FXO/2);
-+	do_div(m, FXO);
-+	settings->m_frac = (u32)m & (BIT(29) - 1);
-+	settings->m_int = (u32)(m >> 29);
-+
-+	return 0;
-+}
-+
-+/* Calculate resulting frequency given the register settings */
-+static unsigned long si514_calc_rate(struct clk_si514_muldiv *settings)
-+{
-+	u64 m = settings->m_frac | ((u64)settings->m_int << 29);
-+
-+	return ((u32)(((m * FXO) + (FXO/2)) >> 29)) /
-+		(settings->hs_div * BIT(settings->ls_div_bits));
-+}
-+
-+static unsigned long si514_recalc_rate(struct clk_hw *hw,
-+		unsigned long parent_rate)
-+{
-+	struct clk_si514 *data = to_clk_si514(hw);
-+	struct clk_si514_muldiv settings;
-+	int err;
-+
-+	err = si514_get_muldiv(data, &settings);
-+	if (err) {
-+		dev_err(&data->i2c_client->dev, "unable to retrieve settings\n");
-+		return 0;
-+	}
-+
-+	return si514_calc_rate(&settings);
-+}
-+
-+static long si514_round_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long *parent_rate)
-+{
-+	struct clk_si514_muldiv settings;
-+	int err;
-+
-+	if (!rate)
-+		return 0;
-+
-+	err = si514_calc_muldiv(&settings, rate);
-+	if (err)
-+		return err;
-+
-+	return si514_calc_rate(&settings);
-+}
-+
-+/* Update output frequency for big frequency changes (> 1000 ppm).
-+ * The chip supports <1000ppm changes "on the fly", we haven't implemented
-+ * that here. */
-+static int si514_set_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long parent_rate)
-+{
-+	struct clk_si514 *data = to_clk_si514(hw);
-+	struct clk_si514_muldiv settings;
-+	int err;
-+
-+	err = si514_calc_muldiv(&settings, rate);
-+	if (err)
-+		return err;
-+
-+	si514_enable_output(data, false);
-+
-+	err = si514_set_muldiv(data, &settings);
-+	if (err < 0)
-+		return err; /* Undefined state now, best to leave disabled */
-+
-+	/* Trigger calibration */
-+	err = regmap_write(data->regmap, SI514_REG_CONTROL, SI514_CONTROL_FCAL);
-+
-+	/* Applying a new frequency can take up to 10ms */
-+	usleep_range(10000, 12000);
-+
-+	si514_enable_output(data, true);
-+
-+	return err;
-+}
-+
-+static const struct clk_ops si514_clk_ops = {
-+	.recalc_rate = si514_recalc_rate,
-+	.round_rate = si514_round_rate,
-+	.set_rate = si514_set_rate,
-+};
-+
-+static bool si514_regmap_is_volatile(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SI514_REG_CONTROL:
-+	case SI514_REG_RESET:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool si514_regmap_is_writeable(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SI514_REG_LP:
-+	case SI514_REG_M_FRAC1 ... SI514_REG_LS_HS_DIV:
-+	case SI514_REG_OE_STATE:
-+	case SI514_REG_RESET:
-+	case SI514_REG_CONTROL:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static struct regmap_config si514_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.cache_type = REGCACHE_RBTREE,
-+	.max_register = SI514_REG_CONTROL,
-+	.writeable_reg = si514_regmap_is_writeable,
-+	.volatile_reg = si514_regmap_is_volatile,
-+};
-+
-+static int si514_probe(struct i2c_client *client,
-+		const struct i2c_device_id *id)
-+{
-+	struct clk_si514 *data;
-+	struct clk_init_data init;
-+	struct clk *clk;
-+	u32 initial_fout;
-+	int err;
-+
-+	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	init.ops = &si514_clk_ops;
-+	init.flags = CLK_IS_ROOT;
-+	init.num_parents = 0;
-+	data->hw.init = &init;
-+	data->i2c_client = client;
-+
-+	if (of_property_read_string(client->dev.of_node, "clock-output-names",
-+			&init.name))
-+		init.name = client->dev.of_node->name;
-+
-+	data->regmap = devm_regmap_init_i2c(client, &si514_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		dev_err(&client->dev, "failed to allocate register map\n");
-+		return PTR_ERR(data->regmap);
-+	}
-+
-+	i2c_set_clientdata(client, data);
-+
-+	clk = devm_clk_register(&client->dev, &data->hw);
-+	if (IS_ERR(clk)) {
-+		dev_err(&client->dev, "clock registration failed\n");
-+		return PTR_ERR(clk);
-+	}
-+	err = of_clk_add_provider(client->dev.of_node, of_clk_src_simple_get,
-+			clk);
-+	if (err) {
-+		dev_err(&client->dev, "unable to add clk provider\n");
-+		return err;
-+	}
-+
-+	/* Read the requested initial output frequency from device tree */
-+	if (!of_property_read_u32(client->dev.of_node, "clock-frequency",
-+				&initial_fout)) {
-+		err = clk_set_rate(clk, initial_fout);
-+		if (err) {
-+			of_clk_del_provider(client->dev.of_node);
-+			return err;
-+		}
-+	}
-+
-+	/* Display a message indicating that we've successfully registered */
-+	dev_info(&client->dev, "registered, current frequency %lu Hz\n",
-+			clk_get_rate(clk));
-+
-+	return 0;
-+}
-+
-+static int si514_remove(struct i2c_client *client)
-+{
-+	of_clk_del_provider(client->dev.of_node);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id si514_id[] = {
-+	{ "si514", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, si514_id);
-+
-+static const struct of_device_id clk_si514_of_match[] = {
-+	{ .compatible = "silabs,si514" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, clk_si514_of_match);
-+
-+static struct i2c_driver si514_driver = {
-+	.driver = {
-+		.name = "si514",
-+		.of_match_table = clk_si514_of_match,
-+	},
-+	.probe		= si514_probe,
-+	.remove		= si514_remove,
-+	.id_table	= si514_id,
-+};
-+module_i2c_driver(si514_driver);
-+
-+MODULE_AUTHOR("Mike Looijmans <mike.looijmans@topic.nl>");
-+MODULE_DESCRIPTION("Si514 driver");
-+MODULE_LICENSE("GPL");
++#endif
 -- 
-1.9.1
+1.7.9.5
