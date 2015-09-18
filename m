@@ -1,79 +1,120 @@
 From: =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb@redhat.com>
-Subject: QEMU fw_cfg DMA interface
-Date: Fri, 18 Sep 2015 10:58:23 +0200
-Message-ID: <1442566703-5091-1-git-send-email-markmb@redhat.com>
+Subject: [PATCH v3] QEMU fw_cfg DMA interface documentation
+Date: Fri, 18 Sep 2015 10:59:27 +0200
+Message-ID: <1442566767-5222-1-git-send-email-markmb@redhat.com>
+References: <1442566703-5091-1-git-send-email-markmb@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-To: linux-kernel@vger.kernel.org, qemu-devel@nongnu.org, seabios@seabios.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, Drew <drjones@redhat.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Stefan Hajnoczi <stefanha@gmail.com>, Alexander Graf <agraf@suse.de>, Kevin O'Connor <kevin@koconnor.net>, Gerd Hoffmann <kraxel@redhat.com>, =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb@redhat.com>, Laszlo <lersek@redhat.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442566703-5091-1-git-send-email-markmb@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Drew <drjones@redhat.com>, Stefan Hajnoczi <stefanha@gmail.com>, Kevin O'Connor <kevin@koconnor.net>, Gerd Hoffmann <kraxel@redhat.com>, Laszlo <lersek@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Implementation of the FW CFG DMA interface.
+Add fw_cfg DMA interface specfication in the fw_cfg documentation.
 
-When running a Linux guest on top of QEMU, using the -kernel options, thi=
+Signed-off-by: Marc Mar=C3=AD <markmb@redhat.com>
+---
+ Documentation/devicetree/bindings/arm/fw-cfg.txt | 49 ++++++++++++++++=
++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documen=
+tation/devicetree/bindings/arm/fw-cfg.txt
+index 953fb64..ba6945e 100644
+--- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
++++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+@@ -45,6 +45,51 @@ blob to be read from the data register has size 4, a=
+nd it is to be interpreted
+ as a uint32_t value in little endian byte order. The current value
+ (corresponding to the above outer protocol) is zero.
+=20
++If bit 1 of the feature bitmap is set, the DMA interface is present. T=
+his
++can be used through the 64-bit wide address register.
++
++The address register is in big-endian format. The value for the regist=
+er is 0
++at startup and after an operation. A write to the lower half triggers =
+an
++operation. This means, that operations with 32-bit addresses can be tr=
+iggered
++with just one write, whereas operations with 64-bit addresses can be t=
+riggered
++with one 64-bit write or two 32-bit writes, starting with the higher p=
+art.
++
++In this register, the physical address of a FWCfgDmaAccess structure i=
+n RAM
++should be written. This is the format of the FWCfgDmaAccess structure:
++
++typedef struct FWCfgDmaAccess {
++    uint32_t control;
++    uint32_t length;
++    uint64_t address;
++} FWCfgDmaAccess;
++
++The fields of the structure are in big endian mode, and the field at t=
+he lowest
++address is the "control" field.
++
++The "control" field has the following bits:
++ - Bit 0: Error
++ - Bit 1: Read
++ - Bit 2: Skip
++ - Bit 3: Select. The upper 16 bits are the selected index.
++
++When an operation is triggered, if the "control" field has bit 3 set, =
+the
++upper 16 bits are interpreted as an index of a firmware configuration =
+item.
++This has the same effect as writing the selector register.
++
++If the "control" field has bit 1 set, a read operation will be perform=
+ed.
++"length" bytes for the current selector and offset will be copied into=
+ the
++physical RAM address specified by the "address" field.
++
++If the "control" field has bit 2 set (and not bit 1), a skip operation=
+ will be
++performed. The offset for the current selector will be advanced "lengt=
+h" bytes.
++
++To check result, read the "control" field:
++   error bit set        ->  something went wrong.
++   all bits cleared     ->  transfer finished successfully.
++   otherwise            ->  transfer still in progress (doesn't happen
++                            today due to implementation not being asyn=
+c,
++                            but may in the future).
++
+ The guest kernel is not expected to use these registers (although it i=
 s
-is the timing improvement for x86:
-
-QEMU commit 16a1b6e and SeaBIOS commit e4d2b8c
-QEMU startup time: .080
-BIOS startup time: .060
-Kernel setup time: .586
-Total time: .726
-
-QEMU with this patch series and SeaBIOS with this patch series
-QEMU startup time: .080
-BIOS startup time: .039
-Kernel setup time: .002
-Total time: .121
-
-QEMU startup time is the time between the start and the first kvm_entry.
-BIOS startup time is the time between the first kvm_entry and the start o=
-f
-function do_boot, in SeaBIOS.
-Kernel setup time is the time between the start of the function do_boot i=
-n
-SeaBIOS and the jump to the Linux kernel.
-
-As you can see, both the BIOS (because of ACPI tables and other configura=
-tions)
-and the Linux kernel boot (because of the copy to memory) are greatly
-improved with this new interface.
-
-Also, this new interface is an addon to the old interface. Both interface=
+ certainly allowed to); the device tree bindings are documented here be=
+cause
+ this is where device tree bindings reside in general.
+@@ -56,6 +101,8 @@ Required properties:
+ - reg: the MMIO region used by the device.
+   * Bytes 0x0 to 0x7 cover the data register.
+   * Bytes 0x8 to 0x9 cover the selector register.
++  * With DMA interface enabled: Bytes 0xc to 0x13 cover the DMA addres=
 s
-are compatible and interchangeable.
-
-Changes from v1:
- - Take into account order of fields in the FWCfgDmaAccess structure
- - Check and change endianness of FWCfgDmaAccess fields
- - Change order of fields in the FWCfgDmaAccess structure
- - Add FW_CFG_DMA_CTL_SKIP feature for control field
- - Split FW_CFG_SIZE in QEMU
- - Make FW_CFG_ID a bitmap of features
- - Add 64 bit address support for the transfer. Trigger when writing the =
-low
-   address, and address is 0 by default and at the end of each transfer.
- - Align ports and addresses.
- - Preserve old fw_cfg_comb_valid behaviour in QEMU
- - Update documentation to reflect all these changes
-
-Changes from v2:
- - Make IOports fw_cfg DMA region a different IO region.
- - Reuse everything for MMIO and IOport DMA regions
- - Make transfer status only based on control field
- - Use DMA helpers instead of direct map/unmap
- - Change ARM fw_cfg DMA address space
- - Change Linux boot process to match linuxboot.S
- - Add select capabilities in the FWCfgDmaAccess struct
- - Update documentation to reflect all these changes
++    register.
+   * Further registers may be appended to the region in case of future =
+interface
+     revisions / feature bits.
+=20
+@@ -66,7 +113,7 @@ Example:
+ 	#address-cells =3D <0x2>;
+=20
+ 	fw-cfg@9020000 {
++		reg =3D <0x0 0x9020000 0x0 0x14>;
+ 		compatible =3D "qemu,fw-cfg-mmio";
+-		reg =3D <0x0 0x9020000 0x0 0xa>;
+ 	};
+ };
+--=20
+2.4.3
