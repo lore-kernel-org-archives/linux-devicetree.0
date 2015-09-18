@@ -1,45 +1,47 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v1 3/3] arm64: dts: rockchip: Add the needed timer for RK3368 SoC
-Date: Fri, 18 Sep 2015 16:51:11 +0800
-Message-ID: <1442566271-10695-4-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v1 2/3] arm64: Enable the timer on Rockchip architecture
+Date: Fri, 18 Sep 2015 16:51:10 +0800
+Message-ID: <1442566271-10695-3-git-send-email-wxt@rock-chips.com>
 References: <1442566271-10695-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442566271-10695-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, daniel.lezcano@linaro.org, will.deacon@arm.com, catalin.marinas@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, tglx@linutronix.de, olof@lixom.net, Caesar Wang <wxt@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1442566271-10695-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There is a need of a broadcast timer in this case to ensure proper
-wakeup when the cpus are in sleep mode and a timer expires.
+On the RK3368 SoC, support the APB timers for rockchip platform.
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
-Changes in v1:
-- As the Heiko comments, add the "rockchip,rk3368-timer" for timer.
-  Although the 'rockchip,rk3288-timer' is working for RK3368, need to add the
-  'rockchip,rk3368-timer' for the rk3368-spec timer in the future.
+Changes in v1: None
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index a712bea..c4b3870 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -214,6 +214,12 @@
- 			(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
-+	timer@ff810000 {
-+		compatible = "rockchip,rk3368-timer", "rockchip,rk3288-timer";
-+		reg = <0x0 0xff810000 0x0 0x20>;
-+		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	xin24m: oscillator {
- 		compatible = "fixed-clock";
- 		clock-frequency = <24000000>;
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 23800a1..0dae08d 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -57,6 +57,7 @@ config ARCH_ROCKCHIP
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select PINCTRL
+ 	select PINCTRL_ROCKCHIP
++	select ROCKCHIP_TIMER
+ 	help
+ 	  This enables support for the ARMv8 based Rockchip chipsets,
+ 	  like the RK3368.
 -- 
 1.9.1
