@@ -1,65 +1,84 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 16/16] phy: phy-core: fix initcall level
-Date: Fri, 18 Sep 2015 11:46:13 +0530
-Message-ID: <55FBAC2D.1020301@ti.com>
-References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de> <1440592108-3740-17-git-send-email-holler@ahsoftware.de>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v4 0/4] PCI: st: provide support for dw pcie
+Date: Fri, 18 Sep 2015 08:29:58 +0200
+Message-ID: <CAG374jAPc8o47uy=0u7FKSZzgMqX9UQ2HCB0Kjme2Xce_tC2aQ@mail.gmail.com>
+References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org> <20150917145949.GF25767@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440592108-3740-17-git-send-email-holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russel King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150917145949.GF25767@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edwo>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wednesday 26 August 2015 05:58 PM, Alexander Holler wrote:
-> The phy-core has to be initialized before other dependent usb-drivers,
-> otherwise a crash might occur.
-> 
-> Currently phy_core_init() is called in the initcall-level device, which is
-> the same level where most usb-drivers will end up. By luck this seemed to
-> have been called most of the time before other usb-drivers without having
-> been explicitly enforced. But if phy_core_init() is not called before a
-> dependent driver, a null-pointer exception might occur (e.g. because the
-> phy device class isn't registered).
-
-Did you actually face a problem? IIUC the modules get loaded based on
-the drivers/Makefile order (unless the other modules are in a different
-initcall table).
-
-IMHO the fix should be in the module that caused the crash. Change it to
-use module_init?
+No problem
 
 Thanks
-Kishon
 
-> 
-> To fix this, phy_core_init() is moved to the initcall-level fs (right
-> before the standard initcall level device).
-> 
-> Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-> ---
->  drivers/phy/phy-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index fc48fac..4945029 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -930,7 +930,7 @@ static int __init phy_core_init(void)
->  
->  	return 0;
->  }
-> -module_init(phy_core_init);
-> +fs_initcall_sync(phy_core_init);
->  
->  static void __exit phy_core_exit(void)
->  {
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gabriel
+
+On 17 September 2015 at 16:59, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> Hi Gabriel,
+>
+> On Thu, Aug 27, 2015 at 02:34:13PM +0200, Gabriel Fernandez wrote:
+>>
+>> This patchset is based on v4.2-rc1 and is based on
+>> [PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+>> patchset from Zhou Wang.
+>>
+>> Changes in v4:
+>>  - Remove pci: designware: remove my pci_common_init_dev() patch and
+>>       use [PATCH v8 3/6] PCI: designware: Add ARM64 support instead.
+>>       This patch is a good solution for me to disable IO support.
+>>  - add __init to st_pcie_probe() and use module_init() instead
+>>       device_initcall() to prevent the probe function from being
+>>       deferred and to prevent module unloading.
+>>
+>> Changes in v3:
+>>  - Remove power management functions (was not fully tested)
+>>  - Remove configuration space range from dt binding
+>>  - Remove pci_common_init_dev() call in pcie-designware.c to avoid
+>>    default IO space declaration.
+>>
+>> Changes in v2:
+>>  - comestic corrections in device tree binding
+>>  - add pci-st.c into MAINTAINERS
+>>  - remove st_pcie_ops structure to avoid another level of indirection
+>>  - remove nasty busy-loop
+>>  - remove useless test using virt_to_phys()
+>>  - move disable io support into dw-pcie driver
+>>
+>> I don't change the st_pcie_abort_handler() function because abort handling
+>> is masked during boot.
+>>
+>>
+>> This patch-set introduces a STMicroelectronics PCIe controller.
+>> It's based on designware PCIe driver.
+>>
+>> Gabriel Fernandez (4):
+>>   ARM: STi: Kconfig update for PCIe support
+>>   PCI: st: Add Device Tree bindings for sti pcie
+>>   PCI: st: Provide support for the sti PCIe controller
+>>   MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+>
+> Rob had some questions, so I'm waiting for an update that responds to
+> those.  When you post that, can you also squash the last two patches
+> together?
+>
+> Thanks,
+>   Bjorn
+>
+>>  Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
+>>  MAINTAINERS                                       |   1 +
+>>  arch/arm/mach-sti/Kconfig                         |   2 +
+>>  drivers/pci/host/Kconfig                          |   9 +
+>>  drivers/pci/host/Makefile                         |   1 +
+>>  drivers/pci/host/pci-st.c                         | 583 ++++++++++++++++++++++
+>>  6 files changed, 649 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+>>  create mode 100644 drivers/pci/host/pci-st.c
+>>
+>> --
+>> 1.9.1
+>>
