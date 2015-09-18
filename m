@@ -1,69 +1,34 @@
-From: Constantine Shulyupin <const@MakeLinux.com>
-Subject: Please suggest proper format for DT properties.
-Date: Sat, 19 Sep 2015 01:36:43 +0300
-Message-ID: <1442615803-17766-1-git-send-email-const@MakeLinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lm-sensors@lm-sensors.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
+Date: Sat, 19 Sep 2015 07:12:13 +0800
+Message-ID: <20150918231213.GA14278@gondor.apana.org.au>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+ <20150918140756.GK9249@gondor.apana.org.au>
+ <CAF2Aj3h7Jy=tpYdZTdbxAJwa=147_hAu3reOFrbEh=JdrMFWLQ@mail.gmail.com>
+ <20150918151137.GA10763@gondor.apana.org.au>
+ <20150918155112.GE3218@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150918155112.GE3218@x1>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Sep 18, 2015 at 04:51:12PM +0100, Lee Jones wrote:
+>
+> I think it's okay for you to take all but patch 6.
+> 
+> Patch 6 is an ARM patch and needs to go into ARM SoC via
+> STMicroelectronics STi tree.
 
-I am designing DT support for a hwmon chip. 
-It has some sensors, each of them can be:
- - "disabled"
- - "thermal diode"
- - "thermistor"
- - "voltage"
+In future please don't send me patches that you don't want me to
+merge in the series.
 
-Four possible options for DT properties format.
-
-Option 1: Separated property for each sensor.
-
-Example nct7802 node:
-
-nct7802 {
-	compatible = "nuvoton,nct7802";
-	reg = <0x2a>;
-	nuvoton,sensor1-type = "thermistor";
-	nuvoton,sensor2-type = "disabled";
-	nuvoton,sensor3-type = "voltage";
-};
-
-Option 2: Array of strings for all sensors.
-
-nct7802 {
-	compatible = "nuvoton,nct7802";
-	reg = <0x2a>;
-	nuvoton,sensors-types = "thermistor", "disabled", "voltage";
-};
-
-Option 3: Sets of 4 cells.
-
-  Borrowed from marvell,reg-init and broadcom,c45-reg-init.
-
-  The first cell is the page address, 
-  the second a register address within the page,
-  the third cell contains a mask to be ANDed with the existing register
-  value, and the fourth cell is ORed with the result to yield the
-  new register value. If the third cell has a value of zero,
-  no read of the existing value is performed.
-
-Example nct7802 node:
-
-nct7802 {
-	compatible = "nuvoton,nct7802";
-	reg = <0x2a>;
-	nct7802,reg-init =
-		<0 0x21 0 0x01 > // START = 1
-		<0 0x22 0x03 0x02>; // RTD1_MD = 2
-};
-
-Please suggest proper format for DT properties.
-
-Thanks
-Constantine
-
-PS:
-Datasheet: https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
