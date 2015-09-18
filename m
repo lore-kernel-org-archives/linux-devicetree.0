@@ -1,57 +1,114 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] usb: renesas_usbhs: Add support for R-Car H3
-Date: Fri, 18 Sep 2015 15:03:52 +0900
-Message-ID: <1442556232-6564-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+Date: Fri, 18 Sep 2015 11:38:13 +0530
+Message-ID: <55FBAA4D.3000704@ti.com>
+References: <1440493835-6732-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1440493835-6732-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a compatible string to support for R-Car H3.
+Hi,
 
-Since the HS-USB controller of R-Car H3 is almost the same specification
-with R-Car Gen2 (these have 16 pipes and usb-dmac), this patch
-sets the "type" of renesas_usbhs_driver_param to USBHS_TYPE_RCAR_GEN2.
+On Tuesday 25 August 2015 02:40 PM, Yoshihiro Shimoda wrote:
+> This patch adds support for R-Car generation 3 USB2 PHY driver.
+> This SoC has 3 EHCI/OHCI channels, and the channel 0 is shared
+> with the HSUSB (USB2.0 peripheral) device.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- This patch is based on the latest Felipe's usb.git / testing/next
-branch (The commit id = b1ede0faf6e4961842f80e5e2fc1bf5373fef235).
+>From the description it looks like it's a single PHY with multiple
+channels. In that case you should have a singe dt node for the PHY
+provider and each channel should be modelled as the child node of the
+PHY provider dt node.
+> 
+> So, the purpose of this driver is:
+>  1) initializes some registers of SoC specific to use the
+>     {ehci,ohci}-platform driver.
+> 
+>  2) detects id pin to select host or peripheral on the channel 0.
+> 
+> For now, this driver only supports 1) above.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  This patch is based on the latest linux-phy / next branch.
+>  (commit id = cfd093bbb5fe84ec8c7bb069fe618159a8b601f5)
+> 
+>  Changes from v1:
+>   - Revise some typos.
+>   - Remove using clk API to enable/disable the clocks.
+>     (In other words, this driver expects to enable/disable the clocks by
+>      Runtime PM API by the phy-core driver.)
+>   - Remove an unnecessary header file (asm/cmpxchg.h).
+> 
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  35 +++
+>  drivers/phy/Kconfig                                |   6 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-rcar-gen3-usb2.c                   | 240 +++++++++++++++++++++
+>  4 files changed, 282 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>  create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> new file mode 100644
+> index 0000000..1d57766
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -0,0 +1,35 @@
+> +* Renesas R-Car generation 3 USB 2.0 PHY
+> +
+> +This file provides information on what the device node for the R-Car generation
+> +3 USB 2.0 PHY contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
+> +	      SoC.
+> +- reg: offset and length of the USB2.0 host register block.
+> +- reg-names: must be "usb2".
+> +- clocks: clock phandle and specifier pair(s).
+> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
+> +
+> +Optional properties:
+> +To use a USB channel where EHCI/OHCI and HSUSB are combined, the device tree
+> +node should set HSUSB properties to reg and reg-names properties:
+> +- reg: offset and length of the HSUSB register block.
+> +- reg-names: must be "hsusb".
+> +
+> +Example (R-Car H3):
+> +
+> +	usb-phy@ee080200 {
+> +		compatible = "renesas,usb2-phy-r8a7795";
+> +		reg = <0 0xee080200 0 0x6ff>, <0 0xe6590100 0 0x100>;
+> +		reg-names = "usb2", "hsusb";
 
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
- drivers/usb/renesas_usbhs/common.c                      | 4 ++++
- 2 files changed, 5 insertions(+)
+hsusb is missing in Documentation.
+> +		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
+> +			 <&mstp7_clks R8A7795_CLK_HSUSB>;
+> +	};
+> +
+> +	usb-phy@ee0a0200 {
+> +		compatible = "renesas,usb2-phy-r8a7795";
+> +		reg = <0 0xee0a0200 0 0x6ff>;
+> +		reg-names = "usb2";
+> +		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>;
+> +	};
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 0fe9bff..406dc43 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -116,6 +116,12 @@ config PHY_RCAR_GEN2
+>  	help
+>  	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
+>  
+> +config PHY_RCAR_GEN3_USB2
+> +	tristate "Renesas R-Car generation 3 USB 2.0 PHY driver"
+> +	depends on GENERIC_PHY
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 64a4ca6..7d48f63 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -5,6 +5,7 @@ Required properties:
- 	- "renesas,usbhs-r8a7790"
- 	- "renesas,usbhs-r8a7791"
- 	- "renesas,usbhs-r8a7794"
-+	- "renesas,usbhs-r8a7795"
-   - reg: Base address and length of the register for the USBHS
-   - interrupts: Interrupt specifier for the USBHS
-   - clocks: A list of phandle + clock specifier pairs
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 7b98e1d..2becd6b 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -476,6 +476,10 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,usbhs-r8a7794",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
- 	},
-+	{
-+		.compatible = "renesas,usbhs-r8a7795",
-+		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usbhs_of_match);
--- 
-1.9.1
+depends on OF?
 
+Thanks
+Kishon
