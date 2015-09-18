@@ -1,60 +1,42 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 4/5] ARM: dts: dra72-evm: Enable the system mailboxes 5 and 6
-Date: Fri, 18 Sep 2015 13:16:33 -0500
-Message-ID: <1442600194-62520-5-git-send-email-s-anna@ti.com>
-References: <1442600194-62520-1-git-send-email-s-anna@ti.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v4 09/10] power: bq24257: Add various device-specific
+ sysfs properties
+Date: Fri, 18 Sep 2015 14:08:09 -0500
+Message-ID: <20150918190809.GH27772@beast>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-10-git-send-email-dannenberg@ti.com>
+ <55F923DE.5010809@samsung.com>
+ <20150916195449.GF27772@beast>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442600194-62520-1-git-send-email-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150916195449.GF27772@beast>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the System Mailboxes 5 and 6 and the corresponding
-child sub-mailbox (IPC 3.x) nodes for the DRA72 EVM board.
-This is needed to enable communication with the respective
-remote processors IPU1, IPU2, and DSP1 from the MPU.
+On Wed, Sep 16, 2015 at 02:54:53PM -0500, Andreas Dannenberg wrote:
+> On Wed, Sep 16, 2015 at 05:10:06PM +0900, Krzysztof Kozlowski wrote:
+> > On 16.09.2015 02:58, Andreas Dannenberg wrote:
+> > >  static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
+> > >  static DEVICE_ATTR(in_dpm_voltage, S_IRUGO, bq24257_show_in_dpm_voltage, NULL);
+> > 
+> > This applies to previous patches actually: DEVICE_ATTR_RO?
+> 
+> Ok. Will simplify.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/dra72-evm.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Actually I looked into this more and realized that the use of the
+pre-configured DEVICE_ATTR_* definitions imposes certain function names,
+which would mean renaming the functions including dropping the bq24257_
+prefix those function names have, making the code inconsistent and
+decreasing the unique-ness of those function names in the global Kernel
+namespace. So I rather leave the more general DEVICE_ATTR() definitions
+in place.
 
-diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
-index 6f6bd98c98df..ccb535b5ef9b 100644
---- a/arch/arm/boot/dts/dra72-evm.dts
-+++ b/arch/arm/boot/dts/dra72-evm.dts
-@@ -695,3 +695,20 @@
- 		};
- 	};
- };
-+
-+&mailbox5 {
-+	status = "okay";
-+	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
-+		status = "okay";
-+	};
-+	mbox_dsp1_ipc3x: mbox_dsp1_ipc3x {
-+		status = "okay";
-+	};
-+};
-+
-+&mailbox6 {
-+	status = "okay";
-+	mbox_ipu2_ipc3x: mbox_ipu2_ipc3x {
-+		status = "okay";
-+	};
-+};
--- 
-2.5.0
+Regards,
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
