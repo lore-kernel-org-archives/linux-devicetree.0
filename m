@@ -1,57 +1,129 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/7] hwrng: st: Provide DT bindings for ST's Random
- Number Generator
-Date: Fri, 18 Sep 2015 17:23:41 +0100
-Message-ID: <CAF2Aj3gBn=PLB=4NvnZwbdtzkYT6QcPPrk3NCNz1+Cx9ZBWr1w@mail.gmail.com>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
-	<1442497557-9271-5-git-send-email-lee.jones@linaro.org>
-	<55FC3A11.6080209@codeaurora.org>
+From: Alonso Adrian <aalonso@freescale.com>
+Subject: RE: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID
+ flag
+Date: Fri, 18 Sep 2015 16:27:37 +0000
+Message-ID: <CY1PR03MB15206FAAB4656A6E207FD4E2A8590@CY1PR03MB1520.namprd03.prod.outlook.com>
+References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
+ <1441147753-13239-5-git-send-email-aalonso@freescale.com>
+ <20150907012831.GE30746@tiger>
+ <BN3PR03MB1509E4893244D963FDA21707A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
+ <20150918135248.GB3770@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <55FC3A11.6080209@codeaurora.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150918135248.GB3770@tiger>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, Huang Anson <Anson.Huang@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Yibin Gong <yibin.gong@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18 September 2015 at 17:21, Stephen Boyd <sboyd@codeaurora.org> wrot=
-e:
-> On 09/17/2015 06:45 AM, Lee Jones wrote:
->> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/rng/st,rng.txt | 15 +++++++++++++=
-++
->>  1 file changed, 15 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rng/st,rng.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rng/st,rng.txt b/Docu=
-mentation/devicetree/bindings/rng/st,rng.txt
->> new file mode 100644
->> index 0000000..dbc64e6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rng/st,rng.txt
->> @@ -0,0 +1,15 @@
->> +STMicroelectronics HW Random Number Generator
->> +----------------------------------------------
->> +
->> +Required parameters:
->> +compatible   : Should be "st,rng"
->> +reg          : Base address and size of IP's register map.
->> +clocks               : Phandle to device's clock (See: ../clocks/cl=
-ock-bindings.txt)
->> +
->> +Example:
->> +
->> +rng@0xfee80000 {
->
-> Drop the 0x part please.
-
-Good spot.  Will fix as a subsequent patch.
-
---=20
-Lee Jones
-Linaro ST Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Friday, September 18, 2015 8:53 AM
+> To: Alonso Lazcano Adrian-B38018 <aalonso@freescale.com>
+> Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org;
+> linus.walleij@linaro.org; lznuaa@gmail.com; devicetree@vger.kernel.org; Li
+> Frank-B20596 <Frank.Li@freescale.com>; Garg Nitin-B37173
+> <nitin.garg@freescale.com>; Huang Yongcai-B20788
+> <Anson.Huang@freescale.com>; linux-gpio@vger.kernel.org;
+> robh+dt@kernel.org; Gong Yibin-B38343 <yibin.gong@freescale.com>
+> Subject: Re: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID
+> flag
+> 
+> On Tue, Sep 08, 2015 at 04:05:32PM +0000, Alonso Adrian wrote:
+> > Hi Shawn,
+> >
+> > See comments below
+> 
+> Please use bottom posting, not top posting.
+> 
+> ...
+> 
+> > > @@ -536,21 +536,29 @@ static int imx_pinctrl_parse_groups(struct
+> device_node *np,
+> > >               return -ENOMEM;
+> > >
+> > >       for (i = 0; i < grp->npins; i++) {
+> > > -             u32 mux_reg = be32_to_cpu(*list++);
+> > > +             u32 mux_reg;
+> > >               u32 conf_reg;
+> > >               unsigned int pin_id;
+> > >               struct imx_pin_reg *pin_reg;
+> > >               struct imx_pin *pin = &grp->pins[i];
+> > >
+> > > +             mux_reg = be32_to_cpu(*list++);
+> > > +             if (!(info->flags & ZERO_OFFSET_VALID) && !mux_reg)
+> > > +                     mux_reg = -1;
+> > > +
+> > >               if (info->flags & SHARE_MUX_CONF_REG) {
+> > >                       conf_reg = mux_reg;
+> > >               } else {
+> > >                       conf_reg = be32_to_cpu(*list++);
+> > > -                     if (!conf_reg)
+> > > +                     if (!(info->flags & ZERO_OFFSET_VALID) &&
+> > > + !conf_reg)
+> > >                               conf_reg = -1;
+> > >               }
+> > >
+> > [Adrian] The below assignment is the important thing that this patch
+> > does, it allows the pad_id to be zero and match the pad id's according to the
+> mux_reg offset.
+> > > -             pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
+> > > +             if (info->flags & ZERO_OFFSET_VALID)
+> > > +                     pin_id = mux_reg / 4;
+> > > +             else
+> > > +                     pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
+> > > +
+> 
+> Ah, yes.  So the only code change we need is just the line below, right?
+> 
+> 	pin_id = (mux_reg != -1) ? mux_reg / 4 : conf_reg / 4;
+> 
+> Shawn
+[Adrian] Yes that will work, let me resend a new patch series with this change, Thanks.
+> 
+> > >               pin_reg = &info->pin_regs[pin_id];
+> > >               pin->pin = pin_id;
+> > >               grp->pin_ids[i] = pin_id; @@ -684,7 +692,7 @@ int
+> > > imx_pinctrl_probe(struct platform_device *pdev,  {
+> > >       struct imx_pinctrl *ipctl;
+> > >       struct resource *res;
+> > > -     int ret, i;
+> > > +     int ret;
+> > >
+> > >       if (!info || !info->pins || !info->npins) {
+> > >               dev_err(&pdev->dev, "wrong pinctrl info\n"); @@
+> > > -702,11 +710,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+> > >       if (!info->pin_regs)
+> > >               return -ENOMEM;
+> > >
+> > > -     for (i = 0; i < info->npins; i++) {
+> > > -             info->pin_regs[i].mux_reg = -1;
+> > > -             info->pin_regs[i].conf_reg = -1;
+> > > -     }
+> > > -
+> > >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >       ipctl->base = devm_ioremap_resource(&pdev->dev, res);
+> > >       if (IS_ERR(ipctl->base))
+> > > diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h
+> > > b/drivers/pinctrl/freescale/pinctrl-imx.h
+> > > index 26f8f1c..67c07c2 100644
+> > > --- a/drivers/pinctrl/freescale/pinctrl-imx.h
+> > > +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+> > > @@ -85,6 +85,7 @@ struct imx_pinctrl_soc_info {  };
+> > >
+> > >  #define SHARE_MUX_CONF_REG   0x1
+> > > +#define ZERO_OFFSET_VALID    0x2
+> > >
+> > >  #define NO_MUX               0x0
+> > >  #define NO_PAD               0x0
+> > > --
+> > > 2.1.4
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
