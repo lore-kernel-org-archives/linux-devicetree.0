@@ -1,73 +1,69 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v2 5/9] ARM: dts: Move all Cygnus peripherals into soc bus
-Date: Fri, 18 Sep 2015 15:11:27 -0700
-Message-ID: <55FC8C0F.9020308@broadcom.com>
-References: <1442611454-16331-1-git-send-email-rjui@broadcom.com>
- <1442611454-16331-6-git-send-email-rjui@broadcom.com>
- <1929872.EmD9YkfFuv@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Constantine Shulyupin <const@MakeLinux.com>
+Subject: Please suggest proper format for DT properties.
+Date: Sat, 19 Sep 2015 01:36:43 +0300
+Message-ID: <1442615803-17766-1-git-send-email-const@MakeLinux.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1929872.EmD9YkfFuv@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>
+To: open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lm-sensors@lm-sensors.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+I am designing DT support for a hwmon chip. 
+It has some sensors, each of them can be:
+ - "disabled"
+ - "thermal diode"
+ - "thermistor"
+ - "voltage"
 
-On 9/18/2015 2:34 PM, Arnd Bergmann wrote:
-> On Friday 18 September 2015 14:24:10 Ray Jui wrote:
->> +       soc {
->> +               compatible = "simple-bus";
->> +               ranges;
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
-> 
->> +               pinctrl: pinctrl@0301d0c8 {
->>
-> 
-> Similarly to the core bus, this seems to have address ranges 0x03xxxxxx and
-> 0x18xxxxxx on it, so put those into the ranges.
->
+Four possible options for DT properties format.
 
-Okay we have an issue here. For whatever reason, the Cygnus ASIC team
-decided to put registers for the same block in random locations. We see
-similar issues in all of our other iProc based SoCs. We have
-communicated this to our ASIC team, and hopefully they can revert the
-trend for the next SoC.
+Option 1: Separated property for each sensor.
 
-For example, the gpio_ccm has registers in the following regions:
+Example nct7802 node:
 
-gpio_ccm: gpio@1800a000 {
-    compatible = "brcm,cygnus-ccm-gpio";
-    reg = <0x1800a000 0x50>,
-          <0x0301d164 0x20>;
+nct7802 {
+	compatible = "nuvoton,nct7802";
+	reg = <0x2a>;
+	nuvoton,sensor1-type = "thermistor";
+	nuvoton,sensor2-type = "disabled";
+	nuvoton,sensor3-type = "voltage";
+};
 
-NAND is worse, it has registers in 3 different separate regions:
+Option 2: Array of strings for all sensors.
 
-nand: nand@18046000 {
-    compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1",
-                 "brcm,brcmnand";
-    reg = <0x18046000 0x600>, <0xf8105408 0x600>,
-          <0x18046f00 0x20>;
+nct7802 {
+	compatible = "nuvoton,nct7802";
+	reg = <0x2a>;
+	nuvoton,sensors-types = "thermistor", "disabled", "voltage";
+};
 
-As you can see, this makes it impossible to define a proper address
-range for the bus; therefore, I'll have to keep the ranges undefined and
-a simple 1:1 mapping under this bus.
+Option 3: Sets of 4 cells.
 
-> It probably also makes sense to name the bus according to what kind of
-> bus (axi, ahb, plb, ...) is used here. If the soc has nested buses
-> (e.g. an ahb connected to an axi bus,) then model both of them in the DT.
+  Borrowed from marvell,reg-init and broadcom,c45-reg-init.
 
-Based on the block diagram from the ASIC team, it looks like all of them
-are connected to one major AXI fabric. I can rename the bus to AXI.
+  The first cell is the page address, 
+  the second a register address within the page,
+  the third cell contains a mask to be ANDed with the existing register
+  value, and the fourth cell is ORed with the result to yield the
+  new register value. If the third cell has a value of zero,
+  no read of the existing value is performed.
 
-> 
-> 	Arnd
-> 
+Example nct7802 node:
 
-Thanks,
+nct7802 {
+	compatible = "nuvoton,nct7802";
+	reg = <0x2a>;
+	nct7802,reg-init =
+		<0 0x21 0 0x01 > // START = 1
+		<0 0x22 0x03 0x02>; // RTD1_MD = 2
+};
 
-Ray
+Please suggest proper format for DT properties.
+
+Thanks
+Constantine
+
+PS:
+Datasheet: https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
