@@ -1,129 +1,98 @@
-From: Alonso Adrian <aalonso@freescale.com>
-Subject: RE: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID
- flag
-Date: Fri, 18 Sep 2015 16:27:37 +0000
-Message-ID: <CY1PR03MB15206FAAB4656A6E207FD4E2A8590@CY1PR03MB1520.namprd03.prod.outlook.com>
-References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-5-git-send-email-aalonso@freescale.com>
- <20150907012831.GE30746@tiger>
- <BN3PR03MB1509E4893244D963FDA21707A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
- <20150918135248.GB3770@tiger>
+From: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 1/8] pinctrl: freescale: imx: fix system crash if enable two pinctl instances
+Date: Fri, 18 Sep 2015 11:29:51 -0500
+Message-ID: <1442593798-11501-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150918135248.GB3770@tiger>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, Huang Anson <Anson.Huang@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Yibin Gong <yibin.gong@freescale.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Friday, September 18, 2015 8:53 AM
-> To: Alonso Lazcano Adrian-B38018 <aalonso@freescale.com>
-> Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org;
-> linus.walleij@linaro.org; lznuaa@gmail.com; devicetree@vger.kernel.org; Li
-> Frank-B20596 <Frank.Li@freescale.com>; Garg Nitin-B37173
-> <nitin.garg@freescale.com>; Huang Yongcai-B20788
-> <Anson.Huang@freescale.com>; linux-gpio@vger.kernel.org;
-> robh+dt@kernel.org; Gong Yibin-B38343 <yibin.gong@freescale.com>
-> Subject: Re: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID
-> flag
-> 
-> On Tue, Sep 08, 2015 at 04:05:32PM +0000, Alonso Adrian wrote:
-> > Hi Shawn,
-> >
-> > See comments below
-> 
-> Please use bottom posting, not top posting.
-> 
-> ...
-> 
-> > > @@ -536,21 +536,29 @@ static int imx_pinctrl_parse_groups(struct
-> device_node *np,
-> > >               return -ENOMEM;
-> > >
-> > >       for (i = 0; i < grp->npins; i++) {
-> > > -             u32 mux_reg = be32_to_cpu(*list++);
-> > > +             u32 mux_reg;
-> > >               u32 conf_reg;
-> > >               unsigned int pin_id;
-> > >               struct imx_pin_reg *pin_reg;
-> > >               struct imx_pin *pin = &grp->pins[i];
-> > >
-> > > +             mux_reg = be32_to_cpu(*list++);
-> > > +             if (!(info->flags & ZERO_OFFSET_VALID) && !mux_reg)
-> > > +                     mux_reg = -1;
-> > > +
-> > >               if (info->flags & SHARE_MUX_CONF_REG) {
-> > >                       conf_reg = mux_reg;
-> > >               } else {
-> > >                       conf_reg = be32_to_cpu(*list++);
-> > > -                     if (!conf_reg)
-> > > +                     if (!(info->flags & ZERO_OFFSET_VALID) &&
-> > > + !conf_reg)
-> > >                               conf_reg = -1;
-> > >               }
-> > >
-> > [Adrian] The below assignment is the important thing that this patch
-> > does, it allows the pad_id to be zero and match the pad id's according to the
-> mux_reg offset.
-> > > -             pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> > > +             if (info->flags & ZERO_OFFSET_VALID)
-> > > +                     pin_id = mux_reg / 4;
-> > > +             else
-> > > +                     pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> > > +
-> 
-> Ah, yes.  So the only code change we need is just the line below, right?
-> 
-> 	pin_id = (mux_reg != -1) ? mux_reg / 4 : conf_reg / 4;
-> 
-> Shawn
-[Adrian] Yes that will work, let me resend a new patch series with this change, Thanks.
-> 
-> > >               pin_reg = &info->pin_regs[pin_id];
-> > >               pin->pin = pin_id;
-> > >               grp->pin_ids[i] = pin_id; @@ -684,7 +692,7 @@ int
-> > > imx_pinctrl_probe(struct platform_device *pdev,  {
-> > >       struct imx_pinctrl *ipctl;
-> > >       struct resource *res;
-> > > -     int ret, i;
-> > > +     int ret;
-> > >
-> > >       if (!info || !info->pins || !info->npins) {
-> > >               dev_err(&pdev->dev, "wrong pinctrl info\n"); @@
-> > > -702,11 +710,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
-> > >       if (!info->pin_regs)
-> > >               return -ENOMEM;
-> > >
-> > > -     for (i = 0; i < info->npins; i++) {
-> > > -             info->pin_regs[i].mux_reg = -1;
-> > > -             info->pin_regs[i].conf_reg = -1;
-> > > -     }
-> > > -
-> > >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >       ipctl->base = devm_ioremap_resource(&pdev->dev, res);
-> > >       if (IS_ERR(ipctl->base))
-> > > diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h
-> > > b/drivers/pinctrl/freescale/pinctrl-imx.h
-> > > index 26f8f1c..67c07c2 100644
-> > > --- a/drivers/pinctrl/freescale/pinctrl-imx.h
-> > > +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-> > > @@ -85,6 +85,7 @@ struct imx_pinctrl_soc_info {  };
-> > >
-> > >  #define SHARE_MUX_CONF_REG   0x1
-> > > +#define ZERO_OFFSET_VALID    0x2
-> > >
-> > >  #define NO_MUX               0x0
-> > >  #define NO_PAD               0x0
-> > > --
-> > > 2.1.4
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+Fix system chrash caused by groups whose number is smaller than the number
+of groups of the last pinctl instance which is not initialized.
+
+iMX7D supports two iomux controllers (iomuxc-lpsr and iomuxc) on probing
+the second instance (iomuxc) the chrash below occurs.
+
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.2.0-next-20150901-00006-gebfa43c (aalonso@bluefly)
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7)
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasin instruction cache
+[    0.000000] Machine model: Freescale i.MX7 SabreSD Board
+[    0.661012] [<802a6cb0>] (strcmp) from [<802cc80c>] (imx_dt_node_to_map+0x58/0x208)
+[    0.668879] [<802cc80c>] (imx_dt_node_to_map) from [<802cbe24>] (pinctrl_dt_to_map+0x174/0x2b0)
+[    0.677654] [<802cbe24>] (pinctrl_dt_to_map) from [<802c8f18>] (pinctrl_get+0x100/0x424)
+[    0.685878] [<802c8f18>] (pinctrl_get) from [<802c9510>] (pinctrl_register+0x26c/0x480)
+[    0.694104] [<802c9510>] (pinctrl_register) from [<802ccf3c>] (imx_pinctrl_probe+0x580/0x6e8)
+[    0.702706] [<802ccf3c>] (imx_pinctrl_probe) from [<80351b58>] (platform_drv_probe+0x44/0xa4)
+[    0.711455] [<80351b58>] (platform_drv_probe) from [<803503ec>] (driver_probe_device+0x174/0x2b4)
+[    0.720405] [<803503ec>] (driver_probe_device) from [<803505fc>] (__driver_attach+0x8c/0x90)
+[    0.728982] [<803505fc>] (__driver_attach) from [<8034e930>] (bus_for_each_dev+0x6c/0xa0)
+[    0.737381] [<8034e930>] (bus_for_each_dev) from [<8034fb88>] (bus_add_driver+0x148/0x1f0)
+[    0.745804] [<8034fb88>] (bus_add_driver) from [<80350c00>] (driver_register+0x78/0xf8)
+[    0.753880] [<80350c00>] (driver_register) from [<800097d0>] (do_one_initcall+0x8c/0x1d4)
+[    0.762282] [<800097d0>] (do_one_initcall) from [<80987dac>] (kernel_init_freeable+0x144/0x1e4)
+[    0.771061] [<80987dac>] (kernel_init_freeable) from [<806d9c7c>] (kernel_init+0x8/0xe8)
+[    0.779285] [<806d9c7c>] (kernel_init) from [<8000f628>] (ret_from_fork+0x14/0x2c)
+[    0.786981] Code: e3520000 e5e32001 1afffffb e12fff1e (e4d03001)
+
+Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Chages for V2:
+- Reorder patch series
+- Add platform boot up information on kernel error
+- Move gpr_index to imx_pinctrl_soc_info
+Changes for V3:
+- Rename grp_index to group_index
+Changes for V4: Resend
+
+ drivers/pinctrl/freescale/pinctrl-imx.c | 3 +--
+ drivers/pinctrl/freescale/pinctrl-imx.h | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index d7b98ba..b9c6deb 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -580,7 +580,6 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 	struct device_node *child;
+ 	struct imx_pmx_func *func;
+ 	struct imx_pin_group *grp;
+-	static u32 grp_index;
+ 	u32 i = 0;
+ 
+ 	dev_dbg(info->dev, "parse function(%d): %s\n", index, np->name);
+@@ -599,7 +598,7 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 
+ 	for_each_child_of_node(np, child) {
+ 		func->groups[i] = child->name;
+-		grp = &info->groups[grp_index++];
++		grp = &info->groups[info->group_index++];
+ 		imx_pinctrl_parse_groups(child, grp, info, i++);
+ 	}
+ 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 49e55d3..2a5fe72 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -78,6 +78,7 @@ struct imx_pinctrl_soc_info {
+ 	struct imx_pin_reg *pin_regs;
+ 	struct imx_pin_group *groups;
+ 	unsigned int ngroups;
++	unsigned int group_index;
+ 	struct imx_pmx_func *functions;
+ 	unsigned int nfunctions;
+ 	unsigned int flags;
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
