@@ -1,45 +1,48 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] ARM: dts: consolidate aliases for Cygnus dt files
-Date: Fri, 18 Sep 2015 23:27:37 +0200
-Message-ID: <25764744.UdkoAR05y0@wuerfel>
-References: <1442611454-16331-1-git-send-email-rjui@broadcom.com> <1442611454-16331-2-git-send-email-rjui@broadcom.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v4 05/10] power: bq24257: Add SW-based approach for Power
+ Good determination
+Date: Fri, 18 Sep 2015 16:28:17 -0500
+Message-ID: <20150918212816.GI27772@beast>
+References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+ <1442339914-25843-6-git-send-email-dannenberg@ti.com>
+ <55F900F9.90306@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442611454-16331-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F900F9.90306@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 September 2015 14:24:06 Ray Jui wrote:
-> Move aliases into bcm-cygnus.dtsi to avoid duplications in Cygnus dts
-> files
+On Wed, Sep 16, 2015 at 02:41:13PM +0900, Krzysztof Kozlowski wrote:
+> On 16.09.2015 02:58, Andreas Dannenberg wrote:
+> > @@ -676,7 +696,7 @@ static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
+> >  {
+> >  	bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0, GPIOD_IN);
+> >  	if (IS_ERR(bq->pg)) {
+> > -		dev_err(bq->dev, "could not probe PG pin\n");
+> > +		dev_info(bq->dev, "could not probe PG pin\n");
 > 
+> I think if pg-gpio is provided (e.g. by DTS) but it is invalid (return
+> value != ENOENT) then it is an error you could print. The driver will
+> fallback to the software method but still user/developer may want to
+> notice the error (e.g. error in DTS).
+> 
+> Anyway it is up to you, rest looks good:
 
-We generally recommend keeping them separate:
+Krzysztof,
+I looked at this closer and all the error scenarios I could come up with
+to test regarding the pin definition in DT (wrong pin numbers, missing
+definition altogether) all generated an -ENOENT coming out of
+devm_gpiod_get_index() with no differentiation between the cases. I'm
+sure there is some way to accomplish that but for the time being I left
+the refinement between dev_err() and dev_info() alone.
 
-> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> index e1ac07a..30903ba 100644
-> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> @@ -40,6 +40,10 @@
->         model = "Broadcom Cygnus SoC";
->         interrupt-parent = <&gic>;
->  
-> +       aliases {
-> +               serial0 = &uart3;
-> +       };
-> +
+Regards,
 
-The SoC has at least four uarts according to this, so it seems unlikely that
-each board really only uses only the fourth one of them and labels it '0'
-on the board. As soon as you get one board that has more than one uart wired
-up, you would need to undo this.
-
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andreas Dannenberg
+Texas Instruments Inc
+
