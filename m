@@ -1,44 +1,32 @@
 From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [RESEND PATCH 0/2] ST PLL fixes for 4.3-rc2
-Date: Fri, 18 Sep 2015 09:31:26 +0200
-Message-ID: <55FBBDCE.8070905@st.com>
+Subject: Re: [PATCH 2/2] drivers: clk: st: Rename st_pll3200c32_407_c0_x into
+ st_pll3200c32_cx_x
+Date: Fri, 18 Sep 2015 09:31:52 +0200
+Message-ID: <55FBBDE8.5070305@st.com>
 References: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
- <20150916223051.GO23081@codeaurora.org> <55FA8C14.3020000@st.com>
- <20150917181449.GR23081@codeaurora.org>
+ <1442389379-9298-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20150917185151.GT23081@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150917181449.GR23081@codeaurora.org>
+In-Reply-To: <20150917185151.GT23081@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 09/17/2015 08:14 PM, Stephen Boyd wrote:
-> On 09/17, Maxime Coquelin wrote:
+On 09/17/2015 08:51 PM, Stephen Boyd wrote:
+> On 09/16, Gabriel Fernandez wrote:
+>> Use a generic name for this kind of PLL
 >>
->> On 09/17/2015 12:30 AM, Stephen Boyd wrote:
->>> On 09/16, Gabriel Fernandez wrote:
->>>> This patch set fixes a kernel crash :
->>> [..]
->>>> This kernel crash is due to a broken compatibility with this commit:
->>>> commit 5eb26c605909 ("ARM: STi: DT: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x")
->>> It isn't clear who's supposed to apply this because the To: list
->>> is huge. Did you want to take this through arm-soc? If so, feel
->>> free to take my acked-by on the second patch. The first patch
->>> doesn't even apply to clk tree because the patch introducing the
->>> typo didn't go through our tree.
->> Indeed Stephen, I see it went through my tree (STi DT).
->> So the first patch should be taken through arm-soc.
->> The second patch, should be taken through yours I think.
+>> Correction in dts files are already done here:
+>> commit 5eb26c605909 ("ARM: STi: DT: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x")
 >>
-> Ok. That probably breaks bisectability, but if you're not
-> worried, I'm not worried.
-I'm not worried about bisectability indeed, as the first patch is just 
-typo fixes in DT Bindings documentation.
-
-Regards,
-Maxime
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>> ---
+> Applied to clk-fixes
+>
+Thanks Stephen
