@@ -1,84 +1,302 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v4 0/4] PCI: st: provide support for dw pcie
-Date: Fri, 18 Sep 2015 08:29:58 +0200
-Message-ID: <CAG374jAPc8o47uy=0u7FKSZzgMqX9UQ2HCB0Kjme2Xce_tC2aQ@mail.gmail.com>
-References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org> <20150917145949.GF25767@google.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] usb: phy: add usb3.0 phy driver for mt65xx SoCs
+Date: Fri, 18 Sep 2015 12:12:18 +0530
+Message-ID: <55FBB24A.2010600@ti.com>
+References: <1442385864-4368-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1442385864-4368-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150917145949.GF25767@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edwo>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1442385864-4368-4-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-No problem
+Hi,
+
+On Wednesday 16 September 2015 12:14 PM, Chunfeng Yun wrote:
+> support usb3.0 phy of mt65xx SoCs
+few nitpicks:
+
+change $subject. This driver is no longer in usb directory.
+
+It can be just "phy: add usb3.0 phy driver for mt65xx SoCs".
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/phy/Kconfig           |   9 +
+>  drivers/phy/Makefile          |   1 +
+>  drivers/phy/phy-mt65xx-usb3.c | 456 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 466 insertions(+)
+>  create mode 100644 drivers/phy/phy-mt65xx-usb3.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 47da573..ec436c1 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -206,6 +206,15 @@ config PHY_HIX5HD2_SATA
+>  	help
+>  	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
+>  
+> +config PHY_MT65XX_USB3
+> +	tristate "Mediatek USB3.0 PHY Driver"
+> +	depends on ARCH_MEDIATEK && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Say 'Y' here to add support for Mediatek USB3.0 PHY driver
+> +	  for mt65xx SoCs. it supports two usb2.0 ports and
+> +	  one usb3.0 port.
+> +
+>  config PHY_SUN4I_USB
+>  	tristate "Allwinner sunxi SoC USB PHY driver"
+>  	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index a5b18c1..a7cc629 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -23,6 +23,7 @@ obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+>  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
+>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+> +obj-$(CONFIG_PHY_MT65XX_USB3)		+= phy-mt65xx-usb3.o
+>  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
+>  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
+> diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
+> new file mode 100644
+> index 0000000..1f00b05
+> --- /dev/null
+> +++ b/drivers/phy/phy-mt65xx-usb3.c
+> @@ -0,0 +1,456 @@
+> +/*
+> + * Copyright (c) 2015 MediaTek Inc.
+> + * Author: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +/*
+> + * for sifslv2 register, but exclude port's;
+> + * relative to USB3_SIF2_BASE base address
+> + */
+> +#define SSUSB_SIFSLV_SPLLC		0x0000
+> +
+> +/* offsets of sub-segment in each port registers */
+> +#define SSUSB_SIFSLV_U2PHY_COM_BASE	0x0000
+> +#define SSUSB_SIFSLV_U3PHYD_BASE	0x0100
+> +#define SSUSB_USB30_PHYA_SIV_B_BASE	0x0300
+> +#define SSUSB_SIFSLV_U3PHYA_DA_BASE	0x0400
+> +
+> +#define U3P_USBPHYACR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0000)
+> +#define PA0_RG_U2PLL_FORCE_ON		BIT(15)
+> +
+> +#define U3P_USBPHYACR2		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0008)
+> +#define PA2_RG_SIF_U2PLL_FORCE_EN	BIT(18)
+> +
+> +#define U3P_USBPHYACR5		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0014)
+> +#define PA5_RG_U2_HSTX_SRCTRL		GENMASK(14, 12)
+> +#define PA5_RG_U2_HSTX_SRCTRL_VAL(x)	((0x7 & (x)) << 12)
+> +#define PA5_RG_U2_HS_100U_U3_EN	BIT(11)
+> +
+> +#define U3P_USBPHYACR6		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0018)
+> +#define PA6_RG_U2_ISO_EN		BIT(31)
+> +#define PA6_RG_U2_BC11_SW_EN		BIT(23)
+> +#define PA6_RG_U2_OTG_VBUSCMP_EN	BIT(20)
+> +
+> +#define U3P_U2PHYACR4		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0020)
+> +#define P2C_RG_USB20_GPIO_CTL		BIT(9)
+> +#define P2C_USB20_GPIO_MODE		BIT(8)
+> +#define P2C_U2_GPIO_CTR_MSK	(P2C_RG_USB20_GPIO_CTL | P2C_USB20_GPIO_MODE)
+> +
+> +#define U3D_U2PHYDCR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0060)
+> +#define P2C_RG_SIF_U2PLL_FORCE_ON	BIT(24)
+> +
+> +#define U3P_U2PHYDTM0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0068)
+> +#define P2C_FORCE_UART_EN		BIT(26)
+> +#define P2C_FORCE_DATAIN		BIT(23)
+> +#define P2C_FORCE_DM_PULLDOWN		BIT(21)
+> +#define P2C_FORCE_DP_PULLDOWN		BIT(20)
+> +#define P2C_FORCE_XCVRSEL		BIT(19)
+> +#define P2C_FORCE_SUSPENDM		BIT(18)
+> +#define P2C_FORCE_TERMSEL		BIT(17)
+> +#define P2C_RG_DATAIN			GENMASK(13, 10)
+> +#define P2C_RG_DATAIN_VAL(x)		((0xf & (x)) << 10)
+> +#define P2C_RG_DMPULLDOWN		BIT(7)
+> +#define P2C_RG_DPPULLDOWN		BIT(6)
+> +#define P2C_RG_XCVRSEL			GENMASK(5, 4)
+> +#define P2C_RG_XCVRSEL_VAL(x)		((0x3 & (x)) << 4)
+> +#define P2C_RG_SUSPENDM			BIT(3)
+> +#define P2C_RG_TERMSEL			BIT(2)
+> +#define P2C_DTM0_PART_MASK \
+> +		(P2C_FORCE_DATAIN | P2C_FORCE_DM_PULLDOWN | \
+> +		P2C_FORCE_DP_PULLDOWN | P2C_FORCE_XCVRSEL | \
+> +		P2C_FORCE_TERMSEL | P2C_RG_DMPULLDOWN | \
+> +		P2C_RG_DPPULLDOWN | P2C_RG_TERMSEL)
+> +
+> +#define U3P_U2PHYDTM1		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x006C)
+> +#define P2C_RG_UART_EN			BIT(16)
+> +#define P2C_RG_VBUSVALID		BIT(5)
+> +#define P2C_RG_SESSEND			BIT(4)
+> +#define P2C_RG_AVALID			BIT(2)
+> +
+> +#define U3P_U3_PHYA_REG0	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0000)
+> +#define P3A_RG_U3_VUSB10_ON		BIT(5)
+> +
+> +#define U3P_U3_PHYA_REG6	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0018)
+> +#define P3A_RG_TX_EIDLE_CM		GENMASK(31, 28)
+> +#define P3A_RG_TX_EIDLE_CM_VAL(x)	((0xf & (x)) << 28)
+> +
+> +#define U3P_U3_PHYA_REG9	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0024)
+> +#define P3A_RG_RX_DAC_MUX		GENMASK(5, 1)
+> +#define P3A_RG_RX_DAC_MUX_VAL(x)	((0x1f & (x)) << 1)
+> +
+> +#define U3P_U3PHYA_DA_REG0	(SSUSB_SIFSLV_U3PHYA_DA_BASE + 0x0000)
+> +#define P3A_RG_XTAL_EXT_EN_U3		GENMASK(11, 10)
+> +#define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
+> +
+> +#define U3P_PHYD_CDR1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x005c)
+> +#define P3D_RG_CDR_BIR_LTD1		GENMASK(28, 24)
+> +#define P3D_RG_CDR_BIR_LTD1_VAL(x)	((0x1f & (x)) << 24)
+> +#define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
+> +#define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
+> +
+> +#define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
+> +#define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
+> +#define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
+> +
+> +struct mt65xx_phy_instance {
+> +	struct phy *phy;
+> +	void __iomem *port_base;
+> +	u32 index;
+> +	u8 type;
+> +};
+> +
+> +struct mt65xx_u3phy {
+> +	struct device *dev;
+> +	void __iomem *sif_base;	/* include sif2, but exclude port's */
+> +	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+> +	struct mt65xx_phy_instance **phys;
+> +	int nphys;
+> +};
+> +
+> +static void phy_instance_init(struct mt65xx_u3phy *u3phy,
+> +	struct mt65xx_phy_instance *instance)
+> +{
+> +	void __iomem *port_base = instance->port_base;
+> +	u32 index = instance->index;
+> +	u32 tmp;
+> +
+> +	/* switch to USB function. (system register, force ip into usb mode) */
+> +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> +	tmp &= ~P2C_FORCE_UART_EN;
+> +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> +
+> +	tmp = readl(port_base + U3P_U2PHYDTM1);
+> +	tmp &= ~P2C_RG_UART_EN;
+> +	writel(tmp, port_base + U3P_U2PHYDTM1);
+> +
+> +	if (!index) {
+> +		tmp = readl(port_base + U3P_U2PHYACR4);
+> +		tmp &= ~P2C_U2_GPIO_CTR_MSK;
+> +		writel(tmp, port_base + U3P_U2PHYACR4);
+> +	}
+> +
+> +	/* DP/DM BC1.1 path Disable */
+> +	tmp = readl(port_base + U3P_USBPHYACR6);
+> +	tmp &= ~PA6_RG_U2_BC11_SW_EN;
+> +	writel(tmp, port_base + U3P_USBPHYACR6);
+> +
+> +	tmp = readl(port_base + U3P_U3PHYA_DA_REG0);
+> +	tmp &= ~P3A_RG_XTAL_EXT_EN_U3;
+> +	tmp |= P3A_RG_XTAL_EXT_EN_U3_VAL(2);
+> +	writel(tmp, port_base + U3P_U3PHYA_DA_REG0);
+> +
+> +	tmp = readl(port_base + U3P_U3_PHYA_REG9);
+> +	tmp &= ~P3A_RG_RX_DAC_MUX;
+> +	tmp |= P3A_RG_RX_DAC_MUX_VAL(4);
+> +	writel(tmp, port_base + U3P_U3_PHYA_REG9);
+> +
+> +	tmp = readl(port_base + U3P_U3_PHYA_REG6);
+> +	tmp &= ~P3A_RG_TX_EIDLE_CM;
+> +	tmp |= P3A_RG_TX_EIDLE_CM_VAL(0xe);
+> +	writel(tmp, port_base + U3P_U3_PHYA_REG6);
+> +
+> +	tmp = readl(port_base + U3P_PHYD_CDR1);
+> +	tmp &= ~(P3D_RG_CDR_BIR_LTD0 | P3D_RG_CDR_BIR_LTD1);
+> +	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
+> +	writel(tmp, port_base + U3P_PHYD_CDR1);
+> +
+> +	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
+> +}
+> +
+> +static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
+> +	struct mt65xx_phy_instance *instance)
+> +{
+> +	void __iomem *port_base = instance->port_base;
+> +	u32 index = instance->index;
+> +	u32 tmp;
+> +
+> +	if (!index) {
+> +		/* Set RG_SSUSB_VUSB10_ON as 1 after VUSB10 ready */
+> +		tmp = readl(port_base + U3P_U3_PHYA_REG0);
+> +		tmp |= P3A_RG_U3_VUSB10_ON;
+> +		writel(tmp, port_base + U3P_U3_PHYA_REG0);
+> +	}
+> +
+> +	/* (force_suspendm=0) (let suspendm=1, enable usb 480MHz pll) */
+> +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> +	tmp &= ~(P2C_FORCE_SUSPENDM | P2C_RG_XCVRSEL);
+> +	tmp &= ~(P2C_RG_DATAIN | P2C_DTM0_PART_MASK);
+> +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> +
+> +	/* OTG Enable */
+> +	tmp = readl(port_base + U3P_USBPHYACR6);
+> +	tmp |= PA6_RG_U2_OTG_VBUSCMP_EN;
+> +	writel(tmp, port_base + U3P_USBPHYACR6);
+> +
+> +	if (!index) {
+> +		tmp = readl(u3phy->sif_base + U3P_XTALCTL3);
+> +		tmp |= XC3_RG_U3_XTAL_RX_PWD | XC3_RG_U3_FRC_XTAL_RX_PWD;
+> +		writel(tmp, u3phy->sif_base + U3P_XTALCTL3);
+> +		/* [mt8173]disable Change 100uA current from SSUSB */
+> +		tmp = readl(port_base + U3P_USBPHYACR5);
+> +		tmp &= ~PA5_RG_U2_HS_100U_U3_EN;
+> +		writel(tmp, port_base + U3P_USBPHYACR5);
+> +	}
+> +	udelay(800);
+
+It's good to document delay values. Is it a recommended value from the
+data manual?
+
+Also now the registers doesn't seem to be shared between the PHYs. But
+if it is then all these functions have to be protected with spinlock.
 
 Thanks
-
-Gabriel
-
-On 17 September 2015 at 16:59, Bjorn Helgaas <bhelgaas@google.com> wrote:
-> Hi Gabriel,
->
-> On Thu, Aug 27, 2015 at 02:34:13PM +0200, Gabriel Fernandez wrote:
->>
->> This patchset is based on v4.2-rc1 and is based on
->> [PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
->> patchset from Zhou Wang.
->>
->> Changes in v4:
->>  - Remove pci: designware: remove my pci_common_init_dev() patch and
->>       use [PATCH v8 3/6] PCI: designware: Add ARM64 support instead.
->>       This patch is a good solution for me to disable IO support.
->>  - add __init to st_pcie_probe() and use module_init() instead
->>       device_initcall() to prevent the probe function from being
->>       deferred and to prevent module unloading.
->>
->> Changes in v3:
->>  - Remove power management functions (was not fully tested)
->>  - Remove configuration space range from dt binding
->>  - Remove pci_common_init_dev() call in pcie-designware.c to avoid
->>    default IO space declaration.
->>
->> Changes in v2:
->>  - comestic corrections in device tree binding
->>  - add pci-st.c into MAINTAINERS
->>  - remove st_pcie_ops structure to avoid another level of indirection
->>  - remove nasty busy-loop
->>  - remove useless test using virt_to_phys()
->>  - move disable io support into dw-pcie driver
->>
->> I don't change the st_pcie_abort_handler() function because abort handling
->> is masked during boot.
->>
->>
->> This patch-set introduces a STMicroelectronics PCIe controller.
->> It's based on designware PCIe driver.
->>
->> Gabriel Fernandez (4):
->>   ARM: STi: Kconfig update for PCIe support
->>   PCI: st: Add Device Tree bindings for sti pcie
->>   PCI: st: Provide support for the sti PCIe controller
->>   MAINTAINERS: Add pci-st.c to ARCH/STI architecture
->
-> Rob had some questions, so I'm waiting for an update that responds to
-> those.  When you post that, can you also squash the last two patches
-> together?
->
-> Thanks,
->   Bjorn
->
->>  Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
->>  MAINTAINERS                                       |   1 +
->>  arch/arm/mach-sti/Kconfig                         |   2 +
->>  drivers/pci/host/Kconfig                          |   9 +
->>  drivers/pci/host/Makefile                         |   1 +
->>  drivers/pci/host/pci-st.c                         | 583 ++++++++++++++++++++++
->>  6 files changed, 649 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
->>  create mode 100644 drivers/pci/host/pci-st.c
->>
->> --
->> 1.9.1
->>
+Kishon
