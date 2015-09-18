@@ -1,111 +1,33 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID
- flag
-Date: Fri, 18 Sep 2015 21:52:48 +0800
-Message-ID: <20150918135248.GB3770@tiger>
-References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-5-git-send-email-aalonso@freescale.com>
- <20150907012831.GE30746@tiger>
- <BN3PR03MB1509E4893244D963FDA21707A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
+Date: Fri, 18 Sep 2015 22:07:56 +0800
+Message-ID: <20150918140756.GK9249@gondor.apana.org.au>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <BN3PR03MB1509E4893244D963FDA21707A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alonso Adrian <aalonso@freescale.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, Huang Anson <Anson.Huang@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Yibin Gong <yibin.gong@freescale.com>
+In-Reply-To: <1442497557-9271-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kieranbingham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 04:05:32PM +0000, Alonso Adrian wrote:
-> Hi Shawn,
-> 
-> See comments below
+On Thu, Sep 17, 2015 at 02:45:50PM +0100, Lee Jones wrote:
+> v1 => v2:
+>  - New patch: Also fixing /dev/hw_random => /dev/hwrng in Kconfig
+>  - Fix 2099 => 2009 typo in commit log
+>  - Fix 'number of random numbers sourced' return value
+>  - Treat devm_clk_get()'s return value correctly
+>  - Check return value of clk_prepare_enable()
+>  - Use sysfs_streq() instead of manually stripping '\n' from sysfs
 
-Please use bottom posting, not top posting.
-
-...
-
-> > @@ -536,21 +536,29 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
-> >               return -ENOMEM;
-> >
-> >       for (i = 0; i < grp->npins; i++) {
-> > -             u32 mux_reg = be32_to_cpu(*list++);
-> > +             u32 mux_reg;
-> >               u32 conf_reg;
-> >               unsigned int pin_id;
-> >               struct imx_pin_reg *pin_reg;
-> >               struct imx_pin *pin = &grp->pins[i];
-> >
-> > +             mux_reg = be32_to_cpu(*list++);
-> > +             if (!(info->flags & ZERO_OFFSET_VALID) && !mux_reg)
-> > +                     mux_reg = -1;
-> > +
-> >               if (info->flags & SHARE_MUX_CONF_REG) {
-> >                       conf_reg = mux_reg;
-> >               } else {
-> >                       conf_reg = be32_to_cpu(*list++);
-> > -                     if (!conf_reg)
-> > +                     if (!(info->flags & ZERO_OFFSET_VALID) && !conf_reg)
-> >                               conf_reg = -1;
-> >               }
-> >
-> [Adrian] The below assignment is the important thing that this patch does,
-> it allows the pad_id to be zero and match the pad id's according to the mux_reg offset.
-> > -             pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> > +             if (info->flags & ZERO_OFFSET_VALID)
-> > +                     pin_id = mux_reg / 4;
-> > +             else
-> > +                     pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> > +
-
-Ah, yes.  So the only code change we need is just the line below, right?
-
-	pin_id = (mux_reg != -1) ? mux_reg / 4 : conf_reg / 4;
-
-Shawn
-
-> >               pin_reg = &info->pin_regs[pin_id];
-> >               pin->pin = pin_id;
-> >               grp->pin_ids[i] = pin_id;
-> > @@ -684,7 +692,7 @@ int imx_pinctrl_probe(struct platform_device *pdev,
-> >  {
-> >       struct imx_pinctrl *ipctl;
-> >       struct resource *res;
-> > -     int ret, i;
-> > +     int ret;
-> >
-> >       if (!info || !info->pins || !info->npins) {
-> >               dev_err(&pdev->dev, "wrong pinctrl info\n");
-> > @@ -702,11 +710,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
-> >       if (!info->pin_regs)
-> >               return -ENOMEM;
-> >
-> > -     for (i = 0; i < info->npins; i++) {
-> > -             info->pin_regs[i].mux_reg = -1;
-> > -             info->pin_regs[i].conf_reg = -1;
-> > -     }
-> > -
-> >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >       ipctl->base = devm_ioremap_resource(&pdev->dev, res);
-> >       if (IS_ERR(ipctl->base))
-> > diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-> > index 26f8f1c..67c07c2 100644
-> > --- a/drivers/pinctrl/freescale/pinctrl-imx.h
-> > +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-> > @@ -85,6 +85,7 @@ struct imx_pinctrl_soc_info {
-> >  };
-> >
-> >  #define SHARE_MUX_CONF_REG   0x1
-> > +#define ZERO_OFFSET_VALID    0x2
-> >
-> >  #define NO_MUX               0x0
-> >  #define NO_PAD               0x0
-> > --
-> > 2.1.4
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
