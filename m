@@ -1,66 +1,40 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: [PATCH] ARM: at91/dt: ov2640: add hsync/vsync-active property
-Date: Fri, 18 Sep 2015 19:28:22 +0800
-Message-ID: <1442575702-22315-1-git-send-email-josh.wu@atmel.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 1/5] spi: introduce mmap read support for spi flash
+ devices
+Date: Fri, 18 Sep 2015 17:40:30 +0530
+Message-ID: <55FBFF36.8050905@ti.com>
+References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
+ <1441355402-6837-2-git-send-email-vigneshr@ti.com>
+ <20150914183744.GF12027@sirena.org.uk> <55F93F89.7060708@ti.com>
+ <20150916105647.GK11268@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150916105647.GK11268@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, Josh Wu <josh.wu@atmel.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On at91sam9x5ek/at91sam9m10g45ek/sama5d3xek boards, we use the parallel
-connection for ov2640. So we must set the hsync/vsync property (1 means
-active high).
-Otherwise, the connection would be seen as BT.656 or BT.1120.
 
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
----
 
- arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 ++
- arch/arm/boot/dts/at91sam9x5ek.dtsi    | 2 ++
- arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 ++
- 3 files changed, 6 insertions(+)
+On 09/16/2015 04:26 PM, Mark Brown wrote:
+> On Wed, Sep 16, 2015 at 03:38:09PM +0530, Vignesh R wrote:
+> 
+>> But, I didn't get how to integrate with existing message queue. Memory
+>> mapped read by-passes message queue of SPI core. Could you please
+>> explain a bit more on integrating with message queue? Did you mean
+>> locking the existing message queue when memory mapped read is being
+>> requested?
+> 
+> Yes, and also making sure that we don't everything gets processed in
+> order so memory mapped requests come after any commands needed to set
+> them up and don't starve other work.
+> 
 
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index d1ae60a..9d16ef8 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -198,6 +198,8 @@
- 					isi_0: endpoint {
- 						remote-endpoint = <&ov2640_0>;
- 						bus-width = <8>;
-+						vsync-active = <1>;
-+						hsync-active = <1>;
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
-index d237c46..479f200 100644
---- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
-@@ -66,6 +66,8 @@
- 					isi_0: endpoint@0 {
- 						remote-endpoint = <&ov2640_0>;
- 						bus-width = <8>;
-+						vsync-active = <1>;
-+						hsync-active = <1>;
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index 83bee7a..8901042 100644
---- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -87,6 +87,8 @@
- 					isi_0: endpoint {
- 						remote-endpoint = <&ov2640_0>;
- 						bus-width = <8>;
-+						vsync-active = <1>;
-+						hsync-active = <1>;
- 					};
- 				};
- 			};
+Ok, thanks for the clarification!
+
 -- 
-1.9.1
+Regards
+Vignesh
