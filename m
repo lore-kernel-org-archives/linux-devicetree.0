@@ -1,33 +1,30 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 0/7] Phy and mdiobus fixes
-Date: Fri, 18 Sep 2015 08:01:28 -0700
-Message-ID: <20150918150128.GV2722@xsjsorenbubuntu>
-References: <20150918094625.GB21084@n2100.arm.linux.org.uk>
- <20150918095600.GC21084@n2100.arm.linux.org.uk>
+From: Asia Heritage Foundation <jojedaa-Mce2/IeTONRg9hUCZPvPmw@public.gmane.org>
+Subject: (unknown)
+Date: Fri, 18 Sep 2015 11:57:44 -0300 (CLST)
+Message-ID: <1249051071.485542.1442588264155.JavaMail.zimbra@fmachile.org>
+Reply-To: Asia Heritage Foundation <asiaheritagefoundations-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150918095600.GC21084@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Sunil Goutham <sgoutham@cavium.com>, Robert Richter <rric@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org, Iyappan Subramanian <isubramanian@apm.com>, Grant Likely <grant.likely@linaro.org>, Li Yang <leoli@freescale.com>, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: 
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
 
-On Fri, 2015-09-18 at 10:56AM +0100, Russell King - ARM Linux wrote:
-> Sorry guys, some of you will get the patches twice, as S=C3=B6ren's n=
-ame
-> in the header caused vger to reject all the patches.
 
-That is the first time I hear about an issue like that. I've been
-receiving patches fine thus far and nobody reported any rejections (by
-vger) to me. Is it some bounce on Xilinx/my side or is vger suddenly
-rejecting non-ascii chars or is something in the mail processing chain
-not properly encoding those chars?
-Please, let me know if I can help with the problem.
+ATTENTION
 
-	Thanks,
-	S=C3=B6ren
+This is to inform you that you have been selected for this year fund donation please contact our online officer via email: asiaheritagefoundations-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org 
+
+for more information of claims.
+
+From
+Mr.Rehan Omar.
+Secretary
+Asia Heritage Foundation (AHF)
+Italy Chapter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
