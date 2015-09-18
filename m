@@ -1,114 +1,65 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
-Date: Fri, 18 Sep 2015 11:38:13 +0530
-Message-ID: <55FBAA4D.3000704@ti.com>
-References: <1440493835-6732-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 16/16] phy: phy-core: fix initcall level
+Date: Fri, 18 Sep 2015 11:46:13 +0530
+Message-ID: <55FBAC2D.1020301@ti.com>
+References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de> <1440592108-3740-17-git-send-email-holler@ahsoftware.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1440493835-6732-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440592108-3740-17-git-send-email-holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russel King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tuesday 25 August 2015 02:40 PM, Yoshihiro Shimoda wrote:
-> This patch adds support for R-Car generation 3 USB2 PHY driver.
-> This SoC has 3 EHCI/OHCI channels, and the channel 0 is shared
-> with the HSUSB (USB2.0 peripheral) device.
+On Wednesday 26 August 2015 05:58 PM, Alexander Holler wrote:
+> The phy-core has to be initialized before other dependent usb-drivers,
+> otherwise a crash might occur.
+> 
+> Currently phy_core_init() is called in the initcall-level device, which is
+> the same level where most usb-drivers will end up. By luck this seemed to
+> have been called most of the time before other usb-drivers without having
+> been explicitly enforced. But if phy_core_init() is not called before a
+> dependent driver, a null-pointer exception might occur (e.g. because the
+> phy device class isn't registered).
 
->From the description it looks like it's a single PHY with multiple
-channels. In that case you should have a singe dt node for the PHY
-provider and each channel should be modelled as the child node of the
-PHY provider dt node.
-> 
-> So, the purpose of this driver is:
->  1) initializes some registers of SoC specific to use the
->     {ehci,ohci}-platform driver.
-> 
->  2) detects id pin to select host or peripheral on the channel 0.
-> 
-> For now, this driver only supports 1) above.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  This patch is based on the latest linux-phy / next branch.
->  (commit id = cfd093bbb5fe84ec8c7bb069fe618159a8b601f5)
-> 
->  Changes from v1:
->   - Revise some typos.
->   - Remove using clk API to enable/disable the clocks.
->     (In other words, this driver expects to enable/disable the clocks by
->      Runtime PM API by the phy-core driver.)
->   - Remove an unnecessary header file (asm/cmpxchg.h).
-> 
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  35 +++
->  drivers/phy/Kconfig                                |   6 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-rcar-gen3-usb2.c                   | 240 +++++++++++++++++++++
->  4 files changed, 282 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
->  create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> new file mode 100644
-> index 0000000..1d57766
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> @@ -0,0 +1,35 @@
-> +* Renesas R-Car generation 3 USB 2.0 PHY
-> +
-> +This file provides information on what the device node for the R-Car generation
-> +3 USB 2.0 PHY contains.
-> +
-> +Required properties:
-> +- compatible: "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
-> +	      SoC.
-> +- reg: offset and length of the USB2.0 host register block.
-> +- reg-names: must be "usb2".
-> +- clocks: clock phandle and specifier pair(s).
-> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
-> +
-> +Optional properties:
-> +To use a USB channel where EHCI/OHCI and HSUSB are combined, the device tree
-> +node should set HSUSB properties to reg and reg-names properties:
-> +- reg: offset and length of the HSUSB register block.
-> +- reg-names: must be "hsusb".
-> +
-> +Example (R-Car H3):
-> +
-> +	usb-phy@ee080200 {
-> +		compatible = "renesas,usb2-phy-r8a7795";
-> +		reg = <0 0xee080200 0 0x6ff>, <0 0xe6590100 0 0x100>;
-> +		reg-names = "usb2", "hsusb";
+Did you actually face a problem? IIUC the modules get loaded based on
+the drivers/Makefile order (unless the other modules are in a different
+initcall table).
 
-hsusb is missing in Documentation.
-> +		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
-> +			 <&mstp7_clks R8A7795_CLK_HSUSB>;
-> +	};
-> +
-> +	usb-phy@ee0a0200 {
-> +		compatible = "renesas,usb2-phy-r8a7795";
-> +		reg = <0 0xee0a0200 0 0x6ff>;
-> +		reg-names = "usb2";
-> +		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>;
-> +	};
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 0fe9bff..406dc43 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -116,6 +116,12 @@ config PHY_RCAR_GEN2
->  	help
->  	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
->  
-> +config PHY_RCAR_GEN3_USB2
-> +	tristate "Renesas R-Car generation 3 USB 2.0 PHY driver"
-> +	depends on GENERIC_PHY
-
-depends on OF?
+IMHO the fix should be in the module that caused the crash. Change it to
+use module_init?
 
 Thanks
 Kishon
+
+> 
+> To fix this, phy_core_init() is moved to the initcall-level fs (right
+> before the standard initcall level device).
+> 
+> Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+> ---
+>  drivers/phy/phy-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index fc48fac..4945029 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -930,7 +930,7 @@ static int __init phy_core_init(void)
+>  
+>  	return 0;
+>  }
+> -module_init(phy_core_init);
+> +fs_initcall_sync(phy_core_init);
+>  
+>  static void __exit phy_core_exit(void)
+>  {
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
