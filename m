@@ -1,16 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun5i: Add sun5i-q8-common.dtsi
-Date: Fri, 18 Sep 2015 21:38:44 +0200
-Message-ID: <20150918193844.GV4684@lukather>
+Subject: Re: [PATCH 3/3] ARM: dts: sun5i: Add dts file for q8
+ formfactor a13 based tablets
+Date: Fri, 18 Sep 2015 21:41:03 +0200
+Message-ID: <20150918194103.GW4684@lukather>
 References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
- <1441464953-26351-2-git-send-email-hdegoede@redhat.com>
+ <1441464953-26351-3-git-send-email-hdegoede@redhat.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hdMwqcnXK86+cyrC"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBRWQ6GXQKGQE2TFYTLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="K4/DQSt3oreaYeED"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUGR6GXQKGQEONQFILI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1441464953-26351-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1441464953-26351-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -22,22 +23,30 @@ To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---hdMwqcnXK86+cyrC
+--K4/DQSt3oreaYeED
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Sat, Sep 05, 2015 at 04:55:52PM +0200, Hans de Goede wrote:
-> This is the sun5i / a13 version of sun8i-q8-common.dtsi for use in dts
-> files for a13 q8 based tablets. Compared to sun8i this uses uart1 for the
-> serial console, and PG0 for card-detect for mmc0.
+On Sat, Sep 05, 2015 at 04:55:53PM +0200, Hans de Goede wrote:
+> This commits adds a generic dts file for q8 formfactor a13 based tablets.
 > 
-> This also adds pmic and otg support, which both use the same config on
-> all known q8 a13 devices. This is not present in sun5i-q8-common.dtsi
-> because pmic / otg support for sun8i has not yet been merged.
+> The tablets ship in many variants, with the difference mainly being the
+> touchscreen controller / accelerometer / wifi chip used.
+> 
+> The wifi is USB based, and thus not listed in devicetree.
+> 
+> The touchscreen controller / accelerometer may turn out to be a problem
+> once we add support for those. We can either do something with devicetree
+> overlays, or add sun5i-a13-<touchscreen>-<accelerometer>.dts files. The
+> latter is what the android mod community is doing with firmware images.
+> 
+> This dts was tested with an a13 q8 tablet with a pcb labelled: "94V-0",
+> silead gsl1680 touchscreen controller and a mc32x0 accelerometer.
 > 
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Applied, thanks!
+Fixed the conflicts and applied. Please post the patches on top of the
+current sunxi/for-next branch.
 
 Maxime
 
@@ -45,4 +54,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---hdMwqcnXK86+cyrC--
+--K4/DQSt3oreaYeED--
