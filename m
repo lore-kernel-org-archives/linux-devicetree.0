@@ -1,53 +1,49 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 0/7] Phy and mdiobus fixes
-Date: Fri, 18 Sep 2015 16:20:51 +0100
-Message-ID: <20150918152050.GI21084@n2100.arm.linux.org.uk>
-References: <20150918094625.GB21084@n2100.arm.linux.org.uk>
- <20150918095600.GC21084@n2100.arm.linux.org.uk>
- <20150918150128.GV2722@xsjsorenbubuntu>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH V4 3/3] arm64: dts: Add reset dts config for Hisilicon
+ Hi6220 SoC
+Date: Fri, 18 Sep 2015 17:23:24 +0200
+Message-ID: <1442589804.1926.6.camel@pengutronix.de>
+References: <1442491202-211336-1-git-send-email-puck.chen@hisilicon.com>
+	 <1442491202-211336-3-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150918150128.GV2722@xsjsorenbubuntu>
+In-Reply-To: <1442491202-211336-3-git-send-email-puck.chen@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Sunil Goutham <sgoutham@cavium.com>, Robert Richter <rric@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org, Iyappan Subramanian <isubramanian@apm.com>, Grant Likely <grant.likely@linaro.org>, Li Yang <leoli@freescale.com>, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org
+To: Chen Feng <puck.chen@hisilicon.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com, arnd@arndb.de, bintian.wang@huawei.com, xuyiping@hisilicon.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com, kong.kongxinwei@hisilicon.com, yudongbin@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 18, 2015 at 08:01:28AM -0700, S=F6ren Brinkmann wrote:
-> Hi Russell,
->=20
-> On Fri, 2015-09-18 at 10:56AM +0100, Russell King - ARM Linux wrote:
-> > Sorry guys, some of you will get the patches twice, as S=F6ren's na=
-me
-> > in the header caused vger to reject all the patches.
->=20
-> That is the first time I hear about an issue like that. I've been
-> receiving patches fine thus far and nobody reported any rejections (b=
-y
-> vger) to me. Is it some bounce on Xilinx/my side or is vger suddenly
-> rejecting non-ascii chars or is something in the mail processing chai=
-n
-> not properly encoding those chars?
-> Please, let me know if I can help with the problem.
+Am Donnerstag, den 17.09.2015, 20:00 +0800 schrieb Chen Feng:
+> Add reset controller for hi6220 hikey-board.
+> 
+> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 3f03380..3f055e2 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -167,5 +167,12 @@
+>  			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
+>  			clock-names = "uartclk", "apb_pclk";
+>  		};
+> +
+> +		reset_ctrl: reset_ctrl@f7030000 {
+> +			compatible = "hisilicon,hi6220-reset-ctl";
+> +			reg = <0x0 0xf7030000 0x0 0x1000>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+>  	};
+>  };
 
-It's to do with how I generate the patch set and submit it to my MTA.
-The result is that the header fields contain an =F6.  Almost all MTAs
-accept this despite it being questionable, but zmailer is extra fussy
-and rejects this - and rejected the messages to lkml, netdev, etc.
+Applied all three, thanks.
+If you want to take patch 3 through the hisilicon git tree instead, let
+me know and I'll drop patch 3.
 
-Normally, the MUA would encode "S=F6ren Brinkmann" in a header into a
-7-bit ascii representation as "=3D?utf-8?B?U8O2cmVu?=3D Brinkmann".
-
-It's one of the many issues of not using a MUA to send out patches.
-
-It's also worth noting that git-send-email misses out mime headers
-(or used to - which is why I have my own scripts for doing this)
-which technically makes the bodies it mails out in violation of the
-RFCs.
-
---=20
-=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+best regards
+Philipp
