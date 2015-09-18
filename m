@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 14/14] ARM: dts: qs600: Add SD card detect support.
-Date: Fri, 18 Sep 2015 13:32:18 +0100
-Message-ID: <1442579538-20525-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 11/14] ARM: dts: ifc6410: Add pwrseq support for WLAN
+Date: Fri, 18 Sep 2015 13:31:59 +0100
+Message-ID: <1442579519-20398-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,43 +10,72 @@ To: agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds SD card detect support.
+This patch adds pwrseq for WLAN which resets the WLAN just before the
+SDIO bus is up.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-index cc9d942..03784f1 100644
---- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-@@ -29,6 +29,16 @@
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index c1d5bd7..9c71a51 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -1,5 +1,6 @@
+ #include "qcom-apq8064-v2.0.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ 
+ / {
+ 	model = "Qualcomm APQ8064/IFC6410";
+@@ -14,6 +15,17 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
++	pwrseq {
++		compatible = "simple-bus";
++
++		sdcc4_pwrseq: sdcc4_pwrseq {
++			pinctrl-names = "default";
++			pinctrl-0 = <&wlan_default_gpios>;
++			compatible = "mmc-pwrseq-simple";
++			reset-gpios = <&pm8921_gpio 43 GPIO_ACTIVE_LOW>;
++		};
++	};
++
  	soc {
-+		pinctrl@800000 {
-+			card_detect: card_detect {
-+				mux {
-+					pins = "gpio26";
-+					function = "gpio";
-+					bias-disable;
+ 		pinctrl@800000 {
+ 			card_detect: card_detect {
+@@ -207,6 +219,21 @@
+ 			status = "okay";
+ 		};
+ 
++		qcom,ssbi@500000 {
++			pmic@0 {
++				gpio@150 {
++					wlan_default_gpios: wlan-gpios {
++						pios {
++							pins = "gpio43";
++							function = "normal";
++							bias-disable;
++							power-source = <PM8921_GPIO_S4>;
++						};
++					};
 +				};
 +			};
 +		};
 +
- 		rpm@108000 {
- 			regulators {
- 				vin_lvs1_3_6-supply = <&pm8921_s4>;
-@@ -197,6 +207,9 @@
- 			sdcc3: sdcc@12180000 {
+ 		amba {
+ 			/* eMMC */
+ 			sdcc1: sdcc@12400000 {
+@@ -228,6 +255,7 @@
  				status = "okay";
- 				vmmc-supply = <&v3p3_fixed>;
-+				pinctrl-names	= "default";
-+				pinctrl-0	= <&card_detect>;
-+				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+ 				vmmc-supply = <&ext_3p3v>;
+ 				vqmmc-supply = <&pm8921_lvs1>;
++				mmc-pwrseq = <&sdcc4_pwrseq>;
  			};
- 			/* WLAN */
- 			sdcc4: sdcc@121c0000 {
+ 		};
+ 	};
 -- 
 1.9.1
