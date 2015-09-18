@@ -1,61 +1,81 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 13/14] ARM: dts: apq8064-ifc6410: add notify led support.
-Date: Fri, 18 Sep 2015 13:32:11 +0100
-Message-ID: <1442579531-20482-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: Re: [PATCH v4 1/3] leds: netxbig: add device tree binding
+Date: Fri, 18 Sep 2015 15:10:11 +0200
+Message-ID: <20150918131011.GN7306@kw.sim.vm.gnt>
+References: <1442505571-9744-1-git-send-email-simon.guinot@sequanux.org>
+ <1442505571-9744-2-git-send-email-simon.guinot@sequanux.org>
+ <55FBD679.2020402@samsung.com>
+ <20150918103006.GM7306@kw.sim.vm.gnt>
+ <55FBEC38.6020209@samsung.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oSMU0HVueUMCAvn0"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55FBEC38.6020209@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Bryan Wu <cooloney@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Yoann Sculo <yoann@sculo.fr>, linux-leds@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds notify led support on IFC6410, whose trigger can be
-configured from userspace.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+--oSMU0HVueUMCAvn0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 9c71a51..11ac608 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -26,6 +26,18 @@
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&notify_led>;
-+
-+		led@1 {
-+			label = "apq8064:green:user1";
-+			gpios = <&pm8921_gpio 18 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
- 	soc {
- 		pinctrl@800000 {
- 			card_detect: card_detect {
-@@ -230,6 +242,15 @@
- 							power-source = <PM8921_GPIO_S4>;
- 						};
- 					};
-+
-+					notify_led: nled {
-+						pios {
-+							pins = "gpio18";
-+							function = "normal";
-+							bias-disable;
-+							power-source = <PM8921_GPIO_S4>;
-+						};
-+					};
- 				};
- 			};
- 		};
--- 
-1.9.1
+On Fri, Sep 18, 2015 at 12:49:28PM +0200, Jacek Anaszewski wrote:
+> >>
+> >>Moreover, if you switched to using devm* prefixed version of
+> >>gpio_request_one and led_classdev_reqister, you could simplify
+> >>the error paths in the driver.
+> >
+> >Yes, I have a pending patch for this conversion. But since it is not
+> >really related with the subject of this patch series (add DT support),
+> >I was planning to send it next.
+> >
+> >Do you want me to include this patch into this series.
+>=20
+> Why not, if you have it ready to go. If it needs some polishing,
+> we can live with what we have now.
+
+No, the patch is ready. I'll add it.
+
+> >>>+static const struct of_device_id of_netxbig_leds_match[] =3D {
+> >>>+	{ .compatible =3D "lacie,netxbig-leds", },
+> >>>+	{},
+> >>>+};
+> >>>+#else
+> >>>+static int netxbig_leds_get_of_pdata(struct device *dev,
+> >>>+				     struct netxbig_led_platform_data *pdata)
+> >>
+> >>s/static int/static inline int/
+> >
+> >Is that not already the case with modern compiler ?
+>=20
+> Could you elaborate on this?
+
+There is not much to say. netxbig_leds_get_of_pdata is a single line of
+code. I am not a gcc expert but I am quite confident that this function
+will be inlined anyway (given the optimisation level used to compile the
+Linux kernel). That's it.
+
+But there is nothing wrong by adding "inline" neither.
+
+Thanks,
+
+Simon
+
+--oSMU0HVueUMCAvn0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlX8DTMACgkQgtp0PDeOcDppSACgmZQtmm7aBFVKmM9SOJZKzT4j
+RdsAnjAJXjM2U+xPYPtfCEbs9zoZ+sIN
+=smec
+-----END PGP SIGNATURE-----
+
+--oSMU0HVueUMCAvn0--
