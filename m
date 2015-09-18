@@ -1,29 +1,33 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v3 14/27] memory: omap-gpmc: Move device tree binding to correct location
-Date: Fri, 18 Sep 2015 17:53:36 +0300
-Message-ID: <1442588029-13769-15-git-send-email-rogerq@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 0/7] Phy and mdiobus fixes
+Date: Fri, 18 Sep 2015 08:01:28 -0700
+Message-ID: <20150918150128.GV2722@xsjsorenbubuntu>
+References: <20150918094625.GB21084@n2100.arm.linux.org.uk>
+ <20150918095600.GC21084@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20150918095600.GC21084@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Sunil Goutham <sgoutham@cavium.com>, Robert Richter <rric@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org, Iyappan Subramanian <isubramanian@apm.com>, Grant Likely <grant.likely@linaro.org>, Li Yang <leoli@freescale.com>, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-omap-gpmc.c is a memory controller so move the binding to the
-right place.
+Hi Russell,
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- .../bindings/{bus/ti-gpmc.txt => memory-controllers/omap-gpmc.txt}        | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{bus/ti-gpmc.txt => memory-controllers/omap-gpmc.txt} (100%)
+On Fri, 2015-09-18 at 10:56AM +0100, Russell King - ARM Linux wrote:
+> Sorry guys, some of you will get the patches twice, as S=C3=B6ren's n=
+ame
+> in the header caused vger to reject all the patches.
 
-diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/bus/ti-gpmc.txt
-rename to Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
--- 
-2.1.4
+That is the first time I hear about an issue like that. I've been
+receiving patches fine thus far and nobody reported any rejections (by
+vger) to me. Is it some bounce on Xilinx/my side or is vger suddenly
+rejecting non-ascii chars or is something in the mail processing chain
+not properly encoding those chars?
+Please, let me know if I can help with the problem.
+
+	Thanks,
+	S=C3=B6ren
