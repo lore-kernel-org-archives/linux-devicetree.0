@@ -1,53 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
-Date: Fri, 18 Sep 2015 09:24:42 -0500
-Message-ID: <CAL_JsqLwPnYB7ahvFZLwJVV=JNx8BCnM0nmWGyzA_YyimDXOLA@mail.gmail.com>
-References: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1442419866-4982-3-git-send-email-pantelis.antoniou@konsulko.com>
- <55FACAA2.4010403@kernel.org> <181E6FCF-F1D6-42BC-B0B0-6ADB993A5A83@konsulko.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
+Date: Fri, 18 Sep 2015 15:53:50 +0100
+Message-ID: <CAF2Aj3h7Jy=tpYdZTdbxAJwa=147_hAu3reOFrbEh=JdrMFWLQ@mail.gmail.com>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+	<20150918140756.GK9249@gondor.apana.org.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <181E6FCF-F1D6-42BC-B0B0-6ADB993A5A83@konsulko.com>
+In-Reply-To: <20150918140756.GK9249@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 18, 2015 at 4:15 AM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> Hi Rob,
+On 18 September 2015 at 15:07, Herbert Xu <herbert@gondor.apana.org.au>=
+ wrote:
+> On Thu, Sep 17, 2015 at 02:45:50PM +0100, Lee Jones wrote:
+>> v1 =3D> v2:
+>>  - New patch: Also fixing /dev/hw_random =3D> /dev/hwrng in Kconfig
+>>  - Fix 2099 =3D> 2009 typo in commit log
+>>  - Fix 'number of random numbers sourced' return value
+>>  - Treat devm_clk_get()'s return value correctly
+>>  - Check return value of clk_prepare_enable()
+>>  - Use sysfs_streq() instead of manually stripping '\n' from sysfs
 >
->> On Sep 17, 2015, at 17:13 , Rob Herring <robh@kernel.org> wrote:
->>
->> On 09/16/2015 11:11 AM, Pantelis Antoniou wrote:
->>> Changesets are very powerful, but the lack of a helper API
->>> makes using them cumbersome. Introduce a simple copy based
->>> API that makes things considerably easier.
+> All applied.  Thanks.
 
-[...]
+Just to be clear.  Which patches have you applied?
 
->>> +struct device_node *of_changeset_create_device_nodev(
->>> +    struct of_changeset *ocs, struct device_node *parent,
->>> +    const char *fmt, va_list vargs)
->>> +{
->>> +    struct device_node *node;
->>> +
->>> +    node = __of_node_dupv(NULL, fmt, vargs);
->>> +    if (!node)
->>> +            return ERR_PTR(-ENOMEM);
->>> +
->>> +    node->parent = parent;
->>> +    return node;
->>> +}
->>
->> EXPORT_SYMBOL_GPL here and on others?
->>
->
-> Err, none of the others of_changeset* methods are exported right now.
-> Up to now it was all internal API; should I go ahead and put EXPORT_SYMBOL_GPL
-> to all the others as well?
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
-Okay, NM then.
-
-Rob
+--=20
+Lee Jones
+Linaro ST Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
