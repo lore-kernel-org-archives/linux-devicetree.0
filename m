@@ -1,45 +1,80 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v5 01/23] driver core: Add pre_probe callback to bus_type
-Date: Fri, 18 Sep 2015 16:56:32 +0200
-Message-ID: <CAAObsKADuTjSUZbVJj5g3Ead-Zb87JEqRzvgh9DW1my4Bdh33Q@mail.gmail.com>
-References: <1442494637-3674-2-git-send-email-tomeu.vizoso@collabora.com> <Pine.LNX.4.44L0.1509171150410.1270-100000@iolanthe.rowland.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v3 06/27] mtd: nand: omap2: Switch to using GPMC-NAND ops for
+ writebuffer empty check
+Date: Fri, 18 Sep 2015 17:53:28 +0300
+Message-ID: <1442588029-13769-7-git-send-email-rogerq@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1509171150410.1270-100000@iolanthe.rowland.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, computersforpeace@gmail.com, dwmw2@infradead.org, fcooper@ti.com, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17 September 2015 at 17:52, Alan Stern <stern@rowland.harvard.edu> wrote:
-> On Thu, 17 Sep 2015, Tomeu Vizoso wrote:
->
->> Some buses (eg. AMBA) need access to some HW resources (it may need a
->> clock to be enabled so a device ID can be read) before a device can be
->> matched to a driver.
->>
->> The pre_probe callback allows the device-driver core to request the bus
->> to perform this initialization and can defer the probe if any of the
->> resources needed are missing.
->>
->> This gives us more flexibility when setting the order in which devices
->> are probed because the resources needed to get the matching information
->> don't need to be available by the time that the bus devices are
->> registered.
->
-> Can't the subsystem do this itself in its matching routine?
+Instead of accessing the gpmc_status register directly start
+using the gpmc_nand_ops->nand_writebuffer_empty() helper
+to check write buffer empty status.
 
-That seems to work, thanks for the idea!
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ drivers/mtd/nand/omap2.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Regards,
+diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+index f214fe2..0eb0b8c 100644
+--- a/drivers/mtd/nand/omap2.c
++++ b/drivers/mtd/nand/omap2.c
+@@ -289,14 +289,13 @@ static void omap_write_buf8(struct mtd_info *mtd, const u_char *buf, int len)
+ 	struct omap_nand_info *info = container_of(mtd,
+ 						struct omap_nand_info, mtd);
+ 	u_char *p = (u_char *)buf;
+-	u32	status = 0;
++	bool status;
+ 
+ 	while (len--) {
+ 		iowrite8(*p++, info->nand.IO_ADDR_W);
+ 		/* wait until buffer is available for write */
+ 		do {
+-			status = readl(info->reg.gpmc_status) &
+-					STATUS_BUFF_EMPTY;
++			status = info->ops->nand_writebuffer_empty();
+ 		} while (!status);
+ 	}
+ }
+@@ -325,7 +324,7 @@ static void omap_write_buf16(struct mtd_info *mtd, const u_char * buf, int len)
+ 	struct omap_nand_info *info = container_of(mtd,
+ 						struct omap_nand_info, mtd);
+ 	u16 *p = (u16 *) buf;
+-	u32	status = 0;
++	bool status;
+ 	/* FIXME try bursts of writesw() or DMA ... */
+ 	len >>= 1;
+ 
+@@ -333,8 +332,7 @@ static void omap_write_buf16(struct mtd_info *mtd, const u_char * buf, int len)
+ 		iowrite16(*p++, info->nand.IO_ADDR_W);
+ 		/* wait until buffer is available for write */
+ 		do {
+-			status = readl(info->reg.gpmc_status) &
+-					STATUS_BUFF_EMPTY;
++			status = info->ops->nand_writebuffer_empty();
+ 		} while (!status);
+ 	}
+ }
+-- 
+2.1.4
 
-Tomeu
 
-> Alan Stern
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
