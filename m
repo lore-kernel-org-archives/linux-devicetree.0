@@ -1,114 +1,45 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v2 6/9] ARM: dts: Reorder Cygnus peripherals
-Date: Fri, 18 Sep 2015 14:24:11 -0700
-Message-ID: <1442611454-16331-7-git-send-email-rjui@broadcom.com>
-References: <1442611454-16331-1-git-send-email-rjui@broadcom.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] ARM: dts: consolidate aliases for Cygnus dt files
+Date: Fri, 18 Sep 2015 23:27:37 +0200
+Message-ID: <25764744.UdkoAR05y0@wuerfel>
+References: <1442611454-16331-1-git-send-email-rjui@broadcom.com> <1442611454-16331-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442611454-16331-1-git-send-email-rjui@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442611454-16331-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reorder all Cygnus peripherals based on base register addresses in
-bcm-cygnus.dtsi
+On Friday 18 September 2015 14:24:06 Ray Jui wrote:
+> Move aliases into bcm-cygnus.dtsi to avoid duplications in Cygnus dts
+> files
+> 
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi | 56 +++++++++++++++++++--------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+We generally recommend keeping them separate:
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 3d29b77..dfa9a3c 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -108,26 +108,14 @@
- 			gpio-controller;
- 		};
- 
--		gpio_ccm: gpio@1800a000 {
--			compatible = "brcm,cygnus-ccm-gpio";
--			reg = <0x1800a000 0x50>,
--			      <0x0301d164 0x20>;
--			#gpio-cells = <2>;
--			gpio-controller;
--			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-controller;
--		};
--
--		gpio_asiu: gpio@180a5000 {
--			compatible = "brcm,cygnus-asiu-gpio";
--			reg = <0x180a5000 0x668>;
--			#gpio-cells = <2>;
--			gpio-controller;
--
--			pinmux = <&pinctrl>;
--
--			interrupt-controller;
--			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+		i2c0: i2c@18008000 {
-+			compatible = "brcm,cygnus-iproc-i2c", "brcm,iproc-i2c";
-+			reg = <0x18008000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_NONE>;
-+			clock-frequency = <100000>;
-+			status = "disabled";
- 		};
- 
- 		wdt0: wdt@18009000 {
-@@ -138,14 +126,14 @@
- 			clock-names = "apb_pclk";
- 		};
- 
--		i2c0: i2c@18008000 {
--			compatible = "brcm,cygnus-iproc-i2c", "brcm,iproc-i2c";
--			reg = <0x18008000 0x100>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			interrupts = <GIC_SPI 85 IRQ_TYPE_NONE>;
--			clock-frequency = <100000>;
--			status = "disabled";
-+		gpio_ccm: gpio@1800a000 {
-+			compatible = "brcm,cygnus-ccm-gpio";
-+			reg = <0x1800a000 0x50>,
-+			      <0x0301d164 0x20>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
- 		};
- 
- 		i2c1: i2c@1800b000 {
-@@ -255,5 +243,17 @@
- 
- 			brcm,nand-has-wp;
- 		};
-+
-+		gpio_asiu: gpio@180a5000 {
-+			compatible = "brcm,cygnus-asiu-gpio";
-+			reg = <0x180a5000 0x668>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+
-+			pinmux = <&pinctrl>;
-+
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- };
--- 
-1.9.1
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index e1ac07a..30903ba 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -40,6 +40,10 @@
+>         model = "Broadcom Cygnus SoC";
+>         interrupt-parent = <&gic>;
+>  
+> +       aliases {
+> +               serial0 = &uart3;
+> +       };
+> +
+
+The SoC has at least four uarts according to this, so it seems unlikely that
+each board really only uses only the fourth one of them and labels it '0'
+on the board. As soon as you get one board that has more than one uart wired
+up, you would need to undo this.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
