@@ -1,35 +1,32 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/2] arm64: dts: qcom: 8x16: UARTDM additions
-Date: Fri, 18 Sep 2015 16:18:52 +0300
-Message-ID: <1442582334-29387-1-git-send-email-ivan.ivanov@linaro.org>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] arm64: dts: berlin4ct: add GPIO support
+Date: Fri, 18 Sep 2015 21:47:36 +0800
+Message-ID: <1442584059-7319-1-git-send-email-jszhang@marvell.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Marvell berlin4ct SoC has 6 GPIO ports powered by snps,dw-apb-gpio. patch1
+enables ARCH_REQUIRE_GPIOLIB for ARCH_BERLIN. patch2 add GPIO nodes in the
+SoC dtsi. The last patch add board dts file for STB reference board.
 
-This is second version of the changes previously posted [1].
-I have to rebase them on top of Andy's for-next[2] branch and rework them
-a little bit, because some of the definitions have been already merged.
+Jisheng Zhang (3):
+  arm64: berlin: enable ARCH_REQUIRE_GPIOLIB
+  arm64: dts: berlin4ct: add GPIO nodes
+  arm64: dts: add dts file for Marvell Berlin4CT STB board
 
-Regards,
-Ivan
+ arch/arm64/Kconfig.platforms                  |   1 +
+ arch/arm64/boot/dts/marvell/berlin4ct-stb.dts |  66 ++++++++++++++
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 120 ++++++++++++++++++++++++++
+ 3 files changed, 187 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
 
-[1] https://lkml.org/lkml/2015/9/12/114
-[2] https://www.codeaurora.org/cgit/quic/kernel/agross-msm/
-
-Ivan T. Ivanov (2):
-  arm64: dts: qcom: 8x16: UART1 add CTS_N, RTS_N pin configurations
-  arm64: dts: qcom: 8x16: UART1 and UART2 use DMA for RX and TX
-
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 13 +++++++++----
- arch/arm64/boot/dts/qcom/msm8916.dtsi      |  4 ++++
- 2 files changed, 13 insertions(+), 4 deletions(-)
-
---
-1.9.1
+-- 
+2.5.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
