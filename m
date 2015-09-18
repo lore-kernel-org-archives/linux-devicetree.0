@@ -1,54 +1,67 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX
- SoCs.
-Date: Fri, 18 Sep 2015 10:00:32 -0700
-Message-ID: <55FC4330.10302@caviumnetworks.com>
-References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com> <1442529694-1792-3-git-send-email-ddaney.cavm@gmail.com> <3066583.BWDZlYWxXU@wuerfel>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] gpio: mention in DT binding doc that <name>-gpio is also
+ supported
+Date: Fri, 18 Sep 2015 19:17:08 +0200
+Message-ID: <55FC4714.1010804@osg.samsung.com>
+References: <1442453638-14246-1-git-send-email-javier@osg.samsung.com>
+ <CAAVeFuK-doCwGB=EwN2F933G8_ubSRR2xz9xEnWLAhReTupvSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <3066583.BWDZlYWxXU@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuK-doCwGB=EwN2F933G8_ubSRR2xz9xEnWLAhReTupvSA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
-> On Thursday 17 September 2015 15:41:33 David Daney wrote:
->> From: David Daney <david.daney@cavium.com>
+Hello Alexandre,
+
+On 09/18/2015 05:44 PM, Alexandre Courbot wrote:
+> On Thu, Sep 17, 2015 at 10:33 AM, Javier Martinez Canillas
+> <javier@osg.samsung.com> wrote:
+>> The GPIO DT binding doc mentions that GPIO are mapped by defining
+>> a <name>-gpios property in the consumer device's node but a -gpio
+>> sufix is also supported after commit:
 >>
->> The on-chip devices all have fixed bars.  So, fix them up.
+>> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
 >>
->> Signed-off-by: David Daney <david.daney@cavium.com>
+>> Update the DT binding documentation to match the implementation.
 >>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>
+>> ---
+>> Hello,
+>>
+>> The GPIO documentation was updated to mention that the -gpio sufix
+>> is also supported in patch https://lkml.org/lkml/2015/9/1/117 that
+>> already landed in Torvalds tree.
+>>
+>> I now noticed that the DT binding also only mentions -gpios so I'm
+>> posting this patch that adds -gpio to the DT binding documentation.
+> 
+> I think I remember that -gpio is considered obsolete and its use
+> should thus not be encouraged, which is the reason why the
+> documentation does not mention it. We could mention it and add a note
+> saying that it should not be used for new bindings, but all in all
+> isn't it better to keep the documentation clear of such use cases that
+> will not be accepted for new patches anyway?
 >
-> You should be able to just mark the BARs as fixed in DT
 
-In the case of ACPI, there is no DT.  So we would need a different 
-solution for ACPI.  What would you recommend for ACPI?
+I agree that if that's the case then it should be documented. Currently
+by reading the docs there is no way to tell if -gpio was only added to
+support old DT bindings and should not be used or if is that the docs
+were not updated when <function>-gpio parsing was added to gpiolib.
 
-Also, can you point me to the OF device tree specification where it 
-tells how to specify PCI BAR addresses, I would especially be interested 
-in knowing how to specify fixed SRIOV BAR addresses in the device tree.
+I can re-spin the patch making it clear that even when the -gpio suffix
+is supported, it's only there for compatibility reasons and should not
+be used for newer bindings.
 
-Thanks,
-David Daney
+And also Documentation/gpio/board.txt has to be updated now since now it
+mentions <function>-gpio but does not say that should not be used.
 
-> and not need
-> this hack.
-
-Yes, it is a bit of a hack.  That is why I put it in its own file, and 
-only try to hack up PCI devices that exactly match the vendor and device 
-ids that need fixing.
-
-IMHO, putting infrastructure into drivers/pci/probe.c, et al. to handle 
-this would be much more intrusive.
-
-For the record:  The PCI Enhanced Allocation (EA) capability (approved 
-by PCI SIG on 23 October 2014) is the proper way to handle this going 
-forward.  However, this is not yet implemented in the SoCs that this 
-patch addresses.  Our plan is to implement the EA capability in the core 
-PCI code, so that we do not need to keep adding devices to this fixup code.
-
-David Daney
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
