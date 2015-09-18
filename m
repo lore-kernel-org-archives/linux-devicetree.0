@@ -1,58 +1,106 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 00/14] ARM: dts: apq8064 dt cleanups and additions
-Date: Fri, 18 Sep 2015 13:29:31 +0100
-Message-ID: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 01/14] ARM: dts: apq8064: remove redundant i2c pinctrl properties
+Date: Fri, 18 Sep 2015 13:30:13 +0100
+Message-ID: <1442579413-19865-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: agross@codeaurora.org, linux-arm-msm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy, 
+This patch removes i2c pinctrl properties from board which which are now
+mentioned in the SOC specific file. This will avoid redundant properties
+across multiple board fiiles.
 
-Here are few cleanup and additions to the existing APQ8064 device tree.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 11 -----------
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  |  5 -----
+ arch/arm/boot/dts/qcom-apq8064.dtsi         |  4 ++++
+ 3 files changed, 4 insertions(+), 16 deletions(-)
 
-Some of the patches are to do with princtrl cleanup which was always not
-in the right place and some of the pinctrls were missing.
-Other set of patches is to do with adding more devices like rtc rng
-and pwr key for pmic 8921.
-Last set of patches are related to pwrseq and SD card detect taking Stephens
-comments into consideration.
-
-Am resending John Stultz patch which was forgotten in the mailing list.
-
-I have tested these patches on IFC6410.
-
-Thanks,
-srini
-
-John Stultz (1):
-  devicetree: Add hardware rng entry to qcom-apq8064.dtsi
-
-Srinivas Kandagatla (13):
-  ARM: dts: apq8064: remove redundant i2c pinctrl properties
-  ARM: dts: ifc6410: remove unnecessary eeprom label
-  ARM: dts: qs600: remove unnecessary eeprom label
-  ARM: dts: apq8064: add pm8921 rtc
-  ARM: dts: apq8064: add pm8921 pwrkey support
-  ARM: dts: apq8064: Prefix the gsbi6 uart pins correctly
-  ARM: dts: apq8064: add missing gsbi7 uart pinctrl
-  ARM: dts: ifc6410: Add missing pinctrl to gsbi7 uart
-  ARM: dts: qs600: Add missing pinctrl property for gsbi7 uart
-  ARM: dts: ifc6410: Add pwrseq support for WLAN
-  ARM: dts: qs600: add pwrseq support to WLAN
-  ARM: dts: apq8064-ifc6410: add notify led support.
-  ARM: dts: qs600: Add SD card detect support.
-
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 48 ++++++++++++++++++++---
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  | 60 +++++++++++++++++++++++++----
- arch/arm/boot/dts/qcom-apq8064.dtsi         | 50 +++++++++++++++++++++++-
- 3 files changed, 144 insertions(+), 14 deletions(-)
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+index 47c0282..80ab5b8 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+@@ -13,15 +13,6 @@
+ 	};
+ 
+ 	soc {
+-		pinctrl@800000 {
+-			i2c1_pins: i2c1 {
+-				mux {
+-					pins = "gpio20", "gpio21";
+-					function = "gsbi1";
+-				};
+-			};
+-		};
+-
+ 		rpm@108000 {
+ 			regulators {
+ 				vin_lvs1_3_6-supply = <&pm8921_s4>;
+@@ -96,8 +87,6 @@
+ 			i2c@12460000 {
+ 				status = "okay";
+ 				clock-frequency = <200000>;
+-				pinctrl-0 = <&i2c1_pins>;
+-				pinctrl-names = "default";
+ 
+ 				eeprom: eeprom@50 {
+ 					compatible = "24c02";
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index f3100da..b701f33 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -119,8 +119,6 @@
+ 			qcom,mode = <GSBI_PROT_I2C>;
+ 			i2c3: i2c@16280000 {
+ 				status = "okay";
+-				pinctrl-0 = <&i2c3_pins>;
+-				pinctrl-names = "default";
+ 			};
+ 		};
+ 
+@@ -131,8 +129,6 @@
+ 			i2c@12460000 {
+ 				status = "okay";
+ 				clock-frequency = <200000>;
+-				pinctrl-0 = <&i2c1_pins>;
+-				pinctrl-names = "default";
+ 
+ 				eeprom: eeprom@52 {
+ 					compatible = "atmel,24c128";
+@@ -148,7 +144,6 @@
+ 
+ 			serial@16540000 {
+ 				status = "ok";
+-
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&uart_pins>;
+ 			};
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index d2e94d6..53d5311 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -213,6 +213,8 @@
+ 
+ 			i2c1: i2c@12460000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
++				pinctrl-0 = <&i2c1_pins>;
++				pinctrl-names = "default";
+ 				reg = <0x12460000 0x1000>;
+ 				interrupts = <0 194 IRQ_TYPE_NONE>;
+ 				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
+@@ -258,6 +260,8 @@
+ 			ranges;
+ 			i2c3: i2c@16280000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
++				pinctrl-0 = <&i2c3_pins>;
++				pinctrl-names = "default";
+ 				reg = <0x16280000 0x1000>;
+ 				interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
+ 				clocks = <&gcc GSBI3_QUP_CLK>,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
