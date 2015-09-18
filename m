@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 12/14] ARM: dts: qs600: add pwrseq support to WLAN
-Date: Fri, 18 Sep 2015 13:32:05 +0100
-Message-ID: <1442579525-20440-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 13/14] ARM: dts: apq8064-ifc6410: add notify led support.
+Date: Fri, 18 Sep 2015 13:32:11 +0100
+Message-ID: <1442579531-20482-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,75 +10,52 @@ To: agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add pwrseq support to sdcc4 which would enable a proper reset of WLAN
-without ugly hacks in the board support file.
+This patch adds notify led support on IFC6410, whose trigger can be
+configured from userspace.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 32 +++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-index 8aac3be..cc9d942 100644
---- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-@@ -1,4 +1,6 @@
- #include "qcom-apq8064-v2.0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- 
- / {
- 	model = "CompuLab CM-QS600";
-@@ -12,6 +14,20 @@
- 		stdout-path = "serial0:115200n8";
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 9c71a51..11ac608 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -26,6 +26,18 @@
+ 		};
  	};
  
-+	pwrseq {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&notify_led>;
 +
-+		sdcc4_pwrseq: sdcc4_pwrseq {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&wlan_default_gpios>;
-+			compatible = "mmc-pwrseq-simple";
-+			reset-gpios = <&pm8921_gpio 43 GPIO_ACTIVE_LOW>;
++		led@1 {
++			label = "apq8064:green:user1";
++			gpios = <&pm8921_gpio 18 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
 +		};
 +	};
 +
  	soc {
- 		rpm@108000 {
- 			regulators {
-@@ -154,6 +170,21 @@
- 			regulator-always-on;
- 		};
- 
-+		qcom,ssbi@500000 {
-+			pmic@0 {
-+				gpio@150 {
-+					wlan_default_gpios: wlan-gpios {
+ 		pinctrl@800000 {
+ 			card_detect: card_detect {
+@@ -230,6 +242,15 @@
+ 							power-source = <PM8921_GPIO_S4>;
+ 						};
+ 					};
++
++					notify_led: nled {
 +						pios {
-+							pins = "gpio43";
++							pins = "gpio18";
 +							function = "normal";
 +							bias-disable;
 +							power-source = <PM8921_GPIO_S4>;
 +						};
 +					};
-+				};
-+			};
-+		};
-+
- 		amba {
- 			/* eMMC */
- 			sdcc1: sdcc@12400000 {
-@@ -172,6 +203,7 @@
- 				status = "okay";
- 				vmmc-supply = <&v3p3_fixed>;
- 				vqmmc-supply = <&v3p3_fixed>;
-+				mmc-pwrseq = <&sdcc4_pwrseq>;
+ 				};
  			};
  		};
- 	};
 -- 
 1.9.1
