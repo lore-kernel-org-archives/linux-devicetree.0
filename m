@@ -1,57 +1,70 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun5i: Add dts file for q8
- formfactor a13 based tablets
-Date: Fri, 18 Sep 2015 21:41:03 +0200
-Message-ID: <20150918194103.GW4684@lukather>
-References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
- <1441464953-26351-3-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX SoCs.
+Date: Fri, 18 Sep 2015 21:45:50 +0200
+Message-ID: <2512701.zkjk3n3AQS@wuerfel>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com> <3066583.BWDZlYWxXU@wuerfel> <55FC4330.10302@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="K4/DQSt3oreaYeED"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUGR6GXQKGQEONQFILI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441464953-26351-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55FC4330.10302@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: linux-arm-kernel@lists.infradead.org, David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
---K4/DQSt3oreaYeED
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Friday 18 September 2015 10:00:32 David Daney wrote:
+> On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
+> > On Thursday 17 September 2015 15:41:33 David Daney wrote:
+> >> From: David Daney <david.daney@cavium.com>
+> >>
+> >> The on-chip devices all have fixed bars.  So, fix them up.
+> >>
+> >> Signed-off-by: David Daney <david.daney@cavium.com>
+> >>
+> >
+> > You should be able to just mark the BARs as fixed in DT
+> 
+> In the case of ACPI, there is no DT.  So we would need a different 
+> solution for ACPI.  What would you recommend for ACPI?
 
-On Sat, Sep 05, 2015 at 04:55:53PM +0200, Hans de Goede wrote:
-> This commits adds a generic dts file for q8 formfactor a13 based tablets.
-> 
-> The tablets ship in many variants, with the difference mainly being the
-> touchscreen controller / accelerometer / wifi chip used.
-> 
-> The wifi is USB based, and thus not listed in devicetree.
-> 
-> The touchscreen controller / accelerometer may turn out to be a problem
-> once we add support for those. We can either do something with devicetree
-> overlays, or add sun5i-a13-<touchscreen>-<accelerometer>.dts files. The
-> latter is what the android mod community is doing with firmware images.
-> 
-> This dts was tested with an a13 q8 tablet with a pcb labelled: "94V-0",
-> silead gsl1680 touchscreen controller and a mc32x0 accelerometer.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+I would expect that this does not matter at all on ACPI, because
+the devices that need it are not hot-plugged, and all boot-time
+devices are probed by the firmware: the ACPI PCI implementation
+does not reassign any BARs, except for the hotplug case.
 
-Fixed the conflicts and applied. Please post the patches on top of the
-current sunxi/for-next branch.
+> Also, can you point me to the OF device tree specification where it 
+> tells how to specify PCI BAR addresses, I would especially be interested 
+> in knowing how to specify fixed SRIOV BAR addresses in the device tree.
 
-Maxime
+This is the 'n' bit mentioned sections 2.1.3 and 2.2.1.1 of the
+PCI binding. When it is set, the OS is not supposed to try to
+reassign the BAR even on machines that otherwise do a complete
+rescan.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---K4/DQSt3oreaYeED--
+The PCI binding traditionally requires you to list all PCI devices
+in DT, Linux as an extension (for the flattened DT format) allows
+leaving out the devices, but in this case you probably need to
+list every device that has a fixed BAR.
+
+> Yes, it is a bit of a hack.  That is why I put it in its own file, and 
+> only try to hack up PCI devices that exactly match the vendor and device 
+> ids that need fixing.
+> 
+> IMHO, putting infrastructure into drivers/pci/probe.c, et al. to handle 
+> this would be much more intrusive.
+
+My guess is that it's already there, but even if it's not, this is a
+generic well-defined case that has a standardized binding, and we should
+implement that.
+
+> For the record:  The PCI Enhanced Allocation (EA) capability (approved 
+> by PCI SIG on 23 October 2014) is the proper way to handle this going 
+> forward.  However, this is not yet implemented in the SoCs that this 
+> patch addresses.  Our plan is to implement the EA capability in the core 
+> PCI code, so that we do not need to keep adding devices to this fixup code.
+
+Good, but still this should only be required for the embedded case where
+you don't have a firmware to probe the bus.
+
+	Arnd
