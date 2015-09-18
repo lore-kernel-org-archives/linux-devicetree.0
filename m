@@ -1,44 +1,57 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] PowerPC: Move Freescale device tree files into fsl
- folder
-Date: Thu, 17 Sep 2015 23:48:19 -0500
-Message-ID: <1442551699.19102.99.camel@freescale.com>
-References: <1442548824-45849-1-git-send-email-hongtao.jia@freescale.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] usb: renesas_usbhs: Add support for R-Car H3
+Date: Fri, 18 Sep 2015 15:03:52 +0900
+Message-ID: <1442556232-6564-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442548824-45849-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-09-18 at 12:00 +0800, Jia Hongtao wrote:
-> It makes no sense that some Freescale device tree files are in fsl
-> directory while some others not. This patch move Freescale device tree
-> files into fsl folder. To do that the following two steps are made:
-> - Move Freescale device tree files into fsl folder.
-> - Update the include path in these files from "fsl/*.dtsi" to "*.dtsi".
-> 
-> Please add "fsl/" prefix when you make dtb using Makefile.
+This patch adds a compatible string to support for R-Car H3.
 
-The existing arrangement is indeed a bit odd, but the real reason for this is 
-the interaction with the preprocessor.  If a dtsi uses preprocessor 
-directives, it needs to be included with #include rather than /include/, or 
-else the dtsi won't be preprocessed.  However, if a dtsi is included with 
-#include, and that dtsi is in fsl/ but the including dts isn't, any 
-/include/s within the dtsi will not search that fsl/ because dtc doesn't 
-realize that's the directory the content came from.
+Since the HS-USB controller of R-Car H3 is almost the same specification
+with R-Car Gen2 (these have 16 pipes and usb-dmac), this patch
+sets the "type" of renesas_usbhs_driver_param to USBHS_TYPE_RCAR_GEN2.
 
-There was a desire to include <dt-bindings/thermal/thermal.h> from 
-fsl/t1040si-post.dtsi.  In order to make everything work, we need to either 
-move all relevant files to the same directory, or convert all /include/s in 
-affected files to #include.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ This patch is based on the latest Felipe's usb.git / testing/next
+branch (The commit id = b1ede0faf6e4961842f80e5e2fc1bf5373fef235).
 
--Scott
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ drivers/usb/renesas_usbhs/common.c                      | 4 ++++
+ 2 files changed, 5 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 64a4ca6..7d48f63 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -5,6 +5,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7790"
+ 	- "renesas,usbhs-r8a7791"
+ 	- "renesas,usbhs-r8a7794"
++	- "renesas,usbhs-r8a7795"
+   - reg: Base address and length of the register for the USBHS
+   - interrupts: Interrupt specifier for the USBHS
+   - clocks: A list of phandle + clock specifier pairs
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index 7b98e1d..2becd6b 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -476,6 +476,10 @@ static const struct of_device_id usbhs_of_match[] = {
+ 		.compatible = "renesas,usbhs-r8a7794",
+ 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+ 	},
++	{
++		.compatible = "renesas,usbhs-r8a7795",
++		.data = (void *)USBHS_TYPE_RCAR_GEN2,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, usbhs_of_match);
+-- 
+1.9.1
+
