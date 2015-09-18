@@ -1,41 +1,82 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
-Date: Fri, 18 Sep 2015 15:53:50 +0100
-Message-ID: <CAF2Aj3h7Jy=tpYdZTdbxAJwa=147_hAu3reOFrbEh=JdrMFWLQ@mail.gmail.com>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
-	<20150918140756.GK9249@gondor.apana.org.au>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 01/27] ARM: OMAP2+: gpmc: Add platform data
+Date: Fri, 18 Sep 2015 17:53:23 +0300
+Message-ID: <1442588029-13769-2-git-send-email-rogerq@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150918140756.GK9249@gondor.apana.org.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442588029-13769-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 September 2015 at 15:07, Herbert Xu <herbert@gondor.apana.org.au>=
- wrote:
-> On Thu, Sep 17, 2015 at 02:45:50PM +0100, Lee Jones wrote:
->> v1 =3D> v2:
->>  - New patch: Also fixing /dev/hw_random =3D> /dev/hwrng in Kconfig
->>  - Fix 2099 =3D> 2009 typo in commit log
->>  - Fix 'number of random numbers sourced' return value
->>  - Treat devm_clk_get()'s return value correctly
->>  - Check return value of clk_prepare_enable()
->>  - Use sysfs_streq() instead of manually stripping '\n' from sysfs
->
-> All applied.  Thanks.
+Add a platform data structure for GPMC. It contains all the necessary
+platform information that needs to be passed from platform init code
+to GPMC driver.
 
-Just to be clear.  Which patches have you applied?
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ include/linux/omap-gpmc.h               |  3 +--
+ include/linux/platform_data/gpmc-omap.h | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/platform_data/gpmc-omap.h
 
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+diff --git a/include/linux/omap-gpmc.h b/include/linux/omap-gpmc.h
+index 7dee0014..5c79190 100644
+--- a/include/linux/omap-gpmc.h
++++ b/include/linux/omap-gpmc.h
+@@ -7,8 +7,7 @@
+  *  option) any later version.
+  */
+ 
+-/* Maximum Number of Chip Selects */
+-#define GPMC_CS_NUM		8
++#include <linux/platform_data/gpmc-omap.h>
+ 
+ #define GPMC_CONFIG_WP		0x00000005
+ 
+diff --git a/include/linux/platform_data/gpmc-omap.h b/include/linux/platform_data/gpmc-omap.h
+new file mode 100644
+index 0000000..d32d9de
+--- /dev/null
++++ b/include/linux/platform_data/gpmc-omap.h
+@@ -0,0 +1,30 @@
++/*
++ * OMAP GPMC Platform data
++ *
++ * Copyright (C) 2014 Texas Instruments, Inc. - http://www.ti.com
++ *	Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ */
++
++#ifndef _GPMC_OMAP_H_
++#define _GPMC_OMAP_H_
++
++/* Maximum Number of Chip Selects */
++#define GPMC_CS_NUM		8
++
++/* Data for each chip select */
++struct gpmc_omap_cs_data {
++	bool valid;			/* data is valid */
++	bool is_nand;			/* device within this CS is NAND */
++	struct platform_device *pdev;	/* device within this CS region */
++	unsigned pdata_size;
++};
++
++struct gpmc_omap_platform_data {
++	struct gpmc_omap_cs_data cs[GPMC_CS_NUM];
++};
++
++#endif /* _GPMC_OMAP_H */
+-- 
+2.1.4
 
---=20
-Lee Jones
-Linaro ST Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
