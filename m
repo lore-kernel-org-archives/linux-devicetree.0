@@ -1,56 +1,31 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: clean up Cygnus DT files
-Date: Thu, 17 Sep 2015 18:20:36 -0700
-Message-ID: <55FB66E4.8010006@broadcom.com>
-References: <1442534282-21356-1-git-send-email-rjui@broadcom.com>
- <1442534282-21356-2-git-send-email-rjui@broadcom.com>
- <55FB65E0.50407@gmail.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v4] qcom: ipq4019: Add basic board/dts support for
+ IPQ4019 SoC
+Date: Thu, 17 Sep 2015 21:44:01 -0500
+Message-ID: <20150918024401.GA21736@qualcomm.com>
+References: <20150827053138.GA24234@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FB65E0.50407-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150827053138.GA24234@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 9/17/2015 6:16 PM, Florian Fainelli wrote:
-> On 17/09/15 16:57, Ray Jui wrote:
->> This patch cleans up Cygnus DT files and makes the format consistent
->> with the rest of Broadcom iProc based SoCs.
->>
->> Changes include:
->>     - Put core components into "core" node of type "simple-bus"
->>     - Put all other peripherals into "soc" node of type "simple-bus"
->>     - Move aliases into bcm-cygnus.dtsi to avoid duplications in all dts
->>       files
->>     - Ordered all device nodes under buses based on their base register
->>       addresses
->>     - Remove unused PCI I/O resource
->>     - Use label instead of full path to reference device nodes in dts
->>       files
+On Thu, Aug 27, 2015 at 11:01:38AM +0530, Varadarajan Narayanan wrote:
+> Add initial dts files and SoC support for IPQ4019
 > 
-> I am fine with the changes per-se, but the review is made largely more
-> difficult because you mix multiple changes at the same time, this really
-> ought to be separate patches to ease the review process. Sorry for not
-> picking that up earlier.
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> ---
 
-Sure! I'll break them up into individual patches as follows:
-- Put core components into "core" node of type "simple-bus"
-- Put all other peripherals into "soc" node of type "simple-bus"
-- Move aliases into bcm-cygnus.dtsi to avoid duplications in all dts files
-- Ordered all device nodes under buses based on their base register
-addresses
-- Remove unused PCI I/O resources
-- Use label instead of full path to reference device nodes in dts files
 
-Thanks!
+Aside from the incorrect copyright date (which i will fix), this is fine.
 
-Ray
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll apply this.
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
