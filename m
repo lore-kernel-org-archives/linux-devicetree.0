@@ -1,66 +1,73 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpio: mention in DT binding doc that <name>-gpio is also supported
-Date: Sat, 19 Sep 2015 03:05:08 +0900
-Message-ID: <CAAVeFu+Np=V+7Z69ZQXwgv5vTqT7paf5mL_aiCvi2JKigBYi1A@mail.gmail.com>
-References: <1442453638-14246-1-git-send-email-javier@osg.samsung.com>
- <CAAVeFuK-doCwGB=EwN2F933G8_ubSRR2xz9xEnWLAhReTupvSA@mail.gmail.com> <55FC4714.1010804@osg.samsung.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/5] ARM: dts: DRA74x: Add IPC sub-mailbox nodes for all IPUs & DSPs
+Date: Fri, 18 Sep 2015 13:16:30 -0500
+Message-ID: <1442600194-62520-2-git-send-email-s-anna@ti.com>
+References: <1442600194-62520-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FC4714.1010804-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+In-Reply-To: <1442600194-62520-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 19, 2015 at 2:17 AM, Javier Martinez Canillas
-<javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
-> Hello Alexandre,
->
-> On 09/18/2015 05:44 PM, Alexandre Courbot wrote:
->> On Thu, Sep 17, 2015 at 10:33 AM, Javier Martinez Canillas
->> <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
->>> The GPIO DT binding doc mentions that GPIO are mapped by defining
->>> a <name>-gpios property in the consumer device's node but a -gpio
->>> sufix is also supported after commit:
->>>
->>> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
->>>
->>> Update the DT binding documentation to match the implementation.
->>>
->>> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->>>
->>> ---
->>> Hello,
->>>
->>> The GPIO documentation was updated to mention that the -gpio sufix
->>> is also supported in patch https://lkml.org/lkml/2015/9/1/117 that
->>> already landed in Torvalds tree.
->>>
->>> I now noticed that the DT binding also only mentions -gpios so I'm
->>> posting this patch that adds -gpio to the DT binding documentation.
->>
->> I think I remember that -gpio is considered obsolete and its use
->> should thus not be encouraged, which is the reason why the
->> documentation does not mention it. We could mention it and add a note
->> saying that it should not be used for new bindings, but all in all
->> isn't it better to keep the documentation clear of such use cases that
->> will not be accepted for new patches anyway?
->>
->
-> I agree that if that's the case then it should be documented. Currently
-> by reading the docs there is no way to tell if -gpio was only added to
-> support old DT bindings and should not be used or if is that the docs
-> were not updated when <function>-gpio parsing was added to gpiolib.
->
-> I can re-spin the patch making it clear that even when the -gpio suffix
-> is supported, it's only there for compatibility reasons and should not
-> be used for newer bindings.
->
-> And also Documentation/gpio/board.txt has to be updated now since now it
-> mentions <function>-gpio but does not say that should not be used.
+Add the sub-mailbox nodes that are used to communicate between
+MPU and the remote processors IPU1, IPU2, DSP1 and DSP2.
 
-Sounds good. Thanks for taking care of this!
+The sub-mailbox nodes utilize the System Mailbox instances 5 and 6.
+These sub-mailbox nodes are added to match the hard-coded mailbox
+configuration used within the TI IPC 3.x software package. The
+Dual-Cortex M4 IPU1 and IPU2 processor sub-systems are assumed to
+be running in SMP-mode, and hence only a single sub-mailbox node
+is added for each.
+
+All these sub-mailbox nodes are left in disabled state, and should
+be enabled (and modified if needed) as per the individual product
+configuration in the corresponding board dts files.
+
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra74x.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
+index feea98e0a4b5..33d11c2c8af3 100644
+--- a/arch/arm/boot/dts/dra74x.dtsi
++++ b/arch/arm/boot/dts/dra74x.dtsi
+@@ -93,3 +93,29 @@
+ 		 <&dss_video2_clk>;
+ 	clock-names = "fck", "video1_clk", "video2_clk";
+ };
++
++&mailbox5 {
++	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
++		ti,mbox-tx = <6 2 2>;
++		ti,mbox-rx = <4 2 2>;
++		status = "disabled";
++	};
++	mbox_dsp1_ipc3x: mbox_dsp1_ipc3x {
++		ti,mbox-tx = <5 2 2>;
++		ti,mbox-rx = <1 2 2>;
++		status = "disabled";
++	};
++};
++
++&mailbox6 {
++	mbox_ipu2_ipc3x: mbox_ipu2_ipc3x {
++		ti,mbox-tx = <6 2 2>;
++		ti,mbox-rx = <4 2 2>;
++		status = "disabled";
++	};
++	mbox_dsp2_ipc3x: mbox_dsp2_ipc3x {
++		ti,mbox-tx = <5 2 2>;
++		ti,mbox-rx = <1 2 2>;
++		status = "disabled";
++	};
++};
+-- 
+2.5.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
