@@ -1,7 +1,7 @@
 From: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Subject: [PATCH] PowerPC: Move Freescale device tree files into fsl folder
-Date: Fri, 18 Sep 2015 11:52:18 +0800
-Message-ID: <1442548338-39028-1-git-send-email-hongtao.jia@freescale.com>
+Date: Fri, 18 Sep 2015 12:00:24 +0800
+Message-ID: <1442548824-45849-1-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -16,7 +16,7 @@ files into fsl folder. To do that the following two steps are made:
 - Move Freescale device tree files into fsl folder.
 - Update the include path in these files from "fsl/*.dtsi" to "*.dtsi".
 
-Plese add "fsl/" prefix when you make dtb using Makefile.
+Please add "fsl/" prefix when you make dtb using Makefile.
 
 Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
