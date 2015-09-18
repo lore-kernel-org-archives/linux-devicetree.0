@@ -1,48 +1,25 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v4 05/10] power: bq24257: Add SW-based approach for Power
- Good determination
-Date: Fri, 18 Sep 2015 16:28:17 -0500
-Message-ID: <20150918212816.GI27772@beast>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
- <1442339914-25843-6-git-send-email-dannenberg@ti.com>
- <55F900F9.90306@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/9] ARM: dts: Remove unused PCI I/O resource in Cygnus
+Date: Fri, 18 Sep 2015 23:28:28 +0200
+Message-ID: <4598126.bTshpfCuvX@wuerfel>
+References: <1442611454-16331-1-git-send-email-rjui@broadcom.com> <1442611454-16331-4-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F900F9.90306@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442611454-16331-4-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 02:41:13PM +0900, Krzysztof Kozlowski wrote:
-> On 16.09.2015 02:58, Andreas Dannenberg wrote:
-> > @@ -676,7 +696,7 @@ static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
-> >  {
-> >  	bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0, GPIOD_IN);
-> >  	if (IS_ERR(bq->pg)) {
-> > -		dev_err(bq->dev, "could not probe PG pin\n");
-> > +		dev_info(bq->dev, "could not probe PG pin\n");
+On Friday 18 September 2015 14:24:08 Ray Jui wrote:
+> Remove unused PCI I/O resource in bcm-cygnus.dtsi
 > 
-> I think if pg-gpio is provided (e.g. by DTS) but it is invalid (return
-> value != ENOENT) then it is an error you could print. The driver will
-> fallback to the software method but still user/developer may want to
-> notice the error (e.g. error in DTS).
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 > 
-> Anyway it is up to you, rest looks good:
 
-Krzysztof,
-I looked at this closer and all the error scenarios I could come up with
-to test regarding the pin definition in DT (wrong pin numbers, missing
-definition altogether) all generated an -ENOENT coming out of
-devm_gpiod_get_index() with no differentiation between the cases. I'm
-sure there is some way to accomplish that but for the time being I left
-the refinement between dev_err() and dev_info() alone.
+Why? How do you know that nobody ever plugs in a card with I/O ports?
 
-Regards,
-
---
-Andreas Dannenberg
-Texas Instruments Inc
-
+	Arnd
