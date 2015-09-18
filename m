@@ -1,49 +1,69 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH V4 3/3] arm64: dts: Add reset dts config for Hisilicon
- Hi6220 SoC
-Date: Fri, 18 Sep 2015 17:23:24 +0200
-Message-ID: <1442589804.1926.6.camel@pengutronix.de>
-References: <1442491202-211336-1-git-send-email-puck.chen@hisilicon.com>
-	 <1442491202-211336-3-git-send-email-puck.chen@hisilicon.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V6 0/3] nvmem: add ocotp support for i.MX23 and i.MX28
+Date: Fri, 18 Sep 2015 17:31:37 +0200
+Message-ID: <55FC2E59.5030504@i2se.com>
+References: <1439418116-1833-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442491202-211336-3-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com, arnd@arndb.de, bintian.wang@huawei.com, xuyiping@hisilicon.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com, kong.kongxinwei@hisilicon.com, yudongbin@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439418116-1833-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 17.09.2015, 20:00 +0800 schrieb Chen Feng:
-> Add reset controller for hi6220 hikey-board.
-> 
-> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 3f03380..3f055e2 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -167,5 +167,12 @@
->  			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
->  			clock-names = "uartclk", "apb_pclk";
->  		};
-> +
-> +		reset_ctrl: reset_ctrl@f7030000 {
-> +			compatible = "hisilicon,hi6220-reset-ctl";
-> +			reg = <0x0 0xf7030000 0x0 0x1000>;
-> +			#reset-cells = <1>;
-> +		};
-> +
->  	};
->  };
+Hi Greg,
 
-Applied all three, thanks.
-If you want to take patch 3 through the hisilicon git tree instead, let
-me know and I'll drop patch 3.
+Am 13.08.2015 um 00:21 schrieb Stefan Wahren:
+> This patch series brings read-only support for the On-Chip OTP cells
+> in the i.MX23 and i.MX28 processor.
+>
+> changes in V6:
+> - add COMPILE_TEST to dependancy
+> - remove unnecessary headers
+> - enable clock during read operation
+> - fix module license
+>
+> changes in V5:
+> - rebase to char-misc-next
+> - add nvmem prefix to module name
+> - set status in dtsi files
+>
+> changes in V4:
+> - rename fsl_ocotp.c to mxs-ocotp.c
+> - adapt driver to use NVMEM framework V7
+> - take care of hbus clock
+> - increase too small timeout
+> - implement a wait function
+> - use defines from stmp_device.h
+> - remove owner init
+> - more code cleanup
+>
+> changes in V3:
+> - drop write support
+> - take care of i.MX23 which has less registers
+> - drop unnecessary header file
+> - move static variables into driver data
+> - add devicetree probing
+> - fix missing bank closing in error case
+> - use kobj from platform device for sysfs
+> - add SYSFS to Kconfig
+> - add binding file
+> - code cleanup
+>
+> Stefan Wahren (3):
+>   DT: nvmem: add binding for mxs-ocotp
+>   nvmem: add driver for ocotp in i.MX23 and i.MX28
+>   ARM: mxs: enable ocotp for i.MX23 and i.MX28
 
-best regards
-Philipp
+the merge window is closed and patch #3 has been applied by Shawn.
+
+Is it possible for you to apply the rest of this series to char-misc-next?
+
+Kind regards
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
