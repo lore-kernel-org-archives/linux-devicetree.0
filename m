@@ -1,57 +1,73 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] ARM: dts: Put Cygnus core components under core
- bus
-Date: Fri, 18 Sep 2015 14:57:15 -0700
-Message-ID: <55FC88BB.2000608@broadcom.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v2 5/9] ARM: dts: Move all Cygnus peripherals into soc bus
+Date: Fri, 18 Sep 2015 15:11:27 -0700
+Message-ID: <55FC8C0F.9020308@broadcom.com>
 References: <1442611454-16331-1-git-send-email-rjui@broadcom.com>
- <1442611454-16331-5-git-send-email-rjui@broadcom.com>
- <1472876.fGCm1r9KFG@wuerfel>
+ <1442611454-16331-6-git-send-email-rjui@broadcom.com>
+ <1929872.EmD9YkfFuv@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472876.fGCm1r9KFG@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1929872.EmD9YkfFuv@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 9/18/2015 2:30 PM, Arnd Bergmann wrote:
-> On Friday 18 September 2015 14:24:09 Ray Jui wrote:
->>
->> +       core {
+On 9/18/2015 2:34 PM, Arnd Bergmann wrote:
+> On Friday 18 September 2015 14:24:10 Ray Jui wrote:
+>> +       soc {
 >> +               compatible = "simple-bus";
 >> +               ranges;
 >> +               #address-cells = <1>;
 >> +               #size-cells = <1>;
->> +
->> +               timer@19020200 {
->> +                       compatible = "arm,cortex-a9-global-timer";
->> +                       reg = <0x19020200 0x100>;
->> +                       interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
->> +                       clocks = <&periph_clk>;
->> +               };
->> +
->> +               gic: interrupt-controller@19021000 {
+> 
+>> +               pinctrl: pinctrl@0301d0c8 {
 >>
 > 
-> Could it be that all 'core' components are in the 0x19xxxxxx address range?
-> If so, please set up an appropriate ranges property for the bus. Also
-> add the address field for the bus according to which addresses are routed
-> to it.
+> Similarly to the core bus, this seems to have address ranges 0x03xxxxxx and
+> 0x18xxxxxx on it, so put those into the ranges.
+>
+
+Okay we have an issue here. For whatever reason, the Cygnus ASIC team
+decided to put registers for the same block in random locations. We see
+similar issues in all of our other iProc based SoCs. We have
+communicated this to our ASIC team, and hopefully they can revert the
+trend for the next SoC.
+
+For example, the gpio_ccm has registers in the following regions:
+
+gpio_ccm: gpio@1800a000 {
+    compatible = "brcm,cygnus-ccm-gpio";
+    reg = <0x1800a000 0x50>,
+          <0x0301d164 0x20>;
+
+NAND is worse, it has registers in 3 different separate regions:
+
+nand: nand@18046000 {
+    compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1",
+                 "brcm,brcmnand";
+    reg = <0x18046000 0x600>, <0xf8105408 0x600>,
+          <0x18046f00 0x20>;
+
+As you can see, this makes it impossible to define a proper address
+range for the bus; therefore, I'll have to keep the ranges undefined and
+a simple 1:1 mapping under this bus.
+
+> It probably also makes sense to name the bus according to what kind of
+> bus (axi, ahb, plb, ...) is used here. If the soc has nested buses
+> (e.g. an ahb connected to an axi bus,) then model both of them in the DT.
+
+Based on the block diagram from the ASIC team, it looks like all of them
+are connected to one major AXI fabric. I can rename the bus to AXI.
+
 > 
 > 	Arnd
 > 
 
-Yes all 'core' components are in the 0x19xxxxx address range for Cygnus.
-It's fine and makes sense to set up proper ranges for this bus. But I
-might have some issues with the 'soc' components and the 'soc' bus,
-which I'll explain and discuss on the next email.
+Thanks,
 
 Ray
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
