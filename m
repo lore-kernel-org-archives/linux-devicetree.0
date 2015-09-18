@@ -1,71 +1,56 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: Add the needed timer for rk3368
- SoC
-Date: Fri, 18 Sep 2015 09:16:53 +0800
-Message-ID: <55FB6605.80601@gmail.com>
-References: <1442476272-31723-1-git-send-email-wxt@rock-chips.com> <1442476272-31723-4-git-send-email-wxt@rock-chips.com> <10188118.z6mI84Cd5Z@diego>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: clean up Cygnus DT files
+Date: Thu, 17 Sep 2015 18:20:36 -0700
+Message-ID: <55FB66E4.8010006@broadcom.com>
+References: <1442534282-21356-1-git-send-email-rjui@broadcom.com>
+ <1442534282-21356-2-git-send-email-rjui@broadcom.com>
+ <55FB65E0.50407@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10188118.z6mI84Cd5Z@diego>
+In-Reply-To: <55FB65E0.50407-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-=E5=9C=A8 2015=E5=B9=B409=E6=9C=8818=E6=97=A5 03:01, Heiko St=C3=BCbner=
- =E5=86=99=E9=81=93:
-> Am Donnerstag, 17. September 2015, 15:51:12 schrieb Caesar Wang:
->> There is a need of a broadcast timer in this case to ensure proper
->> wakeup when the cpus are in sleep mode and a timer expires.
+On 9/17/2015 6:16 PM, Florian Fainelli wrote:
+> On 17/09/15 16:57, Ray Jui wrote:
+>> This patch cleans up Cygnus DT files and makes the format consistent
+>> with the rest of Broadcom iProc based SoCs.
 >>
->> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->>   arch/arm64/boot/dts/rockchip/rk3368.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3368.dtsi index a712bea..99edbaa 10=
-0644
->> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
->> @@ -214,6 +214,12 @@
->>   			(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
->>   	};
->>
->> +	timer@ff810000 {
->> +		compatible =3D "rockchip,rk3288-timer";
-> you probably want a
-> 		compatible =3D "rockchip,rk3368-timer", "rockchip,rk3288-timer";
+>> Changes include:
+>>     - Put core components into "core" node of type "simple-bus"
+>>     - Put all other peripherals into "soc" node of type "simple-bus"
+>>     - Move aliases into bcm-cygnus.dtsi to avoid duplications in all dts
+>>       files
+>>     - Ordered all device nodes under buses based on their base register
+>>       addresses
+>>     - Remove unused PCI I/O resource
+>>     - Use label instead of full path to reference device nodes in dts
+>>       files
+> 
+> I am fine with the changes per-se, but the review is made largely more
+> difficult because you mix multiple changes at the same time, this really
+> ought to be separate patches to ease the review process. Sorry for not
+> picking that up earlier.
 
-Done.
+Sure! I'll break them up into individual patches as follows:
+- Put core components into "core" node of type "simple-bus"
+- Put all other peripherals into "soc" node of type "simple-bus"
+- Move aliases into bcm-cygnus.dtsi to avoid duplications in all dts files
+- Ordered all device nodes under buses based on their base register
+addresses
+- Remove unused PCI I/O resources
+- Use label instead of full path to reference device nodes in dts files
 
-More consideration for the future.
-Although the "rk3288-timer" is working for 3368, agreed to add the=20
-'rk3368-timer' for the rk3368-spec  timer in the future.
+Thanks!
 
->
->> +		reg =3D <0x0 0xff810000 0x0 0x20>;
->> +		interrupts =3D <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +
->>   	xin24m: oscillator {
->>   		compatible =3D "fixed-clock";
->>   		clock-frequency =3D <24000000>;
->
->
->
->
-> --=20
-> Thanks,
-> Caesar
+Ray
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
