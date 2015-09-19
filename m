@@ -1,105 +1,65 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/7] Phy and mdiobus fixes
-Date: Sat, 19 Sep 2015 13:49:35 -0700
-Message-ID: <55FDCA5F.9090604@gmail.com>
-References: <20150918094625.GB21084@n2100.arm.linux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] mfd: tps65912: Rewrite driver adding DT support and
+ using regmap
+Date: Sat, 19 Sep 2015 11:40:21 -0700
+Message-ID: <20150919184021.GQ30445@sirena.org.uk>
+References: <1442339861-30300-1-git-send-email-afd@ti.com>
+ <1442339861-30300-3-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150918094625.GB21084-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sunil Goutham <sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MXxcbiX/Q4+iy5U7"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442339861-30300-3-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 09/18/15 02:46, Russell King - ARM Linux a =C3=A9crit :
-> Hi,
->=20
-> While looking at the phy code, I identified a number of weaknesses
-> where refcounting on device structures was being leaked, where
-> modules could be removed while in-use, and where the fixed-phy could
-> end up having unintended consequences caused by incorrect calls to
-> fixed_phy_update_state().
->=20
-> This patch series resolves those issues, some of which were discovere=
-d
-> with testing on an Armada 388 board.  Not all patches are fully teste=
-d,
-> particularly the one which touches several network drivers.
->=20
-> When resolving the struct device refcounting problems, several differ=
-ent
-> solutions were considered before settling on the implementation here =
--
-> one of the considerations was to avoid touching many network drivers.
-> The solution here is:
->=20
-> 	phy_attach*() - takes a refcount
-> 	phy_detach*() - drops the phy_attach refcount
->=20
-> Provided drivers always attach and detach their phys, which they shou=
-ld
-> already be doing, this should change nothing, even if they leak a ref=
-count.
->=20
-> 	of_phy_find_device() and of_* functions which use that take
-> 	a refcount.  Arrange for this refcount to be dropped once
-> 	the phy is attached.
->=20
-> This is the reason why the previous change is important - we can't dr=
-op
-> this refcount taken by of_phy_find_device() until something else hold=
-s
-> a reference on the device.  This resolves the leaked refcount caused =
-by
-> using of_phy_connect() or of_phy_attach().
->=20
-> Even without the above changes, these drivers are leaking by calling
-> of_phy_find_device().  These drivers are addressed by adding the
-> appropriate release of that refcount.
->=20
-> The mdiobus code also suffered from the same kind of leak, but thankf=
-ully
-> this only happened in one place - the mdio-mux code.
->=20
-> I also found that the try_module_get() in the phy layer code was utte=
-rly
-> useless: phydev->dev.driver was guaranteed to always be NULL, so
-> try_module_get() was always being called with a NULL argument.  I pro=
-ved
-> this with my SFP code, which declares its own MDIO bus - the module u=
-se
-> count was never incremented irrespective of how I set the MDIO bus up=
-=2E
-> This allowed the MDIO bus code to be removed from the kernel while th=
-ere
-> were still PHYs attached to it.
->=20
-> One other bug was discovered: while using in-band-status with mvneta,=
- it
-> was found that if a real phy is attached with in-band-status enabled,
-> and another ethernet interface is using the fixed-phy infrastructure,=
- the
-> interface using the fixed-phy infrastructure is configured according =
-to
-> the other interface using the in-band-status - which is caused by the
-> fixed-phy code not verifying that the phy_device passed in is actuall=
-y
-> a fixed-phy device, rather than a real MDIO phy.
->=20
-> Lastly, having mdio_bus reversing phy_device_register() internals see=
-ms
-> like a layering violation - it's trivial to move that code to the phy
-> device layer.
 
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--MXxcbiX/Q4+iy5U7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
---=20
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Sep 15, 2015 at 12:57:40PM -0500, Andrew F. Davis wrote:
+> The old driver does not support DT. Rewrite the driver adding DT support
+> and use modern kernel features such as regmap and related helpers.
+>=20
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> ---
+>  drivers/gpio/gpio-tps65912.c           | 291 ++++++------
+>  drivers/mfd/Kconfig                    |  20 +-
+>  drivers/mfd/Makefile                   |   3 +-
+>  drivers/mfd/tps65912-core.c            | 288 +++++-------
+>  drivers/mfd/tps65912-i2c.c             | 233 ++++------
+>  drivers/mfd/tps65912-irq.c             | 217 ---------
+>  drivers/mfd/tps65912-spi.c             | 236 ++++------
+>  drivers/regulator/tps65912-regulator.c | 783 ++++++++++-----------------=
+------
+>  include/linux/mfd/tps65912.h           | 256 +++++++----
+>  9 files changed, 854 insertions(+), 1473 deletions(-)
+
+It's not OK to have a single commit that rewrites multiple drivers over
+many subsystems, that's really not something that can be sensibly
+reviewed.  You should split this into a patch series which makes one
+specific change at a time as covered in SubmittingPatches.  That will
+allow the changes to be reviewed much more sensibly.
+
+--MXxcbiX/Q4+iy5U7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV/awRAAoJECTWi3JdVIfQK6sH/0JQ+2xQbDCQxl8ai+3Ko7Cf
+myB2BRCtn20b4PzAkwp/HU24NWZxm3wH1lKSrJ6UqokSQeVS8xIJvfIqPlYGlsKo
+grGCkSsBwpzgYERn6IoJfFyz9/ZuSqDQ5J5qm0J+xA/5RqlMArHFLU9p0KRMrktn
+PZQsBkIqlU5zj3o5v2F1RCy3Nj1pgSjs0zCn6KblDMNTRYzM2qngbMV0+Z9zpEZn
+oO5i6SEgoZJYZ8bTWLgCO3OOiCbVFdqLhyPNKZuan8+P5l0PMxKSEjGV6CTObn6x
+TQ7QX7OsCQkxfeWf0K5Am1wjF0mxs8d45rBuGVSX0qy4auEpK1FKqFmBFpGQ6kE=
+=G+ij
+-----END PGP SIGNATURE-----
+
+--MXxcbiX/Q4+iy5U7--
