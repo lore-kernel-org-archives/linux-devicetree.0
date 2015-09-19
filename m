@@ -1,67 +1,59 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 02/16] PM / OPP: Add 'opp-microvolt-triplets' binding
-Date: Sat, 19 Sep 2015 08:39:56 -0700
-Message-ID: <20150919153956.GB30445@sirena.org.uk>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <254dd353453a495bb0921fa23e430428484f36fa.1441972771.git.viresh.kumar@linaro.org>
- <55F72E65.6000205@kernel.org>
- <20150915033027.GJ32551@linux>
+Subject: Re: [PATCH v5 07/23] regulator: core: Remove regulator_list
+Date: Sat, 19 Sep 2015 08:01:29 -0700
+Message-ID: <20150919150129.GR12027@sirena.org.uk>
+References: <1442494637-3674-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1442494637-3674-8-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
+	protocol="application/pgp-signature"; boundary="55BQxs/tzKPczcTk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150915033027.GJ32551@linux>
+In-Reply-To: <1442494637-3674-8-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
 
---XOIedfhf+7KOe/yw
+--55BQxs/tzKPczcTk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Sep 15, 2015 at 09:00:27AM +0530, Viresh Kumar wrote:
+On Thu, Sep 17, 2015 at 02:57:01PM +0200, Tomeu Vizoso wrote:
+> As we are already registering a device with regulator_class for each
+> regulator device, regulator_list is redundant and can be replaced with
+> calls to class_find_device() and class_for_each_device().
 
-> [+Cc Mark, I thought I cc'd him earlier, but no, I cc'd him only for
-> the first patch]
+This appears to leak references to the struct devices returned by
+class_find_device() - it takes a reference before it returns so any
+device found using class_find_device() needs to be released with
+put_device() and I don't see any new put_device() calls in here.
 
-I'm reading this on a plane so have no other context and to be honest
-I'm struggling to understand what is being discussed here.  It would be
-really helpful if you were to describe in words what proposed bindings
-are intended to do as well as presenting examples, the examples by
-themselves require the reader to reverse engineer what the semantics are
-intended to be.
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
 
-> But if we can define something like:
+This is not the case at all, this patch was newly added.  If you want
+to include changelogs like this in the patch description try to ensure
+that they bear some relationship to reality, if they don't they are
+actively harmful as they are likely to mislead or annoy the reader.
 
-> supply0: regulator@f8000000 {
->         regulator-cells or microvolt-cells = 1 or 3;
->         ...
-> }
-
-As far as I can tell this is proposing adding something to the regulator
-binding specifying if users must present either a single value or a
-min/target/max triplet.  This is obviously problematic since regulators
-can be shared - the needs of one user may not match the needs of another
-user, and of course most users should not be specifying voltages at all
-in the device tree in the first place.
-
---XOIedfhf+7KOe/yw
+--55BQxs/tzKPczcTk
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJV/YHLAAoJECTWi3JdVIfQOBUH/1cZY0IKlsHJ3WdHQ1y06Onn
-xBBnmjp+EDrGPng7m9Lf6Y4dh0+8vKIPMDdsNnKQA53s6P688w1eu25fKpP7sbMZ
-y6M2P9pmy7aQ4XI66XPufzjYK+EeATUzXMfwDbHrACBBnRmqTuedpb5s6HwvxMJ/
-Lp+iaspSxisNVZjz8hPRzVomh3QXlUbgHJygbZnkd+wKb/5B6TqkZbgqvxxN8HwA
-69rIbUMepEhxdHXmowTuiuIYDGhOQXTJVKn3BVTVju62wVQu8LXYKIy3NOmc85dh
-uXTH/gxmceUY/T58aXGhZ6CGpKLSmygVJ2kwJfD2pS3yS4s9wpFUOXGKtgZh/vM=
-=CCMY
+iQEcBAEBCAAGBQJV/XjIAAoJECTWi3JdVIfQyZIH/0fiZnlocw3ABt0s1/Kpabky
+QIxkNj8r1pYrYVDhQCsLEbZ2+kYufFeRoL3FcWOLbubWw/InFyMKWj7CmEJRN3CR
+W2LTCLqeRy+tjScE7+xt84NA6s9aKJwBCT6NP6vwNYU6EdHwmmbfiXX4olJP30mx
+nVEVZrKTI4Ix4intQspgSUsCWir2GToc44wzIVqatBF/iRk0kAjwii1S27007x1N
+ScmDZ2nPsVrqpHzTZXZSaApZPxwTd4ylCSFHUv67EWtgGTqG1DvfkMd7mYqvFLw6
+E79T5UqxD2+tc2FX5tMBHFT9ETFnKX3CFXqIPX55xg2ZToYLKvKiOvB7WmBOAco=
+=yWQv
 -----END PGP SIGNATURE-----
 
---XOIedfhf+7KOe/yw--
+--55BQxs/tzKPczcTk--
