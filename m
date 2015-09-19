@@ -1,61 +1,32 @@
-From: chenfeng <puck.chen@hisilicon.com>
-Subject: Re: [PATCH V4 3/3] arm64: dts: Add reset dts config for Hisilicon
- Hi6220 SoC
-Date: Sat, 19 Sep 2015 09:53:51 +0800
-Message-ID: <55FCC02F.8060001@hisilicon.com>
-References: <1442491202-211336-1-git-send-email-puck.chen@hisilicon.com>
- <1442491202-211336-3-git-send-email-puck.chen@hisilicon.com>
- <1442589804.1926.6.camel@pengutronix.de>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH linux-next 1/4] mtd: spi-nor: remove unused read_xfer/write_xfer hooks
+Date: Sat, 19 Sep 2015 05:08:55 +0200
+Message-ID: <201509190508.55496.marex@denx.de>
+References: <cover.1442590224.git.cyrille.pitchen@atmel.com> <719ad7cc8bf6df151dd799cd4f13292fd9471079.1442590224.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442589804.1926.6.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com, arnd@arndb.de, bintian.wang@huawei.com, xuyiping@hisilicon.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com, kong.kongxinwei@hisilicon.com, yudongbin@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <719ad7cc8bf6df151dd799cd4f13292fd9471079.1442590224.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Philipp,
+On Friday, September 18, 2015 at 05:49:25 PM, Cyrille Pitchen wrote:
+> struct spi_nor_xfer_cfg and read_xfer/write_xfer hooks were never used by
+> any driver. Do some cleanup by removing them.
+> 
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-On 2015/9/18 23:23, Philipp Zabel wrote:
-> Am Donnerstag, den 17.09.2015, 20:00 +0800 schrieb Chen Feng:
->> Add reset controller for hi6220 hikey-board.
->>
->> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> index 3f03380..3f055e2 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> @@ -167,5 +167,12 @@
->>  			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
->>  			clock-names = "uartclk", "apb_pclk";
->>  		};
->> +
->> +		reset_ctrl: reset_ctrl@f7030000 {
->> +			compatible = "hisilicon,hi6220-reset-ctl";
->> +			reg = <0x0 0xf7030000 0x0 0x1000>;
->> +			#reset-cells = <1>;
->> +		};
->> +
->>  	};
->>  };
-> 
-> Applied all three, thanks.
-> If you want to take patch 3 through the hisilicon git tree instead, let
-> me know and I'll drop patch 3.
-> 
-Agree.
-Please help apply all three. Thanks!
+Right, if this will ever be needed, it can be re-added.
 
-Puck
-> best regards
-> Philipp
-> 
-> 
-> .
-> 
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
