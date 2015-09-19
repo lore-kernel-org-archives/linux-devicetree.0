@@ -1,59 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 07/23] regulator: core: Remove regulator_list
-Date: Sat, 19 Sep 2015 08:01:29 -0700
-Message-ID: <20150919150129.GR12027@sirena.org.uk>
-References: <1442494637-3674-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442494637-3674-8-git-send-email-tomeu.vizoso@collabora.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: axp20x: Rename supply names for
+ AXP221 DC1SW and DC5LDO regulators
+Date: Sat, 19 Sep 2015 11:06:30 -0700
+Message-ID: <20150919180630.GN30445@sirena.org.uk>
+References: <1442372732-27434-1-git-send-email-wens@csie.org>
+ <1442372732-27434-2-git-send-email-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="55BQxs/tzKPczcTk"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="LvAn5G4Ewe70kJ1i"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBRX566XQKGQEYQEKNUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1442494637-3674-8-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <1442372732-27434-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---55BQxs/tzKPczcTk
-Content-Type: text/plain; charset=us-ascii
+--LvAn5G4Ewe70kJ1i
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Thu, Sep 17, 2015 at 02:57:01PM +0200, Tomeu Vizoso wrote:
-> As we are already registering a device with regulator_class for each
-> regulator device, regulator_list is redundant and can be replaced with
-> calls to class_find_device() and class_for_each_device().
+On Wed, Sep 16, 2015 at 11:05:30AM +0800, Chen-Yu Tsai wrote:
+> The DC1SW and DC5LDO regulators in the AXP221 are internally chained
+> to DCDC1 and DCDC5, hence the names. The original bindings used the
+> parent regulator names for the supply regulator property. This causes
+> some confusion when we actually use it in the dts:
 
-This appears to leak references to the struct devices returned by
-class_find_device() - it takes a reference before it returns so any
-device found using class_find_device() needs to be released with
-put_device() and I don't see any new put_device() calls in here.
-
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-
-This is not the case at all, this patch was newly added.  If you want
-to include changelogs like this in the patch description try to ensure
-that they bear some relationship to reality, if they don't they are
-actively harmful as they are likely to mislead or annoy the reader.
-
---55BQxs/tzKPczcTk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV/XjIAAoJECTWi3JdVIfQyZIH/0fiZnlocw3ABt0s1/Kpabky
-QIxkNj8r1pYrYVDhQCsLEbZ2+kYufFeRoL3FcWOLbubWw/InFyMKWj7CmEJRN3CR
-W2LTCLqeRy+tjScE7+xt84NA6s9aKJwBCT6NP6vwNYU6EdHwmmbfiXX4olJP30mx
-nVEVZrKTI4Ix4intQspgSUsCWir2GToc44wzIVqatBF/iRk0kAjwii1S27007x1N
-ScmDZ2nPsVrqpHzTZXZSaApZPxwTd4ylCSFHUv67EWtgGTqG1DvfkMd7mYqvFLw6
-E79T5UqxD2+tc2FX5tMBHFT9ETFnKX3CFXqIPX55xg2ZToYLKvKiOvB7WmBOAco=
-=yWQv
------END PGP SIGNATURE-----
-
---55BQxs/tzKPczcTk--
+If these regulators are internally always connected to other regulators
+in the same device why are we even representing their supplies in DT?
+--LvAn5G4Ewe70kJ1i--
