@@ -1,51 +1,47 @@
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/7] tty: serial: msm: Fix command Stale Event Enable definition
-Date: Sat, 19 Sep 2015 07:56:35 +0300
-Message-ID: <EF8B8149-63BF-4F09-8EF2-AD55E66365DE@linaro.org>
-References: <1442062934-13449-1-git-send-email-ivan.ivanov@linaro.org> <1442062934-13449-4-git-send-email-ivan.ivanov@linaro.org> <20150918233316.GB23081@codeaurora.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150918233316.GB23081-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
+Date: Sat, 19 Sep 2015 10:21:45 +0100
+Message-ID: <20150919092145.GG3218@x1>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+ <20150918140756.GK9249@gondor.apana.org.au>
+ <CAF2Aj3h7Jy=tpYdZTdbxAJwa=147_hAu3reOFrbEh=JdrMFWLQ@mail.gmail.com>
+ <20150918151137.GA10763@gondor.apana.org.au>
+ <20150918155112.GE3218@x1>
+ <20150918231213.GA14278@gondor.apana.org.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150918231213.GA14278@gondor.apana.org.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 19 Sep 2015, Herbert Xu wrote:
+> On Fri, Sep 18, 2015 at 04:51:12PM +0100, Lee Jones wrote:
+> >
+> > I think it's okay for you to take all but patch 6.
+> >=20
+> > Patch 6 is an ARM patch and needs to go into ARM SoC via
+> > STMicroelectronics STi tree.
+>=20
+> In future please don't send me patches that you don't want me to
+> merge in the series.
 
-> On Sep 19, 2015, at 2:33 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> 
-> On 09/12, Ivan T. Ivanov wrote:
->> Stale Event Enable command should be 5 not 8, fix this.
->> 
->> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> drivers/tty/serial/msm_serial.h | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/drivers/tty/serial/msm_serial.h b/drivers/tty/serial/msm_serial.h
->> index 60917d30c6b5..223f961f992a 100644
->> --- a/drivers/tty/serial/msm_serial.h
->> +++ b/drivers/tty/serial/msm_serial.h
->> @@ -59,7 +59,7 @@
->> #define UART_CR_CMD_SET_RFR		(13 << 4)
->> #define UART_CR_CMD_RESET_RFR		(14 << 4)
->> #define UART_CR_CMD_PROTECTION_EN	(16 << 4)
->> -#define UART_CR_CMD_STALE_EVENT_ENABLE	(80 << 4)
->> +#define UART_CR_CMD_STALE_EVENT_ENABLE	(5 << 8)
-> 
-> I don't get this one
-> 
-> 5 << 8 == 80 << 4
-> 
-> so this makes no difference.
+That's not how it works.  It's helpful, more often than not, to submit
+the entire set to each maintainer concerned so they can keep up with
+the general conversation.  By only sending specific patches to
+maintainers you essentially blinker them to the bigger picture.
 
+As a maintainer you should _know_ that you can't apply patches from
+other subsystems without appropriate Acks.  I'm sure you'd take
+exception to another maintainer who started accepting patches for
+subsystems you are responsible for.  This works both ways.
 
-Uh, of course. It is not 0x80. 
-
-Regards,
-Ivan--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
