@@ -1,72 +1,107 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
-Date: Sun, 20 Sep 2015 05:39:02 +0100
-Message-ID: <20150920043902.GA3039@x1>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
- <20150918140756.GK9249@gondor.apana.org.au>
- <CAF2Aj3h7Jy=tpYdZTdbxAJwa=147_hAu3reOFrbEh=JdrMFWLQ@mail.gmail.com>
- <20150918151137.GA10763@gondor.apana.org.au>
- <20150918155112.GE3218@x1>
- <20150918231213.GA14278@gondor.apana.org.au>
- <20150919092145.GG3218@x1>
- <20150920012347.GA21913@gondor.apana.org.au>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v4 4/8] ARM: dts: imx: imx7d-sbd add iomuxc-lpsr hoggrp-2
+ pads
+Date: Sun, 20 Sep 2015 11:22:11 +0200
+Message-ID: <20150920092211.GA27897@pengutronix.de>
+References: <1442593798-11501-1-git-send-email-aalonso@freescale.com>
+ <1442593798-11501-4-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150920012347.GA21913@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>
+In-Reply-To: <1442593798-11501-4-git-send-email-aalonso@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Adrian Alonso <aalonso@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com, devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, yibin.gong@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 20 Sep 2015, Herbert Xu wrote:
 
-> On Sat, Sep 19, 2015 at 10:21:45AM +0100, Lee Jones wrote:
-> >
-> > That's not how it works.  It's helpful, more often than not, to sub=
-mit
-> > the entire set to each maintainer concerned so they can keep up wit=
-h
-> > the general conversation.  By only sending specific patches to
-> > maintainers you essentially blinker them to the bigger picture.
-> >=20
-> > As a maintainer you should _know_ that you can't apply patches from
-> > other subsystems without appropriate Acks.  I'm sure you'd take
-> > exception to another maintainer who started accepting patches for
-> > subsystems you are responsible for.  This works both ways.
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Sep 18, 2015 at 11:29:54AM -0500, Adrian Alonso wrote:
+> Add imx7d-sdb iomuxc-lpsr hoggrp-2 default pads settings
 >=20
-> No you are mistaken.  You should only put patches which have
-> dependencies on each other in a series.  If the patches can be
-> applied independently of each other there is no need to have
-> them in a single series.
-
-That's just not true.  I've explained why it's important for everyone
-involved to see the bigger picture.  Let me use this set in an
-example.  The patches can (and should) be applied separately, but they
-are heavily entwined.  Let's say I only sent the ARM patch to Maxime
-(the STi Maintainer) and only sent you the driver and the binding
-document.  There's a chance Maxime could apply the DTS changes prior
-to a proper review of the bindings.  Granted, one way round this would
-be to place the DTS changes into a holding-pen until the binding has
-been accepted, but this method is highly impractical and puts
-unnecessary burden on the contributor.
-
-There are 1000's of examples where all parties need to see reviews on
-other, related but not dependant, parts of a set.  For many of the
-sets I review it's critical for me what else is going on in related
-diffs.  I guess for the subsystems you maintain it's less of an issue,
-but still, it _is_ how people tend to submit code and there is no good
-reason for you to dictate otherwise.
-
-> Obviously if they can go into different trees then they cannot
-> have dependencies.
+> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+> ---
+> Changes for V2: Resend
+> Changes for V3: Resend
+> Changes for V4: Resend
 >=20
-> Cheers,
+>  arch/arm/boot/dts/imx7d-sdb.dts | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sd=
+b.dts
+> index 8059458..c8a178c 100644
+> --- a/arch/arm/boot/dts/imx7d-sdb.dts
+> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
+> @@ -419,3 +419,18 @@
+> =20
+>  	};
+>  };
+> +
+> +&iomuxc_lpsr {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_hog_2>;
+> +
+> +	imx7d-sdb {
+> +		pinctrl_hog_2: hoggrp-2 {
+> +			fsl,pins =3D <
+> +				MX7D_PAD_GPIO1_IO05__GPIO1_IO5    0x14
+> +				MX7D_PAD_GPIO1_IO07__GPIO1_IO7    0x59
+> +				MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B 0x74
+
+I think this belong to the watchdog node.
+
+Also some comments for the GPIOs may probably be nice to know what they
+are for.
+
+Regards,
+
+Markus
+
+> +			>;
+> +		};
+> +	};
+> +};
+> --=20
+> 2.1.4
+>=20
+>=20
+>=20
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV/nrDAAoJEEpcgKtcEGQQPXwP/1SN70cdva4htriTwScYhZFS
+eGtHQxwham5wAE1Yi2+IErsNj09Mdy6DW8cBVwdFwywtLU22iYpUuaoQdlHG6IQ7
+LxcMZbVgAzW9cxgLC6W/WXiDBvyQfyZaa+dNMI5sqq3mZY8+bBFERt/h9WF7fvgS
+cdKYzJgn5dXbC07F1GXtbQnuCkI/FVrTvSVmkUBvvJbxgcm6YpiYVrG5IADlVSX0
+mrWbT1d+7WyHoBgA9SseSqdo22gm3zHnFW67fJZNcso0kOPV7ANHBYnbc2bappjl
+6TuHCPKmjnFjMWOrhVUvSFpRJVpbeIEEBbUYXd864I7gjl742Owtgn2AUGVyTndf
+p1fy+HaGiDCafAAR36gZcgdlDMhrLrPQ12hEZmqHCATf5T7ed/otPptUHoe/FfGI
+Yd4g+p/Izc/Xh+qUXH5jFaalGfEzZaIqVwINrXaymCFggjfIJp8Ouab2ZE/GA0IZ
+MMpwszU9761jcUm8WFhovkuTtGgX5BSYSmSUFSj7Q3X1X39/qzm00KvmHsL4zNzS
+Fg70NvAlVi7G/cmGc5+jZU6NGMS9CSkvZ9DYSTJW4dx6fePpTwPh6Y3a7RF1+7Mw
+VlxYuASV7J+L+tx8eR22Er/OzRlT++s9IObkxIOtRHK6cvspdXaVDIn6AGR7NmAo
+g5vxG4eX/I6XIv3Zgc9F
+=rowL
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
