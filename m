@@ -1,100 +1,63 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: berlin4ct: add the pinctrl node and muxing
- setup for uart0
-Date: Sun, 20 Sep 2015 21:38:00 +0200
-Message-ID: <55FF0B18.5060505@gmail.com>
-References: <1442656956-5740-1-git-send-email-jszhang@marvell.com> <1442656956-5740-6-git-send-email-jszhang@marvell.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 2/2] input: gpio_keys_polled: Add support for abs/rel
+ axis
+Date: Sun, 20 Sep 2015 16:16:21 -0400
+Message-ID: <55FF1415.1040509@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1442656956-5740-6-git-send-email-jszhang@marvell.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input <linux-input@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19.09.2015 12:02, Jisheng Zhang wrote:
-> Add the avio, soc, sm pinctrl nodes for Marvell berlin4ct SoC. This
-> patch also adds urt0 txd and rxd muxing setup in the dtsi because uart0
-> always use them to work, no other possibilities.
+<I seem to have deleted the original mail without reply-ing, so from a threaded mailer pov this is a top-post, sorry>
 
-Please split the patch into two:
-one adding the pinctrl nodes and
-one adding the default pinmux to uart0 node.
+Hi,
 
-> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-> ---
->   arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> index a3b5f1d..4566e4e 100644
-> --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> @@ -225,6 +225,16 @@
->   			};
->   		};
->
-> +		soc_pinctrl: pinctrl@ea8000 {
-> +			compatible = "marvell,berlin4ct-soc-pinctrl";
-> +			reg = <0xea8000 0x14>;
-> +		};
-> +
-> +		avio_pinctrl: pinctrl@ea8400 {
-> +			compatible = "marvell,berlin4ct-avio-pinctrl";
-> +			reg = <0xea8400 8>;
+Dmitry Torokhov wrote:
 
-s/8/0x8/
+ > > +	for_each_set_bit(i, input->relbit, REL_CNT) {
+ > > +		if (!test_bit(i, bdev->rel_axis_seen))
+ > > +			input_event(input, EV_REL, i, 0);
+ > > +	}
+ >
+ > I wonder if this should be written as
+ >
+ >	for_each_set_bit(i, bdev->rel_axis_seen, REL_CNT)
+ >		input_event(input, EV_REL, i, 0);
+ >
+ > i.e. the 2nd bit test is not really needed because we should not see
+ > unsupported bits in "seen" axes.
 
-> +		};
-> +
->   		apb@fc0000 {
->   			compatible = "simple-bus";
->   			#address-cells = <1>;
-> @@ -278,6 +288,23 @@
->   				clocks = <&osc>;
->   				reg-shift = <2>;
->   				status = "disabled";
-> +				pinctrl-0 = <&urt0_txd_pmux>, <&urt0_rxd_pmux>;
-> +				pinctrl-names = "default", "default";
+Yes that makes sense, I'll make this change, re-test and post a new version.
 
-pinctrl-names = "default", "default"; refers to pinctrl-0 and pinctrl-1
-respectively. There is no pinctrl-1, so please remove the second
-pinctrl-names element.
+ > > +		if (fwnode_property_read_u32(child, "linux,input-value",
+ > > +					     (u32 *)&button->value))
+ > > +			button->value = 1;
+ >
+ > Umm, we need negative values too... but there is no
+ > fwnode_property_read_s32 :(. We need to document in the bindings that
+ > value is treated as signed so that users can still achieve the needed
+ > effect.
 
-> +			};
-> +		};
-> +
-> +		sm_pinctrl: pinctrl@fe2200 {
-> +			compatible = "marvell,berlin4ct-sm-pinctrl";
-> +			reg = <0xfe2200 0xc>;
-> +
-> +			urt0_txd_pmux: urt0_txd-pmux {
-> +				groups = "SM_URT0_TXD";
-> +				function = "sm_urt0_txd";
-> +			};
-> +
-> +			urt0_rxd_pmux: urt0_rxd-pmux {
-> +				groups = "SM_URT0_RXD";
-> +				function = "sm_urt0_rxd";
+Right, I was looking how to deal with this, and the generic fwnode
+interface has no s32 version, but the devicetree  linux/of.h code has:
 
-If you change the driver to generic function names ("uart0") this
-boils down to a single
+static inline int of_property_read_s32(const struct device_node *np,
+                                        const char *propname,
+                                        s32 *out_value)
+{
+         return of_property_read_u32(np, propname, (u32*) out_value);
+}
 
-uart0_pmux: uart0-pmux {
-	groups = "SM_UART0_TXD", "SM_UART0_RXD";
-	function = "uart0";
-};
+So this seemed like the best way to deal with this. You're right that
+the devicetree binding docs should explicitly state that negative
+numbers are allowed though, I will update the dt-bindings doc
+patch accordingly.
 
-pinmux node and the reference in uart0 node to
+Regards,
 
-pinctrl-0 = <&uart0_pmux>;
-pinctrl-names = "default";
-
-Sebastian
-
->   			};
->   		};
->   	};
->
+Hans
 
