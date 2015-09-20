@@ -1,63 +1,47 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 2/2] input: gpio_keys_polled: Add support for abs/rel
- axis
-Date: Sun, 20 Sep 2015 16:16:21 -0400
-Message-ID: <55FF1415.1040509@redhat.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v5 07/23] regulator: core: Remove regulator_list
+Date: Sun, 20 Sep 2015 21:32:42 +0100
+Message-ID: <20150920203242.GM21084@n2100.arm.linux.org.uk>
+References: <1442494637-3674-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1442494637-3674-8-git-send-email-tomeu.vizoso@collabora.com>
+ <20150919150129.GR12027@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input <linux-input@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150919150129.GR12027@sirena.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-<I seem to have deleted the original mail without reply-ing, so from a threaded mailer pov this is a top-post, sorry>
+On Sat, Sep 19, 2015 at 08:01:29AM -0700, Mark Brown wrote:
+> On Thu, Sep 17, 2015 at 02:57:01PM +0200, Tomeu Vizoso wrote:
+> > As we are already registering a device with regulator_class for each
+> > regulator device, regulator_list is redundant and can be replaced with
+> > calls to class_find_device() and class_for_each_device().
+> 
+> This appears to leak references to the struct devices returned by
+> class_find_device() - it takes a reference before it returns so any
+> device found using class_find_device() needs to be released with
+> put_device() and I don't see any new put_device() calls in here.
 
-Hi,
+When I've been fiding exactly that kind of bug in the PHY code, I've
+been adding comments to the docbook function header detailing the
+requirement to balance the reference.  IMHO, this is a good idea,
+because the more places that get it with these APIs, the more likely
+people are to potentially read it.
 
-Dmitry Torokhov wrote:
+The comment I've been putting in the phy code is:
 
- > > +	for_each_set_bit(i, input->relbit, REL_CNT) {
- > > +		if (!test_bit(i, bdev->rel_axis_seen))
- > > +			input_event(input, EV_REL, i, 0);
- > > +	}
- >
- > I wonder if this should be written as
- >
- >	for_each_set_bit(i, bdev->rel_axis_seen, REL_CNT)
- >		input_event(input, EV_REL, i, 0);
- >
- > i.e. the 2nd bit test is not really needed because we should not see
- > unsupported bits in "seen" axes.
+ * If successful, returns a pointer to the phy_device with the embedded
+ * struct device refcount incremented by one, or NULL on failure. The
+ * refcount must be dropped by calling phy_disconnect() or phy_detach().
 
-Yes that makes sense, I'll make this change, re-test and post a new version.
+which even goes as far as telling people how they should be dropping
+the reference.  So there should be no excuse (ignorance is not an
+excuse for this!)
 
- > > +		if (fwnode_property_read_u32(child, "linux,input-value",
- > > +					     (u32 *)&button->value))
- > > +			button->value = 1;
- >
- > Umm, we need negative values too... but there is no
- > fwnode_property_read_s32 :(. We need to document in the bindings that
- > value is treated as signed so that users can still achieve the needed
- > effect.
-
-Right, I was looking how to deal with this, and the generic fwnode
-interface has no s32 version, but the devicetree  linux/of.h code has:
-
-static inline int of_property_read_s32(const struct device_node *np,
-                                        const char *propname,
-                                        s32 *out_value)
-{
-         return of_property_read_u32(np, propname, (u32*) out_value);
-}
-
-So this seemed like the best way to deal with this. You're right that
-the devicetree binding docs should explicitly state that negative
-numbers are allowed though, I will update the dt-bindings doc
-patch accordingly.
-
-Regards,
-
-Hans
-
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
