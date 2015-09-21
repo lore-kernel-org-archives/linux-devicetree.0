@@ -1,55 +1,140 @@
-From: Clemens Ladisch <clemens@ladisch.de>
-Subject: Re: [PATCH RFC v4 2/8] ALSA: pcm: add IEC958
-	channel	status helper for hw_params
-Date: Mon, 21 Sep 2015 17:08:15 +0200
-Message-ID: <56001D5F.1010903@ladisch.de>
-References: <cover.1442572860.git.jsarha@ti.com>
- <a7b69fb075b0ae993846cfb65abb20ecab5c9805.1442572860.git.jsarha@ti.com>
- <20150921093748.GG21098@n2100.arm.linux.org.uk>
- <560016BE.6010801@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] irqchip/gicv3-its:  Handle OF device tree "msi-map"
+ properties.
+Date: Mon, 21 Sep 2015 16:58:14 +0100
+Message-ID: <20150921165814.01967eaf@arm.com>
+References: <1442512859-31633-1-git-send-email-ddaney.cavm@gmail.com>
+	<1442512859-31633-3-git-send-email-ddaney.cavm@gmail.com>
+	<20150918095109.144c22ed@arm.com>
+	<55FC4FBA.1010306@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <560016BE.6010801@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jyri Sarha <jsarha@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, moinejf@free.fr, airlied@linux.ie, broonie@kernel.org, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, Takashi Iwai <tiwai@suse.de>, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55FC4FBA.1010306-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jyri Sarha wrote:
-> On 09/21/15 12:37, Russell King - ARM Linux wrote:
->> ALSA documentation (which may be out of date) says that the hw_params
->> callback can be called multiple times during stream setup.  Do we want
->> to be repeatedly programming the HDMI infoframe with different settings,
->> potentially confusing the attached device, or would it be better to do
->> it slightly later (in the prepare callback) after the parameters have
->> been fully negotiated?
->
-> If it is possible that hw_params() can be called multiple times, at
-> least it does not happen very often. I wonder if it would ever happen
-> again after a successful hw_params() call.
+On Fri, 18 Sep 2015 10:54:02 -0700
+David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
 
-It is certainly allowed, and it happens regularly when using OSS
-emulation.  AFAIK PulseAudio does something similar when enumerating
-devices.
+> On 09/18/2015 01:51 AM, Marc Zyngier wrote:
+> > On Thu, 17 Sep 2015 11:00:59 -0700
+> > David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> > Hi David,
+> >
+> >> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >>
+> >> Search up the device hierarchy to find devices with a "msi-map"
+> >> property, if found apply the mapping to the GIC device id.
+> >>
+> >> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>   drivers/irqchip/irq-gic-v3-its-pci-msi.c | 73 ++++++++++++++++++++++++++++++++
+> >>   1 file changed, 73 insertions(+)
+> >>
+> >> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> >> index cf351c6..aa61cef 100644
+> >> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> >> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> >> @@ -73,6 +73,8 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+> >>   	struct pci_dev *pdev;
+> >>   	struct its_pci_alias dev_alias;
+> >>   	struct msi_domain_info *msi_info;
+> >> +	struct device *parent_dev;
+> >> +	struct device_node *msi_controller_node = NULL;
+> >>
+> >>   	if (!dev_is_pci(dev))
+> >>   		return -EINVAL;
+> >> @@ -84,6 +86,77 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+> >>   	dev_alias.count = nvec;
+> >>
+> >>   	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
+> >> +	/*
+> >> +	 * Walk up the device parent links looking for one with a
+> >> +	 * "msi-map" property.
+> >> +	 */
+> >
+> > My first objection is the location of this parsing. It shouldn't be
+> > driver specific, but instead be part of the generic OF handling
+> > (nothing in these properties is GICv3 specific, even if the ITS is the
+> > only user so far).
+> 
+> OK, I agree that this should eventually end up in generic OF handling 
+> code.  I just wanted to get something out to initiate discussion.
+> 
+> The next patch revision will move this to a more generic home.
+> 
+> >
+> >> +	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
+> >
+> > Is there a limit how far we should go up the parent chain to find a
+> > msi-map? My hunch is that you should stop at the first device that does
+> > have an of_node, as it is the one that should contain the msi-map
+> > property.
+> 
+> I think there is the possibility of finding something like a bridge that 
+> has an of_node, but does not have the "msi-map" property.  I currently 
+> have exactly this configuration, as some of the on-SoC devices sit 
+> behind a bridge, but need an of_node to obtain unprobable properties and 
+> children (the MDIO bus devices are like this).
+> 
+> So if we want to abort the walk early, we should at least go up until we 
+> find "msi-map" in the of_node.
 
-> But there is no downside in using prepare callback.
+I don't really see a case where we would traverse a series of nodes
+where the msi-map property wouldn't be in the first node. Could you
+please give me an example?
 
-The prepare callback also can be called multiple times.  This certainly
-happens when the stream is stopped/restarted multiple times.
+[...]
 
-If something does not need to be done again when a stream is restarted,
-then it should be done in the hw_params callback.
+> >> +		msi_controller_node = of_find_node_by_phandle(phandle);
+> >> +		if (domain->of_node != msi_controller_node) {
+> >> +			dev_err(dev,
+> >> +				"ERROR: msi-map mismatch \"%s\" vs. \"%s\"\n",
+> >> +				domain->of_node->full_name,
+> >> +				msi_controller_node ? NULL : msi_controller_node->full_name);
+> >
+> > Why is that an error? a RC can be configured to master multiple
+> > MSI-controllers,
+> 
+> Something has already associated the PCI device with this 
+> MSI-controller.  Therefore I think the reference in the map must refer 
+> to this ITS MSI-controller instance.
+> 
+> 
+> > and the kernel picks one of them for a given device.
+> > This is illustrated by "Example (5)" in the binding, where a device can
+> > master two MSI controllers.
+> 
+> The PCI host may have many MSI controllers, but I think a given PCI 
+> device will have only one (based on bus:devfn) that is looked up in the map.
 
+A PCI device will only be configured to talk to a single MSI
+controller, but here you stop parsing the msi-map on the first match,
+and assume that you must have found the right MSI controller:
 
-Regards,
-Clemens
+I think this should read:
+
++			if (masked_devid < rid_base ||
++			    masked_devid >= rid_base + rid_len ||
+			    domain->of_node != of_find_node_by_phandle(phandle)) {
++				msi_map_len -= 4 * sizeof(__be32);
++				msi_map += 4;
++				continue;
++			}
++			matched = true;
++			break;
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
