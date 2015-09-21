@@ -1,54 +1,68 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] mfd: tps65912: Rewrite driver adding DT support and
- using regmap
-Date: Mon, 21 Sep 2015 12:26:45 -0700
-Message-ID: <20150921192645.GA30445@sirena.org.uk>
-References: <1442339861-30300-1-git-send-email-afd@ti.com>
- <1442339861-30300-3-git-send-email-afd@ti.com>
- <20150919184021.GQ30445@sirena.org.uk>
- <56003365.8030803@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/7] phy: fix of_mdio_find_bus() device refcount leak
+Date: Mon, 21 Sep 2015 20:32:07 +0100
+Message-ID: <20150921193206.GU21084@n2100.arm.linux.org.uk>
+References: <20150918094625.GB21084@n2100.arm.linux.org.uk>
+ <E1ZcsNb-0001Bf-U5@rmk-PC.arm.linux.org.uk>
+ <20150921.120159.326170798236851436.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BOr3uFpVABmJfvZe"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56003365.8030803@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20150921.120159.326170798236851436.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, isubramanian-qTEPVZfXA3Y@public.gmane.org, kchudgar-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 21, 2015 at 12:01:59PM -0700, David Miller wrote:
+> From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Date: Fri, 18 Sep 2015 10:54:55 +0100
+> 
+> > Update the comment, and arrange for the only user of this function
+> > to drop this refcount when disposing of a reference to it.
+> 
+> mdio_mux is not the only user of of_mdio_find_bus(), DSA uses it as
+> well.
+> 
+> So if anything this commit message is inaccurate.
 
---BOr3uFpVABmJfvZe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, I missed that as it wasn't under drivers/net.  It doesn't change
+the validity of this patch, the existing code is wrong and I'm not
+introducing anything that makes the code any more wrong than it is.
 
-On Mon, Sep 21, 2015 at 11:42:13AM -0500, Andrew F. Davis wrote:
+I'll fix the commit message, and I'll fix the DSA code too but in a
+separate patch.  Thanks for pointing it out.
 
-> I know this is hard to review, and so I would like to apologize in advance, but
-> the regulator and GPIO changes depend on the new driver core, as do the i2c/spi
-> components. I really don't know how to split this up without leaving some part
-> in a non-working state in-between patches (which I've heard is also not OK).
+> I also wonder about this refcounting scheme.
 
-So split that interface change between the MFD and the function drivers
-out into a separate change - you've got way more than just an interface
-change in here (and you've not enumerated the various things that are
-being changed in the changelog).
+It's the standard driver model refcounting rules that we've lived with
+for about a decade, ever since the driver model was introduced by
+Patrick Mochel.
 
---BOr3uFpVABmJfvZe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> If you are going to drop the inner device reference, then we take the
+> mdio bus returned from of_mdio_find_bus() what holds onto it and keeps
+> it from disappearing on us?
+> 
+> Don't we have to hold onto some reference count of some kind here?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+In the case of the mdio mux code, I'm dropping the reference when
+either (a) we've encountered an error during initialisation and we're
+cleaning up, or (b) when the mdio mux code is being torn down after
+the mdiomux bus has been unregistered and freed.  In both cases, we're
+done with the mdio bus that was returned from of_mdio_find_bus().
 
-iQEcBAEBCAAGBQJWAFn0AAoJECTWi3JdVIfQVDoH/1jPkK3K6UdC0y+2cWxZEUSn
-HAlj7dadTgId3bnTaizcAwVJX2vOgALNmYB3qQ9jRh2dkFy6gms1SwDYkUBslfq2
-QMnWaRn6W9LdaLvF61OtV82wvI7c17+LGMbpO5ZI7o8xOGRoDs0VIfHUkhZ6jMBg
-Ua3t2ZnKPLVHoq0vvenbbHL5UbClN5OR9GiXL527PrbTi4a7JcyhCtL0oTtIHMSK
-YhGD0tkOJHf/lhefVgO3Ka+l04J/QEHZRfiotQ2fMoomeO0tzkvaMRs3t/W7sgiY
-czeujHqoBVLniKLAbkOtfr9a51zGvugAIv0LlyUhKtfrfL3XkV7AS+82mE5AHOA=
-=L/xO
------END PGP SIGNATURE-----
+In case (a), the devres code will release the kmalloc'd memory when
+mdio_mux_gpio_probe() or mdio_mux_mmioreg_probe() propagates the error
+out of their probe() function.
 
---BOr3uFpVABmJfvZe--
+I'm not sure why you think anything is wrong here - maybe it's the odd
+code structure to the success path at the bottom of mdio_mux_init()?
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
