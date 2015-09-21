@@ -1,127 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
-Date: Mon, 21 Sep 2015 16:42:09 -0700
-Message-ID: <CACRpkdZTN9_t=pUFQTWzaWoqhRBtn7XPEQjo6zUEMoJJBZmDzQ@mail.gmail.com>
-References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
-	<1440920686-6892-4-git-send-email-mpa@pengutronix.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Userspace and Device-Tree
+Date: Mon, 21 Sep 2015 16:51:26 -0700
+Message-ID: <CACRpkdaUZ93t7BdAMhiS0m3wSGP_VaBQdU05ZK_AaHmHyCCKRQ@mail.gmail.com>
+References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
+	<20150828101227.GD31748@leverpostej>
+	<CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
+	<CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
+	<20150831145500.GP12027@sirena.org.uk>
+	<CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
+	<20150831180140.GS12027@sirena.org.uk>
+	<CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
+	<20150901201755.GZ5313@sirena.org.uk>
+	<CAPiN7iWq0EN+Pph82MHvNKn2pUNEh3Vs4ymjMpdB212x2fq0sQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Arun Bharadwaj <arun@gumstix.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Johan Hovold <johan@kernel.org>, chrisrfq@gmail.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPiN7iWq0EN+Pph82MHvNKn2pUNEh3Vs4ymjMpdB212x2fq0sQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 30, 2015 at 12:44 AM, Markus Pargmann <mpa@pengutronix.de> wrote:
+On Tue, Sep 1, 2015 at 3:19 PM, Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> This functions adds a way to initialize a GPIO without hogging it.
->
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> That sounds quite workable to me.  It might get more complicated
+> than I'd prefer, especially if there are more things than GPIOs (such
+> as ADCs, DACs, etc.)
 
-(...)
-
-> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
-> -providing automatic GPIO request and configuration as part of the
-> -gpio-controller's driver probe function.
-> +The GPIO chip may contain GPIO definitions. These define properties for single
-> +GPIOs of this controller.
-
-Insert text like this:
-
-There are two types of GPIO definitions:
-
-- GPIO hogs are ...
-
-- GPIO initializers are ...
-
-This list form is easier to understand.
-
-> -Each GPIO hog definition is represented as a child node of the GPIO controller.
-> +GPIO hogging is a mechanism providing automatic GPIO request and configuration
-> +as part of the gpio-controller's driver probe function.
-> +
-> +GPIO initialization provides an automatic initialization to known save values.
-> +Instead of GPIO hogging the GPIO's value and direction can be modified by other
-> +users after it was initialized.
-> +
-> +Each GPIO definition is represented as a child node of the GPIO controller.
->  Required properties:
-> -- gpio-hog:   A property specifying that this child node represent a GPIO hog.
->  - gpios:      Store the GPIO information (id, flags, ...). Shall contain the
->               number of cells specified in its parent node (GPIO controller
->               node).
-> -Only one of the following properties scanned in the order shown below.
-> -This means that when multiple properties are present they will be searched
-> -in the order presented below and the first match is taken as the intended
-> -configuration.
-> +
-> +Optional properties:
-> +- line-name:  The GPIO label name. If not present the node name is used.
-> + Only one of gpio-hog and gpio-initval may be specified.
-
-This is confusing. Instead write: "The two following options are
-mutually exclusive. One of them must be specified, but not both."
-
-> +- gpio-hog:   A property specifying that this child node represent a GPIO hog.
-> +- gpio-initval: This GPIO should be initialized to the specified configuration.
-
-> + Only one of input, output-low and output-high may be specified:
-
-Insert "Of the following arguments, only one..." (etc)
-
->  - input:      A property specifying to set the GPIO direction as input.
->  - output-low  A property specifying to set the GPIO direction as output with
->               the value low.
->  - output-high A property specifying to set the GPIO direction as output with
->               the value high.
->
-> -Optional properties:
-> -- line-name:  The GPIO label name. If not present the node name is used.
-> -
->  Example of two SOC GPIO banks defined as gpio-controller nodes:
-
-(...)
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -234,6 +234,15 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
->
->                         if (gpiod_hog(desc, lflags, dflags))
->                                 continue;
-> +               } else if (of_property_read_bool(np, "gpio-initval")) {
-> +                       if (!dflags) {
-> +                               dev_warn(chip->dev, "GPIO line %d (%s): no initialization state specified, bailing out\n",
-> +                                        desc_to_gpio(desc), np->name);
-> +                               continue;
-> +                       }
-> +
-> +                       if (gpiod_initialize(desc, lflags, dflags))
-> +                               continue;
-
-We usually do not mix implementations and bindings but it's OK with me.
-
->                 }
-
-You need a terminating  else {} - clause to warn if neither of gpio-hog
-or gpio-initval is specified.
-
-> -int gpiod_hog(struct gpio_desc *desc, unsigned long lflags,
-> -             enum gpiod_flags dflags)
-> +static int _gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
-> +                     enum gpiod_flags dflags)
-
-I don't like _underscore functions. Try to find a name that is descriptive
-and does not begin with underscore.
-
-What about just gpiod_init()?
-
->         if (status < 0) {
->                 pr_err("setup of hog GPIO %s (chip %s, offset %d) failed\n",
-> -                      name, gpiod_to_chip(desc)->label, gpio_chip_hwgpio(desc));
-> +                      name, gpiod_to_chip(desc)->label,
-> +                      gpio_chip_hwgpio(desc));
-
-Looks like a random, unrelated code reshuffling. Don't do this.
+What do you mean by this? We have in-kernel support for ADC and
+DAC, see drivers/iio/[adc|dac] and these have excellent userspace
+interfaces.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
