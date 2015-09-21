@@ -1,140 +1,76 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] irqchip/gicv3-its:  Handle OF device tree "msi-map"
- properties.
-Date: Mon, 21 Sep 2015 16:58:14 +0100
-Message-ID: <20150921165814.01967eaf@arm.com>
-References: <1442512859-31633-1-git-send-email-ddaney.cavm@gmail.com>
-	<1442512859-31633-3-git-send-email-ddaney.cavm@gmail.com>
-	<20150918095109.144c22ed@arm.com>
-	<55FC4FBA.1010306@caviumnetworks.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to the
+ driver
+Date: Mon, 21 Sep 2015 21:27:12 +0530
+Message-ID: <20150921155712.GN2381@localhost>
+References: <1440690558-39822-1-git-send-email-anuragku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FC4FBA.1010306-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1440690558-39822-1-git-send-email-anuragku@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, anirudh@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Anurag Kumar Vulisha <anuragku@xilinx.com>, svemula@xilinx.com, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kedareswara rao Appana <appana.durga.rao@xilinx.com>, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, afaerber@suse.de, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Sep 2015 10:54:02 -0700
-David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-
-> On 09/18/2015 01:51 AM, Marc Zyngier wrote:
-> > On Thu, 17 Sep 2015 11:00:59 -0700
-> > David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> > Hi David,
-> >
-> >> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Search up the device hierarchy to find devices with a "msi-map"
-> >> property, if found apply the mapping to the GIC device id.
-> >>
-> >> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>   drivers/irqchip/irq-gic-v3-its-pci-msi.c | 73 ++++++++++++++++++++++++++++++++
-> >>   1 file changed, 73 insertions(+)
-> >>
-> >> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> >> index cf351c6..aa61cef 100644
-> >> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> >> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> >> @@ -73,6 +73,8 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
-> >>   	struct pci_dev *pdev;
-> >>   	struct its_pci_alias dev_alias;
-> >>   	struct msi_domain_info *msi_info;
-> >> +	struct device *parent_dev;
-> >> +	struct device_node *msi_controller_node = NULL;
-> >>
-> >>   	if (!dev_is_pci(dev))
-> >>   		return -EINVAL;
-> >> @@ -84,6 +86,77 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
-> >>   	dev_alias.count = nvec;
-> >>
-> >>   	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
-> >> +	/*
-> >> +	 * Walk up the device parent links looking for one with a
-> >> +	 * "msi-map" property.
-> >> +	 */
-> >
-> > My first objection is the location of this parsing. It shouldn't be
-> > driver specific, but instead be part of the generic OF handling
-> > (nothing in these properties is GICv3 specific, even if the ITS is the
-> > only user so far).
+On Thu, Aug 27, 2015 at 09:19:18PM +0530, Anurag Kumar Vulisha wrote:
+> This VDMA  is a soft ip, which can be programmed to support
+> 32 bit addressing or greater than 32 bit addressing.
 > 
-> OK, I agree that this should eventually end up in generic OF handling 
-> code.  I just wanted to get something out to initiate discussion.
-> 
-> The next patch revision will move this to a more generic home.
-> 
-> >
-> >> +	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
-> >
-> > Is there a limit how far we should go up the parent chain to find a
-> > msi-map? My hunch is that you should stop at the first device that does
-> > have an of_node, as it is the one that should contain the msi-map
-> > property.
-> 
-> I think there is the possibility of finding something like a bridge that 
-> has an of_node, but does not have the "msi-map" property.  I currently 
-> have exactly this configuration, as some of the on-SoC devices sit 
-> behind a bridge, but need an of_node to obtain unprobable properties and 
-> children (the MDIO bus devices are like this).
-> 
-> So if we want to abort the walk early, we should at least go up until we 
-> find "msi-map" in the of_node.
+> When the VDMA ip is configured for 32 bit address space the
+> transfer start address is specified by a single register.
 
-I don't really see a case where we would traverse a series of nodes
-where the msi-map property wouldn't be in the first node. Could you
-please give me an example?
+would be good to specfiy which one
 
-[...]
+> When the  VDMA core is configured for an address space greater
+> than 32 then each start address is specified by a combination
+> of two registers. The first register specifies the LSB 32 bits
+> of address, while the next register specifies the MSB 32 bits
+> of address.For example,5Ch will specify the LSB 32 bits while
+> 60h will specify the MSB 32 bits of the first start address.So
+> we need to program two registers at a time.
 
-> >> +		msi_controller_node = of_find_node_by_phandle(phandle);
-> >> +		if (domain->of_node != msi_controller_node) {
-> >> +			dev_err(dev,
-> >> +				"ERROR: msi-map mismatch \"%s\" vs. \"%s\"\n",
-> >> +				domain->of_node->full_name,
-> >> +				msi_controller_node ? NULL : msi_controller_node->full_name);
-> >
-> > Why is that an error? a RC can be configured to master multiple
-> > MSI-controllers,
-> 
-> Something has already associated the PCI device with this 
-> MSI-controller.  Therefore I think the reference in the map must refer 
-> to this ITS MSI-controller instance.
-> 
-> 
-> > and the kernel picks one of them for a given device.
-> > This is illustrated by "Example (5)" in the binding, where a device can
-> > master two MSI controllers.
-> 
-> The PCI host may have many MSI controllers, but I think a given PCI 
-> device will have only one (based on bus:devfn) that is looked up in the map.
+can we have spaces after full stops and commas!
 
-A PCI device will only be configured to talk to a single MSI
-controller, but here you stop parsing the msi-map on the first match,
-and assume that you must have found the right MSI controller:
+> +/* Since vdma driver is trying to write to a register offset which is not a
+> + * multiple of 64 bits(ex : 0x5c), we are writing as two separate 32 bits
+> + * instead of a single 64 bit register write.
+> + */
 
-I think this should read:
+This is not kernel style for multi-lines, pls refer to
+Documentation/CodingStyle
 
-+			if (masked_devid < rid_base ||
-+			    masked_devid >= rid_base + rid_len ||
-			    domain->of_node != of_find_node_by_phandle(phandle)) {
-+				msi_map_len -= 4 * sizeof(__be32);
-+				msi_map += 4;
-+				continue;
-+			}
-+			matched = true;
-+			break;
+> +
+> +static inline void vdma_desc_write_64(struct xilinx_vdma_chan *chan, u32 reg,
+> +				 u32 value_lsb, u32 value_msb)
+> +{
+> +	/* Write the lsb 32 bits*/
+> +	writel(value_lsb, chan->xdev->regs + chan->desc_offset + reg);
+> +
+> +	/* Write the msb 32 bits */
+> +	writel(value_msb, chan->xdev->regs + chan->desc_offset + reg + 4);
 
-Thanks,
+why not writeq
 
-	M.
+> +	err = of_property_read_u32(node, "xlnx,addrwidth", &addr_width);
+> +
+> +	if (err < 0) {
+> +		/* Setting addr_width property to default 32 bits */
+> +		addr_width = 32;
+> +	}
+
+braces for a single line statement! Also space is redandant before if
+condition
+
 -- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
