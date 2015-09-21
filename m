@@ -1,47 +1,115 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v5 07/23] regulator: core: Remove regulator_list
-Date: Sun, 20 Sep 2015 21:32:42 +0100
-Message-ID: <20150920203242.GM21084@n2100.arm.linux.org.uk>
-References: <1442494637-3674-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442494637-3674-8-git-send-email-tomeu.vizoso@collabora.com>
- <20150919150129.GR12027@sirena.org.uk>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91/dt: ov2640: add hsync/vsync-active property
+Date: Mon, 21 Sep 2015 09:19:48 +0800
+Message-ID: <55FF5B34.8040500@atmel.com>
+References: <1442575702-22315-1-git-send-email-josh.wu@atmel.com>
+ <55FC1B12.8000703@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150919150129.GR12027@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55FC1B12.8000703-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 19, 2015 at 08:01:29AM -0700, Mark Brown wrote:
-> On Thu, Sep 17, 2015 at 02:57:01PM +0200, Tomeu Vizoso wrote:
-> > As we are already registering a device with regulator_class for each
-> > regulator device, regulator_list is redundant and can be replaced with
-> > calls to class_find_device() and class_for_each_device().
-> 
-> This appears to leak references to the struct devices returned by
-> class_find_device() - it takes a reference before it returns so any
-> device found using class_find_device() needs to be released with
-> put_device() and I don't see any new put_device() calls in here.
+Hi, Nicolas
 
-When I've been fiding exactly that kind of bug in the PHY code, I've
-been adding comments to the docbook function header detailing the
-requirement to balance the reference.  IMHO, this is a good idea,
-because the more places that get it with these APIs, the more likely
-people are to potentially read it.
+On 9/18/2015 10:09 PM, Nicolas Ferre wrote:
+> Le 18/09/2015 13:28, Josh Wu a =E9crit :
+>> On at91sam9x5ek/at91sam9m10g45ek/sama5d3xek boards, we use the paral=
+lel
+>> connection for ov2640. So we must set the hsync/vsync property (1 me=
+ans
+>> active high).
+>> Otherwise, the connection would be seen as BT.656 or BT.1120.
+>>
+>> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Hi Josh,
+>
+> Does this patch apply because of the new enhancement that you had
+> proposed in "media: atmel-isi: parse the DT parameters for
+> vsync/hsync/pixclock polarity" or does it apply even before?
+> Is it a fix that applies to older kernels?
+It's is a fix, according to the dt binding of video interface.
+So it should be applied before:
 
-The comment I've been putting in the phy code is:
+"media: atmel-isi: parse the DT parameters for
+vsync/hsync/pixclock polarity".
 
- * If successful, returns a pointer to the phy_device with the embedded
- * struct device refcount incremented by one, or NULL on failure. The
- * refcount must be dropped by calling phy_disconnect() or phy_detach().
 
-which even goes as far as telling people how they should be dropping
-the reference.  So there should be no excuse (ignorance is not an
-excuse for this!)
+it has no impact in older kernel as the driver doesn't parse that=20
+property yet.
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+>
+> So, should I wait for the enhancements to enter media git tree or can=
+ I
+> take them anyway?
+
+yes, you can take it without waiting for the media tree. Thanks.
+
+Best Regards,
+Josh Wu
+
+>
+> Bye,
+>
+>> ---
+>>
+>>   arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 ++
+>>   arch/arm/boot/dts/at91sam9x5ek.dtsi    | 2 ++
+>>   arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 ++
+>>   3 files changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/=
+dts/at91sam9m10g45ek.dts
+>> index d1ae60a..9d16ef8 100644
+>> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
+>> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+>> @@ -198,6 +198,8 @@
+>>   					isi_0: endpoint {
+>>   						remote-endpoint =3D <&ov2640_0>;
+>>   						bus-width =3D <8>;
+>> +						vsync-active =3D <1>;
+>> +						hsync-active =3D <1>;
+>>   					};
+>>   				};
+>>   			};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts=
+/at91sam9x5ek.dtsi
+>> index d237c46..479f200 100644
+>> --- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+>> @@ -66,6 +66,8 @@
+>>   					isi_0: endpoint@0 {
+>>   						remote-endpoint =3D <&ov2640_0>;
+>>   						bus-width =3D <8>;
+>> +						vsync-active =3D <1>;
+>> +						hsync-active =3D <1>;
+>>   					};
+>>   				};
+>>   			};
+>> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/s=
+ama5d3xmb.dtsi
+>> index 83bee7a..8901042 100644
+>> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
+>> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+>> @@ -87,6 +87,8 @@
+>>   					isi_0: endpoint {
+>>   						remote-endpoint =3D <&ov2640_0>;
+>>   						bus-width =3D <8>;
+>> +						vsync-active =3D <1>;
+>> +						hsync-active =3D <1>;
+>>   					};
+>>   				};
+>>   			};
+>>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
