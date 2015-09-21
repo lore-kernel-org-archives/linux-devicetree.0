@@ -1,51 +1,269 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 2/3] ASoC: da7219: Add bindings documentation for DA7219
- audio codec
-Date: Mon, 21 Sep 2015 10:36:04 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D460170E@SW-EX-MBX01.diasemi.com>
-References: <cover.1442500784.git.Adam.Thomson.Opensource@diasemi.com>
- <381b367e0a4c6c9e00db74f1b0e91d383156ba86.1442500784.git.Adam.Thomson.Opensource@diasemi.com>
- <20150919171017.GI30445@sirena.org.uk>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
+Date: Mon, 21 Sep 2015 13:01:00 +0200
+Message-ID: <20150921110100.GC32203@pengutronix.de>
+References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
+ <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150919171017.GI30445@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Jason Coughlan <jason.coughlan@diasemi.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KN5l+BnMqAQyZLvT"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Arun Bharadwaj <arun@gumstix.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Johan Hovold <johan@kernel.org>, chrisrfq@gmail.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-T24gU2VwdGVtYmVyIDE5LCAyMDE1IDE4OjEwLCBNYXJrIEJyb3duIHdyb3RlOg0KDQo+ID4gKy0g
-ZGxnLGlvLWx2bCA6IEV4cGVjdGVkIHZvbHRhZ2UgbGV2ZWwgcmFuZ2UgZm9yIGRpZ2l0YWwgSU8N
-Cj4gPiArCVsiMi41Vl8zLjZWIiwgIjEuMlZfMi44ViJdDQo+IA0KPiBJZiB0aGUgZHJpdmVyIG5l
-ZWRzIHRvIHJlYWQgb3Igc2V0IHRoZSB2b2x0YWdlIGEgc3VwcGx5IGlzIGF0IGl0IHNob3VsZA0K
-PiBkbyB0aGF0IHZpYSB0aGUgcmVndWxhdG9yIEFQSS4NCg0KVGhpcyB3b3VsZCBqdXN0IGJlIGEg
-cmVhZCBmb3IgdGhlIGRyaXZlci4gSG93ZXZlciBpdCdzIGEgZmFpciBwb2ludCwgc28gSSdsbA0K
-bG9vayB0byBhZGQgcGFzc2luZyBvZiB0aGUgcmVndWxhdG9yIGluZm9ybWF0aW9uIGZvciBWRERJ
-Tywgc28gaSBjYW4gc2V0IHRoaXMNCmJhc2VkIG9uIHJlYWQgdm9sdGFnZS4NCg0KPiANCj4gPiAr
-LSBkbGcsY3AtbWNoYW5nZSA6IENoYXJnZSBwdW1wIHZvbHRhZ2UgdHJhY2tpbmcgbW9kZQ0KPiA+
-ICsJWyJsYXJnZXN0X3ZvbCIsICJkYWNfdm9sIiwgInNpZ19tYWciXQ0KPiA+ICstIGRsZyxjcC12
-b2wtdGhyZXNoIDogQ2hhcmdlIHB1bXAgdm9sdW1lIHRocmVzaG9sZCB2YWx1ZSAoNi1iaXQgdmFs
-dWUpDQo+ID4gKwlbIDAgLSAweDNGIF0NCj4gDQo+IFdoeSBhcmUgdGhlc2UgaW4gdGhlIGRldmlj
-ZSB0cmVlIHJhdGhlciB0aGFuIHJ1bnRpbWUgcGFyYW1ldGVycz8NCj4gDQoNCkZyb20gcHJldmlv
-dXMgaW50ZXJuYWwgZGlzY3Vzc2lvbnMsIHRoZXNlIHNlZW1lZCB0byBiZSBmaXJlIGFuZCBmb3Jn
-ZXQNCnBhcmFtZXRlcnMsIGhlbmNlIHRoZWlyIGluY2x1c2lvbiBpbiB0aGUgRFQgYmluZGluZywg
-cmF0aGVyIHRoYW4gYXMgY29udHJvbHMuDQpQZXJzb25hbGx5IGRpZG4ndCBzZWUgZWl0aGVyIG5l
-ZWRpbmcgcnVudGltZSB1cGRhdGVzLg0KDQo+ID4gK0NoaWxkIG5vZGUgLSAnZGE3MjE5X2FhZCc6
-DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGludGVycnVwdC1wYXJl
-bnQgOiBTcGVjaWZpZXMgdGhlIHBoYW5kbGUgb2YgdGhlIGludGVycnVwdCBjb250cm9sbGVyIHRv
-IHdoaWNoDQo+ID4gKyAgdGhlIElSUXMgZnJvbSBEQTcyMTkgQUFEIGJsb2NrIGFyZSBkZWxpdmVy
-ZWQgdG8uDQo+ID4gKy0gaW50ZXJydXB0cyA6IElSUSBsaW5lIGluZm8gZm9yIERBNzIxOSBBQUQg
-YmxvY2suDQo+ID4gKyAgKFNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50
-ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQgZm9yDQo+ID4gKyAgIGZ1cnRoZXIgaW5m
-b3JtYXRpb24gcmVsYXRpbmcgdG8gaW50ZXJydXB0IHByb3BlcnRpZXMpDQo+IA0KPiBXaHkgaXMg
-dGhpcyBub3Qgc3BlY2lmaWVkIGF0IHRoZSBkZXZpY2UgbGV2ZWwgKHRoZSBkZXZpY2UgZG9lcyBu
-b3QNCj4gYXBwZWFyIHRvIHN1cHBvcnQgb3RoZXIgaW50ZXJydXB0cyk/DQoNCkdpdmVuIHRoZSB3
-YXkgdGhhdCB0aGUgZHJpdmVyIGNvZGUgd2FzIHN0cnVjdHVyZWQsIGFuZCB0aGF0IHRoZSBJUlEg
-aXMgb25seSB1c2VkDQpmb3IgYWNjZXNzb3J5IGRldGVjdGlvbiwgSSBhZGRlZCBpdCB0byB0aGUg
-Y2hpbGQgbm9kZS4gVGhlIG90aGVyIG9wdGlvbiB3b3VsZA0KYmUgdG8gZmxhdHRlbiBvdXQgYmlu
-ZGluZ3MsIGFuZCByZW1vdmUgdGhlIGNoaWxkIG5vZGUuIEZlbHQgbGlrZSBrZWVwaW5nIHRoZQ0K
-YWNjZXNzb3J5IGRldGVjdCBpdGVtcyBzZXBhcmF0ZSB0aG91Z2ggd2FzIGEgc2Vuc2libGUgYXBw
-cm9hY2guIFdoYXQgaXMgeW91cg0KZmVlbGluZyBvbiB0aGlzPw0K
+
+--KN5l+BnMqAQyZLvT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Aug 30, 2015 at 09:44:46AM +0200, Markus Pargmann wrote:
+> This functions adds a way to initialize a GPIO without hogging it.
+>=20
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 29 +++++++------
+>  drivers/gpio/gpiolib-of.c                       |  9 ++++
+>  drivers/gpio/gpiolib.c                          | 55 +++++++++++++++++++=
++-----
+>  drivers/gpio/gpiolib.h                          |  2 +
+>  4 files changed, 73 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentat=
+ion/devicetree/bindings/gpio/gpio.txt
+> index 5788d5cf1252..55d58983ba43 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -116,29 +116,34 @@ Every GPIO controller node must contain both an emp=
+ty "gpio-controller"
+>  property, and a #gpio-cells integer property, which indicates the number=
+ of
+>  cells in a gpio-specifier.
+> =20
+> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechan=
+ism
+> -providing automatic GPIO request and configuration as part of the
+> -gpio-controller's driver probe function.
+> +The GPIO chip may contain GPIO definitions. These define properties for =
+single
+> +GPIOs of this controller.
+> =20
+> -Each GPIO hog definition is represented as a child node of the GPIO cont=
+roller.
+> +GPIO hogging is a mechanism providing automatic GPIO request and configu=
+ration
+> +as part of the gpio-controller's driver probe function.
+> +
+> +GPIO initialization provides an automatic initialization to known save v=
+alues.
+> +Instead of GPIO hogging the GPIO's value and direction can be modified b=
+y other
+> +users after it was initialized.
+> +
+> +Each GPIO definition is represented as a child node of the GPIO controll=
+er.
+>  Required properties:
+> -- gpio-hog:   A property specifying that this child node represent a GPI=
+O hog.
+>  - gpios:      Store the GPIO information (id, flags, ...). Shall contain=
+ the
+>  	      number of cells specified in its parent node (GPIO controller
+>  	      node).
+> -Only one of the following properties scanned in the order shown below.
+> -This means that when multiple properties are present they will be search=
+ed
+> -in the order presented below and the first match is taken as the intended
+> -configuration.
+> +
+> +Optional properties:
+> +- line-name:  The GPIO label name. If not present the node name is used.
+> + Only one of gpio-hog and gpio-initval may be specified.
+> +- gpio-hog:   A property specifying that this child node represent a GPI=
+O hog.
+> +- gpio-initval: This GPIO should be initialized to the specified configu=
+ration.
+
+Any feedback on this new DT binding?
+
+Best Regards,
+
+Markus
+
+> + Only one of input, output-low and output-high may be specified:
+>  - input:      A property specifying to set the GPIO direction as input.
+>  - output-low  A property specifying to set the GPIO direction as output =
+with
+>  	      the value low.
+>  - output-high A property specifying to set the GPIO direction as output =
+with
+>  	      the value high.
+> =20
+> -Optional properties:
+> -- line-name:  The GPIO label name. If not present the node name is used.
+> -
+>  Example of two SOC GPIO banks defined as gpio-controller nodes:
+> =20
+>  	qe_pio_a: gpio-controller@1400 {
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index f1fe5123da28..ee00c2c63f57 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -234,6 +234,15 @@ static void of_gpiochip_scan_gpios(struct gpio_chip =
+*chip)
+> =20
+>  			if (gpiod_hog(desc, lflags, dflags))
+>  				continue;
+> +		} else if (of_property_read_bool(np, "gpio-initval")) {
+> +			if (!dflags) {
+> +				dev_warn(chip->dev, "GPIO line %d (%s): no initialization state spec=
+ified, bailing out\n",
+> +					 desc_to_gpio(desc), np->name);
+> +				continue;
+> +			}
+> +
+> +			if (gpiod_initialize(desc, lflags, dflags))
+> +				continue;
+>  		}
+>  	}
+>  }
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index f1559fa72c36..d7aa27a92e82 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2178,15 +2178,8 @@ struct gpio_desc *__must_check __gpiod_get_index_o=
+ptional(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(__gpiod_get_index_optional);
+> =20
+> -/**
+> - * gpiod_hog - Hog the specified GPIO desc given the provided flags
+> - * @desc:	gpio whose value will be assigned
+> - * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
+> - *		of_get_gpio_hog()
+> - * @dflags:	gpiod_flags - optional GPIO initialization flags
+> - */
+> -int gpiod_hog(struct gpio_desc *desc, unsigned long lflags,
+> -	      enum gpiod_flags dflags)
+> +static int _gpiod_initialize(struct gpio_desc *desc, unsigned long lflag=
+s,
+> +		      enum gpiod_flags dflags)
+>  {
+>  	int status;
+>  	const char *name =3D desc->name;
+> @@ -2202,11 +2195,31 @@ int gpiod_hog(struct gpio_desc *desc, unsigned lo=
+ng lflags,
+>  	status =3D gpiod_configure_flags(desc, name, lflags, dflags);
+>  	if (status < 0) {
+>  		pr_err("setup of hog GPIO %s (chip %s, offset %d) failed\n",
+> -		       name, gpiod_to_chip(desc)->label, gpio_chip_hwgpio(desc));
+> +		       name, gpiod_to_chip(desc)->label,
+> +		       gpio_chip_hwgpio(desc));
+>  		gpiochip_free_own_desc(desc);
+>  		return status;
+>  	}
+> =20
+> +	return 0;
+> +}
+> +
+> +/**
+> + * gpiod_hog - Hog the specified GPIO desc given the provided flags
+> + * @desc:	gpio whose value will be assigned
+> + * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
+> + *		of_get_gpio_hog()
+> + * @dflags:	gpiod_flags - optional GPIO initialization flags
+> + */
+> +int gpiod_hog(struct gpio_desc *desc, unsigned long lflags,
+> +	      enum gpiod_flags dflags)
+> +{
+> +	int ret;
+> +
+> +	ret =3D _gpiod_initialize(desc, lflags, dflags);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Mark GPIO as hogged so it can be identified and removed later */
+>  	set_bit(FLAG_IS_HOGGED, &desc->flags);
+> =20
+> @@ -2236,6 +2249,28 @@ static void gpiochip_free_hogs(struct gpio_chip *c=
+hip)
+>  }
+> =20
+>  /**
+> + * gpiod_initialize - Initialize a GPIO with a given value
+> + * @desc:	gpio whose value will be assigned
+> + * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
+> + *		of_get_gpio_hog()
+> + * @dflags:	gpiod_flags - optional GPIO initialization flags
+> + *
+> + * This is used to initialize GPIOs that were defined in DT
+> + */
+> +int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
+> +		     enum gpiod_flags dflags)
+> +{
+> +	int ret;
+> +
+> +	ret =3D _gpiod_initialize(desc, lflags, dflags);
+> +	if (ret)
+> +		return ret;
+> +
+> +	__gpiod_free(desc);
+> +	return ret;
+> +}
+> +
+> +/**
+>   * gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO funct=
+ion
+>   * @dev:	GPIO consumer, can be NULL for system-global GPIOs
+>   * @con_id:	function within the GPIO consumer
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 6c2aeff59f86..b6dfa3526e3a 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -99,6 +99,8 @@ int gpiod_request(struct gpio_desc *desc, const char *l=
+abel);
+>  void gpiod_free(struct gpio_desc *desc);
+>  int gpiod_hog(struct gpio_desc *desc, unsigned long lflags,
+>  	      enum gpiod_flags dflags);
+> +int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
+> +		     enum gpiod_flags dflags);
+> =20
+>  /*
+>   * Return the GPIO number of the passed descriptor relative to its chip
+> --=20
+> 2.5.0
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--KN5l+BnMqAQyZLvT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV/+NsAAoJEEpcgKtcEGQQrfkP/31lxL/0Bdipll/lwjJj7vq+
+5kc58hHbiinIc4s/kqmn4JQb6y6afy+7llzFbhzVhc3pCTUyZYx/tkAoghFV8+kk
+VuJLg3Nyv9UKzPvuR1xZN4ZdHqdzwVAo5va8Q3AQwE8/hkPa3TEZz7OAkpoV6kct
+py/EL9dxBl9+bLdIgNNJlYxNQzd6a4LCVRTCjSW97yD84iHAJQsPw/uI5t9PqGY2
+ltFTKVgwpjrFKOt5snx1BfW+e3+r9ysqNvtvvbHmiM69dF5e2W9Re6z8h1DmzCcF
+zGD/ZNEZIuYtZpbR7JPbe7buU1FCDxloaVqcaiHz2yB08G4YVytUg1UyMrK1Wvv3
+FLeeuHPotJWOmFSuHR/LqlSQceE0z00KF2xW3+YZU/4YxC8QiffbOgnrmZfHWq2x
+EMA3q79B+j1k99ZJvdQazmGUiT+PLplPePyLdP4q2q0sQJjBhfWgGKUbaQsfvMPh
+rLlzCaAoO38cwxK9s+SH0BrKuevsMd5noC0MxADH0kiZaEdkCJJXF23obGPONE0j
+qLJOGHGSvfVaztvdaLreKXzDxG+RyTCzzshXdjQtr3YBymKqpIKX3DOwwdQIX3F6
+12SEuoQ6oEtRx+1+Sif2LAqB7nw8OW/+T2llpSJiWy52Kyl3WUEwknSBkEMGJdQM
+fcn/A8ytDVUCHsCtJcS9
+=I+QW
+-----END PGP SIGNATURE-----
+
+--KN5l+BnMqAQyZLvT--
