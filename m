@@ -1,88 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v7 PATCH 2/2] devicetree: Add documentation for UPISEMI us5182d
- ALS and Proximity sensor
-Date: Mon, 21 Sep 2015 10:02:31 -0500
-Message-ID: <56001C07.5040802@kernel.org>
-References: <1442391252-7368-1-git-send-email-adriana.reus@intel.com>
- <1442391252-7368-3-git-send-email-adriana.reus@intel.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Fix tipo in st,clkgen-pll documentation
+Date: Mon, 21 Sep 2015 10:04:34 -0500
+Message-ID: <56001C82.8060009@kernel.org>
+References: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1442389379-9298-2-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442391252-7368-3-git-send-email-adriana.reus@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adriana Reus <adriana.reus@intel.com>
-Cc: jic23@kernel.org, pmeerw@pmeerw.net, daniel.baluta@intel.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1442389379-9298-2-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2015 03:14 AM, Adriana Reus wrote:
-> Added entries in i2c/vendor-prefixes for the us5182d als and proximity sensor.
-> Also added a documentation file for this sensor's properties.
-> 
-> Signed-off-by: Adriana Reus <adriana.reus@intel.com>
-> ---
->  Changes since v6:
->  * Added some aditional clarifications on the optional
->    properties, as suggested by Rob.
+On 09/16/2015 02:42 AM, Gabriel Fernandez wrote:
+> replace "sst,plls-c32-cx_x" by "st,plls-c32-cx_x"
+
+Ironically, the subject has a typo...
 
 Acked-by: Rob Herring <robh@kernel.org>
 
 > 
->  .../devicetree/bindings/iio/light/us5182d.txt      | 34 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
-> new file mode 100644
-> index 0000000..6f0a530
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
-> @@ -0,0 +1,34 @@
-> +* UPISEMI us5182d I2C ALS and Proximity sensor
-> +
-> +Required properties:
-> +- compatible: must be "upisemi,usd5182"
-> +- reg: the I2C address of the device
-> +
-> +Optional properties:
-> +- upisemi,glass-coef: glass attenuation factor - compensation factor of
-> +                      resolution 1000 for material transmittance.
-> +- upisemi,dark-ths: array of 8 elements containing 16-bit thresholds (adc
-> +                    counts) corresponding to every scale.
-> +- upisemi,upper-dark-gain: 8-bit dark gain compensation factor(4 int and 4
-> +                           fractional bits - Q4.4) applied when light > threshold
-> +- upisemi,lower-dark-gain: 8-bit dark gain compensation factor(4 int and 4
-> +                           fractional bits - Q4.4) applied when light < threshold
-> +
-> +If the optional properties are not specified these factors will default to the
-> +values in the below example.
-> +The glass-coef defaults to no compensation for the covering material.
-> +The threshold array defaults to experimental values that work with US5182D
-> +sensor on evaluation board - roughly between 12-32 lux.
-> +There will be no dark-gain compensation by default when ALS > thresh
-> +(0 * dark-gain), and a 1.35 compensation factor when ALS < thresh.
-> +
-> +Example:
-> +
-> +    usd5182@39 {
-> +                compatible = "upisemi,usd5182";
-> +                reg = <0x39>;
-> +                upisemi,glass-coef = < 1000 >;
-> +                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800 2000 4000 8000>;
-> +                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
-> +                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 341695b..85ba915 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -213,6 +213,7 @@ toshiba	Toshiba Corporation
->  toumaz	Toumaz
->  tplink	TP-LINK Technologies Co., Ltd.
->  truly	Truly Semiconductors Limited
-> +upisemi	uPI Semiconductor Corp.
->  usi	Universal Scientific Industrial Co., Ltd.
->  v3	V3 Semiconductor
->  variscite	Variscite Ltd.
+> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> index d8b168e..e2c6db0 100644
+> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> @@ -21,8 +21,8 @@ Required properties:
+>  	"st,stih416-plls-c32-ddr",	"st,clkgen-plls-c32"
+>  	"st,stih407-plls-c32-a0",	"st,clkgen-plls-c32"
+>  	"st,stih407-plls-c32-a9",	"st,clkgen-plls-c32"
+> -	"sst,plls-c32-cx_0",		"st,clkgen-plls-c32"
+> -	"sst,plls-c32-cx_1",		"st,clkgen-plls-c32"
+> +	"st,plls-c32-cx_0",		"st,clkgen-plls-c32"
+> +	"st,plls-c32-cx_1",		"st,clkgen-plls-c32"
+>  
+>  	"st,stih415-gpu-pll-c32",	"st,clkgengpu-pll-c32"
+>  	"st,stih416-gpu-pll-c32",	"st,clkgengpu-pll-c32"
 > 
+
