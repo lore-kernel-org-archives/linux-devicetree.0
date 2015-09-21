@@ -1,61 +1,67 @@
-From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
-Subject: [PATCH v3 4/4] ARM: dts: Enable EC vboot context support on Peach boards
-Date: Mon, 21 Sep 2015 10:38:23 -0300
-Message-ID: <1442842703-5309-5-git-send-email-emilio.lopez@collabora.co.uk>
-References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add hdmi-codec for external
+ HDMI-encoders
+Date: Mon, 21 Sep 2015 16:41:20 +0300
+Message-ID: <56000900.3070404@ti.com>
+References: <cover.1442572860.git.jsarha@ti.com>
+ <6fe9ab5dff972e6f228259d6818f3f481a11577d.1442572860.git.jsarha@ti.com>
+ <20150919175450.GL30445@sirena.org.uk>
+ <20150921093107.GF21098@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150921093107.GF21098@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Peach boards use the EC to store the vboot context information,
-so add the corresponding properties on the EC node to indicate so.
-
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Acked-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
----
-
-Changes from v1:
- - none
-
-Changes from v2:
- - collect tags from Krzysztof & Javier
-
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot=
-/dts/exynos5420-peach-pit.dts
-index 8f4d76c..ac02fb4 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -935,6 +935,7 @@
- 		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
- 		reg =3D <0>;
- 		spi-max-frequency =3D <3125000>;
-+		google,has-vbc-nvram;
-=20
- 		controller-data {
- 			samsung,spi-feedback-delay =3D <1>;
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/=
-dts/exynos5800-peach-pi.dts
-index 7d5b386..b60dec0 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -898,6 +898,7 @@
- 		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
- 		reg =3D <0>;
- 		spi-max-frequency =3D <3125000>;
-+		google,has-vbc-nvram;
-=20
- 		controller-data {
- 			samsung,spi-feedback-delay =3D <1>;
---=20
-2.1.4
+T24gMDkvMjEvMTUgMTI6MzEsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPiBPbiBT
+YXQsIFNlcCAxOSwgMjAxNSBhdCAxMDo1NDo1MUFNIC0wNzAwLCBNYXJrIEJyb3duIHdyb3RlOgo+
+PiBPbiBGcmksIFNlcCAxOCwgMjAxNSBhdCAwMjowNjo0MFBNICswMzAwLCBKeXJpIFNhcmhhIHdy
+b3RlOgo+Pj4gKyNkZWZpbmUgU1BESUZfRk9STUFUUwkoU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUg
+fCBTTkRSVl9QQ01fRk1UQklUX1MxNl9CRSB8XAo+Pj4gKwkJCSBTTkRSVl9QQ01fRk1UQklUX1My
+MF8zTEUgfCBTTkRSVl9QQ01fRk1UQklUX1MyMF8zQkUgfFwKPj4+ICsJCQkgU05EUlZfUENNX0ZN
+VEJJVF9TMjRfM0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjRfM0JFIHxcCj4+PiArCQkJIFNORFJW
+X1BDTV9GTVRCSVRfUzI0X0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjRfQkUpCj4+PiArCj4+PiAr
+I2RlZmluZSBJMlNfRk9STUFUUwkoU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUgfCBTTkRSVl9QQ01f
+Rk1UQklUX1MxNl9CRSB8XAo+Pj4gKwkJCSBTTkRSVl9QQ01fRk1UQklUX1MxOF8zTEUgfCBTTkRS
+Vl9QQ01fRk1UQklUX1MxOF8zQkUgfFwKPj4+ICsJCQkgU05EUlZfUENNX0ZNVEJJVF9TMjBfM0xF
+IHwgU05EUlZfUENNX0ZNVEJJVF9TMjBfM0JFIHxcCj4+PiArCQkJIFNORFJWX1BDTV9GTVRCSVRf
+UzI0XzNMRSB8IFNORFJWX1BDTV9GTVRCSVRfUzI0XzNCRSB8XAo+Pj4gKwkJCSBTTkRSVl9QQ01f
+Rk1UQklUX1MyNF9MRSB8IFNORFJWX1BDTV9GTVRCSVRfUzI0X0JFIHxcCj4+PiArCQkJIFNORFJW
+X1BDTV9GTVRCSVRfUzMyX0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMzJfQkUpCj4+Cj4+IEknbSBu
+b3Qgc3VyZSBob3cgYWJzdHJhY3RlZCB0aGlzIEkyUyBhbmQgUy9QRElGIERBSSBidXNpbmVzcyBp
+cyAtIGl0Cj4+IGRvZXNuJ3QgZmVlbCBsaWtlIHNvbWV0aGluZyB0aGF0J3MgZ29pbmcgdG8gYmUg
+YSBwcm9wZXJ0eSBvZiBhbGwgSERNSQo+PiBkZXZpY2VzLCBhbmQgdGhlIHNwZWNpZmljIHNldHMg
+b2YgZm9ybWF0cyBhYm92ZSBjYXVzZSBtZSB0byByYWlzZSBhIGJpdAo+PiBvZiBhbiBleWVicm93
+LiAgU2hvdWxkIHRoaXMgYmUgYW4gaW50ZXJmYWNlIHdoZXJlIHRoZSBIRE1JIGNoaXAKPj4gcmVn
+aXN0ZXJzIG11bHRpcGxlIGludGVyZmFjZXMgaWYgaXQgaGFzIHRoZW0gaW5zdGVhZCBvZiBhdXRv
+bWF0aWNhbGx5Cj4+IGdldHRpbmcgdGhpcyBzcGxpdCBhcyBpcz8KPgo+IFRoZSBpbmNsdXNpb24g
+b2YgdGhlIDMyLWJpdCBmb3JtYXRzIGRvZXMgcmFpc2UgYW4gZXllYnJvdyBoZXJlIHRvby4KPiBB
+dWRpbyB0cmFuc21pc3Npb24gYWNyb3NzIHRoZSBIRE1JIGxpbmsgaXMgUy9QRElGLCBzdXBwb3J0
+aW5nIHVwIHRvCj4gMjQtYml0IHVuY29tcHJlc3NlZCBhdWRpbyAoYWthIEwtUENNKS4KPgo+IFRo
+ZSBkZXZpY2UgbWF5IGFjY2VwdCAzMiBiaXQgSTJTLCBidXQgaXQgd291bGQgaGF2ZSB0byBiZSB0
+cnVuY2F0ZWQgdG8KPiAyNCBiaXQgYmVmb3JlIHRyYW5zbWl0dGluZyBpdCB0byB0aGUgc2luay4g
+IFRoaXMgc2hvdWxkIGJlIG1lbnRpb25lZAo+IHNvbWV3aGVyZS4KPgoKVGhlcmUgaXMgIi5zaWdf
+Yml0cyA9IDI0IiBpbiBoZG1pX2kyc19kYWksIGJ1dCBJIGNhbiBhZGQgYW4gZXhwbGljaXQgCmNv
+bW1lbnQgYWJvdXQgaXQuCgpXZSBuZWVkZWQgMzJiaXQgZm9ybWF0IGluIHByYWN0aWNlIHVudGls
+IFBldGVyIGdvdCAyNF9MRSBwcm9wZXJseSAKd29ya2luZyB3aXRoIE1jQVNQLiBJIGp1c3QgdGhv
+dWdodCB0aGUgbWF5IHN0aWxsIGJlIHNvbWUgcGxhdGZvcm1zIG91dCAKdGhlcmUgdGhhdCBjYW4g
+bm90IHByb2R1Y2UgMjRiaXQgaTJzIHNhbXBsZXMgZm9yIHNvbWUgcmVhc29uLCBidXQgd29yayAK
+anVzdCBmaW5lIHdpdGggMzJiaXQgc2FtcGxlcy4gVGhvc2UgcGxhdGZvcm1zIHdvdWxkIGJlIGxp
+bWl0ZWQgdG8gbGVzcyAKdGhhbiAyNGJpdCBwcmVjaXNpb24gd2l0aG91dCAzMmJpdCBmb3JtYXRz
+LiBCdXQgYXMgc2FpZCwgaXQgaXMgbm90IApjcml0aWNhbCB0byB1cyBhbnkgbW9yZSBhbmQgSSBj
+YW4gZHJvcCB0aGUgMzJiaXQgZm9ybWF0cyBhcyB3ZWxsLgoKQlIsCkp5cmkKCgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
