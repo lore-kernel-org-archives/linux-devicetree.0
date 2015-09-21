@@ -1,68 +1,100 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] phy: fix of_mdio_find_bus() device refcount leak
-Date: Mon, 21 Sep 2015 20:32:07 +0100
-Message-ID: <20150921193206.GU21084@n2100.arm.linux.org.uk>
-References: <20150918094625.GB21084@n2100.arm.linux.org.uk>
- <E1ZcsNb-0001Bf-U5@rmk-PC.arm.linux.org.uk>
- <20150921.120159.326170798236851436.davem@davemloft.net>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [v7 PATCH 2/2] devicetree: Add documentation for UPISEMI us5182d
+ ALS and Proximity sensor
+Date: Mon, 21 Sep 2015 20:36:14 +0100
+Message-ID: <56005C2E.6060906@kernel.org>
+References: <1442391252-7368-1-git-send-email-adriana.reus@intel.com>
+ <1442391252-7368-3-git-send-email-adriana.reus@intel.com>
+ <56001C07.5040802@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150921.120159.326170798236851436.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, isubramanian-qTEPVZfXA3Y@public.gmane.org, kchudgar-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56001C07.5040802-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 21, 2015 at 12:01:59PM -0700, David Miller wrote:
-> From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Date: Fri, 18 Sep 2015 10:54:55 +0100
+On 21/09/15 16:02, Rob Herring wrote:
+> On 09/16/2015 03:14 AM, Adriana Reus wrote:
+>> Added entries in i2c/vendor-prefixes for the us5182d als and proximity sensor.
+>> Also added a documentation file for this sensor's properties.
+>>
+>> Signed-off-by: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Changes since v6:
+>>  * Added some aditional clarifications on the optional
+>>    properties, as suggested by Rob.
 > 
-> > Update the comment, and arrange for the only user of this function
-> > to drop this refcount when disposing of a reference to it.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Thanks. Applied to the togreg branch of iio.git - initially pushed out
+as testing for the autobuilders to play with it.
+
+Jonathan
 > 
-> mdio_mux is not the only user of of_mdio_find_bus(), DSA uses it as
-> well.
+>>
+>>  .../devicetree/bindings/iio/light/us5182d.txt      | 34 ++++++++++++++++++++++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>>  2 files changed, 35 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
+>> new file mode 100644
+>> index 0000000..6f0a530
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
+>> @@ -0,0 +1,34 @@
+>> +* UPISEMI us5182d I2C ALS and Proximity sensor
+>> +
+>> +Required properties:
+>> +- compatible: must be "upisemi,usd5182"
+>> +- reg: the I2C address of the device
+>> +
+>> +Optional properties:
+>> +- upisemi,glass-coef: glass attenuation factor - compensation factor of
+>> +                      resolution 1000 for material transmittance.
+>> +- upisemi,dark-ths: array of 8 elements containing 16-bit thresholds (adc
+>> +                    counts) corresponding to every scale.
+>> +- upisemi,upper-dark-gain: 8-bit dark gain compensation factor(4 int and 4
+>> +                           fractional bits - Q4.4) applied when light > threshold
+>> +- upisemi,lower-dark-gain: 8-bit dark gain compensation factor(4 int and 4
+>> +                           fractional bits - Q4.4) applied when light < threshold
+>> +
+>> +If the optional properties are not specified these factors will default to the
+>> +values in the below example.
+>> +The glass-coef defaults to no compensation for the covering material.
+>> +The threshold array defaults to experimental values that work with US5182D
+>> +sensor on evaluation board - roughly between 12-32 lux.
+>> +There will be no dark-gain compensation by default when ALS > thresh
+>> +(0 * dark-gain), and a 1.35 compensation factor when ALS < thresh.
+>> +
+>> +Example:
+>> +
+>> +    usd5182@39 {
+>> +                compatible = "upisemi,usd5182";
+>> +                reg = <0x39>;
+>> +                upisemi,glass-coef = < 1000 >;
+>> +                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800 2000 4000 8000>;
+>> +                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
+>> +                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
+>> +    };
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 341695b..85ba915 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -213,6 +213,7 @@ toshiba	Toshiba Corporation
+>>  toumaz	Toumaz
+>>  tplink	TP-LINK Technologies Co., Ltd.
+>>  truly	Truly Semiconductors Limited
+>> +upisemi	uPI Semiconductor Corp.
+>>  usi	Universal Scientific Industrial Co., Ltd.
+>>  v3	V3 Semiconductor
+>>  variscite	Variscite Ltd.
+>>
 > 
-> So if anything this commit message is inaccurate.
-
-Yes, I missed that as it wasn't under drivers/net.  It doesn't change
-the validity of this patch, the existing code is wrong and I'm not
-introducing anything that makes the code any more wrong than it is.
-
-I'll fix the commit message, and I'll fix the DSA code too but in a
-separate patch.  Thanks for pointing it out.
-
-> I also wonder about this refcounting scheme.
-
-It's the standard driver model refcounting rules that we've lived with
-for about a decade, ever since the driver model was introduced by
-Patrick Mochel.
-
-> If you are going to drop the inner device reference, then we take the
-> mdio bus returned from of_mdio_find_bus() what holds onto it and keeps
-> it from disappearing on us?
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> Don't we have to hold onto some reference count of some kind here?
-
-In the case of the mdio mux code, I'm dropping the reference when
-either (a) we've encountered an error during initialisation and we're
-cleaning up, or (b) when the mdio mux code is being torn down after
-the mdiomux bus has been unregistered and freed.  In both cases, we're
-done with the mdio bus that was returned from of_mdio_find_bus().
-
-In case (a), the devres code will release the kmalloc'd memory when
-mdio_mux_gpio_probe() or mdio_mux_mmioreg_probe() propagates the error
-out of their probe() function.
-
-I'm not sure why you think anything is wrong here - maybe it's the odd
-code structure to the success path at the bottom of mdio_mux_init()?
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
