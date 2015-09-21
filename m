@@ -1,44 +1,55 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2 0/6] arm64: berlin: add pinctrl support
-Date: Mon, 21 Sep 2015 18:04:14 +0800
-Message-ID: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
+Subject: [PATCH v2 5/6] arm64: dts: berlin4ct: add the pinctrl node
+Date: Mon, 21 Sep 2015 18:04:19 +0800
+Message-ID: <1442829860-4647-6-git-send-email-jszhang@marvell.com>
+References: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for Marvell berlin4ct pin-controller, allowing
-to configure the pin muxing from the device tree.
+Add the avio, soc, sm pinctrl nodes for Marvell berlin4ct SoC.
 
-Since v1:
- - use generic name for pin functions
- - a new commit to add pinmux for uart0
- - correct pinctrl usage in dts
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Jisheng Zhang (6):
-  pinctrl: berlin: regmap as an extra argument of berlin_pinctrl_probe()
-  pinctrl: berlin: add the berlin4ct pinctrl driver
-  arm64: berlin: add the pinctrl dependency for Marvell Berlin SoCs
-  pinctrl: dt-binding: document berlin4ct SoC pinctrl
-  arm64: dts: berlin4ct: add the pinctrl node
-  arm64: dts: berlin4ct: add default pinmux for uart0
-
- .../devicetree/bindings/pinctrl/berlin,pinctrl.txt |   5 +-
- arch/arm64/Kconfig.platforms                       |   1 +
- arch/arm64/boot/dts/marvell/berlin4ct.dtsi         |  22 +
- drivers/pinctrl/berlin/Kconfig                     |   5 +
- drivers/pinctrl/berlin/Makefile                    |   1 +
- drivers/pinctrl/berlin/berlin-bg2.c                |  10 +-
- drivers/pinctrl/berlin/berlin-bg2cd.c              |  10 +-
- drivers/pinctrl/berlin/berlin-bg2q.c               |  10 +-
- drivers/pinctrl/berlin/berlin.c                    |   9 +-
- drivers/pinctrl/berlin/berlin.h                    |   1 +
- drivers/pinctrl/berlin/berlin4ct.c                 | 503 +++++++++++++++++++++
- 11 files changed, 565 insertions(+), 12 deletions(-)
- create mode 100644 drivers/pinctrl/berlin/berlin4ct.c
-
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index a3b5f1d..c374f1d 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -225,6 +225,16 @@
+ 			};
+ 		};
+ 
++		soc_pinctrl: pinctrl@ea8000 {
++			compatible = "marvell,berlin4ct-soc-pinctrl";
++			reg = <0xea8000 0x14>;
++		};
++
++		avio_pinctrl: pinctrl@ea8400 {
++			compatible = "marvell,berlin4ct-avio-pinctrl";
++			reg = <0xea8400 0x8>;
++		};
++
+ 		apb@fc0000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+@@ -280,5 +290,10 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		sm_pinctrl: pinctrl@fe2200 {
++			compatible = "marvell,berlin4ct-sm-pinctrl";
++			reg = <0xfe2200 0xc>;
++		};
+ 	};
+ };
 -- 
 2.5.3
