@@ -1,43 +1,64 @@
-From: Felipe Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: fix usb pin control for imx-rex dts
-Date: Mon, 21 Sep 2015 09:17:17 +0100
-Message-ID: <CAGrhNMwqjQvdsXOT_7JrnuDRm5n8UhLuSPY9GcJKmrXcW05cnQ@mail.gmail.com>
-References: <1442425232-21451-1-git-send-email-eu@felipetonello.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v4 1/3] leds: netxbig: add device tree binding
+Date: Mon, 21 Sep 2015 11:10:56 +0200
+Message-ID: <55FFC9A0.1020608@samsung.com>
+References: <1442505571-9744-1-git-send-email-simon.guinot@sequanux.org>
+ <1442505571-9744-2-git-send-email-simon.guinot@sequanux.org>
+ <55FBD679.2020402@samsung.com> <20150918103006.GM7306@kw.sim.vm.gnt>
+ <55FBEC38.6020209@samsung.com> <20150918131011.GN7306@kw.sim.vm.gnt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442425232-21451-1-git-send-email-eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Felipe F. Tonello" <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150918131011.GN7306@kw.sim.vm.gnt>
+Sender: linux-leds-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Bryan Wu <cooloney@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Yoann Sculo <yoann@sculo.fr>, linux-leds@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 6:40 PM,  <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org> wrote:
-> From: "Felipe F. Tonello" <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+On 09/18/2015 03:10 PM, Simon Guinot wrote:
+> On Fri, Sep 18, 2015 at 12:49:28PM +0200, Jacek Anaszewski wrote:
+>>>>
+>>>> Moreover, if you switched to using devm* prefixed version of
+>>>> gpio_request_one and led_classdev_reqister, you could simplify
+>>>> the error paths in the driver.
+>>>
+>>> Yes, I have a pending patch for this conversion. But since it is not
+>>> really related with the subject of this patch series (add DT support),
+>>> I was planning to send it next.
+>>>
+>>> Do you want me to include this patch into this series.
+>>
+>> Why not, if you have it ready to go. If it needs some polishing,
+>> we can live with what we have now.
 >
-> This fixes a duplicated pin control causing this error:
+> No, the patch is ready. I'll add it.
 >
-> imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_GPIO_1 already
-> requested by regulators:regulator@2; cannot claim for 2184000.usb
-> imx6q-pinctrl 20e0000.iomuxc: pin-137 (2184000.usb) status -22
-> imx6q-pinctrl 20e0000.iomuxc: could not request pin 137
-> (MX6Q_PAD_GPIO_1) from group usbotggrp  on device 20e0000.iomuxc
-> imx_usb 2184000.usb: Error applying setting, reverse things
-> back
-> imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_EIM_D31 already
-> requested by regulators:regulator@1; cannot claim for 2184200.usb
-> imx6q-pinctrl 20e0000.iomuxc: pin-52 (2184200.usb) status -22
-> imx6q-pinctrl 20e0000.iomuxc: could not request pin 52 (MX6Q_PAD_EIM_D31)
-> from group usbh1grp  on device 20e0000.iomuxc
-> imx_usb 2184200.usb: Error applying setting, reverse things
-> back
+>>>>> +static const struct of_device_id of_netxbig_leds_match[] = {
+>>>>> +	{ .compatible = "lacie,netxbig-leds", },
+>>>>> +	{},
+>>>>> +};
+>>>>> +#else
+>>>>> +static int netxbig_leds_get_of_pdata(struct device *dev,
+>>>>> +				     struct netxbig_led_platform_data *pdata)
+>>>>
+>>>> s/static int/static inline int/
+>>>
+>>> Is that not already the case with modern compiler ?
+>>
+>> Could you elaborate on this?
 >
-> Signed-off-by: Felipe F. Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+> There is not much to say. netxbig_leds_get_of_pdata is a single line of
+> code. I am not a gcc expert but I am quite confident that this function
+> will be inlined anyway (given the optimisation level used to compile the
+> Linux kernel). That's it.
+>
+> But there is nothing wrong by adding "inline" neither.
 
-Any comments?
+Right. All the more, this is a common pattern for no-ops, also in *.c
+files.
 
-Felipe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Best Regards,
+Jacek Anaszewski
