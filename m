@@ -1,51 +1,27 @@
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: [PATCH] ARM: dts: exynos4412-odroid: remove redundant pinctrl settings
-Date: Mon, 21 Sep 2015 19:58:59 +0200
-Message-ID: <1442858340-4584-1-git-send-email-tjakobi@math.uni-bielefeld.de>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/7] pinctrl: introduce driver for Atmel PIO4 controller
+Date: Mon, 21 Sep 2015 11:22:39 -0700
+Message-ID: <CACRpkdYHJMu-fa4fcOVpSWYXfYA8fmzM7fvOGh_274mw6GM=bA@mail.gmail.com>
+References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
+	<1442417823-15850-2-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1442417823-15850-2-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The pinctrl settings in i2c_0 and i2c_1 are already provided
-through the exynos4 dtsi.
+On Wed, Sep 16, 2015 at 8:36 AM, Ludovic Desroches
+<ludovic.desroches@atmel.com> wrote:
 
-Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+> Add a pinctrl/gpio driver for Atmel PIO4 controller available on SAMA5D2
+> chip family.
+>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index 3f8bc7b..3c34e74 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -217,8 +217,6 @@
- };
- 
- &i2c_0 {
--	pinctrl-0 = <&i2c0_bus>;
--	pinctrl-names = "default";
- 	samsung,i2c-sda-delay = <100>;
- 	samsung,i2c-max-bus-freq = <400000>;
- 	status = "okay";
-@@ -444,8 +442,6 @@
- };
- 
- &i2c_1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_bus>;
- 	status = "okay";
- 	max98090: max98090@10 {
- 		compatible = "maxim,max98090";
-@@ -460,8 +456,6 @@
- 
- &i2c_2 {
- 	status = "okay";
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c2_bus>;
- };
- 
- &i2c_8 {
--- 
-2.0.5
+Patch applied.
+
+Yours,
+Linus Walleij
