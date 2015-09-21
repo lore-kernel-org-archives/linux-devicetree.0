@@ -1,127 +1,105 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: add dts file for Marvell Berlin4CT STB
- board
-Date: Mon, 21 Sep 2015 10:19:37 +0800
-Message-ID: <20150921101937.0e47d0d8@xhacker>
-References: <1442584059-7319-1-git-send-email-jszhang@marvell.com>
-	<1442584059-7319-4-git-send-email-jszhang@marvell.com>
-	<55FF03AB.4000209@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FF03AB.4000209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 0/5] Support the thermal for RK3368 SoCs
+Date: Mon, 21 Sep 2015 12:16:06 +0800
+Message-ID: <1442808971-2619-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: heiko@sntech.de, edubezval@gmail.com, rui.zhang@intel.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, will.deacon@arm.com, robh+dt@kernel.org, inux-kernel@vger.kernel.org, galak@codeaurora.org, linux-rockchip@lists.infradead.org, dmitry.torokhov@gmail.com, mark.rutland@arm.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, ijc+devicetree@hellion.org.uk, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 20 Sep 2015 21:06:19 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+This series patchs are working for RK3368 on Rockchip platform.
 
-> On 18.09.2015 15:47, Jisheng Zhang wrote:
-> > This patch adds dts for the Berlin4CT STB reference board which is also
-> > based on the Berlin4CT SoC. The Berlin4CT DMP board will be deprecated as
-> > time goes.
-> >
-> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >   arch/arm64/boot/dts/marvell/berlin4ct-stb.dts | 66 +++++++++++++++++++++++++++
-> 
-> This is missing the corresponding Makefile change to add the
-> board to the default dtb build list.
+This patchset are based on linus master branch.
+(Note: add Dmitry two thermal patchs for rockchip
+ https://patchwork.kernel.org/patch/6973101/
+ https://patchwork.kernel.org/patch/6973131/
+)
 
-oops, sorry, I missed it.
+the git log oneline as follows:
 
-> 
-> I've fixed it up and
-> 
-> Applied the two dts patches to berlin64/dt
+30451f4 arm64: dts: Enable the Thermal on R88 board.
+1637a7c arm64: dts: Add main Thermal info to rk3368.dtsi
+8f908b7 arm64: dts: Add the thermal data found on RK3368
+a501fad thermal: rockchip: Support the RK3368 SoCs in thermal driver
+c765254 dt-bindings: thermal: Support the RK3368 SoCs compatible
+ff7fd5d thermal: rockhip: fix setting thermal shutdown polarity
+f54373c thermal: rockchip: fix handling of invalid readings
+0410a40 arm64: dts: rockchip: Add the needed timer for RK3368 SoC
+f696cac arm64: Enable the timer on Rockchip architecture
+e84d626 clocksource: rockchip: Make the driver more readability and compatible
+1f93e4a Linux 4.3-rc2
+.....
 
-Thanks a lot ;)
+@Heiko,
+The PATCH [4/5] is working based on big/littel cluster cpufreq added.
+Anyway, the PATCH [4/5] also work for next kernel.
 
-> 
-> Sebastian
-> 
-> >   1 file changed, 66 insertions(+)
-> >   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-> > new file mode 100644
-> > index 0000000..348c37e
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-> > @@ -0,0 +1,66 @@
-> > +/*
-> > + * Copyright (C) 2015 Marvell Technology Group Ltd.
-> > + *
-> > + * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > + *
-> > + * This file is dual-licensed: you can use it either under the terms
-> > + * of the GPLv2 or the X11 license, at your option. Note that this dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> > + *
-> > + *  a) This library is free software; you can redistribute it and/or
-> > + *     modify it under the terms of the GNU General Public License as
-> > + *     published by the Free Software Foundation; either version 2 of the
-> > + *     License, or (at your option) any later version.
-> > + *
-> > + *     This library is distributed in the hope that it will be useful,
-> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + *     GNU General Public License for more details.
-> > + *
-> > + * Or, alternatively,
-> > + *
-> > + *  b) Permission is hereby granted, free of charge, to any person
-> > + *     obtaining a copy of this software and associated documentation
-> > + *     files (the "Software"), to deal in the Software without
-> > + *     restriction, including without limitation the rights to use,
-> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > + *     sell copies of the Software, and to permit persons to whom the
-> > + *     Software is furnished to do so, subject to the following
-> > + *     conditions:
-> > + *
-> > + *     The above copyright notice and this permission notice shall be
-> > + *     included in all copies or substantial portions of the Software.
-> > + *
-> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "berlin4ct.dtsi"
-> > +
-> > +/ {
-> > +	model = "Marvell BG4CT STB board";
-> > +	compatible = "marvell,berlin4ct-stb", "marvell,berlin4ct", "marvell,berlin";
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial0:115200n8";
-> > +	};
-> > +
-> > +	memory {
-> > +		device_type = "memory";
-> > +		/* the first 16MB is for firmwares' usage */
-> > +		reg = <0 0x01000000 0 0x7f000000>;
-> > +	};
-> > +};
-> > +
-> > +&uart0 {
-> > +	status = "okay";
-> > +};
-> >
-> 
+@Eduardo,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The PATCH[2/4] is based on the Dmitry's patchs.
+
+ https://patchwork.kernel.org/patch/6973101/
+ https://patchwork.kernel.org/patch/6973131/
+
+---
+This series are tested on RK3368 board.
+
+while true;do ls >/dev/null; done&
+
+while true; do grep "" /sys/class/thermal/thermal_zone[1-2]/temp;date;sleep .5;
+done &
+
+You can get the temperature form sensors.
+
+/sys/class/thermal/thermal_zone0/temp:27500
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:30000
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:27500
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:30000
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:25000
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:32500
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:30000
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:22500
+/sys/class/thermal/thermal_zone1/temp:32500
+/sys/class/thermal/thermal_zone0/temp:25000
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:25000
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:22500
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:30000
+/sys/class/thermal/thermal_zone1/temp:32500
+/sys/class/thermal/thermal_zone0/temp:25000
+/sys/class/thermal/thermal_zone1/temp:32500
+/sys/class/thermal/thermal_zone0/temp:32500
+/sys/class/thermal/thermal_zone1/temp:30000
+/sys/class/thermal/thermal_zone0/temp:25000
+/sys/class/thermal/thermal_zone1/temp:32500
+
+
+
+Caesar Wang (5):
+  dt-bindings: thermal: Support the RK3368 SoCs compatible
+  thermal: rockchip: Support the RK3368 SoCs in thermal driver
+  arm64: dts: Add the thermal data found on RK3368
+  arm64: dts: Add main Thermal info to rk3368.dtsi
+  arm64: dts: Enable the Thermal on R88 board
+
+ .../bindings/thermal/rockchip-thermal.txt          |   4 +-
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts        |   6 +
+ arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi   | 112 ++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  30 +++
+ drivers/thermal/rockchip_thermal.c                 | 201 ++++++++++++++++++---
+ 5 files changed, 327 insertions(+), 26 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
+
+-- 
+1.9.1
+
