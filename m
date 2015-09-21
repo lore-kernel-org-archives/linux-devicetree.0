@@ -1,106 +1,62 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
-Date: Mon, 21 Sep 2015 16:11:19 +0300
-Message-ID: <F6E3C79C-50D7-4092-A38A-25E97D6F50A9@konsulko.com>
-References: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com> <1442419866-4982-3-git-send-email-pantelis.antoniou@konsulko.com> <CAMuHMdXWwZ4BZsR8qqpM1Z6hVj9e3Z0Z4bypm42PFZ_C6KX+tg@mail.gmail.com> <324F27EC-FC71-4C50-926A-08AAF2A1114C@konsulko.com> <CAMuHMdUDXZFun7+y3axnz6HKiNaeJnPkVG6Qhq6y4=mcCpPL2w@mail.gmail.com> <EA80A53C-430B-450D-B843-21DFF0FB01D8@konsulko.com> <CAMuHMdXEzZxu8Hg6Z6u1ZEe0ondU+S0ffBvxYGzid38sXAksDw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
+From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
+Subject: [PATCH v3 0/4] platform/chrome: vboot context support
+Date: Mon, 21 Sep 2015 10:38:19 -0300
+Message-ID: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXEzZxu8Hg6Z6u1ZEe0ondU+S0ffBvxYGzid38sXAksDw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robherring2@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi everyone,
 
-> On Sep 21, 2015, at 16:07 , Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->=20
-> Hi Pantelis,
->=20
-> On Mon, Sep 21, 2015 at 2:49 PM, Pantelis Antoniou
-> <pantelis.antoniou@konsulko.com> wrote:
->>> On Sep 21, 2015, at 15:47 , Geert Uytterhoeven <geert@linux-m68k.or=
-g> wrote:
->>> On Mon, Sep 21, 2015 at 2:36 PM, Pantelis Antoniou
->>> <pantelis.antoniou@konsulko.com> wrote:
->>>>> On Sep 21, 2015, at 15:35 , Geert Uytterhoeven <geert@linux-m68k.=
-org> wrote:
->>>>> On Wed, Sep 16, 2015 at 6:11 PM, Pantelis Antoniou
->>>>> <pantelis.antoniou@konsulko.com> wrote:
->>>>>> Changesets are very powerful, but the lack of a helper API
->>>>>> makes using them cumbersome. Introduce a simple copy based
->>>>>> API that makes things considerably easier.
->>>>>>=20
->>>>>> To wit, adding a property using the raw API.
->>>>>>=20
->>>>>>      struct property *prop;
->>>>>>      prop =3D kzalloc(sizeof(*prop)), GFP_KERNEL);
->>>>>>      prop->name =3D kstrdup("compatible");
->>>>>>      prop->value =3D kstrdup("foo,bar");
->>>>>>      prop->length =3D strlen(prop->value) + 1;
->>>>>>      of_changeset_add_property(ocs, np, prop);
->>>>>>=20
->>>>>> while using the helper API
->>>>>>=20
->>>>>>      of_changeset_add_property_string(ocs, np, "compatible",
->>>>>>                      "foo,bar");
->>>>>=20
->>>>> What about removing properties?
->>>>=20
->>>> Once upon a time there was that capability. It was removed after w=
-e didn=E2=80=99t have
->>>> a good use for them yet. Do you have any? I=E2=80=99d be happy to =
-re-add it :)
->>>=20
->>> Aliases?
->>>=20
->>> If an overlay removes e.g. a serial port, it should remove its alia=
-s, too.
->>=20
->> Well, that case is handled. Addition of a property results in remova=
-l of a property when
->> the overlay is reverted.
->=20
-> Actually what I meant is the other way around: _adding_ the overlay w=
-ould
-> _remove_ the alias.
->=20
-> I have a board with an SDHI connector, and an expansion connector.
-> SDHI and serial on the expansion connector share the same pins.
-> By default, SDHI is enabled in the DTS.
->=20
-> To add a serial port to the expansion connector, I disable the SDHI d=
-evice,
-> add the alias, and add the serial device.
-> (dtsi in http://www.spinics.net/lists/devicetree/msg79438.html)
->=20
-> Now imagine doing the opposite: having the serial device enabled by d=
-efault.
-> Then the overlay should disable the serial device, remove the alias, =
-and add
-> the SDHI device.
->=20
+This series adds support for reading and writing the verified boot cont=
+ext
+nvram space on the EC using the cros_ec sysfs interface.
 
-Excellent; this is the use-case I was looking for :)
+The first patch improves is_visible() functionality, making it work
+for binary attributes as well as normal ones. This is needed so the
+sysfs group can be hidden when the EC doesn't offer any space for
+the context.
 
-> Gr{oetje,eeting}s,
->=20
->                        Geert
->=20
+The second patch documents the property used in the binding documents.
+This used to live in the next patch on the previous versions of this se=
+ries.
 
-Regards
+The third patch is the actual code implementing the interface to read
+and write the context data.
 
-=E2=80=94 Pantelis
+The fourth patch adds the DT properties on peach boards which, judging =
+by
+the vendor tree, use the EC to store the verified boot context.
 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
-x-m68k.org
->=20
-> In personal conversations with technical people, I call myself a hack=
-er. But
-> when I'm talking to journalists I just say "programmer" or something =
-like that.
->                                -- Linus Torvalds
+The series was tested on a peach pi and was found to work OK there. As
+always, all comments and further tests are welcome :)
+
+Cheers!
+Emilio
+
+Emilio L=C3=B3pez (4):
+  sysfs: Support is_visible() on binary attributes
+  Documentation: bindings: mfd: cros ec: document vbc EC property
+  platform/chrome: Support reading/writing the vboot context
+  ARM: dts: Enable EC vboot context support on Peach boards
+
+ Documentation/devicetree/bindings/mfd/cros-ec.txt |   4 +
+ arch/arm/boot/dts/exynos5420-peach-pit.dts        |   1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts         |   1 +
+ drivers/platform/chrome/Makefile                  |   3 +-
+ drivers/platform/chrome/cros_ec_dev.c             |   1 +
+ drivers/platform/chrome/cros_ec_vbc.c             | 137 ++++++++++++++=
+++++++++
+ fs/sysfs/group.c                                  |  17 ++-
+ include/linux/mfd/cros_ec.h                       |   1 +
+ include/linux/sysfs.h                             |  18 ++-
+ 9 files changed, 176 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_vbc.c
+
+--=20
+2.1.4
