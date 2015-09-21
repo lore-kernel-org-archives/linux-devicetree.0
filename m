@@ -1,55 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] irqchip/gicv3-its: Handle OF device tree "msi-map" properties.
-Date: Sun, 20 Sep 2015 21:01:58 -0500
-Message-ID: <CAL_JsqJy78FqkRihQhFytLx8Q+-NJCUaG18cQ59pHB1EJ5Ndsg@mail.gmail.com>
-References: <1442512859-31633-1-git-send-email-ddaney.cavm@gmail.com>
- <1442512859-31633-3-git-send-email-ddaney.cavm@gmail.com> <20150918095109.144c22ed@arm.com>
- <55FC4FBA.1010306@caviumnetworks.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: [PATCH v7 0/6] Altera PCIe host controller driver with MSI support
+Date: Mon, 21 Sep 2015 10:13:01 +0800
+Message-ID: <1442801587-3812-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FC4FBA.1010306-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 18, 2015 at 12:54 PM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> On 09/18/2015 01:51 AM, Marc Zyngier wrote:
->>
->> On Thu, 17 Sep 2015 11:00:59 -0700
->> David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> Hi David,
->>
->>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>
->>> Search up the device hierarchy to find devices with a "msi-map"
->>> property, if found apply the mapping to the GIC device id.
+This is the 7th version of patch set to add support for Altera PCIe host
+controller with MSI feature on Altera FPGA device families. This patchset
+mainly resolve comments from Lorenzo Pieralisi in v6 and minor fixes.
 
-[...]
+This patchset is based on v4.3-rc1.
 
->>> +               masked_devid = msi_mask & dev_alias.dev_id;
->>> +               matched = false;
->>> +               while (msi_map_len >= 4 * sizeof(__be32)) {
->>> +                       rid_base = be32_to_cpup(msi_map + 0);
->>> +                       phandle = be32_to_cpup(msi_map + 1);
->>> +                       msi_base = be32_to_cpup(msi_map + 2);
->>> +                       rid_len = be32_to_cpup(msi_map + 3);
->>
->>
->> Ouch. I wonder if that kind of thing should deserve a generic helper.
->> of_property_read_u32_array_from_index()? Rob, what do you think?
->
->
-> I think it is possible to add too many wrapper functions.  IMO, this is not
-> too unreadable.
+v6->v7 changes:
+-pcie-altera: add pcie_bus_configure_settings()
+-pcie-altera: update comment
+-pcie-altera: merge tlp_write_packet_unaligned and tlp_write_packet_aligned
+-pcie-altera: pass in NULL for iobase for of_pci_get_host_bridge_resources
+-pcie-altera: remove pcie->root_bus_nr = 0
 
-Given you are not reading into an array, I don't think a new helper
-would help. You could just use of_property_read_u32_index though.
+History:
+-------
+[v1]: https://lkml.org/lkml/2015/7/28/395
+[v2]: https://lkml.org/lkml/2015/7/31/267
+[v3]: http://www.kernelhub.org/?msg=811940&p=2
+[v4]: https://lkml.org/lkml/2015/8/17/141
+[v5]: https://lkml.org/lkml/2015/8/25/238
+[v6]: https://lkml.org/lkml/2015/9/1/177
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ley Foon Tan (6):
+  arm: add msi.h to Kbuild
+  pci: add Altera PCI vendor ID
+  pci:host: Add Altera PCIe host controller driver
+  pci: altera: Add Altera PCIe MSI driver
+  Documentation: dt-bindings: pci: altera pcie device tree binding
+  MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+
+ .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
+ .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+ MAINTAINERS                                        |  16 +
+ arch/arm/include/asm/Kbuild                        |   1 +
+ drivers/pci/host/Kconfig                           |  16 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pcie-altera-msi.c                 | 310 +++++++++++
+ drivers/pci/host/pcie-altera.c                     | 591 +++++++++++++++++++++
+ include/linux/pci_ids.h                            |   2 +
+ 9 files changed, 1015 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-altera-msi.c
+ create mode 100644 drivers/pci/host/pcie-altera.c
+
+-- 
+1.8.2.1
+
