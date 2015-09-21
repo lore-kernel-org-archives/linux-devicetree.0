@@ -1,82 +1,34 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/1] ARM: DTS: dra72-evm: remove cpsw gpio hogging and add mode-gpios
-Date: Mon, 21 Sep 2015 20:23:51 +0530
-Message-ID: <1442847231-23637-1-git-send-email-mugunthanvnm@ti.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v3 2/4] Documentation: bindings: mfd: cros ec: document
+ vbc EC property
+Date: Mon, 21 Sep 2015 08:01:02 -0700
+Message-ID: <CABxcv=nDbraTFed65qhr-P+Sopz32YW3ut_S11DWR+nJgiSFgw@mail.gmail.com>
+References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
+	<1442842703-5309-3-git-send-email-emilio.lopez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1442842703-5309-3-git-send-email-emilio.lopez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-With the current implementation of GPIO hogging and with
-gpio-pcf857x is built as module, ethernet doesn't work on boot
-and doesn't throw any error/warning to user. Ethernet becomes
-operational when inserting gpio-pcf857x module, even this time
-there is no error/warning logs to user that ethernet is
-operational.
+Hello Emilio,
 
-When using with NFS rootfs and gpio-pcf857x as module, board
-doesn't boot as it doesn't get any ip address and doesn't throw
-any error/warning. To over come this, now cpsw driver tries to
-get mode-gpios. When gpio-pcf857x is built as module it will
-throw error, so that user can decide either to built in
-gpio-pcf857x to continue with nfs boot or choose alternate rootfs
-filesystem like sd/ramdisk.
+On Mon, Sep 21, 2015 at 6:38 AM, Emilio L=C3=B3pez
+<emilio.lopez@collabora.co.uk> wrote:
+> Some EC implementations include a small nvram space used to store
+> verified boot context data. This boolean property lets us indicate
+> whether this space is available or not on a specific EC implementatio=
+n.
+>
+> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
 
-When using mmc/ramdisk as root fs, cpsw will probe defer and
-re-probes again when gpio-pcf857x module is inserted and ethernet
-becomes operational.
+Looks good to me.
 
-Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
----
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-The driver patch is applied to net-next branch (also present in
-linux-next) with commit: '1d147ccbfc35 ("drivers: net: cpsw: Add
-support to drive gpios for ethernet to be functional")
-
-Tested on DRA72x EVM, logs [1] and pushed a branch [2] for testing
-
-[1]: http://pastebin.ubuntu.com/12514591/
-[2]: git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git cpsw-mode-gpios-dt 
-
-Changes from initial version:
-* Modified the commit message to add more information
-
----
- arch/arm/boot/dts/dra72-evm.dts | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
-index 6f6bd98..a12c6f4 100644
---- a/arch/arm/boot/dts/dra72-evm.dts
-+++ b/arch/arm/boot/dts/dra72-evm.dts
-@@ -353,12 +353,6 @@
- 		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
--
--		cpsw_sel_s0 {
--			gpio-hog;
--			gpios = <4 GPIO_ACTIVE_HIGH>;
--			output-low;
--		};
- 	};
- };
- 
-@@ -590,6 +584,7 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	slaves = <1>;
-+	mode-gpios = <&pcf_gpio_21 4 GPIO_ACTIVE_HIGH>;
- };
- 
- &cpsw_emac0 {
--- 
-2.6.0.rc2.10.gf4d9753
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
