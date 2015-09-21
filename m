@@ -1,38 +1,109 @@
-From: David Miller <davem@redhat.com>
-Subject: Re: [PATCH 1/7] phy: fix of_mdio_find_bus() device refcount leak
-Date: Mon, 21 Sep 2015 15:08:27 -0700 (PDT)
-Message-ID: <20150921.150827.116958889622345434.davem@redhat.com>
-References: <E1ZcsNb-0001Bf-U5@rmk-PC.arm.linux.org.uk>
-	<20150921.120159.326170798236851436.davem@davemloft.net>
-	<20150921193206.GU21084@n2100.arm.linux.org.uk>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/9] ARM: dts: consolidate aliases for Cygnus dt files
+Date: Mon, 21 Sep 2015 15:12:42 -0700
+Message-ID: <1442873570-20947-2-git-send-email-rjui@broadcom.com>
+References: <1442873570-20947-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150921193206.GU21084@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@arm.linux.org.uk
-Cc: f.fainelli@gmail.com, devicetree@vger.kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, isubramanian@apm.com, kchudgar@apm.com, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, leoli@freescale.com, michal.simek@xilinx.com, netdev@vger.kernel.org, rric@kernel.org, robh+dt@kernel.org, soren.brinkmann@xilinx.com, sgoutham@cavium.com, thomas.petazzoni@free-electrons.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442873570-20947-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Date: Mon, 21 Sep 2015 20:32:07 +0100
+Move aliases into bcm-cygnus.dtsi to avoid duplications in Cygnus dts
+files
 
-> In the case of the mdio mux code, I'm dropping the reference when
-> either (a) we've encountered an error during initialisation and
-> we're cleaning up, or (b) when the mdio mux code is being torn down
-> after the mdiomux bus has been unregistered and freed.  In both
-> cases, we're done with the mdio bus that was returned from
-> of_mdio_find_bus().
-> 
-> In case (a), the devres code will release the kmalloc'd memory when
-> mdio_mux_gpio_probe() or mdio_mux_mmioreg_probe() propagates the error
-> out of their probe() function.
-> 
-> I'm not sure why you think anything is wrong here - maybe it's the odd
-> code structure to the success path at the bottom of mdio_mux_init()?
+Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm-cygnus.dtsi      | 4 ++++
+ arch/arm/boot/dts/bcm911360_entphn.dts | 4 ----
+ arch/arm/boot/dts/bcm911360k.dts       | 4 ----
+ arch/arm/boot/dts/bcm958300k.dts       | 4 ----
+ arch/arm/boot/dts/bcm958305k.dts       | 4 ----
+ 5 files changed, 4 insertions(+), 16 deletions(-)
 
-Ok I may have misread your change.  I'll restudy it when you respin
-the series with the commit message fixed and the DSA change added.
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index e1ac07a..30903ba 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -40,6 +40,10 @@
+ 	model = "Broadcom Cygnus SoC";
+ 	interrupt-parent = <&gic>;
+ 
++	aliases {
++		serial0 = &uart3;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/bcm911360_entphn.dts b/arch/arm/boot/dts/bcm911360_entphn.dts
+index 7db4843..0e1320e 100644
+--- a/arch/arm/boot/dts/bcm911360_entphn.dts
++++ b/arch/arm/boot/dts/bcm911360_entphn.dts
+@@ -39,10 +39,6 @@
+ 	model = "Cygnus Enterprise Phone (BCM911360_ENTPHN)";
+ 	compatible = "brcm,bcm11360", "brcm,cygnus";
+ 
+-	aliases {
+-		serial0 = &uart3;
+-	};
+-
+ 	chosen {
+ 		stdout-path = &uart3;
+ 		bootargs = "console=ttyS0,115200";
+diff --git a/arch/arm/boot/dts/bcm911360k.dts b/arch/arm/boot/dts/bcm911360k.dts
+index 9658d4f..2af40c6 100644
+--- a/arch/arm/boot/dts/bcm911360k.dts
++++ b/arch/arm/boot/dts/bcm911360k.dts
+@@ -38,10 +38,6 @@
+ 	model = "Cygnus SVK (BCM911360K)";
+ 	compatible = "brcm,bcm11360", "brcm,cygnus";
+ 
+-	aliases {
+-		serial0 = &uart3;
+-	};
+-
+ 	chosen {
+ 		stdout-path = &uart3;
+ 		bootargs = "console=ttyS0,115200";
+diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
+index 2f63052..75e50f0 100644
+--- a/arch/arm/boot/dts/bcm958300k.dts
++++ b/arch/arm/boot/dts/bcm958300k.dts
+@@ -38,10 +38,6 @@
+ 	model = "Cygnus SVK (BCM958300K)";
+ 	compatible = "brcm,bcm58300", "brcm,cygnus";
+ 
+-	aliases {
+-		serial0 = &uart3;
+-	};
+-
+ 	chosen {
+ 		stdout-path = &uart3;
+ 		bootargs = "console=ttyS0,115200";
+diff --git a/arch/arm/boot/dts/bcm958305k.dts b/arch/arm/boot/dts/bcm958305k.dts
+index 56b429a..bf62e1b 100644
+--- a/arch/arm/boot/dts/bcm958305k.dts
++++ b/arch/arm/boot/dts/bcm958305k.dts
+@@ -38,10 +38,6 @@
+ 	model = "Cygnus Wireless Audio (BCM958305K)";
+ 	compatible = "brcm,bcm58305", "brcm,cygnus";
+ 
+-	aliases {
+-		serial0 = &uart3;
+-	};
+-
+ 	chosen {
+ 		stdout-path = &uart3;
+ 		bootargs = "console=ttyS0,115200";
+-- 
+1.9.1
 
-Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
