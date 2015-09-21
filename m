@@ -1,55 +1,45 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2 5/6] arm64: dts: berlin4ct: add the pinctrl node
-Date: Mon, 21 Sep 2015 18:04:19 +0800
-Message-ID: <1442829860-4647-6-git-send-email-jszhang@marvell.com>
+Subject: [PATCH v2 3/6] arm64: berlin: add the pinctrl dependency for Marvell
+ Berlin SoCs
+Date: Mon, 21 Sep 2015 18:04:17 +0800
+Message-ID: <1442829860-4647-4-git-send-email-jszhang@marvell.com>
 References: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the avio, soc, sm pinctrl nodes for Marvell berlin4ct SoC.
+This is to add the pinctrl dependency for Marvell Berlin SoCs.
 
 Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-index a3b5f1d..c374f1d 100644
---- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-+++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-@@ -225,6 +225,16 @@
- 			};
- 		};
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index c6e2c75..3d17ee2 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -9,6 +9,7 @@ config ARCH_BERLIN
+ 	bool "Marvell Berlin SoC Family"
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select DW_APB_ICTL
++	select PINCTRL
+ 	help
+ 	  This enables support for Marvell Berlin SoC Family
  
-+		soc_pinctrl: pinctrl@ea8000 {
-+			compatible = "marvell,berlin4ct-soc-pinctrl";
-+			reg = <0xea8000 0x14>;
-+		};
-+
-+		avio_pinctrl: pinctrl@ea8400 {
-+			compatible = "marvell,berlin4ct-avio-pinctrl";
-+			reg = <0xea8400 0x8>;
-+		};
-+
- 		apb@fc0000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -280,5 +290,10 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		sm_pinctrl: pinctrl@fe2200 {
-+			compatible = "marvell,berlin4ct-sm-pinctrl";
-+			reg = <0xfe2200 0xc>;
-+		};
- 	};
- };
 -- 
 2.5.3
