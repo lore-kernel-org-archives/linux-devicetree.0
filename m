@@ -1,72 +1,58 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v4 0/3] Add DT support for netxbig LEDs
-Date: Mon, 21 Sep 2015 11:25:15 +0200
-Message-ID: <55FFCCFB.5030400@samsung.com>
-References: <1442505571-9744-1-git-send-email-simon.guinot@sequanux.org>
- <55FBD641.7030902@samsung.com> <20150918132356.GO7306@kw.sim.vm.gnt>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add hdmi-codec for external
+ HDMI-encoders
+Date: Mon, 21 Sep 2015 10:31:08 +0100
+Message-ID: <20150921093107.GF21098@n2100.arm.linux.org.uk>
+References: <cover.1442572860.git.jsarha@ti.com>
+ <6fe9ab5dff972e6f228259d6818f3f481a11577d.1442572860.git.jsarha@ti.com>
+ <20150919175450.GL30445@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150918132356.GO7306@kw.sim.vm.gnt>
-Sender: linux-leds-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@sculo.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150919175450.GL30445@sirena.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, Jyri Sarha <jsarha@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2015 03:23 PM, Simon Guinot wrote:
-> On Fri, Sep 18, 2015 at 11:15:45AM +0200, Jacek Anaszewski wrote:
->> Hi Simon,
->>
->> Thanks for the update.
->>
->> On 09/17/2015 05:59 PM, Simon Guinot wrote:
->>> Hello,
->>>
->>> This patch series adds DT support for the LEDs found on the Kirkwood-based
->>> LaCie boards 2Big and 5Big Network v2.
->>>
->>> Changes for v2:
->>> - Check timer mode value retrieved from DT.
->>> - In netxbig_leds_get_of_pdata, don't use unsigned long variables to get
->>>    timer delay values from DT with function of_property_read_u32_index.
->>>    Instead, use a temporary u32 variable. This allows to silence a static
->>>    checker warning.
->>> - Make timer property optional in the binding documentation. It is now
->>>    aligned with the driver code.
->>>
->>> Changes for v3:
->>> - Fix pointer usage with the temporary u32 variable while calling
->>>    of_property_read_u32_index.
->>>
->>> Changes for v4:
->>> - In DT binding document netxbig-gpio-ext.txt, detail byte order for
->>>    registers and latch mechanism for "enable-gpio".
->>> - In leds-netxbig.c, add some error messages.
->>> - In leds-netxbig.c, fix some "sizeof" style issues.
->>> - In leds-netxbig.c, in netxbig_leds_get_of_pdata(), move the
->>>    of_property_read_string() calls after the error-prone checks.
->>> - Add some Acked-by.
->>>
->>> Jacek,
->>>
->>> I did not convert the bright-max DT property into led-max-microamp.
->>> The reason is that I can't translate the bright-max values into
->>> microamperes.
->>
->> Doesn't specification of your device say what current value given
->> brightness level reflects?
->
-> I double-checked and I can confirm that I don't have the current values
-> for the LEDs. Although this feature is nice to have, it has not been
-> used by the LaCie stock firmware. LEDs are only enabled at their maximum
-> level. I believe it is the reason why it has not been specified...
-
-OK, so we have to use levels. Could you rename bright-max to
-max-brightness? We have already this in leds-pwm bindings and
-probably we should make it a common optional DT property for all LEDs.
-I'll add this to my TODO list.
-
--- 
-Best Regards,
-Jacek Anaszewski
+T24gU2F0LCBTZXAgMTksIDIwMTUgYXQgMTA6NTQ6NTFBTSAtMDcwMCwgTWFyayBCcm93biB3cm90
+ZToKPiBPbiBGcmksIFNlcCAxOCwgMjAxNSBhdCAwMjowNjo0MFBNICswMzAwLCBKeXJpIFNhcmhh
+IHdyb3RlOgo+ID4gKyNkZWZpbmUgU1BESUZfRk9STUFUUwkoU05EUlZfUENNX0ZNVEJJVF9TMTZf
+TEUgfCBTTkRSVl9QQ01fRk1UQklUX1MxNl9CRSB8XAo+ID4gKwkJCSBTTkRSVl9QQ01fRk1UQklU
+X1MyMF8zTEUgfCBTTkRSVl9QQ01fRk1UQklUX1MyMF8zQkUgfFwKPiA+ICsJCQkgU05EUlZfUENN
+X0ZNVEJJVF9TMjRfM0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjRfM0JFIHxcCj4gPiArCQkJIFNO
+RFJWX1BDTV9GTVRCSVRfUzI0X0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjRfQkUpCj4gPiArCj4g
+PiArI2RlZmluZSBJMlNfRk9STUFUUwkoU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUgfCBTTkRSVl9Q
+Q01fRk1UQklUX1MxNl9CRSB8XAo+ID4gKwkJCSBTTkRSVl9QQ01fRk1UQklUX1MxOF8zTEUgfCBT
+TkRSVl9QQ01fRk1UQklUX1MxOF8zQkUgfFwKPiA+ICsJCQkgU05EUlZfUENNX0ZNVEJJVF9TMjBf
+M0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjBfM0JFIHxcCj4gPiArCQkJIFNORFJWX1BDTV9GTVRC
+SVRfUzI0XzNMRSB8IFNORFJWX1BDTV9GTVRCSVRfUzI0XzNCRSB8XAo+ID4gKwkJCSBTTkRSVl9Q
+Q01fRk1UQklUX1MyNF9MRSB8IFNORFJWX1BDTV9GTVRCSVRfUzI0X0JFIHxcCj4gPiArCQkJIFNO
+RFJWX1BDTV9GTVRCSVRfUzMyX0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMzJfQkUpCj4gCj4gSSdt
+IG5vdCBzdXJlIGhvdyBhYnN0cmFjdGVkIHRoaXMgSTJTIGFuZCBTL1BESUYgREFJIGJ1c2luZXNz
+IGlzIC0gaXQKPiBkb2Vzbid0IGZlZWwgbGlrZSBzb21ldGhpbmcgdGhhdCdzIGdvaW5nIHRvIGJl
+IGEgcHJvcGVydHkgb2YgYWxsIEhETUkKPiBkZXZpY2VzLCBhbmQgdGhlIHNwZWNpZmljIHNldHMg
+b2YgZm9ybWF0cyBhYm92ZSBjYXVzZSBtZSB0byByYWlzZSBhIGJpdAo+IG9mIGFuIGV5ZWJyb3cu
+ICBTaG91bGQgdGhpcyBiZSBhbiBpbnRlcmZhY2Ugd2hlcmUgdGhlIEhETUkgY2hpcAo+IHJlZ2lz
+dGVycyBtdWx0aXBsZSBpbnRlcmZhY2VzIGlmIGl0IGhhcyB0aGVtIGluc3RlYWQgb2YgYXV0b21h
+dGljYWxseQo+IGdldHRpbmcgdGhpcyBzcGxpdCBhcyBpcz8KClRoZSBpbmNsdXNpb24gb2YgdGhl
+IDMyLWJpdCBmb3JtYXRzIGRvZXMgcmFpc2UgYW4gZXllYnJvdyBoZXJlIHRvby4KQXVkaW8gdHJh
+bnNtaXNzaW9uIGFjcm9zcyB0aGUgSERNSSBsaW5rIGlzIFMvUERJRiwgc3VwcG9ydGluZyB1cCB0
+bwoyNC1iaXQgdW5jb21wcmVzc2VkIGF1ZGlvIChha2EgTC1QQ00pLgoKVGhlIGRldmljZSBtYXkg
+YWNjZXB0IDMyIGJpdCBJMlMsIGJ1dCBpdCB3b3VsZCBoYXZlIHRvIGJlIHRydW5jYXRlZCB0bwoy
+NCBiaXQgYmVmb3JlIHRyYW5zbWl0dGluZyBpdCB0byB0aGUgc2luay4gIFRoaXMgc2hvdWxkIGJl
+IG1lbnRpb25lZApzb21ld2hlcmUuCgotLSAKRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGlu
+ZTogY3VycmVudGx5IGF0IDkuNk1icHMgZG93biA0MDBrYnBzIHVwCmFjY29yZGluZyB0byBzcGVl
+ZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
