@@ -1,114 +1,99 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 00/11] clocksource: sh_cmt: DT binding rework V2
-Date: Mon, 21 Sep 2015 09:25:43 -0500
-Message-ID: <56001367.5040403@kernel.org>
-References: <20150917095325.5369.73893.sendpatchset@little-apple>
+Subject: Re: [PATCH v2 01/11] phy: exynos-ufs: add UFS PHY driver for EXYNOS
+ SoC
+Date: Mon, 21 Sep 2015 09:33:28 -0500
+Message-ID: <56001538.5030706@kernel.org>
+References: <1442483137-32376-1-git-send-email-alim.akhtar@samsung.com>
+ <1442483137-32376-2-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150917095325.5369.73893.sendpatchset@little-apple>
+In-Reply-To: <1442483137-32376-2-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, linux-sh@vger.kernel.org, daniel.lezcano@linaro.org, horms+renesas@verge.net.au, tglx@linutronix.de
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2015 04:53 AM, Magnus Damm wrote:
-> clocksource: sh_cmt: DT binding rework V2
+On 09/17/2015 04:45 AM, Alim Akhtar wrote:
+> From: Seungwon Jeon <essuuj@gmail.com>
 > 
-> [PATCH v2 01/11] devicetree: bindings: Remove sh7372 CMT binding
-> [PATCH v2 02/11] clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT case
-> [PATCH v2 03/11] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-> [PATCH v2 04/11] clocksource: sh_cmt: Support separate R-Car Gen2 CMT0/1
-> [PATCH v2 05/11] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
-> [PATCH v2 06/11] ARM: shmobile: Update CMT compat string users in DTS
-> [PATCH v2 07/11] devicetree: bindings: Deprecate property, update example
-> [PATCH v2 08/11] ARM: shmobile: Remove CMT renesas,channels-mask from DTS
-> [PATCH v2 09/11] devicetree: bindings: Remove unused 32-bit CMT bindings
-> [PATCH v2 10/11] clocksource: sh_cmt: Remove unused 32-bit CMT bindings
-> [PATCH v2 11/11] devicetree: bindings: Remove deprecated properties
+> This patch introduces Exynos UFS PHY driver. This driver
+> supports to deal with phy calibration and power control
+> according to UFS host driver's behavior.
 > 
-> This series reworks the CMT DT bindings to try to deal with the following:
-> - R-Car Gen2 CMT0 and CMT1 hardware instances are not identical
-> - The property renesas,channels-mask is not enough to describe the difference
-> - DT should describe the hardware, not the software implementation
-> - Not all documented DT bindings are actually used
-> 
-> Without these patches the binding "renesas,cmt-48-gen2" is used for both
-> CMT0 and CMT1 on R-Car Gen2 SoCs. CMT0 and CMT1 are currently seen by the
-> Linux device driver as compatible hardware, and the device-specific property
-> "renesas,channels-mask" is used to point out some of the hardware configuration
-> differences. Since the driver is not feature complete only some differences are
-> described and when diving into the data sheet we can see that:
-> 
-> 1) CMT0 is not 48-bit at all, instead it only supports 32-bit counters.
-> 2) Some channels of CMT1 are 48-bit, some 32-bit.
-> 3) A couple of CMT1 channels have even more features.
-> 
-> It turns out that none of the above differences are described in our current
-> DT files. And since we use the same compat string for CMT0 and CMT1 the driver
-> itself cannot enable features specific only to CMT1 without first updating
-> the DTS. So this series is ground work for future feature patches.
-> 
-> It seems that we have two choices if we want to support CMT1 features:
-> A) Keep existing DT bindings, add more properties for CMT1
-> B) Rework the compatible strings and keep configuration in the driver
-> 
-> Judging by above it seems that DT update is inevitable. In my mind it is
-> rather painful to update the DT so I'd like to minimize the number of
-> updates and let the majority of the changes only happen in the driver.
-> And since we should really describe hardware in DT but driver features tend
-> to be implemented incrementally then B) seems like a good fit to me.
-
-Agreed.
-
-For 1, 3. 5, 7, 9, 11:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> I wouldn't mind going with A) but to be honest I must say that the existing
-> compat string "renesas,cmt-48-gen2" is just too confusing with "48"
-> (when CMT0 is 32bit-only) and also "gen2" (used without product line R-Car).
-> 
-> Because of that I've gone with B) and reworked the bindings to separate
-> CMT0 from CMT1 and keep channel configuration in the device driver.
-> 
-> While at it I've deprecated "renesas,channels-mask" and the old DT compat
-> strings. Per-SoC compat strings have also been reworked, but are not left
-> around documented as deprecated since they were never used by the driver.
-> 
-> Comments are very welcome! If all are in favor then it would be good to
-> merge patch 1-5 first and patch 6-8 later once 1-5 are in. Old DTBs are
-> left working but treated as low-feature CMT0. New DTBs including patch 6
-> will not work on old kernels.
-> 
-> V2 patch series fixes patch 1-2 and adds patches 9, 10, 11.
-> Patch 9 and 10 cleans up r8a7740 and sh73a0 bindings.
-> Patch 11 removes deprecated properties as proposed by Laurent.
-> 
-> Many thanks to Geert and Laurent for feedback!
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be> (For patch 1-8)
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be> (For patch 1-8)
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com> (For patch 1-7)
+> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
+>  .../devicetree/bindings/phy/samsung-phy.txt        |   22 ++
+
+It is preferred to put the binding in a separate patch.
+
+>  drivers/phy/Kconfig                                |    7 +
+>  drivers/phy/Makefile                               |    1 +
+>  drivers/phy/phy-exynos-ufs.c                       |  262 ++++++++++++++++++++
+>  drivers/phy/phy-exynos-ufs.h                       |   85 +++++++
+>  drivers/phy/phy-exynos7-ufs.h                      |   89 +++++++
+>  include/linux/phy/phy-exynos-ufs.h                 |  107 ++++++++
+>  7 files changed, 573 insertions(+)
+>  create mode 100644 drivers/phy/phy-exynos-ufs.c
+>  create mode 100644 drivers/phy/phy-exynos-ufs.h
+>  create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>  create mode 100644 include/linux/phy/phy-exynos-ufs.h
 > 
->  Written against renesas-drivers-2015-09-15-v4.3-rc1
-> 
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt |   85 ++++++---------
->  arch/arm/boot/dts/r8a73a4.dtsi                          |    5 
->  arch/arm/boot/dts/r8a7740.dtsi                          |    3 
->  arch/arm/boot/dts/r8a7790.dtsi                          |   10 -
->  arch/arm/boot/dts/r8a7791.dtsi                          |   10 -
->  arch/arm/boot/dts/r8a7793.dtsi                          |   10 -
->  arch/arm/boot/dts/r8a7794.dtsi                          |   10 -
->  arch/arm/boot/dts/sh73a0.dtsi                           |    3 
->  drivers/clocksource/sh_cmt.c                            |   54 ++++++---
->  9 files changed, 85 insertions(+), 105 deletions(-)
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index 60c6f2a..1abe2c4 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -174,3 +174,25 @@ Example:
+>  		usbdrdphy0 = &usb3_phy0;
+>  		usbdrdphy1 = &usb3_phy1;
+>  	};
+> +
+> +Samsung Exynos7 soc serise UFS PHY Controller
+
+s/serise/series/
+
+> +---------------------------------------------
+> +
+> +UFS PHY nodes are defined to describe on-chip UFS Physical layer controllers.
+> +Each UFS PHY controller should have its own node.
+> +
+> +Required properties:
+> +- compatible        : compatible list, contains "samsung,exynos7-ufs-phy"
+> +- reg : offset and length of the UFS PHY register set;
+> +- reg-names : reg name(s) must be 'phy-pma';
+> +- #phy-cells : must be zero
+> +- samsung,syscon-phandle : a phandle to the PMU system controller, no arguments
+
+How about samsung,pmu-syscon as syscon can mean a variety of things?
+
+> +
+> +Example:
+> +	ufs_phy: ufs-phy@0x15571800 {
+> +		compatible = "samsung,exynos7-ufs-phy";
+> +		reg = <0x15571800 0x240>;
+> +		reg-names = "phy-pma";
+> +		samsung,syscon-phandle = <&pmu_system_controller>;
+> +		#phy-cells = <0>;
+> +	};
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 6b8dd16..7449376 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -358,4 +358,11 @@ config PHY_BRCMSTB_SATA
+>  	  Enable this to support the SATA3 PHY on 28nm Broadcom STB SoCs.
+>  	  Likely useful only with CONFIG_SATA_BRCMSTB enabled.
+>  
+> +config PHY_EXYNOS_UFS
+> +	tristate "EXYNOS SoC series UFS PHY driver"
+> +	depends on OF && ARCH_EXYNOS
+
+|| COMPILE_TEST
+
+> +	select GENERIC_PHY
+> +	help
+> +	  Support for UFS PHY on Samsung EXYNOS chipsets.
+> +
+>  endmenu
