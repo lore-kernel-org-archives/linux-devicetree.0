@@ -1,30 +1,94 @@
 From: Eric Nelson <eric@nelint.com>
-Subject: [PATCH V2 0/2] rc: Add timeout support to gpio-ir-recv
-Date: Mon, 21 Sep 2015 12:08:05 -0700
-Message-ID: <1442862487-3643-1-git-send-email-eric@nelint.com>
+Subject: [PATCH V2 2/2] rc: gpio-ir-recv: add timeout on idle
+Date: Mon, 21 Sep 2015 12:08:44 -0700
+Message-ID: <1442862524-3694-3-git-send-email-eric@nelint.com>
 References: <1441980024-1944-1-git-send-email-eric@nelint.com>
+ <1442862524-3694-1-git-send-email-eric@nelint.com>
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1441980024-1944-1-git-send-email-eric@nelint.com>
+In-Reply-To: <1442862524-3694-1-git-send-email-eric@nelint.com>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br, Eric Nelson <eric@nelint.com>
 List-Id: devicetree@vger.kernel.org
 
-Add timeout support to the gpio-ir-recv driver as discussed
-in this original patch:
+Many decoders require a trailing space (period without IR illumination)
+to be delivered before completing a decode.
 
-	https://patchwork.ozlabs.org/patch/516827/
+Since the gpio-ir-recv driver only delivers events on gpio transitions,
+a single IR symbol (caused by a quick touch on an IR remote) will not
+be properly decoded without the use of a timer to flush the tail end
+state of the IR receiver.
 
-V2 uses the timeout field of the rcdev instead of a device tree 
-field to set the timeout value as suggested by Sean Young.
+This patch initializes and uses a timer and the timeout field of rcdev
+to complete the stream and allow decode.
 
-Eric Nelson (2):
-  rc-core: define a default timeout for drivers
-  rc: gpio-ir-recv: add timeout on idle
+The timeout can be overridden through the use of the LIRC_SET_REC_TIMEOUT
+ioctl.
 
+Signed-off-by: Eric Nelson <eric@nelint.com>
+---
  drivers/media/rc/gpio-ir-recv.c | 22 ++++++++++++++++++++++
- include/media/rc-core.h         |  1 +
- 2 files changed, 23 insertions(+)
+ 1 file changed, 22 insertions(+)
 
+diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
+index 7dbc9ca..d3b216a 100644
+--- a/drivers/media/rc/gpio-ir-recv.c
++++ b/drivers/media/rc/gpio-ir-recv.c
+@@ -30,6 +30,7 @@ struct gpio_rc_dev {
+ 	struct rc_dev *rcdev;
+ 	int gpio_nr;
+ 	bool active_low;
++	struct timer_list flush_timer;
+ };
+ 
+ #ifdef CONFIG_OF
+@@ -93,12 +94,26 @@ static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
+ 	if (rc < 0)
+ 		goto err_get_value;
+ 
++	mod_timer(&gpio_dev->flush_timer,
++		  jiffies + nsecs_to_jiffies(gpio_dev->rcdev->timeout));
++
+ 	ir_raw_event_handle(gpio_dev->rcdev);
+ 
+ err_get_value:
+ 	return IRQ_HANDLED;
+ }
+ 
++static void flush_timer(unsigned long arg)
++{
++	struct gpio_rc_dev *gpio_dev = (struct gpio_rc_dev *)arg;
++	DEFINE_IR_RAW_EVENT(ev);
++
++	ev.timeout = true;
++	ev.duration =  gpio_dev->rcdev->timeout;
++	ir_raw_event_store(gpio_dev->rcdev, &ev);
++	ir_raw_event_handle(gpio_dev->rcdev);
++}
++
+ static int gpio_ir_recv_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_rc_dev *gpio_dev;
+@@ -144,6 +159,9 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
+ 	rcdev->input_id.version = 0x0100;
+ 	rcdev->dev.parent = &pdev->dev;
+ 	rcdev->driver_name = GPIO_IR_DRIVER_NAME;
++	rcdev->min_timeout = 1;
++	rcdev->timeout = IR_DEFAULT_TIMEOUT;
++	rcdev->max_timeout = 10 * IR_DEFAULT_TIMEOUT;
+ 	if (pdata->allowed_protos)
+ 		rcdev->allowed_protocols = pdata->allowed_protos;
+ 	else
+@@ -154,6 +172,10 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
+ 	gpio_dev->gpio_nr = pdata->gpio_nr;
+ 	gpio_dev->active_low = pdata->active_low;
+ 
++	init_timer(&gpio_dev->flush_timer);
++	gpio_dev->flush_timer.function = flush_timer;
++	gpio_dev->flush_timer.data = (unsigned long)gpio_dev;
++
+ 	rc = gpio_request(pdata->gpio_nr, "gpio-ir-recv");
+ 	if (rc < 0)
+ 		goto err_gpio_request;
 -- 
 2.5.2
