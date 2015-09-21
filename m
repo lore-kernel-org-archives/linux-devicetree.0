@@ -1,329 +1,521 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] ARM: dts: rockchip: add core rk3036 dts
-Date: Thu, 24 Sep 2015 10:18:40 +0800
-Message-ID: <56035D80.9080308@rock-chips.com>
-References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com>
- <1442478540-15068-2-git-send-email-zhengxing@rock-chips.com>
- <3497055.MjziMiDfL7@diego>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v4 0/16] Add Analogix Core Display Port Driver
+Date: Mon, 21 Sep 2015 19:43:05 +0800
+Message-ID: <55FFED49.8030604@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <3233920.KG0buE86B2@phil> <55E65BCD.7090804@rock-chips.com>
+ <55FFC3B8.9030108@rock-chips.com> <20150921091537.GA20992@ulmo.nvidia.com>
+ <55FFDB9C.1030901@rock-chips.com> <20150921112246.GD20992@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <3497055.MjziMiDfL7@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1133958622=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150921112246.GD20992@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <treding@nvidia.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, s.infradead.org@NULL.NULL, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, seanpaul@chromium.com, djkurtz@chromium.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, Russell King <rmk+kernel@arm.linux.org.uk>, linux-arm-kernel@list.NULL.NULL, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, ajaynumb@gmail.com, Rob Herring <robh+dt@kernel.org>, dianders@chromium.com, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, joe@perches.com, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNeW5tDA55pyIMTfml6UgMTc6MTgsIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+IEFtIERv
-bm5lcnN0YWcsIDE3LiBTZXB0ZW1iZXIgMjAxNSwgMTY6Mjg6NTIgc2NocmllYiBYaW5nIFpoZW5n
-Ogo+PiBJbml0aWFsIHJlbGVhc2UgZm9yIHJrMzAzNiwgbm9kZSBkZWZpbml0aW9ucyByazMwMzYg
-c2RrIGJvYXJkLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBYaW5nIFpoZW5nPHpoZW5neGluZ0Byb2Nr
-LWNoaXBzLmNvbT4KPj4gLS0tCj4+Cj4+IENoYW5nZXMgaW4gdjI6IE5vbmUKPj4KPj4gICBhcmNo
-L2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICB8ICAgIDEgKwo+PiAgIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3JrMzAzNi1zZGsuZHRzIHwgICA2MiArKysrKysrCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMv
-cmszMDM2LmR0c2kgICAgfCAgMzgxCj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrIDMgZmlsZXMgY2hhbmdlZCwgNDQ0IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcmszMDM2LXNkay5kdHMKPj4gICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcmszMDM2LmR0c2kKPj4KPj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUK
-Pj4gaW5kZXggZDM5Y2U0Yi4uNDgyNjBjNCAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvTWFrZWZpbGUKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKPj4gQEAgLTUw
-Miw2ICs1MDIsNyBAQCBkdGItJChDT05GSUdfQVJDSF9ST0NLQ0hJUCkgKz0gXAo+PiAgIAlyazMw
-NjZhLWJxY3VyaWUyLmR0YiBcCj4+ICAgCXJrMzA2NmEtbWFyc2JvYXJkLmR0YiBcCj4+ICAgCXJr
-MzA2NmEtcmF5ZWFnZXIuZHRiIFwKPj4gKwlyazMwMzYtc2RrLmR0YiBcCj4gb3JkZXJpbmcgLi4u
-IHBsZWFzZSBwdXQgdGhlIHJrMzAzNiBhYm92ZSByazMwNjYgYm9hcmRzCkRvbmUuCj4KPj4gICAJ
-cmszMTg4LXJhZHhhcm9jay5kdGIgXAo+PiAgIAlyazMyODgtZXZiLWFjdDg4NDYuZHRiIFwKPj4g
-ICAJcmszMjg4LWV2Yi1yazgwOC5kdGIgXAo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
-dHMvcmszMDM2LXNkay5kdHMKPj4gYi9hcmNoL2FybS9ib290L2R0cy9yazMwMzYtc2RrLmR0cyBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi45MTg3ZjkzCj4+IC0tLSAvZGV2
-L251bGwKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMDM2LXNkay5kdHMKPiBvciAicmsz
-MDM2LWV2Yi5kdHMiPyBXaGF0IGlzIHRoZSBhY3R1YWwgYm9hcmQgbmFtZWQ/CkRvbmUsIHVzZSBy
-azMwMzYtZXZiLmR0cwo+PiBAQCAtMCwwICsxLDYyIEBACj4+ICsvKgo+PiArICogQ29weXJpZ2h0
-IChjKSAgMjAxNSBYaW5nIFpoZW5nPHpoZW5neGluZ0Byb2NrLWNoaXBzLmNvbT4KPiB0aGlzIHBy
-b2JhYmx5IHdhbnRzIGEgUm9ja2NoaXAgY29weXJpZ2h0IG5vdGljZT8KWWVzLCByZW1vdmUgdGhp
-cyBub3RpY2UuCj4+ICsgKgo+PiArICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBj
-YW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKPj4gKyAqIG9mIHRoZSBHUEwgb3IgdGhl
-IFgxMSBsaWNlbnNlLCBhdCB5b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAo+PiArICog
-bGljZW5zaW5nIG9ubHkgYXBwbGllcyB0byB0aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0
-IGFzIGEKPj4gKyAqIHdob2xlLgo+PiArICoKPj4gKyAqICBhKSBUaGlzIGZpbGUgaXMgZnJlZSBz
-b2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yCj4+ICsgKiAgICAgbW9kaWZ5
-IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMK
-Pj4gKyAqICAgICBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0
-aGVyIHZlcnNpb24gMiBvZiB0aGUKPj4gKyAqICAgICBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRp
-b24pIGFueSBsYXRlciB2ZXJzaW9uLgo+PiArICoKPj4gKyAqICAgICBUaGlzIGZpbGUgaXMgZGlz
-dHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPj4gKyAqICAgICBi
-dXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50
-eSBvZgo+PiArICogICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VM
-QVIgUFVSUE9TRS4gIFNlZSB0aGUKPj4gKyAqICAgICBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5z
-ZSBmb3IgbW9yZSBkZXRhaWxzLgo+PiArICoKPj4gKyAqICBPciwgYWx0ZXJuYXRpdmVseSwKPj4g
-KyAqCj4+ICsgKiAgYikgUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBjaGFy
-Z2UsIHRvIGFueSBwZXJzb24KPj4gKyAqICAgICBvYnRhaW5pbmcgYSBjb3B5IG9mIHRoaXMgc29m
-dHdhcmUgYW5kIGFzc29jaWF0ZWQgZG9jdW1lbnRhdGlvbgo+PiArICogICAgIGZpbGVzICh0aGUg
-IlNvZnR3YXJlIiksIHRvIGRlYWwgaW4gdGhlIFNvZnR3YXJlIHdpdGhvdXQKPj4gKyAqICAgICBy
-ZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzIHRvIHVz
-ZSwKPj4gKyAqICAgICBjb3B5LCBtb2RpZnksIG1lcmdlLCBwdWJsaXNoLCBkaXN0cmlidXRlLCBz
-dWJsaWNlbnNlLCBhbmQvb3IKPj4gKyAqICAgICBzZWxsIGNvcGllcyBvZiB0aGUgU29mdHdhcmUs
-IGFuZCB0byBwZXJtaXQgcGVyc29ucyB0byB3aG9tIHRoZQo+PiArICogICAgIFNvZnR3YXJlIGlz
-IGZ1cm5pc2hlZCB0byBkbyBzbywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nCj4+ICsgKiAgICAg
-Y29uZGl0aW9uczoKPj4gKyAqCj4+ICsgKiAgICAgVGhlIGFib3ZlIGNvcHlyaWdodCBub3RpY2Ug
-YW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUKPj4gKyAqICAgICBpbmNsdWRlZCBp
-biBhbGwgY29waWVzIG9yIHN1YnN0YW50aWFsIHBvcnRpb25zIG9mIHRoZSBTb2Z0d2FyZS4KPj4g
-KyAqCj4+ICsgKiAgICAgVEhFIFNPRlRXQVJFIElTIFBST1ZJREVEICJBUyBJUyIsIFdJVEhPVVQg
-V0FSUkFOVFkgT0YgQU5ZIEtJTkQsCj4+ICsgKiAgICAgRVhQUkVTUyBPUiBJTVBMSUVELCBJTkNM
-VURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5USUVTCj4+ICsgKiAgICAgT0YgTUVS
-Q0hBTlRBQklMSVRZLCBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRSBBTkQKPj4gKyAq
-ICAgICBOT05JTkZSSU5HRU1FTlQuIElOIE5PIEVWRU5UIFNIQUxMIFRIRSBBVVRIT1JTIE9SIENP
-UFlSSUdIVAo+PiArICogICAgIEhPTERFUlMgQkUgTElBQkxFIEZPUiBBTlkgQ0xBSU0sIERBTUFH
-RVMgT1IgT1RIRVIgTElBQklMSVRZLAo+PiArICogICAgIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9G
-IENPTlRSQUNULCBUT1JUIE9SIE9USEVSV0lTRSwgQVJJU0lORwo+PiArICogICAgIEZST00sIE9V
-VCBPRiBPUiBJTiBDT05ORUNUSU9OIFdJVEggVEhFIFNPRlRXQVJFIE9SIFRIRSBVU0UgT1IKPj4g
-KyAqICAgICBPVEhFUiBERUFMSU5HUyBJTiBUSEUgU09GVFdBUkUuCj4+ICsgKi8KPj4gKwo+PiAr
-L2R0cy12MS87Cj4+ICsKPj4gKyNpbmNsdWRlICJyazMwMzYuZHRzaSIKPj4gKwo+PiArLyB7Cj4+
-ICsJbW9kZWwgPSAiU0RLLVJLMzAzNiI7Cj4+ICsJY29tcGF0aWJsZSA9ICJzZGssc2RrLXJrMzAz
-NiIsICJyb2NrY2hpcCxyazMwMzYiOwo+IAltb2RlbCA9ICJSb2NrY2hpcCBSSzMwMzYtU0RLIjsK
-PiAJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMwMzYtc2RrIiwgInJvY2tjaGlwLHJrMzAzNiI7
-Cj4KPiBvcgo+Cj4gCW1vZGVsID0gIlJvY2tjaGlwIFJLMzAzNiBFdmFsdWF0aW9uIGJvYXJkIjsK
-PiAJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMwMzYtZXZiIiwgInJvY2tjaGlwLHJrMzAzNiI7
-Cj4KPiBkZXBlbmRpbmcgb24gd2hhdCB0aGUgcmVhbCBib2FyZCBpcyBsYWJlbGVkCkRvbmUuCj4+
-ICt9Owo+PiArCj4+ICsmaTJjMSB7Cj4+ICsJc3RhdHVzID0gIm9rYXkiOwo+PiArCj4+ICsgICAg
-ICAgIGh5bTg1NjM6IGh5bTg1NjNANTEgewo+PiArCQljb21wYXRpYmxlID0gImhhb3l1LGh5bTg1
-NjMiOwo+PiArCQlyZWcgPTwweDUxPjsKPj4gKwkJI2Nsb2NrLWNlbGxzID08MD47Cj4+ICsJCWNs
-b2NrLWZyZXF1ZW5jeSA9PDMyNzY4PjsKPj4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInhpbjMy
-ayI7Cj4+ICsJfTsKPj4gK307Cj4+IFwgTm8gbmV3bGluZSBhdCBlbmQgb2YgZmlsZQo+IG1pc3Np
-bmcgbmV3bGluZSBhcyBzdGF0ZWQgYWJvdmUKRG9uZS4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3JrMzAzNi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMDM2LmR0c2kKPj4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uYjc0NTljMAo+PiAtLS0gL2Rl
-di9udWxsCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzAzNi5kdHNpCj4+IEBAIC0wLDAg
-KzEsMzgxIEBACj4+ICsvKgo+PiArICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBj
-YW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKPj4gKyAqIG9mIHRoZSBHUEwgb3IgdGhl
-IFgxMSBsaWNlbnNlLCBhdCB5b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAo+PiArICog
-bGljZW5zaW5nIG9ubHkgYXBwbGllcyB0byB0aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0
-IGFzIGEKPj4gKyAqIHdob2xlLgo+PiArICoKPj4gKyAqICBhKSBUaGlzIGZpbGUgaXMgZnJlZSBz
-b2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yCj4+ICsgKiAgICAgbW9kaWZ5
-IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMK
-Pj4gKyAqICAgICBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0
-aGVyIHZlcnNpb24gMiBvZiB0aGUKPj4gKyAqICAgICBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRp
-b24pIGFueSBsYXRlciB2ZXJzaW9uLgo+PiArICoKPj4gKyAqICAgICBUaGlzIGZpbGUgaXMgZGlz
-dHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPj4gKyAqICAgICBi
-dXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50
-eSBvZgo+PiArICogICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VM
-QVIgUFVSUE9TRS4gIFNlZSB0aGUKPj4gKyAqICAgICBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5z
-ZSBmb3IgbW9yZSBkZXRhaWxzLgo+PiArICoKPj4gKyAqIE9yLCBhbHRlcm5hdGl2ZWx5LAo+PiAr
-ICoKPj4gKyAqICBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNoYXJn
-ZSwgdG8gYW55IHBlcnNvbgo+PiArICogICAgIG9idGFpbmluZyBhIGNvcHkgb2YgdGhpcyBzb2Z0
-d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uCj4+ICsgKiAgICAgZmlsZXMgKHRoZSAi
-U29mdHdhcmUiKSwgdG8gZGVhbCBpbiB0aGUgU29mdHdhcmUgd2l0aG91dAo+PiArICogICAgIHJl
-c3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8gdXNl
-LAo+PiArICogICAgIGNvcHksIG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1
-YmxpY2Vuc2UsIGFuZC9vcgo+PiArICogICAgIHNlbGwgY29waWVzIG9mIHRoZSBTb2Z0d2FyZSwg
-YW5kIHRvIHBlcm1pdCBwZXJzb25zIHRvIHdob20gdGhlCj4+ICsgKiAgICAgU29mdHdhcmUgaXMg
-ZnVybmlzaGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcKPj4gKyAqICAgICBj
-b25kaXRpb25zOgo+PiArICoKPj4gKyAqICAgICBUaGUgYWJvdmUgY29weXJpZ2h0IG5vdGljZSBh
-bmQgdGhpcyBwZXJtaXNzaW9uIG5vdGljZSBzaGFsbCBiZQo+PiArICogICAgIGluY2x1ZGVkIGlu
-IGFsbCBjb3BpZXMgb3Igc3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgo+PiAr
-ICoKPj4gKyAqICAgICBUSEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFTIElTIiwgV0lUSE9VVCBX
-QVJSQU5UWSBPRiBBTlkgS0lORCwKPj4gKyAqICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xV
-RElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMKPj4gKyAqICAgICBPRiBNRVJD
-SEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFORAo+PiArICog
-ICAgIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFIEFVVEhPUlMgT1IgQ09Q
-WVJJR0hUCj4+ICsgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFNQUdF
-UyBPUiBPVEhFUiBMSUFCSUxJVFksCj4+ICsgKiAgICAgV0hFVEhFUiBJTiBBTiBBQ1RJT04gT0Yg
-Q09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HCj4+ICsgKiAgICAgRlJPTSwgT1VU
-IE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1IgVEhFIFVTRSBPUgo+PiAr
-ICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KPj4gKyAqLwo+PiArCj4+ICsj
-aW5jbHVkZTxkdC1iaW5kaW5ncy9ncGlvL2dwaW8uaD4KPj4gKyNpbmNsdWRlPGR0LWJpbmRpbmdz
-L2ludGVycnVwdC1jb250cm9sbGVyL2lycS5oPgo+PiArI2luY2x1ZGU8ZHQtYmluZGluZ3MvaW50
-ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgo+PiArI2luY2x1ZGU8ZHQtYmluZGluZ3MvcGlu
-Y3RybC9yb2NrY2hpcC5oPgo+PiArI2luY2x1ZGU8ZHQtYmluZGluZ3MvY2xvY2svcmszMDM2LWNy
-dS5oPgo+PiArI2luY2x1ZGUgInNrZWxldG9uLmR0c2kiCj4gaW4gZ2VuZXJhbCwgcGxlYXNlIHNv
-cnQgbm9kZXMgYnkgcmVnaXN0ZXIgYWRkcmVzcywgc28gZm9yIGV4YW1wbGUKPgo+IAlpbnRlcnJ1
-cHQtY29udHJvbGxlckAxMDEzOTAwMAo+IHNob3VsZCBiZSBiZWZvcmUKPiAJY2xvY2stY29udHJv
-bGxlckAyMDAwMDAwMAo+Cj4gc2FtZSBmb3IgYWxsIG90aGVyIG5vZGVzCkRvbmUuCj4+ICsKPj4g
-Ky8gewo+PiArCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMDM2IjsKPj4gKwo+PiArCWludGVy
-cnVwdC1wYXJlbnQgPTwmZ2ljPjsKPj4gKwo+PiArCWFsaWFzZXMgewo+PiArCQlpMmMxID0maTJj
-MTsKPj4gKwkJc2VyaWFsMCA9JnVhcnQwOwo+PiArCQlzZXJpYWwxID0mdWFydDE7Cj4+ICsJCXNl
-cmlhbDIgPSZ1YXJ0MjsKPj4gKwl9Owo+PiArCj4+ICsJbWVtb3J5IHsKPj4gKwkJZGV2aWNlX3R5
-cGUgPSAibWVtb3J5IjsKPj4gKwkJcmVnID08MHg2MDAwMDAwMCAweDQwMDAwMDAwPjsKPiBvcmRl
-cmluZyBpcyBwb3NzaWJsZSAuLi4gdG8gZWFzZSByZWFkYWJpbGl0eSBJIHRyeSB0byBrZWVwIHRo
-aXMgYXMKPgo+IGNvbXBhdGlibGUgPSAuLi4KPiByZWcgPSAuLi4KPiBbb3RoZXIgcHJvcGVydGll
-cyBzb3J0ZWQgYWxwaGFiZXRpY2FsbHldCj4gc3RhdHVzID0gLi4uCkRvbmUuCj4+ICsJfTsKPj4g
-Kwo+PiArICAgICAgICBhcm0tcG11IHsKPj4gKyAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
-ImFybSxjb3J0ZXgtYTctcG11IjsKPj4gKyAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID08R0lD
-X1NQSSA3NiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKPj4gKzxHSUNfU1BJIDc3IElSUV9UWVBFX0xF
-VkVMX0hJR0g+Owo+PiArICAgICAgICAgICAgICAgIGludGVycnVwdC1hZmZpbml0eSA9PCZjcHUw
-Piw8JmNwdTE+Owo+PiArICAgICAgICB9Owo+IHRhYnMsIG5vdCBzcGFjZXMgcGxlYXNlCkRvbmUu
-Cj4+ICsKPj4gKwljcHVzIHsKPj4gKwkJI2FkZHJlc3MtY2VsbHMgPTwxPjsKPj4gKwkJI3NpemUt
-Y2VsbHMgPTwwPjsKPj4gKwkJZW5hYmxlLW1ldGhvZCA9ICJyb2NrY2hpcCxyazMwMzYtc21wIjsK
-PiB0aGlzIGVuYWJsZSBtZXRob2QgaXMgbm90IHlldCBkZWZpbmVkLCBwbGVhc2UgZG9uJ3QgYWRk
-IGl0IHVudGlsIGFjdHVhbCBzbXAgaXMKPiBhY2NlcHRlZApEb25lLCByZW1vdmVkIGl0IG9uIHRo
-aXMgcGF0Y2guCj4+ICsKPj4gKwkJY3B1MDogY3B1QGYwMCB7Cj4+ICsJCQlkZXZpY2VfdHlwZSA9
-ICJjcHUiOwo+PiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3IjsKPj4gKwkJCXJlZyA9
-PDB4ZjAwPjsKPj4gKwkJCW9wZXJhdGluZy1wb2ludHMgPTwKPj4gKwkJCQkvKiBLSHogICAgdVYg
-Ki8KPj4gKwkJCQkgODE2MDAwIDEwMDAwMDAKPj4gKwkJCT47Cj4+ICsJCQkjY29vbGluZy1jZWxs
-cyA9PDI+OyAvKiBtaW4gZm9sbG93ZWQgYnkgbWF4ICovCj4gYWdhaW4sIG5vdCB5ZXQgZGVmaW5l
-ZCB0aGVybWFsIGhhbmRsaW5nLCBzbyB0aGUgI2Nvb2xpbmctY2VsbHMgc2hvdWxkIHN0YXkgb3V0
-Cj4gZm9yIG5vdwpEb25lLCByZW1vdmVkIGl0Lgo+PiArCQkJY2xvY2stbGF0ZW5jeSA9PDQwMDAw
-PjsKPj4gKwkJCWNsb2NrcyA9PCZjcnUgQVJNQ0xLPjsKPj4gKwkJCXJlc2V0cyA9PCZjcnUgU1JT
-VF9DT1JFMD47Cj4+ICsJCX07Cj4+ICsJCWNwdTE6IGNwdUBmMDEgewo+PiArCQkJZGV2aWNlX3R5
-cGUgPSAiY3B1IjsKPj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNyI7Cj4+ICsJCQly
-ZWcgPTwweGYwMT47Cj4+ICsJCQlyZXNldHMgPTwmY3J1IFNSU1RfQ09SRTE+Owo+PiArCQl9Owo+
-PiArCX07Cj4+ICsKPj4gKwlhbWJhIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJhcm0sYW1iYS1idXMi
-Owo+PiArCQkjYWRkcmVzcy1jZWxscyA9PDE+Owo+PiArCQkjc2l6ZS1jZWxscyA9PDE+Owo+PiAr
-CQlyYW5nZXM7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICBwZG1hOiBwZG1hQDIwMDc4MDAwIHsK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHBsMzMwIiwgImFy
-bSxwcmltZWNlbGwiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgcmVnID08MHgyMDA3ODAw
-MCAweDQwMDA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9PEdJQ19T
-UEkgMCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKPj4gKzxHSUNfU1BJIDEgSVJRX1RZUEVfTEVWRUxf
-SElHSD47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAjZG1hLWNlbGxzID08MT47Cj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPTwmY3J1IEFDTEtfRE1BQzI+Owo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOwo+PiArICAgICAg
-ICAgICAgICAgIH07Cj4gYWdhaW4gdGFicyBwbGVhc2UKRG9uZS4KPj4gKwl9Owo+PiArCj4+ICsJ
-eGluMjRtOiBvc2NpbGxhdG9yIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4+
-ICsJCWNsb2NrLWZyZXF1ZW5jeSA9PDI0MDAwMDAwPjsKPj4gKwkJY2xvY2stb3V0cHV0LW5hbWVz
-ID0gInhpbjI0bSI7Cj4+ICsJCSNjbG9jay1jZWxscyA9PDA+Owo+PiArCX07Cj4+ICsKPj4gKwl0
-aW1lciB7Cj4+ICsJCWNvbXBhdGlibGUgPSAiYXJtLGFybXY3LXRpbWVyIjsKPj4gKwkJYXJtLGNw
-dS1yZWdpc3RlcnMtbm90LWZ3LWNvbmZpZ3VyZWQ7Cj4+ICsJCWludGVycnVwdHMgPTxHSUNfUFBJ
-IDEzIChHSUNfQ1BVX01BU0tfU0lNUExFKDQpIHwKPiBJUlFfVFlQRV9MRVZFTF9ISUdIKT4sCj4+
-ICsJCQk8R0lDX1BQSSAxNCAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IElSUV9UWVBFX0xFVkVM
-X0hJR0gpPiwgKwkKPiAJCQo+PiAgICAgPEdJQ19QUEkgMTEgKEdJQ19DUFVfTUFTS19TSU1QTEUo
-NCkgfCBJUlFfVFlQRV9MRVZFTF9ISUdIKT4sICsJCQkKPj4gPEdJQ19QUEkgMTAgKEdJQ19DUFVf
-TUFTS19TSU1QTEUoNCkgfCBJUlFfVFlQRV9MRVZFTF9ISUdIKT47Cj4+ICsJCWNsb2NrLWZyZXF1
-ZW5jeSA9PDI0MDAwMDAwPjsKPj4gKwl9Owo+PiArCj4+ICsJY3J1OiBjbG9jay1jb250cm9sbGVy
-QDIwMDAwMDAwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMwMzYtY3J1IjsKPj4g
-KwkJcmVnID08MHgyMDAwMDAwMCAweDEwMDA+Owo+PiArCQlyb2NrY2hpcCxncmYgPTwmZ3JmPjsK
-Pj4gKwkJI2Nsb2NrLWNlbGxzID08MT47Cj4+ICsJCSNyZXNldC1jZWxscyA9PDE+Owo+PiArCQlh
-c3NpZ25lZC1jbG9ja3MgPTwmY3J1IFBMTF9HUExMPjsKPj4gKwkJYXNzaWduZWQtY2xvY2stcmF0
-ZXMgPTw1OTQwMDAwMDA+Owo+PiArCX07Cj4+ICsKPj4gKwl1YXJ0MDogc2VyaWFsQDIwMDYwMDAw
-IHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMwMzYtdWFydCIsICJzbnBzLGR3LWFw
-Yi11YXJ0IjsKPj4gKwkJcmVnID08MHgyMDA2MDAwMCAweDEwMD47Cj4+ICsJCWludGVycnVwdHMg
-PTxHSUNfU1BJIDIwIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+PiArCQlyZWctc2hpZnQgPTwyPjsK
-Pj4gKwkJcmVnLWlvLXdpZHRoID08ND47Cj4+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9PDI0MDAwMDAw
-PjsKPj4gKwkJY2xvY2tzID08JmNydSBTQ0xLX1VBUlQwPiw8JmNydSBQQ0xLX1VBUlQwPjsKPj4g
-KwkJY2xvY2stbmFtZXMgPSAiYmF1ZGNsayIsICJhcGJfcGNsayI7Cj4+ICsJCXBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7Cj4+ICsJCXBpbmN0cmwtMCA9PCZ1YXJ0MF94ZmVyJnVhcnQwX2N0cyZ1
-YXJ0MF9ydHM+Owo+IHN0YXR1cyA9ICJkaXNhYmxlZCIgYW5kIHRoZW4gaW4gdGhlIGJvYXJkLmR0
-cyBhCj4KPiAmdWFydDAgewo+IAlzdGF0dXMgPSAib2theSI7Cj4gfTsKPgo+IG5vdCBldmVyeWJv
-ZHkgd2lsbCB3YW50IHRvIHVzZSB1YXJ0MCAuLi4gc2FtZSBpcyB0cnVlIGZvciB0aGUgb3RoZXIg
-dHdvIHVhcnRzLgpEb25lLgo+PiArCX07Cj4+ICsKPj4gKwl1YXJ0MTogc2VyaWFsQDIwMDY0MDAw
-IHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMwMzYtdWFydCIsICJzbnBzLGR3LWFw
-Yi11YXJ0IjsKPj4gKwkJcmVnID08MHgyMDA2NDAwMCAweDEwMD47Cj4+ICsJCWludGVycnVwdHMg
-PTxHSUNfU1BJIDIxIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+PiArCQlyZWctc2hpZnQgPTwyPjsK
-Pj4gKwkJcmVnLWlvLXdpZHRoID08ND47Cj4+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9PDI0MDAwMDAw
-PjsKPj4gKwkJY2xvY2tzID08JmNydSBTQ0xLX1VBUlQxPiw8JmNydSBQQ0xLX1VBUlQxPjsKPj4g
-KwkJY2xvY2stbmFtZXMgPSAiYmF1ZGNsayIsICJhcGJfcGNsayI7Cj4+ICsJCXBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7Cj4+ICsJCXBpbmN0cmwtMCA9PCZ1YXJ0MV94ZmVyPjsKPj4gKwl9Owo+
-PiArCj4+ICsJdWFydDI6IHNlcmlhbEAyMDA2ODAwMCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAicm9j
-a2NoaXAscmszMDM2LXVhcnQiLCAic25wcyxkdy1hcGItdWFydCI7Cj4+ICsJCXJlZyA9PDB4MjAw
-NjgwMDAgMHgxMDA+Owo+PiArCQlpbnRlcnJ1cHRzID08R0lDX1NQSSAyMiBJUlFfVFlQRV9MRVZF
-TF9ISUdIPjsKPj4gKwkJcmVnLXNoaWZ0ID08Mj47Cj4+ICsJCXJlZy1pby13aWR0aCA9PDQ+Owo+
-PiArCQljbG9jay1mcmVxdWVuY3kgPTwyNDAwMDAwMD47Cj4+ICsJCWNsb2NrcyA9PCZjcnUgU0NM
-S19VQVJUMj4sPCZjcnUgUENMS19VQVJUMj47Cj4+ICsJCWNsb2NrLW5hbWVzID0gImJhdWRjbGsi
-LCAiYXBiX3BjbGsiOwo+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCQlwaW5j
-dHJsLTAgPTwmdWFydDJfeGZlcj47Cj4+ICsJfTsKPj4gKwo+PiArCXB3bTA6IHB3bUAyMDA1MDAw
-MCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmsyOTI4LXB3bSI7Cj4gCQljb21wYXRp
-YmxlID0gInJvY2tjaGlwLHJrMzAzNi1wd20iLCAicm9ja2NoaXAscmsyOTI4LXB3bSI7Cj4KPiBy
-azI5MjgtcHdtIG1hdGNoZXMgbm93LCBidXQgaWYgd2UgZmluZCBpc3N1ZXMgd2UgY2FuIHNpbXBs
-eSBjcmVhdGUgdGhlIHJrMzAzNi0KPiBwd20gaW4gdGhlIGRyaXZlciB3aXRob3V0IG5lZWRpbmcg
-dG8gY2hhbmdlIHRoZSBkdHMKRG9uZS4KPj4gKwkJcmVnID08MHgyMDA1MDAwMCAweDEwPjsKPj4g
-KwkJI3B3bS1jZWxscyA9PDM+Owo+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiAr
-CQlwaW5jdHJsLTAgPTwmcHdtMF9waW4+Owo+PiArCQljbG9ja3MgPTwmY3J1IFBDTEtfUFdNPjsK
-Pj4gKwkJY2xvY2stbmFtZXMgPSAicHdtIjsKPj4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsKPj4g
-Kwl9Owo+PiArCj4+ICsJcHdtMTogcHdtQDIwMDUwMDEwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJy
-b2NrY2hpcCxyazI5MjgtcHdtIjsKPj4gKwkJcmVnID08MHgyMDA1MDAxMCAweDEwPjsKPj4gKwkJ
-I3B3bS1jZWxscyA9PDM+Owo+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCQlw
-aW5jdHJsLTAgPTwmcHdtMV9waW4+Owo+PiArCQljbG9ja3MgPTwmY3J1IFBDTEtfUFdNPjsKPj4g
-KwkJY2xvY2stbmFtZXMgPSAicHdtIjsKPj4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsKPj4gKwl9
-Owo+PiArCj4+ICsJcHdtMjogcHdtQDIwMDUwMDIwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2Nr
-Y2hpcCxyazI5MjgtcHdtIjsKPj4gKwkJcmVnID08MHgyMDA1MDAyMCAweDEwPjsKPj4gKwkJI3B3
-bS1jZWxscyA9PDM+Owo+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCQlwaW5j
-dHJsLTAgPTwmcHdtMl9waW4+Owo+PiArCQljbG9ja3MgPTwmY3J1IFBDTEtfUFdNPjsKPj4gKwkJ
-Y2xvY2stbmFtZXMgPSAicHdtIjsKPj4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsKPj4gKwl9Owo+
-PiArCj4+ICsJcHdtMzogcHdtQDIwMDUwMDMwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hp
-cCxyazI5MjgtcHdtIjsKPj4gKwkJcmVnID08MHgyMDA1MDAzMCAweDEwPjsKPj4gKwkJI3B3bS1j
-ZWxscyA9PDI+Owo+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCQlwaW5jdHJs
-LTAgPTwmcHdtM19waW4+Owo+PiArCQljbG9ja3MgPTwmY3J1IFBDTEtfUFdNPjsKPj4gKwkJY2xv
-Y2stbmFtZXMgPSAicHdtIjsKPj4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsKPj4gKwl9Owo+PiAr
-Cj4+ICsJc3JhbTogc3JhbUAxMDA4MDAwMCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAs
-cmszMDM2LXNtcC1zcmFtIiwgIm1taW8tc3JhbSI7Cj4+ICsJCXJlZyA9PDB4MTAwODAwMDAgMHgy
-MDAwPjsKPj4gKwl9Owo+PiArCj4+ICsJZ2ljOiBpbnRlcnJ1cHQtY29udHJvbGxlckAxMDEzOTAw
-MCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAiYXJtLGdpYy00MDAiOwo+PiArCQlpbnRlcnJ1cHQtY29u
-dHJvbGxlcjsKPj4gKwkJI2ludGVycnVwdC1jZWxscyA9PDM+Owo+PiArCQkjYWRkcmVzcy1jZWxs
-cyA9PDA+Owo+PiArCj4+ICsJCXJlZyA9PDB4MTAxMzkwMDAgMHgxMDAwPiwKPj4gKwkJPDB4MTAx
-M2EwMDAgMHgxMDAwPiwKPj4gKwkJPDB4MTAxM2MwMDAgMHgyMDAwPiwKPj4gKwkJPDB4MTAxM2Uw
-MDAgMHgyMDAwPjsKPj4gKwkJaW50ZXJydXB0cyA9PEdJQ19QUEkgOSAweGYwND47Cj4+ICsJfTsK
-Pj4gKwo+PiArCWdyZjogc3lzY29uQDIwMDA4MDAwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2Nr
-Y2hpcCxyazMwMzYtZ3JmIiwgInN5c2NvbiI7Cj4+ICsJCXJlZyA9PDB4MjAwMDgwMDAgMHgxMDAw
-PjsKPj4gKwl9Owo+PiArCj4+ICsJcGluY3RybDogcGluY3RybCB7Cj4+ICsJCWNvbXBhdGlibGUg
-PSAicm9ja2NoaXAscmszMDM2LXBpbmN0cmwiOwo+PiArCQlyb2NrY2hpcCxncmYgPTwmZ3JmPjsK
-Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPTwxPjsKPj4gKwkJI3NpemUtY2VsbHMgPTwxPjsKPj4gKwkJ
-cmFuZ2VzOwo+PiArCj4+ICsJCWdwaW8wOiBncGlvMEAyMDA3YzAwMCB7Cj4+ICsJCQljb21wYXRp
-YmxlID0gInJvY2tjaGlwLGdwaW8tYmFuayI7Cj4+ICsJCQlyZWcgPTwweDIwMDdjMDAwIDB4MTAw
-PjsKPj4gKwkJCWludGVycnVwdHMgPTxHSUNfU1BJIDM2IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+
-PiArCQkJY2xvY2tzID08JmNydSBQQ0xLX0dQSU8wPjsKPj4gKwo+PiArCQkJZ3Bpby1jb250cm9s
-bGVyOwo+PiArCQkJI2dwaW8tY2VsbHMgPTwyPjsKPj4gKwo+PiArCQkJaW50ZXJydXB0LWNvbnRy
-b2xsZXI7Cj4+ICsJCQkjaW50ZXJydXB0LWNlbGxzID08Mj47Cj4+ICsJCX07Cj4+ICsKPj4gKwkJ
-Z3BpbzE6IGdwaW8xQDIwMDgwMDAwIHsKPj4gKwkJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAsZ3Bp
-by1iYW5rIjsKPj4gKwkJCXJlZyA9PDB4MjAwODAwMDAgMHgxMDA+Owo+PiArCQkJaW50ZXJydXB0
-cyA9PEdJQ19TUEkgMzcgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4+ICsJCQljbG9ja3MgPTwmY3J1
-IFBDTEtfR1BJTzE+Owo+PiArCj4+ICsJCQlncGlvLWNvbnRyb2xsZXI7Cj4+ICsJCQkjZ3Bpby1j
-ZWxscyA9PDI+Owo+PiArCj4+ICsJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsKPj4gKwkJCSNpbnRl
-cnJ1cHQtY2VsbHMgPTwyPjsKPj4gKwkJfTsKPj4gKwo+PiArCQlncGlvMjogZ3BpbzJAMjAwODQw
-MDAgewo+PiArCQkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxncGlvLWJhbmsiOwo+PiArCQkJcmVn
-ID08MHgyMDA4NDAwMCAweDEwMD47Cj4+ICsJCQlpbnRlcnJ1cHRzID08R0lDX1NQSSAzOCBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKPj4gKwkJCWNsb2NrcyA9PCZjcnUgUENMS19HUElPMj47Cj4+ICsK
-Pj4gKwkJCWdwaW8tY29udHJvbGxlcjsKPj4gKwkJCSNncGlvLWNlbGxzID08Mj47Cj4+ICsKPj4g
-KwkJCWludGVycnVwdC1jb250cm9sbGVyOwo+PiArCQkJI2ludGVycnVwdC1jZWxscyA9PDI+Owo+
-PiArCQl9Owo+PiArCj4+ICsJCXBjZmdfcHVsbF91cDogcGNmZy1wdWxsLXVwIHsKPj4gKwkJCWJp
-YXMtcHVsbC11cDsKPj4gKwkJfTsKPj4gKwo+PiArCQlwY2ZnX3B1bGxfZG93bjogcGNmZy1wdWxs
-LWRvd24gewo+PiArCQkJYmlhcy1wdWxsLWRvd247Cj4+ICsJCX07Cj4+ICsKPj4gKwkJcGNmZ19w
-dWxsX25vbmU6IHBjZmctcHVsbC1ub25lIHsKPj4gKwkJCWJpYXMtZGlzYWJsZTsKPj4gKwkJfTsK
-Pj4gKwo+PiArCQl1YXJ0MCB7Cj4+ICsJCQl1YXJ0MF94ZmVyOiB1YXJ0MC14ZmVyIHsKPj4gKwkJ
-CQlyb2NrY2hpcCxwaW5zID08MCAxNiBSS19GVU5DXzEmcGNmZ19wdWxsX25vbmU+LAo+IHBjZmdf
-cHVsbF91cCBmb3IgdGhlIHJ4LXBpbj8KRG9uZQo+PiArCQkJCQkJPDAgMTcgUktfRlVOQ18xJnBj
-ZmdfcHVsbF9ub25lPjsKPj4gKwkJCX07Cj4+ICsKPj4gKwkJCXVhcnQwX2N0czogdWFydDAtY3Rz
-IHsKPj4gKwkJCQlyb2NrY2hpcCxwaW5zID08MCAxOCBSS19GVU5DXzEmcGNmZ19wdWxsX25vbmU+
-Owo+PiArCQkJfTsKPiBwY2ZnX3B1bGxfdXAgYWdhaW4/Cj4gc2VlIEFSTTogZHRzOiByb2NrY2hp
-cDogcHVsbCB1cCBjdHMgbGluZXMgb24gcmszMjg4Cj4gKGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
-MDE1LzkvMi82MTIpIGZvciBjb21wYXJpc29uClllcywgdGhleSBzaG91bGQgYmUgcHVsbCB1cC4K
-Pgo+PiArCj4+ICsJCQl1YXJ0MF9ydHM6IHVhcnQwLXJ0cyB7Cj4+ICsJCQkJcm9ja2NoaXAscGlu
-cyA9PDAgMTkgUktfRlVOQ18xJnBjZmdfcHVsbF9ub25lPjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+
-ICsKPj4gKwkJdWFydDEgewo+PiArCQkJdWFydDFfeGZlcjogdWFydDEteGZlciB7Cj4+ICsJCQkJ
-cm9ja2NoaXAscGlucyA9PDIgMjIgUktfRlVOQ18xJnBjZmdfcHVsbF9ub25lPiwKPj4gKwkJCQkJ
-CTwyIDIzIFJLX0ZVTkNfMSZwY2ZnX3B1bGxfbm9uZT47Cj4+ICsJCQl9Owo+PiArCQkJLyogbm8g
-cnRzIC8gY3RzIGZvciB1YXJ0MSAqLwo+PiArCQl9Owo+PiArCj4+ICsgICAgICAgICAgICAgICAg
-dWFydDIgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAgdWFydDJfeGZlcjogdWFydDIteGZl
-ciB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvY2tjaGlwLHBpbnMgPTwx
-IDE4IFJLX0ZVTkNfMgo+PiAmcGNmZ19wdWxsX25vbmU+LCArPDEgMTkKPj4gUktfRlVOQ18yJnBj
-ZmdfcHVsbF9ub25lPjsgKyAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAvKiBubyBydHMgLyBjdHMgZm9yIHVhcnQyICovCj4+ICsgICAgICAgICAg
-ICAgICAgfTsKPiB0YWJzIHBsZWFzZQpTb3JyeSwgZG9uZS4KPj4gKwo+PiArCQlwd20wIHsKPj4g
-KwkJCXB3bTBfcGluOiBwd20wLXBpbiB7Cj4+ICsJCQkJcm9ja2NoaXAscGlucyA9PDAgMCBSS19G
-VU5DXzImcGNmZ19wdWxsX25vbmU+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwo+PiArCQlwd20x
-IHsKPj4gKwkJCXB3bTFfcGluOiBwd20xLXBpbiB7Cj4+ICsJCQkJcm9ja2NoaXAscGlucyA9PDAg
-MSBSS19GVU5DXzImcGNmZ19wdWxsX25vbmU+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwo+PiAr
-CQlwd20yIHsKPj4gKwkJCXB3bTJfcGluOiBwd20yLXBpbiB7Cj4+ICsJCQkJcm9ja2NoaXAscGlu
-cyA9PDAgMSAyJnBjZmdfcHVsbF9ub25lPjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsKPj4gKwkJ
-cHdtMyB7Cj4+ICsJCQlwd20zX3BpbjogcHdtMy1waW4gewo+PiArCQkJCXJvY2tjaGlwLHBpbnMg
-PTwwIDI3IDEmcGNmZ19wdWxsX25vbmU+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwo+PiArCQlp
-MmMxIHsKPj4gKwkJCWkyYzFfeGZlcjogaTJjMS14ZmVyIHsKPj4gKwkJCQlyb2NrY2hpcCxwaW5z
-ID08MCAyIFJLX0ZVTkNfMSZwY2ZnX3B1bGxfbm9uZT4sCj4+ICsJCQkJCQk8MCAzIFJLX0ZVTkNf
-MSZwY2ZnX3B1bGxfbm9uZT47Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+ICsKPj4gKwlp
-MmMxOiBpMmNAMjAwNTYwMDAgewo+PiArCQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1p
-MmMiOwo+PiArCQlyZWcgPTwweDIwMDU2MDAwIDB4MTAwMD47Cj4+ICsJCWludGVycnVwdHMgPTxH
-SUNfU1BJIDI1IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+PiArCQkjYWRkcmVzcy1jZWxscyA9PDE+
-Owo+PiArCQkjc2l6ZS1jZWxscyA9PDA+Owo+PiArCQljbG9jay1uYW1lcyA9ICJpMmMiOwo+PiAr
-CQljbG9ja3MgPTwmY3J1IFBDTEtfSTJDMT47Cj4+ICsJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7Cj4+ICsJCXBpbmN0cmwtMCA9PCZpMmMxX3hmZXI+Owo+PiArCQlzdGF0dXMgPSAiZGlzYWJs
-ZWQiOwo+PiArCX07Cj4+ICt9Owo+ClRoYW5rcy4KCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4
-LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+This is a multi-part message in MIME format.
+--===============1133958622==
+Content-Type: multipart/alternative;
+ boundary="------------090204000209030106030501"
+
+This is a multi-part message in MIME format.
+--------------090204000209030106030501
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+
+Hi Thierry,
+
+On 09/21/2015 07:22 PM, Thierry Reding wrote:
+> On Mon, Sep 21, 2015 at 06:27:40PM +0800, Yakir Yang wrote:
+>> Hi Thierry,
+>>
+>> Thanks for your suggest :)
+>>
+>> On 09/21/2015 05:15 PM, Thierry Reding wrote:
+>>> On Mon, Sep 21, 2015 at 04:45:44PM +0800, Yakir Yang wrote:
+>>>> Hi Heiko,
+>>>>
+>>>> On 09/02/2015 10:15 AM, Yakir Yang wrote:
+>>>>> Hi Heiko,
+>>>>>
+>>>>> =E5=9C=A8 09/02/2015 05:47 AM, Heiko Stuebner =E5=86=99=E9=81=93:
+>>>>>> Hi Yakir,
+>>>>>>
+>>>>>> Am Dienstag, 1. September 2015, 13:46:11 schrieb Yakir Yang:
+>>>>>>>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP
+>>>>>>> controller
+>>>>>>> share the same IP, so a lot of parts can be re-used. I split the =
+common
+>>>>>>> code into bridge directory, then rk3288 and exynos only need to k=
+eep
+>>>>>>> some platform code. Cause I can't find the exact IP name of exyno=
+s dp
+>>>>>>> controller, so I decide to name dp core driver with "analogix" wh=
+ich I
+>>>>>>> find in rk3288 eDP TRM ;)
+>>>>>>>
+>>>>>>> Beyond that, there are three light registers setting differents b=
+ewteen
+>>>>>>> exynos and rk3288.
+>>>>>>> 1. RK3288 have five special pll resigters which not indicata in e=
+xynos
+>>>>>>>     dp controller.
+>>>>>>> 2. The address of DP_PHY_PD(dp phy power manager register) are
+>>>>>>> different
+>>>>>>>     between rk3288 and exynos.
+>>>>>>> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL=
+(dp
+>>>>>>> debug
+>>>>>>>     register).
+>>>>>>>
+>>>>>>> I have verified this series on two kinds of rockchip platform boa=
+rd,
+>>>>>>> one
+>>>>>>> is rk3288 sdk board which connect with a 2K display port monitor,=
+ the
+>>>>>>> other
+>>>>>>> is google jerry chromebook which connect with a eDP screen
+>>>>>>> "cnm,n116bgeea2",
+>>>>>>> both of them works rightlly.
+>>>>>> it looks like during the rebase something did go wrong and I found=
+ some
+>>>>>> issues
+>>>>>> I mentioned in the replies to individual patches.
+>>>>>>
+>>>>>> I did prepare a branch based on mainline [0] with both the old and=
+ the
+>>>>>> new edp
+>>>>>> driver - rk3288_veyron_defconfig build both drivers into the image=
+.
+>>>>>>
+>>>>>> While the old driver still works, I wasn't able to make the new on=
+e work
+>>>>>> yet
+>>>>>> ... the drm core does find the connector, but not that anything is
+>>>>>> connected
+>>>>>> to it. I'll try to dig deeper tomorrow, but maybe you'll see anyth=
+ing
+>>>>>> interesting before then.
+>>>>> Many thanks for your comment and debug, I would rebase on your
+>>>>> "edp-with-veyron" branch and fix the broken, make sure v6 would
+>>>>> work rightly at least in your side and my side.
+>>>> Just like we talk off line, I guess there are two tricky questions w=
+hich
+>>>> make analogix_dp just crash/failed on rockchip platform:
+>>>>
+>>>> -  One is how to reach a agreement with the common way to register
+>>>> connector. There would be a conflict with Exynos & IMX & Rockchip.
+>>>>       On analogix_dp thread, Exynos want to register connector when =
+that
+>>>> connector is ready.
+>>>>       On dw_hdmi thread, IMX want to register connector when all com=
+ponent is
+>>>> already.
+>>>>       So Exynos & IMX & Rockchip should reach a common way to regist=
+er
+>>>> connector to fix this issue.
+>>>>
+>>>> -  The other is atomic API.
+>>>>        The rockchip drm haven't implemented the atomic API, but the =
+original
+>>>> exynos_dp have used the atomic API on connector helper function. Tha=
+t's why
+>>>> analogix_dp just keep crash on your side.
+>>> There's really no reason not to convert Rockchip to atomic. It will h=
+ave
+>>> to happen eventually anyway.
+>> Do agree on this point, and I see Tomasz Figa have done some WIP
+>> works on implementing the atomic_commit, maybe would upstream
+>> in further.(https://chromium-review.googlesource.com/#/c/284560/1)
+>>
+>>
+>>> That said, there's another option that would allow you to side-step b=
+oth
+>>> of the above problems at the same time. If you turn the common code i=
+nto
+>>> a helper library that should give you enough flexibility to integrate=
+ it
+>>> into all existing users. For example you could leave out the connecto=
+r
+>>> registration and let the drivers do that. Similarly since the helpers
+>>> are only hooked up at registration time you could probably find a way=
+ to
+>>> share the low-level code but again leave it up to the drivers to glue=
+ it
+>>> all together at registration time (drivers could wrap the low-level c=
+ode
+>>> with atomic or non-atomic callbacks).
+>> Wow, sounds good, but I'm not sure I understand this rightly. Do you
+>> mean that I could support two kinds of callbacks in analogix_dp_core
+>> driver, and export them out. And move the connector registration code
+>> into the helper driver (like exynos_dp.c), so helper driver could chos=
+e to
+>> use the atomic or non-atomic callbacks. like:
+>>
+>> -- analogix_dp_core.c
+>> --------------------------------------------------------------------
+>> ...
+>> struct drm_connector_funcs analogix_dp_connector_atomic_funcs =3D {
+>>          .dpms =3D drm_atomic_helper_connector_dpms,
+>>          .fill_modes =3D drm_helper_probe_single_connector_modes,
+>>          .detect =3D analogix_dp_detect,
+>>          .destroy =3D analogix_dp_connector_destroy,
+>>          .reset =3D drm_atomic_helper_connector_reset,
+>>          .atomic_duplicate_state =3D
+>> drm_atomic_helper_connector_duplicate_state,
+>>          .atomic_destroy_state =3D drm_atomic_helper_connector_destroy=
+_state,
+>> };
+>> EXPORT_SYMBOL(analogix_dp_connector_atomic_funcs);
+>>
+>> struct drm_connector_funcs analogix_dp_connector_funcs =3D {
+>>          .dpms =3D drm_helper_connector_dpms,
+>>          .fill_modes =3D drm_helper_probe_single_connector_modes,
+>>          .detect =3D analogix_dp_detect,
+>>          .destroy =3D analogix_dp_connector_destroy,
+>> };
+>> EXPORT_SYMBOL(analogix_dp_connector_funcs);
+>>
+>> struct drm_connector_helper_funcs analogix_dp_connector_helper_funcs =3D=
+ {
+>>          .get_modes =3D analogix_dp_get_modes,
+>>          .best_encoder =3D analogix_dp_best_encoder,
+>> };
+>> EXPORT_SYMBOL(analogix_dp_connector_helper_funcs);
+>> ...
+>>
+>> -- exynos_dp
+>> ----------------------------------------------------------------------=
+------
+>>          ret =3D drm_connector_init(dp->drm_dev, connector,
+>> &analogix_dp_connector_atomic_funcs,
+>>                                   DRM_MODE_CONNECTOR_eDP);
+>>          if (ret) {
+>>                  DRM_ERROR("Failed to initialize connector with drm\n"=
+);
+>>                  return ret;
+>>          }
+>>
+>>          drm_connector_helper_add(connector,
+>> &analogix_dp_connector_helper_funcs);
+>>          drm_connector_register(connector);
+>>          drm_mode_connector_attach_encoder(connector, encoder);
+>>
+>> -- analogix_dp-rockchip
+>> ----------------------------------------------------------------------=
+------
+>>          ret =3D drm_connector_init(dp->drm_dev, connector,
+>>                                   &analogix_dp_connector_funcs,
+>>                                   DRM_MODE_CONNECTOR_eDP);
+>>          if (ret) {
+>>                  DRM_ERROR("Failed to initialize connector with drm\n"=
+);
+>>                  return ret;
+>>          }
+>>
+>>          drm_connector_helper_add(connector,
+>> &analogix_dp_connector_helper_funcs);
+>>          drm_mode_connector_attach_encoder(connector, encoder);
+>>
+>>
+>> Are those code corresponding to your suggestion.   :)
+> Yes, that looks about right. You could also move the implementations
+> into the Exynos and Rockchip drivers, respectively, if they're only use=
+d
+> from one place. Then you can simply export the low-level analogix_dp_*(=
+)
+> functions. That might give you even more flexibility, but the above
+> would probably work well enough.
+
+Wow, much better, so I just need to export two low-level functions,
+
+  * analogix_dp_detect()
+  * analogix_dp_get_modes()
+
+Pretty cool.
+
+Thanks,
+- Yakir
+
+> Thierry
+
+
+--------------090204000209030106030501
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+  <head>
+    <meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Ty=
+pe">
+  </head>
+  <body bgcolor=3D"#FFFFFF" text=3D"#000000">
+    Hi Thierry,<br>
+    <br>
+    <div class=3D"moz-cite-prefix">On 09/21/2015 07:22 PM, Thierry Reding
+      wrote:<br>
+    </div>
+    <blockquote cite=3D"mid:20150921112246.GD20992@ulmo.nvidia.com"
+      type=3D"cite">
+      <pre wrap=3D"">On Mon, Sep 21, 2015 at 06:27:40PM +0800, Yakir Yang=
+ wrote:
+</pre>
+      <blockquote type=3D"cite">
+        <pre wrap=3D"">Hi Thierry,
+
+Thanks for your suggest :)
+
+On 09/21/2015 05:15 PM, Thierry Reding wrote:
+</pre>
+        <blockquote type=3D"cite">
+          <pre wrap=3D"">On Mon, Sep 21, 2015 at 04:45:44PM +0800, Yakir =
+Yang wrote:
+</pre>
+          <blockquote type=3D"cite">
+            <pre wrap=3D"">Hi Heiko,
+
+On 09/02/2015 10:15 AM, Yakir Yang wrote:
+</pre>
+            <blockquote type=3D"cite">
+              <pre wrap=3D"">Hi Heiko,
+
+=E5=9C=A8 09/02/2015 05:47 AM, Heiko Stuebner =E5=86=99=E9=81=93:
+</pre>
+              <blockquote type=3D"cite">
+                <pre wrap=3D"">Hi Yakir,
+
+Am Dienstag, 1. September 2015, 13:46:11 schrieb Yakir Yang:
+</pre>
+                <blockquote type=3D"cite">
+                  <pre wrap=3D"">   The Samsung Exynos eDP controller and=
+ Rockchip RK3288 eDP
+controller
+share the same IP, so a lot of parts can be re-used. I split the common
+code into bridge directory, then rk3288 and exynos only need to keep
+some platform code. Cause I can't find the exact IP name of exynos dp
+controller, so I decide to name dp core driver with "analogix" which I
+find in rk3288 eDP TRM ;)
+
+Beyond that, there are three light registers setting differents bewteen
+exynos and rk3288.
+1. RK3288 have five special pll resigters which not indicata in exynos
+   dp controller.
+2. The address of DP_PHY_PD(dp phy power manager register) are
+different
+   between rk3288 and exynos.
+3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp
+debug
+   register).
+
+I have verified this series on two kinds of rockchip platform board,
+one
+is rk3288 sdk board which connect with a 2K display port monitor, the
+other
+is google jerry chromebook which connect with a eDP screen
+"cnm,n116bgeea2",
+both of them works rightlly.
+</pre>
+                </blockquote>
+                <pre wrap=3D"">it looks like during the rebase something =
+did go wrong and I found some
+issues
+I mentioned in the replies to individual patches.
+
+I did prepare a branch based on mainline [0] with both the old and the
+new edp
+driver - rk3288_veyron_defconfig build both drivers into the image.
+
+While the old driver still works, I wasn't able to make the new one work
+yet
+... the drm core does find the connector, but not that anything is
+connected
+to it. I'll try to dig deeper tomorrow, but maybe you'll see anything
+interesting before then.
+</pre>
+              </blockquote>
+              <pre wrap=3D"">Many thanks for your comment and debug, I wo=
+uld rebase on your
+"edp-with-veyron" branch and fix the broken, make sure v6 would
+work rightly at least in your side and my side.
+</pre>
+            </blockquote>
+            <pre wrap=3D"">Just like we talk off line, I guess there are =
+two tricky questions which
+make analogix_dp just crash/failed on rockchip platform:
+
+-  One is how to reach a agreement with the common way to register
+connector. There would be a conflict with Exynos &amp; IMX &amp; Rockchip=
+.
+     On analogix_dp thread, Exynos want to register connector when that
+connector is ready.
+     On dw_hdmi thread, IMX want to register connector when all component=
+ is
+already.
+     So Exynos &amp; IMX &amp; Rockchip should reach a common way to regi=
+ster
+connector to fix this issue.
+
+-  The other is atomic API.
+      The rockchip drm haven't implemented the atomic API, but the origin=
+al
+exynos_dp have used the atomic API on connector helper function. That's w=
+hy
+analogix_dp just keep crash on your side.
+</pre>
+          </blockquote>
+          <pre wrap=3D"">There's really no reason not to convert Rockchip=
+ to atomic. It will have
+to happen eventually anyway.
+</pre>
+        </blockquote>
+        <pre wrap=3D"">
+Do agree on this point, and I see Tomasz Figa have done some WIP
+works on implementing the atomic_commit, maybe would upstream
+in further.(<a class=3D"moz-txt-link-freetext" href=3D"https://chromium-r=
+eview.googlesource.com/#/c/284560/1">https://chromium-review.googlesource=
+.com/#/c/284560/1</a>)
+
+
+</pre>
+        <blockquote type=3D"cite">
+          <pre wrap=3D"">That said, there's another option that would all=
+ow you to side-step both
+of the above problems at the same time. If you turn the common code into
+a helper library that should give you enough flexibility to integrate it
+into all existing users. For example you could leave out the connector
+registration and let the drivers do that. Similarly since the helpers
+are only hooked up at registration time you could probably find a way to
+share the low-level code but again leave it up to the drivers to glue it
+all together at registration time (drivers could wrap the low-level code
+with atomic or non-atomic callbacks).
+</pre>
+        </blockquote>
+        <pre wrap=3D"">
+Wow, sounds good, but I'm not sure I understand this rightly. Do you
+mean that I could support two kinds of callbacks in analogix_dp_core
+driver, and export them out. And move the connector registration code
+into the helper driver (like exynos_dp.c), so helper driver could chose t=
+o
+use the atomic or non-atomic callbacks. like:
+
+-- analogix_dp_core.c
+--------------------------------------------------------------------
+...
+struct drm_connector_funcs analogix_dp_connector_atomic_funcs =3D {
+        .dpms =3D drm_atomic_helper_connector_dpms,
+        .fill_modes =3D drm_helper_probe_single_connector_modes,
+        .detect =3D analogix_dp_detect,
+        .destroy =3D analogix_dp_connector_destroy,
+        .reset =3D drm_atomic_helper_connector_reset,
+        .atomic_duplicate_state =3D
+drm_atomic_helper_connector_duplicate_state,
+        .atomic_destroy_state =3D drm_atomic_helper_connector_destroy_sta=
+te,
+};
+EXPORT_SYMBOL(analogix_dp_connector_atomic_funcs);
+
+struct drm_connector_funcs analogix_dp_connector_funcs =3D {
+        .dpms =3D drm_helper_connector_dpms,
+        .fill_modes =3D drm_helper_probe_single_connector_modes,
+        .detect =3D analogix_dp_detect,
+        .destroy =3D analogix_dp_connector_destroy,
+};
+EXPORT_SYMBOL(analogix_dp_connector_funcs);
+
+struct drm_connector_helper_funcs analogix_dp_connector_helper_funcs =3D =
+{
+        .get_modes =3D analogix_dp_get_modes,
+        .best_encoder =3D analogix_dp_best_encoder,
+};
+EXPORT_SYMBOL(analogix_dp_connector_helper_funcs);
+...
+
+-- exynos_dp
+-------------------------------------------------------------------------=
+---
+        ret =3D drm_connector_init(dp-&gt;drm_dev, connector,
+&amp;analogix_dp_connector_atomic_funcs,
+                                 DRM_MODE_CONNECTOR_eDP);
+        if (ret) {
+                DRM_ERROR("Failed to initialize connector with drm\n");
+                return ret;
+        }
+
+        drm_connector_helper_add(connector,
+&amp;analogix_dp_connector_helper_funcs);
+        drm_connector_register(connector);
+        drm_mode_connector_attach_encoder(connector, encoder);
+
+-- analogix_dp-rockchip
+-------------------------------------------------------------------------=
+---
+        ret =3D drm_connector_init(dp-&gt;drm_dev, connector,
+                                 &amp;analogix_dp_connector_funcs,
+                                 DRM_MODE_CONNECTOR_eDP);
+        if (ret) {
+                DRM_ERROR("Failed to initialize connector with drm\n");
+                return ret;
+        }
+
+        drm_connector_helper_add(connector,
+&amp;analogix_dp_connector_helper_funcs);
+        drm_mode_connector_attach_encoder(connector, encoder);
+
+
+Are those code corresponding to your suggestion.   :)
+</pre>
+      </blockquote>
+      <pre wrap=3D"">
+Yes, that looks about right. You could also move the implementations
+into the Exynos and Rockchip drivers, respectively, if they're only used
+from one place. Then you can simply export the low-level analogix_dp_*()
+functions. That might give you even more flexibility, but the above
+would probably work well enough.
+</pre>
+    </blockquote>
+    <br>
+    Wow, much better, so I just need to export two low-level functions,<b=
+r>
+    <ul>
+      <li>analogix_dp_detect()</li>
+      <li>analogix_dp_get_modes()</li>
+    </ul>
+    Pretty cool.<br>
+    <br>
+    Thanks,<br>
+    - Yakir <br>
+    <br>
+    <blockquote cite=3D"mid:20150921112246.GD20992@ulmo.nvidia.com"
+      type=3D"cite">
+      <pre wrap=3D"">
+Thierry
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------090204000209030106030501--
+
+
+--===============1133958622==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1133958622==--
