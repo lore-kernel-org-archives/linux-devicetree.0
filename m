@@ -1,67 +1,131 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add hdmi-codec for external
- HDMI-encoders
-Date: Mon, 21 Sep 2015 16:41:20 +0300
-Message-ID: <56000900.3070404@ti.com>
-References: <cover.1442572860.git.jsarha@ti.com>
- <6fe9ab5dff972e6f228259d6818f3f481a11577d.1442572860.git.jsarha@ti.com>
- <20150919175450.GL30445@sirena.org.uk>
- <20150921093107.GF21098@n2100.arm.linux.org.uk>
+From: =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio.lopez@collabora.co.uk>
+Subject: Re: [PATCH 1/4] sysfs: Support is_visible() on binary attributes
+Date: Mon, 21 Sep 2015 10:41:52 -0300
+Message-ID: <56000920.4010105@collabora.co.uk>
+References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
+ <1442842703-5309-2-git-send-email-emilio.lopez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150921093107.GF21098@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442842703-5309-2-git-send-email-emilio.lopez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMjEvMTUgMTI6MzEsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPiBPbiBT
-YXQsIFNlcCAxOSwgMjAxNSBhdCAxMDo1NDo1MUFNIC0wNzAwLCBNYXJrIEJyb3duIHdyb3RlOgo+
-PiBPbiBGcmksIFNlcCAxOCwgMjAxNSBhdCAwMjowNjo0MFBNICswMzAwLCBKeXJpIFNhcmhhIHdy
-b3RlOgo+Pj4gKyNkZWZpbmUgU1BESUZfRk9STUFUUwkoU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUg
-fCBTTkRSVl9QQ01fRk1UQklUX1MxNl9CRSB8XAo+Pj4gKwkJCSBTTkRSVl9QQ01fRk1UQklUX1My
-MF8zTEUgfCBTTkRSVl9QQ01fRk1UQklUX1MyMF8zQkUgfFwKPj4+ICsJCQkgU05EUlZfUENNX0ZN
-VEJJVF9TMjRfM0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjRfM0JFIHxcCj4+PiArCQkJIFNORFJW
-X1BDTV9GTVRCSVRfUzI0X0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMjRfQkUpCj4+PiArCj4+PiAr
-I2RlZmluZSBJMlNfRk9STUFUUwkoU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUgfCBTTkRSVl9QQ01f
-Rk1UQklUX1MxNl9CRSB8XAo+Pj4gKwkJCSBTTkRSVl9QQ01fRk1UQklUX1MxOF8zTEUgfCBTTkRS
-Vl9QQ01fRk1UQklUX1MxOF8zQkUgfFwKPj4+ICsJCQkgU05EUlZfUENNX0ZNVEJJVF9TMjBfM0xF
-IHwgU05EUlZfUENNX0ZNVEJJVF9TMjBfM0JFIHxcCj4+PiArCQkJIFNORFJWX1BDTV9GTVRCSVRf
-UzI0XzNMRSB8IFNORFJWX1BDTV9GTVRCSVRfUzI0XzNCRSB8XAo+Pj4gKwkJCSBTTkRSVl9QQ01f
-Rk1UQklUX1MyNF9MRSB8IFNORFJWX1BDTV9GTVRCSVRfUzI0X0JFIHxcCj4+PiArCQkJIFNORFJW
-X1BDTV9GTVRCSVRfUzMyX0xFIHwgU05EUlZfUENNX0ZNVEJJVF9TMzJfQkUpCj4+Cj4+IEknbSBu
-b3Qgc3VyZSBob3cgYWJzdHJhY3RlZCB0aGlzIEkyUyBhbmQgUy9QRElGIERBSSBidXNpbmVzcyBp
-cyAtIGl0Cj4+IGRvZXNuJ3QgZmVlbCBsaWtlIHNvbWV0aGluZyB0aGF0J3MgZ29pbmcgdG8gYmUg
-YSBwcm9wZXJ0eSBvZiBhbGwgSERNSQo+PiBkZXZpY2VzLCBhbmQgdGhlIHNwZWNpZmljIHNldHMg
-b2YgZm9ybWF0cyBhYm92ZSBjYXVzZSBtZSB0byByYWlzZSBhIGJpdAo+PiBvZiBhbiBleWVicm93
-LiAgU2hvdWxkIHRoaXMgYmUgYW4gaW50ZXJmYWNlIHdoZXJlIHRoZSBIRE1JIGNoaXAKPj4gcmVn
-aXN0ZXJzIG11bHRpcGxlIGludGVyZmFjZXMgaWYgaXQgaGFzIHRoZW0gaW5zdGVhZCBvZiBhdXRv
-bWF0aWNhbGx5Cj4+IGdldHRpbmcgdGhpcyBzcGxpdCBhcyBpcz8KPgo+IFRoZSBpbmNsdXNpb24g
-b2YgdGhlIDMyLWJpdCBmb3JtYXRzIGRvZXMgcmFpc2UgYW4gZXllYnJvdyBoZXJlIHRvby4KPiBB
-dWRpbyB0cmFuc21pc3Npb24gYWNyb3NzIHRoZSBIRE1JIGxpbmsgaXMgUy9QRElGLCBzdXBwb3J0
-aW5nIHVwIHRvCj4gMjQtYml0IHVuY29tcHJlc3NlZCBhdWRpbyAoYWthIEwtUENNKS4KPgo+IFRo
-ZSBkZXZpY2UgbWF5IGFjY2VwdCAzMiBiaXQgSTJTLCBidXQgaXQgd291bGQgaGF2ZSB0byBiZSB0
-cnVuY2F0ZWQgdG8KPiAyNCBiaXQgYmVmb3JlIHRyYW5zbWl0dGluZyBpdCB0byB0aGUgc2luay4g
-IFRoaXMgc2hvdWxkIGJlIG1lbnRpb25lZAo+IHNvbWV3aGVyZS4KPgoKVGhlcmUgaXMgIi5zaWdf
-Yml0cyA9IDI0IiBpbiBoZG1pX2kyc19kYWksIGJ1dCBJIGNhbiBhZGQgYW4gZXhwbGljaXQgCmNv
-bW1lbnQgYWJvdXQgaXQuCgpXZSBuZWVkZWQgMzJiaXQgZm9ybWF0IGluIHByYWN0aWNlIHVudGls
-IFBldGVyIGdvdCAyNF9MRSBwcm9wZXJseSAKd29ya2luZyB3aXRoIE1jQVNQLiBJIGp1c3QgdGhv
-dWdodCB0aGUgbWF5IHN0aWxsIGJlIHNvbWUgcGxhdGZvcm1zIG91dCAKdGhlcmUgdGhhdCBjYW4g
-bm90IHByb2R1Y2UgMjRiaXQgaTJzIHNhbXBsZXMgZm9yIHNvbWUgcmVhc29uLCBidXQgd29yayAK
-anVzdCBmaW5lIHdpdGggMzJiaXQgc2FtcGxlcy4gVGhvc2UgcGxhdGZvcm1zIHdvdWxkIGJlIGxp
-bWl0ZWQgdG8gbGVzcyAKdGhhbiAyNGJpdCBwcmVjaXNpb24gd2l0aG91dCAzMmJpdCBmb3JtYXRz
-LiBCdXQgYXMgc2FpZCwgaXQgaXMgbm90IApjcml0aWNhbCB0byB1cyBhbnkgbW9yZSBhbmQgSSBj
-YW4gZHJvcCB0aGUgMzJiaXQgZm9ybWF0cyBhcyB3ZWxsLgoKQlIsCkp5cmkKCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This is v3, even if the subject doesn't say so. This is what happens=20
+when you forget to use --reroll-count and try to fix it manually :)
+
+Emilio
+
+On 21/09/15 10:38, Emilio L=C3=B3pez wrote:
+> According to the sysfs header file:
+>
+>      "The returned value will replace static permissions defined in
+>       struct attribute or struct bin_attribute."
+>
+> but this isn't the case, as is_visible is only called on struct attri=
+bute
+> only. This patch introduces a new is_bin_visible() function to implem=
+ent
+> the same functionality for binary attributes, and updates documentati=
+on
+> accordingly.
+>
+> Note that to keep functionality and code similar to that of normal
+> attributes, the mode is now checked as well to ensure it contains onl=
+y
+> read/write permissions or SYSFS_PREALLOC.
+>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
+> ---
+>
+> Changes from v1:
+>   - Don't overload is_visible, introduce is_bin_visible instead as
+>     discussed on the list.
+>
+> Changes from v2:
+>   - Note change in mode checking on the commit log
+>   - Add Guenter's reviewed-by
+>
+>   fs/sysfs/group.c      | 17 +++++++++++++++--
+>   include/linux/sysfs.h | 18 ++++++++++++++----
+>   2 files changed, 29 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> index 39a0199..51b56e6 100644
+> --- a/fs/sysfs/group.c
+> +++ b/fs/sysfs/group.c
+> @@ -73,13 +73,26 @@ static int create_files(struct kernfs_node *paren=
+t, struct kobject *kobj,
+>   	}
+>
+>   	if (grp->bin_attrs) {
+> -		for (bin_attr =3D grp->bin_attrs; *bin_attr; bin_attr++) {
+> +		for (i =3D 0, bin_attr =3D grp->bin_attrs; *bin_attr; i++, bin_att=
+r++) {
+> +			umode_t mode =3D (*bin_attr)->attr.mode;
+> +
+>   			if (update)
+>   				kernfs_remove_by_name(parent,
+>   						(*bin_attr)->attr.name);
+> +			if (grp->is_bin_visible) {
+> +				mode =3D grp->is_bin_visible(kobj, *bin_attr, i);
+> +				if (!mode)
+> +					continue;
+> +			}
+> +
+> +			WARN(mode & ~(SYSFS_PREALLOC | 0664),
+> +			     "Attribute %s: Invalid permissions 0%o\n",
+> +			     (*bin_attr)->attr.name, mode);
+> +
+> +			mode &=3D SYSFS_PREALLOC | 0664;
+>   			error =3D sysfs_add_file_mode_ns(parent,
+>   					&(*bin_attr)->attr, true,
+> -					(*bin_attr)->attr.mode, NULL);
+> +					mode, NULL);
+>   			if (error)
+>   				break;
+>   		}
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 9f65758..2f66050 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -64,10 +64,18 @@ do {							\
+>    *		a new subdirectory with this name.
+>    * @is_visible:	Optional: Function to return permissions associated=
+ with an
+>    *		attribute of the group. Will be called repeatedly for each
+> - *		attribute in the group. Only read/write permissions as well as
+> - *		SYSFS_PREALLOC are accepted. Must return 0 if an attribute is
+> - *		not visible. The returned value will replace static permissions
+> - *		defined in struct attribute or struct bin_attribute.
+> + *		non-binary attribute in the group. Only read/write
+> + *		permissions as well as SYSFS_PREALLOC are accepted. Must
+> + *		return 0 if an attribute is not visible. The returned value
+> + *		will replace static permissions defined in struct attribute.
+> + * @is_bin_visible:
+> + *		Optional: Function to return permissions associated with a
+> + *		binary attribute of the group. Will be called repeatedly
+> + *		for each binary attribute in the group. Only read/write
+> + *		permissions as well as SYSFS_PREALLOC are accepted. Must
+> + *		return 0 if a binary attribute is not visible. The returned
+> + *		value will replace static permissions defined in
+> + *		struct bin_attribute.
+>    * @attrs:	Pointer to NULL terminated list of attributes.
+>    * @bin_attrs:	Pointer to NULL terminated list of binary attributes=
+=2E
+>    *		Either attrs or bin_attrs or both must be provided.
+> @@ -76,6 +84,8 @@ struct attribute_group {
+>   	const char		*name;
+>   	umode_t			(*is_visible)(struct kobject *,
+>   					      struct attribute *, int);
+> +	umode_t			(*is_bin_visible)(struct kobject *,
+> +						  struct bin_attribute *, int);
+>   	struct attribute	**attrs;
+>   	struct bin_attribute	**bin_attrs;
+>   };
+>
