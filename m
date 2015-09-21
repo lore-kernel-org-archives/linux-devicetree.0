@@ -1,71 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Please suggest proper format for DT properties.
-Date: Sun, 20 Sep 2015 20:51:32 -0500
-Message-ID: <CAL_JsqLtyM9v1nCE_ZqcBTmnmLU2AjqBKCG5FhLSmkcXZYjV0w@mail.gmail.com>
-References: <1442615803-17766-1-git-send-email-const@MakeLinux.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 0/5] usb: change clock information for chipidea
+Date: Mon, 21 Sep 2015 08:43:01 +0800
+Message-ID: <1442796186-2574-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442615803-17766-1-git-send-email-const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
-Cc: open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 18, 2015 at 5:36 PM, Constantine Shulyupin
-<const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org> wrote:
-> Hi,
->
-> I am designing DT support for a hwmon chip.
-> It has some sensors, each of them can be:
->  - "disabled"
->  - "thermal diode"
->  - "thermistor"
->  - "voltage"
->
-> Four possible options for DT properties format.
->
-> Option 1: Separated property for each sensor.
->
-> Example nct7802 node:
->
-> nct7802 {
->         compatible = "nuvoton,nct7802";
->         reg = <0x2a>;
->         nuvoton,sensor1-type = "thermistor";
->         nuvoton,sensor2-type = "disabled";
->         nuvoton,sensor3-type = "voltage";
-> };
->
-> Option 2: Array of strings for all sensors.
->
-> nct7802 {
->         compatible = "nuvoton,nct7802";
->         reg = <0x2a>;
->         nuvoton,sensors-types = "thermistor", "disabled", "voltage";
-> };
+This patch set changes usb clock information for legacy i.mx platforms.
+At these platforms, they needs three clocks to let controller work.
 
-It seems you are just listing out all possible modes. Why do you need
-this in the DT at all? This can be inferred by the compatible string.
+Hi Fabio,
 
->
-> Option 3: Sets of 4 cells.
->
->   Borrowed from marvell,reg-init and broadcom,c45-reg-init.
->
->   The first cell is the page address,
->   the second a register address within the page,
->   the third cell contains a mask to be ANDed with the existing register
->   value, and the fourth cell is ORed with the result to yield the
->   new register value. If the third cell has a value of zero,
->   no read of the existing value is performed.
+Would you please have a test at imx27 and imx25 boards, thanks.
 
-I don't see how this relates to the first 2 options. The register you
-write selects the mode? In general, we don't want bindings of just
-random register writes.
+Changes for v3:
+- Delete property "needs-three-clocks", and using of_device_id->data
+  to differentiate platforms
+- change <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+ to <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v4.1+
 
-Rob
+Changes for v2:
+- Add imx25 & imx27 dts change
+- Add Fabio's tested-by and Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+
+- Some typo and commit description
+
+Peter Chen (5):
+  doc: dt-binding: ci-hdrc-usb2: split vendor specific properties
+  ARM: dts: imx27.dtsi: change the clock information for usb
+  ARM: dts: imx25.dtsi: change the clock information for usb
+  ARM: dts: imx35.dtsi: change the clock information for usb
+  usb: chipidea: imx: refine clock operations to adapt for all platforms
+
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  10 +-
+ arch/arm/boot/dts/imx25.dtsi                       |   8 +-
+ arch/arm/boot/dts/imx27.dtsi                       |  16 ++-
+ arch/arm/boot/dts/imx35.dtsi                       |   8 +-
+ drivers/usb/chipidea/ci_hdrc_imx.c                 | 156 ++++++++++++++++++---
+ 5 files changed, 164 insertions(+), 34 deletions(-)
+
+-- 
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
