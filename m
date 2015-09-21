@@ -1,81 +1,196 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] Documentation: dt-bindings: Fix interrupt documentation file path
-Date: Mon, 21 Sep 2015 11:25:40 -0500
-Message-ID: <1442852740-3390-1-git-send-email-afd@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 1/3] Documentation: tps65912: Add DT bindings for the
+ TPS65912 PMIC
+Date: Mon, 21 Sep 2015 11:32:01 -0500
+Message-ID: <56003101.50107@ti.com>
+References: <1442339861-30300-1-git-send-email-afd@ti.com>
+ <1442339861-30300-2-git-send-email-afd@ti.com> <20150920041630.GE3039@x1>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150920041630.GE3039@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the incorrect interrupt documentation file path in binding docs.
+On 09/19/2015 11:16 PM, Lee Jones wrote:
+> On Tue, 15 Sep 2015, Andrew F. Davis wrote:
+>
+>> The TPS65912 PMIC contains several regulators and a GPIO controller.
+>> Add bindings for the TPS65912 PMIC.
+>>
+>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> ---
+>>   .../devicetree/bindings/gpio/gpio-tps65912.txt     | 17 +++++++++
+>>   Documentation/devicetree/bindings/mfd/tps65912.txt | 43 ++++++++++++++++++++++
+>>   .../bindings/regulator/tps65912-regulator.txt      | 32 ++++++++++++++++
+>>   3 files changed, 92 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+>> new file mode 100644
+>> index 0000000..f65370b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+>> @@ -0,0 +1,17 @@
+>> +* TPS65912 GPIO controller bindings
+>
+> Suggest s/controller/Controller/
+>
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
----
- Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt | 2 +-
- Documentation/devicetree/bindings/mfd/arizona.txt          | 2 +-
- Documentation/devicetree/bindings/mfd/palmas.txt           | 2 +-
- Documentation/devicetree/bindings/sound/wm8994.txt         | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ACK
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-index dd5d2c0..4d6c8cd 100644
---- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-@@ -24,7 +24,7 @@ controller.
- - #interrupt-cells : Specifies the number of cells needed to encode an
-   interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
-   the second encodes the triger flags encoded as described in
--  Documentation/devicetree/bindings/interrupts.txt
-+  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- - interrupt-parent : The parent interrupt controller.
- - interrupts : The interrupt to the parent controller raised when GPIOs
-   generate the interrupts.
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index a8fee60..3d361ec 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -24,7 +24,7 @@ Required properties:
-   - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
-     The first cell is the IRQ number.
-     The second cell is the flags, encoded as the trigger masks from
--    Documentation/devicetree/bindings/interrupts.txt
-+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- 
-   - gpio-controller : Indicates this device is a GPIO controller.
-   - #gpio-cells : Must be 2. The first cell is the pin number and the
-diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-index eda8989..8ae1a32 100644
---- a/Documentation/devicetree/bindings/mfd/palmas.txt
-+++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-@@ -24,7 +24,7 @@ and also the generic series names
- - #interrupt-cells : should be set to 2 for IRQ number and flags
-   The first cell is the IRQ number.
-   The second cell is the flags, encoded as the trigger masks from
--  Documentation/devicetree/bindings/interrupts.txt
-+  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- - interrupt-parent : The parent interrupt controller.
- 
- Optional properties:
-diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
-index e045e90..68c4e8d 100644
---- a/Documentation/devicetree/bindings/sound/wm8994.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8994.txt
-@@ -30,7 +30,7 @@ Optional properties:
-   - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
-     The first cell is the IRQ number.
-     The second cell is the flags, encoded as the trigger masks from
--    Documentation/devicetree/bindings/interrupts.txt
-+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- 
-   - clocks : A list of up to two phandle and clock specifier pairs
-   - clock-names : A list of clock names sorted in the same order as clocks.
--- 
-1.9.1
+>> +Required properties:
+>> + - compatible : Should be "ti,tps65912-gpio".
+>> + - gpio-controller : Marks the device node as a gpio controller.
+>
+> s/gpio/GPIO/
+>
+> As above for controller.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ACK
+
+>> + - #gpio-cells : Should be two.  The first cell is the pin number and
+>> +     the second cell is used to specify the gpio polarity:
+>> +       0 = active high
+>> +       1 = active low
+>
+> Best to use the #defines in include/dt-bindings/gpio.
+>
+
+ACK
+
+>> +Example:
+>> +
+>> +	gpio4: tps65912_gpio {
+>> +		compatible = "ti,tps65912-gpio";
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
+>> new file mode 100644
+>> index 0000000..081af66
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+>> @@ -0,0 +1,43 @@
+>> +* TPS65912 Power Management Integrated Circuit bindings
+>> +
+>> +Required properties:
+>> + - compatible : Should be "ti,tps65912".
+>> + - reg : Slave address or chip select number (I2C / SPI).
+>> + - interrupt-parent : The parent interrupt controller.
+>> + - interrupts : The interrupt line the device is connected to.
+>> + - interrupt-controller : Marks the device node as an interrupt controller.
+>> + - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
+>
+> s/the/The/
+>
+
+ACK
+
+>> +     The first cell is the IRQ number.
+>> +     The second cell is the flags, encoded as the trigger masks from
+>> +     Documentation/devicetree/bindings/interrupts.txt
+>
+> No such file.
+>
+
+Yeah, this is an unchecked copy/paste on my part, other bindings did it this also, so
+I just submitted a patch to fix them too.
+
+>> +Optional nodes:
+>> + - Regulators: Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+>> + - GPIO: Documentation/devicetree/bindings/gpio/gpio-tps65912.txt.
+>
+> Better to use ../gpio, ../regulator, etc.
+>
+> "Regulators" and "GPIO" aren't valid node names.
+>
+> Please be more specific.
+>
+
+OK, I'll see if I can clear this up.
+
+>> +Example:
+>> +
+>> +	pmic: tps65912@2d {
+>> +		compatible = "ti,tps65912";
+>> +		reg = <0x2d>;
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +
+>> +		dcdc1: regulator-dcdc1 {
+>> +			compatible = "ti,tps65912-dcdc1";
+>> +			regulator-name = "vdd_core";
+>> +			regulator-min-microvolt = <912000>;
+>> +			regulator-max-microvolt = <1144000>;
+>> +			regulator-boot-on;
+>> +			regulator-always-on;
+>> +		};
+>> +		...
+>
+> No need for this.
+>
+
+ACK
+
+>> +		gpio4: tps65912_gpio {
+>> +			compatible = "ti,tps65912-gpio";
+>> +			gpio-controller;
+>> +			#gpio-cells = <2>;
+>> +		};
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+>> new file mode 100644
+>> index 0000000..a417ff7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+>> @@ -0,0 +1,32 @@
+>> +* TPS65912 regulator bindings
+>> +
+>> +Required properties:
+>> + - compatible: Should be:
+>> +   - "ti,tps65912-dcdc1" for DCDC1
+>> +   - "ti,tps65912-dcdc2" for DCDC2
+>> +   - "ti,tps65912-dcdc3" for DCDC3
+>> +   - "ti,tps65912-dcdc4" for DCDC4
+>> +   - "ti,tps65912-ldo1" for LDO1
+>> +   - "ti,tps65912-ldo2" for LDO2
+>> +   - "ti,tps65912-ldo3" for LDO3
+>> +   - "ti,tps65912-ldo4" for LDO4
+>> +   - "ti,tps65912-ldo5" for LDO5
+>> +   - "ti,tps65912-ldo6" for LDO6
+>> +   - "ti,tps65912-ldo7" for LDO7
+>> +   - "ti,tps65912-ldo8" for LDO8
+>> +   - "ti,tps65912-ldo9" for LDO9
+>> +   - "ti,tps65912-ldo10" for LDO10
+>> +
+>> +Optional properties:
+>> + - Any optional property defined in bindings/regulator/regulator.txt
+>
+> ../regulator/...
+>
+
+Not really sure what you mean here?
+
+Thanks,
+Andrew
+
+>> +Example:
+>> +
+>> +	xyz: regulator@0 {
+>> +		compatible = "ti,tps65912-dcdc1";
+>> +		regulator-name = "vdd_core";
+>> +		regulator-min-microvolt = <912000>;
+>> +		regulator-max-microvolt = <1144000>;
+>> +		regulator-boot-on;
+>> +		regulator-always-on;
+>> +	};
+>
