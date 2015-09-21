@@ -1,14 +1,14 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
-Date: Mon, 21 Sep 2015 11:24:53 -0700
-Message-ID: <CACRpkdapS-Vi_F-MqOFOPTHa2+zbrsPfPsbQA-Eks+tR3Wjg2A@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] ARM: at91/defconfig: sama5: add PIO4 controller support
+Date: Mon, 21 Sep 2015 11:25:54 -0700
+Message-ID: <CACRpkdY0iV+_xyfBSuUPuaRuZLfYYtpLHp5W7a-EYxxKrfEcVA@mail.gmail.com>
 References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
-	<1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
+	<1442417823-15850-6-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442417823-15850-6-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ludovic Desroches <ludovic.desroches@atmel.com>
 Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
@@ -16,11 +16,13 @@ List-Id: devicetree@vger.kernel.org
 On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
 <ludovic.desroches@atmel.com> wrote:
 
-> Add pio4 controller node to enable pinmux and gpio.
+> SAMA5D2 chip family has a new PIO controller.
 >
 > Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-Patch applied.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Please merge this through Nicolas' AT91 tree.
 
 Yours,
 Linus Walleij
