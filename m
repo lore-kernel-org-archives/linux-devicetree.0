@@ -1,81 +1,270 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 resend 1/2] ARM: dts: Add binding
- documentation for AXP20x pmic usb power supply
-Date: Mon, 21 Sep 2015 10:10:28 -0500
-Message-ID: <56001DE4.6060901@kernel.org>
-References: <1442752773-22635-1-git-send-email-hdegoede@redhat.com>
- <1442752773-22635-2-git-send-email-hdegoede@redhat.com>
-Reply-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH RFC v4 4/8] drm/i2c: tda998x: Add support of a DT graph of
+ ports
+Date: Mon, 21 Sep 2015 10:19:18 -0500
+Message-ID: <56001FF6.5070504@kernel.org>
+References: <cover.1442572860.git.jsarha@ti.com>
+ <e9ebb04f781fef7cff99190d301fb64805b97d39.1442572860.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD62P6P6EQIM7J4BWACRUBAU7TTZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1442752773-22635-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e9ebb04f781fef7cff99190d301fb64805b97d39.1442572860.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2015 07:39 AM, Hans de Goede wrote:
-> Add binding documentation for the usb power supply part of the AXP20x pmic.
+On 09/18/2015 06:06 AM, Jyri Sarha wrote:
+> From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> ---
-> Changes in v2:
-> -Split out into a separate patch from the actual driver commit
-> Changes in v4:
-> -s/usb_power_supply/usb-power-supply/ in the dts example code
-> ---
->  .../bindings/power_supply/axp20x_usb_power.txt     | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
+> Two kinds of ports may be declared in a DT graph of ports: video and audio.
+> This patch accepts the port value from a video port as an alternative
+> to the video-ports property.
+> It also accepts audio ports in the case the transmitter is not used as
+> a slave encoder.
+> The new file include/sound/tda998x.h prepares to the definition of
+> a tda998x CODEC.
 > 
-> diff --git a/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt b/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
-> new file mode 100644
-> index 0000000..862f4a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
-> @@ -0,0 +1,34 @@
-> +AXP20x USB power supply
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/drm/i2c/tda998x.txt        | 51 ++++++++++++
+>  drivers/gpu/drm/i2c/tda998x_drv.c                  | 90 +++++++++++++++++++---
+>  include/sound/tda998x.h                            |  8 ++
+>  3 files changed, 140 insertions(+), 9 deletions(-)
+>  create mode 100644 include/sound/tda998x.h
+> 
+> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> index e9e4bce..35f6a80 100644
+> --- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> @@ -16,6 +16,35 @@ Optional properties:
+>  
+>    - video-ports: 24 bits value which defines how the video controller
+>  	output is wired to the TDA998x input - default: <0x230145>
+> +	This property is not used when ports are defined.
 > +
-> +Required Properties:
-> +-compatible: "x-powers,axp202-usb-power-supply"
+> +Optional nodes:
 > +
-> +This node is a subnode of the axp20x PMIC.
+> +  - port: up to three ports.
+> +	The ports are defined according to [1].
 > +
-> +Example:
+> +    Video port.
+> +	There may be only one video port.
+> +	This one must contain the following property:
 > +
-> +axp209: pmic@34 {
-> +	compatible = "x-powers,axp209";
-> +	reg = <0x34>;
-> +	interrupt-parent = <&nmi_intc>;
-> +	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;
+> +	- port-type: must be "rgb"
+
+Why do you need this if there is no other choice? The port number should
+define which one is video.
+
 > +
-> +	regulators {
-> +		x-powers,dcdc-freq = <1500>;
+> +	and may contain the optional property:
 > +
-> +		vdd_cpu: dcdc2 {
-> +			regulator-always-on;
-> +			regulator-min-microvolt = <1000000>;
-> +			regulator-max-microvolt = <1450000>;
-> +			regulator-name = "vdd-cpu";
+> +	- reg: 24 bits value which defines how the video controller
+> +		output is wired to the TDA998x input (video pins)
+> +		When absent, the default value is <0x230145>.
+
+I'm failing to decode how this value works. In any case, I would keep
+this as a vendor specific property rather than abusing reg.
+
+> +
+> +    Audio ports.
+> +	There may be one or two audio ports.
+> +	These ones must contain the following properties:
+> +
+> +	- port-type: must be "i2s" or "spdif"
+> +
+> +	- reg: 8 bits value which defines how the audio controller
+> +		output is wired to the TDA998x input (audio pins)
+
+reg is 32-bits.
+
+> +
+> +[1] Documentation/devicetree/bindings/graph.txt
+>  
+>  Example:
+>  
+> @@ -26,4 +55,26 @@ Example:
+>  		interrupts = <27 2>;		/* falling edge */
+>  		pinctrl-0 = <&pmx_camera>;
+>  		pinctrl-names = "default";
+> +
+> +		port@230145 {
+> +			port-type = "rgb";
+> +			reg = <0x230145>;
+> +			hdmi_0: endpoint {
+> +				remote-endpoint = <&lcd0_0>;
+> +			};
 > +		};
+> +		port@3 {			/* AP1 = I2S */
+
+Is 3 significant? What happened to 0-2?
+
+> +			port-type = "i2s";
+> +			reg = <0x03>;
+> +			tda998x_i2s: endpoint {
+> +				remote-endpoint = <&audio1_i2s>;
+> +			};
+> +		};
+> +		port@4 {			 /* AP2 = S/PDIF */
+> +			port-type = "spdif";
+> +			reg = <0x04>;
+> +			tda998x_spdif: endpoint {
+> +				remote-endpoint = <&audio1_spdif1>;
+> +			};
+> +		};
+>  	};
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+> index 424228b..0952eac 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -27,6 +27,7 @@
+>  #include <drm/drm_edid.h>
+>  #include <drm/drm_of.h>
+>  #include <drm/i2c/tda998x.h>
+> +#include <sound/tda998x.h>
+>  
+>  #define DBG(fmt, ...) DRM_DEBUG(fmt"\n", ##__VA_ARGS__)
+>  
+> @@ -47,6 +48,8 @@ struct tda998x_priv {
+>  	wait_queue_head_t wq_edid;
+>  	volatile int wq_edid_wait;
+>  	struct drm_encoder *encoder;
 > +
-> +		...
-> +	};
+> +	struct tda998x_audio audio;
+>  };
+>  
+>  #define to_tda998x_priv(x)  ((struct tda998x_priv *)to_encoder_slave(x)->slave_priv)
+> @@ -774,6 +777,8 @@ static void tda998x_encoder_set_config(struct tda998x_priv *priv,
+>  			    (p->mirr_f ? VIP_CNTRL_2_MIRR_F : 0);
+>  
+>  	priv->params = *p;
+> +	priv->audio.port_types[0] = p->audio_format;
+> +	priv->audio.ports[0] = p->audio_cfg;
+>  }
+>  
+>  static void tda998x_encoder_dpms(struct tda998x_priv *priv, int mode)
+> @@ -1230,9 +1235,57 @@ static struct drm_encoder_slave_funcs tda998x_encoder_slave_funcs = {
+>  
+>  /* I2C driver functions */
+>  
+> +static int tda998x_parse_ports(struct tda998x_priv *priv,
+> +				struct device_node *np)
+> +{
+> +	struct device_node *of_port;
+> +	const char *port_type;
+> +	int ret, audio_index, reg, afmt;
 > +
-> +	usb-power-supply: usb-power-supply {
-> +		compatible = "x-powers,axp202-usb-power-supply";
-> +	};
+> +	audio_index = 0;
+> +	for_each_child_of_node(np, of_port) {
+> +		if (!of_port->name
+> +		 || of_node_cmp(of_port->name, "port") != 0)
+> +			continue;
+> +		ret = of_property_read_string(of_port, "port-type",
+> +					&port_type);
+> +		if (ret < 0)
+> +			continue;
+> +		ret = of_property_read_u32(of_port, "reg", &reg);
+> +		if (strcmp(port_type, "rgb") == 0) {
+> +			if (!ret) {		/* video reg is optional */
+> +				priv->vip_cntrl_0 = reg >> 16;
+> +				priv->vip_cntrl_1 = reg >> 8;
+> +				priv->vip_cntrl_2 = reg;
+> +			}
+> +			continue;
+> +		}
+> +		if (strcmp(port_type, "i2s") == 0)
+> +			afmt = AFMT_I2S;
+> +		else if (strcmp(port_type, "spdif") == 0)
+> +			afmt = AFMT_SPDIF;
+> +		else
+> +			continue;
+> +		if (ret < 0) {
+> +			dev_err(&priv->hdmi->dev, "missing reg for %s\n",
+> +				port_type);
+> +			return ret;
+> +		}
+> +		if (audio_index >= ARRAY_SIZE(priv->audio.ports)) {
+> +			dev_err(&priv->hdmi->dev, "too many audio ports\n");
+> +			break;
+> +		}
+> +		priv->audio.ports[audio_index] = reg;
+> +		priv->audio.port_types[audio_index] = afmt;
+> +		audio_index++;
+> +	}
+> +	return 0;
+> +}
+> +
+>  static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
+>  {
+>  	struct device_node *np = client->dev.of_node;
+> +	struct device_node *of_port;
+>  	u32 video;
+>  	int rev_lo, rev_hi, ret;
+>  	unsigned short cec_addr;
+> @@ -1337,15 +1390,34 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
+>  	/* enable EDID read irq: */
+>  	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
+>  
+> -	if (!np)
+> -		return 0;		/* non-DT */
+> -
+> -	/* get the optional video properties */
+> -	ret = of_property_read_u32(np, "video-ports", &video);
+> -	if (ret == 0) {
+> -		priv->vip_cntrl_0 = video >> 16;
+> -		priv->vip_cntrl_1 = video >> 8;
+> -		priv->vip_cntrl_2 = video;
+> +	/* get the device tree parameters */
+> +	if (np) {
+> +		of_port = of_get_child_by_name(np, "port");
+> +		if (of_port) {				/* graph of ports */
+> +			of_node_put(of_port);
+> +			ret = tda998x_parse_ports(priv, np);
+> +			if (ret < 0)
+> +				goto fail;
+> +
+> +			/* initialize the default audio configuration */
+> +			if (priv->audio.ports[0]) {
+> +				priv->params.audio_cfg = priv->audio.ports[0];
+> +				priv->params.audio_format =
+> +						priv->audio.port_types[0];
+> +				priv->params.audio_clk_cfg =
+> +					priv->params.audio_format ==
+> +							AFMT_SPDIF ? 0 : 1;
+> +			}
+> +		} else {
+> +
+> +			/* optional video properties */
+> +			ret = of_property_read_u32(np, "video-ports", &video);
+> +			if (ret == 0) {
+> +				priv->vip_cntrl_0 = video >> 16;
+> +				priv->vip_cntrl_1 = video >> 8;
+> +				priv->vip_cntrl_2 = video;
+> +			}
+> +		}
+>  	}
+>  
+>  	return 0;
+> diff --git a/include/sound/tda998x.h b/include/sound/tda998x.h
+> new file mode 100644
+> index 0000000..bef1da7
+> --- /dev/null
+> +++ b/include/sound/tda998x.h
+> @@ -0,0 +1,8 @@
+> +#ifndef SND_TDA998X_H
+> +#define SND_TDA998X_H
+> +
+> +struct tda998x_audio {
+> +	u8 ports[2];			/* AP value */
+> +	u8 port_types[2];		/* AFMT_xxx */
 > +};
+> +#endif
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
