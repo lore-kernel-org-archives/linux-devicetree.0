@@ -1,33 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/7] New Atmel PIO4 pinctrl/gpio driver
-Date: Mon, 21 Sep 2015 11:50:48 -0700
-Message-ID: <CACRpkdYLbifY9VJK0FFf7xXdMJWstdGP=h5ApBMRyRXZHPDUaw@mail.gmail.com>
-References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] doc: dt: add documentation for Mediatek spi-nor
+ controller
+Date: Mon, 21 Sep 2015 08:52:02 -0500
+Message-ID: <56000B82.9060607@kernel.org>
+References: <1442559533-17552-1-git-send-email-bayi.cheng@mediatek.com>
+ <1442559533-17552-2-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442559533-17552-2-git-send-email-bayi.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bayi Cheng <bayi.cheng@mediatek.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanduardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 8:36 AM, Ludovic Desroches
-<ludovic.desroches@atmel.com> wrote:
+On 09/18/2015 01:58 AM, Bayi Cheng wrote:
+> Add device tree binding documentation for serial flash with
+> Mediatek serial flash controller
+> 
+> Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
+> ---
+>  .../devicetree/bindings/mtd/mtk_quadspi.txt        | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mtk_quadspi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mtk_quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk_quadspi.txt
+> new file mode 100644
+> index 0000000..380b907
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/mtk_quadspi.txt
+> @@ -0,0 +1,27 @@
+> +* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
+> +
+> +Required properties:
+> +- compatible: 	  should be "mediatek,mt8173-nor";
+> +- reg: 		  physical base address and length of the controller's register
+> +- clocks: 	  the phandle of the clock needed by the QuadSPI controller
 
-> The Atmel PIO4 controller has been introduced with SAMA5D2 chip family. This
-> drivers manages both pinmux/pinconf and gpio stuff. It is inspired by Mediatek
-> pinctrl driver.
->
-> Changes from v1:
-> - remove some unneeded gpio specific ops (gpio_request, gpio_free,
->   gpio_request_enable, gpio_disable_free and gpio_set_direction).
-> - code styling fixes.
-> - add sama5d2 pin description and device pin muxing.
+QuadSPI?
 
-Looks Good To Me, and has Sascha's ACKs, so merged patches
-1, 2, 3, 4 to the pinctrl tree. Please merge the AT91 DT things into
-the AT91 tree.
+Please document number of clocks and their use/function.
 
-Yours,
-Linus Walleij
+> +- clock-names: 	  the name of the clocks
+> +		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +- #address-cells: should be <1>
+> +- #size-cells:	  should be <0>
+> +
+> +Example:
+> +
+> +nor_flash: spi@1100d000 {
+> +	compatible = "mediatek,mt8173-nor";
+> +	reg = <0 0x1100d000 0 0xe0>;
+> +	clocks = <&pericfg CLK_PERI_SPI>,
+> +		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> +	clock-names = "spi", "sf";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	flash@0 {
+> +		....
+> +	};
+> +};
+> +
+> 
