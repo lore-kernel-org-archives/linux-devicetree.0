@@ -1,88 +1,50 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
-Date: Mon, 21 Sep 2015 15:49:07 +0300
-Message-ID: <EA80A53C-430B-450D-B843-21DFF0FB01D8@konsulko.com>
-References: <1442419866-4982-1-git-send-email-pantelis.antoniou@konsulko.com> <1442419866-4982-3-git-send-email-pantelis.antoniou@konsulko.com> <CAMuHMdXWwZ4BZsR8qqpM1Z6hVj9e3Z0Z4bypm42PFZ_C6KX+tg@mail.gmail.com> <324F27EC-FC71-4C50-926A-08AAF2A1114C@konsulko.com> <CAMuHMdUDXZFun7+y3axnz6HKiNaeJnPkVG6Qhq6y4=mcCpPL2w@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUDXZFun7+y3axnz6HKiNaeJnPkVG6Qhq6y4=mcCpPL2w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robherring2@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v2] gpio: mention in DT binding doc that <name>-gpio is deprecated
+Date: Mon, 21 Sep 2015 14:57:25 +0200
+Message-ID: <1442840245-7982-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <acourbot@nvidia.com>, devicetree@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, Kumar Gala <galak@codeaurora.org>, Masahiro Yamada <yamada.m@jp.panasonic.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+The gpiolib supports parsing DT properties of the form <name>-gpio but it
+was only added for compatibility with older DT bindings that got it wrong
+and should not be used in newer bindings.
 
-> On Sep 21, 2015, at 15:47 , Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->=20
-> Hi Pantelis,
->=20
-> On Mon, Sep 21, 2015 at 2:36 PM, Pantelis Antoniou
-> <pantelis.antoniou@konsulko.com> wrote:
->>> On Sep 21, 2015, at 15:35 , Geert Uytterhoeven <geert@linux-m68k.or=
-g> wrote:
->>> On Wed, Sep 16, 2015 at 6:11 PM, Pantelis Antoniou
->>> <pantelis.antoniou@konsulko.com> wrote:
->>>> Changesets are very powerful, but the lack of a helper API
->>>> makes using them cumbersome. Introduce a simple copy based
->>>> API that makes things considerably easier.
->>>>=20
->>>> To wit, adding a property using the raw API.
->>>>=20
->>>>       struct property *prop;
->>>>       prop =3D kzalloc(sizeof(*prop)), GFP_KERNEL);
->>>>       prop->name =3D kstrdup("compatible");
->>>>       prop->value =3D kstrdup("foo,bar");
->>>>       prop->length =3D strlen(prop->value) + 1;
->>>>       of_changeset_add_property(ocs, np, prop);
->>>>=20
->>>> while using the helper API
->>>>=20
->>>>       of_changeset_add_property_string(ocs, np, "compatible",
->>>>                       "foo,bar");
->>>=20
->>> What about removing properties?
->>=20
->> Once upon a time there was that capability. It was removed after we =
-didn=E2=80=99t have
->> a good use for them yet. Do you have any? I=E2=80=99d be happy to re=
--add it :)
->=20
-> Aliases?
->=20
-> If an overlay removes e.g. a serial port, it should remove its alias,=
- too.
->=20
+The commit that added support for this was:
 
-Well, that case is handled. Addition of a property results in removal o=
-f a property when
-the overlay is reverted.
+dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
 
-This is an accessor API that makes things simpler than what=E2=80=99s i=
-nternally used at
-overlays.
+but didn't update the documentation to explain this so it's been a source
+of confusion. So let's make this clear in the GPIO DT binding doc.
 
-We=E2=80=99re talking about removal of a property/node as part of appli=
-cation.
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-> Gr{oetje,eeting}s,
->=20
->                        Geert
->=20
+---
 
-Regards
+Changes in v2:
+- Explain that <name>-gpio is deprecated instead of saying that is
+  supported. Suggested by Alexandre Courbot.
 
-=E2=80=94 Pantelis
+ Documentation/devicetree/bindings/gpio/gpio.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
-x-m68k.org
->=20
-> In personal conversations with technical people, I call myself a hack=
-er. But
-> when I'm talking to journalists I just say "programmer" or something =
-like that.
->                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 5788d5cf1252..82d40e2505f6 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -16,7 +16,9 @@ properties, each containing a 'gpio-list':
+ GPIO properties should be named "[<name>-]gpios", with <name> being the purpose
+ of this GPIO for the device. While a non-existent <name> is considered valid
+ for compatibility reasons (resolving to the "gpios" property), it is not allowed
+-for new bindings.
++for new bindings. Also, GPIO properties named "[<name>-]gpio" are valid and old
++bindings use it, but are only supported for compatibility reasons and should not
++be used for newer bindings since it has been deprecated.
+ 
+ GPIO properties can contain one or more GPIO phandles, but only in exceptional
+ cases should they contain more than one. If your device uses several GPIOs with
+-- 
+2.4.3
+
