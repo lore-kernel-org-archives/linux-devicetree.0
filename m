@@ -1,98 +1,63 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v3 2/5] ARM: dts: imx27.dtsi: change the clock information for usb
-Date: Mon, 21 Sep 2015 08:43:03 +0800
-Message-ID: <1442796186-2574-3-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 4/5] ARM: dts: imx35.dtsi: change the clock information for usb
+Date: Mon, 21 Sep 2015 08:43:05 +0800
+Message-ID: <1442796186-2574-5-git-send-email-peter.chen@freescale.com>
 References: <1442796186-2574-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1442796186-2574-1-git-send-email-peter.chen@freescale.com>
-Sender: stable-owner@vger.kernel.org
-To: shawn.guo@linaro.org, linux-usb@vger.kernel.org
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, fabio.estevam@freescale.com, Peter Chen <peter.chen@freescale.com>, stable@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442796186-2574-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For imx27, it needs three clocks to let the controller work,
-the old code is wrong, and usbmisc has not included clock handling
-code any more. Without this patch, it will cause below data
-abort when accessing usbmisc registers.
+For imx35, it needs three clocks to let the controller work,
+the old code is wrong, and the usbmisc does not include
+clock handling code any more.
 
-usbcore: registered new interface driver usb-storage
-Unhandled fault: external abort on non-linefetch (0x008) at 0xf4424600
-pgd = c0004000
-[f4424600] *pgd=10000452(bad)
-Internal error: : 8 [#1] PREEMPT ARM
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper Not tainted 4.1.0-next-20150701-dirty #3089
-Hardware name: Freescale i.MX27 (Device Tree Support)
-task: c7832b60 ti: c783e000 task.ti: c783e000
-PC is at usbmisc_imx27_init+0x4c/0xbc
-LR is at usbmisc_imx27_init+0x40/0xbc
-pc : [<c03cb5c0>]    lr : [<c03cb5b4>]    psr: 60000093
-sp : c783fe08  ip : 00000000  fp : 00000000
-r10: c0576434  r9 : 0000009c  r8 : c7a773a0
-r7 : 01000000  r6 : 60000013  r5 : c7a776f0  r4 : c7a773f0
-r3 : f4424600  r2 : 00000000  r1 : 00000001  r0 : 00000001
-Flags: nZCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
-Control: 0005317f  Table: a0004000  DAC: 00000017
-Process swapper (pid: 1, stack limit = 0xc783e190)
-Stack: (0xc783fe08 to 0xc7840000)
-
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
-Reported-by: Fabio Estevam <fabio.estevam@freescale.com>
-Tested-by: Fabio Estevam <fabio.estevam@freescale.com>
-Cc: <stable@vger.kernel.org> #v4.1+
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/imx27.dtsi | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/imx35.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index feb9d34..f818ea4 100644
---- a/arch/arm/boot/dts/imx27.dtsi
-+++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -486,7 +486,10 @@
- 				compatible = "fsl,imx27-usb";
- 				reg = <0x10024000 0x200>;
- 				interrupts = <56>;
--				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-+				clocks = <&clks IMX27_CLK_USB_IPG_GATE>,
-+					<&clks IMX27_CLK_USB_AHB_GATE>,
-+					<&clks IMX27_CLK_USB_DIV>;
+diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
+index e6540b5..5b887d0 100644
+--- a/arch/arm/boot/dts/imx35.dtsi
++++ b/arch/arm/boot/dts/imx35.dtsi
+@@ -305,7 +305,8 @@
+ 				compatible = "fsl,imx35-usb", "fsl,imx27-usb";
+ 				reg = <0x53ff4000 0x0200>;
+ 				interrupts = <37>;
+-				clocks = <&clks 73>;
++				clocks = <&clks 9>, <&clks 73>, <&clks 28>;
 +				clock-names = "ipg", "ahb", "per";
  				fsl,usbmisc = <&usbmisc 0>;
+ 				fsl,usbphy = <&usbphy0>;
  				status = "disabled";
- 			};
-@@ -495,7 +498,10 @@
- 				compatible = "fsl,imx27-usb";
- 				reg = <0x10024200 0x200>;
- 				interrupts = <54>;
--				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-+				clocks = <&clks IMX27_CLK_USB_IPG_GATE>,
-+					<&clks IMX27_CLK_USB_AHB_GATE>,
-+					<&clks IMX27_CLK_USB_DIV>;
+@@ -315,7 +316,8 @@
+ 				compatible = "fsl,imx35-usb", "fsl,imx27-usb";
+ 				reg = <0x53ff4400 0x0200>;
+ 				interrupts = <35>;
+-				clocks = <&clks 73>;
++				clocks = <&clks 9>, <&clks 73>, <&clks 28>;
 +				clock-names = "ipg", "ahb", "per";
  				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
  				dr_mode = "host";
- 				status = "disabled";
-@@ -505,7 +511,10 @@
- 				compatible = "fsl,imx27-usb";
- 				reg = <0x10024400 0x200>;
- 				interrupts = <55>;
--				clocks = <&clks IMX27_CLK_USB_IPG_GATE>;
-+				clocks = <&clks IMX27_CLK_USB_IPG_GATE>,
-+					<&clks IMX27_CLK_USB_AHB_GATE>,
-+					<&clks IMX27_CLK_USB_DIV>;
-+				clock-names = "ipg", "ahb", "per";
- 				fsl,usbmisc = <&usbmisc 2>;
- 				dr_mode = "host";
- 				status = "disabled";
-@@ -515,7 +524,6 @@
+@@ -325,8 +327,6 @@
+ 			usbmisc: usbmisc@53ff4600 {
  				#index-cells = <1>;
- 				compatible = "fsl,imx27-usbmisc";
- 				reg = <0x10024600 0x200>;
--				clocks = <&clks IMX27_CLK_USB_AHB_GATE>;
+ 				compatible = "fsl,imx35-usbmisc";
+-				clocks = <&clks 9>, <&clks 73>, <&clks 28>;
+-				clock-names = "ipg", "ahb", "per";
+ 				reg = <0x53ff4600 0x00f>;
  			};
- 
- 			sahara2: sahara@10025000 {
+ 		};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
