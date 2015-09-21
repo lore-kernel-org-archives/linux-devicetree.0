@@ -1,38 +1,54 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] arm64: dts: qcom: 8x16: UARTDM additions
-Date: Sun, 20 Sep 2015 21:00:24 -0500
-Message-ID: <20150921020024.GA16502@qualcomm.com>
-References: <1442582334-29387-1-git-send-email-ivan.ivanov@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] irqchip/gicv3-its: Handle OF device tree "msi-map" properties.
+Date: Sun, 20 Sep 2015 21:01:58 -0500
+Message-ID: <CAL_JsqJy78FqkRihQhFytLx8Q+-NJCUaG18cQ59pHB1EJ5Ndsg@mail.gmail.com>
+References: <1442512859-31633-1-git-send-email-ddaney.cavm@gmail.com>
+ <1442512859-31633-3-git-send-email-ddaney.cavm@gmail.com> <20150918095109.144c22ed@arm.com>
+ <55FC4FBA.1010306@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442582334-29387-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <55FC4FBA.1010306-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 18, 2015 at 04:18:52PM +0300, Ivan T. Ivanov wrote:
-> Hi,
-> 
-> This is second version of the changes previously posted [1].
-> I have to rebase them on top of Andy's for-next[2] branch and rework them
-> a little bit, because some of the definitions have been already merged.
-> 
-> Regards,
-> Ivan
-> 
-> [1] https://lkml.org/lkml/2015/9/12/114
-> [2] https://www.codeaurora.org/cgit/quic/kernel/agross-msm/
+On Fri, Sep 18, 2015 at 12:54 PM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> On 09/18/2015 01:51 AM, Marc Zyngier wrote:
+>>
+>> On Thu, 17 Sep 2015 11:00:59 -0700
+>> David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>> Hi David,
+>>
+>>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Search up the device hierarchy to find devices with a "msi-map"
+>>> property, if found apply the mapping to the GIC device id.
 
-Thanks!  I have these applied.
+[...]
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>>> +               masked_devid = msi_mask & dev_alias.dev_id;
+>>> +               matched = false;
+>>> +               while (msi_map_len >= 4 * sizeof(__be32)) {
+>>> +                       rid_base = be32_to_cpup(msi_map + 0);
+>>> +                       phandle = be32_to_cpup(msi_map + 1);
+>>> +                       msi_base = be32_to_cpup(msi_map + 2);
+>>> +                       rid_len = be32_to_cpup(msi_map + 3);
+>>
+>>
+>> Ouch. I wonder if that kind of thing should deserve a generic helper.
+>> of_property_read_u32_array_from_index()? Rob, what do you think?
+>
+>
+> I think it is possible to add too many wrapper functions.  IMO, this is not
+> too unreadable.
 
+Given you are not reading into an array, I don't think a new helper
+would help. You could just use of_property_read_u32_index though.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
