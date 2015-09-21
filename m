@@ -1,115 +1,71 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91/dt: ov2640: add hsync/vsync-active property
-Date: Mon, 21 Sep 2015 09:19:48 +0800
-Message-ID: <55FF5B34.8040500@atmel.com>
-References: <1442575702-22315-1-git-send-email-josh.wu@atmel.com>
- <55FC1B12.8000703@atmel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Please suggest proper format for DT properties.
+Date: Sun, 20 Sep 2015 20:51:32 -0500
+Message-ID: <CAL_JsqLtyM9v1nCE_ZqcBTmnmLU2AjqBKCG5FhLSmkcXZYjV0w@mail.gmail.com>
+References: <1442615803-17766-1-git-send-email-const@MakeLinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FC1B12.8000703-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1442615803-17766-1-git-send-email-const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Cc: open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Nicolas
-
-On 9/18/2015 10:09 PM, Nicolas Ferre wrote:
-> Le 18/09/2015 13:28, Josh Wu a =E9crit :
->> On at91sam9x5ek/at91sam9m10g45ek/sama5d3xek boards, we use the paral=
-lel
->> connection for ov2640. So we must set the hsync/vsync property (1 me=
-ans
->> active high).
->> Otherwise, the connection would be seen as BT.656 or BT.1120.
->>
->> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Hi Josh,
+On Fri, Sep 18, 2015 at 5:36 PM, Constantine Shulyupin
+<const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org> wrote:
+> Hi,
 >
-> Does this patch apply because of the new enhancement that you had
-> proposed in "media: atmel-isi: parse the DT parameters for
-> vsync/hsync/pixclock polarity" or does it apply even before?
-> Is it a fix that applies to older kernels?
-It's is a fix, according to the dt binding of video interface.
-So it should be applied before:
-
-"media: atmel-isi: parse the DT parameters for
-vsync/hsync/pixclock polarity".
-
-
-it has no impact in older kernel as the driver doesn't parse that=20
-property yet.
-
+> I am designing DT support for a hwmon chip.
+> It has some sensors, each of them can be:
+>  - "disabled"
+>  - "thermal diode"
+>  - "thermistor"
+>  - "voltage"
 >
-> So, should I wait for the enhancements to enter media git tree or can=
- I
-> take them anyway?
+> Four possible options for DT properties format.
+>
+> Option 1: Separated property for each sensor.
+>
+> Example nct7802 node:
+>
+> nct7802 {
+>         compatible = "nuvoton,nct7802";
+>         reg = <0x2a>;
+>         nuvoton,sensor1-type = "thermistor";
+>         nuvoton,sensor2-type = "disabled";
+>         nuvoton,sensor3-type = "voltage";
+> };
+>
+> Option 2: Array of strings for all sensors.
+>
+> nct7802 {
+>         compatible = "nuvoton,nct7802";
+>         reg = <0x2a>;
+>         nuvoton,sensors-types = "thermistor", "disabled", "voltage";
+> };
 
-yes, you can take it without waiting for the media tree. Thanks.
-
-Best Regards,
-Josh Wu
+It seems you are just listing out all possible modes. Why do you need
+this in the DT at all? This can be inferred by the compatible string.
 
 >
-> Bye,
+> Option 3: Sets of 4 cells.
 >
->> ---
->>
->>   arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 ++
->>   arch/arm/boot/dts/at91sam9x5ek.dtsi    | 2 ++
->>   arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 ++
->>   3 files changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/=
-dts/at91sam9m10g45ek.dts
->> index d1ae60a..9d16ef8 100644
->> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
->> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
->> @@ -198,6 +198,8 @@
->>   					isi_0: endpoint {
->>   						remote-endpoint =3D <&ov2640_0>;
->>   						bus-width =3D <8>;
->> +						vsync-active =3D <1>;
->> +						hsync-active =3D <1>;
->>   					};
->>   				};
->>   			};
->> diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts=
-/at91sam9x5ek.dtsi
->> index d237c46..479f200 100644
->> --- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
->> +++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
->> @@ -66,6 +66,8 @@
->>   					isi_0: endpoint@0 {
->>   						remote-endpoint =3D <&ov2640_0>;
->>   						bus-width =3D <8>;
->> +						vsync-active =3D <1>;
->> +						hsync-active =3D <1>;
->>   					};
->>   				};
->>   			};
->> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/s=
-ama5d3xmb.dtsi
->> index 83bee7a..8901042 100644
->> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
->> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
->> @@ -87,6 +87,8 @@
->>   					isi_0: endpoint {
->>   						remote-endpoint =3D <&ov2640_0>;
->>   						bus-width =3D <8>;
->> +						vsync-active =3D <1>;
->> +						hsync-active =3D <1>;
->>   					};
->>   				};
->>   			};
->>
+>   Borrowed from marvell,reg-init and broadcom,c45-reg-init.
 >
+>   The first cell is the page address,
+>   the second a register address within the page,
+>   the third cell contains a mask to be ANDed with the existing register
+>   value, and the fourth cell is ORed with the result to yield the
+>   new register value. If the third cell has a value of zero,
+>   no read of the existing value is performed.
 
+I don't see how this relates to the first 2 options. The register you
+write selects the mode? In general, we don't want bindings of just
+random register writes.
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
