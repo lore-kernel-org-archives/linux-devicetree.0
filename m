@@ -1,89 +1,49 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 2/2] input: gpio_keys_polled: Add support for abs/rel
- axis
-Date: Tue, 22 Sep 2015 15:07:11 +0200
-Message-ID: <5601527F.9040108@redhat.com>
-References: <55FF1415.1040509@redhat.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 resend 0/2] power: Add an
+ axp20x-usb-power driver
+Date: Tue, 22 Sep 2015 15:12:31 +0200
+Message-ID: <20150922131231.GB23334@earth>
+References: <1442752773-22635-1-git-send-email-hdegoede@redhat.com>
+Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <55FF1415.1040509@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input <linux-input@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pvezYHf7grwyp3Bc"
+Return-path: <linux-sunxi+bncBDXMLNOH5ANRBQ5HQWYAKGQEQYGXBLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442752773-22635-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+--pvezYHf7grwyp3Bc
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
 Hi,
 
-On 20-09-15 22:16, Hans de Goede wrote:
-> <I seem to have deleted the original mail without reply-ing, so from a threaded mailer pov this is a top-post, sorry>
->
-> Hi,
->
-> Dmitry Torokhov wrote:
->
->  > > +    for_each_set_bit(i, input->relbit, REL_CNT) {
->  > > +        if (!test_bit(i, bdev->rel_axis_seen))
->  > > +            input_event(input, EV_REL, i, 0);
->  > > +    }
->  >
->  > I wonder if this should be written as
->  >
->  >    for_each_set_bit(i, bdev->rel_axis_seen, REL_CNT)
->  >        input_event(input, EV_REL, i, 0);
->  >
->  > i.e. the 2nd bit test is not really needed because we should not see
->  > unsupported bits in "seen" axes.
->
-> Yes that makes sense, I'll make this change, re-test and post a new version.
+On Sun, Sep 20, 2015 at 08:39:31AM -0400, Hans de Goede wrote:
+> This is a resend of v4 of the axp20x-usb-power power-supply driver,
+> after v4 there have been no further comments, so I assume that this
+> version is ready for merging, yet for some reason it has not been
+> merged yet.
 
-Erm, correction, no we cannot do this, because the second check is inverted.
+My fault. I did not have enough time before my vacation.
 
-What this loop does is set axis to 0 for axis for which no buttons are pressed,
-so the if is:
+> Can we please get this driver merged (preferably into 4.3,
 
-	if (!test_bit(i, bdev->rel_axis_seen))
+It's obviously too late now.
 
-Because seen axis have already had a value set and we should not
-override that, and this is something which only want to do for axis
-which we support, so this has to stay as is.
+> but if not at least lets get it into next / 4.4 asap).
 
-So I'll fixup the bindings to mention the negative value thingie, and
-then do a v3 of only that one.
+I already merged this into my (local) dev branch last week. I
+just pushed it out, so it should appear in next tomorrow.
 
-Regards,
-
-Hans
-
-
-
->
->  > > +        if (fwnode_property_read_u32(child, "linux,input-value",
->  > > +                         (u32 *)&button->value))
->  > > +            button->value = 1;
->  >
->  > Umm, we need negative values too... but there is no
->  > fwnode_property_read_s32 :(. We need to document in the bindings that
->  > value is treated as signed so that users can still achieve the needed
->  > effect.
->
-> Right, I was looking how to deal with this, and the generic fwnode
-> interface has no s32 version, but the devicetree  linux/of.h code has:
->
-> static inline int of_property_read_s32(const struct device_node *np,
->                                         const char *propname,
->                                         s32 *out_value)
-> {
->          return of_property_read_u32(np, propname, (u32*) out_value);
-> }
->
-> So this seemed like the best way to deal with this. You're right that
-> the devicetree binding docs should explicitly state that negative
-> numbers are allowed though, I will update the dt-bindings doc
-> patch accordingly.
->
-> Regards,
->
-> Hans
->
+-- Sebastian
+--pvezYHf7grwyp3Bc--
