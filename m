@@ -1,182 +1,189 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
-Subject: Re: [PATCH v4 1/3] leds: netxbig: add device tree binding
-Date: Tue, 22 Sep 2015 11:30:15 +0200
-Message-ID: <20150922093015.GU7306@kw.sim.vm.gnt>
-References: <1442505571-9744-1-git-send-email-simon.guinot@sequanux.org>
- <1442505571-9744-2-git-send-email-simon.guinot@sequanux.org>
- <56002485.7030802@kernel.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [RFC v2 4/4] drm/mediatek: Add DRM-based framebuffer device
+Date: Tue, 22 Sep 2015 11:29:51 +0200
+Message-ID: <20150922092951.GD3383@phenom.ffwll.local>
+References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
+ <1442592722-29004-5-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cbsCxbAnPLQXdgdB"
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <56002485.7030802@kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@sculo.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1442592722-29004-5-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-
---cbsCxbAnPLQXdgdB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 21, 2015 at 10:38:45AM -0500, Rob Herring wrote:
-
-Hi Rob,
-
-Thanks for your feedback. Please, see my answers below.
-
-> On 09/17/2015 10:59 AM, Simon Guinot wrote:
-> > This patch adds device tree support for the netxbig LEDs.
-> >=20
-> > This also introduces a additionnal DT binding for the GPIO extension bus
-> > (netxbig-gpio-ext) used to configure the LEDs. Since this bus could also
-> > be used to control other devices, then it seems more suitable to have it
-> > in a separate DT binding.
-> >=20
-> > Signed-off-by: Simon Guinot <simon.guinot@sequanux.org>
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |  22 ++
-> >  .../devicetree/bindings/leds/leds-netxbig.txt      |  92 ++++++++
-> >  drivers/leds/leds-netxbig.c                        | 258 +++++++++++++=
-++++++--
-> >  include/dt-bindings/leds/leds-netxbig.h            |  18 ++
-> >  4 files changed, 369 insertions(+), 21 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio=
--ext.txt
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-netxbig=
-=2Etxt
-> >  create mode 100644 include/dt-bindings/leds/leds-netxbig.h
-> >=20
-> > Changes for v2:
-> > - Check timer mode value retrieved from DT.
-> > - In netxbig_leds_get_of_pdata, don't use unsigned long variables to get
-> >   timer delay values from DT with function of_property_read_u32_index.
-> >   Instead, use a temporary u32 variable. This allows to silence a static
-> >   checker warning.
-> > - Make timer property optional in the binding documentation. It is now
-> >   aligned with the driver code.
-> >=20
-> > Changes for v3:
-> > - Fix pointer usage with the temporary u32 variable while calling
-> >   of_property_read_u32_index.
-> >=20
-> > Changes for v4:
-> > - In DT binding document netxbig-gpio-ext.txt, detail byte order for
-> >   registers and latch mechanism for "enable-gpio".
-> > - In leds-netxbig.c, add some error messages.
-> > - In leds-netxbig.c, fix some "sizeof" style issues.
-> > - In leds-netxbig.c, in netxbig_leds_get_of_pdata(), move the
-> >   of_property_read_string() calls after the error-prone checks.
-> > - Add some Acked-by.
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.tx=
-t b/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
-> > new file mode 100644
-> > index 000000000000..50ec2e690701
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
-> > @@ -0,0 +1,22 @@
-> > +Binding for the GPIO extension bus found on some LaCie/Seagate boards
-> > +(Example: 2Big/5Big Network v2, 2Big NAS).
-> > +
-> > +Required properties:
-> > +- compatible: "lacie,netxbig-gpio-ext".
-> > +- addr-gpios: GPIOs representing the address register (LSB -> MSB).
-> > +- data-gpios: GPIOs representing the data register (LSB -> MSB).
-> > +- enable-gpio: latches the new configuration (address, data) on raisin=
-g edge.
-> > +
-> > +Example:
-> > +
-> > +netxbig_gpio_ext: netxbig-gpio-ext {
-> > +	compatible =3D "lacie,netxbig-gpio-ext";
-> > +
-> > +	addr-gpios =3D <&gpio1 15 GPIO_ACTIVE_HIGH
-> > +		      &gpio1 16 GPIO_ACTIVE_HIGH
-> > +		      &gpio1 17 GPIO_ACTIVE_HIGH>;
-> > +	data-gpios =3D <&gpio1 12 GPIO_ACTIVE_HIGH
-> > +		      &gpio1 13 GPIO_ACTIVE_HIGH
-> > +		      &gpio1 14 GPIO_ACTIVE_HIGH>;
-> > +	enable-gpio =3D <&gpio0 29 GPIO_ACTIVE_HIGH>;
-> > +};
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-netxbig.txt b/=
-Documentation/devicetree/bindings/leds/leds-netxbig.txt
-> > new file mode 100644
-> > index 000000000000..efadbecbfeb9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/leds-netxbig.txt
-> > @@ -0,0 +1,92 @@
-> > +Binding for the CPLD LEDs (GPIO extension bus) found on some LaCie/Sea=
-gate
-> > +boards (Example: 2Big/5Big Network v2, 2Big NAS).
-> > +
-> > +Required properties:
-> > +- compatible: "lacie,netxbig-leds".
-> > +- gpio-ext: Phandle for the gpio-ext bus.
->=20
-> Would being a subnode of gpio-ext work instead?
-
-Well, it is really unclear to me. I think that the GPIO extension bus
-can be seen as a "kind of" GPIO chip. And devices which are using a GPIO
-resource are not represented in DT as sub-nodes of the GPIO node. That's
-why I chose to use a phandle here.=20
-
-Let me know if this representation is not correct.
-
->=20
-> > +
-> > +Optional properties:
-> > +- timers: Timer array. Each timer entry is represented by three intege=
-rs:
-> > +  Mode (gpio-ext bus), delay_on and delay_off.
-> > +
-> > +Each LED is represented as a sub-node of the netxbig-leds device.
-> > +
-> > +Required sub-node properties:
-> > +- mode-addr: Mode register address on gpio-ext bus.
-> > +- mode-val: Mode to value mapping. Each entry is represented by two in=
-tegers:
-> > +  A mode and the corresponding value on the gpio-ext bus.
->=20
-> I somewhat wonder if this is too low level and should just be in the
-> driver instead. I guess with only 3 addr and data lines, it is okay. It
-> wouldn't scale to a large number of registers though.
-
-Even if it is not the case now, note that this values could be different
-for an another board. For example, we already have some x86-based boards
-(still no mainlined yet) which are using the leds-netxbig driver but
-with a different gpio-ext configuration. This could happen with some
-ARM-based boards too.
-
-That's why I think it is better to have this properties in the DT rather
-than hardcoded values in the driver.
-
->=20
-> > +- bright-addr: Brightness register address on gpio-ext bus.
-> > +- bright-max: Maximum brightness value.
->=20
-> We already have a somewhat standard max-brightness property.
-
-Yes, Jacek mentioned that too. It made the change in the v5.
-
-Thanks,
-
-Simon
-
---cbsCxbAnPLQXdgdB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlYBH6cACgkQgtp0PDeOcDqXVgCeJ2FLSD2nFnXeJzqYhfRePfcu
-DhQAnjov8b5mCvsh1THvnjYmLtdskZ7I
-=fGyU
------END PGP SIGNATURE-----
-
---cbsCxbAnPLQXdgdB--
+T24gRnJpLCBTZXAgMTgsIDIwMTUgYXQgMDY6MTI6MDJQTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3
+cm90ZToKPiBGcm9tOiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgo+IAo+IEFkZCBNZWRpYXRl
+ayBsZWdhY3kgZnJhbWVidWZmZXIgc3VwcG9ydC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDSyBIdSA8
+Y2suaHVAbWVkaWF0ZWsuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVk
+aWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2NvbmZpZyAgICAg
+ICB8ICAxMiArKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgfCAg
+MTMgKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2ZiLmMgIHwgMTkyICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9mYi5oICB8ICAgMSArCj4gIDQgZmlsZXMgY2hhbmdlZCwgMjE4IGluc2VydGlv
+bnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2NvbmZpZwo+IGluZGV4IDUzNDNjZjEuLmZhNTgx
+ZmIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcKPiArKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2NvbmZpZwo+IEBAIC0xNCwzICsxNCwxNSBAQCBj
+b25maWcgRFJNX01FRElBVEVLCj4gIAkgIFRoaXMgZHJpdmVyIHByb3ZpZGVzIGtlcm5lbCBtb2Rl
+IHNldHRpbmcgYW5kCj4gIAkgIGJ1ZmZlciBtYW5hZ2VtZW50IHRvIHVzZXJzcGFjZS4KPiAgCj4g
+K2NvbmZpZyBEUk1fTUVESUFURUtfRkJERVYKPiArCWJvb2wgIkVuYWJsZSBsZWdhY3kgZmJkZXYg
+c3VwcG9ydCBmb3IgTWVkaWF0ZWsgRFJNIgo+ICsJZGVwZW5kcyBvbiBEUk1fTUVESUFURUsKPiAr
+CXNlbGVjdCBGQl9TWVNfRklMTFJFQ1QKPiArCXNlbGVjdCBGQl9TWVNfQ09QWUFSRUEKPiArCXNl
+bGVjdCBGQl9TWVNfSU1BR0VCTElUCj4gKwlzZWxlY3QgRFJNX0tNU19GQl9IRUxQRVIKPiArCWhl
+bHAKPiArCSAgQ2hvb3NlIHRoaXMgb3B0aW9uIGlmIHlvdSBoYXZlIGEgbmVlZCBmb3IgdGhlIGxl
+Z2FjeQo+ICsJICBmYmRldiBzdXBwb3J0LiAgTm90ZSB0aGF0IHRoaXMgc3VwcG9ydCBhbHNvIHBy
+b3ZpZGVzCj4gKwkgIHRoZSBMaW51eCBjb25zb2xlIG9uIHRvcCBvZiB0aGUgTWVkaWF0ZWsgRFJN
+IG1vZGUKPiArCSAgc2V0dGluZyBkcml2ZXIuCgpXaXRoIHRoZSBuZXcgS2NvbmZpZyBmb3IgZmJk
+ZXYgZW11bGF0aW9uIGluIDQuMyBhbmQgdGhlIG1vZHVsZSBvcHRpb24gdG8KZGlzYWJsZSBpdCBx
+dWV1ZWQgdXAgZm9yIDQuNCBkcml2ZXItcHJpdmF0ZSBLY29uZmlnIGVudHJpZXMgZm9yIGZiZGV2
+CmFyZW4ndCBuZWVkZWQgYW55IG1vcmUuCi1EYW5pZWwKCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZHJ2LmMKPiBpbmRleCBmYzA3MWZlLi5iNjdjNTgyIDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMKPiBAQCAtNDYsNiArNDYsOSBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IGRybV9tb2RlX2NvbmZpZ19mdW5jcyBtdGtfZHJtX21vZGVfY29uZmlnX2Z1bmNz
+ID0gewo+ICAJLmZiX2NyZWF0ZSA9IG10a19kcm1fbW9kZV9mYl9jcmVhdGUsCj4gIAkuYXRvbWlj
+X2NoZWNrID0gZHJtX2F0b21pY19oZWxwZXJfY2hlY2ssCj4gIAkuYXRvbWljX2NvbW1pdCA9IG10
+a19hdG9taWNfY29tbWl0LAo+ICsjaWZkZWYgQ09ORklHX0RSTV9NRURJQVRFS19GQkRFVgo+ICsJ
+Lm91dHB1dF9wb2xsX2NoYW5nZWQgPSBtdGtfZHJtX21vZGVfb3V0cHV0X3BvbGxfY2hhbmdlZCwK
+PiArI2VuZGlmCj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3QgZW51bSBtdGtfZGRwX2NvbXBfdHlw
+ZSBtdGtfZGRwX21haW5bXSA9IHsKPiBAQCAtMTQwLDYgKzE0MywxMiBAQCBzdGF0aWMgaW50IG10
+a19kcm1fa21zX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldikKPiAgCWRybV9rbXNfaGVscGVy
+X3BvbGxfaW5pdChkZXYpOwo+ICAJZHJtX21vZGVfY29uZmlnX3Jlc2V0KGRldik7Cj4gIAo+ICsj
+aWZkZWYgQ09ORklHX0RSTV9NRURJQVRFS19GQkRFVgo+ICsJZXJyID0gbXRrX2ZiZGV2X2NyZWF0
+ZShkZXYpOwo+ICsJaWYgKGVycikKPiArCQlnb3RvIGVycl9sYXJiX2dldDsKPiArI2VuZGlmCj4g
+Kwo+ICAJcmV0dXJuIDA7Cj4gIAo+ICBlcnJfbGFyYl9nZXQ6Cj4gQEAgLTE2MCw2ICsxNjksMTAg
+QEAgc3RhdGljIHZvaWQgbXRrX2RybV9rbXNfZGVpbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYp
+Cj4gIHsKPiAgCWRybV9rbXNfaGVscGVyX3BvbGxfZmluaShkZXYpOwo+ICAKPiArI2lmZGVmIENP
+TkZJR19EUk1fTUVESUFURUtfRkJERVYKPiArCW10a19mYmRldl9kZXN0cm95KGRldik7Cj4gKyNl
+bmRpZgo+ICsKPiAgCWRybV92YmxhbmtfY2xlYW51cChkZXYpOwo+ICAJZHJtX21vZGVfY29uZmln
+X2NsZWFudXAoZGV2KTsKPiAgfQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9mYi5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZmIuYwo+
+IGluZGV4IGRmYTkzMWIuLjkyOTVhZDMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZmIuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2ZiLmMKPiBAQCAtMTAyLDYgKzEwMiwxOTggQEAgc3RhdGljIHN0cnVjdCBtdGtfZHJtX2Zi
+ICptdGtfZHJtX2ZyYW1lYnVmZmVyX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPiAgCXJl
+dHVybiBtdGtfZmI7Cj4gIH0KPiAgCj4gKyNpZmRlZiBDT05GSUdfRFJNX01FRElBVEVLX0ZCREVW
+Cj4gK3N0YXRpYyBpbnQgbXRrX2RybV9mYl9tbWFwKHN0cnVjdCBmYl9pbmZvICppbmZvLCBzdHJ1
+Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSkKPiArewo+ICsJc3RydWN0IGRybV9mYl9oZWxwZXIgKmhl
+bHBlciA9IGluZm8tPnBhcjsKPiArCXN0cnVjdCBtdGtfZHJtX2ZiICptdGtfZmIgPSB0b19tdGtf
+ZmIoaGVscGVyLT5mYik7Cj4gKwo+ICsJcmV0dXJuIG10a19kcm1fZ2VtX21tYXBfYnVmKG10a19m
+Yi0+Z2VtX29ialswXSwgdm1hKTsKPiArfQo+ICsKPiArc3RhdGljIHN0cnVjdCBmYl9vcHMgbXRr
+X2ZiX29wcyA9IHsKPiArCS5vd25lciA9IFRISVNfTU9EVUxFLAo+ICsJLmZiX2ZpbGxyZWN0ID0g
+c3lzX2ZpbGxyZWN0LAo+ICsJLmZiX2NvcHlhcmVhID0gc3lzX2NvcHlhcmVhLAo+ICsJLmZiX2lt
+YWdlYmxpdCA9IHN5c19pbWFnZWJsaXQsCj4gKwkuZmJfY2hlY2tfdmFyID0gZHJtX2ZiX2hlbHBl
+cl9jaGVja192YXIsCj4gKwkuZmJfc2V0X3BhciA9IGRybV9mYl9oZWxwZXJfc2V0X3BhciwKPiAr
+CS5mYl9ibGFuayA9IGRybV9mYl9oZWxwZXJfYmxhbmssCj4gKwkuZmJfcGFuX2Rpc3BsYXkgPSBk
+cm1fZmJfaGVscGVyX3Bhbl9kaXNwbGF5LAo+ICsJLmZiX3NldGNtYXAgPSBkcm1fZmJfaGVscGVy
+X3NldGNtYXAsCj4gKwkuZmJfbW1hcCA9IG10a19kcm1fZmJfbW1hcCwKPiArfTsKPiArCj4gK3N0
+YXRpYyBpbnQgbXRrX2ZiZGV2X3Byb2JlKHN0cnVjdCBkcm1fZmJfaGVscGVyICpoZWxwZXIsCj4g
+KwkJCSAgIHN0cnVjdCBkcm1fZmJfaGVscGVyX3N1cmZhY2Vfc2l6ZSAqc2l6ZXMpCj4gK3sKPiAr
+CXN0cnVjdCBkcm1fZGV2aWNlICpkZXYgPSBoZWxwZXItPmRldjsKPiArCXN0cnVjdCBkcm1fbW9k
+ZV9mYl9jbWQyIG1vZGUgPSB7IDAgfTsKPiArCXN0cnVjdCBtdGtfZHJtX2ZiICptdGtfZmI7Cj4g
+KwlzdHJ1Y3QgbXRrX2RybV9nZW1fb2JqICptdGtfZ2VtOwo+ICsJc3RydWN0IGRybV9nZW1fb2Jq
+ZWN0ICpnZW07Cj4gKwlzdHJ1Y3QgZmJfaW5mbyAqaW5mbzsKPiArCXN0cnVjdCBkcm1fZnJhbWVi
+dWZmZXIgKmZiOwo+ICsJdW5zaWduZWQgbG9uZyBvZmZzZXQ7Cj4gKwlzaXplX3Qgc2l6ZTsKPiAr
+CWludCBlcnI7Cj4gKwo+ICsJbW9kZS53aWR0aCA9IHNpemVzLT5zdXJmYWNlX3dpZHRoOwo+ICsJ
+bW9kZS5oZWlnaHQgPSBzaXplcy0+c3VyZmFjZV9oZWlnaHQ7Cj4gKwltb2RlLnBpdGNoZXNbMF0g
+PSBzaXplcy0+c3VyZmFjZV93aWR0aCAqICgoc2l6ZXMtPnN1cmZhY2VfYnBwICsgNykgLyA4KTsK
+PiArCW1vZGUucGl4ZWxfZm9ybWF0ID0gZHJtX21vZGVfbGVnYWN5X2ZiX2Zvcm1hdChzaXplcy0+
+c3VyZmFjZV9icHAsCj4gKwkJCQkJCSAgICAgIHNpemVzLT5zdXJmYWNlX2RlcHRoKTsKPiArCj4g
+Kwltb2RlLmhlaWdodCA9IG1vZGUuaGVpZ2h0Oy8qIDw8IDE7IGZvciBmYiB1c2U/ICovCj4gKwlz
+aXplID0gbW9kZS5waXRjaGVzWzBdICogbW9kZS5oZWlnaHQ7Cj4gKwlkZXZfaW5mbyhkZXYtPmRl
+diwgIm10a19mYmRldl9wcm9iZSAlZHglZCBicHAgJWQgcGl0Y2ggJWQgc2l6ZSAlenVcbiIsCj4g
+KwkJIG1vZGUud2lkdGgsIG1vZGUuaGVpZ2h0LCBzaXplcy0+c3VyZmFjZV9icHAsIG1vZGUucGl0
+Y2hlc1swXSwKPiArCQkgc2l6ZSk7Cj4gKwo+ICsJbXRrX2dlbSA9IG10a19kcm1fZ2VtX2NyZWF0
+ZShkZXYsIHNpemUsIHRydWUpOwo+ICsJaWYgKElTX0VSUihtdGtfZ2VtKSkgewo+ICsJCWVyciA9
+IFBUUl9FUlIobXRrX2dlbSk7Cj4gKwkJZ290byBmaW5pOwo+ICsJfQo+ICsKPiArCWdlbSA9ICZt
+dGtfZ2VtLT5iYXNlOwo+ICsKPiArCW10a19mYiA9IG10a19kcm1fZnJhbWVidWZmZXJfaW5pdChk
+ZXYsICZtb2RlLCAmZ2VtKTsKPiArCWlmIChJU19FUlIobXRrX2ZiKSkgewo+ICsJCWRldl9lcnIo
+ZGV2LT5kZXYsICJmYWlsZWQgdG8gYWxsb2NhdGUgRFJNIGZyYW1lYnVmZmVyXG4iKTsKPiArCQll
+cnIgPSBQVFJfRVJSKG10a19mYik7Cj4gKwkJZ290byBmcmVlOwo+ICsJfQo+ICsJZmIgPSAmbXRr
+X2ZiLT5iYXNlOwo+ICsKPiArCWluZm8gPSBmcmFtZWJ1ZmZlcl9hbGxvYygwLCBkZXYtPmRldik7
+Cj4gKwlpZiAoIWluZm8pIHsKPiArCQlkZXZfZXJyKGRldi0+ZGV2LCAiZmFpbGVkIHRvIGFsbG9j
+YXRlIGZyYW1lYnVmZmVyIGluZm9cbiIpOwo+ICsJCWVyciA9IFBUUl9FUlIoaW5mbyk7Cj4gKwkJ
+Z290byByZWxlYXNlOwo+ICsJfQo+ICsKPiArCWhlbHBlci0+ZmIgPSBmYjsKPiArCWhlbHBlci0+
+ZmJkZXYgPSBpbmZvOwo+ICsKPiArCWluZm8tPnBhciA9IGhlbHBlcjsKPiArCWluZm8tPmZsYWdz
+ID0gRkJJTkZPX0ZMQUdfREVGQVVMVDsKPiArCWluZm8tPmZib3BzID0gJm10a19mYl9vcHM7Cj4g
+Kwo+ICsJZXJyID0gZmJfYWxsb2NfY21hcCgmaW5mby0+Y21hcCwgMjU2LCAwKTsKPiArCWlmIChl
+cnIgPCAwKSB7Cj4gKwkJZGV2X2VycihkZXYtPmRldiwgImZhaWxlZCB0byBhbGxvY2F0ZSBjb2xv
+ciBtYXA6ICVkXG4iLCBlcnIpOwo+ICsJCWdvdG8gZGVzdHJveTsKPiArCX0KPiArCj4gKwlkcm1f
+ZmJfaGVscGVyX2ZpbGxfZml4KGluZm8sIGZiLT5waXRjaGVzWzBdLCBmYi0+ZGVwdGgpOwo+ICsJ
+ZHJtX2ZiX2hlbHBlcl9maWxsX3ZhcihpbmZvLCBoZWxwZXIsIGZiLT53aWR0aCwgZmItPmhlaWdo
+dCk7Cj4gKwo+ICsJb2Zmc2V0ID0gaW5mby0+dmFyLnhvZmZzZXQgKiAoZmItPmJpdHNfcGVyX3Bp
+eGVsICsgNykgLyA4Owo+ICsJb2Zmc2V0ICs9IGluZm8tPnZhci55b2Zmc2V0ICogZmItPnBpdGNo
+ZXNbMF07Cj4gKwo+ICsJc3RyY3B5KGluZm8tPmZpeC5pZCwgIm10ayIpOwo+ICsJLyogZGV2LT5t
+b2RlX2NvbmZpZy5mYl9iYXNlID0gKHJlc291cmNlX3NpemVfdCliby0+cGFkZHI7ICovCj4gKwlp
+bmZvLT52YXIueXJlcyA9IGluZm8tPnZhci55cmVzX3ZpcnR1YWw7LyogPj4gMTsgZm9yIGZiIHVz
+ZT8gKi8KPiArCWluZm8tPmZpeC5zbWVtX3N0YXJ0ID0gbXRrX2dlbS0+ZG1hX2FkZHIgKyBvZmZz
+ZXQ7Cj4gKwlpbmZvLT5maXguc21lbV9sZW4gPSBzaXplOwo+ICsJaW5mby0+c2NyZWVuX2Jhc2Ug
+PSBtdGtfZ2VtLT5rdmFkZHIgKyBvZmZzZXQ7Cj4gKwlpbmZvLT5zY3JlZW5fc2l6ZSA9IHNpemU7
+Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gKwo+ICtkZXN0cm95Ogo+ICsJZHJtX2ZyYW1lYnVmZmVyX3Vu
+cmVnaXN0ZXJfcHJpdmF0ZShmYik7Cj4gKwltdGtfZHJtX2ZiX2Rlc3Ryb3koZmIpOwo+ICtyZWxl
+YXNlOgo+ICsJZnJhbWVidWZmZXJfcmVsZWFzZShpbmZvKTsKPiArZnJlZToKPiArCW10a19kcm1f
+Z2VtX2ZyZWVfb2JqZWN0KCZtdGtfZ2VtLT5iYXNlKTsKPiArZmluaToKPiArCWRldl9lcnIoZGV2
+LT5kZXYsICJtdGtfZmJkZXZfcHJvYmUgZmFpbFxuIik7Cj4gKwlyZXR1cm4gZXJyOwo+ICt9Cj4g
+Kwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9mYl9oZWxwZXJfZnVuY3MgbXRrX2RybV9mYl9o
+ZWxwZXJfZnVuY3MgPSB7Cj4gKwkuZmJfcHJvYmUgPSBtdGtfZmJkZXZfcHJvYmUsCj4gK307Cj4g
+Kwo+ICtpbnQgbXRrX2ZiZGV2X2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+ICt7Cj4g
+KwlzdHJ1Y3QgbXRrX2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPiArCXN0
+cnVjdCBkcm1fZmJfaGVscGVyICpmYmRldjsKPiArCWludCByZXQ7Cj4gKwo+ICsJZmJkZXYgPSBk
+ZXZtX2t6YWxsb2MoZGV2LT5kZXYsIHNpemVvZigqZmJkZXYpLCBHRlBfS0VSTkVMKTsKPiArCWlm
+ICghZmJkZXYpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJZHJtX2ZiX2hlbHBlcl9wcmVw
+YXJlKGRldiwgZmJkZXYsICZtdGtfZHJtX2ZiX2hlbHBlcl9mdW5jcyk7Cj4gKwo+ICsJcmV0ID0g
+ZHJtX2ZiX2hlbHBlcl9pbml0KGRldiwgZmJkZXYsIGRldi0+bW9kZV9jb25maWcubnVtX2NydGMs
+Cj4gKwkJCQkgZGV2LT5tb2RlX2NvbmZpZy5udW1fY29ubmVjdG9yKTsKPiArCWlmIChyZXQpIHsK
+PiArCQlkZXZfZXJyKGRldi0+ZGV2LCAiZmFpbGVkIHRvIGluaXRpYWxpemUgRFJNIEZCIGhlbHBl
+clxuIik7Cj4gKwkJZ290byBmaW5pOwo+ICsJfQo+ICsKPiArCXJldCA9IGRybV9mYl9oZWxwZXJf
+c2luZ2xlX2FkZF9hbGxfY29ubmVjdG9ycyhmYmRldik7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZGV2
+X2VycihkZXYtPmRldiwgImZhaWxlZCB0byBhZGQgY29ubmVjdG9yc1xuIik7Cj4gKwkJZ290byBm
+aW5pOwo+ICsJfQo+ICsKPiArCXJldCA9IGRybV9mYl9oZWxwZXJfaW5pdGlhbF9jb25maWcoZmJk
+ZXYsIEZCREVWX0JQUCk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZGV2X2VycihkZXYtPmRldiwgImZh
+aWxlZCB0byBzZXQgaW5pdGlhbCBjb25maWd1cmF0aW9uXG4iKTsKPiArCQlnb3RvIGZpbmk7Cj4g
+Kwl9Cj4gKwlwcml2LT5mYl9oZWxwZXIgPSBmYmRldjsKPiArCj4gKwlyZXR1cm4gMDsKPiArCj4g
+K2Zpbmk6Cj4gKwlkcm1fZmJfaGVscGVyX2ZpbmkoZmJkZXYpOwo+ICsKPiArCXJldHVybiByZXQ7
+Cj4gK30KPiArCj4gK3ZvaWQgbXRrX2ZiZGV2X2Rlc3Ryb3koc3RydWN0IGRybV9kZXZpY2UgKmRl
+dikKPiArewo+ICsJc3RydWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdiA9IGRldi0+ZGV2X3ByaXZh
+dGU7Cj4gKwlzdHJ1Y3QgZHJtX2ZiX2hlbHBlciAqaGVscGVyID0gcHJpdi0+ZmJfaGVscGVyOwo+
+ICsJc3RydWN0IGZiX2luZm8gKmluZm8gPSBoZWxwZXItPmZiZGV2Owo+ICsKPiArCWlmIChpbmZv
+KSB7Cj4gKwkJaW50IGVycjsKPiArCj4gKwkJZXJyID0gdW5yZWdpc3Rlcl9mcmFtZWJ1ZmZlcihp
+bmZvKTsKPiArCQlpZiAoZXJyIDwgMCkKPiArCQkJRFJNX0RFQlVHX0tNUygiZmFpbGVkIHRvIHVu
+cmVnaXN0ZXIgZnJhbWVidWZmZXJcbiIpOwo+ICsKPiArCQlpZiAoaW5mby0+Y21hcC5sZW4pCj4g
+KwkJCWZiX2RlYWxsb2NfY21hcCgmaW5mby0+Y21hcCk7Cj4gKwo+ICsJCWZyYW1lYnVmZmVyX3Jl
+bGVhc2UoaW5mbyk7Cj4gKwl9Cj4gKwo+ICsJaWYgKGhlbHBlci0+ZmIpIHsKPiArCQlkcm1fZnJh
+bWVidWZmZXJfdW5yZWdpc3Rlcl9wcml2YXRlKGhlbHBlci0+ZmIpOwo+ICsJCW10a19kcm1fZmJf
+ZGVzdHJveShoZWxwZXItPmZiKTsKPiArCX0KPiArCj4gKwlkcm1fZmJfaGVscGVyX2ZpbmkoaGVs
+cGVyKTsKPiArfQo+ICsKPiArdm9pZCBtdGtfZHJtX21vZGVfb3V0cHV0X3BvbGxfY2hhbmdlZChz
+dHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+ICt7Cj4gKwlzdHJ1Y3QgbXRrX2RybV9wcml2YXRlICpw
+cml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPiArCj4gKwlpZiAocHJpdi0+ZmJfaGVscGVyKQo+ICsJ
+CWRybV9mYl9oZWxwZXJfaG90cGx1Z19ldmVudChwcml2LT5mYl9oZWxwZXIpOwo+ICt9Cj4gKyNl
+bmRpZgo+ICsKPiAgc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqbXRrX2RybV9tb2RlX2ZiX2NyZWF0
+ZShzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICAJCQkJCSAgICAgICBzdHJ1Y3QgZHJtX2ZpbGUg
+KmZpbGUsCj4gIAkJCQkJICAgICAgIHN0cnVjdCBkcm1fbW9kZV9mYl9jbWQyICpjbWQpCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2ZiLmggYi9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5oCj4gaW5kZXggOWNlNzMwNy4uYWNiZmVjZiAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5oCj4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZmIuaAo+IEBAIC0xNSw2ICsxNSw3
+IEBACj4gICNkZWZpbmUgTVRLX0RSTV9GQl9ICj4gIAo+ICAjZGVmaW5lIE1BWF9GQl9PQkoJMwo+
+ICsjZGVmaW5lIEZCREVWX0JQUAkxNgo+ICAKPiAgc3RydWN0IGRybV9nZW1fb2JqZWN0ICptdGtf
+ZmJfZ2V0X2dlbV9vYmooc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCj4gIAkJCQkJICB1bnNp
+Z25lZCBpbnQgcGxhbmUpOwo+IC0tIAo+IDIuNS4xCj4gCj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJl
+IEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
