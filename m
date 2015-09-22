@@ -1,107 +1,104 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
- charger
-Date: Tue, 22 Sep 2015 17:37:25 +0200
-Message-ID: <20150922153725.GA4235@earth>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <D854C92F57B1B347B57E531E78D05EAD57904B8D@BGSMSX104.gar.corp.intel.com>
- <55F0C522.6070705@samsung.com>
- <55F1B2FD.4020608@ti.com>
- <55F22740.4080003@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX
+ SoCs.
+Date: Tue, 22 Sep 2015 16:39:31 +0100
+Message-ID: <20150922153931.GD17444@red-moon>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+ <3066583.BWDZlYWxXU@wuerfel>
+ <55FC4330.10302@caviumnetworks.com>
+ <2512701.zkjk3n3AQS@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55F22740.4080003@samsung.com>
+In-Reply-To: <2512701.zkjk3n3AQS@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: "Andrew F. Davis" <afd@ti.com>, "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: David Daney <ddaney@caviumnetworks.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <ddaney.cavm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 18, 2015 at 08:45:50PM +0100, Arnd Bergmann wrote:
+> On Friday 18 September 2015 10:00:32 David Daney wrote:
+> > On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
+> > > On Thursday 17 September 2015 15:41:33 David Daney wrote:
+> > >> From: David Daney <david.daney@cavium.com>
+> > >>
+> > >> The on-chip devices all have fixed bars.  So, fix them up.
+> > >>
+> > >> Signed-off-by: David Daney <david.daney@cavium.com>
+> > >>
+> > >
+> > > You should be able to just mark the BARs as fixed in DT
+> > 
+> > In the case of ACPI, there is no DT.  So we would need a different 
+> > solution for ACPI.  What would you recommend for ACPI?
+> 
+> I would expect that this does not matter at all on ACPI, because
+> the devices that need it are not hot-plugged, and all boot-time
+> devices are probed by the firmware: the ACPI PCI implementation
+> does not reassign any BARs, except for the hotplug case.
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What do you mean by "the ACPI PCI implementation does not reassign
+any BARs" ? Do you mean on x86 ? The resource assignment is part
+of the resource survey on x86, where all resources that can be claimed
+are claimed, but still, some of them may be still reassigned IIUC.
 
-Hi,
+On arm64 we do not carry out any resource survey at present, but
+if we do (and we should), it will have to work for both DT and ACPI
+systems.
 
-On Fri, Sep 11, 2015 at 09:58:40AM +0900, Krzysztof Kozlowski wrote:
-> On 11.09.2015 01:42, Andrew F. Davis wrote:
-> > On 09/09/2015 06:47 PM, Krzysztof Kozlowski wrote:
-> >>>>> +- ti,enable-user-write: boolean, if present driver will allow the
-> >>>>> user space
-> >>>>> +    to control the charging current and voltage through sysfs;
-> >>>>
-> >>>> This is not DT property. It does not describe hardware.
-> >>> We needed a mechanism to enable the sysfs writes on certain propertie=
-s.
-> >>> If DT is not the place where should it go?
-> >>
-> >> DT is not the place. As I discussed later with Andreas, if you really
-> >> need this and if mainline is a place for that then probably this should
-> >> be compile option (a Kconfig symbol).
-> >>
-> >=20
-> > I think this would actually be a good use for module parameters, this w=
-ay
-> > it could still be set at boot without re-compiling.
-> >=20
-> > I think compile-time disabling sysfs properties because they are
-> > "dangerous" is
-> > a little bit too artificially restricting and controlling, you can set
-> > permissions
-> > so only root can change them already. The kernel should not be
-> > restricting root,
-> > I understand the fear of someone rooting a machine and remotely over
-> > charging
-> > a LiPo[1], but these physical limits are hardware descriptions and can
-> > and should
-> > be set by DT, beyond this root should have full control over their mach=
-ine.
->=20
->=20
-> Indeed module parameters could be used for enabling/disabling debug
-> options... but as fair as I understand these are for purely development
-> purposes. That is why they got into DT initially, right? To allow the
-> developer to play with it on the development board?
->=20
-> This is why I am really not convinced that this should go to mainline.
->=20
-> Anyway if it goes, then maybe compiling it out is the safest choice?
-> What's the purpose of having it in kernel all the time? If this was a
-> debug option, than some experienced user could turn it on and report to
-> LKML with extended debug data. But it's not a debug but development optio=
-n?
+> > Also, can you point me to the OF device tree specification where it 
+> > tells how to specify PCI BAR addresses, I would especially be interested 
+> > in knowing how to specify fixed SRIOV BAR addresses in the device tree.
+> 
+> This is the 'n' bit mentioned sections 2.1.3 and 2.2.1.1 of the
+> PCI binding. When it is set, the OS is not supposed to try to
+> reassign the BAR even on machines that otherwise do a complete
+> rescan.
 
-Changing the current limit is useful for "expert" users with custom
-usb power supplies, that are not correctly detected by extcon. I
-also think a module parameter would be the best option here.
+I do not see any code in the kernel taking care of that bit and
+if I am not mistaken the code that allows creating pci devices
+exists in PowerPC arch code (arch/powerpc/kernel/pci_of_scan.c) and
+should be moved out of there for the other arches to use it.
 
--- Sebastian
+Or maybe we can use DT just to fix-up the resource flags (ie
+every PCI device will have its own of_node set if it is present
+in the DT, we can use it to fixup its resources and related flags,
+pcibios_add_device() ?).
 
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> The PCI binding traditionally requires you to list all PCI devices
+> in DT, Linux as an extension (for the flattened DT format) allows
+> leaving out the devices, but in this case you probably need to
+> list every device that has a fixed BAR.
+> 
+> > Yes, it is a bit of a hack.  That is why I put it in its own file, and 
+> > only try to hack up PCI devices that exactly match the vendor and device 
+> > ids that need fixing.
+> > 
+> > IMHO, putting infrastructure into drivers/pci/probe.c, et al. to handle 
+> > this would be much more intrusive.
+> 
+> My guess is that it's already there, but even if it's not, this is a
+> generic well-defined case that has a standardized binding, and we should
+> implement that.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+See above.
 
-iQIcBAEBCgAGBQJWAXWyAAoJENju1/PIO/qalAUP/iQ8j956h3v2LOgMF4BPIZKx
-s0vtTW9Bf/PvtJFzhEKzdDxW12ZFyqgUS3gk9GJssP9rr65fBvzEripZqmP6lDzz
-A7fm3vEGVsrmvIMDdk08ll2GLKs7TsFfcz+DKIvriuHba4v4yys8G9sM/p1Zm6WI
-ZI4eNbKv/7kf64U+rB1rQHoHi6zzXkq2pdKWkrzPh3h5evkBqQPYlNJ2t13plh93
-p+nGMfPPRG7HGP06o89ZScF+sRzGgGM5f1Pin3t3rESwbBDjNYMpLiZwpzqpclBX
-GlRJhq5mj7Xe4FTprPHQTqGu8pYQYaXUxToZvDqxp7iNR5SImxofLptMFL+XIg/4
-BrjvaO6yjczdJlO8WochXcLL3s0OOjPHyLYZOrrQ3DyIzid6uihiOFbbvu51qXHE
-pQq9HbQZuwnnEFl6T+XI+49ZPFCGMsMmQM/BgN0RuKI/b89tOeCiKpKR7fCFGS8D
-DM4RyEanAWUYmpD+ZcPlo9U31h6fAPlSkNpDl6GAzzfeQ3z25ILuM+HSUquzbl9N
-PntM6HhfrdD0Ie7QDywVhRs78kGpJdfP3z+HKtObKKrs+11k3WD0EV2eceJVdUEV
-S7cHbfFn3CDG32FFsndCCQ1D2YkslCJ1E0Fq8Z4jGTB7raaW9VcfWEFZbzLfq4aK
-hbiQUBDf5hv3RM3+cKnN
-=BCk3
------END PGP SIGNATURE-----
+Thanks,
+Lorenzo
 
---FCuugMFkClbJLl1L--
+> > Forthe record:  The PCI Enhanced Allocation (EA) capability (approved 
+> > by PCI SIG on 23 October 2014) is the proper way to handle this going 
+> > forward.  However, this is not yet implemented in the SoCs that this 
+> > patch addresses.  Our plan is to implement the EA capability in the core 
+> > PCI code, so that we do not need to keep adding devices to this fixup code.
+> 
+> Good, but still this should only be required for the embedded case where
+> you don't have a firmware to probe the bus.
+> 
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
