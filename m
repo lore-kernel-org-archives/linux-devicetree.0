@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/9] NFC: NCI: export nci_send_frame function
-Date: Tue, 22 Sep 2015 16:26:07 +0200
-Message-ID: <1442931974-31526-3-git-send-email-cuissard@marvell.com>
+Subject: [PATCH 7/9] NFC: NCI: allow spi driver to choose transfer clock
+Date: Tue, 22 Sep 2015 16:26:12 +0200
+Message-ID: <1442931974-31526-8-git-send-email-cuissard@marvell.com>
 References: <1442931974-31526-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,78 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Export nci_send_frame symbol to allow drivers to use it.
-This is needed for example if NCI is used during firmware
-download phase.
+In some cases low level drivers might want to update the SPI transfer clock
+(e.g. during firmware download).
+
+This patch adds this support. Without any modification the driver will use the
+default SPI clock (from pdata or device tree).
 
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- include/net/nfc/nci_core.h | 1 +
- net/nfc/nci/core.c         | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ include/net/nfc/nci_core.h | 4 ++++
+ net/nfc/nci/spi.c          | 7 ++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index d0d0f1e..f0bb5e7 100644
+index f0bb5e7..0f91e09 100644
 --- a/include/net/nfc/nci_core.h
 +++ b/include/net/nfc/nci_core.h
-@@ -282,6 +282,7 @@ int nci_core_reset(struct nci_dev *ndev);
- int nci_core_init(struct nci_dev *ndev);
+@@ -381,6 +381,10 @@ struct nci_spi {
  
- int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
-+int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb);
- int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+ 	unsigned int		xfer_udelay;	/* microseconds delay between
+ 						  transactions */
++
++	unsigned int		xfer_speed_hz; /* SPI clock frequency
++						 0 => default clock */
++
+ 	u8			acknowledge_mode;
  
- int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index 943889b..5feed7e 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -1177,7 +1177,7 @@ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb)
- }
- EXPORT_SYMBOL(nci_recv_frame);
+ 	struct completion	req_completion;
+diff --git a/net/nfc/nci/spi.c b/net/nfc/nci/spi.c
+index ec250e7..c9115d0 100644
+--- a/net/nfc/nci/spi.c
++++ b/net/nfc/nci/spi.c
+@@ -56,6 +56,7 @@ static int __nci_spi_send(struct nci_spi *nspi, struct sk_buff *skb,
+ 	}
+ 	t.cs_change = cs_change;
+ 	t.delay_usecs = nspi->xfer_udelay;
++	t.speed_hz = nspi->xfer_speed_hz;
  
--static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
-+int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
- {
- 	pr_debug("len %d\n", skb->len);
+ 	spi_message_init(&m);
+ 	spi_message_add_tail(&t, &m);
+@@ -142,7 +143,8 @@ struct nci_spi *nci_spi_allocate_spi(struct spi_device *spi,
  
-@@ -1195,6 +1195,7 @@ static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
+ 	nspi->acknowledge_mode = acknowledge_mode;
+ 	nspi->xfer_udelay = delay;
+-
++	/* Use controller max SPI speed by default */
++	nspi->xfer_speed_hz = 0;
+ 	nspi->spi = spi;
+ 	nspi->ndev = ndev;
+ 	init_completion(&nspi->req_completion);
+@@ -195,12 +197,14 @@ static struct sk_buff *__nci_spi_read(struct nci_spi *nspi)
+ 	tx.tx_buf = req;
+ 	tx.len = 2;
+ 	tx.cs_change = 0;
++	tx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&tx, &m);
  
- 	return ndev->ops->send(ndev, skb);
- }
-+EXPORT_SYMBOL(nci_send_frame);
+ 	memset(&rx, 0, sizeof(struct spi_transfer));
+ 	rx.rx_buf = resp_hdr;
+ 	rx.len = 2;
+ 	rx.cs_change = 1;
++	rx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&rx, &m);
  
- /* Send NCI command */
- int nci_send_cmd(struct nci_dev *ndev, __u16 opcode, __u8 plen, void *payload)
+ 	ret = spi_sync(nspi->spi, &m);
+@@ -224,6 +228,7 @@ static struct sk_buff *__nci_spi_read(struct nci_spi *nspi)
+ 	rx.len = rx_len;
+ 	rx.cs_change = 0;
+ 	rx.delay_usecs = nspi->xfer_udelay;
++	rx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&rx, &m);
+ 
+ 	ret = spi_sync(nspi->spi, &m);
 -- 
 2.2.0.33.gc18b867
 
