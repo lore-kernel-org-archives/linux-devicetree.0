@@ -1,216 +1,206 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v4 3/6] iommu: add ARM short descriptor page table
- allocator.
-Date: Tue, 22 Sep 2015 22:12:47 +0800
-Message-ID: <1442931167.17514.39.camel@mhfsdcap03>
-References: <1438597279-2937-1-git-send-email-yong.wu@mediatek.com>
-	 <1438597279-2937-4-git-send-email-yong.wu@mediatek.com>
-	 <20150916155824.GM28771@arm.com> <1442501662.8145.151.camel@mhfsdcap03>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v1 1/3] clocksource: rockchip: Make the driver more readability
+ and compatible
+Date: Tue, 22 Sep 2015 22:15:17 +0800
+Message-ID: <56016275.4080704@rock-chips.com>
+References: <1442566271-10695-1-git-send-email-wxt@rock-chips.com> <1442566271-10695-2-git-send-email-wxt@rock-chips.com> <5455510.kk9S3OIaU9@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442501662.8145.151.camel@mhfsdcap03>
+In-Reply-To: <5455510.kk9S3OIaU9@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Robin Murphy <Robin.Murphy@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "youhua.li@mediatek.com" <youhua.li@mediatek.com>, Thierry Reding <treding@nvidia.com>, "k.zhang@mediatek.com" <k.zhang@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Tomasz Figa <tfiga@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "pebolle@tiscali.nl" <pebolle@tiscali.nl>, "frederic.chen@mediatek.com" <frederic.chen@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Daniel
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, catalin.marinas@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, olof@lixom.net, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> > > +static int arm_short_unmap(struct io_pgtable_ops *ops,
-> > > +                          unsigned long iova,
-> > > +                          size_t size)
-> > > +{
-> > > +       struct arm_short_io_pgtable *data = io_pgtable_ops_to_data(ops);
-> > > +       struct io_pgtable_cfg *cfg = &data->iop.cfg;
-> > > +       arm_short_iopte *pgd, *pte = NULL;
-> > > +       arm_short_iopte curpgd, curpte = 0;
-> > > +       phys_addr_t paddr;
-> > > +       unsigned int iova_base, blk_size = 0;
-> > > +       void *cookie = data->iop.cookie;
-> > > +       bool pgtablefree = false;
-> > > +
-> > > +       pgd = (arm_short_iopte *)data->pgd + ARM_SHORT_PGD_IDX(iova);
-> > > +
-> > > +       /* Get block size */
-> > > +       if (ARM_SHORT_PGD_TYPE_IS_PGTABLE(*pgd)) {
-> > > +               pte = arm_short_get_pte_in_pgd(*pgd, iova);
-> > > +
-> > > +               if (ARM_SHORT_PTE_TYPE_IS_SMALLPAGE(*pte))
-> > > +                       blk_size = SZ_4K;
-> > > +               else if (ARM_SHORT_PTE_TYPE_IS_LARGEPAGE(*pte))
-> > > +                       blk_size = SZ_64K;
-> > > +               else
-> > > +                       WARN_ON(1);
-> 
-> > > +       } else if (ARM_SHORT_PGD_TYPE_IS_SECTION(*pgd)) {
-> > > +               blk_size = SZ_1M;
-> > > +       } else if (ARM_SHORT_PGD_TYPE_IS_SUPERSECTION(*pgd)) {
-> > > +               blk_size = SZ_16M;
-> > > +       } else {
-> > > +               WARN_ON(1); 
-> > > +       }
-> > > +
-> > > +       iova_base = iova & ~(blk_size - 1);
-> > > +       pgd = (arm_short_iopte *)data->pgd + ARM_SHORT_PGD_IDX(iova_base);
-> > > +       paddr = arm_short_iova_to_phys(ops, iova_base);
-> > > +       curpgd = *pgd;
-> > > +
-> > > +       if (blk_size == SZ_4K || blk_size == SZ_64K) {
-> > > +               pte = arm_short_get_pte_in_pgd(*pgd, iova_base);
-> > > +               curpte = *pte;
-> > > +               __arm_short_set_pte(pte, 0, blk_size / SZ_4K, cfg);
-> > > +
-> > > +            pgtablefree = _arm_short_whether_free_pgtable(pgd);
-> > > +            if (pgtablefree)
-> > > +                 __arm_short_set_pte(pgd, 0, 1, cfg);
-> > > +       } else if (blk_size == SZ_1M || blk_size == SZ_16M) {
-> > > +               __arm_short_set_pte(pgd, 0, blk_size / SZ_1M, cfg);
-> > > +       }
-> > > +
-> > > +    cfg->tlb->tlb_add_flush(iova_base, blk_size, true, cookie);
-> > > +    cfg->tlb->tlb_sync(cookie);
-> > > +
-> > > +       if (pgtablefree)/* Free pgtable after tlb-flush */
-> > > +              __arm_short_free_pgtable(ARM_SHORT_GET_PGTABLE_VA(curpgd),
-> > > +                                        ARM_SHORT_BYTES_PER_PTE, false, cfg);
-> > > +
-> > > +       if (blk_size > size) { /* Split the block */
-> > > +               return arm_short_split_blk_unmap(
-> > > +                               ops, iova, paddr, size,
-> > > +                               ARM_SHORT_PGD_GET_PROT(curpgd),
-> > > +                               ARM_SHORT_PTE_LARGE_GET_PROT(curpte),
-> > > +                               blk_size);
-> > > +       } else if (blk_size < size) {
-> > > +               /* Unmap the block while remap partial again after split */
-> > > +               return blk_size +
-> > > +                       arm_short_unmap(ops, iova + blk_size, size - blk_size);
+Hi  Heiko,
 
-Hi Will, Robin,
-     I would like to show you a problem I met, The recursion here may
-lead to stack overflow while we test FHD video decode.
+=E5=9C=A8 2015=E5=B9=B409=E6=9C=8822=E6=97=A5 22:00, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Hi Caesar,
+>
+> Am Freitag, 18. September 2015, 16:51:09 schrieb Caesar Wang:
+>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
+>> There are some failure with build up on timer driver for rockchip.
+>>
+>> logs:
+>> ...
+>> drivers/clocksource/rockchip_timer.c:156:13: error: 'NO_IRQ' undecla=
+red
+>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  operand =
+1 --
+>> `dsb`
+>> ...
+>>
+>> The problem was different semantics of dsb on btw arm32 and arm64,
+>> Here we can convert the dsb with insteading of dsb(sy).
+>>
+>> NO_IRQ definition is missing for ARM64, since NO_IRQ being -1 is a
+>> legacy thing for ARM - all ARM drivers are supposed to be converted =
+to
+>> use <=3D 0 or =3D=3D 0 to detect invalid IRQs, and _eventually_ once=
+ all users
+>> are gone, NO_IRQ deleted. Modern drivers should _all_ be using !irq =
+to
+>> detect invalid IRQs, and not using NO_IRQ.
+>>
+>> Meanwhile, I change a bit to make the code more readability for driv=
+er
+>> when I check the code style.
+>>
+>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>> ---
+>>
+>> Changes in v1:
+>> - As Russell, Thomas, Daniel comments, let's replace NO_IRQ by '!irq=
+'.
+>>
+>>   drivers/clocksource/rockchip_timer.c | 29 +++++++++++++++---------=
+-----
+>>   1 file changed, 15 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/rockchip_timer.c
+>> b/drivers/clocksource/rockchip_timer.c index bb2c2b0..e1af449 100644
+>> --- a/drivers/clocksource/rockchip_timer.c
+>> +++ b/drivers/clocksource/rockchip_timer.c
+>> @@ -17,16 +17,16 @@
+>>
+>>   #define TIMER_NAME "rk_timer"
+>>
+>> -#define TIMER_LOAD_COUNT0 0x00
+>> -#define TIMER_LOAD_COUNT1 0x04
+>> -#define TIMER_CONTROL_REG 0x10
+>> -#define TIMER_INT_STATUS 0x18
+>> +#define TIMER_LOAD_COUNT0	0x00
+>> +#define TIMER_LOAD_COUNT1	0x04
+>> +#define TIMER_CONTROL_REG	0x10
+>> +#define TIMER_INT_STATUS	0x18
+>>
+>> -#define TIMER_DISABLE 0x0
+>> -#define TIMER_ENABLE 0x1
+>> -#define TIMER_MODE_FREE_RUNNING (0 << 1)
+>> -#define TIMER_MODE_USER_DEFINED_COUNT (1 << 1)
+>> -#define TIMER_INT_UNMASK (1 << 2)
+>> +#define TIMER_DISABLE			(0 << 0)
+>> +#define TIMER_ENABLE			(1 << 0)
+>> +#define TIMER_MODE_FREE_RUNNING		(0 << 1)
+>> +#define TIMER_MODE_USER_DEFINED_COUNT	(1 << 1)
+>> +#define TIMER_INT_UNMASK		(1 << 2)
+> not sure how Daniel sees this, but those could count as "unrelated ch=
+ange", as
+> they have nothing to do with the arm64 build-fixes.
 
-    From the log, I get the internal variable in the error case: the
-"size" is 0x100000, the "iova" is 0xfea00000, but at that time the
-"blk_size" is 0x1000 as it was the map of small-page. so it enter the
-recursion here.
-    
-    After check the unmap flow, there is only a iommu_unmap in
-__iommu_dma_unmap, and it won't check the physical address align in
-iommu_unmap.
-so if the iova and size both are SZ_16M or SZ_1M align by chance, it
-also enter the arm_short_unmap even though it was the map of small-page.
+Yep, it's no related to the arm64 uild fixes.
+I only make the code more readability for driver.
 
-    So.
-    a) Do we need unmap each sg item while iommu_dma_unmap?, like below:
+>
+>>   struct bc_timer {
+>>   	struct clock_event_device ce;
+>> @@ -49,14 +49,14 @@ static inline void __iomem *rk_base(struct
+>> clock_event_device *ce) static inline void rk_timer_disable(struct
+>> clock_event_device *ce) {
+>>   	writel_relaxed(TIMER_DISABLE, rk_base(ce) + TIMER_CONTROL_REG);
+>> -	dsb();
+>> +	dsb(sy);
+>>   }
+>>
+>>   static inline void rk_timer_enable(struct clock_event_device *ce, =
+u32
+>> flags) {
+>>   	writel_relaxed(TIMER_ENABLE | TIMER_INT_UNMASK | flags,
+>>   		       rk_base(ce) + TIMER_CONTROL_REG);
+>> -	dsb();
+>> +	dsb(sy);
+>>   }
+>>
+>>   static void rk_timer_update_counter(unsigned long cycles,
+>> @@ -64,13 +64,13 @@ static void rk_timer_update_counter(unsigned lon=
+g
+>> cycles, {
+>>   	writel_relaxed(cycles, rk_base(ce) + TIMER_LOAD_COUNT0);
+>>   	writel_relaxed(0, rk_base(ce) + TIMER_LOAD_COUNT1);
+>> -	dsb();
+>> +	dsb(sy);
+>>   }
+>>
+>>   static void rk_timer_interrupt_clear(struct clock_event_device *ce=
+)
+>>   {
+>>   	writel_relaxed(1, rk_base(ce) + TIMER_INT_STATUS);
+>> -	dsb();
+>> +	dsb(sy);
+>>   }
+>>
+>>   static inline int rk_timer_set_next_event(unsigned long cycles,
+>> @@ -148,7 +148,7 @@ static void __init rk_timer_init(struct device_n=
+ode *np)
+>> bc_timer.freq =3D clk_get_rate(timer_clk);
+>>
+>>   	irq =3D irq_of_parse_and_map(np, 0);
+>> -	if (irq =3D=3D NO_IRQ) {
+>> +	if (!irq) {
+>>   		pr_err("Failed to map interrupts for '%s'\n", TIMER_NAME);
+>>   		return;
+>>   	}
+>> @@ -173,4 +173,5 @@ static void __init rk_timer_init(struct device_n=
+ode *np)
+>>
+>>   	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
+>>   }
+>> +
+> unnecessary addition of a blank line (same reasons as above)
 
-//===============
-static void __iommu_dma_unmap(struct iommu_domain *domain, dma_addr_t
-dma_addr)
-{
-	/* ...and if we can't, then something is horribly, horribly wrong */
-+       for_each_sg(sg, s, nents, i)
-		BUG_ON(iommu_unmap(domain, pfn << shift, size) < size);
-	__free_iova(iovad, iova);
-}
-//===============
- 
-    b). I need to add do-while which was suggested to delete from [1] in
-arm_short_unmap for this case.
+It's the same reason with the above.
 
-     After I test locally, I prepare to add the do-while like below:
-     
-//==============================
-static int arm_short_unmap(struct io_pgtable_ops *ops,
-			   unsigned long iova,
-			   size_t size)
-{
-	struct arm_short_io_pgtable *data = io_pgtable_ops_to_data(ops);
-	struct io_pgtable_cfg *cfg = &data->iop.cfg;
-	arm_short_iopte *pgd, *pte = NULL;
-	arm_short_iopte curpgd, curpte = 0;
-	unsigned int blk_base, blk_size;
-	int unmap_size = 0;
-	bool pgtempty;
+CHECK: Please use a blank line after function/struct/union/enum declara=
+tions
+#176: FILE: rockchip_timer.c:176:
++}
++CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer", rk_timer_ini=
+t);
 
-	do {
-		pgd = (arm_short_iopte *)data->pgd + ARM_SHORT_PGD_IDX(iova);
-		blk_size = 0;
-		pgtempty = false;
-
-		/* Get block size */
-		if (ARM_SHORT_PGD_TYPE_IS_PGTABLE(*pgd)) {
-			pte = arm_short_get_pte_in_pgd(*pgd, iova);
-
-			if (ARM_SHORT_PTE_TYPE_IS_SMALLPAGE(*pte))
-				blk_size = SZ_4K;
-			else if (ARM_SHORT_PTE_TYPE_IS_LARGEPAGE(*pte))
-				blk_size = SZ_64K;
-		} else if (ARM_SHORT_PGD_TYPE_IS_SECTION(*pgd)) {
-			blk_size = SZ_1M;
-		} else if (ARM_SHORT_PGD_TYPE_IS_SUPERSECTION(*pgd)) {
-			blk_size = SZ_16M;
-		}
-
-		if (WARN_ON(!blk_size))
-			return 0;
-
-		blk_base = iova & ~(blk_size - 1);
-		pgd = (arm_short_iopte *)data->pgd + ARM_SHORT_PGD_IDX(blk_base);
-		curpgd = *pgd;
-
-		if (blk_size == SZ_4K || blk_size == SZ_64K) {
-			pte = arm_short_get_pte_in_pgd(*pgd, blk_base);
-			curpte = *pte;
-			__arm_short_set_pte(pte, 0, blk_size / SZ_4K, cfg);
-
-			pgtempty = __arm_short_pgtable_empty(pgd);
-			if (pgtempty)
-				__arm_short_set_pte(pgd, 0, 1, cfg);
-		} else if (blk_size == SZ_1M || blk_size == SZ_16M) {
-			__arm_short_set_pte(pgd, 0, blk_size / SZ_1M, cfg);
-		}
-
-		cfg->tlb->tlb_add_flush(blk_base, blk_size, true, data->iop.cookie);
-		cfg->tlb->tlb_sync(data->iop.cookie);
-
-		if (pgtempty)/* Free lvl2 pgtable after tlb-flush */
-			__arm_short_free_pgtable(
-					ARM_SHORT_GET_PGTABLE_VA(curpgd),
-					ARM_SHORT_BYTES_PER_PTE, false, cfg);
-
-		/*
-		 * If the unmap size which is from the pgsize_bitmap is more
-		 * than the current blk_size, unmap it continuously.
-		 */
-		if (blk_size <= size) {
-			iova += blk_size;
-			size -= blk_size;
-			unmap_size += blk_size;
-			continue;
-		} else { /* Split this block */
-			return arm_short_split_blk_unmap(
-					ops, iova, size, blk_size,
-					ARM_SHORT_PGD_GET_PROT(curpgd),
-					ARM_SHORT_PTE_GET_PROT_LARGE(curpte));
-		}
-	}while (size);
-
-	return unmap_size;
-}
-//=============================
-
-    Is there any other suggestion?
-    Thanks very much.
+I know, we can ignore the above warning.
+That's a bit better, I thnik.
 
 
-[1]:http://lists.linuxfoundation.org/pipermail/iommu/2015-June/013322.html
-
-> > > +       }
-> > > +
-> > > +       return size;
-> > > +}
-> > > +
+>>   CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer", rk_timer=
+_init);
+>
+> Heiko
+>
 > _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+
+--=20
+***********************************************************************=
+***************
+=E7=8E=8B=E6=99=93=E8=85=BE    Caesar Wang
+Product R&D Dept.III
+=46uzhou Rockchip Electronics Co.Ltd
+Addr=EF=BC=9A  NO.18 Building, A District, Fuzhou Software Park,Gulou D=
+istrict,Fuzhou, Fujian,China(Fuzhou Headquarters)
+               21F,Malata Building,Kejizhongyi Avenue,Nanshan District,=
+Shenzhen  (Shenzhen Office)
+Tel=EF=BC=9A+86-591-83991906/07 - 8221
+Mobile:+86 15059456742
+E-mail : wxt@rock-chips.com
+***********************************************************************=
+****************
+***********************************************************************=
+****************
+IMPORTANT NOTICE: This email is from Fuzhou Rockchip Electronics Co., L=
+td .The contents of this email and any attachments may
+contain information that is privileged, confidential and/or exempt from=
+ disclosure under applicable law and relevant NDA.
+If you are not the intended recipient, you are hereby notified that any=
+ disclosure, copying, distribution, or use of the
+information is STRICTLY PROHIBITED. Please immediately contact the send=
+er as soon as possible and destroy the material
+in its entirety in any format. Thank you.
+***********************************************************************=
+****************
