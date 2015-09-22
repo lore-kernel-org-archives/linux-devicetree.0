@@ -1,309 +1,55 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: sun8i: Add Allwinner A83T dtsi
-Date: Tue, 22 Sep 2015 17:54:50 +0200
-Message-ID: <20150922155450.GL4684@lukather>
-References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
- <1442936337-3104-4-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v5 3/6] power: Add support for DA9150 Fuel-Gauge
+Date: Tue, 22 Sep 2015 17:58:01 +0200
+Message-ID: <20150922155801.GB4235@earth>
+References: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
+ <2ee6ba34e4489f2657e324ebcab0b775d5fba1de.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tuMntWBhi9NC2Hav"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTXUQWYAKGQE5MKVC7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1442936337-3104-4-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <2ee6ba34e4489f2657e324ebcab0b775d5fba1de.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
---tuMntWBhi9NC2Hav
-Content-Type: text/plain; charset=UTF-8
+
+--7iMSBzlTiPOCCT2k
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Sep 22, 2015 at 11:38:56PM +0800, Vishnu Patekar wrote:
-> Allwinner A83T is new octa-core cortex-a7 SOC.
-> This adds the basic dtsi, the clocks differs from
-> earlier sun8i SOCs.
-> 
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 243 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 243 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-a83t.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> new file mode 100644
-> index 0000000..f6ddd9c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -0,0 +1,243 @@
-> +/*
-> + * Copyright 2015 Vishnu Patekar
-> + *
-> + * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> +
-> + */
-> +
-> +#include "skeleton.dtsi"
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +
-> +	chosen {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <0>;
-> +		};
-> +
-> +		cpu@1 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <1>;
-> +		};
-> +
-> +		cpu@2 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <2>;
-> +		};
-> +
-> +		cpu@3 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <3>;
-> +		};
-> +		cpu@4 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <4>;
-> +		};
-> +
-> +		cpu@5 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <5>;
-> +		};
-> +		cpu@6 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <6>;
-> +		};
-> +
-> +		cpu@7 {
-> +			compatible = "arm,cortex-a7";
-> +			device_type = "cpu";
-> +			reg = <7>;
-> +		};
-> +	};
-> +
-> +	memory {
-> +		reg = <0x40000000 0x80000000>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <24000000>;
-> +		arm,cpu-registers-not-fw-configured;
-> +	};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		osc24M: osc24M_clk {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <24000000>;
-> +			clock-output-names = "osc24M";
-> +		};
-> +
-> +		osc32k: osc32k_clk {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32768>;
-> +			clock-output-names = "osc32k";
-> +		};
-> +	};
-> +
-> +	soc@01c00000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		pio: pinctrl@01c20800 {
-> +			compatible = "allwinner,sun8i-a83t-pinctrl";
-> +			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> +			/* compatible gets set in SoC specific dtsi file */
+Hi,
 
-Which DTSI?
+On Fri, Sep 11, 2015 at 11:05:35AM +0100, Adam Thomson wrote:
+> This adds power supply driver support for the Fuel-Gauge part of
+> the DA9150 combined Charger and Fuel-Gauge device.
 
-> +			reg = <0x01c20800 0x400>;
-> +			/* interrupts get set in SoC specific dtsi file */
+Acked-By: Sebastian Reichel <sre@kernel.org>
 
-Ditto
+-- Sebastian
 
-> +			clocks = <&osc24M>;
-> +			gpio-controller;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			#gpio-cells = <3>;
-> +
-> +			uart0_pins_a: uart0@0 {
-> +				allwinner,pins = "PF2", "PF4";
-> +				allwinner,function = "uart0";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			mmc0_pins_a: mmc0@0 {
-> +				allwinner,pins = "PF0", "PF1", "PF2",
-> +						 "PF3", "PF4", "PF5";
-> +				allwinner,function = "mmc0";
-> +				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			mmc1_pins_a: mmc1@0 {
-> +				allwinner,pins = "PG0", "PG1", "PG2",
-> +						 "PG3", "PG4", "PG5";
-> +				allwinner,function = "mmc1";
-> +				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			mmc2_8bit_pins: mmc2_8bit {
-> +				allwinner,pins = "PC5", "PC6", "PC8",
-> +						 "PC9", "PC10", "PC11",
-> +						 "PC12", "PC13", "PC14",
-> +						 "PC15";
-> +				allwinner,function = "mmc2";
-> +				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			i2c0_pins_a: i2c0@0 {
-> +				allwinner,pins = "PH0", "PH1";
-> +				allwinner,function = "i2c0";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			i2c1_pins_a: i2c1@0 {
-> +				allwinner,pins = "PH2", "PH3";
-> +				allwinner,function = "i2c1";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			i2c2_pins_a: i2c2@0 {
-> +				allwinner,pins = "PH4", "PH5";
-> +				allwinner,function = "i2c2";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
+--7iMSBzlTiPOCCT2k
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Please order those by alphabetical order.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> +		};
-> +
-> +		uart0: serial@01c28000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x01c28000 0x400>;
-> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			clocks = <&osc24M>;
-> +			status = "disabled";
-> +		};
-> +
-> +		gic: interrupt-controller@01c81000 {
-> +			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-> +			reg = <0x01c81000 0x1000>,
-> +			      <0x01c82000 0x1000>,
-> +			      <0x01c84000 0x2000>,
-> +			      <0x01c86000 0x2000>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		};
-> +
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+iQIcBAEBCgAGBQJWAXqHAAoJENju1/PIO/qa2N0P/0gjNoUF5xtt07nhVENr9Jp6
+cSxWlJ8YKRpwY5+jGP7T8cjw9u7JlkfhzaGC5hMfKyXL5uGU0t5Dl2bbVrqr62P5
+dopaMbHqjD2PDh40b28fT1PsnhFIehxTzCOSv8MsbyDSdd9Ul6rEFGI7bSMUTglX
+zLL50tpMpshEnnxID5AwsqYtcFyS88seyWEkdZdQUlAFbLkZ7PGG2cAGdXdD0rSf
+orD9ZfB0OZP+wL789vxbGlW+HDM4Bo3i+Tum05SRHsm4m1m3+b3afEhW0PiY8dat
+RRz3fNyfAJ9acg7gCnHX2outSYWaWujbP/zysOcR/4WzBwF1Rys2CBGHBerEwUSL
+uDnHyFmEMpD5eBQGHuIxlLQ8TO6T+FDEyTrozUpg7Ug9RKVnzjJC84Q/7l4EuFPM
+Nc0bOhSU0QJGxxN88g2LzRUZptTotuJdYJ/ejgAg0S3uXm3FbMWEfdO22CTYYXD9
+xdT5WD6TMsFnbZkok/UhlYn0cHBdFTsNGCrRUUmhYkjNAsqYi7dPXrgsKDN8Ut+l
+2CBp+H0QlWV5/Y/djSdv+c6P1O2osfJarwNMtLpxpToEdgRcWQZrbIXEqOvrLpoz
+HdnMcx/on3701bIvOGEzHM4tJgMpfA92cvalP7l8RcLRjyInkpCiKlH+asx/lbn0
+GeR9yvsotnxyTwDK92DJ
+=0d+3
+-----END PGP SIGNATURE-----
 
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---tuMntWBhi9NC2Hav--
+--7iMSBzlTiPOCCT2k--
