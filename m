@@ -1,42 +1,51 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 1/5] clk: berlin: add common pll driver
-Date: Tue, 22 Sep 2015 22:12:32 +0800
-Message-ID: <1442931156-5877-2-git-send-email-jszhang@marvell.com>
+Subject: [PATCH 3/5] clk: berlin: add clk support for berlin4ct
+Date: Tue, 22 Sep 2015 22:12:34 +0800
+Message-ID: <1442931156-5877-4-git-send-email-jszhang@marvell.com>
 References: <1442931156-5877-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1442931156-5877-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pll driver for Marvell SoCs newer than BG2, BG2CD, BG2Q.
+This patch supports the gate-clk and berlin-clk in berlin4ct SoC.
 
 Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- drivers/clk/berlin/Makefile |   2 +-
- drivers/clk/berlin/pll.c    | 119 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 120 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/berlin/pll.c
+ drivers/clk/berlin/Makefile        |   2 +-
+ drivers/clk/berlin/clk-berlin4ct.c | 164 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 165 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/berlin/clk-berlin4ct.c
 
 diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
-index 2a36ab7..747700d 100644
+index 741ba22..fe29dd3 100644
 --- a/drivers/clk/berlin/Makefile
 +++ b/drivers/clk/berlin/Makefile
 @@ -1,4 +1,4 @@
--obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
-+obj-y += pll.o berlin2-avpll.o berlin2-pll.o berlin2-div.o
+-obj-y += pll.o clk.o berlin2-avpll.o berlin2-pll.o berlin2-div.o
++obj-y += pll.o clk.o clk-berlin4ct.o berlin2-avpll.o berlin2-pll.o berlin2-div.o
  obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
  obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
  obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
-diff --git a/drivers/clk/berlin/pll.c b/drivers/clk/berlin/pll.c
+diff --git a/drivers/clk/berlin/clk-berlin4ct.c b/drivers/clk/berlin/clk-berlin4ct.c
 new file mode 100644
-index 0000000..9aad0b6
+index 0000000..b9d4a9b
 --- /dev/null
-+++ b/drivers/clk/berlin/pll.c
-@@ -0,0 +1,119 @@
++++ b/drivers/clk/berlin/clk-berlin4ct.c
+@@ -0,0 +1,164 @@
 +/*
 + * Copyright (c) 2015 Marvell Technology Group Ltd.
 + *
@@ -54,107 +63,152 @@ index 0000000..9aad0b6
 + * You should have received a copy of the GNU General Public License along with
 + * this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
++#include <linux/clk-provider.h>
 +#include <linux/io.h>
++#include <linux/kernel.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
 +#include <linux/slab.h>
-+#include <linux/kernel.h>
-+#include <linux/clk-provider.h>
 +
-+#define PLL_CTRL0	0x0
-+#define PLL_CTRL1	0x4
-+#define PLL_CTRL2	0x8
-+#define PLL_CTRL3	0xC
-+#define PLL_CTRL4	0x10
-+#define PLL_STATUS	0x14
++#include "clk.h"
 +
-+#define PLL_SOURCE_MAX	2
++#define CLK_SOURCE_MAX	5
 +
-+struct berlin_pll {
-+	struct clk_hw	hw;
-+	void __iomem	*ctrl;
-+	void __iomem	*bypass;
-+	u8		bypass_shift;
++static struct clk_onecell_data gateclk_data;
++static struct clk_onecell_data clk_data;
++
++static DEFINE_SPINLOCK(lock);
++
++static const struct gateclk_desc berlin4ct_gates[] __initconst = {
++	{ "tspsysclk",		"perifsysclk",	0 },
++	{ "usb0coreclk",	"perifsysclk",	1 },
++	{ "zspsysclk",		"perifsysclk",	2 },
++	{ "sdiosysclk",		"perifsysclk",	3 },
++	{ "ethcoreclk",		"perifsysclk",	4 },
++	{ "pcie0sys",		"perifsysclk",	6 },
++	{ "sata0core",		"perifsysclk",	7 },
++	{ "nfcsysclk",		"perifsysclk",	8 },
++	{ "emmcsysclk",		"perifsysclk",	9 },
++	{ "ihb0sysclk",		"perifsysclk",	10 },
 +};
 +
-+#define to_berlin_pll(hw)       container_of(hw, struct berlin_pll, hw)
-+
-+static u8 vcodiv_berlin[] = {1, 2, 4, 8, 16, 32, 64, 128};
-+
-+static unsigned long berlin_pll_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	u32 val, fbdiv, rfdiv, vcodivsel, bypass;
-+	struct berlin_pll *pll = to_berlin_pll(hw);
-+
-+	bypass = readl_relaxed(pll->bypass);
-+	if (bypass & (1 << pll->bypass_shift))
-+		return parent_rate;
-+
-+	val = readl_relaxed(pll->ctrl + PLL_CTRL0);
-+	fbdiv = (val >> 12) & 0x1FF;
-+	rfdiv = (val >> 3) & 0x1FF;
-+	val = readl_relaxed(pll->ctrl + PLL_CTRL1);
-+	vcodivsel = (val >> 9) & 0x7;
-+	return parent_rate * fbdiv * 4 / rfdiv /
-+		vcodiv_berlin[vcodivsel];
-+}
-+
-+static u8 berlin_pll_get_parent(struct clk_hw *hw)
-+{
-+	struct berlin_pll *pll = to_berlin_pll(hw);
-+	u32 bypass = readl_relaxed(pll->bypass);
-+
-+	if (bypass & (1 << pll->bypass_shift))
-+		return 1;
-+	else
-+		return 0;
-+}
-+
-+static const struct clk_ops berlin_pll_ops = {
-+	.recalc_rate	= berlin_pll_recalc_rate,
-+	.get_parent	= berlin_pll_get_parent,
++static const struct clk_desc berlin4ct_descs[] __initconst = {
++	{ "cpufastrefclk",	0x0 },
++	{ "memfastrefclk",	0x4 },
++	{ "cfgclk",		0x20,	CLK_IGNORE_UNUSED },
++	{ "perifsysclk",	0x24,	CLK_IGNORE_UNUSED },
++	{ "hbclk",		0x28 },
++	{ "atbclk",		0x2c },
++	{ "decoderclk",		0x40 },
++	{ "decoderm3clk",	0x44 },
++	{ "decoderpcubeclk",	0x48 },
++	{ "encoderclk",		0x4c },
++	{ "ovpcoreclk",		0x50 },
++	{ "gfx2dcoreclk",	0x60 },
++	{ "gfx3dcoreclk",	0x64 },
++	{ "gfx3dshclk",		0x68 },
++	{ "gfx3dsysclk",	0x6c },
++	{ "gfx2dsysclk",	0x70 },
++	{ "aviosysclk",		0x80 },
++	{ "vppsysclk",		0x84 },
++	{ "eddcclk",		0x88 },
++	{ "aviobiuclk",		0x8c },
++	{ "zspclk",		0xa0 },
++	{ "tspclk",		0xc0 },
++	{ "tsprefclk",		0xc4 },
++	{ "ndsclk",		0xc8 },
++	{ "nocsclk",		0xcc },
++	{ "apbcoreclk",		0xd0,	CLK_IGNORE_UNUSED },
++	{ "emmcclk",		0xe0 },
++	{ "sd0clk",		0xe4 },
++	{ "sd1clk",		0xe8 },
++	{ "dllmstrefclk",	0xec },
++	{ "gethrgmiiclk",	0xf0 },
++	{ "gethrgmiisysclk",	0xf4 },
++	{ "usim0clk",		0x100 },
++	{ "pcietestclk",	0x110 },
++	{ "usb2testclk",	0x120 },
++	{ "usb3testclk",	0x124 },
++	{ "usb3coreclk",	0x128 },
++	{ "nfceccclk",		0x130 },
++	{ "bcmclk",		0x140 },
 +};
 +
-+void __init berlin_pll_setup(struct device_node *np)
++static void __init berlin4ct_gateclk_setup(struct device_node *np)
 +{
-+	struct clk_init_data init;
-+	struct berlin_pll *pll;
-+	const char *parent_names[PLL_SOURCE_MAX];
-+	struct clk *clk;
-+	int ret, num_parents;
++	int i, n, ret;
++	void __iomem *base;
++	struct clk **clks;
++
++	base = of_iomap(np, 0);
++	if (WARN_ON(!base))
++		return;
++
++	n = ARRAY_SIZE(berlin4ct_gates);
++	clks = kzalloc(n * sizeof(struct clk *), GFP_KERNEL);
++	if (WARN_ON(!clks))
++		return;
++
++	for (i = 0; i < n; i++) {
++		clks[i] = clk_register_gate(NULL, berlin4ct_gates[i].name,
++				berlin4ct_gates[i].parent_name,
++				berlin4ct_gates[i].flags, base,
++				berlin4ct_gates[i].bit_idx, 0, &lock);
++		WARN_ON(IS_ERR(clks[i]));
++	}
++
++	gateclk_data.clks = clks;
++	gateclk_data.clk_num = i;
++
++	ret = of_clk_add_provider(np, of_clk_src_onecell_get,
++				  &gateclk_data);
++	if (WARN_ON(ret))
++		return;
++
++}
++CLK_OF_DECLARE(berlin4ct_gateclk, "marvell,berlin4ct-gateclk",
++	       berlin4ct_gateclk_setup);
++
++static void __init berlin4ct_clk_setup(struct device_node *np)
++{
++	int i, n, ret, num_parents;
++	void __iomem *base;
++	struct clk **clks;
++	const char *parent_names[CLK_SOURCE_MAX];
 +
 +	num_parents = of_clk_get_parent_count(np);
-+	if (num_parents <= 0 || num_parents > PLL_SOURCE_MAX)
++	if (num_parents <= 0 || num_parents > CLK_SOURCE_MAX)
 +		return;
 +
 +	of_clk_parent_fill(np, parent_names, num_parents);
 +
-+	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-+	if (WARN_ON(!pll))
++	base = of_iomap(np, 0);
++	if (WARN_ON(!base))
 +		return;
 +
-+	pll->ctrl = of_iomap(np, 0);
-+	pll->bypass = of_iomap(np, 1);
-+	ret = of_property_read_u8(np, "bypass-shift", &pll->bypass_shift);
-+	if (WARN_ON(!pll->ctrl || !pll->bypass || ret))
++	n = ARRAY_SIZE(berlin4ct_descs);
++	clks = kzalloc(n * sizeof(struct clk *), GFP_KERNEL);
++	if (WARN_ON(!clks))
 +		return;
 +
-+	init.name = np->name;
-+	init.ops = &berlin_pll_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = num_parents;
++	for (i = 0; i < n; i++) {
++		clks[i] = berlin_clk_register(berlin4ct_descs[i].name,
++				num_parents, parent_names,
++				berlin4ct_descs[i].flags,
++				base + berlin4ct_descs[i].offset);
++		WARN_ON(IS_ERR(clks[i]));
++	}
 +
-+	pll->hw.init = &init;
++	clk_data.clks = clks;
++	clk_data.clk_num = i;
 +
-+	clk = clk_register(NULL, &pll->hw);
-+	if (WARN_ON(IS_ERR(clk)))
-+		return;
-+
-+	ret = of_clk_add_provider(np, of_clk_src_simple_get, clk);
++	ret = of_clk_add_provider(np, of_clk_src_onecell_get,
++				  &clk_data);
 +	if (WARN_ON(ret))
 +		return;
++
 +}
-+CLK_OF_DECLARE(berlin_pll, "marvell,berlin-pll", berlin_pll_setup);
++CLK_OF_DECLARE(berlin4ct_clk, "marvell,berlin4ct-clk",
++	       berlin4ct_clk_setup);
 -- 
 2.5.3
