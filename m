@@ -1,71 +1,89 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 00/11] power: bq24257: Add support for bq24250/bq24251
-Date: Tue, 22 Sep 2015 21:31:14 +0200
-Message-ID: <20150922193113.GC9949@earth>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX SoCs.
+Date: Tue, 22 Sep 2015 21:33:25 +0200
+Message-ID: <1763517.VsvPY9OlHW@wuerfel>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com> <2512701.zkjk3n3AQS@wuerfel> <20150922153931.GD17444@red-moon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442612399-341-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150922153931.GD17444@red-moon>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: David Daney <ddaney@caviumnetworks.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <ddaney.cavm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 22 September 2015 16:39:31 Lorenzo Pieralisi wrote:
+> On Fri, Sep 18, 2015 at 08:45:50PM +0100, Arnd Bergmann wrote:
+> > On Friday 18 September 2015 10:00:32 David Daney wrote:
+> > > On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
+> > > > On Thursday 17 September 2015 15:41:33 David Daney wrote:
+> > > >> From: David Daney <david.daney@cavium.com>
+> > > >>
+> > > >> The on-chip devices all have fixed bars.  So, fix them up.
+> > > >>
+> > > >> Signed-off-by: David Daney <david.daney@cavium.com>
+> > > >>
+> > > >
+> > > > You should be able to just mark the BARs as fixed in DT
+> > > 
+> > > In the case of ACPI, there is no DT.  So we would need a different 
+> > > solution for ACPI.  What would you recommend for ACPI?
+> > 
+> > I would expect that this does not matter at all on ACPI, because
+> > the devices that need it are not hot-plugged, and all boot-time
+> > devices are probed by the firmware: the ACPI PCI implementation
+> > does not reassign any BARs, except for the hotplug case.
+> 
+> What do you mean by "the ACPI PCI implementation does not reassign
+> any BARs" ? Do you mean on x86 ? The resource assignment is part
+> of the resource survey on x86, where all resources that can be claimed
+> are claimed, but still, some of them may be still reassigned IIUC.
 
---/e2eDi0V/xtL+Mc8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The ACPI PCI implementation should be completely architecture
+independent and do the same thing everywhere. The code is spread
+over drivers/acpi/pci*, with small parts currently residing in
+arch/{x86,ia64} that need to be moved to drivers/acpi/
 
-Hi,
+> On arm64 we do not carry out any resource survey at present, but
+> if we do (and we should), it will have to work for both DT and ACPI
+> systems.
 
-On Fri, Sep 18, 2015 at 04:39:48PM -0500, Andreas Dannenberg wrote:
-> This patch series extends the driver to also support bq24250/bq24251.
->=20
-> The bq24250/251/257 devices have a very similar feature set and are
-> virtually identical from a control register point of view so it made
-> sense to extend the existing driver rather than submitting a new driver.
-> In addition to the new device support the driver is also extended to
-> allow access to some device features previously hidden. Basic and
-> potentially dangerous charger config parameters affecting the actual
-> charging of the Li-Ion battery are only configurable through firmware
-> rather than sysfs properties. However some newly introduced properties
-> are exposed through sysfs properties as access to them may be desired
-> from userspace. For example, it is now possible to manually configure
-> the maximum current drawn from the input source to accommodate different
-> chargers (0.5A, 1.5A, 2.0A and so on) based on system knowledge a
-> userspace application may have rather than rely on the auto-detection
-> mechanism that may not work in all possible scenarios.
->=20
-> Note that most patches have dependencies on other patches in the series.
+This is not a difference between DT and ACPI, but a difference between
+embedded and server. Server platforms that have a proper firmware
+to scan the PCI bus should not set PCI_REASSIGN_ALL_RSRC and
+PCI_REASSIGN_ALL_BUS, while embedded systems that don't set up
+the PCI bus before boot have to set those.
 
-Please document the custom sysfs files in Documentation/ABI/.
+On ACPI, reassigning the resources would actually be dangerous
+because the firmware may rely on devices to be at a certain
+location (both bus number and mmio address), or may play tricks
+here to hide stuff from the OS.
 
--- Sebastian
+> > > Also, can you point me to the OF device tree specification where it 
+> > > tells how to specify PCI BAR addresses, I would especially be interested 
+> > > in knowing how to specify fixed SRIOV BAR addresses in the device tree.
+> > 
+> > This is the 'n' bit mentioned sections 2.1.3 and 2.2.1.1 of the
+> > PCI binding. When it is set, the OS is not supposed to try to
+> > reassign the BAR even on machines that otherwise do a complete
+> > rescan.
+> 
+> I do not see any code in the kernel taking care of that bit and
+> if I am not mistaken the code that allows creating pci devices
+> exists in PowerPC arch code (arch/powerpc/kernel/pci_of_scan.c) and
+> should be moved out of there for the other arches to use it.
+> 
+> Or maybe we can use DT just to fix-up the resource flags (ie
+> every PCI device will have its own of_node set if it is present
+> in the DT, we can use it to fixup its resources and related flags,
+> pcibios_add_device() ?).
 
---/e2eDi0V/xtL+Mc8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I haven't looked at the code in detail now, but I'm pretty sure that
+a device node that refers to a PCI device is connected to the
+dev->of_node pointer already on all architectures.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+It's quite possible that we never implemented the fixed BAR logic
+though, but it can be done based on those pointers.
 
-iQIcBAEBCgAGBQJWAayBAAoJENju1/PIO/qaguAQAKGYFTDzoxUXKp6AkaSt6q0G
-Z+DYHTQzI78sMhm4XkSC+ZGL7gVpJgIhjG7gwq/8o8kO0tV7+RhW3T8becTKqP/e
-UVIqdDGnhZ/IgS6/XExSpuZ8dlT/oGcyMp4+siiBvrXGl55PuWdInXQgmueYTdhm
-ngn58i9ITFogbyOu3DEcExrBwCvsVXcqfS8L3eJMQ8boCtsF3Ftx3kWvgck3sHVA
-wLs8nzejVBuEAG9DmQVJKjuD+mgAapcduO4ECKto6GXyNuW6ES7g/38t+ZhfKK+y
-+XTHFjuk91MirU5HkKgwlB8NalMfRG5yxy1I1BALb/iWJ3sbxiBWB9w8ycrE8vIv
-3xhcqxavh0RnDP/zsRB04jVqAoaYWyALqkGyEKz+QAtd9CnygFcmIWemtYfZUgr7
-YozsSY4FybtLPjfhn4L3O4LHlNx0UJR0UJugpJBhhJ42PyqB16wQKdnGRXFzKHWW
-OPHMVaajncIq0ZQiGICM2f/L5UaicC8hO/lpUojZbFKK3BKc/TJLp62QrwIgT5uy
-4naRs3gJFPGiHKYS38DTKty6DS/01be7qOSfPI9H/qUxJGEE3RKsWb2EzMGKiwvQ
-JlmvFEA5SoZDCc9tzumOTATDMtsO1rbYLluq/teXxGyZg5xhhf/JMIBT2gXOmG0w
-f8jvwP9B4dofHsZN019f
-=LQm9
------END PGP SIGNATURE-----
-
---/e2eDi0V/xtL+Mc8--
+	Arnd
