@@ -1,11 +1,13 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v11 0/4] FPGA Manager Framework
-Date: Tue, 22 Sep 2015 10:21:07 -0500
-Message-ID: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v11 2/4] fpga manager: add sysfs interface document
+Date: Tue, 22 Sep 2015 10:21:09 -0500
+Message-ID: <1442935271-10375-3-git-send-email-atull@opensource.altera.com>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -21,38 +23,73 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-This patch set adds the FPGA manager core which exports API functions that
-write an image to a FPGA
+Add documentation under drivers/staging for new fpga manager's
+sysfs interface.
 
-I'm holding off on the DT overlay support a little for now.
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+v5  : (actually second version, but keeping version numbers
+      aligned with rest of patch series)
+      Move document to drivers/staging/fpga/Documentation/ABI
 
-The core's API is minimal to start with: only 6 functions.  This gives a
-manufacturer-agnostic interface for programming FPGA's such that higher
-level interfaces (such as DT Overlays) can be shared.
+v6  : No change in this patch for v6 of the patch set
+v7  : No change in this patch for v7 of the patch set
+v8  : No change in this patch for v8 of the patch set
 
-Alan Tull (4):
-  usage documentation for FPGA manager core
-  fpga manager: add sysfs interface document
-  add FPGA manager core
-  fpga manager: add driver for socfpga fpga manager
+v9  : Remove 'firmware' and 'reset' files
+      Update state strings
 
- Documentation/ABI/testing/sysfs-class-fpga-manager |   37 ++
- Documentation/fpga/fpga-mgr.txt                    |  171 ++++++
- drivers/Kconfig                                    |    2 +
- drivers/Makefile                                   |    1 +
- drivers/fpga/Kconfig                               |   24 +
- drivers/fpga/Makefile                              |    9 +
- drivers/fpga/fpga-mgr.c                            |  382 ++++++++++++
- drivers/fpga/socfpga.c                             |  616 ++++++++++++++++++++
- include/linux/fpga/fpga-mgr.h                      |  127 ++++
- 9 files changed, 1369 insertions(+)
+v10 : Clarifications about state attribute
+      Move to Documentation/ABI/testing/
+
+v11 : No change in this patch for v11 of the patch set
+---
+ Documentation/ABI/testing/sysfs-class-fpga-manager |   37 ++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-manager
- create mode 100644 Documentation/fpga/fpga-mgr.txt
- create mode 100644 drivers/fpga/Kconfig
- create mode 100644 drivers/fpga/Makefile
- create mode 100644 drivers/fpga/fpga-mgr.c
- create mode 100644 drivers/fpga/socfpga.c
- create mode 100644 include/linux/fpga/fpga-mgr.h
 
+diff --git a/Documentation/ABI/testing/sysfs-class-fpga-manager b/Documentation/ABI/testing/sysfs-class-fpga-manager
+new file mode 100644
+index 0000000..23056c5
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-fpga-manager
+@@ -0,0 +1,37 @@
++What:		/sys/class/fpga_manager/<fpga>/name
++Date:		August 2015
++KernelVersion:	4.3
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of low level fpga manager driver.
++
++What:		/sys/class/fpga_manager/<fpga>/state
++Date:		August 2015
++KernelVersion:	4.3
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Read fpga manager state as a string.
++		The intent is to provide enough detail that if something goes
++		wrong during FPGA programming (something that the driver can't
++		fix) then userspace can know, i.e. if the firmware request
++		fails, that could be due to not being able to find the firmware
++		file.
++
++		This is a superset of FPGA states and fpga manager driver
++		states.  The fpga manager driver is walking through these steps
++		to get the FPGA into a known operating state.  It's a sequence,
++		though some steps may get skipped.  Valid FPGA states will vary
++		by manufacturer; this is a superset.
++
++		* unknown		= can't determine state
++		* power off		= FPGA power is off
++		* power up		= FPGA reports power is up
++		* reset			= FPGA held in reset state
++		* firmware request	= firmware class request in progress
++		* firmware request error = firmware request failed
++		* write init		= preparing FPGA for programming
++		* write init error	= Error while preparing FPGA for
++					  programming
++		* write			= FPGA ready to receive image data
++		* write error		= Error while programming
++		* write complete	= Doing post programming steps
++		* write complete error	= Error while doing post programming
++		* operating		= FPGA is programmed and operating
 -- 
 1.7.9.5
