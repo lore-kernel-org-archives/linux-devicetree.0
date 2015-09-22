@@ -1,34 +1,27 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next 1/4] mtd: spi-nor: remove unused
- read_xfer/write_xfer hooks
-Date: Mon, 21 Sep 2015 17:01:45 -0700
-Message-ID: <20150922000145.GJ31505@google.com>
-References: <cover.1442590224.git.cyrille.pitchen@atmel.com>
- <719ad7cc8bf6df151dd799cd4f13292fd9471079.1442590224.git.cyrille.pitchen@atmel.com>
- <201509190508.55496.marex@denx.de>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [net-next PATCH 0/4] Add support for reading macid when DT
+ macid not found
+Date: Mon, 21 Sep 2015 17:22:00 -0700 (PDT)
+Message-ID: <20150921.172200.1139561155195657435.davem@davemloft.net>
+References: <1442831213-3913-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201509190508.55496.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1442831213-3913-1-git-send-email-mugunthanvnm@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: mugunthanvnm@ti.com
+Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 19, 2015 at 05:08:55AM +0200, Marek Vasut wrote:
-> On Friday, September 18, 2015 at 05:49:25 PM, Cyrille Pitchen wrote:
-> > struct spi_nor_xfer_cfg and read_xfer/write_xfer hooks were never used by
-> > any driver. Do some cleanup by removing them.
-> > 
-> > Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
-> Right, if this will ever be needed, it can be re-added.
-> 
-> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Date: Mon, 21 Sep 2015 15:56:49 +0530
 
-Applied this patch to l2-mtd.git. Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Did a boot test on dra7-evm [1] and am437x-gp-evm [2].
+> Pushed a branch [3] for others to test the patch.
+> 
+> [1]: http://pastebin.ubuntu.com/12513420/
+> [2]: http://pastebin.ubuntu.com/12513428/
+> [3]: git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git cpsw-macid-read-support
+
+Series applied, thanks.
