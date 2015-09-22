@@ -1,96 +1,182 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Please suggest proper format for DT properties.
-Date: Tue, 22 Sep 2015 10:36:51 +0200
-Message-ID: <3914149.k3sqApaTEz@wuerfel>
-References: <1442615803-17766-1-git-send-email-const@MakeLinux.com>
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: Re: [PATCH v4 1/3] leds: netxbig: add device tree binding
+Date: Tue, 22 Sep 2015 11:30:15 +0200
+Message-ID: <20150922093015.GU7306@kw.sim.vm.gnt>
+References: <1442505571-9744-1-git-send-email-simon.guinot@sequanux.org>
+ <1442505571-9744-2-git-send-email-simon.guinot@sequanux.org>
+ <56002485.7030802@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442615803-17766-1-git-send-email-const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-Cc: open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cbsCxbAnPLQXdgdB"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56002485.7030802@kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@sculo.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 19 September 2015 01:36:43 Constantine Shulyupin wrote:
-> 
-> I am designing DT support for a hwmon chip. 
-> It has some sensors, each of them can be:
->  - "disabled"
->  - "thermal diode"
->  - "thermistor"
->  - "voltage"
-> 
-> Four possible options for DT properties format.
-> 
-> Option 1: Separated property for each sensor.
-> 
-> Example nct7802 node:
-> 
-> nct7802 {
->         compatible = "nuvoton,nct7802";
->         reg = <0x2a>;
->         nuvoton,sensor1-type = "thermistor";
->         nuvoton,sensor2-type = "disabled";
->         nuvoton,sensor3-type = "voltage";
-> };
-> 
-> Option 2: Array of strings for all sensors.
-> 
-> nct7802 {
->         compatible = "nuvoton,nct7802";
->         reg = <0x2a>;
->         nuvoton,sensors-types = "thermistor", "disabled", "voltage";
-> };
-> 
-> Option 3: Sets of 4 cells.
-> 
->   Borrowed from marvell,reg-init and broadcom,c45-reg-init.
-> 
->   The first cell is the page address, 
->   the second a register address within the page,
->   the third cell contains a mask to be ANDed with the existing register
->   value, and the fourth cell is ORed with the result to yield the
->   new register value. If the third cell has a value of zero,
->   no read of the existing value is performed.
-> 
-> Example nct7802 node:
-> 
-> nct7802 {
->         compatible = "nuvoton,nct7802";
->         reg = <0x2a>;
->         nct7802,reg-init =
->                 <0 0x21 0 0x01 > // START = 1
->                 <0 0x22 0x03 0x02>; // RTD1_MD = 2
-> };
-> 
 
-I would strongly prefer Option 1 or 2 over option 3.
-Between 1 and 2, I'd probably go for 1. Another option might
-be to have a subnode per sensor:
+--cbsCxbAnPLQXdgdB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-nct7802@2a {
-        compatible = "nuvoton,nct7802";
-        reg = <0x2a>;
-	#address-cells=<1>;
-	#size-cells=<0>;
+On Mon, Sep 21, 2015 at 10:38:45AM -0500, Rob Herring wrote:
 
-	sensor@1 {
-		compatible = "nuvoton,nct7802-thermistor";
-		further-properties;
-	};
-	sensor@3 {
-		compatible = "nuvoton,nct7802-voltage";
-		for-example-range-mv = <0 5000>;
-	};
-};
+Hi Rob,
 
-In either case, I'd say that disabled sensors should not need to
-be listed.
+Thanks for your feedback. Please, see my answers below.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 09/17/2015 10:59 AM, Simon Guinot wrote:
+> > This patch adds device tree support for the netxbig LEDs.
+> >=20
+> > This also introduces a additionnal DT binding for the GPIO extension bus
+> > (netxbig-gpio-ext) used to configure the LEDs. Since this bus could also
+> > be used to control other devices, then it seems more suitable to have it
+> > in a separate DT binding.
+> >=20
+> > Signed-off-by: Simon Guinot <simon.guinot@sequanux.org>
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > ---
+> >  .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |  22 ++
+> >  .../devicetree/bindings/leds/leds-netxbig.txt      |  92 ++++++++
+> >  drivers/leds/leds-netxbig.c                        | 258 +++++++++++++=
+++++++--
+> >  include/dt-bindings/leds/leds-netxbig.h            |  18 ++
+> >  4 files changed, 369 insertions(+), 21 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio=
+-ext.txt
+> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-netxbig=
+=2Etxt
+> >  create mode 100644 include/dt-bindings/leds/leds-netxbig.h
+> >=20
+> > Changes for v2:
+> > - Check timer mode value retrieved from DT.
+> > - In netxbig_leds_get_of_pdata, don't use unsigned long variables to get
+> >   timer delay values from DT with function of_property_read_u32_index.
+> >   Instead, use a temporary u32 variable. This allows to silence a static
+> >   checker warning.
+> > - Make timer property optional in the binding documentation. It is now
+> >   aligned with the driver code.
+> >=20
+> > Changes for v3:
+> > - Fix pointer usage with the temporary u32 variable while calling
+> >   of_property_read_u32_index.
+> >=20
+> > Changes for v4:
+> > - In DT binding document netxbig-gpio-ext.txt, detail byte order for
+> >   registers and latch mechanism for "enable-gpio".
+> > - In leds-netxbig.c, add some error messages.
+> > - In leds-netxbig.c, fix some "sizeof" style issues.
+> > - In leds-netxbig.c, in netxbig_leds_get_of_pdata(), move the
+> >   of_property_read_string() calls after the error-prone checks.
+> > - Add some Acked-by.
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.tx=
+t b/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+> > new file mode 100644
+> > index 000000000000..50ec2e690701
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+> > @@ -0,0 +1,22 @@
+> > +Binding for the GPIO extension bus found on some LaCie/Seagate boards
+> > +(Example: 2Big/5Big Network v2, 2Big NAS).
+> > +
+> > +Required properties:
+> > +- compatible: "lacie,netxbig-gpio-ext".
+> > +- addr-gpios: GPIOs representing the address register (LSB -> MSB).
+> > +- data-gpios: GPIOs representing the data register (LSB -> MSB).
+> > +- enable-gpio: latches the new configuration (address, data) on raisin=
+g edge.
+> > +
+> > +Example:
+> > +
+> > +netxbig_gpio_ext: netxbig-gpio-ext {
+> > +	compatible =3D "lacie,netxbig-gpio-ext";
+> > +
+> > +	addr-gpios =3D <&gpio1 15 GPIO_ACTIVE_HIGH
+> > +		      &gpio1 16 GPIO_ACTIVE_HIGH
+> > +		      &gpio1 17 GPIO_ACTIVE_HIGH>;
+> > +	data-gpios =3D <&gpio1 12 GPIO_ACTIVE_HIGH
+> > +		      &gpio1 13 GPIO_ACTIVE_HIGH
+> > +		      &gpio1 14 GPIO_ACTIVE_HIGH>;
+> > +	enable-gpio =3D <&gpio0 29 GPIO_ACTIVE_HIGH>;
+> > +};
+> > diff --git a/Documentation/devicetree/bindings/leds/leds-netxbig.txt b/=
+Documentation/devicetree/bindings/leds/leds-netxbig.txt
+> > new file mode 100644
+> > index 000000000000..efadbecbfeb9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/leds-netxbig.txt
+> > @@ -0,0 +1,92 @@
+> > +Binding for the CPLD LEDs (GPIO extension bus) found on some LaCie/Sea=
+gate
+> > +boards (Example: 2Big/5Big Network v2, 2Big NAS).
+> > +
+> > +Required properties:
+> > +- compatible: "lacie,netxbig-leds".
+> > +- gpio-ext: Phandle for the gpio-ext bus.
+>=20
+> Would being a subnode of gpio-ext work instead?
+
+Well, it is really unclear to me. I think that the GPIO extension bus
+can be seen as a "kind of" GPIO chip. And devices which are using a GPIO
+resource are not represented in DT as sub-nodes of the GPIO node. That's
+why I chose to use a phandle here.=20
+
+Let me know if this representation is not correct.
+
+>=20
+> > +
+> > +Optional properties:
+> > +- timers: Timer array. Each timer entry is represented by three intege=
+rs:
+> > +  Mode (gpio-ext bus), delay_on and delay_off.
+> > +
+> > +Each LED is represented as a sub-node of the netxbig-leds device.
+> > +
+> > +Required sub-node properties:
+> > +- mode-addr: Mode register address on gpio-ext bus.
+> > +- mode-val: Mode to value mapping. Each entry is represented by two in=
+tegers:
+> > +  A mode and the corresponding value on the gpio-ext bus.
+>=20
+> I somewhat wonder if this is too low level and should just be in the
+> driver instead. I guess with only 3 addr and data lines, it is okay. It
+> wouldn't scale to a large number of registers though.
+
+Even if it is not the case now, note that this values could be different
+for an another board. For example, we already have some x86-based boards
+(still no mainlined yet) which are using the leds-netxbig driver but
+with a different gpio-ext configuration. This could happen with some
+ARM-based boards too.
+
+That's why I think it is better to have this properties in the DT rather
+than hardcoded values in the driver.
+
+>=20
+> > +- bright-addr: Brightness register address on gpio-ext bus.
+> > +- bright-max: Maximum brightness value.
+>=20
+> We already have a somewhat standard max-brightness property.
+
+Yes, Jacek mentioned that too. It made the change in the v5.
+
+Thanks,
+
+Simon
+
+--cbsCxbAnPLQXdgdB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlYBH6cACgkQgtp0PDeOcDqXVgCeJ2FLSD2nFnXeJzqYhfRePfcu
+DhQAnjov8b5mCvsh1THvnjYmLtdskZ7I
+=fGyU
+-----END PGP SIGNATURE-----
+
+--cbsCxbAnPLQXdgdB--
