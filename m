@@ -1,73 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
-Date: Wed, 23 Sep 2015 02:22:10 +0300
-Message-ID: <5601E2A2.9000904@cogentembedded.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
- <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
- <20150812012652.GH15957@verge.net.au> <55D790A5.1050008@cogentembedded.com>
- <55D7A3A1.9020009@cogentembedded.com> <20150902022936.GA18115@verge.net.au>
- <55EA2D8D.90004@cogentembedded.com> <20150918002122.GC12858@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150918002122.GC12858@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/6] PCI: generic: Misc. bug fixes/enhancements
+Date: Tue, 22 Sep 2015 16:49:11 -0700
+Message-ID: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-On 09/18/2015 03:21 AM, Simon Horman wrote:
+While using the pci-host-generic driver to add PCI support for the
+Cavium ThunderX processors, several bugs were discovered.  This patch
+set fixes the bugs, a follow-on set will add the ThunderX support.
 
->>>>>>> Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
->>>>>>> device nodes along with the necessary voltage regulators.
->>>>>>>
->>>>>>> Based on the original patch by Vladimir Barinov
->>>>>>> <vladimir.barinov@cogentembedded.com>.
->>>>>>>
->>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>>>>
->>>>>>> ---
->>>>>>> This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
->>>>>>> 'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
->>>>>>> the R8A7794 GPIO patches in order to compile.
->>>>>>>
->>>>>>> Changes in version 2:
->>>>>>> - removed not working SDHI0 stuff, renamed the patch;
->>>>>>> - replaced SDHI1's "wp-gpios" property with "disable-wp".
->>>>>>
->>>>>> I am wondering if you could explain the motivation for the "disable-wp"
->>>>>> update
->>>>>
->>>>>     Please see the comment in mmc_sd_get_ro().
->>>>>
->>>>>> and weather it is appropriate for other r8a779* dts files.
->>>>>
->>>>>     In case of micro-SD slots, yes.
->>>>
->>>>     The MMC binding document says it should only be specified if the
->>>> controller has WP detection logic. We, so far, seem to have been replying on
->>>> the GPIOs despite this logic is present (according to the R-Car gen2 SDHI
->>>> manuals I have). The driver will first call mmc_gpio_get_ro() and when that
->>>> fails due to "wp-gpios" not being specified, it proceeds to reading the
->>>> register but that is forbidden by TMIO_MMC_WRPROTECT_DISABLE flag set for
->>>> the R-Car gen1/2 chips, so 0 is always returned from tmio_mmc_get_ro().
->>>> There seems to be no point in going that far (and doing the runtime PM
->>>> dances) --
->>
->>     Alternatively, the driver could be fixed to check the flag before the RPM
->> call unlike what it does now.
->
-> If the driver can be updated to do the right thing then that seems
+Changes from v2:
 
-    OK, I'll try going this way...
+  - Added " PCI: generic: Claim device resources if PCI_PROBE_ONLY"
 
-> preferable to me. If so would it be the case that the presence of the
-> "disable-wp" property would not have any run-time effect?
+Changes from v1:
 
-    Yes.
+  - "PCI: generic: Allow bus default MSI controller to be specified."
+    patch was dropped as it is no longer necessary.
 
-MBR, Sergei
+  - "PCI: Make global and export pdev_fixup_irq()." and "PCI: generic:
+    Only fixup irqs for bus we are creating." were rewritten to move
+    the support into a somewhat more generic form in setup-irq.c.
 
+  - Add some clarifying text to host-generic-pci.txt
+
+  - Add some Acked-by:
+
+
+David Daney (6):
+  PCI: Add pci_bus_fixup_irqs().
+  PCI: generic: Only fixup irqs for bus we are creating.
+  PCI: generic: Quit clobbering our pci_ops.
+  PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+  PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
+  PCI: generic: Claim device resources if PCI_PROBE_ONLY
+
+ .../devicetree/bindings/pci/host-generic-pci.txt   |  4 +-
+ drivers/pci/host/pci-host-generic.c                | 59 +++++++++++++++-------
+ drivers/pci/setup-irq.c                            | 30 +++++++++++
+ include/linux/pci.h                                |  4 ++
+ 4 files changed, 79 insertions(+), 18 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
