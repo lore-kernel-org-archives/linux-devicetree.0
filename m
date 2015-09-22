@@ -1,7 +1,7 @@
 From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [RFC PATCH v2 3/3] Documentation: dt-bindings: add example DT binding document
-Date: Mon, 21 Sep 2015 23:59:18 -0400
-Message-ID: <1442894358-15606-4-git-send-email-mporter@konsulko.com>
+Subject: [RFC PATCH v2 1/3] Documentation: dt-bindings: add documentation on new DT binding format
+Date: Mon, 21 Sep 2015 23:59:16 -0400
+Message-ID: <1442894358-15606-2-git-send-email-mporter@konsulko.com>
 References: <1442894358-15606-1-git-send-email-mporter@konsulko.com>
 Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1442894358-15606-1-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
@@ -10,160 +10,125 @@ To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a skeleton DT binding document that serves as the canonical
-example for implementing YAML-based DT bindings documentation.
-The skeleton binding illustrates use of all fields and variations
-described in the dt-binding-format.txt documentation.
+Documentation explaining the syntax and format of the YAML-based DT binding
+documentation.
 
 Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/skeleton.yaml | 138 ++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/skeleton.yaml
+ .../devicetree/bindings/dt-binding-format.txt      | 105 +++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dt-binding-format.txt
 
-diff --git a/Documentation/devicetree/bindings/skeleton.yaml b/Documentation/devicetree/bindings/skeleton.yaml
+diff --git a/Documentation/devicetree/bindings/dt-binding-format.txt b/Documentation/devicetree/bindings/dt-binding-format.txt
 new file mode 100644
-index 0000000..d7a27cb
+index 0000000..3763487
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/skeleton.yaml
-@@ -0,0 +1,138 @@
-+%YAML 1.2
-+---
-+version: 1
++++ b/Documentation/devicetree/bindings/dt-binding-format.txt
+@@ -0,0 +1,105 @@
++--------------------------
++Device Tree Binding Format
++--------------------------
 +
-+id: skel-device
++Background
++----------
 +
-+title: Skeleton Device
++DT bindings historically were written as text in prose format which
++led to issues in usability of that source documentation. Some of
++these issues include the need to programmatically process binding
++source documentation to do DTS validation, perform mass updates to
++format/style, and to generate publishable documentation in HTML or
++PDF form.
 +
-+maintainer:
-+    -   name: Skeleton Person <skel-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
++Overview
++--------
 +
-+description: >
-+    The Skeleton Device binding represents the SK11 device produced by
-+    the Skeleton Corporation. The binding can also support compatible
-+    clones made by second source vendors.
++The DT binding format is based on the YAML text markup language.
++Although there are many text markup options available, YAML
++fulfills all requirements considered for a DT binding source format
++which include:
 +
-+# This binding inherits property characteristics from the generic
-+# spi-slave binding
++1) Must be human readable
++2) Must be easily translated to other data formats (XML, JSON, etc).
++3) Must have sufficient tools and libraries to enable developers to
++   build new tools for DT binding processing
++4) Must have a complete spec to refer to syntax
 +
-+inherits:
-+    -   id: spi-slave
++YAML is documentated in the specification found at
++http://www.yaml.org/spec/1.2/spec.html
 +
-+properties:
++The required YAML DT binding tag format and syntax are defined in
++the following sections.
 +
-+# The compatible property is a reserved name. The type is always "string"
-+# and should not be repeated device binding.
++YAML DT Binding Syntax
++----------------------
 +
-+    -   name: "compatible"
-+        constraint: |
-+            "skel,sk11" || "faux,fx11" , BASE("skel,sk11")
-+        description: FX11 is a clone of the original SK11 device
++* Lines starting with "#" are comments and not part of the binding itself
++* "%YAML 1.2" starts a file, indicating the version of YAML in use
++* "---" starts a binding document
++* "..." ends a binding document
++* Multiple binding documents may exist in a single file
++* Tabs are not permitted
++* Scope is denoted by indentation of four spaces
++* Key value pairs are denoted by "key: value"
++* Sequences are denoted by "-"
++* Scalar values may convert newlines to spaces and preserve blank
++  lines for long description formatting using ">"
++* Scalar values may escape all reserved characters and preserve
++  newlines by using "|" to denote literal style
 +
-+# The reg property is a reserved name. The type is always "int" and
-+# should not be repeated in a device binding. Constraints are defined
-+# only in the context of the parent node's address, size, and ranges
-+# cells. The description is inherited from the spi-slave binding.
++For additional information on YAML syntax, refer to the specification
++at http://www.yaml.org/spec/1.2/spec.html
 +
-+    -   name: "reg"
++YAML DT Binding Format
++----------------------
 +
-+# spi-max-frequency needs the device-specific constraint to be supplied
++The DT binding format is based on the YAML Core schema defined in the
++specification. The following YAML sequences and keys are supported in
++the DT binding format:
 +
-+    -   name: "spi-max-frequency"
-+        constraint: |
-+            if (compatible == "skel,sk11") c <= 10000000 else c <= 1000000
++[Note: [R] and [O] denote required and optional sequences/keys,respectively]
 +
-+# This property overrides the generic binding description with
-+# a device specific description in order to mention the chip's
-+# h/w cfg strapping pins.
++* [R] version: DT binding format version. Currently 1.
 +
-+    -   name: "spi-cs-high"
-+        description: >
-+            Set if skeleton device configuration pins are set for chip
-+            select polarity high
++* [R] id: unique identifier in property form (e.g. skel-device)
 +
-+# Device specific properties don't inherit characteristic from a generic
-+# binding so category, type, constraint, and description must be specified
-+# if needed.
++* [R] title: title of the binding
 +
-+    -   name: "skel,deprecated1"
-+        category: deprecated
-+        type: int
-+        constraint: |
-+            (c >= 100000) && (c <= 200000)
-+        description: >
-+            First of two deprecated properties.
++* [R] maintainer: sequence of maintainers
++      [R] name: name and email of maintainer or mailing list in RFC822
++                form.
 +
-+# There are no constraints for properties of empty type
++* [O] description: full description of the binding
 +
-+    -   name: "skel,deprecated2"
-+        category: deprecated
-+        type: empty
-+        description: >
-+            Second of two deprecated properties.
++* [O] inherits: sequence of inherited bindings
++      [R] id: unique identifier of inherited binding
 +
-+# This example could be auto-generated rather than explicitly included
-+# in the yaml source.
++* [R] properties: sequence of properties
++      [R] name: name of property surrounded in double quotes
++      [R} category: category of property. One of "required",
++                    "optional", or "deprecated".
++      [R] type: type of property. One of "string", "int", "empty",
++                "phandle", or "array".
++      [O] constraint: constraint expression using C syntax
++      [O] deprecated: C syntax expression of deprecated compatible
++                      strings.
++      [O] description: description of the property
 +
-+example:
-+    -   dts: |
-+            sk11@0 {
-+                compatible = "skel,sk11";
-+                reg = <0>;
-+                spi-max-frequency = <1000000>;
-+                spi-cs-high;
-+            };
-+...
++* [O] notes: Any additional notes about properties in this binding.
 +
-+---
-+version: 1
++* [O] example: sequence of examples:
++      [R] dts: DT source of example usage. The example text must use
++               literal style ("|") so that it retains indentation and
++               newlines.
++      [O] description: description of the example
 +
-+id: skel-mini
++Skeleton Binding
++----------------
 +
-+title: Skeleton Mini Device
-+
-+maintainer:
-+    -   name: Rogue Developer <rogue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+
-+description: >
-+    The Skeleton Mini Device binding represents the SK47x series devices
-+    produced by the Skeleton Corporation.
-+
-+properties:
-+    -   name: "compatible"
-+        category: required
-+        constraint: |
-+            "skel,sk472" || skel,sk473" || "skel,sk474" , BASE("skel,sk472")
-+        deprecated: "skel,sk47x"
-+        description: >
-+            SK472 is the original part in the family. SK473/4 are later releases
-+            with minor register changes.
-+
-+    -   name: "reg"
-+        category: required
-+        description: Address and size of Skeleton Mini register range.
-+
-+    -   name: "skel,sync-mode"
-+        category: optional
-+        type: empty
-+        description: Enable synchronous transfer mode
-+
-+example:
-+    -   dts: |
-+            sk472@beef0000 {
-+                compatible = "skel,sk472";
-+                reg = <0xbeef0000 0x100>;
-+            };
-+        description: >
-+            Demonstrates an SK472 in normal mode.
-+
-+    -   dts: |
-+            sk474@dead0000 {
-+                compatible = "skel,sk474", "skel,sk472";
-+                reg = <0xdead0000 0x100>;
-+                skel,sync-mode;
-+            };
-+        description: >
-+            Demonstrates an SK474 in synchronous mode.
-+...
++The skeleton.yaml binding found in the top of the DT binding tree
++is the canonical example of syntax and format to use when writing
++a DT binding document. It is maintained with the latest formatting
++conventions, making it the best starting point when writing a new DT
++binding.
 -- 
 2.5.1
