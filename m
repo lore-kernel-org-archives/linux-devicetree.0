@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 4/9] NFC: nfcmrvl: allow low level drivers to configure head/tail room
-Date: Tue, 22 Sep 2015 16:26:09 +0200
-Message-ID: <1442931974-31526-5-git-send-email-cuissard@marvell.com>
+Subject: [PATCH 2/9] NFC: NCI: export nci_send_frame function
+Date: Tue, 22 Sep 2015 16:26:07 +0200
+Message-ID: <1442931974-31526-3-git-send-email-cuissard@marvell.com>
 References: <1442931974-31526-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,73 +12,49 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Low-level drivers may need to add some data before and/or after NCI packet.
+Export nci_send_frame symbol to allow drivers to use it.
+This is needed for example if NCI is used during firmware
+download phase.
 
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/nfc/nfcmrvl/main.c            | 6 +++---
- drivers/nfc/nfcmrvl/uart.c            | 2 ++
- include/linux/platform_data/nfcmrvl.h | 3 +++
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ include/net/nfc/nci_core.h | 1 +
+ net/nfc/nci/core.c         | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
-index 6fb23cc..bd8db3d 100644
---- a/drivers/nfc/nfcmrvl/main.c
-+++ b/drivers/nfc/nfcmrvl/main.c
-@@ -104,7 +104,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index d0d0f1e..f0bb5e7 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -282,6 +282,7 @@ int nci_core_reset(struct nci_dev *ndev);
+ int nci_core_init(struct nci_dev *ndev);
+ 
+ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
++int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb);
+ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+ 
+ int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 943889b..5feed7e 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1177,7 +1177,7 @@ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb)
+ }
+ EXPORT_SYMBOL(nci_recv_frame);
+ 
+-static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
++int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
  {
- 	struct nfcmrvl_private *priv;
- 	int rc;
--	int headroom = 0;
-+	int headroom = pdata->phy_headroom;
- 	u32 protocols;
+ 	pr_debug("len %d\n", skb->len);
  
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-@@ -127,7 +127,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
- 	}
+@@ -1195,6 +1195,7 @@ static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
  
- 	if (priv->config.hci_muxed)
--		headroom = NFCMRVL_HCI_EVENT_HEADER_SIZE;
-+		headroom += NFCMRVL_HCI_EVENT_HEADER_SIZE;
+ 	return ndev->ops->send(ndev, skb);
+ }
++EXPORT_SYMBOL(nci_send_frame);
  
- 	protocols = NFC_PROTO_JEWEL_MASK
- 		| NFC_PROTO_MIFARE_MASK
-@@ -138,7 +138,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
- 		| NFC_PROTO_NFC_DEP_MASK;
- 
- 	priv->ndev = nci_allocate_device(&nfcmrvl_nci_ops, protocols,
--					 headroom, 0);
-+					 headroom, priv->config.phy_tailroom);
- 	if (!priv->ndev) {
- 		nfc_err(dev, "nci_allocate_device failed\n");
- 		rc = -ENOMEM;
-diff --git a/drivers/nfc/nfcmrvl/uart.c b/drivers/nfc/nfcmrvl/uart.c
-index 8355824..b851334 100644
---- a/drivers/nfc/nfcmrvl/uart.c
-+++ b/drivers/nfc/nfcmrvl/uart.c
-@@ -138,6 +138,8 @@ static int nfcmrvl_nci_uart_open(struct nci_uart *nu)
- 		pdata = &config;
- 	}
- 
-+	pdata->phy_headroom = pdata->phy_tailroom = 0;
-+
- 	priv = nfcmrvl_nci_register_dev(nu, &uart_ops, nu->tty->dev, pdata);
- 	if (IS_ERR(priv))
- 		return PTR_ERR(priv);
-diff --git a/include/linux/platform_data/nfcmrvl.h b/include/linux/platform_data/nfcmrvl.h
-index ac91707..6f6ba27 100644
---- a/include/linux/platform_data/nfcmrvl.h
-+++ b/include/linux/platform_data/nfcmrvl.h
-@@ -26,6 +26,9 @@ struct nfcmrvl_platform_data {
- 	unsigned int reset_n_io;
- 	/* Tell if transport is muxed in HCI one */
- 	unsigned int hci_muxed;
-+	/* Tell generic driver that the PHY requires some headroom space */
-+	unsigned int phy_headroom;
-+	unsigned int phy_tailroom;
- 
- 	/*
- 	 * UART specific
+ /* Send NCI command */
+ int nci_send_cmd(struct nci_dev *ndev, __u16 opcode, __u8 plen, void *payload)
 -- 
 2.2.0.33.gc18b867
 
