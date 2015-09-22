@@ -1,39 +1,55 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
-Date: Tue, 22 Sep 2015 12:24:26 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1509221223280.5606@nanos>
-References: <1442636780-2891-1-git-send-email-lynxis@fe80.eu> <1442636780-2891-3-git-send-email-lynxis@fe80.eu>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC v2 4/4] drm/mediatek: Add DRM-based framebuffer device
+Date: Tue, 22 Sep 2015 12:35:14 +0200
+Message-ID: <1442918114.3128.19.camel@pengutronix.de>
+References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
+	 <1442592722-29004-5-git-send-email-p.zabel@pengutronix.de>
+	 <20150922092951.GD3383@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1442636780-2891-3-git-send-email-lynxis@fe80.eu>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Alexander Couzens <lynxis@fe80.eu>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150922092951.GD3383-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 19 Sep 2015, Alexander Couzens wrote:
+Hi Daniel,
 
-> The ar7240 misc irq chip use ack handler
-> instead of ack_mask handler. All new ath79 chips use
-> the ar7240 misc irq chip
+Am Dienstag, den 22.09.2015, 11:29 +0200 schrieb Daniel Vetter:
+> > diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
+> > index 5343cf1..fa581fb 100644
+> > --- a/drivers/gpu/drm/mediatek/Kconfig
+> > +++ b/drivers/gpu/drm/mediatek/Kconfig
+> > @@ -14,3 +14,15 @@ config DRM_MEDIATEK
+> >  	  This driver provides kernel mode setting and
+> >  	  buffer management to userspace.
+> >  
+> > +config DRM_MEDIATEK_FBDEV
+> > +	bool "Enable legacy fbdev support for Mediatek DRM"
+> > +	depends on DRM_MEDIATEK
+> > +	select FB_SYS_FILLRECT
+> > +	select FB_SYS_COPYAREA
+> > +	select FB_SYS_IMAGEBLIT
+> > +	select DRM_KMS_FB_HELPER
+> > +	help
+> > +	  Choose this option if you have a need for the legacy
+> > +	  fbdev support.  Note that this support also provides
+> > +	  the Linux console on top of the Mediatek DRM mode
+> > +	  setting driver.
 > 
-> Signed-off-by: Alexander Couzens <lynxis@fe80.eu>
-> Acked-by: Alban Bedel <albeu@free.fr>
-> ---
->  .../interrupt-controller/qca,ath79-misc-intc.txt     | 20 ++++++++++++++++++--
->  arch/mips/ath79/irq.c                                | 10 ++++++++++
+> With the new Kconfig for fbdev emulation in 4.3 and the module option to
+> disable it queued up for 4.4 driver-private Kconfig entries for fbdev
+> aren't needed any more.
+> -Daniel
 
-That driver should probably move into drivers/irqchip.
+I'll drop it for the next patch submission, thanks.
 
-Other than that.
+regards
+Philipp
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
