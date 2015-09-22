@@ -1,119 +1,25 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] clk: bcm2835: Add support for programming the
- audio domain clocks.
-Date: Mon, 21 Sep 2015 19:01:07 -0700
-Message-ID: <5600B663.8000501@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 2/4] clk: bcm2835: Add binding docs for the new
+ platform clock driver.
+Date: Mon, 21 Sep 2015 19:01:53 -0700
+Message-ID: <5600B691.9000401@wwwdotorg.org>
 References: <1441922305-2298-1-git-send-email-eric@anholt.net>
- <1441922305-2298-3-git-send-email-eric@anholt.net>
+ <1441922305-2298-2-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441922305-2298-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1441922305-2298-2-git-send-email-eric@anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 09/10/2015 02:58 PM, Eric Anholt wrote:
-> This adds support for enabling, disabling, and setting the rate of the
-> audio domain clocks.  It will be necessary for setting the pixel clock
-> for HDMI in the VC4 driver and let us write a cpufreq driver.  It will
-> also improve compatibility with user changes to the firmware's
-> config.txt, since our previous fixed clocks are unaware of it.
-> 
-> The firmware also has support for configuring the clocks through the
-> mailbox channel, but the pixel clock setup by the firmware doesn't
-> work, and it's Raspberry Pi specific anyway.  The only conflicts we
-> should have with the firmware would be if we made firmware calls that
-> result in clock management (like opening firmware V3D or ISP access,
-> which we don't support in upstream), or on hardware over-thermal or
-> under-voltage (when the firmware would rewrite PLLB to take the ARM
-> out of overclock).  If that happens, our cached .recalc_rate() results
-> would be incorrect, but that's no worse than our current state where
-> we used fixed clocks.
-> 
-> The existing fixed clocks in the code are left in place to provide
-> backwards compatibility with old device tree files.
+> Previously we've only supported a few fixed clocks based on
+> assumptions about how the firmware sets up the clocks, but this
+> binding will let us control the actual (audio power domain) clock
+> manager.
 
-> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-
-> +/**
-> + * DOC: BCM2835 CPRMAN (clock manager for the "audio" domain)
-> + *
-> + * The clock tree on the 2835 has several levels.  There's a root
-> + * oscillator running at 19.2Mhz.  After the oscillator there are 4
-
-Nit: s/4/5.
-
-> +struct bcm2835_pll_data {
-...
-> +	/* Highest rate for the VCO before we have to use the
-> +	 * pre-divide-by-2.
-> +	 */
-
-Nit: /* should be on a line on its own I think. Similar elsewhere.
-
-> +static const struct bcm2835_pll_ana_bits bcm2835_ana_default = {
-> +	0,
-> +	0,
-> +	~((7 << 19) | (15 << 15)),
-> +	(2 << 19) | (8 << 15),
-> +	~(7 << 7),
-> +	(6 << 1),
-> +
-> +	14
-
-Nit: Elide the blank line? In some other structs too.
-
-Are there #defines or names you can use for those initializers?
-
-> +static int bcm2835_clk_probe(struct platform_device *pdev)
-
-> +	cprman = kzalloc(sizeof(*cprman), GFP_KERNEL);
-> +	if (!cprman)
-> +		return -ENOMEM;
-
-This function allocates/initializes a lot of resources without using
-devm_ versions of APIs.
-> +
-> +	spin_lock_init(&cprman->regs_lock);
-> +	cprman->dev = &pdev->dev;
-> +	cprman->regs = of_iomap(dev->of_node, 0);
-> +	if (!cprman->regs)
-> +		return -ENODEV;
-
-.. consequently if probe() fails later on (such as here) then resources
-allocated earlier are not released. probe() should either switch to APIs
-such as devm_kzalloc() or add some cleanup handling.
-
-> +	cprman->osc_name = of_clk_get_parent_name(dev->of_node, 0);
-> +	if (!cprman->osc_name)
-> +		return -ENODEV;
-> +
-> +	platform_set_drvdata(pdev, cprman);
-
-I'd expect that to happen right after allocating cprman, since it feels
-related to having allocated the cprman object.
-
-> +	onecell = kmalloc(sizeof(*onecell), GFP_KERNEL);
-> +	if (!onecell)
-> +		return -ENOMEM;
-> +	onecell->clk_num = BCM2835_CLOCK_COUNT;
-> +	onecell->clks = kzalloc(sizeof(*onecell->clks) *
-> +				BCM2835_CLOCK_COUNT, GFP_KERNEL);
-
-Does this need to be dynamically allocated? I think you can just make
-these fields in struct bcm2835_cprman; even the array of clks could be:
-
-struct clks clks[BCM2835_CLOCK_COUNT];
-
-> +	clks[BCM2835_PLLA] = bcm2835_register_pll(cprman, &bcm2835_plla_data);
-> +	clks[BCM2835_PLLB] = bcm2835_register_pll(cprman, &bcm2835_pllb_data);
-
-These can fail; shouldn't there be error-checking? Or, does
-of_clk_add_provider() check for this?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patches 1 and 2,
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
