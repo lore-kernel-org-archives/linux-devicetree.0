@@ -1,125 +1,106 @@
-From: Josh Cartwright <joshc@ni.com>
-Subject: Re: [PATCH v11 4/4] fpga manager: add driver for socfpga fpga manager
-Date: Tue, 22 Sep 2015 17:47:23 -0500
-Message-ID: <20150922224723.GB26335@jcartwri.amer.corp.natinst.com>
-References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
- <1442935271-10375-5-git-send-email-atull@opensource.altera.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
+Date: Wed, 23 Sep 2015 02:19:19 +0300
+Message-ID: <5601E1F7.1060907@cogentembedded.com>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+ <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
+ <20150812012652.GH15957@verge.net.au> <55D790A5.1050008@cogentembedded.com>
+ <55D7A3A1.9020009@cogentembedded.com> <20150902022936.GA18115@verge.net.au>
+ <55EA2D8D.90004@cogentembedded.com> <20150918002122.GC12858@verge.net.au>
+ <CANqRtoSRZo_J1kV0EkYdVzg9YRJ5=Ha3eQRVPKeq9M=kAPLwpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1887566569101365014=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1442935271-10375-5-git-send-email-atull@opensource.altera.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: atull@opensource.altera.com
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, pavel@denx.de, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSRZo_J1kV0EkYdVzg9YRJ5=Ha3eQRVPKeq9M=kAPLwpA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---===============1887566569101365014==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
-Content-Disposition: inline
+On 09/18/2015 05:56 AM, Magnus Damm wrote:
 
+>>>>>>>> Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
+>>>>>>>> device nodes along with the necessary voltage regulators.
+>>>>>>>>
+>>>>>>>> Based on the original patch by Vladimir Barinov
+>>>>>>>> <vladimir.barinov@cogentembedded.com>.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>>>>>
+>>>>>>>> ---
+>>>>>>>> This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
+>>>>>>>> 'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
+>>>>>>>> the R8A7794 GPIO patches in order to compile.
+>>>>>>>>
+>>>>>>>> Changes in version 2:
+>>>>>>>> - removed not working SDHI0 stuff, renamed the patch;
+>>>>>>>> - replaced SDHI1's "wp-gpios" property with "disable-wp".
+>>>>>>>
+>>>>>>> I am wondering if you could explain the motivation for the "disable-wp"
+>>>>>>> update
+>>>>>>
+>>>>>>     Please see the comment in mmc_sd_get_ro().
+>>>>>>
+>>>>>>> and weather it is appropriate for other r8a779* dts files.
+>>>>>>
+>>>>>>     In case of micro-SD slots, yes.
+>>>>>
+>>>>>     The MMC binding document says it should only be specified if the
+>>>>> controller has WP detection logic. We, so far, seem to have been replying on
+>>>>> the GPIOs despite this logic is present (according to the R-Car gen2 SDHI
+>>>>> manuals I have). The driver will first call mmc_gpio_get_ro() and when that
+>>>>> fails due to "wp-gpios" not being specified, it proceeds to reading the
+>>>>> register but that is forbidden by TMIO_MMC_WRPROTECT_DISABLE flag set for
+>>>>> the R-Car gen1/2 chips, so 0 is always returned from tmio_mmc_get_ro().
+>>>>> There seems to be no point in going that far (and doing the runtime PM
+>>>>> dances) --
+>>>
+>>>     Alternatively, the driver could be fixed to check the flag before the RPM
+>>> call unlike what it does now.
+>>
+>> If the driver can be updated to do the right thing then that seems
+>> preferable to me. If so would it be the case that the presence of the
+>> "disable-wp" property would not have any run-time effect?
+>>>
+>>>>> and MMC_CAP2_NO_WRITE_PROTECT (set when "disable-wp" is specified) prohibits
+>>>>> doing that...
+>>>>
+>>>> That sounds reasonable to me.
+>>>
+>>>     I'm still wondering why TMIO_MMC_WRPROTECT_DISABLE is set for the R-Car
+>>> SoCs. Morimoto-san, any comments? Your change logs are too terse. :-)
+>>
+>> I will follow up on this.
 
---24zk1gE8NUlDmwG9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
+> Now what is the issue that you guys are having?
 
-On Tue, Sep 22, 2015 at 10:21:11AM -0500, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
->=20
-> Add driver to fpga manager framework to allow configuration
-> of FPGA in Altera SoCFPGA parts.
->=20
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> Acked-by: Moritz Fischer <moritz.fischer@ettus.com>
-[..]
-> +++ b/drivers/fpga/Kconfig
-> @@ -11,4 +11,14 @@ config FPGA
->  	  kernel.  The FPGA framework adds a FPGA manager class and FPGA
->  	  manager drivers.
-> =20
-> +if FPGA
+    My main issue is that I don't understand why checking the write protect 
+bit is always prohibited for the R-Car SoCs (by setting 
+TMIO_MMC_WRPROTECT_DISABLE), i.e. it can only be read via GPIO (though that 
+GPIO is just an alias of the WP signal).
 
-FPGA is unconditionally set here, otherwise drivers/fpga/Kconfig
-wouldn't even be considered.
+>>>> Some more questions from my side:
+>>>
+>>>> * What is the status of this patch
+>>>
+>>>     Tested, working.
+>>>
+>>>> * Can you prepare patches for r8a779* dts files for micro-SD slots?
+>>>
+>>>     Ugh, I probably can but won't promise anything.
+>>
+>> Likewise, ugh.
 
-> +
-> +config FPGA_MGR_SOCFPGA
-> +	tristate "Altera SOCFPGA FPGA Manager"
-> +	depends on ARCH_SOCFPGA
-> +	help
-> +	  FPGA manager driver support for Altera SOCFPGA.
-> +
-> +endif # FPGA
-> +
->  endmenu
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index 3313c52..ba6c5c5 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -6,3 +6,4 @@
->  obj-$(CONFIG_FPGA)			+=3D fpga-mgr.o
-> =20
->  # FPGA Manager Drivers
-> +obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+=3D socfpga.o
-> diff --git a/drivers/fpga/socfpga.c b/drivers/fpga/socfpga.c
-> new file mode 100644
-> index 0000000..706b80d
-> --- /dev/null
-> +++ b/drivers/fpga/socfpga.c
-[..]
-> +/*
-> + * Step 9: write data to the FPGA data register
-> + */
-> +static int socfpga_fpga_ops_configure_write(struct fpga_manager *mgr,
-> +					    const char *buf, size_t count)
-> +{
-> +	struct socfpga_fpga_priv *priv =3D mgr->priv;
-> +	u32 *buffer_32 =3D (u32 *)buf;
+> What needs to be updated for R-Car Gen1 again?
 
-Seems sketchy from an endianess perspective, but it may be okay if
-SOCFPGA doesn't support BE (which my follow up question would be: why
-not?).  Same thing applies with seemingly cavalier usages of the
-__raw_readl/writel variants.
+    We haven't reached the agreement about the need for update yet.
 
-  Josh
+> Thanks,
+> / magnus
 
---24zk1gE8NUlDmwG9
-Content-Type: application/pgp-signature; name="signature.asc"
+MBR, Sergei
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAABCAAGBQJWAdp4AAoJEKp7ZBKwQFArdnUH/1O/KH6vXBPpAkqQv6egoz5o
-A7rkrmsHk+b0OuWWzRZn15ydXT76VejVZYou5fmW+Oec/ueiUSYWsQKMeKihLgE4
-NcLDZXkMUo60NEhWULINmSI9BOe9xxJSxkYjDt5VPOnJWuTqXdRFLhqBqKlOR+Hl
-ScvzOz9iqgNLg+/angU3lWhOht+s2A3B9+wBDXBsB7HIs4cep3/pQ5zTuHbsu1KD
-tw7XG0WqLUjxuA8EeMHz8aGP/gmsG68E6vi+8HINrtE5luMsF0pa3Op6l2YYqApd
-P67ORUaLfYlHmTghijrfaOujJ2PZz8EmRmgd9JWb2McfUQnz6Xw9sbjzuQ2wsI4=
-=GKZC
------END PGP SIGNATURE-----
-
---24zk1gE8NUlDmwG9--
-
---===============1887566569101365014==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============1887566569101365014==--
