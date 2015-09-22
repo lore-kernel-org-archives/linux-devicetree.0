@@ -1,51 +1,42 @@
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Subject: Re: [PATCH v9 3/6] PCI: designware: Add ARM64 support
-Date: Tue, 22 Sep 2015 22:35:13 +0530
-Message-ID: <CAHM4w1mabn8SiE_oqWBbr1chrQTUPiUhc8fCsxJ0t=AyOZOadA@mail.gmail.com>
-References: <1442321361-174300-1-git-send-email-wangzhou1@hisilicon.com>
-	<1442321361-174300-4-git-send-email-wangzhou1@hisilicon.com>
-	<5600C285.5090603@hisilicon.com>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH 1/2] MIPS: ath79: set missing irq ack handler for
+ ar7100-misc-intc irq chip
+Date: Tue, 22 Sep 2015 19:09:56 +0200
+Message-ID: <20150922170956.GA18064@linux-mips.org>
+References: <1442636780-2891-1-git-send-email-lynxis@fe80.eu>
+ <1442636780-2891-2-git-send-email-lynxis@fe80.eu>
+ <alpine.DEB.2.11.1509221223050.5606@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5600C285.5090603@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Minghuan Lian <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zhang Jukuo <zhangjukuo@huawei.com>, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, Liguozhu <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.11.1509221223050.5606@nanos>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexander Couzens <lynxis@fe80.eu>, linux-mips@linux-mips.org, Alban Bedel <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou,
+On Tue, Sep 22, 2015 at 12:23:22PM +0200, Thomas Gleixner wrote:
 
-On Tue, Sep 22, 2015 at 8:22 AM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
-> On 2015/9/15 20:49, Zhou Wang wrote:
->> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
->> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
->> move related operations to dw_pcie_host_init.
->>
->> This patch also try to use of_pci_get_host_bridge_resources for ARM32 and ARM64
->> according to the suggestion for Gabriele[1]
->>
->> This patch reverts commit f4c55c5a3f7f ("PCI: designware: Program ATU with
->> untranslated address") based on 1/6 in this series. we delete *_mod_base in
->> pcie-designware. This was discussed in [2]
->>
->> I have compiled the driver with multi_v7_defconfig. However, I don't have
->> ARM32 PCIe related board to do test. It will be appreciated if someone could
->> help to test it.
->>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> Tested-by: James Morse <james.morse@arm.com>
->> Tested-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->> Tested-by: Minghuan Lian <Minghuan.Lian@freescale.com>
+> On Sat, 19 Sep 2015, Alexander Couzens wrote:
+> 
+> > The irq ack handler was forgotten while introducing OF support.
+> > Only ar71xx and ar933x based devices require it.
+> > 
+> > Signed-off-by: Alexander Couzens <lynxis@fe80.eu>
+> > Acked-by: Alban Bedel <albeu@free.fr>
+> 
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
-Sorry for delayed response. Since I moved from ST, I do not have any
-test board having designware PCIe controller :(, and also I do
-designware work only in my hobby time,  so it took time to understand
-few modifications. Anyway, all modifications looks fine to me. So,
+Thanks, I dropped the older version of the patch from my tree and applied
+this one.
 
-Acked-by: Pratyush Anand <pratyush.anand@gmail.com>
-
-PS: Does someone know about a economical test board from any vendor
-with designware PCIe IP?
+  Ralf
