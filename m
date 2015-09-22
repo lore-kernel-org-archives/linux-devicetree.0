@@ -1,140 +1,213 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: sun8i: Add A83T HomletV2 Board by Allwinner
-Date: Tue, 22 Sep 2015 23:38:57 +0800
-Message-ID: <1442936337-3104-5-git-send-email-vishnupatekar0510@gmail.com>
-References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBZPMQWYAKGQEKQPWVGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1442936337-3104-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v2 0/4] Renesas CPG/MSTP DT Binding Proposal
+Date: Tue, 22 Sep 2015 17:44:02 +0200
+Message-ID: <1442936646-30362-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-H8Homlet Proto v2.0 Board is A83T Dev Board by Allwinner.
-It has UART, ethernet, USB, HDMI, etc ports on it.
+This is v2 of "Renesas CPG/MSTP DT Binding Proposal"
+(http://www.spinics.net/lists/linux-clk/msg01189.html"), this time
+including some actual patches.
 
-It's name is confusing, Its A83T board however,"H8_HOMLET_PROTO_V2"
-printed on board.
 
-A83T patches are tested on this board.
-It has UART, ethernet, USB, HDMI, etc ports on it.
+Introduction
+------------
 
-For FEL mode it needs USB A-A(Male) cable. I used uart0 which
-is multiplexed to microsd pins PF2 and PF4.
+On Renesas SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse
+Generator), MSSR (Module Standby and Software Reset), and APMU (Advanced
+Power Management Unit for AP-System Core) blocks are very intimately
+tied.
 
-Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                         |  5 +-
- .../boot/dts/sun8i-a83t-allwinner-homlet-v20.dts   | 69 ++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts
+  - The CPG clock generates various clocks for LSI internal generation,
+  - The MSSR block provides two functions:
+      1. Module Standby: "Clock supply to specified modules is stopped
+	 by setting the module stop control register bits."
+         However, the clock supply to a module is not stopped until all
+	 CPUs in the SoC agree.  Indeed, there are separate MSTP
+	 registers for application (Cortex-A) and real-time (SH and/or
+	 Cortex-R) cores.
+      2. Reset Control. to perform a software reset of a specific
+         module.
+  - The APMU controls power and clock supply to the AP-system core (e.g.
+    CA7/CA53, CA15/A57, SCU).
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b276174..9585a58 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -634,7 +634,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a33-ga10h-v1.1.dtb \
- 	sun8i-a33-ippo-q8h-v1.2.dtb \
- 	sun8i-a33-q8-tzx-723q4.dtb \
--	sun8i-a33-sinlinx-sina33.dtb
-+	sun8i-a33-sinlinx-sina33.dtb \
-+	sun8i-a83t-allwinner-homlet-v20.dtb
- dtb-$(CONFIG_MACH_SUN9I) += \
- 	sun9i-a80-optimus.dtb \
- 	sun9i-a80-cubieboard4.dtb
-@@ -679,7 +680,7 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
- 	uniphier-ph1-ld6b-ref.dtb \
- 	uniphier-ph1-pro4-ref.dtb \
- 	uniphier-ph1-sld3-ref.dtb \
--	uniphier-ph1-sld8-ref.dtb 
-+	uniphier-ph1-sld8-ref.dtb
- dtb-$(CONFIG_ARCH_VERSATILE) += \
- 	versatile-ab.dtb \
- 	versatile-pb.dtb
-diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts
-new file mode 100644
-index 0000000..bbc2ab9
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts
-@@ -0,0 +1,69 @@
-+/*
-+ * Copyright 2015 Vishnu Patekar
-+ * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a83t.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Allwinner A83T H8Homlet Proto Dev Board v2.0";
-+	compatible = "allwinner,homletv2", "allwinner,sun8i-a83t";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+		bootargs = "earlyprintk console=ttyS0,115200";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
+MSTP and CPG registers are mixed in one register block.
+The APMU has one or two separate register blocks.
+
+The current DT bindings are split across 5 different binding documents:
+  1. Renesas SoC-specific "core" CPG clocks that cannot be represented
+     easily in DT in another way (cfr. [1]),
+  2. Renesas-specific MSTP "Module Standby" clocks (cfr. [2]),
+  3. Renesas-specific "DIV6" variable factor clocks, also generated by
+     the CPG (cfr. [3]).
+  4. Generic "fixed-factor-clock" clocks, generated by the CPG, but
+     represented in DT using the generic ""fixed-factor-clock" bindings
+     (cfr. [4]),
+  5. Renesas-specific APMU bindings are under development (cfr. [8]).
+
+Note that currently the Reset Control function of the MSSR block is not
+supported by DT nor Linux, and that there are no DT bindings for the
+APMU block yet.
+
+
+Issues with current bindings
+----------------------------
+
+General:
+  - Tight coupling of CPG and MSTP is not represented in DT:
+      - There's one CPG node, and separate MSTP nodes (one for each
+	block of up to 32 possible MSTP clocks) next to it,
+      - CPG Clock Domain requires "power-domain = <...>" properties
+	linking individual device nodes to the "CPG/MSTP" clock domain
+	provider.
+        For now I use a link to the (single) CPG device node, while the
+	clock provider (mostly) controls the (multiple) MSTP clocks
+	(cfr. [5]).
+      - On R-Car Gen3, any CPG/MSTP (and APMU) register write access
+	requires writing a special value to a specific "Write Protect
+	Register" inside the CPG first. Exact details and impact are
+	still under investigation (cfr. [6]).
+
+MSTP-specific:
+  - The clock hierarchy (parent-child relationship) is represented in a
+    flat structure,
+  - Multiple arrays have to be kept in sync:
+      - "clocks" (parents),
+      - "clock-indices" (sparse bit index inside register),
+      - "clock-output-names",
+  - MSTP clocks are referred to using a reference to a device node and a
+    bit index:
+       - Bit index definitions in
+	 include/dt-bindings/clock/<soc>-clock.h are separated from the
+	 .dtsi file,
+       - There's no protection against using a bit index definition for
+	 a different MSTP register, e.g.
+           - clocks = <&mstp8_clks R8A7791_CLK_QSPI_MOD> (wrong),
+           - clocks = <&mstp9_clks R8A7791_CLK_QSPI_MOD> (correct),
+   - The "reg" properties contain only the SMSTPCRx (control register
+     for System CPU) and MSTPSRx (optional status register) registers
+     only.
+     However, in reality there are many more register sets (up to 10 as
+     of R-Car Gen3):
+       - Separate control registers for application (Cortex-A,
+	 supported) and real-time (SH and/or Cortex-R, not supported)
+	 cores,
+       - various software reset registers (not supported).
+     To make matters more complicated:
+       - Many registers are optional.
+         The current bindings just support one control register and one
+	 optional status register, but this doesn't scale to more
+	 register sets,
+       - Register sets are not linear and not contiguous in the register
+	 space.
+         I.e. it's not possible to derive the address of SMSTPCRx from
+	 the address of SMSTPCRy, or the address of MSTPSRx from the
+	 address of SMSTPCRx.
+
+
+Proposal
+--------
+
+I'd like to propose the following, to resolve (some of) the issues with
+the current bindings:
+
+  - Get rid of the "clocks" node.
+    This is something we already did on r8a7795, and can be done for
+    older SoCs without breaking backwards-compatibility,
+  - Replace the existing MSTP driver by a new MSSR driver, which is
+    planned to be extensible to handle module reset as well,
+  - MSTP clocks:
+      - All MSTP clocks are now grouped inside the CPG node, under a new
+	"mssr" subnode, covering the same register block as the parent
+	CPG node,
+      - The list of available registers is maintained inside the new
+	MSSR driver,
+      - MSTP clocks are still referred to by a one cell clock specifier,
+	but this is now global, and encodes both the MSTP register
+	number and the MSTP register bit, crafted to look like the MSTP
+	numbers in the datasheet,
+  - Reset control:
+     - Added "#reset-cells = 1",
+     - One cell reset specifiers will use the MSTP clock numbers, as
+       these are actually module numbers (hmm, perhaps I should start
+       calling them "module numbers", too)
+     - Reset control support is still to be implemented.
+
+While this is mainly intended for R-Car Gen3 (r8a7795), it was developed
+and tested on r8a7791/koelsch.
+
+
+Changes compared to v1
+----------------------
+
+  - Renamed "mstp" node to "mssr" node, added "reg" and "compatible"
+    properties.
+    While at first I wanted to not put a "reg" nor "compatible" property
+    in the "mssr" node at all, and let the CPG driver handle the
+    registration of the MSTP clocks itself. However, I believe (I
+    haven't tried) that won't work, as some MSTP clocks have a DIV6
+    clock as parent, which isn't instantiated yet (usually the DIV6
+    clock has a CPG clock as parent).
+  - Retained arrays of "clocks", "clock-output-names", and
+    "clock-indices" properties, as this was apparently something the
+    clock maintainer(s) insisted upon when the original bindings were
+    developed.
+  - Replace the existing MSTP driver by a new MSSR driver, preparing for
+    reset control,
+  - Drop changing the compatible value for the CPG node, as everything
+    is now handled in the new MSSR driver,
+  - Working patches are now included (for r8a7791/koelsch only).
+
+
+References
+----------
+
+  [1] Documentation/devicetree/bindings/clock/renesas,<SoC>-cpg-clocks.txt
+      where <SoC> is a single SoC name or a family of SoCs
+  [2] Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+  [3] Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+  [4] Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
+  [5] Series "[PATCH v2 00/14] ARM: shmobile: Add CPG Clock Domains"
+      (https://lkml.org/lkml/2015/5/28/590,
+       http://lkml.iu.edu/hypermail/linux/kernel/1505.3/03336.html)
+  [6] Series "[PATCH 0/6][RFC] arm64: Renesas Gen3 initial patch"
+      (http://www.spinics.net/lists/linux-sh/msg42683.html)
+  [7] Series "[PATCH v3 00/09] ARM: shmobile: APMU DT support via SMP
+      Enable method V3"
+      (http://www.spinics.net/lists/devicetree/msg94094.html)
+
+
+Geert Uytterhoeven (4):
+  [RFC] ARM: shmobile: r8a7791 dtsi: Move DIV6 and MSTP clocks under CPG
+  [RFC] ARM: shmobile: r8a7791/koelsch dts(i): Switch from MSTP to MSSR
+  [RFC] clk: shmobile: Add Renesas Module Standby and Software Reset
+    driver
+  [RFC] clk: shmobile: rcar-gen2: Switch from old MSTP to new MSSR
+    driver
+
+ arch/arm/boot/dts/r8a7791-koelsch.dts     |   6 +-
+ arch/arm/boot/dts/r8a7791.dtsi            | 650 ++++++++++++++++--------------
+ drivers/clk/shmobile/Makefile             |   2 +-
+ drivers/clk/shmobile/clk-mssr.c           | 365 +++++++++++++++++
+ drivers/clk/shmobile/clk-rcar-gen2.c      |   2 +-
+ include/dt-bindings/clock/r8a7791-clock.h | 232 +++++------
+ include/linux/clk/shmobile.h              |   2 +
+ 7 files changed, 827 insertions(+), 432 deletions(-)
+ create mode 100644 drivers/clk/shmobile/clk-mssr.c
+
 -- 
 1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
