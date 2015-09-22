@@ -1,96 +1,223 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Tue, 22 Sep 2015 17:24:37 +0200
-Message-ID: <560172B5.8090709@redhat.com>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
- <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
- <20150913152224.GU9885@lukather> <55F5B370.7040203@redhat.com>
- <20150922150242.GF4684@lukather>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v11 1/4] usage documentation for FPGA manager core
+Date: Tue, 22 Sep 2015 10:21:08 -0500
+Message-ID: <1442935271-10375-2-git-send-email-atull@opensource.altera.com>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150922150242.GF4684@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Alan Tull <atull@opensource.altera.com>
 
-On 22-09-15 17:02, Maxime Ripard wrote:
-> On Sun, Sep 13, 2015 at 07:33:36PM +0200, Hans de Goede wrote:
->>> Anyway. In both cases, the regulator really shouldn't be drifting
->>> along like this.
->>
->> Right which is why I've added the always-on property.
->
-> Which is exactly what I meant by drifting along: that regulator will
-> never be associated to the i2c bus, and will always be enabled even
-> though the i2c bus might not even be accessible in the first place
-> (driver not selected, compiled as a module and not loaded yet), which
-> is just as bad.
->
->>> If the i2c bus needs a regulator to be operationaly,
->>> then we can just add an optional bus-supply property or something to
->>> give that to the i2c driver so that it can enable it when needed.
->>
->> I agree that that would be sensible if this regulator were tied to
->> the pull-ups, but I've my doubts that it is. We've not seen anything
->> similar on any other allwinner tablet, other then ChenYu-s Ippo-q8-v5
->> tablet.
->>
->> This tablet is sort of a high-end tablet (with a nice ips screen) and
->> such it also uses a different (better) sensor for its frontcam, a
->> gc2015 rather then the usual gc0308. I believe that this is the
->> culprit.
->>
->> Which would make modelling this as some sort of i2c-bus power-supply
->> wrong, and I've checked and none of the existing i2c bindings under
->> Documentation/devicetree/bindings/i2c contain such a thing, so we
->> would be the first and we will likely have a hard time selling a
->> binding for this upstream, esp. since we do not know what exactly
->> is going on.
->
-> Well, strictly speaking, it is a supply needed to get the bus to
-> work. We should really try to avoid having always-on for regulators,
-> especially for devices that are already represented in the DT.
->
->> So all in all I strongly believe that just setting always-on
->> on the regulator in question is the best solution.
->
-> It's a hack we can avoid.
+Add a document on the new FPGA manager core.
 
-How? By adding a regulator property to the i2c controller node
-and then have the i2c controller driver enable this on probe ?
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+v9:  initial version where this patch was added
 
-This will make 0 difference in practice since any useful kernel
-config will always include the i2c controller as that is necessary
-to talk to the pmic which controls this regulator in the first place.
+v10: requested cleanups to formatting and otherwise
+     s/fpga/FPGA/g
+     rewrite implementation section to not reference socfpga.c by name
+     other rewrites
+     Moved to Documentation/fpga/
 
-Having some sort of regulator property in the i2c-controller node
-might be something worthwhile adding if we knew for sure that that
-is how things are wired up, but we simply do not know.
+v11: s/with image/with an image/
+     s/on the path/in the path/
+---
+ Documentation/fpga/fpga-mgr.txt |  171 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 171 insertions(+)
+ create mode 100644 Documentation/fpga/fpga-mgr.txt
 
-I'm not going to submit a patch to the i2c bindings to add a
-regulator if I cannot explain exactly during review why it is
-needed.
-
-The way I see it this board has some kinda bug making that bus
-not work when the regulator in question is disabled, but we do
-not exactly why, so we workaround the bug by not disabling the
-regulator -> always-on.
-
-Making some $random-node increase the use-count of the regulator
-so that it does not get disabled seems not really helpful since
-we do not know where to put the regulator property.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/fpga/fpga-mgr.txt b/Documentation/fpga/fpga-mgr.txt
+new file mode 100644
+index 0000000..ce3e84f
+--- /dev/null
++++ b/Documentation/fpga/fpga-mgr.txt
+@@ -0,0 +1,171 @@
++FPGA Manager Core
++
++Alan Tull 2015
++
++Overview
++========
++
++The FPGA manager core exports a set of functions for programming an FPGA with
++an image.  The API is manufacturer agnostic.  All manufacturer specifics are
++hidden away in a low level driver which registers a set of ops with the core.
++The FPGA image data itself is very manufacturer specific, but for our purposes
++it's just binary data.  The FPGA manager core won't parse it.
++
++
++API Functions:
++==============
++
++To program the FPGA from a file or from a buffer:
++-------------------------------------------------
++
++	int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags,
++		              const char *buf, size_t count);
++
++Load the FPGA from an image which exists as a buffer in memory.
++
++	int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
++		                   const char *image_name);
++
++Load the FPGA from an image which exists as a file.  The image file must be on
++the firmware search path (see the firmware class documentation).
++
++For both these functions, flags == 0 for normal full reconfiguration or
++FPGA_MGR_PARTIAL_RECONFIG for partial reconfiguration.  If successful, the FPGA
++ends up in operating mode.  Return 0 on success or a negative error code.
++
++
++To get/put a reference to a FPGA manager:
++-----------------------------------------
++
++	struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
++
++	void fpga_mgr_put(struct fpga_manager *mgr);
++
++Given a DT node, get an exclusive reference to a FPGA manager or release
++the reference.
++
++
++To register or unregister the low level FPGA-specific driver:
++-------------------------------------------------------------
++
++	int fpga_mgr_register(struct device *dev, const char *name,
++		              const struct fpga_manager_ops *mops,
++		              void *priv);
++
++	void fpga_mgr_unregister(struct device *dev);
++
++Use of these two functions is described below in "How To Support a new FPGA
++device."
++
++
++How to write an image buffer to a supported FPGA
++================================================
++/* Include to get the API */
++#include <linux/fpga/fpga-mgr.h>
++
++/* device node that specifies the FPGA manager to use */
++struct device_node *mgr_node = ...
++
++/* FPGA image is in this buffer.  count is size of the buffer. */
++char *buf = ...
++int count = ...
++
++/* flags indicates whether to do full or partial reconfiguration */
++int flags = 0;
++
++int ret;
++
++/* Get exclusive control of FPGA manager */
++struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
++
++/* Load the buffer to the FPGA */
++ret = fpga_mgr_buf_load(mgr, flags, buf, count);
++
++/* Release the FPGA manager */
++fpga_mgr_put(mgr);
++
++
++How to write an image file to a supported FPGA
++==============================================
++/* Include to get the API */
++#include <linux/fpga/fpga-mgr.h>
++
++/* device node that specifies the FPGA manager to use */
++struct device_node *mgr_node = ...
++
++/* FPGA image is in this file which is in the firmware search path */
++const char *path = "fpga-image-9.rbf"
++
++/* flags indicates whether to do full or partial reconfiguration */
++int flags = 0;
++
++int ret;
++
++/* Get exclusive control of FPGA manager */
++struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
++
++/* Get the firmware image (path) and load it to the FPGA */
++ret = fpga_mgr_firmware_load(mgr, flags, path);
++
++/* Release the FPGA manager */
++fpga_mgr_put(mgr);
++
++
++How to support a new FPGA device
++================================
++To add another FPGA manager, write a driver that implements a set of ops.  The
++probe function calls fpga_mgr_register(), such as:
++
++static const struct fpga_manager_ops socfpga_fpga_ops = {
++       .write_init = socfpga_fpga_ops_configure_init,
++       .write = socfpga_fpga_ops_configure_write,
++       .write_complete = socfpga_fpga_ops_configure_complete,
++       .state = socfpga_fpga_ops_state,
++};
++
++static int socfpga_fpga_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct socfpga_fpga_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	/* ... do ioremaps, get interrupts, etc. and save
++	   them in priv... */
++
++	return fpga_mgr_register(dev, "Altera SOCFPGA FPGA Manager",
++				 &socfpga_fpga_ops, priv);
++}
++
++static int socfpga_fpga_remove(struct platform_device *pdev)
++{
++	fpga_mgr_unregister(&pdev->dev);
++
++	return 0;
++}
++
++
++The ops will implement whatever device specific register writes are needed to
++do the programming sequence for this particular FPGA.  These ops return 0 for
++success or negative error codes otherwise.
++
++The programming sequence is:
++ 1. .write_init
++ 2. .write (may be called once or multiple times)
++ 3. .write_complete
++
++The .write_init function will prepare the FPGA to receive the image data.
++
++The .write function writes a buffer to the FPGA. The buffer may be contain the
++whole FPGA image or may be a smaller chunk of an FPGA image.  In the latter
++case, this function is called multiple times for successive chunks.
++
++The .write_complete function is called after all the image has been written
++to put the FPGA into operating mode.
++
++The ops include a .state function which will read the hardware FPGA manager and
++return a code of type enum fpga_mgr_states.  It doesn't result in a change in
++hardware state.
+-- 
+1.7.9.5
