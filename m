@@ -1,62 +1,46 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 01/11] dt: power: bq24257-charger: Cover additional
- devices
-Date: Tue, 22 Sep 2015 18:24:48 +0200
-Message-ID: <20150922162448.GE4235@earth>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
- <1442612399-341-2-git-send-email-dannenberg@ti.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] edac: Export edac_debugfs
+Date: Tue, 22 Sep 2015 18:34:05 +0200
+Message-ID: <20150922163405.GC3437@pd.tnic>
+References: <1439534769-22811-1-git-send-email-lho@apm.com>
+ <1439534769-22811-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hwvH6HDNit2nSK4j"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1442612399-341-2-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1439534769-22811-2-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 14, 2015 at 12:46:06AM -0600, Loc Ho wrote:
+> This patch exports and expose the edac_debugfs file node. This allows
+> EDAC driver to create debugfs node under the EDAC debugfs node.
 
---hwvH6HDNit2nSK4j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-Hi,
+> -#ifdef CONFIG_EDAC_DEBUG
+> -static struct dentry *edac_debugfs;
+> +struct dentry *edac_debugfs;
+> +EXPORT_SYMBOL_GPL(edac_debugfs);
 
-On Fri, Sep 18, 2015 at 04:39:49PM -0500, Andreas Dannenberg wrote:
-> Extend the bq24257 charger's device tree documentation to cover the
-> bq24250 and bq24251 devices as well feature additions.
+Hmm, so Arnd was right about this being the wrong direction we're
+chasing. We should rather be exporting a bunch of EDAC debugfs wrappers
+which EDAC drivers can call instead of exposing edac_debugfs itself.
 
-The binding looks fine to except for:
+And this is much better and the right(tm) approach IMO. So I went
+and hacked it in, it builds on those !x86 targets (as far as my
+cross-compilers are concerned, build succeeds :-)).
 
-> +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
-> +    also be defined through the standard interrupt definition properties (see
-> +    optional properties section below). Only use one method.
+So here it is as a follow-up to this message.
 
-Why do you expose two ways for this?
+-- 
+Regards/Gruss,
+    Boris.
 
--- Sebastian
-
---hwvH6HDNit2nSK4j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWAYDNAAoJENju1/PIO/qabwcP/RgyDAy7vFAHbO3QZ69kDJzG
-mVkNLkc7dkT2LV0V32a5pLCI4HObctAVkq5lzlruXIsGE8uYoPz+p5Szg9saRFTk
-+tzJXU+lqNpNlERrKX7lsPVJQNL4ILrNcU5L30NgCH/mWn/AdPGxd+aTKjTL2oA6
-pxy/vkW2uldpHtDrYk/CuhdSY7w3AhEAjlPVd0+aGd0dA/XEGhpIBv1MMHhw1ATZ
-qSP71amNo9/eSaulRnO7bIkwfJHu3uWjmM/1zKrrUYB/a831eCVWUhNpEv+bQ0B0
-ZP8u6WfYyZsD2a/y6c6BlOdLlqt/0hNvfv3X8xWuL9Qa9Xot5iNwjinlRGSmenm/
-QkYWeLpyRoENtdbza1eMMDMbbr01XJ26QCF+8ob3QH2YaQRXhKQuWTzAxGH8aSV2
-DzgwHKML18T90NXRyRyxAZAHiuZg6C+oEkfuc+yw2Ac6KS4m1JCT4EwSIBdkv6DU
-Y1VAOGEQichjC++aT5PUa00E7R+ouJukw1HHjyzlUzaoz1B3SD0tEkCP0AwhUDI6
-AB9EXTlehXITaYT3onUo0N6RQLwxR6w9Lr7YR65lqSU5T3QMxtE9f9qJFjRiY7xY
-aXmM1y3F7K3wv/bqtha6rNiXivmkoONS+UXsTdu2wVW4+68fzcrzKEzDjsps8HCO
-D8FC0tg5UIsuq30uVnw0
-=hiGT
------END PGP SIGNATURE-----
-
---hwvH6HDNit2nSK4j--
+ECO tip #101: Trim your mails when you reply.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
