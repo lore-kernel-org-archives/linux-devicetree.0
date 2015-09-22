@@ -1,54 +1,95 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Please suggest proper format for DT properties.
-Date: Tue, 22 Sep 2015 17:17:05 +0200
-Message-ID: <2276160.jkVDCt4RhG@wuerfel>
-References: <1442615803-17766-1-git-send-email-const@MakeLinux.com> <3914149.k3sqApaTEz@wuerfel> <56016EE9.1010302@roeck-us.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun4i: Add dts file for the
+ pov protab2-ips9 tablet
+Date: Tue, 22 Sep 2015 17:24:37 +0200
+Message-ID: <560172B5.8090709@redhat.com>
+References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
+ <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
+ <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
+ <20150913152224.GU9885@lukather> <55F5B370.7040203@redhat.com>
+ <20150922150242.GF4684@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56016EE9.1010302-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20150922150242.GF4684@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 September 2015 08:08:25 Guenter Roeck wrote:
-> > I would strongly prefer Option 1 or 2 over option 3.
-> > Between 1 and 2, I'd probably go for 1. Another option might
-> > be to have a subnode per sensor:
-> >
-> > nct7802@2a {
-> >          compatible = "nuvoton,nct7802";
-> >          reg = <0x2a>;
-> >       #address-cells=<1>;
-> >       #size-cells=<0>;
-> >
-> >       sensor@1 {
-> >               compatible = "nuvoton,nct7802-thermistor";
-> >               further-properties;
-> >       };
-> >       sensor@3 {
-> >               compatible = "nuvoton,nct7802-voltage";
-> >               for-example-range-mv = <0 5000>;
-> >       };
-> > };
-> >
-> I personally would prefer this approach. It would also make it easier to add more
-> properties. Wonder what is more appropriate, though - a compatible property or
-> something like the following ?
->                 sensor-type = "xxx";
-> 
-> I don't have a preference, just asking.
+Hi,
 
-I'm not sure here, either way would work, and we are not particularly
-consistent in this regard. Maybe someone else has a stronger preference.
+On 22-09-15 17:02, Maxime Ripard wrote:
+> On Sun, Sep 13, 2015 at 07:33:36PM +0200, Hans de Goede wrote:
+>>> Anyway. In both cases, the regulator really shouldn't be drifting
+>>> along like this.
+>>
+>> Right which is why I've added the always-on property.
+>
+> Which is exactly what I meant by drifting along: that regulator will
+> never be associated to the i2c bus, and will always be enabled even
+> though the i2c bus might not even be accessible in the first place
+> (driver not selected, compiled as a module and not loaded yet), which
+> is just as bad.
+>
+>>> If the i2c bus needs a regulator to be operationaly,
+>>> then we can just add an optional bus-supply property or something to
+>>> give that to the i2c driver so that it can enable it when needed.
+>>
+>> I agree that that would be sensible if this regulator were tied to
+>> the pull-ups, but I've my doubts that it is. We've not seen anything
+>> similar on any other allwinner tablet, other then ChenYu-s Ippo-q8-v5
+>> tablet.
+>>
+>> This tablet is sort of a high-end tablet (with a nice ips screen) and
+>> such it also uses a different (better) sensor for its frontcam, a
+>> gc2015 rather then the usual gc0308. I believe that this is the
+>> culprit.
+>>
+>> Which would make modelling this as some sort of i2c-bus power-supply
+>> wrong, and I've checked and none of the existing i2c bindings under
+>> Documentation/devicetree/bindings/i2c contain such a thing, so we
+>> would be the first and we will likely have a hard time selling a
+>> binding for this upstream, esp. since we do not know what exactly
+>> is going on.
+>
+> Well, strictly speaking, it is a supply needed to get the bus to
+> work. We should really try to avoid having always-on for regulators,
+> especially for devices that are already represented in the DT.
+>
+>> So all in all I strongly believe that just setting always-on
+>> on the regulator in question is the best solution.
+>
+> It's a hack we can avoid.
 
-> Also, would the index be derived from "@1", or should there be a reg property ?
+How? By adding a regulator property to the i2c controller node
+and then have the i2c controller driver enable this on probe ?
 
-There needs to be a 'reg' property. Sorry for missing that above.
+This will make 0 difference in practice since any useful kernel
+config will always include the i2c controller as that is necessary
+to talk to the pmic which controls this regulator in the first place.
 
-	Arnd
+Having some sort of regulator property in the i2c-controller node
+might be something worthwhile adding if we knew for sure that that
+is how things are wired up, but we simply do not know.
+
+I'm not going to submit a patch to the i2c bindings to add a
+regulator if I cannot explain exactly during review why it is
+needed.
+
+The way I see it this board has some kinda bug making that bus
+not work when the regulator in question is disabled, but we do
+not exactly why, so we workaround the bug by not disabling the
+regulator -> always-on.
+
+Making some $random-node increase the use-count of the regulator
+so that it does not get disabled seems not really helpful since
+we do not know where to put the regulator property.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
