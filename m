@@ -1,46 +1,35 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 3/3] PCI: generic: Add support for Cavium ThunderX PCIe
- root complexes.
-Date: Tue, 22 Sep 2015 19:52:30 +0100
-Message-ID: <20150922185230.GR7356@arm.com>
-References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
- <1442529694-1792-4-git-send-email-ddaney.cavm@gmail.com>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: [PATCH 0/3] Malta DT memory init
+Date: Tue, 22 Sep 2015 11:56:35 -0700
+Message-ID: <1442948198-14507-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442529694-1792-4-git-send-email-ddaney.cavm@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, David Daney <david.daney@cavium.com>
+To: linux-mips@linux-mips.org
+Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, James Hogan <james.hogan@imgtec.com>, Pawel Moll <pawel.moll@arm.com>, Markos Chandras <markos.chandras@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 11:41:34PM +0100, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> The config space for external PCIe root complexes on some Cavium
-> ThunderX SoCs is very similar to CAM and ECAM, but differs in the
-> shift values that have to be applied to the bus and devfn numbers to
-> compose that address window offset.  These root complexes also have
-> the interesting property that there is no root bridge, so the standard
-> manner of limiting scanning to only the first device doesn't work.  We
-> can use the standard pci-host-generic driver if we make a minor
-> addition to handle these differences, so we...
-> 
-> Add a mapping function for ThunderX PCIe root complexes with a bus
-> shift of 24 and devfn shift of 16.  Ignore accesses for devices other
-> than the first device on the primary bus.
-> 
-> Document the whole thing in devicetree/bindings/pci/host-generic-pci.txt
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  .../devicetree/bindings/pci/host-generic-pci.txt   |  8 +++---
->  drivers/pci/host/pci-host-generic.c                | 29 ++++++++++++++++++++++
->  2 files changed, 34 insertions(+), 3 deletions(-)
+This series extracts some parts of my earlier Malta DT conversion
+patchset which I believe should be good to merge independently from the
+rest (which require further interrupt work).
 
-Thanks, this looks better now:
+Paul Burton (3):
+  MIPS: malta: split obj-y entries across lines
+  MIPS: malta: remove fw_memblock_t abstraction
+  MIPS: malta: setup RAM regions via DT
 
-  Acked-by: Will Deacon <will.deacon@arm.com>
+ arch/mips/Kconfig                               |   2 +
+ arch/mips/boot/dts/mti/malta.dts                |   4 +
+ arch/mips/include/asm/fw/fw.h                   |  16 ---
+ arch/mips/include/asm/mach-malta/malta-dtshim.h |  29 +++++
+ arch/mips/mti-malta/Makefile                    |  15 ++-
+ arch/mips/mti-malta/malta-dtshim.c              | 162 ++++++++++++++++++++++++
+ arch/mips/mti-malta/malta-memory.c              | 131 +------------------
+ arch/mips/mti-malta/malta-setup.c               |   5 +-
+ 8 files changed, 215 insertions(+), 149 deletions(-)
+ create mode 100644 arch/mips/include/asm/mach-malta/malta-dtshim.h
+ create mode 100644 arch/mips/mti-malta/malta-dtshim.c
 
-Will
+-- 
+2.5.3
