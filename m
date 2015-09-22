@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/9] NFC: nfcmrvl: remove unneeded version defines
-Date: Tue, 22 Sep 2015 16:26:06 +0200
-Message-ID: <1442931974-31526-2-git-send-email-cuissard@marvell.com>
+Subject: [PATCH 4/9] NFC: nfcmrvl: allow low level drivers to configure head/tail room
+Date: Tue, 22 Sep 2015 16:26:09 +0200
+Message-ID: <1442931974-31526-5-git-send-email-cuissard@marvell.com>
 References: <1442931974-31526-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,63 +12,73 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Low-level drivers may need to add some data before and/or after NCI packet.
+
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/nfc/nfcmrvl/main.c | 7 ++-----
- drivers/nfc/nfcmrvl/usb.c  | 5 +----
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ drivers/nfc/nfcmrvl/main.c            | 6 +++---
+ drivers/nfc/nfcmrvl/uart.c            | 2 ++
+ include/linux/platform_data/nfcmrvl.h | 3 +++
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
-index 4a8866d..77e292f 100644
+index 6fb23cc..bd8db3d 100644
 --- a/drivers/nfc/nfcmrvl/main.c
 +++ b/drivers/nfc/nfcmrvl/main.c
-@@ -1,7 +1,7 @@
- /*
-  * Marvell NFC driver: major functions
-  *
-- * Copyright (C) 2014, Marvell International Ltd.
-+ * Copyright (C) 2014-2015 Marvell International Ltd.
-  *
-  * This software file (the "File") is distributed by Marvell International
-  * Ltd. under the terms of the GNU General Public License Version 2, June 1991
-@@ -25,8 +25,6 @@
- #include <net/nfc/nci_core.h>
- #include "nfcmrvl.h"
- 
--#define VERSION "1.0"
--
- static int nfcmrvl_nci_open(struct nci_dev *ndev)
+@@ -104,7 +104,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
  {
- 	struct nfcmrvl_private *priv = nci_get_drvdata(ndev);
-@@ -252,6 +250,5 @@ int nfcmrvl_parse_dt(struct device_node *node,
- EXPORT_SYMBOL_GPL(nfcmrvl_parse_dt);
+ 	struct nfcmrvl_private *priv;
+ 	int rc;
+-	int headroom = 0;
++	int headroom = pdata->phy_headroom;
+ 	u32 protocols;
  
- MODULE_AUTHOR("Marvell International Ltd.");
--MODULE_DESCRIPTION("Marvell NFC driver ver " VERSION);
--MODULE_VERSION(VERSION);
-+MODULE_DESCRIPTION("Marvell NFC driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
-index 7d1fe43..5e624d1 100644
---- a/drivers/nfc/nfcmrvl/usb.c
-+++ b/drivers/nfc/nfcmrvl/usb.c
-@@ -23,8 +23,6 @@
- #include <net/nfc/nci_core.h>
- #include "nfcmrvl.h"
+ 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+@@ -127,7 +127,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
+ 	}
  
--#define VERSION "1.0"
--
- static struct usb_device_id nfcmrvl_table[] = {
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1286, 0x2046,
- 					USB_CLASS_VENDOR_SPEC, 4, 1) },
-@@ -469,6 +467,5 @@ static struct usb_driver nfcmrvl_usb_driver = {
- module_usb_driver(nfcmrvl_usb_driver);
+ 	if (priv->config.hci_muxed)
+-		headroom = NFCMRVL_HCI_EVENT_HEADER_SIZE;
++		headroom += NFCMRVL_HCI_EVENT_HEADER_SIZE;
  
- MODULE_AUTHOR("Marvell International Ltd.");
--MODULE_DESCRIPTION("Marvell NFC-over-USB driver ver " VERSION);
--MODULE_VERSION(VERSION);
-+MODULE_DESCRIPTION("Marvell NFC-over-USB driver");
- MODULE_LICENSE("GPL v2");
+ 	protocols = NFC_PROTO_JEWEL_MASK
+ 		| NFC_PROTO_MIFARE_MASK
+@@ -138,7 +138,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(void *drv_data,
+ 		| NFC_PROTO_NFC_DEP_MASK;
+ 
+ 	priv->ndev = nci_allocate_device(&nfcmrvl_nci_ops, protocols,
+-					 headroom, 0);
++					 headroom, priv->config.phy_tailroom);
+ 	if (!priv->ndev) {
+ 		nfc_err(dev, "nci_allocate_device failed\n");
+ 		rc = -ENOMEM;
+diff --git a/drivers/nfc/nfcmrvl/uart.c b/drivers/nfc/nfcmrvl/uart.c
+index 8355824..b851334 100644
+--- a/drivers/nfc/nfcmrvl/uart.c
++++ b/drivers/nfc/nfcmrvl/uart.c
+@@ -138,6 +138,8 @@ static int nfcmrvl_nci_uart_open(struct nci_uart *nu)
+ 		pdata = &config;
+ 	}
+ 
++	pdata->phy_headroom = pdata->phy_tailroom = 0;
++
+ 	priv = nfcmrvl_nci_register_dev(nu, &uart_ops, nu->tty->dev, pdata);
+ 	if (IS_ERR(priv))
+ 		return PTR_ERR(priv);
+diff --git a/include/linux/platform_data/nfcmrvl.h b/include/linux/platform_data/nfcmrvl.h
+index ac91707..6f6ba27 100644
+--- a/include/linux/platform_data/nfcmrvl.h
++++ b/include/linux/platform_data/nfcmrvl.h
+@@ -26,6 +26,9 @@ struct nfcmrvl_platform_data {
+ 	unsigned int reset_n_io;
+ 	/* Tell if transport is muxed in HCI one */
+ 	unsigned int hci_muxed;
++	/* Tell generic driver that the PHY requires some headroom space */
++	unsigned int phy_headroom;
++	unsigned int phy_tailroom;
+ 
+ 	/*
+ 	 * UART specific
 -- 
 2.2.0.33.gc18b867
 
