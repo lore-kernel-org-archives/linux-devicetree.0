@@ -1,56 +1,46 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Tue, 22 Sep 2015 19:33:20 +0100
-Message-ID: <20150922193320.37997c15@arm.com>
-References: <1442801587-3812-1-git-send-email-lftan@altera.com>
-	<1442801587-3812-4-git-send-email-lftan@altera.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 3/3] PCI: generic: Add support for Cavium ThunderX PCIe
+ root complexes.
+Date: Tue, 22 Sep 2015 19:52:30 +0100
+Message-ID: <20150922185230.GR7356@arm.com>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+ <1442529694-1792-4-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1442801587-3812-4-git-send-email-lftan@altera.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442529694-1792-4-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Sep 2015 10:13:04 +0800
-Ley Foon Tan <lftan@altera.com> wrote:
-
-> This patch adds the Altera PCIe host controller driver.
+On Thu, Sep 17, 2015 at 11:41:34PM +0100, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
-> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+> The config space for external PCIe root complexes on some Cavium
+> ThunderX SoCs is very similar to CAM and ECAM, but differs in the
+> shift values that have to be applied to the bus and devfn numbers to
+> compose that address window offset.  These root complexes also have
+> the interesting property that there is no root bridge, so the standard
+> manner of limiting scanning to only the first device doesn't work.  We
+> can use the standard pci-host-generic driver if we make a minor
+> addition to handle these differences, so we...
+> 
+> Add a mapping function for ThunderX PCIe root complexes with a bus
+> shift of 24 and devfn shift of 16.  Ignore accesses for devices other
+> than the first device on the primary bus.
+> 
+> Document the whole thing in devicetree/bindings/pci/host-generic-pci.txt
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 > ---
->  drivers/pci/host/Kconfig       |   8 +
->  drivers/pci/host/Makefile      |   1 +
->  drivers/pci/host/pcie-altera.c | 591 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 600 insertions(+)
->  create mode 100644 drivers/pci/host/pcie-altera.c
-> 
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index d5e58ba..df9ed4f 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -145,4 +145,12 @@ config PCIE_IPROC_BCMA
->  	  Say Y here if you want to use the Broadcom iProc PCIe controller
->  	  through the BCMA bus interface
->  
-> +config PCIE_ALTERA
-> +	tristate "Altera PCIe controller"
-> +	depends on ARCH_SOCFPGA || NIOS2
-> +	select PCI_DOMAINS
-> +	help
-> +	  Say Y here if you want to enable PCIe controller support for Altera
-> +	  SoCFPGA family of SoCs.
-> +
+>  .../devicetree/bindings/pci/host-generic-pci.txt   |  8 +++---
+>  drivers/pci/host/pci-host-generic.c                | 29 ++++++++++++++++++++++
+>  2 files changed, 34 insertions(+), 3 deletions(-)
 
-Is there anything in this driver that is actually specific to any of
-these two platforms/architectures? I'd don't think we should restrict
-if we can avoid it (hint: the companion MSI driver is not restricted to
-any architecture).
+Thanks, this looks better now:
 
-Thanks,
+  Acked-by: Will Deacon <will.deacon@arm.com>
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+Will
