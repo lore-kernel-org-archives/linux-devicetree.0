@@ -1,59 +1,110 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: dts: sun5i: Add PWM channel 0
- pinmux setting for A13/A10s
-Date: Tue, 22 Sep 2015 16:29:44 +0200
-Message-ID: <20150922142944.GD4684@lukather>
-References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
- <1442752251-20744-3-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v4 1/5] Documentation: add DT bindings for ARM SCPI sensors
+Date: Tue, 22 Sep 2015 15:31:53 +0100
+Message-ID: <9hhoagubk4m.fsf@e105922-lin.cambridge.arm.com>
+References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
+	<1442335861-7282-2-git-send-email-punit.agrawal@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FWNnc7UvJRgHBXIN"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWWLQWYAKGQENQVBBNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442752251-20744-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442335861-7282-2-git-send-email-punit.agrawal@arm.com> (Punit
+	Agrawal's message of "Tue, 15 Sep 2015 17:50:57 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, edubezval@gmail.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
---FWNnc7UvJRgHBXIN
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Punit Agrawal <punit.agrawal@arm.com> writes:
 
-On Sun, Sep 20, 2015 at 08:30:48AM -0400, Hans de Goede wrote:
-> Add a pinmux setting for the first pwm channel. This is often used for
-> backlight dimming on tablets.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> The System Control Processor (SCP) provides access to SoC sensors via
+> the System Control and Power Interface (SCPI) Message Protocol. Add
+> bindings to allow probing of these sensors. Also support referencing
+> of the sensors for setting up thermal zones via the thermal DT
+> bindings.
+>
+> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+
+Gentle reminder for review of the below bindings. They've been updated
+based on feedback on the earlier version [a].
+
+If there are no further comments, I'd like to request an ack from the DT
+reviewers.
+
+[a] http://thread.gmane.org/gmane.linux.power-management.general/65475/focus=134976
+
 > ---
->  arch/arm/boot/dts/sun5i.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-> index 5e036a4..f0714d3 100644
-> --- a/arch/arm/boot/dts/sun5i.dtsi
-> +++ b/arch/arm/boot/dts/sun5i.dtsi
-> @@ -529,6 +529,13 @@
->  				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->  				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->  			};
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index f002460..86302de 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -72,8 +72,25 @@ Required sub-node properties:
+>  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+>  	       shared memory on Juno platforms
+>  
+> +Sensor bindings for the sensors based on SCPI Message Protocol
+> +--------------------------------------------------------------
+> +SCPI provides an API to access the various sensors on the SoC.
 > +
-> +			pwm0_pins: pwm0 {
-
-Is there a reason why you call this pinset pwm0, while it looks like
-there's a single pwm controller?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---FWNnc7UvJRgHBXIN--
+> +Required properties:
+> +- compatible : should be "arm,scpi-sensors".
+> +- #thermal-sensor-cells: should be set to 1. This property follows the
+> +			 thermal device tree bindings[2].
+> +
+> +			 Valid cell values are raw identifiers (Sensor
+> +			 ID) as used by the firmware. Refer to
+> +			 platform documentation for your
+> +			 implementation for the IDs to use. For Juno
+> +			 R0 and Juno R1 refer to [3].
+> +
+>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
+> +[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
+>  
+>  Example:
+>  
+> @@ -122,6 +139,11 @@ scpi_protocol: scpi@2e000000 {
+>  			clock-output-names = "pxlclk0", "pxlclk1";
+>  		};
+>  	};
+> +
+> +	scpi_sensors0: sensors {
+> +		compatible = "arm,scpi-sensors";
+> +		#thermal-sensor-cells = <1>;
+> +	};
+>  };
+>  
+>  cpu@0 {
+> @@ -136,6 +158,17 @@ hdlcd@7ff60000 {
+>  	clocks = <&scpi_clk 4>;
+>  };
+>  
+> +thermal-zones {
+> +	soc_thermal {
+> +		polling-delay-passive = <100>;
+> +		polling-delay = <1000>;
+> +
+> +				/* sensor         ID */
+> +		thermal-sensors = <&scpi_sensors0 3>;
+> +		...
+> +	};
+> +};
+> +
+>  In the above example, the #clock-cells is set to 1 as required.
+>  scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
+>  1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
+> @@ -148,3 +181,8 @@ scpi_dvfs i.e. "atlclk".
+>  Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
+>  clock. '4' in the clock specifier here points to the second entry
+>  in the output clocks of scpi_clocks  i.e. "pxlclk1"
+> +
+> +The thermal-sensors property in the soc_thermal node uses the
+> +temperature sensor provided by SCP firmware to setup a thermal
+> +zone. The ID "3" is the sensor identifier for the temperature sensor
+> +as used by the firmware.
