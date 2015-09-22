@@ -1,56 +1,49 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 0/6] Add support for DA9150 Fuel-Gauge
-Date: Tue, 22 Sep 2015 18:10:32 +0100
-Message-ID: <20150922171032.GH11284@x1>
-References: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
- <20150922160405.GC4235@earth>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
+Date: Tue, 22 Sep 2015 19:12:29 +0200
+Message-ID: <20150922171228.GB18064@linux-mips.org>
+References: <1442636780-2891-1-git-send-email-lynxis@fe80.eu>
+ <1442636780-2891-3-git-send-email-lynxis@fe80.eu>
+ <alpine.DEB.2.11.1509221223280.5606@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
 Content-Disposition: inline
-In-Reply-To: <20150922160405.GC4235@earth>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+In-Reply-To: <alpine.DEB.2.11.1509221223280.5606@nanos>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexander Couzens <lynxis@fe80.eu>, linux-mips@linux-mips.org, Alban Bedel <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Sep 2015, Sebastian Reichel wrote:
-> On Fri, Sep 11, 2015 at 11:05:21AM +0100, Adam Thomson wrote:
-> > This patch set adds support for the Dialog DA9150 Fuel-Gauge.
-> >
-> > [...]
-> >=20
-> > Adam Thomson (6):
-> >   mfd: da9150: Add support for Fuel-Gauge
-> >   mfd: da9150: Update DT bindings for Fuel-Gauge support
-> >   power: Add support for DA9150 Fuel-Gauge
-> >   power: da9150: Add DT bindings documentation for Fuel-Gauge
-> >   mfd: da9150: Use relative paths in DT bindings document
-> >   mfd: da9150: Use DEFINE_RES_IRQ_NAMED() help macro for IRQ resour=
-ce
-> >=20
-> >  Documentation/devicetree/bindings/mfd/da9150.txt   |  33 +-
-> >  .../devicetree/bindings/power/da9150-fg.txt        |  23 +
-> >  drivers/mfd/da9150-core.c                          | 191 +++++--
-> >  drivers/power/Kconfig                              |  10 +
-> >  drivers/power/Makefile                             |   1 +
-> >  drivers/power/da9150-fg.c                          | 578 +++++++++=
-++++++++++++
-> >  include/linux/mfd/da9150/core.h                    |  19 +-
-> >  7 files changed, 810 insertions(+), 45 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/power/da9150-=
-fg.txt
-> >  create mode 100644 drivers/power/da9150-fg.c
->=20
-> I suggest, that you take the whole patchset via the mfd tree.
+On Tue, Sep 22, 2015 at 12:24:26PM +0200, Thomas Gleixner wrote:
 
-That's fine, but I'm still missing an Ack for patch 4.
+> > The ar7240 misc irq chip use ack handler
+> > instead of ack_mask handler. All new ath79 chips use
+> > the ar7240 misc irq chip
+> > 
+> > Signed-off-by: Alexander Couzens <lynxis@fe80.eu>
+> > Acked-by: Alban Bedel <albeu@free.fr>
+> > ---
+> >  .../interrupt-controller/qca,ath79-misc-intc.txt     | 20 ++++++++++++++++++--
+> >  arch/mips/ath79/irq.c                                | 10 ++++++++++
+> 
+> That driver should probably move into drivers/irqchip.
 
+Like a fair number of other irq.c type files in arch/mips that could
+reasonably easily be rewritten to go to drivers/irqchip.
 
+> Other than that.
+> 
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks, I replaced the previous version of this patch with this one.
+
+  Ralf
