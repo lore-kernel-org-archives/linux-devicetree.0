@@ -1,69 +1,110 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers: power: twl4030_charger: fix link
- problems when building as module
-Date: Tue, 22 Sep 2015 23:29:38 +0200
-Message-ID: <20150922212900.GB15646@earth>
-References: <1442953171-19718-1-git-send-email-marek@goldelico.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt-bindings: Fix interrupt documentation
+ file path
+Date: Tue, 22 Sep 2015 22:56:34 +0100
+Message-ID: <20150922215634.GD3442@x1>
+References: <1442852740-3390-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1442953171-19718-1-git-send-email-marek@goldelico.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, linux-pm@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, neilb@suse.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1442852740-3390-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 21 Sep 2015, Andrew F. Davis wrote:
 
---Bn2rw/3z4jIqBvZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Marek,
-
-On Tue, Sep 22, 2015 at 10:19:29PM +0200, Marek Belisko wrote:
-> If either twl4030_charger or twl4030_madc is configured as MODULE,
-> we get build (link) errors.
+> Fix the incorrect interrupt documentation file path in binding docs.
 >=20
-> To solve, the direct call of twl4030_get_madc_conversion() is replaced
-> by a call to iio_read_channel_processed().
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 > ---
-> changes from V1: added missing iio_channel_release + document and add new=
- DT bindings
+>  Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt | 2 +-
+>  Documentation/devicetree/bindings/mfd/arizona.txt          | 2 +-
+>  Documentation/devicetree/bindings/mfd/palmas.txt           | 2 +-
 
-That was fast :) Patchset looks fine to me except for one last
-thing: Let's make the iio-channel optional, so that old DT blobs
-are still supported. Also the IS_REACHABLE(CONFIG_TWL4030_MADC)
-check can be removed, it should no longer be needed with
-iio_read_channel_processed().
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
--- Sebastian
+>  Documentation/devicetree/bindings/sound/wm8994.txt         | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.t=
+xt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> index dd5d2c0..4d6c8cd 100644
+> --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> @@ -24,7 +24,7 @@ controller.
+>  - #interrupt-cells : Specifies the number of cells needed to encode =
+an
+>    interrupt.  Shall be set to 2.  The first cell defines the interru=
+pt number,
+>    the second encodes the triger flags encoded as described in
+> -  Documentation/devicetree/bindings/interrupts.txt
+> +  Documentation/devicetree/bindings/interrupt-controller/interrupts.=
+txt
+>  - interrupt-parent : The parent interrupt controller.
+>  - interrupts : The interrupt to the parent controller raised when GP=
+IOs
+>    generate the interrupts.
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
+mentation/devicetree/bindings/mfd/arizona.txt
+> index a8fee60..3d361ec 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -24,7 +24,7 @@ Required properties:
+>    - #interrupt-cells: the number of cells to describe an IRQ, this s=
+hould be 2.
+>      The first cell is the IRQ number.
+>      The second cell is the flags, encoded as the trigger masks from
+> -    Documentation/devicetree/bindings/interrupts.txt
+> +    Documentation/devicetree/bindings/interrupt-controller/interrupt=
+s.txt
+> =20
+>    - gpio-controller : Indicates this device is a GPIO controller.
+>    - #gpio-cells : Must be 2. The first cell is the pin number and th=
+e
+> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Docum=
+entation/devicetree/bindings/mfd/palmas.txt
+> index eda8989..8ae1a32 100644
+> --- a/Documentation/devicetree/bindings/mfd/palmas.txt
+> +++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+> @@ -24,7 +24,7 @@ and also the generic series names
+>  - #interrupt-cells : should be set to 2 for IRQ number and flags
+>    The first cell is the IRQ number.
+>    The second cell is the flags, encoded as the trigger masks from
+> -  Documentation/devicetree/bindings/interrupts.txt
+> +  Documentation/devicetree/bindings/interrupt-controller/interrupts.=
+txt
+>  - interrupt-parent : The parent interrupt controller.
+> =20
+>  Optional properties:
+> diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Doc=
+umentation/devicetree/bindings/sound/wm8994.txt
+> index e045e90..68c4e8d 100644
+> --- a/Documentation/devicetree/bindings/sound/wm8994.txt
+> +++ b/Documentation/devicetree/bindings/sound/wm8994.txt
+> @@ -30,7 +30,7 @@ Optional properties:
+>    - #interrupt-cells: the number of cells to describe an IRQ, this s=
+hould be 2.
+>      The first cell is the IRQ number.
+>      The second cell is the flags, encoded as the trigger masks from
+> -    Documentation/devicetree/bindings/interrupts.txt
+> +    Documentation/devicetree/bindings/interrupt-controller/interrupt=
+s.txt
+> =20
+>    - clocks : A list of up to two phandle and clock specifier pairs
+>    - clock-names : A list of clock names sorted in the same order as =
+clocks.
 
---Bn2rw/3z4jIqBvZU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWAcgZAAoJENju1/PIO/qaJn4QAJQVkPeQMwlPmqqcjCuC+pC7
-r0KH63HVGJGbNlaqNCHn0rSSv0F0UbKjJKZ1tyM4bYrFTPJChSEnNS7mc30m5stO
-8AQ4JZZNQd5YP4/RRgQf85dHBH16CN0hlL3v2VPnAKbs9+7w6mkC/kXvqSXoPftE
-XNn0FT5byFQhCxE3i1EBcggijhmUqAyfycJQsakzjOX2QORFblhvP7Jih/7n6OdR
-9PicTYvHbAdBP4FR4Gg54NpbdLooeOlKhKuF90IuaqMr89K1tn1oHaK8Z2Lab0pq
-ice+7U4d7M73lalsNS6qLw6N8TG6RnNfdtgNLqzQYuxsWPvzE7M3bz/g2VrtQK/F
-1H6q2ff7+3iZm3wokFRTAk1e7/1HeBA0jWqjcRLJ7Kl0w08Msv/Cs5ZiiwBHFGpg
-esDqTASWhHptMoVHjV9C3WBGe/805h0DhpiijnQCA280qaACh10xf2mUwdW/MRaD
-U1rn47+ySYP7d3JaAnLnB3hL01cE7Fc2wbQwHGvukseHCsIQI4b+VrZArPFNXI15
-ZD3Jpdi+W5BuCoadYlTpcKLnSas6A4Y/JXuUAZvxf8MWdq/xLXMOh1ue7sUFATWA
-nww3WNG/Qh47lzkRs8dUr+6FL+/hUVI02uSV40c/CtQtF8CgoMtMD7Rv7WGVXQ1p
-dwFJbWLfH3zYM+w7PAqY
-=jM4l
------END PGP SIGNATURE-----
-
---Bn2rw/3z4jIqBvZU--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
