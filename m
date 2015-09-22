@@ -1,13 +1,12 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/2] MIPS: ath79: set missing irq ack handler for
- ar7100-misc-intc irq chip
-Date: Tue, 22 Sep 2015 12:23:22 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1509221223050.5606@nanos>
-References: <1442636780-2891-1-git-send-email-lynxis@fe80.eu> <1442636780-2891-2-git-send-email-lynxis@fe80.eu>
+Subject: Re: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
+Date: Tue, 22 Sep 2015 12:24:26 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1509221223280.5606@nanos>
+References: <1442636780-2891-1-git-send-email-lynxis@fe80.eu> <1442636780-2891-3-git-send-email-lynxis@fe80.eu>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1442636780-2891-2-git-send-email-lynxis@fe80.eu>
+In-Reply-To: <1442636780-2891-3-git-send-email-lynxis@fe80.eu>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -23,10 +22,18 @@ List-Id: devicetree@vger.kernel.org
 
 On Sat, 19 Sep 2015, Alexander Couzens wrote:
 
-> The irq ack handler was forgotten while introducing OF support.
-> Only ar71xx and ar933x based devices require it.
+> The ar7240 misc irq chip use ack handler
+> instead of ack_mask handler. All new ath79 chips use
+> the ar7240 misc irq chip
 > 
 > Signed-off-by: Alexander Couzens <lynxis@fe80.eu>
 > Acked-by: Alban Bedel <albeu@free.fr>
+> ---
+>  .../interrupt-controller/qca,ath79-misc-intc.txt     | 20 ++++++++++++++++++--
+>  arch/mips/ath79/irq.c                                | 10 ++++++++++
+
+That driver should probably move into drivers/irqchip.
+
+Other than that.
 
 Acked-by: Thomas Gleixner <tglx@linutronix.de>
