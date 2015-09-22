@@ -1,55 +1,43 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/6] PCI: generic: Misc. bug fixes/enhancements
-Date: Tue, 22 Sep 2015 16:49:11 -0700
-Message-ID: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v3 5/6] PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
+Date: Tue, 22 Sep 2015 16:49:16 -0700
+Message-ID: <1442965757-12925-6-git-send-email-ddaney.cavm@gmail.com>
+References: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: David Daney <david.daney@cavium.com>
 
-While using the pci-host-generic driver to add PCI support for the
-Cavium ThunderX processors, several bugs were discovered.  This patch
-set fixes the bugs, a follow-on set will add the ThunderX support.
+If the bus is being configured with a bus-range that does not start at
+zero, pass that starting bus number to pci_scan_root_bus().  Passing
+the incorrect value of zero causes attempted config accesses outside
+of the supported range, which cascades to an OOPs spew and eventual
+kernel panic.
 
-Changes from v2:
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+No change from v1 or v2.
 
-  - Added " PCI: generic: Claim device resources if PCI_PROBE_ONLY"
+ drivers/pci/host/pci-host-generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes from v1:
-
-  - "PCI: generic: Allow bus default MSI controller to be specified."
-    patch was dropped as it is no longer necessary.
-
-  - "PCI: Make global and export pdev_fixup_irq()." and "PCI: generic:
-    Only fixup irqs for bus we are creating." were rewritten to move
-    the support into a somewhat more generic form in setup-irq.c.
-
-  - Add some clarifying text to host-generic-pci.txt
-
-  - Add some Acked-by:
-
-
-David Daney (6):
-  PCI: Add pci_bus_fixup_irqs().
-  PCI: generic: Only fixup irqs for bus we are creating.
-  PCI: generic: Quit clobbering our pci_ops.
-  PCI: generic: Correct, and avoid overflow, in bus_max calculation.
-  PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
-  PCI: generic: Claim device resources if PCI_PROBE_ONLY
-
- .../devicetree/bindings/pci/host-generic-pci.txt   |  4 +-
- drivers/pci/host/pci-host-generic.c                | 59 +++++++++++++++-------
- drivers/pci/setup-irq.c                            | 30 +++++++++++
- include/linux/pci.h                                |  4 ++
- 4 files changed, 79 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+index 0a9c453..e364232 100644
+--- a/drivers/pci/host/pci-host-generic.c
++++ b/drivers/pci/host/pci-host-generic.c
+@@ -259,7 +259,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 	if (!pci_has_flag(PCI_PROBE_ONLY))
+ 		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+ 
+-	bus = pci_scan_root_bus(dev, 0,
++	bus = pci_scan_root_bus(dev, pci->cfg.bus_range->start,
+ 				&pci->cfg.ops.ops, pci, &pci->resources);
+ 	if (!bus) {
+ 		dev_err(dev, "Scanning rootbus failed");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
