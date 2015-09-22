@@ -1,39 +1,31 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] edac: Export edac_debugfs
-Date: Tue, 22 Sep 2015 19:52:27 +0200
-Message-ID: <20150922175227.GA3568@pd.tnic>
-References: <1439534769-22811-1-git-send-email-lho@apm.com>
- <1439534769-22811-2-git-send-email-lho@apm.com>
- <20150922163405.GC3437@pd.tnic>
- <CAPw-ZTnMfvAtoXz_dHsLnwEm4N63Tdb+4c7NE+oLw28v+ozd7g@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7 1/6] arm: add msi.h to Kbuild
+Date: Tue, 22 Sep 2015 19:23:48 +0100
+Message-ID: <20150922192348.1c9814c8@arm.com>
+References: <1442801587-3812-1-git-send-email-lftan@altera.com>
+	<1442801587-3812-2-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTnMfvAtoXz_dHsLnwEm4N63Tdb+4c7NE+oLw28v+ozd7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442801587-3812-2-git-send-email-lftan@altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 22, 2015 at 10:46:07AM -0700, Loc Ho wrote:
-> Let's me sync and give it a try. Do you see any other issue besides this?
+On Mon, 21 Sep 2015 10:13:02 +0800
+Ley Foon Tan <lftan@altera.com> wrote:
 
-I replied to each message separately but they were all small nitpicks
-only.
+> Include asm-generic/msi.h to support CONFIG_GENERIC_MSI_IRQ_DOMAIN.
+> This to fix compilation error:
+> "include/linux/msi.h:123:21: fatal error: asm/msi.h:
+> No such file or directory"
+> 
+> Signed-off-by: Ley Foon Tan <lftan@altera.com>
 
-Btw, I have the debugfs pile here if you want to base your stuff ontop:
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 
-git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#edac-debugfs
-
-Thanks.
-
+	M.
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jazz is not dead. It just smells funny.
