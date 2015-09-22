@@ -1,56 +1,137 @@
-From: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Tue, 22 Sep 2015 06:54:10 -0700
-Message-ID: <CAPiN7iVZgvLS0HGifhDULVavCw2TdxZBC_+bcGjWKAAax=YFKQ@mail.gmail.com>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
-	<20150828101227.GD31748@leverpostej>
-	<CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
-	<CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
-	<20150831145500.GP12027@sirena.org.uk>
-	<CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
-	<20150831180140.GS12027@sirena.org.uk>
-	<CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
-	<CAAVeFuJsM_gDNHNqSRi2iHNAzMHAiw0-y5V1pRce4SD8OgY11Q@mail.gmail.com>
-	<CAPiN7iUvDgifPYxhtVf3oOJLV1q1ZA6MZ-2tL2JbpgE0oUM6AA@mail.gmail.com>
-	<CACRpkda=2qnxnnRBga-6U9mCDUD61=1+62-awC8NVOV6Yt9mAA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 1/3] clocksource: rockchip: Make the driver more readability and compatible
+Date: Tue, 22 Sep 2015 16:00:53 +0200
+Message-ID: <5455510.kk9S3OIaU9@diego>
+References: <1442566271-10695-1-git-send-email-wxt@rock-chips.com> <1442566271-10695-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkda=2qnxnnRBga-6U9mCDUD61=1+62-awC8NVOV6Yt9mAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442566271-10695-2-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: daniel.lezcano@linaro.org, will.deacon@arm.com, catalin.marinas@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, tglx@linutronix.de, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 21, 2015 at 4:55 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Sep 2, 2015 at 6:35 AM, Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> There are some hardware aspects/parameters
->> of exporting that aren't controllable from userspace, such as whether or not
->> reversing the direction of a GPIO is safe.
->
-> The original argument as to why kernel should handle hardware
-> is to keep things safe and under control.
->
-> I don't understand this argument really, should the kernel give you
-> a gun but stop you from shooting yourself in the foot with it or
-> what do you mean? Then the stance of kernel not to give out guns
-> is better.
+Hi Caesar,
 
->From my embedded perspective a board designer wants to keep
-hardware safe and under control too.  He may want or need to expose
-controls or status to userspace applications, though, and what he
-wants to have exposed may vary from board to board.  I just feel that
-exposing them via the DT could be OK, whereas others do not.
+Am Freitag, 18. September 2015, 16:51:09 schrieb Caesar Wang:
+> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
+> There are some failure with build up on timer driver for rockchip.
+> 
+> logs:
+> ...
+> drivers/clocksource/rockchip_timer.c:156:13: error: 'NO_IRQ' undeclared
+> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  operand 1 --
+> `dsb`
+> ...
+> 
+> The problem was different semantics of dsb on btw arm32 and arm64,
+> Here we can convert the dsb with insteading of dsb(sy).
+> 
+> NO_IRQ definition is missing for ARM64, since NO_IRQ being -1 is a
+> legacy thing for ARM - all ARM drivers are supposed to be converted to
+> use <= 0 or == 0 to detect invalid IRQs, and _eventually_ once all users
+> are gone, NO_IRQ deleted. Modern drivers should _all_ be using !irq to
+> detect invalid IRQs, and not using NO_IRQ.
+> 
+> Meanwhile, I change a bit to make the code more readability for driver
+> when I check the code style.
+> 
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> ---
+> 
+> Changes in v1:
+> - As Russell, Thomas, Daniel comments, let's replace NO_IRQ by '!irq'.
+> 
+>  drivers/clocksource/rockchip_timer.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/clocksource/rockchip_timer.c
+> b/drivers/clocksource/rockchip_timer.c index bb2c2b0..e1af449 100644
+> --- a/drivers/clocksource/rockchip_timer.c
+> +++ b/drivers/clocksource/rockchip_timer.c
+> @@ -17,16 +17,16 @@
+> 
+>  #define TIMER_NAME "rk_timer"
+> 
+> -#define TIMER_LOAD_COUNT0 0x00
+> -#define TIMER_LOAD_COUNT1 0x04
+> -#define TIMER_CONTROL_REG 0x10
+> -#define TIMER_INT_STATUS 0x18
+> +#define TIMER_LOAD_COUNT0	0x00
+> +#define TIMER_LOAD_COUNT1	0x04
+> +#define TIMER_CONTROL_REG	0x10
+> +#define TIMER_INT_STATUS	0x18
+> 
+> -#define TIMER_DISABLE 0x0
+> -#define TIMER_ENABLE 0x1
+> -#define TIMER_MODE_FREE_RUNNING (0 << 1)
+> -#define TIMER_MODE_USER_DEFINED_COUNT (1 << 1)
+> -#define TIMER_INT_UNMASK (1 << 2)
+> +#define TIMER_DISABLE			(0 << 0)
+> +#define TIMER_ENABLE			(1 << 0)
+> +#define TIMER_MODE_FREE_RUNNING		(0 << 1)
+> +#define TIMER_MODE_USER_DEFINED_COUNT	(1 << 1)
+> +#define TIMER_INT_UNMASK		(1 << 2)
 
-I personally think it make sense to allow a board designer to somehow
-specify in the DT (not doable now) that an otherwise unattached GPIO
-should be exposed to userspace and whether or not to expose the
-"direction" pseudo-file in sysfs that allows changing of the direction.
-If the board designer thinks it's safe or necessary to change the
-direction of the GPIO, then why not allow him to specify it as such.
+not sure how Daniel sees this, but those could count as "unrelated change", as 
+they have nothing to do with the arm64 build-fixes.
 
-- Chris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> 
+>  struct bc_timer {
+>  	struct clock_event_device ce;
+> @@ -49,14 +49,14 @@ static inline void __iomem *rk_base(struct
+> clock_event_device *ce) static inline void rk_timer_disable(struct
+> clock_event_device *ce) {
+>  	writel_relaxed(TIMER_DISABLE, rk_base(ce) + TIMER_CONTROL_REG);
+> -	dsb();
+> +	dsb(sy);
+>  }
+> 
+>  static inline void rk_timer_enable(struct clock_event_device *ce, u32
+> flags) {
+>  	writel_relaxed(TIMER_ENABLE | TIMER_INT_UNMASK | flags,
+>  		       rk_base(ce) + TIMER_CONTROL_REG);
+> -	dsb();
+> +	dsb(sy);
+>  }
+> 
+>  static void rk_timer_update_counter(unsigned long cycles,
+> @@ -64,13 +64,13 @@ static void rk_timer_update_counter(unsigned long
+> cycles, {
+>  	writel_relaxed(cycles, rk_base(ce) + TIMER_LOAD_COUNT0);
+>  	writel_relaxed(0, rk_base(ce) + TIMER_LOAD_COUNT1);
+> -	dsb();
+> +	dsb(sy);
+>  }
+> 
+>  static void rk_timer_interrupt_clear(struct clock_event_device *ce)
+>  {
+>  	writel_relaxed(1, rk_base(ce) + TIMER_INT_STATUS);
+> -	dsb();
+> +	dsb(sy);
+>  }
+> 
+>  static inline int rk_timer_set_next_event(unsigned long cycles,
+> @@ -148,7 +148,7 @@ static void __init rk_timer_init(struct device_node *np)
+> bc_timer.freq = clk_get_rate(timer_clk);
+> 
+>  	irq = irq_of_parse_and_map(np, 0);
+> -	if (irq == NO_IRQ) {
+> +	if (!irq) {
+>  		pr_err("Failed to map interrupts for '%s'\n", TIMER_NAME);
+>  		return;
+>  	}
+> @@ -173,4 +173,5 @@ static void __init rk_timer_init(struct device_node *np)
+> 
+>  	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
+>  }
+> +
+
+unnecessary addition of a blank line (same reasons as above)
+>  CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer", rk_timer_init);
+
+
+Heiko
