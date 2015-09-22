@@ -1,74 +1,94 @@
-From: "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
-Subject: RE: [PATCH] power: bq24261_charger: Add support for TI BQ24261
- charger
-Date: Tue, 22 Sep 2015 15:43:13 +0000
-Message-ID: <D854C92F57B1B347B57E531E78D05EAD5790FE2E@BGSMSX104.gar.corp.intel.com>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <D854C92F57B1B347B57E531E78D05EAD57904B8D@BGSMSX104.gar.corp.intel.com>
- <55F0C522.6070705@samsung.com> <55F1B2FD.4020608@ti.com>
- <55F22740.4080003@samsung.com> <20150922153725.GA4235@earth>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: sunxi: Introduce Allwinner for
+ A83T support
+Date: Tue, 22 Sep 2015 23:47:40 +0800
+Message-ID: <CAGb2v665FhnSoWYGJn+Tf79F7pZitYBrEOmAts4nVoUWb-uBqg@mail.gmail.com>
+References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com> <1442936337-3104-2-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150922153725.GA4235@earth>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: "Andrew F. Davis" <afd@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNHQQWYAKGQEJMAGAHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1442936337-3104-2-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Hi,
-> 
-> On Fri, Sep 11, 2015 at 09:58:40AM +0900, Krzysztof Kozlowski wrote:
-> > On 11.09.2015 01:42, Andrew F. Davis wrote:
-> > > On 09/09/2015 06:47 PM, Krzysztof Kozlowski wrote:
-> > >>>>> +- ti,enable-user-write: boolean, if present driver will allow
-> > >>>>> +the
-> > >>>>> user space
-> > >>>>> +    to control the charging current and voltage through sysfs;
-> > >>>>
-> > >>>> This is not DT property. It does not describe hardware.
-> > >>> We needed a mechanism to enable the sysfs writes on certain properties.
-> > >>> If DT is not the place where should it go?
-> > >>
-> > >> DT is not the place. As I discussed later with Andreas, if you
-> > >> really need this and if mainline is a place for that then probably
-> > >> this should be compile option (a Kconfig symbol).
-> > >>
-> > >
-> > > I think this would actually be a good use for module parameters,
-> > > this way it could still be set at boot without re-compiling.
-> > >
-> > > I think compile-time disabling sysfs properties because they are
-> > > "dangerous" is a little bit too artificially restricting and
-> > > controlling, you can set permissions so only root can change them
-> > > already. The kernel should not be restricting root, I understand the
-> > > fear of someone rooting a machine and remotely over charging a
-> > > LiPo[1], but these physical limits are hardware descriptions and can
-> > > and should be set by DT, beyond this root should have full control
-> > > over their machine.
-> >
-> >
-> > Indeed module parameters could be used for enabling/disabling debug
-> > options... but as fair as I understand these are for purely
-> > development purposes. That is why they got into DT initially, right?
-> > To allow the developer to play with it on the development board?
-> >
-> > This is why I am really not convinced that this should go to mainline.
-> >
-> > Anyway if it goes, then maybe compiling it out is the safest choice?
-> > What's the purpose of having it in kernel all the time? If this was a
-> > debug option, than some experienced user could turn it on and report
-> > to LKML with extended debug data. But it's not a debug but development
-> option?
-> 
-> Changing the current limit is useful for "expert" users with custom usb power
-> supplies, that are not correctly detected by extcon. I also think a module
-> parameter would be the best option here.
+On Tue, Sep 22, 2015 at 11:38 PM, Vishnu Patekar
+<vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Allwinner A83T is octa-core cortex-a7 based SoC.
+> It's clock control unit and prcm, pinmux are different from previous sun8i
+> series.
+> Its processor cores are arragned in two clusters 4 cores each,
+> similar to A80.
+>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+>  drivers/clk/sunxi/clk-sunxi.c                   | 6 ++++++
+>  3 files changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+> index 67da205..cf5ed27 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -11,4 +11,5 @@ using one of the following compatible strings:
+>    allwinner,sun8i-a23
+>    allwinner,sun8i-a33
+>    allwinner,sun8i-h3
+> +  allwinner,sun8i-a83t
 
-Ok. I will resubmit the patches along with fixing the other comments.
+Alphabetic order please.
 
-Thanks,
-Ram
+>    allwinner,sun9i-a80
+> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> index 65bab28..b04aefa 100644
+> --- a/arch/arm/mach-sunxi/sunxi.c
+> +++ b/arch/arm/mach-sunxi/sunxi.c
+> @@ -69,6 +69,7 @@ static const char * const sun8i_board_dt_compat[] = {
+>         "allwinner,sun8i-a23",
+>         "allwinner,sun8i-a33",
+>         "allwinner,sun8i-h3",
+> +       "allwinner,sun8i-a83t",
+
+Same here.
+
+>         NULL,
+>  };
+>
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 413070d..f216d5d 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -1212,6 +1212,12 @@ CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
+>
+> +static void __init sun8ia83t_init_clocks(struct device_node *node)
+> +{
+> +       sunxi_init_clocks(NULL, 0);
+> +}
+> +CLK_OF_DECLARE(sun9i_a83t_clk_init, "allwinner,sun8i-a83t", sun8ia83t_init_clocks);
+
+sun8i? Missing underscore too.
+
+I think you should add this once you actually have clock support.
+Otherwise this call basically does nothing.
+
+> +
+>  static void __init sun9i_init_clocks(struct device_node *node)
+>  {
+>         sunxi_init_clocks(NULL, 0);
+
+On the side, I will send patches to remove sun9i_init_clocks.
+
+
+Regards
+ChenYu
