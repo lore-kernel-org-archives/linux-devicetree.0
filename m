@@ -1,49 +1,26 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/3] clk: bcm2835: Add a driver for the auxiliary
- peripheral clock gates.
-Date: Mon, 21 Sep 2015 19:11:38 -0700
-Message-ID: <5600B8DA.4030406@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: bcm2835: Add the auxiliary clocks to the device
+ tree.
+Date: Mon, 21 Sep 2015 19:12:01 -0700
+Message-ID: <5600B8F1.2090109@wwwdotorg.org>
 References: <1441923750-19404-1-git-send-email-eric@anholt.net>
- <1441923750-19404-3-git-send-email-eric@anholt.net>
+ <1441923750-19404-4-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1441923750-19404-3-git-send-email-eric@anholt.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441923750-19404-4-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 09/10/2015 03:22 PM, Eric Anholt wrote:
-> There are a pair of SPI masters and a mini UART that were last minute
-> additions.  As a result, they didn't get integrated in the same way as
-> the other gates off of the VPU clock in CPRMAN.
+> These will be used for enabling UART1, SPI1, and SPI2.
 
-> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c b/drivers/clk/bcm/clk-bcm2835-aux.c
-
-> +static int bcm2835_aux_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct clk_onecell_data *onecell;
-> +	const char *parent;
-> +	struct clk *parent_clk;
-> +	void __iomem *reg;
-> +
-> +	parent_clk = of_clk_get(dev->of_node, 0);
-> +	if (IS_ERR(parent_clk))
-> +		return PTR_ERR(parent_clk);
-> +	parent = __clk_get_name(parent_clk);
-
-I think all the comments I made on probe() for the main bcm2835 clock
-driver likely apply here too.
-
-Also, is it "legal" for clock drivers to use __clk_get_name()? I thought
-that was a clock core internal function, but may be wrong. I would have
-expected to be able to pass a clock object when registering clocks
-rather than a clock name, but oh well.
-
-BTW, I like how this series shows how useful it is for someone with full
-knowledge of the HW to come up with the DT bindings for a HW module;
-once you know how the HW is actually designed, the correct binding ends
-up being a lot easier to come up with, rather than guessing:-)
+Patches 1, 3,
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
