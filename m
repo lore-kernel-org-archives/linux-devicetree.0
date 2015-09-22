@@ -1,185 +1,62 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: sun8i: Add A83T HomletV2
- Board by Allwinner
-Date: Wed, 23 Sep 2015 00:21:06 +0800
-Message-ID: <CAEzqOZsDeW-qB=b9i+su6yDSosvDj34VdYLZsz8SZ=i5yvBFFQ@mail.gmail.com>
-References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
- <1442936337-3104-5-git-send-email-vishnupatekar0510@gmail.com> <20150922160053.GM4684@lukather>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v5 01/11] dt: power: bq24257-charger: Cover additional
+ devices
+Date: Tue, 22 Sep 2015 18:24:48 +0200
+Message-ID: <20150922162448.GE4235@earth>
+References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
+ <1442612399-341-2-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBBUAQ2YAKGQEDOXX2HA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150922160053.GM4684@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hwvH6HDNit2nSK4j"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442612399-341-2-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
+--hwvH6HDNit2nSK4j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Sep 23, 2015 at 12:00 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->
-> On Tue, Sep 22, 2015 at 11:38:57PM +0800, Vishnu Patekar wrote:
-> > H8Homlet Proto v2.0 Board is A83T Dev Board by Allwinner.
-> > It has UART, ethernet, USB, HDMI, etc ports on it.
-> >
-> > It's name is confusing, Its A83T board however,"H8_HOMLET_PROTO_V2"
-> > printed on board.
-> >
-> > A83T patches are tested on this board.
-> > It has UART, ethernet, USB, HDMI, etc ports on it.
-> >
-> > For FEL mode it needs USB A-A(Male) cable. I used uart0 which
-> > is multiplexed to microsd pins PF2 and PF4.
->
-> Is there no other UART on the device?
-There is other UART port. I've not yet verify it.
-Well, to put this device into FEL mode we need to press '2' on UART0.
-So, I had to use uart0 multiplexed with uart0.
+Hi,
 
-I doubt whether we can use other uart connector to put device into FEL mode.
->
-> >
-> > Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/Makefile                         |  5 +-
-> >  .../boot/dts/sun8i-a83t-allwinner-homlet-v20.dts   | 69 ++++++++++++++++++++++
-> >  2 files changed, 72 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts
-> >
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index b276174..9585a58 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -634,7 +634,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
-> >       sun8i-a33-ga10h-v1.1.dtb \
-> >       sun8i-a33-ippo-q8h-v1.2.dtb \
-> >       sun8i-a33-q8-tzx-723q4.dtb \
-> > -     sun8i-a33-sinlinx-sina33.dtb
-> > +     sun8i-a33-sinlinx-sina33.dtb \
-> > +     sun8i-a83t-allwinner-homlet-v20.dtb
->
-> we probably want to mention the h8 in here too, and the v2 is enough.
->
-> >  dtb-$(CONFIG_MACH_SUN9I) += \
-> >       sun9i-a80-optimus.dtb \
-> >       sun9i-a80-cubieboard4.dtb
-> > @@ -679,7 +680,7 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
-> >       uniphier-ph1-ld6b-ref.dtb \
-> >       uniphier-ph1-pro4-ref.dtb \
-> >       uniphier-ph1-sld3-ref.dtb \
-> > -     uniphier-ph1-sld8-ref.dtb
-> > +     uniphier-ph1-sld8-ref.dtb
->
-> Uh ?
-I just fixed a white space error here, sorry, forgot to mention in commit log.
->
-> >  dtb-$(CONFIG_ARCH_VERSATILE) += \
-> >       versatile-ab.dtb \
-> >       versatile-pb.dtb
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts
-> > new file mode 100644
-> > index 0000000..bbc2ab9
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-homlet-v20.dts
-> > @@ -0,0 +1,69 @@
-> > +/*
-> > + * Copyright 2015 Vishnu Patekar
-> > + * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > + *
-> > + * This file is dual-licensed: you can use it either under the terms
-> > + * of the GPL or the X11 license, at your option. Note that this dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> > + *
-> > + *  a) This file is free software; you can redistribute it and/or
-> > + *     modify it under the terms of the GNU General Public License as
-> > + *     published by the Free Software Foundation; either version 2 of the
-> > + *     License, or (at your option) any later version.
-> > + *
-> > + *     This file is distributed in the hope that it will be useful,
-> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + *     GNU General Public License for more details.
-> > + *
-> > + * Or, alternatively,
-> > + *
-> > + *  b) Permission is hereby granted, free of charge, to any person
-> > + *     obtaining a copy of this software and associated documentation
-> > + *     files (the "Software"), to deal in the Software without
-> > + *     restriction, including without limitation the rights to use,
-> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > + *     sell copies of the Software, and to permit persons to whom the
-> > + *     Software is furnished to do so, subject to the following
-> > + *     conditions:
-> > + *
-> > + *     The above copyright notice and this permission notice shall be
-> > + *     included in all copies or substantial portions of the Software.
-> > + *
-> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "sun8i-a83t.dtsi"
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/pinctrl/sun4i-a10.h>
->
-> Do you need those headers?
-I'll verify.
->
-> > +
-> > +/ {
-> > +     model = "Allwinner A83T H8Homlet Proto Dev Board v2.0";
-> > +     compatible = "allwinner,homletv2", "allwinner,sun8i-a83t";
->
->                                 ^ Please add a dash here
->
-> > +
-> > +     aliases {
-> > +             serial0 = &uart0;
-> > +     };
-> > +
-> > +     chosen {
-> > +             stdout-path = "serial0:115200n8";
-> > +             bootargs = "earlyprintk console=ttyS0,115200";
->
-> console is useless here, and please remove earlyprintk. It will make
-> your kernel crash if the image is configured for another SoC.
->
-Okie.
-> > +     };
-> > +};
-> > +
-> > +&uart0 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&uart0_pins_a>;
-> > +     status = "okay";
-> > +};
-> > --
-> > 1.9.1
-> >
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+On Fri, Sep 18, 2015 at 04:39:49PM -0500, Andreas Dannenberg wrote:
+> Extend the bq24257 charger's device tree documentation to cover the
+> bq24250 and bq24251 devices as well feature additions.
+
+The binding looks fine to except for:
+
+> +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
+> +    also be defined through the standard interrupt definition properties (see
+> +    optional properties section below). Only use one method.
+
+Why do you expose two ways for this?
+
+-- Sebastian
+
+--hwvH6HDNit2nSK4j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWAYDNAAoJENju1/PIO/qabwcP/RgyDAy7vFAHbO3QZ69kDJzG
+mVkNLkc7dkT2LV0V32a5pLCI4HObctAVkq5lzlruXIsGE8uYoPz+p5Szg9saRFTk
++tzJXU+lqNpNlERrKX7lsPVJQNL4ILrNcU5L30NgCH/mWn/AdPGxd+aTKjTL2oA6
+pxy/vkW2uldpHtDrYk/CuhdSY7w3AhEAjlPVd0+aGd0dA/XEGhpIBv1MMHhw1ATZ
+qSP71amNo9/eSaulRnO7bIkwfJHu3uWjmM/1zKrrUYB/a831eCVWUhNpEv+bQ0B0
+ZP8u6WfYyZsD2a/y6c6BlOdLlqt/0hNvfv3X8xWuL9Qa9Xot5iNwjinlRGSmenm/
+QkYWeLpyRoENtdbza1eMMDMbbr01XJ26QCF+8ob3QH2YaQRXhKQuWTzAxGH8aSV2
+DzgwHKML18T90NXRyRyxAZAHiuZg6C+oEkfuc+yw2Ac6KS4m1JCT4EwSIBdkv6DU
+Y1VAOGEQichjC++aT5PUa00E7R+ouJukw1HHjyzlUzaoz1B3SD0tEkCP0AwhUDI6
+AB9EXTlehXITaYT3onUo0N6RQLwxR6w9Lr7YR65lqSU5T3QMxtE9f9qJFjRiY7xY
+aXmM1y3F7K3wv/bqtha6rNiXivmkoONS+UXsTdu2wVW4+68fzcrzKEzDjsps8HCO
+D8FC0tg5UIsuq30uVnw0
+=hiGT
+-----END PGP SIGNATURE-----
+
+--hwvH6HDNit2nSK4j--
