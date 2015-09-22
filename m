@@ -1,125 +1,86 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: uniphier: add outer cache support
-Date: Tue, 22 Sep 2015 14:27:14 +0900
-Message-ID: <CAK7LNARNRz5fmLjVTN4rha05hNXH4mTj=jXP-KmWWU2UUrCVYg@mail.gmail.com>
-References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com>
-	<1442551054-2116-2-git-send-email-yamada.masahiro@socionext.com>
-	<20150921193822.GV21084@n2100.arm.linux.org.uk>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v6 03/22] of/platform: Point to struct device from device node
+Date: Tue, 22 Sep 2015 08:45:51 +0200
+Message-ID: <CAAObsKA85fbnt5ENM8_rfpoNV777ySRe=weWYBgy8tLPxu5jZg@mail.gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1442844182-27787-4-git-send-email-tomeu.vizoso@collabora.com> <CAL_JsqK5CH+a-xQYcocqPb0XqV3F1shC48YQxsTFf9sXjx_xHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150921193822.GV21084-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <CAL_JsqK5CH+a-xQYcocqPb0XqV3F1shC48YQxsTFf9sXjx_xHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jungseung Lee <js07.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Nathan Lynch <nathan_lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-
-2015-09-22 4:38 GMT+09:00 Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
-> On Fri, Sep 18, 2015 at 01:37:32PM +0900, Masahiro Yamada wrote:
->> +/**
->> + * __uniphier_cache_maint_common - run a queue operation for a particular level
->> + *
->> + * @data: cache controller specific data
->> + * @start: start address of range operation (don't care for "all" operation)
->> + * @size: data size of range operation (don't care for "all" operation)
->> + * @operation: flags to specify the desired cache operation
->> + */
->> +static void __uniphier_cache_maint_common(struct uniphier_cache_data *data,
->> +                                       unsigned long start,
->> +                                       unsigned long size,
->> +                                       u32 operation)
->> +{
->> +     unsigned long flags;
->> +
->> +     /*
->> +      * The IRQ must be disable during this sequence because the accessor
->> +      * holds the access right of the operation queue registers.  The IRQ
->> +      * should be restored after releasing the register access right.
->> +      */
->> +     local_irq_save(flags);
->> +
->> +     /* clear the complete notification flag */
->> +     writel_relaxed(UNIPHIER_SSCOLPQS_EF, data->op_base + UNIPHIER_SSCOLPQS);
->> +
->> +     /*
->> +      * We do not need a spin lock here because the hardware guarantees
->> +      * this sequence is atomic, i.e. the write access is arbitrated
->> +      * and only the winner's write accesses take effect.
->> +      * After register settings, we need to check the UNIPHIER_SSCOPPQSEF to
->> +      * see if we won the arbitration or not.
->> +      * If the command was not successfully set, just try again.
->> +      */
->> +     do {
->> +             /* set cache operation */
->> +             writel_relaxed(UNIPHIER_SSCOQM_CE | operation,
->> +                            data->op_base + UNIPHIER_SSCOQM);
->> +
->> +             /* set address range if needed */
->> +             if (likely(UNIPHIER_SSCOQM_S_IS_RANGE(operation))) {
->> +                     writel_relaxed(start, data->op_base + UNIPHIER_SSCOQAD);
->> +                     writel_relaxed(size, data->op_base + UNIPHIER_SSCOQSZ);
->> +             }
->> +
->> +             /* set target ways if needed */
->> +             if (unlikely(UNIPHIER_SSCOQM_TID_IS_WAY(operation)))
->> +                     writel_relaxed(data->way_locked_mask,
->> +                                    data->op_base + UNIPHIER_SSCOQWN);
->> +     } while (unlikely(readl_relaxed(data->op_base + UNIPHIER_SSCOPPQSEF) &
->> +                       (UNIPHIER_SSCOPPQSEF_FE | UNIPHIER_SSCOPPQSEF_OE)));
->> +
->> +     /* wait until the operation is completed */
->> +     while (likely(readl_relaxed(data->op_base + UNIPHIER_SSCOLPQS) !=
->> +                   UNIPHIER_SSCOLPQS_EF))
->> +             cpu_relax();
->> +
->> +     local_irq_restore(flags);
+On 22 September 2015 at 02:39, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Sep 21, 2015 at 9:02 AM, Tomeu Vizoso
+> <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>> When adding platform and AMBA devices, set the device node's device
+>> member to point to it.
+>>
+>> This speeds lookups considerably and is safe because we only create one
+>> of these devices for any given device node.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>
+>> Changes in v5:
+>> - Set the pointer to struct device also for AMBA devices
+>> - Unset the pointer to struct device when the platform device is about
+>>   to be unregistered
+>> - Increase the reference count of the device before returning from
+>>   of_find_device_by_node()
+>>
+>>  drivers/of/platform.c | 19 ++++++++++---------
+>>  include/linux/of.h    |  1 +
+>>  2 files changed, 11 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 1001efaedcb8..408d89f1d124 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -32,11 +32,6 @@ const struct of_device_id of_default_bus_match_table[] = {
+>>         {} /* Empty terminated list */
+>>  };
+>>
+>> -static int of_dev_node_match(struct device *dev, void *data)
+>> -{
+>> -       return dev->of_node == data;
+>> -}
+>> -
+>>  /**
+>>   * of_find_device_by_node - Find the platform_device associated with a node
+>>   * @np: Pointer to device tree node
+>> @@ -45,10 +40,10 @@ static int of_dev_node_match(struct device *dev, void *data)
+>>   */
+>>  struct platform_device *of_find_device_by_node(struct device_node *np)
+>>  {
+>> -       struct device *dev;
+>> -
+>> -       dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+>> -       return dev ? to_platform_device(dev) : NULL;
+>> +       if (np->device && np->device->bus == &platform_bus_type &&
+>> +           get_device(np->device))
 >
-> I'm concerned about this.  We've had caches like this (ARM L220) which
-> require only one operation to be performed at a time.  In a SMP system,
-> that requires a spinlock to prevent one CPU triggering a L2 maintanence
-> operation while another CPU tries to operate on the L2 cache.
+> Where do we drop the reference incremented by get_device?
 >
-> From the overall series diffstat, I see that you are adding SMP support
-> too.  So I have to ask the obvious question: if you need to disable
-> local IRQs around the L2 cache operations, what happens if two CPUs
-> both try to perform a L2 cache operation concurrently?
+> However, bus_find_device also took a reference I think, so you aren't
+> really changing behavior.
 
+Yeah, Intel's 0day build bot warned of the missing get_device() when
+running the OF unittests.
 
-This cache controller is able to accept operations from multiple CPUs
-at the same time.
+Regards,
 
-Let's assume the following scenario:
+Tomeu
 
-CPU0 issues some operation.
-Before the cache controller finishes the operation,
-CPU1 issues another operation;  this is OK.
-The operation is stored in the queue of the cache controller
-until the operation under way is completed.
-When the operation from CPU0 is finished, the controller starts
-the operation from CPU1.
-
-If the queue is full (this unlikely happens though),
-the CPU can know by checking UNIPHIER_SSCOPPQSEF register.
-This is checked by the code:
-
-unlikely(readl_relaxed(data->op_base + UNIPHIER_SSCOPPQSEF) &
-                       (UNIPHIER_SSCOPPQSEF_FE | UNIPHIER_SSCOPPQSEF_OE))
-
-
-The status register (UNIPHIER_SSCOLPQS) has each instance for each CPU.
-That means, CPU0 can know if the operation issued by itself is finished or not.
-Likewise for CPU1, CPU2, ...
-
-To sum up, the cache controller can nicely handles cache operations in SMP.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
