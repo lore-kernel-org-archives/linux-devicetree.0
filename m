@@ -1,89 +1,56 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 2/3] power_supply: Add support for tps65217-charger.
-Date: Tue, 22 Sep 2015 15:44:32 +0200
-Message-ID: <20150922134432.GG23334@earth>
-References: <1441699779-22189-1-git-send-email-enric.balletbo@collabora.com>
- <1441699779-22189-3-git-send-email-enric.balletbo@collabora.com>
+From: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Userspace and Device-Tree
+Date: Tue, 22 Sep 2015 06:54:10 -0700
+Message-ID: <CAPiN7iVZgvLS0HGifhDULVavCw2TdxZBC_+bcGjWKAAax=YFKQ@mail.gmail.com>
+References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
+	<20150828101227.GD31748@leverpostej>
+	<CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
+	<CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
+	<20150831145500.GP12027@sirena.org.uk>
+	<CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
+	<20150831180140.GS12027@sirena.org.uk>
+	<CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
+	<CAAVeFuJsM_gDNHNqSRi2iHNAzMHAiw0-y5V1pRce4SD8OgY11Q@mail.gmail.com>
+	<CAPiN7iUvDgifPYxhtVf3oOJLV1q1ZA6MZ-2tL2JbpgE0oUM6AA@mail.gmail.com>
+	<CACRpkda=2qnxnnRBga-6U9mCDUD61=1+62-awC8NVOV6Yt9mAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z9ECzHErBrwFF8sy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441699779-22189-3-git-send-email-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <eballetbo@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dbaryshkov@gmail.com, dwmw2@infradead.org, tony@atomide.com, sameo@linux.intel.com, lee.jones@linaro.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkda=2qnxnnRBga-6U9mCDUD61=1+62-awC8NVOV6Yt9mAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---z9ECzHErBrwFF8sy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Sep 08, 2015 at 10:09:38AM +0200, Enric Balletbo i Serra wrote:
-> This patch adds support for the tps65217 charger driver. This driver is
-> responsible for controlling the charger aspect of the tps65217 mfd.
-> Currently, this mainly consists of turning on and off the charger, but
-> some other features of the charger can be supported through this driver.
-
-Driver looks mostly fine. I have two comments though:
-
-> [...]
+On Mon, Sep 21, 2015 at 4:55 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Sep 2, 2015 at 6:35 AM, Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> There are some hardware aspects/parameters
+>> of exporting that aren't controllable from userspace, such as whether or not
+>> reversing the direction of a GPIO is safe.
 >
-> +static int tps65217_ac_get_property(struct power_supply *psy,
-> +			enum power_supply_property psp,
-> +			union power_supply_propval *val)
-> +{
-> +	struct tps65217_charger *charger = power_supply_get_drvdata(psy);
-> +
-> +	if (psp == POWER_SUPPLY_PROP_ONLINE) {
-> +		val->intval = charger->ac_online;
-> +		charger->prev_ac_online = charger->ac_online;
-
-I think prev_ac_online should be set at the beginning of
-tps65217_charger_irq().
-
-> [...]
+> The original argument as to why kernel should handle hardware
+> is to keep things safe and under control.
 >
-> +static int tps65217_charger_probe(struct platform_device *pdev)
-> +{
->
-> [...]
->
-> +	charger->ac = power_supply_register(&pdev->dev,
-> +					&tps65217_charger_desc, NULL);
-> +	if (IS_ERR(charger->ac)) {
-> +		dev_err(&pdev->dev, "failed: power supply register\n");
-> +		return PTR_ERR(charger->ac);
-> +	}
+> I don't understand this argument really, should the kernel give you
+> a gun but stop you from shooting yourself in the foot with it or
+> what do you mean? Then the stance of kernel not to give out guns
+> is better.
 
-You can use devm_power_supply_register(...) to simplify the driver
-a bit more.
+>From my embedded perspective a board designer wants to keep
+hardware safe and under control too.  He may want or need to expose
+controls or status to userspace applications, though, and what he
+wants to have exposed may vary from board to board.  I just feel that
+exposing them via the DT could be OK, whereas others do not.
 
--- Sebastian
+I personally think it make sense to allow a board designer to somehow
+specify in the DT (not doable now) that an otherwise unattached GPIO
+should be exposed to userspace and whether or not to expose the
+"direction" pseudo-file in sysfs that allows changing of the direction.
+If the board designer thinks it's safe or necessary to change the
+direction of the GPIO, then why not allow him to specify it as such.
 
---z9ECzHErBrwFF8sy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWAVs9AAoJENju1/PIO/qaMZwP/2hkjOS3EBALtiClJtJQ9pkP
-J1WFNEJqAjg9gBzz0qQraa6ObwQaK7bvR3IIizpWEztNuAcbg9zK6EJc7LGfwgFr
-tmbDpWsJ/x30WVpeg/7c3GWZipFo6xgBCbA/1Ew6DD3ZWrgd9nwJb8CnMPIO1Bw8
-QoSJb88AxCb74k2dwrBhkCp2b/d7+DQXDAbDRXj50ZiPmZIieFXrRe1bGKingUs9
-pTaMm4e1+u2EfN4UyMhCulLaguyhp3skZY5T7eCLEhU5X8ieAABFbHINWngfjGch
-twj2VU9AZgvOkB5ipcdAdj4mPuI3fEH8XuvHx/3U6V5NeDH7EW647Wx3TW7359DX
-VXETmoqeLezM4mojTv3gRaQwbeiKINwkxpNsreANNCcd+sONTkuGCZS3w7jkJu8T
-0lrZ+C1PkzuyroGoXWt1PPgCzmqbR4ldojx8W/wfpKECyuaVI/RiwzTf4nneOtWX
-76DXZn3S+76GhgEjRo7p8IYk9oFRZdAFOQKfDmnvv6Sc6R0THqH0nTXdTXnORc3p
-8yDgpIr7KjWfD96Wt1FEEXVYsxudgLMk2cQrbFY33BhCkKcoToHZ9bMwNR875j+M
-HMsRlxyLssrTrLmuR8qdAd7VByAyO/C9Do1B0N0TNRY3WZQVVui6e3KsiCIOpC4q
-yaCUV1iG5jDaqNiWdgD+
-=Oas6
------END PGP SIGNATURE-----
-
---z9ECzHErBrwFF8sy--
+- Chris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
