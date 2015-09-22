@@ -1,49 +1,65 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 resend 0/2] power: Add an
- axp20x-usb-power driver
-Date: Tue, 22 Sep 2015 15:12:31 +0200
-Message-ID: <20150922131231.GB23334@earth>
-References: <1442752773-22635-1-git-send-email-hdegoede@redhat.com>
-Reply-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX
+ SoCs.
+Date: Tue, 22 Sep 2015 08:19:16 -0500
+Message-ID: <20150922131916.GE27964@google.com>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
+ <3066583.BWDZlYWxXU@wuerfel>
+ <55FC4330.10302@caviumnetworks.com>
+ <2512701.zkjk3n3AQS@wuerfel>
+ <55FCB3AC.8080709@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pvezYHf7grwyp3Bc"
-Return-path: <linux-sunxi+bncBDXMLNOH5ANRBQ5HQWYAKGQEQYGXBLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1442752773-22635-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <55FCB3AC.8080709-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---pvezYHf7grwyp3Bc
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi David,
 
-Hi,
+On Fri, Sep 18, 2015 at 06:00:28PM -0700, David Daney wrote:
+> On 09/18/2015 12:45 PM, Arnd Bergmann wrote:
+> >On Friday 18 September 2015 10:00:32 David Daney wrote:
+> >>On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
+> >>>On Thursday 17 September 2015 15:41:33 David Daney wrote:
+> >>>>From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >>>>
+> >>>>The on-chip devices all have fixed bars.  So, fix them up.
+> >>>>
+> >>>>Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >>>>
+> >>>
+> >>>You should be able to just mark the BARs as fixed in DT
+> 
+> I think we can switch to PCI_PROBE_ONLY, and have all non-fixed BAR
+> devices configured by firmware.  This may significantly simplify any
+> quirks required in the kernel.
 
-On Sun, Sep 20, 2015 at 08:39:31AM -0400, Hans de Goede wrote:
-> This is a resend of v4 of the axp20x-usb-power power-supply driver,
-> after v4 there have been no further comments, so I assume that this
-> version is ready for merging, yet for some reason it has not been
-> merged yet.
+I don't like PCI_PROBE_ONLY, and I'd like to avoid it when we can.
 
-My fault. I did not have enough time before my vacation.
+Your original patch description said the on-chip devices have "fixed
+BARs."  In what sense are they "fixed"?  I assume they are writable
+enough so we can learn their sizes?  If we can't learn their sizes, we
+have bigger problems because we can't tell what space is used.
 
-> Can we please get this driver merged (preferably into 4.3,
+Are there other parts of the system, e.g., run-time firmware, that
+depend on the devices not being moved?
 
-It's obviously too late now.
+> >>For the record:  The PCI Enhanced Allocation (EA) capability (approved
+> >>by PCI SIG on 23 October 2014) is the proper way to handle this going
+> >>forward.  However, this is not yet implemented in the SoCs that this
+> >>patch addresses.  Our plan is to implement the EA capability in the core
+> >>PCI code, so that we do not need to keep adding devices to this fixup code.
 
-> but if not at least lets get it into next / 4.4 asap).
+Sean Stalley has posted some patches to add EA support to Linux, but I
+haven't merged them yet.  If we had that, another option would be to
+hook into your config accessors and fabricate an EA capability.
 
-I already merged this into my (local) dev branch last week. I
-just pushed it out, so it should appear in next tomorrow.
-
--- Sebastian
---pvezYHf7grwyp3Bc--
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
