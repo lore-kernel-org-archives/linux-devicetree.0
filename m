@@ -1,65 +1,33 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX
- SoCs.
-Date: Tue, 22 Sep 2015 08:19:16 -0500
-Message-ID: <20150922131916.GE27964@google.com>
-References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com>
- <3066583.BWDZlYWxXU@wuerfel>
- <55FC4330.10302@caviumnetworks.com>
- <2512701.zkjk3n3AQS@wuerfel>
- <55FCB3AC.8080709@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55FCB3AC.8080709-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 0/4] input: gpio_keys_polled: Add support for abs/rel axis
+Date: Tue, 22 Sep 2015 15:23:56 +0200
+Message-ID: <1442928240-2452-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Hi Dmitry,
 
-On Fri, Sep 18, 2015 at 06:00:28PM -0700, David Daney wrote:
-> On 09/18/2015 12:45 PM, Arnd Bergmann wrote:
-> >On Friday 18 September 2015 10:00:32 David Daney wrote:
-> >>On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
-> >>>On Thursday 17 September 2015 15:41:33 David Daney wrote:
-> >>>>From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>>>
-> >>>>The on-chip devices all have fixed bars.  So, fix them up.
-> >>>>
-> >>>>Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>>>
-> >>>
-> >>>You should be able to just mark the BARs as fixed in DT
-> 
-> I think we can switch to PCI_PROBE_ONLY, and have all non-fixed BAR
-> devices configured by firmware.  This may significantly simplify any
-> quirks required in the kernel.
+This patch-series really is 2 related series:
 
-I don't like PCI_PROBE_ONLY, and I'd like to avoid it when we can.
+Patch 1 + 2:
 
-Your original patch description said the on-chip devices have "fixed
-BARs."  In what sense are they "fixed"?  I assume they are writable
-enough so we can learn their sizes?  If we can't learn their sizes, we
-have bigger problems because we can't tell what space is used.
+Support for abs/rel axis in gpio_keys_polled, the dt-bindings patch is
+updated, the actual implementation is the same as the v2 version.
 
-Are there other parts of the system, e.g., run-time firmware, that
-depend on the devices not being moved?
+Patch 3 + 4:
 
-> >>For the record:  The PCI Enhanced Allocation (EA) capability (approved
-> >>by PCI SIG on 23 October 2014) is the proper way to handle this going
-> >>forward.  However, this is not yet implemented in the SoCs that this
-> >>patch addresses.  Our plan is to implement the EA capability in the core
-> >>PCI code, so that we do not need to keep adding devices to this fixup code.
+Add a single header with key / btn / axis defines to be shared by input.h
+and the dt-bindings headers, as requested by you. The first patch introduces
+a new header for this, the second patch makes dt-bindings/input/input.h
+use this new header. The second patch has been Acked by the devicetree
+maintainer, and since it depends on the first one I believe that it is
+best if this patch gets merged via your tree too.
 
-Sean Stalley has posted some patches to add EA support to Linux, but I
-haven't merged them yet.  If we had that, another option would be to
-hook into your config accessors and fabricate an EA capability.
+Regards,
 
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
+
+
