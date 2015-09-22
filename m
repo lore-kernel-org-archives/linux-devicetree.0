@@ -1,100 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] mfd: axp20x: Rename supply names for AXP221 DC1SW
- and DC5LDO regulators
-Date: Tue, 22 Sep 2015 23:06:49 +0100
-Message-ID: <20150922220649.GJ3442@x1>
-References: <1442372732-27434-1-git-send-email-wens@csie.org>
- <1442372732-27434-2-git-send-email-wens@csie.org>
- <20150920041722.GI3039@x1>
- <CAGb2v65pPzZsb0X5WQ6-X9tEqvNYYGPiLrKxR18+nZ0P4R-VCA@mail.gmail.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v5 09/11] power: bq24257: Allow input current limit sysfs
+ access
+Date: Tue, 22 Sep 2015 17:10:45 -0500
+Message-ID: <20150922221044.GB30297@beast>
+References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
+ <1442612399-341-10-git-send-email-dannenberg@ti.com>
+ <20150922191649.GA9949@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65pPzZsb0X5WQ6-X9tEqvNYYGPiLrKxR18+nZ0P4R-VCA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20150922191649.GA9949@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 20 Sep 2015, Chen-Yu Tsai wrote:
+On Tue, Sep 22, 2015 at 09:16:49PM +0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Fri, Sep 18, 2015 at 04:39:57PM -0500, Andreas Dannenberg wrote:
+> > This patch allows reading (and writing, if the D+/D- USB signal-based
+> > charger type detection is disabled) of the input current limit through
+> > the power supply's input_current_limit sysfs property. This allows
+> > userspace to see what charger was detected and to re-configure the
+> > maximum current drawn from the external supply at runtime based on
+> > system-level knowledge or user input.
+> 
+> Maybe also support writing into input_current_limit in auto mode.
+> Just disable auto detection until "auto" is written into sysfs node.
 
-> Hi Lee,
->=20
-> On Sun, Sep 20, 2015 at 12:17 PM, Lee Jones <lee.jones@linaro.org> wr=
-ote:
-> > On Wed, 16 Sep 2015, Chen-Yu Tsai wrote:
-> >
-> >> The DC1SW and DC5LDO regulators in the AXP221 are internally chain=
-ed
-> >> to DCDC1 and DCDC5, hence the names. The original bindings used th=
-e
-> >> parent regulator names for the supply regulator property. This cau=
-ses
-> >> some confusion when we actually use it in the dts:
-> >>
-> >>       axp221 {
-> >>               /* self supplying? */
-> >>               dcdc1-supply =3D <&dcdc1>;
-> >>               dcdc5-supply =3D <&dcdc5>;
-> >>
-> >>               dcdc1: dcdc1 {
-> >>                       ...
-> >>               };
-> >>
-> >>               dcdc5: dcdc5 {
-> >>                       ...
-> >>               };
-> >>       };
-> >>
-> >> Change them to the downstream regulator names, or "dc1sw" and "dc5=
-ldo"
-> >> respectively.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mfd/axp20x.txt | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > Applied, thanks.
->=20
-> Mark (in his reply) has a point. If these are internally connect, we
-> should just remove them from the bindings, and associate them in the
-> driver.
->=20
-> I'm looking into this. In the mean time, could you drop this one?
+Auto-detection was enabled by default in the original driver so I think
+that should be left intact. I added the ability to manually override
+this via DT with a fixed value, and then configure said fixed value
+through sysfs at runtime.
 
-Patch removed.
+I'm not 100% clear on the usecase of runtime enabling/disabling auto so
+I'd rather leave the implementation as-is. Either auto mode is enabled
+or not -- and this is directly tied to the DT setting. But if someone
+has a strong usecase for this I can certainly add it.
 
-> >> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Do=
-cumentation/devicetree/bindings/mfd/axp20x.txt
-> >> index 41811223e5be..8e79252b1e7c 100644
-> >> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> >> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> >> @@ -60,8 +60,8 @@ DCDC2               : DC-DC buck    : vin2-suppl=
-y
-> >>  DCDC3                : DC-DC buck    : vin3-supply
-> >>  DCDC4                : DC-DC buck    : vin4-supply
-> >>  DCDC5                : DC-DC buck    : vin5-supply
-> >> -DC1SW                : On/Off Switch : dcdc1-supply          : DC=
-DC1 secondary output
-> >> -DC5LDO               : LDO           : dcdc5-supply          : in=
-put from DCDC5
-> >> +DC1SW                : On/Off Switch : dc1sw-supply          : DC=
-DC1 secondary output
-> >> +DC5LDO               : LDO           : dc5ldo-supply         : in=
-put from DCDC5
-> >>  ALDO1                : LDO           : aldoin-supply         : sh=
-ared supply
-> >>  ALDO2                : LDO           : aldoin-supply         : sh=
-ared supply
-> >>  ALDO3                : LDO           : aldoin-supply         : sh=
-ared supply
-> >
+Regards,
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
+> 
+> -- Sebastian
+
+
