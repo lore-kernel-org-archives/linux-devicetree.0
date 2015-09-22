@@ -1,141 +1,78 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 4/5] dt-bindings: add binding for marvell berlin4ct SoC
-Date: Tue, 22 Sep 2015 22:12:35 +0800
-Message-ID: <1442931156-5877-5-git-send-email-jszhang@marvell.com>
-References: <1442931156-5877-1-git-send-email-jszhang@marvell.com>
+From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/9] NFC: nfcmrvl: remove unneeded version defines
+Date: Tue, 22 Sep 2015 16:26:06 +0200
+Message-ID: <1442931974-31526-2-git-send-email-cuissard@marvell.com>
+References: <1442931974-31526-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442931156-5877-1-git-send-email-jszhang@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442931974-31526-1-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a dt-binding include for Marvell berlin4ct clock IDs.
-
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- .../bindings/clock/marvell,berlin4ct.txt           | 38 +++++++++++++++
- include/dt-bindings/clock/berlin4ct.h              | 56 ++++++++++++++++++++++
- 2 files changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
- create mode 100644 include/dt-bindings/clock/berlin4ct.h
+ drivers/nfc/nfcmrvl/main.c | 7 ++-----
+ drivers/nfc/nfcmrvl/usb.c  | 5 +----
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt b/Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
-new file mode 100644
-index 0000000..a489473
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
-@@ -0,0 +1,38 @@
-+* Marvell berlin4ct Clock Controllers
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+The berlin4ct clock subsystem generates and supplies clock to various
-+controllers within the berlin4ct SoC. The berlin4ct contains 3 clock controller
-+blocks: pll, gateclk, berlin-clk.
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "marvell,berlin-pll" - pll compatible
-+  - "marvell,berlin4ct-clk" - berlin clk compatible
-+  - "marvell,berlin4ct-gateclk" - gateclk compatible
-+- reg: physical base address of the clock controller and length of memory mapped
-+  region. For pll, the second reg defines the bypass register base address and
-+  length of memory mapped region.
-+- #clock-cells: for pll should 0, for gateclk and berlin clk should be 1.
-+- #bypass-shift: the bypass bit in bypass register.
-+
-+Example:
-+
-+syspll: syspll {
-+	compatible = "marvell,berlin-pll";
-+	reg = <0xea0200 0x14>, <0xea0710 4>;
-+	#clock-cells = <0>;
-+	clocks = <&osc>;
-+	bypass-shift = /bits/ 8 <0>;
-+};
-+
-+clk: clk {
-+	compatible = "marvell,berlin4ct-clk";
-+	reg = <0xea0720 0x144>;
-+	#clock-cells = <1>;
-+	clocks = <&syspll>;
-+};
-diff --git a/include/dt-bindings/clock/berlin4ct.h b/include/dt-bindings/clock/berlin4ct.h
-new file mode 100644
-index 0000000..f742f6b
---- /dev/null
-+++ b/include/dt-bindings/clock/berlin4ct.h
-@@ -0,0 +1,56 @@
-+/*
-+ * Berlin2 BG2Q clock tree IDs
-+ */
-+
-+/* GATE CLK */
-+#define GATECLK_TSPSYS		0
-+#define GATECLK_USB0CORE	1
-+#define GATECLK_ZSPSYS		2
-+#define GATECLK_SDIOSYS		3
-+#define GATECLK_ETHCORE		4
-+#define GATECLK_PCIE0SYS	5
-+#define GATECLK_SATA0CORE	6
-+#define GATECLK_NFCSYS		7
-+#define GATECLK_EMMCSYS		8
-+#define GATECLK_IHB0SYS		9
-+
-+/* BERLIN CLK */
-+#define CLK_CPUFASTREF		0
-+#define CLK_MEMFASTREF		1
-+#define CLK_CFG			2
-+#define CLK_PERIFSYS		3
-+#define CLK_HB			4
-+#define CLK_ATB			5
-+#define CLK_DECODER		6
-+#define CLK_DECODERM3		7
-+#define CLK_DECODERPCUBE	8
-+#define CLK_ENCODER		9
-+#define CLK_OVPCORE		10
-+#define CLK_GFX2DCORE		11
-+#define CLK_GFX3DCORE		12
-+#define CLK_GFX3DSH		13
-+#define CLK_GFX3DSYS		14
-+#define CLK_GFX2DSYS		15
-+#define CLK_AVIOSYS		16
-+#define CLK_VPPSYS		17
-+#define CLK_EDDC		18
-+#define CLK_AVIOBIU		19
-+#define CLK_ZSP			20
-+#define CLK_TSP			21
-+#define CLK_TSPREF		22
-+#define CLK_NDS			23
-+#define CLK_NOCS		24
-+#define CLK_APBCORE		25
-+#define CLK_EMMC		26
-+#define CLK_SD0			27
-+#define CLK_SD1			28
-+#define CLK_DLLMSTREF		29
-+#define CLK_GETHRGMII		30
-+#define CLK_GETHRGMIISYS	31
-+#define CLK_USIM0		32
-+#define CLK_PCIETEST		33
-+#define CLK_USB2TEST		34
-+#define CLK_USB3TEST		35
-+#define CLK_USB3CORE		36
-+#define CLK_NFCECC		37
-+#define CLK_BCM			38
+diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
+index 4a8866d..77e292f 100644
+--- a/drivers/nfc/nfcmrvl/main.c
++++ b/drivers/nfc/nfcmrvl/main.c
+@@ -1,7 +1,7 @@
+ /*
+  * Marvell NFC driver: major functions
+  *
+- * Copyright (C) 2014, Marvell International Ltd.
++ * Copyright (C) 2014-2015 Marvell International Ltd.
+  *
+  * This software file (the "File") is distributed by Marvell International
+  * Ltd. under the terms of the GNU General Public License Version 2, June 1991
+@@ -25,8 +25,6 @@
+ #include <net/nfc/nci_core.h>
+ #include "nfcmrvl.h"
+ 
+-#define VERSION "1.0"
+-
+ static int nfcmrvl_nci_open(struct nci_dev *ndev)
+ {
+ 	struct nfcmrvl_private *priv = nci_get_drvdata(ndev);
+@@ -252,6 +250,5 @@ int nfcmrvl_parse_dt(struct device_node *node,
+ EXPORT_SYMBOL_GPL(nfcmrvl_parse_dt);
+ 
+ MODULE_AUTHOR("Marvell International Ltd.");
+-MODULE_DESCRIPTION("Marvell NFC driver ver " VERSION);
+-MODULE_VERSION(VERSION);
++MODULE_DESCRIPTION("Marvell NFC driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
+index 7d1fe43..5e624d1 100644
+--- a/drivers/nfc/nfcmrvl/usb.c
++++ b/drivers/nfc/nfcmrvl/usb.c
+@@ -23,8 +23,6 @@
+ #include <net/nfc/nci_core.h>
+ #include "nfcmrvl.h"
+ 
+-#define VERSION "1.0"
+-
+ static struct usb_device_id nfcmrvl_table[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1286, 0x2046,
+ 					USB_CLASS_VENDOR_SPEC, 4, 1) },
+@@ -469,6 +467,5 @@ static struct usb_driver nfcmrvl_usb_driver = {
+ module_usb_driver(nfcmrvl_usb_driver);
+ 
+ MODULE_AUTHOR("Marvell International Ltd.");
+-MODULE_DESCRIPTION("Marvell NFC-over-USB driver ver " VERSION);
+-MODULE_VERSION(VERSION);
++MODULE_DESCRIPTION("Marvell NFC-over-USB driver");
+ MODULE_LICENSE("GPL v2");
 -- 
-2.5.3
+2.2.0.33.gc18b867
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
