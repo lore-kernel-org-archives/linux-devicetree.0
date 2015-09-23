@@ -1,197 +1,274 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] of/irq: Add new function of_msi_map_rid()
-Date: Wed, 23 Sep 2015 10:12:39 -0700
-Message-ID: <5602DD87.1080805@caviumnetworks.com>
-References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com> <1442966406-13198-3-git-send-email-ddaney.cavm@gmail.com> <CAL_JsqKh0BaEOnjJYiDSa_unwm0MFqw+_wMEM+LOkvADSkfTkQ@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v11 3/4] add FPGA manager core
+Date: Wed, 23 Sep 2015 12:10:13 -0500
+Message-ID: <alpine.DEB.2.02.1509231129350.23595@linuxheads99>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com> <1442935271-10375-4-git-send-email-atull@opensource.altera.com> <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKh0BaEOnjJYiDSa_unwm0MFqw+_wMEM+LOkvADSkfTkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Josh Cartwright <joshc@ni.com>
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, Moritz Fischer <moritz.fischer@ettus.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2015 10:07 AM, Rob Herring wrote:
-> On Tue, Sep 22, 2015 at 7:00 PM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> The device tree property "msi-map" specifies how to create the PCI
->> requester id used in some MSI controllers.  Add a new function
->> of_msi_map_rid() that finds the msi-map property and applies its
->> translation to a given requester id.
->>
->> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> ---
->>   drivers/of/irq.c       | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/of_irq.h |  7 ++++
->>   2 files changed, 93 insertions(+)
->>
->> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->> index 55317fa..3f64d2e 100644
->> --- a/drivers/of/irq.c
->> +++ b/drivers/of/irq.c
->> @@ -598,3 +598,89 @@ void of_msi_configure(struct device *dev, struct device_node *np)
->>                  d = irq_find_host(msi_np);
->>          dev_set_msi_domain(dev, d);
->>   }
->> +
->> +/**
->> + * of_msi_map_rid - Map a MSI requester ID for a device.
->> + * @dev: device for which the mapping is to be done.
->> + * @msi_np: device node of the expected msi controller.
->> + * @rid_in: unmapped MSI requester ID for the device.
->> + *
->> + * Walk up the device hierarchy looking for devices with a "msi-map"
->> + * property.  If found, apply the mapping to @rid_in.
->> + *
->> + * Returns the mapped MSI requester ID.
->> + */
->> +u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
->
-> Generally, the OF API does not use struct device except for what is in
-> of/device.c. I'm guessing you need it here because you have devices
-> without DT nodes?
+Hi Josh,
 
-Exactly right.  As you can see we walk up the hierarchy until we find a 
-device with the desired of_node ("msi-map").
+Thanks for the review.  This is all at the tail end of a long
+(>2 years) discussion on this.  I hope that the way this has
+shaped out still meets the needs of the people who have been
+in this discussion the most and have had the strongest feelings
+(due to being current users of FPGAs under Linux).
 
->
-> We may want to handle this more like NUMA node IDs where we populate
-> data in struct device at creation time and looking at struct device
-> parents is independent of DT. How would this information be retrieved
-> with ACPI?
+On Tue, 22 Sep 2015, Josh Cartwright wrote:
 
-ACPI has a table called _IORT that contains similar information.  It 
-would have to be extracted with an analogous facility.
+> > 
+> > The following sysfs files are created:
+> > * /sys/class/fpga_manager/<fpga>/name
+> >   Name of low level driver.
+> 
+> Don't 'struct device's already have a name?  Why do you need another name
+> attribute?
 
->
->> +{
->> +       struct device *parent_dev;
->> +       struct device_node *msi_controller_node;
->> +       const __be32 *msi_map;
->
->> +       u32 map_mask, masked_rid;
->> +       u32 rid_base, msi_base, rid_len, phandle;
->
-> One line please.
-OK.
+It's a nicety but not a necessity.  And it's not the only kernel framework
+that has human readable names like that. Look at i2c for one example.
+Nobody's complained about this one before but I guess it's not
+absolutely needed.
 
-It looks like another revision of the patch is in order.
+> > +
+> > +static const char * const state_str[] = {
+> > +	[FPGA_MGR_STATE_UNKNOWN] =		"unknown",
+> > +	[FPGA_MGR_STATE_POWER_OFF] =		"power off",
+> > +	[FPGA_MGR_STATE_POWER_UP] =		"power up",
+> > +	[FPGA_MGR_STATE_RESET] =		"reset",
+> > +
+> > +	/* requesting FPGA image from firmware */
+> > +	[FPGA_MGR_STATE_FIRMWARE_REQ] =		"firmware request",
+> > +	[FPGA_MGR_STATE_FIRMWARE_REQ_ERR] =	"firmware request error",
+> > +
+> > +	/* Preparing FPGA to receive image */
+> > +	[FPGA_MGR_STATE_WRITE_INIT] =		"write init",
+> > +	[FPGA_MGR_STATE_WRITE_INIT_ERR] =	"write init error",
+> > +
+> > +	/* Writing image to FPGA */
+> > +	[FPGA_MGR_STATE_WRITE] =		"write",
+> > +	[FPGA_MGR_STATE_WRITE_ERR] =		"write error",
+> > +
+> > +	/* Finishing configuration after image has been written */
+> > +	[FPGA_MGR_STATE_WRITE_COMPLETE] =	"write complete",
+> > +	[FPGA_MGR_STATE_WRITE_COMPLETE_ERR] =	"write complete error",
+> > +
+> > +	/* FPGA reports to be in normal operating mode */
+> > +	[FPGA_MGR_STATE_OPERATING] =		"operating",
+> > +};
+> 
+> Is it really necessary to expose the whole FPGA manager state machine to
+> userspace?  Is the only justification "for debugging"?
+> 
+> If so, that seems pretty short-sighted, as it then makes the state
+> machine part of the stable usermode API.  It even makes less sense given
+> this patchsets current state: configuration of the FPGA is not something
+> that userspace is directly triggering.
 
->
->> +       int msi_map_len;
->> +       bool matched;
->> +       u32 rid_out = rid_in;
->> +
->> +       /*
->> +        * Walk up the device parent links looking for one with a
->> +        * "msi-map" property.
->> +        */
->> +       msi_map = NULL;
->
-> init in the declaration.
+Nope, not for debugging.
 
-OK...
->
->> +       for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
->> +               if (!parent_dev->of_node)
->> +                       continue;
->> +
->> +               msi_map = of_get_property(parent_dev->of_node,
->> +                                         "msi-map", &msi_map_len);
->> +               if (!msi_map)
->> +                       continue;
->> +
->> +               if (msi_map_len % (4 * sizeof(__be32))) {
->> +                       dev_err(parent_dev, "Error: Bad msi-map length: %d\n",
->> +                               msi_map_len);
->> +                       goto out;
->
-> Just return here.
->
->> +               }
->> +               /* We have a good parent_dev and msi_map, let's use them. */
->> +               break;
->> +       }
->> +       if (!msi_map)
->> +               goto out;
->
-> Just return here.
->
->> +
->> +       /* The default is to select all bits. */
->> +       map_mask = 0xffffffff;
->> +
->> +       /*
->> +        * Can be overridden by "msi-map-mask" property.  If
->> +        * of_property_read_u32() fails, the default is used.
->> +        */
->> +       of_property_read_u32(parent_dev->of_node, "msi-map-mask", &map_mask);
->> +
->> +       masked_rid = map_mask & rid_in;
->> +       matched = false;
->> +       while (!matched && msi_map_len >= 4 * sizeof(__be32)) {
->> +               rid_base = be32_to_cpup(msi_map + 0);
->> +               phandle = be32_to_cpup(msi_map + 1);
->> +               msi_base = be32_to_cpup(msi_map + 2);
->> +               rid_len = be32_to_cpup(msi_map + 3);
->> +
->> +               msi_controller_node = of_find_node_by_phandle(phandle);
->> +
->> +               matched = masked_rid >= rid_base &&
->> +                       masked_rid < rid_base + rid_len &&
->> +                       msi_np == msi_controller_node;
->> +
->> +               of_node_put(msi_controller_node);
->> +               msi_map_len -= 4 * sizeof(__be32);
->> +               msi_map += 4;
->> +       }
->> +       if (!matched)
->> +               goto out;
->
-> Just return here.
->
->> +
->> +       rid_out = masked_rid + msi_base;
->> +       dev_dbg(dev,
->> +               "msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
->> +               dev_name(parent_dev), map_mask, rid_base, msi_base,
->> +               rid_len, rid_in, rid_out);
->> +out:
->> +       return rid_out;
->> +}
->> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
->> index 4bcbd58..8cd9334 100644
->> --- a/include/linux/of_irq.h
->> +++ b/include/linux/of_irq.h
->> @@ -75,6 +75,7 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
->>   extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
->>   extern struct device_node *of_irq_find_parent(struct device_node *child);
->>   extern void of_msi_configure(struct device *dev, struct device_node *np);
->> +u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
->>
->>   #else /* !CONFIG_OF */
->>   static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->> @@ -87,6 +88,12 @@ static inline void *of_irq_find_parent(struct device_node *child)
->>   {
->>          return NULL;
->>   }
->> +
->> +static inline u32 of_msi_map_rid(struct device *dev,
->> +                                struct device_node *msi_np, u32 rid_in)
->> +{
->> +       return rid_in;
->> +}
->>   #endif /* !CONFIG_OF */
->>
->>   #endif /* __OF_IRQ_H */
->> --
->> 1.9.1
->>
+This feature was requested two years ago by folks who have userspace
+bringing up a complicated system in FPGAs under Linux.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+https://lkml.org/lkml/2013/9/18/490
+
+There are likely to be interfaces that can be triggered by userspace. Please
+look at my last patchset for one example: using device tree overlays.
+That can be triggered from userspace.  You could have a layered system
+where userspace loads one DT overlay (which triggers FPGA programming
+and drivers probing), checks for success, then loads the next
+DT overlay to program the next FPGA in the system.  In this case
+the userspace interface is the configfs interface for DT overlays
+so I would not be able to add FPGA manager status to that interface.
+The only status I would have would be in the configfs, indicating
+whether the overlay got applied successfully or not.
+
+> 
+> > +
+> > +static ssize_t name_show(struct device *dev,
+> > +			 struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> > +
+> > +	return sprintf(buf, "%s\n", mgr->name);
+> > +}
+> > +
+> > +static ssize_t state_show(struct device *dev,
+> > +			  struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> > +
+> > +	return sprintf(buf, "%s\n", state_str[mgr->state]);
+> > +}
+> 
+> Is it possible that the state of the FPGA has changed since the last
+> time we've done an update?  Should the lower-level drivers' state()
+> callback be invoked here?
+
+Exposing the low level driver's state is not exactly the intent here.
+Above I commented further on the intent of exposing state.
+I want to expose how far the FPGA manager core's state machine gets
+in the process of programming.  So if we can't get the FPGA into
+a state ready for receiving data, it will be "write init error", for
+instance.  If we can't load the specific firmware file we wanted,
+it's "firmware request error." 
+
+> 
+> > +
+> > +static DEVICE_ATTR_RO(name);
+> > +static DEVICE_ATTR_RO(state);
+> > +
+> > +static struct attribute *fpga_mgr_attrs[] = {
+> > +	&dev_attr_name.attr,
+> > +	&dev_attr_state.attr,
+> > +	NULL,
+> > +};
+> > +ATTRIBUTE_GROUPS(fpga_mgr);
+> > +
+> > +static int fpga_mgr_of_node_match(struct device *dev, const void *data)
+> > +{
+> > +	return dev->of_node == data;
+> > +}
+> > +
+> > +/**
+> > + * of_fpga_mgr_get - get an exclusive reference to a fpga mgr
+> > + * @node:	device node
+> > + *
+> > + * Given a device node, get an exclusive reference to a fpga mgr.
+> > + *
+> > + * Return: fpga manager struct or IS_ERR() condition containing error code.
+> > + */
+> > +struct fpga_manager *of_fpga_mgr_get(struct device_node *node)
+> > +{
+> > +	struct fpga_manager *mgr;
+> > +	struct device *dev;
+> > +
+> > +	if (!node)
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	dev = class_find_device(fpga_mgr_class, NULL, node,
+> > +				fpga_mgr_of_node_match);
+> > +	if (!dev)
+> > +		return ERR_PTR(-ENODEV);
+> > +
+> > +	mgr = to_fpga_manager(dev);
+> > +	put_device(dev);
+> 
+> Who's ensuring the FPGA manager device's lifetime between _get and _put?
+
+Well... get_device and put_device are not sufficient?
+
+> 
+> > +	if (!mgr)
+> > +		return ERR_PTR(-ENODEV);
+> > +
+> > +	/* Get exclusive use of fpga manager */
+> > +	if (!mutex_trylock(&mgr->ref_mutex))
+> > +		return ERR_PTR(-EBUSY);
+> > +
+> > +	if (!try_module_get(THIS_MODULE)) {
+> > +		mutex_unlock(&mgr->ref_mutex);
+> > +		return ERR_PTR(-ENODEV);
+> > +	}
+> > +
+> > +	return mgr;
+> > +}
+> [..]
+> > +int fpga_mgr_register(struct device *dev, const char *name,
+> > +		      const struct fpga_manager_ops *mops,
+> > +		      void *priv)
+> > +{
+> > +	struct fpga_manager *mgr;
+> > +	const char *dt_label;
+> > +	int id, ret;
+> > +
+> > +	if (!mops || !mops->write_init || !mops->write ||
+> > +	    !mops->write_complete || !mops->state) {
+> > +		dev_err(dev, "Attempt to register without fpga_manager_ops\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (!name || !strlen(name)) {
+> > +		dev_err(dev, "Attempt to register with no name!\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	mgr = kzalloc(sizeof(*mgr), GFP_KERNEL);
+> > +	if (!mgr)
+> > +		return -ENOMEM;
+> > +
+> > +	id = ida_simple_get(&fpga_mgr_ida, 0, 0, GFP_KERNEL);
+> > +	if (id < 0) {
+> > +		ret = id;
+> > +		goto error_kfree;
+> > +	}
+> > +
+> > +	mutex_init(&mgr->ref_mutex);
+> > +
+> > +	mgr->name = name;
+> > +	mgr->mops = mops;
+> > +	mgr->priv = priv;
+> > +
+> > +	/*
+> > +	 * Initialize framework state by requesting low level driver read state
+> > +	 * from device.  FPGA may be in reset mode or may have been programmed
+> > +	 * by bootloader or EEPROM.
+> > +	 */
+> > +	mgr->state = mgr->mops->state(mgr);
+> > +
+> > +	device_initialize(&mgr->dev);
+> > +	mgr->dev.class = fpga_mgr_class;
+> > +	mgr->dev.parent = dev;
+> > +	mgr->dev.of_node = dev->of_node;
+> > +	mgr->dev.id = id;
+> > +	dev_set_drvdata(dev, mgr);
+> > +
+> > +	dt_label = of_get_property(mgr->dev.of_node, "label", NULL);
+> > +	if (dt_label)
+> > +		ret = dev_set_name(&mgr->dev, "%s", dt_label);
+> > +	else
+> > +		ret = dev_set_name(&mgr->dev, "fpga%d", id);
+> 
+> I'm wondering if an alias {} node is better for this.
+
+I could look into that.  Is there an example of that you particularly
+like for this?
+
+> 
+> [..]
+> > +++ b/include/linux/fpga/fpga-mgr.h
+> [..]
+> > +/*
+> > + * FPGA Manager flags
+> > + * FPGA_MGR_PARTIAL_RECONFIG: do partial reconfiguration if supported
+> > + */
+> > +#define FPGA_MGR_PARTIAL_RECONFIG	BIT(0)
+> > +
+> > +/**
+> > + * struct fpga_manager_ops - ops for low level fpga manager drivers
+> > + * @state: returns an enum value of the FPGA's state
+> > + * @write_init: prepare the FPGA to receive confuration data
+> 
+>                                                ^configuration
+
+Ah spelling.  Thanks!
+
+> 
+> > + * @write: write count bytes of configuration data to the FPGA
+> > + * @write_complete: set FPGA to operating state after writing is done
+> > + * @fpga_remove: optional: Set FPGA into a specific state during driver remove
+> 
+> Any specific state?  State in the FPGA-manager-state-machine case?  Or a
+> basic 'reset' state?
+
+Could be reset. Leaving that one open for the person implemening the low
+level driver.
+
+> 
+>   Josh
+> 
