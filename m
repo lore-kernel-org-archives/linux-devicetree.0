@@ -1,89 +1,50 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX
- SoCs.
-Date: Wed, 23 Sep 2015 09:24:17 -0700
-Message-ID: <5602D231.5090709@caviumnetworks.com>
-References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com> <3066583.BWDZlYWxXU@wuerfel> <55FC4330.10302@caviumnetworks.com> <2512701.zkjk3n3AQS@wuerfel> <55FCB3AC.8080709@caviumnetworks.com> <20150922131916.GE27964@google.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] Docs: dt: Add PCI MSI map bindings
+Date: Wed, 23 Sep 2015 17:37:48 +0100
+Message-ID: <20150923173748.0c684c6a@arm.com>
+References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
+	<1442966406-13198-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150922131916.GE27964-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1442966406-13198-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2015 06:19 AM, Bjorn Helgaas wrote:
-> Hi David,
->
-> On Fri, Sep 18, 2015 at 06:00:28PM -0700, David Daney wrote:
->> On 09/18/2015 12:45 PM, Arnd Bergmann wrote:
->>> On Friday 18 September 2015 10:00:32 David Daney wrote:
->>>> On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
->>>>> On Thursday 17 September 2015 15:41:33 David Daney wrote:
->>>>>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>> The on-chip devices all have fixed bars.  So, fix them up.
->>>>>>
->>>>>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>
->>>>> You should be able to just mark the BARs as fixed in DT
->>
->> I think we can switch to PCI_PROBE_ONLY, and have all non-fixed BAR
->> devices configured by firmware.  This may significantly simplify any
->> quirks required in the kernel.
->
-> I don't like PCI_PROBE_ONLY, and I'd like to avoid it when we can.
+On Tue, 22 Sep 2015 17:00:04 -0700
+David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-I don't like it either, but if it were the only way the PCI maintainers 
-would allow us to support the hardware, I would rewrite the firmware to 
-make it possible.  However, as you say below ...
+> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> 
+> Currently msi-parent is used by a few bindings to describe the
+> relationship between a PCI root complex and a single MSI controller, but
+> this property does not have a generic binding document.
+> 
+> Additionally, msi-parent is insufficient to describe more complex
+> relationships between MSI controllers and devices under a root complex,
+> where devices may be able to target multiple MSI controllers, or where
+> MSI controllers use (non-probeable) sideband information to distinguish
+> devices.
+> 
+> This patch adds a generic binding for mapping PCI devices to MSI
+> controllers. This document covers msi-parent, and a new msi-map property
+> (specific to PCI*) which may be used to map devices (identified by their
+> Requester ID) to sideband data for each MSI controller that they may
+> target.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
->
-> Your original patch description said the on-chip devices have "fixed
-> BARs."  In what sense are they "fixed"?  I assume they are writable
-> enough so we can learn their sizes?
+I thought I had done it already, but nevertheless:
 
-Yes.  The BAR registers are writable, but ignored.  So, the size is 
-correctly probed.  The BAR registers are initialized by 
-hardware/firmware to the proper value.
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
->  If we can't learn their sizes, we
-> have bigger problems because we can't tell what space is used.
->
-> Are there other parts of the system, e.g., run-time firmware, that
-> depend on the devices not being moved?
-
-The devices cannot move, the address decoding is not programmable.  The 
-BAR registers are provided as an aid in integrating the devices with OS 
-PCI infrastructure.  Although, one might argue that they don't do a very 
-good job of adhering to the PCI specifications...
-
->
->>>> For the record:  The PCI Enhanced Allocation (EA) capability (approved
->>>> by PCI SIG on 23 October 2014) is the proper way to handle this going
->>>> forward.  However, this is not yet implemented in the SoCs that this
->>>> patch addresses.  Our plan is to implement the EA capability in the core
->>>> PCI code, so that we do not need to keep adding devices to this fixup code.
->
-> Sean Stalley has posted some patches to add EA support to Linux, but I
-> haven't merged them yet.  If we had that, another option would be to
-> hook into your config accessors and fabricate an EA capability.
-
-To me, this is the most interesting part of your message.  If you really 
-would accept a config read accessor that presented a synthetic EA 
-capability, that would be ideal.  We know exactly which roots contain 
-the fixed devices, so it would be a trivial exercise to provide a custom 
-config accessor.
-
-I am going to work on this in hope of eventual acceptance of this strategy.
-
-Thanks,
-David Daney
-
-
+	M.
+-- 
+Jazz is not dead. It just smells funny.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
