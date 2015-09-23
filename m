@@ -1,35 +1,59 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: Various STi DT clean-ups
-Date: Wed, 23 Sep 2015 21:37:26 +0200
-Message-ID: <1443037049-6167-1-git-send-email-maxime.coquelin@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+Date: Wed, 23 Sep 2015 21:39:27 +0200
+Message-ID: <1707525.QvfFzUYq4E@wuerfel>
+References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com> <3751968.n8LRgots8n@wuerfel> <20150923193545.GZ7356@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: maxime.coquelin-qxv4g6HH51o@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150923193545.GZ7356@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <ddaney@caviumnetworks.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-This series cleans the STi407 family DTs, by factorizing common nodes between
-STiH407 and STiH410, and also by only enabling PWM and USB nodes at board
-level, as they could not be exposed on some boards.
+On Wednesday 23 September 2015 20:35:45 Will Deacon wrote:
+> On Wed, Sep 23, 2015 at 08:27:41PM +0100, Arnd Bergmann wrote:
+> > On Wednesday 23 September 2015 11:21:56 David Daney wrote:
+> > > >>
+> > > >>      /* Limit the bus-range to fit within reg */
+> > > >> -    bus_max = pci->cfg.bus_range->start +
+> > > >> -              (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> > > >> +    bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> > > >> +    if (bus_max > 255)
+> > > >> +            bus_max = 255;
+> > > >
+> > > > I still don't understand the need for this part. If the cfg space is bigger
+> > > > than bus_max, isn't that simply an invalid resource? Given that the resource
+> > > > could be broken in other ways too, this check feels more like a specific
+> > > > workaround rather than generally useful code.
+> > > 
+> > > Imagine...
+> > > 
+> > >    bus-range [0x80 .. 0xff], this requires a cfg.res that will cover the 
+> > > entire range of 0..0xff.
+> > > 
+> > >    according to the calculations above, (resource_size(&pci->cfg.res) >> 
+> > > pci->cfg.ops.bus_shift) - 1 will have a value of 0xff, so...
+> > 
+> > Extending the computation to 32 bit seems fine, but I'd rather warn loudly
+> > if the bus range does not fit within the registers.
+> > 
+> > Also note that the computation is already correct with my interpretation
+> > of the reg property.
+> 
+> From what Lorenzo was saying, ACPI shares the interpretation that David is
+> implementing here and, given that the DT version seems to be subjective,
+> aligning this reg property with MMCFG seems to make sense.
 
-Maxime Coquelin (3):
-  ARM: dts: stih407: Enable PWM nodes only board level
-  ARM: dts: stih407/410: Tidy up display nodes
-  ARM: dts: stih410: Enable USB2.0 and related PHY nodes at board level
+We should then make it very clear in the binding that the driver
+is not allowed to actually map the registers for the buses outside
+of the bus-range, as that is highly unusual.
 
- arch/arm/boot/dts/stih407-family.dtsi | 19 +++++++++++++++++--
- arch/arm/boot/dts/stih407.dtsi        | 13 -------------
- arch/arm/boot/dts/stih410-b2120.dts   | 24 ++++++++++++++++++++++++
- arch/arm/boot/dts/stih410.dtsi        | 23 +++++++++++------------
- arch/arm/boot/dts/stihxxx-b2120.dtsi  |  8 ++++++++
- 5 files changed, 60 insertions(+), 27 deletions(-)
+We would also need a special exception for this if we ever get to
+implement the DT source checker that we have been talking about for
+years, as the reg property might then overlap with a property from
+another device.
 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
