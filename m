@@ -1,95 +1,86 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v3 3/6] PCI: generic: Quit clobbering our pci_ops.
-Date: Wed, 23 Sep 2015 08:56:59 -0700
-Message-ID: <5602CBCB.4030605@caviumnetworks.com>
-References: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com> <1442965757-12925-4-git-send-email-ddaney.cavm@gmail.com> <1729894.341fjYUAKl@wuerfel>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v4 0/5] ARM: sunxi: Add Reduced Serial Bus support
+Date: Thu, 24 Sep 2015 00:05:16 +0800
+Message-ID: <1443024323-9115-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1729894.341fjYUAKl@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB443ROYAKGQEFN4KHXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2015 01:21 AM, Arnd Bergmann wrote:
-> On Tuesday 22 September 2015 16:49:14 David Daney wrote:
->> From: David Daney <david.daney@cavium.com>
->>
->> The pci-host-generic driver keeps a global struct pci_ops which it
->> then patches with the .map_bus method appropriate for the bus device.
->> A problem arises when the driver is used for two different types of
->> bus devices, the .map_bus method for the last device probed clobbers
->> the method for all previous devices.  The result, only the last bus
->> device probed has the proper .map_bus, and the others fail.
->>
->> Move the struct pci_ops into the bus specific structure, and
->> initialize it when the bus device is probed.  Keep a copy of the
->> gen_pci_cfg_bus_ops structure, instead of a pointer to a global copy,
->
-> This is a very useful change.
->
->> to future proof against the addition of bus specific elements to
->> struct pci_ops.
->
-> but I don't like this part. We should just not have bus specific
-> elements in pci_ops. We don't really have that here either, except
-> that the gen_pci driver had a hack for reusing the same operations
-> for things that are actually different.
->
-> It's an established practice that anything named '*_operations' is
-> meant to be constant and ideally defined as 'static const ... *_ops;'
-> in the driver. We could try to enforce this better by marking
-> bus->ops as 'const' and changing all the instances of this structure
-> accordingly.
->
->> @@ -65,7 +65,11 @@ static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
->>
->>   static struct gen_pci_cfg_bus_ops gen_pci_cfg_cam_bus_ops = {
->>   	.bus_shift	= 16,
->> -	.map_bus	= gen_pci_map_cfg_bus_cam,
->> +	.ops		= {
->> +		.map_bus	= gen_pci_map_cfg_bus_cam,
->> +		.read		= pci_generic_config_read,
->> +		.write		= pci_generic_config_write,
->> +	}
->>   };
->
-> So this is good. We could in theory unify the map_bus functions
-> like this now:
->
-> static void __iomem *gen_pci_map_cfg_bus(struct pci_bus *bus,
->                                           unsigned int devfn,
->                                           int where)
-> {
->          struct gen_pci *pci = bus->sysdata;
-> 	struct gen_pci_cfg_bus_ops *ops;
->          resource_size_t idx;
->
-> 	ops = container_of(bus->ops, struct gen_pci_cfg_bus_ops, ops);
-> 	idx = bus->number - pci->cfg.bus_range->start;
->
->          return pci->cfg.win[idx] + ((devfn << ops->dev_shift) | where);
-> }
->
-> Not sure if that improves clarity or not, up to Will.
->
->> @@ -234,8 +237,7 @@ static int gen_pci_probe(struct platform_device *pdev)
->>   	}
->>
->>   	of_id = of_match_node(gen_pci_of_match, np);
->> -	pci->cfg.ops = of_id->data;
->> +	pci->cfg.ops = *(struct gen_pci_cfg_bus_ops *)of_id->data;
->
-> This is the part that grabbed my attention, we should not do it like this.
->
+Hi everyone,
 
-I will consider changing this so that a structure copy is not used, 
-perhaps as you suggest above.
+This is my fourth attempt at adding support for Allwinner's Reduced
+Serial Bus (RSB), which is used to communicate with PMICs and other
+peripherals on their newer SoCs, such as the A23/A33/A80.
 
-David Daney.
+RSB is a simplified two wire interface using push-pull outputs,
+supporting multiple slaves, address and data parity checks, and
+clock speeds up to 20 MHz. The bus only supports simple register
+read/writes, with possible register sizes of 8/16/32 bits. Access
+sizes not matching the slave device register sizes result in NACKs
+or errors. 32 bit registers in devices have yet to be seen.
+
+Previous attempts to add support through the I2C subsystem have
+been rejected, as the bus line protocol is too different to even
+consider. The latest attempt to add a common bus driver was also
+rejected as this is sunxi only.
+
+This version adds a platform driver for the RSB controller under
+drivers/soc/sunxi, which adds a custom driver type and bus type
+for slave drivers to use. Custom regmap support is also merged
+into the controller driver. Currently the driver only exports 2
+symbols: sunxi_rsb_driver_register() & devm_regmap_init_sunxi_rsb().
+
+Patch 1 adds the DT bindings for Allwinner RSB controller.
+
+Patch 2 adds the driver itself.
+
+Patch 3 adds the RSB nodes for A23/A33 dtsi.
+
+Patch 5 & 5 enable the RSB controller on the boards I have.
+
+Still to come are axp20x driver support for the RSB based AXP223.
+The complete series can be found at:
+
+    https://github.com/wens/linux/tree/sunxi-rsb-v4
+
+This is now sunxi specific, so if everything works out, it should
+all go through Maxime's tree?
 
 
-> 	Arnd
->
+Regards,
+ChenYu
+
+Chen-Yu Tsai (5):
+  soc: sunxi: Add Allwinner Reduced Serial Bus (RSB) controller bindings
+  soc: sunxi: Add driver for Allwinner Reduced Serial Bus
+  ARM: dts: sun8i: Add Reduced Serial Bus controller device node to
+    A23/A33 dtsi
+  ARM: dts: sun8i: ippo-q8h-v5: Enable Reduced Serial Bus controller
+  ARM: dts: sun8i: sinlinx-sina33: Enable Reduced Serial Bus controller
+
+ .../devicetree/bindings/soc/sunxi/rsb.txt          |  47 ++
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi               |  21 +
+ arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts        |   4 +
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
+ drivers/soc/sunxi/Kconfig                          |  10 +
+ drivers/soc/sunxi/Makefile                         |   1 +
+ drivers/soc/sunxi/sunxi_rsb.c                      | 786 +++++++++++++++++++++
+ include/linux/soc/sunxi/sunxi_rsb.h                |  89 +++
+ 8 files changed, 962 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/sunxi/rsb.txt
+ create mode 100644 drivers/soc/sunxi/sunxi_rsb.c
+ create mode 100644 include/linux/soc/sunxi/sunxi_rsb.h
+
+-- 
+2.5.3
