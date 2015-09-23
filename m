@@ -1,37 +1,182 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v2 3/3] irqchip/gicv3-its:  Handle OF device tree "msi-map" properties.
-Date: Tue, 22 Sep 2015 17:00:06 -0700
-Message-ID: <1442966406-13198-4-git-send-email-ddaney.cavm@gmail.com>
-References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v3 1/3] mailbox/omap: Add ti,mbox-send-noirq quirk to fix AM33xx CPU Idle
+Date: Tue, 22 Sep 2015 19:14:52 -0500
+Message-ID: <1442967294-23837-2-git-send-email-d-gerlach@ti.com>
+References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
+In-Reply-To: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: David Daney <david.daney@cavium.com>
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Keerty J <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+The mailbox framework controls the transmission queue and requires
+either its controller implementations or clients to run the state
+machine for the Tx queue. The OMAP mailbox controller uses a Tx-ready
+interrupt as the equivalent of a Tx-done interrupt to run this Tx
+queue state-machine.
 
-Call of_msi_map_rid() to handle mapping of the requester id.
+The WkupM3 processor on AM33xx and AM43xx SoCs is used to offload
+certain PM tasks, like doing the necessary operations for Device
+PM suspend/resume or for entering lower c-states during cpuidle.
 
-Signed-off-by: David Daney <david.daney@cavium.com>
+The CPUIdle on AM33xx requires the messages to be sent without
+having to trigger the Tx-ready interrupts, as the interrupt
+would immediately terminate the CPUIdle operation. Support for
+this has been added by introducing a DT quirk, "ti,mbox-send-noirq"
+and using it to modify the normal OMAP mailbox controller behavior
+on the sub-mailboxes used to communicate with the WkupM3 remote
+processor. This also requires the wkup_m3_ipc driver to adjust
+its mailbox usage logic to run the Tx state machine.
+
+NOTE:
+- AM43xx does not communicate with WkupM3 for CPU Idle, so is
+  not affected by this behavior. But, it uses the same IPC driver
+  for PM suspend/resume functionality, so requires the quirk as
+  well, because of changes to the common wkup_m3_ipc driver.
+
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+[s-anna@ti.com: revise logic and update comments/patch description]
+Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- drivers/irqchip/irq-gic-v3-its-pci-msi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v2->v3: Unchanged.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-index cf351c6..8b1c938 100644
---- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-+++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-@@ -86,7 +86,8 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
- 	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
+ .../devicetree/bindings/mailbox/omap-mailbox.txt   |  8 ++++
+ drivers/mailbox/omap-mailbox.c                     | 49 ++++++++++++++++++++--
+ 2 files changed, 53 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+index d1a0433..9b40c49 100644
+--- a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++++ b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+@@ -75,6 +75,14 @@ data that represent the following:
+     Cell #3 (usr_id)  - mailbox user id for identifying the interrupt line
+                         associated with generating a tx/rx fifo interrupt.
  
- 	/* ITS specific DeviceID, as the core ITS ignores dev. */
--	info->scratchpad[0].ul = dev_alias.dev_id;
-+	info->scratchpad[0].ul = of_msi_map_rid(dev, domain->of_node,
-+						dev_alias.dev_id);
++Optional Properties:
++--------------------
++- ti,mbox-send-noirq:   Quirk flag to allow the client user of this sub-mailbox
++                        to send messages without triggering a Tx ready interrupt,
++                        and to control the Tx ticker. Should be used only on
++                        sub-mailboxes used to communicate with WkupM3 remote
++                        processor on AM33xx/AM43xx SoCs.
++
+ Mailbox Users:
+ ==============
+ A device needing to communicate with a target processor device should specify
+diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
+index a3dbfd9..b7f636f 100644
+--- a/drivers/mailbox/omap-mailbox.c
++++ b/drivers/mailbox/omap-mailbox.c
+@@ -38,6 +38,8 @@
+ #include <linux/mailbox_controller.h>
+ #include <linux/mailbox_client.h>
  
- 	return msi_info->ops->msi_prepare(domain->parent,
- 					  dev, dev_alias.count, info);
++#include "mailbox.h"
++
+ #define MAILBOX_REVISION		0x000
+ #define MAILBOX_MESSAGE(m)		(0x040 + 4 * (m))
+ #define MAILBOX_FIFOSTATUS(m)		(0x080 + 4 * (m))
+@@ -106,6 +108,7 @@ struct omap_mbox_fifo_info {
+ 	int rx_irq;
+ 
+ 	const char *name;
++	bool send_no_irq;
+ };
+ 
+ struct omap_mbox {
+@@ -119,6 +122,7 @@ struct omap_mbox {
+ 	u32			ctx[OMAP4_MBOX_NR_REGS];
+ 	u32			intr_type;
+ 	struct mbox_chan	*chan;
++	bool			send_no_irq;
+ };
+ 
+ /* global variables for the mailbox devices */
+@@ -418,6 +422,9 @@ static int omap_mbox_startup(struct omap_mbox *mbox)
+ 		goto fail_request_irq;
+ 	}
+ 
++	if (mbox->send_no_irq)
++		mbox->chan->txdone_method = TXDONE_BY_ACK;
++
+ 	_omap_mbox_enable_irq(mbox, IRQ_RX);
+ 
+ 	return 0;
+@@ -586,13 +593,27 @@ static void omap_mbox_chan_shutdown(struct mbox_chan *chan)
+ 	mutex_unlock(&mdev->cfg_lock);
+ }
+ 
+-static int omap_mbox_chan_send_data(struct mbox_chan *chan, void *data)
++static int omap_mbox_chan_send_noirq(struct omap_mbox *mbox, void *data)
+ {
+-	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
+ 	int ret = -EBUSY;
+ 
+-	if (!mbox)
+-		return -EINVAL;
++	if (!mbox_fifo_full(mbox)) {
++		_omap_mbox_enable_irq(mbox, IRQ_RX);
++		mbox_fifo_write(mbox, (mbox_msg_t)data);
++		ret = 0;
++		_omap_mbox_disable_irq(mbox, IRQ_RX);
++
++		/* we must read and ack the interrupt directly from here */
++		mbox_fifo_read(mbox);
++		ack_mbox_irq(mbox, IRQ_RX);
++	}
++
++	return ret;
++}
++
++static int omap_mbox_chan_send(struct omap_mbox *mbox, void *data)
++{
++	int ret = -EBUSY;
+ 
+ 	if (!mbox_fifo_full(mbox)) {
+ 		mbox_fifo_write(mbox, (mbox_msg_t)data);
+@@ -604,6 +625,22 @@ static int omap_mbox_chan_send_data(struct mbox_chan *chan, void *data)
+ 	return ret;
+ }
+ 
++static int omap_mbox_chan_send_data(struct mbox_chan *chan, void *data)
++{
++	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
++	int ret;
++
++	if (!mbox)
++		return -EINVAL;
++
++	if (mbox->send_no_irq)
++		ret = omap_mbox_chan_send_noirq(mbox, data);
++	else
++		ret = omap_mbox_chan_send(mbox, data);
++
++	return ret;
++}
++
+ static const struct mbox_chan_ops omap_mbox_chan_ops = {
+ 	.startup        = omap_mbox_chan_startup,
+ 	.send_data      = omap_mbox_chan_send_data,
+@@ -732,6 +769,9 @@ static int omap_mbox_probe(struct platform_device *pdev)
+ 			finfo->rx_usr = tmp[2];
+ 
+ 			finfo->name = child->name;
++
++			if (of_find_property(child, "ti,mbox-send-noirq", NULL))
++				finfo->send_no_irq = true;
+ 		} else {
+ 			finfo->tx_id = info->tx_id;
+ 			finfo->rx_id = info->rx_id;
+@@ -791,6 +831,7 @@ static int omap_mbox_probe(struct platform_device *pdev)
+ 		fifo->irqstatus = MAILBOX_IRQSTATUS(intr_type, finfo->rx_usr);
+ 		fifo->irqdisable = MAILBOX_IRQDISABLE(intr_type, finfo->rx_usr);
+ 
++		mbox->send_no_irq = finfo->send_no_irq;
+ 		mbox->intr_type = intr_type;
+ 
+ 		mbox->parent = mdev;
 -- 
-1.9.1
+2.4.6
