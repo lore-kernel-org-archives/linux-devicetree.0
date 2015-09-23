@@ -1,46 +1,40 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: exynos5420: fix wrong clock binding for
- sysmmu_fimd1_1
-Date: Wed, 23 Sep 2015 09:19:04 +0200
-Message-ID: <56025268.6040405@osg.samsung.com>
-References: <1442990906-16411-1-git-send-email-jy0922.shim@samsung.com>
+From: Ming Lei <ming.lei@canonical.com>
+Subject: Re: [RFC 0/5] console/acpi: add DBG2 and SPCR console configuration
+Date: Wed, 23 Sep 2015 15:38:20 +0800
+Message-ID: <CACVXFVPEJb-RXLgU0V+HduoENquUs3oDGWsUtCvH+TOSRMYiUg@mail.gmail.com>
+References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442990906-16411-1-git-send-email-jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, al.stone@linaro.org, torez@redhat.com, Jon Masters <jcm@redhat.com>, G Gregory <graeme.gregory@linaro.org>, linaro-acpi@lists.linaro.org, Lv Zheng <lv.zheng@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Joonyoung,
+Hi Leif,
 
-On 09/23/2015 08:48 AM, Joonyoung Shim wrote:
-> The sysmmu_fimd1_1 should bind the clock CLK_SMMU_FIMD1M1, not the clock
-> CLK_SMMU_FIMD1M0. CLK_SMMU_FIMD1M0 is a clock for the sysmmu_fimd1_0.
-> 
 
-Can you please mention in the commit message if this patch is solving an
-issue on a given machine or if it is just for the sake of correctness.
+On Tue, Sep 8, 2015 at 8:43 PM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
+> Support for configuring bootconsole and console via the ACPI tables
+> DBG2 (Debug Port Table 2) [1] and SPCR (Serial Port Console Redirection
+> Table) [2], defined by Microsoft, has been discussed on and off over the
+> years.
+>
+> [1] https://msdn.microsoft.com/en-us/library/windows/hardware/dn639131(v=vs.85).aspx
+> [2] https://msdn.microsoft.com/en-us/library/windows/hardware/dn639132(v=vs.85).aspx
+>
+> Licensing concerns have prevented this happening in the past, but as of
+> 10 August 2015, these tables have both been released also under OWF 1.0
+> (http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0)
+> which is think is noncontroversially GPL-compatible?
+>
+> This set is a first attempt at implementing this.
 
-Git blame shows that this was added by commit b70045167815 ("ARM: dts: add
-sysmmu nodes for exynos5420") so please add a Fixes: tag.
+>From distribution view, the patchset looks very useful.
 
-> Signed-off-by: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # v4.2
-> ---
+I have one simple question, are there other candidates for conveying this kind
+of information like what DBG2/SPCR does? Or are DBG2 and SPCR the
+offical speficiations to do such things in ARM server industry?
 
-Patch looks good to me.
-
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
