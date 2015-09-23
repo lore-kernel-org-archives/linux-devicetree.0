@@ -1,78 +1,77 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
- compatible flags
-Date: Wed, 23 Sep 2015 14:05:39 -0400
-Message-ID: <5602E9F3.7020102@ti.com>
-References: <1442938118-4718-1-git-send-email-nm@ti.com> <1442938118-4718-2-git-send-email-nm@ti.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 3/3] irqchip/gicv3-its:  Handle OF device tree
+ "msi-map" properties.
+Date: Wed, 23 Sep 2015 19:18:34 +0100
+Message-ID: <20150923191834.1764ca02@arm.com>
+References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
+	<1442966406-13198-4-git-send-email-ddaney.cavm@gmail.com>
+	<20150923180100.03844936@arm.com>
+	<5602DC97.1040505@caviumnetworks.com>
+	<20150923175259.GT7356@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442938118-4718-2-git-send-email-nm@ti.com>
+In-Reply-To: <20150923175259.GT7356@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: David Daney <ddaney@caviumnetworks.com>, David Daney <ddaney.cavm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2015 12:08 PM, Nishanth Menon wrote:
-> Keystone2 devices are used on more platforms than just Texas
-> Instruments reference evaluation platforms called EVMs. Providing a
-> generic compatible "ti,keystone" is not sufficient to differentiate
-> various SoC definitions possible on various platforms. So, provide
-> compatible matches for each SoC family by itself.
->
-> This allows SoC specific logic to be run time handled based on
-> of_machine_is_compatible("ti,k2hk") or as needed for the dependent
-> processor instead of needing to use board dependent compatibles that
-> are needed now.
->
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->   .../devicetree/bindings/arm/keystone/keystone.txt    | 20 +++++++++++++++++---
->   1 file changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-> index 59d7a46f85eb..800d2d02e27b 100644
-> --- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-> +++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-> @@ -9,12 +9,26 @@ Required properties:
->      the form "ti,keystone-*". Generic devices like gic, arch_timers, ns16550
->      type UART should use the specified compatible for those devices.
->
-> +SoC families:
-> +
-> +- Keystone 2 generic SoC:
-> +   compatible = "ti,keystone"
-> +
-> +SoCs:
-> +
-> +- Keystone 2 Hawking/Kepler
-> +   compatible = ti,k2hk", "ti,keystone"
-> +- Keystone 2 Lamarr
-> +   compatible = ti,k2l", "ti,keystone"
-> +- Keystone 2 Edison
-> +   compatible = ti,k2e", "ti,keystone"
-> +
->   Boards:
->   -  Keystone 2 Hawking/Kepler EVM
-> -   compatible = "ti,k2hk-evm","ti,keystone"
-> +   compatible = "ti,k2hk-evm", "ti,k2hk", "ti,keystone"
->
->   -  Keystone 2 Lamarr EVM
-> -   compatible = "ti,k2l-evm","ti,keystone"
-> +   compatible = "ti,k2l-evm", "ti, k2l", "ti,keystone"
->
->   -  Keystone 2 Edison EVM
-> -   compatible = "ti,k2e-evm","ti,keystone"
-> +   compatible = "ti,k2e-evm", "ti,k2e", "ti,keystone"
->
-DTS takes care of the difference in the hardware and If there SoC 
-specific customization required outside this, then it is best to include 
-this as part of that change. In the past, I believe we didn't do it due 
-to the same reason as above.
+On Wed, 23 Sep 2015 18:52:59 +0100
+Will Deacon <will.deacon@arm.com> wrote:
 
-Murali
+> On Wed, Sep 23, 2015 at 06:08:39PM +0100, David Daney wrote:
+> > On 09/23/2015 10:01 AM, Marc Zyngier wrote:
+> > > On Tue, 22 Sep 2015 17:00:06 -0700
+> > > David Daney <ddaney.cavm@gmail.com> wrote:
+> > >
+> > >> From: David Daney <david.daney@cavium.com>
+> > >>
+> > >> Call of_msi_map_rid() to handle mapping of the requester id.
+> > >>
+> > >> Signed-off-by: David Daney <david.daney@cavium.com>
+> > >> ---
+> > >>   drivers/irqchip/irq-gic-v3-its-pci-msi.c | 3 ++-
+> > >>   1 file changed, 2 insertions(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> > >> index cf351c6..8b1c938 100644
+> > >> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> > >> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> > >> @@ -86,7 +86,8 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+> > >>   	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
+> > >>
+> > >>   	/* ITS specific DeviceID, as the core ITS ignores dev. */
+> > >> -	info->scratchpad[0].ul = dev_alias.dev_id;
+> > >> +	info->scratchpad[0].ul = of_msi_map_rid(dev, domain->of_node,
+> > >> +						dev_alias.dev_id);
+> > >>
+> > >>   	return msi_info->ops->msi_prepare(domain->parent,
+> > >>   					  dev, dev_alias.count, info);
+> > >
+> > > I really wonder if that shouldn't be part of the pci_for_each_dma_alias
+> > > call. It would make a lot more sense for this functionality to be an
+> > > integral part of the core code, and would probably make the integration
+> > > of _IORT (which has the exact same requirements) a bit easier.
+> > >
+> > > Thoughts?
+> > >
+> > 
+> > I am a proponent of pushing things like this as far into the core code 
+> > as possible.  So, from that point of view, I think it would probably be 
+> > a good idea.
+> > 
+> > I can prepare a patch that does that, but it would also be nice hear 
+> > from other maintainers and get their thoughts on this.
+> 
+> Hmm, we use pci_for_each_dma_alias in the SMMU drivers to get the SID,
+> so I'm not sure that using the MSI mapping is necessarily the right thing
+> to do there. Maybe we should instead have dma_alias_to_msi_id helpers or
+> something?
 
+Yes, that's probably a sensible solution.
+
+	M.
 -- 
-Murali Karicheri
-Linux Kernel, Keystone
+Jazz is not dead. It just smells funny.
