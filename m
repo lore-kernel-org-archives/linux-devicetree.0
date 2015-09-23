@@ -1,88 +1,78 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in
- bus_max calculation.
-Date: Wed, 23 Sep 2015 19:01:57 +0100
-Message-ID: <20150923180157.GV7356@arm.com>
-References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com>
- <1442527332-1174-5-git-send-email-ddaney.cavm@gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
+ compatible flags
+Date: Wed, 23 Sep 2015 14:05:39 -0400
+Message-ID: <5602E9F3.7020102@ti.com>
+References: <1442938118-4718-1-git-send-email-nm@ti.com> <1442938118-4718-2-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442527332-1174-5-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442938118-4718-2-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 11:02:11PM +0100, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> There are two problems with the bus_max calculation:
-> 
-> 1) The u8 data type can overflow for large config space windows.
-> 
-> 2) The calculation is incorrect for a bus range that doesn't start at
->    zero.
-> 
-> Since the configuration space is relative to bus zero, make bus_max
-> just be the size of the config window scaled by bus_shift.  Then clamp
-> it to a maximum of 255, per PCI.  Use a data type of int to avoid
-> overflow problems.
-> 
-> Update host-generic-pci.txt to clarify the semantics of the "reg"
-> property with respect to non-zero starting bus numbers.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+On 09/22/2015 12:08 PM, Nishanth Menon wrote:
+> Keystone2 devices are used on more platforms than just Texas
+> Instruments reference evaluation platforms called EVMs. Providing a
+> generic compatible "ti,keystone" is not sufficient to differentiate
+> various SoC definitions possible on various platforms. So, provide
+> compatible matches for each SoC family by itself.
+>
+> This allows SoC specific logic to be run time handled based on
+> of_machine_is_compatible("ti,k2hk") or as needed for the dependent
+> processor instead of needing to use board dependent compatibles that
+> are needed now.
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 > ---
-> Change from v1: Added text to host-generic-pci.txt
-> 
->  Documentation/devicetree/bindings/pci/host-generic-pci.txt | 4 +++-
->  drivers/pci/host/pci-host-generic.c                        | 7 ++++---
->  2 files changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> index cf3e205..105a968 100644
-> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> @@ -34,7 +34,9 @@ Properties of the host controller node:
->  - #size-cells    : Must be 2.
->  
->  - reg            : The Configuration Space base address and size, as accessed
-> -                   from the parent bus.
-> +                   from the parent bus.  The base address corresponds to
-> +                   bus zero, even though the "bus-range" property may specify
-> +                   a different starting bus number.
+>   .../devicetree/bindings/arm/keystone/keystone.txt    | 20 +++++++++++++++++---
+>   1 file changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+> index 59d7a46f85eb..800d2d02e27b 100644
+> --- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+> +++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+> @@ -9,12 +9,26 @@ Required properties:
+>      the form "ti,keystone-*". Generic devices like gic, arch_timers, ns16550
+>      type UART should use the specified compatible for those devices.
+>
+> +SoC families:
+> +
+> +- Keystone 2 generic SoC:
+> +   compatible = "ti,keystone"
+> +
+> +SoCs:
+> +
+> +- Keystone 2 Hawking/Kepler
+> +   compatible = ti,k2hk", "ti,keystone"
+> +- Keystone 2 Lamarr
+> +   compatible = ti,k2l", "ti,keystone"
+> +- Keystone 2 Edison
+> +   compatible = ti,k2e", "ti,keystone"
+> +
+>   Boards:
+>   -  Keystone 2 Hawking/Kepler EVM
+> -   compatible = "ti,k2hk-evm","ti,keystone"
+> +   compatible = "ti,k2hk-evm", "ti,k2hk", "ti,keystone"
+>
+>   -  Keystone 2 Lamarr EVM
+> -   compatible = "ti,k2l-evm","ti,keystone"
+> +   compatible = "ti,k2l-evm", "ti, k2l", "ti,keystone"
+>
+>   -  Keystone 2 Edison EVM
+> -   compatible = "ti,k2e-evm","ti,keystone"
+> +   compatible = "ti,k2e-evm", "ti,k2e", "ti,keystone"
+>
+DTS takes care of the difference in the hardware and If there SoC 
+specific customization required outside this, then it is best to include 
+this as part of that change. In the past, I believe we didn't do it due 
+to the same reason as above.
 
-That's a useful clarification, thanks.
+Murali
 
->  Properties of the /chosen node:
-> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-> index 77cf4bd..0a9c453 100644
-> --- a/drivers/pci/host/pci-host-generic.c
-> +++ b/drivers/pci/host/pci-host-generic.c
-> @@ -164,7 +164,7 @@ out_release_res:
->  static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->  {
->  	int err;
-> -	u8 bus_max;
-> +	int bus_max;
->  	resource_size_t busn;
->  	struct resource *bus_range;
->  	struct device *dev = pci->host.dev.parent;
-> @@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->  	}
->  
->  	/* Limit the bus-range to fit within reg */
-> -	bus_max = pci->cfg.bus_range->start +
-> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
-> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
-> +	if (bus_max > 255)
-> +		bus_max = 255;
-
-I still don't understand the need for this part. If the cfg space is bigger
-than bus_max, isn't that simply an invalid resource? Given that the resource
-could be broken in other ways too, this check feels more like a specific
-workaround rather than generally useful code.
-
-Will
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
