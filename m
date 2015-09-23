@@ -1,70 +1,112 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v3 0/3] soc: ti: Introduce wkup_m3_ipc driver
-Date: Tue, 22 Sep 2015 19:14:51 -0500
-Message-ID: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Keerty J <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v2] PCI: generic: Add support for Cavium ThunderX PCIe root complexes.
+Date: Tue, 22 Sep 2015 17:16:55 -0700
+Message-ID: <1442967415-13595-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This series is version 3 of the code to introduce a wkup_m3_ipc driver
-to handle communication between the MPU and Cortex M3 present on TI AM335x
-and AM437x SoCs. v2 of this series can be found at [1]. Only patch 3
-has been changed based on a request from Tony and a few cleanups:
+From: David Daney <david.daney@cavium.com>
 
-- Rather than exporting all of the functionality of the driver, added
-  wkup_m3_ipc_get and wkup_m3_ipc_put to allow users to just get a handle
-  containing an ops structure for use.
+The config space for external PCIe root complexes on some Cavium
+ThunderX SoCs is very similar to CAM and ECAM, but differs in the
+shift values that have to be applied to the bus and devfn numbers to
+compose that address window offset.  These root complexes also have
+the interesting property that there is no root bridge, so the standard
+manner of limiting scanning to only the first device doesn't work.  We
+can use the standard pci-host-generic driver if we make a minor
+addition to handle these differences, so we...
 
-- Changed all ops (previously exported functions) to take pointer to
-  struct wkup_m3_ipc as an argument now that user code will get this
-  from wkup_m3_ipc_get.
+Add a mapping function for ThunderX PCIe root complexes with a bus
+shift of 24 and devfn shift of 16.  Ignore accesses for devices other
+than the first device on the primary bus.
 
-- General cleanup to probe function
+Document the whole thing in devicetree/bindings/pci/host-generic-pci.txt
 
-- Added MODULE_DEVICE_TABLE so driver can probe automatically.
+Signed-off-by: David Daney <david.daney@cavium.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+---
 
-The series containing the DT nodes can be found here [2]. The actual dt
-nodes for wkup_m3_ipc (last two patches) have been merged but discussion
-is still open for the ti,mbox-send-noirq flag patches and depends on the
-comments provided for the omap-mailbox change presented in patch 1 of
-this series.
+This patch depends on:
+https://lkml.org/lkml/2015/9/22/1189
 
-A full branch containing all necessary PM code for both am335x and am437x
-has been pushed here [3] to provide a big picture view of the plan for
-this series.
+Changes from v1:
 
-This driver relies on the firmware at [4] in the next-upstream branch
-being present in /lib/firmware in the rootfs or built in to the kernel.
+  - Added Acked-by:
 
-Regards,
-Dave
+  - Removed two patches from the set that were somewhat unrelated.
 
-[1] https://lkml.org/lkml/2015/7/17/797
-[2] https://lkml.org/lkml/2015/7/17/813
-[3] https://github.com/dgerlach/linux-pm/tree/pm-v4.3-rc1-amx3-suspend
-[4] https://git.ti.com/ti-cm3-pm-firmware
+ .../devicetree/bindings/pci/host-generic-pci.txt   |  8 +++---
+ drivers/pci/host/pci-host-generic.c                | 29 ++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 3 deletions(-)
 
-Dave Gerlach (3):
-  mailbox/omap: Add ti,mbox-send-noirq quirk to fix AM33xx CPU Idle
-  Documentation: dt: add bindings for TI Wakeup M3 IPC device
-  soc: ti: Add wkup_m3_ipc driver
-
- .../devicetree/bindings/mailbox/omap-mailbox.txt   |   8 +
- .../devicetree/bindings/soc/ti/wkup_m3_ipc.txt     |  57 +++
- drivers/mailbox/omap-mailbox.c                     |  49 +-
- drivers/soc/ti/Kconfig                             |  10 +
- drivers/soc/ti/Makefile                            |   1 +
- drivers/soc/ti/wkup_m3_ipc.c                       | 508 +++++++++++++++++++++
- include/linux/wkup_m3_ipc.h                        |  55 +++
- 7 files changed, 684 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
- create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
- create mode 100644 include/linux/wkup_m3_ipc.h
-
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+index 105a968..a5aed0f 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+@@ -14,9 +14,11 @@ tree bindings communicated in pci.txt:
+ 
+ Properties of the host controller node:
+ 
+-- compatible     : Must be "pci-host-cam-generic" or "pci-host-ecam-generic"
+-                   depending on the layout of configuration space (CAM vs
+-                   ECAM respectively).
++- compatible     : One of the following with bus:devfn:reg mapped to the
++                   PCI config space address window in the bit positions shown:
++                   "pci-host-cam-generic" -- 'CAM'  bits 16:8:0
++                   "pci-host-ecam-generic" -- 'ECAM'  bits 20:12:0
++                   "cavium,pci-host-thunder-pem" --  bits 24:16:0
+ 
+ - device_type    : Must be "pci".
+ 
+diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+index b163fdc..853f6f6 100644
+--- a/drivers/pci/host/pci-host-generic.c
++++ b/drivers/pci/host/pci-host-generic.c
+@@ -91,6 +91,32 @@ static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
+ 	}
+ };
+ 
++static void __iomem *gen_pci_map_cfg_bus_thunder_pem(struct pci_bus *bus,
++						     unsigned int devfn,
++						     int where)
++{
++	struct gen_pci *pci = bus->sysdata;
++	resource_size_t idx = bus->number - pci->cfg.bus_range->start;
++
++	/*
++	 * Thunder PEM is a PCIe RC, but without a root bridge.  On
++	 * the primary bus, ignore accesses for devices other than
++	 * the first device.
++	 */
++	if (idx == 0 && (devfn & ~7u))
++		return NULL;
++	return pci->cfg.win[idx] + ((devfn << 16) | where);
++}
++
++static struct gen_pci_cfg_bus_ops gen_pci_cfg_thunder_pem_bus_ops = {
++	.bus_shift	= 24,
++	.ops		= {
++		.map_bus	= gen_pci_map_cfg_bus_thunder_pem,
++		.read		= pci_generic_config_read,
++		.write		= pci_generic_config_write,
++	}
++};
++
+ static const struct of_device_id gen_pci_of_match[] = {
+ 	{ .compatible = "pci-host-cam-generic",
+ 	  .data = &gen_pci_cfg_cam_bus_ops },
+@@ -98,6 +124,9 @@ static const struct of_device_id gen_pci_of_match[] = {
+ 	{ .compatible = "pci-host-ecam-generic",
+ 	  .data = &gen_pci_cfg_ecam_bus_ops },
+ 
++	{ .compatible = "cavium,pci-host-thunder-pem",
++	  .data = &gen_pci_cfg_thunder_pem_bus_ops },
++
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, gen_pci_of_match);
 -- 
-2.4.6
+1.9.1
