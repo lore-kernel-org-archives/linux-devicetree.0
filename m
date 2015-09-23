@@ -1,35 +1,88 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
-Date: Wed, 23 Sep 2015 22:45:28 +0200
-Message-ID: <2795004.Hn5xt30nZN@wuerfel>
-References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com> <20150923193545.GZ7356@arm.com> <1707525.QvfFzUYq4E@wuerfel>
+Subject: Re: [PATCH v2 5/9] ARM: dts: Move all Cygnus peripherals into soc bus
+Date: Wed, 23 Sep 2015 23:29:30 +0200
+Message-ID: <1969821.ZhaOpCV2D1@wuerfel>
+References: <1442611454-16331-1-git-send-email-rjui@broadcom.com> <1929872.EmD9YkfFuv@wuerfel> <55FC8C0F.9020308@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1707525.QvfFzUYq4E@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <ddaney@caviumnetworks.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55FC8C0F.9020308@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 September 2015 21:39:27 Arnd Bergmann wrote:
-> On Wednesday 23 September 2015 20:35:45 Will Deacon wrote:
+On Friday 18 September 2015 15:11:27 Ray Jui wrote:
+> On 9/18/2015 2:34 PM, Arnd Bergmann wrote:
+> > On Friday 18 September 2015 14:24:10 Ray Jui wrote:
+> >> +       soc {
+> >> +               compatible = "simple-bus";
+> >> +               ranges;
+> >> +               #address-cells = <1>;
+> >> +               #size-cells = <1>;
 > > 
-> > From what Lorenzo was saying, ACPI shares the interpretation that David is
-> > implementing here and, given that the DT version seems to be subjective,
-> > aligning this reg property with MMCFG seems to make sense.
+> >> +               pinctrl: pinctrl@0301d0c8 {
+> >>
+> > 
+> > Similarly to the core bus, this seems to have address ranges 0x03xxxxxx and
+> > 0x18xxxxxx on it, so put those into the ranges.
+> >
 > 
-> We should then make it very clear in the binding that the driver
-> is not allowed to actually map the registers for the buses outside
-> of the bus-range, as that is highly unusual.
+> Okay we have an issue here. For whatever reason, the Cygnus ASIC team
+> decided to put registers for the same block in random locations. We see
+> similar issues in all of our other iProc based SoCs. We have
+> communicated this to our ASIC team, and hopefully they can revert the
+> trend for the next SoC.
+> 
+> For example, the gpio_ccm has registers in the following regions:
+> 
+> gpio_ccm: gpio@1800a000 {
+>     compatible = "brcm,cygnus-ccm-gpio";
+>     reg = <0x1800a000 0x50>,
+>           <0x0301d164 0x20>;
+> 
+> NAND is worse, it has registers in 3 different separate regions:
+> 
+> nand: nand@18046000 {
+>     compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1",
+>                  "brcm,brcmnand";
+>     reg = <0x18046000 0x600>, <0xf8105408 0x600>,
+>           <0x18046f00 0x20>;
+> 
+> As you can see, this makes it impossible to define a proper address
+> range for the bus; therefore, I'll have to keep the ranges undefined and
+> a simple 1:1 mapping under this bus.
 
-One more point here: I think ACPI does something different here,
-it lists the base address of mmconfig space of the the PCI domain
-that the host bridge belongs to. In contrast, in DT the 'reg'
-property is defined as the registers belonging to the host bridge
-itself, and the DT does not say anything about domains at all
-(aside from the linux,pci-domain property that is not mandatory
-and a Linux-specific extension).
+Hmm, you could still try to list them as non-overlapping with other
+buses on the root node like
+
+	ranges = <0x03000000 0x03000000 0x01000000>,
+		 <0x18000000 0x18000000 0x01000000>,
+		 <0xf8000000 0xf8000000 0x01000000>;
+
+which clarifies how the bus is wired up in hardware.
+
+Alternatively, you could make a more elaborate mapping, if there
+are in fact multiple hardware ranges, like
+
+	#address-cells = <2>; # space:offset
+	ranges = <1 0  0x03000000 0x01000000>,
+		 <2 0  0x18000000 0x01000000>,
+		 <3 0  0xf8000000 0x01000000>;
+
+It really depends on what the hardware designers were thinking. If
+the AXI bus actually decodes the entire 32-bit address range and devices
+are just located at random addresses in there, your current scheme is
+probably closest to reality.
+
+> > It probably also makes sense to name the bus according to what kind of
+> > bus (axi, ahb, plb, ...) is used here. If the soc has nested buses
+> > (e.g. an ahb connected to an axi bus,) then model both of them in the DT.
+> 
+> Based on the block diagram from the ASIC team, it looks like all of them
+> are connected to one major AXI fabric. I can rename the bus to AXI.
+
+Ok.
 
 	Arnd
