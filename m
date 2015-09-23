@@ -1,42 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] ARM: dts: consolidate aliases for Cygnus dt files
-Date: Wed, 23 Sep 2015 23:31:12 +0200
-Message-ID: <20046098.CeNft0Jl1D@wuerfel>
-References: <1442611454-16331-1-git-send-email-rjui@broadcom.com> <25764744.UdkoAR05y0@wuerfel> <55FC85D6.7050506@broadcom.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCHv3] arm64: dts: Add base stratix 10 dtsi
+Date: Wed, 23 Sep 2015 06:54:50 +0100
+Message-ID: <20150923055450.GA4883@svinekod>
+References: <1442353625-4552-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55FC85D6.7050506-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442353625-4552-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 September 2015 14:44:54 Ray Jui wrote:
-> On 9/18/2015 2:27 PM, Arnd Bergmann wrote:
-> > On Friday 18 September 2015 14:24:06 Ray Jui wrote:
-> > 
-> > The SoC has at least four uarts according to this, so it seems unlikely that
-> > each board really only uses only the fourth one of them and labels it '0'
-> > on the board. As soon as you get one board that has more than one uart wired
-> > up, you would need to undo this.
-> > 
-> 
-> I think Scott might have explained this in the past. uart3 is going to
-> be used on all Cygnus boards (including all future boards) because the
-> bootrom was designed to use uart3 as console and that won't change.
-> 
-> Let me know if you still think I need to move this back to the dts.
+> +/ {
+> +	compatible = "altr,socfpga-stratix10";
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
 
-I would still like to see them stay in the .dts file, if only for
-consistency with other platforms. 
+[...]
 
-Also, even if you can guarantee that uart3 is always used for the
-console, that doesn't prevent board designers from adding more than
-one uart, right?
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		device_type = "soc";
+> +		interrupt-parent = <&intc>;
 
-	Arnd
+As far as I am aware, this requires a (non-empty) ranges property, given the
+parent node has {address,size}-cells = <2>.
+
+Does the kernel not complain currently?
+
+Otherwise this looks OK to me. Please fix the rangers property and ask for this
+to be taken via arm-soc. I note neither Arnd nor Olof are on Cc currently.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
