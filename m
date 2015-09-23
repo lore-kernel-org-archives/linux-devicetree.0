@@ -1,80 +1,47 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v3 4/6] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
-Date: Tue, 22 Sep 2015 16:49:15 -0700
-Message-ID: <1442965757-12925-5-git-send-email-ddaney.cavm@gmail.com>
-References: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
-Cc: David Daney <david.daney@cavium.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] of, irqchip/gicv3-its: Handle "msi-map" properties.
+Date: Tue, 22 Sep 2015 17:00:03 -0700
+Message-ID: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-There are two problems with the bus_max calculation:
+The first patch from Mark Rutland adds the OF device tree binding
+description, which explains what we are attempting to do here.  For
+MSI messages on GICv3 systems there is some side-band data that
+accompanies the message, this data is specified in the OF device tree
+"msi-map" property of the PCI host driver.
 
-1) The u8 data type can overflow for large config space windows.
+The second patch adds a parser to get the required information out of
+the device tree.
 
-2) The calculation is incorrect for a bus range that doesn't start at
-   zero.
+The third and final patch adds the "msi-map" parsing to gicv3-its.
 
-Since the configuration space is relative to bus zero, make bus_max
-just be the size of the config window scaled by bus_shift.  Then clamp
-it to a maximum of 255, per PCI.  Use a data type of int to avoid
-overflow problems.
+Changes from v1: Factor out the device tree access code to a separate
+function in drivers/of/irq.c
 
-Update host-generic-pci.txt to clarify the semantics of the "reg"
-property with respect to non-zero starting bus numbers.
+David Daney (2):
+  of/irq: Add new function of_msi_map_rid()
+  irqchip/gicv3-its:  Handle OF device tree "msi-map" properties.
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
-No change from v2.
-Change from v1: Added text to host-generic-pci.txt
+Mark Rutland (1):
+  Docs: dt: Add PCI MSI map bindings
 
- Documentation/devicetree/bindings/pci/host-generic-pci.txt | 4 +++-
- drivers/pci/host/pci-host-generic.c                        | 7 ++++---
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v3-its-pci-msi.c          |   3 +-
+ drivers/of/irq.c                                  |  86 +++++++++
+ include/linux/of_irq.h                            |   7 +
+ 4 files changed, 315 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-index cf3e205..105a968 100644
---- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-@@ -34,7 +34,9 @@ Properties of the host controller node:
- - #size-cells    : Must be 2.
- 
- - reg            : The Configuration Space base address and size, as accessed
--                   from the parent bus.
-+                   from the parent bus.  The base address corresponds to
-+                   bus zero, even though the "bus-range" property may specify
-+                   a different starting bus number.
- 
- 
- Properties of the /chosen node:
-diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-index 77cf4bd..0a9c453 100644
---- a/drivers/pci/host/pci-host-generic.c
-+++ b/drivers/pci/host/pci-host-generic.c
-@@ -164,7 +164,7 @@ out_release_res:
- static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
- {
- 	int err;
--	u8 bus_max;
-+	int bus_max;
- 	resource_size_t busn;
- 	struct resource *bus_range;
- 	struct device *dev = pci->host.dev.parent;
-@@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
- 	}
- 
- 	/* Limit the bus-range to fit within reg */
--	bus_max = pci->cfg.bus_range->start +
--		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
-+	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
-+	if (bus_max > 255)
-+		bus_max = 255;
- 	pci->cfg.bus_range->end = min_t(resource_size_t,
- 					pci->cfg.bus_range->end, bus_max);
- 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
