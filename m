@@ -1,69 +1,56 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Wed, 23 Sep 2015 16:15:19 +0100
-Message-ID: <20150923161519.15e0dd87@arm.com>
-References: <1442801587-3812-1-git-send-email-lftan@altera.com>
-	<1442801587-3812-4-git-send-email-lftan@altera.com>
-	<20150922193320.37997c15@arm.com>
-	<CAFiDJ5-JTmU39wZ7A+h3X37zj8M09+6mmUxK=J2DOaD9VzPC5w@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/4] serial: bcm2835: add auxiliary uart1 to device tree
+ of bcm2835
+Date: Wed, 23 Sep 2015 09:18:53 -0600
+Message-ID: <5602C2DD.20805@wwwdotorg.org>
+References: <1441974053-2630-1-git-send-email-kernel@martin.sperl.org>
+ <1441974053-2630-4-git-send-email-kernel@martin.sperl.org>
+ <5600C011.8020402@wwwdotorg.org> <5602788E.3070103@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFiDJ5-JTmU39wZ7A+h3X37zj8M09+6mmUxK=J2DOaD9VzPC5w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5602788E.3070103-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Sep 2015 17:33:09 +0800
-Ley Foon Tan <lftan@altera.com> wrote:
+On 09/23/2015 04:01 AM, Martin Sperl wrote:
+> On 22.09.2015 04:42, Stephen Warren wrote:
+>> On 09/11/2015 05:20 AM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+>>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>>>
+>>> Add the auxiliary uart1 device to the device tree of the bcm2835 SOC.
+>>
+>>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi
+>>> b/arch/arm/boot/dts/bcm2835.dtsi
+>>
+>>> +        uart1: uart@7e215040 {
+>>> +            compatible = "ns16550";
+>>
+>> compatible should always include a precise HW-specific value; something
+>> like brcm,bcm2835-aux-uart. That way, if we find some other issue that
+>> needs working around on this HW in the future, all DTs will already
+>> contain the compatible value that SW needs in order to trigger that
+>> workaround. That's a generally true statement; i.e. irrespective of
+>> anything else in this series.
+>>
+>> I don't believe "ns16550" should be in the compatible value for this
+>> device, since the device cannot be successfully driven by SW that only
+>> knows about a standard 16650 UART. SW must know about the different
+>> divider, and there is no possibility of SW knowing about that before
+>> this series.
+>>
+>
+> OK - I will look into creating a separate driver then that uses the 8250
+> implementation as a basis...
 
-> On Wed, Sep 23, 2015 at 2:33 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > On Mon, 21 Sep 2015 10:13:04 +0800
-> > Ley Foon Tan <lftan@altera.com> wrote:
-> >
-> >> This patch adds the Altera PCIe host controller driver.
-> >>
-> >> Signed-off-by: Ley Foon Tan <lftan@altera.com>
-> >> ---
-> >>  drivers/pci/host/Kconfig       |   8 +
-> >>  drivers/pci/host/Makefile      |   1 +
-> >>  drivers/pci/host/pcie-altera.c | 591 +++++++++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 600 insertions(+)
-> >>  create mode 100644 drivers/pci/host/pcie-altera.c
-> >>
-> >> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> >> index d5e58ba..df9ed4f 100644
-> >> --- a/drivers/pci/host/Kconfig
-> >> +++ b/drivers/pci/host/Kconfig
-> >> @@ -145,4 +145,12 @@ config PCIE_IPROC_BCMA
-> >>         Say Y here if you want to use the Broadcom iProc PCIe controller
-> >>         through the BCMA bus interface
-> >>
-> >> +config PCIE_ALTERA
-> >> +     tristate "Altera PCIe controller"
-> >> +     depends on ARCH_SOCFPGA || NIOS2
-> >> +     select PCI_DOMAINS
-> >> +     help
-> >> +       Say Y here if you want to enable PCIe controller support for Altera
-> >> +       SoCFPGA family of SoCs.
-> >> +
-> >
-> > Is there anything in this driver that is actually specific to any of
-> > these two platforms/architectures? I'd don't think we should restrict
-> > if we can avoid it (hint: the companion MSI driver is not restricted to
-> > any architecture).
-> No specific dependency on these 2 architectures. Then I will remove this.
-
-OK. If you fix this, you can put my
-
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-
-on this patch.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
+I expect all you need to do is add a new PORT_* value to the existing 
+driver (which then drives some new quirk setting re: the clock rate), 
+and add new entry for the compatible value in of_platform_serial_table[] 
+in drivers/tty/serial/of_serial.c to select the correct TYPE_*.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
