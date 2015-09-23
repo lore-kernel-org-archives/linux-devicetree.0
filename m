@@ -1,34 +1,50 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: set up trigger type for edt-ft5x06
- interrupts
-Date: Wed, 23 Sep 2015 05:16:38 -0700
-Message-ID: <20150923121637.GG3529@tiger>
-References: <5044530af510d6686e78f8dfa912d89ef824f899.1442079408.git.dmitry.torokhov@gmail.com>
- <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov@gmail.com>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 0/3] Add Palmas iio gpadc
+Date: Wed, 23 Sep 2015 14:48:44 +0200
+Message-ID: <86F849CB-1A50-4BEB-99C6-79FF97971DCB@goldelico.com>
+References: <1437657169.3419965.331206849.51D66A2E@webmail.messagingengine.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437657169.3419965.331206849.51D66A2E@webmail.messagingengine.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Marek Belisko <marek@goldelico.com>, Pradeep Goudagunta <pgoudagunta@nvidia.com>, Nikolaus Schaller <hns@goldelico.com>, Laxman Dewangan <ldewangan@nvidia.com>, gg@slimlogic.co.uk, jic23@jic23.retrosnub.co.uk
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-iio@vger.kernel.org, notaz@openpandora.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 12, 2015 at 10:45:51AM -0700, Dmitry Torokhov wrote:
-> Now that the driver respects IRQ trigger settings from device tree, let's
-> fix them up in individual DTSes (note that the driver is still compatible
-> with older DTSes).
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-...
->  arch/arm/boot/dts/imx28-tx28.dts      | 3 ++-
->  arch/arm/boot/dts/imx53-tx53-x03x.dts | 3 ++-
->  arch/arm/boot/dts/imx6qdl-tx6.dtsi    | 3 ++-
+Add iio driver for the TI Palmas (twl6035, 6037) including device tree bindings.
+It enables the gpadc for the OMAP5 uevm.
 
-Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch series is based on original code taken from Android Tegra kernels:
+(https://android.googlesource.com/kernel/tegra/+/aaabb2e045f31e5a970109ffdaae900dd403d17e/drivers/staging/iio/adc)
+
+Tegra code was developed by:
+Pradeep Goudagunta <pgoudagunta@nvidia.com>
+Laxman Dewangan <ldewangan@nvidia.com>
+
+Edited and extended for mainline by:
+H. Nikolaus Schaller <hns@goldelico.com>
+Marek Belisko <marek@goldelico.com>
+
+
+
+H. Nikolaus Schaller (2):
+ iio:adc: add iio driver for Palmas (twl6035/7) gpadc
+ ARM: dts: omap5-uevm: enable iio gpadc for Palmas
+
+Marek Belisko (1):
+ iio:adc:palmas: add DT support
+
+.../devicetree/bindings/iio/adc/palmas-gpadc.txt   |  67 ++
+arch/arm/boot/dts/omap5-uevm.dts                   |  22 +
+drivers/iio/adc/Kconfig                            |   9 +
+drivers/iio/adc/Makefile                           |   1 +
+drivers/iio/adc/palmas_gpadc.c                     | 883 +++++++++++++++++++++
+include/linux/mfd/palmas.h                         |  59 +-
+6 files changed, 1037 insertions(+), 4 deletions(-)
+create mode 100644 Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
+create mode 100644 drivers/iio/adc/palmas_gpadc.c
+
+-- 
+2.5.1
