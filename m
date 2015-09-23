@@ -1,40 +1,45 @@
-From: Ming Lei <ming.lei@canonical.com>
-Subject: Re: [RFC 0/5] console/acpi: add DBG2 and SPCR console configuration
-Date: Wed, 23 Sep 2015 15:38:20 +0800
-Message-ID: <CACVXFVPEJb-RXLgU0V+HduoENquUs3oDGWsUtCvH+TOSRMYiUg@mail.gmail.com>
-References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, al.stone@linaro.org, torez@redhat.com, Jon Masters <jcm@redhat.com>, G Gregory <graeme.gregory@linaro.org>, linaro-acpi@lists.linaro.org, Lv Zheng <lv.zheng@intel.com>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: [PATCH v2] ARM: dts: exynos5420: fix wrong clock binding for
+ sysmmu_fimd1_1
+Date: Wed, 23 Sep 2015 16:41:55 +0900
+Message-ID: <1442994115-20167-1-git-send-email-jy0922.shim@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, stable@vger.kernel.org, k.kozlowski@samsung.com, kgene@kernel.org, m.szyprowski@samsung.com, javier@osg.samsung.com, jy0922.shim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Leif,
+The sysmmu_fimd1_1 should bind the clock CLK_SMMU_FIMD1M1, not the clock
+CLK_SMMU_FIMD1M0. CLK_SMMU_FIMD1M0 is a clock for the sysmmu_fimd1_0.
 
+This wrong clock binding causes the problem that is blocked in iommu_map
+function when IOMMU is enabled and exynos-drm driver tries to allocate
+buffer via DMA mapping API on Odroid-XU3 board.
 
-On Tue, Sep 8, 2015 at 8:43 PM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> Support for configuring bootconsole and console via the ACPI tables
-> DBG2 (Debug Port Table 2) [1] and SPCR (Serial Port Console Redirection
-> Table) [2], defined by Microsoft, has been discussed on and off over the
-> years.
->
-> [1] https://msdn.microsoft.com/en-us/library/windows/hardware/dn639131(v=vs.85).aspx
-> [2] https://msdn.microsoft.com/en-us/library/windows/hardware/dn639132(v=vs.85).aspx
->
-> Licensing concerns have prevented this happening in the past, but as of
-> 10 August 2015, these tables have both been released also under OWF 1.0
-> (http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0)
-> which is think is noncontroversially GPL-compatible?
->
-> This set is a first attempt at implementing this.
+Fixes: b70045167815 ("ARM: dts: add sysmmu nodes for exynos5420")
+Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
+Cc: <stable@vger.kernel.org> # v4.2
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
+Changes for v2:
+- Update the commit message
+- Add Fixes: and Reviewed-by: tags
 
->From distribution view, the patchset looks very useful.
+ arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have one simple question, are there other candidates for conveying this kind
-of information like what DBG2/SPCR does? Or are DBG2 and SPCR the
-offical speficiations to do such things in ARM server industry?
-
-Thanks,
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index df9aee9..1b3d6c7 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -1117,7 +1117,7 @@
+ 		interrupt-parent = <&combiner>;
+ 		interrupts = <3 0>;
+ 		clock-names = "sysmmu", "master";
+-		clocks = <&clock CLK_SMMU_FIMD1M0>, <&clock CLK_FIMD1>;
++		clocks = <&clock CLK_SMMU_FIMD1M1>, <&clock CLK_FIMD1>;
+ 		power-domains = <&disp_pd>;
+ 		#iommu-cells = <0>;
+ 	};
+-- 
+1.9.1
