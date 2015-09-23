@@ -1,59 +1,90 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v11 3/4] add FPGA manager core
-Date: Wed, 23 Sep 2015 11:15:16 -0500
-Message-ID: <alpine.DEB.2.02.1509231101050.23595@linuxheads99>
-References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
- <1442935271-10375-4-git-send-email-atull@opensource.altera.com>
- <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
- <20150923132354.GB31253@amd> <20150923141106.GH4953@mwanda>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] PCI: Add quirks for devices found on Cavium ThunderX
+ SoCs.
+Date: Wed, 23 Sep 2015 09:24:17 -0700
+Message-ID: <5602D231.5090709@caviumnetworks.com>
+References: <1442529694-1792-1-git-send-email-ddaney.cavm@gmail.com> <3066583.BWDZlYWxXU@wuerfel> <55FC4330.10302@caviumnetworks.com> <2512701.zkjk3n3AQS@wuerfel> <55FCB3AC.8080709@caviumnetworks.com> <20150922131916.GE27964@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150923141106.GH4953@mwanda>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, linux-kernel@vger.kernel.org, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, akpm@linux-foundation.org, monstr@monstr.eu, Pavel Machek <pavel@denx.de>, gregkh@linuxfoundation.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, Josh Cartwright <joshc@ni.com>, dinguyen@opensource.altera.com, delicious.quinoa@gm
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150922131916.GE27964-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Sep 2015, Dan Carpenter wrote:
+On 09/22/2015 06:19 AM, Bjorn Helgaas wrote:
+> Hi David,
+>
+> On Fri, Sep 18, 2015 at 06:00:28PM -0700, David Daney wrote:
+>> On 09/18/2015 12:45 PM, Arnd Bergmann wrote:
+>>> On Friday 18 September 2015 10:00:32 David Daney wrote:
+>>>> On 09/18/2015 12:19 AM, Arnd Bergmann wrote:
+>>>>> On Thursday 17 September 2015 15:41:33 David Daney wrote:
+>>>>>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>>>>>
+>>>>>> The on-chip devices all have fixed bars.  So, fix them up.
+>>>>>>
+>>>>>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>>>>>
+>>>>>
+>>>>> You should be able to just mark the BARs as fixed in DT
+>>
+>> I think we can switch to PCI_PROBE_ONLY, and have all non-fixed BAR
+>> devices configured by firmware.  This may significantly simplify any
+>> quirks required in the kernel.
+>
+> I don't like PCI_PROBE_ONLY, and I'd like to avoid it when we can.
 
-> On Wed, Sep 23, 2015 at 03:23:54PM +0200, Pavel Machek wrote:
-> > > > +int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
-> > > > +			   const char *image_name)
-> > > > +{
-> > > > +	struct device *dev = &mgr->dev;
-> > > > +	const struct firmware *fw;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!mgr)
-> > > > +		return -ENODEV;
-> > > 
-> > > Again; I'm of the opinion this is needlessly defensive.
-> > 
-> > Not only that, it can never happen. mgr is already dereferenced above.
-> > 
-> 
-> It's not dereferenced.  We're taking the address of mgr->dev but we
-> don't dereference mgr.
-> 
-> regards,
-> dan carpenter
-> 
-> 
+I don't like it either, but if it were the only way the PCI maintainers 
+would allow us to support the hardware, I would rewrite the firmware to 
+make it possible.  However, as you say below ...
 
-That's correct, it's not dereferenced.
+>
+> Your original patch description said the on-chip devices have "fixed
+> BARs."  In what sense are they "fixed"?  I assume they are writable
+> enough so we can learn their sizes?
 
-Is there some community agreement on whether we want to check a pointer
-that has been passed for NULL or not?  This is C code after all.  Checking
-a passed pointer for NULL is a very common reason to return -ENODEV.
+Yes.  The BAR registers are writable, but ignored.  So, the size is 
+correctly probed.  The BAR registers are initialized by 
+hardware/firmware to the proper value.
 
-Alan
+>  If we can't learn their sizes, we
+> have bigger problems because we can't tell what space is used.
+>
+> Are there other parts of the system, e.g., run-time firmware, that
+> depend on the devices not being moved?
+
+The devices cannot move, the address decoding is not programmable.  The 
+BAR registers are provided as an aid in integrating the devices with OS 
+PCI infrastructure.  Although, one might argue that they don't do a very 
+good job of adhering to the PCI specifications...
+
+>
+>>>> For the record:  The PCI Enhanced Allocation (EA) capability (approved
+>>>> by PCI SIG on 23 October 2014) is the proper way to handle this going
+>>>> forward.  However, this is not yet implemented in the SoCs that this
+>>>> patch addresses.  Our plan is to implement the EA capability in the core
+>>>> PCI code, so that we do not need to keep adding devices to this fixup code.
+>
+> Sean Stalley has posted some patches to add EA support to Linux, but I
+> haven't merged them yet.  If we had that, another option would be to
+> hook into your config accessors and fabricate an EA capability.
+
+To me, this is the most interesting part of your message.  If you really 
+would accept a config read accessor that presented a synthetic EA 
+capability, that would be ideal.  We know exactly which roots contain 
+the fixed devices, so it would be a trivial exercise to provide a custom 
+config accessor.
+
+I am going to work on this in hope of eventual acceptance of this strategy.
+
+Thanks,
+David Daney
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
