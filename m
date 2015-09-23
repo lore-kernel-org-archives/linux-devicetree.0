@@ -1,110 +1,69 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: RE: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to
- the driver
-Date: Wed, 23 Sep 2015 15:12:36 +0000
-Message-ID: <3802E9A6666DF54886E2B9CBF743BA9801C08CA1@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1440690558-39822-1-git-send-email-anuragku@xilinx.com>
- <20150921155712.GN2381@localhost>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Wed, 23 Sep 2015 16:15:19 +0100
+Message-ID: <20150923161519.15e0dd87@arm.com>
+References: <1442801587-3812-1-git-send-email-lftan@altera.com>
+	<1442801587-3812-4-git-send-email-lftan@altera.com>
+	<20150922193320.37997c15@arm.com>
+	<CAFiDJ5-JTmU39wZ7A+h3X37zj8M09+6mmUxK=J2DOaD9VzPC5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150921155712.GN2381@localhost>
-Content-Language: en-US
+In-Reply-To: <CAFiDJ5-JTmU39wZ7A+h3X37zj8M09+6mmUxK=J2DOaD9VzPC5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Dan Williams <dan.j.williams@intel.com>, "afaerber@suse.de" <afaerber@suse.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Wed, 23 Sep 2015 17:33:09 +0800
+Ley Foon Tan <lftan@altera.com> wrote:
 
-Thanks for reviewing the patch
-
-> -----Original Message-----
-> From: Vinod Koul [mailto:vinod.koul@intel.com]
-> Sent: Monday, September 21, 2015 9:27 PM
-> To: Anurag Kumar Vulisha
-> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Michal
-> Simek; Soren Brinkmann; Dan Williams; afaerber@suse.de; Maxime Ripard;
-> Laurent Pinchart; Appana Durga Kedareswara Rao; Anirudha Sarangi; Srikanth
-> Vemula; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org; Anurag Kumar
-> Vulisha
-> Subject: Re: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to
-> the driver
->
-> On Thu, Aug 27, 2015 at 09:19:18PM +0530, Anurag Kumar Vulisha wrote:
-> > This VDMA  is a soft ip, which can be programmed to support
-> > 32 bit addressing or greater than 32 bit addressing.
+> On Wed, Sep 23, 2015 at 2:33 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > On Mon, 21 Sep 2015 10:13:04 +0800
+> > Ley Foon Tan <lftan@altera.com> wrote:
 > >
-> > When the VDMA ip is configured for 32 bit address space the transfer
-> > start address is specified by a single register.
->
-> would be good to specfiy which one
->
+> >> This patch adds the Altera PCIe host controller driver.
+> >>
+> >> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+> >> ---
+> >>  drivers/pci/host/Kconfig       |   8 +
+> >>  drivers/pci/host/Makefile      |   1 +
+> >>  drivers/pci/host/pcie-altera.c | 591 +++++++++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 600 insertions(+)
+> >>  create mode 100644 drivers/pci/host/pcie-altera.c
+> >>
+> >> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> >> index d5e58ba..df9ed4f 100644
+> >> --- a/drivers/pci/host/Kconfig
+> >> +++ b/drivers/pci/host/Kconfig
+> >> @@ -145,4 +145,12 @@ config PCIE_IPROC_BCMA
+> >>         Say Y here if you want to use the Broadcom iProc PCIe controller
+> >>         through the BCMA bus interface
+> >>
+> >> +config PCIE_ALTERA
+> >> +     tristate "Altera PCIe controller"
+> >> +     depends on ARCH_SOCFPGA || NIOS2
+> >> +     select PCI_DOMAINS
+> >> +     help
+> >> +       Say Y here if you want to enable PCIe controller support for Altera
+> >> +       SoCFPGA family of SoCs.
+> >> +
+> >
+> > Is there anything in this driver that is actually specific to any of
+> > these two platforms/architectures? I'd don't think we should restrict
+> > if we can avoid it (hint: the companion MSI driver is not restricted to
+> > any architecture).
+> No specific dependency on these 2 architectures. Then I will remove this.
 
-Will change  this in v3
+OK. If you fix this, you can put my
 
-> > When the  VDMA core is configured for an address space greater than 32
-> > then each start address is specified by a combination of two
-> > registers. The first register specifies the LSB 32 bits of address,
-> > while the next register specifies the MSB 32 bits of address.For
-> > example,5Ch will specify the LSB 32 bits while 60h will specify the
-> > MSB 32 bits of the first start address.So we need to program two
-> > registers at a time.
->
-> can we have spaces after full stops and commas!
->
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Will take care of this in v3 patch.
-
-> > +/* Since vdma driver is trying to write to a register offset which is
-> > +not a
-> > + * multiple of 64 bits(ex : 0x5c), we are writing as two separate 32
-> > +bits
-> > + * instead of a single 64 bit register write.
-> > + */
->
-> This is not kernel style for multi-lines, pls refer to
-> Documentation/CodingStyle
->
-
-Will address this in v3 patch
-
-> > +
-> > +static inline void vdma_desc_write_64(struct xilinx_vdma_chan *chan,
-> u32 reg,
-> > +                            u32 value_lsb, u32 value_msb)
-> > +{
-> > +   /* Write the lsb 32 bits*/
-> > +   writel(value_lsb, chan->xdev->regs + chan->desc_offset + reg);
-> > +
-> > +   /* Write the msb 32 bits */
-> > +   writel(value_msb, chan->xdev->regs + chan->desc_offset + reg + 4);
->
-> why not writeq
-
-We are trying to write at a register address(ex:0x5c) which is not aligned on 8 bytes  boundary.So if I try to use 64 bit write on it,unalignment  fault is getting  generated.To avoid that we are using two separate 32  bit writes.
-We had this discussion in previous versions of this patch with Laurent Pinchart .I have also added this exaplanation in the comments above this function.
-
->
-> > +   err = of_property_read_u32(node, "xlnx,addrwidth", &addr_width);
-> > +
-> > +   if (err < 0) {
-> > +           /* Setting addr_width property to default 32 bits */
-> > +           addr_width = 32;
-> > +   }
->
-> braces for a single line statement! Also space is redandant before if condition
->
-
-Will take care of this in v3 patch
+on this patch.
 
 Thanks,
-Anurag Kumar V
 
-> --
-> ~Vinod
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+	M.
+-- 
+Jazz is not dead. It just smells funny.
