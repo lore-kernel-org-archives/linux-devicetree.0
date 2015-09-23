@@ -1,44 +1,35 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v5 05/11] power: bq24257: Add SW-based approach for Power
- Good determination
-Date: Wed, 23 Sep 2015 15:02:56 -0500
-Message-ID: <20150923200255.GC32687@beast>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
- <1442612399-341-6-git-send-email-dannenberg@ti.com>
- <20150922193719.GD9949@earth>
- <20150923193427.GA32687@beast>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+Date: Wed, 23 Sep 2015 22:45:28 +0200
+Message-ID: <2795004.Hn5xt30nZN@wuerfel>
+References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com> <20150923193545.GZ7356@arm.com> <1707525.QvfFzUYq4E@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150923193427.GA32687@beast>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1707525.QvfFzUYq4E@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <ddaney@caviumnetworks.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 23, 2015 at 02:34:27PM -0500, Andreas Dannenberg wrote:
-> On Tue, Sep 22, 2015 at 09:37:20PM +0200, Sebastian Reichel wrote:
+On Wednesday 23 September 2015 21:39:27 Arnd Bergmann wrote:
+> On Wednesday 23 September 2015 20:35:45 Will Deacon wrote:
 > > 
-> > I guess you can just handle this like an optional gpio
-> > 
-> > if(bq->pg)
-> >     state->power_good = !gpiod_get_value_cansleep(bq->pg);
-> > else
-> >     ...
+> > From what Lorenzo was saying, ACPI shares the interpretation that David is
+> > implementing here and, given that the DT version seems to be subjective,
+> > aligning this reg property with MMCFG seems to make sense.
 > 
-> What happens when somebody wants to use GPIO number 0? According to
-> gpio_is_valid() this is a valid GPIO so technically I should not use a
-> check against zero to see whether the user has configured a GPIO for
-> this purpose and wants to use it, no?
+> We should then make it very clear in the binding that the driver
+> is not allowed to actually map the registers for the buses outside
+> of the bus-range, as that is highly unusual.
 
-Ok never mind I figured it out. bq->pg is of type gpio_desc and not the
-actual GPIO number. Together with your suggestion of how to use gpiod_*
-in combination with platform data this will be a nice simplification!
+One more point here: I think ACPI does something different here,
+it lists the base address of mmconfig space of the the PCI domain
+that the host bridge belongs to. In contrast, in DT the 'reg'
+property is defined as the registers belonging to the host bridge
+itself, and the DT does not say anything about domains at all
+(aside from the linux,pci-domain property that is not mandatory
+and a Linux-specific extension).
 
-Regards,
-
---
-Andreas Dannenberg
-Texas Instruments Inc
-
+	Arnd
