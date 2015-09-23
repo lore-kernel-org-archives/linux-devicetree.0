@@ -1,93 +1,44 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] irqchip/gicv3-its: Handle OF device tree "msi-map"
- properties.
-Date: Wed, 23 Sep 2015 20:23:37 +0100
-Message-ID: <5602FC39.6090404@arm.com>
-References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
- <1442966406-13198-4-git-send-email-ddaney.cavm@gmail.com>
- <20150923180100.03844936@arm.com> <5602DC97.1040505@caviumnetworks.com>
- <20150923175259.GT7356@arm.com> <20150923191834.1764ca02@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+Date: Wed, 23 Sep 2015 21:27:41 +0200
+Message-ID: <3751968.n8LRgots8n@wuerfel>
+References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com> <20150923180157.GV7356@arm.com> <5602EDC4.3040603@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150923191834.1764ca02-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5602EDC4.3040603@caviumnetworks.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Daney <ddaney@caviumnetworks.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23/09/15 19:18, Marc Zyngier wrote:
-> On Wed, 23 Sep 2015 18:52:59 +0100
-> Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->
->> On Wed, Sep 23, 2015 at 06:08:39PM +0100, David Daney wrote:
->>> On 09/23/2015 10:01 AM, Marc Zyngier wrote:
->>>> On Tue, 22 Sep 2015 17:00:06 -0700
->>>> David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>
->>>>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>>>
->>>>> Call of_msi_map_rid() to handle mapping of the requester id.
->>>>>
->>>>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>>> ---
->>>>>    drivers/irqchip/irq-gic-v3-its-pci-msi.c | 3 ++-
->>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
->>>>> index cf351c6..8b1c938 100644
->>>>> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
->>>>> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
->>>>> @@ -86,7 +86,8 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
->>>>>    	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
->>>>>
->>>>>    	/* ITS specific DeviceID, as the core ITS ignores dev. */
->>>>> -	info->scratchpad[0].ul = dev_alias.dev_id;
->>>>> +	info->scratchpad[0].ul = of_msi_map_rid(dev, domain->of_node,
->>>>> +						dev_alias.dev_id);
->>>>>
->>>>>    	return msi_info->ops->msi_prepare(domain->parent,
->>>>>    					  dev, dev_alias.count, info);
->>>>
->>>> I really wonder if that shouldn't be part of the pci_for_each_dma_alias
->>>> call. It would make a lot more sense for this functionality to be an
->>>> integral part of the core code, and would probably make the integration
->>>> of _IORT (which has the exact same requirements) a bit easier.
->>>>
->>>> Thoughts?
->>>>
->>>
->>> I am a proponent of pushing things like this as far into the core code
->>> as possible.  So, from that point of view, I think it would probably be
->>> a good idea.
->>>
->>> I can prepare a patch that does that, but it would also be nice hear
->>> from other maintainers and get their thoughts on this.
->>
->> Hmm, we use pci_for_each_dma_alias in the SMMU drivers to get the SID,
->> so I'm not sure that using the MSI mapping is necessarily the right thing
->> to do there. Maybe we should instead have dma_alias_to_msi_id helpers or
->> something?
->
-> Yes, that's probably a sensible solution.
+On Wednesday 23 September 2015 11:21:56 David Daney wrote:
+> >>
+> >>      /* Limit the bus-range to fit within reg */
+> >> -    bus_max = pci->cfg.bus_range->start +
+> >> -              (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> >> +    bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> >> +    if (bus_max > 255)
+> >> +            bus_max = 255;
+> >
+> > I still don't understand the need for this part. If the cfg space is bigger
+> > than bus_max, isn't that simply an invalid resource? Given that the resource
+> > could be broken in other ways too, this check feels more like a specific
+> > workaround rather than generally useful code.
+> 
+> Imagine...
+> 
+>    bus-range [0x80 .. 0xff], this requires a cfg.res that will cover the 
+> entire range of 0..0xff.
+> 
+>    according to the calculations above, (resource_size(&pci->cfg.res) >> 
+> pci->cfg.ops.bus_shift) - 1 will have a value of 0xff, so...
 
-Seconded; take a look at all the additional bus-walking 
-iommu_group_get_for_pci_dev does between the call to 
-pci_for_each_dma_alias and the group = iommu_group_alloc() line - I'd 
-say it's only at the latter point, when there are no aliases found on 
-the PCI side, that it would then need to check the external RID-SID 
-mapping to see if there is any further aliasing downstream of the root 
-complex (and possibly liaise with the IOMMU driver to retrieve an 
-appropriate group, but let's worry about that bit later).
+Extending the computation to 32 bit seems fine, but I'd rather warn loudly
+if the bus range does not fit within the registers.
 
-Robin.
+Also note that the computation is already correct with my interpretation
+of the reg property.
 
->
-> 	M.
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
