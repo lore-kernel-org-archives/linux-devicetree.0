@@ -1,59 +1,77 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/4] Documentation: bindings: mfd: cros ec: document
- vbc EC property
-Date: Wed, 23 Sep 2015 01:34:01 +0100
-Message-ID: <20150923003401.GB16510@x1>
-References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1442842703-5309-3-git-send-email-emilio.lopez@collabora.co.uk>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v5 01/11] dt: power: bq24257-charger: Cover additional
+ devices
+Date: Wed, 23 Sep 2015 02:34:15 +0200
+Message-ID: <20150923003414.GB4359@earth>
+References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
+ <1442612399-341-2-git-send-email-dannenberg@ti.com>
+ <20150922162448.GE4235@earth>
+ <20150922215823.GA30297@beast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1442842703-5309-3-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio.lopez@collabora.co.uk>
-Cc: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20150922215823.GA30297@beast>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Sep 2015, Emilio L=C3=B3pez wrote:
 
-> Some EC implementations include a small nvram space used to store
-> verified boot context data. This boolean property lets us indicate
-> whether this space is available or not on a specific EC implementatio=
-n.
->=20
-> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
-> ---
->=20
-> Patch is new in v3, split from 3/4
->=20
->  Documentation/devicetree/bindings/mfd/cros-ec.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Docu=
-mentation/devicetree/bindings/mfd/cros-ec.txt
-> index 1777916..136e0c2 100644
-> --- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-> @@ -34,6 +34,10 @@ Required properties (LPC):
->  - compatible: "google,cros-ec-lpc"
->  - reg: List of (IO address, size) pairs defining the interface uses
-> =20
-> +Optional properties (all):
-> +- google,has-vbc-nvram: Some implementations of the EC include a sma=
-ll
-> +  nvram space used to store verified boot context data. This boolean=
- flag
-> +  is used to specify whether this nvram is present or not.
+--JYK4vJDZwFMowpUq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is there no way to check for this at runtime?
+Hi,
 
->  Example for I2C:
-> =20
+On Tue, Sep 22, 2015 at 04:58:24PM -0500, Andreas Dannenberg wrote:
+> On Tue, Sep 22, 2015 at 06:24:48PM +0200, Sebastian Reichel wrote:
+> > On Fri, Sep 18, 2015 at 04:39:49PM -0500, Andreas Dannenberg wrote:
+> > > Extend the bq24257 charger's device tree documentation to cover the
+> > > bq24250 and bq24251 devices as well feature additions.
+> >=20
+> > The binding looks fine to except for:
+> >=20
+> > > +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively t=
+he pin can
+> > > +    also be defined through the standard interrupt definition proper=
+ties (see
+> > > +    optional properties section below). Only use one method.
+> >=20
+> > Why do you expose two ways for this?
+>=20
+> Hi Sebastian. The original driver exposed this - it just didn't
+> document it in the DT binding doc. I'm not sure why this was introduced
+> in the first place (Laurentiu?). I know we can't change the API but
+> since it was never documented maybe we can remove it?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+It seems this is neither documented, nor used. So I guess it can be
+removed. Let's wait for feedback from Laurentiu, though.
+
+-- Sebastian
+
+--JYK4vJDZwFMowpUq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWAfOGAAoJENju1/PIO/qaXPMP/iornNTJzenD7SJfS6LNVP8d
+p+E/DRV4eVPseBR836b8gy+UnCYADIwyWOFPJ8uPVs2ZX5J46hcDDUTZcgfc1Lap
+5e0vFYg76Epzybti5v4m8Q+R9sgbnDlE2bXJ6rxpXKueVEMW9NA06C2KvpU0apxP
+dGe7CI7/SIqwIdjjdK8eEp2h2qtDNGkWnGiOOS+nhhoOfCygyfZAWKqjj1o0+PZs
+sFbZr3B5mpuE6BbxdkJPORI8Hjoodyd/4iExiM4FdFB4j+BO/eDBdAnQ1rSV5znt
+XKKaryr0Y2pTkZ2jOS3d1MELSQGq8inVCH8xtGKwU04hZMTvfhGWHCnE/VGBrj2W
+8YQhcV9Ci++t538gJZTQCDt3OQw8z/b/rfhwvMupIY+OOoA94EscB+RUPh1sIc0/
+w4bHrm+lRguZpKcRyi+w2WY+GEZEsBIjk9acU+g97xDmVThKFXhARZlffN57rbss
+otXpVi3fC1cyvWu8AXuwgwdYx2z3YjdjQ8h8DzMp15y7rFO9ktznUBU4PVlrApaL
+capDvf3A8SzVFsSmCXT1rjvcEO9+OiARWxnqsUaAxQUrmzFfC5pF02MCs3QQQbe+
+dRO8nfgeHf1qRDI9sEfsaSiCK0F18VOK3zZ7u3sS3iaK4IJb7Zn4q0N+bTMoDJpS
+w9Z7WrDTUBP6t4Pu0MZi
+=jXa4
+-----END PGP SIGNATURE-----
+
+--JYK4vJDZwFMowpUq--
