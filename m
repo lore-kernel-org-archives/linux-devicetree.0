@@ -1,78 +1,34 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 09/11] power: bq24257: Allow input current limit sysfs
- access
-Date: Wed, 23 Sep 2015 02:29:06 +0200
-Message-ID: <20150923002906.GA4359@earth>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
- <1442612399-341-10-git-send-email-dannenberg@ti.com>
- <20150922191649.GA9949@earth>
- <20150922221044.GB30297@beast>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 1/4] clk: clk-vf610: Add clock for Vybrid OCOTP
+ controller
+Date: Tue, 22 Sep 2015 17:31:14 -0700
+Message-ID: <20150923003114.GB3529@tiger>
+References: <cover.1441609625.git.maitysanchayan@gmail.com>
+ <ca85ab571ba312ea75a4d33543e5dbb8745e7190.1441609625.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150922221044.GB30297@beast>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <ca85ab571ba312ea75a4d33543e5dbb8745e7190.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 07, 2015 at 01:51:35PM +0530, Sanchayan Maity wrote:
+> Add clock support for Vybrid On-Chip One Time Programmable
+> (OCOTP) controller.
+> 
+> While the OCOTP block does not require explicit clock gating,
+> for programming the OCOTP timing register the clock rate of
+> ipg clock is required for timing calculations related to fuse
+> and shadow register read sequence. We explicitly specify the
+> ipg clock for OCOTP as a result.
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 22, 2015 at 05:10:45PM -0500, Andreas Dannenberg wrote:
-> On Tue, Sep 22, 2015 at 09:16:49PM +0200, Sebastian Reichel wrote:
-> > On Fri, Sep 18, 2015 at 04:39:57PM -0500, Andreas Dannenberg wrote:
-> > > This patch allows reading (and writing, if the D+/D- USB signal-based
-> > > charger type detection is disabled) of the input current limit through
-> > > the power supply's input_current_limit sysfs property. This allows
-> > > userspace to see what charger was detected and to re-configure the
-> > > maximum current drawn from the external supply at runtime based on
-> > > system-level knowledge or user input.
-> >=20
-> > Maybe also support writing into input_current_limit in auto mode.
-> > Just disable auto detection until "auto" is written into sysfs node.
->=20
-> Auto-detection was enabled by default in the original driver so I think
-> that should be left intact. I added the ability to manually override
-> this via DT with a fixed value, and then configure said fixed value
-> through sysfs at runtime.
->=20
-> I'm not 100% clear on the usecase of runtime enabling/disabling auto so
-> I'd rather leave the implementation as-is. Either auto mode is enabled
-> or not -- and this is directly tied to the DT setting. But if someone
-> has a strong usecase for this I can certainly add it.
-
-For some usb power supplies auto-detection doesn't work very well,
-resulting in a 100mA default fallback. Users knowing their hardware
-could force charging with the correct input current limitation.
-
--- Sebastian
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWAfJPAAoJENju1/PIO/qaEGYP/2Ykr5YV0PNzJiEXw81Fec5N
-xeOAs67S2JJW66qx4GuVt5LtEX+fLsH6wP19fJe/1ATNWVtH49OTpms0PSyYZc9m
-WCQY/MIrGpgNRc/kPxCINm6Kw0HH3JArOnOGb0Af0EpVbcpmkGYoBbiSiFJ4J5O3
-3peLqkffpAnF5n4wH8V70YmJEE/qbvXGV57imMnMAXp41N5ZUC8jJ4rrXKr6wT6y
-C5A07e6FtUzJ6dIJlTJ2xMb0KGxTL78gUpykpRhUDaoBJ9ieH4RYjVuk/+iuyw7r
-mvz9NuGbAZnHSUgsz7qV50wGgEezImx8nhDNqEUMdE+wO9a912v19XvxWx9LM8B7
-TLybaoNBv1Lor5OIPx4QGWRyNoJIu0TLI5zQS7WgeYIhiVu6OkIZBK8cOhesrJp5
-KMAfWca8yW3IYs48CgghG1nn0vN9G1J2aR1QUX/KfbPDp1rD7fkdgTnwBjvYGk6x
-SydL9CJprajs0YOCiFCKT6xGtchaO3lwvcCHyoG3mNa94MSV52354t/EvMFApjdr
-hWtrTrobciZBl/n9CUjPxEg3zw0jiWjLNVTHSzM1P7W5Sm/rIoI2Tdtkjjn1Dm3I
-Z196W40X4OJO0ibkePqxiEYVRaQtag3TFNO3zQ/HSswlr+AHOdsGDSyYqaGMGM7+
-bfzPP8MR6qM/DhX0cWwW
-=3rwV
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+Applied this one, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
