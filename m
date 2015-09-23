@@ -1,340 +1,235 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] net: mdio-octeon: Add PCI driver binding.
-Date: Tue, 22 Sep 2015 17:41:36 -0700
-Message-ID: <1442968896-30776-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v11 1/4] usage documentation for FPGA manager core
+Date: Tue, 22 Sep 2015 17:50:24 -0700
+Message-ID: <CAAtXAHf0S8dscv4UiVqq2rOUcuy9dk2kMXHVp_mXbDKu8fEbnA@mail.gmail.com>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
+ <1442935271-10375-2-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1442935271-10375-2-git-send-email-atull@opensource.altera.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Alan Tull <atull@opensource.altera.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, Nicolas Pitre <nico@linaro.org>, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Kumar Gala <galak@codeaurora.org>, broonie@kernel.org, Philip Balister <philip@balister.org>, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, balbi@ti.c
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Hi Alan,
 
-When the Cavium mdio-octeon devices appear in the Thunder family of
-arm64 based SoCs, they show up as PCI devices.  Add PCI driver
-wrapping so the driver is bound in the standard PCI device scan.
+On Tue, Sep 22, 2015 at 8:21 AM,  <atull@opensource.altera.com> wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+>
+> Add a document on the new FPGA manager core.
+>
 
-When in this form, a single PCI device may have more than a single
-bus, we call this a "nexus" of buses.  The standard firmware
-device_for_each_child_node() iterator is used to find the individual
-buses underneath the "nexus".
+Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
 
-Update the device tree binding documentation for the new PCI driver
-binding.
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+> v9:  initial version where this patch was added
+>
+> v10: requested cleanups to formatting and otherwise
+>      s/fpga/FPGA/g
+>      rewrite implementation section to not reference socfpga.c by name
+>      other rewrites
+>      Moved to Documentation/fpga/
+>
+> v11: s/with image/with an image/
+>      s/on the path/in the path/
+> ---
+>  Documentation/fpga/fpga-mgr.txt |  171 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 171 insertions(+)
+>  create mode 100644 Documentation/fpga/fpga-mgr.txt
+>
+> diff --git a/Documentation/fpga/fpga-mgr.txt b/Documentation/fpga/fpga-mgr.txt
+> new file mode 100644
+> index 0000000..ce3e84f
+> --- /dev/null
+> +++ b/Documentation/fpga/fpga-mgr.txt
+> @@ -0,0 +1,171 @@
+> +FPGA Manager Core
+> +
+> +Alan Tull 2015
+> +
+> +Overview
+> +========
+> +
+> +The FPGA manager core exports a set of functions for programming an FPGA with
+> +an image.  The API is manufacturer agnostic.  All manufacturer specifics are
+> +hidden away in a low level driver which registers a set of ops with the core.
+> +The FPGA image data itself is very manufacturer specific, but for our purposes
+> +it's just binary data.  The FPGA manager core won't parse it.
+> +
+> +
+> +API Functions:
+> +==============
+> +
+> +To program the FPGA from a file or from a buffer:
+> +-------------------------------------------------
+> +
+> +       int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags,
+> +                             const char *buf, size_t count);
+> +
+> +Load the FPGA from an image which exists as a buffer in memory.
+> +
+> +       int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
+> +                                  const char *image_name);
+> +
+> +Load the FPGA from an image which exists as a file.  The image file must be on
+> +the firmware search path (see the firmware class documentation).
+> +
+> +For both these functions, flags == 0 for normal full reconfiguration or
+> +FPGA_MGR_PARTIAL_RECONFIG for partial reconfiguration.  If successful, the FPGA
+> +ends up in operating mode.  Return 0 on success or a negative error code.
+> +
+> +
+> +To get/put a reference to a FPGA manager:
+> +-----------------------------------------
+> +
+> +       struct fpga_manager *of_fpga_mgr_get(struct device_node *node);
+> +
+> +       void fpga_mgr_put(struct fpga_manager *mgr);
+> +
+> +Given a DT node, get an exclusive reference to a FPGA manager or release
+> +the reference.
+> +
+> +
+> +To register or unregister the low level FPGA-specific driver:
+> +-------------------------------------------------------------
+> +
+> +       int fpga_mgr_register(struct device *dev, const char *name,
+> +                             const struct fpga_manager_ops *mops,
+> +                             void *priv);
+> +
+> +       void fpga_mgr_unregister(struct device *dev);
+> +
+> +Use of these two functions is described below in "How To Support a new FPGA
+> +device."
+> +
+> +
+> +How to write an image buffer to a supported FPGA
+> +================================================
+> +/* Include to get the API */
+> +#include <linux/fpga/fpga-mgr.h>
+> +
+> +/* device node that specifies the FPGA manager to use */
+> +struct device_node *mgr_node = ...
+> +
+> +/* FPGA image is in this buffer.  count is size of the buffer. */
+> +char *buf = ...
+> +int count = ...
+> +
+> +/* flags indicates whether to do full or partial reconfiguration */
+> +int flags = 0;
+> +
+> +int ret;
+> +
+> +/* Get exclusive control of FPGA manager */
+> +struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
+> +
+> +/* Load the buffer to the FPGA */
+> +ret = fpga_mgr_buf_load(mgr, flags, buf, count);
+> +
+> +/* Release the FPGA manager */
+> +fpga_mgr_put(mgr);
+> +
+> +
+> +How to write an image file to a supported FPGA
+> +==============================================
+> +/* Include to get the API */
+> +#include <linux/fpga/fpga-mgr.h>
+> +
+> +/* device node that specifies the FPGA manager to use */
+> +struct device_node *mgr_node = ...
+> +
+> +/* FPGA image is in this file which is in the firmware search path */
+> +const char *path = "fpga-image-9.rbf"
+> +
+> +/* flags indicates whether to do full or partial reconfiguration */
+> +int flags = 0;
+> +
+> +int ret;
+> +
+> +/* Get exclusive control of FPGA manager */
+> +struct fpga_manager *mgr = of_fpga_mgr_get(mgr_node);
+> +
+> +/* Get the firmware image (path) and load it to the FPGA */
+> +ret = fpga_mgr_firmware_load(mgr, flags, path);
+> +
+> +/* Release the FPGA manager */
+> +fpga_mgr_put(mgr);
+> +
+> +
+> +How to support a new FPGA device
+> +================================
+> +To add another FPGA manager, write a driver that implements a set of ops.  The
+> +probe function calls fpga_mgr_register(), such as:
+> +
+> +static const struct fpga_manager_ops socfpga_fpga_ops = {
+> +       .write_init = socfpga_fpga_ops_configure_init,
+> +       .write = socfpga_fpga_ops_configure_write,
+> +       .write_complete = socfpga_fpga_ops_configure_complete,
+> +       .state = socfpga_fpga_ops_state,
+> +};
+> +
+> +static int socfpga_fpga_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct socfpga_fpga_priv *priv;
+> +       int ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       /* ... do ioremaps, get interrupts, etc. and save
+> +          them in priv... */
+> +
+> +       return fpga_mgr_register(dev, "Altera SOCFPGA FPGA Manager",
+> +                                &socfpga_fpga_ops, priv);
+> +}
+> +
+> +static int socfpga_fpga_remove(struct platform_device *pdev)
+> +{
+> +       fpga_mgr_unregister(&pdev->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +
+> +The ops will implement whatever device specific register writes are needed to
+> +do the programming sequence for this particular FPGA.  These ops return 0 for
+> +success or negative error codes otherwise.
+> +
+> +The programming sequence is:
+> + 1. .write_init
+> + 2. .write (may be called once or multiple times)
+> + 3. .write_complete
+> +
+> +The .write_init function will prepare the FPGA to receive the image data.
+> +
+> +The .write function writes a buffer to the FPGA. The buffer may be contain the
+> +whole FPGA image or may be a smaller chunk of an FPGA image.  In the latter
+> +case, this function is called multiple times for successive chunks.
+> +
+> +The .write_complete function is called after all the image has been written
+> +to put the FPGA into operating mode.
+> +
+> +The ops include a .state function which will read the hardware FPGA manager and
+> +return a code of type enum fpga_mgr_states.  It doesn't result in a change in
+> +hardware state.
+> --
+> 1.7.9.5
+>
 
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/net/cavium-mdio.txt        |  61 +++++++-
- drivers/net/phy/mdio-octeon.c                      | 159 +++++++++++++++++++--
- 2 files changed, 209 insertions(+), 11 deletions(-)
+Cheers,
 
-diff --git a/Documentation/devicetree/bindings/net/cavium-mdio.txt b/Documentation/devicetree/bindings/net/cavium-mdio.txt
-index 04cb749..020df08 100644
---- a/Documentation/devicetree/bindings/net/cavium-mdio.txt
-+++ b/Documentation/devicetree/bindings/net/cavium-mdio.txt
-@@ -1,9 +1,12 @@
- * System Management Interface (SMI) / MDIO
- 
- Properties:
--- compatible: "cavium,octeon-3860-mdio"
-+- compatible: One of:
- 
--  Compatibility with all cn3XXX, cn5XXX and cn6XXX SOCs.
-+   "cavium,octeon-3860-mdio": Compatibility with all cn3XXX, cn5XXX
-+                       and cn6XXX SOCs.
-+
-+   "cavium,thunder-8890-mdio": Compatibility with all cn8XXX SOCs.
- 
- - reg: The base address of the MDIO bus controller register bank.
- 
-@@ -25,3 +28,57 @@ Example:
- 			reg = <0>;
- 		};
- 	};
-+
-+
-+* System Management Interface (SMI) / MDIO Nexus
-+
-+  Several mdio buses may be gathered as children of a single PCI
-+  device, this PCI device is the nexus of the buses.
-+
-+Properties:
-+
-+- compatible: "cavium,thunder-8890-mdio-nexus";
-+
-+- reg: The PCI device and function numbers of the nexus device.
-+
-+- #address-cells: Must be <2>.
-+
-+- #size-cells: Must be <2>.
-+
-+- ranges: As needed for mapping of the MDIO bus device registers.
-+
-+- assigned-addresses: As needed for mapping of the MDIO bus device registers.
-+
-+Example:
-+
-+        mdio-nexus@1,3 {
-+                compatible = "cavium,thunder-8890-mdio-nexus";
-+                #address-cells = <2>;
-+                #size-cells = <2>;
-+                reg = <0x0b00 0 0 0 0>; /* DEVFN = 0x0b (1:3) */
-+                assigned-addresses = <0x03000000 0x87e0 0x05000000 0x0 0x800000>;
-+                ranges = <0x87e0 0x05000000 0x03000000 0x87e0 0x05000000 0x0 0x800000>;
-+
-+                mdio0@87e0,05003800 {
-+                        compatible = "cavium,thunder-8890-mdio";
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+                        reg = <0x87e0 0x05003800 0x0 0x30>;
-+
-+                        ethernet-phy@0 {
-+                                ...
-+                                reg = <0>;
-+                        };
-+                };
-+                mdio0@87e0,05003880 {
-+                        compatible = "cavium,thunder-8890-mdio";
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+                        reg = <0x87e0 0x05003880 0x0 0x30>;
-+
-+                        ethernet-phy@0 {
-+                                ...
-+                                reg = <0>;
-+                        };
-+                };
-+        };
-diff --git a/drivers/net/phy/mdio-octeon.c b/drivers/net/phy/mdio-octeon.c
-index fcf4e4d..21eca35 100644
---- a/drivers/net/phy/mdio-octeon.c
-+++ b/drivers/net/phy/mdio-octeon.c
-@@ -3,7 +3,7 @@
-  * License.  See the file "COPYING" in the main directory of this archive
-  * for more details.
-  *
-- * Copyright (C) 2009-2012 Cavium, Inc.
-+ * Copyright (C) 2009-2015 Cavium, Inc.
-  */
- 
- #include <linux/platform_device.h>
-@@ -14,6 +14,7 @@
- #include <linux/gfp.h>
- #include <linux/phy.h>
- #include <linux/io.h>
-+#include <linux/pci.h>
- 
- #ifdef CONFIG_CAVIUM_OCTEON_SOC
- #include <asm/octeon/octeon.h>
-@@ -110,8 +111,6 @@ enum octeon_mdiobus_mode {
- struct octeon_mdiobus {
- 	struct mii_bus *mii_bus;
- 	u64 register_base;
--	resource_size_t mdio_phys;
--	resource_size_t regsize;
- 	enum octeon_mdiobus_mode mode;
- 	int phy_irq[PHY_MAX_ADDR];
- };
-@@ -269,6 +268,8 @@ static int octeon_mdiobus_probe(struct platform_device *pdev)
- {
- 	struct octeon_mdiobus *bus;
- 	struct resource *res_mem;
-+	resource_size_t mdio_phys;
-+	resource_size_t regsize;
- 	union cvmx_smix_en smi_en;
- 	int err = -ENOENT;
- 
-@@ -282,17 +283,17 @@ static int octeon_mdiobus_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
- 
--	bus->mdio_phys = res_mem->start;
--	bus->regsize = resource_size(res_mem);
-+	mdio_phys = res_mem->start;
-+	regsize = resource_size(res_mem);
- 
--	if (!devm_request_mem_region(&pdev->dev, bus->mdio_phys, bus->regsize,
-+	if (!devm_request_mem_region(&pdev->dev, mdio_phys, regsize,
- 				     res_mem->name)) {
- 		dev_err(&pdev->dev, "request_mem_region failed\n");
- 		return -ENXIO;
- 	}
- 
- 	bus->register_base =
--		(u64)devm_ioremap(&pdev->dev, bus->mdio_phys, bus->regsize);
-+		(u64)devm_ioremap(&pdev->dev, mdio_phys, regsize);
- 	if (!bus->register_base) {
- 		dev_err(&pdev->dev, "dev_ioremap failed\n");
- 		return -ENOMEM;
-@@ -308,7 +309,7 @@ static int octeon_mdiobus_probe(struct platform_device *pdev)
- 
- 	bus->mii_bus->priv = bus;
- 	bus->mii_bus->irq = bus->phy_irq;
--	bus->mii_bus->name = "mdio-octeon";
-+	bus->mii_bus->name = KBUILD_MODNAME;
- 	snprintf(bus->mii_bus->id, MII_BUS_ID_SIZE, "%llx", bus->register_base);
- 	bus->mii_bus->parent = &pdev->dev;
- 
-@@ -356,7 +357,7 @@ MODULE_DEVICE_TABLE(of, octeon_mdiobus_match);
- 
- static struct platform_driver octeon_mdiobus_driver = {
- 	.driver = {
--		.name		= "mdio-octeon",
-+		.name		= KBUILD_MODNAME,
- 		.of_match_table = octeon_mdiobus_match,
- 	},
- 	.probe		= octeon_mdiobus_probe,
-@@ -371,6 +372,146 @@ EXPORT_SYMBOL(octeon_mdiobus_force_mod_depencency);
- 
- module_platform_driver(octeon_mdiobus_driver);
- 
-+#ifdef CONFIG_PCI
-+
-+struct thunder_mdiobus_nexus {
-+	void __iomem *bar0;
-+	struct octeon_mdiobus *buses[4];
-+};
-+
-+static int thunder_mdiobus_pci_probe(struct pci_dev *pdev,
-+				     const struct pci_device_id *ent)
-+{
-+	struct device_node *node;
-+	struct fwnode_handle *fwn;
-+	struct thunder_mdiobus_nexus *nexus;
-+	int err;
-+	int i;
-+
-+	nexus = devm_kzalloc(&pdev->dev, sizeof(*nexus), GFP_KERNEL);
-+	if (!nexus)
-+		return -ENOMEM;
-+
-+	pci_set_drvdata(pdev, nexus);
-+
-+	err = pcim_enable_device(pdev);
-+	if (err) {
-+		dev_err(&pdev->dev, "Failed to enable PCI device\n");
-+		pci_set_drvdata(pdev, NULL);
-+		return err;
-+	}
-+
-+	err = pci_request_regions(pdev, KBUILD_MODNAME);
-+	if (err) {
-+		dev_err(&pdev->dev, "pci_request_regions failed\n");
-+		goto err_disable_device;
-+	}
-+
-+	nexus->bar0 = pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
-+	if (!nexus->bar0) {
-+		err = -ENOMEM;
-+		goto err_release_regions;
-+	}
-+
-+	i = 0;
-+	device_for_each_child_node(&pdev->dev, fwn) {
-+		struct resource r;
-+		struct octeon_mdiobus *bus;
-+		union cvmx_smix_en smi_en;
-+
-+		/* If it is not an OF node we cannot handle it yet, so
-+		 * exit the loop.
-+		 */
-+		node = to_of_node(fwn);
-+		if (!node)
-+			break;
-+
-+		err = of_address_to_resource(node, 0, &r);
-+		if (err) {
-+			dev_err(&pdev->dev,
-+				"Couldn't translate address for \"%s\"\n",
-+				node->name);
-+			break;
-+		}
-+		bus = devm_kzalloc(&pdev->dev, sizeof(struct octeon_mdiobus),
-+				   GFP_KERNEL);
-+
-+		if (!bus)
-+			break;
-+
-+		nexus->buses[i] = bus;
-+		i++;
-+
-+		bus->register_base = (u64)nexus->bar0 +
-+			r.start - pci_resource_start(pdev, 0);
-+
-+		bus->mii_bus = mdiobus_alloc();
-+		if (!bus->mii_bus)
-+			break;
-+
-+		smi_en.u64 = 0;
-+		smi_en.s.en = 1;
-+		oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
-+		bus->mii_bus->priv = bus;
-+		bus->mii_bus->irq = bus->phy_irq;
-+		bus->mii_bus->name = KBUILD_MODNAME;
-+		snprintf(bus->mii_bus->id, MII_BUS_ID_SIZE, "%llx", r.start);
-+		bus->mii_bus->parent = &pdev->dev;
-+		bus->mii_bus->read = octeon_mdiobus_read;
-+		bus->mii_bus->write = octeon_mdiobus_write;
-+
-+		err = of_mdiobus_register(bus->mii_bus, node);
-+		if (err)
-+			dev_err(&pdev->dev, "of_mdiobus_register failed\n");
-+
-+		dev_info(&pdev->dev, "Added bus at %llx\n", r.start);
-+		if (i >= ARRAY_SIZE(nexus->buses))
-+			break;
-+	}
-+	return 0;
-+
-+err_release_regions:
-+	pci_release_regions(pdev);
-+
-+err_disable_device:
-+	pci_set_drvdata(pdev, NULL);
-+	return err;
-+}
-+
-+static void thunder_mdiobus_pci_remove(struct pci_dev *pdev)
-+{
-+	int i;
-+	union cvmx_smix_en smi_en;
-+	struct thunder_mdiobus_nexus *nexus = pci_get_drvdata(pdev);
-+
-+	for (i = 0; i < ARRAY_SIZE(nexus->buses); i++) {
-+		struct octeon_mdiobus *bus = nexus->buses[i];
-+
-+		if (!bus)
-+			continue;
-+
-+		mdiobus_unregister(bus->mii_bus);
-+		mdiobus_free(bus->mii_bus);
-+		smi_en.u64 = 0;
-+		oct_mdio_writeq(smi_en.u64, bus->register_base + SMI_EN);
-+	}
-+	pci_set_drvdata(pdev, NULL);
-+}
-+
-+static const struct pci_device_id thunder_mdiobus_id_table[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, 0xa02b) },
-+	{ 0, } /* End of table. */
-+};
-+MODULE_DEVICE_TABLE(pci, thunder_mdiobus_id_table);
-+
-+static struct pci_driver thunder_mdiobus_driver = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = thunder_mdiobus_id_table,
-+	.probe = thunder_mdiobus_pci_probe,
-+	.remove = thunder_mdiobus_pci_remove,
-+};
-+module_pci_driver(thunder_mdiobus_driver);
-+#endif /* CONFIG_PCI */
- MODULE_DESCRIPTION(DRV_DESCRIPTION);
- MODULE_VERSION(DRV_VERSION);
- MODULE_AUTHOR("David Daney");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Moritz
