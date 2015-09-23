@@ -1,46 +1,162 @@
 From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] Docs: dt: Add PCI MSI map bindings
-Date: Wed, 23 Sep 2015 17:37:48 +0100
-Message-ID: <20150923173748.0c684c6a@arm.com>
+Subject: Re: [PATCH v2 2/3] of/irq: Add new function of_msi_map_rid()
+Date: Wed, 23 Sep 2015 17:52:16 +0100
+Message-ID: <20150923175216.3384d7b4@arm.com>
 References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
-	<1442966406-13198-2-git-send-email-ddaney.cavm@gmail.com>
+	<1442966406-13198-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442966406-13198-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1442966406-13198-3-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Sep 2015 17:00:04 -0700
+On Tue, 22 Sep 2015 17:00:05 -0700
 David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 > 
-> Currently msi-parent is used by a few bindings to describe the
-> relationship between a PCI root complex and a single MSI controller, but
-> this property does not have a generic binding document.
+> The device tree property "msi-map" specifies how to create the PCI
+> requester id used in some MSI controllers.  Add a new function
+> of_msi_map_rid() that finds the msi-map property and applies its
+> translation to a given requester id.
 > 
-> Additionally, msi-parent is insufficient to describe more complex
-> relationships between MSI controllers and devices under a root complex,
-> where devices may be able to target multiple MSI controllers, or where
-> MSI controllers use (non-probeable) sideband information to distinguish
-> devices.
-> 
-> This patch adds a generic binding for mapping PCI devices to MSI
-> controllers. This document covers msi-parent, and a new msi-map property
-> (specific to PCI*) which may be used to map devices (identified by their
-> Requester ID) to sideband data for each MSI controller that they may
-> target.
-> 
-> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 > Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/of/irq.c       | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_irq.h |  7 ++++
+>  2 files changed, 93 insertions(+)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 55317fa..3f64d2e 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -598,3 +598,89 @@ void of_msi_configure(struct device *dev, struct device_node *np)
+>  		d = irq_find_host(msi_np);
+>  	dev_set_msi_domain(dev, d);
+>  }
+> +
+> +/**
+> + * of_msi_map_rid - Map a MSI requester ID for a device.
+> + * @dev: device for which the mapping is to be done.
+> + * @msi_np: device node of the expected msi controller.
+> + * @rid_in: unmapped MSI requester ID for the device.
+> + *
+> + * Walk up the device hierarchy looking for devices with a "msi-map"
+> + * property.  If found, apply the mapping to @rid_in.
+> + *
+> + * Returns the mapped MSI requester ID.
+> + */
+> +u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
+> +{
+> +	struct device *parent_dev;
+> +	struct device_node *msi_controller_node;
+> +	const __be32 *msi_map;
+> +	u32 map_mask, masked_rid;
+> +	u32 rid_base, msi_base, rid_len, phandle;
+> +	int msi_map_len;
+> +	bool matched;
+> +	u32 rid_out = rid_in;
+> +
+> +	/*
+> +	 * Walk up the device parent links looking for one with a
+> +	 * "msi-map" property.
+> +	 */
+> +	msi_map = NULL;
+> +	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
+> +		if (!parent_dev->of_node)
+> +			continue;
+> +
+> +		msi_map = of_get_property(parent_dev->of_node,
+> +					  "msi-map", &msi_map_len);
+> +		if (!msi_map)
+> +			continue;
+> +
+> +		if (msi_map_len % (4 * sizeof(__be32))) {
+> +			dev_err(parent_dev, "Error: Bad msi-map length: %d\n",
+> +				msi_map_len);
+> +			goto out;
+> +		}
+> +		/* We have a good parent_dev and msi_map, let's use them. */
+> +		break;
+> +	}
+> +	if (!msi_map)
+> +		goto out;
+> +
+> +	/* The default is to select all bits. */
+> +	map_mask = 0xffffffff;
+> +
+> +	/*
+> +	 * Can be overridden by "msi-map-mask" property.  If
+> +	 * of_property_read_u32() fails, the default is used.
+> +	 */
+> +	of_property_read_u32(parent_dev->of_node, "msi-map-mask", &map_mask);
+> +
+> +	masked_rid = map_mask & rid_in;
+> +	matched = false;
+> +	while (!matched && msi_map_len >= 4 * sizeof(__be32)) {
+> +		rid_base = be32_to_cpup(msi_map + 0);
+> +		phandle = be32_to_cpup(msi_map + 1);
+> +		msi_base = be32_to_cpup(msi_map + 2);
+> +		rid_len = be32_to_cpup(msi_map + 3);
 
-I thought I had done it already, but nevertheless:
+Rob did suggest to use of_property_read_u32_index() instead of these
+be32_to_cpup(). Not sure if that'd be a major improvement though.
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> +
+> +		msi_controller_node = of_find_node_by_phandle(phandle);
+> +
+> +		matched = masked_rid >= rid_base &&
+> +			masked_rid < rid_base + rid_len &&
+> +			msi_np == msi_controller_node;
+> +
+> +		of_node_put(msi_controller_node);
+> +		msi_map_len -= 4 * sizeof(__be32);
+> +		msi_map += 4;
+> +	}
+> +	if (!matched)
+> +		goto out;
+> +
+> +	rid_out = masked_rid + msi_base;
+> +	dev_dbg(dev,
+> +		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
+> +		dev_name(parent_dev), map_mask, rid_base, msi_base,
+> +		rid_len, rid_in, rid_out);
+> +out:
+> +	return rid_out;
+> +}
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index 4bcbd58..8cd9334 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -75,6 +75,7 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+>  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+>  extern struct device_node *of_irq_find_parent(struct device_node *child);
+>  extern void of_msi_configure(struct device *dev, struct device_node *np);
+> +u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
+>  
+>  #else /* !CONFIG_OF */
+>  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+> @@ -87,6 +88,12 @@ static inline void *of_irq_find_parent(struct device_node *child)
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline u32 of_msi_map_rid(struct device *dev,
+> +				 struct device_node *msi_np, u32 rid_in)
+> +{
+> +	return rid_in;
+> +}
+>  #endif /* !CONFIG_OF */
+>  
+>  #endif /* __OF_IRQ_H */
+
+Otherwise looks good to me.
+
+Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
 	M.
 -- 
