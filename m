@@ -1,44 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in bus_max calculation.
-Date: Wed, 23 Sep 2015 21:27:41 +0200
-Message-ID: <3751968.n8LRgots8n@wuerfel>
-References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com> <20150923180157.GV7356@arm.com> <5602EDC4.3040603@caviumnetworks.com>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCHv3] arm64: dts: Add base stratix 10 dtsi
+Date: Wed, 23 Sep 2015 14:30:33 -0500
+Message-ID: <CADhT+wf91qp=bGPk5kZj=_QP6qKeBmx1UJda_4+u3av7uO+m7A@mail.gmail.com>
+References: <1442353625-4552-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5602EDC4.3040603@caviumnetworks.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: David Daney <ddaney@caviumnetworks.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442353625-4552-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 September 2015 11:21:56 David Daney wrote:
-> >>
-> >>      /* Limit the bus-range to fit within reg */
-> >> -    bus_max = pci->cfg.bus_range->start +
-> >> -              (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
-> >> +    bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
-> >> +    if (bus_max > 255)
-> >> +            bus_max = 255;
-> >
-> > I still don't understand the need for this part. If the cfg space is bigger
-> > than bus_max, isn't that simply an invalid resource? Given that the resource
-> > could be broken in other ways too, this check feels more like a specific
-> > workaround rather than generally useful code.
-> 
-> Imagine...
-> 
->    bus-range [0x80 .. 0xff], this requires a cfg.res that will cover the 
-> entire range of 0..0xff.
-> 
->    according to the calculations above, (resource_size(&pci->cfg.res) >> 
-> pci->cfg.ops.bus_shift) - 1 will have a value of 0xff, so...
+On Tue, Sep 15, 2015 at 4:47 PM,  <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>
+> Add the base DTS for Altera's SoCFPGA Stratix 10 platform.
+>
+> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+> v3: change #address-cells and #size-cells to <2>
+>     change the GIC address to 0xfffc1000
+>     update the GIC virtual CPU reg length to 0x2000
+> v2: use interrupt-affinity for pmu node
+> ---
+>  arch/arm64/Kconfig.platforms                       |   5 +
+>  arch/arm64/boot/dts/Makefile                       |   1 +
+>  arch/arm64/boot/dts/altera/Makefile                |   5 +
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 357 +++++++++++++++++++++
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  39 +++
+>  arch/arm64/configs/defconfig                       |   1 +
+>  6 files changed, 408 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/altera/Makefile
+>  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+>
 
-Extending the computation to 32 bit seems fine, but I'd rather warn loudly
-if the bus range does not fit within the registers.
+Gentle ping?
 
-Also note that the computation is already correct with my interpretation
-of the reg property.
-
-	Arnd
+Thanks,
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
