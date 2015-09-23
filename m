@@ -1,112 +1,94 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v2] PCI: generic: Add support for Cavium ThunderX PCIe root complexes.
-Date: Tue, 22 Sep 2015 17:16:55 -0700
-Message-ID: <1442967415-13595-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
-Cc: David Daney <david.daney@cavium.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v3 2/3] Documentation: dt: add bindings for TI Wakeup M3 IPC device
+Date: Tue, 22 Sep 2015 19:14:53 -0500
+Message-ID: <1442967294-23837-3-git-send-email-d-gerlach@ti.com>
+References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Keerty J <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+Add the device tree bindings document for the TI Wakeup M3 IPC
+device on AM33xx and AM43xx SoCs. These devices are used by the
+TI wkup_m3_ipc driver, and contain the registers upon which the
+IPC protocol to communicate with the Wakeup M3 processor is
+implemented.
 
-The config space for external PCIe root complexes on some Cavium
-ThunderX SoCs is very similar to CAM and ECAM, but differs in the
-shift values that have to be applied to the bus and devfn numbers to
-compose that address window offset.  These root complexes also have
-the interesting property that there is no root bridge, so the standard
-manner of limiting scanning to only the first device doesn't work.  We
-can use the standard pci-host-generic driver if we make a minor
-addition to handle these differences, so we...
-
-Add a mapping function for ThunderX PCIe root complexes with a bus
-shift of 24 and devfn shift of 16.  Ignore accesses for devices other
-than the first device on the primary bus.
-
-Document the whole thing in devicetree/bindings/pci/host-generic-pci.txt
-
-Signed-off-by: David Daney <david.daney@cavium.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
+v2->v3: Unchanged.
 
-This patch depends on:
-https://lkml.org/lkml/2015/9/22/1189
+ .../devicetree/bindings/soc/ti/wkup_m3_ipc.txt     | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
 
-Changes from v1:
-
-  - Added Acked-by:
-
-  - Removed two patches from the set that were somewhat unrelated.
-
- .../devicetree/bindings/pci/host-generic-pci.txt   |  8 +++---
- drivers/pci/host/pci-host-generic.c                | 29 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-index 105a968..a5aed0f 100644
---- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-@@ -14,9 +14,11 @@ tree bindings communicated in pci.txt:
- 
- Properties of the host controller node:
- 
--- compatible     : Must be "pci-host-cam-generic" or "pci-host-ecam-generic"
--                   depending on the layout of configuration space (CAM vs
--                   ECAM respectively).
-+- compatible     : One of the following with bus:devfn:reg mapped to the
-+                   PCI config space address window in the bit positions shown:
-+                   "pci-host-cam-generic" -- 'CAM'  bits 16:8:0
-+                   "pci-host-ecam-generic" -- 'ECAM'  bits 20:12:0
-+                   "cavium,pci-host-thunder-pem" --  bits 24:16:0
- 
- - device_type    : Must be "pci".
- 
-diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-index b163fdc..853f6f6 100644
---- a/drivers/pci/host/pci-host-generic.c
-+++ b/drivers/pci/host/pci-host-generic.c
-@@ -91,6 +91,32 @@ static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
- 	}
- };
- 
-+static void __iomem *gen_pci_map_cfg_bus_thunder_pem(struct pci_bus *bus,
-+						     unsigned int devfn,
-+						     int where)
-+{
-+	struct gen_pci *pci = bus->sysdata;
-+	resource_size_t idx = bus->number - pci->cfg.bus_range->start;
+diff --git a/Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt b/Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
+new file mode 100644
+index 0000000..4015504
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
+@@ -0,0 +1,57 @@
++Wakeup M3 IPC Driver
++=====================
 +
-+	/*
-+	 * Thunder PEM is a PCIe RC, but without a root bridge.  On
-+	 * the primary bus, ignore accesses for devices other than
-+	 * the first device.
-+	 */
-+	if (idx == 0 && (devfn & ~7u))
-+		return NULL;
-+	return pci->cfg.win[idx] + ((devfn << 16) | where);
-+}
++The TI AM33xx and AM43xx family of devices use a small Cortex M3 co-processor
++(commonly referred to as Wakeup M3 or CM3) to help with various low power tasks
++that cannot be controlled from the MPU, like suspend/resume and certain deep
++C-states for CPU Idle. Once the wkup_m3_ipc driver uses the wkup_m3_rproc driver
++to boot the wkup_m3, it handles communication with the CM3 using IPC registers
++present in the SoC's control module and a mailbox. The wkup_m3_ipc exposes an
++API to allow the SoC PM code to execute specific PM tasks.
 +
-+static struct gen_pci_cfg_bus_ops gen_pci_cfg_thunder_pem_bus_ops = {
-+	.bus_shift	= 24,
-+	.ops		= {
-+		.map_bus	= gen_pci_map_cfg_bus_thunder_pem,
-+		.read		= pci_generic_config_read,
-+		.write		= pci_generic_config_write,
-+	}
-+};
++Wkup M3 Device Node:
++====================
++A wkup_m3_ipc device node is used to represent the IPC registers within an
++SoC.
 +
- static const struct of_device_id gen_pci_of_match[] = {
- 	{ .compatible = "pci-host-cam-generic",
- 	  .data = &gen_pci_cfg_cam_bus_ops },
-@@ -98,6 +124,9 @@ static const struct of_device_id gen_pci_of_match[] = {
- 	{ .compatible = "pci-host-ecam-generic",
- 	  .data = &gen_pci_cfg_ecam_bus_ops },
- 
-+	{ .compatible = "cavium,pci-host-thunder-pem",
-+	  .data = &gen_pci_cfg_thunder_pem_bus_ops },
++Required properties:
++--------------------
++- compatible:		Should be,
++				"ti,am3352-wkup-m3-ipc" for AM33xx SoCs
++				"ti,am4372-wkup-m3-ipc" for AM43xx SoCs
++- reg:			Contains the IPC register address space to communicate
++			with the Wakeup M3 processor
++- interrupts:		Contains the interrupt information for the wkup_m3
++			interrupt that signals the MPU.
++- ti,rproc:		phandle to the wkup_m3 rproc node so the IPC driver
++			can boot it.
++- mboxes:		phandles used by IPC framework to get correct mbox
++			channel for communication. Must point to appropriate
++			mbox_wkupm3 child node.
 +
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, gen_pci_of_match);
++Example:
++--------
++/* AM33xx */
++	l4_wkup: l4_wkup@44c00000 {
++		...
++
++		scm: scm@210000 {
++			compatible = "ti,am3-scm", "simple-bus";
++			reg = <0x210000 0x2000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x210000 0x2000>;
++
++			...
++
++			wkup_m3_ipc: wkup_m3_ipc@1324 {
++				compatible = "ti,am3352-wkup-m3-ipc";
++				reg = <0x1324 0x24>;
++				interrupts = <78>;
++				ti,rproc = <&wkup_m3>;
++				mboxes = <&mailbox &mbox_wkupm3>;
++			};
++
++			...
++		};
++	};
 -- 
-1.9.1
+2.4.6
