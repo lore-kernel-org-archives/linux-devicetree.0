@@ -1,45 +1,38 @@
-From: Joonyoung Shim <jy0922.shim@samsung.com>
-Subject: [PATCH v2] ARM: dts: exynos5420: fix wrong clock binding for
- sysmmu_fimd1_1
-Date: Wed, 23 Sep 2015 16:41:55 +0900
-Message-ID: <1442994115-20167-1-git-send-email-jy0922.shim@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, stable@vger.kernel.org, k.kozlowski@samsung.com, kgene@kernel.org, m.szyprowski@samsung.com, javier@osg.samsung.com, jy0922.shim@samsung.com
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] PCI: generic: Add support for Cavium ThunderX PCIe root complexes.
+Date: Wed, 23 Sep 2015 09:51:30 +0200
+Message-ID: <1524364.fcqUh1gtkt@wuerfel>
+References: <1442967415-13595-1-git-send-email-ddaney.cavm@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1442967415-13595-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-The sysmmu_fimd1_1 should bind the clock CLK_SMMU_FIMD1M1, not the clock
-CLK_SMMU_FIMD1M0. CLK_SMMU_FIMD1M0 is a clock for the sysmmu_fimd1_0.
+On Tuesday 22 September 2015 17:16:55 David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> The config space for external PCIe root complexes on some Cavium
+> ThunderX SoCs is very similar to CAM and ECAM, but differs in the
+> shift values that have to be applied to the bus and devfn numbers to
+> compose that address window offset.  These root complexes also have
+> the interesting property that there is no root bridge, so the standard
+> manner of limiting scanning to only the first device doesn't work.  We
+> can use the standard pci-host-generic driver if we make a minor
+> addition to handle these differences, so we...
+> 
+> Add a mapping function for ThunderX PCIe root complexes with a bus
+> shift of 24 and devfn shift of 16.  Ignore accesses for devices other
+> than the first device on the primary bus.
+> 
+> Document the whole thing in devicetree/bindings/pci/host-generic-pci.txt
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Acked-by: Will Deacon <will.deacon@arm.com>
+> 
 
-This wrong clock binding causes the problem that is blocked in iommu_map
-function when IOMMU is enabled and exynos-drm driver tries to allocate
-buffer via DMA mapping API on Odroid-XU3 board.
-
-Fixes: b70045167815 ("ARM: dts: add sysmmu nodes for exynos5420")
-Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
-Cc: <stable@vger.kernel.org> # v4.2
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
-Changes for v2:
-- Update the commit message
-- Add Fixes: and Reviewed-by: tags
-
- arch/arm/boot/dts/exynos5420.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index df9aee9..1b3d6c7 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -1117,7 +1117,7 @@
- 		interrupt-parent = <&combiner>;
- 		interrupts = <3 0>;
- 		clock-names = "sysmmu", "master";
--		clocks = <&clock CLK_SMMU_FIMD1M0>, <&clock CLK_FIMD1>;
-+		clocks = <&clock CLK_SMMU_FIMD1M1>, <&clock CLK_FIMD1>;
- 		power-domains = <&disp_pd>;
- 		#iommu-cells = <0>;
- 	};
--- 
-1.9.1
+Acked-by: Arnd Bergmann <arnd@arndb.de>
