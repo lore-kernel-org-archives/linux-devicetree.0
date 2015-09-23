@@ -1,124 +1,110 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 09/11] power: bq24257: Allow input current limit sysfs
- access
-Date: Wed, 23 Sep 2015 17:02:28 +0200
-Message-ID: <20150923150228.GA5254@earth>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
- <1442612399-341-10-git-send-email-dannenberg@ti.com>
- <20150922191649.GA9949@earth>
- <20150922221044.GB30297@beast>
- <20150923002906.GA4359@earth>
- <20150923141146.GA6289@borg>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: RE: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to
+ the driver
+Date: Wed, 23 Sep 2015 15:12:36 +0000
+Message-ID: <3802E9A6666DF54886E2B9CBF743BA9801C08CA1@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1440690558-39822-1-git-send-email-anuragku@xilinx.com>
+ <20150921155712.GN2381@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150923141146.GA6289@borg>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150921155712.GN2381@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Dan Williams <dan.j.williams@intel.com>, "afaerber@suse.de" <afaerber@suse.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for reviewing the patch
 
-Hi,
+> -----Original Message-----
+> From: Vinod Koul [mailto:vinod.koul@intel.com]
+> Sent: Monday, September 21, 2015 9:27 PM
+> To: Anurag Kumar Vulisha
+> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Michal
+> Simek; Soren Brinkmann; Dan Williams; afaerber@suse.de; Maxime Ripard;
+> Laurent Pinchart; Appana Durga Kedareswara Rao; Anirudha Sarangi; Srikanth
+> Vemula; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org; Anurag Kumar
+> Vulisha
+> Subject: Re: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to
+> the driver
+>
+> On Thu, Aug 27, 2015 at 09:19:18PM +0530, Anurag Kumar Vulisha wrote:
+> > This VDMA  is a soft ip, which can be programmed to support
+> > 32 bit addressing or greater than 32 bit addressing.
+> >
+> > When the VDMA ip is configured for 32 bit address space the transfer
+> > start address is specified by a single register.
+>
+> would be good to specfiy which one
+>
 
-On Wed, Sep 23, 2015 at 09:11:46AM -0500, Andreas Dannenberg wrote:
-> On Wed, Sep 23, 2015 at 02:29:06AM +0200, Sebastian Reichel wrote:
-> > On Tue, Sep 22, 2015 at 05:10:45PM -0500, Andreas Dannenberg wrote:
-> > > On Tue, Sep 22, 2015 at 09:16:49PM +0200, Sebastian Reichel wrote:
-> > > > On Fri, Sep 18, 2015 at 04:39:57PM -0500, Andreas Dannenberg wrote:
-> > > > > This patch allows reading (and writing, if the D+/D- USB signal-b=
-ased
-> > > > > charger type detection is disabled) of the input current limit th=
-rough
-> > > > > the power supply's input_current_limit sysfs property. This allows
-> > > > > userspace to see what charger was detected and to re-configure the
-> > > > > maximum current drawn from the external supply at runtime based on
-> > > > > system-level knowledge or user input.
-> > > >=20
-> > > > Maybe also support writing into input_current_limit in auto mode.
-> > > > Just disable auto detection until "auto" is written into sysfs node.
-> > >=20
-> > > Auto-detection was enabled by default in the original driver so I thi=
-nk
-> > > that should be left intact. I added the ability to manually override
-> > > this via DT with a fixed value, and then configure said fixed value
-> > > through sysfs at runtime.
-> > >=20
-> > > I'm not 100% clear on the usecase of runtime enabling/disabling auto =
-so
-> > > I'd rather leave the implementation as-is. Either auto mode is enabled
-> > > or not -- and this is directly tied to the DT setting. But if someone
-> > > has a strong usecase for this I can certainly add it.
-> >=20
-> > For some usb power supplies auto-detection doesn't work very well,
-> > resulting in a 100mA default fallback. Users knowing their hardware
-> > could force charging with the correct input current limitation.
->=20
-> Ok. So how should we best go about extending the usage of the
-> 'input_current_limit' sysfs node for this charger? You mentioned
-> writing 'auto' into it should enable the auto-detection mode. I suppose
-> writing a fixed current value will disable it. But how to indicate to
-> the user when reading 'input_current_limit' whether auto mode is enabled
-> or not (I think this is something we should do).
+Will change  this in v3
 
-Right, I haven't thought of this.
+> > When the  VDMA core is configured for an address space greater than 32
+> > then each start address is specified by a combination of two
+> > registers. The first register specifies the LSB 32 bits of address,
+> > while the next register specifies the MSB 32 bits of address.For
+> > example,5Ch will specify the LSB 32 bits while 60h will specify the
+> > MSB 32 bits of the first start address.So we need to program two
+> > registers at a time.
+>
+> can we have spaces after full stops and commas!
+>
 
-> Can we return a mixed number/string like this?
->=20
-> # Example: charger auto detection mode is disabled, and input current
-> # limit is configured as 500mA.
->=20
-> $ cat input_current_limit
-> 500000
->=20
-> # Example: charger auto detection mode is enabled, and a charger
-> # supporting 1A was detected (note the mixed number/string thats
-> # returned)
->=20
-> $ cat input_current_limit
-> 1000000 (auto)
->=20
-> Would that work?
+Will take care of this in v3 patch.
 
-No. sysfs nodes should only contain one value per file.
+> > +/* Since vdma driver is trying to write to a register offset which is
+> > +not a
+> > + * multiple of 64 bits(ex : 0x5c), we are writing as two separate 32
+> > +bits
+> > + * instead of a single 64 bit register write.
+> > + */
+>
+> This is not kernel style for multi-lines, pls refer to
+> Documentation/CodingStyle
+>
 
-> Or should we introduce a new sysfs property?
+Will address this in v3 patch
 
-So maybe keep this patch as is (disallow setting the limit in auto
-mode) and create another file for setting (and getting) the mode.
+> > +
+> > +static inline void vdma_desc_write_64(struct xilinx_vdma_chan *chan,
+> u32 reg,
+> > +                            u32 value_lsb, u32 value_msb)
+> > +{
+> > +   /* Write the lsb 32 bits*/
+> > +   writel(value_lsb, chan->xdev->regs + chan->desc_offset + reg);
+> > +
+> > +   /* Write the msb 32 bits */
+> > +   writel(value_msb, chan->xdev->regs + chan->desc_offset + reg + 4);
+>
+> why not writeq
 
-Also it might be a good idea to return to safe defaults when the
-charger is disconnected (-> reset to DT specified values).
+We are trying to write at a register address(ex:0x5c) which is not aligned on 8 bytes  boundary.So if I try to use 64 bit write on it,unalignment  fault is getting  generated.To avoid that we are using two separate 32  bit writes.
+We had this discussion in previous versions of this patch with Laurent Pinchart .I have also added this exaplanation in the comments above this function.
 
--- Sebastian
+>
+> > +   err = of_property_read_u32(node, "xlnx,addrwidth", &addr_width);
+> > +
+> > +   if (err < 0) {
+> > +           /* Setting addr_width property to default 32 bits */
+> > +           addr_width = 32;
+> > +   }
+>
+> braces for a single line statement! Also space is redandant before if condition
+>
 
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Will take care of this in v3 patch
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Thanks,
+Anurag Kumar V
 
-iQIcBAEBCgAGBQJWAr8AAAoJENju1/PIO/qaI2sP/jgdxRw2VL/3Xhvyb8RC6zSk
-oTv2eDSMSekrzoTiMMNNroMf7x8hU+fmBGqmXvjkn14h1GwpOYNcQ9/Bb2EG7v+L
-kVYYCfOANyQkIxw9sA9Xa+QmqYFLfzHLB7pdupkfOHvkJQnvnS1m/uOIkIkL8XyQ
-EKCb+6kTS2a66Kb4TYJd+Xt6IGipTDKBugrHVRr3WYTgUpc9qgHsLBuDZb5okGDL
-zB+NSQzsCGLqbDpU6PBEz/TB7aw3XvPBqovLJfP3VjAMOW60wlLJQwxwG+Z9O08I
-9cdILtzyg7LQgW9IAzOPgYogDOZDFldDNW16Z5fB8PTSb548U9foAhTwyHKM4yVD
-y11dbArCorhOc7aaWcXO0ckeYRUVByYXEGKZnpOyvtm1mlvQhKORJ+1IKJHO6LAR
-SSmSwuotTcCJv3RrmYwuH73wH6kqLPO9lHrSZc3+BOFmL9gEmFP3I0nP5kCRedI7
-xVP73BQcUx4FEQEdahJEZzVpdUX9ymTZEcoXWPfDEQEhzx6e+g4tR+pFJbXF3C40
-KdguD0RY4RIHXgjE+T1E2rDq9feebDsfEJgqPmd6YbQ8ZZrjXHeNrQfNEHbcZ0yK
-ob9oLlFrkwgrbhMyiDa+OLZDnxvjj2zfkfl5SAwqYcfiMyiTaKr0r6Yr5Xs7BItu
-KTRh1tLP1LSfxcAwvCzD
-=Ifty
------END PGP SIGNATURE-----
+> --
+> ~Vinod
 
---PEIAKu/WMn1b1Hv9--
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
