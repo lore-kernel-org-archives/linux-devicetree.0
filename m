@@ -1,52 +1,113 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v11 3/4] add FPGA manager core
-Date: Wed, 23 Sep 2015 15:23:54 +0200
-Message-ID: <20150923132354.GB31253@amd>
-References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
- <1442935271-10375-4-git-send-email-atull@opensource.altera.com>
- <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH V2 2/2] rc: gpio-ir-recv: add timeout on idle
+Date: Wed, 23 Sep 2015 14:26:40 +0100
+Message-ID: <20150923132640.GA10104@gofer.mess.org>
+References: <1441980024-1944-1-git-send-email-eric@nelint.com>
+ <1442862524-3694-1-git-send-email-eric@nelint.com>
+ <1442862524-3694-3-git-send-email-eric@nelint.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>
-Cc: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, Moritz Fischer <moritz.fischer@ettus.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, Petr Cvek <petr.cvek@tul>
+In-Reply-To: <1442862524-3694-3-git-send-email-eric@nelint.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Eric Nelson <eric@nelint.com>
+Cc: linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> > +++ b/drivers/fpga/fpga-mgr.c
-> > @@ -0,0 +1,382 @@
-> [..]
-> > +int fpga_mgr_buf_load(struct fpga_manager *mgr, u32 flags, const char *buf,
-> > +		      size_t count)
-> > +{
-> > +	struct device *dev = &mgr->dev;
-> > +	int ret;
-> > +
-> > +	if (!mgr)
-> > +		return -ENODEV;
+On Mon, Sep 21, 2015 at 12:08:44PM -0700, Eric Nelson wrote:
+> Many decoders require a trailing space (period without IR illumination)
+> to be delivered before completing a decode.
 > 
-> This seems overly defensive.
+> Since the gpio-ir-recv driver only delivers events on gpio transitions,
+> a single IR symbol (caused by a quick touch on an IR remote) will not
+> be properly decoded without the use of a timer to flush the tail end
+> state of the IR receiver.
 > 
-> [..]
-> > +int fpga_mgr_firmware_load(struct fpga_manager *mgr, u32 flags,
-> > +			   const char *image_name)
-> > +{
-> > +	struct device *dev = &mgr->dev;
-> > +	const struct firmware *fw;
-> > +	int ret;
-> > +
-> > +	if (!mgr)
-> > +		return -ENODEV;
+> This patch initializes and uses a timer and the timeout field of rcdev
+> to complete the stream and allow decode.
 > 
-> Again; I'm of the opinion this is needlessly defensive.
+> The timeout can be overridden through the use of the LIRC_SET_REC_TIMEOUT
+> ioctl.
 
-Not only that, it can never happen. mgr is already dereferenced above.
+Thanks, this is much nicer.
 
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> Signed-off-by: Eric Nelson <eric@nelint.com>
+> ---
+>  drivers/media/rc/gpio-ir-recv.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
+> index 7dbc9ca..d3b216a 100644
+> --- a/drivers/media/rc/gpio-ir-recv.c
+> +++ b/drivers/media/rc/gpio-ir-recv.c
+> @@ -30,6 +30,7 @@ struct gpio_rc_dev {
+>  	struct rc_dev *rcdev;
+>  	int gpio_nr;
+>  	bool active_low;
+> +	struct timer_list flush_timer;
+>  };
+>  
+>  #ifdef CONFIG_OF
+> @@ -93,12 +94,26 @@ static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
+>  	if (rc < 0)
+>  		goto err_get_value;
+>  
+> +	mod_timer(&gpio_dev->flush_timer,
+> +		  jiffies + nsecs_to_jiffies(gpio_dev->rcdev->timeout));
+> +
+>  	ir_raw_event_handle(gpio_dev->rcdev);
+>  
+>  err_get_value:
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void flush_timer(unsigned long arg)
+> +{
+> +	struct gpio_rc_dev *gpio_dev = (struct gpio_rc_dev *)arg;
+> +	DEFINE_IR_RAW_EVENT(ev);
+> +
+> +	ev.timeout = true;
+> +	ev.duration =  gpio_dev->rcdev->timeout;
+
+Nitpick: two spaces, checkpatch would have found this.
+
+> +	ir_raw_event_store(gpio_dev->rcdev, &ev);
+> +	ir_raw_event_handle(gpio_dev->rcdev);
+> +}
+> +
+>  static int gpio_ir_recv_probe(struct platform_device *pdev)
+>  {
+>  	struct gpio_rc_dev *gpio_dev;
+> @@ -144,6 +159,9 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
+>  	rcdev->input_id.version = 0x0100;
+>  	rcdev->dev.parent = &pdev->dev;
+>  	rcdev->driver_name = GPIO_IR_DRIVER_NAME;
+> +	rcdev->min_timeout = 1;
+> +	rcdev->timeout = IR_DEFAULT_TIMEOUT;
+> +	rcdev->max_timeout = 10 * IR_DEFAULT_TIMEOUT;
+>  	if (pdata->allowed_protos)
+>  		rcdev->allowed_protocols = pdata->allowed_protos;
+>  	else
+> @@ -154,6 +172,10 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
+>  	gpio_dev->gpio_nr = pdata->gpio_nr;
+>  	gpio_dev->active_low = pdata->active_low;
+>  
+> +	init_timer(&gpio_dev->flush_timer);
+> +	gpio_dev->flush_timer.function = flush_timer;
+> +	gpio_dev->flush_timer.data = (unsigned long)gpio_dev;
+
+
+You could use "setup_timer(&gpio_dev->flush_timer, flush_timer, (unsigned long)gpio_dev);" here.
+
+
+> +
+>  	rc = gpio_request(pdata->gpio_nr, "gpio-ir-recv");
+>  	if (rc < 0)
+>  		goto err_gpio_request;
+
+You'll need a "del_timer_sync(&gpio_dev->flush_timer);" in 
+gpio_ir_recv_remove() or you'll have a race on remove.
+
+
+Sean
