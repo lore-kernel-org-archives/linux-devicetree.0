@@ -1,68 +1,48 @@
-From: =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] Documentation: bindings: mfd: cros ec: document
- vbc EC property
-Date: Wed, 23 Sep 2015 11:31:22 -0300
-Message-ID: <5602B7BA.8020302@collabora.co.uk>
-References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1442842703-5309-3-git-send-email-emilio.lopez@collabora.co.uk>
- <20150923003401.GB16510@x1>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 5/7] ARM: at91/defconfig: sama5: add PIO4 controller
+ support
+Date: Wed, 23 Sep 2015 16:44:13 +0200
+Message-ID: <5602BABD.7060308@atmel.com>
+References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
+ <1442417823-15850-6-git-send-email-ludovic.desroches@atmel.com>
+ <CACRpkdY0iV+_xyfBSuUPuaRuZLfYYtpLHp5W7a-EYxxKrfEcVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150923003401.GB16510@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY0iV+_xyfBSuUPuaRuZLfYYtpLHp5W7a-EYxxKrfEcVA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Paul Bolle <pebolle@tiscali.nl>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Le 21/09/2015 20:25, Linus Walleij a =C3=A9crit :
+> On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
+> <ludovic.desroches@atmel.com> wrote:
+>=20
+>> SAMA5D2 chip family has a new PIO controller.
+>>
+>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>=20
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Please merge this through Nicolas' AT91 tree.
 
-On 22/09/15 21:34, Lee Jones wrote:
-> On Mon, 21 Sep 2015, Emilio L=C3=B3pez wrote:
->
->> Some EC implementations include a small nvram space used to store
->> verified boot context data. This boolean property lets us indicate
->> whether this space is available or not on a specific EC implementati=
-on.
->>
->> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
->> ---
->>
->> Patch is new in v3, split from 3/4
->>
->>   Documentation/devicetree/bindings/mfd/cros-ec.txt | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Doc=
-umentation/devicetree/bindings/mfd/cros-ec.txt
->> index 1777916..136e0c2 100644
->> --- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
->> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
->> @@ -34,6 +34,10 @@ Required properties (LPC):
->>   - compatible: "google,cros-ec-lpc"
->>   - reg: List of (IO address, size) pairs defining the interface use=
-s
->>
->> +Optional properties (all):
->> +- google,has-vbc-nvram: Some implementations of the EC include a sm=
-all
->> +  nvram space used to store verified boot context data. This boolea=
-n flag
->> +  is used to specify whether this nvram is present or not.
->
-> Is there no way to check for this at runtime?
+Added in the at91-4.4-defconfig branch.
 
-You can issue a read and see if it succeeds, but the problem is that=20
-some EC implementations return success even when they don't implement=20
-the functionality.
+Thanks.
 
-Cheers,
+Paul,
 
-Emilio
+This symbol will appear in Linus W.'s tree and is selected in mine. So
+you may find that the symbol appear unused before the two trees are
+merged in Linux-next or mainline.
+
+Bye,
+--=20
+Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
