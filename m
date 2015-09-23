@@ -1,40 +1,88 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] PCI: generic: Only fixup irqs for bus we are
- creating.
-Date: Wed, 23 Sep 2015 18:59:40 +0100
-Message-ID: <20150923175940.GU7356@arm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in
+ bus_max calculation.
+Date: Wed, 23 Sep 2015 19:01:57 +0100
+Message-ID: <20150923180157.GV7356@arm.com>
 References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com>
- <1442527332-1174-3-git-send-email-ddaney.cavm@gmail.com>
+ <1442527332-1174-5-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1442527332-1174-3-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1442527332-1174-5-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 11:02:09PM +0100, David Daney wrote:
-> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Thu, Sep 17, 2015 at 11:02:11PM +0100, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
-> If we create multiple buses with pci-host-generic, or there are buses
-> created by other drivers, we don't want to call pci_fixup_irqs() which
-> operates on all devices, not just the devices on the bus being added.
-> The consequence is that either the fixups are done more than once, or
-> in some cases incorrect fixups could be applied.
+> There are two problems with the bus_max calculation:
 > 
-> Call pci_bus_fixup_irqs() instead of pci_fixup_irqs().
+> 1) The u8 data type can overflow for large config space windows.
 > 
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> 2) The calculation is incorrect for a bus range that doesn't start at
+>    zero.
+> 
+> Since the configuration space is relative to bus zero, make bus_max
+> just be the size of the config window scaled by bus_shift.  Then clamp
+> it to a maximum of 255, per PCI.  Use a data type of int to avoid
+> overflow problems.
+> 
+> Update host-generic-pci.txt to clarify the semantics of the "reg"
+> property with respect to non-zero starting bus numbers.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 > ---
-> Changes from v1: Moved most of the code to pci_bus_fixup_irqs(),
-> making this patch very simple.
+> Change from v1: Added text to host-generic-pci.txt
+> 
+>  Documentation/devicetree/bindings/pci/host-generic-pci.txt | 4 +++-
+>  drivers/pci/host/pci-host-generic.c                        | 7 ++++---
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> index cf3e205..105a968 100644
+> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> @@ -34,7 +34,9 @@ Properties of the host controller node:
+>  - #size-cells    : Must be 2.
+>  
+>  - reg            : The Configuration Space base address and size, as accessed
+> -                   from the parent bus.
+> +                   from the parent bus.  The base address corresponds to
+> +                   bus zero, even though the "bus-range" property may specify
+> +                   a different starting bus number.
 
-Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+That's a useful clarification, thanks.
+
+>  Properties of the /chosen node:
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index 77cf4bd..0a9c453 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -164,7 +164,7 @@ out_release_res:
+>  static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  {
+>  	int err;
+> -	u8 bus_max;
+> +	int bus_max;
+>  	resource_size_t busn;
+>  	struct resource *bus_range;
+>  	struct device *dev = pci->host.dev.parent;
+> @@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	}
+>  
+>  	/* Limit the bus-range to fit within reg */
+> -	bus_max = pci->cfg.bus_range->start +
+> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+> +	if (bus_max > 255)
+> +		bus_max = 255;
+
+I still don't understand the need for this part. If the cfg space is bigger
+than bus_max, isn't that simply an invalid resource? Given that the resource
+could be broken in other ways too, this check feels more like a specific
+workaround rather than generally useful code.
 
 Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
