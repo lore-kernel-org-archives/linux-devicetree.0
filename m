@@ -1,58 +1,87 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] irqchip/gicv3-its:  Handle OF device tree
- "msi-map" properties.
-Date: Wed, 23 Sep 2015 18:01:00 +0100
-Message-ID: <20150923180100.03844936@arm.com>
-References: <1442966406-13198-1-git-send-email-ddaney.cavm@gmail.com>
-	<1442966406-13198-4-git-send-email-ddaney.cavm@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442966406-13198-4-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 3/3] ARM: dts: omap5-uevm: enable iio gpadc for Palmas
+Date: Wed, 23 Sep 2015 19:03:37 +0200
+Message-ID: <05683602-B29C-45F9-A00D-127F6ECC4E21@goldelico.com>
+References: <1437657169.3419965.331206849.51D66A2E@webmail.messagingengine.com> <cover.1443012491.git.hns@goldelico.com> <4254897D-374E-4122-A1A6-269A22C2D622@goldelico.com> <20150923165613.GG23801@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150923165613.GG23801@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Marek Belisko <marek@goldelico.com>, Pradeep Goudagunta <pgoudagunta@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, gg@slimlogic.co.uk, jic23@jic23.retrosnub.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-iio@vger.kernel.org, notaz@openpandora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Sep 2015 17:00:06 -0700
-David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi,
 
-> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> Call of_msi_map_rid() to handle mapping of the requester id.
-> 
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/irqchip/irq-gic-v3-its-pci-msi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> index cf351c6..8b1c938 100644
-> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> @@ -86,7 +86,8 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
->  	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
->  
->  	/* ITS specific DeviceID, as the core ITS ignores dev. */
-> -	info->scratchpad[0].ul = dev_alias.dev_id;
-> +	info->scratchpad[0].ul = of_msi_map_rid(dev, domain->of_node,
-> +						dev_alias.dev_id);
->  
->  	return msi_info->ops->msi_prepare(domain->parent,
->  					  dev, dev_alias.count, info);
+Am 23.09.2015 um 18:56 schrieb Tony Lindgren <tony@atomide.com>:
 
-I really wonder if that shouldn't be part of the pci_for_each_dma_alias
-call. It would make a lot more sense for this functionality to be an
-integral part of the core code, and would probably make the integration
-of _IORT (which has the exact same requirements) a bit easier.
+> * H. Nikolaus Schaller <hns@goldelico.com> [150923 05:53]:
+>=20
+> Missing description?
 
-Thoughts?
+well, description is =93ARM: dts: omap5-uevm: enable iio gpadc for Palm=
+as"
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+and I didn=92t catch that the commit is otherwise empty. Sorry.
+
+> BTW, this I want to queue separately
+> as I have patches in works to support omap5 variants with
+> omap5-board-common.dtsi to avoid duplicating things as
+> we get omap5 better supported for things like regulators.
+
+Yes, it should work for all Palmas based OMAP5 boards and a=20
+omap5-board-common.dtsi would be the right place (after
+it comes to existence).
+
+>=20
+> Regards,
+>=20
+> Tony
+>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/arm/boot/dts/omap5-uevm.dts | 22 ++++++++++++++++++++++
+>> 1 file changed, 22 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/om=
+ap5-uevm.dts
+>> index 3b16e8f..0d4c8ff 100644
+>> --- a/arch/arm/boot/dts/omap5-uevm.dts
+>> +++ b/arch/arm/boot/dts/omap5-uevm.dts
+>> @@ -342,6 +342,28 @@
+>>=20
+>> 			ti,ldo6-vibrator;
+>>=20
+>> +			gpadc {
+>> +				compatible =3D "ti,palmas-gpadc";
+>> +				interrupts =3D <18 0
+>> +					      16 0
+>> +					      17 0>;
+>> +				ti,channel0-current-microamp =3D <5>;
+>> +				ti,channel3-current-microamp =3D <10>;
+>> +				iio_map {
+>> +					ch1 {
+>> +						ti,adc-channel-number =3D <1>;
+>> +						ti,adc-consumer-device =3D "generic-adc-thermal.0";
+>> +						ti,adc-consumer-channel =3D"battery-temp-channel";
+>> +					};
+>> +
+>> +					ch6 {
+>> +						ti,adc-channel-number =3D <6>;
+>> +						ti,adc-consumer-device =3D "palmas-battery";
+>> +						ti,adc-consumer-channel =3D"vbat_channel";
+>> +					};
+>> +				};
+>> +			};
+>> +
+>> 			regulators {
+>> 				smps123_reg: smps123 {
+>> 					/* VDD_OPP_MPU */
+>> --=20
+>> 2.5.1
+>>=20
+
+BR,
+Nikolaus
