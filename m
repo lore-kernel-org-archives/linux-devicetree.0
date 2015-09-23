@@ -1,39 +1,68 @@
-From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] rc: gpio-ir-recv: add timeout on idle
-Date: Wed, 23 Sep 2015 15:26:19 +0100
-Message-ID: <20150923142619.GA10653@gofer.mess.org>
-References: <5602AE95.9000505@nelint.com>
- <1443017228-16499-1-git-send-email-eric@nelint.com>
+From: =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] Documentation: bindings: mfd: cros ec: document
+ vbc EC property
+Date: Wed, 23 Sep 2015 11:31:22 -0300
+Message-ID: <5602B7BA.8020302@collabora.co.uk>
+References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
+ <1442842703-5309-3-git-send-email-emilio.lopez@collabora.co.uk>
+ <20150923003401.GB16510@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443017228-16499-1-git-send-email-eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20150923003401.GB16510@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 23, 2015 at 07:07:08AM -0700, Eric Nelson wrote:
-> Many decoders require a trailing space (period without IR illumination)
-> to be delivered before completing a decode.
-> 
-> Since the gpio-ir-recv driver only delivers events on gpio transitions,
-> a single IR symbol (caused by a quick touch on an IR remote) will not
-> be properly decoded without the use of a timer to flush the tail end
-> state of the IR receiver.
-> 
-> This patch initializes and uses a timer and the timeout field of rcdev
-> to complete the stream and allow decode.
-> 
-> The timeout can be overridden through the use of the LIRC_SET_REC_TIMEOUT
-> ioctl.
-> 
-> Signed-off-by: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+Hi Lee,
 
-Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+On 22/09/15 21:34, Lee Jones wrote:
+> On Mon, 21 Sep 2015, Emilio L=C3=B3pez wrote:
+>
+>> Some EC implementations include a small nvram space used to store
+>> verified boot context data. This boolean property lets us indicate
+>> whether this space is available or not on a specific EC implementati=
+on.
+>>
+>> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+>> ---
+>>
+>> Patch is new in v3, split from 3/4
+>>
+>>   Documentation/devicetree/bindings/mfd/cros-ec.txt | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Doc=
+umentation/devicetree/bindings/mfd/cros-ec.txt
+>> index 1777916..136e0c2 100644
+>> --- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+>> @@ -34,6 +34,10 @@ Required properties (LPC):
+>>   - compatible: "google,cros-ec-lpc"
+>>   - reg: List of (IO address, size) pairs defining the interface use=
+s
+>>
+>> +Optional properties (all):
+>> +- google,has-vbc-nvram: Some implementations of the EC include a sm=
+all
+>> +  nvram space used to store verified boot context data. This boolea=
+n flag
+>> +  is used to specify whether this nvram is present or not.
+>
+> Is there no way to check for this at runtime?
 
+You can issue a read and see if it succeeds, but the problem is that=20
+some EC implementations return success even when they don't implement=20
+the functionality.
+
+Cheers,
+
+Emilio
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
