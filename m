@@ -1,65 +1,86 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 01/11] dt: power: bq24257-charger: Cover additional
- devices
-Date: Wed, 23 Sep 2015 11:14:56 +0300
-Message-ID: <20150923081456.GC15509@lpalcu-desk>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
- <1442612399-341-2-git-send-email-dannenberg@ti.com>
- <20150922162448.GE4235@earth>
- <20150922215823.GA30297@beast>
- <20150923003414.GB4359@earth>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/6] PCI: generic: Quit clobbering our pci_ops.
+Date: Wed, 23 Sep 2015 10:21:10 +0200
+Message-ID: <1729894.341fjYUAKl@wuerfel>
+References: <1442965757-12925-1-git-send-email-ddaney.cavm@gmail.com> <1442965757-12925-4-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150923003414.GB4359@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442965757-12925-4-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Sep 23, 2015 at 02:34:15AM +0200, Sebastian Reichel wrote:
-> Hi,
+On Tuesday 22 September 2015 16:49:14 David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
-> On Tue, Sep 22, 2015 at 04:58:24PM -0500, Andreas Dannenberg wrote:
-> > On Tue, Sep 22, 2015 at 06:24:48PM +0200, Sebastian Reichel wrote:
-> > > On Fri, Sep 18, 2015 at 04:39:49PM -0500, Andreas Dannenberg wrote:
-> > > > Extend the bq24257 charger's device tree documentation to cover the
-> > > > bq24250 and bq24251 devices as well feature additions.
-> > > 
-> > > The binding looks fine to except for:
-> > > 
-> > > > +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
-> > > > +    also be defined through the standard interrupt definition properties (see
-> > > > +    optional properties section below). Only use one method.
-> > > 
-> > > Why do you expose two ways for this?
-> > 
-> > Hi Sebastian. The original driver exposed this - it just didn't
-> > document it in the DT binding doc. I'm not sure why this was introduced
-> > in the first place (Laurentiu?). I know we can't change the API but
-> > since it was never documented maybe we can remove it?
+> The pci-host-generic driver keeps a global struct pci_ops which it
+> then patches with the .map_bus method appropriate for the bus device.
+> A problem arises when the driver is used for two different types of
+> bus devices, the .map_bus method for the last device probed clobbers
+> the method for all previous devices.  The result, only the last bus
+> device probed has the proper .map_bus, and the others fail.
 > 
-> It seems this is neither documented, nor used. So I guess it can be
-> removed. Let's wait for feedback from Laurentiu, though.
-This was needed to have both ACPI and DT enumeration work. At the time I
-wrote the driver, GpioInt resources in ACPI were not passed to the
-driver in client->irq, as opposed to DT enumeration.
+> Move the struct pci_ops into the bus specific structure, and
+> initialize it when the bus device is probed.  Keep a copy of the
+> gen_pci_cfg_bus_ops structure, instead of a pointer to a global copy,
 
-However, conveniently enough, the patch below landed in master by the
-same time bq24257 driver went in. So, I believe it should be safe now to
-remove the stat-gpio probing.
+This is a very useful change.
 
-commit 845c877009cf014b971aab7f54613f9185a824b0
-Author: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Date:   Wed May 6 13:29:08 2015 +0300
+> to future proof against the addition of bus specific elements to
+> struct pci_ops.
 
-    i2c / ACPI: Assign IRQ for devices that have GpioInt automatically
+but I don't like this part. We should just not have bus specific
+elements in pci_ops. We don't really have that here either, except
+that the gen_pci driver had a hack for reusing the same operations
+for things that are actually different.
 
-laurentiu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It's an established practice that anything named '*_operations' is
+meant to be constant and ideally defined as 'static const ... *_ops;'
+in the driver. We could try to enforce this better by marking
+bus->ops as 'const' and changing all the instances of this structure
+accordingly.
+
+> @@ -65,7 +65,11 @@ static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
+>  
+>  static struct gen_pci_cfg_bus_ops gen_pci_cfg_cam_bus_ops = {
+>  	.bus_shift	= 16,
+> -	.map_bus	= gen_pci_map_cfg_bus_cam,
+> +	.ops		= {
+> +		.map_bus	= gen_pci_map_cfg_bus_cam,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+>  };
+
+So this is good. We could in theory unify the map_bus functions
+like this now:
+
+static void __iomem *gen_pci_map_cfg_bus(struct pci_bus *bus,
+                                         unsigned int devfn,
+                                         int where)
+{
+        struct gen_pci *pci = bus->sysdata;
+	struct gen_pci_cfg_bus_ops *ops;
+        resource_size_t idx;
+
+	ops = container_of(bus->ops, struct gen_pci_cfg_bus_ops, ops);
+	idx = bus->number - pci->cfg.bus_range->start;
+
+        return pci->cfg.win[idx] + ((devfn << ops->dev_shift) | where);
+}
+
+Not sure if that improves clarity or not, up to Will.
+
+> @@ -234,8 +237,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	of_id = of_match_node(gen_pci_of_match, np);
+> -	pci->cfg.ops = of_id->data;
+> +	pci->cfg.ops = *(struct gen_pci_cfg_bus_ops *)of_id->data;
+
+This is the part that grabbed my attention, we should not do it like this.
+
+	Arnd
