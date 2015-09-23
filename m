@@ -1,53 +1,58 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] iommu/omap: Add support for configuring dsp iommus
-	on DRA7xx
-Date: Wed, 23 Sep 2015 10:53:49 -0700
-Message-ID: <20150923175348.GJ23801@atomide.com>
-References: <1437522936-19758-1-git-send-email-s-anna@ti.com>
-	<1437522936-19758-3-git-send-email-s-anna@ti.com>
-	<20150722052600.GF17550@atomide.com> <55AFC34E.4000603@ti.com>
-	<20150723072455.GC16878@atomide.com> <55B114DF.8070800@ti.com>
-	<20150724043056.GG16878@atomide.com> <55B266CE.9070202@ti.com>
-	<20150728061426.GL16878@atomide.com> <55E8D077.3050108@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 3/3] mfd: tps65912: Rewrite driver adding DT support
+ and using regmap
+Date: Wed, 23 Sep 2015 10:53:17 -0700
+Message-ID: <20150923175317.GU30445@sirena.org.uk>
+References: <1443024459-15770-1-git-send-email-afd@ti.com>
+ <1443024459-15770-4-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1a0hRYDdJmE1GM/c"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55E8D077.3050108-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+In-Reply-To: <1443024459-15770-4-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150903 16:01]:
-> >>>> On 07/23/2015 02:24 AM, Tony Lindgren wrote:
-> > OK maybe check the syss/sysc registers involved here for each hardware
-> > module here and which driver tinkers with which registers? This will
-> > make things a lot easier in the long run for sure.
-> 
-> The OMAP remoteproc driver typically deals with only the reset registers
-> and another register in the Control module for programming the boot
-> address for the DSPs. You can look up the OMAP4 hwmod data for
-> reference. There is currently a .prcm.omap4.modulemode set for these,
-> and I have a patch to remove those. I haven't yet posted it yet [1],
-> because OMAP remoteprocs are still not bootable on mainline.
 
-Thanks for checking that. Like we chatted, let's make sure we don't
-end up with iommu and remoteproc "consumer device" specific data
-in the iommu and remoteproc code.
+--1a0hRYDdJmE1GM/c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
+On Wed, Sep 23, 2015 at 11:07:39AM -0500, Andrew F. Davis wrote:
 
-Tony
+>  drivers/gpio/Kconfig                   |   6 +
+>  drivers/gpio/Makefile                  |   1 +
+>  drivers/gpio/gpio-tps65912.c           | 138 ++++++++++++
+>  drivers/mfd/Kconfig                    |  24 ++
+>  drivers/mfd/Makefile                   |   3 +
+>  drivers/mfd/tps65912-core.c            | 114 ++++++++++
+>  drivers/mfd/tps65912-i2c.c             |  86 ++++++++
+>  drivers/mfd/tps65912-spi.c             |  85 +++++++
+>  drivers/regulator/Kconfig              |   6 +
+>  drivers/regulator/Makefile             |   1 +
+>  drivers/regulator/tps65912-regulator.c | 240 ++++++++++++++++++++
+>  include/linux/mfd/tps65912.h           | 393 +++++++++++++++++++++++++++++++++
 
-> [1]
-> http://git.ti.com/gitweb/?p=rpmsg/remoteproc.git;a=commit;h=0dd2a6a2d8869ee6cec92f75d70663259a41c11f
+Please submit this like a normal driver, not as one enormous patch
+covering every subsystem.
+
+--1a0hRYDdJmE1GM/c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWAucIAAoJECTWi3JdVIfQmBcH/jTZvSxB4uYCxRvqZNaSY0zI
+mnnwVTMAlmALBEeJ8JGRjxfDOJfi1x3v5tWVgZ01y0wtiRbmFjuNJTY7r/zWM/L8
+DzDVO66wuwKHVT63tcwNhOG4c9mveZuVje/Clc5drElhQww2iRc0/1BzRYSBFEj3
+vTqe+wBJg1N12aTMcbGA+9WBmAgVXsPeQuU+Kb653cQghpAdUqxBeLkGoRoo9ie4
+FSzfIDY3yUiiYInxI83wpI/h2HtJarWliD1XOG5b07ywwEqNbcDqk1CKKIZqO0Hq
+GRetgUSWhnUeb4/PF8egYMxQuWDXW6/qcgKEO2qt12GpEvynzLHulyY2+yA0ANU=
+=Qmg2
+-----END PGP SIGNATURE-----
+
+--1a0hRYDdJmE1GM/c--
