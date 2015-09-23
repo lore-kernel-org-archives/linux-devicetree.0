@@ -1,41 +1,69 @@
-From: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
- compatible flags
-Date: Wed, 23 Sep 2015 11:19:32 -0700
-Message-ID: <5602ED34.9010108@oracle.com>
-References: <1442938118-4718-1-git-send-email-nm@ti.com>
- <1442938118-4718-2-git-send-email-nm@ti.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] PCI: generic: Correct, and avoid overflow, in
+ bus_max calculation.
+Date: Wed, 23 Sep 2015 11:21:56 -0700
+Message-ID: <5602EDC4.3040603@caviumnetworks.com>
+References: <1442527332-1174-1-git-send-email-ddaney.cavm@gmail.com> <1442527332-1174-5-git-send-email-ddaney.cavm@gmail.com> <20150923180157.GV7356@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442938118-4718-2-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20150923180157.GV7356-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Nishant,
-
-On 9/22/2015 9:08 AM, Nishanth Menon wrote:
-> Keystone2 devices are used on more platforms than just Texas
-> Instruments reference evaluation platforms called EVMs. Providing a
-> generic compatible "ti,keystone" is not sufficient to differentiate
-> various SoC definitions possible on various platforms. So, provide
-> compatible matches for each SoC family by itself.
+On 09/23/2015 11:01 AM, Will Deacon wrote:
+> On Thu, Sep 17, 2015 at 11:02:11PM +0100, David Daney wrote:
+[...]
 >
-> This allows SoC specific logic to be run time handled based on
-> of_machine_is_compatible("ti,k2hk") or as needed for the dependent
-> processor instead of needing to use board dependent compatibles that
-> are needed now.
+>>   Properties of the /chosen node:
+>> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+>> index 77cf4bd..0a9c453 100644
+>> --- a/drivers/pci/host/pci-host-generic.c
+>> +++ b/drivers/pci/host/pci-host-generic.c
+>> @@ -164,7 +164,7 @@ out_release_res:
+>>   static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>>   {
+>>   	int err;
+>> -	u8 bus_max;
+>> +	int bus_max;
+>>   	resource_size_t busn;
+>>   	struct resource *bus_range;
+>>   	struct device *dev = pci->host.dev.parent;
+>> @@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>>   	}
+>>
+>>   	/* Limit the bus-range to fit within reg */
+>> -	bus_max = pci->cfg.bus_range->start +
+>> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+>> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+>> +	if (bus_max > 255)
+>> +		bus_max = 255;
 >
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
-You need to expand that 'not sufficient' for me. Unless there is
-genuine case to support this, I would want to avoid this churn.
+> I still don't understand the need for this part. If the cfg space is bigger
+> than bus_max, isn't that simply an invalid resource? Given that the resource
+> could be broken in other ways too, this check feels more like a specific
+> workaround rather than generally useful code.
 
-Regards,
-Santosh
+Imagine...
+
+   bus-range [0x80 .. 0xff], this requires a cfg.res that will cover the 
+entire range of 0..0xff.
+
+   according to the calculations above, (resource_size(&pci->cfg.res) >> 
+pci->cfg.ops.bus_shift) - 1 will have a value of 0xff, so...
+
+   bus_max = 0x80 + 0xff -> OVERFLOW of u8!
+
+That is not useful.  bus_max should represent the largest bus number 
+that can be covered by cfg.res.  That is what my patch is attempting to 
+accomplish.  Calculate the largest bus number that can be accommodated 
+by cfg.res, and then clamp it to 0xff.
+
+David Daney.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
