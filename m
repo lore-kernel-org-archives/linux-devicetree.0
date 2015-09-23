@@ -1,58 +1,228 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 2/6] ARM: dts: sun7i: Enable USB DRC on
- Bananapi
-Date: Wed, 23 Sep 2015 10:47:12 +0200
-Message-ID: <56026710.9090103@redhat.com>
-References: <1442928966-6418-1-git-send-email-hdegoede@redhat.com>
- <1442928966-6418-2-git-send-email-hdegoede@redhat.com>
- <87io718so8.fsf@karme.de>
+From: <erin.lo@mediatek.com>
+Subject: [PATCH 2/2] ARM: dts: mediatek: add MT2701 basic support
+Date: Wed, 23 Sep 2015 16:56:10 +0800
+Message-ID: <1442998570-54031-3-git-send-email-erin.lo@mediatek.com>
+References: <1442998570-54031-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87io718so8.fsf-k/3wkfGq5Xs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Thiele <karme-k/3wkfGq5Xs@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442998570-54031-1-git-send-email-erin.lo@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Erin Lo <erin.lo@mediatek.com>
 
-On 23-09-15 10:07, Jens Thiele wrote:
-> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
->
->> Enable the otg/drc usb controller on the Bananapi.
->
-> would something similar apply to the a20 olimex olinuxino micro/lime2
-> boards?
+This adds basic chip support for Mediatek 2701.
 
-a20 olimex olinuxino micro already has this in 4.3-rc1, see:
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+---
+ arch/arm/boot/dts/Makefile       |   1 +
+ arch/arm/boot/dts/mt2701-evb.dts |  29 ++++++++
+ arch/arm/boot/dts/mt2701.dtsi    | 146 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 176 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mt2701-evb.dts
+ create mode 100644 arch/arm/boot/dts/mt2701.dtsi
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-
-a20 olimex olinuxino lime2 support is pending:
-
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/dt-for-4.4&id=9ff5052f7561068207c2b0e7590ad8ca5765f2cc
-
-Regards,
-
-Hans
-
-
->
-> is there some documentation how to port devicetree improvements/new
-> features to all boards or to at least help with that? i think you did
-> some workshop like that?
->
-> i think i have seen other features being added only to some boards?
-> pwm backlight?
-> audio output?
-> but my understanding of all of this is really very limited.
->
-> thanks,
-> Jens
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 233159d..aec787e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -732,6 +732,7 @@ dtb-$(CONFIG_MACH_DOVE) += \
+ 	dove-dove-db.dtb \
+ 	dove-sbc-a510.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += \
++	mt2701-evb.dtb \
+ 	mt6580-evbp1.dtb \
+ 	mt6589-aquaris5.dtb \
+ 	mt6592-evb.dtb \
+diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+new file mode 100644
+index 0000000..082ca88
+--- /dev/null
++++ b/arch/arm/boot/dts/mt2701-evb.dts
+@@ -0,0 +1,29 @@
++/*
++ * Copyright (c) 2015 MediaTek Inc.
++ * Author: Erin Lo <erin.lo@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++#include "mt2701.dtsi"
++
++/ {
++	model = "MediaTek MT2701 evaluation board";
++	compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
++
++	memory {
++		reg = <0 0x80000000 0 0x40000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+new file mode 100644
+index 0000000..69f240f
+--- /dev/null
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -0,0 +1,146 @@
++/*
++ * Copyright (c) 2015 MediaTek Inc.
++ * Author: Erin.Lo <erin.lo@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "skeleton64.dtsi"
++
++/ {
++	compatible = "mediatek,mt2701";
++	interrupt-parent = <&sysirq>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++	};
++
++	system_clk: dummy13m {
++		compatible = "fixed-clock";
++		clock-frequency = <13000000>;
++		#clock-cells = <0>;
++	};
++
++	rtc_clk: dummy32k {
++		compatible = "fixed-clock";
++		clock-frequency = <32000>;
++		#clock-cells = <0>;
++	};
++
++	uart_clk: dummy26m {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	watchdog: watchdog@10007000 {
++		compatible = "mediatek,mt2701-wdt",
++			     "mediatek,mt6589-wdt";
++		reg = <0 0x10007000 0 0x100>;
++	};
++
++	timer: timer@10008000 {
++		compatible = "mediatek,mt2701-timer",
++			     "mediatek,mt6577-timer";
++		reg = <0x10008000 0x80>;
++		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&system_clk>, <&rtc_clk>;
++		clock-names = "system-clk", "rtc-clk";
++	};
++
++	sysirq: interrupt-controller@10200100 {
++		compatible = "mediatek,mt2701-sysirq",
++			     "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10200100 0 0x1c>;
++	};
++
++	gic: interrupt-controller@10211000 {
++		compatible = "arm,cortex-a7-gic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10211000 0 0x1000>,
++		      <0 0x10212000 0 0x1000>,
++		      <0 0x10214000 0 0x2000>,
++		      <0 0x10216000 0 0x2000>;
++	};
++
++	uart0: serial@11002000 {
++		compatible = "mediatek,mt2701-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11002000 0 0x400>;
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart1: serial@11003000 {
++		compatible = "mediatek,mt2701-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11003000 0 0x400>;
++		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart2: serial@11004000 {
++		compatible = "mediatek,mt2701-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11004000 0 0x400>;
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart3: serial@11005000 {
++		compatible = "mediatek,mt2701-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11005000 0 0x400>;
++		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++};
+-- 
+1.8.1.1.dirty
