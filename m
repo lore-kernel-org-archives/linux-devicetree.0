@@ -1,73 +1,49 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCH 2/2] ARM: socfpga: dts: enable USB and I2C on Arria10 SoCDK
-Date: Wed, 23 Sep 2015 17:11:15 -0500
-Message-ID: <1443046275-26421-2-git-send-email-dinguyen@opensource.altera.com>
-References: <1443046275-26421-1-git-send-email-dinguyen@opensource.altera.com>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCHv3] arm64: dts: Add base stratix 10 dtsi
+Date: Wed, 23 Sep 2015 17:43:25 -0500
+Message-ID: <CADhT+wccWpy9VhZv=yWRiA4tf1SO_1-EAu6_cc+UkPJOWX0Bpw@mail.gmail.com>
+References: <1442353625-4552-1-git-send-email-dinguyen@opensource.altera.com>
+	<20150923055450.GA4883@svinekod>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1443046275-26421-1-git-send-email-dinguyen@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com
-Cc: devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, dinh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150923055450.GA4883@svinekod>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+On Wed, Sep 23, 2015 at 12:54 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> +/ {
+>> +     compatible = "altr,socfpga-stratix10";
+>> +     #address-cells = <2>;
+>> +     #size-cells = <2>;
+>
+> [...]
+>
+>> +     soc {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +             compatible = "simple-bus";
+>> +             device_type = "soc";
+>> +             interrupt-parent = <&intc>;
+>
+> As far as I am aware, this requires a (non-empty) ranges property, given the
+> parent node has {address,size}-cells = <2>.
+>
+> Does the kernel not complain currently?
+>
 
-On the Arria10 Devkit, the I2C bus has a serial EEPROM and an RTC
-hanging off it. Also, enable the USB node.
+I do not see any complaints without ranges here, but with ranges, I get:
 
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
----
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb
+Warning (ranges_format): /soc has empty "ranges" property but its
+#address-cells (1) differs from / (2)
+Warning (ranges_format): /soc has empty "ranges" property but its
+#size-cells (1) differs from / (2)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index 99aa9a1..567df98 100644
---- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -70,6 +70,33 @@
- 	status = "okay";
- };
- 
-+&i2c1 {
-+	speed-mode = <0>;
-+	status = "okay";
-+
-+	/*
-+	 * adjust the falling times to decrease the i2c frequency to 50Khz
-+	 * because the LCD module does not work at the standard 100Khz
-+	 */
-+	i2c-sda-falling-time-ns = <6000>;
-+	i2c-scl-falling-time-ns = <6000>;
-+
-+	eeprom@51 {
-+		compatible = "atmel,24c32";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1339";
-+		reg = <0x68>;
-+	};
-+};
-+
- &uart1 {
- 	status = "okay";
- };
-+
-+&usb0 {
-+	status = "okay";
-+};
--- 
-2.4.5
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
