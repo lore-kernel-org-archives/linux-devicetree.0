@@ -1,7 +1,7 @@
 From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: stih407/410: Tidy up display nodes
-Date: Wed, 23 Sep 2015 21:37:28 +0200
-Message-ID: <1443037049-6167-3-git-send-email-maxime.coquelin@st.com>
+Subject: [PATCH 3/3] ARM: dts: stih410: Enable USB2.0 and related PHY nodes at board level
+Date: Wed, 23 Sep 2015 21:37:29 +0200
+Message-ID: <1443037049-6167-4-git-send-email-maxime.coquelin@st.com>
 References: <1443037049-6167-1-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,88 +12,107 @@ To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.
 Cc: maxime.coquelin-qxv4g6HH51o@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The display nodes are common to both STiH407 and STiH410, move them to the
-family file.
+A borad might not expose the USB2.0 ports, so disable them by default in SoC
+file, and enable them in b2120 board.
 
 Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 13 +++++++++++++
- arch/arm/boot/dts/stih407.dtsi        | 13 -------------
- arch/arm/boot/dts/stih410.dtsi        | 13 -------------
- 3 files changed, 13 insertions(+), 26 deletions(-)
+ arch/arm/boot/dts/stih410-b2120.dts | 24 ++++++++++++++++++++++++
+ arch/arm/boot/dts/stih410.dtsi      | 12 ++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 9975e8f..5b454d9 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -152,6 +152,19 @@
- 					<ST_IRQ_SYSCFG_DISABLED>;
+diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
+index 16f02c5..8af1e73 100644
+--- a/arch/arm/boot/dts/stih410-b2120.dts
++++ b/arch/arm/boot/dts/stih410-b2120.dts
+@@ -35,5 +35,29 @@
+ 			sd-uhs-sdr104;
+ 			sd-uhs-ddr50;
  		};
- 
-+		/* Display */
-+		vtg_main: sti-vtg-main@8d02800 {
-+			compatible = "st,vtg";
-+			reg = <0x8d02800 0x200>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_NONE>;
++
++		usb2_picophy1: phy2 {
++			status = "okay";
 +		};
 +
-+		vtg_aux: sti-vtg-aux@8d00200 {
-+			compatible = "st,vtg";
-+			reg = <0x8d00200 0x100>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_NONE>;
++		usb2_picophy2: phy3 {
++			status = "okay";
 +		};
 +
- 		serial@9830000 {
- 			compatible = "st,asc";
- 			reg = <0x9830000 0x2c>;
-diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
-index 3efa3b2..98c3468 100644
---- a/arch/arm/boot/dts/stih407.dtsi
-+++ b/arch/arm/boot/dts/stih407.dtsi
-@@ -10,19 +10,6 @@
- #include "stih407-family.dtsi"
- / {
- 	soc {
--		/* Display */
--		vtg_main: sti-vtg-main@8d02800 {
--			compatible = "st,vtg";
--			reg = <0x8d02800 0x200>;
--			interrupts = <GIC_SPI 108 IRQ_TYPE_NONE>;
--		};
--
--		vtg_aux: sti-vtg-aux@8d00200 {
--			compatible = "st,vtg";
--			reg = <0x8d00200 0x100>;
--			interrupts = <GIC_SPI 109 IRQ_TYPE_NONE>;
--		};
--
- 		sti-display-subsystem {
- 			compatible = "st,sti-display-subsystem";
- 			#address-cells = <1>;
++		ohci0: usb@9a03c00 {
++			status = "okay";
++		};
++
++		ehci0: usb@9a03e00 {
++			status = "okay";
++		};
++
++		ohci1: usb@9a83c00 {
++			status = "okay";
++		};
++
++		ehci1: usb@9a83e00 {
++			status = "okay";
++		};
+ 	};
+ };
 diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 6f40bc9..23f4a48 100644
+index 23f4a48..e3150e3 100644
 --- a/arch/arm/boot/dts/stih410.dtsi
 +++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -85,19 +85,6 @@
- 			phy-names = "usb";
+@@ -22,6 +22,8 @@
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+ 				 <&picophyreset STIH407_PICOPHY0_RESET>;
+ 			reset-names = "global", "port";
++
++			status = "disabled";
  		};
  
--		/* Display */
--		vtg_main: sti-vtg-main@8d02800 {
--			compatible = "st,vtg";
--			reg = <0x8d02800 0x200>;
--			interrupts = <GIC_SPI 108 IRQ_TYPE_NONE>;
--		};
--
--		vtg_aux: sti-vtg-aux@8d00200 {
--			compatible = "st,vtg";
--			reg = <0x8d00200 0x100>;
--			interrupts = <GIC_SPI 109 IRQ_TYPE_NONE>;
--		};
--
+ 		usb2_picophy2: phy3 {
+@@ -31,6 +33,8 @@
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+ 				 <&picophyreset STIH407_PICOPHY1_RESET>;
+ 			reset-names = "global", "port";
++
++			status = "disabled";
+ 		};
+ 
+ 		ohci0: usb@9a03c00 {
+@@ -43,6 +47,8 @@
+ 			reset-names = "power", "softreset";
+ 			phys = <&usb2_picophy1>;
+ 			phy-names = "usb";
++
++			status = "disabled";
+ 		};
+ 
+ 		ehci0: usb@9a03e00 {
+@@ -57,6 +63,8 @@
+ 			reset-names = "power", "softreset";
+ 			phys = <&usb2_picophy1>;
+ 			phy-names = "usb";
++
++			status = "disabled";
+ 		};
+ 
+ 		ohci1: usb@9a83c00 {
+@@ -69,6 +77,8 @@
+ 			reset-names = "power", "softreset";
+ 			phys = <&usb2_picophy2>;
+ 			phy-names = "usb";
++
++			status = "disabled";
+ 		};
+ 
+ 		ehci1: usb@9a83e00 {
+@@ -83,6 +93,8 @@
+ 			reset-names = "power", "softreset";
+ 			phys = <&usb2_picophy2>;
+ 			phy-names = "usb";
++
++			status = "disabled";
+ 		};
+ 
  		sti-display-subsystem {
- 			compatible = "st,sti-display-subsystem";
- 			#address-cells = <1>;
 -- 
 1.9.1
 
