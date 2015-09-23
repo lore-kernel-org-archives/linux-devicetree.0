@@ -1,135 +1,34 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH linux-next v9 0/3] mfd: flexcom: add a driver for Flexcom
-Date: Wed, 23 Sep 2015 12:29:36 +0200
-Message-ID: <56027F10.1060804@atmel.com>
-References: <cover.1441118159.git.cyrille.pitchen@atmel.com>
- <20150920041912.GS3039@x1>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: set up trigger type for edt-ft5x06
+ interrupts
+Date: Wed, 23 Sep 2015 05:16:38 -0700
+Message-ID: <20150923121637.GG3529@tiger>
+References: <5044530af510d6686e78f8dfa912d89ef824f899.1442079408.git.dmitry.torokhov@gmail.com>
+ <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150920041912.GS3039@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, robh+dt@kernel.org
-Cc: boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 20/09/2015 06:19, Lee Jones a =C3=A9crit :
-> Patch set description?
+On Sat, Sep 12, 2015 at 10:45:51AM -0700, Dmitry Torokhov wrote:
+> Now that the driver respects IRQ trigger settings from device tree, let's
+> fix them up in individual DTSes (note that the driver is still compatible
+> with older DTSes).
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+...
+>  arch/arm/boot/dts/imx28-tx28.dts      | 3 ++-
+>  arch/arm/boot/dts/imx53-tx53-x03x.dts | 3 ++-
+>  arch/arm/boot/dts/imx6qdl-tx6.dtsi    | 3 ++-
 
-Cyrille actually placed it as the v1 changelog below...
-
-> Once Rob is satisfied, please re-submit this set with Nicolas' Acks
-
-I think that Rob was okay with the DT binding: "A few comments, but in
-general looks fine." and it may not be important to tack Rob for
-addition of his formal tag...
-
-Or maybe this message can act as a "ping" for Rob...
-
-> and I will re-review.
-
-We wait one or two days before Cyrille re-send the series. We are
-looking forward to using this driver in Linux-next soon.
-
-Bye,
-
-
->> ChangeLog
->>
->> v9:
->> - go back to v5 (use the new "atmel,flexcom-mode" DT property).
->> - fix the name of the spi node in the DT example: from spi@f8034400 =
-to
->>   spi@400
->> - align the fields of the struct platform_driver atmel_flexcom_drive=
-r as
->>   suggested by Lee Jones.
->>
->> v8:
->> - fix the name of the spi node in the DT example: from spi@f8034400 =
-to
->>   spi@2,0
->> - use the return code of op_property_read_u32_index() instead of -EI=
-NVAL
->>   to report error.
->> - add Acked-by from Nicolas Ferre
->>
->> v7:
->> - read the operating mode from the very first u32 of the reg propert=
-y from
->>   the first available child node (should be unique).
->> - update the DT bindings documentation accordingly.
->>
->> v6:
->> - select the operating mode according to the "compatible" DT propert=
-y of
->>   the first available child node (should be unique).
->> - remove the "atmel,flexcom-mode" DT property so the need of a heade=
-r file
->>   defining macros for the possible values of this deprecated propert=
-y.
->>
->> v5:
->> - create a header file containing macros used by DT bindings
->> - use numeric constants instead of strings to select the Flexcom mod=
-e
->> - change the license to "GPL v2"
->> - update the DT binding documentation to make it more readable and a=
-dd
->>   references to USART, SPI and I2C DT binding documentations. remove=
- the
->>   useless label in the Example section.
->> - change the register prefix from FX_ to FLEX_ to match the Flexcom
->>   programmer datasheet.
->> - rename some variables to make them more understandable.
->>
->> v4:
->> - check clk_prepare_enable() return code in atmel_flexcom_probe()
->> - add a commit message to the DT binding patch
->>
->> v3:
->> - remove MODULE_ALIAS()
->> - add Acked-by from Boris Brezillon and Alexandre Belloni
->>
->> v2:
->> - enhance the documentation of DT bindings and change the way the "r=
-anges"
->>   property is used.
->> - replace __raw_readl() and __raw_writel() by readl() and writel().
->> - change the module license to "GPL" for v2 or later
->> - print the selected flexcom mode after the hardware version
->>
->> v1:
->> This series of patches a support to the Atmel Flexcom, a wrapper whi=
-ch
->> integrates an USART, a SPI controller and a TWI controller. Only one
->> peripheral can be used at a time. The active function is selected th=
-ough
->> the Flexcom Mode Register.
->>
->> Cyrille Pitchen (3):
->>   mfd: atmel-flexcom: create include file with macros used by DT
->>     bindings
->>   mfd: devicetree: add bindings for Atmel Flexcom
->>   mfd: atmel-flexcom: add a driver for Atmel Flexible Serial
->>     Communication Unit
->>
->>  .../devicetree/bindings/mfd/atmel-flexcom.txt      |  67 ++++++++++=
-+++
->>  drivers/mfd/Kconfig                                |  11 +++
->>  drivers/mfd/Makefile                               |   1 +
->>  drivers/mfd/atmel-flexcom.c                        | 104 ++++++++++=
-+++++++++++
->>  include/dt-bindings/mfd/atmel-flexcom.h            |  16 ++++
->>  5 files changed, 199 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flex=
-com.txt
->>  create mode 100644 drivers/mfd/atmel-flexcom.c
->>  create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
->>
->=20
-
-
---=20
-Nicolas Ferre
+Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
