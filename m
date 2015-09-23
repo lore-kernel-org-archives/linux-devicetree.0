@@ -1,77 +1,37 @@
-From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 09/11] power: bq24257: Allow input current limit sysfs
- access
-Date: Wed, 23 Sep 2015 09:11:46 -0500
-Message-ID: <20150923141146.GA6289@borg>
-References: <1442612399-341-1-git-send-email-dannenberg@ti.com>
- <1442612399-341-10-git-send-email-dannenberg@ti.com>
- <20150922191649.GA9949@earth>
- <20150922221044.GB30297@beast>
- <20150923002906.GA4359@earth>
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] rc: gpio-ir-recv: add timeout on idle
+Date: Wed, 23 Sep 2015 15:26:19 +0100
+Message-ID: <20150923142619.GA10653@gofer.mess.org>
+References: <5602AE95.9000505@nelint.com>
+ <1443017228-16499-1-git-send-email-eric@nelint.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150923002906.GA4359@earth>
+In-Reply-To: <1443017228-16499-1-git-send-email-eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 23, 2015 at 02:29:06AM +0200, Sebastian Reichel wrote:
-> On Tue, Sep 22, 2015 at 05:10:45PM -0500, Andreas Dannenberg wrote:
-> > On Tue, Sep 22, 2015 at 09:16:49PM +0200, Sebastian Reichel wrote:
-> > > On Fri, Sep 18, 2015 at 04:39:57PM -0500, Andreas Dannenberg wrote:
-> > > > This patch allows reading (and writing, if the D+/D- USB signal-based
-> > > > charger type detection is disabled) of the input current limit through
-> > > > the power supply's input_current_limit sysfs property. This allows
-> > > > userspace to see what charger was detected and to re-configure the
-> > > > maximum current drawn from the external supply at runtime based on
-> > > > system-level knowledge or user input.
-> > > 
-> > > Maybe also support writing into input_current_limit in auto mode.
-> > > Just disable auto detection until "auto" is written into sysfs node.
-> > 
-> > Auto-detection was enabled by default in the original driver so I think
-> > that should be left intact. I added the ability to manually override
-> > this via DT with a fixed value, and then configure said fixed value
-> > through sysfs at runtime.
-> > 
-> > I'm not 100% clear on the usecase of runtime enabling/disabling auto so
-> > I'd rather leave the implementation as-is. Either auto mode is enabled
-> > or not -- and this is directly tied to the DT setting. But if someone
-> > has a strong usecase for this I can certainly add it.
+On Wed, Sep 23, 2015 at 07:07:08AM -0700, Eric Nelson wrote:
+> Many decoders require a trailing space (period without IR illumination)
+> to be delivered before completing a decode.
 > 
-> For some usb power supplies auto-detection doesn't work very well,
-> resulting in a 100mA default fallback. Users knowing their hardware
-> could force charging with the correct input current limitation.
+> Since the gpio-ir-recv driver only delivers events on gpio transitions,
+> a single IR symbol (caused by a quick touch on an IR remote) will not
+> be properly decoded without the use of a timer to flush the tail end
+> state of the IR receiver.
+> 
+> This patch initializes and uses a timer and the timeout field of rcdev
+> to complete the stream and allow decode.
+> 
+> The timeout can be overridden through the use of the LIRC_SET_REC_TIMEOUT
+> ioctl.
+> 
+> Signed-off-by: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
 
-Ok. So how should we best go about extending the usage of the
-'input_current_limit' sysfs node for this charger? You mentioned
-writing 'auto' into it should enable the auto-detection mode. I suppose
-writing a fixed current value will disable it. But how to indicate to
-the user when reading 'input_current_limit' whether auto mode is enabled
-or not (I think this is something we should do). Can we return a mixed
-number/string like this?
-
-# Example: charger auto detection mode is disabled, and input current
-# limit is configured as 500mA.
-
-$ cat input_current_limit
-500000
-
-# Example: charger auto detection mode is enabled, and a charger
-# supporting 1A was detected (note the mixed number/string thats
-# returned)
-
-$ cat input_current_limit
-1000000 (auto)
-
-Would that work? Or should we introduce a new sysfs property?
-
---
-Andreas Dannenberg
-Texas Instruments Inc
+Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
