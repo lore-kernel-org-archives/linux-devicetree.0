@@ -1,11 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 0/5] ARM: sunxi: Add Reduced Serial Bus support
-Date: Thu, 24 Sep 2015 00:05:16 +0800
-Message-ID: <1443024323-9115-1-git-send-email-wens@csie.org>
+Subject: [PATCH v4 4/5] ARM: dts: sun8i: ippo-q8h-v5: Enable
+ Reduced Serial Bus controller
+Date: Thu, 24 Sep 2015 00:05:20 +0800
+Message-ID: <1443024323-9115-5-git-send-email-wens@csie.org>
+References: <1443024323-9115-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB443ROYAKGQEFN4KHXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6U3ROYAKGQERJV674A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1443024323-9115-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -17,70 +20,33 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <p
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The Reduced Serial Bus controller is used to talk to the onboard PMIC.
 
-This is my fourth attempt at adding support for Allwinner's Reduced
-Serial Bus (RSB), which is used to communicate with PMICs and other
-peripherals on their newer SoCs, such as the A23/A33/A80.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
 
-RSB is a simplified two wire interface using push-pull outputs,
-supporting multiple slaves, address and data parity checks, and
-clock speeds up to 20 MHz. The bus only supports simple register
-read/writes, with possible register sizes of 8/16/32 bits. Access
-sizes not matching the slave device register sizes result in NACKs
-or errors. 32 bit registers in devices have yet to be seen.
+Changes since v3:
 
-Previous attempts to add support through the I2C subsystem have
-been rejected, as the bus line protocol is too different to even
-consider. The latest attempt to add a common bus driver was also
-rejected as this is sunxi only.
+None
 
-This version adds a platform driver for the RSB controller under
-drivers/soc/sunxi, which adds a custom driver type and bus type
-for slave drivers to use. Custom regmap support is also merged
-into the controller driver. Currently the driver only exports 2
-symbols: sunxi_rsb_driver_register() & devm_regmap_init_sunxi_rsb().
+---
+ arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Patch 1 adds the DT bindings for Allwinner RSB controller.
-
-Patch 2 adds the driver itself.
-
-Patch 3 adds the RSB nodes for A23/A33 dtsi.
-
-Patch 5 & 5 enable the RSB controller on the boards I have.
-
-Still to come are axp20x driver support for the RSB based AXP223.
-The complete series can be found at:
-
-    https://github.com/wens/linux/tree/sunxi-rsb-v4
-
-This is now sunxi specific, so if everything works out, it should
-all go through Maxime's tree?
-
-
-Regards,
-ChenYu
-
-Chen-Yu Tsai (5):
-  soc: sunxi: Add Allwinner Reduced Serial Bus (RSB) controller bindings
-  soc: sunxi: Add driver for Allwinner Reduced Serial Bus
-  ARM: dts: sun8i: Add Reduced Serial Bus controller device node to
-    A23/A33 dtsi
-  ARM: dts: sun8i: ippo-q8h-v5: Enable Reduced Serial Bus controller
-  ARM: dts: sun8i: sinlinx-sina33: Enable Reduced Serial Bus controller
-
- .../devicetree/bindings/soc/sunxi/rsb.txt          |  47 ++
- arch/arm/boot/dts/sun8i-a23-a33.dtsi               |  21 +
- arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts        |   4 +
- arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
- drivers/soc/sunxi/Kconfig                          |  10 +
- drivers/soc/sunxi/Makefile                         |   1 +
- drivers/soc/sunxi/sunxi_rsb.c                      | 786 +++++++++++++++++++++
- include/linux/soc/sunxi/sunxi_rsb.h                |  89 +++
- 8 files changed, 962 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/sunxi/rsb.txt
- create mode 100644 drivers/soc/sunxi/sunxi_rsb.c
- create mode 100644 include/linux/soc/sunxi/sunxi_rsb.h
-
+diff --git a/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts b/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
+index 4f47fd654eea..af87e4922e44 100644
+--- a/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
++++ b/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
+@@ -58,6 +58,10 @@
+ 	status = "failed";
+ };
+ 
++&r_rsb {
++	status = "okay";
++};
++
+ /*
+  * FIXME for now we only support host mode and rely on u-boot to have
+  * turned on Vbus which is controlled by the axp223 pmic on the board.
 -- 
 2.5.3
