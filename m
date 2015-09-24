@@ -1,50 +1,52 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] usb: phy: Add platform driver support for ULPI
- PHYs
-Date: Thu, 24 Sep 2015 17:43:31 +0800
-Message-ID: <20150924094330.GC27847@shlinux2>
-References: <1443012873-13757-1-git-send-email-sbhatta@xilinx.com>
- <20150924090629.GA27847@shlinux2>
- <F1B223389110CE49B4CF055ABA2E5D3D78C9BCA7@XAP-PVEXMBX02.xlnx.xilinx.com>
+From: huangdaode <huangdaode@hisilicon.com>
+Subject: [PATCH net-next] net: Fix Hisilicon Network Subsystem Support Compilation
+Date: Thu, 24 Sep 2015 17:54:09 +0800
+Message-ID: <1443088449-147241-1-git-send-email-huangdaode@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <F1B223389110CE49B4CF055ABA2E5D3D78C9BCA7-4lKfpRxZ5ekkx2a1wsGfbYg+Gb3gawCHQz34XiSyOiE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, liguozhu@hisilicon.com, Yisen.Zhuang@huawei.com, paul.gortmaker@windriver.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 09:21:16AM +0000, Subbaraya Sundeep Bhatta wrote:
-> > > +uphy->flags);
-> > > +
-> > > +	uphy->usb_phy->set_vbus	= usbphy_set_vbus;
-> > 
-> > When you will call it?
-> 
-> I am calling it in host.c and otg_fsm.c of Chipidea driver wherever
-> regulator_enable/disable is called to control VBUS like below: 
-> 
-> if (ci->platdata->flags & CI_HDRC_PHY_VBUS_CONTROL) {
->                 if (enable)
->                         ci->usb_phy->set_vbus(ci->usb_phy, 1);
->                 else
->                         ci->usb_phy->set_vbus(ci->usb_phy, 0);
-> }
-> 
-> After these changes host mode and otg modes works fine
-> for my case.
-> 
+This patch fixes the compilation error with arm allmodconfig, this error
+generated due to unavailability of readq on 32-bit platform which was
+found during net-next daily compilation
 
-Get it, there are several vbus control ways, I may need to consolidate
-them, of cos, this is another topic.
+Signed-off-by: huangdaode <huangdaode@hisilicon.com>
+Singed-off-by: yankejian <yankejian@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/net/ethernet/hisilicon/Kconfig b/drivers/net/ethernet/hisilicon/Kconfig
+index 165b5a8..04d5f8f 100644
+--- a/drivers/net/ethernet/hisilicon/Kconfig
++++ b/drivers/net/ethernet/hisilicon/Kconfig
+@@ -41,6 +41,7 @@ config HNS_MDIO
+ 
+ config HNS
+ 	tristate "Hisilicon Network Subsystem Support (Framework)"
++	depends on ARM64
+ 	---help---
+ 	  This selects the framework support for Hisilicon Network Subsystem. It
+ 	  is needed by any driver which provides HNS acceleration engine or make
+@@ -50,6 +51,7 @@ config HNS_DSAF
+ 	tristate "Hisilicon HNS DSAF device Support"
+ 	select HNS
+ 	select HNS_MDIO
++	depends on ARM64
+ 	---help---
+ 	  This selects the DSAF (Distributed System Area Frabric) network
+ 	  acceleration engine support. The engine is used in Hisilicon hip05,
+@@ -59,6 +61,7 @@ config HNS_ENET
+ 	tristate "Hisilicon HNS Ethernet Device Support"
+ 	select PHYLIB
+ 	select HNS
++	depends on ARM64
+ 	---help---
+ 	  This selects the general ethernet driver for HNS.  This module make
+ 	  use of any HNS AE driver, such as HNS_DSAF
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
