@@ -1,30 +1,40 @@
-From: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Subject: Re: [PATCH 1/4] ARM: sunxi: Introduce Allwinner for A83T support
-Date: Thu, 24 Sep 2015 18:52:37 +0800
-Message-ID: <CAEzqOZv_L3A7kpKqNQnHjL6Wb1Lzw6dSU4Qy52yJVf2h1QmcLA@mail.gmail.com>
+From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: sunxi: Introduce Allwinner for
+ A83T support
+Date: Thu, 24 Sep 2015 18:55:03 +0800
+Message-ID: <CAEzqOZvz4AHmmaoh3qe_AMJg2ON-fzG_1XixM861rJPoap5CdQ@mail.gmail.com>
 References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
- <1442936337-3104-2-git-send-email-vishnupatekar0510@gmail.com> <CAGb2v665FhnSoWYGJn+Tf79F7pZitYBrEOmAts4nVoUWb-uBqg@mail.gmail.com>
+ <1442936337-3104-2-git-send-email-vishnupatekar0510@gmail.com> <20150922155152.GJ4684@lukather>
+Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v665FhnSoWYGJn+Tf79F7pZitYBrEOmAts4nVoUWb-uBqg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBG5NR6YAKGQEZUIV4XQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150922155152.GJ4684@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Tue, Sep 22, 2015 at 11:47 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> On Tue, Sep 22, 2015 at 11:38 PM, Vishnu Patekar
-> <vishnupatekar0510@gmail.com> wrote:
+On Tue, Sep 22, 2015 at 11:51 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Sep 22, 2015 at 11:38:54PM +0800, Vishnu Patekar wrote:
 >> Allwinner A83T is octa-core cortex-a7 based SoC.
 >> It's clock control unit and prcm, pinmux are different from previous sun8i
 >> series.
 >> Its processor cores are arragned in two clusters 4 cores each,
 >> similar to A80.
 >>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
 >>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
 >>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
@@ -40,24 +50,17 @@ On Tue, Sep 22, 2015 at 11:47 PM, Chen-Yu Tsai <wens@csie.org> wrote:
 >>    allwinner,sun8i-a33
 >>    allwinner,sun8i-h3
 >> +  allwinner,sun8i-a83t
->
-> Alphabetic order please.
-Okie, I'll correct.
->
 >>    allwinner,sun9i-a80
 >> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
 >> index 65bab28..b04aefa 100644
 >> --- a/arch/arm/mach-sunxi/sunxi.c
 >> +++ b/arch/arm/mach-sunxi/sunxi.c
 >> @@ -69,6 +69,7 @@ static const char * const sun8i_board_dt_compat[] = {
->>         "allwinner,sun8i-a23",
->>         "allwinner,sun8i-a33",
->>         "allwinner,sun8i-h3",
->> +       "allwinner,sun8i-a83t",
->
-> Same here.
->
->>         NULL,
+>>       "allwinner,sun8i-a23",
+>>       "allwinner,sun8i-a33",
+>>       "allwinner,sun8i-h3",
+>> +     "allwinner,sun8i-a83t",
+>>       NULL,
 >>  };
 >>
 >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
@@ -69,25 +72,26 @@ Okie, I'll correct.
 >>  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
 >>
 >> +static void __init sun8ia83t_init_clocks(struct device_node *node)
+>
+> Having an underscore between sun8i and a83t would be great :)
+>
 >> +{
->> +       sunxi_init_clocks(NULL, 0);
+>> +     sunxi_init_clocks(NULL, 0);
 >> +}
 >> +CLK_OF_DECLARE(sun9i_a83t_clk_init, "allwinner,sun8i-a83t", sun8ia83t_init_clocks);
 >
-> sun8i? Missing underscore too.
-Sorry, yes, sun8i. will add _.
+>                   ^ Is this a sun9i or sun8i SoC ?
+It's sun8i, sorry.
 >
-> I think you should add this once you actually have clock support.
-> Otherwise this call basically does nothing.
+> Is the list of protected clocks always going to be empty, or will you
+> add some new clocks in that list in the future?
+Yes, I'll add new clocks as time permits.
 >
->> +
->>  static void __init sun9i_init_clocks(struct device_node *node)
->>  {
->>         sunxi_init_clocks(NULL, 0);
+> Thanks!
+> Maxime
 >
-> On the side, I will send patches to remove sun9i_init_clocks.
->
->
-> Regards
-> ChenYu
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 Thanks for review.
