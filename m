@@ -1,90 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Enable USB DRC on the
- Marsboard A10
-Date: Thu, 24 Sep 2015 12:02:31 +0200
-Message-ID: <5603CA37.8000604@redhat.com>
-References: <1443080026-4011-1-git-send-email-mamlinav@gmail.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 2/4] pinctrl: sunxi: add allwinner A83T PIO controller
+ support
+Date: Thu, 24 Sep 2015 12:15:03 +0200
+Message-ID: <20150924101503.GQ4684@lukather>
+References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1442936337-3104-3-git-send-email-vishnupatekar0510@gmail.com>
+ <CAGb2v66gd9qe-yPwENp8e6incjiN7OhXKk00=1gbkofvKrM9og@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBO4UR6YAKGQELUIMK2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1443080026-4011-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W+nSBPrhyZdnT2dj"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66gd9qe-yPwENp8e6incjiN7OhXKk00=1gbkofvKrM9og@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Vishnu Patekar <vishnupatekar0510@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 24-09-15 09:33, Aleksei Mamlin wrote:
-> Enable the otg/drc usb controller on the Marsboard A10.
-> Similar to Cubieboard, the 5V of the otg is directly connected to the
-> general 5V, so we only use the id pin.
->
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--W+nSBPrhyZdnT2dj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks patch looks good to me:
+On Wed, Sep 23, 2015 at 12:06:56AM +0800, Chen-Yu Tsai wrote:
+> > +static const struct sunxi_pinctrl_desc sun8i_a83t_pinctrl_data =3D {
+> > +       .pins =3D sun8i_a83t_pins,
+> > +       .npins =3D ARRAY_SIZE(sun8i_a83t_pins),
+> > +       .irq_banks =3D 3,
+>=20
+> Do you know if there's a hole at where PA_EINT interrupt registers
+> should be? AFAIK we aren't handling that properly, but that is outside
+> the scope of this patch.
 
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Judging from the A83t datasheet, PB seems to be the first IRQ bank, so
+it should be fine.
 
-Regards,
+Maxime
 
-Hans
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
+--W+nSBPrhyZdnT2dj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> ---
->   arch/arm/boot/dts/sun4i-a10-marsboard.dts | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-> index 02158bc..9a012db 100644
-> --- a/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-> +++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-> @@ -154,6 +154,10 @@
->   	status = "okay";
->   };
->
-> +&otg_sram {
-> +	status = "okay";
-> +};
-> +
->   &pio {
->   	led_pins_marsboard: led_pins@0 {
->   		allwinner,pins = "PB5", "PB6", "PB7", "PB8";
-> @@ -161,6 +165,13 @@
->   		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->   		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->   	};
-> +
-> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> +		allwinner,pins = "PH4";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
->   };
->
->   &reg_usb1_vbus {
-> @@ -184,7 +195,15 @@
->   	status = "okay";
->   };
->
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
->   &usbphy {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb0_id_detect_pin>;
-> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
->   	usb1_vbus-supply = <&reg_usb1_vbus>;
->   	usb2_vbus-supply = <&reg_usb2_vbus>;
->   	status = "okay";
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWA80nAAoJEBx+YmzsjxAgc5oQAKHCw/z5KoIdQIvc6f0oDzXY
+5qUywmnPglcpOxHddCHA2CQU8hYts6YU3glsEPe6K803iCnvLWysMBiZBd9X3wKQ
+HS58q8J5XT76Q8Bmsklumjs+Ou4DlvZq79dm4VweefPo1CZoc/f4baPVtuW6IRjq
+izHGWxjB1aHgg80ebQEbAt4002LEOVINOL0IwRBanDlE192JZ9TuKdiunbc7sXz/
+sNT8wKdbNt6kZhmZTi/4YkvgBx5bgQXce+PGXJIRPyM7daIZdLh27z/8bzTLNjJl
+JMaWximN2/JxIU2N/0YAD8IIUWrtg3eoSkAa1rhpJzS1t0vl9yGbnDwGIrx7mAwj
+bBI/YKY1YjYV2IbLy30xM413u/XmtlEbUVRq0nIhr2M6sgBCCkKVhosCEvLMMCl2
+mZqbVl8WItCI4GCdCZEwoi4vnKi+oLsDnT9J9JP8slNbjRt08O7w7VC/diwzSBDA
+rU9+1p+/1ByEy0hliouyMi1gCsPB/e+uOBz5nZVaBcD5PuyYAjacySeco0mPAzZ1
+188wy3nWTDURuYbXesOUr8CiugnC5WDVSH+iXheYatZt51/+mAreaD1okLSp/FGc
+9ap5+kpL+CaTSa4UG4sbrjcHbcEa2Vdg/HFaj3QFjf2pP8N7chT+fBLxSXNHOwyF
+9Cu2G5rzNrBkQgJbn+/W
+=OZMX
+-----END PGP SIGNATURE-----
+
+--W+nSBPrhyZdnT2dj--
