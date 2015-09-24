@@ -1,86 +1,80 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/2] SSD1307fb updates
-Date: Thu, 24 Sep 2015 14:11:28 +0300
-Message-ID: <5603DA60.3050402@ti.com>
-References: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] edac: Add L3 EDAC support to the APM X-Gene SoC
+ EDAC driver
+Date: Thu, 24 Sep 2015 13:25:12 +0200
+Message-ID: <20150924112512.GB3774@pd.tnic>
+References: <1443055261-8613-1-git-send-email-lho@apm.com>
+ <1443055261-8613-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk"
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441739991-4676-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443055261-8613-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: =?UTF-8?Q?Thomas_Niederpr=c3=bcm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Wed, Sep 23, 2015 at 05:40:59PM -0700, Loc Ho wrote:
+> Add EDAC support for the L3 component.
+> 
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  drivers/edac/xgene_edac.c |  669 ++++++++++++++++++++++++++++++++-------------
+>  1 files changed, 474 insertions(+), 195 deletions(-)
 
+...
 
+> @@ -878,25 +869,16 @@ static const struct file_operations xgene_edac_pmd_debug_inject_fops[] = {
+>  	{ }
+>  };
+> 
+> -static void xgene_edac_pmd_create_debugfs_nodes(
+> -	struct edac_device_ctl_info *edac_dev)
+> +static void
+> +xgene_edac_pmd_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
+>  {
+>  	struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
+>  	struct dentry *dbgfs_dir;
+> -	char name[30];
+> +	char name[10];
 
-On 08/09/15 22:19, Olliver Schinagl wrote:
-> Having a few ssd1309 128x64 OLED displays laying around, I added suppor=
-t for it to the existing 1307fb driver. While doing this I noticed the he=
-aders where out of order so I fixed those as well.
->=20
-> For this specific display, the following can be used in a i2c node for =
-example.
->=20
-> 	ssd1309: oled@3c {
-> 		compatible =3D "solomon,ssd1309fb-i2c";
-> 		pinctrl-names =3D "default";
-> 		pinctrl-0 =3D <&oled_pins>;
-> 		reg =3D <0x3c>;
-> 		reset-gpios =3D <&pio 8 13 GPIO_ACTIVE_HIGH>;
-> 		solomon,width =3D <128>;
-> 		solomon,height =3D <64>;
-> 		solomon,com-invdir;
-> 		solomon,page-offset =3D <0>;
-> 		solomon,prechargep1 =3D <2>;
-> 		solomon,prechargep2 =3D <8>;
-> 	};
->=20
-> Olliver Schinagl (2):
->   fbdev: ssd1307fb: alphabetize headers
->   fbdev: ssd1307fb: add ssd1309 support
->=20
->  .../devicetree/bindings/video/ssd1307fb.txt         |  3 ++-
->  drivers/video/fbdev/ssd1307fb.c                     | 21 +++++++++++++=
-+++-----
->  2 files changed, 18 insertions(+), 6 deletions(-)
->=20
+So somehow we don't seem to understand each other. This char name[10] on
+the stack thing has a bunch of problems:
 
-Thanks, queued for 4.4.
+1. It is on the stack so it contains random garbage.
 
- Tomi
+> 
+> -	if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
+> +	if (!IS_ENABLED(CONFIG_EDAC_DEBUG) || !ctx->edac->dfs)
+>  		return;
+> 
+> -	/*
+> -	 * Todo: Switch to common EDAC debug file system for edac device
+> -	 *       when available.
+> -	 */
+> -	if (!ctx->edac->dfs) {
+> -		ctx->edac->dfs = edac_debugfs_create_dir(edac_dev->dev->kobj.name);
+> -		if (!ctx->edac->dfs)
+> -			return;
+> -	}
+>  	sprintf(name, "PMD%d", ctx->pmd);
 
+2. You're sprintf-ing into it without checking its length. This can
+possibly write past the end if %d is big enough. I know, I know, %d
+is only small numbers but that assurance not good enough. You need
+snprintf() and check the ctx->pmd width for sane numbers only anyway.
 
---UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+And debugfs goes and does strlen() on it which could lead to all kinds
+of funky stuff later.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Please fix that in all its occurrences in this patchset.
 
-iQIcBAEBCAAGBQJWA9pgAAoJEPo9qoy8lh71guUQAJAjnKwhRqlY9ogvX7Bybx1e
-iaXFSOjJckWNC9bWY1c0E+m4Bbsl621ITMmNiQe09pfPmO+fe2RToXoeFVR3Hcqp
-WpuHUjS/tSqE9o/U3/7IiWTe6A26uO8TXdVujpy1qlIqmxbxC9c1osa+NeHNXxi/
-u4/MRRuMnnjdOVyaOAgHhwhD9kleb6IfqVtGKgPwPBnekTAoGofLnHMDk4kjXFUH
-2a0PeXVC8Q3ZZseit9usFbkSOVAV8cSVnPG57kP2nQEUaMdhd4uhMFEA1mr/nGDr
-t2rm1maZ9xtrEjrPTUvgigPMKnDJ0Gc7Yl6eXRSjdM/PymIMuEPYheg5eyaJ68S6
-XPkqAjd5g5VLv3gJ7+bEy8Ur06XKfdzjgCOtdBVNE7RA7Z80lEEHfYTYkUw+91hY
-90wFSznP+30aOOtetCHLbGjJlo+sFzI5naC3RDQn+6qud+rNl8vgUq63gQOXkpWW
-SNPb0apzmeEaoizaotBrJ1mlzHk04/49cmtVbGZQ4jz6geGI0bnHpl7fRorYHQ0W
-DqZP3cl+Y4TGIk3MW9D6W+XeNMtal6VZjR9cgZ6Vefs7yxnaaP/enpS89AX1cLEs
-l1OR5lUTNeW0bHXUkkwwEBbrSLfjAywpV+PEzKwiLQcfOolBLjwVIjSbh0Me5gYG
-VF8fLBY0eYtSGFzjvu62
-=LeeH
------END PGP SIGNATURE-----
+-- 
+Regards/Gruss,
+    Boris.
 
---UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk--
+ECO tip #101: Trim your mails when you reply.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
