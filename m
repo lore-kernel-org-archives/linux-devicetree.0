@@ -1,77 +1,77 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers: power: twl4030_charger: fix link
- problems when building as module
-Date: Thu, 24 Sep 2015 22:39:25 +0200
-Message-ID: <20150924203924.GD3125@earth>
-References: <1442953171-19718-1-git-send-email-marek@goldelico.com>
- <20150922212900.GB15646@earth>
- <CAAfyv36mr67fUJKbe1F_rdxRjtvR8M+da0rYCtVTxDgyhKLvSQ@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v11 3/4] add FPGA manager core
+Date: Thu, 24 Sep 2015 15:47:26 -0500
+Message-ID: <alpine.DEB.2.02.1509241526380.5173@linuxheads99>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
+ <1442935271-10375-4-git-send-email-atull@opensource.altera.com>
+ <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
+ <20150923132354.GB31253@amd> <20150923141106.GH4953@mwanda>
+ <alpine.DEB.2.02.1509231101050.23595@linuxheads99>
+ <20150924074953.GI4953@mwanda>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Q0rSlbzrZN6k9QnT"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAfyv36mr67fUJKbe1F_rdxRjtvR8M+da0rYCtVTxDgyhKLvSQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Belisko Marek <marek.belisko@gmail.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, LKML <linux-kernel@vger.kernel.org>, Neil Brown <neilb@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150924074953.GI4953@mwanda>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, linus.walleij@linaro.org, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, rubini@gnudd.com, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Josh Cartwright <joshc@ni.com>, broonie@kernel.org, gregkh@linuxfoundation.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, monstr@monstr.eu, Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@daveml
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 24 Sep 2015, Dan Carpenter wrote:
 
---Q0rSlbzrZN6k9QnT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Of course, the maintainer gets the last word regardless of what anyone
+> else thinks.
+> 
+> Generally, minimal code is better.  Trying to future proof code is a
+> waste of time because you can't predict what will happen in the future.
+> It's way more likely that some pointer you never expected to be NULL
+> will be NULL instead of the few checked at the beginning of a function.
+> Adding useless code uses RAM and makes the function slower.  It's a bit
+> confusing for users as well because they will wonder when the NULL check
+> is used.  A lot of times this sort of error handling is a bit fake and
+> what I mean is that it looks correct but the system will just crash in a
+> later function.
+> 
+> Also especially with a simple NULL dereferences like this theoretical
+> one, it's better to just get the oops.  It kills the module but you get
+> a good message in the log and it's normally straight forward to debug.
+> 
+> We spent a surprising amount of time discussing useless code.  I made
+> someone redo a patch yesterday because they had incomplete error
+> handling for a situation which could never happen.
+> 
+> regards,
+> dan carpenter
+> 
+> 
 
-Hi,
+Thanks for the discussion.
 
-On Thu, Sep 24, 2015 at 09:09:15PM +0200, Belisko Marek wrote:
-> On Tue, Sep 22, 2015 at 11:29 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> > On Tue, Sep 22, 2015 at 10:19:29PM +0200, Marek Belisko wrote:
-> >> If either twl4030_charger or twl4030_madc is configured as MODULE,
-> >> we get build (link) errors.
-> >>
-> >> To solve, the direct call of twl4030_get_madc_conversion() is replaced
-> >> by a call to iio_read_channel_processed().
-> >>
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> >> ---
-> >> changes from V1: added missing iio_channel_release + document and add new DT bindings
-> >
-> > That was fast :) Patchset looks fine to me except for one last
-> > thing: Let's make the iio-channel optional, so that old DT blobs
-> > are still supported. Also the IS_REACHABLE(CONFIG_TWL4030_MADC)
-> > check can be removed, it should no longer be needed with
-> > iio_read_channel_processed().
-> OK I updated driver code to pass when 'vac' property isn't found in
-> DT. Should I mark it also
-> in DT bindings or keep it as it was in v2? Thanks.
+Interesting.  The amount of code bloat here compiles down to about two
+machine instructions (in two places).  Actually a little more since I should
+be using IS_ERR_OR_NULL.  But the main question is whether I should do
+it at all.
 
-Move it from "Required properties:" to "Optional properties:". Maybe
-stating, that the feature does not work, if it's not provided.
+The behaviour I should drive here is that the user will do their own error
+checking.  After they get a pointer to a FPGA manager using
+of_fpga_mgr_get(), they should check it and not assume that
+fpga_mgr_firmware_load() will do it for them, i.e.
 
--- Sebastian
+	mgr = of_fpga_mgr_get(mgr_node);
+	if (IS_ERR(mgr))
+		return PTR_ERR(mgr);
+	fpga_mgr_firmware_load(mgr, flags, path);
 
---Q0rSlbzrZN6k9QnT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I could take out these NULL pointer checks and it won't hurt anything unless
+someone is just using the functions badly, in which case: kablooey.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWBF98AAoJENju1/PIO/qab8MP/0CoSqi1KeRuhrmjDhiuIjie
-sHAG7koLJOE754cICR0SZ+iptfozd7T9w5FkA58bh0xr49n90aWTn8ho35RlzDeu
-/3W6qHT4jRByqlxIxX0V8XLExohlMuq7Lq0n/LHMZoa5Rv4IkLhkoFEk49rlM2Jh
-2JUh31FONJtEAgcCgGeTXa2FhYYB3qRoE085m3yXaL1PgmT5cZo/spcL1Hct7pMh
-mpMODyJB3ptvU+zR71NIA84plxeuZx6I7+Jt61TJCzkcTIhT3bDolQDohnWzsbl8
-MH3t43/ngmzqPOcH3eSPjp6fPFMr/PrVIG+Pms00oFM5VvSeNVyZ7UYHvlvtuof3
-p2TlE8PD1fcFBewMVnMLXZqD2dKncoT3OyoziOlspaWmmDtblr8RuPUMP6MGREJh
-kQudD/rwNhGPXIvTYSBg+E1yfNwsTp0xnbkAmtOeL5iUf77CBmt7cuRo42wiIkt/
-Cp0AlW3iaV7GlUsI1jolO1cMhSvu2iQXar7K+WJIzNhxY/cuDg010GSTLE8D0SJR
-LKj8XX7dd9NxtZ/z8FzNOLv22COknzEhazPGMbpVT68M8Vto3W9QhlpluHv16NOC
-rQ0lZwapmmrkH5d6Ffd/zh1M2OcUsPnrzYBq7Qy1mQZn8YKgGQVFNC4THn0A54mN
-wSxjJLWvHmojX7F8JFhK
-=ik+g
------END PGP SIGNATURE-----
-
---Q0rSlbzrZN6k9QnT--
+Alan
