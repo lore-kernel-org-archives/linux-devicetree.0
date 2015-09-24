@@ -1,76 +1,129 @@
-From: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91/dt: pullup dbgu rx instead of tx
-Date: Thu, 24 Sep 2015 17:22:54 +0200
-Message-ID: <5604154E.6050404@lysator.liu.se>
-References: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
- <20150924144753.GY4287@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] Revert "ARM: dts: sun8i: Add new sun8i-a33-q8-tzx-723q4.dts file"
+Date: Thu, 24 Sep 2015 17:23:52 +0200
+Message-ID: <1443108234-14837-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150924144753.GY4287-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-09-24 16:47, Alexandre Belloni wrote:
-> Hi Peter,
-> 
-> Thanks for the patch but you actually got beaten by Sylvain:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/368426.html
+The tzx-723q[a]4 board variant of A33 based Q8 formfactor tablets was
+given its own dts file because the mmc would not work with a drive
+strength of 30mA, Android seemed to be using a lower drive-strength
+and doing the same with the upstream kernel seemed to fix this issue.
 
-Ok, great!
+While working on a similar fix for u-boot I noticed that Android did
+not use a lower drive strength for mmc0, but for mmc1, so mmc0 should
+work fine with a drive strength of 30mA.
 
-I just noticed that other ports have the same problem in sama5d3.dtsi. E.g.
+Further investigation has shown that Allwinner is using slightly
+tweaked clock sample phase settings in newer Android kernels, and
+that updating the mainstream sunxi mmc driver to these settings fixes
+this.
 
-	uart1 {
-		pinctrl_uart1: uart1-0 {
-			atmel,pins =
-				<AT91_PIOA 30 AT91_PERIPH_B AT91_PINCTRL_NONE   /* conflicts with TWD0, ISI_VSYNC */
-				 AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_PULL_UP>;      /* conflicts with TWCK0, ISI_HSYNC */
-		};
-	};
+With this fixed we no longer need a dts file specifically for these
+pcb varants -> drop this dts file.
 
-Given that the original bug I found spread all over the map, it seems
-like someone was confused when the pull-ups were originally added.
-Someone (else?) at Atmel needs to audit this so that pull-ups are
-added on the rx-pins instead of the tx-pins.
+This reverts commit fb61c559a810f1487892b83d2d0606af1d020318.
 
-Cheers,
-Peter
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                   |  1 -
+ arch/arm/boot/dts/sun8i-a33-q8-tzx-723q4.dts | 70 ----------------------------
+ 2 files changed, 71 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/sun8i-a33-q8-tzx-723q4.dts
 
-> On 24/09/2015 at 16:44:15 +0200, Peter Rosin wrote :
->> From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->>
->> It seems pointless to pullup the tx line, but there is value in pulling
->> up the rx line.
->>
->> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sama5d3.dtsi |    4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
->> index 9e2444b07bce..304a40c5552a 100644
->> --- a/arch/arm/boot/dts/sama5d3.dtsi
->> +++ b/arch/arm/boot/dts/sama5d3.dtsi
->> @@ -545,8 +545,8 @@
->>  				dbgu {
->>  					pinctrl_dbgu: dbgu-0 {
->>  						atmel,pins =
->> -							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB30 periph A */
->> -							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;	/* PB31 periph A with pullup */
->> +							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB30 periph A with pullup */
->> +							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB31 periph A */
->>  					};
->>  				};
->>  
->> -- 
->> 1.7.10.4
->>
-> 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index df8e0b3..d3982e7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -637,7 +637,6 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a33-et-q8-v1.6.dtb \
+ 	sun8i-a33-ga10h-v1.1.dtb \
+ 	sun8i-a33-ippo-q8h-v1.2.dtb \
+-	sun8i-a33-q8-tzx-723q4.dtb \
+ 	sun8i-a33-sinlinx-sina33.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tzx-723q4.dts b/arch/arm/boot/dts/sun8i-a33-q8-tzx-723q4.dts
+deleted file mode 100644
+index 04f396a..0000000
+--- a/arch/arm/boot/dts/sun8i-a33-q8-tzx-723q4.dts
++++ /dev/null
+@@ -1,70 +0,0 @@
+-/*
+- * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+- */
+-
+-/dts-v1/;
+-#include "sun8i-a33.dtsi"
+-#include "sun8i-q8-common.dtsi"
+-
+-/ {
+-	model = "Q8 TZX 723Q4 Quad Core Tablet";
+-	compatible = "tzx,q8-tzx-723q4", "allwinner,sun8i-a33";
+-};
+-
+-/* The TZX 723Q[a]4 PCB mmc only works properly with a lower drive-strenght */
+-&mmc0_pins_a {
+-	allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-};
+-
+-/*
+- * FIXME for now we only support host mode and rely on u-boot to have
+- * turned on Vbus which is controlled by the axp223 pmic on the board.
+- *
+- * Once we have axp223 support we should switch to fully supporting otg.
+- */
+-&usb_otg {
+-	dr_mode = "host";
+-	status = "okay";
+-};
+-
+-&usbphy {
+-	status = "okay";
+-};
+-- 
+2.5.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
