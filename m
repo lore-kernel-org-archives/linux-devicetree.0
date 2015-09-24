@@ -1,77 +1,95 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v11 3/4] add FPGA manager core
-Date: Thu, 24 Sep 2015 15:47:26 -0500
-Message-ID: <alpine.DEB.2.02.1509241526380.5173@linuxheads99>
-References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
- <1442935271-10375-4-git-send-email-atull@opensource.altera.com>
- <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
- <20150923132354.GB31253@amd> <20150923141106.GH4953@mwanda>
- <alpine.DEB.2.02.1509231101050.23595@linuxheads99>
- <20150924074953.GI4953@mwanda>
+From: Adrian Alonso <aalonso@freescale.com>
+Subject: [PATCH v5 1/7] pinctrl: freescale: imx: fix system crash if enable two pinctl instances
+Date: Thu, 24 Sep 2015 15:53:57 -0500
+Message-ID: <1443128043-21063-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150924074953.GI4953@mwanda>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, linus.walleij@linaro.org, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, rubini@gnudd.com, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Josh Cartwright <joshc@ni.com>, broonie@kernel.org, gregkh@linuxfoundation.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, monstr@monstr.eu, Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@daveml
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Sep 2015, Dan Carpenter wrote:
+From: Robin Gong <b38343@freescale.com>
 
-> Of course, the maintainer gets the last word regardless of what anyone
-> else thinks.
-> 
-> Generally, minimal code is better.  Trying to future proof code is a
-> waste of time because you can't predict what will happen in the future.
-> It's way more likely that some pointer you never expected to be NULL
-> will be NULL instead of the few checked at the beginning of a function.
-> Adding useless code uses RAM and makes the function slower.  It's a bit
-> confusing for users as well because they will wonder when the NULL check
-> is used.  A lot of times this sort of error handling is a bit fake and
-> what I mean is that it looks correct but the system will just crash in a
-> later function.
-> 
-> Also especially with a simple NULL dereferences like this theoretical
-> one, it's better to just get the oops.  It kills the module but you get
-> a good message in the log and it's normally straight forward to debug.
-> 
-> We spent a surprising amount of time discussing useless code.  I made
-> someone redo a patch yesterday because they had incomplete error
-> handling for a situation which could never happen.
-> 
-> regards,
-> dan carpenter
-> 
-> 
+Fix system chrash caused by groups whose number is smaller than the number
+of groups of the last pinctl instance which is not initialized.
 
-Thanks for the discussion.
+iMX7D supports two iomux controllers (iomuxc-lpsr and iomuxc) on probing
+the second instance (iomuxc) the chrash below occurs.
 
-Interesting.  The amount of code bloat here compiles down to about two
-machine instructions (in two places).  Actually a little more since I should
-be using IS_ERR_OR_NULL.  But the main question is whether I should do
-it at all.
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.2.0-next-20150901-00006-gebfa43c (aalonso@bluefly)
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7)
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasin instruction cache
+[    0.000000] Machine model: Freescale i.MX7 SabreSD Board
+[    0.661012] [<802a6cb0>] (strcmp) from [<802cc80c>] (imx_dt_node_to_map+0x58/0x208)
+[    0.668879] [<802cc80c>] (imx_dt_node_to_map) from [<802cbe24>] (pinctrl_dt_to_map+0x174/0x2b0)
+[    0.677654] [<802cbe24>] (pinctrl_dt_to_map) from [<802c8f18>] (pinctrl_get+0x100/0x424)
+[    0.685878] [<802c8f18>] (pinctrl_get) from [<802c9510>] (pinctrl_register+0x26c/0x480)
+[    0.694104] [<802c9510>] (pinctrl_register) from [<802ccf3c>] (imx_pinctrl_probe+0x580/0x6e8)
+[    0.702706] [<802ccf3c>] (imx_pinctrl_probe) from [<80351b58>] (platform_drv_probe+0x44/0xa4)
+[    0.711455] [<80351b58>] (platform_drv_probe) from [<803503ec>] (driver_probe_device+0x174/0x2b4)
+[    0.720405] [<803503ec>] (driver_probe_device) from [<803505fc>] (__driver_attach+0x8c/0x90)
+[    0.728982] [<803505fc>] (__driver_attach) from [<8034e930>] (bus_for_each_dev+0x6c/0xa0)
+[    0.737381] [<8034e930>] (bus_for_each_dev) from [<8034fb88>] (bus_add_driver+0x148/0x1f0)
+[    0.745804] [<8034fb88>] (bus_add_driver) from [<80350c00>] (driver_register+0x78/0xf8)
+[    0.753880] [<80350c00>] (driver_register) from [<800097d0>] (do_one_initcall+0x8c/0x1d4)
+[    0.762282] [<800097d0>] (do_one_initcall) from [<80987dac>] (kernel_init_freeable+0x144/0x1e4)
+[    0.771061] [<80987dac>] (kernel_init_freeable) from [<806d9c7c>] (kernel_init+0x8/0xe8)
+[    0.779285] [<806d9c7c>] (kernel_init) from [<8000f628>] (ret_from_fork+0x14/0x2c)
+[    0.786981] Code: e3520000 e5e32001 1afffffb e12fff1e (e4d03001)
 
-The behaviour I should drive here is that the user will do their own error
-checking.  After they get a pointer to a FPGA manager using
-of_fpga_mgr_get(), they should check it and not assume that
-fpga_mgr_firmware_load() will do it for them, i.e.
+Signed-off-by: Robin Gong <b38343@freescale.com>
+Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+---
+Chages for V2:
+- Reorder patch series
+- Add platform boot up information on kernel error
+- Move gpr_index to imx_pinctrl_soc_info
+Changes for V3:
+- Rename grp_index to group_index
+Changes for V4: Resend
+Changes for V5: Resend
 
-	mgr = of_fpga_mgr_get(mgr_node);
-	if (IS_ERR(mgr))
-		return PTR_ERR(mgr);
-	fpga_mgr_firmware_load(mgr, flags, path);
+ drivers/pinctrl/freescale/pinctrl-imx.c | 3 +--
+ drivers/pinctrl/freescale/pinctrl-imx.h | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I could take out these NULL pointer checks and it won't hurt anything unless
-someone is just using the functions badly, in which case: kablooey.
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index d7b98ba..b9c6deb 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -580,7 +580,6 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 	struct device_node *child;
+ 	struct imx_pmx_func *func;
+ 	struct imx_pin_group *grp;
+-	static u32 grp_index;
+ 	u32 i = 0;
+ 
+ 	dev_dbg(info->dev, "parse function(%d): %s\n", index, np->name);
+@@ -599,7 +598,7 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 
+ 	for_each_child_of_node(np, child) {
+ 		func->groups[i] = child->name;
+-		grp = &info->groups[grp_index++];
++		grp = &info->groups[info->group_index++];
+ 		imx_pinctrl_parse_groups(child, grp, info, i++);
+ 	}
+ 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 49e55d3..2a5fe72 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -78,6 +78,7 @@ struct imx_pinctrl_soc_info {
+ 	struct imx_pin_reg *pin_regs;
+ 	struct imx_pin_group *groups;
+ 	unsigned int ngroups;
++	unsigned int group_index;
+ 	struct imx_pmx_func *functions;
+ 	unsigned int nfunctions;
+ 	unsigned int flags;
+-- 
+2.1.4
 
-Alan
