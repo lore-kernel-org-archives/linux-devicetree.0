@@ -1,83 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC v4 4/8] drm/i2c: tda998x: Add support of a DT graph of
- ports
-Date: Thu, 24 Sep 2015 11:29:21 -0500
-Message-ID: <CAL_JsqJztmoNZdL06CnAh6REpRsSjVN-9zyo5g08YuezW58vrQ@mail.gmail.com>
-References: <cover.1442572860.git.jsarha@ti.com>
- <e9ebb04f781fef7cff99190d301fb64805b97d39.1442572860.git.jsarha@ti.com>
- <56001FF6.5070504@kernel.org> <20150924123616.5d47f363@armhf>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add sensor node to Juno dt
+Date: Thu, 24 Sep 2015 17:36:58 +0100
+Message-ID: <20150924163658.GH2368@e106497-lin.cambridge.arm.com>
+References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
+ <1442335861-7282-6-git-send-email-punit.agrawal@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150924123616.5d47f363@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>, liam.r.girdwood@linux.intel.com, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Jyri Sarha <jsarha@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442335861-7282-6-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMjQsIDIwMTUgYXQgNTozNiBBTSwgSmVhbi1GcmFuY29pcyBNb2luZSA8bW9p
-bmVqZkBmcmVlLmZyPiB3cm90ZToKPiBPbiBNb24sIDIxIFNlcCAyMDE1IDEwOjE5OjE4IC0wNTAw
-Cj4gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4KPj4gT24gMDkvMTgvMjAx
-NSAwNjowNiBBTSwgSnlyaSBTYXJoYSB3cm90ZToKPj4gPiBGcm9tOiBKZWFuLUZyYW5jb2lzIE1v
-aW5lIDxtb2luZWpmQGZyZWUuZnI+Cj4+ID4KPj4gPiBUd28ga2luZHMgb2YgcG9ydHMgbWF5IGJl
-IGRlY2xhcmVkIGluIGEgRFQgZ3JhcGggb2YgcG9ydHM6IHZpZGVvIGFuZCBhdWRpby4KPj4gPiBU
-aGlzIHBhdGNoIGFjY2VwdHMgdGhlIHBvcnQgdmFsdWUgZnJvbSBhIHZpZGVvIHBvcnQgYXMgYW4g
-YWx0ZXJuYXRpdmUKPj4gPiB0byB0aGUgdmlkZW8tcG9ydHMgcHJvcGVydHkuCj4+ID4gSXQgYWxz
-byBhY2NlcHRzIGF1ZGlvIHBvcnRzIGluIHRoZSBjYXNlIHRoZSB0cmFuc21pdHRlciBpcyBub3Qg
-dXNlZCBhcwo+PiA+IGEgc2xhdmUgZW5jb2Rlci4KPj4gPiBUaGUgbmV3IGZpbGUgaW5jbHVkZS9z
-b3VuZC90ZGE5OTh4LmggcHJlcGFyZXMgdG8gdGhlIGRlZmluaXRpb24gb2YKPj4gPiBhIHRkYTk5
-OHggQ09ERUMuCj4+ID4KPj4gPiBTaWduZWQtb2ZmLWJ5OiBKZWFuLUZyYW5jb2lzIE1vaW5lIDxt
-b2luZWpmQGZyZWUuZnI+Cj4+ID4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRp
-LmNvbT4KPj4gPiAtLS0KPiAgICAgICAgIFtzbmlwXQo+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaTJjL3RkYTk5OHgudHh0Cj4+ID4gaW5kZXgg
-ZTllNGJjZS4uMzVmNmE4MCAxMDA2NDQKPj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dAo+PiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaTJjL3RkYTk5OHgudHh0Cj4+ID4gQEAgLTE2LDYgKzE2
-LDM1IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ID4KPj4gPiAgICAtIHZpZGVvLXBvcnRzOiAy
-NCBiaXRzIHZhbHVlIHdoaWNoIGRlZmluZXMgaG93IHRoZSB2aWRlbyBjb250cm9sbGVyCj4+ID4g
-ICAgIG91dHB1dCBpcyB3aXJlZCB0byB0aGUgVERBOTk4eCBpbnB1dCAtIGRlZmF1bHQ6IDwweDIz
-MDE0NT4KPj4gPiArICAgVGhpcyBwcm9wZXJ0eSBpcyBub3QgdXNlZCB3aGVuIHBvcnRzIGFyZSBk
-ZWZpbmVkLgo+PiA+ICsKPj4gPiArT3B0aW9uYWwgbm9kZXM6Cj4+ID4gKwo+PiA+ICsgIC0gcG9y
-dDogdXAgdG8gdGhyZWUgcG9ydHMuCj4+ID4gKyAgIFRoZSBwb3J0cyBhcmUgZGVmaW5lZCBhY2Nv
-cmRpbmcgdG8gWzFdLgo+PiA+ICsKPj4gPiArICAgIFZpZGVvIHBvcnQuCj4+ID4gKyAgIFRoZXJl
-IG1heSBiZSBvbmx5IG9uZSB2aWRlbyBwb3J0Lgo+PiA+ICsgICBUaGlzIG9uZSBtdXN0IGNvbnRh
-aW4gdGhlIGZvbGxvd2luZyBwcm9wZXJ0eToKPj4gPiArCj4+ID4gKyAgIC0gcG9ydC10eXBlOiBt
-dXN0IGJlICJyZ2IiCj4+Cj4+IFdoeSBkbyB5b3UgbmVlZCB0aGlzIGlmIHRoZXJlIGlzIG5vIG90
-aGVyIGNob2ljZT8gVGhlIHBvcnQgbnVtYmVyIHNob3VsZAo+PiBkZWZpbmUgd2hpY2ggb25lIGlz
-IHZpZGVvLgo+Cj4gVGhlcmUgaXMgbm8gc3BlY2lmaWMgcG9ydCBudW1iZXIuCj4gT25lIG9mIHRo
-ZSBwb3J0cyBpcyB2aWRlbyBhbmQgdHdvIG90aGVyIG9uZXMgYXJlIGF1ZGlvLgoKSSBzYXlpbmcg
-eW91IHNob3VsZCBkZWZpbmUgdGhlIHBvcnQgbnVtYmVyaW5nIGluIHRoZSBiaW5kaW5nLiBQb3J0
-IDAKaXMgdmlkZW8sIFBvcnQgMSBpcyBpMnMsIGV0Yy4KCj4KPj4gPiArCj4+ID4gKyAgIGFuZCBt
-YXkgY29udGFpbiB0aGUgb3B0aW9uYWwgcHJvcGVydHk6Cj4+ID4gKwo+PiA+ICsgICAtIHJlZzog
-MjQgYml0cyB2YWx1ZSB3aGljaCBkZWZpbmVzIGhvdyB0aGUgdmlkZW8gY29udHJvbGxlcgo+PiA+
-ICsgICAgICAgICAgIG91dHB1dCBpcyB3aXJlZCB0byB0aGUgVERBOTk4eCBpbnB1dCAodmlkZW8g
-cGlucykKPj4gPiArICAgICAgICAgICBXaGVuIGFic2VudCwgdGhlIGRlZmF1bHQgdmFsdWUgaXMg
-PDB4MjMwMTQ1Pi4KPj4KPj4gSSdtIGZhaWxpbmcgdG8gZGVjb2RlIGhvdyB0aGlzIHZhbHVlIHdv
-cmtzLiBJbiBhbnkgY2FzZSwgSSB3b3VsZCBrZWVwCj4+IHRoaXMgYXMgYSB2ZW5kb3Igc3BlY2lm
-aWMgcHJvcGVydHkgcmF0aGVyIHRoYW4gYWJ1c2luZyByZWcuCj4KPiBUaGlzIGhhcyBiZWVuIGV4
-cGxhaW5lZCBpbgo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzEvMjAvODYKCk9rYXksIHNv
-IHRoYXQgZXhwbGFpbnMgaG93IGl0IHdvcmtzLCBidXQgc3RpbGwgaXQgc2hvdWxkIG5vdCBiZSBp
-biByZWcuCgo+Cj4+ID4gKwo+PiA+ICsgICAgQXVkaW8gcG9ydHMuCj4+ID4gKyAgIFRoZXJlIG1h
-eSBiZSBvbmUgb3IgdHdvIGF1ZGlvIHBvcnRzLgo+PiA+ICsgICBUaGVzZSBvbmVzIG11c3QgY29u
-dGFpbiB0aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6Cj4+ID4gKwo+PiA+ICsgICAtIHBvcnQtdHlw
-ZTogbXVzdCBiZSAiaTJzIiBvciAic3BkaWYiCj4+ID4gKwo+PiA+ICsgICAtIHJlZzogOCBiaXRz
-IHZhbHVlIHdoaWNoIGRlZmluZXMgaG93IHRoZSBhdWRpbyBjb250cm9sbGVyCj4+ID4gKyAgICAg
-ICAgICAgb3V0cHV0IGlzIHdpcmVkIHRvIHRoZSBUREE5OTh4IGlucHV0IChhdWRpbyBwaW5zKQo+
-Pgo+PiByZWcgaXMgMzItYml0cy4KPgo+IFRoaXMgcG9ydCBoYXMgb25seSA4IHNpZ25pZmljYW50
-IGJpdHMgYXMgZXhwbGFpbmVkIGluCj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTUvMS83LzM2
-MgoKTWF5YmUgb25seSA4LWJpdHMgYXJlIHVzZWQsIGJ1dCB0aGUgc2l6ZSBvZiB0aGUgZGF0YSBp
-biB0aGUgRFRCIGlzCjMyLWJpdHMgdW5sZXNzIHlvdSBhZGQgOC1iaXQgYW5ub3RhdGlvbi4gQWdh
-aW4sIHJlZyBpcyBub3QgYXBwcm9wcmlhdGUKdG8gdXNlIGhlcmUuCgpSb2IKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Sep 15, 2015 at 05:51:01PM +0100, Punit Agrawal wrote:
+> The SCP firmware on Juno provides access to SoC sensors via the
+> SCPI. Add the sensor nodes to the device tree to enable this support.
+>=20
+> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+
+Acked-by: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+
+> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/arm/juno-base.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot=
+/dts/arm/juno-base.dtsi
+> index c624208..dd5158e 100644
+> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> @@ -96,6 +96,11 @@
+>  				clock-output-names =3D "pxlclk0", "pxlclk1";
+>  			};
+>  		};
+> +
+> +		scpi_sensors0: sensors {
+> +			compatible =3D "arm,scpi-sensors";
+> +			#thermal-sensor-cells =3D <1>;
+> +		};
+>  	};
+> =20
+>  	/include/ "juno-clocks.dtsi"
+> --=20
+> 2.5.1
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
