@@ -1,38 +1,61 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: mdio-octeon: Add PCI driver binding.
-Date: Thu, 24 Sep 2015 16:07:57 -0700 (PDT)
-Message-ID: <20150924.160757.907239258265499481.davem@davemloft.net>
-References: <56047D15.9080105@caviumnetworks.com>
-	<20150924.155004.109163182451628208.davem@davemloft.net>
-	<56047F26.9070305@caviumnetworks.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 0/9] Phy, mdiobus, and netdev struct device fixes
+Date: Fri, 25 Sep 2015 00:12:21 +0100
+Message-ID: <20150924231221.GI21513@n2100.arm.linux.org.uk>
+References: <20150924215731.GE20825@lunn.ch>
+ <20150924.151554.619662567057050978.davem@davemloft.net>
+ <20150924222654.GG20825@lunn.ch>
+ <20150924.155137.1429397912516096627.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56047F26.9070305@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ddaney@caviumnetworks.com
-Cc: ddaney.cavm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, david.daney@cavium.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150924.155137.1429397912516096627.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, sgoutham@cavium.com, rric@kernel.org, frowand.list@gmail.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, netdev@vger.kernel.org, soren.brinkmann@xilinx.com, isubramanian@apm.com, grant.likely@linaro.org, leoli@freescale.com, kchudgar@apm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <ddaney@caviumnetworks.com>
-Date: Thu, 24 Sep 2015 15:54:30 -0700
-
-> On 09/24/2015 03:50 PM, David Miller wrote:
->> From: David Daney <ddaney@caviumnetworks.com>
->> Date: Thu, 24 Sep 2015 15:45:41 -0700
->>
->>> 2) The OF device tree nodes for PCI devices do not result in the
->>> creation of a platform device.
->>
->> But they are created for the children right?  And that's the one
->> you need them for probing.
->>
->> I'm still not convinced, sorry.
->>
+On Thu, Sep 24, 2015 at 03:51:37PM -0700, David Miller wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
+> Date: Fri, 25 Sep 2015 00:26:54 +0200
 > 
-> Let's let this topic rest for a few days.  My original patch was
-> defective, so it cannot be merged.  I will sleep on this, try a few
-> things and perhaps revisit it if I still think it is advisable.
+> > On Thu, Sep 24, 2015 at 03:15:54PM -0700, David Miller wrote:
+> >> From: Andrew Lunn <andrew@lunn.ch>
+> >> Date: Thu, 24 Sep 2015 23:57:31 +0200
+> >> 
+> >> > I built the FEC driver as a module, and it won't unload:
+> >> > 
+> >> >  kernel:unregister_netdevice: waiting for eth1 to become free. Usage count = 1
+> >> > unregister_netdevice: waiting for eth1 to become free. Usage count = 1
+> >> > 
+> >> > i assume because DSA holds a reference. I've not tried a fully module
+> >> > build, DSA has issues with that.
+> >> > 
+> >> > Tested-by: Andrew Lunn <andrew@lunn.ch>
+> >> 
+> >> So, is this a regression?
+> > 
+> > Sorry, worded that badly. Since DSA is still active, it should not be
+> > possible to unload the FEC driver. DSA should have a reference to it,
+> > and mdio-mux also should have a reference to the mdio bus of the FEC
+> > driver.
+> > 
+> > As Russell requested, i will re-test without his patches, just to make
+> > sure.
+> 
+> Something needs to hold into the underlying device refcount of a DSA
+> blob so that an unload can't even be attempted in that state.
 
-Ok.
+Holding a reference on a struct device does _not_ stop the device
+being unbound or the module driving it being removed.  It merely
+stops the struct device from being freed before all references have
+been dropped.
+
+Devices are always free to be unbound from their bound drivers
+irrespective of the struct device refcount.  Even taking a reference
+on the module (via try_module_get()) does not stop this.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
