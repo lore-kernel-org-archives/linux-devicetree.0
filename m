@@ -1,80 +1,65 @@
 From: Dongsheng Wang <dongsheng.wang@freescale.com>
-Subject: [PATCH v3 1/2] fsl: Add binding for RCPM
-Date: Thu, 24 Sep 2015 16:29:13 +0800
-Message-ID: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
+Subject: [PATCH v3 2/2] arm/layerscape: add RCPM device tree support for
+ ls1021a.
+Date: Thu, 24 Sep 2015 16:29:14 +0800
+Message-ID: <1443083354-37369-2-git-send-email-dongsheng.wang@freescale.com>
+References: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: scottwood@freescale.com
-Cc: devicetree@vger.kernel.org, Chenhui Zhao <chenhui.zhao@freescale.com>, alison.wang@freescale.com, linuxppc-dev@lists.ozlabs.org, Wang Dongsheng <dongsheng.wang@freescale.com>, Tang Yuantian <Yuantian.Tang@freescale.com>, robh+dt@kernel.org, jason.jin@freescale.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, alison.wang@freescale.com, linuxppc-dev@lists.ozlabs.org, Wang Dongsheng <dongsheng.wang@freescale.com>, robh+dt@kernel.org, jason.jin@freescale.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogV2FuZyBEb25nc2hlbmcgPGRvbmdzaGVuZy53YW5nQGZyZWVzY2FsZS5jb20+CgpSQ1BN
-IGlzIHRoZSBSdW4gQ29udHJvbCBhbmQgUG93ZXIgTWFuYWdlbWVudCBtb2R1bGUgcGVyZm9ybXMg
-YWxsCmRldmljZS1sZXZlbCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9s
-IGFuZCBwb3dlcgptYW5hZ2VtZW50LgoKQWRkIHRoaXMgZm9yIGZyZWVzY2FsZSBwb3dlcnBjIHBs
-YXRmb3JtIGFuZCBsYXllcnNjYXBlIHBsYXRmb3JtLgoKU2lnbmVkLW9mZi1ieTogQ2hlbmh1aSBa
-aGFvIDxjaGVuaHVpLnpoYW9AZnJlZXNjYWxlLmNvbT4KU2lnbmVkLW9mZi1ieTogVGFuZyBZdWFu
-dGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBXYW5nIERv
-bmdzaGVuZyA8ZG9uZ3NoZW5nLndhbmdAZnJlZXNjYWxlLmNvbT4KLS0tCip2MyoKLSBBZGQgImZz
-bCwjcmNwbS13YWtldXAtY2VsbHMiIGZvciByY3BtIG5vZGUuIFRoZSBudW1iZXIgb2YgY2VsbHMK
-ICBjb3JyZXNwb25kIHJjcG0td2FrZXVwIHByb3BlcnR5LgotIE1vZGlmeSByY3BtLXdha2V1cCBw
-cm9wZXJ0eSBkZXNjcmlwdGlvbi4KCip2MioKLSBSZW1vdmUgUDQwODAgZXhhbXBsZS4KLSBNb2Rp
-ZnkgcmNwbS13YWtldXAgcHJvcGVydHkgZGVzY3JpcHRpb24uCgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4dApuZXcgZmlsZSBtb2RlIDEw
-MDY0NAppbmRleCAwMDAwMDAwLi41MjExMGVjCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQKQEAgLTAsMCArMSw2MyBA
-QAorKiBSdW4gQ29udHJvbCBhbmQgUG93ZXIgTWFuYWdlbWVudAorLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorVGhlIFJDUE0gcGVyZm9ybXMgYWxsIGRldmljZS1s
-ZXZlbCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9sCithbmQgcG93ZXIg
-bWFuYWdlbWVudC4KKworUmVxdWlyZWQgcHJvcGVyaXRlczoKKyAgLSByZWcgOiBPZmZzZXQgYW5k
-IGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IG9mIFJDUE0gYmxvY2suCisgIC0gZnNsLCNyY3Bt
-LXdha2V1cC1jZWxscyA6IFRoZSBudW1iZXIgb2YgY2VsbHMgaW4gcmNwbS13YWtldXAgcHJvcGVy
-dHkuCisgIC0gY29tcGF0aWJsZSA6IFNvdWxkIGNvbnRhaW4gYSBjaGlwLXNwZWNpZmljIFJDUE0g
-YmxvY2sgY29tcGF0aWJsZSBzdHJpbmcKKwlhbmQgKGlmIGFwcGxpY2FibGUpIG1heSBjb250YWlu
-IGEgY2hhc3Npcy12ZXJzaW9uIFJDUE0gY29tcGF0aWJsZQorCXN0cmluZy4gQ2hpcC1zcGVjaWZp
-YyBzdHJpbmdzIGFyZSBvZiB0aGUgZm9ybSAiZnNsLDxjaGlwPi1yY3BtIiwKKwlzdWNoIGFzOgor
-CSogImZzbCxwMjA0MS1yY3BtIgorCSogImZzbCxwMzA0MS1yY3BtIgorCSogImZzbCxwNDA4MC1y
-Y3BtIgorCSogImZzbCxwNTAyMC1yY3BtIgorCSogImZzbCxwNTA0MC1yY3BtIgorCSogImZzbCx0
-NDI0MC1yY3BtIgorCSogImZzbCxiNDQyMC1yY3BtIgorCSogImZzbCxiNDg2MC1yY3BtIgorCisJ
-Q2hhc3Npcy12ZXJzaW9uIHN0cmluZ3MgYXJlIG9mIHRoZSBmb3JtICJmc2wscW9yaXEtcmNwbS08
-dmVyc2lvbj4iLAorCXN1Y2ggYXM6CisJKiAiZnNsLHFvcmlxLXJjcG0tMS4wIjogZm9yIGNoYXNz
-aXMgMS4wIHJjcG0KKwkqICJmc2wscW9yaXEtcmNwbS0yLjAiOiBmb3IgY2hhc3NpcyAyLjAgcmNw
-bQorCSogImZzbCxxb3JpcS1yY3BtLTIuMSI6IGZvciBjaGFzc2lzIDIuMSByY3BtCisKK0FsbCBy
-ZWZlcmVuY2VzIHRvICIxLjAiIGFuZCAiMi4wIiByZWZlciB0byB0aGUgUW9ySVEgY2hhc3NpcyB2
-ZXJzaW9uIHRvCit3aGljaCB0aGUgY2hpcCBjb21wbGllcy4KK0NoYXNzaXMgVmVyc2lvbgkJRXhh
-bXBsZSBDaGlwcworLS0tLS0tLS0tLS0tLS0tCQktLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tCisxLjAJCQkJcDQwODAsIHA1MDIwLCBwNTA0MCwgcDIwNDEsIHAzMDQxCisyLjAJCQkJdDQy
-NDAsIGI0ODYwLCBiNDQyMAorMi4xCQkJCXQxMDQwLCBsczEwMjEKKworRXhhbXBsZToKK1RoZSBS
-Q1BNIG5vZGUgZm9yIFQ0MjQwOgorCXJjcG06IGdsb2JhbC11dGlsaXRpZXNAZTIwMDAgeworCQlj
-b21wYXRpYmxlID0gImZzbCx0NDI0MC1yY3BtIiwgImZzbCxxb3JpcS1yY3BtLTIuMCI7CisJCXJl
-ZyA9IDwweGUyMDAwIDB4MTAwMD47CisJCWZzbCwjcmNwbS13YWtldXAtY2VsbHMgPSA8Mj47CisJ
-fTsKKworKiBGcmVlc2NhbGUgUkNQTSBXYWtldXAgU291cmNlIERldmljZSBUcmVlIEJpbmRpbmdz
-CistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCitSZXF1aXJlZCBy
-Y3BtLXdha2V1cCBwcm9wZXJ0eSBzaG91bGQgYmUgYWRkZWQgdG8gYSBkZXZpY2Ugbm9kZSBpZiB0
-aGUgZGV2aWNlCitjYW4gYmUgdXNlZCBhcyBhIHdha2V1cCBzb3VyY2UuCisKKyAgLSByY3BtLXdh
-a2V1cDogVGhlIHZhbHVlIG9mIHRoZSBwcm9wZXJ0eSBjb25zaXN0cyBvZiBjZWxscywgdGhlIG51
-bWJlciBvZgorCWNlbGxzIGRlZmluZWQgaW4gImZzbCwjcmNwbS13YWtldXAtY2VsbHMiLiBUaGUg
-Zmlyc3QgY2VsbCBpcyBhIHBvaW50ZXIKKwl0byB0aGUgcmNwbSBub2RlLCB0aGUgc2Vjb25kIGNl
-bGwgaXMgdGhlIGJpdCBtYXNrIHRoYXQgc2hvdWxkIGJlIHNldAorCWluIElQUERFWFBDUjAsIGFu
-ZCB0aGUgdGhpcmQgY2VsbCBpcyBmb3IgSVBQREVYUENSMSwgYW5kIHNvIG9uLgorCitFeGFtcGxl
-OgorCWxwdWFydDA6IHNlcmlhbEAyOTUwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIx
-YS1scHVhcnQiOworCQlyZWcgPSA8MHgwIDB4Mjk1MDAwMCAweDAgMHgxMDAwPjsKKwkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDgwIElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQljbG9ja3MgPSA8JnN5
-c2Nsaz47CisJCWNsb2NrLW5hbWVzID0gImlwZyI7CisJCXJjcG0td2FrZXVwID0gPCZyY3BtIDB4
-MCAweDQwMDAwMDAwPjsKKwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9OwotLSAKMi4xLjAuMjcu
-Zzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcK
-aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+From: Wang Dongsheng <dongsheng.wang@freescale.com>
+
+Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
+---
+*v3*: Add "fsl,#rcpm-wakeup-cells" for rcpm node.
+*v2*: No changes.
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 973a496..ac5f9a2 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -139,6 +139,7 @@
+ 			sdhci,auto-cmd12;
+ 			big-endian;
+ 			bus-width = <4>;
++			rcpm-wakeup = <&rcpm 0x00000080 0x0>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -186,6 +187,12 @@
+ 			};
+ 		};
+ 
++		rcpm: rcpm@1ee2000 {
++			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1";
++			reg = <0x0 0x1ee2000 0x0 0x10000>;
++			fsl,#rcpm-wakeup-cells = <3>;
++		};
++
+ 		dspi0: dspi@2100000 {
+ 			compatible = "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+@@ -287,6 +294,7 @@
+ 			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&sysclk>;
+ 			clock-names = "ipg";
++			rcpm-wakeup = <&rcpm 0x0 0x40000000>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.1.0.27.g96db324
