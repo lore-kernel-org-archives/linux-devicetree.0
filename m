@@ -1,123 +1,158 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [PATCH v2 5/9] dt-bindings: add documentation of rk3036 clock
- controller
-Date: Thu, 24 Sep 2015 11:42:23 +0800
-Message-ID: <5603711F.3070809@rock-chips.com>
-References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com> <1442485969-1733-1-git-send-email-zhengxing@rock-chips.com> <14900712.fB7cIie92H@diego>
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: Re: [PATCH V2 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
+Date: Thu, 24 Sep 2015 13:43:24 +0800
+Message-ID: <20150924054321.GA32196@shlinux2>
+References: <cover.1442310569.git.shengjiu.wang@freescale.com>
+ <113f1cecf1d83c6b96fd23ab9d7a73d1923e0d21.1442310569.git.shengjiu.wang@freescale.com>
+ <20150923153340.GK3529@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <14900712.fB7cIie92H@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20150923153340.GK3529@tiger>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015=E5=B9=B409=E6=9C=8817=E6=97=A5 23:09, Heiko St=C3=BCbner wrote:
-> Am Donnerstag, 17. September 2015, 18:32:49 schrieb Xing Zheng:
->> Add the devicetree binding for the cru on the rk3036 which quite sim=
-ilar
->> structured as previous clock controllers.
->>
->> Signed-off-by: Xing Zheng<zhengxing@rock-chips.com>
->> ---
->>
->> Changes in v2: None
->>
->>   .../bindings/clock/rockchip,rk3036-cru.txt         |   60
->> ++++++++++++++++++++ 1 file changed, 60 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036=
--cru.txt
->> b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt ne=
-w file
->> mode 100644
->> index 0000000..ac3037a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.tx=
-t
->> @@ -0,0 +1,60 @@
->> +* Rockchip RK3036 Clock and Reset Unit
->> +
->> +The RK3036 clock controller generates and supplies clock to various
->> +controllers within the SoC and also implements a reset controller f=
-or SoC
->> +peripherals.
->> +
->> +Required Properties:
->> +
->> +- compatible: should be "rockchip,rk3036-cru"
->> +- reg: physical base address of the controller and length of memory=
- mapped
->> +  region.
->> +- #clock-cells: should be 1.
->> +- #reset-cells: should be 1.
->> +
->> +Optional Properties:
->> +
->> +- rockchip,grf: phandle to the syscon managing the "general registe=
-r files"
->> +  If missing pll rates are not changable, due to the missing pll lo=
-ck
->> status. +
->> +Each clock is assigned an identifier and client nodes can use this
->> identifier +to specify the clock which they consume. All available c=
-locks
->> are defined as +preprocessor macros in the dt-bindings/clock/rk3036-=
-cru.h
->> headers and can be +used in device tree sources. Similar macros exis=
-t for
->> the reset sources in +these files.
->> +
->> +External clocks:
->> +
->> +There are several clocks that are generated outside the SoC. It is =
-expected
->> +that they are defined using standard clock bindings with following
->> +clock-output-names:
->> + - "xin24m" - crystal input - required,
->> + - "xin32k" - rtc clock - optional,
-> The rk3036 does not seem to use a rtc clock, so this should probably =
-go away
-Done.
->> + - "ext_i2s" - external I2S clock - optional,
->> + - "ext_hsadc" - external HSADC clock - optional,
->> + - "ext_vip" - external VIP clock - optional,
->> + - "ext_isp" - external ISP clock - optional,
->> + - "ext_jtag" - external JTAG clock - optional
-> There do not seem to exist external clock sources for hsadc, vip, isp=
- and jtag
-> in your clock tree?
->
-> missing here:
-> - ext_gmac
-Yes, done.
->> +
->> +Example: Clock controller node:
->> +
->> +	cru: cru@20000000 {
->> +		compatible =3D "rockchip,rk3036-cru";
->> +		reg =3D<0x20000000 0x1000>;
->> +		rockchip,grf =3D<&grf>;
->> +
->> +		#clock-cells =3D<1>;
->> +		#reset-cells =3D<1>;
->> +	};
->> +
->> +Example: UART controller node that consumes the clock generated by =
-the
->> clock +  controller:
->> +
->> +	uart0: serial@20060000 {
->> +		compatible =3D "snps,dw-apb-uart";
->> +		reg =3D<0x20060000 0x100>;
->> +		interrupts =3D<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg-shift =3D<2>;
->> +		reg-io-width =3D<4>;
->> +		clocks =3D<&cru SCLK_UART0>;
->> +	};
-Thanks.
+On Wed, Sep 23, 2015 at 08:33:41AM -0700, Shawn Guo wrote:
+> On Tue, Sep 15, 2015 at 06:01:01PM +0800, Shengjiu Wang wrote:
+> > As spdif driver will register SPDIF clock to regmap, regmap will do
+> > clk_prepare in init function, so SPDIF clock is prepared in probe, then its
+> > root clock (pll clock) is prepared also, which cause the arm can't enter
+> > low power mode.
+> 
+> Can you help me understand why ARM cannot enter low power mode when pll
+> clock is prepared?
+> 
+> Shawn
+Hi Shawn
+
+   In i.mx clock framework, when pll clk is prepared, it will be powerup. when
+enterring low power idle mode, the powerdown bit is checked, when pll is not
+powerdown state, chip will not enter low power idle mode.
+
+best regards
+wang shengjiu
+> 
+> > Add SPDIF_GCLK in clock tree which share same gate bits with SPDIF clock.
+> > Its root clock is ipg clock, and register it to regmap, then the issue cam
+> > be fixed.
+> > 
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
+> > ---
+> >  drivers/clk/imx/clk-imx6q.c               | 4 +++-
+> >  drivers/clk/imx/clk-imx6sl.c              | 4 +++-
+> >  drivers/clk/imx/clk-imx6sx.c              | 1 +
+> >  include/dt-bindings/clock/imx6qdl-clock.h | 3 ++-
+> >  include/dt-bindings/clock/imx6sl-clock.h  | 3 ++-
+> >  include/dt-bindings/clock/imx6sx-clock.h  | 3 ++-
+> >  6 files changed, 13 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
+> > index b2c1c04..e6b5944 100644
+> > --- a/drivers/clk/imx/clk-imx6q.c
+> > +++ b/drivers/clk/imx/clk-imx6q.c
+> > @@ -119,6 +119,7 @@ static unsigned int share_count_ssi1;
+> >  static unsigned int share_count_ssi2;
+> >  static unsigned int share_count_ssi3;
+> >  static unsigned int share_count_mipi_core_cfg;
+> > +static unsigned int share_count_spdif;
+> >  
+> >  static inline int clk_on_imx6q(void)
+> >  {
+> > @@ -456,7 +457,8 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+> >  	clk[IMX6QDL_CLK_SATA]         = imx_clk_gate2("sata",          "ahb",               base + 0x7c, 4);
+> >  	clk[IMX6QDL_CLK_SDMA]         = imx_clk_gate2("sdma",          "ahb",               base + 0x7c, 6);
+> >  	clk[IMX6QDL_CLK_SPBA]         = imx_clk_gate2("spba",          "ipg",               base + 0x7c, 12);
+> > -	clk[IMX6QDL_CLK_SPDIF]        = imx_clk_gate2("spdif",         "spdif_podf",        base + 0x7c, 14);
+> > +	clk[IMX6QDL_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",     "spdif_podf",     base + 0x7c, 14, &share_count_spdif);
+> > +	clk[IMX6QDL_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk", "ipg",           base + 0x7c, 14, &share_count_spdif);
+> >  	clk[IMX6QDL_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",      "ipg",        base + 0x7c, 18, &share_count_ssi1);
+> >  	clk[IMX6QDL_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",      "ipg",        base + 0x7c, 20, &share_count_ssi2);
+> >  	clk[IMX6QDL_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",      "ipg",        base + 0x7c, 22, &share_count_ssi3);
+> > diff --git a/drivers/clk/imx/clk-imx6sl.c b/drivers/clk/imx/clk-imx6sl.c
+> > index a0d4cf2..a73cedd 100644
+> > --- a/drivers/clk/imx/clk-imx6sl.c
+> > +++ b/drivers/clk/imx/clk-imx6sl.c
+> > @@ -97,6 +97,7 @@ static struct clk_div_table video_div_table[] = {
+> >  static unsigned int share_count_ssi1;
+> >  static unsigned int share_count_ssi2;
+> >  static unsigned int share_count_ssi3;
+> > +static unsigned int share_count_spdif;
+> >  
+> >  static struct clk *clks[IMX6SL_CLK_END];
+> >  static struct clk_onecell_data clk_data;
+> > @@ -391,7 +392,8 @@ static void __init imx6sl_clocks_init(struct device_node *ccm_node)
+> >  	clks[IMX6SL_CLK_PWM4]         = imx_clk_gate2("pwm4",         "perclk",            base + 0x78, 22);
+> >  	clks[IMX6SL_CLK_SDMA]         = imx_clk_gate2("sdma",         "ipg",               base + 0x7c, 6);
+> >  	clks[IMX6SL_CLK_SPBA]         = imx_clk_gate2("spba",         "ipg",               base + 0x7c, 12);
+> > -	clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2("spdif",        "spdif0_podf",       base + 0x7c, 14);
+> > +	clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",     "spdif0_podf",   base + 0x7c, 14, &share_count_spdif);
+> > +	clks[IMX6SL_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk",  "ipg",         base + 0x7c, 14, &share_count_spdif);
+> >  	clks[IMX6SL_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",     "ipg",        base + 0x7c, 18, &share_count_ssi1);
+> >  	clks[IMX6SL_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",     "ipg",        base + 0x7c, 20, &share_count_ssi2);
+> >  	clks[IMX6SL_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",     "ipg",        base + 0x7c, 22, &share_count_ssi3);
+> > diff --git a/drivers/clk/imx/clk-imx6sx.c b/drivers/clk/imx/clk-imx6sx.c
+> > index 5b95c2c..f2bc511 100644
+> > --- a/drivers/clk/imx/clk-imx6sx.c
+> > +++ b/drivers/clk/imx/clk-imx6sx.c
+> > @@ -454,6 +454,7 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
+> >  	clks[IMX6SX_CLK_SPBA]         = imx_clk_gate2("spba",          "ipg",               base + 0x7c, 12);
+> >  	clks[IMX6SX_CLK_AUDIO]        = imx_clk_gate2_shared("audio",  "audio_podf",        base + 0x7c, 14, &share_count_audio);
+> >  	clks[IMX6SX_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",  "spdif_podf",        base + 0x7c, 14, &share_count_audio);
+> > +	clks[IMX6SX_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk",    "ipg",        base + 0x7c, 14, &share_count_audio);
+> >  	clks[IMX6SX_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",      "ipg",        base + 0x7c, 18, &share_count_ssi1);
+> >  	clks[IMX6SX_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",      "ipg",        base + 0x7c, 20, &share_count_ssi2);
+> >  	clks[IMX6SX_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",      "ipg",        base + 0x7c, 22, &share_count_ssi3);
+> > diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
+> > index 8de173f..77985cc 100644
+> > --- a/include/dt-bindings/clock/imx6qdl-clock.h
+> > +++ b/include/dt-bindings/clock/imx6qdl-clock.h
+> > @@ -254,6 +254,7 @@
+> >  #define IMX6QDL_CLK_CAAM_MEM			241
+> >  #define IMX6QDL_CLK_CAAM_ACLK			242
+> >  #define IMX6QDL_CLK_CAAM_IPG			243
+> > -#define IMX6QDL_CLK_END				244
+> > +#define IMX6QDL_CLK_SPDIF_GCLK			244
+> > +#define IMX6QDL_CLK_END				245
+> >  
+> >  #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+> > diff --git a/include/dt-bindings/clock/imx6sl-clock.h b/include/dt-bindings/clock/imx6sl-clock.h
+> > index 9ce4e42..e14573e 100644
+> > --- a/include/dt-bindings/clock/imx6sl-clock.h
+> > +++ b/include/dt-bindings/clock/imx6sl-clock.h
+> > @@ -174,6 +174,7 @@
+> >  #define IMX6SL_CLK_SSI1_IPG		161
+> >  #define IMX6SL_CLK_SSI2_IPG		162
+> >  #define IMX6SL_CLK_SSI3_IPG		163
+> > -#define IMX6SL_CLK_END			164
+> > +#define IMX6SL_CLK_SPDIF_GCLK		164
+> > +#define IMX6SL_CLK_END			165
+> >  
+> >  #endif /* __DT_BINDINGS_CLOCK_IMX6SL_H */
+> > diff --git a/include/dt-bindings/clock/imx6sx-clock.h b/include/dt-bindings/clock/imx6sx-clock.h
+> > index 9957091..36f0324 100644
+> > --- a/include/dt-bindings/clock/imx6sx-clock.h
+> > +++ b/include/dt-bindings/clock/imx6sx-clock.h
+> > @@ -274,6 +274,7 @@
+> >  #define IMX6SX_PLL5_BYPASS		261
+> >  #define IMX6SX_PLL6_BYPASS		262
+> >  #define IMX6SX_PLL7_BYPASS		263
+> > -#define IMX6SX_CLK_CLK_END		264
+> > +#define IMX6SX_CLK_SPDIF_GCLK		264
+> > +#define IMX6SX_CLK_CLK_END		265
+> >  
+> >  #endif /* __DT_BINDINGS_CLOCK_IMX6SX_H */
+> > -- 
+> > 1.9.1
+> > 
