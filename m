@@ -1,55 +1,123 @@
-Return-Path: <sureshraj@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1443576270-36548-2-git-send-email-sureshraj@google.com>
-References: <1443576270-36548-1-git-send-email-sureshraj@google.com> <1443576270-36548-2-git-send-email-sureshraj@google.com>
-From: Suresh Rajashekara <sureshraj@google.com>
-Date: Tue, 29 Sep 2015 18:29:19 -0700
-Message-ID: <CACVnMDpj5qXxCi5B140CvzUNROtoy4fMPmA1P06pKQ3kdzoN0w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] iio:light:tsl2563: Add DT support
-Content-Type: multipart/alternative; boundary=001a113971805d53080520ecde5c
-To: linux-iio@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, matthias.bgg@gmail.com, linux-kernel@vger.kernel.org, jic23@kernel.org, Suresh Rajashekara <sureshraj@google.com>
+In-Reply-To: <E1ZfC2U-000364-SS@rmk-PC.arm.linux.org.uk>
+References: <20150924191754.GC21513@n2100.arm.linux.org.uk>
+	<E1ZfC2U-000364-SS@rmk-PC.arm.linux.org.uk>
+Date: Thu, 24 Sep 2015 17:20:04 -0500
+Message-ID: <CAL_Jsq+hQeJYKJ0UoppXAocni2qQLtzxi=EFabYoUzEopy5dKw@mail.gmail.com>
+Subject: Re: [PATCH 5/9] of_mdio: fix MDIO phy device refcounting
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113971805d53080520ecde5c
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 29, 2015 at 6:24 PM, Suresh Rajashekara <sureshraj@google.com>
-wrote:
+
+On Thu, Sep 24, 2015 at 2:18 PM, Russell King <rmk+kernel@arm.linux.org.uk> wrote:
+> bus_find_device() is defined as:
 >
-> * Add Device Tree support for the Dyna Image AP3223 ambient light sensor
-and
-> * proximity driver,
-> * Document the binding and
-> * Add a vendor prefix for Dyna Image
+>  * This is similar to the bus_for_each_dev() function above, but it
+>  * returns a reference to a device that is 'found' for later use, as
+>  * determined by the @match callback.
 >
-> v2
-> * Seperating the device tree changes from code
+> and it does indeed return a reference-counted pointer to the device:
 >
-> Signed-off-by: Suresh Rajashekara <sureshraj@google.com>
-
-=E2=80=8BPlease ignore this patch. I have a typo in subject. Will fix and r=
-esubmit
-
-Suresh=E2=80=8B
-
---001a113971805d53080520ecde5c
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br>On Tue, Sep 29, 2015 at 6:24 PM, Suresh Rajashekara &l=
-t;<a href=3D"mailto:sureshraj@google.com">sureshraj@google.com</a>&gt; wrot=
-e:<br>&gt;<br>&gt; * Add Device Tree support for the Dyna Image AP3223 ambi=
-ent light sensor and<br>&gt; * proximity driver,<br>&gt; * Document the bin=
-ding and<br>&gt; * Add a vendor prefix for Dyna Image<br>&gt;<br>&gt; v2<br=
->&gt; * Seperating the device tree changes from code<br>&gt;<br>&gt; Signed=
--off-by: Suresh Rajashekara &lt;<a href=3D"mailto:sureshraj@google.com">sur=
-eshraj@google.com</a>&gt;<div><br></div><div><div class=3D"gmail_default" s=
-tyle=3D"font-family:&#39;trebuchet ms&#39;,sans-serif">=E2=80=8BPlease igno=
-re this patch. I have a typo in subject. Will fix and resubmit</div><div cl=
-ass=3D"gmail_default" style=3D"font-family:&#39;trebuchet ms&#39;,sans-seri=
-f"><br></div><div class=3D"gmail_default" style=3D"font-family:&#39;trebuch=
-et ms&#39;,sans-serif">Suresh=E2=80=8B</div><br></div></div>
-
---001a113971805d53080520ecde5c--
+>         while ((dev = next_device(&i)))
+>                 if (match(dev, data) && get_device(dev))
+>                                         ^^^^^^^^^^^^^^^
+>                         break;
+>         klist_iter_exit(&i);
+>         return dev;
+>
+> What that means is that when we're done with the struct device, we must
+> drop that reference.  Neither of_phy_connect() nor of_phy_attach() did
+> this when phy_connect_direct() or phy_attach_direct() failed.
+>
+> With our previous patch, phy_connect_direct() and phy_attach_direct()
+> take a new refcount on the phy device when successful, so we can drop
+> our local reference immediatley after these functions, whether or not
+> they succeeded.
+>
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+>  drivers/of/of_mdio.c | 27 +++++++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 1350fa25cdb0..a87a868fed64 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -197,7 +197,8 @@ static int of_phy_match(struct device *dev, void *phy_np)
+>   * of_phy_find_device - Give a PHY node, find the phy_device
+>   * @phy_np: Pointer to the phy's device tree node
+>   *
+> - * Returns a pointer to the phy_device.
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure.
+>   */
+>  struct phy_device *of_phy_find_device(struct device_node *phy_np)
+>  {
+> @@ -217,7 +218,9 @@ EXPORT_SYMBOL(of_phy_find_device);
+>   * @hndlr: Link state callback for the network device
+>   * @iface: PHY data interface type
+>   *
+> - * Returns a pointer to the phy_device if successful.  NULL otherwise
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure. The
+> + * refcount must be dropped by calling phy_disconnect() or phy_detach().
+>   */
+>  struct phy_device *of_phy_connect(struct net_device *dev,
+>                                   struct device_node *phy_np,
+> @@ -225,13 +228,19 @@ struct phy_device *of_phy_connect(struct net_device *dev,
+>                                   phy_interface_t iface)
+>  {
+>         struct phy_device *phy = of_phy_find_device(phy_np);
+> +       int ret;
+>
+>         if (!phy)
+>                 return NULL;
+>
+>         phy->dev_flags = flags;
+>
+> -       return phy_connect_direct(dev, phy, hndlr, iface) ? NULL : phy;
+> +       ret = phy_connect_direct(dev, phy, hndlr, iface);
+> +
+> +       /* refcount is held by phy_connect_direct() on success */
+> +       put_device(&phy->dev);
+> +
+> +       return ret ? NULL : phy;
+>  }
+>  EXPORT_SYMBOL(of_phy_connect);
+>
+> @@ -241,17 +250,27 @@ EXPORT_SYMBOL(of_phy_connect);
+>   * @phy_np: Node pointer for the PHY
+>   * @flags: flags to pass to the PHY
+>   * @iface: PHY data interface type
+> + *
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure. The
+> + * refcount must be dropped by calling phy_disconnect() or phy_detach().
+>   */
+>  struct phy_device *of_phy_attach(struct net_device *dev,
+>                                  struct device_node *phy_np, u32 flags,
+>                                  phy_interface_t iface)
+>  {
+>         struct phy_device *phy = of_phy_find_device(phy_np);
+> +       int ret;
+>
+>         if (!phy)
+>                 return NULL;
+>
+> -       return phy_attach_direct(dev, phy, flags, iface) ? NULL : phy;
+> +       ret = phy_attach_direct(dev, phy, flags, iface);
+> +
+> +       /* refcount is held by phy_attach_direct() on success */
+> +       put_device(&phy->dev);
+> +
+> +       return ret ? NULL : phy;
+>  }
+>  EXPORT_SYMBOL(of_phy_attach);
+>
+> --
+> 2.1.0
+>
