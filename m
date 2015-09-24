@@ -1,55 +1,203 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH] ARM: at91/dt: pullup dbgu rx instead of tx
-Date: Thu, 24 Sep 2015 16:47:53 +0200
-Message-ID: <20150924144753.GY4287@piout.net>
-References: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v3 5/5] gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
+Date: Thu, 24 Sep 2015 09:52:54 -0500
+Message-ID: <1443106374-4126-6-git-send-email-afd@ti.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
-Sender: stable-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>
-Cc: linux-arm-kernel@lists.infradead.org, Peter Rosin <peda@axentia.se>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1443106374-4126-1-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+This patch adds support for the TPS65912 PMIC GPIOs.
 
-Thanks for the patch but you actually got beaten by Sylvain:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/368426.html
+TPS65912 has five configurable GPIOs that can be used for several
+purposes.
 
-On 24/09/2015 at 16:44:15 +0200, Peter Rosin wrote :
-> From: Peter Rosin <peda@axentia.se>
-> 
-> It seems pointless to pullup the tx line, but there is value in pulling
-> up the rx line.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  arch/arm/boot/dts/sama5d3.dtsi |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-> index 9e2444b07bce..304a40c5552a 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -545,8 +545,8 @@
->  				dbgu {
->  					pinctrl_dbgu: dbgu-0 {
->  						atmel,pins =
-> -							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB30 periph A */
-> -							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;	/* PB31 periph A with pullup */
-> +							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB30 periph A with pullup */
-> +							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB31 periph A */
->  					};
->  				};
->  
-> -- 
-> 1.7.10.4
-> 
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ drivers/gpio/Kconfig         |   6 ++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-tps65912.c | 138 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 145 insertions(+)
+ create mode 100644 drivers/gpio/gpio-tps65912.c
 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index fb28483..82218fa 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -838,6 +838,12 @@ config GPIO_TPS65910
+ 	  Select this option to enable GPIO driver for the TPS65910
+ 	  chip family.
+ 
++config GPIO_TPS65912
++	tristate "TI TPS65912 GPIO"
++	depends on MFD_TPS65912
++	help
++	  This driver supports TPS65912 gpio chip
++
+ config GPIO_TWL4030
+ 	tristate "TWL4030, TWL5030, and TPS659x0 GPIOs"
+ 	depends on TWL4030_CORE
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 605bf89..f79a7c4 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -96,6 +96,7 @@ obj-$(CONFIG_GPIO_TIMBERDALE)	+= gpio-timberdale.o
+ obj-$(CONFIG_GPIO_PALMAS)	+= gpio-palmas.o
+ obj-$(CONFIG_GPIO_TPS6586X)	+= gpio-tps6586x.o
+ obj-$(CONFIG_GPIO_TPS65910)	+= gpio-tps65910.o
++obj-$(CONFIG_GPIO_TPS65912)	+= gpio-tps65912.o
+ obj-$(CONFIG_GPIO_TS5500)	+= gpio-ts5500.o
+ obj-$(CONFIG_GPIO_TWL4030)	+= gpio-twl4030.o
+ obj-$(CONFIG_GPIO_TWL6040)	+= gpio-twl6040.o
+diff --git a/drivers/gpio/gpio-tps65912.c b/drivers/gpio/gpio-tps65912.c
+new file mode 100644
+index 0000000..4707e62
+--- /dev/null
++++ b/drivers/gpio/gpio-tps65912.c
+@@ -0,0 +1,138 @@
++/*
++ * TI TPS65912x GPIO Driver
++ *
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Author: Andrew F. Davis <afd@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether expressed or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License version 2 for more details.
++ *
++ * Based on the Arizona GPIO driver and the previous TPS65912 driver by
++ * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
++ */
++
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++
++#include <linux/mfd/tps65912.h>
++
++struct tps65912_gpio {
++	struct tps65912 *tps;
++	struct gpio_chip gpio_chip;
++};
++
++#define to_gpio(gc) container_of(gc, struct tps65912_gpio, gpio_chip)
++
++static int tps65912_gpio_get(struct gpio_chip *gc, unsigned offset)
++{
++	struct tps65912_gpio *gpio = to_gpio(gc);
++	int ret, val;
++
++	ret = regmap_read(gpio->tps->regmap, TPS65912_GPIO1 + offset, &val);
++	if (ret < 0)
++		return ret;
++
++	return val & GPIO_STS_MASK;
++}
++
++static void tps65912_gpio_set(struct gpio_chip *gc, unsigned offset,
++			      int value)
++{
++	struct tps65912_gpio *gpio = to_gpio(gc);
++
++	regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
++			   GPIO_SET_MASK, value ? GPIO_SET_MASK : 0);
++}
++
++static int tps65912_gpio_output(struct gpio_chip *gc, unsigned offset,
++				int value)
++{
++	struct tps65912_gpio *gpio = to_gpio(gc);
++
++	/* Set the initial value */
++	tps65912_gpio_set(gc, offset, value);
++
++	return regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
++				  GPIO_CFG_MASK, GPIO_CFG_MASK);
++}
++
++static int tps65912_gpio_input(struct gpio_chip *gc, unsigned offset)
++{
++	struct tps65912_gpio *gpio = to_gpio(gc);
++
++	return regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
++				  GPIO_CFG_MASK, 0);
++}
++
++static const struct of_device_id tps65912_gpio_of_match_table[] = {
++	{ .compatible = "ti,tps65912-gpio", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tps65912_gpio_of_match_table);
++
++static struct gpio_chip template_chip = {
++	.label			= "tps65912-gpio",
++	.owner			= THIS_MODULE,
++	.direction_input	= tps65912_gpio_input,
++	.direction_output	= tps65912_gpio_output,
++	.get			= tps65912_gpio_get,
++	.set			= tps65912_gpio_set,
++	.can_sleep		= true,
++	.ngpio			= 5,
++	.base			= -1,
++};
++
++static int tps65912_gpio_probe(struct platform_device *pdev)
++{
++	struct tps65912_gpio *gpio;
++	int ret;
++
++	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	gpio->tps = dev_get_drvdata(pdev->dev.parent);
++	gpio->gpio_chip = template_chip;
++	ret = gpiochip_add(&gpio->gpio_chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, gpio);
++
++	return 0;
++}
++
++static int tps65912_gpio_remove(struct platform_device *pdev)
++{
++	struct tps65912_gpio *gpio = platform_get_drvdata(pdev);
++
++	gpiochip_remove(&gpio->gpio_chip);
++
++	return 0;
++}
++
++static struct platform_driver tps65912_gpio_driver = {
++	.driver = {
++		.name = "tps65912-gpio",
++		.of_match_table = tps65912_gpio_of_match_table,
++	},
++	.probe = tps65912_gpio_probe,
++	.remove = tps65912_gpio_remove,
++};
++
++module_platform_driver(tps65912_gpio_driver);
++
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("TPS65912 GPIO driver");
++MODULE_ALIAS("platform:tps65912-gpio");
++MODULE_LICENSE("GPL v2");
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.9.1
+
