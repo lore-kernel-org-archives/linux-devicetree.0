@@ -1,59 +1,71 @@
 From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v5 0/4] edac: Add L3/SoC support to the APM X-Gene SoC EDAC driver
-Date: Wed, 23 Sep 2015 17:40:57 -0700
-Message-ID: <1443055261-8613-1-git-send-email-lho@apm.com>
+Subject: [PATCH v5 1/4] Documentation: Update the APM X-Gene SoC EDAC DTS binding for L3/SoC subnodes
+Date: Wed, 23 Sep 2015 17:40:58 -0700
+Message-ID: <1443055261-8613-2-git-send-email-lho@apm.com>
+References: <1443055261-8613-1-git-send-email-lho@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443055261-8613-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-v5:
-* Drop the EDAC debugfs export and use the wrapper from maintainer
-* Clean up debugfs node function to make use of function wrapper
-* Clean up function xgene_edac_l3_v1_errata_chk
-* Move SoC part into another patch
-* Tested with git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git#edac-debugfs
-* Make function xgene_edac_l3_create_debugfs_nodes more readable
+Update documentation for the APM X-Gene SoC EDAC DTS binding for L3/SoC
+subnodes.
 
-v4:
-* Remove function for EDAC debugfs node and replace with export variable
-* Switch the driver to use the exported edac_debugfs variable
-* Revert the if statement logic for function as necessary
-* Remove un-necessary code in debugfs creation functions
-
-v3:
-* Add an function to retrieve the EDAC debugfs node
-* Move all debugfs node under EDAC code debugfs node
-* Update L3 to check for v1 errata
-* Rename error label for L3/SoC add routines
-* Re-structure SoC EDAC functions for code readability
-* Inline the function xgene_edac_soc_mem_data
-* Remove un-necessary { }
-
-v2:
-* Update binding documentation accordingly
-* Change all single bit defines to BIT(x)
-* Add support for L3 version 1 and 2 HW's
-* Change to use debug file system for error injection
-* In L3/SoC instance add function, allocate EDAC context after all
-  initalization successed
-* Support raw or detail info for SoC EDAC error reporting
-
-v1:
-* Add L3/SoC support to the APM X-Gene SoC EDAC driver
+Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 ---
-Loc Ho (4):
-  Documentation: Update the APM X-Gene SoC EDAC DTS binding for L3/SoC
-    subnodes
-  edac: Add L3 EDAC support to the APM X-Gene SoC EDAC driver
-  edac: Add SoC EDAC support to the APM X-Gene SoC EDAC driver
-  arm64: Add L3/SoC DT subnodes to the APM X-Gene SoC EDAC node
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   23 ++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
- .../devicetree/bindings/edac/apm-xgene-edac.txt    |   23 +
- arch/arm64/boot/dts/apm/apm-storm.dtsi             |   10 +
- drivers/edac/xgene_edac.c                          | 1165 ++++++++++++++++----
- 3 files changed, 1004 insertions(+), 194 deletions(-)
+diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+index 78edb80..78e2a31 100644
+--- a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
++++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+@@ -5,6 +5,8 @@ The follow error types are supported:
+
+   memory controller	- Memory controller
+   PMD (L1/L2)		- Processor module unit (PMD) L1/L2 cache
++  L3			- L3 cache controller
++  SoC			- SoC IP's such as Ethernet, SATA, and etc
+
+ The following section describes the EDAC DT node binding.
+
+@@ -30,6 +32,17 @@ Required properties for PMD subnode:
+ - reg			: First resource shall be the PMD resource.
+ - pmd-controller	: Instance number of the PMD controller.
+
++Required properties for L3 subnode:
++- compatible		: Shall be "apm,xgene-edac-l3" or
++                          "apm,xgene-edac-l3-v2".
++- reg			: First resource shall be the L3 EDAC resource.
++
++Required properties for SoC subnode:
++- compatible		: Shall be "apm,xgene-edac-soc-v1" for revision 1 or
++                          "apm,xgene-edac-l3-soc" for general value reporting
++                          only.
++- reg			: First resource shall be the SoC EDAC resource.
++
+ Example:
+ 	csw: csw@7e200000 {
+ 		compatible = "apm,xgene-csw", "syscon";
+@@ -76,4 +89,14 @@ Example:
+ 			reg = <0x0 0x7c000000 0x0 0x200000>;
+ 			pmd-controller = <0>;
+ 		};
++
++		edacl3@7e600000 {
++			compatible = "apm,xgene-edac-l3";
++			reg = <0x0 0x7e600000 0x0 0x1000>;
++		};
++
++		edacsoc@7e930000 {
++			compatible = "apm,xgene-edac-soc-v1";
++			reg = <0x0 0x7e930000 0x0 0x1000>;
++		};
+ 	};
+--
+1.7.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
