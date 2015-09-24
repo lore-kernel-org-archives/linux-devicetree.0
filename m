@@ -1,521 +1,238 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v4 0/16] Add Analogix Core Display Port Driver
-Date: Mon, 21 Sep 2015 19:43:05 +0800
-Message-ID: <55FFED49.8030604@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
- <3233920.KG0buE86B2@phil> <55E65BCD.7090804@rock-chips.com>
- <55FFC3B8.9030108@rock-chips.com> <20150921091537.GA20992@ulmo.nvidia.com>
- <55FFDB9C.1030901@rock-chips.com> <20150921112246.GD20992@ulmo.nvidia.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH 2/5] thermal: rockchip: Support the RK3368 SoCs in thermal
+ driver
+Date: Thu, 24 Sep 2015 10:27:50 +0800
+Message-ID: <56035FA6.4060306@gmail.com>
+References: <1442808971-2619-1-git-send-email-wxt@rock-chips.com> <1442808971-2619-3-git-send-email-wxt@rock-chips.com> <20150921170851.GH17389@dtor-ws>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1133958622=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150921112246.GD20992@ulmo.nvidia.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <treding@nvidia.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, s.infradead.org@NULL.NULL, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, seanpaul@chromium.com, djkurtz@chromium.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, Russell King <rmk+kernel@arm.linux.org.uk>, linux-arm-kernel@list.NULL.NULL, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, ajaynumb@gmail.com, Rob Herring <robh+dt@kernel.org>, dianders@chromium.com, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, joe@perches.com, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150921170851.GH17389@dtor-ws>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Caesar Wang <wxt@rock-chips.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, inux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, catalin.marinas@arm.com, ijc+devicetree@hellion.org.uk, will.deacon@arm.com, edubezval@gmail.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, olof@lixom.net, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============1133958622==
-Content-Type: multipart/alternative;
- boundary="------------090204000209030106030501"
+Hi Dmitry,
 
-This is a multi-part message in MIME format.
---------------090204000209030106030501
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-
-Hi Thierry,
-
-On 09/21/2015 07:22 PM, Thierry Reding wrote:
-> On Mon, Sep 21, 2015 at 06:27:40PM +0800, Yakir Yang wrote:
->> Hi Thierry,
+=E5=9C=A8 2015=E5=B9=B409=E6=9C=8822=E6=97=A5 01:08, Dmitry Torokhov =E5=
+=86=99=E9=81=93:
+> Hi Caesar,
+>
+> On Mon, Sep 21, 2015 at 12:16:08PM +0800, Caesar Wang wrote:
+>> The RK3368 SoCs support to 2 channel TS-ADC, the temperature criteri=
+a
+>> of each channel can be configurable.
 >>
->> Thanks for your suggest :)
+>> The system has two Temperature Sensors, channel 0 is for CPU,
+>> and channel 1 is for GPU.
 >>
->> On 09/21/2015 05:15 PM, Thierry Reding wrote:
->>> On Mon, Sep 21, 2015 at 04:45:44PM +0800, Yakir Yang wrote:
->>>> Hi Heiko,
->>>>
->>>> On 09/02/2015 10:15 AM, Yakir Yang wrote:
->>>>> Hi Heiko,
->>>>>
->>>>> =E5=9C=A8 09/02/2015 05:47 AM, Heiko Stuebner =E5=86=99=E9=81=93:
->>>>>> Hi Yakir,
->>>>>>
->>>>>> Am Dienstag, 1. September 2015, 13:46:11 schrieb Yakir Yang:
->>>>>>>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP
->>>>>>> controller
->>>>>>> share the same IP, so a lot of parts can be re-used. I split the =
-common
->>>>>>> code into bridge directory, then rk3288 and exynos only need to k=
-eep
->>>>>>> some platform code. Cause I can't find the exact IP name of exyno=
-s dp
->>>>>>> controller, so I decide to name dp core driver with "analogix" wh=
-ich I
->>>>>>> find in rk3288 eDP TRM ;)
->>>>>>>
->>>>>>> Beyond that, there are three light registers setting differents b=
-ewteen
->>>>>>> exynos and rk3288.
->>>>>>> 1. RK3288 have five special pll resigters which not indicata in e=
-xynos
->>>>>>>     dp controller.
->>>>>>> 2. The address of DP_PHY_PD(dp phy power manager register) are
->>>>>>> different
->>>>>>>     between rk3288 and exynos.
->>>>>>> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL=
-(dp
->>>>>>> debug
->>>>>>>     register).
->>>>>>>
->>>>>>> I have verified this series on two kinds of rockchip platform boa=
-rd,
->>>>>>> one
->>>>>>> is rk3288 sdk board which connect with a 2K display port monitor,=
- the
->>>>>>> other
->>>>>>> is google jerry chromebook which connect with a eDP screen
->>>>>>> "cnm,n116bgeea2",
->>>>>>> both of them works rightlly.
->>>>>> it looks like during the rebase something did go wrong and I found=
- some
->>>>>> issues
->>>>>> I mentioned in the replies to individual patches.
->>>>>>
->>>>>> I did prepare a branch based on mainline [0] with both the old and=
- the
->>>>>> new edp
->>>>>> driver - rk3288_veyron_defconfig build both drivers into the image=
-.
->>>>>>
->>>>>> While the old driver still works, I wasn't able to make the new on=
-e work
->>>>>> yet
->>>>>> ... the drm core does find the connector, but not that anything is
->>>>>> connected
->>>>>> to it. I'll try to dig deeper tomorrow, but maybe you'll see anyth=
-ing
->>>>>> interesting before then.
->>>>> Many thanks for your comment and debug, I would rebase on your
->>>>> "edp-with-veyron" branch and fix the broken, make sure v6 would
->>>>> work rightly at least in your side and my side.
->>>> Just like we talk off line, I guess there are two tricky questions w=
-hich
->>>> make analogix_dp just crash/failed on rockchip platform:
->>>>
->>>> -  One is how to reach a agreement with the common way to register
->>>> connector. There would be a conflict with Exynos & IMX & Rockchip.
->>>>       On analogix_dp thread, Exynos want to register connector when =
-that
->>>> connector is ready.
->>>>       On dw_hdmi thread, IMX want to register connector when all com=
-ponent is
->>>> already.
->>>>       So Exynos & IMX & Rockchip should reach a common way to regist=
-er
->>>> connector to fix this issue.
->>>>
->>>> -  The other is atomic API.
->>>>        The rockchip drm haven't implemented the atomic API, but the =
-original
->>>> exynos_dp have used the atomic API on connector helper function. Tha=
-t's why
->>>> analogix_dp just keep crash on your side.
->>> There's really no reason not to convert Rockchip to atomic. It will h=
-ave
->>> to happen eventually anyway.
->> Do agree on this point, and I see Tomasz Figa have done some WIP
->> works on implementing the atomic_commit, maybe would upstream
->> in further.(https://chromium-review.googlesource.com/#/c/284560/1)
+>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>> ---
 >>
+>>   drivers/thermal/rockchip_thermal.c | 201 +++++++++++++++++++++++++=
++++++++-----
+>>   1 file changed, 176 insertions(+), 25 deletions(-)
 >>
->>> That said, there's another option that would allow you to side-step b=
-oth
->>> of the above problems at the same time. If you turn the common code i=
-nto
->>> a helper library that should give you enough flexibility to integrate=
- it
->>> into all existing users. For example you could leave out the connecto=
-r
->>> registration and let the drivers do that. Similarly since the helpers
->>> are only hooked up at registration time you could probably find a way=
- to
->>> share the low-level code but again leave it up to the drivers to glue=
- it
->>> all together at registration time (drivers could wrap the low-level c=
-ode
->>> with atomic or non-atomic callbacks).
->> Wow, sounds good, but I'm not sure I understand this rightly. Do you
->> mean that I could support two kinds of callbacks in analogix_dp_core
->> driver, and export them out. And move the connector registration code
->> into the helper driver (like exynos_dp.c), so helper driver could chos=
-e to
->> use the atomic or non-atomic callbacks. like:
->>
->> -- analogix_dp_core.c
->> --------------------------------------------------------------------
->> ...
->> struct drm_connector_funcs analogix_dp_connector_atomic_funcs =3D {
->>          .dpms =3D drm_atomic_helper_connector_dpms,
->>          .fill_modes =3D drm_helper_probe_single_connector_modes,
->>          .detect =3D analogix_dp_detect,
->>          .destroy =3D analogix_dp_connector_destroy,
->>          .reset =3D drm_atomic_helper_connector_reset,
->>          .atomic_duplicate_state =3D
->> drm_atomic_helper_connector_duplicate_state,
->>          .atomic_destroy_state =3D drm_atomic_helper_connector_destroy=
-_state,
->> };
->> EXPORT_SYMBOL(analogix_dp_connector_atomic_funcs);
->>
->> struct drm_connector_funcs analogix_dp_connector_funcs =3D {
->>          .dpms =3D drm_helper_connector_dpms,
->>          .fill_modes =3D drm_helper_probe_single_connector_modes,
->>          .detect =3D analogix_dp_detect,
->>          .destroy =3D analogix_dp_connector_destroy,
->> };
->> EXPORT_SYMBOL(analogix_dp_connector_funcs);
->>
->> struct drm_connector_helper_funcs analogix_dp_connector_helper_funcs =3D=
- {
->>          .get_modes =3D analogix_dp_get_modes,
->>          .best_encoder =3D analogix_dp_best_encoder,
->> };
->> EXPORT_SYMBOL(analogix_dp_connector_helper_funcs);
->> ...
->>
->> -- exynos_dp
->> ----------------------------------------------------------------------=
-------
->>          ret =3D drm_connector_init(dp->drm_dev, connector,
->> &analogix_dp_connector_atomic_funcs,
->>                                   DRM_MODE_CONNECTOR_eDP);
->>          if (ret) {
->>                  DRM_ERROR("Failed to initialize connector with drm\n"=
-);
->>                  return ret;
->>          }
->>
->>          drm_connector_helper_add(connector,
->> &analogix_dp_connector_helper_funcs);
->>          drm_connector_register(connector);
->>          drm_mode_connector_attach_encoder(connector, encoder);
->>
->> -- analogix_dp-rockchip
->> ----------------------------------------------------------------------=
-------
->>          ret =3D drm_connector_init(dp->drm_dev, connector,
->>                                   &analogix_dp_connector_funcs,
->>                                   DRM_MODE_CONNECTOR_eDP);
->>          if (ret) {
->>                  DRM_ERROR("Failed to initialize connector with drm\n"=
-);
->>                  return ret;
->>          }
->>
->>          drm_connector_helper_add(connector,
->> &analogix_dp_connector_helper_funcs);
->>          drm_mode_connector_attach_encoder(connector, encoder);
->>
->>
->> Are those code corresponding to your suggestion.   :)
-> Yes, that looks about right. You could also move the implementations
-> into the Exynos and Rockchip drivers, respectively, if they're only use=
-d
-> from one place. Then you can simply export the low-level analogix_dp_*(=
-)
-> functions. That might give you even more flexibility, but the above
-> would probably work well enough.
+>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/ro=
+ckchip_thermal.c
+>> index 4d5b7d4..16d2476 100644
+>> --- a/drivers/thermal/rockchip_thermal.c
+>> +++ b/drivers/thermal/rockchip_thermal.c
+>> @@ -1,6 +1,9 @@
+>>   /*
+>>    * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+>>    *
+>> + * Copyright (c) 2015, Fuzhou Rockchip Electronics Co., Ltd
+>> + * Caesar Wang <wxt@rock-chips.com>
+>> + *
+>>    * This program is free software; you can redistribute it and/or m=
+odify it
+>>    * under the terms and conditions of the GNU General Public Licens=
+e,
+>>    * version 2, as published by the Free Software Foundation.
+>> @@ -43,16 +46,11 @@ enum tshut_polarity {
+>>   	TSHUT_HIGH_ACTIVE,
+>>   };
+>>  =20
+>> -/**
+>> - * The system has three Temperature Sensors.  channel 0 is reserved=
+,
+>> - * channel 1 is for CPU, and channel 2 is for GPU.
+>> - */
+>> -enum sensor_id {
+>> -	SENSOR_CPU =3D 1,
+>> -	SENSOR_GPU,
+>> -};
+>> -
+>>   struct rockchip_tsadc_chip {
+>> +	/* The sensor id of chip correspond to the ADC channel */
+>> +	int cpu_id;
+>> +	int gpu_id;
+>> +
+>>   	/* The hardware-controlled tshut property */
+>>   	long tshut_temp;
+>>   	enum tshut_mode tshut_mode;
+>> @@ -72,10 +70,11 @@ struct rockchip_tsadc_chip {
+>>   struct rockchip_thermal_sensor {
+>>   	struct rockchip_thermal_data *thermal;
+>>   	struct thermal_zone_device *tzd;
+>> -	enum sensor_id id;
+>> +	int id;
+>>   };
+>>  =20
+>> -#define NUM_SENSORS	2 /* Ignore unused sensor 0 */
+>> +/* Two sensors: CPU and GPU */
+>> +#define NUM_SENSORS	2
+>>  =20
+>>   struct rockchip_thermal_data {
+>>   	const struct rockchip_tsadc_chip *chip;
+>> @@ -94,7 +93,7 @@ struct rockchip_thermal_data {
+>>   	enum tshut_polarity tshut_polarity;
+>>   };
+>>  =20
+>> -/* TSADC V2 Sensor info define: */
+>> +/* TSADC Sensor info define: */
+>>   #define TSADCV2_AUTO_CON			0x04
+>>   #define TSADCV2_INT_EN				0x08
+>>   #define TSADCV2_INT_PD				0x0c
+>> @@ -116,6 +115,8 @@ struct rockchip_thermal_data {
+>>   #define TSADCV2_INT_PD_CLEAR_MASK		~BIT(8)
+>>  =20
+>>   #define TSADCV2_DATA_MASK			0xfff
+>> +#define TSADCV3_DATA_MASK			0x3ff
+>> +
+>>   #define TSADCV2_HIGHT_INT_DEBOUNCE_COUNT	4
+>>   #define TSADCV2_HIGHT_TSHUT_DEBOUNCE_COUNT	4
+>>   #define TSADCV2_AUTO_PERIOD_TIME		250 /* msec */
+>> @@ -164,6 +165,45 @@ static const struct tsadc_table v2_code_table[]=
+ =3D {
+>>   	{3421, 125000},
+>>   };
+>>  =20
+>> +static const struct tsadc_table v3_code_table[] =3D {
+>> +	{0, -40000},
+>> +	{106, -40000},
+>> +	{108, -35000},
+>> +	{110, -30000},
+>> +	{112, -25000},
+>> +	{114, -20000},
+>> +	{116, -15000},
+>> +	{118, -10000},
+>> +	{120, -5000},
+>> +	{122, 0},
+>> +	{124, 5000},
+>> +	{126, 10000},
+>> +	{128, 15000},
+>> +	{130, 20000},
+>> +	{132, 25000},
+>> +	{134, 30000},
+>> +	{136, 35000},
+>> +	{138, 40000},
+>> +	{140, 45000},
+>> +	{142, 50000},
+>> +	{144, 55000},
+>> +	{146, 60000},
+>> +	{148, 65000},
+>> +	{150, 70000},
+>> +	{152, 75000},
+>> +	{154, 80000},
+>> +	{156, 85000},
+>> +	{158, 90000},
+>> +	{160, 95000},
+>> +	{162, 100000},
+>> +	{163, 105000},
+>> +	{165, 110000},
+>> +	{167, 115000},
+>> +	{169, 120000},
+>> +	{171, 125000},
+>> +	{TSADCV3_DATA_MASK, 125000},
+>> +};
+>> +
+>>   static u32 rk_tsadcv2_temp_to_code(long temp)
+>>   {
+>>   	int high, low, mid;
+>> @@ -227,16 +267,83 @@ static int rk_tsadcv2_code_to_temp(u32 code, i=
+nt *temp)
+>>   	return 0;
+>>   }
+>>  =20
+>> +static u32 rk_tsadcv3_temp_to_code(long temp)
+>> +{
+>> +	int high, low, mid;
+>> +
+>> +	low =3D 0;
+>> +	high =3D ARRAY_SIZE(v3_code_table) - 1;
+>> +	mid =3D (high + low) / 2;
+>> +
+>> +	if (temp < v3_code_table[low].temp || temp > v3_code_table[high].t=
+emp)
+>> +		return 0;
+> How is this different from v2 conversion except for the table being
+> used? I think you should be able to reuse the conversion routines if =
+you
+> pass the conversion table in as a parameter.
 
-Wow, much better, so I just need to export two low-level functions,
+The table_v3 is same with the table_v2 but the anolog data of ADC.
 
-  * analogix_dp_detect()
-  * analogix_dp_get_modes()
+Do you want to reuse the conversion routines,?  I know the conversion=20
+routines is same in
+rk_tsadcv3_temp_to_code() if we have many socs maybe the ADC analog dat=
+a=20
+are different.
 
-Pretty cool.
+Says:
 
-Thanks,
-- Yakir
+rk_tsadcv3_temp_to_code(temp, xxx)
 
-> Thierry
-
-
---------------090204000209030106030501
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Ty=
-pe">
-  </head>
-  <body bgcolor=3D"#FFFFFF" text=3D"#000000">
-    Hi Thierry,<br>
-    <br>
-    <div class=3D"moz-cite-prefix">On 09/21/2015 07:22 PM, Thierry Reding
-      wrote:<br>
-    </div>
-    <blockquote cite=3D"mid:20150921112246.GD20992@ulmo.nvidia.com"
-      type=3D"cite">
-      <pre wrap=3D"">On Mon, Sep 21, 2015 at 06:27:40PM +0800, Yakir Yang=
- wrote:
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">Hi Thierry,
-
-Thanks for your suggest :)
-
-On 09/21/2015 05:15 PM, Thierry Reding wrote:
-</pre>
-        <blockquote type=3D"cite">
-          <pre wrap=3D"">On Mon, Sep 21, 2015 at 04:45:44PM +0800, Yakir =
-Yang wrote:
-</pre>
-          <blockquote type=3D"cite">
-            <pre wrap=3D"">Hi Heiko,
-
-On 09/02/2015 10:15 AM, Yakir Yang wrote:
-</pre>
-            <blockquote type=3D"cite">
-              <pre wrap=3D"">Hi Heiko,
-
-=E5=9C=A8 09/02/2015 05:47 AM, Heiko Stuebner =E5=86=99=E9=81=93:
-</pre>
-              <blockquote type=3D"cite">
-                <pre wrap=3D"">Hi Yakir,
-
-Am Dienstag, 1. September 2015, 13:46:11 schrieb Yakir Yang:
-</pre>
-                <blockquote type=3D"cite">
-                  <pre wrap=3D"">   The Samsung Exynos eDP controller and=
- Rockchip RK3288 eDP
-controller
-share the same IP, so a lot of parts can be re-used. I split the common
-code into bridge directory, then rk3288 and exynos only need to keep
-some platform code. Cause I can't find the exact IP name of exynos dp
-controller, so I decide to name dp core driver with "analogix" which I
-find in rk3288 eDP TRM ;)
-
-Beyond that, there are three light registers setting differents bewteen
-exynos and rk3288.
-1. RK3288 have five special pll resigters which not indicata in exynos
-   dp controller.
-2. The address of DP_PHY_PD(dp phy power manager register) are
-different
-   between rk3288 and exynos.
-3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp
-debug
-   register).
-
-I have verified this series on two kinds of rockchip platform board,
-one
-is rk3288 sdk board which connect with a 2K display port monitor, the
-other
-is google jerry chromebook which connect with a eDP screen
-"cnm,n116bgeea2",
-both of them works rightlly.
-</pre>
-                </blockquote>
-                <pre wrap=3D"">it looks like during the rebase something =
-did go wrong and I found some
-issues
-I mentioned in the replies to individual patches.
-
-I did prepare a branch based on mainline [0] with both the old and the
-new edp
-driver - rk3288_veyron_defconfig build both drivers into the image.
-
-While the old driver still works, I wasn't able to make the new one work
-yet
-... the drm core does find the connector, but not that anything is
-connected
-to it. I'll try to dig deeper tomorrow, but maybe you'll see anything
-interesting before then.
-</pre>
-              </blockquote>
-              <pre wrap=3D"">Many thanks for your comment and debug, I wo=
-uld rebase on your
-"edp-with-veyron" branch and fix the broken, make sure v6 would
-work rightly at least in your side and my side.
-</pre>
-            </blockquote>
-            <pre wrap=3D"">Just like we talk off line, I guess there are =
-two tricky questions which
-make analogix_dp just crash/failed on rockchip platform:
-
--  One is how to reach a agreement with the common way to register
-connector. There would be a conflict with Exynos &amp; IMX &amp; Rockchip=
-.
-     On analogix_dp thread, Exynos want to register connector when that
-connector is ready.
-     On dw_hdmi thread, IMX want to register connector when all component=
- is
-already.
-     So Exynos &amp; IMX &amp; Rockchip should reach a common way to regi=
-ster
-connector to fix this issue.
-
--  The other is atomic API.
-      The rockchip drm haven't implemented the atomic API, but the origin=
-al
-exynos_dp have used the atomic API on connector helper function. That's w=
-hy
-analogix_dp just keep crash on your side.
-</pre>
-          </blockquote>
-          <pre wrap=3D"">There's really no reason not to convert Rockchip=
- to atomic. It will have
-to happen eventually anyway.
-</pre>
-        </blockquote>
-        <pre wrap=3D"">
-Do agree on this point, and I see Tomasz Figa have done some WIP
-works on implementing the atomic_commit, maybe would upstream
-in further.(<a class=3D"moz-txt-link-freetext" href=3D"https://chromium-r=
-eview.googlesource.com/#/c/284560/1">https://chromium-review.googlesource=
-.com/#/c/284560/1</a>)
-
-
-</pre>
-        <blockquote type=3D"cite">
-          <pre wrap=3D"">That said, there's another option that would all=
-ow you to side-step both
-of the above problems at the same time. If you turn the common code into
-a helper library that should give you enough flexibility to integrate it
-into all existing users. For example you could leave out the connector
-registration and let the drivers do that. Similarly since the helpers
-are only hooked up at registration time you could probably find a way to
-share the low-level code but again leave it up to the drivers to glue it
-all together at registration time (drivers could wrap the low-level code
-with atomic or non-atomic callbacks).
-</pre>
-        </blockquote>
-        <pre wrap=3D"">
-Wow, sounds good, but I'm not sure I understand this rightly. Do you
-mean that I could support two kinds of callbacks in analogix_dp_core
-driver, and export them out. And move the connector registration code
-into the helper driver (like exynos_dp.c), so helper driver could chose t=
-o
-use the atomic or non-atomic callbacks. like:
-
--- analogix_dp_core.c
---------------------------------------------------------------------
-...
-struct drm_connector_funcs analogix_dp_connector_atomic_funcs =3D {
-        .dpms =3D drm_atomic_helper_connector_dpms,
-        .fill_modes =3D drm_helper_probe_single_connector_modes,
-        .detect =3D analogix_dp_detect,
-        .destroy =3D analogix_dp_connector_destroy,
-        .reset =3D drm_atomic_helper_connector_reset,
-        .atomic_duplicate_state =3D
-drm_atomic_helper_connector_duplicate_state,
-        .atomic_destroy_state =3D drm_atomic_helper_connector_destroy_sta=
-te,
-};
-EXPORT_SYMBOL(analogix_dp_connector_atomic_funcs);
-
-struct drm_connector_funcs analogix_dp_connector_funcs =3D {
-        .dpms =3D drm_helper_connector_dpms,
-        .fill_modes =3D drm_helper_probe_single_connector_modes,
-        .detect =3D analogix_dp_detect,
-        .destroy =3D analogix_dp_connector_destroy,
-};
-EXPORT_SYMBOL(analogix_dp_connector_funcs);
-
-struct drm_connector_helper_funcs analogix_dp_connector_helper_funcs =3D =
 {
-        .get_modes =3D analogix_dp_get_modes,
-        .best_encoder =3D analogix_dp_best_encoder,
-};
-EXPORT_SYMBOL(analogix_dp_connector_helper_funcs);
-...
+     ...
 
--- exynos_dp
--------------------------------------------------------------------------=
----
-        ret =3D drm_connector_init(dp-&gt;drm_dev, connector,
-&amp;analogix_dp_connector_atomic_funcs,
-                                 DRM_MODE_CONNECTOR_eDP);
-        if (ret) {
-                DRM_ERROR("Failed to initialize connector with drm\n");
-                return ret;
-        }
+yyyy =3D  rk_tsadcv2_temp_to_code(temp)
 
-        drm_connector_helper_add(connector,
-&amp;analogix_dp_connector_helper_funcs);
-        drm_connector_register(connector);
-        drm_mode_connector_attach_encoder(connector, encoder);
-
--- analogix_dp-rockchip
--------------------------------------------------------------------------=
----
-        ret =3D drm_connector_init(dp-&gt;drm_dev, connector,
-                                 &amp;analogix_dp_connector_funcs,
-                                 DRM_MODE_CONNECTOR_eDP);
-        if (ret) {
-                DRM_ERROR("Failed to initialize connector with drm\n");
-                return ret;
-        }
-
-        drm_connector_helper_add(connector,
-&amp;analogix_dp_connector_helper_funcs);
-        drm_mode_connector_attach_encoder(connector, encoder);
+=2E..
+}
+=2E..
 
 
-Are those code corresponding to your suggestion.   :)
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-Yes, that looks about right. You could also move the implementations
-into the Exynos and Rockchip drivers, respectively, if they're only used
-from one place. Then you can simply export the low-level analogix_dp_*()
-functions. That might give you even more flexibility, but the above
-would probably work well enough.
-</pre>
-    </blockquote>
-    <br>
-    Wow, much better, so I just need to export two low-level functions,<b=
-r>
-    <ul>
-      <li>analogix_dp_detect()</li>
-      <li>analogix_dp_get_modes()</li>
-    </ul>
-    Pretty cool.<br>
-    <br>
-    Thanks,<br>
-    - Yakir <br>
-    <br>
-    <blockquote cite=3D"mid:20150921112246.GD20992@ulmo.nvidia.com"
-      type=3D"cite">
-      <pre wrap=3D"">
-Thierry
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
+I guess you want to independent the adc value,after all the temperature=
+=20
+points are same.
 
---------------090204000209030106030501--
+Says: maybe i will better likely on this.
+
+//3066/3188
+=2E....
+
+//3288
+
+static const struct tsadc_table v2_code_table[] =3D {
+	{0,3800,3792,3783, 3774,3765, 3756,3747,......
+},
 
 
---===============1133958622==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+//3368
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+static const struct tsadc_table v3_code_table[] =3D {
+	{0,106,108,110,112,114,......
+},
 
---===============1133958622==--
+//next socs
+
+  ....
+
+Dmitry, I know you don't mean that.:-)
+
+I'm no sure if this way will better for the thermal driver.
+
+
+> Thanks.
+>
+
+
+--=20
+Thanks,
+Caesar
+
