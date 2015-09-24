@@ -1,62 +1,80 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Thu, 24 Sep 2015 09:54:11 -0700
-Message-ID: <CACRpkdYLYWVHoy+OV2wnS7pHrJ=PUFcSLdcB-8wu2z-HbKBj7Q@mail.gmail.com>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
-	<20150828101227.GD31748@leverpostej>
-	<CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
-	<CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
-	<20150831145500.GP12027@sirena.org.uk>
-	<CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
-	<20150831180140.GS12027@sirena.org.uk>
-	<CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
-	<CAAVeFuJsM_gDNHNqSRi2iHNAzMHAiw0-y5V1pRce4SD8OgY11Q@mail.gmail.com>
-	<CAPiN7iUvDgifPYxhtVf3oOJLV1q1ZA6MZ-2tL2JbpgE0oUM6AA@mail.gmail.com>
-	<CACRpkda=2qnxnnRBga-6U9mCDUD61=1+62-awC8NVOV6Yt9mAA@mail.gmail.com>
-	<CAPiN7iVZgvLS0HGifhDULVavCw2TdxZBC_+bcGjWKAAax=YFKQ@mail.gmail.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] edac: Add L3 EDAC support to the APM X-Gene SoC
+ EDAC driver
+Date: Thu, 24 Sep 2015 10:01:46 -0700
+Message-ID: <CAPw-ZT==R-YwO3fedqqDLPNCPAageogqOaXdo4_B4SK9i02d5A@mail.gmail.com>
+References: <1443055261-8613-1-git-send-email-lho@apm.com>
+	<1443055261-8613-3-git-send-email-lho@apm.com>
+	<20150924112512.GB3774@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPiN7iVZgvLS0HGifhDULVavCw2TdxZBC_+bcGjWKAAax=YFKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150924112512.GB3774-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 22, 2015 at 6:54 AM, Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Sep 21, 2015 at 4:55 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Sep 2, 2015 at 6:35 AM, Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> There are some hardware aspects/parameters
->>> of exporting that aren't controllable from userspace, such as whether or not
->>> reversing the direction of a GPIO is safe.
+Hi,
+
+>> Add EDAC support for the L3 component.
 >>
->> The original argument as to why kernel should handle hardware
->> is to keep things safe and under control.
->>
->> I don't understand this argument really, should the kernel give you
->> a gun but stop you from shooting yourself in the foot with it or
->> what do you mean? Then the stance of kernel not to give out guns
->> is better.
+>> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  drivers/edac/xgene_edac.c |  669 ++++++++++++++++++++++++++++++++-------------
+>>  1 files changed, 474 insertions(+), 195 deletions(-)
 >
-> From my embedded perspective a board designer wants to keep
-> hardware safe and under control too.  He may want or need to expose
-> controls or status to userspace applications, though, and what he
-> wants to have exposed may vary from board to board.  I just feel that
-> exposing them via the DT could be OK, whereas others do not.
+> ...
+>
+>> @@ -878,25 +869,16 @@ static const struct file_operations xgene_edac_pmd_debug_inject_fops[] = {
+>>       { }
+>>  };
+>>
+>> -static void xgene_edac_pmd_create_debugfs_nodes(
+>> -     struct edac_device_ctl_info *edac_dev)
+>> +static void
+>> +xgene_edac_pmd_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
+>>  {
+>>       struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
+>>       struct dentry *dbgfs_dir;
+>> -     char name[30];
+>> +     char name[10];
+>
+> So somehow we don't seem to understand each other. This char name[10] on
+> the stack thing has a bunch of problems:
+>
+> 1. It is on the stack so it contains random garbage.
+>
+>>
+>> -     if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
+>> +     if (!IS_ENABLED(CONFIG_EDAC_DEBUG) || !ctx->edac->dfs)
+>>               return;
+>>
+>> -     /*
+>> -      * Todo: Switch to common EDAC debug file system for edac device
+>> -      *       when available.
+>> -      */
+>> -     if (!ctx->edac->dfs) {
+>> -             ctx->edac->dfs = edac_debugfs_create_dir(edac_dev->dev->kobj.name);
+>> -             if (!ctx->edac->dfs)
+>> -                     return;
+>> -     }
+>>       sprintf(name, "PMD%d", ctx->pmd);
+>
+> 2. You're sprintf-ing into it without checking its length. This can
+> possibly write past the end if %d is big enough. I know, I know, %d
+> is only small numbers but that assurance not good enough. You need
+> snprintf() and check the ctx->pmd width for sane numbers only anyway.
+>
+> And debugfs goes and does strlen() on it which could lead to all kinds
+> of funky stuff later.
+>
+> Please fix that in all its occurrences in this patchset.
 
-I am usually conservative with this because all too often, people
-do not know about all the stuff listed in
-Documentation/gpio/drivers-on-gpio.txt
-and their usual reasoning is "just lemme do this in userspace real
-quick now because I have this project". And that doesn't sit well with
-our long-term view of kernel ABIs.
+Okay... Got it and will post another version using snprintf. Did you
+also reviewed the SoC patch as well?
 
-For proper userspace ABI the sysfs has been deemed unusable
-and does not scale. What is needed is a chardev rewrite as has
-been discussed several times.
-
-Yours,
-Linus Walleij
+-Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
