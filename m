@@ -1,53 +1,102 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv3 0/2] Add support for tps65217 charger
-Date: Fri, 25 Sep 2015 00:18:47 +0200
-Message-ID: <20150924221847.GA32564@earth>
-References: <1443123861-3473-1-git-send-email-enric.balletbo@collabora.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: move aliases back to .dts in Cygnus
+Date: Thu, 24 Sep 2015 15:21:23 -0700
+Message-ID: <1443133283-29025-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443123861-3473-1-git-send-email-enric.balletbo@collabora.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Enric Balletbo i Serra <eballetbo@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dbaryshkov@gmail.com, dwmw2@infradead.org, tony@atomide.com, sameo@linux.intel.com, lee.jones@linaro.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Move aliases from bcm-cygnus.dtsi back to individual .dts files. Also
+clean up the chosen node to have the stdout-path using the proper alias
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ----
+ arch/arm/boot/dts/bcm911360k.dts  | 7 +++++--
+ arch/arm/boot/dts/bcm958300k.dts  | 7 +++++--
+ arch/arm/boot/dts/bcm958305k.dts  | 7 +++++--
+ 4 files changed, 15 insertions(+), 10 deletions(-)
 
-Hi,
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index b5f9f34..2778533 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -41,10 +41,6 @@
+ 	model = "Broadcom Cygnus SoC";
+ 	interrupt-parent = <&gic>;
+ 
+-	aliases {
+-		serial0 = &uart3;
+-	};
+-
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/bcm911360k.dts b/arch/arm/boot/dts/bcm911360k.dts
+index 814011c..091c73a 100644
+--- a/arch/arm/boot/dts/bcm911360k.dts
++++ b/arch/arm/boot/dts/bcm911360k.dts
+@@ -38,9 +38,12 @@
+ 	model = "Cygnus SVK (BCM911360K)";
+ 	compatible = "brcm,bcm11360", "brcm,cygnus";
+ 
++	aliases {
++		serial0 = &uart3;
++	};
++
+ 	chosen {
+-		stdout-path = &uart3;
+-		bootargs = "console=ttyS0,115200";
++		stdout-path = "serial0:115200n8";
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
+index 2e31581..b4a1392 100644
+--- a/arch/arm/boot/dts/bcm958300k.dts
++++ b/arch/arm/boot/dts/bcm958300k.dts
+@@ -39,9 +39,12 @@
+ 	model = "Cygnus SVK (BCM958300K)";
+ 	compatible = "brcm,bcm58300", "brcm,cygnus";
+ 
++	aliases {
++		serial0 = &uart3;
++	};
++
+ 	chosen {
+-		stdout-path = &uart3;
+-		bootargs = "console=ttyS0,115200";
++		stdout-path = "serial0:115200n8";
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm958305k.dts b/arch/arm/boot/dts/bcm958305k.dts
+index 288a637..3378683 100644
+--- a/arch/arm/boot/dts/bcm958305k.dts
++++ b/arch/arm/boot/dts/bcm958305k.dts
+@@ -39,9 +39,12 @@
+ 	model = "Cygnus Wireless Audio (BCM958305K)";
+ 	compatible = "brcm,bcm58305", "brcm,cygnus";
+ 
++	aliases {
++		serial0 = &uart3;
++	};
++
+ 	chosen {
+-		stdout-path = &uart3;
+-		bootargs = "console=ttyS0,115200";
++		stdout-path = "serial0:115200n8";
+ 	};
+ };
+ 
+-- 
+1.9.1
 
-On Thu, Sep 24, 2015 at 09:44:19PM +0200, Enric Balletbo i Serra wrote:
-> The following series add initial support for tps65217 battery charger.
-
-Thanks, queued.
-
--- Sebastian
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWBHbCAAoJENju1/PIO/qabJ8P/Ark1LxbKmEtjh683qq6PPaL
-czFFZWprXCepx0Isc7mscwr9++3BTEJmagf1j0ExBAOfZtgDISTvwR0SaPrBSubj
-orwwJAw/wGYGqnc+01DK79dGYnHjGqqIpprbR1K86rMQ222Lv8TCH1QLvq9Ke07I
-qPJ8RBGhgpTHkVUrBBqJtNlBQYsiOiQk4ZNz0jMV4otKp9N4aIhXeEzCcwC5g6YL
-mlF1XBnNiJL1Y17UgVbCY6jJc9zQ20Wu/c2oJdnQNQkPfQwlsI6R6ytGYs4FzhUw
-2CJV0nmYMBW/PPsG77Mwpm3SweDlMgrlQ8kVEhSD9t3GzuM1490UpfoJaVpjzXLf
-XyMNEk/OdZ7OVpsiO1IsDAU8nJkmHbOlXt5O2EGbUo4NDDvMgS8InknDIPlucCEw
-EmQBJmK8gfYlBAWXw6ZKz5/5bwacFX7duBq2dbFNFAhculv8vBP4FIlVWFvx3T+P
-2tnr4k+iglgyCCypPEv+Wm5vKCy0mX/6e71pmvNYFknuT08L1keLDoETp/Fz0FbX
-1F2znNTABequKZF6d+DJOQLXKhB7kKgg30bxLcKpACJmVoi2NOJ8hupicyXxDzOE
-LwN5PstQFNN4WCQgY6QU4k+qNfNkmzR2Crc4n4QAa1vGnoGd1B8G6JyfOH/jOCpl
-n97jZGscyAyBT1QpAXEM
-=iB93
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
