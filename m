@@ -1,76 +1,51 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun4i: Enable USB DRC on the
- Marsboard A10
-Date: Thu, 24 Sep 2015 10:33:46 +0300
-Message-ID: <1443080026-4011-1-git-send-email-mamlinav@gmail.com>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v11 3/4] add FPGA manager core
+Date: Thu, 24 Sep 2015 10:49:53 +0300
+Message-ID: <20150924074953.GI4953@mwanda>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
+ <1442935271-10375-4-git-send-email-atull@opensource.altera.com>
+ <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
+ <20150923132354.GB31253@amd> <20150923141106.GH4953@mwanda>
+ <alpine.DEB.2.02.1509231101050.23595@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIJ3UEOWACRUBAWK4WYC-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1509231101050.23595@linuxheads99>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: atull <atull@opensource.altera.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, linus.walleij@linaro.org, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, rubini@gnudd.com, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Josh Cartwright <joshc@ni.com>, broonie@kernel.org, gregkh@linuxfoundation.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, monstr@monstr.eu, Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemlo
 List-Id: devicetree@vger.kernel.org
 
-Enable the otg/drc usb controller on the Marsboard A10.
-Similar to Cubieboard, the 5V of the otg is directly connected to the
-general 5V, so we only use the id pin.
+Of course, the maintainer gets the last word regardless of what anyone
+else thinks.
 
-Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-marsboard.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Generally, minimal code is better.  Trying to future proof code is a
+waste of time because you can't predict what will happen in the future.
+It's way more likely that some pointer you never expected to be NULL
+will be NULL instead of the few checked at the beginning of a function.
+Adding useless code uses RAM and makes the function slower.  It's a bit
+confusing for users as well because they will wonder when the NULL check
+is used.  A lot of times this sort of error handling is a bit fake and
+what I mean is that it looks correct but the system will just crash in a
+later function.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-index 02158bc..9a012db 100644
---- a/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-@@ -154,6 +154,10 @@
- 	status = "okay";
- };
- 
-+&otg_sram {
-+	status = "okay";
-+};
-+
- &pio {
- 	led_pins_marsboard: led_pins@0 {
- 		allwinner,pins = "PB5", "PB6", "PB7", "PB8";
-@@ -161,6 +165,13 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
-+
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
- };
- 
- &reg_usb1_vbus {
-@@ -184,7 +195,15 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
- 	usb2_vbus-supply = <&reg_usb2_vbus>;
- 	status = "okay";
--- 
-2.4.9
+Also especially with a simple NULL dereferences like this theoretical
+one, it's better to just get the oops.  It kills the module but you get
+a good message in the log and it's normally straight forward to debug.
+
+We spent a surprising amount of time discussing useless code.  I made
+someone redo a patch yesterday because they had incomplete error
+handling for a situation which could never happen.
+
+regards,
+dan carpenter
