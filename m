@@ -1,63 +1,80 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v4 2/5] soc: sunxi: Add driver for
- Allwinner Reduced Serial Bus
-Date: Thu, 24 Sep 2015 16:23:09 +0800
-Message-ID: <CAGb2v65Q1fMs5mxk8m64US+82oVkfmRyx3D2Yf_VhZwOpPHXVA@mail.gmail.com>
-References: <1443024323-9115-1-git-send-email-wens@csie.org>
- <1443024323-9115-3-git-send-email-wens@csie.org> <20150923164532.GT30445@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Dongsheng Wang <dongsheng.wang@freescale.com>
+Subject: [PATCH v3 1/2] fsl: Add binding for RCPM
+Date: Thu, 24 Sep 2015 16:29:13 +0800
+Message-ID: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCHGR2YAKGQE4ITRBUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150923164532.GT30445-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: scottwood@freescale.com
+Cc: devicetree@vger.kernel.org, Chenhui Zhao <chenhui.zhao@freescale.com>, alison.wang@freescale.com, linuxppc-dev@lists.ozlabs.org, Wang Dongsheng <dongsheng.wang@freescale.com>, Tang Yuantian <Yuantian.Tang@freescale.com>, robh+dt@kernel.org, jason.jin@freescale.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 12:45 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Sep 24, 2015 at 12:05:18AM +0800, Chen-Yu Tsai wrote:
->
->> +static int sunxi_rsb_device_probe(struct device *dev)
->> +{
->> +     const struct sunxi_rsb_driver *drv = to_sunxi_rsb_driver(dev->driver);
->> +     struct sunxi_rsb_device *rdev = to_sunxi_rsb_device(dev);
->> +     int ret;
->> +
->> +     if (dev->bus != &sunxi_rsb_bus)
->> +             return 0;
->
-> That's a bit worrying...  why might this get called for something other
-> than a rsb device?
-
-You're right. sunxi_rsb_bus is self contained (not exported) in sunxi_rsb.c,
-so it's safe to assume that the devices going through sunxi_rsb_device_probe()
-and sunxi_rsb_device_remove() are indeed sunxi_rsb slave devices.
-
-I'll remove the checks from both functions.
-
->> +struct regmap *devm_regmap_init_sunxi_rsb(struct sunxi_rsb_device *rdev,
->> +                                       const struct regmap_config *config);
->
-> This should work most of the time but you might want to take a look at
-> the changes introduced in 3cfe7a74d42b (regmap: Use different lockdep
-> class for each regmap init call) and follow a similar pattern for RSB to
-> avoid spurious lockdep warnings in some configurations - see the commit
-> log for that change for a full explanation.
-
-This seems easy enough. I'll follow the patterns found in linux/regmap.h.
-
-> Otherwise the regmap bit of this looks good, I'll try to have another
-> look through at the rest of the code later.
-
-Thanks!
-
-
-Regards
-ChenYu
+RnJvbTogV2FuZyBEb25nc2hlbmcgPGRvbmdzaGVuZy53YW5nQGZyZWVzY2FsZS5jb20+CgpSQ1BN
+IGlzIHRoZSBSdW4gQ29udHJvbCBhbmQgUG93ZXIgTWFuYWdlbWVudCBtb2R1bGUgcGVyZm9ybXMg
+YWxsCmRldmljZS1sZXZlbCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9s
+IGFuZCBwb3dlcgptYW5hZ2VtZW50LgoKQWRkIHRoaXMgZm9yIGZyZWVzY2FsZSBwb3dlcnBjIHBs
+YXRmb3JtIGFuZCBsYXllcnNjYXBlIHBsYXRmb3JtLgoKU2lnbmVkLW9mZi1ieTogQ2hlbmh1aSBa
+aGFvIDxjaGVuaHVpLnpoYW9AZnJlZXNjYWxlLmNvbT4KU2lnbmVkLW9mZi1ieTogVGFuZyBZdWFu
+dGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBXYW5nIERv
+bmdzaGVuZyA8ZG9uZ3NoZW5nLndhbmdAZnJlZXNjYWxlLmNvbT4KLS0tCip2MyoKLSBBZGQgImZz
+bCwjcmNwbS13YWtldXAtY2VsbHMiIGZvciByY3BtIG5vZGUuIFRoZSBudW1iZXIgb2YgY2VsbHMK
+ICBjb3JyZXNwb25kIHJjcG0td2FrZXVwIHByb3BlcnR5LgotIE1vZGlmeSByY3BtLXdha2V1cCBw
+cm9wZXJ0eSBkZXNjcmlwdGlvbi4KCip2MioKLSBSZW1vdmUgUDQwODAgZXhhbXBsZS4KLSBNb2Rp
+ZnkgcmNwbS13YWtldXAgcHJvcGVydHkgZGVzY3JpcHRpb24uCgpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4dApuZXcgZmlsZSBtb2RlIDEw
+MDY0NAppbmRleCAwMDAwMDAwLi41MjExMGVjCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQKQEAgLTAsMCArMSw2MyBA
+QAorKiBSdW4gQ29udHJvbCBhbmQgUG93ZXIgTWFuYWdlbWVudAorLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorVGhlIFJDUE0gcGVyZm9ybXMgYWxsIGRldmljZS1s
+ZXZlbCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9sCithbmQgcG93ZXIg
+bWFuYWdlbWVudC4KKworUmVxdWlyZWQgcHJvcGVyaXRlczoKKyAgLSByZWcgOiBPZmZzZXQgYW5k
+IGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IG9mIFJDUE0gYmxvY2suCisgIC0gZnNsLCNyY3Bt
+LXdha2V1cC1jZWxscyA6IFRoZSBudW1iZXIgb2YgY2VsbHMgaW4gcmNwbS13YWtldXAgcHJvcGVy
+dHkuCisgIC0gY29tcGF0aWJsZSA6IFNvdWxkIGNvbnRhaW4gYSBjaGlwLXNwZWNpZmljIFJDUE0g
+YmxvY2sgY29tcGF0aWJsZSBzdHJpbmcKKwlhbmQgKGlmIGFwcGxpY2FibGUpIG1heSBjb250YWlu
+IGEgY2hhc3Npcy12ZXJzaW9uIFJDUE0gY29tcGF0aWJsZQorCXN0cmluZy4gQ2hpcC1zcGVjaWZp
+YyBzdHJpbmdzIGFyZSBvZiB0aGUgZm9ybSAiZnNsLDxjaGlwPi1yY3BtIiwKKwlzdWNoIGFzOgor
+CSogImZzbCxwMjA0MS1yY3BtIgorCSogImZzbCxwMzA0MS1yY3BtIgorCSogImZzbCxwNDA4MC1y
+Y3BtIgorCSogImZzbCxwNTAyMC1yY3BtIgorCSogImZzbCxwNTA0MC1yY3BtIgorCSogImZzbCx0
+NDI0MC1yY3BtIgorCSogImZzbCxiNDQyMC1yY3BtIgorCSogImZzbCxiNDg2MC1yY3BtIgorCisJ
+Q2hhc3Npcy12ZXJzaW9uIHN0cmluZ3MgYXJlIG9mIHRoZSBmb3JtICJmc2wscW9yaXEtcmNwbS08
+dmVyc2lvbj4iLAorCXN1Y2ggYXM6CisJKiAiZnNsLHFvcmlxLXJjcG0tMS4wIjogZm9yIGNoYXNz
+aXMgMS4wIHJjcG0KKwkqICJmc2wscW9yaXEtcmNwbS0yLjAiOiBmb3IgY2hhc3NpcyAyLjAgcmNw
+bQorCSogImZzbCxxb3JpcS1yY3BtLTIuMSI6IGZvciBjaGFzc2lzIDIuMSByY3BtCisKK0FsbCBy
+ZWZlcmVuY2VzIHRvICIxLjAiIGFuZCAiMi4wIiByZWZlciB0byB0aGUgUW9ySVEgY2hhc3NpcyB2
+ZXJzaW9uIHRvCit3aGljaCB0aGUgY2hpcCBjb21wbGllcy4KK0NoYXNzaXMgVmVyc2lvbgkJRXhh
+bXBsZSBDaGlwcworLS0tLS0tLS0tLS0tLS0tCQktLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tCisxLjAJCQkJcDQwODAsIHA1MDIwLCBwNTA0MCwgcDIwNDEsIHAzMDQxCisyLjAJCQkJdDQy
+NDAsIGI0ODYwLCBiNDQyMAorMi4xCQkJCXQxMDQwLCBsczEwMjEKKworRXhhbXBsZToKK1RoZSBS
+Q1BNIG5vZGUgZm9yIFQ0MjQwOgorCXJjcG06IGdsb2JhbC11dGlsaXRpZXNAZTIwMDAgeworCQlj
+b21wYXRpYmxlID0gImZzbCx0NDI0MC1yY3BtIiwgImZzbCxxb3JpcS1yY3BtLTIuMCI7CisJCXJl
+ZyA9IDwweGUyMDAwIDB4MTAwMD47CisJCWZzbCwjcmNwbS13YWtldXAtY2VsbHMgPSA8Mj47CisJ
+fTsKKworKiBGcmVlc2NhbGUgUkNQTSBXYWtldXAgU291cmNlIERldmljZSBUcmVlIEJpbmRpbmdz
+CistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCitSZXF1aXJlZCBy
+Y3BtLXdha2V1cCBwcm9wZXJ0eSBzaG91bGQgYmUgYWRkZWQgdG8gYSBkZXZpY2Ugbm9kZSBpZiB0
+aGUgZGV2aWNlCitjYW4gYmUgdXNlZCBhcyBhIHdha2V1cCBzb3VyY2UuCisKKyAgLSByY3BtLXdh
+a2V1cDogVGhlIHZhbHVlIG9mIHRoZSBwcm9wZXJ0eSBjb25zaXN0cyBvZiBjZWxscywgdGhlIG51
+bWJlciBvZgorCWNlbGxzIGRlZmluZWQgaW4gImZzbCwjcmNwbS13YWtldXAtY2VsbHMiLiBUaGUg
+Zmlyc3QgY2VsbCBpcyBhIHBvaW50ZXIKKwl0byB0aGUgcmNwbSBub2RlLCB0aGUgc2Vjb25kIGNl
+bGwgaXMgdGhlIGJpdCBtYXNrIHRoYXQgc2hvdWxkIGJlIHNldAorCWluIElQUERFWFBDUjAsIGFu
+ZCB0aGUgdGhpcmQgY2VsbCBpcyBmb3IgSVBQREVYUENSMSwgYW5kIHNvIG9uLgorCitFeGFtcGxl
+OgorCWxwdWFydDA6IHNlcmlhbEAyOTUwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIx
+YS1scHVhcnQiOworCQlyZWcgPSA8MHgwIDB4Mjk1MDAwMCAweDAgMHgxMDAwPjsKKwkJaW50ZXJy
+dXB0cyA9IDxHSUNfU1BJIDgwIElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQljbG9ja3MgPSA8JnN5
+c2Nsaz47CisJCWNsb2NrLW5hbWVzID0gImlwZyI7CisJCXJjcG0td2FrZXVwID0gPCZyY3BtIDB4
+MCAweDQwMDAwMDAwPjsKKwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9OwotLSAKMi4xLjAuMjcu
+Zzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcK
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
