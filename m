@@ -1,59 +1,123 @@
-From: erin.lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Document: DT: Add bindings for mediatek MT2701 SoC
- Platform
-Date: Thu, 24 Sep 2015 11:15:59 +0800
-Message-ID: <1443064559.23409.13.camel@mtksdaap41>
-References: <1442998570-54031-1-git-send-email-erin.lo@mediatek.com>
- <1442998570-54031-2-git-send-email-erin.lo@mediatek.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH v2 5/9] dt-bindings: add documentation of rk3036 clock
+ controller
+Date: Thu, 24 Sep 2015 11:42:23 +0800
+Message-ID: <5603711F.3070809@rock-chips.com>
+References: <1442478540-15068-1-git-send-email-zhengxing@rock-chips.com> <1442485969-1733-1-git-send-email-zhengxing@rock-chips.com> <14900712.fB7cIie92H@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1442998570-54031-2-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <14900712.fB7cIie92H@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-09-23 at 16:56 +0800, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> This adds a DT binding documentation for the MT2701 SoC from Mediatek.
-> 
-> Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/mediatek.txt                 | 4 ++++
->  Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt | 1 +
->  Documentation/devicetree/bindings/serial/mtk-uart.txt              | 5 +++--
->  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt     | 5 +++--
->  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt             | 6 +++++-
->  5 files changed, 16 insertions(+), 5 deletions(-)
-> 
-
-[snip...]
-
-> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> index 2d47add..f5effb7 100644
-> --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> @@ -9,8 +9,9 @@ Required properties:
->    * "mediatek,mt6589-uart" for MT6589 compatible UARTS
->    * "mediatek,mt6582-uart" for MT6582 compatible UARTS
->    * "mediatek,mt6580-uart" for MT6580 compatible UARTS
-> -  * "mediatek,mt6577-uart" for all compatible UARTS (MT8173, MT6795,
-> -        MT6589, MT6582, MT6580, MT6577)
-> +  * "mediatek,mt6577-uart" for all compatible UARTS (MT8173, MT6589, MT6582,
-
-
-MT6795 will be added back in next version.
-
-Regards,
--Erin
+On 2015=E5=B9=B409=E6=9C=8817=E6=97=A5 23:09, Heiko St=C3=BCbner wrote:
+> Am Donnerstag, 17. September 2015, 18:32:49 schrieb Xing Zheng:
+>> Add the devicetree binding for the cru on the rk3036 which quite sim=
+ilar
+>> structured as previous clock controllers.
+>>
+>> Signed-off-by: Xing Zheng<zhengxing@rock-chips.com>
+>> ---
+>>
+>> Changes in v2: None
+>>
+>>   .../bindings/clock/rockchip,rk3036-cru.txt         |   60
+>> ++++++++++++++++++++ 1 file changed, 60 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036=
+-cru.txt
+>> b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt ne=
+w file
+>> mode 100644
+>> index 0000000..ac3037a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.tx=
+t
+>> @@ -0,0 +1,60 @@
+>> +* Rockchip RK3036 Clock and Reset Unit
+>> +
+>> +The RK3036 clock controller generates and supplies clock to various
+>> +controllers within the SoC and also implements a reset controller f=
+or SoC
+>> +peripherals.
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be "rockchip,rk3036-cru"
+>> +- reg: physical base address of the controller and length of memory=
+ mapped
+>> +  region.
+>> +- #clock-cells: should be 1.
+>> +- #reset-cells: should be 1.
+>> +
+>> +Optional Properties:
+>> +
+>> +- rockchip,grf: phandle to the syscon managing the "general registe=
+r files"
+>> +  If missing pll rates are not changable, due to the missing pll lo=
+ck
+>> status. +
+>> +Each clock is assigned an identifier and client nodes can use this
+>> identifier +to specify the clock which they consume. All available c=
+locks
+>> are defined as +preprocessor macros in the dt-bindings/clock/rk3036-=
+cru.h
+>> headers and can be +used in device tree sources. Similar macros exis=
+t for
+>> the reset sources in +these files.
+>> +
+>> +External clocks:
+>> +
+>> +There are several clocks that are generated outside the SoC. It is =
+expected
+>> +that they are defined using standard clock bindings with following
+>> +clock-output-names:
+>> + - "xin24m" - crystal input - required,
+>> + - "xin32k" - rtc clock - optional,
+> The rk3036 does not seem to use a rtc clock, so this should probably =
+go away
+Done.
+>> + - "ext_i2s" - external I2S clock - optional,
+>> + - "ext_hsadc" - external HSADC clock - optional,
+>> + - "ext_vip" - external VIP clock - optional,
+>> + - "ext_isp" - external ISP clock - optional,
+>> + - "ext_jtag" - external JTAG clock - optional
+> There do not seem to exist external clock sources for hsadc, vip, isp=
+ and jtag
+> in your clock tree?
+>
+> missing here:
+> - ext_gmac
+Yes, done.
+>> +
+>> +Example: Clock controller node:
+>> +
+>> +	cru: cru@20000000 {
+>> +		compatible =3D "rockchip,rk3036-cru";
+>> +		reg =3D<0x20000000 0x1000>;
+>> +		rockchip,grf =3D<&grf>;
+>> +
+>> +		#clock-cells =3D<1>;
+>> +		#reset-cells =3D<1>;
+>> +	};
+>> +
+>> +Example: UART controller node that consumes the clock generated by =
+the
+>> clock +  controller:
+>> +
+>> +	uart0: serial@20060000 {
+>> +		compatible =3D "snps,dw-apb-uart";
+>> +		reg =3D<0x20060000 0x100>;
+>> +		interrupts =3D<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>> +		reg-shift =3D<2>;
+>> +		reg-io-width =3D<4>;
+>> +		clocks =3D<&cru SCLK_UART0>;
+>> +	};
+Thanks.
