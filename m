@@ -1,87 +1,93 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH RFC v4 4/8] drm/i2c: tda998x: Add support of a DT graph
- of ports
-Date: Thu, 24 Sep 2015 12:36:16 +0200
-Message-ID: <20150924123616.5d47f363@armhf>
-References: <cover.1442572860.git.jsarha@ti.com>
- <e9ebb04f781fef7cff99190d301fb64805b97d39.1442572860.git.jsarha@ti.com>
- <56001FF6.5070504@kernel.org>
+From: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Subject: Re: [PATCH 1/4] ARM: sunxi: Introduce Allwinner for A83T support
+Date: Thu, 24 Sep 2015 18:52:37 +0800
+Message-ID: <CAEzqOZv_L3A7kpKqNQnHjL6Wb1Lzw6dSU4Qy52yJVf2h1QmcLA@mail.gmail.com>
+References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1442936337-3104-2-git-send-email-vishnupatekar0510@gmail.com> <CAGb2v665FhnSoWYGJn+Tf79F7pZitYBrEOmAts4nVoUWb-uBqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56001FF6.5070504@kernel.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, Jyri Sarha <jsarha@ti.com>, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v665FhnSoWYGJn+Tf79F7pZitYBrEOmAts4nVoUWb-uBqg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMSBTZXAgMjAxNSAxMDoxOToxOCAtMDUwMApSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPiB3cm90ZToKCj4gT24gMDkvMTgvMjAxNSAwNjowNiBBTSwgSnlyaSBTYXJoYSB3cm90
-ZToKPiA+IEZyb206IEplYW4tRnJhbmNvaXMgTW9pbmUgPG1vaW5lamZAZnJlZS5mcj4KPiA+IAo+
-ID4gVHdvIGtpbmRzIG9mIHBvcnRzIG1heSBiZSBkZWNsYXJlZCBpbiBhIERUIGdyYXBoIG9mIHBv
-cnRzOiB2aWRlbyBhbmQgYXVkaW8uCj4gPiBUaGlzIHBhdGNoIGFjY2VwdHMgdGhlIHBvcnQgdmFs
-dWUgZnJvbSBhIHZpZGVvIHBvcnQgYXMgYW4gYWx0ZXJuYXRpdmUKPiA+IHRvIHRoZSB2aWRlby1w
-b3J0cyBwcm9wZXJ0eS4KPiA+IEl0IGFsc28gYWNjZXB0cyBhdWRpbyBwb3J0cyBpbiB0aGUgY2Fz
-ZSB0aGUgdHJhbnNtaXR0ZXIgaXMgbm90IHVzZWQgYXMKPiA+IGEgc2xhdmUgZW5jb2Rlci4KPiA+
-IFRoZSBuZXcgZmlsZSBpbmNsdWRlL3NvdW5kL3RkYTk5OHguaCBwcmVwYXJlcyB0byB0aGUgZGVm
-aW5pdGlvbiBvZgo+ID4gYSB0ZGE5OTh4IENPREVDLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBK
-ZWFuLUZyYW5jb2lzIE1vaW5lIDxtb2luZWpmQGZyZWUuZnI+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBK
-eXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+ID4gLS0tCglbc25pcF0KPiA+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaTJjL3RkYTk5OHgudHh0Cj4g
-PiBpbmRleCBlOWU0YmNlLi4zNWY2YTgwIDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdGRhOTk4eC50eHQKPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaTJjL3RkYTk5OHgudHh0Cj4gPiBAQCAtMTYs
-NiArMTYsMzUgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAKPiA+ICAgIC0gdmlkZW8tcG9y
-dHM6IDI0IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5lcyBob3cgdGhlIHZpZGVvIGNvbnRyb2xsZXIK
-PiA+ICAJb3V0cHV0IGlzIHdpcmVkIHRvIHRoZSBUREE5OTh4IGlucHV0IC0gZGVmYXVsdDogPDB4
-MjMwMTQ1Pgo+ID4gKwlUaGlzIHByb3BlcnR5IGlzIG5vdCB1c2VkIHdoZW4gcG9ydHMgYXJlIGRl
-ZmluZWQuCj4gPiArCj4gPiArT3B0aW9uYWwgbm9kZXM6Cj4gPiArCj4gPiArICAtIHBvcnQ6IHVw
-IHRvIHRocmVlIHBvcnRzLgo+ID4gKwlUaGUgcG9ydHMgYXJlIGRlZmluZWQgYWNjb3JkaW5nIHRv
-IFsxXS4KPiA+ICsKPiA+ICsgICAgVmlkZW8gcG9ydC4KPiA+ICsJVGhlcmUgbWF5IGJlIG9ubHkg
-b25lIHZpZGVvIHBvcnQuCj4gPiArCVRoaXMgb25lIG11c3QgY29udGFpbiB0aGUgZm9sbG93aW5n
-IHByb3BlcnR5Ogo+ID4gKwo+ID4gKwktIHBvcnQtdHlwZTogbXVzdCBiZSAicmdiIiAgCj4gCj4g
-V2h5IGRvIHlvdSBuZWVkIHRoaXMgaWYgdGhlcmUgaXMgbm8gb3RoZXIgY2hvaWNlPyBUaGUgcG9y
-dCBudW1iZXIgc2hvdWxkCj4gZGVmaW5lIHdoaWNoIG9uZSBpcyB2aWRlby4KClRoZXJlIGlzIG5v
-IHNwZWNpZmljIHBvcnQgbnVtYmVyLgpPbmUgb2YgdGhlIHBvcnRzIGlzIHZpZGVvIGFuZCB0d28g
-b3RoZXIgb25lcyBhcmUgYXVkaW8uCgo+ID4gKwo+ID4gKwlhbmQgbWF5IGNvbnRhaW4gdGhlIG9w
-dGlvbmFsIHByb3BlcnR5Ogo+ID4gKwo+ID4gKwktIHJlZzogMjQgYml0cyB2YWx1ZSB3aGljaCBk
-ZWZpbmVzIGhvdyB0aGUgdmlkZW8gY29udHJvbGxlcgo+ID4gKwkJb3V0cHV0IGlzIHdpcmVkIHRv
-IHRoZSBUREE5OTh4IGlucHV0ICh2aWRlbyBwaW5zKQo+ID4gKwkJV2hlbiBhYnNlbnQsIHRoZSBk
-ZWZhdWx0IHZhbHVlIGlzIDwweDIzMDE0NT4uICAKPiAKPiBJJ20gZmFpbGluZyB0byBkZWNvZGUg
-aG93IHRoaXMgdmFsdWUgd29ya3MuIEluIGFueSBjYXNlLCBJIHdvdWxkIGtlZXAKPiB0aGlzIGFz
-IGEgdmVuZG9yIHNwZWNpZmljIHByb3BlcnR5IHJhdGhlciB0aGFuIGFidXNpbmcgcmVnLgoKVGhp
-cyBoYXMgYmVlbiBleHBsYWluZWQgaW4KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQvMS8yMC84
-NgoKPiA+ICsKPiA+ICsgICAgQXVkaW8gcG9ydHMuCj4gPiArCVRoZXJlIG1heSBiZSBvbmUgb3Ig
-dHdvIGF1ZGlvIHBvcnRzLgo+ID4gKwlUaGVzZSBvbmVzIG11c3QgY29udGFpbiB0aGUgZm9sbG93
-aW5nIHByb3BlcnRpZXM6Cj4gPiArCj4gPiArCS0gcG9ydC10eXBlOiBtdXN0IGJlICJpMnMiIG9y
-ICJzcGRpZiIKPiA+ICsKPiA+ICsJLSByZWc6IDggYml0cyB2YWx1ZSB3aGljaCBkZWZpbmVzIGhv
-dyB0aGUgYXVkaW8gY29udHJvbGxlcgo+ID4gKwkJb3V0cHV0IGlzIHdpcmVkIHRvIHRoZSBUREE5
-OTh4IGlucHV0IChhdWRpbyBwaW5zKSAgCj4gCj4gcmVnIGlzIDMyLWJpdHMuCgpUaGlzIHBvcnQg
-aGFzIG9ubHkgOCBzaWduaWZpY2FudCBiaXRzIGFzIGV4cGxhaW5lZCBpbgpodHRwczovL2xrbWwu
-b3JnL2xrbWwvMjAxNS8xLzcvMzYyCgo+ID4gKwo+ID4gK1sxXSBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Cj4gPiAgCj4gPiAgRXhhbXBsZToKPiA+ICAKPiA+IEBA
-IC0yNiw0ICs1NSwyNiBAQCBFeGFtcGxlOgo+ID4gIAkJaW50ZXJydXB0cyA9IDwyNyAyPjsJCS8q
-IGZhbGxpbmcgZWRnZSAqLwo+ID4gIAkJcGluY3RybC0wID0gPCZwbXhfY2FtZXJhPjsKPiA+ICAJ
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gPiArCj4gPiArCQlwb3J0QDIzMDE0NSB7Cj4g
-PiArCQkJcG9ydC10eXBlID0gInJnYiI7Cj4gPiArCQkJcmVnID0gPDB4MjMwMTQ1PjsKPiA+ICsJ
-CQloZG1pXzA6IGVuZHBvaW50IHsKPiA+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2QwXzA+
-Owo+ID4gKwkJCX07Cj4gPiArCQl9Owo+ID4gKwkJcG9ydEAzIHsJCQkvKiBBUDEgPSBJMlMgKi8g
-IAo+IAo+IElzIDMgc2lnbmlmaWNhbnQ/IFdoYXQgaGFwcGVuZWQgdG8gMC0yPwoKVGhlIHZhbHVl
-IGFmdGVyIEAgaXMgdGhlICdyZWcnIHZhbHVlICg9IHZhbHVlIG9mIHRoZSBwb3J0IHJlZ2lzdGVy
-KS4KCj4gPiArCQkJcG9ydC10eXBlID0gImkycyI7Cj4gPiArCQkJcmVnID0gPDB4MDM+Owo+ID4g
-KwkJCXRkYTk5OHhfaTJzOiBlbmRwb2ludCB7Cj4gPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
-YXVkaW8xX2kycz47Cj4gPiArCQkJfTsKPiA+ICsJCX07CgotLSAKS2VuIGFyIGMnaGVudGHDsQl8
-CSAgICAgICoqIEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpm
-LmZyZWUuZnIvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hello,
+
+On Tue, Sep 22, 2015 at 11:47 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Tue, Sep 22, 2015 at 11:38 PM, Vishnu Patekar
+> <vishnupatekar0510@gmail.com> wrote:
+>> Allwinner A83T is octa-core cortex-a7 based SoC.
+>> It's clock control unit and prcm, pinmux are different from previous sun8i
+>> series.
+>> Its processor cores are arragned in two clusters 4 cores each,
+>> similar to A80.
+>>
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+>>  drivers/clk/sunxi/clk-sunxi.c                   | 6 ++++++
+>>  3 files changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> index 67da205..cf5ed27 100644
+>> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+>> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> @@ -11,4 +11,5 @@ using one of the following compatible strings:
+>>    allwinner,sun8i-a23
+>>    allwinner,sun8i-a33
+>>    allwinner,sun8i-h3
+>> +  allwinner,sun8i-a83t
+>
+> Alphabetic order please.
+Okie, I'll correct.
+>
+>>    allwinner,sun9i-a80
+>> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+>> index 65bab28..b04aefa 100644
+>> --- a/arch/arm/mach-sunxi/sunxi.c
+>> +++ b/arch/arm/mach-sunxi/sunxi.c
+>> @@ -69,6 +69,7 @@ static const char * const sun8i_board_dt_compat[] = {
+>>         "allwinner,sun8i-a23",
+>>         "allwinner,sun8i-a33",
+>>         "allwinner,sun8i-h3",
+>> +       "allwinner,sun8i-a83t",
+>
+> Same here.
+>
+>>         NULL,
+>>  };
+>>
+>> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+>> index 413070d..f216d5d 100644
+>> --- a/drivers/clk/sunxi/clk-sunxi.c
+>> +++ b/drivers/clk/sunxi/clk-sunxi.c
+>> @@ -1212,6 +1212,12 @@ CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
+>>  CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
+>>  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
+>>
+>> +static void __init sun8ia83t_init_clocks(struct device_node *node)
+>> +{
+>> +       sunxi_init_clocks(NULL, 0);
+>> +}
+>> +CLK_OF_DECLARE(sun9i_a83t_clk_init, "allwinner,sun8i-a83t", sun8ia83t_init_clocks);
+>
+> sun8i? Missing underscore too.
+Sorry, yes, sun8i. will add _.
+>
+> I think you should add this once you actually have clock support.
+> Otherwise this call basically does nothing.
+>
+>> +
+>>  static void __init sun9i_init_clocks(struct device_node *node)
+>>  {
+>>         sunxi_init_clocks(NULL, 0);
+>
+> On the side, I will send patches to remove sun9i_init_clocks.
+>
+>
+> Regards
+> ChenYu
+Thanks for review.
