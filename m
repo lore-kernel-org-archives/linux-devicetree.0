@@ -1,110 +1,93 @@
-From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
-Subject: RE: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
-Date: Thu, 24 Sep 2015 09:26:21 +0000
-Message-ID: <F1B223389110CE49B4CF055ABA2E5D3D78C9BCBF@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1443012841-13673-1-git-send-email-sbhatta@xilinx.com>
- <20150924091034.GB27847@shlinux2>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH linux-next v10 0/3] mfd: flexcom: add a driver for Flexcom
+Date: Thu, 24 Sep 2015 11:35:55 +0200
+Message-ID: <cover.1443087121.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150924091034.GB27847@shlinux2>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "kishon@ti.com" <kishon@ti.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+This series of patches a support to the Atmel Flexcom, a wrapper which
+integrates an USART, a SPI controller and a TWI controller. Only one
+peripheral can be used at a time. The active function is selected though
+the Flexcom Mode Register
 
-> -----Original Message-----
-> From: Peter Chen [mailto:peter.chen@freescale.com]
-> Sent: Thursday, September 24, 2015 2:41 PM
-> To: Subbaraya Sundeep Bhatta
-> Cc: balbi@ti.com; devicetree@vger.kernel.org; kishon@ti.com;
-> gregkh@linuxfoundation.org; linux-usb@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Punnaiah Choudary Kalluri; Subbaraya Sundeep Bhatta;
-> linux-arm-kernel@lists.infradead.org
-> Subject: Re: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
-> 
-> On Wed, Sep 23, 2015 at 06:24:01PM +0530, Subbaraya Sundeep Bhatta
-> wrote:
-> > This patch adds binding doc info for generic ULPI PHYs platform
-> > driver.
-> >
-> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/usb/ulpi-platform-phy.txt  |   34
-> ++++++++++++++++++++
-> >  1 files changed, 34 insertions(+), 0 deletions(-)  create mode 100644
-> > Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
-> > b/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
-> > new file mode 100644
-> > index 0000000..7b8cbb4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
-> > @@ -0,0 +1,34 @@
-> > +Platform driver for generic ULPI PHYs
-> > +
-> > +Required properties:
-> > +- compatible		: Should be "ulpi-phy"
-> > +- reg			: Physical base address and size of the USB
-> > +			  controller registers map to which this PHY
-> > +			  is connected.
-> > +- view-port		: Should contain viewport register offset of the
-> > +			  USB controller to which this PHY is connected Optional
-> > +properties:
-> > +- drv-vbus		: required if turning VBUS on/off has to be driven
-> > +			  by writing to PHY. This feature depends on board
-> > +			  design.
-> > +
-> > +Example:
-> > +Below example shows the PHY binding for Chipidea USB controller which
-> > +has ulpi viewport register at 0x0170
-> > +
-> > +		usb_phy0: phy0 {
-> > +                	compatible = "ulpi-phy";
-> > +                	reg = <0xe0002000 0x1000>;
-> > +                	view-port = <0x0170>;
-> > +                	drv-vbus;
-> > +        	};
-> > +
-> > +		usb0: usb@e0002000 {
-> > +                        compatible = "chipidea,usb2";
-> > +                        interrupt-parent = <&intc>;
-> > +                        interrupts = <0 21 4>;
-> > +                        reg = <0xe0002000 0x1000>;
-> 
-> Although just call devm_ioremap twice for the same register region does not
-> cause any errors, I am not sure if it will has other potential problems. Cc: arm
-> list.
 
-Yes Peter I was also in doubt to call devm_ioremap twice for same register region.
-devm_ioremap_resource complained hence modified to devm_ioremap. Thanks for
-adding arm-list.
+ChangeLog
 
-Sundeep
-> 
-> > +                        phy_type = "ulpi";
-> > +			dr_mode = "host";
-> > +			usb-phy = <&usb_phy0>;
-> > +                };
-> > --
-> > 1.7.1
-> >
-> 
-> --
-> 
-> Best Regards,
-> Peter Chen
+v10:
+- add Acked-by from Nicolas Ferre
+
+v9:
+- go back to v5 (use the new "atmel,flexcom-mode" DT property).
+- fix the name of the spi node in the DT example: from spi@f8034400 to
+  spi@400
+- align the fields of the struct platform_driver atmel_flexcom_driver as
+  suggested by Lee Jones.
+
+v8:
+- fix the name of the spi node in the DT example: from spi@f8034400 to
+  spi@2,0
+- use the return code of op_property_read_u32_index() instead of -EINVAL
+  to report error.
+- add Acked-by from Nicolas Ferre
+
+v7:
+- read the operating mode from the very first u32 of the reg property from
+  the first available child node (should be unique).
+- update the DT bindings documentation accordingly.
+
+v6:
+- select the operating mode according to the "compatible" DT property of
+  the first available child node (should be unique).
+- remove the "atmel,flexcom-mode" DT property so the need of a header file
+  defining macros for the possible values of this deprecated property.
+
+v5:
+- create a header file containing macros used by DT bindings
+- use numeric constants instead of strings to select the Flexcom mode
+- change the license to "GPL v2"
+- update the DT binding documentation to make it more readable and add
+  references to USART, SPI and I2C DT binding documentations. remove the
+  useless label in the Example section.
+- change the register prefix from FX_ to FLEX_ to match the Flexcom
+  programmer datasheet.
+- rename some variables to make them more understandable.
+
+v4:
+- check clk_prepare_enable() return code in atmel_flexcom_probe()
+- add a commit message to the DT binding patch
+
+v3:
+- remove MODULE_ALIAS()
+- add Acked-by from Boris Brezillon and Alexandre Belloni
+
+v2:
+- enhance the documentation of DT bindings and change the way the "ranges"
+  property is used.
+- replace __raw_readl() and __raw_writel() by readl() and writel().
+- change the module license to "GPL" for v2 or later
+- print the selected flexcom mode after the hardware version
+
+Cyrille Pitchen (3):
+  mfd: atmel-flexcom: create include file with macros used by DT
+    bindings
+  mfd: devicetree: add bindings for Atmel Flexcom
+  mfd: atmel-flexcom: add a driver for Atmel Flexible Serial
+    Communication Unit
+
+ .../devicetree/bindings/mfd/atmel-flexcom.txt      |  67 +++++++++++++
+ drivers/mfd/Kconfig                                |  11 +++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/atmel-flexcom.c                        | 104 +++++++++++++++++++++
+ include/dt-bindings/mfd/atmel-flexcom.h            |  16 ++++
+ 5 files changed, 199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+ create mode 100644 drivers/mfd/atmel-flexcom.c
+ create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
+
+-- 
+1.8.2.2
