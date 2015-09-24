@@ -1,807 +1,502 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v5 2/4] edac: Add L3 EDAC support to the APM X-Gene SoC EDAC driver
-Date: Wed, 23 Sep 2015 17:40:59 -0700
-Message-ID: <1443055261-8613-3-git-send-email-lho@apm.com>
-References: <1443055261-8613-1-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443055261-8613-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: huangdaode <huangdaode@hisilicon.com>
+Subject: Re: [PATCH v2 1/5] net: add Hisilicon Network Subsystem support (config
+ and documents)
+Date: Thu, 24 Sep 2015 09:58:13 +0800
+Message-ID: <560358B5.3050403@hisilicon.com>
+References: <1442472710-20909-1-git-send-email-huangdaode@hisilicon.com> <1442472710-20909-2-git-send-email-huangdaode@hisilicon.com> <560019C5.6030407@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <560019C5.6030407@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, liguozhu@hisilicon.com, Yisen.Zhuang@huawei.com, davem@davemloft.net, paul.gortmaker@windriver.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Add EDAC support for the L3 component.
+On 2015/9/21 22:52, Rob Herring wrote:
+> On 09/17/2015 01:51 AM, huangdaode wrote:
+>> The Hisilicon Network Subsystem is a long term evolution IP which is
+>> supposed to be used in Hisilicon ICT SoC. The IP, which is called hns
+>> for short, is a TCP/IP acceleration engine, which can directly decode
+>> TCP/IP stream and distribute them to different ring buffers.
+>>
+>> HNS can be configured to work on different mode for different scenario.
+>> This patch make use only some of the mode to make it as standard
+>> ethernet NIC. The other mode will be added soon.
+>>
+>> The whole function has 4 kernel sub-modules:
+>>
+>> hnae: the HNS acceleration engine framework. It provides a abstract
+>> interface between the engine and the upper layers which make use of the
+>> engine by ring buffer.
+>>
+>> hns_enet_drv: a standard ethernet driver that base on the ring buffer.
+>>
+>> hns_dsaf: one of the implementation of HNS acceleration engine, which is
+>> applied on Hililicon hip05, Hi1610 and other later-on SoCs
+>>
+>> hns_mdio: the mdio control to the PHY, used by acceleration engine
+>>
+>> This submit add basic config and documents
+>>
+>> Signed-off-by: huangdaode <huangdaode@hisilicon.com>
+>> Signed-off-by: Kenneth Lee <liguozhu@huawei.com>
+>> Signed-off-by: Yisen Zhuang <Yisen.Zhuang@huawei.com>
+>> ---
+>>   .../bindings/net/hisilicon-hip04-net.txt           |   4 +-
+>>   .../devicetree/bindings/net/hisilicon-hns-dsaf.txt |  49 ++++++
+>>   .../devicetree/bindings/net/hisilicon-hns-mdio.txt |  22 +++
+>>   .../devicetree/bindings/net/hisilicon-hns-nic.txt  |  47 +++++
+>>   arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi       | 193 +++++++++++++++++++++
+>>   5 files changed, 313 insertions(+), 2 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>>   create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+>>   create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+>>   create mode 100644 arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+>> index 988fc69..d1df8a0 100644
+>> --- a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+>> @@ -32,13 +32,13 @@ Required properties:
+>>   
+>>   Required properties:
+>>   
+>> -- compatible: should be "hisilicon,hip04-mdio".
+>> +- compatible: should be "hisilicon,mdio".
+> Why are you removing the old one? Please use more specific compatible
+> strings, not less specific.
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/edac/xgene_edac.c |  669 ++++++++++++++++++++++++++++++++-------------
- 1 files changed, 474 insertions(+), 195 deletions(-)
 
-diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
-index 5ff42d5..37121e8 100644
---- a/drivers/edac/xgene_edac.c
-+++ b/drivers/edac/xgene_edac.c
-@@ -63,10 +63,11 @@ struct xgene_edac {
- 	struct regmap		*efuse_map;
- 	void __iomem		*pcp_csr;
- 	spinlock_t		lock;
--	struct dentry		*dfs;
-+	struct dentry           *dfs;
+we have unified the hip04_mdio.c and hip05_mdio.c  into hns_mdio.c, so 
+we plan use
+"hisilicon,mdio", "hisilicon,hns-mdio" "hisilicon,hns-mdio Vx", in this 
+case, "hisilicon, mdio "
+is more suitable for us, meanwhile, we will upstream hip04 dts file 
+later, and will apply the
+compatible property with "hisilicon,mdio".
 
- 	struct list_head	mcus;
- 	struct list_head	pmds;
-+	struct list_head	l3s;
+>>   - Inherits from MDIO bus node binding [2]
+>>   [2] Documentation/devicetree/bindings/net/phy.txt
+>>   
+>>   Example:
+>>   	mdio {
+>> -		compatible = "hisilicon,hip04-mdio";
+>> +		compatible = "hisilicon,mdio";
+>>   		reg = <0x28f1000 0x1000>;
+>>   		#address-cells = <1>;
+>>   		#size-cells = <0>;
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>> new file mode 100644
+>> index 0000000..80411b2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>> @@ -0,0 +1,49 @@
+>> +Hisilicon DSA Fabric device controller
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hns-dsaf-v1" or "hisilicon,hns-dsaf-v2".
+>> +  "hisilicon,hns-dsaf-v1" is for hip05.
+>> +  "hisilicon,hns-dsaf-v2" is for Hi1610 and Hi1612.
+>> +- dsa-name: dsa fabric name who provide this interface.
+>> +  should be "dsafX", X is the dsaf id.
+> What is this for? Find a different way to distinguish instances other
+> than an index.
 
- 	struct mutex		mc_lock;
- 	int			mc_active_mask;
-@@ -537,140 +538,134 @@ static void xgene_edac_pmd_l1_check(struct edac_device_ctl_info *edac_dev,
- 	pg_f = ctx->pmd_csr + cpu_idx * CPU_CSR_STRIDE + CPU_MEMERR_CPU_PAGE;
+our driver support multi dsaf, so X in dsafX is the dsaf id.
+the enet driver interface use the dsa-name to match the dsaf engine, 
+then get it's handle.
+when there are 2 dsafs ,we use dsaf0 and dsaf1 to distinguish them. The 
+default is dsaf0.
 
- 	val = readl(pg_f + MEMERR_CPU_ICFESR_PAGE_OFFSET);
--	if (val) {
--		dev_err(edac_dev->dev,
--			"CPU%d L1 memory error ICF 0x%08X Way 0x%02X Index 0x%02X Info 0x%02X\n",
--			ctx->pmd * MAX_CPU_PER_PMD + cpu_idx, val,
--			MEMERR_CPU_ICFESR_ERRWAY_RD(val),
--			MEMERR_CPU_ICFESR_ERRINDEX_RD(val),
--			MEMERR_CPU_ICFESR_ERRINFO_RD(val));
--		if (val & MEMERR_CPU_ICFESR_CERR_MASK)
--			dev_err(edac_dev->dev,
--				"One or more correctable error\n");
--		if (val & MEMERR_CPU_ICFESR_MULTCERR_MASK)
--			dev_err(edac_dev->dev, "Multiple correctable error\n");
--		switch (MEMERR_CPU_ICFESR_ERRTYPE_RD(val)) {
--		case 1:
--			dev_err(edac_dev->dev, "L1 TLB multiple hit\n");
--			break;
--		case 2:
--			dev_err(edac_dev->dev, "Way select multiple hit\n");
--			break;
--		case 3:
--			dev_err(edac_dev->dev, "Physical tag parity error\n");
--			break;
--		case 4:
--		case 5:
--			dev_err(edac_dev->dev, "L1 data parity error\n");
--			break;
--		case 6:
--			dev_err(edac_dev->dev, "L1 pre-decode parity error\n");
--			break;
--		}
-+	if (!val)
-+		goto chk_lsu;
-+	dev_err(edac_dev->dev,
-+		"CPU%d L1 memory error ICF 0x%08X Way 0x%02X Index 0x%02X Info 0x%02X\n",
-+		ctx->pmd * MAX_CPU_PER_PMD + cpu_idx, val,
-+		MEMERR_CPU_ICFESR_ERRWAY_RD(val),
-+		MEMERR_CPU_ICFESR_ERRINDEX_RD(val),
-+		MEMERR_CPU_ICFESR_ERRINFO_RD(val));
-+	if (val & MEMERR_CPU_ICFESR_CERR_MASK)
-+		dev_err(edac_dev->dev, "One or more correctable error\n");
-+	if (val & MEMERR_CPU_ICFESR_MULTCERR_MASK)
-+		dev_err(edac_dev->dev, "Multiple correctable error\n");
-+	switch (MEMERR_CPU_ICFESR_ERRTYPE_RD(val)) {
-+	case 1:
-+		dev_err(edac_dev->dev, "L1 TLB multiple hit\n");
-+		break;
-+	case 2:
-+		dev_err(edac_dev->dev, "Way select multiple hit\n");
-+		break;
-+	case 3:
-+		dev_err(edac_dev->dev, "Physical tag parity error\n");
-+		break;
-+	case 4:
-+	case 5:
-+		dev_err(edac_dev->dev, "L1 data parity error\n");
-+		break;
-+	case 6:
-+		dev_err(edac_dev->dev, "L1 pre-decode parity error\n");
-+		break;
-+	}
+>> +- mode: dsa fabric mode string. only support one of dsaf modes like these:
+>> +		"2port-64vf",
+>> +		"6port-16rss",
+>> +		"6port-16vf".
+>> +- interrupt-parent: the interrupt parent of this device.
+>> +- interrupts: should contain the DSA Fabric and rcb interrupt.
+>> +- reg: specifies base physical address(es) and size of the device registers.
+>> +  The first region is external interface control register base and size.
+>> +  The second region is SerDes base register and size.
+>> +  The third region is the PPE register base and size.
+>> +  The fourth region is dsa fabric base register and size.
+>> +  The fifth region is cpld base register and size, it is not required if do not use cpld.
+>> +- phy-handle: phy handle of physicl port, 0 if not any phy device. see ethernet.txt [1].
+>> +- buf-size: rx buffer size, should be 16-1024.
+> This is a h/w property?
 
--		/* Clear any HW errors */
--		writel(val, pg_f + MEMERR_CPU_ICFESR_PAGE_OFFSET);
-+	/* Clear any HW errors */
-+	writel(val, pg_f + MEMERR_CPU_ICFESR_PAGE_OFFSET);
+yes. it's.
 
--		if (val & (MEMERR_CPU_ICFESR_CERR_MASK |
--			   MEMERR_CPU_ICFESR_MULTCERR_MASK))
--			edac_device_handle_ce(edac_dev, 0, 0,
--					      edac_dev->ctl_name);
--	}
-+	if (val & (MEMERR_CPU_ICFESR_CERR_MASK |
-+		   MEMERR_CPU_ICFESR_MULTCERR_MASK))
-+		edac_device_handle_ce(edac_dev, 0, 0, edac_dev->ctl_name);
+>> +- desc-num: number of description in TX and RX queue, should be 512, 1024, 2048 or 4096.
+> This is a h/w property?
 
-+chk_lsu:
- 	val = readl(pg_f + MEMERR_CPU_LSUESR_PAGE_OFFSET);
--	if (val) {
-+	if (!val)
-+		goto chk_mmu;
-+	dev_err(edac_dev->dev,
-+		"CPU%d memory error LSU 0x%08X Way 0x%02X Index 0x%02X Info 0x%02X\n",
-+		ctx->pmd * MAX_CPU_PER_PMD + cpu_idx, val,
-+		MEMERR_CPU_LSUESR_ERRWAY_RD(val),
-+		MEMERR_CPU_LSUESR_ERRINDEX_RD(val),
-+		MEMERR_CPU_LSUESR_ERRINFO_RD(val));
-+	if (val & MEMERR_CPU_LSUESR_CERR_MASK)
-+		dev_err(edac_dev->dev, "One or more correctable error\n");
-+	if (val & MEMERR_CPU_LSUESR_MULTCERR_MASK)
-+		dev_err(edac_dev->dev, "Multiple correctable error\n");
-+	switch (MEMERR_CPU_LSUESR_ERRTYPE_RD(val)) {
-+	case 0:
-+		dev_err(edac_dev->dev, "Load tag error\n");
-+		break;
-+	case 1:
-+		dev_err(edac_dev->dev, "Load data error\n");
-+		break;
-+	case 2:
-+		dev_err(edac_dev->dev, "WSL multihit error\n");
-+		break;
-+	case 3:
-+		dev_err(edac_dev->dev, "Store tag error\n");
-+		break;
-+	case 4:
- 		dev_err(edac_dev->dev,
--			"CPU%d memory error LSU 0x%08X Way 0x%02X Index 0x%02X Info 0x%02X\n",
--			ctx->pmd * MAX_CPU_PER_PMD + cpu_idx, val,
--			MEMERR_CPU_LSUESR_ERRWAY_RD(val),
--			MEMERR_CPU_LSUESR_ERRINDEX_RD(val),
--			MEMERR_CPU_LSUESR_ERRINFO_RD(val));
--		if (val & MEMERR_CPU_LSUESR_CERR_MASK)
--			dev_err(edac_dev->dev,
--				"One or more correctable error\n");
--		if (val & MEMERR_CPU_LSUESR_MULTCERR_MASK)
--			dev_err(edac_dev->dev, "Multiple correctable error\n");
--		switch (MEMERR_CPU_LSUESR_ERRTYPE_RD(val)) {
--		case 0:
--			dev_err(edac_dev->dev, "Load tag error\n");
--			break;
--		case 1:
--			dev_err(edac_dev->dev, "Load data error\n");
--			break;
--		case 2:
--			dev_err(edac_dev->dev, "WSL multihit error\n");
--			break;
--		case 3:
--			dev_err(edac_dev->dev, "Store tag error\n");
--			break;
--		case 4:
--			dev_err(edac_dev->dev,
--				"DTB multihit from load pipeline error\n");
--			break;
--		case 5:
--			dev_err(edac_dev->dev,
--				"DTB multihit from store pipeline error\n");
--			break;
--		}
-+			"DTB multihit from load pipeline error\n");
-+		break;
-+	case 5:
-+		dev_err(edac_dev->dev,
-+			"DTB multihit from store pipeline error\n");
-+		break;
-+	}
+yes.
 
--		/* Clear any HW errors */
--		writel(val, pg_f + MEMERR_CPU_LSUESR_PAGE_OFFSET);
-+	/* Clear any HW errors */
-+	writel(val, pg_f + MEMERR_CPU_LSUESR_PAGE_OFFSET);
+>> +
+>> +[1] Documentation/devicetree/bindings/net/phy.txt
+>> +
+>> +Example:
+>> +
+>> +dsa: dsa@c7000000 {
+>> +	compatible = "hisilicon,hns-dsaf-v1";
+>> +	dsa_name = "dsaf0";
+>> +	mode = "6port-16rss";
+>> +	interrupt-parent = <&mbigen_dsa>;
+>> +	reg = <0x0 0xC0000000 0x0 0x420000
+>> +	       0x0 0xC2000000 0x0 0x300000
+>> +	       0x0 0xc5000000 0x0 0x890000
+>> +	       0x0 0xc7000000 0x0 0x60000>;
+>> +	phy-handle = <0 0 0 0 &soc0_phy4 &soc0_phy5 0 0>;
+>> +	interrupts = <131 4>,<132 4>, <133 4>,<134 4>,
+>> +		     <135 4>,<136 4>, <137 4>,<138 4>,
+>> +		     <139 4>,<140 4>, <141 4>,<142 4>,
+>> +		     <143 4>,<144 4>, <145 4>,<146 4>,
+>> +		     <147 4>,<148 4>, <384 1>,<385 1>,
+>> +		     <386 1>,<387 1>, <388 1>,<389 1>,
+>> +		     <390 1>,<391 1>,
+>> +	buf-size = <4096>;
+>> +	desc-num = <1024>;
+>> +	dma-coherent;
+>> +};
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+>> new file mode 100644
+>> index 0000000..9940aa0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+>> @@ -0,0 +1,22 @@
+>> +Hisilicon MDIO bus controller
+>> +
+>> +Properties:
+>> +- compatible: "hisilicon,mdio","hisilicon,hns-mdio".
+> How is this related to the other MDIO ctrlr?
 
--		if (val & (MEMERR_CPU_LSUESR_CERR_MASK |
--			   MEMERR_CPU_LSUESR_MULTCERR_MASK))
--			edac_device_handle_ce(edac_dev, 0, 0,
--					      edac_dev->ctl_name);
--	}
-+	if (val & (MEMERR_CPU_LSUESR_CERR_MASK |
-+		   MEMERR_CPU_LSUESR_MULTCERR_MASK))
-+		edac_device_handle_ce(edac_dev, 0, 0, edac_dev->ctl_name);
+hns-mdio  module only supports Hisilicon SoCs, such as hip04, hip05 and 
+other later on SoC  MDIO ctrlr.
+what does the other MDIO ctrlr mean?
+>
+> Most specific string should come first.
 
-+chk_mmu:
- 	val = readl(pg_f + MEMERR_CPU_MMUESR_PAGE_OFFSET);
--	if (val) {
--		dev_err(edac_dev->dev,
--			"CPU%d memory error MMU 0x%08X Way 0x%02X Index 0x%02X Info 0x%02X %s\n",
--			ctx->pmd * MAX_CPU_PER_PMD + cpu_idx, val,
--			MEMERR_CPU_MMUESR_ERRWAY_RD(val),
--			MEMERR_CPU_MMUESR_ERRINDEX_RD(val),
--			MEMERR_CPU_MMUESR_ERRINFO_RD(val),
--			val & MEMERR_CPU_MMUESR_ERRREQSTR_LSU_MASK ? "LSU" :
--								     "ICF");
--		if (val & MEMERR_CPU_MMUESR_CERR_MASK)
--			dev_err(edac_dev->dev,
--				"One or more correctable error\n");
--		if (val & MEMERR_CPU_MMUESR_MULTCERR_MASK)
--			dev_err(edac_dev->dev, "Multiple correctable error\n");
--		switch (MEMERR_CPU_MMUESR_ERRTYPE_RD(val)) {
--		case 0:
--			dev_err(edac_dev->dev, "Stage 1 UTB hit error\n");
--			break;
--		case 1:
--			dev_err(edac_dev->dev, "Stage 1 UTB miss error\n");
--			break;
--		case 2:
--			dev_err(edac_dev->dev, "Stage 1 UTB allocate error\n");
--			break;
--		case 3:
--			dev_err(edac_dev->dev,
--				"TMO operation single bank error\n");
--			break;
--		case 4:
--			dev_err(edac_dev->dev, "Stage 2 UTB error\n");
--			break;
--		case 5:
--			dev_err(edac_dev->dev, "Stage 2 UTB miss error\n");
--			break;
--		case 6:
--			dev_err(edac_dev->dev, "Stage 2 UTB allocate error\n");
--			break;
--		case 7:
--			dev_err(edac_dev->dev,
--				"TMO operation multiple bank error\n");
--			break;
--		}
-+	if (!val)
-+		return;
-+	dev_err(edac_dev->dev,
-+		"CPU%d memory error MMU 0x%08X Way 0x%02X Index 0x%02X Info 0x%02X %s\n",
-+		ctx->pmd * MAX_CPU_PER_PMD + cpu_idx, val,
-+		MEMERR_CPU_MMUESR_ERRWAY_RD(val),
-+		MEMERR_CPU_MMUESR_ERRINDEX_RD(val),
-+		MEMERR_CPU_MMUESR_ERRINFO_RD(val),
-+		val & MEMERR_CPU_MMUESR_ERRREQSTR_LSU_MASK ? "LSU" : "ICF");
-+	if (val & MEMERR_CPU_MMUESR_CERR_MASK)
-+		dev_err(edac_dev->dev, "One or more correctable error\n");
-+	if (val & MEMERR_CPU_MMUESR_MULTCERR_MASK)
-+		dev_err(edac_dev->dev, "Multiple correctable error\n");
-+	switch (MEMERR_CPU_MMUESR_ERRTYPE_RD(val)) {
-+	case 0:
-+		dev_err(edac_dev->dev, "Stage 1 UTB hit error\n");
-+		break;
-+	case 1:
-+		dev_err(edac_dev->dev, "Stage 1 UTB miss error\n");
-+		break;
-+	case 2:
-+		dev_err(edac_dev->dev, "Stage 1 UTB allocate error\n");
-+		break;
-+	case 3:
-+		dev_err(edac_dev->dev, "TMO operation single bank error\n");
-+		break;
-+	case 4:
-+		dev_err(edac_dev->dev, "Stage 2 UTB error\n");
-+		break;
-+	case 5:
-+		dev_err(edac_dev->dev, "Stage 2 UTB miss error\n");
-+		break;
-+	case 6:
-+		dev_err(edac_dev->dev, "Stage 2 UTB allocate error\n");
-+		break;
-+	case 7:
-+		dev_err(edac_dev->dev, "TMO operation multiple bank error\n");
-+		break;
-+	}
+agreed.
 
--		/* Clear any HW errors */
--		writel(val, pg_f + MEMERR_CPU_MMUESR_PAGE_OFFSET);
-+	/* Clear any HW errors */
-+	writel(val, pg_f + MEMERR_CPU_MMUESR_PAGE_OFFSET);
+>
+>> +- reg: The base address of the MDIO bus controller register bank.
+>> +- #address-cells: Must be <1>.
+>> +- #size-cells: Must be <0>.  MDIO addresses have no size component.
+>> +
+>> +Typically an MDIO bus might have several children.
+>> +
+>> +Example:
+>> +         mdio@803c0000 {
+>> +                   #address-cells = <1>;
+>> +                   #size-cells = <0>;
+>> +                   compatible = "hisilicon,mdio","hisilicon,hns-mdio";
+>> +                   reg = <0x0 0x803c0000 0x0 0x10000>;
+>> +
+>> +                   ethernet-phy@0 {
+>> +                            ...
+>> +                            reg = <0>;
+>> +                   };
+>> +         };
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+>> new file mode 100644
+>> index 0000000..41d19be
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+>> @@ -0,0 +1,47 @@
+>> +Hisilicon Network Subsystem NIC controller
+>> +
+>> +Required properties:
+>> +- compatible: "hisilicon,hns-nic-v1" or "hisilicon,hns-nic-v2".
+>> +  "hisilicon,hns-nic-v1" is for hip05.
+>> +  "hisilicon,hns-nic-v2" is for Hi1610 and Hi1612.
+>> +- ae-name: accelerator name who provides this interface,
+>> +  is simply a name referring to the name of name in the accelerator node.
+> Why is this needed?
 
--		edac_device_handle_ce(edac_dev, 0, 0, edac_dev->ctl_name);
--	}
-+	edac_device_handle_ce(edac_dev, 0, 0, edac_dev->ctl_name);
- }
+this is used to distinguish the different SOCs, the driver use it 
+recognize the current SoC(such as hip05,hi1610 and later on SoCs ) on 
+board.
 
- static void xgene_edac_pmd_l2_check(struct edac_device_ctl_info *edac_dev)
-@@ -685,60 +680,56 @@ static void xgene_edac_pmd_l2_check(struct edac_device_ctl_info *edac_dev)
- 	/* Check L2 */
- 	pg_e = ctx->pmd_csr + CPU_MEMERR_L2C_PAGE;
- 	val = readl(pg_e + MEMERR_L2C_L2ESR_PAGE_OFFSET);
--	if (val) {
--		val_lo = readl(pg_e + MEMERR_L2C_L2EALR_PAGE_OFFSET);
--		val_hi = readl(pg_e + MEMERR_L2C_L2EAHR_PAGE_OFFSET);
--		dev_err(edac_dev->dev,
--			"PMD%d memory error L2C L2ESR 0x%08X @ 0x%08X.%08X\n",
--			ctx->pmd, val, val_hi, val_lo);
--		dev_err(edac_dev->dev,
--			"ErrSyndrome 0x%02X ErrWay 0x%02X ErrCpu %d ErrGroup 0x%02X ErrAction 0x%02X\n",
--			MEMERR_L2C_L2ESR_ERRSYN_RD(val),
--			MEMERR_L2C_L2ESR_ERRWAY_RD(val),
--			MEMERR_L2C_L2ESR_ERRCPU_RD(val),
--			MEMERR_L2C_L2ESR_ERRGROUP_RD(val),
--			MEMERR_L2C_L2ESR_ERRACTION_RD(val));
--
--		if (val & MEMERR_L2C_L2ESR_ERR_MASK)
--			dev_err(edac_dev->dev,
--				"One or more correctable error\n");
--		if (val & MEMERR_L2C_L2ESR_MULTICERR_MASK)
--			dev_err(edac_dev->dev, "Multiple correctable error\n");
--		if (val & MEMERR_L2C_L2ESR_UCERR_MASK)
--			dev_err(edac_dev->dev,
--				"One or more uncorrectable error\n");
--		if (val & MEMERR_L2C_L2ESR_MULTUCERR_MASK)
--			dev_err(edac_dev->dev,
--				"Multiple uncorrectable error\n");
--
--		switch (MEMERR_L2C_L2ESR_ERRTYPE_RD(val)) {
--		case 0:
--			dev_err(edac_dev->dev, "Outbound SDB parity error\n");
--			break;
--		case 1:
--			dev_err(edac_dev->dev, "Inbound SDB parity error\n");
--			break;
--		case 2:
--			dev_err(edac_dev->dev, "Tag ECC error\n");
--			break;
--		case 3:
--			dev_err(edac_dev->dev, "Data ECC error\n");
--			break;
--		}
--
--		/* Clear any HW errors */
--		writel(val, pg_e + MEMERR_L2C_L2ESR_PAGE_OFFSET);
--
--		if (val & (MEMERR_L2C_L2ESR_ERR_MASK |
--			   MEMERR_L2C_L2ESR_MULTICERR_MASK))
--			edac_device_handle_ce(edac_dev, 0, 0,
--					      edac_dev->ctl_name);
--		if (val & (MEMERR_L2C_L2ESR_UCERR_MASK |
--			   MEMERR_L2C_L2ESR_MULTUCERR_MASK))
--			edac_device_handle_ue(edac_dev, 0, 0,
--					      edac_dev->ctl_name);
-+	if (!val)
-+		goto chk_l2c;
-+	val_lo = readl(pg_e + MEMERR_L2C_L2EALR_PAGE_OFFSET);
-+	val_hi = readl(pg_e + MEMERR_L2C_L2EAHR_PAGE_OFFSET);
-+	dev_err(edac_dev->dev,
-+		"PMD%d memory error L2C L2ESR 0x%08X @ 0x%08X.%08X\n",
-+		ctx->pmd, val, val_hi, val_lo);
-+	dev_err(edac_dev->dev,
-+		"ErrSyndrome 0x%02X ErrWay 0x%02X ErrCpu %d ErrGroup 0x%02X ErrAction 0x%02X\n",
-+		MEMERR_L2C_L2ESR_ERRSYN_RD(val),
-+		MEMERR_L2C_L2ESR_ERRWAY_RD(val),
-+		MEMERR_L2C_L2ESR_ERRCPU_RD(val),
-+		MEMERR_L2C_L2ESR_ERRGROUP_RD(val),
-+		MEMERR_L2C_L2ESR_ERRACTION_RD(val));
-+
-+	if (val & MEMERR_L2C_L2ESR_ERR_MASK)
-+		dev_err(edac_dev->dev, "One or more correctable error\n");
-+	if (val & MEMERR_L2C_L2ESR_MULTICERR_MASK)
-+		dev_err(edac_dev->dev, "Multiple correctable error\n");
-+	if (val & MEMERR_L2C_L2ESR_UCERR_MASK)
-+		dev_err(edac_dev->dev, "One or more uncorrectable error\n");
-+	if (val & MEMERR_L2C_L2ESR_MULTUCERR_MASK)
-+		dev_err(edac_dev->dev, "Multiple uncorrectable error\n");
-+
-+	switch (MEMERR_L2C_L2ESR_ERRTYPE_RD(val)) {
-+	case 0:
-+		dev_err(edac_dev->dev, "Outbound SDB parity error\n");
-+		break;
-+	case 1:
-+		dev_err(edac_dev->dev, "Inbound SDB parity error\n");
-+		break;
-+	case 2:
-+		dev_err(edac_dev->dev, "Tag ECC error\n");
-+		break;
-+	case 3:
-+		dev_err(edac_dev->dev, "Data ECC error\n");
-+		break;
- 	}
+>> +- port-id: is the index of port provided by DSAF (the accelerator). DSAF can
+>> +  connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
+>> +  are called debug ports.
+> Could the OF graph binding be used to describe this connection?
 
-+	/* Clear any HW errors */
-+	writel(val, pg_e + MEMERR_L2C_L2ESR_PAGE_OFFSET);
-+
-+	if (val & (MEMERR_L2C_L2ESR_ERR_MASK |
-+		   MEMERR_L2C_L2ESR_MULTICERR_MASK))
-+		edac_device_handle_ce(edac_dev, 0, 0, edac_dev->ctl_name);
-+	if (val & (MEMERR_L2C_L2ESR_UCERR_MASK |
-+		   MEMERR_L2C_L2ESR_MULTUCERR_MASK))
-+		edac_device_handle_ue(edac_dev, 0, 0, edac_dev->ctl_name);
-+
-+chk_l2c:
- 	/* Check if any memory request timed out on L2 cache */
- 	pg_d = ctx->pmd_csr + CPU_L2C_PAGE;
- 	val = readl(pg_d + CPUX_L2C_L2RTOSR_PAGE_OFFSET);
-@@ -878,25 +869,16 @@ static const struct file_operations xgene_edac_pmd_debug_inject_fops[] = {
- 	{ }
- };
+sorry, i can not exactly get your points.
+could you please explain it clearly?
 
--static void xgene_edac_pmd_create_debugfs_nodes(
--	struct edac_device_ctl_info *edac_dev)
-+static void
-+xgene_edac_pmd_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
- {
- 	struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
- 	struct dentry *dbgfs_dir;
--	char name[30];
-+	char name[10];
+>> +
+>> +  The remaining 6 PHYs are taken according to the mode of DSAF.
+>> +
+>> +  In NIC mode of DSAF, all 6 PHYs are taken as ethernet ports to the CPU. The
+>> +  port-id can be 2 to 7. Here is the diagram:
+>> +            +-----+---------------+
+>> +            |            CPU      |
+>> +            +-+-+-+---+-+-+-+-+-+-+
+>> +              | |     | | | | | |
+>> +             debug       service
+>> +             port         port
+>> +             (0,1)       (2-7)
+>> +
+>> +  In Switch mode of DSAF, all 6 PHYs are taken as physical ports connect to a
+>> +  LAN Switch while the CPU side assume itself have one single NIC connect to
+>> +  this switch. In this case, the port-id will be 2 only.
+>> +            +-----+---------------+
+>> +            |            CPU      |
+>> +            +-+-+-+---+-+-+-+-+-+-+
+>> +              | |   service| port(2)
+>> +             debug   +------------+
+>> +             port    |   switch   |
+>> +             (0,1)   +-+-+-+-+-+-++
+>> +                       | | | | | |
+>> +                      external port
+>> +
+>> +- local-mac-address: mac addr of the ethernet interface
+>> +
+>> +Example:
+>> +
+>> +	ethernet@0{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <0>;
+>> +		local-mac-address = [a2 14 e4 4b 56 76];
+>> +	};
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+>> new file mode 100644
+>> index 0000000..3500586
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+>> @@ -0,0 +1,193 @@
+>> +soc0: soc@000000000 {
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	device_type = "soc";
+>> +	compatible = "simple-bus";
+>> +	ranges = <0x0 0x0 0x0 0x0 0x1 0x0>;
+>> +	chip-id = <0>;
+>> +
+>> +	soc0_mdio0: mdio@803c0000 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		compatible = "hisilicon,hns-mdio";
+>> +		reg = <0x0 0x803c0000 0x0 0x10000
+>> +		       0x0 0x80000000 0x0 0x10000>;
+>> +
+>> +		soc0_phy4: ethernet-phy@4 {
+>> +			reg = <0x0>;
+> Should be 4?
 
--	if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
-+	if (!IS_ENABLED(CONFIG_EDAC_DEBUG) || !ctx->edac->dfs)
- 		return;
+on hip05 d02 board, this Phy is connected to port4, since this is the 
+file describe the device
+connection, so 4 is more specific than 0.
 
--	/*
--	 * Todo: Switch to common EDAC debug file system for edac device
--	 *       when available.
--	 */
--	if (!ctx->edac->dfs) {
--		ctx->edac->dfs = edac_debugfs_create_dir(edac_dev->dev->kobj.name);
--		if (!ctx->edac->dfs)
--			return;
--	}
- 	sprintf(name, "PMD%d", ctx->pmd);
- 	dbgfs_dir = edac_debugfs_create_dir_at(name, ctx->edac->dfs);
- 	if (!dbgfs_dir)
-@@ -1016,10 +998,294 @@ static int xgene_edac_pmd_remove(struct xgene_edac_pmd_ctx *pmd)
- 	return 0;
- }
+>
+>> +			device_type = "ethernet-phy";
+> Drop device_type.
 
-+/* L3 Error device */
-+#define L3C_ESR				(0x0A * 4)
-+#define  L3C_ESR_DATATAG_MASK		BIT(9)
-+#define  L3C_ESR_MULTIHIT_MASK		BIT(8)
-+#define  L3C_ESR_UCEVICT_MASK		BIT(6)
-+#define  L3C_ESR_MULTIUCERR_MASK	BIT(5)
-+#define  L3C_ESR_MULTICERR_MASK		BIT(4)
-+#define  L3C_ESR_UCERR_MASK		BIT(3)
-+#define  L3C_ESR_CERR_MASK		BIT(2)
-+#define  L3C_ESR_UCERRINTR_MASK		BIT(1)
-+#define  L3C_ESR_CERRINTR_MASK		BIT(0)
-+#define L3C_ECR				(0x0B * 4)
-+#define  L3C_ECR_UCINTREN		BIT(3)
-+#define  L3C_ECR_CINTREN		BIT(2)
-+#define  L3C_UCERREN			BIT(1)
-+#define  L3C_CERREN			BIT(0)
-+#define L3C_ELR				(0x0C * 4)
-+#define  L3C_ELR_ERRSYN(src)		((src & 0xFF800000) >> 23)
-+#define  L3C_ELR_ERRWAY(src)		((src & 0x007E0000) >> 17)
-+#define  L3C_ELR_AGENTID(src)		((src & 0x0001E000) >> 13)
-+#define  L3C_ELR_ERRGRP(src)		((src & 0x00000F00) >> 8)
-+#define  L3C_ELR_OPTYPE(src)		((src & 0x000000F0) >> 4)
-+#define  L3C_ELR_PADDRHIGH(src)		(src & 0x0000000F)
-+#define L3C_AELR			(0x0D * 4)
-+#define L3C_BELR			(0x0E * 4)
-+#define  L3C_BELR_BANK(src)		(src & 0x0000000F)
-+
-+struct xgene_edac_dev_ctx {
-+	struct list_head	next;
-+	struct device		ddev;
-+	char			*name;
-+	struct xgene_edac	*edac;
-+	struct edac_device_ctl_info *edac_dev;
-+	int			edac_idx;
-+	void __iomem		*dev_csr;
-+	int			version;
-+};
-+
-+/*
-+ * Version 1 of the L3 controller has broken single bit correctable logic for
-+ * certain error syndromes. Log them as uncorrectable in that case.
-+ */
-+static bool xgene_edac_l3_promote_to_uc_err(u32 l3cesr, u32 l3celr)
-+{
-+	if (l3cesr & L3C_ESR_DATATAG_MASK) {
-+		switch (L3C_ELR_ERRSYN(l3celr)) {
-+		case 0x13C:
-+		case 0x0B4:
-+		case 0x007:
-+		case 0x00D:
-+		case 0x00E:
-+		case 0x019:
-+		case 0x01A:
-+		case 0x01C:
-+		case 0x04E:
-+		case 0x041:
-+			return true;
-+		}
-+	} else if (L3C_ELR_ERRSYN(l3celr) == 9)
-+		return true;
-+
-+	return false;
-+}
-+
-+static void xgene_edac_l3_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct xgene_edac_dev_ctx *ctx = edac_dev->pvt_info;
-+	u32 l3cesr;
-+	u32 l3celr;
-+	u32 l3caelr;
-+	u32 l3cbelr;
-+
-+	l3cesr = readl(ctx->dev_csr + L3C_ESR);
-+	if (!(l3cesr & (L3C_ESR_UCERR_MASK | L3C_ESR_CERR_MASK)))
-+		return;
-+
-+	if (l3cesr & L3C_ESR_UCERR_MASK)
-+		dev_err(edac_dev->dev, "L3C uncorrectable error\n");
-+	if (l3cesr & L3C_ESR_CERR_MASK)
-+		dev_warn(edac_dev->dev, "L3C correctable error\n");
-+
-+	l3celr = readl(ctx->dev_csr + L3C_ELR);
-+	l3caelr = readl(ctx->dev_csr + L3C_AELR);
-+	l3cbelr = readl(ctx->dev_csr + L3C_BELR);
-+	if (l3cesr & L3C_ESR_MULTIHIT_MASK)
-+		dev_err(edac_dev->dev, "L3C multiple hit error\n");
-+	if (l3cesr & L3C_ESR_UCEVICT_MASK)
-+		dev_err(edac_dev->dev,
-+			"L3C dropped eviction of line with error\n");
-+	if (l3cesr & L3C_ESR_MULTIUCERR_MASK)
-+		dev_err(edac_dev->dev, "L3C multiple uncorrectable error\n");
-+	if (l3cesr & L3C_ESR_DATATAG_MASK)
-+		dev_err(edac_dev->dev,
-+			"L3C data error syndrome 0x%X group 0x%X\n",
-+			L3C_ELR_ERRSYN(l3celr), L3C_ELR_ERRGRP(l3celr));
-+	else
-+		dev_err(edac_dev->dev,
-+			"L3C tag error syndrome 0x%X Way of Tag 0x%X Agent ID 0x%X Operation type 0x%X\n",
-+			L3C_ELR_ERRSYN(l3celr), L3C_ELR_ERRWAY(l3celr),
-+			L3C_ELR_AGENTID(l3celr), L3C_ELR_OPTYPE(l3celr));
-+	/*
-+	 * NOTE: Address [41:38] in L3C_ELR_PADDRHIGH(l3celr).
-+	 *       Address [37:6] in l3caelr. Lower 6 bits are zero.
-+	 */
-+	dev_err(edac_dev->dev, "L3C error address 0x%08X.%08X bank %d\n",
-+		L3C_ELR_PADDRHIGH(l3celr) << 6 | (l3caelr >> 26),
-+		(l3caelr & 0x3FFFFFFF) << 6, L3C_BELR_BANK(l3cbelr));
-+	dev_err(edac_dev->dev,
-+		"L3C error status register value 0x%X\n", l3cesr);
-+
-+	/* Clear L3C error interrupt */
-+	writel(0, ctx->dev_csr + L3C_ESR);
-+
-+	if (ctx->version <= 1 &&
-+	    xgene_edac_l3_promote_to_uc_err(l3cesr, l3celr)) {
-+		edac_device_handle_ue(edac_dev, 0, 0, edac_dev->ctl_name);
-+		return;
-+	}
-+	if (l3cesr & L3C_ESR_CERR_MASK)
-+		edac_device_handle_ce(edac_dev, 0, 0, edac_dev->ctl_name);
-+	if (l3cesr & L3C_ESR_UCERR_MASK)
-+		edac_device_handle_ue(edac_dev, 0, 0, edac_dev->ctl_name);
-+}
-+
-+static void xgene_edac_l3_hw_init(struct edac_device_ctl_info *edac_dev,
-+				  bool enable)
-+{
-+	struct xgene_edac_dev_ctx *ctx = edac_dev->pvt_info;
-+	u32 val;
-+
-+	val = readl(ctx->dev_csr + L3C_ECR);
-+	val |= L3C_UCERREN | L3C_CERREN;
-+	/* On disable, we just disable interrupt but keep error enabled */
-+	if (edac_dev->op_state == OP_RUNNING_INTERRUPT) {
-+		if (enable)
-+			val |= L3C_ECR_UCINTREN | L3C_ECR_CINTREN;
-+		else
-+			val &= ~(L3C_ECR_UCINTREN | L3C_ECR_CINTREN);
-+	}
-+	writel(val, ctx->dev_csr + L3C_ECR);
-+
-+	if (edac_dev->op_state == OP_RUNNING_INTERRUPT) {
-+		/* Enable/disable L3 error top level interrupt */
-+		if (enable) {
-+			xgene_edac_pcp_clrbits(ctx->edac, PCPHPERRINTMSK,
-+					       L3C_UNCORR_ERR_MASK);
-+			xgene_edac_pcp_clrbits(ctx->edac, PCPLPERRINTMSK,
-+					       L3C_CORR_ERR_MASK);
-+		} else {
-+			xgene_edac_pcp_setbits(ctx->edac, PCPHPERRINTMSK,
-+					       L3C_UNCORR_ERR_MASK);
-+			xgene_edac_pcp_setbits(ctx->edac, PCPLPERRINTMSK,
-+					       L3C_CORR_ERR_MASK);
-+		}
-+	}
-+}
-+
-+static ssize_t xgene_edac_l3_inject_ctrl_write(struct file *file,
-+					       const char __user *data,
-+					       size_t count, loff_t *ppos)
-+{
-+	struct edac_device_ctl_info *edac_dev = file->private_data;
-+	struct xgene_edac_dev_ctx *ctx = edac_dev->pvt_info;
-+
-+	/* Generate all errors */
-+	writel(0xFFFFFFFF, ctx->dev_csr + L3C_ESR);
-+	return count;
-+}
-+
-+static const struct file_operations xgene_edac_l3_debug_inject_fops = {
-+	.open = simple_open,
-+	.write = xgene_edac_l3_inject_ctrl_write,
-+	.llseek = generic_file_llseek
-+};
-+
-+static void
-+xgene_edac_l3_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct xgene_edac_dev_ctx *ctx = edac_dev->pvt_info;
-+	struct dentry *dbgfs_dir;
-+	char name[10];
-+
-+	if (!IS_ENABLED(CONFIG_EDAC_DEBUG) || !ctx->edac->dfs)
-+		return;
-+
-+	sprintf(name, "l3c%d", ctx->edac_idx);
-+	dbgfs_dir = edac_debugfs_create_dir_at(name, ctx->edac->dfs);
-+	if (!dbgfs_dir)
-+		return;
-+
-+	debugfs_create_file("l3_inject_ctrl", S_IWUSR, dbgfs_dir, edac_dev,
-+			    &xgene_edac_l3_debug_inject_fops);
-+}
-+
-+static int xgene_edac_l3_add(struct xgene_edac *edac, struct device_node *np,
-+			     int version)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct xgene_edac_dev_ctx *ctx;
-+	struct resource res;
-+	void __iomem *dev_csr;
-+	int edac_idx;
-+	int rc = 0;
-+
-+	if (!devres_open_group(edac->dev, xgene_edac_l3_add, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	rc = of_address_to_resource(np, 0, &res);
-+	if (rc < 0) {
-+		dev_err(edac->dev, "no L3 resource address\n");
-+		goto err_release_group;
-+	}
-+	dev_csr = devm_ioremap_resource(edac->dev, &res);
-+	if (IS_ERR(dev_csr)) {
-+		dev_err(edac->dev,
-+			"devm_ioremap_resource failed for L3 resource address\n");
-+		rc = PTR_ERR(dev_csr);
-+		goto err_release_group;
-+	}
-+
-+	edac_idx = edac_device_alloc_index();
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*ctx),
-+					      "l3c", 1, "l3c", 1, 0, NULL, 0,
-+					      edac_idx);
-+	if (!edac_dev) {
-+		rc = -ENOMEM;
-+		goto err_release_group;
-+	}
-+
-+	ctx = edac_dev->pvt_info;
-+	ctx->dev_csr = dev_csr;
-+	ctx->name = "xgene_l3_err";
-+	ctx->edac_idx = edac_idx;
-+	ctx->edac = edac;
-+	ctx->edac_dev = edac_dev;
-+	ctx->ddev = *edac->dev;
-+	ctx->version = version;
-+	edac_dev->dev = &ctx->ddev;
-+	edac_dev->ctl_name = ctx->name;
-+	edac_dev->dev_name = ctx->name;
-+	edac_dev->mod_name = EDAC_MOD_STR;
-+
-+	if (edac_op_state == EDAC_OPSTATE_POLL)
-+		edac_dev->edac_check = xgene_edac_l3_check;
-+
-+	xgene_edac_l3_create_debugfs_nodes(edac_dev);
-+
-+	rc = edac_device_add_device(edac_dev);
-+	if (rc > 0) {
-+		dev_err(edac->dev, "failed edac_device_add_device()\n");
-+		rc = -ENOMEM;
-+		goto err_ctl_free;
-+	}
-+
-+	if (edac_op_state == EDAC_OPSTATE_INT)
-+		edac_dev->op_state = OP_RUNNING_INTERRUPT;
-+
-+	list_add(&ctx->next, &edac->l3s);
-+
-+	xgene_edac_l3_hw_init(edac_dev, 1);
-+
-+	devres_remove_group(edac->dev, xgene_edac_l3_add);
-+
-+	dev_info(edac->dev, "X-Gene EDAC L3 registered\n");
-+	return 0;
-+
-+err_ctl_free:
-+	edac_device_free_ctl_info(edac_dev);
-+err_release_group:
-+	devres_release_group(edac->dev, xgene_edac_l3_add);
-+	return rc;
-+}
-+
-+static int xgene_edac_l3_remove(struct xgene_edac_dev_ctx *l3)
-+{
-+	struct edac_device_ctl_info *edac_dev = l3->edac_dev;
-+
-+	xgene_edac_l3_hw_init(edac_dev, 0);
-+	edac_device_del_device(l3->edac->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+	return 0;
-+}
-+
- static irqreturn_t xgene_edac_isr(int irq, void *dev_id)
- {
- 	struct xgene_edac *ctx = dev_id;
- 	struct xgene_edac_pmd_ctx *pmd;
-+	struct xgene_edac_dev_ctx *node;
- 	unsigned int pcp_hp_stat;
- 	unsigned int pcp_lp_stat;
+agreed.
 
-@@ -1030,9 +1296,8 @@ static irqreturn_t xgene_edac_isr(int irq, void *dev_id)
- 	    (MCU_CORR_ERR_MASK & pcp_lp_stat)) {
- 		struct xgene_edac_mc_ctx *mcu;
+>
+>> +			compatible = "ethernet-phy-ieee802.3-c22";
+>> +		};
+>> +		soc0_phy5: ethernet-phy@5 {
+>> +			reg = <0x1>;
+> Should be 5? Or unit-address should be 1.
 
--		list_for_each_entry(mcu, &ctx->mcus, next) {
-+		list_for_each_entry(mcu, &ctx->mcus, next)
- 			xgene_edac_mc_check(mcu->mci);
--		}
- 	}
+the reason is same with 4.
 
- 	list_for_each_entry(pmd, &ctx->pmds, next) {
-@@ -1040,6 +1305,9 @@ static irqreturn_t xgene_edac_isr(int irq, void *dev_id)
- 			xgene_edac_pmd_check(pmd->edac_dev);
- 	}
+>
+>> +			device_type = "ethernet-phy";
+>> +			compatible = "ethernet-phy-ieee802.3-c22";
+>> +		};
+>> +	};
+>> +
+>> +	dsa: dsa@c7000000 {
+>> +		compatible = "hisilicon,hns-dsaf-v1";
+>> +		dsa_name = "dsaf0";
+>> +		mode = "6port-16rss";
+>> +		interrupt-parent = <&mbigen_dsa>;
+>> +
+>> +		reg = <0x0 0xC0000000 0x0 0x420000
+>> +		       0x0 0xC2000000 0x0 0x300000
+>> +		       0x0 0xc5000000 0x0 0x890000
+>> +		       0x0 0xc7000000 0x0 0x60000
+>> +		       >;
+>> +
+>> +		phy-handle = <0 0 0 0 &soc0_phy4 &soc0_phy5 0 0>;
+>> +		interrupts = <
+>> +			/* [14] ge fifo err 8 / xge 6**/
+>> +			149 0x4 150 0x4 151 0x4 152 0x4
+>> +			153 0x4 154 0x4  26 0x4 27 0x4
+>> +			155 0x4 156 0x4 157 0x4 158 0x4 159 0x4 160 0x4
+>> +			/* [12] rcb com 4*3**/
+>> +			0x6 0x4 0x7 0x4 0x8 0x4 0x9 0x4
+>> +			 16 0x4  17 0x4  18 0x4  19 0x4
+>> +			 22 0x4  23 0x4  24 0x4  25 0x4
+>> +			/* [8] ppe tnl 0-7***/
+>> +			0x0 0x4 0x1 0x4 0x2 0x4 0x3 0x4
+>> +			0x4 0x4 0x5 0x4 12 0x4 13 0x4
+>> +			/* [21] dsaf event int 3+18**/
+>> +			 128 0x4  129 0x4  130 0x4
+>> +			0x83 0x4 0x84 0x4 0x85 0x4 0x86 0x4 0x87 0x4 0x88 0x4
+>> +			0x89 0x4 0x8a 0x4 0x8b 0x4 0x8c 0x4 0x8d 0x4 0x8e 0x4
+>> +			0x8f 0x4 0x90 0x4 0x91 0x4 0x92 0x4 0x93 0x4 0x94 0x4
+>> +			/* [4] debug rcb 2*2*/
+>> +			0xe 0x1 0xf 0x1 0x14 0x1 0x15 0x1
+>> +			/* [256] sevice rcb 2*128*/
+>> +			0x180 0x1 0x181 0x1 0x182 0x1 0x183 0x1
+>> +			0x184 0x1 0x185 0x1 0x186 0x1 0x187 0x1
+>> +			0x188 0x1 0x189 0x1 0x18a 0x1 0x18b 0x1
+>> +			0x18c 0x1 0x18d 0x1 0x18e 0x1 0x18f 0x1
+>> +			0x190 0x1 0x191 0x1 0x192 0x1 0x193 0x1
+>> +			0x194 0x1 0x195 0x1 0x196 0x1 0x197 0x1
+>> +			0x198 0x1 0x199 0x1 0x19a 0x1 0x19b 0x1
+>> +			0x19c 0x1 0x19d 0x1 0x19e 0x1 0x19f 0x1
+>> +			0x1a0 0x1 0x1a1 0x1 0x1a2 0x1 0x1a3 0x1
+>> +			0x1a4 0x1 0x1a5 0x1 0x1a6 0x1 0x1a7 0x1
+>> +			0x1a8 0x1 0x1a9 0x1 0x1aa 0x1 0x1ab 0x1
+>> +			0x1ac 0x1 0x1ad 0x1 0x1ae 0x1 0x1af 0x1
+>> +			0x1b0 0x1 0x1b1 0x1 0x1b2 0x1 0x1b3 0x1
+>> +			0x1b4 0x1 0x1b5 0x1 0x1b6 0x1 0x1b7 0x1
+>> +			0x1b8 0x1 0x1b9 0x1 0x1ba 0x1 0x1bb 0x1
+>> +			0x1bc 0x1 0x1bd 0x1 0x1be 0x1 0x1bf 0x1
+>> +			0x1c0 0x1 0x1c1 0x1 0x1c2 0x1 0x1c3 0x1
+>> +			0x1c4 0x1 0x1c5 0x1 0x1c6 0x1 0x1c7 0x1
+>> +			0x1c8 0x1 0x1c9 0x1 0x1ca 0x1 0x1cb 0x1
+>> +			0x1cc 0x1 0x1cd 0x1 0x1ce 0x1 0x1cf 0x1
+>> +			0x1d0 0x1 0x1d1 0x1 0x1d2 0x1 0x1d3 0x1
+>> +			0x1d4 0x1 0x1d5 0x1 0x1d6 0x1 0x1d7 0x1
+>> +			0x1d8 0x1 0x1d9 0x1 0x1da 0x1 0x1db 0x1
+>> +			0x1dc 0x1 0x1dd 0x1 0x1de 0x1 0x1df 0x1
+>> +			0x1e0 0x1 0x1e1 0x1 0x1e2 0x1 0x1e3 0x1
+>> +			0x1e4 0x1 0x1e5 0x1 0x1e6 0x1 0x1e7 0x1
+>> +			0x1e8 0x1 0x1e9 0x1 0x1ea 0x1 0x1eb 0x1
+>> +			0x1ec 0x1 0x1ed 0x1 0x1ee 0x1 0x1ef 0x1
+>> +			0x1f0 0x1 0x1f1 0x1 0x1f2 0x1 0x1f3 0x1
+>> +			0x1f4 0x1 0x1f5 0x1 0x1f6 0x1 0x1f7 0x1
+>> +			0x1f8 0x1 0x1f9 0x1 0x1fa 0x1 0x1fb 0x1
+>> +			0x1fc 0x1 0x1fd 0x1 0x1fe 0x1 0x1ff 0x1
+>> +			0x200 0x1 0x201 0x1 0x202 0x1 0x203 0x1
+>> +			0x204 0x1 0x205 0x1 0x206 0x1 0x207 0x1
+>> +			0x208 0x1 0x209 0x1 0x20a 0x1 0x20b 0x1
+>> +			0x20c 0x1 0x20d 0x1 0x20e 0x1 0x20f 0x1
+>> +			0x210 0x1 0x211 0x1 0x212 0x1 0x213 0x1
+>> +			0x214 0x1 0x215 0x1 0x216 0x1 0x217 0x1
+>> +			0x218 0x1 0x219 0x1 0x21a 0x1 0x21b 0x1
+>> +			0x21c 0x1 0x21d 0x1 0x21e 0x1 0x21f 0x1
+>> +			0x220 0x1 0x221 0x1 0x222 0x1 0x223 0x1
+>> +			0x224 0x1 0x225 0x1 0x226 0x1 0x227 0x1
+>> +			0x228 0x1 0x229 0x1 0x22a 0x1 0x22b 0x1
+>> +			0x22c 0x1 0x22d 0x1 0x22e 0x1 0x22f 0x1
+>> +			0x230 0x1 0x231 0x1 0x232 0x1 0x233 0x1
+>> +			0x234 0x1 0x235 0x1 0x236 0x1 0x237 0x1
+>> +			0x238 0x1 0x239 0x1 0x23a 0x1 0x23b 0x1
+>> +			0x23c 0x1 0x23d 0x1 0x23e 0x1 0x23f 0x1
+>> +			0x240 0x1 0x241 0x1 0x242 0x1 0x243 0x1
+>> +			0x244 0x1 0x245 0x1 0x246 0x1 0x247 0x1
+>> +			0x248 0x1 0x249 0x1 0x24a 0x1 0x24b 0x1
+>> +			0x24c 0x1 0x24d 0x1 0x24e 0x1 0x24f 0x1
+>> +			0x250 0x1 0x251 0x1 0x252 0x1 0x253 0x1
+>> +			0x254 0x1 0x255 0x1 0x256 0x1 0x257 0x1
+>> +			0x258 0x1 0x259 0x1 0x25a 0x1 0x25b 0x1
+>> +			0x25c 0x1 0x25d 0x1 0x25e 0x1 0x25f 0x1
+>> +			0x260 0x1 0x261 0x1 0x262 0x1 0x263 0x1
+>> +			0x264 0x1 0x265 0x1 0x266 0x1 0x267 0x1
+>> +			0x268 0x1 0x269 0x1 0x26a 0x1 0x26b 0x1
+>> +			0x26c 0x1 0x26d 0x1 0x26e 0x1 0x26f 0x1
+>> +			0x270 0x1 0x271 0x1 0x272 0x1 0x273 0x1
+>> +			0x274 0x1 0x275 0x1 0x276 0x1 0x277 0x1
+>> +			0x278 0x1 0x279 0x1 0x27a 0x1 0x27b 0x1
+>> +			0x27c 0x1 0x27d 0x1 0x27e 0x1 0x27f 0x1>;
+>> +		buf-size = <4096>;
+>> +		desc-num = <1024>;
+>> +		dma-coherent;
+>> +	};
+>> +
+>> +	eth0: ethernet@0{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <0>;
+> These should perhaps be subnodes of dsaf. That would solve associating
+> them with a particular dsaf.
+>
+> There is no register interface for these?
 
-+	list_for_each_entry(node, &ctx->l3s, next)
-+		xgene_edac_l3_check(node->edac_dev);
-+
- 	return IRQ_HANDLED;
- }
+hns_enet works on top of the abstraction of ring buffer. It does not 
+touch the hardware configuration.
 
-@@ -1058,6 +1326,7 @@ static int xgene_edac_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, edac);
- 	INIT_LIST_HEAD(&edac->mcus);
- 	INIT_LIST_HEAD(&edac->pmds);
-+	INIT_LIST_HEAD(&edac->l3s);
- 	spin_lock_init(&edac->lock);
- 	mutex_init(&edac->mc_lock);
+>> +		local-mac-address = [00 00 00 01 00 58];
+>> +		status = "disabled";
+>> +		dma-coherent;
+> Is this really per port?
 
-@@ -1122,6 +1391,8 @@ static int xgene_edac_probe(struct platform_device *pdev)
- 		}
- 	}
+in non dsaf mode, a port is a network interface, so the property is per 
+port under non dsaf mode.
+we should specify every port information, so that the enet module can 
+identify each of them.
 
-+	edac->dfs = edac_debugfs_create_dir(pdev->dev.kobj.name);
-+
- 	for_each_child_of_node(pdev->dev.of_node, child) {
- 		if (!of_device_is_available(child))
- 			continue;
-@@ -1131,6 +1402,10 @@ static int xgene_edac_probe(struct platform_device *pdev)
- 			xgene_edac_pmd_add(edac, child, 1);
- 		if (of_device_is_compatible(child, "apm,xgene-edac-pmd-v2"))
- 			xgene_edac_pmd_add(edac, child, 2);
-+		if (of_device_is_compatible(child, "apm,xgene-edac-l3"))
-+			xgene_edac_l3_add(edac, child, 1);
-+		if (of_device_is_compatible(child, "apm,xgene-edac-l3-v2"))
-+			xgene_edac_l3_add(edac, child, 2);
- 	}
+>> +	};
+>> +	eth1: ethernet@1{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <1>;
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +	eth2: ethernet@2{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <2>;
+>> +		local-mac-address = [00 00 00 01 00 5a];
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +	eth3: ethernet@3{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <3>;
+>> +		local-mac-address = [00 00 00 01 00 5b];
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +	eth4: ethernet@4{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <4>;
+>> +		local-mac-address = [00 00 00 01 00 5c];
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +	eth5: ethernet@5{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <5>;
+>> +		local-mac-address = [00 00 00 01 00 5d];
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +	eth6: ethernet@6{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <6>;
+>> +		local-mac-address = [00 00 00 01 00 5e];
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +	eth7: ethernet@7{
+>> +		compatible = "hisilicon,hns-nic-v1";
+>> +		ae-name = "dsaf0";
+>> +		port-id = <7>;
+>> +		local-mac-address = [00 00 00 01 00 5f];
+>> +		status = "disabled";
+>> +		dma-coherent;
+>> +	};
+>> +};
+>>
 
- 	return 0;
-@@ -1146,14 +1421,18 @@ static int xgene_edac_remove(struct platform_device *pdev)
- 	struct xgene_edac_mc_ctx *temp_mcu;
- 	struct xgene_edac_pmd_ctx *pmd;
- 	struct xgene_edac_pmd_ctx *temp_pmd;
-+	struct xgene_edac_dev_ctx *node;
-+	struct xgene_edac_dev_ctx *temp_node;
+thanks.
 
--	list_for_each_entry_safe(mcu, temp_mcu, &edac->mcus, next) {
-+	list_for_each_entry_safe(mcu, temp_mcu, &edac->mcus, next)
- 		xgene_edac_mc_remove(mcu);
--	}
-
--	list_for_each_entry_safe(pmd, temp_pmd, &edac->pmds, next) {
-+	list_for_each_entry_safe(pmd, temp_pmd, &edac->pmds, next)
- 		xgene_edac_pmd_remove(pmd);
--	}
-+
-+	list_for_each_entry_safe(node, temp_node, &edac->l3s, next)
-+		xgene_edac_l3_remove(node);
-+
- 	return 0;
- }
-
---
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> .
+>
