@@ -1,114 +1,75 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: sun8i: Make ippo-q8h-v1.2.dts a symlink to q8-tablet.dts
-Date: Thu, 24 Sep 2015 17:23:54 +0200
-Message-ID: <1443108234-14837-3-git-send-email-hdegoede@redhat.com>
-References: <1443108234-14837-1-git-send-email-hdegoede@redhat.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/5] Add SMP bringup support for mt65xx socs
+Date: Thu, 24 Sep 2015 23:38:55 +0800
+Message-ID: <1443109140-5406-1-git-send-email-yingjoe.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443108234-14837-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A33 Q8 tablets with the ippo-q8h-v1.2 pcb will work fine with the
-generic q8-tablet.dts and given the many variants of PCBs found in
-Q8 tablets using such a specific dts name was a mistake in hindsight.
+This series add SMP brinup support for MediaTek SoCs. This is v4 and
+is based on v4.3-rc1.
 
-We cannot just drop the ippo-q8h-v1.2.dtb as existing u-boot configs
-may very well point to it.
+There are similar but different SMP bringup up methods on MediaTek
+mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+directly in secure world.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-The plan is to remove the matching u-boot config after v2015.10 (which will
-ship with a generic q8_a33_tablet_defconfig file), and then once the
-next u-boot has shipped for a bit we can consider removing the symlink
-and Makefile entry for this.
----
- arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts | 66 +--------------------------
- 1 file changed, 1 insertion(+), 65 deletions(-)
- mode change 100644 => 120000 arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
+Patch 1 enable arch timer support.
+Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
+"mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+and TZ platform.
+Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-deleted file mode 100644
-index b8439cb..0000000
---- a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-+++ /dev/null
-@@ -1,65 +0,0 @@
--/*
-- * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--/dts-v1/;
--#include "sun8i-a33.dtsi"
--#include "sun8i-q8-common.dtsi"
--
--/ {
--	model = "Ippo Q8H Quad Core Tablet (v1.2)";
--	compatible = "ippo,a33-q8h-v1.2", "allwinner,sun8i-a33";
--};
--
--/*
-- * FIXME for now we only support host mode and rely on u-boot to have
-- * turned on Vbus which is controlled by the axp223 pmic on the board.
-- *
-- * Once we have axp223 support we should switch to fully supporting otg.
-- */
--&usb_otg {
--	dr_mode = "host";
--	status = "okay";
--};
--
--&usbphy {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-new file mode 120000
-index 0000000..4519fd7
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-@@ -0,0 +1 @@
-+sun8i-a33-q8-tablet.dts
-\ No newline at end of file
+Changes in v4:
+- rebase to v4.3-rc1
+- Reserve trustzone bootinfo memory area in device tree.
+
+Changes in v3:
+- v3 in [1]
+- The first 2 patches in v2 are merged in v4.2-rc1.
+- Patch 3~4 in v2 are moved to another series [2]
+- platsmp.c changes based on Stephen's suggestion
+- Change cpu enable-method name to "mediatek,mt6589-smp"
+
+Changes in v2:
+- Fix boot issue for THUMB2 kernel.
+- Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
+- Change platsmp.c according to Matthias' suggestion
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
+
+v1:
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001570.html
+
+[2]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
+
+Matthias Brugger (1):
+  ARM: mediatek: enable gpt6 on boot up to make arch timer working
+
+Yingjoe Chen (4):
+  devicetree: bindings: add new SMP enable method Mediatek SoC
+  ARM: mediatek: add smp bringup code
+  ARM: dts: mt8135: enable basic SMP bringup for mt8135
+  ARM: dts: mt8127: enable basic SMP bringup for mt8127
+
+ Documentation/devicetree/bindings/arm/cpus.txt |   2 +
+ arch/arm/boot/dts/mt8127.dtsi                  |  27 +++++
+ arch/arm/boot/dts/mt8135.dtsi                  |  27 +++++
+ arch/arm/mach-mediatek/Makefile                |   3 +
+ arch/arm/mach-mediatek/mediatek.c              |  27 +++++
+ arch/arm/mach-mediatek/platsmp.c               | 141 +++++++++++++++++++++++++
+ 6 files changed, 227 insertions(+)
+ create mode 100644 arch/arm/mach-mediatek/platsmp.c
+
 -- 
-2.5.0
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
