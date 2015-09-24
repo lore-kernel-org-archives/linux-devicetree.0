@@ -1,41 +1,60 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for LeMaker BananaPi
-Date: Thu, 24 Sep 2015 10:57:11 -0700
-Message-ID: <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
-	<20150818153631.GH2547@lukather>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH v2 1/3] drivers: power: twl4030_charger: fix link problems
+ when building as module
+Date: Thu, 24 Sep 2015 21:09:15 +0200
+Message-ID: <CAAfyv36mr67fUJKbe1F_rdxRjtvR8M+da0rYCtVTxDgyhKLvSQ@mail.gmail.com>
+References: <1442953171-19718-1-git-send-email-marek@goldelico.com>
+	<20150922212900.GB15646@earth>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150818153631.GH2547@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Timo Sigurdsson <public_timo.s@silentcreek.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Tyler Baker <tyler.baker@linaro.org>, Olof Johansson <olof@lixom.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150922212900.GB15646@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, LKML <linux-kernel@vger.kernel.org>, Neil Brown <neilb@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2015 at 8:36 AM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Sun, Aug 02, 2015 at 06:18:25PM +0200, Timo Sigurdsson wrote:
->> sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
->> driver, so add them to allow for voltage-scaling with cpufreq-dt.
->>
->> Signed-off-by: Timo Sigurdsson <public_timo.s@silentcreek.de>
+Hi Sebastian,
+
+On Tue, Sep 22, 2015 at 11:29 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> Hi Marek,
 >
-> Queued, thanks!
-> Maxime
+> On Tue, Sep 22, 2015 at 10:19:29PM +0200, Marek Belisko wrote:
+>> If either twl4030_charger or twl4030_madc is configured as MODULE,
+>> we get build (link) errors.
+>>
+>> To solve, the direct call of twl4030_get_madc_conversion() is replaced
+>> by a call to iio_read_channel_processed().
+>>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>> ---
+>> changes from V1: added missing iio_channel_release + document and add new DT bindings
+>
+> That was fast :) Patchset looks fine to me except for one last
+> thing: Let's make the iio-channel optional, so that old DT blobs
+> are still supported. Also the IS_REACHABLE(CONFIG_TWL4030_MADC)
+> check can be removed, it should no longer be needed with
+> iio_read_channel_processed().
+OK I updated driver code to pass when 'vac' property isn't found in
+DT. Should I mark it also
+in DT bindings or keep it as it was in v2? Thanks.
+>
+> -- Sebastian
 
-kernelci.org started finding boot faiulres[1] on bananapi linux-next
-around next-20150918, but it was only failing in some labs and not
-others.  I finally bisected it down to this patch, which landed in
-linux-next in the form of 2d665a8a8350 ARM: dts: sunxi: Add regulators
-for LeMaker BananaPi.  Reverting that commit on top of next-20150923
-gets my bananapi booting again.
+BR,
 
-Note it's kind of an interesting boot failure.  The kernel boots fully
-to a shell, but panics after running a few commands.  In particular
-'dmesg -n1' seems to trigger it usually[2].
+marek
 
-Kevin
 
-[1] http://kernelci.org/boot/sun7i-a20-bananapi/job/next/kernel/next-20150923/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5602504359b514be146c326f
-[2] http://storage.kernelci.org/next/next-20150923/arm-multi_v7_defconfig/lab-khilman/boot-sun7i-a20-bananapi.html
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
