@@ -1,38 +1,38 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next] net: Fix Hisilicon Network Subsystem Support
- Compilation
-Date: Thu, 24 Sep 2015 10:52:24 -0700 (PDT)
-Message-ID: <20150924.105224.795981964968343044.davem@davemloft.net>
-References: <1443088449-147241-1-git-send-email-huangdaode@hisilicon.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/3] gpiolib: gpiod_hog remove separate name argument
+Date: Thu, 24 Sep 2015 10:52:55 -0700
+Message-ID: <CACRpkdb4EoA_oBSF46eYAZ-fbTEqaf=Q+wsGyKyrQZ9KB2B7cQ@mail.gmail.com>
+References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
+	<1440920686-6892-3-git-send-email-mpa@pengutronix.de>
+	<CACRpkdZrXEXtkPpgtrcjqP5jD+M0UOj5Wj69o4zYJQKihsY6Xg@mail.gmail.com>
+	<20150924063931.GS32203@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443088449-147241-1-git-send-email-huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150924063931.GS32203@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Arun Bharadwaj <arun@gumstix.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Johan Hovold <johan@kernel.org>, Chris Read <chrisrfq@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Date: Thu, 24 Sep 2015 17:54:09 +0800
+On Wed, Sep 23, 2015 at 11:39 PM, Markus Pargmann <mpa@pengutronix.de> wrote:
 
-> This patch fixes the compilation error with arm allmodconfig, this error
-> generated due to unavailability of readq on 32-bit platform which was
-> found during net-next daily compilation
-> 
-> Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Singed-off-by: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> - Fixed that but noted that it just alters the call to gpiod_hog()
+>>   in of_gpiochip_scan_hogs(), there is a local const char *name that
+>>   should be removed too.
+>
+> The local const char *name is temporarily used in
+> of_gpiochip_scan_hogs() to get the name from DT and assign it to the
+> descriptor:
+>         desc = of_parse_own_gpio(np, &name, &lflags, &dflags);
+>         ...
+>         else
+>                 desc->name = name;
 
-This is not necessaily the right fix, sorry.
+OK the problem is that this series is dependent on the
+named GPIOs series. I want this series to stand alone,
+because this series is not as controversial, and I want to
+merge these initvals first.
 
-I'd rather this driver be available to compile on as many
-configurations as possible, to increase build coverage.
-
-There is a standard way to make readq available on 32-bit platforms
-and I want you to do research into how that works and how you can thus
-make your driver build even on 32-bit targets.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
