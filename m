@@ -1,92 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
-Date: Thu, 24 Sep 2015 11:18:01 -0500
-Message-ID: <CAL_JsqK-aAY+DAwt0YH-mbBo+a9c7WPrBwJJoy3=FkT6ZX2A5w@mail.gmail.com>
-References: <1443012841-13673-1-git-send-email-sbhatta@xilinx.com>
- <20150924091034.GB27847@shlinux2> <F1B223389110CE49B4CF055ABA2E5D3D78C9BCBF@XAP-PVEXMBX02.xlnx.xilinx.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH] ARM: at91/dt: pullup dbgu rx instead of tx
+Date: Thu, 24 Sep 2015 18:27:19 +0200
+Message-ID: <20150924162719.GZ4287@piout.net>
+References: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
+ <20150924144753.GY4287@piout.net>
+ <5604154E.6050404@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F1B223389110CE49B4CF055ABA2E5D3D78C9BCBF@XAP-PVEXMBX02.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
-Cc: Peter Chen <peter.chen@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "kishon@ti.com" <kishon@ti.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5604154E.6050404@lysator.liu.se>
+Sender: stable-owner@vger.kernel.org
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: linux-arm-kernel@lists.infradead.org, Peter Rosin <peda@axentia.se>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 4:26 AM, Subbaraya Sundeep Bhatta
-<subbaraya.sundeep.bhatta@xilinx.com> wrote:
-> Hi Peter,
->
->> -----Original Message-----
->> From: Peter Chen [mailto:peter.chen@freescale.com]
->> Sent: Thursday, September 24, 2015 2:41 PM
->> To: Subbaraya Sundeep Bhatta
->> Cc: balbi@ti.com; devicetree@vger.kernel.org; kishon@ti.com;
->> gregkh@linuxfoundation.org; linux-usb@vger.kernel.org; linux-
->> kernel@vger.kernel.org; Punnaiah Choudary Kalluri; Subbaraya Sundeep Bhatta;
->> linux-arm-kernel@lists.infradead.org
->> Subject: Re: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
->>
->> On Wed, Sep 23, 2015 at 06:24:01PM +0530, Subbaraya Sundeep Bhatta
->> wrote:
->> > This patch adds binding doc info for generic ULPI PHYs platform
->> > driver.
->> >
->> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
->> > ---
->> >  .../devicetree/bindings/usb/ulpi-platform-phy.txt  |   34
->> ++++++++++++++++++++
->> >  1 files changed, 34 insertions(+), 0 deletions(-)  create mode 100644
->> > Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
->> >
->> > diff --git
->> > a/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
->> > b/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
->> > new file mode 100644
->> > index 0000000..7b8cbb4
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
->> > @@ -0,0 +1,34 @@
->> > +Platform driver for generic ULPI PHYs
->> > +
->> > +Required properties:
->> > +- compatible               : Should be "ulpi-phy"
->> > +- reg                      : Physical base address and size of the USB
->> > +                     controller registers map to which this PHY
->> > +                     is connected.
->> > +- view-port                : Should contain viewport register offset of the
->> > +                     USB controller to which this PHY is connected Optional
->> > +properties:
->> > +- drv-vbus         : required if turning VBUS on/off has to be driven
->> > +                     by writing to PHY. This feature depends on board
->> > +                     design.
->> > +
->> > +Example:
->> > +Below example shows the PHY binding for Chipidea USB controller which
->> > +has ulpi viewport register at 0x0170
->> > +
->> > +           usb_phy0: phy0 {
->> > +                   compatible = "ulpi-phy";
->> > +                   reg = <0xe0002000 0x1000>;
->> > +                   view-port = <0x0170>;
->> > +                   drv-vbus;
->> > +           };
->> > +
->> > +           usb0: usb@e0002000 {
->> > +                        compatible = "chipidea,usb2";
->> > +                        interrupt-parent = <&intc>;
->> > +                        interrupts = <0 21 4>;
->> > +                        reg = <0xe0002000 0x1000>;
->>
->> Although just call devm_ioremap twice for the same register region does not
->> cause any errors, I am not sure if it will has other potential problems. Cc: arm
->> list.
->
-> Yes Peter I was also in doubt to call devm_ioremap twice for same register region.
-> devm_ioremap_resource complained hence modified to devm_ioremap. Thanks for
-> adding arm-list.
+On 24/09/2015 at 17:22:54 +0200, Peter Rosin wrote :
+> I just noticed that other ports have the same problem in sama5d3.dtsi. E.g.
+> 
+> 	uart1 {
+> 		pinctrl_uart1: uart1-0 {
+> 			atmel,pins =
+> 				<AT91_PIOA 30 AT91_PERIPH_B AT91_PINCTRL_NONE   /* conflicts with TWD0, ISI_VSYNC */
+> 				 AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_PULL_UP>;      /* conflicts with TWCK0, ISI_HSYNC */
+> 		};
+> 	};
+> 
+> Given that the original bug I found spread all over the map, it seems
+> like someone was confused when the pull-ups were originally added.
+> Someone (else?) at Atmel needs to audit this so that pull-ups are
+> added on the rx-pins instead of the tx-pins.
+> 
 
-Don't put overlapping resources in the DT. Having 2 drivers accessing
-the same registers is not a clean or safe design.
+Sure, that is the plan!
+Thanks again for the report.
 
-Rob
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
