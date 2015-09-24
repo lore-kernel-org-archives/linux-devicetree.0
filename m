@@ -1,97 +1,87 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: sunxi: Introduce Allwinner for
- A83T support
-Date: Thu, 24 Sep 2015 18:55:03 +0800
-Message-ID: <CAEzqOZvz4AHmmaoh3qe_AMJg2ON-fzG_1XixM861rJPoap5CdQ@mail.gmail.com>
-References: <1442936337-3104-1-git-send-email-vishnupatekar0510@gmail.com>
- <1442936337-3104-2-git-send-email-vishnupatekar0510@gmail.com> <20150922155152.GJ4684@lukather>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/2] SSD1307fb updates
+Date: Thu, 24 Sep 2015 14:11:28 +0300
+Message-ID: <5603DA60.3050402@ti.com>
+References: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBG5NR6YAKGQEZUIV4XQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150922155152.GJ4684@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441739991-4676-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: =?UTF-8?Q?Thomas_Niederpr=c3=bcm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+--UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 22, 2015 at 11:51 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Tue, Sep 22, 2015 at 11:38:54PM +0800, Vishnu Patekar wrote:
->> Allwinner A83T is octa-core cortex-a7 based SoC.
->> It's clock control unit and prcm, pinmux are different from previous sun8i
->> series.
->> Its processor cores are arragned in two clusters 4 cores each,
->> similar to A80.
->>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
->>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
->>  drivers/clk/sunxi/clk-sunxi.c                   | 6 ++++++
->>  3 files changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
->> index 67da205..cf5ed27 100644
->> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
->> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
->> @@ -11,4 +11,5 @@ using one of the following compatible strings:
->>    allwinner,sun8i-a23
->>    allwinner,sun8i-a33
->>    allwinner,sun8i-h3
->> +  allwinner,sun8i-a83t
->>    allwinner,sun9i-a80
->> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
->> index 65bab28..b04aefa 100644
->> --- a/arch/arm/mach-sunxi/sunxi.c
->> +++ b/arch/arm/mach-sunxi/sunxi.c
->> @@ -69,6 +69,7 @@ static const char * const sun8i_board_dt_compat[] = {
->>       "allwinner,sun8i-a23",
->>       "allwinner,sun8i-a33",
->>       "allwinner,sun8i-h3",
->> +     "allwinner,sun8i-a83t",
->>       NULL,
->>  };
->>
->> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
->> index 413070d..f216d5d 100644
->> --- a/drivers/clk/sunxi/clk-sunxi.c
->> +++ b/drivers/clk/sunxi/clk-sunxi.c
->> @@ -1212,6 +1212,12 @@ CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
->>  CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
->>  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
->>
->> +static void __init sun8ia83t_init_clocks(struct device_node *node)
->
-> Having an underscore between sun8i and a83t would be great :)
->
->> +{
->> +     sunxi_init_clocks(NULL, 0);
->> +}
->> +CLK_OF_DECLARE(sun9i_a83t_clk_init, "allwinner,sun8i-a83t", sun8ia83t_init_clocks);
->
->                   ^ Is this a sun9i or sun8i SoC ?
-It's sun8i, sorry.
->
-> Is the list of protected clocks always going to be empty, or will you
-> add some new clocks in that list in the future?
-Yes, I'll add new clocks as time permits.
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-Thanks for review.
+
+
+On 08/09/15 22:19, Olliver Schinagl wrote:
+> Having a few ssd1309 128x64 OLED displays laying around, I added suppor=
+t for it to the existing 1307fb driver. While doing this I noticed the he=
+aders where out of order so I fixed those as well.
+>=20
+> For this specific display, the following can be used in a i2c node for =
+example.
+>=20
+> 	ssd1309: oled@3c {
+> 		compatible =3D "solomon,ssd1309fb-i2c";
+> 		pinctrl-names =3D "default";
+> 		pinctrl-0 =3D <&oled_pins>;
+> 		reg =3D <0x3c>;
+> 		reset-gpios =3D <&pio 8 13 GPIO_ACTIVE_HIGH>;
+> 		solomon,width =3D <128>;
+> 		solomon,height =3D <64>;
+> 		solomon,com-invdir;
+> 		solomon,page-offset =3D <0>;
+> 		solomon,prechargep1 =3D <2>;
+> 		solomon,prechargep2 =3D <8>;
+> 	};
+>=20
+> Olliver Schinagl (2):
+>   fbdev: ssd1307fb: alphabetize headers
+>   fbdev: ssd1307fb: add ssd1309 support
+>=20
+>  .../devicetree/bindings/video/ssd1307fb.txt         |  3 ++-
+>  drivers/video/fbdev/ssd1307fb.c                     | 21 +++++++++++++=
++++-----
+>  2 files changed, 18 insertions(+), 6 deletions(-)
+>=20
+
+Thanks, queued for 4.4.
+
+ Tomi
+
+
+--UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWA9pgAAoJEPo9qoy8lh71guUQAJAjnKwhRqlY9ogvX7Bybx1e
+iaXFSOjJckWNC9bWY1c0E+m4Bbsl621ITMmNiQe09pfPmO+fe2RToXoeFVR3Hcqp
+WpuHUjS/tSqE9o/U3/7IiWTe6A26uO8TXdVujpy1qlIqmxbxC9c1osa+NeHNXxi/
+u4/MRRuMnnjdOVyaOAgHhwhD9kleb6IfqVtGKgPwPBnekTAoGofLnHMDk4kjXFUH
+2a0PeXVC8Q3ZZseit9usFbkSOVAV8cSVnPG57kP2nQEUaMdhd4uhMFEA1mr/nGDr
+t2rm1maZ9xtrEjrPTUvgigPMKnDJ0Gc7Yl6eXRSjdM/PymIMuEPYheg5eyaJ68S6
+XPkqAjd5g5VLv3gJ7+bEy8Ur06XKfdzjgCOtdBVNE7RA7Z80lEEHfYTYkUw+91hY
+90wFSznP+30aOOtetCHLbGjJlo+sFzI5naC3RDQn+6qud+rNl8vgUq63gQOXkpWW
+SNPb0apzmeEaoizaotBrJ1mlzHk04/49cmtVbGZQ4jz6geGI0bnHpl7fRorYHQ0W
+DqZP3cl+Y4TGIk3MW9D6W+XeNMtal6VZjR9cgZ6Vefs7yxnaaP/enpS89AX1cLEs
+l1OR5lUTNeW0bHXUkkwwEBbrSLfjAywpV+PEzKwiLQcfOolBLjwVIjSbh0Me5gYG
+VF8fLBY0eYtSGFzjvu62
+=LeeH
+-----END PGP SIGNATURE-----
+
+--UtHJcEq1hH7QjaIbUDP4IXlmhdC7nX6Gk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
