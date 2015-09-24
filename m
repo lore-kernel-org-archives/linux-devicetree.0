@@ -1,72 +1,38 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
- compatible flags
-Date: Thu, 24 Sep 2015 09:20:50 -0500
-Message-ID: <560406C2.6090200@ti.com>
-References: <1442938118-4718-1-git-send-email-nm@ti.com>
- <1442938118-4718-2-git-send-email-nm@ti.com> <5602ED34.9010108@oracle.com>
- <56040323.1080409@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56040323.1080409-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: [PATCH] ARM: at91/dt: pullup dbgu rx instead of tx
+Date: Thu, 24 Sep 2015 16:44:15 +0200
+Message-ID: <1443105855-15738-1-git-send-email-peda@lysator.liu.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Peter Rosin <peda@axentia.se>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, peda@lysator.liu.se, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2015 09:05 AM, Murali Karicheri wrote:
-> On 09/23/2015 02:19 PM, santosh shilimkar wrote:
->> Nishant,
->>
->> On 9/22/2015 9:08 AM, Nishanth Menon wrote:
->>> Keystone2 devices are used on more platforms than just Texas
->>> Instruments reference evaluation platforms called EVMs. Providing a
->>> generic compatible "ti,keystone" is not sufficient to differentiate
->>> various SoC definitions possible on various platforms. So, provide
->>> compatible matches for each SoC family by itself.
->>>
->>> This allows SoC specific logic to be run time handled based on
->>> of_machine_is_compatible("ti,k2hk") or as needed for the dependent
->>> processor instead of needing to use board dependent compatibles that
->>> are needed now.
->>>
->>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->>> ---
->> You need to expand that 'not sufficient' for me. Unless there is
->> genuine case to support this, I would want to avoid this churn.
->>
-> 
-> I agree. If there are run time check required in code to treat the 
-> variants of Keystone SoC differently, then this change is needed. At 
-> this time, SoC DTS captures these differences. IMHO, If a future 
-> Keystone SoC support required SoC specific compatibility string to 
-> customize SoC specific initialization code, then it can be introduced at 
-> that time. I am not sure why this is introduced with out an example usage.
+From: Peter Rosin <peda@axentia.se>
 
-a) See
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/usage-model.txt#n116
--> all we have today is board, soc generic family. The generic
-compatible flag of ti,keystone to mark that this is a keystone2 device
-does not identify that what kind of soc it is. which is what this
-series introduces.
+It seems pointless to pullup the tx line, but there is value in pulling
+up the rx line.
 
-b) there is no realistic way for user space applications such as a
-test framework or other SoC based applications in a generic distro to
-detect the right SoC this platform is running on - imagine writing SoC
-specific code that depends on board compatible flags - there is never
-an end to that story as the number of boards expand.
+Cc: stable@vger.kernel.org
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ arch/arm/boot/dts/sama5d3.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-c) Ideally we will try never to introduce code that will have to
-depend on SoC compatible flag based match in kernel - but that is not
-a reason not to follow guidelines provided by devicetree documentation
-to provide SoC specific compatible flags.
-
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index 9e2444b07bce..304a40c5552a 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -545,8 +545,8 @@
+ 				dbgu {
+ 					pinctrl_dbgu: dbgu-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB30 periph A */
+-							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;	/* PB31 periph A with pullup */
++							<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB30 periph A with pullup */
++							 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB31 periph A */
+ 					};
+ 				};
+ 
 -- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
