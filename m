@@ -1,81 +1,42 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] edac: Add L3 EDAC support to the APM X-Gene SoC
- EDAC driver
-Date: Thu, 24 Sep 2015 13:25:12 +0200
-Message-ID: <20150924112512.GB3774@pd.tnic>
-References: <1443055261-8613-1-git-send-email-lho@apm.com>
- <1443055261-8613-3-git-send-email-lho@apm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
+Date: Thu, 24 Sep 2015 04:57:37 -0700
+Message-ID: <20150924115737.GM3529@tiger>
+References: <cover.1442310569.git.shengjiu.wang@freescale.com>
+ <113f1cecf1d83c6b96fd23ab9d7a73d1923e0d21.1442310569.git.shengjiu.wang@freescale.com>
+ <20150923153340.GK3529@tiger>
+ <20150924054321.GA32196@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443055261-8613-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+In-Reply-To: <20150924054321.GA32196@shlinux2>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shengjiu Wang <shengjiu.wang@freescale.com>
+Cc: mturquette@baylibre.com, kernel@pengutronix.de, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 23, 2015 at 05:40:59PM -0700, Loc Ho wrote:
-> Add EDAC support for the L3 component.
+On Thu, Sep 24, 2015 at 01:43:24PM +0800, Shengjiu Wang wrote:
+> On Wed, Sep 23, 2015 at 08:33:41AM -0700, Shawn Guo wrote:
+> > On Tue, Sep 15, 2015 at 06:01:01PM +0800, Shengjiu Wang wrote:
+> > > As spdif driver will register SPDIF clock to regmap, regmap will do
+> > > clk_prepare in init function, so SPDIF clock is prepared in probe, then its
+> > > root clock (pll clock) is prepared also, which cause the arm can't enter
+> > > low power mode.
+> > 
+> > Can you help me understand why ARM cannot enter low power mode when pll
+> > clock is prepared?
+> > 
+> > Shawn
+> Hi Shawn
 > 
-> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-> ---
->  drivers/edac/xgene_edac.c |  669 ++++++++++++++++++++++++++++++++-------------
->  1 files changed, 474 insertions(+), 195 deletions(-)
+>    In i.mx clock framework, when pll clk is prepared, it will be powerup. when
+> enterring low power idle mode, the powerdown bit is checked, when pll is not
+> powerdown state, chip will not enter low power idle mode.
 
-...
+So this is not a SPDIF specific problem, and any device driver preparing
+its clock that is a child of pll clock will run into this problem,
+right?  If so, we should purchase a more generic solution than such
+device specific one.
 
-> @@ -878,25 +869,16 @@ static const struct file_operations xgene_edac_pmd_debug_inject_fops[] = {
->  	{ }
->  };
-> 
-> -static void xgene_edac_pmd_create_debugfs_nodes(
-> -	struct edac_device_ctl_info *edac_dev)
-> +static void
-> +xgene_edac_pmd_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
->  {
->  	struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
->  	struct dentry *dbgfs_dir;
-> -	char name[30];
-> +	char name[10];
-
-So somehow we don't seem to understand each other. This char name[10] on
-the stack thing has a bunch of problems:
-
-1. It is on the stack so it contains random garbage.
-
-> 
-> -	if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
-> +	if (!IS_ENABLED(CONFIG_EDAC_DEBUG) || !ctx->edac->dfs)
->  		return;
-> 
-> -	/*
-> -	 * Todo: Switch to common EDAC debug file system for edac device
-> -	 *       when available.
-> -	 */
-> -	if (!ctx->edac->dfs) {
-> -		ctx->edac->dfs = edac_debugfs_create_dir(edac_dev->dev->kobj.name);
-> -		if (!ctx->edac->dfs)
-> -			return;
-> -	}
->  	sprintf(name, "PMD%d", ctx->pmd);
-
-2. You're sprintf-ing into it without checking its length. This can
-possibly write past the end if %d is big enough. I know, I know, %d
-is only small numbers but that assurance not good enough. You need
-snprintf() and check the ctx->pmd width for sane numbers only anyway.
-
-And debugfs goes and does strlen() on it which could lead to all kinds
-of funky stuff later.
-
-Please fix that in all its occurrences in this patchset.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
