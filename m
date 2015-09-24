@@ -1,61 +1,66 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 0/9] Phy, mdiobus, and netdev struct device fixes
-Date: Fri, 25 Sep 2015 00:12:21 +0100
-Message-ID: <20150924231221.GI21513@n2100.arm.linux.org.uk>
-References: <20150924215731.GE20825@lunn.ch>
- <20150924.151554.619662567057050978.davem@davemloft.net>
- <20150924222654.GG20825@lunn.ch>
- <20150924.155137.1429397912516096627.davem@davemloft.net>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7] tty: serial: msm: Add DMA support and fix bit definitions
+Date: Fri, 25 Sep 2015 00:27:19 +0100
+Message-ID: <560486D7.3090003@linaro.org>
+References: <1442062934-13449-1-git-send-email-ivan.ivanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150924.155137.1429397912516096627.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, sgoutham@cavium.com, rric@kernel.org, frowand.list@gmail.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, netdev@vger.kernel.org, soren.brinkmann@xilinx.com, isubramanian@apm.com, grant.likely@linaro.org, leoli@freescale.com, kchudgar@apm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442062934-13449-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 03:51:37PM -0700, David Miller wrote:
-> From: Andrew Lunn <andrew@lunn.ch>
-> Date: Fri, 25 Sep 2015 00:26:54 +0200
-> 
-> > On Thu, Sep 24, 2015 at 03:15:54PM -0700, David Miller wrote:
-> >> From: Andrew Lunn <andrew@lunn.ch>
-> >> Date: Thu, 24 Sep 2015 23:57:31 +0200
-> >> 
-> >> > I built the FEC driver as a module, and it won't unload:
-> >> > 
-> >> >  kernel:unregister_netdevice: waiting for eth1 to become free. Usage count = 1
-> >> > unregister_netdevice: waiting for eth1 to become free. Usage count = 1
-> >> > 
-> >> > i assume because DSA holds a reference. I've not tried a fully module
-> >> > build, DSA has issues with that.
-> >> > 
-> >> > Tested-by: Andrew Lunn <andrew@lunn.ch>
-> >> 
-> >> So, is this a regression?
-> > 
-> > Sorry, worded that badly. Since DSA is still active, it should not be
-> > possible to unload the FEC driver. DSA should have a reference to it,
-> > and mdio-mux also should have a reference to the mdio bus of the FEC
-> > driver.
-> > 
-> > As Russell requested, i will re-test without his patches, just to make
-> > sure.
-> 
-> Something needs to hold into the underlying device refcount of a DSA
-> blob so that an unload can't even be attempted in that state.
 
-Holding a reference on a struct device does _not_ stop the device
-being unbound or the module driving it being removed.  It merely
-stops the struct device from being freed before all references have
-been dropped.
+Hi Ivan,
+On 12/09/15 14:02, Ivan T. Ivanov wrote:
+> Hi,
+>
+> Following patches add DMA support for UARTDM type of hardware.
+>
+> Changes have been tested on UARTDM v1.3(APQ8064) and v1.4(APQ8016).
+>
+> Patches from Gurav were published long ago here[1], I just addressed
+> remaining comments and coding style issues.
+>
+> Any comments are welcome.
+Looks like Magic Sysrq is broken with this patches.
 
-Devices are always free to be unbound from their bound drivers
-irrespective of the struct device refcount.  Even taking a reference
-on the module (via try_module_get()) does not stop this.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--srini
+>
+> Regards,
+> Ivan
+>
+> Ivan T. Ivanov (5):
+>    tty: serial: msm: Fix command Stale Event Enable definition
+>    tty: serial: msm: Add msm prefix to all driver functions
+>    tty: serial: msm: Add TX DMA support
+>    tty: serial: msm: Add RX DMA support
+>    tty: serial: msm: Remove 115.2 Kbps maximum baud rate limitation
+>
+> Pramod Gurav (2):
+>    tty: serial: msm: Add mask value for UART_DM registers
+>    tty: serial: msm: replaces (1 << x) with BIT(x) macro
+>
+> [1] http://www.spinics.net/lists/linux-serial/msg16874.html
+>
+>
+>   .../devicetree/bindings/serial/qcom,msm-uartdm.txt |   6 +
+>   drivers/tty/serial/msm_serial.c                    | 616 +++++++++++++++++++--
+>   drivers/tty/serial/msm_serial.h                    |  55 +-
+>   3 files changed, 604 insertions(+), 73 deletions(-)
+>
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
