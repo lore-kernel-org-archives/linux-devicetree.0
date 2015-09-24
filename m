@@ -1,63 +1,50 @@
-From: RAJESH BHAGAT <rajesh.bhagat@freescale.com>
-Subject: RE: [PATCH 1/3][v4] Documentation: dt: dwc3: Add
- snps,quirk-frame-length-adjustment property
-Date: Thu, 24 Sep 2015 09:42:59 +0000
-Message-ID: <BN1PR0301MB0675A3534647A872F433E689E9430@BN1PR0301MB0675.namprd03.prod.outlook.com>
-References: <1441341894-17327-1-git-send-email-nikhil.badola@freescale.com>
- <SN1PR0301MB1629AAEC687AF3E058BB701DF35A0@SN1PR0301MB1629.namprd03.prod.outlook.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] usb: phy: Add platform driver support for ULPI
+ PHYs
+Date: Thu, 24 Sep 2015 17:43:31 +0800
+Message-ID: <20150924094330.GC27847@shlinux2>
+References: <1443012873-13757-1-git-send-email-sbhatta@xilinx.com>
+ <20150924090629.GA27847@shlinux2>
+ <F1B223389110CE49B4CF055ABA2E5D3D78C9BCA7@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN1PR0301MB1629AAEC687AF3E058BB701DF35A0@SN1PR0301MB1629.namprd03.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "balbi@ti.com" <balbi@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <F1B223389110CE49B4CF055ABA2E5D3D78C9BCA7-4lKfpRxZ5ekkx2a1wsGfbYg+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe, 
+On Thu, Sep 24, 2015 at 09:21:16AM +0000, Subbaraya Sundeep Bhatta wrote:
+> > > +uphy->flags);
+> > > +
+> > > +	uphy->usb_phy->set_vbus	= usbphy_set_vbus;
+> > 
+> > When you will call it?
+> 
+> I am calling it in host.c and otg_fsm.c of Chipidea driver wherever
+> regulator_enable/disable is called to control VBUS like below: 
+> 
+> if (ci->platdata->flags & CI_HDRC_PHY_VBUS_CONTROL) {
+>                 if (enable)
+>                         ci->usb_phy->set_vbus(ci->usb_phy, 1);
+>                 else
+>                         ci->usb_phy->set_vbus(ci->usb_phy, 0);
+> }
+> 
+> After these changes host mode and otg modes works fine
+> for my case.
+> 
 
-Any comments on the below [v4] patches?
+Get it, there are several vbus control ways, I may need to consolidate
+them, of cos, this is another topic.
 
-[PATCH 1/3][v4] Documentation: dt: dwc3: Add snps,quirk-frame-length-adjustment property
-[PATCH 2/3][v4] drivers: usb: dwc3: Add frame length adjustment quirk
-[PATCH 3/3][v4] arm: dts: ls1021a: Add quirk for Erratum A009116
+-- 
 
-I will be taking forward these patches, as Nikhil has left freescale.
-
-Thanks,
-Rajesh Bhagat
-
------Original Message-----
-From: Nikhil Badola [mailto:nikhil.badola@freescale.com] 
-Sent: Friday, September 04, 2015 10:15 AM
-To: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-usb@vger.kernel.org
-Cc: balbi@ti.com; Badola Nikhil-B46172 <nikhil.badola@freescale.com>
-Subject: [PATCH 1/3][v4] Documentation: dt: dwc3: Add snps,quirk-frame-length-adjustment property
-
-Add snps,quirk-frame-length-adjustment property which provides value for post silicon frame length adjustment
-
-Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
----
-Changes for v4: None
-
- Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 0815eac..8c7d585 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -40,6 +40,9 @@ Optional properties:
-  - snps,hird-threshold: HIRD threshold
-  - snps,hsphy_interface: High-Speed PHY interface selection between "utmi" for
-    UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value 3.
-+ - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
-+	register for post-silicon frame length adjustment when the
-+	fladj_30mhz_sdbnd signal is invalid or incorrect.
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
+Best Regards,
+Peter Chen
 --
-2.1.0
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
