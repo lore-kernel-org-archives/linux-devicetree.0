@@ -1,88 +1,302 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
-Date: Fri, 25 Sep 2015 08:49:51 +0200
-Message-ID: <FEB50554-2A45-4B3C-A896-EBF723AB3572@goldelico.com>
-References: <cover.1443031678.git.hns@goldelico.com> <1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com> <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, eric miao <eric.miao@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, Grazvydas Ignotas <notaz@openpandora.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: sun7i: dt: Add new Olimex A20 EVB device
+Date: Fri, 25 Sep 2015 08:52:19 +0200
+Message-ID: <20150925065219.GC4684@lukather>
+References: <1443034070-642-1-git-send-email-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kYjgnhhF68gsb/oS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJG6SOYAKGQEYF26K5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443034070-642-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--kYjgnhhF68gsb/oS
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Am 25.09.2015 um 00:11 schrieb Linus Walleij <linus.walleij@linaro.org>=
-:
+On Wed, Sep 23, 2015 at 08:47:50PM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> The A20-SOM-EVB is a reference design of a 2-layer board for the
+> A20-SOM.
+> It expands the features of A20-SOM by adding VGA connector, HDMI
+> connector, audio In/Out, LCD connector, 2 Mpix camera, gigabit
+> Ethernet, SATA, USB-OTG and 2 USB hosts.
+> 
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes since v2:
+> - changed dcdc2 to have max voltage of 1.4V
+> Changes since v1:
+> - renamed dts from sun7i-a20-olinuxino-evb to sun7i-a20-olimex-som-evb
+> - added "axp209 dtsi"
+> - change regulator settings
+> ---
+>  arch/arm/boot/dts/Makefile                     |   1 +
+>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 216 +++++++++++++++++++++++++
+>  2 files changed, 217 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 359dcb5..8419a3e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -617,6 +617,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>  	sun7i-a20-i12-tvbox.dtb \
+>  	sun7i-a20-m3.dtb \
+>  	sun7i-a20-mk808c.dtb \
+> +	sun7i-a20-olimex-som-evb.dtb \
+>  	sun7i-a20-olinuxino-lime.dtb \
+>  	sun7i-a20-olinuxino-lime2.dtb \
+>  	sun7i-a20-olinuxino-micro.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> new file mode 100644
+> index 0000000..41b4b4a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> @@ -0,0 +1,216 @@
+> +/*
+> + * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +	model = "Olimex A20-Olimex-SOM-EVB";
+> +	compatible = "olimex,a20-olimex-som-evb", "allwinner,sun7i-a20";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&led_pins_olimex_som_evb>;
+> +
+> +		green {
+> +			label = "a20-olimex-som-evb:green:usr";
+> +			gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
+> +
+> +	reg_axp_ipsout: axp_ipsout {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "axp-ipsout";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +	};
 
-> On Wed, Sep 23, 2015 at 11:13 AM, H. Nikolaus Schaller
-> <hns@goldelico.com> wrote:
->=20
->> 1. add a DT property to specify the list of GPIO pins that are to be=
-come
->>   "open drain"
->> 2. if a pin is configured as "open drain", set value by either outpu=
-tting a
->>   "0" (low level) or switching to input (high impedance)
->>=20
->> Tested on OMAP5 uEVM with TCA6424 and some LEDs connected to 5V.
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->=20
-> I understand the approach, but this is the wrong way to do it.
-> Instead of indicating that a pin on the pin controller should be
-> open drain, the *consumer* specifying its gpios =3D <....> should
-> do this.
+Are you using that regulator somewhere?
 
-On a second thought I am no longer sure if that is the right approach.
+> +};
+> +
+> +&ahci {
+> +	target-supply = <&reg_ahci_5v>;
+> +	status = "okay";
+> +};
+> +
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status = "okay";
+> +};
+> +
+> +&gmac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&gmac_pins_rgmii_a>;
+> +	phy = <&phy1>;
+> +	phy-mode = "rgmii";
+> +	status = "okay";
+> +
+> +	phy1: ethernet-phy@1 {
+> +		reg = <1>;
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_pins_a>;
+> +	status = "okay";
+> +
+> +	axp209: pmic@34 {
+> +		reg = <0x34>;
+> +		interrupt-parent = <&nmi_intc>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins_a>;
+> +	status = "okay";
+> +};
 
-A gpio is for input and output of =930=94 and =931=94 values. And a gpi=
-o consumer
-can control if the output should be active or inactive and input.
+Having aliases for these two would be great to make sure that the bus
+number is fixed.
 
-How the output is physically represented (totem-pole or single-ended,
-high power, low power etc.) is not a property of the gpio itself and
-there is IMHO no need for the consumer to be able to define (or change)
-it.
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&ohci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci1 {
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	ahci_pwr_pin_olimex_som_evb: ahci_pwr_pin@1 {
+> +		allwinner,pins = "PC3";
+> +		allwinner,function = "gpio_out";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +	};
+> +
+> +	led_pins_olimex_som_evb: led_pins@0 {
+> +		allwinner,pins = "PH2";
+> +		allwinner,function = "gpio_out";
+> +		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +	};
+> +};
+> +
+> +&reg_ahci_5v {
+> +	pinctrl-0 = <&ahci_pwr_pin_olimex_som_evb>;
+> +	gpio = <&pio 2 3 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> +
+> +#include "axp209.dtsi"
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1000000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1000000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-int-dll";
+> +};
+> +
+> +&reg_ldo1 {
+> +	regulator-name = "vdd-rtc";
+> +};
+> +
+> +&reg_ldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "avcc";
+> +};
+> +
+> +&reg_usb0_vbus {
+> +	status = "okay";
+> +};
+> +
+> +&reg_usb1_vbus {
+> +	status = "okay";
+> +};
+> +
+> +&reg_usb2_vbus {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	usb1_vbus-supply = <&reg_usb1_vbus>;
+> +	usb2_vbus-supply = <&reg_usb2_vbus>;
+> +	status = "okay";
+> +};
+> -- 
+> 2.4.6
+> 
 
-On SoC with integrated gpio controllers it is very common to have
-pinmux definitions completely separated from the gpio controller
-properties. But the gpio consumer can connect to pinctrl settings
-to describe that the pin should have certain physical properties.
+Thanks!
+Maxime
 
-There, it is common to be able to enable/disable pull-up/downs as
-well.
-
-So turning a totem-pole output (as it is available in the tca6424)
-into an open-drain output is sort of turning off the pull-up transistor=
-=2E
-I.e. comparable to a pinmux setting.
-
-So such controllers should get the option to define pinctrl.
-
-Some chips might have special control registers for doing that
-while others need the trick to switch between input and output
-mode but that is driver implementation detail.
-
-But I am not sure if this has other implications.
-
->=20
-> I just sent a patch adding the bindings because Tony Lindgren
-> and Grygorii Strashko approached me similar problems so let's
-> begin with the bindings.
->=20
-> Implementing it in the kernel requires some elaboration and it's
-> going to be more complicated than this local approach, but it
-> will be more generic and reusable so that is what we need to do.
->=20
-> Yours,
-> Linus Walleij
-
-BR,
-Nikolaus Schaller--
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--kYjgnhhF68gsb/oS--
