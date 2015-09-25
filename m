@@ -1,70 +1,75 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 4/6] extcon: arizona: Add device binding for second
- jack detect pin on GPIO5
-Date: Fri, 25 Sep 2015 10:10:42 +0100
-Message-ID: <20150925091042.GD5432@ck-lbox>
-References: <1442397404-7579-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1442397404-7579-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <56049B42.7030509@samsung.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v11 3/4] add FPGA manager core
+Date: Fri, 25 Sep 2015 13:00:36 +0300
+Message-ID: <20150925100036.GM4953@mwanda>
+References: <1442935271-10375-1-git-send-email-atull@opensource.altera.com>
+ <1442935271-10375-4-git-send-email-atull@opensource.altera.com>
+ <20150922222929.GA26335@jcartwri.amer.corp.natinst.com>
+ <20150923132354.GB31253@amd> <20150923141106.GH4953@mwanda>
+ <alpine.DEB.2.02.1509231101050.23595@linuxheads99>
+ <20150924074953.GI4953@mwanda>
+ <alpine.DEB.2.02.1509241526380.5173@linuxheads99>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <56049B42.7030509-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <alpine.DEB.2.02.1509241526380.5173@linuxheads99>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: atull <atull@opensource.altera.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, linus.walleij@linaro.org, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, rubini@gnudd.com, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, akpm@linux-foundation.org, monstr@monstr.eu, Pavel Machek <pavel@denx.de>, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, Josh Cartwright <joshc@ni.com>, dinguyen@opensource.altera.com, delicious.quinoa@gma
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 25, 2015 at 09:54:26AM +0900, Chanwoo Choi wrote:
-> Hi Charles,
+On Thu, Sep 24, 2015 at 03:47:26PM -0500, atull wrote:
+> Interesting.  The amount of code bloat here compiles down to about two
+> machine instructions (in two places).  Actually a little more since I should
+> be using IS_ERR_OR_NULL.  But the main question is whether I should do
+> it at all.
 > 
-> I have one comment.
-> I think current extcon-arizona.c has the many platform data
-> so, extcon-arizona.c use the too much if statement to support each feature
-> for different wolfsonmicro codec. I think it cause the complicated code.
-> 
-> For example,
-> You may use 'struct of_device_id' as following. You used already this method
-> on drivers/mfd/arizona-core.c. If you separate the function of each wmXXXX arizona,
-> it makes improved readability for extcon-arizona.c and some user will use extcon-arizora
-> more easily.
-> 
-> struct arizona_extcon_data {
-> 	void (*init)(...);
-> 	void (*irq_handler)(...);
-> 	...	
-> };
-> 
-> struct arizona_extcon_data wm8994_data {
-> 	.init = wm8994_extcon_init,
-> 	.irq_handler = wm8994_extcon_irq_handler;
-> 	...
-> };
-> 
-> static const struct of_device_id arizona_extcon_dt_match[] = {
-> 	{
-> 		.compatible = "wm8994-arizona-extcon",
-> 		.data = (void *)wm8994_data;
-> 	}, {
-> 		.compatible = "wmXXXX-arizona-extcon",
-> 		.data = (void *)wmXXXX_data;
-> 	}, 
-> };
-> 
-> I expect that you will revise the arizona-extcon.c driver on next time.
 
-I will have an investigation to see what ideas I can come up with
-here and send through some patches.
+They kernel already has too many bogus checks for IS_ERR().  It's a very
+common bug to check for IS_ERR() when you should be checking for NULL.
 
-But I am slightly worried you think the gains will be better than
-they actually will be. Most of the platform data is just that
-platform data, and needs to be configured based on the system not
-based on the CODEC.
+-	foo = some_allocator();
++	foo = kmalloc();
+	if (IS_ERR(foo))
+		goto fail;
 
-Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have a static checker for "warn: 'foo' isn't an ERR_PTR" but I haven't
+published it because too much code has impossible checks.
+
+> The behaviour I should drive here is that the user will do their own error
+> checking.  After they get a pointer to a FPGA manager using
+> of_fpga_mgr_get(), they should check it and not assume that
+> fpga_mgr_firmware_load() will do it for them, i.e.
+> 
+> 	mgr = of_fpga_mgr_get(mgr_node);
+> 	if (IS_ERR(mgr))
+> 		return PTR_ERR(mgr);
+> 	fpga_mgr_firmware_load(mgr, flags, path);
+> 
+
+I don't understand completely how of_fpga_mgr_get() ever returns NULL.
+A lot of the of_ functions return ERR_PTRs if OF_ is compiled in but
+they return NULL if it's not.  I think this is so people can build with
+COMPILE_TEST so we get more coverage with static analysis?
+
+> I could take out these NULL pointer checks and it won't hurt anything unless
+> someone is just using the functions badly, in which case: kablooey.
+
+Linux devs are very good about doing error checking.  An early kablooey
+is what we want for people who don't.
+
+Also if you provide a sanity check then Markus Elfring will remove all
+the error checking in the callers.  Don't do it.
+
+regards,
+dan carpenter
