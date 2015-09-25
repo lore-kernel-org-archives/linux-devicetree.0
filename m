@@ -1,226 +1,43 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH 1/2] ARM: ux500: remove regulator-compatible usage
-Date: Fri, 25 Sep 2015 15:51:31 +0200
-Message-ID: <1443189092-16430-1-git-send-email-javier@osg.samsung.com>
+From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 03/14] power: bq24257: Streamline input current limit
+ setup
+Date: Fri, 25 Sep 2015 08:52:52 -0500
+Message-ID: <20150925135251.GA9370@borg>
+References: <1443151618-29742-1-git-send-email-dannenberg@ti.com>
+ <1443151618-29742-4-git-send-email-dannenberg@ti.com>
+ <20150925132302.GD15509@lpalcu-desk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150925132302.GD15509@lpalcu-desk>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The regulator-compatible property from the regulator DT binding was
-deprecated and the correct approach is to use the node's name.
+On Fri, Sep 25, 2015 at 04:23:03PM +0300, Laurentiu Palcu wrote:
+> On Thu, Sep 24, 2015 at 10:26:47PM -0500, Andreas Dannenberg wrote:
+> [...]
+> > -	if (reset_iilimit) {
+> > +		/* reset input current limit */
+> >  		ret = bq24257_field_write(bq, F_IILIMIT, IILIMIT_500);
+> >  		if (ret < 0)
+> >  			goto error;
+> > -	} else if (config_iilimit) {
+> > -		schedule_delayed_work(&bq->iilimit_setup_work,
+> > +	} else if (!old_state.power_good) {
+> > +		dev_dbg(bq->dev, "Power inserted\n");
+> > +		if (bq->iilimit_autoset_enable)
+> iilimit_autoset_enable is introduced in patch 6. If we ever need to
+> bisect this code, this patch will fail to build.
 
-This patch has no functional changes since the values of the node's
-name and the regulator-compatible match for all the regulators.
+Good catch!! I want to fix this and retest/resubmit (and put in the
+suggestion from your other email too). I know it's a lot of traffic but
+it should be done right :)
 
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
----
-
- arch/arm/boot/dts/ste-dbx5x0.dtsi | 33 ---------------------------------
- 1 file changed, 33 deletions(-)
-
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 50f5e9d09203..341f5b7ed242 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -512,63 +512,51 @@
- 
- 				// DB8500_REGULATOR_VAPE
- 				db8500_vape_reg: db8500_vape {
--					regulator-compatible = "db8500_vape";
- 					regulator-always-on;
- 				};
- 
- 				// DB8500_REGULATOR_VARM
- 				db8500_varm_reg: db8500_varm {
--					regulator-compatible = "db8500_varm";
- 				};
- 
- 				// DB8500_REGULATOR_VMODEM
- 				db8500_vmodem_reg: db8500_vmodem {
--					regulator-compatible = "db8500_vmodem";
- 				};
- 
- 				// DB8500_REGULATOR_VPLL
- 				db8500_vpll_reg: db8500_vpll {
--					regulator-compatible = "db8500_vpll";
- 				};
- 
- 				// DB8500_REGULATOR_VSMPS1
- 				db8500_vsmps1_reg: db8500_vsmps1 {
--					regulator-compatible = "db8500_vsmps1";
- 				};
- 
- 				// DB8500_REGULATOR_VSMPS2
- 				db8500_vsmps2_reg: db8500_vsmps2 {
--					regulator-compatible = "db8500_vsmps2";
- 				};
- 
- 				// DB8500_REGULATOR_VSMPS3
- 				db8500_vsmps3_reg: db8500_vsmps3 {
--					regulator-compatible = "db8500_vsmps3";
- 				};
- 
- 				// DB8500_REGULATOR_VRF1
- 				db8500_vrf1_reg: db8500_vrf1 {
--					regulator-compatible = "db8500_vrf1";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_SVAMMDSP
- 				db8500_sva_mmdsp_reg: db8500_sva_mmdsp {
--					regulator-compatible = "db8500_sva_mmdsp";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_SVAMMDSPRET
- 				db8500_sva_mmdsp_ret_reg: db8500_sva_mmdsp_ret {
--					regulator-compatible = "db8500_sva_mmdsp_ret";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_SVAPIPE
- 				db8500_sva_pipe_reg: db8500_sva_pipe {
--					regulator-compatible = "db8500_sva_pipe";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_SIAMMDSP
- 				db8500_sia_mmdsp_reg: db8500_sia_mmdsp {
--					regulator-compatible = "db8500_sia_mmdsp";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_SIAMMDSPRET
-@@ -577,39 +565,32 @@
- 
- 				// DB8500_REGULATOR_SWITCH_SIAPIPE
- 				db8500_sia_pipe_reg: db8500_sia_pipe {
--					regulator-compatible = "db8500_sia_pipe";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_SGA
- 				db8500_sga_reg: db8500_sga {
--					regulator-compatible = "db8500_sga";
- 					vin-supply = <&db8500_vape_reg>;
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_B2R2_MCDE
- 				db8500_b2r2_mcde_reg: db8500_b2r2_mcde {
--					regulator-compatible = "db8500_b2r2_mcde";
- 					vin-supply = <&db8500_vape_reg>;
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_ESRAM12
- 				db8500_esram12_reg: db8500_esram12 {
--					regulator-compatible = "db8500_esram12";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_ESRAM12RET
- 				db8500_esram12_ret_reg: db8500_esram12_ret {
--					regulator-compatible = "db8500_esram12_ret";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_ESRAM34
- 				db8500_esram34_reg: db8500_esram34 {
--					regulator-compatible = "db8500_esram34";
- 				};
- 
- 				// DB8500_REGULATOR_SWITCH_ESRAM34RET
- 				db8500_esram34_ret_reg: db8500_esram34_ret {
--					regulator-compatible = "db8500_esram34_ret";
- 				};
- 			};
- 
-@@ -721,7 +702,6 @@
- 					compatible = "stericsson,ab8500-ext-regulator";
- 
- 					ab8500_ext1_reg: ab8500_ext1 {
--						regulator-compatible = "ab8500_ext1";
- 						regulator-min-microvolt = <1800000>;
- 						regulator-max-microvolt = <1800000>;
- 						regulator-boot-on;
-@@ -729,7 +709,6 @@
- 					};
- 
- 					ab8500_ext2_reg: ab8500_ext2 {
--						regulator-compatible = "ab8500_ext2";
- 						regulator-min-microvolt = <1360000>;
- 						regulator-max-microvolt = <1360000>;
- 						regulator-boot-on;
-@@ -737,7 +716,6 @@
- 					};
- 
- 					ab8500_ext3_reg: ab8500_ext3 {
--						regulator-compatible = "ab8500_ext3";
- 						regulator-min-microvolt = <3400000>;
- 						regulator-max-microvolt = <3400000>;
- 						regulator-boot-on;
-@@ -750,7 +728,6 @@
- 
- 					// supplies to the display/camera
- 					ab8500_ldo_aux1_reg: ab8500_ldo_aux1 {
--						regulator-compatible = "ab8500_ldo_aux1";
- 						regulator-min-microvolt = <2500000>;
- 						regulator-max-microvolt = <2900000>;
- 						regulator-boot-on;
-@@ -760,56 +737,46 @@
- 
- 					// supplies to the on-board eMMC
- 					ab8500_ldo_aux2_reg: ab8500_ldo_aux2 {
--						regulator-compatible = "ab8500_ldo_aux2";
- 						regulator-min-microvolt = <1100000>;
- 						regulator-max-microvolt = <3300000>;
- 					};
- 
- 					// supply for VAUX3; SDcard slots
- 					ab8500_ldo_aux3_reg: ab8500_ldo_aux3 {
--						regulator-compatible = "ab8500_ldo_aux3";
- 						regulator-min-microvolt = <1100000>;
- 						regulator-max-microvolt = <3300000>;
- 					};
- 
- 					// supply for v-intcore12; VINTCORE12 LDO
- 					ab8500_ldo_intcore_reg: ab8500_ldo_intcore {
--						regulator-compatible = "ab8500_ldo_intcore";
- 					};
- 
- 					// supply for tvout; gpadc; TVOUT LDO
- 					ab8500_ldo_tvout_reg: ab8500_ldo_tvout {
--						regulator-compatible = "ab8500_ldo_tvout";
- 					};
- 
- 					// supply for ab8500-usb; USB LDO
- 					ab8500_ldo_usb_reg: ab8500_ldo_usb {
--						regulator-compatible = "ab8500_ldo_usb";
- 					};
- 
- 					// supply for ab8500-vaudio; VAUDIO LDO
- 					ab8500_ldo_audio_reg: ab8500_ldo_audio {
--						regulator-compatible = "ab8500_ldo_audio";
- 					};
- 
- 					// supply for v-anamic1 VAMIC1 LDO
- 					ab8500_ldo_anamic1_reg: ab8500_ldo_anamic1 {
--						regulator-compatible = "ab8500_ldo_anamic1";
- 					};
- 
- 					// supply for v-amic2; VAMIC2 LDO; reuse constants for AMIC1
- 					ab8500_ldo_anamic2_reg: ab8500_ldo_anamic2 {
--						regulator-compatible = "ab8500_ldo_anamic2";
- 					};
- 
- 					// supply for v-dmic; VDMIC LDO
- 					ab8500_ldo_dmic_reg: ab8500_ldo_dmic {
--						regulator-compatible = "ab8500_ldo_dmic";
- 					};
- 
- 					// supply for U8500 CSI/DSI; VANA LDO
- 					ab8500_ldo_ana_reg: ab8500_ldo_ana {
--						regulator-compatible = "ab8500_ldo_ana";
- 					};
- 				};
- 			};
--- 
-2.4.3
-
+Regards,
+Andreas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
