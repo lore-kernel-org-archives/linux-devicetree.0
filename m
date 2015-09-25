@@ -1,43 +1,29 @@
-From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v6 4/9] Input: goodix - write configuration data to
- device
-Date: Fri, 25 Sep 2015 21:18:20 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0E9963@irsmsx105.ger.corp.intel.com>
-References: <1442327483-19407-1-git-send-email-irina.tirdea@intel.com>
-	 <1442327483-19407-5-git-send-email-irina.tirdea@intel.com>
- <1443192040.17020.26.camel@hadess.net>
+From: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 0/3] Docs: dt: update binding for Freescale Management Complex
+Date: Fri, 25 Sep 2015 16:08:03 -0500
+Message-ID: <1443215286-3126-1-git-send-email-stuart.yoder@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443192040.17020.26.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, itai.katz-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
-W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMjUgU2VwdGVtYmVyLCAyMDE1IDE3
-OjQxDQo+IFRvOiBUaXJkZWEsIElyaW5hOyBEbWl0cnkgVG9yb2tob3Y7IEFsZWtzZWkgTWFtbGlu
-OyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1hcmsgUnV0bGFuZDsgUHVyZGls
-YSwgT2N0YXZpYW47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgNC85XSBJbnB1dDogZ29vZGl4
-IC0gd3JpdGUgY29uZmlndXJhdGlvbiBkYXRhIHRvIGRldmljZQ0KPiANCj4gT24gVHVlLCAyMDE1
-LTA5LTE1IGF0IDE3OjMxICswMzAwLCBJcmluYSBUaXJkZWEgd3JvdGU6DQo+ID4gR29vZGl4IGRl
-dmljZXMgY2FuIGJlIGNvbmZpZ3VyZWQgYnkgd3JpdGluZyBjdXN0b20gZGF0YSB0byB0aGUgZGV2
-aWNlDQo+ID4gYXQNCj4gPiBpbml0LiBUaGUgY29uZmlndXJhdGlvbiBkYXRhIGlzIHJlYWQgd2l0
-aCByZXF1ZXN0X2Zpcm13YXJlIGZyb20NCj4gPiAiZ29vZGl4XzxpZD5fY2ZnLmJpbiIsIHdoZXJl
-IDxpZD4gaXMgdGhlIHByb2R1Y3QgaWQgcmVhZCBmcm9tIHRoZQ0KPiA+IGRldmljZQ0KPiA+IChl
-LmcuOiBnb29kaXhfOTExX2NmZy5iaW4gZm9yIEdvb2RpeCBHVDkxMSwgZ29vZGl4XzkyNzFfY2Zn
-LmJpbiBmb3INCj4gPiBHVDkyNzEpLg0KPiA+DQo+ID4gVGhlIGNvbmZpZ3VyYXRpb24gaW5mb3Jt
-YXRpb24gaGFzIGEgc3BlY2lmaWMgZm9ybWF0IGRlc2NyaWJlZCBpbiB0aGUNCj4gPiBHb29kaXgN
-Cj4gPiBkYXRhc2hlZXQuIEl0IGluY2x1ZGVzIFgvWSByZXNvbHV0aW9uLCBtYXhpbXVtIHN1cHBv
-cnRlZCB0b3VjaA0KPiA+IHBvaW50cywNCj4gPiBpbnRlcnJ1cHQgZmxhZ3MsIHZhcmlvdXMgc2Vz
-aXRpdml0eSBmYWN0b3JzIGFuZCBzZXR0aW5ncyBmb3IgYWR2YW5jZWQNCj4gDQo+IHNlbnNpdGl2
-aXR5Lg0KDQpXaWxsIGZpeCB0aGlzIGluIG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0Y2hlcy4gSSB3
-aWxsIHdhaXQgZm9yIHlvdSByZXBseSBvbg0KdGhlIGdwaW8gaXNzdWUgYmVmb3JlIHNlbmRpbmcg
-YSBuZXcgdmVyc2lvbi4NCg0KVGhhbmtzLA0KSXJpbmENCg0K
+Update the binding for the Freescale Management Complex to include definition
+of ranges, msi-parent, and dpmac subnodes.
+
+Stuart Yoder (3):
+  Docs: dt: fsl-mc: update binding to include msi-parent
+  Docs: dt: fsl-mc update binding to include definition of ranges
+  Docs: dt: fsl-mc: update binding to define dpmac subnodes
+
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 81 +++++++++++++++++++++-
+ 1 file changed, 80 insertions(+), 1 deletion(-)
+
+-- 
+2.3.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
