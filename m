@@ -1,94 +1,48 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
-Date: Fri, 25 Sep 2015 12:42:23 +0000
-Message-ID: <SG2PR06MB0919D459785C1CEAB1F22F35D8420@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1440493835-6732-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <55FBAA4D.3000704@ti.com> <56000DB2.5010004@kernel.org>
+From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 03/14] power: bq24257: Streamline input current limit
+ setup
+Date: Fri, 25 Sep 2015 16:23:03 +0300
+Message-ID: <20150925132302.GD15509@lpalcu-desk>
+References: <1443151618-29742-1-git-send-email-dannenberg@ti.com>
+ <1443151618-29742-4-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <56000DB2.5010004@kernel.org>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443151618-29742-4-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Sep 24, 2015 at 10:26:47PM -0500, Andreas Dannenberg wrote:
+[...]
+> -	if (reset_iilimit) {
+> +		/* reset input current limit */
+>  		ret = bq24257_field_write(bq, F_IILIMIT, IILIMIT_500);
+>  		if (ret < 0)
+>  			goto error;
+> -	} else if (config_iilimit) {
+> -		schedule_delayed_work(&bq->iilimit_setup_work,
+> +	} else if (!old_state.power_good) {
+> +		dev_dbg(bq->dev, "Power inserted\n");
+> +		if (bq->iilimit_autoset_enable)
+iilimit_autoset_enable is introduced in patch 6. If we ever need to
+bisect this code, this patch will fail to build.
 
-Thank you for your comment!
-And, I'm sorry for the delayed response.
+> +			/* configure input current limit */
+> +			schedule_delayed_work(&bq->iilimit_setup_work,
+>  				      msecs_to_jiffies(BQ24257_ILIM_SET_DELAY));
+> +	} else if (new_state->fault == FAULT_NO_BAT) {
+> +		dev_warn(bq->dev, "Battery removed\n");
+> +	} else if (new_state->fault == FAULT_TIMER) {
+> +		dev_err(bq->dev, "Safety timer expired! Battery dead?\n");
+>  	}
+>  
+>  	return;
 
-> Sent: Monday, September 21, 2015 11:01 PM
-> 
-> On 09/18/2015 01:08 AM, Kishon Vijay Abraham I wrote:
-> > Hi,
-> >
-> > On Tuesday 25 August 2015 02:40 PM, Yoshihiro Shimoda wrote:
-> >> This patch adds support for R-Car generation 3 USB2 PHY driver.
-> >> This SoC has 3 EHCI/OHCI channels, and the channel 0 is shared
-> >> with the HSUSB (USB2.0 peripheral) device.
-> >
-> > From the description it looks like it's a single PHY with multiple
-> > channels. In that case you should have a singe dt node for the PHY
-> > provider and each channel should be modelled as the child node of the
-> > PHY provider dt node.
-> 
-> You only need sub-nodes if you need per channel properties. Otherwise,
-> #phy-cells can be 1 and the cell value can be the channel number.
-
-Thank you for the information. I got it.
-
-< snip >
-> >> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> >> new file mode 100644
-> >> index 0000000..1d57766
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> >> @@ -0,0 +1,35 @@
-> >> +* Renesas R-Car generation 3 USB 2.0 PHY
-> >> +
-> >> +This file provides information on what the device node for the R-Car generation
-> >> +3 USB 2.0 PHY contains.
-> >> +
-> >> +Required properties:
-> >> +- compatible: "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
-> >> +	      SoC.
-> >> +- reg: offset and length of the USB2.0 host register block.
-> 
-> host register block? You mean phy register block?
-
-Oops, thank you for the point. I will fix it.
-
-> >> +- reg-names: must be "usb2".
-> >> +- clocks: clock phandle and specifier pair(s).
-> >> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
-> >> +
-> >> +Optional properties:
-> >> +To use a USB channel where EHCI/OHCI and HSUSB are combined, the device tree
-> >> +node should set HSUSB properties to reg and reg-names properties:
-> >> +- reg: offset and length of the HSUSB register block.
-> >> +- reg-names: must be "hsusb".
-> >> +
-> >> +Example (R-Car H3):
-> >> +
-> >> +	usb-phy@ee080200 {
-> >> +		compatible = "renesas,usb2-phy-r8a7795";
-> >> +		reg = <0 0xee080200 0 0x6ff>, <0 0xe6590100 0 0x100>;
-> >> +		reg-names = "usb2", "hsusb";
-> >
-> > hsusb is missing in Documentation.
-> 
-> usb2 is the host controller? It is questionable that these should be
-> combined. Does this appear under another node? If so, don't overlap
-> resources in the DT.
-
-Thank you for the point.
-I don't think that this appears under another node.
-However, to avoid such a situation, I should change the name somehow.
-
-Best regards,
-Yoshihiro Shimoda
-
+laurentiu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
