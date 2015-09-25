@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/5] ARM: dts: WM8750: fix cpu compatible value
-Date: Fri, 25 Sep 2015 20:35:34 +0300
-Message-ID: <1443202534-13816-5-git-send-email-vz@mleia.com>
+Subject: [PATCH 4/5] ARM: dts: TI-Nspire: fix cpu compatible value
+Date: Fri, 25 Sep 2015 20:35:33 +0300
+Message-ID: <1443202534-13816-4-git-send-email-vz@mleia.com>
 References: <1443202506-13732-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1443202506-13732-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
@@ -15,19 +15,19 @@ see Documentation/devicetree/bindings/arm/cpus.txt
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/wm8750.dtsi | 2 +-
+ arch/arm/boot/dts/nspire.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/wm8750.dtsi b/arch/arm/boot/dts/wm8750.dtsi
-index 557a9c2a..46d076d 100644
---- a/arch/arm/boot/dts/wm8750.dtsi
-+++ b/arch/arm/boot/dts/wm8750.dtsi
-@@ -17,7 +17,7 @@
+diff --git a/arch/arm/boot/dts/nspire.dtsi b/arch/arm/boot/dts/nspire.dtsi
+index 390c91a..ee5a0bb 100644
+--- a/arch/arm/boot/dts/nspire.dtsi
++++ b/arch/arm/boot/dts/nspire.dtsi
+@@ -16,7 +16,7 @@
  
- 		cpu {
- 			device_type = "cpu";
--			compatible = "arm,arm1176ej-s";
-+			compatible = "arm,arm1176jzf";
+ 	cpus {
+ 		cpu@0 {
+-			compatible = "arm,arm926ejs";
++			compatible = "arm,arm926ej-s";
  		};
  	};
  
