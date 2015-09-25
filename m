@@ -1,35 +1,40 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 16/22] pinctrl: Probe pinctrl devices on demand
-Date: Fri, 25 Sep 2015 10:03:24 -0700
-Message-ID: <CACRpkdZR0Sv+Fdka7rfSjbZj4enm97mpZppQvap8ZrNDo1dzLQ@mail.gmail.com>
-References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
-	<1441628627-5143-17-git-send-email-tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: Add driver for Alphascale asm9260 pinctrl
+Date: Fri, 25 Sep 2015 10:14:43 -0700
+Message-ID: <CACRpkdaX2kV_W-_sdvUA7PHrApeJi05T=CMCGddzMj4ksxs4Bg@mail.gmail.com>
+References: <1428306169.634.51.camel@x220>
+	<1428311043-12012-1-git-send-email-linux@rempel-privat.de>
+	<1428311043-12012-2-git-send-email-linux@rempel-privat.de>
+	<CACRpkdakXbHL6ydeZrs4XZ9Z1odHL5bWRxiHtT_Jbg-ygTudgw@mail.gmail.com>
+	<55522993.6090104@rempel-privat.de>
+	<CACRpkdZn+bkDKzAD6gpnysezGZ6fzizD2o4zdBfEamFgUbzcvg@mail.gmail.com>
+	<55EFC9CC.3010008@rempel-privat.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1441628627-5143-17-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55EFC9CC.3010008@rempel-privat.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 7, 2015 at 5:23 AM, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+On Tue, Sep 8, 2015 at 10:55 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+> [Me]
+>> Why is it necessary for the driver to copy one description of
+>> the pin into another?
+>
+> If i understand it correctly, pinctrl_pin_desc is essential part of
+> pinmux framework. Theoretically i should define just statical array of
+> this struct, but by this number of pins and functions it hard to keep it
+> readable and error free. So i decided to create asm9260_mux_table which
+> contains every thing i need. The side effect is higher memory usage
+> since i need to create pinctrl_pin_desc on fly.
+>
+> May be i miss some thing?
 
-> When looking up a pin controller through its OF node, probe it if it
-> hasn't already.
->
-> The goal is to reduce deferred probes to a minimum, as it makes it very
-> cumbersome to find out why a device failed to probe, and can introduce
-> very big delays in when a critical device is probed.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+I don't see how having code copying data from one data container
+to another makes things "more readable and error free". Go for *one*
+static definition. Also the memory waste is a total no-no.
 
 Yours,
 Linus Walleij
