@@ -1,74 +1,110 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Fri, 25 Sep 2015 14:13:30 -0500
-Message-ID: <56059CDA.4020004@ti.com>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-4-git-send-email-afd@ti.com> <20150925165059.GI27197@x1>
+From: Alonso Adrian <aalonso@freescale.com>
+Subject: RE: [PATCH v5 4/7] pinctrl: freescale: imx: allow mux_reg offset zero
+Date: Fri, 25 Sep 2015 19:16:49 +0000
+Message-ID: <BN3PR03MB150994443644800594BE9BA2A8420@BN3PR03MB1509.namprd03.prod.outlook.com>
+References: <1443128043-21063-1-git-send-email-aalonso@freescale.com>
+ <1443128043-21063-4-git-send-email-aalonso@freescale.com>
+ <20150925104726.GJ11805@pengutronix.de> <20150925190725.GX3529@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150925165059.GI27197@x1>
+In-Reply-To: <20150925190725.GX3529@tiger>
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Markus Pargmann <mpa@pengutronix.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, Huang Anson <Anson.Huang@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Yibin Gong <yibin.gong@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2015 11:50 AM, Lee Jones wrote:
-> On Thu, 24 Sep 2015, Andrew F. Davis wrote:
->
->> This patch adds support for TPS65912 mfd device. It provides
->> communication through the I2C and SPI interfaces. It contains
->> the following components:
->>
->>   - Regulators
->>   - GPIO controller
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>   drivers/mfd/Kconfig          |  24 +++
->>   drivers/mfd/Makefile         |   3 +
->>   drivers/mfd/tps65912-core.c  | 114 +++++++++++++
->>   drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
->>   drivers/mfd/tps65912-spi.c   |  85 ++++++++++
->>   include/linux/mfd/tps65912.h | 393 +++++++++++++++++++++++++++++++++++++++++++
->>   6 files changed, 705 insertions(+)
->>   create mode 100644 drivers/mfd/tps65912-core.c
->>   create mode 100644 drivers/mfd/tps65912-i2c.c
->>   create mode 100644 drivers/mfd/tps65912-spi.c
->>   create mode 100644 include/linux/mfd/tps65912.h
->
-> [...]
->
->> +#define TPS65912_IRQ(_name, _reg, _offset)			\
->> +	[TPS65912_IRQ_ ## _name] = {				\
->> +		.mask = TPS65912_ ## _reg ## _ ## _name,	\
->> +		.reg_offset = _offset,				\
->> +	}
->
-> I told you about this already.
->
-> If you want this set to be merged for v4.3 then you'll need commit
-> b4fe8ba ("regmap: Add generic macro to define regmap_irq") from my
-> tree.
->
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Friday, September 25, 2015 2:07 PM
+> To: Markus Pargmann <mpa@pengutronix.de>
+> Cc: Alonso Lazcano Adrian-B38018 <aalonso@freescale.com>; linux-arm-
+> kernel@lists.infradead.org; shawn.guo@linaro.org; linus.walleij@linaro.org;
+> lznuaa@gmail.com; devicetree@vger.kernel.org; Li Frank-B20596
+> <Frank.Li@freescale.com>; Garg Nitin-B37173 <nitin.garg@freescale.com>;
+> Huang Yongcai-B20788 <Anson.Huang@freescale.com>; linux-
+> gpio@vger.kernel.org; robh+dt@kernel.org; kernel@pengutronix.de; Gong
+> Yibin-B38343 <yibin.gong@freescale.com>
+> Subject: Re: [PATCH v5 4/7] pinctrl: freescale: imx: allow mux_reg offset zero
+> 
+> On Fri, Sep 25, 2015 at 12:47:26PM +0200, Markus Pargmann wrote:
+> > On Thu, Sep 24, 2015 at 03:54:00PM -0500, Adrian Alonso wrote:
+> > > Allow mux_reg offset zero to be a valid pin_id, on imx7d mux_conf
+> > > reg offset is zero for iomuxc-lspr controller
+> > >
+> > > Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+> > > ---
+> > > Changes for V2: Resend
+> > > Changes for V3: Resend
+> > > Changes for V4: Simplify pin_id assigment when ZERO_OFFSET_VALID is
+> > > set Changes for V5:
+> > > - Drop patch pinctrl: freescale: imx: add ZERO_OFFSET_VALID flag
+> > > - Allow mux_reg ZERO OFFSET as pin_id
+> > >
+> > >  drivers/pinctrl/freescale/pinctrl-imx.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c
+> > > b/drivers/pinctrl/freescale/pinctrl-imx.c
+> > > index b9c6deb..23348d8 100644
+> > > --- a/drivers/pinctrl/freescale/pinctrl-imx.c
+> > > +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+> > > @@ -550,7 +550,7 @@ static int imx_pinctrl_parse_groups(struct
+> device_node *np,
+> > >  				conf_reg = -1;
+> > >  		}
+> > >
+> > > -		pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
+> > > +		pin_id = (mux_reg != -1) ? mux_reg / 4 : conf_reg / 4;
+> >
+> > This will break compatibility with imx35 and imx25 pinctrl drivers.
+> > They have definitions where mux_reg can be 0x0. See imx35-pinfunc.h
+> > and
+> > imx25-pinfunc.h:
+> >
+> > 	git grep -E "0x0+ 0x.* 0x.* 0x.* 0x.*"
+> >
+> > This mux_reg behaviour was not described in the DT binding
+> > documentation. But it is used by some platforms. So even if you change
+> > the pincfunc headers to use "-1", it would break devicetrees compiled
+> > with earlier kernel versions.
+> 
+> Ah, sorry, I'm screwed on the previous review.  So we still need the flag
+> ZERO_OFFSET_VALID to convert invalid 0 mux_reg to -1.
+> 
+> @Adrian,
+> 
+> Will the following change just work for you?
+@Shawn, yes the change will work, do you want me to prepare a new patch series?
+> 
+> Shawn
+> 
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c
+> b/drivers/pinctrl/freescale/pinctrl-imx.c
+> index d7b98ba36825..ae801ba7e226 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+> @@ -542,6 +542,9 @@ static int imx_pinctrl_parse_groups(struct device_node
+> *np,
+>                 struct imx_pin_reg *pin_reg;
+>                 struct imx_pin *pin = &grp->pins[i];
+> 
+> +               if (!(info->flags & ZERO_OFFSET_VALID) && !mux_reg)
+> +                       mux_reg = -1;
+> +
+>                 if (info->flags & SHARE_MUX_CONF_REG) {
+>                         conf_reg = mux_reg;
+>                 } else {
+> @@ -550,7 +553,7 @@ static int imx_pinctrl_parse_groups(struct device_node
+> *np,
+>                                 conf_reg = -1;
+>                 }
+> 
+> -               pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
+> +               pin_id = (mux_reg != -1) ? mux_reg / 4 : conf_reg / 4;
+>                 pin_reg = &info->pin_regs[pin_id];
+>                 pin->pin = pin_id;
+>                 grp->pin_ids[i] = pin_id;
 
-You asked me to submit this to Mark Brown, I didn't realize you also
-wanted me to use the one in your tree. Using yours will make my lines
-over 80 chars and so it kind of defeats the purpose but I'll do it
-for v4.
-
-> [...]
->
->> +static struct i2c_driver tps65912_i2c_driver = {
->> +	.driver		= {
->> +		.name	= "tps65912",
->> +		.of_match_table = tps65912_i2c_of_match_table,
->
-> of_match_ptr()
->
-
-Why? tps65912_i2c_of_match_table is always compiled in.
-
-> [...]
->
