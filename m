@@ -1,57 +1,121 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
- compatible flags
-Date: Fri, 25 Sep 2015 09:50:07 -0500
-Message-ID: <56055F1F.4060401@ti.com>
-References: <1442938118-4718-1-git-send-email-nm@ti.com> <1442938118-4718-2-git-send-email-nm@ti.com> <5602ED34.9010108@oracle.com> <56040323.1080409@ti.com> <560406C2.6090200@ti.com> <56041CA4.40208@ti.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] dmaengine: of: Allow #dma-cells to be zero
+Date: Fri, 25 Sep 2015 15:56:38 +0100
+Message-ID: <1443193000-457-2-git-send-email-jonathanh@nvidia.com>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56041CA4.40208-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443193000-457-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2015 10:54 AM, Murali Karicheri wrote:
-[...]
-> ti,omap3 is the family of omap3 devices similar to keystone. ti,omap3450
-> is required if there is an exceptional treatment required for ti,omap3450.
-> 
-> In keystone case so far there is no case of exceptional treatment
-> required in the code for a specific SoC. So a generic name, ti,keystone
-> is used. When exceptional treatment is needed in the future, for example
-> k2hk Soc, we should introduce SoC specific string in the following order.
+Currently, the #dma-cells property must be 1 or more. However, for some
+DMA controllers, where DMA clients may use any DMA channel and it is not
+necessary to specify any other DMA information in the device-tree DMA
+binding, setting #dma-cells to 0 is desirable. The Tegra210 ADMA
+controller is an example of a DMA controller where neither the DMA
+channel or the hardware request signal need to be encoded in the
+device-tree binding.
 
-Did you do a grep on the code to see?
-$ git grep ti,omap3 arch/arm/mach-omap2/
-           arch/arm/mach-omap2/board-generic.c:    "ti,omap3430",
-arch/arm/mach-omap2/board-generic.c:    "ti,omap3",
-arch/arm/mach-omap2/board-generic.c:    "ti,omap36xx",
-arch/arm/mach-omap2/board-generic.c:    "ti,omap3-beagle",
+By allowing DMA controllers to set #dma-cells to 0, means that the
+"dma-names" property for these controllers is not needed. Therefore,
+update the of_dma_request_slave_channel() and of_dma_match_channel()
+functions to ignore this property if no name is provided.
 
-This is the same as keystone's device support. even though only 36xx was
-needed, we introduced other SoC specific compatibility match.
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/dma/dma.txt | 12 ++++++++----
+ drivers/dma/of-dma.c                          | 23 +++++++++++++++--------
+ 2 files changed, 23 insertions(+), 12 deletions(-)
 
-> "ti,k2hk-evm", "ti,k2hk", "ti,keystone"
-> 
-> So unless there is an exception, there is no need for a SoC specific
-> string in the compatibility string list. So this can be added later if
-> there is need for exceptional treatment. Did I get it wrong?
-> 
-
-I see both your views seem to be "if we dont need a compatible" dont add
-it. My view was based on "be accurate in the hardware description"
-
-OK - i will probably agree on the topic. But, how about userspace
-needing to know which SoC they are on, without needing to depend on
-board->soc mapping? How do we help resolve that?
-
+diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+index 6312fb00ce8d..4d73916fc879 100644
+--- a/Documentation/devicetree/bindings/dma/dma.txt
++++ b/Documentation/devicetree/bindings/dma/dma.txt
+@@ -8,9 +8,12 @@ controller.
+ * DMA controller
+ 
+ Required property:
+-- #dma-cells: 		Must be at least 1. Used to provide DMA controller
+-			specific information. See DMA client binding below for
+-			more details.
++- #dma-cells: 		Used to provide DMA controller specific information.
++			Can be 0 for DMA controllers where clients may use
++			any channel and any DMA specific information, such
++			as a hardware request signal, does not need to be
++			encoded in the binding. See DMA client binding below
++			for more details.
+ 
+ Optional properties:
+ - dma-channels: 	Number of DMA channels supported by the controller.
+@@ -79,7 +82,8 @@ Required property:
+ 			are defined in the binding of the DMA client device.
+ 			Multiple DMA specifiers can be used to represent
+ 			alternatives and in this case the dma-names for those
+-			DMA specifiers must be identical (see examples).
++			DMA specifiers must be identical (see examples). This
++			is optional for DMA controllers where #dma-cells is 0.
+ 
+ Examples:
+ 
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 1e1f2986eba8..ef3d260610ea 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -214,11 +214,13 @@ static int of_dma_match_channel(struct device_node *np, const char *name,
+ {
+ 	const char *s;
+ 
+-	if (of_property_read_string_index(np, "dma-names", index, &s))
+-		return -ENODEV;
++	if (name) {
++		if (of_property_read_string_index(np, "dma-names", index, &s))
++			return -ENODEV;
+ 
+-	if (strcmp(name, s))
+-		return -ENODEV;
++		if (strcmp(name, s))
++			return -ENODEV;
++	}
+ 
+ 	if (of_parse_phandle_with_args(np, "dmas", "#dma-cells", index,
+ 				       dma_spec))
+@@ -230,7 +232,7 @@ static int of_dma_match_channel(struct device_node *np, const char *name,
+ /**
+  * of_dma_request_slave_channel - Get the DMA slave channel
+  * @np:		device node to get DMA request from
+- * @name:	name of desired channel
++ * @name:	name of desired channel (optional)
+  *
+  * Returns pointer to appropriate DMA channel on success or an error pointer.
+  */
+@@ -243,8 +245,8 @@ struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ 	int			count, i;
+ 	int			ret_no_channel = -ENODEV;
+ 
+-	if (!np || !name) {
+-		pr_err("%s: not enough information provided\n", __func__);
++	if (!np) {
++		pr_err("%s: device node is not valid\n", __func__);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 
+@@ -252,7 +254,12 @@ struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ 	if (!of_find_property(np, "dmas", NULL))
+ 		return ERR_PTR(-ENODEV);
+ 
+-	count = of_property_count_strings(np, "dma-names");
++	/*
++	 * If a name is not provided, then assume that there is one
++	 * DMA specifier in the list for the client and so set the
++	 * count to 1 and see if this matches.
++	 */
++	count = name ? of_property_count_strings(np, "dma-names") : 1;
+ 	if (count < 0) {
+ 		pr_err("%s: dma-names property of node '%s' missing or empty\n",
+ 			__func__, np->full_name);
 -- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
