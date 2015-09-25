@@ -1,63 +1,53 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
- compatible flags
-Date: Fri, 25 Sep 2015 08:18:07 -0700
-Message-ID: <560565AF.2010701@oracle.com>
-References: <1442938118-4718-1-git-send-email-nm@ti.com>
- <1442938118-4718-2-git-send-email-nm@ti.com> <5602ED34.9010108@oracle.com>
- <56040323.1080409@ti.com> <560406C2.6090200@ti.com> <56041CA4.40208@ti.com>
- <56055F1F.4060401@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
+Date: Fri, 25 Sep 2015 17:32:14 +0200
+Message-ID: <2742332.nt7s0RkAcY@wuerfel>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com> <6067659.MUznB20YVT@wuerfel> <56056589.9010704@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <56055F1F.4060401@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56056589.9010704-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/25/2015 7:50 AM, Nishanth Menon wrote:
-> On 09/24/2015 10:54 AM, Murali Karicheri wrote:
-> [...]
->> ti,omap3 is the family of omap3 devices similar to keystone. ti,omap3450
->> is required if there is an exceptional treatment required for ti,omap3450.
->>
->> In keystone case so far there is no case of exceptional treatment
->> required in the code for a specific SoC. So a generic name, ti,keystone
->> is used. When exceptional treatment is needed in the future, for example
->> k2hk Soc, we should introduce SoC specific string in the following order.
->
-> Did you do a grep on the code to see?
-> $ git grep ti,omap3 arch/arm/mach-omap2/
->             arch/arm/mach-omap2/board-generic.c:    "ti,omap3430",
-> arch/arm/mach-omap2/board-generic.c:    "ti,omap3",
-> arch/arm/mach-omap2/board-generic.c:    "ti,omap36xx",
-> arch/arm/mach-omap2/board-generic.c:    "ti,omap3-beagle",
->
-> This is the same as keystone's device support. even though only 36xx was
-> needed, we introduced other SoC specific compatibility match.
->
->> "ti,k2hk-evm", "ti,k2hk", "ti,keystone"
->>
->> So unless there is an exception, there is no need for a SoC specific
->> string in the compatibility string list. So this can be added later if
->> there is need for exceptional treatment. Did I get it wrong?
->>
->
-> I see both your views seem to be "if we dont need a compatible" dont add
-> it. My view was based on "be accurate in the hardware description"
->
-> OK - i will probably agree on the topic. But, how about userspace
-> needing to know which SoC they are on, without needing to depend on
-> board->soc mapping? How do we help resolve that?
->
-Why the user space should care about exact SOC ?
+On Friday 25 September 2015 16:17:29 Jon Hunter wrote:
+> On 25/09/15 16:03, Arnd Bergmann wrote:
+> > On Friday 25 September 2015 15:56:40 Jon Hunter wrote:
+> >> +       case DMA_MEM_TO_DEV:
+> >> +               burst_size = fls(tdc->config.dst_maxburst);
+> >> +               ch_regs->config = ADMA_CH_CONFIG_SRC_BUF(num_bufs - 1);
+> >> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_MEM_TO_AHUB) |
+> >> +                               ADMA_CH_CTRL_TX_REQ(tdc->config.slave_id);
+> >> +               ch_regs->src_addr = buf_addr;
+> >> +               break;
+> >> +
+> >> +       case DMA_DEV_TO_MEM:
+> >> +               burst_size = fls(tdc->config.src_maxburst);
+> >> +               ch_regs->config = ADMA_CH_CONFIG_TRG_BUF(num_bufs - 1);
+> >> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_AHUB_TO_MEM) |
+> >> +                               ADMA_CH_CTRL_RX_REQ(tdc->config.slave_id);
+> >> +               ch_regs->trg_addr = buf_addr;
+> >> +               break;
+> > 
+> > Do not use the 'slave_id' field here to identify the slave device, that
+> > concept is broken. Instead, put the slave identification into the
+> > dma specifier in DT and read it out in your xlate function.
+> 
+> Why is it broken?
+
+This requires the slave driver to pass a slave id through the
+dmaengine_slave_config() interface, but we don't want the driver
+to know how it is connected to the dma engine. That information is
+not a property of the slave itself but rather of the connection
+between the slave and the master, and it belongs into DT, similar
+to how we deal with IRQ or GPIO numbers.
+
+> What happens if I don't know the slave-id? In other words, the slave-id
+> can be dynamically allocated and associated with a given slave.
+
+How do you identify the slave that the slave-id is associated with?
+
+	Arnd
