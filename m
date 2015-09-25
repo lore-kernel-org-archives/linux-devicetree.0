@@ -1,56 +1,74 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] pinctrl: freescale: imx: fix system crash if
- enable two pinctl instances
-Date: Fri, 25 Sep 2015 12:09:50 -0700
-Message-ID: <20150925190949.GY3529@tiger>
-References: <1443128043-21063-1-git-send-email-aalonso@freescale.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
+Date: Fri, 25 Sep 2015 14:13:30 -0500
+Message-ID: <56059CDA.4020004@ti.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-4-git-send-email-afd@ti.com> <20150925165059.GI27197@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443128043-21063-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150925165059.GI27197@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 03:53:57PM -0500, Adrian Alonso wrote:
-> From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Fix system chrash caused by groups whose number is smaller than the number
-> of groups of the last pinctl instance which is not initialized.
-> 
-> iMX7D supports two iomux controllers (iomuxc-lpsr and iomuxc) on probing
-> the second instance (iomuxc) the chrash below occurs.
-> 
-> Uncompressing Linux... done, booting the kernel.
-> [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Linux version 4.2.0-next-20150901-00006-gebfa43c (aalonso@bluefly)
-> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7)
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasin instruction cache
-> [    0.000000] Machine model: Freescale i.MX7 SabreSD Board
-> [    0.661012] [<802a6cb0>] (strcmp) from [<802cc80c>] (imx_dt_node_to_map+0x58/0x208)
-> [    0.668879] [<802cc80c>] (imx_dt_node_to_map) from [<802cbe24>] (pinctrl_dt_to_map+0x174/0x2b0)
-> [    0.677654] [<802cbe24>] (pinctrl_dt_to_map) from [<802c8f18>] (pinctrl_get+0x100/0x424)
-> [    0.685878] [<802c8f18>] (pinctrl_get) from [<802c9510>] (pinctrl_register+0x26c/0x480)
-> [    0.694104] [<802c9510>] (pinctrl_register) from [<802ccf3c>] (imx_pinctrl_probe+0x580/0x6e8)
-> [    0.702706] [<802ccf3c>] (imx_pinctrl_probe) from [<80351b58>] (platform_drv_probe+0x44/0xa4)
-> [    0.711455] [<80351b58>] (platform_drv_probe) from [<803503ec>] (driver_probe_device+0x174/0x2b4)
-> [    0.720405] [<803503ec>] (driver_probe_device) from [<803505fc>] (__driver_attach+0x8c/0x90)
-> [    0.728982] [<803505fc>] (__driver_attach) from [<8034e930>] (bus_for_each_dev+0x6c/0xa0)
-> [    0.737381] [<8034e930>] (bus_for_each_dev) from [<8034fb88>] (bus_add_driver+0x148/0x1f0)
-> [    0.745804] [<8034fb88>] (bus_add_driver) from [<80350c00>] (driver_register+0x78/0xf8)
-> [    0.753880] [<80350c00>] (driver_register) from [<800097d0>] (do_one_initcall+0x8c/0x1d4)
-> [    0.762282] [<800097d0>] (do_one_initcall) from [<80987dac>] (kernel_init_freeable+0x144/0x1e4)
-> [    0.771061] [<80987dac>] (kernel_init_freeable) from [<806d9c7c>] (kernel_init+0x8/0xe8)
-> [    0.779285] [<806d9c7c>] (kernel_init) from [<8000f628>] (ret_from_fork+0x14/0x2c)
-> [    0.786981] Code: e3520000 e5e32001 1afffffb e12fff1e (e4d03001)
-> 
-> Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 09/25/2015 11:50 AM, Lee Jones wrote:
+> On Thu, 24 Sep 2015, Andrew F. Davis wrote:
+>
+>> This patch adds support for TPS65912 mfd device. It provides
+>> communication through the I2C and SPI interfaces. It contains
+>> the following components:
+>>
+>>   - Regulators
+>>   - GPIO controller
+>>
+>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> ---
+>>   drivers/mfd/Kconfig          |  24 +++
+>>   drivers/mfd/Makefile         |   3 +
+>>   drivers/mfd/tps65912-core.c  | 114 +++++++++++++
+>>   drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
+>>   drivers/mfd/tps65912-spi.c   |  85 ++++++++++
+>>   include/linux/mfd/tps65912.h | 393 +++++++++++++++++++++++++++++++++++++++++++
+>>   6 files changed, 705 insertions(+)
+>>   create mode 100644 drivers/mfd/tps65912-core.c
+>>   create mode 100644 drivers/mfd/tps65912-i2c.c
+>>   create mode 100644 drivers/mfd/tps65912-spi.c
+>>   create mode 100644 include/linux/mfd/tps65912.h
+>
+> [...]
+>
+>> +#define TPS65912_IRQ(_name, _reg, _offset)			\
+>> +	[TPS65912_IRQ_ ## _name] = {				\
+>> +		.mask = TPS65912_ ## _reg ## _ ## _name,	\
+>> +		.reg_offset = _offset,				\
+>> +	}
+>
+> I told you about this already.
+>
+> If you want this set to be merged for v4.3 then you'll need commit
+> b4fe8ba ("regmap: Add generic macro to define regmap_irq") from my
+> tree.
+>
 
-Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You asked me to submit this to Mark Brown, I didn't realize you also
+wanted me to use the one in your tree. Using yours will make my lines
+over 80 chars and so it kind of defeats the purpose but I'll do it
+for v4.
+
+> [...]
+>
+>> +static struct i2c_driver tps65912_i2c_driver = {
+>> +	.driver		= {
+>> +		.name	= "tps65912",
+>> +		.of_match_table = tps65912_i2c_of_match_table,
+>
+> of_match_ptr()
+>
+
+Why? tps65912_i2c_of_match_table is always compiled in.
+
+> [...]
+>
