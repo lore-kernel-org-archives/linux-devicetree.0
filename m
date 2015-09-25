@@ -1,227 +1,91 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] clocksource: rockchip: Make the driver more readability
- and compatible
-Date: Fri, 25 Sep 2015 10:18:08 +0800
-Message-ID: <5604AEE0.5000300@gmail.com>
-References: <1442566271-10695-1-git-send-email-wxt@rock-chips.com> <1442566271-10695-2-git-send-email-wxt@rock-chips.com> <5455510.kk9S3OIaU9@diego> <56016275.4080704@rock-chips.com> <56049476.1040605@linaro.org>
+From: Wang Dongsheng <Dongsheng.Wang@freescale.com>
+Subject: RE: [PATCH v3 1/2] fsl: Add binding for RCPM
+Date: Fri, 25 Sep 2015 02:24:22 +0000
+Message-ID: <SN1PR0301MB161689CBB87F80716219B6F79D420@SN1PR0301MB1616.namprd03.prod.outlook.com>
+References: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
+ <20150924122917.GQ3529@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56049476.1040605-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZQ==?= =?UTF-8?B?cg==?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20150924122917.GQ3529@tiger>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Zhao C.H." <chenhui.zhao@freescale.com>, Huan Wang <alison.wang@freescale.com>, Yuantian Tang <Yuantian.Tang@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Jin Jason <Jason.Jin@freescale.com>, Scott Wood <scottwood@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Daniel,
-
-=E5=9C=A8 2015=E5=B9=B409=E6=9C=8825=E6=97=A5 08:25, Daniel Lezcano =E5=
-=86=99=E9=81=93:
->
-> Hi Caesar,
->
-> so thinking a bit more about this patch. I would like to split it int=
-o=20
-> two. One fixing the NO_IRQ and another fixing the dsb().
->
-> IIUC, the ARMv8 support is not yet ready and dsb() is not necessary a=
-s=20
-> a fix for the previous kernel version. However, the timer is used wit=
-h=20
-> the ARMv7 boards and the NO_IRQ should be merged into tip-urgent.
->
-> I already done the fix and I am ready to submit it (for the timer=20
-> keystone also). So I suggest your resend the dsb() fix only.
->
-> Regarding the indentation, I prefer you do that in a separate patch b=
-y=20
-> cleaning up the macros (if relevant) or send the patch to trivial@
->
-
-I know the indentation is trivial for this driver, but I just send the=20
-patch v2.
-
->   -- Daniel
->
-> On 09/22/2015 07:15 AM, Caesar Wang wrote:
->> Hi  Heiko,
->>
->> =E5=9C=A8 2015=E5=B9=B409=E6=9C=8822=E6=97=A5 22:00, Heiko St=C3=BCb=
-ner =E5=86=99=E9=81=93:
->>> Hi Caesar,
->>>
->>> Am Freitag, 18. September 2015, 16:51:09 schrieb Caesar Wang:
->>>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
->>>> There are some failure with build up on timer driver for rockchip.
->>>>
->>>> logs:
->>>> ...
->>>> drivers/clocksource/rockchip_timer.c:156:13: error: 'NO_IRQ'=20
->>>> undeclared
->>>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at operand=
-=20
->>>> 1 --
->>>> `dsb`
->>>> ...
->>>>
->>>> The problem was different semantics of dsb on btw arm32 and arm64,
->>>> Here we can convert the dsb with insteading of dsb(sy).
->>>>
->>>> NO_IRQ definition is missing for ARM64, since NO_IRQ being -1 is a
->>>> legacy thing for ARM - all ARM drivers are supposed to be converte=
-d to
->>>> use <=3D 0 or =3D=3D 0 to detect invalid IRQs, and _eventually_ on=
-ce all=20
->>>> users
->>>> are gone, NO_IRQ deleted. Modern drivers should _all_ be using !ir=
-q to
->>>> detect invalid IRQs, and not using NO_IRQ.
->>>>
->>>> Meanwhile, I change a bit to make the code more readability for dr=
-iver
->>>> when I check the code style.
->>>>
->>>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> ---
->>>>
->>>> Changes in v1:
->>>> - As Russell, Thomas, Daniel comments, let's replace NO_IRQ by '!i=
-rq'.
->>>>
->>>>   drivers/clocksource/rockchip_timer.c | 29
->>>> +++++++++++++++--------------
->>>>   1 file changed, 15 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/drivers/clocksource/rockchip_timer.c
->>>> b/drivers/clocksource/rockchip_timer.c index bb2c2b0..e1af449 1006=
-44
->>>> --- a/drivers/clocksource/rockchip_timer.c
->>>> +++ b/drivers/clocksource/rockchip_timer.c
->>>> @@ -17,16 +17,16 @@
->>>>
->>>>   #define TIMER_NAME "rk_timer"
->>>>
->>>> -#define TIMER_LOAD_COUNT0 0x00
->>>> -#define TIMER_LOAD_COUNT1 0x04
->>>> -#define TIMER_CONTROL_REG 0x10
->>>> -#define TIMER_INT_STATUS 0x18
->>>> +#define TIMER_LOAD_COUNT0    0x00
->>>> +#define TIMER_LOAD_COUNT1    0x04
->>>> +#define TIMER_CONTROL_REG    0x10
->>>> +#define TIMER_INT_STATUS    0x18
->>>>
->>>> -#define TIMER_DISABLE 0x0
->>>> -#define TIMER_ENABLE 0x1
->>>> -#define TIMER_MODE_FREE_RUNNING (0 << 1)
->>>> -#define TIMER_MODE_USER_DEFINED_COUNT (1 << 1)
->>>> -#define TIMER_INT_UNMASK (1 << 2)
->>>> +#define TIMER_DISABLE            (0 << 0)
->>>> +#define TIMER_ENABLE            (1 << 0)
->>>> +#define TIMER_MODE_FREE_RUNNING        (0 << 1)
->>>> +#define TIMER_MODE_USER_DEFINED_COUNT    (1 << 1)
->>>> +#define TIMER_INT_UNMASK        (1 << 2)
->>> not sure how Daniel sees this, but those could count as "unrelated
->>> change", as
->>> they have nothing to do with the arm64 build-fixes.
->>
->> Yep, it's no related to the arm64 uild fixes.
->> I only make the code more readability for driver.
->>
->>>
->>>>   struct bc_timer {
->>>>       struct clock_event_device ce;
->>>> @@ -49,14 +49,14 @@ static inline void __iomem *rk_base(struct
->>>> clock_event_device *ce) static inline void rk_timer_disable(struct
->>>> clock_event_device *ce) {
->>>>       writel_relaxed(TIMER_DISABLE, rk_base(ce) + TIMER_CONTROL_RE=
-G);
->>>> -    dsb();
->>>> +    dsb(sy);
->>>>   }
->>>>
->>>>   static inline void rk_timer_enable(struct clock_event_device *ce=
-,=20
->>>> u32
->>>> flags) {
->>>>       writel_relaxed(TIMER_ENABLE | TIMER_INT_UNMASK | flags,
->>>>                  rk_base(ce) + TIMER_CONTROL_REG);
->>>> -    dsb();
->>>> +    dsb(sy);
->>>>   }
->>>>
->>>>   static void rk_timer_update_counter(unsigned long cycles,
->>>> @@ -64,13 +64,13 @@ static void rk_timer_update_counter(unsigned l=
-ong
->>>> cycles, {
->>>>       writel_relaxed(cycles, rk_base(ce) + TIMER_LOAD_COUNT0);
->>>>       writel_relaxed(0, rk_base(ce) + TIMER_LOAD_COUNT1);
->>>> -    dsb();
->>>> +    dsb(sy);
->>>>   }
->>>>
->>>>   static void rk_timer_interrupt_clear(struct clock_event_device *=
-ce)
->>>>   {
->>>>       writel_relaxed(1, rk_base(ce) + TIMER_INT_STATUS);
->>>> -    dsb();
->>>> +    dsb(sy);
->>>>   }
->>>>
->>>>   static inline int rk_timer_set_next_event(unsigned long cycles,
->>>> @@ -148,7 +148,7 @@ static void __init rk_timer_init(struct
->>>> device_node *np)
->>>> bc_timer.freq =3D clk_get_rate(timer_clk);
->>>>
->>>>       irq =3D irq_of_parse_and_map(np, 0);
->>>> -    if (irq =3D=3D NO_IRQ) {
->>>> +    if (!irq) {
->>>>           pr_err("Failed to map interrupts for '%s'\n", TIMER_NAME=
-);
->>>>           return;
->>>>       }
->>>> @@ -173,4 +173,5 @@ static void __init rk_timer_init(struct
->>>> device_node *np)
->>>>
->>>>       clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_M=
-AX);
->>>>   }
->>>> +
->>> unnecessary addition of a blank line (same reasons as above)
->>
->> It's the same reason with the above.
->>
->> CHECK: Please use a blank line after function/struct/union/enum
->> declarations
->> #176: FILE: rockchip_timer.c:176:
->> +}
->> +CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer",=20
->> rk_timer_init);
->>
->> I know, we can ignore the above warning.
->> That's a bit better, I thnik.
->>
->>
->>>>   CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer",
->>>> rk_timer_init);
->>>
->>> Heiko
->>>
->>> _______________________________________________
->>> Linux-rockchip mailing list
->>> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->>
->>
->
->
->
-> --=20
-> Thanks,
-> Caesar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2hhd24sCgpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LgoKPiA+IEZyb206IFdhbmcgRG9uZ3No
+ZW5nIDxkb25nc2hlbmcud2FuZ0BmcmVlc2NhbGUuY29tPgo+ID4KPiA+IFJDUE0gaXMgdGhlIFJ1
+biBDb250cm9sIGFuZCBQb3dlciBNYW5hZ2VtZW50IG1vZHVsZSBwZXJmb3JtcyBhbGwKPiA+IGRl
+dmljZS1sZXZlbCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1biBjb250cm9sIGFuZCBw
+b3dlcgo+ID4gbWFuYWdlbWVudC4KPiA+Cj4gPiBBZGQgdGhpcyBmb3IgZnJlZXNjYWxlIHBvd2Vy
+cGMgcGxhdGZvcm0gYW5kIGxheWVyc2NhcGUgcGxhdGZvcm0uCj4gPgo+ID4gU2lnbmVkLW9mZi1i
+eTogQ2hlbmh1aSBaaGFvIDxjaGVuaHVpLnpoYW9AZnJlZXNjYWxlLmNvbT4KPiA+IFNpZ25lZC1v
+ZmYtYnk6IFRhbmcgWXVhbnRpYW4gPFl1YW50aWFuLlRhbmdAZnJlZXNjYWxlLmNvbT4KPiA+IFNp
+Z25lZC1vZmYtYnk6IFdhbmcgRG9uZ3NoZW5nIDxkb25nc2hlbmcud2FuZ0BmcmVlc2NhbGUuY29t
+Pgo+ID4gLS0tCj4gPiAqdjMqCj4gPiAtIEFkZCAiZnNsLCNyY3BtLXdha2V1cC1jZWxscyIgZm9y
+IHJjcG0gbm9kZS4gVGhlIG51bWJlciBvZiBjZWxscwo+ID4gICBjb3JyZXNwb25kIHJjcG0td2Fr
+ZXVwIHByb3BlcnR5Lgo+ID4gLSBNb2RpZnkgcmNwbS13YWtldXAgcHJvcGVydHkgZGVzY3JpcHRp
+b24uCj4gPgo+ID4gKnYyKgo+ID4gLSBSZW1vdmUgUDQwODAgZXhhbXBsZS4KPiA+IC0gTW9kaWZ5
+IHJjcG0td2FrZXVwIHByb3BlcnR5IGRlc2NyaXB0aW9uLgo+ID4KPiA+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4dAo+ID4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4dAo+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLjUyMTEwZWMKPiA+IC0tLSAvZGV2
+L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNs
+L3JjcG0udHh0Cj4gPiBAQCAtMCwwICsxLDYzIEBACj4gPiArKiBSdW4gQ29udHJvbCBhbmQgUG93
+ZXIgTWFuYWdlbWVudAo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KPiA+ICtUaGUgUkNQTSBwZXJmb3JtcyBhbGwgZGV2aWNlLWxldmVsIHRhc2tzIGFzc29j
+aWF0ZWQgd2l0aCBkZXZpY2UgcnVuCj4gPiArY29udHJvbCBhbmQgcG93ZXIgbWFuYWdlbWVudC4K
+PiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJpdGVzOgo+ID4gKyAgLSByZWcgOiBPZmZzZXQgYW5k
+IGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IG9mIFJDUE0gYmxvY2suCj4gPiArICAtIGZzbCwj
+cmNwbS13YWtldXAtY2VsbHMgOiBUaGUgbnVtYmVyIG9mIGNlbGxzIGluIHJjcG0td2FrZXVwIHBy
+b3BlcnR5Lgo+ID4gKyAgLSBjb21wYXRpYmxlIDogU291bGQgY29udGFpbiBhIGNoaXAtc3BlY2lm
+aWMgUkNQTSBibG9jayBjb21wYXRpYmxlIHN0cmluZwo+ID4gKwlhbmQgKGlmIGFwcGxpY2FibGUp
+IG1heSBjb250YWluIGEgY2hhc3Npcy12ZXJzaW9uIFJDUE0gY29tcGF0aWJsZQo+ID4gKwlzdHJp
+bmcuIENoaXAtc3BlY2lmaWMgc3RyaW5ncyBhcmUgb2YgdGhlIGZvcm0gImZzbCw8Y2hpcD4tcmNw
+bSIsCj4gPiArCXN1Y2ggYXM6Cj4gPiArCSogImZzbCxwMjA0MS1yY3BtIgo+ID4gKwkqICJmc2ws
+cDMwNDEtcmNwbSIKPiA+ICsJKiAiZnNsLHA0MDgwLXJjcG0iCj4gPiArCSogImZzbCxwNTAyMC1y
+Y3BtIgo+ID4gKwkqICJmc2wscDUwNDAtcmNwbSIKPiA+ICsJKiAiZnNsLHQ0MjQwLXJjcG0iCj4g
+PiArCSogImZzbCxiNDQyMC1yY3BtIgo+ID4gKwkqICJmc2wsYjQ4NjAtcmNwbSIKPiA+ICsKPiA+
+ICsJQ2hhc3Npcy12ZXJzaW9uIHN0cmluZ3MgYXJlIG9mIHRoZSBmb3JtICJmc2wscW9yaXEtcmNw
+bS08dmVyc2lvbj4iLAo+ID4gKwlzdWNoIGFzOgo+ID4gKwkqICJmc2wscW9yaXEtcmNwbS0xLjAi
+OiBmb3IgY2hhc3NpcyAxLjAgcmNwbQo+ID4gKwkqICJmc2wscW9yaXEtcmNwbS0yLjAiOiBmb3Ig
+Y2hhc3NpcyAyLjAgcmNwbQo+ID4gKwkqICJmc2wscW9yaXEtcmNwbS0yLjEiOiBmb3IgY2hhc3Np
+cyAyLjEgcmNwbQo+ID4gKwo+ID4gK0FsbCByZWZlcmVuY2VzIHRvICIxLjAiIGFuZCAiMi4wIiBy
+ZWZlciB0byB0aGUgUW9ySVEgY2hhc3NpcyB2ZXJzaW9uCj4gPiArdG8gd2hpY2ggdGhlIGNoaXAg
+Y29tcGxpZXMuCj4gPiArQ2hhc3NpcyBWZXJzaW9uCQlFeGFtcGxlIENoaXBzCj4gPiArLS0tLS0t
+LS0tLS0tLS0tCQktLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPiArMS4wCQkJCXA0
+MDgwLCBwNTAyMCwgcDUwNDAsIHAyMDQxLCBwMzA0MQo+ID4gKzIuMAkJCQl0NDI0MCwgYjQ4NjAs
+IGI0NDIwCj4gPiArMi4xCQkJCXQxMDQwLCBsczEwMjEKPiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4g
+K1RoZSBSQ1BNIG5vZGUgZm9yIFQ0MjQwOgo+ID4gKwlyY3BtOiBnbG9iYWwtdXRpbGl0aWVzQGUy
+MDAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLHQ0MjQwLXJjcG0iLCAiZnNsLHFvcmlxLXJj
+cG0tMi4wIjsKPiA+ICsJCXJlZyA9IDwweGUyMDAwIDB4MTAwMD47Cj4gPiArCQlmc2wsI3JjcG0t
+d2FrZXVwLWNlbGxzID0gPDI+Owo+ID4gKwl9Owo+ID4gKwo+ID4gKyogRnJlZXNjYWxlIFJDUE0g
+V2FrZXVwIFNvdXJjZSBEZXZpY2UgVHJlZSBCaW5kaW5ncwo+ID4gKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+ICtSZXF1aXJlZCByY3BtLXdha2V1cCBwcm9w
+ZXJ0eSBzaG91bGQgYmUgYWRkZWQgdG8gYSBkZXZpY2Ugbm9kZSBpZiB0aGUKPiA+ICtkZXZpY2Ug
+Y2FuIGJlIHVzZWQgYXMgYSB3YWtldXAgc291cmNlLgo+ID4gKwo+ID4gKyAgLSByY3BtLXdha2V1
+cDogVGhlIHZhbHVlIG9mIHRoZSBwcm9wZXJ0eSBjb25zaXN0cyBvZiBjZWxscywgdGhlCj4gPiAr
+IG51bWJlciBvZgo+IAo+IFNob3VsZG4ndCB0aGlzIHZlbmRvciBzcGVjaWZpYyBwcm9wZXJ0eSBi
+ZSBwcmVmaXhlZCB3aXRoICdmc2wsJyBhcyB3ZWxsPwo+IAoKT2theS4KCj4gPiArCWNlbGxzIGRl
+ZmluZWQgaW4gImZzbCwjcmNwbS13YWtldXAtY2VsbHMiLiBUaGUgZmlyc3QgY2VsbCBpcyBhIHBv
+aW50ZXIKPiA+ICsJdG8gdGhlIHJjcG0gbm9kZSwgdGhlIHNlY29uZCBjZWxsIGlzIHRoZSBiaXQg
+bWFzayB0aGF0IHNob3VsZCBiZSBzZXQKPiA+ICsJaW4gSVBQREVYUENSMCwgYW5kIHRoZSB0aGly
+ZCBjZWxsIGlzIGZvciBJUFBERVhQQ1IxLCBhbmQgc28gb24uCj4gCj4gSSBndWVzcyB0aGF0IElQ
+UERFWFBDUjAgYW5kIElQUERFWFBDUjEgbmVlZCBzb21lIGRvY3VtZW50YXRpb24gdG9vLCBvciBh
+IHBvaW50ZXIKPiB0byBoYXJkd2FyZSBkb2N1bWVudHMgY29udGFpbmluZyBtb3JlIGRldGFpbGVk
+IGluZm8gYWJvdXQgdGhlbS4KPiAKCkZvbGxvd2luZyB0aGUgInJjcG0td2FrZXVwIiBkb2N1bWVu
+dHMgcHV0IGEgIk5vdGUiIHRvIGRlc2NyaWJlIElQUERFWFBDUnggcmVnaXN0ZXJzPwoKUmVnYXJk
+cywKLURvbmdzaGVuZyAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
+Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
