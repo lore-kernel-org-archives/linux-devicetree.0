@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v2 1/5] dt-binding: soc: qcom: Add Qualcomm SMSM device tree documentation
-Date: Thu, 24 Sep 2015 18:24:59 -0700
-Message-ID: <1443144303-21020-2-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [PATCH v2 2/5] dt-binding: soc: qcom: Introduce qcom,smp2p binding documentation
+Date: Thu, 24 Sep 2015 18:25:00 -0700
+Message-ID: <1443144303-21020-3-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1443144303-21020-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,8 +12,8 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This documents a device tree binding for the Qualcomm Shared Memory
-State Machine.
+Introduce binding documentation for the Qualcomm Shared Memory Point 2 Point
+protocol.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
@@ -21,115 +21,115 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 Changes since v1:
 - No longer representing outgoing state as gpio-controller
 
- .../devicetree/bindings/soc/qcom/qcom,smsm.txt     | 104 +++++++++++++++++++++
+ .../devicetree/bindings/soc/qcom/qcom,smp2p.txt    | 104 +++++++++++++++++++++
  1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smsm.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smsm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smsm.txt
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt
 new file mode 100644
-index 000000000000..a6634c70850d
+index 000000000000..5cc82b8353d8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smsm.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt
 @@ -0,0 +1,104 @@
-+Qualcomm Shared Memory State Machine
++Qualcomm Shared Memory Point 2 Point binding
 +
-+The Shared Memory State Machine facilitates broadcasting of single bit state
-+information between the processors in a Qualcomm SoC. Each processor is
-+assigned 32 bits of state that can be modified. A processor can through a
-+matrix of bitmaps signal subscription of notifications upon changes to a
-+certain bit owned by a certain remote processor.
++The Shared Memory Point to Point (SMP2P) protocol facilitates communication of
++a single 32-bit value between two processors.  Each value has a single writer
++(the local side) and a single reader (the remote side).  Values are uniquely
++identified in the system by the directed edge (local processor ID to remote
++processor ID) and a string identifier.
 +
 +- compatible:
 +	Usage: required
 +	Value type: <string>
 +	Definition: must be one of:
-+		    "qcom,smsm"
++		    "qcom,smp2p"
 +
-+- qcom,ipc-N:
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: one entry specifying the smp2p notification interrupt
++
++- qcom,ipc:
 +	Usage: required
 +	Value type: <prop-encoded-array>
 +	Definition: three entries specifying the outgoing ipc bit used for
-+		    signaling the N:th remote processor
++		    signaling the remote end of the smp2p edge:
 +		    - phandle to a syscon node representing the apcs registers
 +		    - u32 representing offset to the register within the syscon
 +		    - u32 representing the ipc bit within the register
 +
-+- qcom,local-host:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: identifier of the local processor in the list of hosts, or
-+		    in other words specifier of the column in the subscription
-+		    matrix representing the local processor
-+		    defaults to host 0
++- qcom,smem:
++	Usage: required
++	Value type: <u32 array>
++	Definition: two identifiers of the inbound and outbound smem items used
++		    for this edge
 +
-+- #address-cells:
++- qcom,local-pid:
 +	Usage: required
 +	Value type: <u32>
-+	Definition: must be 1
++	Definition: specifies the identfier of the local endpoint of this edge
 +
-+- #size-cells:
++- qcom,remote-pid:
 +	Usage: required
 +	Value type: <u32>
-+	Definition: must be 0
++	Definition: specifies the identfier of the remote endpoint of this edge
 +
 += SUBNODES
-+Each processor's state bits are described by a subnode of the smsm device node.
-+Nodes can either be flagged as an interrupt-controller to denote a remote
-+processor's state bits or the local processors bits.  The node names are not
++Each SMP2P pair contain a set of inbound and outbound entries, these are
++described in subnodes of the smp2p device node. The node names are not
 +important.
 +
-+- reg:
++- qcom,entry-name:
 +	Usage: required
-+	Value type: <u32>
-+	Definition: specifies the offset, in words, of the first bit for this
-+		    entry
-+
-+- #qcom,state-cells:
-+	Usage: required for local entry
-+	Value type: <u32>
-+	Definition: must be 1 - denotes bit number
++	Value type: <string>
++	Definition: specifies the name of this entry, for inbound entries this
++		    will be used to match against the remotely allocated entry
++		    and for outbound entries this name is used for allocating
++		    entries
 +
 +- interrupt-controller:
-+	Usage: required for remote entries
++	Usage: required for incoming entries
 +	Value type: <empty>
-+	Definition: marks the entry as a interrupt-controller and the state bits
-+		    to belong to a remote processor
++	Definition: marks the entry as inbound; the node should be specified
++		    as a two cell interrupt-controller as defined in
++		    "../interrupt-controller/interrupts.txt"
++		    If not specified this node will denote the outgoing entry
 +
 +- #interrupt-cells:
-+	Usage: required for remote entries
++	Usage: required for incoming entries
 +	Value type: <u32>
-+	Definition: must be 2 - denotes bit number and IRQ flags
++	Definition: must be 2 - denoting the bit in the entry and IRQ flags
 +
-+- interrupts:
-+	Usage: required for remote entries
-+	Value type: <prop-encoded-array>
-+	Definition: one entry specifying remote IRQ used by the remote processor
-+		    to signal changes of its state bits
-+
++- #qcom,state-cells:
++	Usage: required for outgoing entries
++	Value type: <u32>
++	Definition: must be 1 - denoting the bit in the entry
 +
 += EXAMPLE
-+The following example shows the SMEM setup for controlling properties of the
-+wireless processor, defined from the 8974 apps processor's point-of-view. It
-+encompasses one outbound entry and the outgoing interrupt for the wireless
-+processor.
++The following example shows the SMP2P setup with the wireless processor,
++defined from the 8974 apps processor's point-of-view. It encompasses one
++inbound and one outbound entry:
 +
-+smsm {
-+	compatible = "qcom,smsm";
++wcnss-smp2p {
++	compatible = "qcom,smp2p";
++	qcom,smem = <431>, <451>;
 +
-+	#address-cells = <1>;
-+	#size-cells = <0>;
++	interrupts = <0 143 1>;
 +
-+	qcom,ipc-3 = <&apcs 8 19>;
++	qcom,ipc = <&apcs 8 18>;
 +
-+	apps_smsm: apps@0 {
-+		reg = <0>;
++	qcom,local-pid = <0>;
++	qcom,remote-pid = <4>;
++
++	wcnss_smp2p_out: master-kernel {
++		qcom,entry-name = "master-kernel";
 +
 +		#qcom,state-cells = <1>;
 +	};
 +
-+	wcnss_smsm: wcnss@7 {
-+		reg = <7>;
-+		interrupts = <0 144 1>;
++	wcnss_smp2p_in: slave-kernel {
++		qcom,entry-name = "slave-kernel";
 +
 +		interrupt-controller;
 +		#interrupt-cells = <2>;
