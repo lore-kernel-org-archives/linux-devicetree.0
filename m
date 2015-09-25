@@ -1,87 +1,63 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: arm: Fix typo in the idle-states bindings examples
-Date: Fri, 25 Sep 2015 13:32:04 -0500
-Message-ID: <CAL_JsqJ4zBhVKOuMTxOVDB_kim4+R4Tb=tO3ugEoXzLO63a07w@mail.gmail.com>
-References: <1443106436-542-1-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2] gpio: mention in DT binding doc that <name>-gpio is deprecated
+Date: Fri, 25 Sep 2015 13:32:32 -0500
+Message-ID: <CAL_JsqL9FCGAy-9o_4M+hhG7MVB6MX8i5JJyNBnM3fPezVrYdQ@mail.gmail.com>
+References: <1442840245-7982-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443106436-542-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1442840245-7982-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Masahiro Yamada <yamada.m-NAum8xwdG0+S7A1Ibl2khg@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 9:53 AM, Lorenzo Pieralisi
-<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> The idle-states bindings mandate that the entry-method string
-> in the idle-states node must be "psci" for ARM v8 64-bit systems,
-> but the examples in the bindings report a wrong entry-method string.
-> Owing to this typo, some dts in the kernel wrongly defined the
-> entry-method property, since they likely cut and pasted the example
-> definition without paying attention to the bindings definitions.
+On Mon, Sep 21, 2015 at 7:57 AM, Javier Martinez Canillas
+<javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
+> The gpiolib supports parsing DT properties of the form <name>-gpio but it
+> was only added for compatibility with older DT bindings that got it wrong
+> and should not be used in newer bindings.
 >
-> This patch fixes the typo in the DT idle states bindings examples and
-> respective dts in the kernel so that the bindings and related dts
-> files are made compliant.
+> The commit that added support for this was:
 >
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Cc: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
+>
+> but didn't update the documentation to explain this so it's been a source
+> of confusion. So let's make this clear in the GPIO DT binding doc.
+>
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
 Applied. Thanks.
 
 Rob
 
+>
 > ---
->  Documentation/devicetree/bindings/arm/idle-states.txt | 2 +-
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi              | 2 +-
->  arch/arm64/boot/dts/rockchip/rk3368.dtsi              | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
-> index a8274ea..b8e41c1 100644
-> --- a/Documentation/devicetree/bindings/arm/idle-states.txt
-> +++ b/Documentation/devicetree/bindings/arm/idle-states.txt
-> @@ -497,7 +497,7 @@ cpus {
->         };
+> Changes in v2:
+> - Explain that <name>-gpio is deprecated instead of saying that is
+>   supported. Suggested by Alexandre Courbot.
 >
->         idle-states {
-> -               entry-method = "arm,psci";
-> +               entry-method = "psci";
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
->                 CPU_RETENTION_0_0: cpu-retention-0-0 {
->                         compatible = "arm,idle-state";
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index d18ee42..06a1564 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -81,7 +81,7 @@
->                 };
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 5788d5cf1252..82d40e2505f6 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -16,7 +16,9 @@ properties, each containing a 'gpio-list':
+>  GPIO properties should be named "[<name>-]gpios", with <name> being the purpose
+>  of this GPIO for the device. While a non-existent <name> is considered valid
+>  for compatibility reasons (resolving to the "gpios" property), it is not allowed
+> -for new bindings.
+> +for new bindings. Also, GPIO properties named "[<name>-]gpio" are valid and old
+> +bindings use it, but are only supported for compatibility reasons and should not
+> +be used for newer bindings since it has been deprecated.
 >
->                 idle-states {
-> -                       entry-method = "arm,psci";
-> +                       entry-method = "psci";
->
->                         CPU_SLEEP_0: cpu-sleep-0 {
->                                 compatible = "arm,idle-state";
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> index a712bea..cc093a4 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> @@ -106,7 +106,7 @@
->                 };
->
->                 idle-states {
-> -                       entry-method = "arm,psci";
-> +                       entry-method = "psci";
->
->                         cpu_sleep: cpu-sleep-0 {
->                                 compatible = "arm,idle-state";
+>  GPIO properties can contain one or more GPIO phandles, but only in exceptional
+>  cases should they contain more than one. If your device uses several GPIOs with
 > --
-> 2.5.1
+> 2.4.3
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
