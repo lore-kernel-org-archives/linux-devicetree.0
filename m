@@ -1,76 +1,24 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 4.3
-Date: Thu, 24 Sep 2015 19:15:17 -0500
-Message-ID: <CAL_Jsq+f33VOG6EBeP9GyrLQSdh06BDKr40QihXtkiF6_5SmXA@mail.gmail.com>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: [PATCH v3 3/3] dmaengine: mpc512x: initialize with
+ subsys_initcall()
+Date: Thu, 24 Sep 2015 19:16:28 -0500
+Message-ID: <5604925C.1050803@tabi.org>
+References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
+ <1443115737-3948-4-git-send-email-alex.popov@linux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443115737-3948-4-git-send-email-alex.popov@linux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Popov <alex.popov@linux.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Anatolij Gustschin <agust@denx.de>, Gerhard Sittig <gsi@denx.de>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Alexander Popov wrote:
+> Initialize Freescale MPC512x DMA driver with subsys_initcall()
+> to allow the depending drivers to call dma_request_slave_channel()
+> during their probe.
+>
+> Signed-off-by: Alexander Popov<alex.popov@linux.com>
 
-Please pull DT fixes for 4.3. Details below.
-
-Rob
-
-The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
-
-  Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.3
-
-for you to fetch changes up to a13f18f59d2646754cda3662a9e215ff43e7a7d5:
-
-  Documentation: arm: Fix typo in the idle-states bindings examples
-(2015-09-24 17:55:32 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for 4.3:
-
-- Silence bogus warning for of_irq_parse_pci
-- Fix typo in ARM idle-states binding doc and dts files
-- Various minor binding documentation updates
-
-----------------------------------------------------------------
-David Daney (1):
-      of_pci_irq: Silence bogus "of_irq_parse_pci() failed ..." messages.
-
-Hans de Goede (1):
-      devicetree: bindings: Extend the bma180 bindings with bma250 info
-
-Javier Martinez Canillas (1):
-      gpio: mention in DT binding doc that <name>-gpio is deprecated
-
-Lorenzo Pieralisi (1):
-      Documentation: arm: Fix typo in the idle-states bindings examples
-
-Mark Rutland (1):
-      Docs: dt: add #msi-cells to GICv3 ITS binding
-
-Masahiro Yamada (1):
-      of: add vendor prefix for Socionext Inc.
-
-Punit Agrawal (2):
-      of: thermal: Fix inconsitency between cooling-*-state and cooling-*-level
-      of: thermal: Mark cooling-*-level properties optional
-
- Documentation/devicetree/bindings/arm/gic-v3.txt   |  5 ++++
- .../devicetree/bindings/arm/idle-states.txt        |  2 +-
- Documentation/devicetree/bindings/gpio/gpio.txt    |  4 +++-
- .../devicetree/bindings/iio/accel/bma180.txt       |  8 +++++--
- .../devicetree/bindings/thermal/thermal.txt        | 27 +++++++++++-----------
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  2 +-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +-
- drivers/of/of_pci_irq.c                            | 22 +++++++++++-------
- 9 files changed, 46 insertions(+), 27 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is there any way we can use -EPROBEDEFER instead?
