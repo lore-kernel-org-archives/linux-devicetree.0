@@ -1,19 +1,19 @@
 From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Error: arch/arm/boot/dts/mt8135.dtsi:81.21-22 syntax error
-Date: Fri, 25 Sep 2015 12:39:37 +0800
-Message-ID: <201509251235.v9pyo8d8%fengguang.wu@intel.com>
-References: <1443109140-5406-5-git-send-email-yingjoe.chen@mediatek.com>
+Subject: Error: arch/arm/boot/dts/mt8127.dtsi:56.21-22 syntax error
+Date: Fri, 25 Sep 2015 13:12:46 +0800
+Message-ID: <201509251344.29msO8f1%fengguang.wu@intel.com>
+References: <1443109140-5406-6-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="YZ5djTAD1cGYuMQK"
+Content-Type: multipart/mixed; boundary="SLDf9lqlvOQaIe6s"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1443109140-5406-5-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1443109140-5406-6-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---YZ5djTAD1cGYuMQK
+--SLDf9lqlvOQaIe6s
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -25,20 +25,20 @@ config: arm-multi_v7_defconfig (attached as .config)
 reproduce:
   wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
   chmod +x ~/bin/make.cross
-  git checkout 8a73387f4d2fc100197bd3a0d05398b7e243237d
+  git checkout 41626f34b6fad3bd9f733a6d8f5542683d2356d5
   # save the attached .config to linux build tree
   make.cross ARCH=arm 
 
 All error/warnings (new ones prefixed by >>):
 
->> Error: arch/arm/boot/dts/mt8135.dtsi:81.21-22 syntax error
+>> Error: arch/arm/boot/dts/mt8127.dtsi:56.21-22 syntax error
    FATAL ERROR: Unable to parse input tree
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---YZ5djTAD1cGYuMQK
+--SLDf9lqlvOQaIe6s
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=".config"
 
@@ -5852,7 +5852,7 @@ CONFIG_FONT_8x16=y
 CONFIG_ARCH_HAS_SG_CHAIN=y
 # CONFIG_VIRTUALIZATION is not set
 
---YZ5djTAD1cGYuMQK--
+--SLDf9lqlvOQaIe6s--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
