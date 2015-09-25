@@ -1,70 +1,46 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for
- the TPS65912 PMIC
-Date: Fri, 25 Sep 2015 11:05:33 -0700
-Message-ID: <20150925180533.GN30445@sirena.org.uk>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-5-git-send-email-afd@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 0/2] ASoC: atmel-classd: add driver for Atmel CLASSD
+Date: Fri, 25 Sep 2015 11:07:28 -0700
+Message-ID: <20150925180728.GP30445@sirena.org.uk>
+References: <1443073287-17849-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iym2iLi12j4kk03o"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="fW6jlebSFjIjuLDN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443106374-4126-5-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1443073287-17849-1-git-send-email-songjun.wu@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Songjun Wu <songjun.wu@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---iym2iLi12j4kk03o
+--fW6jlebSFjIjuLDN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Sep 24, 2015 at 09:52:53AM -0500, Andrew F. Davis wrote:
+On Thu, Sep 24, 2015 at 01:41:25PM +0800, Songjun Wu wrote:
 
-> +static int tps65912_regulator_probe(struct platform_device *pdev)
-> +{
-> +	struct tps65912 *tps = dev_get_drvdata(pdev->dev.parent);
-> +	struct regulator_init_data *init_data;
-> +	const struct tps_info *template;
-> +	struct regulator_dev *rdev;
-> +	const struct of_device_id *match;
-> +	struct regulator_config config = { };
-> +	int id;
-> +
-> +	match = of_match_device(tps65912_regulator_of_match_table, &pdev->dev);
-> +	if (!match)
-> +		return -ENODEV;
-> +
-> +	template = match->data;
-> +	id = template->id;
-> +	init_data = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node,
-> +					       &regulators[id]);
+> Songjun Wu (2):
+>   ASoC: atmel-classd: add the Audio Class D Amplifier
+>   ASoC: atmel-classd: DT binding for Class D audio amplifier driver
 
-Don't open code this stuff, use the core DT matching in the
-regulator_desc instead.
+I don't seem to have the second patch with the binding documentation.
 
-Please also use subject lines mathcing the style for the subsystem.
-
---iym2iLi12j4kk03o
+--fW6jlebSFjIjuLDN
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWBYzsAAoJECTWi3JdVIfQIjUH/igUNLPhNPkPVL5uY/fWMsxh
-i1H+ayv2p/GzZPaPHvAenZc8jzqXjFaTkzNmhhggoSHypfubvxi9833NH93j9t2e
-zNHD9deFHCdLtB6truqIpYODQGAMcnerno4Ba/0unDOROTWPxPAkazY8YmO6STHz
-r6TNFWNYJl0JityJ/DXj/FC3TRZJ/VbgvNxv6qdxXo9cwhCBOXCMiAoxUMOVIKXg
-mM4I29R9QQ46R2lBrG7WKYNHGW0ayuQ5tTZuTK7oPwd0A5eYoFsuqVaiuRS7PL1u
-wD+yFA6v29A5EjeoomRpySVTXPaaLhoNgvJW4DdP9T9uXfpuXO6KqFc6pLH5Mhk=
-=ZFLK
+iQEcBAEBCAAGBQJWBY1gAAoJECTWi3JdVIfQKVkH/3PaVzfnwZD2YGvngkGtMME1
+tt1jaMuPmGY2Wf5NCB2DpldD6Oj0BQOfFSnXrg1/bwlIXy3wBpMzT4H3oQixMi/W
+uFQ0yWNnvinV5ywG8MvN+9V0ibQMYMwELb+6wGqGm+vrA2KGmMJchWSzs05wMk19
+/Idf6bLewy8evyjdMbGCt9qSQseSpSc//xOoLGlHFtC7O7WC4DMqzY9L0z3VpCAR
+HXvPAJGZt23kci5784V5X2EwNKstxu+eSWv/ggL35GIZdDRbamOZFya0quQzPjtm
+binAznaIe47a3GWN4eIHqM/ApfNLD0LVZ0z8WPozieMouqLMH5rSf9Fmfo76nhA=
+=VHH7
 -----END PGP SIGNATURE-----
 
---iym2iLi12j4kk03o--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--fW6jlebSFjIjuLDN--
