@@ -1,46 +1,53 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Phy, mdiobus, and netdev struct device fixes
-Date: Thu, 24 Sep 2015 23:05:22 -0700 (PDT)
-Message-ID: <20150924.230522.2080343670036893514.davem@davemloft.net>
-References: <20150924191754.GC21513@n2100.arm.linux.org.uk>
-	<5604A5EC.7060401@gmail.com>
+From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: [PATCHv2 2/2] iio: ti-ads868x: Add DT binding documentation
+Date: Fri, 25 Sep 2015 08:29:40 +0200
+Message-ID: <1443162580-28293-2-git-send-email-sean.nyekjaer@prevas.dk>
+References: <1443162580-28293-1-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5604A5EC.7060401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, isubramanian-qTEPVZfXA3Y@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kchudgar-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443162580-28293-1-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Thu, 24 Sep 2015 18:39:56 -0700
+Adding binding documentation for Texas Instruments ADS868X ADC.
 
-> On 24/09/15 12:17, Russell King - ARM Linux wrote:
->> Hi,
->> 
->> The third version of this series fixes the build error which David
->> identified, and drops the broken changes for the Cavium Thunger BGX
->> ethernet driver as this driver requires some complex changes to
->> resolve the leakage - and this is best done by people who can test
->> the driver.
->> 
->> Compared to v2, the only patch which has changed is patch 6
->>   "net: fix phy refcounting in a bunch of drivers"
->> 
->> I _think_ I've been able to build-test all the drivers touched by
->> that patch to some degree now, though several of them needed the
->> Kconfig hacked to allow it (not all had || COMPILE_TEST clause on
->> their dependencies.)
-> 
-> Tested-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Thanks for fixing that.
+Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+---
+ .../devicetree/bindings/iio/adc/ti-ads868x.txt         | 18 ++++++++++=
+++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads868=
+x.txt
 
-Series applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads868x.txt b=
+/Documentation/devicetree/bindings/iio/adc/ti-ads868x.txt
+new file mode 100644
+index 0000000..bc3c305
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti-ads868x.txt
+@@ -0,0 +1,18 @@
++* Texas Instruments' ADS8684 and ADS8688 ADC chip
++
++Required properties:
++ - compatible: Should be "ti,ads8684" or "ti,ads8688"
++ - reg: spi chip select number for the device
++ - vref-supply: The regulator supply for ADC reference voltage
++
++Recommended properties:
++ - spi-max-frequency: Definition as per
++		Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Example:
++adc@0 {
++	compatible =3D "ti,ads8688";
++	reg =3D <0>;
++	vref-supply =3D <&vdd_supply>;
++	spi-max-frequency =3D <1000000>;
++};
+--=20
+2.5.3
