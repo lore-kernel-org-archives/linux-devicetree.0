@@ -1,61 +1,89 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
-Date: Fri, 25 Sep 2015 17:47:44 +0200
-Message-ID: <1783348.ocWL5DWVKG@wuerfel>
-References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com> <56056589.9010704@nvidia.com> <56056A8F.5010103@nvidia.com>
+From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v7 02/15] power: bq24257: Remove IRQ config through stat-gpios
+Date: Fri, 25 Sep 2015 10:54:07 -0500
+Message-ID: <1443196460-26156-3-git-send-email-dannenberg@ti.com>
+References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56056A8F.5010103-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443196460-26156-1-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 25 September 2015 16:38:55 Jon Hunter wrote:
-> On 25/09/15 16:17, Jon Hunter wrote:
-> > 
-> > On 25/09/15 16:03, Arnd Bergmann wrote:
-> >> On Friday 25 September 2015 15:56:40 Jon Hunter wrote:
-> >>> +       case DMA_MEM_TO_DEV:
-> >>> +               burst_size = fls(tdc->config.dst_maxburst);
-> >>> +               ch_regs->config = ADMA_CH_CONFIG_SRC_BUF(num_bufs - 1);
-> >>> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_MEM_TO_AHUB) |
-> >>> +                               ADMA_CH_CTRL_TX_REQ(tdc->config.slave_id);
-> >>> +               ch_regs->src_addr = buf_addr;
-> >>> +               break;
-> >>> +
-> >>> +       case DMA_DEV_TO_MEM:
-> >>> +               burst_size = fls(tdc->config.src_maxburst);
-> >>> +               ch_regs->config = ADMA_CH_CONFIG_TRG_BUF(num_bufs - 1);
-> >>> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_AHUB_TO_MEM) |
-> >>> +                               ADMA_CH_CTRL_RX_REQ(tdc->config.slave_id);
-> >>> +               ch_regs->trg_addr = buf_addr;
-> >>> +               break;
-> >>
-> >> Do not use the 'slave_id' field here to identify the slave device, that
-> >> concept is broken. Instead, put the slave identification into the
-> >> dma specifier in DT and read it out in your xlate function.
-> > 
-> > Why is it broken?
-> > 
-> > What happens if I don't know the slave-id? In other words, the slave-id
-> > can be dynamically allocated and associated with a given slave.
-> 
-> I guess thinking about it some more, the driver could assign an id
-> itself to a given channel and I could avoid using slave_id here. There
-> are 22 channels and 10 tx and 10 rx requests.
+At the time the driver was written GpioInt resources in ACPI were not
+passed to the driver in client->irq, as opposed to DT enumeration. To
+accommodate this use case, a "stat-gpios" property was introduced to
+allow configuring the IRQ.
 
-This sounds roughly right. So you could pick the ch_regs->ctrl value
-when you allocate the tegra_adma_chan structure, and then map it to
-the slave in the xlate() function.
+However this issue with ACPI was fixed in commit "845c877 i2c / ACPI:
+Assign IRQ for devices that have GpioInt automatically" and makes this
+workaround no longer necessary, hence we can remove the support for the
+"stat-gpios" property and the associated code from the bq24257 driver.
 
-> However, I could also
-> statically assign a mapping in DT for the clients if that is preferred.
+Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+---
+ drivers/power/bq24257_charger.c | 28 ++++------------------------
+ 1 file changed, 4 insertions(+), 24 deletions(-)
 
-That's not what I was looking for, the DT should contain the information
-that the DMA master uses to identify a device, not a setting that it
-can freely choose.
-
-	Arnd
+diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+index 5859bc7..69b53d0 100644
+--- a/drivers/power/bq24257_charger.c
++++ b/drivers/power/bq24257_charger.c
+@@ -36,7 +36,6 @@
+ #define BQ24257_REG_7			0x06
+ 
+ #define BQ24257_MANUFACTURER		"Texas Instruments"
+-#define BQ24257_STAT_IRQ		"stat"
+ #define BQ24257_PG_GPIO			"pg"
+ 
+ #define BQ24257_ILIM_SET_DELAY		1000	/* msec */
+@@ -606,19 +605,6 @@ static int bq24257_power_supply_init(struct bq24257_device *bq)
+ 	return 0;
+ }
+ 
+-static int bq24257_irq_probe(struct bq24257_device *bq)
+-{
+-	struct gpio_desc *stat_irq;
+-
+-	stat_irq = devm_gpiod_get_index(bq->dev, BQ24257_STAT_IRQ, 0, GPIOD_IN);
+-	if (IS_ERR(stat_irq)) {
+-		dev_err(bq->dev, "could not probe stat_irq pin\n");
+-		return PTR_ERR(stat_irq);
+-	}
+-
+-	return gpiod_to_irq(stat_irq);
+-}
+-
+ static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
+ {
+ 	bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0, GPIOD_IN);
+@@ -740,21 +726,15 @@ static int bq24257_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
+-	if (client->irq <= 0)
+-		client->irq = bq24257_irq_probe(bq);
+-
+-	if (client->irq < 0) {
+-		dev_err(dev, "no irq resource found\n");
+-		return client->irq;
+-	}
+-
+ 	ret = devm_request_threaded_irq(dev, client->irq, NULL,
+ 					bq24257_irq_handler_thread,
+ 					IRQF_TRIGGER_FALLING |
+ 					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+-					BQ24257_STAT_IRQ, bq);
+-	if (ret)
++					"bq24257", bq);
++	if (ret) {
++		dev_err(dev, "Failed to request IRQ #%d\n", client->irq);
+ 		return ret;
++	}
+ 
+ 	ret = bq24257_power_supply_init(bq);
+ 	if (ret < 0)
+-- 
+1.9.1
