@@ -1,54 +1,98 @@
-From: Wang Dongsheng <Dongsheng.Wang@freescale.com>
-Subject: RE: [PATCH v3 1/2] fsl: Add binding for RCPM
-Date: Fri, 25 Sep 2015 02:51:36 +0000
-Message-ID: <SN1PR0301MB16165FD739C5CD90FB4352149D420@SN1PR0301MB1616.namprd03.prod.outlook.com>
-References: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
- <1443123009.32298.29.camel@freescale.com>
- <SN1PR0301MB161653CC69BB78A0A8B565569D420@SN1PR0301MB1616.namprd03.prod.outlook.com>
- <1443149032.32298.102.camel@freescale.com>
+From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v6 01/14] dt: power: bq24257-charger: Cover additional devices
+Date: Thu, 24 Sep 2015 22:26:45 -0500
+Message-ID: <1443151618-29742-2-git-send-email-dannenberg@ti.com>
+References: <1443151618-29742-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1443149032.32298.102.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Zhao C.H." <chenhui.zhao@freescale.com>, Huan Wang <alison.wang@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Yuantian Tang <Yuantian.Tang@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Jin Jason <Jason.Jin@freescale.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443151618-29742-1-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Thu, 2015-09-24 at 21:38 -0500, Wang Dongsheng-B40534 wrote:
-> > > > +* Freescale RCPM Wakeup Source Device Tree Bindings
-> > > > +-------------------------------------------
-> > > > +Required rcpm-wakeup property should be added to a device node if the
-> > > > device
-> > > > +can be used as a wakeup source.
-> > > > +
-> > > > +  - rcpm-wakeup: The value of the property consists of cells, the
-> > > > number of
-> > > > +     cells defined in "fsl,#rcpm-wakeup-cells". The first cell is a
-> > > > pointer
-> > > > +     to the rcpm node, the second cell is the bit mask that should be
-> > > > set
-> > > > +     in IPPDEXPCR0, and the third cell is for IPPDEXPCR1, and so on.
-> > >
-> > > The phandle should not be included in the cell count.
-> > >
-> >
-> > Yes, the first cell "&rcpm" should be in the cell count, right?
-> 
-> No.  None of the other #foo-cells work that way.
-> 
+Extend the bq24257 charger's device tree documentation to cover the
+bq24250 and bq24251 devices as well feature additions.
 
-Sorry a type wrong. I means the first cell "&rcpm" should *NOT* be in the cell count.
+Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/power/bq24257.txt          | 53 ++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 5 deletions(-)
 
-Regards,
--Dongsheng
+diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
+index 5c9d394..6c376ef 100644
+--- a/Documentation/devicetree/bindings/power/bq24257.txt
++++ b/Documentation/devicetree/bindings/power/bq24257.txt
+@@ -1,21 +1,64 @@
+-Binding for TI bq24257 Li-Ion Charger
++Binding for TI bq24250/bq24251/bq24257 Li-Ion Charger
+ 
+ Required properties:
+ - compatible: Should contain one of the following:
++ * "ti,bq24250"
++ * "ti,bq24251"
+  * "ti,bq24257"
+-- reg:			   integer, i2c address of the device.
++- reg: integer, i2c address of the device.
++- interrupt-parent: Should be the phandle for the interrupt controller. Use in
++    conjunction with "interrupts".
++- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
++    conjunction with "interrupt-parent".
+ - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
+-- ti,charge-current:	   integer, maximum charging current in uA.
+-- ti,termination-current:  integer, charge will be terminated when current in
+-			   constant-voltage phase drops below this value (in uA).
++- ti,charge-current: integer, maximum charging current in uA.
++- ti,termination-current: integer, charge will be terminated when current in
++    constant-voltage phase drops below this value (in uA).
++
++Optional properties:
++- pg-gpios: GPIO used for connecting the bq2425x device PG (Power Good) pin.
++    This pin is not available on all devices however it should be used if
++    possible as this is the recommended way to obtain the charger's input PG
++    state. If this pin is not specified a software-based approach for PG
++    detection is used.
++- ti,current-limit: The maximum current to be drawn from the charger's input
++    (in uA). If this property is not specified a USB D+/D- signal based charger
++    type detection is used (if available) and the input limit current is set
++    accordingly. If the D+/D- based detection is not available on a given device
++    a default of 500,000 is used (=500mA).
++- ti,ovp-voltage: Configures the over voltage protection voltage (in uV). If
++    not specified a default of 6,5000,000 (=6.5V) is used.
++- ti,in-dpm-voltage: Configures the threshold input voltage for the dynamic
++    power path management (in uV). If not specified a default of 4,360,000
++    (=4.36V) is used.
+ 
+ Example:
+ 
+ bq24257 {
+ 	compatible = "ti,bq24257";
+ 	reg = <0x6a>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
++
++	pg-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+ 
+ 	ti,battery-regulation-voltage = <4200000>;
+ 	ti,charge-current = <1000000>;
+ 	ti,termination-current = <50000>;
+ };
++
++Example:
++
++bq24250 {
++	compatible = "ti,bq24250";
++	reg = <0x6a>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
++
++	ti,battery-regulation-voltage = <4200000>;
++	ti,charge-current = <500000>;
++	ti,termination-current = <50000>;
++	ti,current-limit = <900000>;
++	ti,ovp-voltage = <9500000>;
++	ti,in-dpm-voltage = <4440000>;
++};
+-- 
+1.9.1
