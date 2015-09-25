@@ -1,137 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH linux-next v10 2/3] mfd: devicetree: add bindings for
- Atmel Flexcom
-Date: Fri, 25 Sep 2015 22:32:13 +0100
-Message-ID: <20150925213213.GN27197@x1>
-References: <cover.1443087121.git.cyrille.pitchen@atmel.com>
- <07fc381ccc3247e28eb94faf76cbcc94762ba622.1443087121.git.cyrille.pitchen@atmel.com>
+From: Stuart Yoder <stuart.yoder@freescale.com>
+Subject: [PATCH 1/3] Docs: dt: fsl-mc: update binding to include msi-parent
+Date: Fri, 25 Sep 2015 16:08:04 -0500
+Message-ID: <1443215286-3126-2-git-send-email-stuart.yoder@freescale.com>
+References: <1443215286-3126-1-git-send-email-stuart.yoder@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <07fc381ccc3247e28eb94faf76cbcc94762ba622.1443087121.git.cyrille.pitchen@atmel.com>
+In-Reply-To: <1443215286-3126-1-git-send-email-stuart.yoder@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, german.rivera@freescale.com, bhupesh.sharma@freescale.com, itai.katz@freescale.com, Stuart Yoder <stuart.yoder@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Sep 2015, Cyrille Pitchen wrote:
+The Freescale Management Complex and all associated objects
+use message interrupts, and thus an msi-parent is required.
 
-> This patch documents the DT bindings for the Atmel Flexcom which will=
- be
-> introduced by sama5d2x SoCs. These bindings will be used by the actua=
-l
-> Flexcom driver to be sent in another patch.
->=20
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
->  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 67 ++++++++++++=
-++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexc=
-om.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt =
-b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
-> new file mode 100644
-> index 000000000000..fc3511e41542
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
-> @@ -0,0 +1,67 @@
-> +* Device tree bindings for Atmel Flexcom (Flexible Serial Communicat=
-ion Unit)
-> +
-> +The Atmel Flexcom is just a wrapper which embeds a SPI controller, a=
-n I2C
-> +controller and an USART. Only one function can be used at a time and=
- is chosen
-> +at boot time according to the device tree.
-> +
-> +Required properties:
-> +- compatible:		Should be "atmel,sama5d2-flexcom"
-> +- reg:			Should be the offset/length value for Flexcom dedicated
-> +			I/O registers (without USART, TWI or SPI registers).
-> +- clocks:		Should be the Flexcom peripheral clock from PMC.
-> +- #address-cells:	Should be <1>
-> +- #size-cells:		Should be <1>
-> +- ranges:		Should be one range for the full I/O register region
-> +			(including USART, TWI and SPI registers).
-> +- atmel,flexcom-mode:	Should be one of the 3 following macros as def=
-ined in
+Signed-off-by: Stuart Yoder <stuart.yoder@freescale.com>
+---
+ Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-They're not macros.
-
-> +			include/dt-bindings/mfd/atmel-flexcom.h:
-
-This is Linux specific.  Please remove it from the binding document.
-
-> +			- ATMEL_FLEXCOM_MODE_USART for USART
-> +			- ATMEL_FLEXCOM_MODE_SPI for SPI
-> +			- ATMEL_FLEXCOM_MODE_TWI for I2C
-> +
-> +Required child:
-> +a single child device of type matching the "atmel,flexcom-mode" prop=
-erty.
-
-s/a/A/
-
-> +The reg property of this child should be:
-> +- <0x200 0x200> for USART
-> +- <0x400 0x200> for SPI
-> +- <0x600 0x200> for I2C
-
-Address/offset information doesn't belong in the binding document.
-
-> +The phandle provided by the clocks property of the child is the same=
- as one for
-> +the Flexcom parent.
-> +
-> +Other properties remain unchanged. See documentation of the respecti=
-ve device:
-
-Unchanged since when?
-
-> +- ../serial/atmel-usart.txt
-> +- ../spi/spi_atmel.txt
-> +- ../i2c/i2c-at91.txt
-> +
-> +Example:
-> +
-> +flexcom@f8034000 {
-> +	compatible =3D "atmel,sama5d2-flexcom";
-> +	reg =3D <0xf8034000 0x200>;
-> +	clocks =3D <&flx0_clk>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	ranges =3D <0x0 0xf8034000 0x800>;
-> +	atmel,flexcom-mode =3D <ATMEL_FLEXCOM_MODE_SPI>;
-> +
-> +	spi@400 {
-> +		compatible =3D "atmel,at91rm9200-spi";
-> +		reg =3D <0x400 0x200>;
-> +		interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH 7>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_flx0_default>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +		clocks =3D <&flx0_clk>;
-> +		clock-names =3D "spi_clk";
-> +		atmel,fifo-size =3D <32>;
-> +
-> +		mtd_dataflash@0 {
-> +			compatible =3D "atmel,at25f512b";
-> +			reg =3D <0>;
-> +			spi-max-frequency =3D <20000000>;
-> +		};
-> +	};
-> +};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+index c7a26ca..6aac955 100644
+--- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
++++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+@@ -30,11 +30,17 @@ Required properties:
+                         region may not be present in some scenarios, such
+                         as in the device tree presented to a virtual machine.
+ 
++    - msi-parent
++        Value type: <phandle>
++        Definition: Must be present and point to the MSI controller node
++                    handling message interrupts for the MC.
++
+ Example:
+ 
+         fsl_mc: fsl-mc@80c000000 {
+                 compatible = "fsl,qoriq-mc";
+                 reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
+                       <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
++                msi-parent = <&its>;
+         };
+ 
+-- 
+2.3.3
