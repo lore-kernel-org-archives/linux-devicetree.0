@@ -1,73 +1,72 @@
 From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v5 4/7] pinctrl: freescale: imx: allow mux_reg offset zero
-Date: Fri, 25 Sep 2015 12:47:26 +0200
-Message-ID: <20150925104726.GJ11805@pengutronix.de>
+Subject: Re: [PATCH v5 3/7] ARM: dts: imx: imx7d-sbd add iomuxc-lpsr hoggrp-2
+ pads
+Date: Fri, 25 Sep 2015 12:49:22 +0200
+Message-ID: <20150925104922.GK11805@pengutronix.de>
 References: <1443128043-21063-1-git-send-email-aalonso@freescale.com>
- <1443128043-21063-4-git-send-email-aalonso@freescale.com>
+ <1443128043-21063-3-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="va4/JQ6j8/8uipEp"
+	protocol="application/pgp-signature"; boundary="fUvfsPTz/SzOZDdw"
 Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443128043-21063-4-git-send-email-aalonso@freescale.com>
+In-Reply-To: <1443128043-21063-3-git-send-email-aalonso@freescale.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Adrian Alonso <aalonso@freescale.com>
 Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com, devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, yibin.gong@freescale.com
 List-Id: devicetree@vger.kernel.org
 
 
---va4/JQ6j8/8uipEp
+--fUvfsPTz/SzOZDdw
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 24, 2015 at 03:54:00PM -0500, Adrian Alonso wrote:
-> Allow mux_reg offset zero to be a valid pin_id, on imx7d
-> mux_conf reg offset is zero for iomuxc-lspr controller
+On Thu, Sep 24, 2015 at 03:53:59PM -0500, Adrian Alonso wrote:
+> Add imx7d-sdb iomuxc-lpsr hoggrp-2 default pads settings
 >=20
 > Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 > ---
 > Changes for V2: Resend
 > Changes for V3: Resend
-> Changes for V4: Simplify pin_id assigment when ZERO_OFFSET_VALID is set
-> Changes for V5:
-> - Drop patch pinctrl: freescale: imx: add ZERO_OFFSET_VALID flag
-> - Allow mux_reg ZERO OFFSET as pin_id
+> Changes for V4: Resend
+> Changes for V5: Resend
 >=20
->  drivers/pinctrl/freescale/pinctrl-imx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/boot/dts/imx7d-sdb.dts | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 >=20
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/fr=
-eescale/pinctrl-imx.c
-> index b9c6deb..23348d8 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-> @@ -550,7 +550,7 @@ static int imx_pinctrl_parse_groups(struct device_nod=
-e *np,
->  				conf_reg =3D -1;
->  		}
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sd=
+b.dts
+> index 8059458..c8a178c 100644
+> --- a/arch/arm/boot/dts/imx7d-sdb.dts
+> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
+> @@ -419,3 +419,18 @@
 > =20
-> -		pin_id =3D mux_reg ? mux_reg / 4 : conf_reg / 4;
-> +		pin_id =3D (mux_reg !=3D -1) ? mux_reg / 4 : conf_reg / 4;
+>  	};
+>  };
+> +
+> +&iomuxc_lpsr {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_hog_2>;
+> +
+> +	imx7d-sdb {
+> +		pinctrl_hog_2: hoggrp-2 {
+> +			fsl,pins =3D <
+> +				MX7D_PAD_GPIO1_IO05__GPIO1_IO5    0x14
+> +				MX7D_PAD_GPIO1_IO07__GPIO1_IO7    0x59
+> +				MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B 0x74
 
-This will break compatibility with imx35 and imx25 pinctrl drivers. They
-have definitions where mux_reg can be 0x0. See imx35-pinfunc.h and
-imx25-pinfunc.h:
-
-	git grep -E "0x0+ 0x.* 0x.* 0x.* 0x.*"
-
-This mux_reg behaviour was not described in the DT binding
-documentation. But it is used by some platforms. So even if you change
-the pincfunc headers to use "-1", it would break devicetrees compiled
-with earlier kernel versions.
+In my opinion this should still be in the pincontrol for the watchdog
+instead of hogging. Also it is not obvious what the GPIOs are for.
 
 Regards,
 
 Markus
 
->  		pin_reg =3D &info->pin_regs[pin_id];
->  		pin->pin =3D pin_id;
->  		grp->pin_ids[i] =3D pin_id;
+> +			>;
+> +		};
+> +	};
+> +};
 > --=20
 > 2.1.4
 >=20
@@ -80,26 +79,26 @@ Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
 Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
---va4/JQ6j8/8uipEp
+--fUvfsPTz/SzOZDdw
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJWBSY+AAoJEEpcgKtcEGQQi1oP/1xLdcApkQnCkQXArBj0fUn5
-1Ru/fAkS1rPoI425kHk6fBlOCi5cpjvFSXWPKr7lP4m3oFFdhu+WOTDD4rdCEVe8
-sHBsNw4LF6hF5LpvaQNxUecFlLxjIHruAHc9Id4ZTfqXdEv6zs0SueX/wBE3bdRb
-ZuHQCdA8+NEFaYgNyX+xO05aMg2ONSO0gsn14Z7VM7or7qi0UKrZvi28BMHiEsTC
-joMAvsb3CUF/4Du6YR2CyASu3O8EYrG6KnYwZh8+DCaDMXPJWDIQQzKurT1V3wQf
-lyKp/NFgEO0IAS9KffJiZc3Yj8mrU4GpfEC+9LyXcWI6u5urHA/qKcDcmeMD46Xt
-rAexs9YjGbVF5PQh5wQvAOq4Bd3zs6D9Y0BEyi05geJmkHBIKXze2YP8eMNyN/4O
-S3NVEKyxf0xVT7CNWTIjAWKZEd7rST3wmCDvcTQfhByr6QhBTUMkoxyfXiqq2dUU
-URG8GNg7hpIpHPdo+u0YOjBrxIrQ701JEfYTq27mDPam6pA3YLIX/LEpwBs165JV
-sAXdSakdMeN3VPvozhUoj+Ck2zu55Ga5Ds+fumap1nOZFZFsG3SEvB+DW/75iO5c
-pk8TNgk1QsbntncMn/r26/H7CU6Hw8Yc0IbNlE4d2DGROwCeP6sogblufXDpQkMH
-tLrEofsZABuCu8aVQfmz
-=fo/7
+iQIcBAEBAgAGBQJWBSayAAoJEEpcgKtcEGQQa1gP+QGgUas1Z23SNPvhGzauJ+Nu
+9zgKFc6YkWBOY8IJiHBaV+mo5VfbBXBion6/Q0OTjKTPV7jCnP4pQKd4yDe47c5Z
+sUEDSvO7XTELYofcxAeyp5cJF2gnG5qmUeyvv/QbrdiTBcmxwlpQPBqXOIJnihYV
+/DhbFsunDO16sb3i3GyUEa3258qxuWAo56PoL/++ocma5DdSi4Uq/iC0tjUzaHEi
+lNwQgM8Y9AJJ4oMpGf8mJfCIxA3PTvIA8N75CRnoRDGI0y3Bln9l7mJy7+1sijWA
+wCEq+D9lSCdW7/8Nbm4dsMHEsvdj7Wq/3cMqWwMSWjR6t0FMrHIPIGpWShlhX7Lt
+HLnB44hmZ3w2RiO1NFiV7ySn8ZcaWMPNqQVyooXjDci6uCbfcwF0Fu6aUlO2OyIS
+VgXdhdYNel+/OT5v3Pao+XKxpMIUC6r74XgGIMBVOEpwc95svXs0QrNav3lQQY0V
+HVGQU3DuIr5EnfiQNJzZHh7Ntv93BaE3O234KtBvHADnDTPk5v7X46sXCXo2nh1J
+AX4Hq9hwiVafYoteZhyGiluJGJR11GyifgprZLgpc/oOlEnYYD+80NGdqPQJ+L/i
+Mj2GRBKdiqcs50XcG5rvSEXw5OkspSyDJhrFgW41XLh3zfFtS5YiAGOCZF2kB09E
+rXOSTcoDgf6f/aXgKjg8
+=WQPW
 -----END PGP SIGNATURE-----
 
---va4/JQ6j8/8uipEp--
+--fUvfsPTz/SzOZDdw--
