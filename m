@@ -1,66 +1,51 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] ARM: dts: mt8135: enable basic SMP bringup for
- mt8135
-Date: Fri, 25 Sep 2015 13:46:25 +0800
-Message-ID: <1443159985.23134.0.camel@mtksdaap41>
-References: <1443109140-5406-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1443109140-5406-5-git-send-email-yingjoe.chen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443109140-5406-5-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
+Date: Fri, 25 Sep 2015 07:54:36 +0200
+Message-ID: <477D98CD-B014-41AE-9A78-22D632205D14@goldelico.com>
+References: <cover.1443031678.git.hns@goldelico.com> <1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com> <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, eric miao <eric.miao@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, Grazvydas Ignotas <notaz@openpandora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-09-24 at 23:38 +0800, Yingjoe Chen wrote:
-> Add arch timer node to enable arch-timer support. MT8135 firmware
-> doesn't correctly setup arch-timer frequency and CNTVOFF, add
-> properties to workaround this.
+
+Am 25.09.2015 um 00:11 schrieb Linus Walleij <linus.walleij@linaro.org>:
+
+> On Wed, Sep 23, 2015 at 11:13 AM, H. Nikolaus Schaller
+> <hns@goldelico.com> wrote:
 > 
-> This also set cpu enable-method to enable SMP.
+>> 1. add a DT property to specify the list of GPIO pins that are to become
+>>   "open drain"
+>> 2. if a pin is configured as "open drain", set value by either outputting a
+>>   "0" (low level) or switching to input (high impedance)
+>> 
+>> Tested on OMAP5 uEVM with TCA6424 and some LEDs connected to 5V.
+>> 
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > 
-> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/mt8135.dtsi | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+> I understand the approach, but this is the wrong way to do it.
+> Instead of indicating that a pin on the pin controller should be
+> open drain, the *consumer* specifying its gpios = <....> should
+> do this.
 > 
-> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-> index 08371db..c3c90f2 100644
-> --- a/arch/arm/boot/dts/mt8135.dtsi
-> +++ b/arch/arm/boot/dts/mt8135.dtsi
-> @@ -46,6 +46,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "mediatek,mt81xx-tz-smp";
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> @@ -72,6 +73,17 @@
->  		};
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		trustzone-bootinfo: trustzone-bootinfo@80002000 {
+> I just sent a patch adding the bindings because Tony Lindgren
+> and Grygorii Strashko approached me similar problems so let's
+> begin with the bindings.
+> 
+> Implementing it in the kernel requires some elaboration and it's
+> going to be more complicated than this local approach, but it
+> will be more generic and reusable so that is what we need to do.
+
+Ok, I understand.
+
+Should not be too difficult to modify the driver.
+
+BR,
+Nikolaus Schaller
 
 
-Sorry, this should be
-
-+		trustzone-bootinfo@80002000 {
-
-I'll fix this in next version.
-
-Joe.C
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
