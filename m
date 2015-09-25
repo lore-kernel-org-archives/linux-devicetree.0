@@ -1,46 +1,89 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/2] ASoC: atmel-classd: add driver for Atmel CLASSD
-Date: Fri, 25 Sep 2015 11:07:28 -0700
-Message-ID: <20150925180728.GP30445@sirena.org.uk>
-References: <1443073287-17849-1-git-send-email-songjun.wu@atmel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: arm: Fix typo in the idle-states bindings examples
+Date: Fri, 25 Sep 2015 13:32:04 -0500
+Message-ID: <CAL_JsqJ4zBhVKOuMTxOVDB_kim4+R4Tb=tO3ugEoXzLO63a07w@mail.gmail.com>
+References: <1443106436-542-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fW6jlebSFjIjuLDN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443073287-17849-1-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443106436-542-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 24, 2015 at 9:53 AM, Lorenzo Pieralisi
+<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> The idle-states bindings mandate that the entry-method string
+> in the idle-states node must be "psci" for ARM v8 64-bit systems,
+> but the examples in the bindings report a wrong entry-method string.
+> Owing to this typo, some dts in the kernel wrongly defined the
+> entry-method property, since they likely cut and pasted the example
+> definition without paying attention to the bindings definitions.
+>
+> This patch fixes the typo in the DT idle states bindings examples and
+> respective dts in the kernel so that the bindings and related dts
+> files are made compliant.
+>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Cc: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
---fW6jlebSFjIjuLDN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied. Thanks.
 
-On Thu, Sep 24, 2015 at 01:41:25PM +0800, Songjun Wu wrote:
+Rob
 
-> Songjun Wu (2):
->   ASoC: atmel-classd: add the Audio Class D Amplifier
->   ASoC: atmel-classd: DT binding for Class D audio amplifier driver
-
-I don't seem to have the second patch with the binding documentation.
-
---fW6jlebSFjIjuLDN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWBY1gAAoJECTWi3JdVIfQKVkH/3PaVzfnwZD2YGvngkGtMME1
-tt1jaMuPmGY2Wf5NCB2DpldD6Oj0BQOfFSnXrg1/bwlIXy3wBpMzT4H3oQixMi/W
-uFQ0yWNnvinV5ywG8MvN+9V0ibQMYMwELb+6wGqGm+vrA2KGmMJchWSzs05wMk19
-/Idf6bLewy8evyjdMbGCt9qSQseSpSc//xOoLGlHFtC7O7WC4DMqzY9L0z3VpCAR
-HXvPAJGZt23kci5784V5X2EwNKstxu+eSWv/ggL35GIZdDRbamOZFya0quQzPjtm
-binAznaIe47a3GWN4eIHqM/ApfNLD0LVZ0z8WPozieMouqLMH5rSf9Fmfo76nhA=
-=VHH7
------END PGP SIGNATURE-----
-
---fW6jlebSFjIjuLDN--
+> ---
+>  Documentation/devicetree/bindings/arm/idle-states.txt | 2 +-
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi              | 2 +-
+>  arch/arm64/boot/dts/rockchip/rk3368.dtsi              | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+> index a8274ea..b8e41c1 100644
+> --- a/Documentation/devicetree/bindings/arm/idle-states.txt
+> +++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+> @@ -497,7 +497,7 @@ cpus {
+>         };
+>
+>         idle-states {
+> -               entry-method = "arm,psci";
+> +               entry-method = "psci";
+>
+>                 CPU_RETENTION_0_0: cpu-retention-0-0 {
+>                         compatible = "arm,idle-state";
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index d18ee42..06a1564 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -81,7 +81,7 @@
+>                 };
+>
+>                 idle-states {
+> -                       entry-method = "arm,psci";
+> +                       entry-method = "psci";
+>
+>                         CPU_SLEEP_0: cpu-sleep-0 {
+>                                 compatible = "arm,idle-state";
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> index a712bea..cc093a4 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> @@ -106,7 +106,7 @@
+>                 };
+>
+>                 idle-states {
+> -                       entry-method = "arm,psci";
+> +                       entry-method = "psci";
+>
+>                         cpu_sleep: cpu-sleep-0 {
+>                                 compatible = "arm,idle-state";
+> --
+> 2.5.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
