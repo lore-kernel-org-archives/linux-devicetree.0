@@ -1,53 +1,110 @@
 From: Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: [PATCHv4 2/3] devicetree: Add new ANX7814 SlimPort transmitter
- binding.
-Date: Fri, 25 Sep 2015 21:29:27 +0200
-Message-ID: <1443209368-7135-3-git-send-email-enric.balletbo@collabora.com>
-References: <1443209368-7135-1-git-send-email-enric.balletbo@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1443209368-7135-1-git-send-email-enric.balletbo@collabora.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCHv4 0/3] Add initial support for slimport anx78xx
+Date: Fri, 25 Sep 2015 21:29:25 +0200
+Message-ID: <1443209368-7135-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
-Cc: mark.rutland@arm.com, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, dan.carpenter@oracle.com, nathan.chung@mediatek.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org, span@analogixsemi.com, nathan.chung@mediatek.com, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, dan.carpenter@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFOWDc4MTQgaXMgYW4gdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIFNsaW1Q
-b3J0IHRyYW5zbWl0dGVyCmRlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2VzLgoKWW91IGNhbiBh
-ZGQgc3VwcG9ydCB0byB5b3VyIGJvYXJkIHdpdGggY3VycmVudCBiaW5kaW5nLgoKRXhhbXBsZToK
-Cglhbng3ODE0OiBhbng3ODE0QDM4IHsKCQljb21wYXRpYmxlID0gImFuYWxvZ2l4LGFueDc4MTQi
-OwoJCXJlZyA9IDwweDM4PjsKCQlwZC1ncGlvcyA9IDwmZ3BpbzAgMSBHUElPX0FDVElWRV9ISUdI
-PjsKCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzAgMiBHUElPX0FDVElWRV9ISUdIPjsKCX07CgpTaWdu
-ZWQtb2ZmLWJ5OiBFbnJpYyBCYWxsZXRibyBpIFNlcnJhIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJv
-cmEuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0
-LnR4dCAgIHwgMjIgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDIyIGlu
-c2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdmlkZW8vYnJpZGdlL2FueDc4MTQudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9icmlkZ2UvYW54NzgxNC50eHQKbmV3
-IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uYThjYzc0NgotLS0gL2Rldi9udWxsCisr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9icmlkZ2UvYW54Nzgx
-NC50eHQKQEAgLTAsMCArMSwyMiBAQAorQW5hbG9naXggQU5YNzgxNCBTbGltUG9ydCAoRnVsbC1I
-RCBUcmFuc21pdHRlcikKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tCisKK1RoZSBBTlg3ODE0IGlzIGFuIHVsdHJhLWxvdyBwb3dlciBGdWxsLUhEICgxMDgw
-cDYwKSBTbGltUG9ydCB0cmFuc21pdHRlcgorZGVzaWduZWQgZm9yIHBvcnRhYmxlIGRldmljZXMu
-CisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisKKyAtIGNvbXBhdGlibGUJOiAiYW5hbG9naXgsYW54
-NzgxNCIKKyAtIHJlZwkJOiBJMkMgYWRkcmVzcyBvZiB0aGUgZGV2aWNlCisgLSBwZC1ncGlvcwk6
-IFdoaWNoIEdQSU8gdG8gdXNlIGZvciBwb3dlciBkb3duCisgLSByZXNldC1ncGlvcwk6IFdoaWNo
-IEdQSU8gdG8gdXNlIGZvciByZXNldAorCitFeGFtcGxlOgorCisJYW54NzgxNDogYW54NzgxNEAz
-OCB7CisJCWNvbXBhdGlibGUgPSAiYW5hbG9naXgsYW54NzgxNCI7CisJCXJlZyA9IDwweDM4PjsK
-KwkJcGQtZ3Bpb3MgPSA8JmdwaW8wIDEgR1BJT19BQ1RJVkVfSElHSD47CisJCXJlc2V0LWdwaW9z
-ID0gPCZncGlvMCAyIEdQSU9fQUNUSVZFX0hJR0g+OworCX07CisKLS0gCjIuMS4wCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi all,
+
+This is the fouth version with fixes suggested by Nicolas Boichat and Dan Carpenter.
+
+See the changelog below for details.
+
+The following series add initial support for the Slimport ANX7814 transmitter, a
+ultra-low power Full-HD (1080p60) transmitter designed for portable device.
+
+The driver was originally created and based from the work of Junhua Xia from
+Analogix. This driver is a refactor of the original driver and fixes different
+coding style lines, and different errors/warnings reported by checkpatch. Also
+there were things that I noticed that we need to change like:
+
+ - Convert the numbered GPIO API to the new descriptor based GPIO API.
+ - Review the DT binding
+ - Add missing MODULE_DEVICE_TABLE(of, ...);
+ - Fix Makefiles and Kconfig to build conditionally.
+ - Use SIMPLE_DEV_PM_OPS() instead of the deprecated i2c .suspend and
+  .resume callbacks.
+ - Move to use managed device resources.
+ - Remove dead/unused code.
+ - And others ...
+
+Changes since v3:
+
+Nicolas Boichat: 
+ - Integrate sp_edid_header_result with sp_check_edid_data
+ - Fix loop forever.
+ - Use meaningful messages and variable names
+ - Replace some 'while' loops and use a for loop.
+ - Might be clearer to say >= LINK_6P75G
+ - Convert a function to void function because always return 0
+ - Remove some magic numbers and refactor sp_tx_pclk_calc
+ - Replace sp_read_reg(SP_TX_LINK_BW_SET_REG) for sp_tx_get_link_bw.
+ - Mask bits 4:0. Bit 5 has another purpose, and 7:6 are reserved.
+ - Use ARRAY_SIZE.
+ - Use memset for initialization.
+ - Simply condition if (!(c1 & POLLING_EN) || (c & POLLING_ERR))
+ - Don not use a temporal variable write the value directly.
+ - Fix various typos
+ - Return directly PTR_ERR.
+
+Dan Carpenter: 
+ - Refactor while loop removing the earlier condition and do while (--c) instead
+ - Simplify double negative and fix alignment
+ - Remove the superflous casts to u16 and parens
+ - Remove debug printks and use ftrace instead.
+ - Flip this condition around and pull the code in one indent level.
+ - Fix return value 'ret' that should be an int. It causes a signedness bug later.
+ - Use better style for devm_kzalloc
+ - Get rid of AUX_*.  They aren't used much and we could easily use normal error codes instead.
+
+Enric Balletbo
+ - Fix errors reported by scripts/checkpatch.pl --strict --subjective
+ - Remove XTAL_CLK_M10 XTAL_CLK definitions
+ - replace ulong for unsigned long
+ - remove some magic numbers and refactor sp_tx_enable_audio_output
+ - remove some magic numbers and refactor sp_tx_phy_auto_test
+
+Changes since v2 (requested by Daniel Kurtz):
+ - clean up the typos, and little nits requested by Dan.
+ - move to the drm/bridge directory
+ - rename the files, variables, types, etc. to anx78xx
+ - plumb through the context struct to all functions that act on the device
+ - use proper messaging (dev_ rather than pr_, _dbg/_err rather than _info)
+
+Changes since v1:
+ - As requested by Greg, move from staging to a subsystem.
+
+Best regards,
+
+Enric Balletbo i Serra (3):
+  of: Add vendor prefix for Analogix Semiconductor, Inc.
+  devicetree: Add new ANX7814 SlimPort transmitter binding.
+  drm: bridge: anx78xx: Add anx78xx driver support by analogix.
+
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ .../devicetree/bindings/video/bridge/anx7814.txt   |   22 +
+ drivers/gpu/drm/bridge/Kconfig                     |    2 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/anx78xx/Kconfig             |    7 +
+ drivers/gpu/drm/bridge/anx78xx/Makefile            |    4 +
+ drivers/gpu/drm/bridge/anx78xx/anx78xx.h           |   41 +
+ drivers/gpu/drm/bridge/anx78xx/anx78xx_main.c      |  228 ++
+ drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c   | 3148 ++++++++++++++++++++
+ drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.h   |  214 ++
+ drivers/gpu/drm/bridge/anx78xx/slimport_tx_reg.h   |  807 +++++
+ 11 files changed, 4475 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/Kconfig
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/Makefile
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/anx78xx.h
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/anx78xx_main.c
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.h
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_reg.h
+
+-- 
+2.1.0
