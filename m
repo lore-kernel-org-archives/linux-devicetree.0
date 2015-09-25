@@ -1,61 +1,65 @@
-From: Nishanth Menon <menon.nishanth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: keystone: provide SoC specific
- compatible flags
-Date: Fri, 25 Sep 2015 12:38:39 -0500
-Message-ID: <5605869F.9080906@gmail.com>
-References: <1442938118-4718-1-git-send-email-nm@ti.com> <1442938118-4718-2-git-send-email-nm@ti.com> <5602ED34.9010108@oracle.com> <56040323.1080409@ti.com> <560406C2.6090200@ti.com> <56041CA4.40208@ti.com> <56055F1F.4060401@ti.com> <560565AF.2010701@oracle.com> <56056FD9.5060000@ti.com> <56057319.9080104@oracle.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: DT: Add binding documentation for
+ NVIDIA ADMA
+Date: Fri, 25 Sep 2015 02:16:30 +0100
+Message-ID: <20150925011630.GA2569@svinekod>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com>
+ <1443193000-457-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56057319.9080104-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443193000-457-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2015 11:15 AM, santosh shilimkar wrote:
-> 9/25/2015 9:01 AM, Nishanth Menon wrote:
->> On 09/25/2015 10:18 AM, santosh shilimkar wrote:
->>> On 9/25/2015 7:50 AM, Nishanth Menon wrote:
->> [...]
->>>> But, how about userspace
->>>> needing to know which SoC they are on, without needing to depend on
->>>> board->soc mapping? How do we help resolve that?
->>>>
->>> Why the user space should care about exact SOC ?
->>
->> examples vary - trivial one is: debug tools like omapconf[1] or testing
->> tools like opentest[2] need some standard way to ensure Linux kernel is
->> functional - trusting the least set of parameters is usually what we
->> would prefer. while building a generic distro such as debian or yocto,
->> one prefers NOT to need to do a package build per SoC/perboard - that
->> never scales. instead, you'd like the same application run on different
->> systems dynamically.
->>
-> I guessed omapconf example is coming though Keystone has no such tool
-
-:) That is true - as of now. maynot be the case for future.
-
-> yet ;-). Opentest shouldn't need that info either.
-
-we did debate this on opentest, but we could not implement anything
-since we did not have a consistent solution yet.
-
-> I do agree that having a soc along with board is useful in
-> longer run to accommodation more boards and variants.
-> And only on that merit, I am willing to take these patches.
+On Fri, Sep 25, 2015 at 03:56:39PM +0100, Jon Hunter wrote:
+> Add device-tree binding documentation for the Tegra210 Audio DMA
+> controller.
 > 
-> Please refresh the series commit messages based on the
-> discussion so far and repost. Will pick it up then.
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/dma/tegra210-adma.txt      | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/tegra210-adma.txt
 > 
-Thanks. I will do so (probably early next week)..
+> diff --git a/Documentation/devicetree/bindings/dma/tegra210-adma.txt b/Documentation/devicetree/bindings/dma/tegra210-adma.txt
+> new file mode 100644
+> index 000000000000..af04b3c5a557
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/tegra210-adma.txt
+> @@ -0,0 +1,47 @@
+> +* NVIDIA Tegra Audio DMA controller
+> +
+> +Required properties:
+> +- compatible: Should be "nvidia,<chip>-adma"
 
+Where <chip> can be?
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg: Should contain DMA registers location and length. This should include
+> +  all of the per-channel registers.
+
+This is one contiguous bank?
+
+> +- interrupt-parent: Phandle to the interrupt parent controller.
+> +- interrupts: Should contain all of the per-channel DMA interrupts.
+
+In which particular order?
+
+> +- clocks: Must contain two entries, one for the power-domain clock and one
+> +  for the module clock. See ../clocks/clock-bindings.txt for details.
+
+The example dts and driver rely on clock-names.
+
+Please define the set of clock-names, and define clocks in terms of
+clock-names.
+
+> +- dma-channels: Number of DMA channels supported by the controller.
+> +- #dma-cells : Must be <0>.
+
+As others have pointed out, this doesn't seem right.
+
+Thanks,
+Mark.
