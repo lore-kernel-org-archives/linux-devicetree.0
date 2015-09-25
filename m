@@ -1,61 +1,88 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] Revert "ARM: dts: sun8i: Add new
- sun8i-a33-q8-tzx-723q4.dts file"
-Date: Fri, 25 Sep 2015 08:42:58 +0200
-Message-ID: <20150925064258.GA4684@lukather>
-References: <1443108234-14837-1-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TguDem35cI6GfxJY"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB46ZSOYAKGQEZQB6ORI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443108234-14837-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
+Date: Fri, 25 Sep 2015 08:49:51 +0200
+Message-ID: <FEB50554-2A45-4B3C-A896-EBF723AB3572@goldelico.com>
+References: <cover.1443031678.git.hns@goldelico.com> <1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com> <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, eric miao <eric.miao@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, Grazvydas Ignotas <notaz@openpandora.org>
 List-Id: devicetree@vger.kernel.org
 
---TguDem35cI6GfxJY
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-On Thu, Sep 24, 2015 at 05:23:52PM +0200, Hans de Goede wrote:
-> The tzx-723q[a]4 board variant of A33 based Q8 formfactor tablets was
-> given its own dts file because the mmc would not work with a drive
-> strength of 30mA, Android seemed to be using a lower drive-strength
-> and doing the same with the upstream kernel seemed to fix this issue.
-> 
-> While working on a similar fix for u-boot I noticed that Android did
-> not use a lower drive strength for mmc0, but for mmc1, so mmc0 should
-> work fine with a drive strength of 30mA.
-> 
-> Further investigation has shown that Allwinner is using slightly
-> tweaked clock sample phase settings in newer Android kernels, and
-> that updating the mainstream sunxi mmc driver to these settings fixes
-> this.
-> 
-> With this fixed we no longer need a dts file specifically for these
-> pcb varants -> drop this dts file.
+Am 25.09.2015 um 00:11 schrieb Linus Walleij <linus.walleij@linaro.org>=
+:
 
-I dropped the patch.
+> On Wed, Sep 23, 2015 at 11:13 AM, H. Nikolaus Schaller
+> <hns@goldelico.com> wrote:
+>=20
+>> 1. add a DT property to specify the list of GPIO pins that are to be=
+come
+>>   "open drain"
+>> 2. if a pin is configured as "open drain", set value by either outpu=
+tting a
+>>   "0" (low level) or switching to input (high impedance)
+>>=20
+>> Tested on OMAP5 uEVM with TCA6424 and some LEDs connected to 5V.
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>=20
+> I understand the approach, but this is the wrong way to do it.
+> Instead of indicating that a pin on the pin controller should be
+> open drain, the *consumer* specifying its gpios =3D <....> should
+> do this.
 
-> This reverts commit fb61c559a810f1487892b83d2d0606af1d020318.
+On a second thought I am no longer sure if that is the right approach.
 
-Checkpatch prints an error about this one. Make sure you have the
-right commit format.
+A gpio is for input and output of =930=94 and =931=94 values. And a gpi=
+o consumer
+can control if the output should be active or inactive and input.
 
-Thanks!
-Maxime
+How the output is physically represented (totem-pole or single-ended,
+high power, low power etc.) is not a property of the gpio itself and
+there is IMHO no need for the consumer to be able to define (or change)
+it.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---TguDem35cI6GfxJY--
+On SoC with integrated gpio controllers it is very common to have
+pinmux definitions completely separated from the gpio controller
+properties. But the gpio consumer can connect to pinctrl settings
+to describe that the pin should have certain physical properties.
+
+There, it is common to be able to enable/disable pull-up/downs as
+well.
+
+So turning a totem-pole output (as it is available in the tca6424)
+into an open-drain output is sort of turning off the pull-up transistor=
+=2E
+I.e. comparable to a pinmux setting.
+
+So such controllers should get the option to define pinctrl.
+
+Some chips might have special control registers for doing that
+while others need the trick to switch between input and output
+mode but that is driver implementation detail.
+
+But I am not sure if this has other implications.
+
+>=20
+> I just sent a patch adding the bindings because Tony Lindgren
+> and Grygorii Strashko approached me similar problems so let's
+> begin with the bindings.
+>=20
+> Implementing it in the kernel requires some elaboration and it's
+> going to be more complicated than this local approach, but it
+> will be more generic and reusable so that is what we need to do.
+>=20
+> Yours,
+> Linus Walleij
+
+BR,
+Nikolaus Schaller--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
