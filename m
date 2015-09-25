@@ -1,56 +1,76 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 0/9] Phy, mdiobus, and netdev struct device fixes
-Date: Fri, 25 Sep 2015 00:33:03 +0100
-Message-ID: <20150924233303.GJ21513@n2100.arm.linux.org.uk>
-References: <20150924191754.GC21513@n2100.arm.linux.org.uk>
- <20150924215731.GE20825@lunn.ch>
- <20150924221541.GF21513@n2100.arm.linux.org.uk>
- <20150924225033.GI20825@lunn.ch>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 4.3
+Date: Thu, 24 Sep 2015 19:15:17 -0500
+Message-ID: <CAL_Jsq+f33VOG6EBeP9GyrLQSdh06BDKr40QihXtkiF6_5SmXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150924225033.GI20825@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Sunil Goutham <sgoutham@cavium.com>, Robert Richter <rric@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Iyappan Subramanian <isubramanian@apm.com>, Grant Likely <grant.likely@linaro.org>, Li Yang <leoli@freescale.com>, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 25, 2015 at 12:50:33AM +0200, Andrew Lunn wrote:
-> > Thanks for testing.  Please could you confirm whether the same behaviour
-> > is observed without the patches, just to make absolutely sure that isn't
-> > a regression.
-> 
-> So i tested this now.
-> 
-> I have two FEC interfaces. One i my main access interface, and the
-> second is used by DSA to access switches. With your patches, the
-> module Used by count is equal to the number of interfaces which are
-> up.
-> 
-> Without your patches, the count is always 0.
+Hi Linus,
 
-That will be as a result of the MDIO bus module refcounting patch -
-"phy: fix mdiobus module safety".  The code prior to that patch was
-totally useless and ineffectual - it might as well not even have
-been present, because it would never have any effect.  bus_module
-would always be NULL in phy_attach_direct().
+Please pull DT fixes for 4.3. Details below.
 
-While my change makes the code start to work as originally intended,
-it's still unsafe: there's nothing to stop you manually unbinding the
-driver providing the MDIO bus from the struct device.  The driver
-will then free the resources it claimed in its probe function, which
-may include the MMIO mapping for the MDIO bus accessor functions.
+Rob
 
-If the accessors are then called, despite keeping the mdio bus, phy,
-etc data structures properly refcounted, the kernel will oops when
-the (many) MDIO bus drivers hit the free'd MMIO mapping.  This is,
-unfortunately, just another pre-existing bug in this code.
+The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
 
-To stop that, we need some way to say "this MDIO bus has been removed,
-prevent further access" and that needs to be done in a race free way.
-Right now, that doesn't exist.
+  Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.3
+
+for you to fetch changes up to a13f18f59d2646754cda3662a9e215ff43e7a7d5:
+
+  Documentation: arm: Fix typo in the idle-states bindings examples
+(2015-09-24 17:55:32 -0500)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.3:
+
+- Silence bogus warning for of_irq_parse_pci
+- Fix typo in ARM idle-states binding doc and dts files
+- Various minor binding documentation updates
+
+----------------------------------------------------------------
+David Daney (1):
+      of_pci_irq: Silence bogus "of_irq_parse_pci() failed ..." messages.
+
+Hans de Goede (1):
+      devicetree: bindings: Extend the bma180 bindings with bma250 info
+
+Javier Martinez Canillas (1):
+      gpio: mention in DT binding doc that <name>-gpio is deprecated
+
+Lorenzo Pieralisi (1):
+      Documentation: arm: Fix typo in the idle-states bindings examples
+
+Mark Rutland (1):
+      Docs: dt: add #msi-cells to GICv3 ITS binding
+
+Masahiro Yamada (1):
+      of: add vendor prefix for Socionext Inc.
+
+Punit Agrawal (2):
+      of: thermal: Fix inconsitency between cooling-*-state and cooling-*-level
+      of: thermal: Mark cooling-*-level properties optional
+
+ Documentation/devicetree/bindings/arm/gic-v3.txt   |  5 ++++
+ .../devicetree/bindings/arm/idle-states.txt        |  2 +-
+ Documentation/devicetree/bindings/gpio/gpio.txt    |  4 +++-
+ .../devicetree/bindings/iio/accel/bma180.txt       |  8 +++++--
+ .../devicetree/bindings/thermal/thermal.txt        | 27 +++++++++++-----------
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  2 +-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +-
+ drivers/of/of_pci_irq.c                            | 22 +++++++++++-------
+ 9 files changed, 46 insertions(+), 27 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
