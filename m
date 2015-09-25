@@ -1,51 +1,46 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: add vendor prefix for Socionext Inc.
-Date: Fri, 25 Sep 2015 16:46:14 -0500
-Message-ID: <CAL_JsqKMC76KUue0a+dnODmRA2gZNPgTXedhKsabD5xz3i1G3A@mail.gmail.com>
-References: <1438163133-4539-1-git-send-email-yamada.masahiro@socionext.com>
- <20150824065724.GB3247@x1> <CAL_JsqLjV+m+nRd7aW1GWg-rzwO+ndzAPxCUcRTatzaq+RvHQw@mail.gmail.com>
- <CAK7LNAT7CrSX-spOVOEsDwjGiXRcKe_C+TCkUx=_rjRmBwbFiQ@mail.gmail.com> <20150909080422.GC3260@x1>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 0/2] pwm: Broadcom BCM7038 PWM controller (v4)
+Date: Fri, 25 Sep 2015 16:05:05 -0700
+Message-ID: <5605D321.6000207@gmail.com>
+References: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150909080422.GC3260@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, ariel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 9, 2015 at 3:04 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 09 Sep 2015, Masahiro Yamada wrote:
->> 2015-08-25 0:11 GMT+09:00 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> > On Mon, Aug 24, 2015 at 1:57 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> >> On Wed, 29 Jul 2015, Masahiro Yamada wrote:
->> >>
->> >>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> >>> ---
->> >>>
->> >>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->> >>>  1 file changed, 1 insertion(+)
->> >>
->> >> Patch has been around for nearly a month and is pretty trivial, so I'm
->> >> just going to go ahead an apply it.
->> >
->> > Okay. I just added it now going thru my backlog, but will drop it.
->> >
->> > Rob
->> >
->>
->> So, where has this patch gone?
->>
->> I've not seen it anywhere.
->
-> That's a very good question.  I must have mis-applied it some how.
->
-> Sorry for this.  I will try to get it into v4.3 by hook or by crook.
+On 14/09/15 16:47, Florian Fainelli wrote:
+> Hi,
+> 
+> This patch series add PWM support for the Broadcom BCM7xxx
+> chips which feature one or more PWM controllers capable of
+> output periods from 148ns to ~622ms using a combination of
+> variable and fixed frequency settings.
 
-I've applied this and it is in Linus' tree now.
+Thierry, are you happy with this version of the patches? Thanks.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> The controller does not support setting a polarity.
+> 
+> This is based on Thierry's pwm/next branch.
+> 
+> Florian Fainelli (2):
+>   Documentation: dt: add Broadcom BCM7038 PWM controller binding
+>   pwm: Add Broadcom BCM7038 PWM controller support
+> 
+>  .../devicetree/bindings/pwm/brcm,bcm7038-pwm.txt   |  20 ++
+>  drivers/pwm/Kconfig                                |  10 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-brcmstb.c                          | 345 +++++++++++++++++++++
+>  4 files changed, 376 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+>  create mode 100644 drivers/pwm/pwm-brcmstb.c
+> 
+
+
+-- 
+Florian
