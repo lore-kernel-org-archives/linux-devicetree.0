@@ -1,85 +1,60 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Fri, 25 Sep 2015 22:24:46 +0100
-Message-ID: <20150925212446.GL27197@x1>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-4-git-send-email-afd@ti.com>
- <20150925165059.GI27197@x1>
- <56059CDA.4020004@ti.com>
+Subject: Re: [PATCH linux-next v10 1/3] mfd: atmel-flexcom: create include
+ file with macros used by DT bindings
+Date: Fri, 25 Sep 2015 22:26:18 +0100
+Message-ID: <20150925212618.GM27197@x1>
+References: <cover.1443087121.git.cyrille.pitchen@atmel.com>
+ <af5839d98ab0259b92b905f3403e224d62bfc787.1443087121.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56059CDA.4020004-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <af5839d98ab0259b92b905f3403e224d62bfc787.1443087121.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Sep 2015, Andrew F. Davis wrote:
+On Thu, 24 Sep 2015, Cyrille Pitchen wrote:
 
-> On 09/25/2015 11:50 AM, Lee Jones wrote:
-> >On Thu, 24 Sep 2015, Andrew F. Davis wrote:
-> >
-> >>This patch adds support for TPS65912 mfd device. It provides
-> >>communication through the I2C and SPI interfaces. It contains
-> >>the following components:
-> >>
-> >>  - Regulators
-> >>  - GPIO controller
-> >>
-> >>Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> >>---
-> >>  drivers/mfd/Kconfig          |  24 +++
-> >>  drivers/mfd/Makefile         |   3 +
-> >>  drivers/mfd/tps65912-core.c  | 114 +++++++++++++
-> >>  drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
-> >>  drivers/mfd/tps65912-spi.c   |  85 ++++++++++
-> >>  include/linux/mfd/tps65912.h | 393 ++++++++++++++++++++++++++++++=
-+++++++++++++
-> >>  6 files changed, 705 insertions(+)
-> >>  create mode 100644 drivers/mfd/tps65912-core.c
-> >>  create mode 100644 drivers/mfd/tps65912-i2c.c
-> >>  create mode 100644 drivers/mfd/tps65912-spi.c
-> >>  create mode 100644 include/linux/mfd/tps65912.h
-> >
-> >[...]
-> >
-> >>+#define TPS65912_IRQ(_name, _reg, _offset)			\
-> >>+	[TPS65912_IRQ_ ## _name] =3D {				\
-> >>+		.mask =3D TPS65912_ ## _reg ## _ ## _name,	\
-> >>+		.reg_offset =3D _offset,				\
-> >>+	}
-> >
-> >I told you about this already.
-> >
-> >If you want this set to be merged for v4.3 then you'll need commit
-> >b4fe8ba ("regmap: Add generic macro to define regmap_irq") from my
-> >tree.
+> This patch defines some macros to be used as value for the
+> "atmel,flexcom-mode" DT property. This value is then written into
+> the Operating Mode (OPMODE) bit field of the Flexcom Mode Register.
 >=20
-> You asked me to submit this to Mark Brown, I didn't realize you also
-> wanted me to use the one in your tree. Using yours will make my lines
-> over 80 chars and so it kind of defeats the purpose but I'll do it
-> for v4.
-
-I asked two of you to upstream a generic incarnation of your
-implementation.  The other guy got there first.  Now I want everyone
-to use it instead of hand-rolling their own.
-
-> >[...]
-> >
-> >>+static struct i2c_driver tps65912_i2c_driver =3D {
-> >>+	.driver		=3D {
-> >>+		.name	=3D "tps65912",
-> >>+		.of_match_table =3D tps65912_i2c_of_match_table,
-> >
-> >of_match_ptr()
-> >
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  include/dt-bindings/mfd/atmel-flexcom.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
 >=20
-> Why? tps65912_i2c_of_match_table is always compiled in.
+> diff --git a/include/dt-bindings/mfd/atmel-flexcom.h b/include/dt-bin=
+dings/mfd/atmel-flexcom.h
+> new file mode 100644
+> index 000000000000..6728f2851b4d
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/atmel-flexcom.h
+> @@ -0,0 +1,16 @@
+> +/*
+> + * This header provides macros for Atmel Flexcom DT bindings.
+> + *
+> + * Copyright (C) 2015 Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> + *
+> + * GPLv2 only
 
-But it needn't be.
+I'm not sure this constitutes as a proper licence statement.
+
+> + */
+> +
+> +#ifndef __DT_BINDINGS_ATMEL_FLEXCOM_H__
+> +#define __DT_BINDINGS_ATMEL_FLEXCOM_H__
+> +
+> +#define ATMEL_FLEXCOM_MODE_USART	1
+> +#define ATMEL_FLEXCOM_MODE_SPI		2
+> +#define ATMEL_FLEXCOM_MODE_TWI		3
+> +
+> +#endif /* __DT_BINDINGS_ATMEL_FLEXCOM_H__ */
 
 --=20
 Lee Jones
