@@ -1,217 +1,98 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] clocksource: rockchip: Make the driver more
- readability and compatible
-Date: Thu, 24 Sep 2015 17:25:26 -0700
-Message-ID: <56049476.1040605@linaro.org>
-References: <1442566271-10695-1-git-send-email-wxt@rock-chips.com>
- <1442566271-10695-2-git-send-email-wxt@rock-chips.com>
- <5455510.kk9S3OIaU9@diego> <56016275.4080704@rock-chips.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/6] extcon: arizona: Add device binding for second jack
+ detect pin on GPIO5
+Date: Fri, 25 Sep 2015 09:54:26 +0900
+Message-ID: <56049B42.7030509@samsung.com>
+References: <1442397404-7579-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1442397404-7579-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56016275.4080704-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-reply-to: <1442397404-7579-5-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Charles,
 
-Hi Caesar,
+I have one comment.
+I think current extcon-arizona.c has the many platform data
+so, extcon-arizona.c use the too much if statement to support each feat=
+ure
+for different wolfsonmicro codec. I think it cause the complicated code=
+=2E
 
-so thinking a bit more about this patch. I would like to split it into=20
-two. One fixing the NO_IRQ and another fixing the dsb().
+=46or example,
+You may use 'struct of_device_id' as following. You used already this m=
+ethod
+on drivers/mfd/arizona-core.c. If you separate the function of each wmX=
+XXX arizona,
+it makes improved readability for extcon-arizona.c and some user will u=
+se extcon-arizora
+more easily.
 
-IIUC, the ARMv8 support is not yet ready and dsb() is not necessary as =
-a=20
-fix for the previous kernel version. However, the timer is used with th=
-e=20
-ARMv7 boards and the NO_IRQ should be merged into tip-urgent.
+struct arizona_extcon_data {
+	void (*init)(...);
+	void (*irq_handler)(...);
+	...=09
+};
 
-I already done the fix and I am ready to submit it (for the timer=20
-keystone also). So I suggest your resend the dsb() fix only.
+struct arizona_extcon_data wm8994_data {
+	.init =3D wm8994_extcon_init,
+	.irq_handler =3D wm8994_extcon_irq_handler;
+	...
+};
 
-Regarding the indentation, I prefer you do that in a separate patch by=20
-cleaning up the macros (if relevant) or send the patch to trivial@
+static const struct of_device_id arizona_extcon_dt_match[] =3D {
+	{
+		.compatible =3D "wm8994-arizona-extcon",
+		.data =3D (void *)wm8994_data;
+	}, {
+		.compatible =3D "wmXXXX-arizona-extcon",
+		.data =3D (void *)wmXXXX_data;
+	},=20
+};
 
-   -- Daniel
+I expect that you will revise the arizona-extcon.c driver on next time.
 
-On 09/22/2015 07:15 AM, Caesar Wang wrote:
-> Hi  Heiko,
->
-> =E5=9C=A8 2015=E5=B9=B409=E6=9C=8822=E6=97=A5 22:00, Heiko St=C3=BCbn=
-er =E5=86=99=E9=81=93:
->> Hi Caesar,
->>
->> Am Freitag, 18. September 2015, 16:51:09 schrieb Caesar Wang:
->>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
->>> There are some failure with build up on timer driver for rockchip.
->>>
->>> logs:
->>> ...
->>> drivers/clocksource/rockchip_timer.c:156:13: error: 'NO_IRQ' undecl=
-ared
->>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  operand=
- 1 --
->>> `dsb`
->>> ...
->>>
->>> The problem was different semantics of dsb on btw arm32 and arm64,
->>> Here we can convert the dsb with insteading of dsb(sy).
->>>
->>> NO_IRQ definition is missing for ARM64, since NO_IRQ being -1 is a
->>> legacy thing for ARM - all ARM drivers are supposed to be converted=
- to
->>> use <=3D 0 or =3D=3D 0 to detect invalid IRQs, and _eventually_ onc=
-e all users
->>> are gone, NO_IRQ deleted. Modern drivers should _all_ be using !irq=
- to
->>> detect invalid IRQs, and not using NO_IRQ.
->>>
->>> Meanwhile, I change a bit to make the code more readability for dri=
-ver
->>> when I check the code style.
->>>
->>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->>>
->>> Changes in v1:
->>> - As Russell, Thomas, Daniel comments, let's replace NO_IRQ by '!ir=
-q'.
->>>
->>>   drivers/clocksource/rockchip_timer.c | 29
->>> +++++++++++++++--------------
->>>   1 file changed, 15 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/clocksource/rockchip_timer.c
->>> b/drivers/clocksource/rockchip_timer.c index bb2c2b0..e1af449 10064=
-4
->>> --- a/drivers/clocksource/rockchip_timer.c
->>> +++ b/drivers/clocksource/rockchip_timer.c
->>> @@ -17,16 +17,16 @@
->>>
->>>   #define TIMER_NAME "rk_timer"
->>>
->>> -#define TIMER_LOAD_COUNT0 0x00
->>> -#define TIMER_LOAD_COUNT1 0x04
->>> -#define TIMER_CONTROL_REG 0x10
->>> -#define TIMER_INT_STATUS 0x18
->>> +#define TIMER_LOAD_COUNT0    0x00
->>> +#define TIMER_LOAD_COUNT1    0x04
->>> +#define TIMER_CONTROL_REG    0x10
->>> +#define TIMER_INT_STATUS    0x18
->>>
->>> -#define TIMER_DISABLE 0x0
->>> -#define TIMER_ENABLE 0x1
->>> -#define TIMER_MODE_FREE_RUNNING (0 << 1)
->>> -#define TIMER_MODE_USER_DEFINED_COUNT (1 << 1)
->>> -#define TIMER_INT_UNMASK (1 << 2)
->>> +#define TIMER_DISABLE            (0 << 0)
->>> +#define TIMER_ENABLE            (1 << 0)
->>> +#define TIMER_MODE_FREE_RUNNING        (0 << 1)
->>> +#define TIMER_MODE_USER_DEFINED_COUNT    (1 << 1)
->>> +#define TIMER_INT_UNMASK        (1 << 2)
->> not sure how Daniel sees this, but those could count as "unrelated
->> change", as
->> they have nothing to do with the arm64 build-fixes.
->
-> Yep, it's no related to the arm64 uild fixes.
-> I only make the code more readability for driver.
->
->>
->>>   struct bc_timer {
->>>       struct clock_event_device ce;
->>> @@ -49,14 +49,14 @@ static inline void __iomem *rk_base(struct
->>> clock_event_device *ce) static inline void rk_timer_disable(struct
->>> clock_event_device *ce) {
->>>       writel_relaxed(TIMER_DISABLE, rk_base(ce) + TIMER_CONTROL_REG=
-);
->>> -    dsb();
->>> +    dsb(sy);
->>>   }
->>>
->>>   static inline void rk_timer_enable(struct clock_event_device *ce,=
- u32
->>> flags) {
->>>       writel_relaxed(TIMER_ENABLE | TIMER_INT_UNMASK | flags,
->>>                  rk_base(ce) + TIMER_CONTROL_REG);
->>> -    dsb();
->>> +    dsb(sy);
->>>   }
->>>
->>>   static void rk_timer_update_counter(unsigned long cycles,
->>> @@ -64,13 +64,13 @@ static void rk_timer_update_counter(unsigned lo=
-ng
->>> cycles, {
->>>       writel_relaxed(cycles, rk_base(ce) + TIMER_LOAD_COUNT0);
->>>       writel_relaxed(0, rk_base(ce) + TIMER_LOAD_COUNT1);
->>> -    dsb();
->>> +    dsb(sy);
->>>   }
->>>
->>>   static void rk_timer_interrupt_clear(struct clock_event_device *c=
-e)
->>>   {
->>>       writel_relaxed(1, rk_base(ce) + TIMER_INT_STATUS);
->>> -    dsb();
->>> +    dsb(sy);
->>>   }
->>>
->>>   static inline int rk_timer_set_next_event(unsigned long cycles,
->>> @@ -148,7 +148,7 @@ static void __init rk_timer_init(struct
->>> device_node *np)
->>> bc_timer.freq =3D clk_get_rate(timer_clk);
->>>
->>>       irq =3D irq_of_parse_and_map(np, 0);
->>> -    if (irq =3D=3D NO_IRQ) {
->>> +    if (!irq) {
->>>           pr_err("Failed to map interrupts for '%s'\n", TIMER_NAME)=
-;
->>>           return;
->>>       }
->>> @@ -173,4 +173,5 @@ static void __init rk_timer_init(struct
->>> device_node *np)
->>>
->>>       clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MA=
-X);
->>>   }
->>> +
->> unnecessary addition of a blank line (same reasons as above)
->
-> It's the same reason with the above.
->
-> CHECK: Please use a blank line after function/struct/union/enum
-> declarations
-> #176: FILE: rockchip_timer.c:176:
-> +}
-> +CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer", rk_timer_i=
-nit);
->
-> I know, we can ignore the above warning.
-> That's a bit better, I thnik.
->
->
->>>   CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer",
->>> rk_timer_init);
->>
->> Heiko
->>
->> _______________________________________________
->> Linux-rockchip mailing list
->> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
->
+Thanks,
+Chanwoo Choi
 
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+On 2015=EB=85=84 09=EC=9B=94 16=EC=9D=BC 18:56, Charles Keepax wrote:
+> Some Arizona devices have the option to use the GPIO5 pin as a second
+> jack detection pin. This patch adds device bindings to specify to the
+> driver that it should use this pin. Note that the second jack detecti=
+on
+> pin is hard wired in the chip so can only be enabled through the
+> binding, rather than a pin being specified.
+>=20
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/extcon/extcon-arizona.c |    5 +++++
+>  1 files changed, 5 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
+arizona.c
+> index dc1910d..992f80e 100644
+> --- a/drivers/extcon/extcon-arizona.c
+> +++ b/drivers/extcon/extcon-arizona.c
+> @@ -1235,6 +1235,11 @@ static int arizona_extcon_device_get_pdata(str=
+uct arizona *arizona)
+> =20
+>  	device_property_read_u32(arizona->dev, "wlf,gpsw", &pdata->gpsw);
+> =20
+> +	pdata->jd_gpio5 =3D device_property_read_bool(arizona->dev,
+> +						    "wlf,use-jd-gpio");
+> +	pdata->jd_gpio5_nopull =3D device_property_read_bool(arizona->dev,
+> +						"wlf,use-jd-gpio-nopull");
+> +
+>  	return 0;
+>  }
+> =20
+>=20
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
