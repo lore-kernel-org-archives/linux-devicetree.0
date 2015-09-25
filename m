@@ -1,127 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/9] Phy, mdiobus, and netdev struct device fixes
-Date: Thu, 24 Sep 2015 18:39:56 -0700
-Message-ID: <5604A5EC.7060401@gmail.com>
-References: <20150924191754.GC21513@n2100.arm.linux.org.uk>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH 0/3] i2c: uniphier: add two I2C controller drivers for
+ UniPhier SoC platform
+Date: Fri, 25 Sep 2015 11:12:13 +0900
+Message-ID: <CAK7LNAQgcphEQA27Z4+rDiJZ1wZ7-FLDhx3hVz+bVcTstdgQXw@mail.gmail.com>
+References: <1438243942-26401-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20150924191754.GC21513@n2100.arm.linux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, David Miller <davem@davemloft.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Sunil Goutham <sgoutham@cavium.com>, Robert Richter <rric@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Iyappan Subramanian <isubramanian@apm.com>, Grant Likely <grant.likely@linaro.org>, Li Yang <leoli@freescale.com>, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438243942-26401-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sachin Kamat <sachin.kamat-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/09/15 12:17, Russell King - ARM Linux wrote:
-> Hi,
-> 
-> The third version of this series fixes the build error which David
-> identified, and drops the broken changes for the Cavium Thunger BGX
-> ethernet driver as this driver requires some complex changes to
-> resolve the leakage - and this is best done by people who can test
-> the driver.
-> 
-> Compared to v2, the only patch which has changed is patch 6
->   "net: fix phy refcounting in a bunch of drivers"
-> 
-> I _think_ I've been able to build-test all the drivers touched by
-> that patch to some degree now, though several of them needed the
-> Kconfig hacked to allow it (not all had || COMPILE_TEST clause on
-> their dependencies.)
+Hi Wolfram,
 
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Thanks for fixing that.
+Could you have some time for reviewing this series?
+Perhaps, after ELCE?
 
-> 
-> Previous cover letters below:
-> 
-> This is the second version of the series, with the comments David had
-> on the first patch fixed up.  Original series description with updated
-> diffstat below.
-> 
-> While looking at the DSA code, I noticed we have a
-> of_find_net_device_by_node(), and it looks like users of that are
-> similarly buggy - it looks like net/dsa/dsa.c is the only user.  Fix
-> that too.
-> 
-> Hi,
-> 
-> While looking at the phy code, I identified a number of weaknesses
-> where refcounting on device structures was being leaked, where
-> modules could be removed while in-use, and where the fixed-phy could
-> end up having unintended consequences caused by incorrect calls to
-> fixed_phy_update_state().
-> 
-> This patch series resolves those issues, some of which were discovered
-> with testing on an Armada 388 board.  Not all patches are fully tested,
-> particularly the one which touches several network drivers.
-> 
-> When resolving the struct device refcounting problems, several different
-> solutions were considered before settling on the implementation here -
-> one of the considerations was to avoid touching many network drivers.
-> The solution here is:
-> 
-> 	phy_attach*() - takes a refcount
-> 	phy_detach*() - drops the phy_attach refcount
-> 
-> Provided drivers always attach and detach their phys, which they should
-> already be doing, this should change nothing, even if they leak a refcount.
-> 
-> 	of_phy_find_device() and of_* functions which use that take
-> 	a refcount.  Arrange for this refcount to be dropped once
-> 	the phy is attached.
-> 
-> This is the reason why the previous change is important - we can't drop
-> this refcount taken by of_phy_find_device() until something else holds
-> a reference on the device.  This resolves the leaked refcount caused by
-> using of_phy_connect() or of_phy_attach().
-> 
-> Even without the above changes, these drivers are leaking by calling
-> of_phy_find_device().  These drivers are addressed by adding the
-> appropriate release of that refcount.
-> 
-> The mdiobus code also suffered from the same kind of leak, but thankfully
-> this only happened in one place - the mdio-mux code.
-> 
-> I also found that the try_module_get() in the phy layer code was utterly
-> useless: phydev->dev.driver was guaranteed to always be NULL, so
-> try_module_get() was always being called with a NULL argument.  I proved
-> this with my SFP code, which declares its own MDIO bus - the module use
-> count was never incremented irrespective of how I set the MDIO bus up.
-> This allowed the MDIO bus code to be removed from the kernel while there
-> were still PHYs attached to it.
-> 
-> One other bug was discovered: while using in-band-status with mvneta, it
-> was found that if a real phy is attached with in-band-status enabled,
-> and another ethernet interface is using the fixed-phy infrastructure, the
-> interface using the fixed-phy infrastructure is configured according to
-> the other interface using the in-band-status - which is caused by the
-> fixed-phy code not verifying that the phy_device passed in is actually
-> a fixed-phy device, rather than a real MDIO phy.
-> 
-> Lastly, having mdio_bus reversing phy_device_register() internals seems
-> like a layering violation - it's trivial to move that code to the phy
-> device layer.
-> 
->  drivers/net/ethernet/apm/xgene/xgene_enet_hw.c | 24 ++++++----
->  drivers/net/ethernet/freescale/gianfar.c       |  6 ++-
->  drivers/net/ethernet/freescale/ucc_geth.c      |  8 +++-
->  drivers/net/ethernet/marvell/mvneta.c          |  2 +
->  drivers/net/ethernet/xilinx/xilinx_emaclite.c  |  2 +
->  drivers/net/phy/fixed_phy.c                    |  2 +-
->  drivers/net/phy/mdio-mux.c                     | 19 +++++---
->  drivers/net/phy/mdio_bus.c                     | 24 ++++++----
->  drivers/net/phy/phy_device.c                   | 62 ++++++++++++++++++++------
->  drivers/of/of_mdio.c                           | 27 +++++++++--
->  include/linux/phy.h                            |  6 ++-
->  net/core/net-sysfs.c                           |  9 ++++
->  net/dsa/dsa.c                                  | 41 ++++++++++++++---
->  13 files changed, 181 insertions(+), 51 deletions(-)
-> 
+
+2015-07-30 17:12 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+>
+> This series adds two I2C controller drivers.
+> (they are completely different IPs.)
+>
+> The first one is a very simple FIFO-less I2C controller,
+> which is used on some older UniPhier SoCs.
+>
+> The other one is higher-performance I2C controller with TX/RX FIFO,
+> used on newer UniPhier SoCs.
+>
+>
+>
+> Masahiro Yamada (3):
+>   i2c: uniphier: add UniPhier FIFO-less I2C driver
+>   i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver
+>   i2c: uniphier: add bindings for UniPhier I2C controllers
+>
+>  .../devicetree/bindings/i2c/i2c-uniphier.txt       |  46 ++
+>  drivers/i2c/busses/Kconfig                         |  16 +
+>  drivers/i2c/busses/Makefile                        |   2 +
+>  drivers/i2c/busses/i2c-uniphier-f.c                | 589 +++++++++++++++++++++
+>  drivers/i2c/busses/i2c-uniphier.c                  | 446 ++++++++++++++++
+>  5 files changed, 1099 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphier.txt
+>  create mode 100644 drivers/i2c/busses/i2c-uniphier-f.c
+>  create mode 100644 drivers/i2c/busses/i2c-uniphier.c
+>
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 
 
 -- 
-Florian
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
