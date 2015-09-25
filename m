@@ -1,51 +1,46 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
-Date: Fri, 25 Sep 2015 07:54:36 +0200
-Message-ID: <477D98CD-B014-41AE-9A78-22D632205D14@goldelico.com>
-References: <cover.1443031678.git.hns@goldelico.com> <1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com> <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, eric miao <eric.miao@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, Grazvydas Ignotas <notaz@openpandora.org>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Phy, mdiobus, and netdev struct device fixes
+Date: Thu, 24 Sep 2015 23:05:22 -0700 (PDT)
+Message-ID: <20150924.230522.2080343670036893514.davem@davemloft.net>
+References: <20150924191754.GC21513@n2100.arm.linux.org.uk>
+	<5604A5EC.7060401@gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5604A5EC.7060401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, isubramanian-qTEPVZfXA3Y@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kchudgar-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Thu, 24 Sep 2015 18:39:56 -0700
 
-Am 25.09.2015 um 00:11 schrieb Linus Walleij <linus.walleij@linaro.org>:
-
-> On Wed, Sep 23, 2015 at 11:13 AM, H. Nikolaus Schaller
-> <hns@goldelico.com> wrote:
-> 
->> 1. add a DT property to specify the list of GPIO pins that are to become
->>   "open drain"
->> 2. if a pin is configured as "open drain", set value by either outputting a
->>   "0" (low level) or switching to input (high impedance)
+> On 24/09/15 12:17, Russell King - ARM Linux wrote:
+>> Hi,
 >> 
->> Tested on OMAP5 uEVM with TCA6424 and some LEDs connected to 5V.
+>> The third version of this series fixes the build error which David
+>> identified, and drops the broken changes for the Cavium Thunger BGX
+>> ethernet driver as this driver requires some complex changes to
+>> resolve the leakage - and this is best done by people who can test
+>> the driver.
 >> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Compared to v2, the only patch which has changed is patch 6
+>>   "net: fix phy refcounting in a bunch of drivers"
+>> 
+>> I _think_ I've been able to build-test all the drivers touched by
+>> that patch to some degree now, though several of them needed the
+>> Kconfig hacked to allow it (not all had || COMPILE_TEST clause on
+>> their dependencies.)
 > 
-> I understand the approach, but this is the wrong way to do it.
-> Instead of indicating that a pin on the pin controller should be
-> open drain, the *consumer* specifying its gpios = <....> should
-> do this.
+> Tested-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> I just sent a patch adding the bindings because Tony Lindgren
-> and Grygorii Strashko approached me similar problems so let's
-> begin with the bindings.
-> 
-> Implementing it in the kernel requires some elaboration and it's
-> going to be more complicated than this local approach, but it
-> will be more generic and reusable so that is what we need to do.
+> Thanks for fixing that.
 
-Ok, I understand.
-
-Should not be too difficult to modify the driver.
-
-BR,
-Nikolaus Schaller
-
-
+Series applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
