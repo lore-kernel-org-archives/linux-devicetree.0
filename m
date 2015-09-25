@@ -1,131 +1,44 @@
-From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH v6 6/6] pinctrl: freescale: imx: imx7d iomuxc-lpsr devicetree
- bindings
-Date: Fri, 25 Sep 2015 16:06:02 -0500
-Message-ID: <1443215162-13716-6-git-send-email-aalonso@freescale.com>
-References: <1443215162-13716-1-git-send-email-aalonso@freescale.com>
+From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v6 4/9] Input: goodix - write configuration data to
+ device
+Date: Fri, 25 Sep 2015 21:18:20 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0E9963@irsmsx105.ger.corp.intel.com>
+References: <1442327483-19407-1-git-send-email-irina.tirdea@intel.com>
+	 <1442327483-19407-5-git-send-email-irina.tirdea@intel.com>
+ <1443192040.17020.26.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1443215162-13716-1-git-send-email-aalonso@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, yibin.gong@freescale.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443192040.17020.26.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add iomuxc-lpsr devicetree bindings documentation
-Provide documentation context as well an example on
-pheriperals that could use pad from either iomuxc controller
-supported by iMX7D SoC
-
-Signed-off-by: Adrian Alonso <aalonso@freescale.com>
----
-Changes for V2: New patch on imx7d iomuxc-lpsr patch series
-Changes for V3: Add shared input select register notes
-Changes for V4: Resend
-Changes for V5:
-- Fix spell error
-- Remove references of SHARE_INPUT_SELECT_REG flag
-Changes for v6: Resend
-
- .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         | 63 +++++++++++++++++++++-
- 1 file changed, 62 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-index 8bbf25d..aae069f 100644
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-@@ -1,16 +1,42 @@
- * Freescale i.MX7 Dual IOMUX Controller
- 
-+iMX7D supports two iomuxc controllers, fsl,imx7d-iomuxc controller is similar
-+as previous iMX SoC generation and fsl,imx7d-iomuxc-lpsr which provides low
-+power state retention capabilities on gpios that are part of iomuxc-lpsr
-+(GPIO1_IO7..GPIO1_IO0). While iomuxc-lpsr provides its own set of registers for
-+mux and pad control settings, it shares the input select register from main
-+iomuxc controller for daisy chain settings, the fsl,input-sel property extends
-+fsl,imx-pinctrl driver to support iomuxc-lpsr controller.
-+
-+iomuxc_lpsr: iomuxc-lpsr@302c0000 {
-+	compatible = "fsl,imx7d-iomuxc-lpsr";
-+	reg = <0x302c0000 0x10000>;
-+	fsl,input-sel = <&iomuxc>;
-+};
-+
-+iomuxc: iomuxc@30330000 {
-+	compatible = "fsl,imx7d-iomuxc";
-+	reg = <0x30330000 0x10000>;
-+};
-+
-+Pheriparials using pads from iomuxc-lpsr support low state retention power
-+state, under LPSR mode GPIO's state of pads are retain.
-+
- Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
- and usage.
- 
- Required properties:
--- compatible: "fsl,imx7d-iomuxc"
-+- compatible: "fsl,imx7d-iomuxc" for main IOMUXC controller, or
-+  "fsl,imx7d-iomuxc-lpsr" for Low Power State Retention IOMUXC controller.
- - fsl,pins: each entry consists of 6 integers and represents the mux and config
-   setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
-   input_val> are specified using a PIN_FUNC_ID macro, which can be found in
-   imx7d-pinfunc.h under device tree source folder.  The last integer CONFIG is
-   the pad setting value like pull-up on this pin.  Please refer to i.MX7 Dual
-   Reference Manual for detailed CONFIG settings.
-+- fsl,input-sel: required property for iomuxc-lpsr controller, this property is
-+  a phandle for main iomuxc controller which shares the input select register for
-+  daisy chain settings.
- 
- CONFIG bits definition:
- PAD_CTL_PUS_100K_DOWN           (0 << 5)
-@@ -25,3 +51,38 @@ PAD_CTL_DSE_X1                  (0 << 0)
- PAD_CTL_DSE_X2                  (1 << 0)
- PAD_CTL_DSE_X3                  (2 << 0)
- PAD_CTL_DSE_X4                  (3 << 0)
-+
-+Examples:
-+While iomuxc-lpsr is intended to be used by dedicated peripherals to take
-+advantages of LPSR power mode, is also possible that an IP to use pads from
-+any of the iomux controllers. For example the I2C1 IP can use SCL pad from
-+iomuxc-lpsr controller and SDA pad from iomuxc controller as:
-+
-+i2c1: i2c@30a20000 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1_1 &pinctrl_i2c1_2>;
-+	status = "okay";
-+};
-+
-+iomuxc-lpsr@302c0000 {
-+	compatible = "fsl,imx7d-iomuxc-lpsr";
-+	reg = <0x302c0000 0x10000>;
-+	fsl,input-sel = <&iomuxc>;
-+
-+	pinctrl_i2c1_1: i2c1grp-1 {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO04__I2C1_SCL 0x4000007f
-+		>;
-+	};
-+};
-+
-+iomuxc@30330000 {
-+	compatible = "fsl,imx7d-iomuxc";
-+	reg = <0x30330000 0x10000>;
-+
-+	pinctrl_i2c1_2: i2c1grp-2 {
-+		fsl,pins = <
-+			MX7D_PAD_I2C1_SCL__I2C1_SCL 0x4000007f
-+		>;
-+	};
-+};
--- 
-2.1.4
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
+W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMjUgU2VwdGVtYmVyLCAyMDE1IDE3
+OjQxDQo+IFRvOiBUaXJkZWEsIElyaW5hOyBEbWl0cnkgVG9yb2tob3Y7IEFsZWtzZWkgTWFtbGlu
+OyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1hcmsgUnV0bGFuZDsgUHVyZGls
+YSwgT2N0YXZpYW47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgNC85XSBJbnB1dDogZ29vZGl4
+IC0gd3JpdGUgY29uZmlndXJhdGlvbiBkYXRhIHRvIGRldmljZQ0KPiANCj4gT24gVHVlLCAyMDE1
+LTA5LTE1IGF0IDE3OjMxICswMzAwLCBJcmluYSBUaXJkZWEgd3JvdGU6DQo+ID4gR29vZGl4IGRl
+dmljZXMgY2FuIGJlIGNvbmZpZ3VyZWQgYnkgd3JpdGluZyBjdXN0b20gZGF0YSB0byB0aGUgZGV2
+aWNlDQo+ID4gYXQNCj4gPiBpbml0LiBUaGUgY29uZmlndXJhdGlvbiBkYXRhIGlzIHJlYWQgd2l0
+aCByZXF1ZXN0X2Zpcm13YXJlIGZyb20NCj4gPiAiZ29vZGl4XzxpZD5fY2ZnLmJpbiIsIHdoZXJl
+IDxpZD4gaXMgdGhlIHByb2R1Y3QgaWQgcmVhZCBmcm9tIHRoZQ0KPiA+IGRldmljZQ0KPiA+IChl
+LmcuOiBnb29kaXhfOTExX2NmZy5iaW4gZm9yIEdvb2RpeCBHVDkxMSwgZ29vZGl4XzkyNzFfY2Zn
+LmJpbiBmb3INCj4gPiBHVDkyNzEpLg0KPiA+DQo+ID4gVGhlIGNvbmZpZ3VyYXRpb24gaW5mb3Jt
+YXRpb24gaGFzIGEgc3BlY2lmaWMgZm9ybWF0IGRlc2NyaWJlZCBpbiB0aGUNCj4gPiBHb29kaXgN
+Cj4gPiBkYXRhc2hlZXQuIEl0IGluY2x1ZGVzIFgvWSByZXNvbHV0aW9uLCBtYXhpbXVtIHN1cHBv
+cnRlZCB0b3VjaA0KPiA+IHBvaW50cywNCj4gPiBpbnRlcnJ1cHQgZmxhZ3MsIHZhcmlvdXMgc2Vz
+aXRpdml0eSBmYWN0b3JzIGFuZCBzZXR0aW5ncyBmb3IgYWR2YW5jZWQNCj4gDQo+IHNlbnNpdGl2
+aXR5Lg0KDQpXaWxsIGZpeCB0aGlzIGluIG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0Y2hlcy4gSSB3
+aWxsIHdhaXQgZm9yIHlvdSByZXBseSBvbg0KdGhlIGdwaW8gaXNzdWUgYmVmb3JlIHNlbmRpbmcg
+YSBuZXcgdmVyc2lvbi4NCg0KVGhhbmtzLA0KSXJpbmENCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
