@@ -1,47 +1,61 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 0/4] Support the timer on RK3368 SoC
-Date: Fri, 25 Sep 2015 10:14:54 +0800
-Message-ID: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v2 2/4] clocksource: rockchip: trivial: Make the driver more readability
+Date: Fri, 25 Sep 2015 10:14:56 +0800
+Message-ID: <1443147298-12603-3-git-send-email-wxt@rock-chips.com>
+References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, daniel.lezcano@linaro.org, will.deacon@arm.com, catalin.marinas@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Timer0~11 count up from zero to a programmed value and
-generate an interrupt when the count reaches the programmed value.
+Let's checkstyle to clean up the macros with such trivial details.
 
-TIMER0, TIMER1, TIMER2, Timer3, TIMER4 and TIMER5 are in the CPU
-subsystem, using timer ch0 ~ ch5 respectively. The timer clock is 24MHz
-OSC.
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+---
 
-This series are found on RK3368 SoC, verified on rk3368 evb board.
+Changes in v2: None
+Changes in v1: None
 
+ drivers/clocksource/rockchip_timer.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-Changes in v2:
-- As Heiko/Daniel comments, let's split it into two patch.
-
-Changes in v1:
-- As Russell, Thomas, Daniel comments, let's replace NO_IRQ by '!irq'.
-- As the Heiko comments, add the "rockchip,rk3368-timer" for timer.
-  Although the 'rockchip,rk3288-timer' is working for RK3368, need to add the
-  'rockchip,rk3368-timer' for the rk3368-spec timer in the future.
-
-Caesar Wang (4):
-  clocksource: rockchip: Make the driver more compatible
-  clocksource: rockchip: trivial: Make the driver more readability
-  arm64: Enable the timer on Rockchip architecture
-  arm64: dts: rockchip: Add the needed timer for RK3368 SoC
-
- arch/arm64/Kconfig.platforms             |  1 +
- arch/arm64/boot/dts/rockchip/rk3368.dtsi |  6 ++++++
- drivers/clocksource/rockchip_timer.c     | 27 ++++++++++++++-------------
- 3 files changed, 21 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
+index 3ace7ac..9ed662a 100644
+--- a/drivers/clocksource/rockchip_timer.c
++++ b/drivers/clocksource/rockchip_timer.c
+@@ -17,16 +17,16 @@
+ 
+ #define TIMER_NAME "rk_timer"
+ 
+-#define TIMER_LOAD_COUNT0 0x00
+-#define TIMER_LOAD_COUNT1 0x04
+-#define TIMER_CONTROL_REG 0x10
+-#define TIMER_INT_STATUS 0x18
++#define TIMER_LOAD_COUNT0	0x00
++#define TIMER_LOAD_COUNT1	0x04
++#define TIMER_CONTROL_REG	0x10
++#define TIMER_INT_STATUS	0x18
+ 
+-#define TIMER_DISABLE 0x0
+-#define TIMER_ENABLE 0x1
+-#define TIMER_MODE_FREE_RUNNING (0 << 1)
+-#define TIMER_MODE_USER_DEFINED_COUNT (1 << 1)
+-#define TIMER_INT_UNMASK (1 << 2)
++#define TIMER_DISABLE		0x0
++#define TIMER_ENABLE		0x1
++#define TIMER_MODE_FREE_RUNNING			(0 << 1)
++#define TIMER_MODE_USER_DEFINED_COUNT		(1 << 1)
++#define TIMER_INT_UNMASK			(1 << 2)
+ 
+ struct bc_timer {
+ 	struct clock_event_device ce;
+@@ -173,4 +173,5 @@ static void __init rk_timer_init(struct device_node *np)
+ 
+ 	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
+ }
++
+ CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer", rk_timer_init);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
