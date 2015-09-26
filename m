@@ -1,89 +1,128 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: twl4030: Add iio properties for bci subnode
-Date: Sat, 26 Sep 2015 19:29:37 +0200
-Message-ID: <20150926172936.GD22315@earth>
-References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
- <1443212447-5841-3-git-send-email-marek@goldelico.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 5/6] Documentation: dt-bindings: pci: altera pcie
+ device tree binding
+Date: Fri, 25 Sep 2015 22:55:06 -0500
+Message-ID: <5606171A.5000609@kernel.org>
+References: <1442801587-3812-1-git-send-email-lftan@altera.com>
+ <1442801587-3812-6-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Qrgsu6vtpU/OV/zm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443212447-5841-3-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: neilb-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1442801587-3812-6-git-send-email-lftan@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lftan.linux@gmail.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
---Qrgsu6vtpU/OV/zm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Marek,
-
-On Fri, Sep 25, 2015 at 10:20:47PM +0200, Marek Belisko wrote:
-> Added new iio properties which are required for twl4030-charger driver and
-> allow to use twl4030-madc indirectly.
->=20
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+On 09/20/2015 09:13 PM, Ley Foon Tan wrote:
+> This patch adds the bindings for Altera PCIe host controller driver and
+> Altera PCIe MSI driver.
+> 
+> Signed-off-by: Ley Foon Tan <lftan@altera.com>
 > ---
->  arch/arm/boot/dts/twl4030.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.d=
-tsi
-> index 36ae916..482b7aa 100644
-> --- a/arch/arm/boot/dts/twl4030.dtsi
-> +++ b/arch/arm/boot/dts/twl4030.dtsi
-> @@ -22,6 +22,8 @@
->  	charger: bci {
->  		compatible =3D "ti,twl4030-bci";
->  		interrupts =3D <9>, <2>;
-> +		io-channels =3D <&twl4030_madc 11>;
-> +		io-channel-name =3D "vac";
->  		bci3v1-supply =3D <&vusb3v1>;
->  	};
+>  .../devicetree/bindings/pci/altera-pcie-msi.txt    | 28 +++++++++++++
+>  .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> new file mode 100644
+> index 0000000..53ad2388
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> @@ -0,0 +1,28 @@
+> +* Altera PCIe MSI controller
+> +
+> +Required properties:
+> +- compatible:	should contain "altr,msi-1.0"
+> +- reg:		specifies the physical base address of the controller and
+> +		the length of the memory mapped region.
+> +- reg-names:	must include the following entries:
+> +		"csr": CSR registers
+> +		"vector_slave": vectors slave port region
+> +- interrupt-parent:	interrupt source phandle.
+> +- interrupts:	specifies the interrupt source of the parent interrupt
+> +		controller. The format of the interrupt specifier depends on the
+> +		parent interrupt controller.
+> +- num-vectors:	number of vectors, range 1 to 32.
+> +- msi-controller:	indicates that this is MSI controller node
+> +
+> +
+> +Example
+> +msi0: msi@0xFF200000 {
+> +	compatible = "altr,msi-1.0";
+> +	reg = <0xFF200000 0x00000010
+> +		0xFF200010 0x00000080>;
+> +	reg-names = "csr", "vector_slave";
+> +	interrupt-parent = <&hps_0_arm_gic_0>;
+> +	interrupts = <0 42 4>;
+> +	msi-controller = <1>;
 
-Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This should not have a value.
 
-This patch is missing correct To/Cc:
+> +	num-vectors = <32>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+> new file mode 100644
+> index 0000000..4440db1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+> @@ -0,0 +1,49 @@
+> +* Altera PCIe controller
+> +
+> +Required properties:
+> +- compatible :	should contain "altr,pcie-root-port-1.0"
+> +- reg:		a list of physical base address and length for TXS and CRA.
+> +- reg-names:	must include the following entries:
+> +		"Txs" or "txs": TX slave port region
+> +		"Cra" or "cra": Control register access region
 
-$ grep -A5 "OMAP DEVICE TREE SUPPORT" MAINTAINERS
-OMAP DEVICE TREE SUPPORT
-M:	Beno=EEt Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-M:	Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-L:	linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-S:	Maintained
+Why both cases? Can we please just have one (or none is better IMO).
 
--- Sebastian
+txs contains the config space?
 
---Qrgsu6vtpU/OV/zm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +- interrupt-parent:	interrupt source phandle.
+> +- interrupts:	specifies the interrupt source of the parent interrupt controller.
+> +		The format of the interrupt specifier depends on the parent interrupt
+> +		controller.
+> +- device_type:	must be "pci"
+> +- #address-cells:	set to <3>
+> +- #size-cells:	set to <2>
+> +- #interrupt-cells:	set to <1>
+> +- ranges:		describes the translation of addresses for root ports and standard
+> +		PCI regions.
+> +- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+> +		mapping of the PCIe interface to interrupt numbers.
+> +
+> +Optional properties:
+> +- msi-parent:	Link to the hardware entity that serves as the MSI controller for this PCIe
+> +		controller.
+> +- bus-range:	PCI bus numbers covered
+> +
+> +Example
+> +	pcie_0: pcie@0xc00000000 {
+> +		compatible = "altr,pcie-root-port-1.0";
+> +		reg = <0xc0000000 0x20000000>,
+> +			<0xff220000 0x00004000>;
+> +		reg-names = "Txs", "Cra";
+> +		interrupt-parent = <&hps_0_arm_gic_0>;
+> +		interrupts = <0 40 4>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		bus-range = <0x0 0xFF>;
+> +		device_type = "pci";
+> +		msi-parent = <&msi_to_gic_gen_0>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0 0 0 1 &pcie_0 1>,
+> +			            <0 0 0 2 &pcie_0 2>,
+> +			            <0 0 0 3 &pcie_0 3>,
+> +			            <0 0 0 4 &pcie_0 4>;
+> +		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+> +			    0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+> +	};
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWBtYAAAoJENju1/PIO/qaTBgP/juvubxn1mu0n055xYZNGn0u
-Ed1wWKF4gaUn+3iPW8Coxo1aZxzUQ37iEtYt2eW66GgSfsFl2aAfqN2S8WeU9f0L
-NoJS9p+5PnAWYNy1BbUygUT7c/x5z5PGEsDfhaTwZwMvGmpucFqdZ5AlcFmObMGn
-GvyHsdLfQP9R9qwRLXao9cy3fhoy/cvnrKZ03y5y//xtn1/7Q0psRui5+guV3dJN
-GNaChaPgFyPBuyRBsCeiBh5LZK1gdCM6XyAvzam/hBMa3DO9Gg+I94JbgGRAkfpd
-BulYBsUBXAY6SoyxVvbUBP+yAPEZ3A15pzEu3suWy5oEJjDPC6OrKiNU+yQCPN+n
-xjj25w5xGSrWV5yJzKqXuop43VfSQ2BOMc8nvHL7Fj3YodG0fDjySdGa2t5kzPUp
-R+rDJ493Lt17qOBwZp7Ns7++hYREXg5uBU59Xm9yjhGWnLKC54euyLAxN1jAdNwd
-i+6P9TMhsVVL6osNCyO32/mlcq6b4EdCVNKCFQ2t+0Ac+KJIFn+O1rz9a5iBXkPy
-47DHLtYNqzCV2flpWU0oZBvIcl7wmfkegdKqqt6rnejeFKwP5nTXxc1bIWf9TXJ4
-svR3MmH4bTabMm4CQEo4U1LNK67VwOvMKI1dBzNUb3oR6VSR6Yg3YP4qQtFjbY7v
-c9Q9Z8mSS7SobCGTYojJ
-=7GMb
------END PGP SIGNATURE-----
-
---Qrgsu6vtpU/OV/zm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
