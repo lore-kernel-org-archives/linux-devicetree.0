@@ -1,41 +1,41 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 0/4] WCNSS Peripheral Image Loader
-Date: Fri, 25 Sep 2015 22:26:29 -0700
-Message-ID: <1443245193-8597-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] edac: xgene: Fix possible sprintf overflow issue
+Date: Sat, 26 Sep 2015 10:38:47 +0200
+Message-ID: <20150926083847.GA19534@pd.tnic>
+References: <1443116287-11752-1-git-send-email-lho@apm.com>
+ <20150925134551.GE3568@pd.tnic>
+ <CAPw-ZTmYEx9o39Xr_4wyQd_ZNhpQv6fmjsbmzw7J27+i2nADqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTmYEx9o39Xr_4wyQd_ZNhpQv6fmjsbmzw7J27+i2nADqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series provides the minimum changes needed to use remotproc on the
-Qualcomm platform, it then introduces the Peripheral Image Loader for
-the WCNSS core.
+On Fri, Sep 25, 2015 at 10:52:23AM -0700, Loc Ho wrote:
+> Thanks you... Next I would like to get the ACPI APEI supported. But
+> unlike x86 which as NMI interface, APM hardware don't support this NMI
+> interface. In order to make this works, we need an method to trigger
+> the OS to indicate that the APEI table is available. For this, we are
+> thinking about writing an separate APEI driver that wires up the IRQ
+> to trigger the OS. Before we get going with this, I would like to run
+> by you to see if you have any suggestion?
 
+Well, AFAIR, there are efforts going on already for this on ARM64:
 
-The implementation depends on https://lkml.org/lkml/2015/9/24/723
+https://lkml.kernel.org/r/1439555753-11974-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 
-Bjorn Andersson (4):
-  remoteproc: core: Make the loaded resource table optional
-  remoteproc: Add additional crash reasons
-  remoteproc: qcom: Introduce WCNSS peripheral image loader
-  dt-binding: remoteproc: Introduce Qualcomm WCNSS loader binding
-
- .../bindings/remoteproc/qcom,wcnss-pil.txt         | 107 ++++
- drivers/remoteproc/Kconfig                         |  11 +
- drivers/remoteproc/Makefile                        |   2 +
- drivers/remoteproc/qcom_mdt_loader.c               | 213 +++++++
- drivers/remoteproc/qcom_mdt_loader.h               |   8 +
- drivers/remoteproc/qcom_wcnss.c                    | 615 +++++++++++++++++++++
- drivers/remoteproc/remoteproc_core.c               |  10 +-
- include/linux/remoteproc.h                         |   4 +
- 8 files changed, 964 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
- create mode 100644 drivers/remoteproc/qcom_mdt_loader.c
- create mode 100644 drivers/remoteproc/qcom_mdt_loader.h
- create mode 100644 drivers/remoteproc/qcom_wcnss.c
+Maybe test those first and possibly extend...
 
 -- 
-1.8.2.2
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
