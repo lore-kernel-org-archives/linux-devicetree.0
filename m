@@ -1,8 +1,9 @@
 From: kbuild test robot <lkp@intel.com>
-Subject: [PATCH linux-review] drm: bridge: anx78xx: pxtal_data[] can be static
+Subject: drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:610:33: sparse:
+ symbol 'pxtal_data' was not declared. Should it be static?
 Date: Sat, 26 Sep 2015 09:35:38 +0800
-Message-ID: <20150926013538.GA81225@roam>
-References: <201509260912.Q0WHr90i%fengguang.wu@intel.com>
+Message-ID: <201509260912.Q0WHr90i%fengguang.wu@intel.com>
+References: <1443209368-7135-4-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -22,40 +23,27 @@ To: Enric Balletbo i Serra <eballetbo@gmail.com>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, airlied@linux.ie, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, kbuild-all@01.org, galak@codeaurora.org, nathan.chung@mediatek.com, mark.rutland@arm.com, javier@dowhile0.org, dan.carpenter@oracle.com, span@analogixsemi.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Enric,
 
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+FYI, build test results on v4.3-rc2 (pls ignore if it's inappropriate base for your patch).
+
+reproduce:
+  # apt-get install sparse
+  make ARCH=x86_64 allmodconfig
+  make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:610:33: sparse: symbol 'pxtal_data' was not declared. Should it be static?
+>> drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:643:6: sparse: symbol 'sp_tx_initialization' was not declared. Should it be static?
+>> drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:2188:6: sparse: symbol 'sp_initialization' was not declared. Should it be static?
+>> drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:649:30: sparse: cast truncates bits from constant value (ffffff7f becomes 7f)
+   drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:2129:30: sparse: cast truncates bits from constant value (ffffff7f becomes 7f)
+>> drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c:2140:38: sparse: cast truncates bits from constant value (ffffff1f becomes 1f)
+
+Please review and possibly fold the followup patch.
+
 ---
- slimport_tx_drv.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c b/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
-index 7721326..9afebab 100644
---- a/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
-+++ b/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
-@@ -607,7 +607,7 @@ static void hdmi_rx_initialization(struct anx78xx *anx78xx)
- 	hdmi_rx_set_termination(anx78xx, 0);
- }
- 
--struct anx78xx_clock_data const pxtal_data[XTAL_CLK_NUM] = {
-+static struct anx78xx_clock_data const pxtal_data[XTAL_CLK_NUM] = {
- 	{19, 192},
- 	{24, 240},
- 	{25, 250},
-@@ -640,7 +640,7 @@ static void xtal_clk_sel(struct anx78xx *anx78xx)
- 			    ((pxtal_data[XTAL_27M].xtal_clk >> 1) - 2) << 3);
- }
- 
--void sp_tx_initialization(struct anx78xx *anx78xx)
-+static void sp_tx_initialization(struct anx78xx *anx78xx)
- {
- 	sp_write_reg(anx78xx, TX_P0, AUX_CTRL2, 0x30);
- 	sp_write_reg_or(anx78xx, TX_P0, AUX_CTRL2, 0x08);
-@@ -2185,7 +2185,7 @@ static void sp_config_audio_output(struct anx78xx *anx78xx)
- 
- /******************End Audio process********************/
- 
--void sp_initialization(struct anx78xx *anx78xx)
-+static void sp_initialization(struct anx78xx *anx78xx)
- {
- 	/* Waitting Hot plug event! */
- 	if (!(sp.common_int_status.common_int[3] & PLUG))
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
