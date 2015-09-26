@@ -1,63 +1,61 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 6/6] pinctrl: freescale: imx: imx7d iomuxc-lpsr
- devicetree bindings
-Date: Fri, 25 Sep 2015 17:44:12 -0700
-Message-ID: <20150926004411.GE3529@tiger>
-References: <1443215162-13716-1-git-send-email-aalonso@freescale.com>
- <1443215162-13716-6-git-send-email-aalonso@freescale.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: [PATCH linux-review] drm: bridge: anx78xx: pxtal_data[] can be static
+Date: Sat, 26 Sep 2015 09:35:38 +0800
+Message-ID: <20150926013538.GA81225@roam>
+References: <201509260912.Q0WHr90i%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1443215162-13716-6-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Adrian Alonso <aalonso@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
+In-Reply-To: <1443209368-7135-4-git-send-email-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Enric Balletbo i Serra <eballetbo@gmail.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, airlied@linux.ie, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, kbuild-all@01.org, galak@codeaurora.org, nathan.chung@mediatek.com, mark.rutland@arm.com, javier@dowhile0.org, dan.carpenter@oracle.com, span@analogixsemi.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 25, 2015 at 04:06:02PM -0500, Adrian Alonso wrote:
-> +Examples:
-> +While iomuxc-lpsr is intended to be used by dedicated peripherals to take
-> +advantages of LPSR power mode, is also possible that an IP to use pads from
-> +any of the iomux controllers. For example the I2C1 IP can use SCL pad from
-> +iomuxc-lpsr controller and SDA pad from iomuxc controller as:
-> +
-> +i2c1: i2c@30a20000 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1_1 &pinctrl_i2c1_2>;
-> +	status = "okay";
-> +};
-> +
-> +iomuxc-lpsr@302c0000 {
-> +	compatible = "fsl,imx7d-iomuxc-lpsr";
-> +	reg = <0x302c0000 0x10000>;
-> +	fsl,input-sel = <&iomuxc>;
-> +
-> +	pinctrl_i2c1_1: i2c1grp-1 {
-> +		fsl,pins = <
-> +			MX7D_PAD_GPIO1_IO04__I2C1_SCL 0x4000007f
-> +		>;
-> +	};
-> +};
-> +
-> +iomuxc@30330000 {
-> +	compatible = "fsl,imx7d-iomuxc";
-> +	reg = <0x30330000 0x10000>;
-> +
-> +	pinctrl_i2c1_2: i2c1grp-2 {
-> +		fsl,pins = <
-> +			MX7D_PAD_I2C1_SCL__I2C1_SCL 0x4000007f
 
-I thought you have fixed this, as I have pointed it out during the last
-review.  The example doesn't make sense.  There is no reason you need to
-have two pads on the same function I2C1_SCL.  One of them should be
-I2C1_SDA.
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+ slimport_tx_drv.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Shawn
-
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.1.4
-> 
+diff --git a/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c b/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
+index 7721326..9afebab 100644
+--- a/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
++++ b/drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
+@@ -607,7 +607,7 @@ static void hdmi_rx_initialization(struct anx78xx *anx78xx)
+ 	hdmi_rx_set_termination(anx78xx, 0);
+ }
+ 
+-struct anx78xx_clock_data const pxtal_data[XTAL_CLK_NUM] = {
++static struct anx78xx_clock_data const pxtal_data[XTAL_CLK_NUM] = {
+ 	{19, 192},
+ 	{24, 240},
+ 	{25, 250},
+@@ -640,7 +640,7 @@ static void xtal_clk_sel(struct anx78xx *anx78xx)
+ 			    ((pxtal_data[XTAL_27M].xtal_clk >> 1) - 2) << 3);
+ }
+ 
+-void sp_tx_initialization(struct anx78xx *anx78xx)
++static void sp_tx_initialization(struct anx78xx *anx78xx)
+ {
+ 	sp_write_reg(anx78xx, TX_P0, AUX_CTRL2, 0x30);
+ 	sp_write_reg_or(anx78xx, TX_P0, AUX_CTRL2, 0x08);
+@@ -2185,7 +2185,7 @@ static void sp_config_audio_output(struct anx78xx *anx78xx)
+ 
+ /******************End Audio process********************/
+ 
+-void sp_initialization(struct anx78xx *anx78xx)
++static void sp_initialization(struct anx78xx *anx78xx)
+ {
+ 	/* Waitting Hot plug event! */
+ 	if (!(sp.common_int_status.common_int[3] & PLUG))
