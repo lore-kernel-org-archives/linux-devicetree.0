@@ -1,40 +1,43 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] edac: xgene: Fix possible sprintf overflow issue
-Date: Sat, 26 Sep 2015 10:38:47 +0200
-Message-ID: <20150926083847.GA19534@pd.tnic>
-References: <1443116287-11752-1-git-send-email-lho@apm.com>
- <20150925134551.GE3568@pd.tnic>
- <CAPw-ZTmYEx9o39Xr_4wyQd_ZNhpQv6fmjsbmzw7J27+i2nADqQ@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: mediatek: add smp bringup code
+Date: Sat, 26 Sep 2015 10:38:35 +0100
+Message-ID: <20150926093835.GA20255@n2100.arm.linux.org.uk>
+References: <1443109140-5406-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1443109140-5406-4-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPw-ZTmYEx9o39Xr_4wyQd_ZNhpQv6fmjsbmzw7J27+i2nADqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1443109140-5406-4-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 25, 2015 at 10:52:23AM -0700, Loc Ho wrote:
-> Thanks you... Next I would like to get the ACPI APEI supported. But
-> unlike x86 which as NMI interface, APM hardware don't support this NMI
-> interface. In order to make this works, we need an method to trigger
-> the OS to indicate that the APEI table is available. For this, we are
-> thinking about writing an separate APEI driver that wires up the IRQ
-> to trigger the OS. Before we get going with this, I would like to run
-> by you to see if you have any suggestion?
+On Thu, Sep 24, 2015 at 11:38:58PM +0800, Yingjoe Chen wrote:
+> +struct mtk_smp_boot_info {
+> +	unsigned long smp_base;
+...
+> +static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
+> +	0x80002000, 0x3fc,
+...
+> +static const struct mtk_smp_boot_info mtk_mt6589_boot = {
+> +	0x10002000, 0x34,
+...
+> +	if (trustzone) {
+> +		/* smp_base(trustzone-bootinfo) is reserved by device tree */
+> +		mtk_smp_base = phys_to_virt(mtk_smp_info->smp_base);
 
-Well, AFAIR, there are efforts going on already for this on ARM64:
+I can't say whether this is correct or not, as we've got rid of most of
+the information that would allow me to make that decision.
 
-https://lkml.kernel.org/r/1439555753-11974-1-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-
-Maybe test those first and possibly extend...
+The address passed to phys_to_virt() _must_ be one which is mapped by
+the kernel as lowmem.  I've no idea if the above would fall into that
+category though.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
