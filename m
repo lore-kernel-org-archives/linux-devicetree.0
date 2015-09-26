@@ -1,132 +1,62 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 1/3] ARM: uniphier: add outer cache support
-Date: Sun, 27 Sep 2015 00:32:54 +0900
-Message-ID: <CAK7LNATb3u525VwMgiasYfpStGp5g43fVU9_W=g-KEJ+gaTi6w@mail.gmail.com>
-References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com>
-	<1442551054-2116-2-git-send-email-yamada.masahiro@socionext.com>
-	<20150921193822.GV21084@n2100.arm.linux.org.uk>
-	<CAK7LNARNRz5fmLjVTN4rha05hNXH4mTj=jXP-KmWWU2UUrCVYg@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v3] drivers: power: twl4030_charger: fix link problems
+ when building as module
+Date: Sat, 26 Sep 2015 19:23:54 +0200
+Message-ID: <20150926172353.GC22315@earth>
+References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARNRz5fmLjVTN4rha05hNXH4mTj=jXP-KmWWU2UUrCVYg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Jungseung Lee <js07.lee@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Stefan Agner <stefan@agner.ch>, Pawel Moll <pawel.moll@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Jiang Liu <jiang.liu@linux.intel.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Nicolas Pitre <nico@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Nathan Lynch <nathan_lynch@mentor.com>, Kees Cook <keescook@chromium.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Linux
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443212447-5841-1-git-send-email-marek@goldelico.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, neilb@suse.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-2015-09-22 14:27 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> Hi Russell,
->
->
-> 2015-09-22 4:38 GMT+09:00 Russell King - ARM Linux <linux@arm.linux.org.uk>:
->> On Fri, Sep 18, 2015 at 01:37:32PM +0900, Masahiro Yamada wrote:
->>> +/**
->>> + * __uniphier_cache_maint_common - run a queue operation for a particular level
->>> + *
->>> + * @data: cache controller specific data
->>> + * @start: start address of range operation (don't care for "all" operation)
->>> + * @size: data size of range operation (don't care for "all" operation)
->>> + * @operation: flags to specify the desired cache operation
->>> + */
->>> +static void __uniphier_cache_maint_common(struct uniphier_cache_data *data,
->>> +                                       unsigned long start,
->>> +                                       unsigned long size,
->>> +                                       u32 operation)
->>> +{
->>> +     unsigned long flags;
->>> +
->>> +     /*
->>> +      * The IRQ must be disable during this sequence because the accessor
->>> +      * holds the access right of the operation queue registers.  The IRQ
->>> +      * should be restored after releasing the register access right.
->>> +      */
->>> +     local_irq_save(flags);
->>> +
->>> +     /* clear the complete notification flag */
->>> +     writel_relaxed(UNIPHIER_SSCOLPQS_EF, data->op_base + UNIPHIER_SSCOLPQS);
->>> +
->>> +     /*
->>> +      * We do not need a spin lock here because the hardware guarantees
->>> +      * this sequence is atomic, i.e. the write access is arbitrated
->>> +      * and only the winner's write accesses take effect.
->>> +      * After register settings, we need to check the UNIPHIER_SSCOPPQSEF to
->>> +      * see if we won the arbitration or not.
->>> +      * If the command was not successfully set, just try again.
->>> +      */
->>> +     do {
->>> +             /* set cache operation */
->>> +             writel_relaxed(UNIPHIER_SSCOQM_CE | operation,
->>> +                            data->op_base + UNIPHIER_SSCOQM);
->>> +
->>> +             /* set address range if needed */
->>> +             if (likely(UNIPHIER_SSCOQM_S_IS_RANGE(operation))) {
->>> +                     writel_relaxed(start, data->op_base + UNIPHIER_SSCOQAD);
->>> +                     writel_relaxed(size, data->op_base + UNIPHIER_SSCOQSZ);
->>> +             }
->>> +
->>> +             /* set target ways if needed */
->>> +             if (unlikely(UNIPHIER_SSCOQM_TID_IS_WAY(operation)))
->>> +                     writel_relaxed(data->way_locked_mask,
->>> +                                    data->op_base + UNIPHIER_SSCOQWN);
->>> +     } while (unlikely(readl_relaxed(data->op_base + UNIPHIER_SSCOPPQSEF) &
->>> +                       (UNIPHIER_SSCOPPQSEF_FE | UNIPHIER_SSCOPPQSEF_OE)));
->>> +
->>> +     /* wait until the operation is completed */
->>> +     while (likely(readl_relaxed(data->op_base + UNIPHIER_SSCOLPQS) !=
->>> +                   UNIPHIER_SSCOLPQS_EF))
->>> +             cpu_relax();
->>> +
->>> +     local_irq_restore(flags);
->>
->> I'm concerned about this.  We've had caches like this (ARM L220) which
->> require only one operation to be performed at a time.  In a SMP system,
->> that requires a spinlock to prevent one CPU triggering a L2 maintanence
->> operation while another CPU tries to operate on the L2 cache.
->>
->> From the overall series diffstat, I see that you are adding SMP support
->> too.  So I have to ask the obvious question: if you need to disable
->> local IRQs around the L2 cache operations, what happens if two CPUs
->> both try to perform a L2 cache operation concurrently?
->
->
-> This cache controller is able to accept operations from multiple CPUs
-> at the same time.
->
-> Let's assume the following scenario:
->
-> CPU0 issues some operation.
-> Before the cache controller finishes the operation,
-> CPU1 issues another operation;  this is OK.
-> The operation is stored in the queue of the cache controller
-> until the operation under way is completed.
-> When the operation from CPU0 is finished, the controller starts
-> the operation from CPU1.
->
-> If the queue is full (this unlikely happens though),
-> the CPU can know by checking UNIPHIER_SSCOPPQSEF register.
-> This is checked by the code:
->
-> unlikely(readl_relaxed(data->op_base + UNIPHIER_SSCOPPQSEF) &
->                        (UNIPHIER_SSCOPPQSEF_FE | UNIPHIER_SSCOPPQSEF_OE))
->
->
-> The status register (UNIPHIER_SSCOLPQS) has each instance for each CPU.
-> That means, CPU0 can know if the operation issued by itself is finished or not.
-> Likewise for CPU1, CPU2, ...
->
-> To sum up, the cache controller can nicely handles cache operations in SMP.
->
 
+--RIYY1s2vRbPFwWeW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi Marek,
 
-OK, I will send v4 with more detailed comments
-to explain why this outer cache controller works nicely in an SMP system
-without a spin lock.
+On Fri, Sep 25, 2015 at 10:20:45PM +0200, Marek Belisko wrote:
+> If either twl4030_charger or twl4030_madc is configured as MODULE,
+> we get build (link) errors.
+>=20
+> To solve, the direct call of twl4030_get_madc_conversion() is replaced
+> by a call to iio_read_channel_processed().
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
 
+Thanks, queued for 4.4 together with the DT binding patch.
 
+-- Sebastian
 
+--RIYY1s2vRbPFwWeW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Best Regards
-Masahiro Yamada
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWBtSpAAoJENju1/PIO/qa7XsQAI0OKnqgAPA8EcYcOgVODjxT
+g80HaNA1m+Wq/KQtfP4t5CabCH0T20b90vXEl3tnqYtc8Dw9Be4AQzlWyf95PH/x
+jgOSuSbz2Ma/MftO9livTv2heoLQJt7rBXeml1TVVn3kCc9SFzrQrTvS6SeblV2c
+2MJAdxG5biK58RTp3pUTT1zb7xoCRtUV1pX1t8jyXDJ6h9pJ/PHsXo9DRTnMqHMb
+stqoYbLEQierFHwzT0+TFEgFAllFE6LCzpGwuE08eCESqUsVnjbPkUkclG7amvs4
+hX7C5ZPDs7zYX37RVnqXEyDHnk7rgvoFuu+UpqTViJUk3ZS2fAZSOKGV48WcLGtI
+zVfOcAVgr8IJTWtjOvOsOhtqN5pnpDg8DU70fETIRhSQBN+H/SzLaUw0fHiT8stO
++H14RCnq6Qk9kpcqENBdOlHJ14rLBd6BTBaecEjX6qhZ19NIvxwhx6LbutTfDl7W
+RAVZhETz9UiQKE3MAeZ2u4VX7hqPwdtO/ze6/L/CBdHR8+hJPhuOQr2SRsVWHUkm
+Mh16NjzqP86FQzNollnxujP9w7tipTzvQ6w0KzD0LjNT2UsmdyDsqQhrSItADlNJ
+k4eMaNk2sELZBLM69VrmoPQSD3PBQ1JuXf60kFaBy/kvohLF1xcNKFTcJmuYF9Yo
+4CPbfsatkfsPr5T7fUIs
+=gtH6
+-----END PGP SIGNATURE-----
+
+--RIYY1s2vRbPFwWeW--
