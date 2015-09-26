@@ -1,44 +1,132 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] ARM: mediatek: add smp bringup code
-Date: Sat, 26 Sep 2015 10:38:35 +0100
-Message-ID: <20150926093835.GA20255@n2100.arm.linux.org.uk>
-References: <1443109140-5406-1-git-send-email-yingjoe.chen@mediatek.com>
- <1443109140-5406-4-git-send-email-yingjoe.chen@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 1/3] ARM: uniphier: add outer cache support
+Date: Sun, 27 Sep 2015 00:32:54 +0900
+Message-ID: <CAK7LNATb3u525VwMgiasYfpStGp5g43fVU9_W=g-KEJ+gaTi6w@mail.gmail.com>
+References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com>
+	<1442551054-2116-2-git-send-email-yamada.masahiro@socionext.com>
+	<20150921193822.GV21084@n2100.arm.linux.org.uk>
+	<CAK7LNARNRz5fmLjVTN4rha05hNXH4mTj=jXP-KmWWU2UUrCVYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443109140-5406-4-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARNRz5fmLjVTN4rha05hNXH4mTj=jXP-KmWWU2UUrCVYg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Jungseung Lee <js07.lee@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Stefan Agner <stefan@agner.ch>, Pawel Moll <pawel.moll@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Jiang Liu <jiang.liu@linux.intel.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Nicolas Pitre <nico@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Nathan Lynch <nathan_lynch@mentor.com>, Kees Cook <keescook@chromium.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 11:38:58PM +0800, Yingjoe Chen wrote:
-> +struct mtk_smp_boot_info {
-> +	unsigned long smp_base;
-...
-> +static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
-> +	0x80002000, 0x3fc,
-...
-> +static const struct mtk_smp_boot_info mtk_mt6589_boot = {
-> +	0x10002000, 0x34,
-...
-> +	if (trustzone) {
-> +		/* smp_base(trustzone-bootinfo) is reserved by device tree */
-> +		mtk_smp_base = phys_to_virt(mtk_smp_info->smp_base);
+2015-09-22 14:27 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> Hi Russell,
+>
+>
+> 2015-09-22 4:38 GMT+09:00 Russell King - ARM Linux <linux@arm.linux.org.uk>:
+>> On Fri, Sep 18, 2015 at 01:37:32PM +0900, Masahiro Yamada wrote:
+>>> +/**
+>>> + * __uniphier_cache_maint_common - run a queue operation for a particular level
+>>> + *
+>>> + * @data: cache controller specific data
+>>> + * @start: start address of range operation (don't care for "all" operation)
+>>> + * @size: data size of range operation (don't care for "all" operation)
+>>> + * @operation: flags to specify the desired cache operation
+>>> + */
+>>> +static void __uniphier_cache_maint_common(struct uniphier_cache_data *data,
+>>> +                                       unsigned long start,
+>>> +                                       unsigned long size,
+>>> +                                       u32 operation)
+>>> +{
+>>> +     unsigned long flags;
+>>> +
+>>> +     /*
+>>> +      * The IRQ must be disable during this sequence because the accessor
+>>> +      * holds the access right of the operation queue registers.  The IRQ
+>>> +      * should be restored after releasing the register access right.
+>>> +      */
+>>> +     local_irq_save(flags);
+>>> +
+>>> +     /* clear the complete notification flag */
+>>> +     writel_relaxed(UNIPHIER_SSCOLPQS_EF, data->op_base + UNIPHIER_SSCOLPQS);
+>>> +
+>>> +     /*
+>>> +      * We do not need a spin lock here because the hardware guarantees
+>>> +      * this sequence is atomic, i.e. the write access is arbitrated
+>>> +      * and only the winner's write accesses take effect.
+>>> +      * After register settings, we need to check the UNIPHIER_SSCOPPQSEF to
+>>> +      * see if we won the arbitration or not.
+>>> +      * If the command was not successfully set, just try again.
+>>> +      */
+>>> +     do {
+>>> +             /* set cache operation */
+>>> +             writel_relaxed(UNIPHIER_SSCOQM_CE | operation,
+>>> +                            data->op_base + UNIPHIER_SSCOQM);
+>>> +
+>>> +             /* set address range if needed */
+>>> +             if (likely(UNIPHIER_SSCOQM_S_IS_RANGE(operation))) {
+>>> +                     writel_relaxed(start, data->op_base + UNIPHIER_SSCOQAD);
+>>> +                     writel_relaxed(size, data->op_base + UNIPHIER_SSCOQSZ);
+>>> +             }
+>>> +
+>>> +             /* set target ways if needed */
+>>> +             if (unlikely(UNIPHIER_SSCOQM_TID_IS_WAY(operation)))
+>>> +                     writel_relaxed(data->way_locked_mask,
+>>> +                                    data->op_base + UNIPHIER_SSCOQWN);
+>>> +     } while (unlikely(readl_relaxed(data->op_base + UNIPHIER_SSCOPPQSEF) &
+>>> +                       (UNIPHIER_SSCOPPQSEF_FE | UNIPHIER_SSCOPPQSEF_OE)));
+>>> +
+>>> +     /* wait until the operation is completed */
+>>> +     while (likely(readl_relaxed(data->op_base + UNIPHIER_SSCOLPQS) !=
+>>> +                   UNIPHIER_SSCOLPQS_EF))
+>>> +             cpu_relax();
+>>> +
+>>> +     local_irq_restore(flags);
+>>
+>> I'm concerned about this.  We've had caches like this (ARM L220) which
+>> require only one operation to be performed at a time.  In a SMP system,
+>> that requires a spinlock to prevent one CPU triggering a L2 maintanence
+>> operation while another CPU tries to operate on the L2 cache.
+>>
+>> From the overall series diffstat, I see that you are adding SMP support
+>> too.  So I have to ask the obvious question: if you need to disable
+>> local IRQs around the L2 cache operations, what happens if two CPUs
+>> both try to perform a L2 cache operation concurrently?
+>
+>
+> This cache controller is able to accept operations from multiple CPUs
+> at the same time.
+>
+> Let's assume the following scenario:
+>
+> CPU0 issues some operation.
+> Before the cache controller finishes the operation,
+> CPU1 issues another operation;  this is OK.
+> The operation is stored in the queue of the cache controller
+> until the operation under way is completed.
+> When the operation from CPU0 is finished, the controller starts
+> the operation from CPU1.
+>
+> If the queue is full (this unlikely happens though),
+> the CPU can know by checking UNIPHIER_SSCOPPQSEF register.
+> This is checked by the code:
+>
+> unlikely(readl_relaxed(data->op_base + UNIPHIER_SSCOPPQSEF) &
+>                        (UNIPHIER_SSCOPPQSEF_FE | UNIPHIER_SSCOPPQSEF_OE))
+>
+>
+> The status register (UNIPHIER_SSCOLPQS) has each instance for each CPU.
+> That means, CPU0 can know if the operation issued by itself is finished or not.
+> Likewise for CPU1, CPU2, ...
+>
+> To sum up, the cache controller can nicely handles cache operations in SMP.
+>
 
-I can't say whether this is correct or not, as we've got rid of most of
-the information that would allow me to make that decision.
 
-The address passed to phys_to_virt() _must_ be one which is mapped by
-the kernel as lowmem.  I've no idea if the above would fall into that
-category though.
+
+OK, I will send v4 with more detailed comments
+to explain why this outer cache controller works nicely in an SMP system
+without a spin lock.
+
+
+
 
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Masahiro Yamada
