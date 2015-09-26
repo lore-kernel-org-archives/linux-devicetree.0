@@ -1,46 +1,25 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 0/2] pwm: Broadcom BCM7038 PWM controller (v4)
-Date: Fri, 25 Sep 2015 16:05:05 -0700
-Message-ID: <5605D321.6000207@gmail.com>
-References: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 1/6] ARM: dts: imx: imx7d add iomuxc lpsr device node
+Date: Fri, 25 Sep 2015 17:28:49 -0700
+Message-ID: <20150926002848.GA3529@tiger>
+References: <1443215162-13716-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, ariel@vanguardiasur.com.ar
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443215162-13716-1-git-send-email-aalonso@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Adrian Alonso <aalonso@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/09/15 16:47, Florian Fainelli wrote:
-> Hi,
+On Fri, Sep 25, 2015 at 04:05:57PM -0500, Adrian Alonso wrote:
+> Add device tree node to support iomuxc-lpsr controller, fsl,iput-sel
+> phandle allows to get input select register base address which is
+> shared from main iomuxc controller.
 > 
-> This patch series add PWM support for the Broadcom BCM7xxx
-> chips which feature one or more PWM controllers capable of
-> output periods from 148ns to ~622ms using a combination of
-> variable and fixed frequency settings.
+> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 
-Thierry, are you happy with this version of the patches? Thanks.
+For the series,
 
-> 
-> The controller does not support setting a polarity.
-> 
-> This is based on Thierry's pwm/next branch.
-> 
-> Florian Fainelli (2):
->   Documentation: dt: add Broadcom BCM7038 PWM controller binding
->   pwm: Add Broadcom BCM7038 PWM controller support
-> 
->  .../devicetree/bindings/pwm/brcm,bcm7038-pwm.txt   |  20 ++
->  drivers/pwm/Kconfig                                |  10 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-brcmstb.c                          | 345 +++++++++++++++++++++
->  4 files changed, 376 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
->  create mode 100644 drivers/pwm/pwm-brcmstb.c
-> 
-
-
--- 
-Florian
+Acked-by: Shawn Guo <shawnguo@kernel.org>
