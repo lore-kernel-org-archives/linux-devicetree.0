@@ -1,96 +1,266 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH 4/6] extcon: arizona: Add device binding for second jack
- detect pin on GPIO5
-Date: Sun, 27 Sep 2015 13:50:57 +0900
-Message-ID: <CAGTfZH13KbQqjSLaussyqYBTHWAdcGpyq4099TF=zf76xXpSEg@mail.gmail.com>
-References: <1442397404-7579-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<1442397404-7579-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<56049B42.7030509@samsung.com>
-	<20150925091042.GD5432@ck-lbox>
-Reply-To: cw00.choi@samsung.com
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v4] ARM: sun7i: dt: Add new Olimex A20 EVB device
+Date: Sun, 27 Sep 2015 08:16:42 +0200
+Message-ID: <1443334602-1236-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150925091042.GD5432@ck-lbox>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBTETT2YAKGQEND3YHUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 25, 2015 at 6:10 PM, Charles Keepax
-<ckeepax@opensource.wolfsonmicro.com> wrote:
-> On Fri, Sep 25, 2015 at 09:54:26AM +0900, Chanwoo Choi wrote:
->> Hi Charles,
->>
->> I have one comment.
->> I think current extcon-arizona.c has the many platform data
->> so, extcon-arizona.c use the too much if statement to support each feature
->> for different wolfsonmicro codec. I think it cause the complicated code.
->>
->> For example,
->> You may use 'struct of_device_id' as following. You used already this method
->> on drivers/mfd/arizona-core.c. If you separate the function of each wmXXXX arizona,
->> it makes improved readability for extcon-arizona.c and some user will use extcon-arizora
->> more easily.
->>
->> struct arizona_extcon_data {
->>       void (*init)(...);
->>       void (*irq_handler)(...);
->>       ...
->> };
->>
->> struct arizona_extcon_data wm8994_data {
->>       .init = wm8994_extcon_init,
->>       .irq_handler = wm8994_extcon_irq_handler;
->>       ...
->> };
->>
->> static const struct of_device_id arizona_extcon_dt_match[] = {
->>       {
->>               .compatible = "wm8994-arizona-extcon",
->>               .data = (void *)wm8994_data;
->>       }, {
->>               .compatible = "wmXXXX-arizona-extcon",
->>               .data = (void *)wmXXXX_data;
->>       },
->> };
->>
->> I expect that you will revise the arizona-extcon.c driver on next time.
->
-> I will have an investigation to see what ideas I can come up with
-> here and send through some patches.
->
-> But I am slightly worried you think the gains will be better than
-> they actually will be. Most of the platform data is just that
-> platform data, and needs to be configured based on the system not
-> based on the CODEC.
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I agree. As you mentioned, platform data will be configured based on the system.
-But, I mean that there are many platform datas for extcon-arizona in
-"struct arizona_pdata" (in include/linux/mfd/arizona/pdata.h).
+The A20-SOM-EVB is a reference design of a 2-layer board for the
+A20-SOM.
+It expands the features of A20-SOM by adding VGA connector, HDMI
+connector, audio In/Out, LCD connector, 2 Mpix camera, gigabit
+Ethernet, SATA, USB-OTG and 2 USB hosts.
 
-There are four sound code using the extcon-arizona driver as
-following: I check the following list
-in drivers/mfd/arizona-core.c.
-- wm5102
-- wm5110
-- wm8997
-- wm8998
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v3:
+- removed i2c1 as it's not used
+- removed axp_ipsout regulator
+Changes since v2:
+- changed dcdc2 to have max voltage of 1.4V
+Changes since v1:
+- renamed dts from sun7i-a20-olinuxino-evb to sun7i-a20-olimex-som-evb
+- added "axp209 dtsi"
+- change regulator settings
+---
+ arch/arm/boot/dts/Makefile                     |   1 +
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 202 +++++++++++++++++++++++++
+ 2 files changed, 203 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
 
-If upper four sound codec include the same headset detection IP
-(extcon-arizona.c)
-without any difference about detection IP in sound codec, you don't
-need to revise
-the extcon-arizona.c driver.
-
-But, If some field of  "struct arizona_pdata" (in
-include/linux/mfd/arizona/pdata.h)
-are used for only specific sound codec (wmXXX series), I think we need
-to revise it.
-
-I'm positive about your patches of extcon-arizona. Just I think that
-you can make it
-more easier and improved readability.
-
-Thanks,
-Chanwoo Choi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 1c5f225..0e87a54 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -618,6 +618,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-m3.dtb \
+ 	sun7i-a20-mk808c.dtb \
++	sun7i-a20-olimex-som-evb.dtb \
+ 	sun7i-a20-olinuxino-lime.dtb \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+new file mode 100644
+index 0000000..3317c22
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+@@ -0,0 +1,202 @@
++/*
++ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Olimex A20-Olimex-SOM-EVB";
++	compatible = "olimex,a20-olimex-som-evb", "allwinner,sun7i-a20";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_olimex_som_evb>;
++
++		green {
++			label = "a20-olimex-som-evb:green:usr";
++			gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&ahci {
++	target-supply = <&reg_ahci_5v>;
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_rgmii_a>;
++	phy = <&phy1>;
++	phy-mode = "rgmii";
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&pio {
++	ahci_pwr_pin_olimex_som_evb: ahci_pwr_pin@1 {
++		allwinner,pins = "PC3";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	led_pins_olimex_som_evb: led_pins@0 {
++		allwinner,pins = "PH2";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_ahci_5v {
++	pinctrl-0 = <&ahci_pwr_pin_olimex_som_evb>;
++	gpio = <&pio 2 3 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb0_vbus {
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+2.5.3
