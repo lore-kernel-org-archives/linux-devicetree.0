@@ -1,266 +1,168 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v4] ARM: sun7i: dt: Add new Olimex A20 EVB device
-Date: Sun, 27 Sep 2015 08:16:42 +0200
-Message-ID: <1443334602-1236-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH net-next v4] net: Fix Hisilicon Network Subsystem Support Compilation
+Date: Sun, 27 Sep 2015 15:22:44 +0800
+Message-ID: <1443338564-185286-1-git-send-email-huangdaode@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBTETT2YAKGQEND3YHUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This patch fixes the compilation error with arm allmodconfig, this error
+generated due to unavailability of readq() on 32-bit platform which was
+found during net-next daily compilation. In the same time, fix all the
+hns drivers compilation warnings.
 
-The A20-SOM-EVB is a reference design of a 2-layer board for the
-A20-SOM.
-It expands the features of A20-SOM by adding VGA connector, HDMI
-connector, audio In/Out, LCD connector, 2 Mpix camera, gigabit
-Ethernet, SATA, USB-OTG and 2 USB hosts.
-
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: zhaungyuzeng <Yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: kenneth Lee <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
-Changes since v3:
-- removed i2c1 as it's not used
-- removed axp_ipsout regulator
-Changes since v2:
-- changed dcdc2 to have max voltage of 1.4V
-Changes since v1:
-- renamed dts from sun7i-a20-olinuxino-evb to sun7i-a20-olimex-som-evb
-- added "axp209 dtsi"
-- change regulator settings
----
- arch/arm/boot/dts/Makefile                     |   1 +
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 202 +++++++++++++++++++++++++
- 2 files changed, 203 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c   |  2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h  |  4 ++--
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c   |  6 ++----
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h   |  2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c |  1 +
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c       | 17 -----------------
+ 6 files changed, 7 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 1c5f225..0e87a54 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -618,6 +618,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-i12-tvbox.dtb \
- 	sun7i-a20-m3.dtb \
- 	sun7i-a20-mk808c.dtb \
-+	sun7i-a20-olimex-som-evb.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-new file mode 100644
-index 0000000..3317c22
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -0,0 +1,202 @@
-+/*
-+ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Olimex A20-Olimex-SOM-EVB";
-+	compatible = "olimex,a20-olimex-som-evb", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_olimex_som_evb>;
-+
-+		green {
-+			label = "a20-olimex-som-evb:green:usr";
-+			gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+};
-+
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	ahci_pwr_pin_olimex_som_evb: ahci_pwr_pin@1 {
-+		allwinner,pins = "PC3";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	led_pins_olimex_som_evb: led_pins@0 {
-+		allwinner,pins = "PH2";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&reg_ahci_5v {
-+	pinctrl-0 = <&ahci_pwr_pin_olimex_som_evb>;
-+	gpio = <&pio 2 3 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+#include "axp209.dtsi"
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
+index a8bd27b..95bf42a 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
+@@ -86,7 +86,7 @@ int hns_mac_get_sfp_prsnt(struct hns_mac_cb *mac_cb, int *sfp_prsnt)
+ 	if (!mac_cb->cpld_vaddr)
+ 		return -ENODEV;
+ 
+-	*sfp_prsnt = !dsaf_read_b((u64)mac_cb->cpld_vaddr
++	*sfp_prsnt = !dsaf_read_b((u8 *)mac_cb->cpld_vaddr
+ 					+ MAC_SFP_PORT_OFFSET);
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+index e0417c0..315b07e 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+@@ -43,7 +43,7 @@ struct hns_mac_cb;
+ #define DSAF_DUMP_REGS_NUM 504
+ #define DSAF_STATIC_NUM 28
+ 
+-#define DSAF_STATS_READ(p, offset) (*((u64 *)((u64)(p) + (offset))))
++#define DSAF_STATS_READ(p, offset) (*((u64 *)((u8 *)(p) + (offset))))
+ 
+ enum hal_dsaf_mode {
+ 	HRD_DSAF_NO_DSAF_MODE	= 0x0,
+@@ -302,7 +302,7 @@ struct dsaf_device {
+ 
+ static inline void *hns_dsaf_dev_priv(const struct dsaf_device *dsaf_dev)
+ {
+-	return (void *)((u64)dsaf_dev + sizeof(*dsaf_dev));
++	return (void *)((u8 *)dsaf_dev + sizeof(*dsaf_dev));
+ }
+ 
+ struct dsaf_drv_tbl_tcam_key {
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c
+index 50f3427..05ea244 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c
+@@ -192,8 +192,7 @@ static void hns_rcb_ring_init(struct ring_pair_cb *ring_pair, int ring_type)
+ 		dsaf_write_dev(q, RCB_RING_RX_RING_BASEADDR_L_REG,
+ 			       (u32)dma);
+ 		dsaf_write_dev(q, RCB_RING_RX_RING_BASEADDR_H_REG,
+-			       (u32)(dma >> 32));
+-
++			       (u32)((dma >> 31) >> 1));
+ 		dsaf_write_dev(q, RCB_RING_RX_RING_BD_LEN_REG,
+ 			       bd_size_type);
+ 		dsaf_write_dev(q, RCB_RING_RX_RING_BD_NUM_REG,
+@@ -204,8 +203,7 @@ static void hns_rcb_ring_init(struct ring_pair_cb *ring_pair, int ring_type)
+ 		dsaf_write_dev(q, RCB_RING_TX_RING_BASEADDR_L_REG,
+ 			       (u32)dma);
+ 		dsaf_write_dev(q, RCB_RING_TX_RING_BASEADDR_H_REG,
+-			       (u32)(dma >> 32));
+-
++			       (u32)((dma >> 31) >> 1));
+ 		dsaf_write_dev(q, RCB_RING_TX_RING_BD_LEN_REG,
+ 			       bd_size_type);
+ 		dsaf_write_dev(q, RCB_RING_TX_RING_BD_NUM_REG,
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+index 6fc58ba..b475e1b 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+@@ -967,6 +967,6 @@ static inline u32 dsaf_get_reg_field(void *base, u32 reg, u32 mask, u32 shift)
+ 	readb((__iomem unsigned char *)(addr))
+ 
+ #define hns_mac_reg_read64(drv, offset) \
+-	readq((__iomem void *)(((u64)(drv)->io_base + 0xc00 + (offset))))
++	readq((__iomem void *)(((u8 *)(drv)->io_base + 0xc00 + (offset))))
+ 
+ #endif	/* _DSAF_REG_H */
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
+index fe7fa1d..dab5ecf 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
+@@ -7,6 +7,7 @@
+  * (at your option) any later version.
+  */
+ 
++#include <asm-generic/io-64-nonatomic-hi-lo.h>
+ #include <linux/of_mdio.h>
+ #include "hns_dsaf_main.h"
+ #include "hns_dsaf_mac.h"
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 0713ced..ce7f2e0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -31,8 +31,6 @@
+ #define NIC_TX_CLEAN_MAX_NUM 256
+ #define NIC_RX_CLEAN_MAX_NUM 64
+ 
+-#define RCB_ERR_PRINT_CYCLE 1000
+-
+ #define RCB_IRQ_NOT_INITED 0
+ #define RCB_IRQ_INITED 1
+ 
+@@ -434,21 +432,12 @@ out_bnum_err:
+ 
+ 	if (unlikely((!desc->rx.pkt_len) ||
+ 		     hnae_get_bit(bnum_flag, HNS_RXD_DROP_B))) {
+-		if (!(ring->stats.err_pkt_len % RCB_ERR_PRINT_CYCLE))
+-			netdev_dbg(ndev,
+-				   "pkt_len(%u),drop(%u),%#llx,%#llx\n",
+-				   le16_to_cpu(desc->rx.pkt_len),
+-				   hnae_get_bit(bnum_flag, HNS_RXD_DROP_B),
+-				   ((u64 *)desc)[0], ((u64 *)desc)[1]);
+ 		ring->stats.err_pkt_len++;
+ 		dev_kfree_skb_any(skb);
+ 		return -EFAULT;
+ 	}
+ 
+ 	if (unlikely(hnae_get_bit(bnum_flag, HNS_RXD_L2E_B))) {
+-		if (!(ring->stats.l2_err % RCB_ERR_PRINT_CYCLE))
+-			netdev_dbg(ndev, "L2 check err,%#llx,%#llx\n",
+-				   ((u64 *)desc)[0], ((u64 *)desc)[1]);
+ 		ring->stats.l2_err++;
+ 		dev_kfree_skb_any(skb);
+ 		return -EFAULT;
+@@ -459,12 +448,6 @@ out_bnum_err:
+ 
+ 	if (unlikely(hnae_get_bit(bnum_flag, HNS_RXD_L3E_B) ||
+ 		     hnae_get_bit(bnum_flag, HNS_RXD_L4E_B))) {
+-		if (!(ring->stats.l3l4_csum_err % RCB_ERR_PRINT_CYCLE))
+-			netdev_dbg(ndev,
+-				   "check err(%#x),%#llx,%#llx\n",
+-				   hnae_get_bit(bnum_flag, HNS_RXD_L3E_B) |
+-				   hnae_get_bit(bnum_flag, HNS_RXD_L4E_B),
+-				   ((u64 *)desc)[0], ((u64 *)desc)[1]);
+ 		ring->stats.l3l4_csum_err++;
+ 		return 0;
+ 	}
 -- 
-2.5.3
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
