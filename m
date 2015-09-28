@@ -1,104 +1,101 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH 1/2] of: thermal: Fix inconsitency between cooling-*-state and cooling-*-level
-Date: Mon, 28 Sep 2015 09:58:04 +0100
-Message-ID: <9hhpp12apk3.fsf@e105922-lin.cambridge.arm.com>
-References: <1441711013-11220-1-git-send-email-punit.agrawal@arm.com>
-	<1441711249-11434-1-git-send-email-punit.agrawal@arm.com>
-	<CAL_JsqKGk1v1FJ8De8L+UoMUC=T04SYK+WqHz6rZEYipiPYnqA@mail.gmail.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add
+ hdmi-codec for external HDMI-encoders
+Date: Mon, 28 Sep 2015 11:01:34 +0200
+Message-ID: <560901EE.60407@st.com>
+References: <mailman.310.1442574427.844.alsa-devel@alsa-project.org>
+ <56057A9E.9080602@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKGk1v1FJ8De8L+UoMUC=T04SYK+WqHz6rZEYipiPYnqA@mail.gmail.com>
-	(Rob Herring's message of "Fri, 25 Sep 2015 13:33:15 -0500")
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <56057A9E.9080602@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, moinejf@free.fr, tony@atomide.com, broonie@kernel.orgJyri Sarha <jsarha@ti.com>, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+few questions/remarks
+BR,
+Arnaud
 
-Rob Herring <robherring2@gmail.com> writes:
+> +static void hdmi_codec_abort(struct device *dev)
+> +{
+> +    struct hdmi_codec_priv *hcp = dev_get_drvdata(dev);
+> +
+> +    dev_dbg(dev, "%s()\n", __func__);
+> +
+> +    mutex_lock(&hcp->current_stream_lock);
+> +    if (hcp->current_stream && hcp->current_stream->runtime &&
+> +        snd_pcm_running(hcp->current_stream)) {
+> +        dev_info(dev, "HDMI audio playback aborted\n");
+> +        snd_pcm_stream_lock_irq(hcp->current_stream);
+> +        snd_pcm_stop(hcp->current_stream, SNDRV_PCM_STATE_DISCONNECTED);
+> +        snd_pcm_stream_unlock_irq(hcp->current_stream);
+> +    }
+> +    mutex_unlock(&hcp->current_stream_lock);
+> +}
+Does driver should stop the stream in case of unplug?
+This could generate unexpected behavior at application level.
+Perhaps should be better if this part is managed in DRM driver. if HDMI 
+master, I2S bus should be maintained ON to consume the audio stream 
+until application action.
 
-> On Tue, Sep 8, 2015 at 6:20 AM, Punit Agrawal <punit.agrawal@arm.com> wrote:
->> The device trees in the kernel as well as the binding description in
->> Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt use the
->> cooling-{min,max}-level property.
->>
->> Fix the inconsistency with the binding description in
->> Documentation/devicetree/bindings/thermal/thermal.txt by changing
->> cooling-*-state properties to cooling-*-level.
->>
->> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
->> Cc: Eduardo Valentin <edubezval@gmail.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->
-> Both patches applied. Thanks.
+> +
+> +static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+> +                struct snd_pcm_hw_params *params,
+> +                struct snd_soc_dai *dai)
+> +{
+> +    struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+> +    struct hdmi_codec_params hp = {
+> +        .iec = {
+> +            .status = { 0 },
+> +            .subcode = { 0 },
+> +            .pad = 0,
+> +            .dig_subframe = { 0 },
+> +        }
+> +    };
+> +    int ret;
+> +
+> +    dev_dbg(dai->dev, "%s() width %d rate %d channels %d\n", __func__,
+> +        params_width(params), params_rate(params),
+> +        params_channels(params));
+> +
+> +    ret = snd_pcm_create_iec958_consumer_hw_params(params, hp.iec.status,
+> +                               sizeof(hp.iec.status));
+Tell me if i am wrong, but in case of SPDIF format, IEC status is 
+managed by cpu_dai not by the codec.
+To manage IEC61937 a control should be needed to update IEC status bits...
 
-I see the patches in v4.3-rc3 now. Thanks for picking up these fixes.
-
-Cheers,
-Punit
-
->
-> Rob
->
->> ---
->>  Documentation/devicetree/bindings/thermal/thermal.txt | 14 +++++++-------
->>  1 file changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
->> index 8a49362..8320186 100644
->> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
->> @@ -55,16 +55,16 @@ of heat dissipation). For example a fan's cooling states correspond to
->>  the different fan speeds possible. Cooling states are referred to by
->>  single unsigned integers, where larger numbers mean greater heat
->>  dissipation. The precise set of cooling states associated with a device
->> -(as referred to be the cooling-min-state and cooling-max-state
->> +(as referred to by the cooling-min-level and cooling-max-level
->>  properties) should be defined in a particular device's binding.
->>  For more examples of cooling devices, refer to the example sections below.
->>
->>  Required properties:
->> -- cooling-min-state:   An integer indicating the smallest
->> +- cooling-min-level:   An integer indicating the smallest
->>    Type: unsigned       cooling state accepted. Typically 0.
->>    Size: one cell
->>
->> -- cooling-max-state:   An integer indicating the largest
->> +- cooling-max-level:   An integer indicating the largest
->>    Type: unsigned       cooling state accepted.
->>    Size: one cell
->>
->> @@ -225,8 +225,8 @@ cpus {
->>                         396000  950000
->>                         198000  850000
->>                 >;
->> -               cooling-min-state = <0>;
->> -               cooling-max-state = <3>;
->> +               cooling-min-level = <0>;
->> +               cooling-max-level = <3>;
->>                 #cooling-cells = <2>; /* min followed by max */
->>         };
->>         ...
->> @@ -240,8 +240,8 @@ cpus {
->>          */
->>         fan0: fan@0x48 {
->>                 ...
->> -               cooling-min-state = <0>;
->> -               cooling-max-state = <9>;
->> +               cooling-min-level = <0>;
->> +               cooling-max-level = <9>;
->>                 #cooling-cells = <2>; /* min followed by max */
->>         };
->>  };
->> --
->> 2.5.0
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +    if (ret < 0) {
+> +        dev_err(dai->dev, "Creating IEC958 channel status failed %d\n",
+> +            ret);
+> +        return ret;
+> +    }
+> +
+> +    ret = hdmi_codec_new_stream(substream, dai);
+> +    if (ret)
+> +        return ret;
+> +
+> +    hdmi_audio_infoframe_init(&hp.cea);
+> +    hp.cea.channels = params_channels(params);
+> +    hp.cea.coding_type = HDMI_AUDIO_CODING_TYPE_STREAM;
+> +    hp.cea.sample_size = HDMI_AUDIO_SAMPLE_SIZE_STREAM;
+> +    hp.cea.sample_frequency = HDMI_AUDIO_SAMPLE_FREQUENCY_STREAM;
+> +
+> +    hp.sample_width = params_width(params);
+> +    hp.sample_rate = params_rate(params);
+> +    hp.channels = params_channels(params);
+> +
+> +    return hcp->hcd.ops->hw_params(dai->dev->parent,
+> &hcp->daifmt[dai->id],
+> +                       &hp);
+> +}
+> +
