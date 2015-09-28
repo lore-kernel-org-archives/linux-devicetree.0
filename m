@@ -1,28 +1,66 @@
-From: Alexander Popov <alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] powerpc/512x: add LocalPlus Bus FIFO device driver
-Date: Mon, 28 Sep 2015 16:13:09 +0300
-Message-ID: <56093CE5.5070301@linux.com>
-References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
- <1443115737-3948-2-git-send-email-alex.popov@linux.com>
- <56049CD0.7080104@tabi.org>
-Reply-To: alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 04/15] power: bq24257: Use managed power supply
+ register
+Date: Mon, 28 Sep 2015 22:10:16 +0900
+Message-ID: <56093C38.6040309@samsung.com>
+References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
+ <1443196460-26156-5-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56049CD0.7080104-N01EOCouUvQ@public.gmane.org>
+In-Reply-To: <1443196460-26156-5-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello, Timur, thanks a lot for your review.
-I'll fix all the issues you pointed at and return with v4.
+W dniu 26.09.2015 o 00:54, Andreas Dannenberg pisze:
+> Use the devm_* managed version of the function to register the power
+> supply and remove the associated unregister function.
 
-The only question I have: why calling dma_unmap_single() from within
-a spinlock is a bad practice?
+Add explanation for "why" you want to use devm method.
+
+After that:
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
 Best regards,
-Alexander
+Krzysztof
+
+> 
+> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/power/bq24257_charger.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> index d2d077c..6757b41 100644
+> --- a/drivers/power/bq24257_charger.c
+> +++ b/drivers/power/bq24257_charger.c
+> @@ -590,8 +590,10 @@ static int bq24257_power_supply_init(struct bq24257_device *bq)
+>  	psy_cfg.supplied_to = bq24257_charger_supplied_to;
+>  	psy_cfg.num_supplicants = ARRAY_SIZE(bq24257_charger_supplied_to);
+>  
+> -	bq->charger = power_supply_register(bq->dev, &bq24257_power_supply_desc,
+> -					    &psy_cfg);
+> +	bq->charger = devm_power_supply_register(bq->dev,
+> +						 &bq24257_power_supply_desc,
+> +						 &psy_cfg);
+> +
+>  	if (IS_ERR(bq->charger))
+>  		return PTR_ERR(bq->charger);
+>  
+> @@ -742,8 +744,6 @@ static int bq24257_remove(struct i2c_client *client)
+>  
+>  	cancel_delayed_work_sync(&bq->iilimit_setup_work);
+>  
+> -	power_supply_unregister(bq->charger);
+> -
+>  	bq24257_field_write(bq, F_RESET, 1); /* reset to defaults */
+>  
+>  	return 0;
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
