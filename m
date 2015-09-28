@@ -1,59 +1,103 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH linux-next v11 1/3] mfd: atmel-flexcom: create include file with macros used by DT bindings
-Date: Mon, 28 Sep 2015 11:13:24 +0200
-Message-ID: <97f3621def8ca996e6e5ca48870e29d452e252d9.1443431309.git.cyrille.pitchen@atmel.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH linux-next v11 2/3] mfd: devicetree: add bindings for Atmel Flexcom
+Date: Mon, 28 Sep 2015 11:13:25 +0200
+Message-ID: <377681c95dc91d6fc1d2c7b012ed8a71f7565e80.1443431309.git.cyrille.pitchen@atmel.com>
 References: <cover.1443431309.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1443431309.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, akpm@linux-foundation.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1443431309.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch defines some macros to be used as value for the
-"atmel,flexcom-mode" DT property. This value is then written into
-the Operating Mode (OPMODE) bit field of the Flexcom Mode Register.
+This patch documents the DT bindings for the Atmel Flexcom which will be
+introduced by sama5d2x SoCs. These bindings will be used by the actual
+Flexcom driver to be sent in another patch.
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- include/dt-bindings/mfd/atmel-flexcom.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
+ .../devicetree/bindings/mfd/atmel-flexcom.txt      | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
 
-diff --git a/include/dt-bindings/mfd/atmel-flexcom.h b/include/dt-bindings/mfd/atmel-flexcom.h
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
 new file mode 100644
-index 000000000000..a266fe4ee945
+index 000000000000..692300117c64
 --- /dev/null
-+++ b/include/dt-bindings/mfd/atmel-flexcom.h
-@@ -0,0 +1,26 @@
-+/*
-+ * This header provides macros for Atmel Flexcom DT bindings.
-+ *
-+ * Copyright (C) 2015 Cyrille Pitchen <cyrille.pitchen@atmel.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
++++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+@@ -0,0 +1,63 @@
++* Device tree bindings for Atmel Flexcom (Flexible Serial Communication Unit)
 +
-+#ifndef __DT_BINDINGS_ATMEL_FLEXCOM_H__
-+#define __DT_BINDINGS_ATMEL_FLEXCOM_H__
++The Atmel Flexcom is just a wrapper which embeds a SPI controller, an I2C
++controller and an USART. Only one function can be used at a time and is chosen
++at boot time according to the device tree.
 +
-+#define ATMEL_FLEXCOM_MODE_USART	1
-+#define ATMEL_FLEXCOM_MODE_SPI		2
-+#define ATMEL_FLEXCOM_MODE_TWI		3
++Required properties:
++- compatible:		Should be "atmel,sama5d2-flexcom"
++- reg:			Should be the offset/length value for Flexcom dedicated
++			I/O registers (without USART, TWI or SPI registers).
++- clocks:		Should be the Flexcom peripheral clock from PMC.
++- #address-cells:	Should be <1>
++- #size-cells:		Should be <1>
++- ranges:		Should be one range for the full I/O register region
++			(including USART, TWI and SPI registers).
++- atmel,flexcom-mode:	Should be one of the following values:
++			- <1> for USART
++			- <2> for SPI
++			- <3> for I2C
 +
-+#endif /* __DT_BINDINGS_ATMEL_FLEXCOM_H__ */
++Required child:
++A single available child device of type matching the "atmel,flexcom-mode"
++property.
++
++The phandle provided by the clocks property of the child is the same as one for
++the Flexcom parent.
++
++For other properties, please refer to the documentations of the respective
++device:
++- ../serial/atmel-usart.txt
++- ../spi/spi_atmel.txt
++- ../i2c/i2c-at91.txt
++
++Example:
++
++flexcom@f8034000 {
++	compatible = "atmel,sama5d2-flexcom";
++	reg = <0xf8034000 0x200>;
++	clocks = <&flx0_clk>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0x0 0xf8034000 0x800>;
++	atmel,flexcom-mode = <2>;
++
++	spi@400 {
++		compatible = "atmel,at91rm9200-spi";
++		reg = <0x400 0x200>;
++		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_flx0_default>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&flx0_clk>;
++		clock-names = "spi_clk";
++		atmel,fifo-size = <32>;
++
++		mtd_dataflash@0 {
++			compatible = "atmel,at25f512b";
++			reg = <0>;
++			spi-max-frequency = <20000000>;
++		};
++	};
++};
 -- 
 1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
