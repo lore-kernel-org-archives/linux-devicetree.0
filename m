@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 6/9] NFC: NCI: move generic spi driver to a module
-Date: Mon, 28 Sep 2015 14:33:11 +0200
-Message-ID: <1443443594-14353-7-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v2 7/9] NFC: NCI: allow spi driver to choose transfer clock
+Date: Mon, 28 Sep 2015 14:33:12 +0200
+Message-ID: <1443443594-14353-8-git-send-email-cuissard@marvell.com>
 References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,61 +12,78 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SPI driver should be a module.
+In some cases low level drivers might want to update the SPI transfer clock
+(e.g. during firmware download).
+
+This patch adds this support. Without any modification the driver will use the
+default SPI clock (from pdata or device tree).
 
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- net/nfc/nci/Kconfig  | 2 +-
- net/nfc/nci/Makefile | 3 ++-
- net/nfc/nci/spi.c    | 4 ++++
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ include/net/nfc/nci_core.h | 4 ++++
+ net/nfc/nci/spi.c          | 7 ++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/net/nfc/nci/Kconfig b/net/nfc/nci/Kconfig
-index 901c1dd..85d4819 100644
---- a/net/nfc/nci/Kconfig
-+++ b/net/nfc/nci/Kconfig
-@@ -12,7 +12,7 @@ config NFC_NCI
- config NFC_NCI_SPI
- 	depends on NFC_NCI && SPI
- 	select CRC_CCITT
--	bool "NCI over SPI protocol support"
-+	tristate "NCI over SPI protocol support"
- 	default n
- 	help
- 	  NCI (NFC Controller Interface) is a communication protocol between
-diff --git a/net/nfc/nci/Makefile b/net/nfc/nci/Makefile
-index b4b85b8..0ca31d9 100644
---- a/net/nfc/nci/Makefile
-+++ b/net/nfc/nci/Makefile
-@@ -6,7 +6,8 @@ obj-$(CONFIG_NFC_NCI) += nci.o
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index f0bb5e7..0f91e09 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -381,6 +381,10 @@ struct nci_spi {
  
- nci-objs := core.o data.o lib.o ntf.o rsp.o hci.o
+ 	unsigned int		xfer_udelay;	/* microseconds delay between
+ 						  transactions */
++
++	unsigned int		xfer_speed_hz; /* SPI clock frequency
++						 0 => default clock */
++
+ 	u8			acknowledge_mode;
  
--nci-$(CONFIG_NFC_NCI_SPI) += spi.o
-+nci_spi-y += spi.o
-+obj-$(CONFIG_NFC_NCI_SPI) += nci_spi.o
- 
- nci_uart-y += uart.o
- obj-$(CONFIG_NFC_NCI_UART) += nci_uart.o
+ 	struct completion	req_completion;
 diff --git a/net/nfc/nci/spi.c b/net/nfc/nci/spi.c
-index ec250e7..25153d0 100644
+index 25153d0..d904cd2 100644
 --- a/net/nfc/nci/spi.c
 +++ b/net/nfc/nci/spi.c
-@@ -18,6 +18,8 @@
+@@ -58,6 +58,7 @@ static int __nci_spi_send(struct nci_spi *nspi, struct sk_buff *skb,
+ 	}
+ 	t.cs_change = cs_change;
+ 	t.delay_usecs = nspi->xfer_udelay;
++	t.speed_hz = nspi->xfer_speed_hz;
  
- #define pr_fmt(fmt) "nci_spi: %s: " fmt, __func__
+ 	spi_message_init(&m);
+ 	spi_message_add_tail(&t, &m);
+@@ -144,7 +145,8 @@ struct nci_spi *nci_spi_allocate_spi(struct spi_device *spi,
  
-+#include <linux/module.h>
-+
- #include <linux/export.h>
- #include <linux/spi/spi.h>
- #include <linux/crc-ccitt.h>
-@@ -320,3 +322,5 @@ done:
- 	return skb;
- }
- EXPORT_SYMBOL_GPL(nci_spi_read);
-+
-+MODULE_LICENSE("GPL");
+ 	nspi->acknowledge_mode = acknowledge_mode;
+ 	nspi->xfer_udelay = delay;
+-
++	/* Use controller max SPI speed by default */
++	nspi->xfer_speed_hz = 0;
+ 	nspi->spi = spi;
+ 	nspi->ndev = ndev;
+ 	init_completion(&nspi->req_completion);
+@@ -197,12 +199,14 @@ static struct sk_buff *__nci_spi_read(struct nci_spi *nspi)
+ 	tx.tx_buf = req;
+ 	tx.len = 2;
+ 	tx.cs_change = 0;
++	tx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&tx, &m);
+ 
+ 	memset(&rx, 0, sizeof(struct spi_transfer));
+ 	rx.rx_buf = resp_hdr;
+ 	rx.len = 2;
+ 	rx.cs_change = 1;
++	rx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&rx, &m);
+ 
+ 	ret = spi_sync(nspi->spi, &m);
+@@ -226,6 +230,7 @@ static struct sk_buff *__nci_spi_read(struct nci_spi *nspi)
+ 	rx.len = rx_len;
+ 	rx.cs_change = 0;
+ 	rx.delay_usecs = nspi->xfer_udelay;
++	rx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&rx, &m);
+ 
+ 	ret = spi_sync(nspi->spi, &m);
 -- 
 2.2.0.33.gc18b867
 
