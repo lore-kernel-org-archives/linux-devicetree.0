@@ -1,104 +1,79 @@
 From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH v7 5/7] pinctrl: freescale: imx: add shared input select reg support
-Date: Mon, 28 Sep 2015 16:56:39 -0500
-Message-ID: <1443477401-17238-5-git-send-email-aalonso@freescale.com>
+Subject: [PATCH v7 2/7] ARM: dts: imx: imx7d-sbd add iomuxc-lpsr hoggrp-2 pads
+Date: Mon, 28 Sep 2015 16:56:36 -0500
+Message-ID: <1443477401-17238-2-git-send-email-aalonso@freescale.com>
 References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
+Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, yibin.gong@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-- Add shared input select register support
-- imx7d has two iomux controllers iomuxc and iomuxc-lpsr
-  which share select_input register for daisy chain settings
+Add imx7d-sdb iomuxc-lpsr hoggrp-2 default pads settings
+Add iomuxc-lpsr usb_otg1_vbus pinctrl settings
 
 Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 ---
 Changes for V2: Resend
-Changes for V3:
-- Use of_parse_phandle instead of of_get_child_by_name to get input select
-  base register address
-  Changes for V4: Resend
-  Changes for V5:
-  - Remove SHARE_INPUT_SELECT_REG flag
-  - Use fsl,input-sel to check if shared input select register support is used
-Changes for V6: Resend
-Changes for V7: Resend
+Changes for V3: Resend
+Changes for V4: Resend
+Changes for V5: Resend
+Changes for V6:
+- Add wdog pinctrl group, add comments for hog2 group gpios
+Changes for V7:
+- Remove wdog pinctrl settings as they are not currently used
+- Add pinctrl_usb_otg1_vbus settings
 
- drivers/pinctrl/freescale/pinctrl-imx.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7d-sdb.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 151d50d..a5bb939 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_address.h>
- #include <linux/pinctrl/machine.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
-@@ -39,6 +40,7 @@ struct imx_pinctrl {
- 	struct device *dev;
- 	struct pinctrl_dev *pctl;
- 	void __iomem *base;
-+	void __iomem *input_sel_base;
- 	const struct imx_pinctrl_soc_info *info;
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+index 83f0053..a5c7a44 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -65,6 +65,8 @@
+ 			regulator-min-microvolt = <5000000>;
+ 			regulator-max-microvolt = <5000000>;
+ 			gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 =  <&pinctrl_usb_otg1_vbus>;
+ 			enable-active-high;
+ 		};
+ 
+@@ -410,3 +412,22 @@
+ 
+ 	};
  };
- 
-@@ -254,7 +256,12 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
- 			 * Regular select input register can never be at offset
- 			 * 0, and we only print register value for regular case.
- 			 */
--			writel(pin->input_val, ipctl->base + pin->input_reg);
-+			if (ipctl->input_sel_base)
-+				writel(pin->input_val, ipctl->input_sel_base +
-+						pin->input_reg);
-+			else
-+				writel(pin->input_val, ipctl->base +
-+						pin->input_reg);
- 			dev_dbg(ipctl->dev,
- 				"==>select_input: offset 0x%x val 0x%x\n",
- 				pin->input_reg, pin->input_val);
-@@ -685,6 +692,8 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
- int imx_pinctrl_probe(struct platform_device *pdev,
- 		      struct imx_pinctrl_soc_info *info)
- {
-+	struct device_node *dev_np = pdev->dev.of_node;
-+	struct device_node *np;
- 	struct imx_pinctrl *ipctl;
- 	struct resource *res;
- 	int ret, i;
-@@ -715,6 +724,23 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 	if (IS_ERR(ipctl->base))
- 		return PTR_ERR(ipctl->base);
- 
-+	if (of_property_read_bool(dev_np, "fsl,input-sel")) {
-+		np = of_parse_phandle(dev_np, "fsl,input-sel", 0);
-+		if (np) {
-+			ipctl->input_sel_base = of_iomap(np, 0);
-+			if (IS_ERR(ipctl->input_sel_base)) {
-+				of_node_put(np);
-+				dev_err(&pdev->dev,
-+					"iomuxc input select base address not found\n");
-+				return PTR_ERR(ipctl->input_sel_base);
-+			}
-+		} else {
-+			dev_err(&pdev->dev, "iomuxc fsl,input-sel property not found\n");
-+			return -EINVAL;
-+		}
-+		of_node_put(np);
-+	}
 +
- 	imx_pinctrl_desc.name = dev_name(&pdev->dev);
- 	imx_pinctrl_desc.pins = info->pins;
- 	imx_pinctrl_desc.npins = info->npins;
++&iomuxc_lpsr {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog_2>;
++
++	imx7d-sdb {
++		pinctrl_hog_2: hog2grp {
++			fsl,pins = <
++				MX7D_PAD_GPIO1_IO07__GPIO1_IO7    0x59  /* sensor_int_b */
++			>;
++		};
++
++		pinctrl_usb_otg1_vbus: usbotg1vbusgrp {
++			fsl,pins = <
++				MX7D_PAD_GPIO1_IO05__GPIO1_IO5    0x14 	/* usb_otg1_pwr */
++			>;
++		};
++	};
++};
 -- 
 2.1.4
-
