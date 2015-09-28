@@ -1,52 +1,47 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v4 1/9] drivers/of: Introduce of_node_alloc
-Date: Mon, 28 Sep 2015 15:50:38 -0700
-Message-ID: <5609C43E.1040106@gmail.com>
-References: <1443458582-7497-1-git-send-email-marc.zyngier@arm.com> <1443458582-7497-2-git-send-email-marc.zyngier@arm.com>
-Reply-To: frowand.list@gmail.com
+From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 14/15] power: bq24257: Add platform data based
+ initialization
+Date: Mon, 28 Sep 2015 17:50:55 -0500
+Message-ID: <20150928225054.GA8797@beast>
+References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
+ <1443196460-26156-15-git-send-email-dannenberg@ti.com>
+ <20150928175811.GG3660@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443458582-7497-2-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Jason Cooper <jason@lakedaemon.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Graeme Gregory <graeme@xora.org.uk>, Jake Oshins <jakeo@microsoft.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150928175811.GG3660@earth>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/28/2015 9:42 AM, Marc Zyngier wrote:
-> We want to be able to generate "fake" device nodes that can be
-> used as an identifier for irq domains. For that, we reuse the
-> dynamic DT layer in order to generate DT nodes in a detached state
-> (so that it doesn't interfere with the rest of the tree).
+On Mon, Sep 28, 2015 at 07:58:12PM +0200, Sebastian Reichel wrote:
+> Hi,
 > 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  drivers/of/dynamic.c | 22 ++++++++++++++++++++++
->  include/linux/of.h   |  5 +++++
->  2 files changed, 27 insertions(+)
+> On Fri, Sep 25, 2015 at 10:54:19AM -0500, Andreas Dannenberg wrote:
+> > The patch adds a way to setup and initialize the device through the use
+> > of platform data with configuration options equivalent to when using
+> > device firmware (DT or ACPI) for systems where this is not available.
 > 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 53826b8..709d363 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -445,6 +445,28 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
->  	return NULL;
->  }
->  
-> +/**
-> + * of_node_alloc() - Allocate an empty device node dynamically.
-> + * @fmt: Format string (plus vargs) for new full name of the device node
-> + *
-> + * Create an device tree node, either by by allocating an empty one
+> Which board is this btw? Looks like most arm board code is going
+> away in the next few kernel releases, so I wonder if this patch
+> will just increase maintainence without any proper user.
 
-      Create a device tree node by allocating an empty one
+There is no particular board I'm targeting this for however platform
+data support has been tested with a board file that I created for one of
+the TI devices (don't worry I won't try to upstream that one :)
 
-> + * suitable for further modification.  The node data are dynamically
-> + * allocated and all the node flags have the OF_DYNAMIC & OF_DETACHED
-> + * bits set. Returns the newly allocated node or NULL on out of memory
-> + * error.
-> + */
-> +struct device_node *of_node_alloc(const char *fmt, ...)
+>From a silicon vendor POV I want to make sure to make it easy to use
+these devices for the largest audience possible hence the added pdata
+support as there are still archs out there that don't support DT/ACPI.
 
-< snip >
+With the changes based on your suggestion to use the gpiod interface
+also for pdata this patch has become almost trivial and so should be the
+effort removing this support should it ever become necessary.
+
+Regards,
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
