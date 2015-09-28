@@ -1,59 +1,63 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 06/11] ARM: DT: STiH407: Add NAND flash controller pin configuration
-Date: Mon, 28 Sep 2015 13:37:42 +0100
-Message-ID: <1443443867-4099-7-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 10/11] ARM: DT: STiH407: Add RMII pinctrl support
+Date: Mon, 28 Sep 2015 13:37:46 +0100
+Message-ID: <1443443867-4099-11-git-send-email-peter.griffin@linaro.org>
 References: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Christophe Kerello <christophe.kerello@st.com>
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds NAND flash support controller pin configuration
-for STiH407 family silicon.
+This patch adds the RMII pinctrl support for the Synopsys
+MAC on STiH407 SoCs.
 
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 Acked-by: Lee Jones <lee.jones@linaro.org>
 Acked-by: Patrice Chotard <patrice.chotard@st.com>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index b7a405f..d281f9c 100644
+index 9daab1f..881e94a 100644
 --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -1085,6 +1085,29 @@
+@@ -256,6 +256,33 @@
+ 						phyclk = <&pio2 3 ALT1 OUT NICLK 0 CLK_A>;
  					};
  				};
- 			};
 +
-+			nand {
-+				pinctrl_nand: nand {
++				pinctrl_rmii1: rmii1-0 {
 +					st,pins {
-+						nand_cs1 = <&pio40 6 ALT3 OUT>;
-+						nand_cs0 = <&pio40 7 ALT3 OUT>;
-+						nand_d0 = <&pio41 0 ALT3 BIDIR>;
-+						nand_d1 = <&pio41 1 ALT3 BIDIR>;
-+						nand_d2 = <&pio41 2 ALT3 BIDIR>;
-+						nand_d3 = <&pio41 3 ALT3 BIDIR>;
-+						nand_d4 = <&pio41 4 ALT3 BIDIR>;
-+						nand_d5 = <&pio41 5 ALT3 BIDIR>;
-+						nand_d6 = <&pio41 6 ALT3 BIDIR>;
-+						nand_d7 = <&pio41 7 ALT3 BIDIR>;
-+						nand_we = <&pio42 0 ALT3 OUT>;
-+						nand_dqs = <&pio42 1 ALT3 OUT>;
-+						nand_ale = <&pio42 2 ALT3 OUT>;
-+						nand_cle = <&pio42 3 ALT3 OUT>;
-+						nand_rnb = <&pio42 4 ALT3 IN>;
-+						nand_oe = <&pio42 5 ALT3 OUT>;
++						txd0 = <&pio0 0 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
++						txd1 = <&pio0 1 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
++						txen = <&pio0 5 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
++						mdio = <&pio1 0 ALT1 OUT BYPASS 0>;
++						mdc = <&pio1 1 ALT1 OUT NICLK 0 CLK_A>;
++						mdint = <&pio1 3 ALT1 IN BYPASS 0>;
++						rxd0 = <&pio1 4 ALT1 IN SE_NICLK_IO 0 CLK_B>;
++						rxd1 = <&pio1 5 ALT1 IN SE_NICLK_IO 0 CLK_B>;
++						rxdv = <&pio2 0 ALT1 IN SE_NICLK_IO 0 CLK_B>;
++						rx_er = <&pio2 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
 +					};
 +				};
-+			};
- 		};
- 	};
- };
++
++				pinctrl_rmii1_phyclk: rmii1_phyclk {
++					st,pins {
++						phyclk = <&pio2 3 ALT1 OUT NICLK 0 CLK_A>;
++					};
++				};
++
++				pinctrl_rmii1_phyclk_ext: rmii1_phyclk_ext {
++					st,pins {
++						phyclk = <&pio2 3 ALT2 IN NICLK 0 CLK_A>;
++					};
++				};
+ 			};
+ 
+ 			pwm1 {
 -- 
 1.9.1
