@@ -1,96 +1,63 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add hdmi-codec for external
- HDMI-encoders
-Date: Mon, 28 Sep 2015 15:26:59 +0300
-Message-ID: <56093213.8010008@ti.com>
-References: <mailman.310.1442574427.844.alsa-devel@alsa-project.org>
- <56057A9E.9080602@st.com> <560901EE.60407@st.com>
+From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/9] Marvell NFC drivers for i2c and spi
+Date: Mon, 28 Sep 2015 14:33:05 +0200
+Message-ID: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <560901EE.60407@st.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, moinejf@free.fr, tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMjgvMTUgMTI6MDEsIEFybmF1ZCBQb3VsaXF1ZW4gd3JvdGU6Cj4gZmV3IHF1ZXN0aW9u
-cy9yZW1hcmtzCj4gQlIsCj4gQXJuYXVkCj4KPj4gK3N0YXRpYyB2b2lkIGhkbWlfY29kZWNfYWJv
-cnQoc3RydWN0IGRldmljZSAqZGV2KQo+PiArewo+PiArICAgIHN0cnVjdCBoZG1pX2NvZGVjX3By
-aXYgKmhjcCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+PiArCj4+ICsgICAgZGV2X2RiZyhkZXYs
-ICIlcygpXG4iLCBfX2Z1bmNfXyk7Cj4+ICsKPj4gKyAgICBtdXRleF9sb2NrKCZoY3AtPmN1cnJl
-bnRfc3RyZWFtX2xvY2spOwo+PiArICAgIGlmIChoY3AtPmN1cnJlbnRfc3RyZWFtICYmIGhjcC0+
-Y3VycmVudF9zdHJlYW0tPnJ1bnRpbWUgJiYKPj4gKyAgICAgICAgc25kX3BjbV9ydW5uaW5nKGhj
-cC0+Y3VycmVudF9zdHJlYW0pKSB7Cj4+ICsgICAgICAgIGRldl9pbmZvKGRldiwgIkhETUkgYXVk
-aW8gcGxheWJhY2sgYWJvcnRlZFxuIik7Cj4+ICsgICAgICAgIHNuZF9wY21fc3RyZWFtX2xvY2tf
-aXJxKGhjcC0+Y3VycmVudF9zdHJlYW0pOwo+PiArICAgICAgICBzbmRfcGNtX3N0b3AoaGNwLT5j
-dXJyZW50X3N0cmVhbSwgU05EUlZfUENNX1NUQVRFX0RJU0NPTk5FQ1RFRCk7Cj4+ICsgICAgICAg
-IHNuZF9wY21fc3RyZWFtX3VubG9ja19pcnEoaGNwLT5jdXJyZW50X3N0cmVhbSk7Cj4+ICsgICAg
-fQo+PiArICAgIG11dGV4X3VubG9jaygmaGNwLT5jdXJyZW50X3N0cmVhbV9sb2NrKTsKPj4gK30K
-PiBEb2VzIGRyaXZlciBzaG91bGQgc3RvcCB0aGUgc3RyZWFtIGluIGNhc2Ugb2YgdW5wbHVnPwo+
-IFRoaXMgY291bGQgZ2VuZXJhdGUgdW5leHBlY3RlZCBiZWhhdmlvciBhdCBhcHBsaWNhdGlvbiBs
-ZXZlbC4KPiBQZXJoYXBzIHNob3VsZCBiZSBiZXR0ZXIgaWYgdGhpcyBwYXJ0IGlzIG1hbmFnZWQg
-aW4gRFJNIGRyaXZlci4gaWYgSERNSQo+IG1hc3RlciwgSTJTIGJ1cyBzaG91bGQgYmUgbWFpbnRh
-aW5lZCBPTiB0byBjb25zdW1lIHRoZSBhdWRpbyBzdHJlYW0KPiB1bnRpbCBhcHBsaWNhdGlvbiBh
-Y3Rpb24uCj4KClRoZSB3aG9sZSBwb2ludCBvZiB0aGlzIGFib3J0IGNhbGxiYWNrIGlzIHRvIHBy
-b3ZpZGUgdGhlIG1lYW5zIGZvciB0aGUgCnZpZGVvIHNpZGUgdG8gc3RvcCB0aGUgYXVkaW8gcGxh
-eWJhY2sgaW4gYSBjbGVhbiB3YXkuCgpUaGUgYWJvcnQgY2FsbGJhY2sgaXMgZ2l2ZW4gdG8gdGhl
-IHZpZGVvIHNpZGUgaW4gc3RhcnR1cCgpIGNhbGxiYWNrIAooQVNvQyBzaWRlIGNhbGxzIHZpZGVv
-IHNpZGUpLiBJZiB0aGUgdmlkZW8gc2lkZSBzZWVzIHRoYXQgdGhlIHBsYXliYWNrIApjYW4gbm90
-IGdvIG9uIGl0IGNhbiBjYWxsIHRoZSBhYm9ydCBjYWxsYmFjayBhbmQgdGhlIGF1ZGlvIHBsYXli
-YWNrIHdpbGwgCmFib3J0IGluIHN0YW5kYXJkIEFMU0Egd2F5IGFuZCBhIHByb3Blcmx5IHdyaXR0
-ZW4gYXBwbGljYXRpb25zIHNob3VsZCAKbm90IGdldCBjb25mdXNlZC4KCk5vdGhpbmcgaXMgZm9y
-Y2luZyB0aGUgdmlkZW8gc2lkZSB0byBjYWxsIHRoZSBjYWxsYmFjayBldmVyLCBpZiBzbyAKZGVj
-aWRlZC4gQnV0IGlmIGZvciBpbnN0YW5jZSBwb3dlciBtYW5hZ2VtZW50IHN0b3BzIHRoZSBpMnMg
-Y2xvY2tzIHdoZW4gCmNvbm5lY3RvciBpcyB1bnBsdWdnZWQsIHRoZW4gdGhlIGF1ZGlvIGNhbiBu
-b3QgZ28gb24gYW55IG1vcmUgYW5kIGl0IApzaG91bGQgYmUgYWJvcnRlZCAoYWN0dWFsbHkgaXQg
-d291bGQgYWJvcnQgaW4gYSBtb21lbnQgd2hlbiBBTFNBIApyZWFsaXplcyB0aGF0IHRoZSBETUEg
-aXMgbm90IHJ1bm5pbmcpLgoKPj4gKwo+PiArc3RhdGljIGludCBoZG1pX2NvZGVjX2h3X3BhcmFt
-cyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKPj4gKyAgICAgICAgICAgICAg
-ICBzdHJ1Y3Qgc25kX3BjbV9od19wYXJhbXMgKnBhcmFtcywKPj4gKyAgICAgICAgICAgICAgICBz
-dHJ1Y3Qgc25kX3NvY19kYWkgKmRhaSkKPj4gK3sKPj4gKyAgICBzdHJ1Y3QgaGRtaV9jb2RlY19w
-cml2ICpoY3AgPSBzbmRfc29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOwo+PiArICAgIHN0cnVjdCBo
-ZG1pX2NvZGVjX3BhcmFtcyBocCA9IHsKPj4gKyAgICAgICAgLmllYyA9IHsKPj4gKyAgICAgICAg
-ICAgIC5zdGF0dXMgPSB7IDAgfSwKPj4gKyAgICAgICAgICAgIC5zdWJjb2RlID0geyAwIH0sCj4+
-ICsgICAgICAgICAgICAucGFkID0gMCwKPj4gKyAgICAgICAgICAgIC5kaWdfc3ViZnJhbWUgPSB7
-IDAgfSwKPj4gKyAgICAgICAgfQo+PiArICAgIH07Cj4+ICsgICAgaW50IHJldDsKPj4gKwo+PiAr
-ICAgIGRldl9kYmcoZGFpLT5kZXYsICIlcygpIHdpZHRoICVkIHJhdGUgJWQgY2hhbm5lbHMgJWRc
-biIsIF9fZnVuY19fLAo+PiArICAgICAgICBwYXJhbXNfd2lkdGgocGFyYW1zKSwgcGFyYW1zX3Jh
-dGUocGFyYW1zKSwKPj4gKyAgICAgICAgcGFyYW1zX2NoYW5uZWxzKHBhcmFtcykpOwo+PiArCj4+
-ICsgICAgcmV0ID0gc25kX3BjbV9jcmVhdGVfaWVjOTU4X2NvbnN1bWVyX2h3X3BhcmFtcyhwYXJh
-bXMsCj4+IGhwLmllYy5zdGF0dXMsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-c2l6ZW9mKGhwLmllYy5zdGF0dXMpKTsKPiBUZWxsIG1lIGlmIGkgYW0gd3JvbmcsIGJ1dCBpbiBj
-YXNlIG9mIFNQRElGIGZvcm1hdCwgSUVDIHN0YXR1cyBpcwo+IG1hbmFnZWQgYnkgY3B1X2RhaSBu
-b3QgYnkgdGhlIGNvZGVjLgo+IFRvIG1hbmFnZSBJRUM2MTkzNyBhIGNvbnRyb2wgc2hvdWxkIGJl
-IG5lZWRlZCB0byB1cGRhdGUgSUVDIHN0YXR1cyBiaXRzLi4uCj4KCkFGQUlLIHllcy4gSG93ZXZl
-ciwgdGhlIHZpZGVvIHNpZGUgaW1wbGVtZW50YXRpb24gaXMgZnJlZSB0byBpZ25vcmUgCnN0YXR1
-cyBiaXRzIGluIHRoZSBzdHJ1Y3QgaGRtaV9jb2RlY19wYXJhbXMgYW5kIGl0IHNob3VsZCBub3Jt
-YWxseSBkbyBzbyAKaWYgdGhlIGZvcm1hdCBpcyBTUERJRi4gT2YgY291cnNlIEkgY291bGQgc2F2
-ZSBjb3VwbGUgQ1BVIGN5Y2xlcyBpbiB0aGUgCmNvZGVjIGNvZGUgaWYgd291bGQgbm90IGV2ZW4g
-cHJvZHVjZSB0aGUgYml0cyB3aGVuIHRoZSBmb3JtYXQgaXMgU1BESUYuCgpCZXN0IHJlZ2FyZHMs
-Ckp5cmkKCj4+ICsgICAgaWYgKHJldCA8IDApIHsKPj4gKyAgICAgICAgZGV2X2VycihkYWktPmRl
-diwgIkNyZWF0aW5nIElFQzk1OCBjaGFubmVsIHN0YXR1cyBmYWlsZWQgJWRcbiIsCj4+ICsgICAg
-ICAgICAgICByZXQpOwo+PiArICAgICAgICByZXR1cm4gcmV0Owo+PiArICAgIH0KPj4gKwo+PiAr
-ICAgIHJldCA9IGhkbWlfY29kZWNfbmV3X3N0cmVhbShzdWJzdHJlYW0sIGRhaSk7Cj4+ICsgICAg
-aWYgKHJldCkKPj4gKyAgICAgICAgcmV0dXJuIHJldDsKPj4gKwo+PiArICAgIGhkbWlfYXVkaW9f
-aW5mb2ZyYW1lX2luaXQoJmhwLmNlYSk7Cj4+ICsgICAgaHAuY2VhLmNoYW5uZWxzID0gcGFyYW1z
-X2NoYW5uZWxzKHBhcmFtcyk7Cj4+ICsgICAgaHAuY2VhLmNvZGluZ190eXBlID0gSERNSV9BVURJ
-T19DT0RJTkdfVFlQRV9TVFJFQU07Cj4+ICsgICAgaHAuY2VhLnNhbXBsZV9zaXplID0gSERNSV9B
-VURJT19TQU1QTEVfU0laRV9TVFJFQU07Cj4+ICsgICAgaHAuY2VhLnNhbXBsZV9mcmVxdWVuY3kg
-PSBIRE1JX0FVRElPX1NBTVBMRV9GUkVRVUVOQ1lfU1RSRUFNOwo+PiArCj4+ICsgICAgaHAuc2Ft
-cGxlX3dpZHRoID0gcGFyYW1zX3dpZHRoKHBhcmFtcyk7Cj4+ICsgICAgaHAuc2FtcGxlX3JhdGUg
-PSBwYXJhbXNfcmF0ZShwYXJhbXMpOwo+PiArICAgIGhwLmNoYW5uZWxzID0gcGFyYW1zX2NoYW5u
-ZWxzKHBhcmFtcyk7Cj4+ICsKPj4gKyAgICByZXR1cm4gaGNwLT5oY2Qub3BzLT5od19wYXJhbXMo
-ZGFpLT5kZXYtPnBhcmVudCwKPj4gJmhjcC0+ZGFpZm10W2RhaS0+aWRdLAo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAmaHApOwo+PiArfQo+PiArCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+Please find patches that enable Marvell NFC controlled over i2c
+and spi. This patchset includes also firmware download support and
+few enhancements.
+
+V2 update: Add module license in spi driver, update makefile
+
+Br,
+
+Vincent Cuissard (9):
+  NFC: nfcmrvl: remove unneeded version defines
+  NFC: NCI: export nci_send_frame function
+  NFC: nfcmrvl: add firmware download support
+  NFC: nfcmrvl: allow low level drivers to configure head/tail room
+  NFC: nfcmrvl: add i2c driver
+  NFC: NCI: move generic spi driver to a module
+  NFC: NCI: allow spi driver to choose transfer clock
+  NFC: nfcmrvl: add spi driver
+  NFC: nfcmrvl: update device tree bindings for Marvell NFC
+
+ .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  61 ++-
+ drivers/nfc/nfcmrvl/Kconfig                        |  22 +
+ drivers/nfc/nfcmrvl/Makefile                       |   8 +-
+ drivers/nfc/nfcmrvl/fw_dnld.c                      | 561 +++++++++++++++++++++
+ drivers/nfc/nfcmrvl/fw_dnld.h                      | 105 ++++
+ drivers/nfc/nfcmrvl/i2c.c                          | 302 +++++++++++
+ drivers/nfc/nfcmrvl/main.c                         |  64 ++-
+ drivers/nfc/nfcmrvl/nfcmrvl.h                      |  22 +-
+ drivers/nfc/nfcmrvl/spi.c                          | 242 +++++++++
+ drivers/nfc/nfcmrvl/uart.c                         |  16 +-
+ drivers/nfc/nfcmrvl/usb.c                          |   7 +-
+ include/linux/platform_data/nfcmrvl.h              |  11 +
+ include/net/nfc/nci.h                              |   1 +
+ include/net/nfc/nci_core.h                         |   5 +
+ net/nfc/nci/Kconfig                                |   2 +-
+ net/nfc/nci/Makefile                               |   3 +-
+ net/nfc/nci/core.c                                 |   3 +-
+ net/nfc/nci/spi.c                                  |  11 +-
+ 18 files changed, 1408 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.c
+ create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.h
+ create mode 100644 drivers/nfc/nfcmrvl/i2c.c
+ create mode 100644 drivers/nfc/nfcmrvl/spi.c
+
+--
+2.2.0.33.gc18b867
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
