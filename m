@@ -1,57 +1,96 @@
-From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH v7 3/7] ARM: dts: imx: imx7d-sbd add usb_otg2_vbus pinctrl settings
-Date: Mon, 28 Sep 2015 16:56:37 -0500
-Message-ID: <1443477401-17238-3-git-send-email-aalonso@freescale.com>
+From: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v7 6/7] pinctrl: freescale: imx7d: support iomux lpsr controller
+Date: Mon, 28 Sep 2015 16:56:40 -0500
+Message-ID: <1443477401-17238-6-git-send-email-aalonso@freescale.com>
 References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443477401-17238-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb_otg2_vbus pinctrl settings
+iMX7D has two iomuxc controllers, iomuxc controller similar as
+previous iMX SoC generation and iomuxc-lpsr which provides low
+power state rentetion capabilities on gpios that are part of
+iomuxc-lpsr
 
-Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+Add iomuxc-lpsr gpio group id's
+
+Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-Changes for V7: New patch in series
+Changes for V2: Add imx7d_lpsr_pads enums
+Changes for V3: Resend
+Changes for V4: Resend
+Changes for V5: Remove flags SHARE_INPUT_SELECT_REG and
+ ZERO_OFFSET_VALID.
+Changes for V6: Restore ZERO_OFFSET_VALID flag.
+Changes for V7: Resend
 
- arch/arm/boot/dts/imx7d-sdb.dts | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/pinctrl/freescale/pinctrl-imx7d.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index a5c7a44..96c1e1a 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -77,6 +77,8 @@
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
- 			gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 =  <&pinctrl_usb_otg2_vbus>;
- 			enable-active-high;
- 		};
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx7d.c b/drivers/pinctrl/freescale/pinctrl-imx7d.c
+index 1fa7530..16dc925 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx7d.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx7d.c
+@@ -174,6 +174,17 @@ enum imx7d_pads {
+ 	MX7D_PAD_ENET1_COL = 154,
+ };
  
-@@ -254,11 +256,16 @@
- 	imx7d-sdb {
- 		pinctrl_hog: hoggrp {
- 			fsl,pins = <
--				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
- 				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
- 			>;
- 		};
- 
-+		pinctrl_usb_otg2_vbus: usbotg2vbusgrp {
-+			fsl,pins = <
-+				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14 /* usb_otg2_pwr */
-+			>;
-+		};
++enum imx7d_lpsr_pads {
++	MX7D_PAD_GPIO1_IO00 = 0,
++	MX7D_PAD_GPIO1_IO01 = 1,
++	MX7D_PAD_GPIO1_IO02 = 2,
++	MX7D_PAD_GPIO1_IO03 = 3,
++	MX7D_PAD_GPIO1_IO04 = 4,
++	MX7D_PAD_GPIO1_IO05 = 5,
++	MX7D_PAD_GPIO1_IO06 = 6,
++	MX7D_PAD_GPIO1_IO07 = 7,
++};
 +
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
- 				MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
+ /* Pad names for the pinmux subsystem */
+ static const struct pinctrl_pin_desc imx7d_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX7D_PAD_RESERVE0),
+@@ -333,13 +344,32 @@ static const struct pinctrl_pin_desc imx7d_pinctrl_pads[] = {
+ 	IMX_PINCTRL_PIN(MX7D_PAD_ENET1_COL),
+ };
+ 
++/* Pad names for the pinmux subsystem */
++static const struct pinctrl_pin_desc imx7d_lpsr_pinctrl_pads[] = {
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO00),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO01),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO02),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO03),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO04),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO05),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO06),
++	IMX_PINCTRL_PIN(MX7D_PAD_GPIO1_IO07),
++};
++
+ static struct imx_pinctrl_soc_info imx7d_pinctrl_info = {
+ 	.pins = imx7d_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx7d_pinctrl_pads),
+ };
+ 
++static struct imx_pinctrl_soc_info imx7d_lpsr_pinctrl_info = {
++	.pins = imx7d_lpsr_pinctrl_pads,
++	.npins = ARRAY_SIZE(imx7d_lpsr_pinctrl_pads),
++	.flags = ZERO_OFFSET_VALID,
++};
++
+ static struct of_device_id imx7d_pinctrl_of_match[] = {
+ 	{ .compatible = "fsl,imx7d-iomuxc", .data = &imx7d_pinctrl_info, },
++	{ .compatible = "fsl,imx7d-iomuxc-lpsr", .data = &imx7d_lpsr_pinctrl_info },
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
 2.1.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
