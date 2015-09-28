@@ -1,128 +1,91 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v6 5/5] leds: netxbig: set led_classdev max_brightness
-Date: Mon, 28 Sep 2015 15:43:02 +0200
-Message-ID: <560943E6.1050606@samsung.com>
-References: <1443301358-2131-1-git-send-email-simon.guinot@sequanux.org>
- <1443301358-2131-6-git-send-email-simon.guinot@sequanux.org>
- <5608F41B.4020307@samsung.com> <20150928091956.GY7306@kw.sim.vm.gnt>
- <5609133A.3050802@samsung.com> <20150928115033.GZ7306@kw.sim.vm.gnt>
- <56093188.4050405@samsung.com> <20150928132533.GA7306@kw.sim.vm.gnt>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH linux-next 0/4] mtd: spi-nor: fix Quad SPI memory support
+Date: Mon, 28 Sep 2015 16:10:17 +0200
+Message-ID: <56094A49.7000304@atmel.com>
+References: <cover.1442590224.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150928132533.GA7306@kw.sim.vm.gnt>
-Sender: linux-leds-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@printk.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh@kernel.org>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1442590224.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2015 03:25 PM, Simon Guinot wrote:
-> On Mon, Sep 28, 2015 at 02:24:40PM +0200, Jacek Anaszewski wrote:
->> On 09/28/2015 01:50 PM, Simon Guinot wrote:
->>> On Mon, Sep 28, 2015 at 12:15:22PM +0200, Jacek Anaszewski wrote:
->>>> On 09/28/2015 11:19 AM, Simon Guinot wrote:
->>>>> On Mon, Sep 28, 2015 at 10:02:35AM +0200, Jacek Anaszewski wrote:
->>>>>> Hi Simon,
->>>>>
->>>>> Hi Jacek,
->>>>>
->>>>>>
->>>>>> Does your device support reading the brightness currently set?
->>>>>
->>>>> No it don't.
->>>>>
->>>>>> If so, it would be good to implement brightness_get op, because
->>>>>> AFAIR you mentioned that the firmware you are working with sets
->>>>>> always maximum brightness value. Having the op implemented would
->>>>>> allow to find this out.
->>>>>
->>>>> I don't understand how this can help. I mean, the only issue is that at
->>>>> startup the initial LED state is unknown. And the software brightness
->>>>> value could be false. But once the LED is configured, the brightness
->>>>> values for software and hardware are synchronized. The brightness value
->>>>> is stored/cached in led_classdev and it can be retrieved by the user via
->>>>> sysfs...
->>>>>
->>>>> For my own knowledge, is there some interest in having brightness_get(),
->>>>> aside of guessing the LED initial state ?
->>>>
->>>> Some LED controllers can adjust brightness in case battery voltage level
->>>> falls below some threshold.
->>>
->>> OK, thanks for the explanation.
->>>
->>>>
->>>>> What does the embedded firmware is writing 255 or 0 into the brightness
->>>>> sysfs attribute. The max_brightness value is ignored. After this patch,
->>>>> writing 255 and 0 still allows to configure the LED in the same way:
->>>>> maximum brightness or off. Thus, I believe there is no compatibility
->>>>> issue.
->>>>
->>>> LED core always assures that brightness value passed to brightness_set
->>>> op does not exceed max_brightness value. So, now after executing
->>>> "echo 255 > brightness", LED core will adjust it to max_brightness
->>>> (e.g. 7) before passing to brightness_set.
->>>>
->>>> In the message [1], you mentioned that "LEDs are only enabled at their
->>>> maximum level", so IIUC following is possible:
->>>>
->>>> #echo 3 > "brightness"
->>>>
->>>> firmware sets brightness to max_brightness from DT (e.g. 7), but
->>>>
->>>> #cat brightness
->>>> #3
->>>>
->>>> Is it true?
->>>
->>> Oh no sorry, it is a misunderstanding. By "LEDs are only enabled at
->>> their maximum level", I was meaning "LEDs are only enabled at their
->>> maximum level by the LaCie stock firmware". The firmware don't make
->>> use of the different hardware brightness levels available. But the
->>> feature works perfectly. If you write 3 into sysfs "brightness", then
->>> you get the third brightness level.
->>
->> I thought that driver talks to firmware, which controls the LEDs.
->>  From your explanation I infer that this driver replaces LaCie stock
->> firmware, am I right? There must be however some circuit that controls
->> LED brightness then.
->
-> OK, I think I may have managed to confuse you completely.
->
-> The LEDs are controlled by a CPLD. The leds-netxbig driver talks to the
-> CPLD via the gpio-ext "kind of" bus:
->
-> leds-netxbig -> gpio-ext bus -> CPLD -> LEDs
->
-> "LaCie stock firmware" don't refer to the firmware embedded in the CPLD
-> but to the stock LaCie Linux system running *on* the board.
->
-> "LEDs are only enabled at their maximum level by the LaCie stock
-> firmware" means: "In the Linux LaCie system running on the board,
-> userland only configures the LED brightness to 0 or 255".
->
-> It don't mean that the CPLD does some weird stuff implying that the
-> feature is somewhat broken. No, the feature works. Simply userland
-> (in the stock LaCie system aka firmware) don't use it.
->
-> Remember that your original question was:
->
-> "Doesn't specification of your device say what current value given
->   brightness level reflects?"
->
-> Let me rephrase my answer without using "LaCie stock firmware":
->
-> No this information is not available in the board specification. It is
-> probably because this feature is not used by the LaCie Linux userland.
-> The LED brightness is configured to off or full. Other levels are not
-> used. That's probably why no one took care of measuring the LED current
-> consumption.
->
-> Let me know if it is still unclear for you.
+Hi all,
 
-Thanks for this explanation. Now everything is clear.
+are there other works in progress to enhance the QSPI support inside th=
+e
+spi-nor framework?
+Do you have any suggestion about what should be done and how to do it?
+Is there any discussion on this topic? If so, I would be interested in =
+taking
+part of it so I could synchronize my work with other developers' effort=
+s.
 
--- 
+Brian, Mark, Marek, with this series I've removed the Atmel QSPI contro=
+ller
+driver to focus only on the common spi-nor framework. I will send a ded=
+icated
+series later for the Atmel QSPI controller once we all agree on an upda=
+te of
+the framework API to add support to other QSPI memory manufacturers suc=
+h as
+Micron or Macronix.
+
+Currently, it looks like the spi-nor framework only works with Spansion
+memories. For instance, without the patches of this series, I can't use=
+ the
+Micron n25q128a13 embedded on sama5d2 xplained boards.
+So I hope we will find a way to make it work!
+
 Best Regards,
-Jacek Anaszewski
+
+Cyrille
+
+Le 18/09/2015 17:49, Cyrille Pitchen a =E9crit :
+> Hi all,
+>=20
+> this series of patches fixes the QSPI support mostly for Micron and
+> Macronix memories. There are also some updates for Spansion memories.
+> There are also many comments to explain the implementation choices ba=
+sed
+> on the datasheets from memory manufacturers.
+>=20
+> The series was backported to a at91-4.1 kernel then tested on a sama5=
+d2
+> xplained board, which embeds a at25df321a memory on a SPI controller =
+and
+> a Micron n25q128a13 QSPI memory on the new Atmel QSPI controller.
+>=20
+> The at25 memory was used to check non regression on the m25p80 driver
+> whereas the Micron memory was used to test the fixes of the spi-nor
+> framework. The driver for the Atmel QSPI controller will be sent in a
+> dedicated series.
+>=20
+> Best Regards,
+>=20
+> Cyrille
+>=20
+> Cyrille Pitchen (4):
+>   mtd: spi-nor: remove unused read_xfer/write_xfer hooks
+>   mtd: spi-nor: properly detect the memory when it boots in Quad or D=
+ual
+>     mode
+>   mtd: spi-nor: fix Quad SPI mode support for Spansion, Micron and
+>     Macronix
+>   mtd: m25p80: add support of dual and quad spi protocols to all
+>     commands
+>=20
+>  drivers/mtd/devices/m25p80.c  | 254 ++++++++++---
+>  drivers/mtd/spi-nor/spi-nor.c | 811 ++++++++++++++++++++++++++++++++=
+++++------
+>  include/linux/mtd/spi-nor.h   |  69 ++--
+>  3 files changed, 954 insertions(+), 180 deletions(-)
+>=20
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
