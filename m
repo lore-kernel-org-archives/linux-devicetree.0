@@ -1,114 +1,66 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
-Date: Mon, 28 Sep 2015 10:36:46 -0600
-Message-ID: <56096C9E.7070608@wwwdotorg.org>
-References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com>
- <56056589.9010704@nvidia.com> <56056A8F.5010103@nvidia.com>
- <1783348.ocWL5DWVKG@wuerfel> <5609556A.8060908@nvidia.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 02/15] power: bq24257: Remove IRQ config through
+ stat-gpios
+Date: Mon, 28 Sep 2015 18:38:26 +0200
+Message-ID: <20150928163825.GD3660@earth>
+References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
+ <1443196460-26156-3-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1sNVjLsmu1MXqwQ/"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5609556A.8060908-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443196460-26156-3-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2015 08:57 AM, Jon Hunter wrote:
->
-> On 25/09/15 16:47, Arnd Bergmann wrote:
->> On Friday 25 September 2015 16:38:55 Jon Hunter wrote:
->>> On 25/09/15 16:17, Jon Hunter wrote:
->>>>
->>>> On 25/09/15 16:03, Arnd Bergmann wrote:
->>>>> On Friday 25 September 2015 15:56:40 Jon Hunter wrote:
->>>>>> +       case DMA_MEM_TO_DEV:
->>>>>> +               burst_size = fls(tdc->config.dst_maxburst);
->>>>>> +               ch_regs->config = ADMA_CH_CONFIG_SRC_BUF(num_bufs - 1);
->>>>>> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_MEM_TO_AHUB) |
->>>>>> +                               ADMA_CH_CTRL_TX_REQ(tdc->config.slave_id);
->>>>>> +               ch_regs->src_addr = buf_addr;
->>>>>> +               break;
->>>>>> +
->>>>>> +       case DMA_DEV_TO_MEM:
->>>>>> +               burst_size = fls(tdc->config.src_maxburst);
->>>>>> +               ch_regs->config = ADMA_CH_CONFIG_TRG_BUF(num_bufs - 1);
->>>>>> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_AHUB_TO_MEM) |
->>>>>> +                               ADMA_CH_CTRL_RX_REQ(tdc->config.slave_id);
->>>>>> +               ch_regs->trg_addr = buf_addr;
->>>>>> +               break;
->>>>>
->>>>> Do not use the 'slave_id' field here to identify the slave device, that
->>>>> concept is broken. Instead, put the slave identification into the
->>>>> dma specifier in DT and read it out in your xlate function.
->>>>
->>>> Why is it broken?
->>>>
->>>> What happens if I don't know the slave-id? In other words, the slave-id
->>>> can be dynamically allocated and associated with a given slave.
->>>
->>> I guess thinking about it some more, the driver could assign an id
->>> itself to a given channel and I could avoid using slave_id here. There
->>> are 22 channels and 10 tx and 10 rx requests.
->>
->> This sounds roughly right. So you could pick the ch_regs->ctrl value
->> when you allocate the tegra_adma_chan structure, and then map it to
->> the slave in the xlate() function.
->
-> Actually, what I mentioned about would not work as it is not the DMA
-> that should assign the requests to the channel.
->
-> I think that I have poorly described the hardware and how it works, so
-> let me try and explain a bit more.
->
->  From a hardware perspective it looks like the following ...
->
-> memory <-> adma <-> adma-if <-> xbar <-> clients
->
-> where:
-> - memory is the system memory
-> - adma is the dma controller
-> - adma-if is the dma interface to a crossbar
-> - xbar is the crossbar
-> - clients are various audio interfaces, such as i2s, etc
->
-> The adma-if is essentially a mux with 10 tx and 10 rx ports. Any of the
-> 22 adma channels can be mapped to any of the 10 tx or rx ports. The
-> request signal used by the adma is determined by which port it is
-> configured to use. However, what makes this even more configurable is
-> the xbar is also a mux that can route adma-if ports to the various clients.
->
-> So potentially, you could use any adma channel and any port to route
-> audio to any of the clients. However, the adma-if needs to know which
-> adma channel is mapped to which port
 
-It does? I'm pretty sure it didn't in earlier chips; what changed?
+--1sNVjLsmu1MXqwQ/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For earlier chips, I believe all that's required is:
+Hi,
 
-When programming the DMA engine, you need to know which ADMA-IF is in 
-use, so the correct DMA request selector can be programmed into the DMA 
-engine for flow-control.
+On Fri, Sep 25, 2015 at 10:54:07AM -0500, Andreas Dannenberg wrote:
+> At the time the driver was written GpioInt resources in ACPI were not
+> passed to the driver in client->irq, as opposed to DT enumeration. To
+> accommodate this use case, a "stat-gpios" property was introduced to
+> allow configuring the IRQ.
+>=20
+> However this issue with ACPI was fixed in commit "845c877 i2c / ACPI:
+> Assign IRQ for devices that have GpioInt automatically" and makes this
+> workaround no longer necessary, hence we can remove the support for the
+> "stat-gpios" property and the associated code from the bq24257 driver.
 
-ADMA-IF simply receives the data from DMA, and forwards it to the XBAR 
-tagged with the ADMA-IF's own ID.
+Thanks, queued.
 
-The XBAR programming selects which data source (ADMA-IF TX, I2S RX, ...) 
-each sink (ADMARX, I2S TX, ...) receives.
+-- Sebastian
 
-Ideally, when an I2S controller needs to start transmitting data, it 
-should dynamically allocate an ADMA-IF, query it for its DMA slave 
-request ID, and then forward this information to the ASoC code that sets 
-up the DMA transfer.
+--1sNVjLsmu1MXqwQ/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In practice, this means that since any I2S module could use any ADMA-IF, 
-you probably need to list all DMA request selectors possible in the 
-I2S's DMA-related properties, so it can choose which one to use.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Or perhaps the XBAR binding should list all the DMA requestors so that 
-each I2S node doesn't have to.
+iQIcBAEBCgAGBQJWCW0BAAoJENju1/PIO/qaUOsP/AslesqcRf3DIzhbbZik7xR2
+1j6fMTnWqkVOT+tGk5gFF+DhWJwXKmfibPG04yNNojuMZ1FXjY9CVsqrIl5ncUWP
+cvjDRde1wRwibtnxhMjIDw14B3gxk3wVGEHRELCSTFiMpISsKL83PbqqdIKMJpKW
+me0p0BpS0u1xq4DGRsnw7XFE5TB+DRj/Is9SPt9ErjWIxHKxQEAsSWalk+oX3c4v
+ZSf/oLnoj/iuXLMOindPuhYKS6HWadoJjxKfJV6/cxvPw9nLeVLTJk1NJ1itlo9E
+N6rCj6wTNcMdacD05kEJGIzJoShdpUxgcfXwqOXJXPGGocmJPpRUaFlF3QPeb9ii
+pLI8qz/5ljIGeSh7tG29ziyqm6IWPNINzupWgjL4ljKuYR5Bqpiw2iVInCt6dMAy
+ImCpWZLc2OYOw/aGaORthe+DHRPsp7lGbppEmwYNkjvysvDxxjbKm+HahxDr/2kA
+490K3EeYpQVXzKFHHRJpqWUwcYaxi8VWlbpjCSaaSt4s/GPh6iL/Rr0xBdBXDkco
+D+jW+Gm+FA/ox+ct0nQME4inHXvynFOEu8vencRUfE1LrXMaVLhTRvDven6BfePr
+ttUMGqzpGfsC9iVnZJ2I4sVy/1lUMs9ZBVR9dAS2GGtvGPX099Pcds9CPAA0ch9G
+QNKe5csieX/OaTkx4GLB
+=RlQL
+-----END PGP SIGNATURE-----
 
+--1sNVjLsmu1MXqwQ/--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
