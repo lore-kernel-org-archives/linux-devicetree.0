@@ -1,79 +1,59 @@
-From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH v7 2/7] ARM: dts: imx: imx7d-sbd add iomuxc-lpsr hoggrp-2 pads
-Date: Mon, 28 Sep 2015 16:56:36 -0500
-Message-ID: <1443477401-17238-2-git-send-email-aalonso@freescale.com>
-References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: [PATCH v8 03/14] power: bq24257: Use managed power supply register
+Date: Mon, 28 Sep 2015 17:33:51 -0500
+Message-ID: <1443479642-23712-4-git-send-email-dannenberg@ti.com>
+References: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, yibin.gong@freescale.com
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add imx7d-sdb iomuxc-lpsr hoggrp-2 default pads settings
-Add iomuxc-lpsr usb_otg1_vbus pinctrl settings
+Use the devm_* managed version of the function to register the power
+supply and remove the associated unregister function. This will simplify
+error handling moving forward as it allows the unregister to happen
+automatically. It also saves a few lines of code.
 
-Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+As this changes the order of putting the bq24257 into reset vs.
+unregistering the power-supply during driver remove re-tested various
+driver unload scenario to make sure that this doesn't cause any
+unintended side effects such as erroneous interrupts.
+
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 ---
-Changes for V2: Resend
-Changes for V3: Resend
-Changes for V4: Resend
-Changes for V5: Resend
-Changes for V6:
-- Add wdog pinctrl group, add comments for hog2 group gpios
-Changes for V7:
-- Remove wdog pinctrl settings as they are not currently used
-- Add pinctrl_usb_otg1_vbus settings
+ drivers/power/bq24257_charger.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- arch/arm/boot/dts/imx7d-sdb.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 83f0053..a5c7a44 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -65,6 +65,8 @@
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
- 			gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 =  <&pinctrl_usb_otg1_vbus>;
- 			enable-active-high;
- 		};
+diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+index d2d077c..6757b41 100644
+--- a/drivers/power/bq24257_charger.c
++++ b/drivers/power/bq24257_charger.c
+@@ -590,8 +590,10 @@ static int bq24257_power_supply_init(struct bq24257_device *bq)
+ 	psy_cfg.supplied_to = bq24257_charger_supplied_to;
+ 	psy_cfg.num_supplicants = ARRAY_SIZE(bq24257_charger_supplied_to);
  
-@@ -410,3 +412,22 @@
+-	bq->charger = power_supply_register(bq->dev, &bq24257_power_supply_desc,
+-					    &psy_cfg);
++	bq->charger = devm_power_supply_register(bq->dev,
++						 &bq24257_power_supply_desc,
++						 &psy_cfg);
++
+ 	if (IS_ERR(bq->charger))
+ 		return PTR_ERR(bq->charger);
  
- 	};
- };
-+
-+&iomuxc_lpsr {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog_2>;
-+
-+	imx7d-sdb {
-+		pinctrl_hog_2: hog2grp {
-+			fsl,pins = <
-+				MX7D_PAD_GPIO1_IO07__GPIO1_IO7    0x59  /* sensor_int_b */
-+			>;
-+		};
-+
-+		pinctrl_usb_otg1_vbus: usbotg1vbusgrp {
-+			fsl,pins = <
-+				MX7D_PAD_GPIO1_IO05__GPIO1_IO5    0x14 	/* usb_otg1_pwr */
-+			>;
-+		};
-+	};
-+};
+@@ -742,8 +744,6 @@ static int bq24257_remove(struct i2c_client *client)
+ 
+ 	cancel_delayed_work_sync(&bq->iilimit_setup_work);
+ 
+-	power_supply_unregister(bq->charger);
+-
+ 	bq24257_field_write(bq, F_RESET, 1); /* reset to defaults */
+ 
+ 	return 0;
 -- 
-2.1.4
+1.9.1
+
