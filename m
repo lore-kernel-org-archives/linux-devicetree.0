@@ -1,36 +1,66 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: dts: S3C2416: fix cpu compatible value
-Date: Mon, 28 Sep 2015 20:44:59 +0900
-Message-ID: <5609283B.1070306@samsung.com>
-References: <1443202506-13732-1-git-send-email-vz@mleia.com>
- <1443202534-13816-3-git-send-email-vz@mleia.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] usb: renesas_usbhs: Add support for R-Car H3
+Date: Mon, 28 Sep 2015 11:48:07 +0000
+Message-ID: <SG2PR06MB091979AD8228513ABBC0CB1DD84F0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1442556232-6564-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <87a8skyw7s.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443202534-13816-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87a8skyw7s.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Language: ja-JP
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 26.09.2015 o 02:35, Vladimir Zapolskiy pisze:
-> The change corrects cpu compatible property to a defined one,
-> see Documentation/devicetree/bindings/arm/cpus.txt
+Hi Morimoto-san,
+
+Thank you for the comment.
+And, I'm sorry for the delayed response.
+
+> Sent: Friday, September 18, 2015 5:25 PM
 > 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/s3c2416.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Shimoda-san
+> 
+> > This patch adds a compatible string to support for R-Car H3.
+> >
+> > Since the HS-USB controller of R-Car H3 is almost the same specification
+> > with R-Car Gen2 (these have 16 pipes and usb-dmac), this patch
+> > sets the "type" of renesas_usbhs_driver_param to USBHS_TYPE_RCAR_GEN2.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> (snip)
+> > diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+> > index 7b98e1d..2becd6b 100644
+> > --- a/drivers/usb/renesas_usbhs/common.c
+> > +++ b/drivers/usb/renesas_usbhs/common.c
+> > @@ -476,6 +476,10 @@ static const struct of_device_id usbhs_of_match[] = {
+> >  		.compatible = "renesas,usbhs-r8a7794",
+> >  		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+> >  	},
+> > +	{
+> > +		.compatible = "renesas,usbhs-r8a7795",
+> > +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+> > +	},
+> 
+> It is helpful for user if it is indicating Gen2 compatible.
+> Because r8a7795 is Gen3
 
+So, I will add a comment in the code like the followings:
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+{
+	/* Gen3 is compatible with Gen2 */
+	.compatible = "renesas,usbhs-r8a7795",
+	.data = (void *)USBHS_TYPE_RCAR_GEN2,
+},
 
 Best regards,
-Krzysztof
+Yoshihiro Shimoda
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
