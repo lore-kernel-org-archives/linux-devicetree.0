@@ -1,94 +1,96 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v6 5/5] leds: netxbig: set led_classdev max_brightness
-Date: Mon, 28 Sep 2015 14:24:40 +0200
-Message-ID: <56093188.4050405@samsung.com>
-References: <1443301358-2131-1-git-send-email-simon.guinot@sequanux.org>
- <1443301358-2131-6-git-send-email-simon.guinot@sequanux.org>
- <5608F41B.4020307@samsung.com> <20150928091956.GY7306@kw.sim.vm.gnt>
- <5609133A.3050802@samsung.com> <20150928115033.GZ7306@kw.sim.vm.gnt>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add hdmi-codec for external
+ HDMI-encoders
+Date: Mon, 28 Sep 2015 15:26:59 +0300
+Message-ID: <56093213.8010008@ti.com>
+References: <mailman.310.1442574427.844.alsa-devel@alsa-project.org>
+ <56057A9E.9080602@st.com> <560901EE.60407@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150928115033.GZ7306@kw.sim.vm.gnt>
-Sender: linux-leds-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@printk.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh@kernel.org>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <560901EE.60407@st.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, moinejf@free.fr, tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2015 01:50 PM, Simon Guinot wrote:
-> On Mon, Sep 28, 2015 at 12:15:22PM +0200, Jacek Anaszewski wrote:
->> On 09/28/2015 11:19 AM, Simon Guinot wrote:
->>> On Mon, Sep 28, 2015 at 10:02:35AM +0200, Jacek Anaszewski wrote:
->>>> Hi Simon,
->>>
->>> Hi Jacek,
->>>
->>>>
->>>> Does your device support reading the brightness currently set?
->>>
->>> No it don't.
->>>
->>>> If so, it would be good to implement brightness_get op, because
->>>> AFAIR you mentioned that the firmware you are working with sets
->>>> always maximum brightness value. Having the op implemented would
->>>> allow to find this out.
->>>
->>> I don't understand how this can help. I mean, the only issue is that at
->>> startup the initial LED state is unknown. And the software brightness
->>> value could be false. But once the LED is configured, the brightness
->>> values for software and hardware are synchronized. The brightness value
->>> is stored/cached in led_classdev and it can be retrieved by the user via
->>> sysfs...
->>>
->>> For my own knowledge, is there some interest in having brightness_get(),
->>> aside of guessing the LED initial state ?
->>
->> Some LED controllers can adjust brightness in case battery voltage level
->> falls below some threshold.
->
-> OK, thanks for the explanation.
->
->>
->>> What does the embedded firmware is writing 255 or 0 into the brightness
->>> sysfs attribute. The max_brightness value is ignored. After this patch,
->>> writing 255 and 0 still allows to configure the LED in the same way:
->>> maximum brightness or off. Thus, I believe there is no compatibility
->>> issue.
->>
->> LED core always assures that brightness value passed to brightness_set
->> op does not exceed max_brightness value. So, now after executing
->> "echo 255 > brightness", LED core will adjust it to max_brightness
->> (e.g. 7) before passing to brightness_set.
->>
->> In the message [1], you mentioned that "LEDs are only enabled at their
->> maximum level", so IIUC following is possible:
->>
->> #echo 3 > "brightness"
->>
->> firmware sets brightness to max_brightness from DT (e.g. 7), but
->>
->> #cat brightness
->> #3
->>
->> Is it true?
->
-> Oh no sorry, it is a misunderstanding. By "LEDs are only enabled at
-> their maximum level", I was meaning "LEDs are only enabled at their
-> maximum level by the LaCie stock firmware". The firmware don't make
-> use of the different hardware brightness levels available. But the
-> feature works perfectly. If you write 3 into sysfs "brightness", then
-> you get the third brightness level.
-
-I thought that driver talks to firmware, which controls the LEDs.
- From your explanation I infer that this driver replaces LaCie stock
-firmware, am I right? There must be however some circuit that controls
-LED brightness then.
-
-> OK, I understand you remark now. Sorry for not being very clear in a
-> first place.
-
-
--- 
-Best Regards,
-Jacek Anaszewski
+T24gMDkvMjgvMTUgMTI6MDEsIEFybmF1ZCBQb3VsaXF1ZW4gd3JvdGU6Cj4gZmV3IHF1ZXN0aW9u
+cy9yZW1hcmtzCj4gQlIsCj4gQXJuYXVkCj4KPj4gK3N0YXRpYyB2b2lkIGhkbWlfY29kZWNfYWJv
+cnQoc3RydWN0IGRldmljZSAqZGV2KQo+PiArewo+PiArICAgIHN0cnVjdCBoZG1pX2NvZGVjX3By
+aXYgKmhjcCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+PiArCj4+ICsgICAgZGV2X2RiZyhkZXYs
+ICIlcygpXG4iLCBfX2Z1bmNfXyk7Cj4+ICsKPj4gKyAgICBtdXRleF9sb2NrKCZoY3AtPmN1cnJl
+bnRfc3RyZWFtX2xvY2spOwo+PiArICAgIGlmIChoY3AtPmN1cnJlbnRfc3RyZWFtICYmIGhjcC0+
+Y3VycmVudF9zdHJlYW0tPnJ1bnRpbWUgJiYKPj4gKyAgICAgICAgc25kX3BjbV9ydW5uaW5nKGhj
+cC0+Y3VycmVudF9zdHJlYW0pKSB7Cj4+ICsgICAgICAgIGRldl9pbmZvKGRldiwgIkhETUkgYXVk
+aW8gcGxheWJhY2sgYWJvcnRlZFxuIik7Cj4+ICsgICAgICAgIHNuZF9wY21fc3RyZWFtX2xvY2tf
+aXJxKGhjcC0+Y3VycmVudF9zdHJlYW0pOwo+PiArICAgICAgICBzbmRfcGNtX3N0b3AoaGNwLT5j
+dXJyZW50X3N0cmVhbSwgU05EUlZfUENNX1NUQVRFX0RJU0NPTk5FQ1RFRCk7Cj4+ICsgICAgICAg
+IHNuZF9wY21fc3RyZWFtX3VubG9ja19pcnEoaGNwLT5jdXJyZW50X3N0cmVhbSk7Cj4+ICsgICAg
+fQo+PiArICAgIG11dGV4X3VubG9jaygmaGNwLT5jdXJyZW50X3N0cmVhbV9sb2NrKTsKPj4gK30K
+PiBEb2VzIGRyaXZlciBzaG91bGQgc3RvcCB0aGUgc3RyZWFtIGluIGNhc2Ugb2YgdW5wbHVnPwo+
+IFRoaXMgY291bGQgZ2VuZXJhdGUgdW5leHBlY3RlZCBiZWhhdmlvciBhdCBhcHBsaWNhdGlvbiBs
+ZXZlbC4KPiBQZXJoYXBzIHNob3VsZCBiZSBiZXR0ZXIgaWYgdGhpcyBwYXJ0IGlzIG1hbmFnZWQg
+aW4gRFJNIGRyaXZlci4gaWYgSERNSQo+IG1hc3RlciwgSTJTIGJ1cyBzaG91bGQgYmUgbWFpbnRh
+aW5lZCBPTiB0byBjb25zdW1lIHRoZSBhdWRpbyBzdHJlYW0KPiB1bnRpbCBhcHBsaWNhdGlvbiBh
+Y3Rpb24uCj4KClRoZSB3aG9sZSBwb2ludCBvZiB0aGlzIGFib3J0IGNhbGxiYWNrIGlzIHRvIHBy
+b3ZpZGUgdGhlIG1lYW5zIGZvciB0aGUgCnZpZGVvIHNpZGUgdG8gc3RvcCB0aGUgYXVkaW8gcGxh
+eWJhY2sgaW4gYSBjbGVhbiB3YXkuCgpUaGUgYWJvcnQgY2FsbGJhY2sgaXMgZ2l2ZW4gdG8gdGhl
+IHZpZGVvIHNpZGUgaW4gc3RhcnR1cCgpIGNhbGxiYWNrIAooQVNvQyBzaWRlIGNhbGxzIHZpZGVv
+IHNpZGUpLiBJZiB0aGUgdmlkZW8gc2lkZSBzZWVzIHRoYXQgdGhlIHBsYXliYWNrIApjYW4gbm90
+IGdvIG9uIGl0IGNhbiBjYWxsIHRoZSBhYm9ydCBjYWxsYmFjayBhbmQgdGhlIGF1ZGlvIHBsYXli
+YWNrIHdpbGwgCmFib3J0IGluIHN0YW5kYXJkIEFMU0Egd2F5IGFuZCBhIHByb3Blcmx5IHdyaXR0
+ZW4gYXBwbGljYXRpb25zIHNob3VsZCAKbm90IGdldCBjb25mdXNlZC4KCk5vdGhpbmcgaXMgZm9y
+Y2luZyB0aGUgdmlkZW8gc2lkZSB0byBjYWxsIHRoZSBjYWxsYmFjayBldmVyLCBpZiBzbyAKZGVj
+aWRlZC4gQnV0IGlmIGZvciBpbnN0YW5jZSBwb3dlciBtYW5hZ2VtZW50IHN0b3BzIHRoZSBpMnMg
+Y2xvY2tzIHdoZW4gCmNvbm5lY3RvciBpcyB1bnBsdWdnZWQsIHRoZW4gdGhlIGF1ZGlvIGNhbiBu
+b3QgZ28gb24gYW55IG1vcmUgYW5kIGl0IApzaG91bGQgYmUgYWJvcnRlZCAoYWN0dWFsbHkgaXQg
+d291bGQgYWJvcnQgaW4gYSBtb21lbnQgd2hlbiBBTFNBIApyZWFsaXplcyB0aGF0IHRoZSBETUEg
+aXMgbm90IHJ1bm5pbmcpLgoKPj4gKwo+PiArc3RhdGljIGludCBoZG1pX2NvZGVjX2h3X3BhcmFt
+cyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKPj4gKyAgICAgICAgICAgICAg
+ICBzdHJ1Y3Qgc25kX3BjbV9od19wYXJhbXMgKnBhcmFtcywKPj4gKyAgICAgICAgICAgICAgICBz
+dHJ1Y3Qgc25kX3NvY19kYWkgKmRhaSkKPj4gK3sKPj4gKyAgICBzdHJ1Y3QgaGRtaV9jb2RlY19w
+cml2ICpoY3AgPSBzbmRfc29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOwo+PiArICAgIHN0cnVjdCBo
+ZG1pX2NvZGVjX3BhcmFtcyBocCA9IHsKPj4gKyAgICAgICAgLmllYyA9IHsKPj4gKyAgICAgICAg
+ICAgIC5zdGF0dXMgPSB7IDAgfSwKPj4gKyAgICAgICAgICAgIC5zdWJjb2RlID0geyAwIH0sCj4+
+ICsgICAgICAgICAgICAucGFkID0gMCwKPj4gKyAgICAgICAgICAgIC5kaWdfc3ViZnJhbWUgPSB7
+IDAgfSwKPj4gKyAgICAgICAgfQo+PiArICAgIH07Cj4+ICsgICAgaW50IHJldDsKPj4gKwo+PiAr
+ICAgIGRldl9kYmcoZGFpLT5kZXYsICIlcygpIHdpZHRoICVkIHJhdGUgJWQgY2hhbm5lbHMgJWRc
+biIsIF9fZnVuY19fLAo+PiArICAgICAgICBwYXJhbXNfd2lkdGgocGFyYW1zKSwgcGFyYW1zX3Jh
+dGUocGFyYW1zKSwKPj4gKyAgICAgICAgcGFyYW1zX2NoYW5uZWxzKHBhcmFtcykpOwo+PiArCj4+
+ICsgICAgcmV0ID0gc25kX3BjbV9jcmVhdGVfaWVjOTU4X2NvbnN1bWVyX2h3X3BhcmFtcyhwYXJh
+bXMsCj4+IGhwLmllYy5zdGF0dXMsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+c2l6ZW9mKGhwLmllYy5zdGF0dXMpKTsKPiBUZWxsIG1lIGlmIGkgYW0gd3JvbmcsIGJ1dCBpbiBj
+YXNlIG9mIFNQRElGIGZvcm1hdCwgSUVDIHN0YXR1cyBpcwo+IG1hbmFnZWQgYnkgY3B1X2RhaSBu
+b3QgYnkgdGhlIGNvZGVjLgo+IFRvIG1hbmFnZSBJRUM2MTkzNyBhIGNvbnRyb2wgc2hvdWxkIGJl
+IG5lZWRlZCB0byB1cGRhdGUgSUVDIHN0YXR1cyBiaXRzLi4uCj4KCkFGQUlLIHllcy4gSG93ZXZl
+ciwgdGhlIHZpZGVvIHNpZGUgaW1wbGVtZW50YXRpb24gaXMgZnJlZSB0byBpZ25vcmUgCnN0YXR1
+cyBiaXRzIGluIHRoZSBzdHJ1Y3QgaGRtaV9jb2RlY19wYXJhbXMgYW5kIGl0IHNob3VsZCBub3Jt
+YWxseSBkbyBzbyAKaWYgdGhlIGZvcm1hdCBpcyBTUERJRi4gT2YgY291cnNlIEkgY291bGQgc2F2
+ZSBjb3VwbGUgQ1BVIGN5Y2xlcyBpbiB0aGUgCmNvZGVjIGNvZGUgaWYgd291bGQgbm90IGV2ZW4g
+cHJvZHVjZSB0aGUgYml0cyB3aGVuIHRoZSBmb3JtYXQgaXMgU1BESUYuCgpCZXN0IHJlZ2FyZHMs
+Ckp5cmkKCj4+ICsgICAgaWYgKHJldCA8IDApIHsKPj4gKyAgICAgICAgZGV2X2VycihkYWktPmRl
+diwgIkNyZWF0aW5nIElFQzk1OCBjaGFubmVsIHN0YXR1cyBmYWlsZWQgJWRcbiIsCj4+ICsgICAg
+ICAgICAgICByZXQpOwo+PiArICAgICAgICByZXR1cm4gcmV0Owo+PiArICAgIH0KPj4gKwo+PiAr
+ICAgIHJldCA9IGhkbWlfY29kZWNfbmV3X3N0cmVhbShzdWJzdHJlYW0sIGRhaSk7Cj4+ICsgICAg
+aWYgKHJldCkKPj4gKyAgICAgICAgcmV0dXJuIHJldDsKPj4gKwo+PiArICAgIGhkbWlfYXVkaW9f
+aW5mb2ZyYW1lX2luaXQoJmhwLmNlYSk7Cj4+ICsgICAgaHAuY2VhLmNoYW5uZWxzID0gcGFyYW1z
+X2NoYW5uZWxzKHBhcmFtcyk7Cj4+ICsgICAgaHAuY2VhLmNvZGluZ190eXBlID0gSERNSV9BVURJ
+T19DT0RJTkdfVFlQRV9TVFJFQU07Cj4+ICsgICAgaHAuY2VhLnNhbXBsZV9zaXplID0gSERNSV9B
+VURJT19TQU1QTEVfU0laRV9TVFJFQU07Cj4+ICsgICAgaHAuY2VhLnNhbXBsZV9mcmVxdWVuY3kg
+PSBIRE1JX0FVRElPX1NBTVBMRV9GUkVRVUVOQ1lfU1RSRUFNOwo+PiArCj4+ICsgICAgaHAuc2Ft
+cGxlX3dpZHRoID0gcGFyYW1zX3dpZHRoKHBhcmFtcyk7Cj4+ICsgICAgaHAuc2FtcGxlX3JhdGUg
+PSBwYXJhbXNfcmF0ZShwYXJhbXMpOwo+PiArICAgIGhwLmNoYW5uZWxzID0gcGFyYW1zX2NoYW5u
+ZWxzKHBhcmFtcyk7Cj4+ICsKPj4gKyAgICByZXR1cm4gaGNwLT5oY2Qub3BzLT5od19wYXJhbXMo
+ZGFpLT5kZXYtPnBhcmVudCwKPj4gJmhjcC0+ZGFpZm10W2RhaS0+aWRdLAo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAmaHApOwo+PiArfQo+PiArCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
