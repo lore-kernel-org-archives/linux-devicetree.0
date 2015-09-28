@@ -1,109 +1,95 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Mon, 28 Sep 2015 11:01:11 -0500
-Message-ID: <56096447.8020804@ti.com>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-4-git-send-email-afd@ti.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 09/15] power: bq24257: Add SW-based approach for Power
+ Good determination
+Date: Mon, 28 Sep 2015 18:02:41 +0200
+Message-ID: <20150928160241.GA3660@earth>
+References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
+ <1443196460-26156-10-git-send-email-dannenberg@ti.com>
+ <20150927202025.GA2051@earth>
+ <20150928120412.GA12676@borg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1443106374-4126-4-git-send-email-afd@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150928120412.GA12676@borg>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2015 09:52 AM, Andrew F. Davis wrote:
-> This patch adds support for TPS65912 mfd device. It provides
-> communication through the I2C and SPI interfaces. It contains
-> the following components:
-> 
->   - Regulators
->   - GPIO controller
-> 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> ---
->   drivers/mfd/Kconfig          |  24 +++
->   drivers/mfd/Makefile         |   3 +
->   drivers/mfd/tps65912-core.c  | 114 +++++++++++++
->   drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
->   drivers/mfd/tps65912-spi.c   |  85 ++++++++++
->   include/linux/mfd/tps65912.h | 393 +++++++++++++++++++++++++++++++++++++++++++
->   6 files changed, 705 insertions(+)
->   create mode 100644 drivers/mfd/tps65912-core.c
->   create mode 100644 drivers/mfd/tps65912-i2c.c
->   create mode 100644 drivers/mfd/tps65912-spi.c
->   create mode 100644 include/linux/mfd/tps65912.h
-> 
 
-[...]
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +/*
-> + * struct tps_info - packages regulator constraints
-> + * @id: Id of the regulator
-> + * @name: Voltage regulator name
-> + * @min_uV: Minimum micro volts
-> + * @max_uV: Minimum micro volts
-> + *
-> + * This data is used to check the regulator voltage limits while setting.
-> + */
-> +struct tps_info {
-> +	int id;
-> +	const char *name;
-> +	int min_uV;
-> +	int max_uV;
-> +};
+Hi,
 
-Could you move structure's definitions to the corresponding c-files
-if they are used only locally in this files, pls? 
+On Mon, Sep 28, 2015 at 07:04:12AM -0500, Andreas Dannenberg wrote:
+> On Sun, Sep 27, 2015 at 10:20:26PM +0200, Sebastian Reichel wrote:
+> > On Fri, Sep 25, 2015 at 10:54:14AM -0500, Andreas Dannenberg wrote:
+> > > @@ -651,15 +670,18 @@ static int bq24257_power_supply_init(struct bq2=
+4257_device *bq)
+> > >  	return PTR_ERR_OR_ZERO(bq->charger);
+> > >  }
+> > > =20
+> > > -static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
+> > > +static void bq24257_pg_gpio_probe(struct bq24257_device *bq)
+> > >  {
+> > > -	bq->pg =3D devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0, GPIOD_=
+IN);
+> > > +	bq->pg =3D devm_gpiod_get_optional(bq->dev, BQ24257_PG_GPIO, GPIOD_=
+IN);
+> > > +
+> > >  	if (IS_ERR(bq->pg)) {
+> > > -		dev_err(bq->dev, "could not probe PG pin\n");
+> > > -		return PTR_ERR(bq->pg);
+> > > +		dev_err(bq->dev, "error probing PG pin\n");
+> > > +		bq->pg =3D NULL;
+> > > +		return;
+> > >  	}
+> >=20
+> > You should handle -EPROBE_DEFER here.
+>=20
+> Hi Sebastian. From having a quick look at the Kernel tree it seems like
+> this error shouldn't get exposed to the user (which it doesn't since it
+> would get zeroe'd out) and the error itself suggests that I should
+> "retry" which none of the things I looked at in the Kernel through "git
+> grep" seemed to do. So before making any assumptions I wanted to see if
+> I'm missing something or you could give me any pointers how to proceed.
 
-> +
-> +/*
-> + * struct tps65912 - state holder for the tps65912 driver
-> + *
-> + * Device data may be used to access the TPS65912 chip
-> + */
-> +struct tps65912 {
-> +	struct device *dev;
-> +	unsigned int id;
-> +
-> +	/* IRQ Data */
-> +	int irq;
-> +	struct regmap_irq_chip_data *irq_data;
-> +
-> +	struct regulator_desc desc[TPS65912_NUM_REGULATOR];
-> +	struct tps_info *info[TPS65912_NUM_REGULATOR];
+If you return -EPROBE_DEFER from your driver's probe function, the
+driver probe will fail. In opposit to other error codes it will be
+marked for retry at a later point, though. You will get
+EPROBE_DEFER, if you try to access a GPIO from a not-yet initialized
+GPIO controller (e.g. if you load the charger driver before the
+gpio driver).
 
-seems above two field are not used (and id?).
+Correct handling is simple: Just forward it, making sure, that all
+non-devm probed resources are correctly free'd.
 
-> +	struct regmap *regmap;
-> +};
-> +
-> +static const struct regmap_range tps65912_yes_ranges[] = {
-> +	regmap_reg_range(TPS65912_INT_STS, TPS65912_GPIO5),
-> +};
-> +
-> +static const struct regmap_access_table tps65912_volatile_table = {
-> +	.yes_ranges = tps65912_yes_ranges,
-> +	.n_yes_ranges = ARRAY_SIZE(tps65912_yes_ranges),
-> +};
-> +
-> +static const struct regmap_config tps65912_regmap_co	nfig = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.cache_type = REGCACHE_RBTREE,
-> +	.volatile_table = &tps65912_volatile_table,
-> +};
-> +
-> +int tps65912_device_init(struct tps65912 *tps);
-> +int tps65912_device_exit(struct tps65912 *tps);
-> +
-> +#endif /*  __LINUX_MFD_TPS65912_H */
-> 
+-- Sebastian
 
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-regards,
--grygorii
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWCWSeAAoJENju1/PIO/qa/4UP/2f2L1oagbaEL9taSdzarAlA
+jYPaYQbSezevnLTVH2hsVWvyLYi31Vd7/QaiP+rcSFD6B7K0bNg78iM0k5IOb+5Q
+OeSXvwxngUvlyLtxxFuXIWtJSJmJynSfu3tDLwBt0Mao8zy9qtw5XAChzLqTQXie
+K7ZoHBFBtOi9NE8uNIRUdIvs+yljBXGRXy4z5KmoIOZap6ewSWRob4s4j1cLX/Pa
+gSFHfLUvQW/dzUo7IKbSiFoy4dktrS+l9P4lDEuPiUm6YGMb1zAXDX7ABKqekVYL
+PWhjxcf9lef7suJu0SzhOhXlAD5TojOTzz1BQiQYZA4wihmTMK+g9vjHt+9FhWz2
+PicrMFYeUoqDSWC7T2pcZYoQqCk/nC60p6Em5rNvCOUHGWOVZlPG9piC99opTETt
++iZpKIk/zDYReBHhi0o06UJRoy3JhmVkctS5RyMkxbcsNwxF7O4N+eIrEw/0j+qc
+Wlg6y91TW6dnHmKMdvUTxXdaR1/v7FP8BqNx73u1qCmZUXN2GlPkUEAF0pymqGwg
+ynDC170yKXNjw/okLBGNM+JIaH1xqW/S2vCQ4X2L5YQkmjm9IYf0iG+IJdzrWrlb
+KSsusuE3+S3SeI24vbT6v/FtrXPEJiKZgaCvOq9fF/CsNej2P2DI+adzIYD4ufJc
+Q+J0qUn3n+paOsXQZ6+v
+=SF88
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
