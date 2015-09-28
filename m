@@ -1,91 +1,110 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next 0/4] mtd: spi-nor: fix Quad SPI memory support
-Date: Mon, 28 Sep 2015 16:10:17 +0200
-Message-ID: <56094A49.7000304@atmel.com>
-References: <cover.1442590224.git.cyrille.pitchen@atmel.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
+Date: Mon, 28 Sep 2015 15:57:46 +0100
+Message-ID: <5609556A.8060908@nvidia.com>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com>
+ <56056589.9010704@nvidia.com> <56056A8F.5010103@nvidia.com>
+ <1783348.ocWL5DWVKG@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1442590224.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1783348.ocWL5DWVKG@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
 
-are there other works in progress to enhance the QSPI support inside th=
-e
-spi-nor framework?
-Do you have any suggestion about what should be done and how to do it?
-Is there any discussion on this topic? If so, I would be interested in =
-taking
-part of it so I could synchronize my work with other developers' effort=
-s.
+On 25/09/15 16:47, Arnd Bergmann wrote:
+> On Friday 25 September 2015 16:38:55 Jon Hunter wrote:
+>> On 25/09/15 16:17, Jon Hunter wrote:
+>>>
+>>> On 25/09/15 16:03, Arnd Bergmann wrote:
+>>>> On Friday 25 September 2015 15:56:40 Jon Hunter wrote:
+>>>>> +       case DMA_MEM_TO_DEV:
+>>>>> +               burst_size = fls(tdc->config.dst_maxburst);
+>>>>> +               ch_regs->config = ADMA_CH_CONFIG_SRC_BUF(num_bufs - 1);
+>>>>> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_MEM_TO_AHUB) |
+>>>>> +                               ADMA_CH_CTRL_TX_REQ(tdc->config.slave_id);
+>>>>> +               ch_regs->src_addr = buf_addr;
+>>>>> +               break;
+>>>>> +
+>>>>> +       case DMA_DEV_TO_MEM:
+>>>>> +               burst_size = fls(tdc->config.src_maxburst);
+>>>>> +               ch_regs->config = ADMA_CH_CONFIG_TRG_BUF(num_bufs - 1);
+>>>>> +               ch_regs->ctrl = ADMA_CH_CTRL_XFER_DIR(ADMA_AHUB_TO_MEM) |
+>>>>> +                               ADMA_CH_CTRL_RX_REQ(tdc->config.slave_id);
+>>>>> +               ch_regs->trg_addr = buf_addr;
+>>>>> +               break;
+>>>>
+>>>> Do not use the 'slave_id' field here to identify the slave device, that
+>>>> concept is broken. Instead, put the slave identification into the
+>>>> dma specifier in DT and read it out in your xlate function.
+>>>
+>>> Why is it broken?
+>>>
+>>> What happens if I don't know the slave-id? In other words, the slave-id
+>>> can be dynamically allocated and associated with a given slave.
+>>
+>> I guess thinking about it some more, the driver could assign an id
+>> itself to a given channel and I could avoid using slave_id here. There
+>> are 22 channels and 10 tx and 10 rx requests.
+> 
+> This sounds roughly right. So you could pick the ch_regs->ctrl value
+> when you allocate the tegra_adma_chan structure, and then map it to
+> the slave in the xlate() function.
 
-Brian, Mark, Marek, with this series I've removed the Atmel QSPI contro=
-ller
-driver to focus only on the common spi-nor framework. I will send a ded=
-icated
-series later for the Atmel QSPI controller once we all agree on an upda=
-te of
-the framework API to add support to other QSPI memory manufacturers suc=
-h as
-Micron or Macronix.
+Actually, what I mentioned about would not work as it is not the DMA
+that should assign the requests to the channel.
 
-Currently, it looks like the spi-nor framework only works with Spansion
-memories. For instance, without the patches of this series, I can't use=
- the
-Micron n25q128a13 embedded on sama5d2 xplained boards.
-So I hope we will find a way to make it work!
+I think that I have poorly described the hardware and how it works, so
+let me try and explain a bit more.
 
-Best Regards,
+>From a hardware perspective it looks like the following ...
 
-Cyrille
+memory <-> adma <-> adma-if <-> xbar <-> clients
 
-Le 18/09/2015 17:49, Cyrille Pitchen a =E9crit :
-> Hi all,
->=20
-> this series of patches fixes the QSPI support mostly for Micron and
-> Macronix memories. There are also some updates for Spansion memories.
-> There are also many comments to explain the implementation choices ba=
-sed
-> on the datasheets from memory manufacturers.
->=20
-> The series was backported to a at91-4.1 kernel then tested on a sama5=
-d2
-> xplained board, which embeds a at25df321a memory on a SPI controller =
-and
-> a Micron n25q128a13 QSPI memory on the new Atmel QSPI controller.
->=20
-> The at25 memory was used to check non regression on the m25p80 driver
-> whereas the Micron memory was used to test the fixes of the spi-nor
-> framework. The driver for the Atmel QSPI controller will be sent in a
-> dedicated series.
->=20
-> Best Regards,
->=20
-> Cyrille
->=20
-> Cyrille Pitchen (4):
->   mtd: spi-nor: remove unused read_xfer/write_xfer hooks
->   mtd: spi-nor: properly detect the memory when it boots in Quad or D=
-ual
->     mode
->   mtd: spi-nor: fix Quad SPI mode support for Spansion, Micron and
->     Macronix
->   mtd: m25p80: add support of dual and quad spi protocols to all
->     commands
->=20
->  drivers/mtd/devices/m25p80.c  | 254 ++++++++++---
->  drivers/mtd/spi-nor/spi-nor.c | 811 ++++++++++++++++++++++++++++++++=
-++++------
->  include/linux/mtd/spi-nor.h   |  69 ++--
->  3 files changed, 954 insertions(+), 180 deletions(-)
->=20
+where:
+- memory is the system memory
+- adma is the dma controller
+- adma-if is the dma interface to a crossbar
+- xbar is the crossbar
+- clients are various audio interfaces, such as i2s, etc
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The adma-if is essentially a mux with 10 tx and 10 rx ports. Any of the
+22 adma channels can be mapped to any of the 10 tx or rx ports. The
+request signal used by the adma is determined by which port it is
+configured to use. However, what makes this even more configurable is
+the xbar is also a mux that can route adma-if ports to the various clients.
+
+So potentially, you could use any adma channel and any port to route
+audio to any of the clients. However, the adma-if needs to know which
+adma channel is mapped to which port and so it probably makes most sense
+for the adma-if binding (not in the mainline yet) so specify a mapping
+even though any mapping could be used.
+
+	admaif@0x702d0000 {
+		dmas = <&adma 1>, <&adma 1>, <&adma 2>, <&adma 2>,
+		...
+		dma-names = "rx1", "tx1", "rx2", "tx2",
+		...
+	};
+
+Alternatively, I was thinking that I could set #dma-cells = 0, but what
+I should have done is just have something like ...
+
+	admaif@0x702d0000 {
+		dmas = <&adma>, <&adma>, <&adma>, <&adma>,
+		...
+		dma-names = "rx1", "tx1", "rx2", "tx2",
+		...
+	};
+
+In the above case the adma-if driver can just pick whatever channel it
+wants for each of the ports.
+
+Hope this is clearer.
+
+Cheers
+Jon
