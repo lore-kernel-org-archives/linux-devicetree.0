@@ -1,91 +1,147 @@
-From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [RESEND PATCH v2 2/2] SoC: atmel-classd: DT binding for Class D audio amplifier driver
-Date: Mon, 28 Sep 2015 13:14:37 +0800
-Message-ID: <1443417278-19657-3-git-send-email-songjun.wu@atmel.com>
-References: <1443417278-19657-1-git-send-email-songjun.wu@atmel.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: Re: [PATCH v7 5/6] Documentation: dt-bindings: pci: altera pcie
+ device tree binding
+Date: Mon, 28 Sep 2015 13:38:39 +0800
+Message-ID: <CAFiDJ59PuhRj3F288A_451pLiKnqPUKin9C2t5uuH2iNPnJfAg@mail.gmail.com>
+References: <1442801587-3812-1-git-send-email-lftan@altera.com>
+ <1442801587-3812-6-git-send-email-lftan@altera.com>
+ <5606171A.5000609@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443417278-19657-1-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5606171A.5000609@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DT binding documentation for this new ASoC driver.
+On Sat, Sep 26, 2015 at 11:55 AM, Rob Herring <robh@kernel.org> wrote:
+>
+> On 09/20/2015 09:13 PM, Ley Foon Tan wrote:
+> > This patch adds the bindings for Altera PCIe host controller driver and
+> > Altera PCIe MSI driver.
+> >
+> > Signed-off-by: Ley Foon Tan <lftan@altera.com>
+> > ---
+> >  .../devicetree/bindings/pci/altera-pcie-msi.txt    | 28 +++++++++++++
+> >  .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
+> >  2 files changed, 77 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> > new file mode 100644
+> > index 0000000..53ad2388
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> > @@ -0,0 +1,28 @@
+> > +* Altera PCIe MSI controller
+> > +
+> > +Required properties:
+> > +- compatible:        should contain "altr,msi-1.0"
+> > +- reg:               specifies the physical base address of the controller and
+> > +             the length of the memory mapped region.
+> > +- reg-names: must include the following entries:
+> > +             "csr": CSR registers
+> > +             "vector_slave": vectors slave port region
+> > +- interrupt-parent:  interrupt source phandle.
+> > +- interrupts:        specifies the interrupt source of the parent interrupt
+> > +             controller. The format of the interrupt specifier depends on the
+> > +             parent interrupt controller.
+> > +- num-vectors:       number of vectors, range 1 to 32.
+> > +- msi-controller:    indicates that this is MSI controller node
+> > +
+> > +
+> > +Example
+> > +msi0: msi@0xFF200000 {
+> > +     compatible = "altr,msi-1.0";
+> > +     reg = <0xFF200000 0x00000010
+> > +             0xFF200010 0x00000080>;
+> > +     reg-names = "csr", "vector_slave";
+> > +     interrupt-parent = <&hps_0_arm_gic_0>;
+> > +     interrupts = <0 42 4>;
+> > +     msi-controller = <1>;
+>
+> This should not have a value.
+Okay.
 
-Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+>
+> > +     num-vectors = <32>;
+> > +};
+> > diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+> > new file mode 100644
+> > index 0000000..4440db1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+> > @@ -0,0 +1,49 @@
+> > +* Altera PCIe controller
+> > +
+> > +Required properties:
+> > +- compatible :       should contain "altr,pcie-root-port-1.0"
+> > +- reg:               a list of physical base address and length for TXS and CRA.
+> > +- reg-names: must include the following entries:
+> > +             "Txs" or "txs": TX slave port region
+> > +             "Cra" or "cra": Control register access region
+>
+> Why both cases? Can we please just have one (or none is better IMO).
+The PCIe IP on different device families use different register names.
+And our device tree generator will auto generate the register names
+based on the hardware description name. Too bad we can't change the
+hardware description names now.
+>
+> txs contains the config space?
+It is not the config space, but a memory slave port.
 
-Changes in v2:
-- Delete the device node "Sound" in dts.
-
- .../devicetree/bindings/sound/atmel-classd.txt     |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/atmel-classd.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/atmel-classd.txt b/Documentation/devicetree/bindings/sound/atmel-classd.txt
-new file mode 100644
-index 0000000..0018451
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/atmel-classd.txt
-@@ -0,0 +1,52 @@
-+* Atmel ClassD driver under ALSA SoC architecture
-+
-+Required properties:
-+- compatible
-+	Should be "atmel,sama5d2-classd".
-+- reg
-+	Should contain ClassD registers location and length.
-+- interrupts
-+	Should contain the IRQ line for the ClassD.
-+- dmas
-+	One DMA specifiers as described in atmel-dma.txt and dma.txt files.
-+- dma-names
-+	Must be "tx".
-+- clock-names
-+	Tuple listing input clock names.
-+	Required elements: "pclk", "gclk" and "aclk".
-+- clocks
-+	Please refer to clock-bindings.txt.
-+
-+Optional properties:
-+- pinctrl-names, pinctrl-0
-+	Please refer to pinctrl-bindings.txt.
-+- atmel,model
-+	The user-visible name of this sound complex.
-+	The default value is "CLASSD".
-+- atmel,pwm-type
-+	PWM modulation type, "single" or "diff".
-+	The default value is "single".
-+- atmel,non-overlap-time
-+	Set non-overlapping time, the unit is nanosecond(ns).
-+	There are four values,
-+	<5>, <10>, <15>, <20>, the default value is <10>.
-+	Non-overlapping will be disabled if not specified.
-+
-+Example:
-+classd: classd@fc048000 {
-+		compatible = "atmel,sama5d2-classd";
-+		reg = <0xfc048000 0x100>;
-+		interrupts = <59 IRQ_TYPE_LEVEL_HIGH 7>;
-+		dmas = <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(47))>;
-+		dma-names = "tx";
-+		clocks = <&classd_clk>, <&classd_gclk>, <&audio_pll_pmc>;
-+		clock-names = "pclk", "gclk", "aclk";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_classd_default>;
-+		atmel,model = "classd @ SAMA5D2-Xplained";
-+		atmel,pwm-type = "diff";
-+		atmel,non-overlap-time = <10>;
-+};
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> > +- interrupt-parent:  interrupt source phandle.
+> > +- interrupts:        specifies the interrupt source of the parent interrupt controller.
+> > +             The format of the interrupt specifier depends on the parent interrupt
+> > +             controller.
+> > +- device_type:       must be "pci"
+> > +- #address-cells:    set to <3>
+> > +- #size-cells:       set to <2>
+> > +- #interrupt-cells:  set to <1>
+> > +- ranges:            describes the translation of addresses for root ports and standard
+> > +             PCI regions.
+> > +- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+> > +             mapping of the PCIe interface to interrupt numbers.
+> > +
+> > +Optional properties:
+> > +- msi-parent:        Link to the hardware entity that serves as the MSI controller for this PCIe
+> > +             controller.
+> > +- bus-range: PCI bus numbers covered
+> > +
+> > +Example
+> > +     pcie_0: pcie@0xc00000000 {
+> > +             compatible = "altr,pcie-root-port-1.0";
+> > +             reg = <0xc0000000 0x20000000>,
+> > +                     <0xff220000 0x00004000>;
+> > +             reg-names = "Txs", "Cra";
+> > +             interrupt-parent = <&hps_0_arm_gic_0>;
+> > +             interrupts = <0 40 4>;
+> > +             interrupt-controller;
+> > +             #interrupt-cells = <1>;
+> > +             bus-range = <0x0 0xFF>;
+> > +             device_type = "pci";
+> > +             msi-parent = <&msi_to_gic_gen_0>;
+> > +             #address-cells = <3>;
+> > +             #size-cells = <2>;
+> > +             interrupt-map-mask = <0 0 0 7>;
+> > +             interrupt-map = <0 0 0 1 &pcie_0 1>,
+> > +                                 <0 0 0 2 &pcie_0 2>,
+> > +                                 <0 0 0 3 &pcie_0 3>,
+> > +                                 <0 0 0 4 &pcie_0 4>;
+> > +             ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+> > +                         0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+> > +     };
+> >
+>
