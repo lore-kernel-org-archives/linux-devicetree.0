@@ -1,105 +1,29 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 1/2] pci: host: pci-dra7xx: use "num-lanes" property to find phy count
-Date: Mon, 28 Sep 2015 18:27:37 +0530
-Message-ID: <1443445058-643-2-git-send-email-kishon@ti.com>
-References: <1443445058-643-1-git-send-email-kishon@ti.com>
+From: Alexander Popov <alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] powerpc/512x: add LocalPlus Bus FIFO device driver
+Date: Mon, 28 Sep 2015 16:13:09 +0300
+Message-ID: <56093CE5.5070301@linux.com>
+References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
+ <1443115737-3948-2-git-send-email-alex.popov@linux.com>
+ <56049CD0.7080104@tabi.org>
+Reply-To: alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443445058-643-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com
-Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, kishon@ti.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56049CD0.7080104-N01EOCouUvQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-use "num-lanes" property to find phy count instead of the number
-phy-names property.
+Hello, Timur, thanks a lot for your review.
+I'll fix all the issues you pointed at and return with v4.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/host/pci-dra7xx.c |   23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+The only question I have: why calling dma_unmap_single() from within
+a spinlock is a bad practice?
 
-diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-index 199e29a..e15b2e2 100644
---- a/drivers/pci/host/pci-dra7xx.c
-+++ b/drivers/pci/host/pci-dra7xx.c
-@@ -66,7 +66,7 @@
- struct dra7xx_pcie {
- 	void __iomem		*base;
- 	struct phy		**phy;
--	int			phy_count;
-+	int			lanes;
- 	struct device		*dev;
- 	struct pcie_port	pp;
- };
-@@ -328,7 +328,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	int ret;
- 	int irq;
- 	int i;
--	int phy_count;
-+	u32 lanes;
- 	struct phy **phy;
- 	void __iomem *base;
- 	struct resource *res;
-@@ -362,17 +362,16 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	if (!base)
- 		return -ENOMEM;
- 
--	phy_count = of_property_count_strings(np, "phy-names");
--	if (phy_count < 0) {
--		dev_err(dev, "unable to find the strings\n");
--		return phy_count;
-+	if (of_property_read_u32(np, "num-lanes", &lanes)) {
-+		dev_err(dev, "Failed to parse the number of lanes\n");
-+		return -EINVAL;
- 	}
- 
--	phy = devm_kzalloc(dev, sizeof(*phy) * phy_count, GFP_KERNEL);
-+	phy = devm_kzalloc(dev, sizeof(*phy) * lanes, GFP_KERNEL);
- 	if (!phy)
- 		return -ENOMEM;
- 
--	for (i = 0; i < phy_count; i++) {
-+	for (i = 0; i < lanes; i++) {
- 		snprintf(name, sizeof(name), "pcie-phy%d", i);
- 		phy[i] = devm_phy_get(dev, name);
- 		if (IS_ERR(phy[i]))
-@@ -392,7 +391,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	dra7xx->base = base;
- 	dra7xx->phy = phy;
- 	dra7xx->dev = dev;
--	dra7xx->phy_count = phy_count;
-+	dra7xx->lanes = lanes;
- 
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
-@@ -449,7 +448,7 @@ static int __exit dra7xx_pcie_remove(struct platform_device *pdev)
- 	struct dra7xx_pcie *dra7xx = platform_get_drvdata(pdev);
- 	struct pcie_port *pp = &dra7xx->pp;
- 	struct device *dev = &pdev->dev;
--	int count = dra7xx->phy_count;
-+	int count = dra7xx->lanes;
- 
- 	if (pp->irq_domain)
- 		irq_domain_remove(pp->irq_domain);
-@@ -495,7 +494,7 @@ static int dra7xx_pcie_resume(struct device *dev)
- static int dra7xx_pcie_suspend_noirq(struct device *dev)
- {
- 	struct dra7xx_pcie *dra7xx = dev_get_drvdata(dev);
--	int count = dra7xx->phy_count;
-+	int count = dra7xx->lanes;
- 
- 	while (count--) {
- 		phy_power_off(dra7xx->phy[count]);
-@@ -508,7 +507,7 @@ static int dra7xx_pcie_suspend_noirq(struct device *dev)
- static int dra7xx_pcie_resume_noirq(struct device *dev)
- {
- 	struct dra7xx_pcie *dra7xx = dev_get_drvdata(dev);
--	int phy_count = dra7xx->phy_count;
-+	int phy_count = dra7xx->lanes;
- 	int ret;
- 	int i;
- 
--- 
-1.7.9.5
+Best regards,
+Alexander
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
