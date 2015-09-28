@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/9] NFC: nfcmrvl: remove unneeded version defines
-Date: Mon, 28 Sep 2015 14:33:06 +0200
-Message-ID: <1443443594-14353-2-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v2 2/9] NFC: NCI: export nci_send_frame function
+Date: Mon, 28 Sep 2015 14:33:07 +0200
+Message-ID: <1443443594-14353-3-git-send-email-cuissard@marvell.com>
 References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,63 +12,49 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Export nci_send_frame symbol to allow drivers to use it.
+This is needed for example if NCI is used during firmware
+download phase.
+
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/nfc/nfcmrvl/main.c | 7 ++-----
- drivers/nfc/nfcmrvl/usb.c  | 5 +----
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ include/net/nfc/nci_core.h | 1 +
+ net/nfc/nci/core.c         | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
-index 4a8866d..77e292f 100644
---- a/drivers/nfc/nfcmrvl/main.c
-+++ b/drivers/nfc/nfcmrvl/main.c
-@@ -1,7 +1,7 @@
- /*
-  * Marvell NFC driver: major functions
-  *
-- * Copyright (C) 2014, Marvell International Ltd.
-+ * Copyright (C) 2014-2015 Marvell International Ltd.
-  *
-  * This software file (the "File") is distributed by Marvell International
-  * Ltd. under the terms of the GNU General Public License Version 2, June 1991
-@@ -25,8 +25,6 @@
- #include <net/nfc/nci_core.h>
- #include "nfcmrvl.h"
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index d0d0f1e..f0bb5e7 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -282,6 +282,7 @@ int nci_core_reset(struct nci_dev *ndev);
+ int nci_core_init(struct nci_dev *ndev);
  
--#define VERSION "1.0"
--
- static int nfcmrvl_nci_open(struct nci_dev *ndev)
+ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
++int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb);
+ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+ 
+ int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 943889b..5feed7e 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1177,7 +1177,7 @@ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb)
+ }
+ EXPORT_SYMBOL(nci_recv_frame);
+ 
+-static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
++int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
  {
- 	struct nfcmrvl_private *priv = nci_get_drvdata(ndev);
-@@ -252,6 +250,5 @@ int nfcmrvl_parse_dt(struct device_node *node,
- EXPORT_SYMBOL_GPL(nfcmrvl_parse_dt);
+ 	pr_debug("len %d\n", skb->len);
  
- MODULE_AUTHOR("Marvell International Ltd.");
--MODULE_DESCRIPTION("Marvell NFC driver ver " VERSION);
--MODULE_VERSION(VERSION);
-+MODULE_DESCRIPTION("Marvell NFC driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
-index 7d1fe43..5e624d1 100644
---- a/drivers/nfc/nfcmrvl/usb.c
-+++ b/drivers/nfc/nfcmrvl/usb.c
-@@ -23,8 +23,6 @@
- #include <net/nfc/nci_core.h>
- #include "nfcmrvl.h"
+@@ -1195,6 +1195,7 @@ static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
  
--#define VERSION "1.0"
--
- static struct usb_device_id nfcmrvl_table[] = {
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1286, 0x2046,
- 					USB_CLASS_VENDOR_SPEC, 4, 1) },
-@@ -469,6 +467,5 @@ static struct usb_driver nfcmrvl_usb_driver = {
- module_usb_driver(nfcmrvl_usb_driver);
+ 	return ndev->ops->send(ndev, skb);
+ }
++EXPORT_SYMBOL(nci_send_frame);
  
- MODULE_AUTHOR("Marvell International Ltd.");
--MODULE_DESCRIPTION("Marvell NFC-over-USB driver ver " VERSION);
--MODULE_VERSION(VERSION);
-+MODULE_DESCRIPTION("Marvell NFC-over-USB driver");
- MODULE_LICENSE("GPL v2");
+ /* Send NCI command */
+ int nci_send_cmd(struct nci_dev *ndev, __u16 opcode, __u8 plen, void *payload)
 -- 
 2.2.0.33.gc18b867
 
