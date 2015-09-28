@@ -1,47 +1,141 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: Add
- sun8i-a33-q8-tablet.dts file
-Date: Mon, 28 Sep 2015 10:34:27 +0200
-Message-ID: <20150928083427.GK7104@lukather>
-References: <1443108234-14837-1-git-send-email-hdegoede@redhat.com>
- <1443108234-14837-2-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH RESEND] ARM: dts: Move display-timings node from fimd to dp
+Date: Mon, 28 Sep 2015 10:56:49 +0200
+Message-ID: <CAAObsKDqpBnggX7sHCgQ5d7ZxYumh_ga8kbLQc4bQ=N+M6BoCg@mail.gmail.com>
+References: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aYrjF+tKt+ApYAdb"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFHXUOYAKGQEFKRNX4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443108234-14837-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Sean Paul <seanpaul@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---aYrjF+tKt+ApYAdb
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Kukjin and Krzysztof,
 
-On Thu, Sep 24, 2015 at 05:23:53PM +0200, Hans de Goede wrote:
-> This is a generic dts file for A33 based q8 formfactor tablets,
-> this is intended to replace both sun8i-a33-ippo-q8h-v1.2.dts and
-> sun8i-a33-et-q8-v1.6.dts (these can be fully dropped after a
-> transition period).
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+could you take a look at this?
 
-Applied, together with patch 3.
+Thanks,
 
-Thanks!
-Maxime
+Tomeu
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---aYrjF+tKt+ApYAdb--
+On 17 September 2015 at 14:48, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+> From: Sean Paul <seanpaul@chromium.org>
+>
+> This patch moves the display-timings node from fimd to dp to reflect the
+> device tree bindings change.
+>
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> [tomeu.vizoso@collabora.com: Rebased]
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>
+> ---
+>
+> Hi,
+>
+> looks like a long time ago the bindings were changed and the DTs for
+> these boards weren't updated.
+>
+> I have retaken Sean's forgotten patch and rebased it, but I have only
+> tested on an Arndale that exynos-drm doesn't complain about missing
+> timings.
+>
+> Regards,
+>
+> Tomeu
+> ---
+>  arch/arm/boot/dts/exynos5250-arndale.dts  |  8 ++++----
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts | 16 ++++++++--------
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts |  7 ++++---
+>  3 files changed, 16 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+> index db3f65f3eb45..c000532c1444 100644
+> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+> @@ -129,10 +129,6 @@
+>         samsung,color-depth = <1>;
+>         samsung,link-rate = <0x0a>;
+>         samsung,lane-count = <4>;
+> -};
+> -
+> -&fimd {
+> -       status = "okay";
+>
+>         display-timings {
+>                 native-mode = <&timing0>;
+> @@ -152,6 +148,10 @@
+>         };
+>  };
+>
+> +&fimd {
+> +       status = "okay";
+> +};
+> +
+>  &hdmi {
+>         hpd-gpio = <&gpx3 7 GPIO_ACTIVE_LOW>;
+>         vdd_osc-supply = <&ldo10_reg>;
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index c625e71217aa..0f5dcd418af8 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -89,14 +89,6 @@
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&dp_hpd>;
+>         status = "okay";
+> -};
+> -
+> -&ehci {
+> -       samsung,vbus-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
+> -};
+> -
+> -&fimd {
+> -       status = "okay";
+>
+>         display-timings {
+>                 native-mode = <&timing0>;
+> @@ -116,6 +108,14 @@
+>         };
+>  };
+>
+> +&ehci {
+> +       samsung,vbus-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
+> +};
+> +
+> +&fimd {
+> +       status = "okay";
+> +};
+> +
+>  &hdmi {
+>         hpd-gpio = <&gpx3 7 GPIO_ACTIVE_HIGH>;
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> index 98871f972c8a..7520d52f4e22 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -98,10 +98,7 @@
+>         samsung,link-rate = <0x0a>;
+>         samsung,lane-count = <4>;
+>         status = "okay";
+> -};
+>
+> -&fimd {
+> -       status = "okay";
+>         display-timings {
+>                 native-mode = <&timing0>;
+>                 timing0: timing@0 {
+> @@ -118,6 +115,10 @@
+>         };
+>  };
+>
+> +&fimd {
+> +       status = "okay";
+> +};
+> +
+>  &hdmi {
+>         status = "okay";
+>         hpd-gpio = <&gpx3 7 0>;
+> --
+> 2.4.3
+>
