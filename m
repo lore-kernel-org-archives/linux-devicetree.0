@@ -1,65 +1,95 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 00/11] Hi Maxime / Patrice / Srini,
-Date: Mon, 28 Sep 2015 16:39:38 +0100
-Message-ID: <20150928153938.GS27197@x1>
-References: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
+Date: Mon, 28 Sep 2015 10:43:12 -0500
+Message-ID: <56096010.5010202@ti.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-4-git-send-email-afd@ti.com> <20150925165059.GI27197@x1>
+ <56059CDA.4020004@ti.com> <20150925212446.GL27197@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150925212446.GL27197@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Sep 2015, Peter Griffin wrote:
+On 09/25/2015 04:24 PM, Lee Jones wrote:
+> On Fri, 25 Sep 2015, Andrew F. Davis wrote:
+>
+>> On 09/25/2015 11:50 AM, Lee Jones wrote:
+>>> On Thu, 24 Sep 2015, Andrew F. Davis wrote:
+>>>
+>>>> This patch adds support for TPS65912 mfd device. It provides
+>>>> communication through the I2C and SPI interfaces. It contains
+>>>> the following components:
+>>>>
+>>>>   - Regulators
+>>>>   - GPIO controller
+>>>>
+>>>> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>   drivers/mfd/Kconfig          |  24 +++
+>>>>   drivers/mfd/Makefile         |   3 +
+>>>>   drivers/mfd/tps65912-core.c  | 114 +++++++++++++
+>>>>   drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
+>>>>   drivers/mfd/tps65912-spi.c   |  85 ++++++++++
+>>>>   include/linux/mfd/tps65912.h | 393 +++++++++++++++++++++++++++++++++++++++++++
+>>>>   6 files changed, 705 insertions(+)
+>>>>   create mode 100644 drivers/mfd/tps65912-core.c
+>>>>   create mode 100644 drivers/mfd/tps65912-i2c.c
+>>>>   create mode 100644 drivers/mfd/tps65912-spi.c
+>>>>   create mode 100644 include/linux/mfd/tps65912.h
+>>>
+>>> [...]
+>>>
+>>>> +#define TPS65912_IRQ(_name, _reg, _offset)			\
+>>>> +	[TPS65912_IRQ_ ## _name] = {				\
+>>>> +		.mask = TPS65912_ ## _reg ## _ ## _name,	\
+>>>> +		.reg_offset = _offset,				\
+>>>> +	}
+>>>
+>>> I told you about this already.
+>>>
+>>> If you want this set to be merged for v4.3 then you'll need commit
+>>> b4fe8ba ("regmap: Add generic macro to define regmap_irq") from my
+>>> tree.
+>>
+>> You asked me to submit this to Mark Brown, I didn't realize you also
+>> wanted me to use the one in your tree. Using yours will make my lines
+>> over 80 chars and so it kind of defeats the purpose but I'll do it
+>> for v4.
+>
+> I asked two of you to upstream a generic incarnation of your
+> implementation.  The other guy got there first.  Now I want everyone
+> to use it instead of hand-rolling their own.
+>
 
-> This series makes a series of updates to the stih407 pinctrl groups
-> and makes the upstream kernel more closely aligned in terms of pin
-> configuration to the vendor kernel.
->=20
-> A number of new periphs are added such as spi fsm, nand, cec0, and
-> for others such as SPI the various alternate function pin muxings hav=
-e
-> been added. Finally for SPI the controller nodes have been updated
-> to have the default pin assignment in the controller node.
->=20
-> Changes since v1:
->  - Rebase on v4.3-rc3
->  - Remove some SoBs (Lee)
->  - Collect up Acks
->=20
-> kind regards,
->=20
-> Peter.
->=20
-> Peter Griffin (11):
->   ARM: STi: DT: STiH407: Add a cec0 pin definition
->   ARM: STi: DT: STiH407: Add i2c3 alternate pin configs
->   ARM: DT: STiH407: Add SPI 3 wire and 4 wire pinctrl configs
->   ARM: DT: STiH407: Add serial3 pinctrl configuration
->   ARM: DT: STiH407: Add SPI FSM (NOR Flash) Controller pin config
->   ARM: DT: STiH407: Add NAND flash controller pin configuration
->   ARM: DT: STiH407: Add systrace pin configuration
->   ARM: DT: STiH407: Add SD pinctrl config for mmc0 controller
->   ARM: DT: STiH407: Add pinconfig for IRB UHF and IRB TX
->   ARM: DT: STiH407: Add RMII pinctrl support
->   ARM: STi: STiH407: Add spi default pinctrl groups.
->=20
->  arch/arm/boot/dts/stih407-family.dtsi  |  14 ++
->  arch/arm/boot/dts/stih407-pinctrl.dtsi | 378 +++++++++++++++++++++++=
-+++++++++-
->  2 files changed, 387 insertions(+), 5 deletions(-)
+Got it.
 
-I'll do this privately, so as not to unnecessarily delay the
-acceptance of the set.  I'm a big fan of keeping the *-by's in
-chronological order.  It does help to provide an insight to the
-history of the patch.
+>>> [...]
+>>>
+>>>> +static struct i2c_driver tps65912_i2c_driver = {
+>>>> +	.driver		= {
+>>>> +		.name	= "tps65912",
+>>>> +		.of_match_table = tps65912_i2c_of_match_table,
+>>>
+>>> of_match_ptr()
+>>>
+>>
+>> Why? tps65912_i2c_of_match_table is always compiled in.
+>
+> But it needn't be.
+>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+This driver is DT only, would it make more sense to just add a dependency
+on CONFIG_OF in the Kconfig? I don't see many other drivers that are DT
+only doing this, the driver should compile just fine without OF enabled,
+it just wont have DT functionality, so is it really dependent on OF?
+The of_match_ptr(x) macro looks to be useful when the x is conditionally
+compiled in, but in my case the x (my of_device_id table) is always compiled.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
