@@ -1,94 +1,161 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v2 3/4] clk: bcm2835: Add support for programming the audio domain clocks.
-Date: Mon, 28 Sep 2015 14:19:43 -0700
-Message-ID: <87si5yutqo.fsf@eliezer.anholt.net>
-References: <1441922305-2298-1-git-send-email-eric@anholt.net> <1441922305-2298-3-git-send-email-eric@anholt.net> <5600B663.8000501@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5600B663.8000501@wwwdotorg.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
+Subject: [PATCH v3 4/4] ARM: bcm2835: Switch to using the new clock driver support.
+Date: Mon, 28 Sep 2015 14:22:05 -0700
+Message-ID: <1443475325-22270-4-git-send-email-eric@anholt.net>
+References: <1443475325-22270-1-git-send-email-eric@anholt.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443475325-22270-1-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This will give us the ability to set the pixel and HDMI state machine
+clocks for the VC4 KMS driver, change the CPU frequency, and
+potentially gate clocks in the future (once we also write a power
+domain driver).  It also gives the uart an explicit clock reference,
+so that we don't need to change the physical addresses of the old
+fixed clk_bcm2835.c clocks for Raspberry Pi 2 port.
 
-Stephen Warren <swarren@wwwdotorg.org> writes:
+Two clocks get their frequencies updated as a result of this.  One is
+uart's apb_pclk, which was previously accidentally grabbing the fixed
+uart0_pclk due to the apb_pclk not having clk_register_clkdev()
+called.  The uart doesn't seem to do anything with apb_pclk other than
+make sure it's on, so that appears safe (also, as far as I can see,
+the apb clock is actually the same as the VPU clock).  The other is
+EMMC, which according to the docs was supposed to be in the 50-100Mhz
+range, but it turns out the firmware needed to change to running it at
+the 250Mhz core clock speed to avoid a bug in clock domain crossing.
 
-> On 09/10/2015 02:58 PM, Eric Anholt wrote:
->> This adds support for enabling, disabling, and setting the rate of the
->> audio domain clocks.  It will be necessary for setting the pixel clock
->> for HDMI in the VC4 driver and let us write a cpufreq driver.  It will
->> also improve compatibility with user changes to the firmware's
->> config.txt, since our previous fixed clocks are unaware of it.
->>=20
->> The firmware also has support for configuring the clocks through the
->> mailbox channel, but the pixel clock setup by the firmware doesn't
->> work, and it's Raspberry Pi specific anyway.  The only conflicts we
->> should have with the firmware would be if we made firmware calls that
->> result in clock management (like opening firmware V3D or ISP access,
->> which we don't support in upstream), or on hardware over-thermal or
->> under-voltage (when the firmware would rewrite PLLB to take the ARM
->> out of overclock).  If that happens, our cached .recalc_rate() results
->> would be incorrect, but that's no worse than our current state where
->> we used fixed clocks.
->>=20
->> The existing fixed clocks in the code are left in place to provide
->> backwards compatibility with old device tree files.
->
->> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835=
-.c
+Additionally, anything using BCM2835_CLOCK_VPU will now have a correct
+clock rate if the user configures the boot-time core clock speed using
+config.txt.
 
->> +static const struct bcm2835_pll_ana_bits bcm2835_ana_default =3D {
->> +	0,
->> +	0,
->> +	~((7 << 19) | (15 << 15)),
->> +	(2 << 19) | (8 << 15),
->> +	~(7 << 7),
->> +	(6 << 1),
->> +
->> +	14
->
-> Nit: Elide the blank line? In some other structs too.
->
-> Are there #defines or names you can use for those initializers?
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+ arch/arm/boot/dts/bcm2835.dtsi | 52 +++++++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 24 deletions(-)
 
-I've just used named initializers instad.  (These *are* the defines, so
-another indirection wouldn't help anyone reading the driver).
-
->> +	clks[BCM2835_PLLA] =3D bcm2835_register_pll(cprman, &bcm2835_plla_data=
-);
->> +	clks[BCM2835_PLLB] =3D bcm2835_register_pll(cprman, &bcm2835_pllb_data=
-);
->
-> These can fail; shouldn't there be error-checking? Or, does
-> of_clk_add_provider() check for this?
-
-When you get the clk from the of provider, the error gets passed
-through, like it should.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWCa7wAAoJELXWKTbR/J7o1BIP/05NesNw767zkmH3kW/KzDXE
-JwQnnc0QSQCsqibY1UgxvYJ4MRiA/+pkiMoCjg9oay+8fp8nJR475WgqDhv51wrR
-V97op+1n6Fhi+Oo4K07adNBSUKJy+evM1h7Lxmv7ksQncIHxfkc0OA4r22xea8T1
-cNKaYVmzbJPrwupFigt0OgNE1Raj4EkEoYFqfKoGEjfUBaOr4GrTT1Yl9at0rECJ
-hflWa5GPNW7U9FAoTTVAgP/ZSQdxquPP1WABbIgdx8ayzCTGvkwO6nV3DtDRyh4p
-iV/IKgmdfJkEKBaBHxhXejnIhTfkXHmpmfq4j2V12n/QrIOW8Eine/5KEDyXJ1I5
-mMonfQDiOJuRlIWhde8XtQdNrfrniV3oXKrTprpTRYcDQJC2sVCojPRaTnr5Jq2W
-1d3BbcESRRW6tJNFHhQFWXtsgiOLxuxquizaUAYOpj38z06KMasVqmYdo+DBWqXS
-L6WR8T0zRKwyk063/jOLivR4ok7dB0PZ5VIkU+o1N7hpLzAgVLDoJawlIMS/quvM
-zXF/fHJMbAx7iJ4AGmtUyj9KpwABxe7Rxk5BM7fiLKm0A+BLV4TuxWtP/VrX1trs
-6/+3ojSD6CUNZR2LJrjPH5PTg5cqEK5T3z7BJFCef9eOQj+ix4RTaWr2auTCweyc
-UPqz973/BB1Hyd+GpOR8
-=xin0
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 301c73f..a6a55b7 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -1,4 +1,5 @@
+ #include <dt-bindings/pinctrl/bcm2835.h>
++#include <dt-bindings/clock/bcm2835.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -21,6 +22,10 @@
+ 			compatible = "brcm,bcm2835-system-timer";
+ 			reg = <0x7e003000 0x1000>;
+ 			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
++			/* This could be a reference to BCM2835_CLOCK_TIMER,
++			 * but we don't have the driver using the common clock
++			 * support yet.
++			 */
+ 			clock-frequency = <1000000>;
+ 		};
+ 
+@@ -57,6 +62,17 @@
+ 			reg = <0x7e100000 0x28>;
+ 		};
+ 
++		clocks: cprman@7e101000 {
++			compatible = "brcm,bcm2835-cprman";
++			#clock-cells = <1>;
++			reg = <0x7e101000 0x2000>;
++
++			/* CPRMAN derives everything from the platform's
++			 * oscillator.
++			 */
++			clocks = <&clk_osc>;
++		};
++
+ 		rng@7e104000 {
+ 			compatible = "brcm,bcm2835-rng";
+ 			reg = <0x7e104000 0x10>;
+@@ -96,7 +112,9 @@
+ 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+ 			reg = <0x7e201000 0x1000>;
+ 			interrupts = <2 25>;
+-			clock-frequency = <3000000>;
++			clocks = <&clocks BCM2835_CLOCK_UART>,
++				 <&clocks BCM2835_CLOCK_VPU>;
++			clock-names = "uartclk", "apb_pclk";
+ 			arm,primecell-periphid = <0x00241011>;
+ 		};
+ 
+@@ -115,7 +133,7 @@
+ 			compatible = "brcm,bcm2835-spi";
+ 			reg = <0x7e204000 0x1000>;
+ 			interrupts = <2 22>;
+-			clocks = <&clk_spi>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -125,7 +143,7 @@
+ 			compatible = "brcm,bcm2835-i2c";
+ 			reg = <0x7e205000 0x1000>;
+ 			interrupts = <2 21>;
+-			clocks = <&clk_i2c>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -135,7 +153,7 @@
+ 			compatible = "brcm,bcm2835-sdhci";
+ 			reg = <0x7e300000 0x100>;
+ 			interrupts = <2 30>;
+-			clocks = <&clk_mmc>;
++			clocks = <&clocks BCM2835_CLOCK_EMMC>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -143,7 +161,7 @@
+ 			compatible = "brcm,bcm2835-i2c";
+ 			reg = <0x7e804000 0x1000>;
+ 			interrupts = <2 21>;
+-			clocks = <&clk_i2c>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -165,28 +183,14 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		clk_mmc: clock@0 {
+-			compatible = "fixed-clock";
+-			reg = <0>;
+-			#clock-cells = <0>;
+-			clock-output-names = "mmc";
+-			clock-frequency = <100000000>;
+-		};
+-
+-		clk_i2c: clock@1 {
++		/* The oscillator is the root of the clock tree. */
++		clk_osc: clock@3 {
+ 			compatible = "fixed-clock";
+-			reg = <1>;
++			reg = <3>;
+ 			#clock-cells = <0>;
+-			clock-output-names = "i2c";
+-			clock-frequency = <250000000>;
++			clock-output-names = "osc";
++			clock-frequency = <19200000>;
+ 		};
+ 
+-		clk_spi: clock@2 {
+-			compatible = "fixed-clock";
+-			reg = <2>;
+-			#clock-cells = <0>;
+-			clock-output-names = "spi";
+-			clock-frequency = <250000000>;
+-		};
+ 	};
+ };
+-- 
+2.1.4
