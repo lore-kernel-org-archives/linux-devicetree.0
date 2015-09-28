@@ -1,45 +1,48 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 01/11] ARM: STi: DT: STiH407: Add a cec0 pin definition
-Date: Mon, 28 Sep 2015 13:37:37 +0100
-Message-ID: <1443443867-4099-2-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 05/11] ARM: DT: STiH407: Add SPI FSM (NOR Flash) Controller pin config
+Date: Mon, 28 Sep 2015 13:37:41 +0100
+Message-ID: <1443443867-4099-6-git-send-email-peter.griffin@linaro.org>
 References: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, Nicolas Vanhaelewyn <nicolas.vanhaelewyn@st.com>
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Christophe Kerello <christophe.kerello@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This pin setup provides the correct configuration in order to
-interact with the CEC HW.
+This patch adds the pin configuration for the NOR flash controller.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Nicolas Vanhaelewyn <nicolas.vanhaelewyn@st.com>
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Patrice Chotard <patrice.chotard@st.com>
 Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Patrice Chotard <patrice.chotard@st.com>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index 1683deb..30db453 100644
+index 5d725fe..b7a405f 100644
 --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -107,6 +107,14 @@
- 				st,retime-pin-mask = <0x3f>;
+@@ -1072,6 +1072,19 @@
+ 					};
+ 				};
  			};
- 
-+			cec0 {
-+				pinctrl_cec0_default: cec0-default {
++
++			fsm {
++				pinctrl_fsm: fsm {
 +					st,pins {
-+						hdmi_cec = <&pio2 4 ALT1 BIDIR>;
++						spi-fsm-clk = <&pio40 1 ALT1 OUT>;
++						spi-fsm-cs = <&pio40 0 ALT1 OUT>;
++						spi-fsm-mosi = <&pio40 2 ALT1 OUT>;
++						spi-fsm-miso = <&pio40 3 ALT1 IN>;
++						spi-fsm-hol = <&pio40 5 ALT1 OUT>;
++						spi-fsm-wp = <&pio40 4 ALT1 OUT>;
 +					};
 +				};
 +			};
-+
- 			rc {
- 				pinctrl_ir: ir0 {
- 					st,pins {
+ 		};
+ 	};
+ };
 -- 
 1.9.1
