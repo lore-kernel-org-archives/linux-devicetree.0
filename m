@@ -1,66 +1,111 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] usb: renesas_usbhs: Add support for R-Car H3
-Date: Mon, 28 Sep 2015 11:48:07 +0000
-Message-ID: <SG2PR06MB091979AD8228513ABBC0CB1DD84F0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1442556232-6564-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <87a8skyw7s.wl%kuninori.morimoto.gx@renesas.com>
+From: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 5/5] leds: netxbig: set led_classdev max_brightness
+Date: Mon, 28 Sep 2015 13:50:33 +0200
+Message-ID: <20150928115033.GZ7306@kw.sim.vm.gnt>
+References: <1443301358-2131-1-git-send-email-simon.guinot@sequanux.org>
+ <1443301358-2131-6-git-send-email-simon.guinot@sequanux.org>
+ <5608F41B.4020307@samsung.com>
+ <20150928091956.GY7306@kw.sim.vm.gnt>
+ <5609133A.3050802@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87a8skyw7s.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2fowzm2eVyDiEwGH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5609133A.3050802-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Donnefort <vdonnefort-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoann Sculo <yoann-SEL7PEOQfnBQFI55V6+gNQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
 
-Thank you for the comment.
-And, I'm sorry for the delayed response.
+--2fowzm2eVyDiEwGH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Sent: Friday, September 18, 2015 5:25 PM
-> 
-> Hi Shimoda-san
-> 
-> > This patch adds a compatible string to support for R-Car H3.
+On Mon, Sep 28, 2015 at 12:15:22PM +0200, Jacek Anaszewski wrote:
+> On 09/28/2015 11:19 AM, Simon Guinot wrote:
+> >On Mon, Sep 28, 2015 at 10:02:35AM +0200, Jacek Anaszewski wrote:
+> >>Hi Simon,
 > >
-> > Since the HS-USB controller of R-Car H3 is almost the same specification
-> > with R-Car Gen2 (these have 16 pipes and usb-dmac), this patch
-> > sets the "type" of renesas_usbhs_driver_param to USBHS_TYPE_RCAR_GEN2.
+> >Hi Jacek,
 > >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> (snip)
-> > diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-> > index 7b98e1d..2becd6b 100644
-> > --- a/drivers/usb/renesas_usbhs/common.c
-> > +++ b/drivers/usb/renesas_usbhs/common.c
-> > @@ -476,6 +476,10 @@ static const struct of_device_id usbhs_of_match[] = {
-> >  		.compatible = "renesas,usbhs-r8a7794",
-> >  		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-> >  	},
-> > +	{
-> > +		.compatible = "renesas,usbhs-r8a7795",
-> > +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-> > +	},
-> 
-> It is helpful for user if it is indicating Gen2 compatible.
-> Because r8a7795 is Gen3
+> >>
+> >>Does your device support reading the brightness currently set?
+> >
+> >No it don't.
+> >
+> >>If so, it would be good to implement brightness_get op, because
+> >>AFAIR you mentioned that the firmware you are working with sets
+> >>always maximum brightness value. Having the op implemented would
+> >>allow to find this out.
+> >
+> >I don't understand how this can help. I mean, the only issue is that at
+> >startup the initial LED state is unknown. And the software brightness
+> >value could be false. But once the LED is configured, the brightness
+> >values for software and hardware are synchronized. The brightness value
+> >is stored/cached in led_classdev and it can be retrieved by the user via
+> >sysfs...
+> >
+> >For my own knowledge, is there some interest in having brightness_get(),
+> >aside of guessing the LED initial state ?
+>=20
+> Some LED controllers can adjust brightness in case battery voltage level
+> falls below some threshold.
 
-So, I will add a comment in the code like the followings:
+OK, thanks for the explanation.
 
-{
-	/* Gen3 is compatible with Gen2 */
-	.compatible = "renesas,usbhs-r8a7795",
-	.data = (void *)USBHS_TYPE_RCAR_GEN2,
-},
+>=20
+> >What does the embedded firmware is writing 255 or 0 into the brightness
+> >sysfs attribute. The max_brightness value is ignored. After this patch,
+> >writing 255 and 0 still allows to configure the LED in the same way:
+> >maximum brightness or off. Thus, I believe there is no compatibility
+> >issue.
+>=20
+> LED core always assures that brightness value passed to brightness_set
+> op does not exceed max_brightness value. So, now after executing
+> "echo 255 > brightness", LED core will adjust it to max_brightness
+> (e.g. 7) before passing to brightness_set.
+>=20
+> In the message [1], you mentioned that "LEDs are only enabled at their
+> maximum level", so IIUC following is possible:
+>=20
+> #echo 3 > "brightness"
+>=20
+> firmware sets brightness to max_brightness from DT (e.g. 7), but
+>=20
+> #cat brightness
+> #3
+>=20
+> Is it true?
 
-Best regards,
-Yoshihiro Shimoda
+Oh no sorry, it is a misunderstanding. By "LEDs are only enabled at
+their maximum level", I was meaning "LEDs are only enabled at their
+maximum level by the LaCie stock firmware". The firmware don't make
+use of the different hardware brightness levels available. But the
+feature works perfectly. If you write 3 into sysfs "brightness", then
+you get the third brightness level.
 
+OK, I understand you remark now. Sorry for not being very clear in a
+first place.
+
+Simon
+
+--2fowzm2eVyDiEwGH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlYJKYkACgkQgtp0PDeOcDoz9ACcCnjADwVGNAoa1l4vIc1/Ro5w
+su8AmgOLV2wgBvNjK3k3/UR0G2M6vP3X
+=L2F3
+-----END PGP SIGNATURE-----
+
+--2fowzm2eVyDiEwGH--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
