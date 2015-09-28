@@ -1,141 +1,104 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH RESEND] ARM: dts: Move display-timings node from fimd to dp
-Date: Mon, 28 Sep 2015 10:56:49 +0200
-Message-ID: <CAAObsKDqpBnggX7sHCgQ5d7ZxYumh_ga8kbLQc4bQ=N+M6BoCg@mail.gmail.com>
-References: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH 1/2] of: thermal: Fix inconsitency between cooling-*-state and cooling-*-level
+Date: Mon, 28 Sep 2015 09:58:04 +0100
+Message-ID: <9hhpp12apk3.fsf@e105922-lin.cambridge.arm.com>
+References: <1441711013-11220-1-git-send-email-punit.agrawal@arm.com>
+	<1441711249-11434-1-git-send-email-punit.agrawal@arm.com>
+	<CAL_JsqKGk1v1FJ8De8L+UoMUC=T04SYK+WqHz6rZEYipiPYnqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Sean Paul <seanpaul@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKGk1v1FJ8De8L+UoMUC=T04SYK+WqHz6rZEYipiPYnqA@mail.gmail.com>
+	(Rob Herring's message of "Fri, 25 Sep 2015 13:33:15 -0500")
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin and Krzysztof,
+Hi Rob,
 
-could you take a look at this?
+Rob Herring <robherring2@gmail.com> writes:
 
-Thanks,
+> On Tue, Sep 8, 2015 at 6:20 AM, Punit Agrawal <punit.agrawal@arm.com> wrote:
+>> The device trees in the kernel as well as the binding description in
+>> Documentation/devicetree/bindings/cpufreq/cpufreq-dt.txt use the
+>> cooling-{min,max}-level property.
+>>
+>> Fix the inconsistency with the binding description in
+>> Documentation/devicetree/bindings/thermal/thermal.txt by changing
+>> cooling-*-state properties to cooling-*-level.
+>>
+>> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+>> Cc: Eduardo Valentin <edubezval@gmail.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>
+> Both patches applied. Thanks.
 
-Tomeu
+I see the patches in v4.3-rc3 now. Thanks for picking up these fixes.
 
-On 17 September 2015 at 14:48, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
-> From: Sean Paul <seanpaul@chromium.org>
+Cheers,
+Punit
+
 >
-> This patch moves the display-timings node from fimd to dp to reflect the
-> device tree bindings change.
+> Rob
 >
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> [tomeu.vizoso@collabora.com: Rebased]
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->
-> ---
->
-> Hi,
->
-> looks like a long time ago the bindings were changed and the DTs for
-> these boards weren't updated.
->
-> I have retaken Sean's forgotten patch and rebased it, but I have only
-> tested on an Arndale that exynos-drm doesn't complain about missing
-> timings.
->
-> Regards,
->
-> Tomeu
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts  |  8 ++++----
->  arch/arm/boot/dts/exynos5250-smdk5250.dts | 16 ++++++++--------
->  arch/arm/boot/dts/exynos5420-smdk5420.dts |  7 ++++---
->  3 files changed, 16 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-> index db3f65f3eb45..c000532c1444 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -129,10 +129,6 @@
->         samsung,color-depth = <1>;
->         samsung,link-rate = <0x0a>;
->         samsung,lane-count = <4>;
-> -};
-> -
-> -&fimd {
-> -       status = "okay";
->
->         display-timings {
->                 native-mode = <&timing0>;
-> @@ -152,6 +148,10 @@
->         };
->  };
->
-> +&fimd {
-> +       status = "okay";
-> +};
-> +
->  &hdmi {
->         hpd-gpio = <&gpx3 7 GPIO_ACTIVE_LOW>;
->         vdd_osc-supply = <&ldo10_reg>;
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index c625e71217aa..0f5dcd418af8 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -89,14 +89,6 @@
->         pinctrl-names = "default";
->         pinctrl-0 = <&dp_hpd>;
->         status = "okay";
-> -};
-> -
-> -&ehci {
-> -       samsung,vbus-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-> -};
-> -
-> -&fimd {
-> -       status = "okay";
->
->         display-timings {
->                 native-mode = <&timing0>;
-> @@ -116,6 +108,14 @@
->         };
->  };
->
-> +&ehci {
-> +       samsung,vbus-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-> +};
-> +
-> +&fimd {
-> +       status = "okay";
-> +};
-> +
->  &hdmi {
->         hpd-gpio = <&gpx3 7 GPIO_ACTIVE_HIGH>;
->  };
-> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> index 98871f972c8a..7520d52f4e22 100644
-> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> @@ -98,10 +98,7 @@
->         samsung,link-rate = <0x0a>;
->         samsung,lane-count = <4>;
->         status = "okay";
-> -};
->
-> -&fimd {
-> -       status = "okay";
->         display-timings {
->                 native-mode = <&timing0>;
->                 timing0: timing@0 {
-> @@ -118,6 +115,10 @@
->         };
->  };
->
-> +&fimd {
-> +       status = "okay";
-> +};
-> +
->  &hdmi {
->         status = "okay";
->         hpd-gpio = <&gpx3 7 0>;
+>> ---
+>>  Documentation/devicetree/bindings/thermal/thermal.txt | 14 +++++++-------
+>>  1 file changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> index 8a49362..8320186 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> @@ -55,16 +55,16 @@ of heat dissipation). For example a fan's cooling states correspond to
+>>  the different fan speeds possible. Cooling states are referred to by
+>>  single unsigned integers, where larger numbers mean greater heat
+>>  dissipation. The precise set of cooling states associated with a device
+>> -(as referred to be the cooling-min-state and cooling-max-state
+>> +(as referred to by the cooling-min-level and cooling-max-level
+>>  properties) should be defined in a particular device's binding.
+>>  For more examples of cooling devices, refer to the example sections below.
+>>
+>>  Required properties:
+>> -- cooling-min-state:   An integer indicating the smallest
+>> +- cooling-min-level:   An integer indicating the smallest
+>>    Type: unsigned       cooling state accepted. Typically 0.
+>>    Size: one cell
+>>
+>> -- cooling-max-state:   An integer indicating the largest
+>> +- cooling-max-level:   An integer indicating the largest
+>>    Type: unsigned       cooling state accepted.
+>>    Size: one cell
+>>
+>> @@ -225,8 +225,8 @@ cpus {
+>>                         396000  950000
+>>                         198000  850000
+>>                 >;
+>> -               cooling-min-state = <0>;
+>> -               cooling-max-state = <3>;
+>> +               cooling-min-level = <0>;
+>> +               cooling-max-level = <3>;
+>>                 #cooling-cells = <2>; /* min followed by max */
+>>         };
+>>         ...
+>> @@ -240,8 +240,8 @@ cpus {
+>>          */
+>>         fan0: fan@0x48 {
+>>                 ...
+>> -               cooling-min-state = <0>;
+>> -               cooling-max-state = <9>;
+>> +               cooling-min-level = <0>;
+>> +               cooling-max-level = <9>;
+>>                 #cooling-cells = <2>; /* min followed by max */
+>>         };
+>>  };
+>> --
+>> 2.5.0
+>>
 > --
-> 2.4.3
->
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
