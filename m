@@ -1,147 +1,53 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH v7 5/6] Documentation: dt-bindings: pci: altera pcie
- device tree binding
-Date: Mon, 28 Sep 2015 13:38:39 +0800
-Message-ID: <CAFiDJ59PuhRj3F288A_451pLiKnqPUKin9C2t5uuH2iNPnJfAg@mail.gmail.com>
-References: <1442801587-3812-1-git-send-email-lftan@altera.com>
- <1442801587-3812-6-git-send-email-lftan@altera.com>
- <5606171A.5000609@kernel.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 1/3] mmc: sprd: Add MMC host driver for Spreadtrum
+ SoC
+Date: Mon, 28 Sep 2015 15:37:43 +0800
+Message-ID: <5608EE47.1020402@rock-chips.com>
+References: <1439571353-30165-1-git-send-email-wuht06@gmail.com>
+ <1439571353-30165-2-git-send-email-wuht06@gmail.com>
+ <CAPDyKFp=XH+Vo_diRyhrMuB+v1rmTmxo3Lid3Wc-u1ohqNisKw@mail.gmail.com>
+ <CAG_R4_VTXCV4NVMOwv-9F56-_pVsK0hU4go79ZhV3OFxwcF0mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5606171A.5000609@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAG_R4_VTXCV4NVMOwv-9F56-_pVsK0hU4go79ZhV3OFxwcF0mA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hongtao Wu <wuht06@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, shawn.lin@rock-chips.com, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Orson.Zhai@spreadtrum.com" <Orson.Zhai@spreadtrum.com>, "Chunyan.Zhang@spreadtrum.com" <Chunyan.Zhang@spreadtrum.com>, "Jason.Wu@spreadtrum.com" <Jason.Wu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 26, 2015 at 11:55 AM, Rob Herring <robh@kernel.org> wrote:
+On 2015/9/28 15:18, Hongtao Wu wrote:
+>  >>
 >
-> On 09/20/2015 09:13 PM, Ley Foon Tan wrote:
-> > This patch adds the bindings for Altera PCIe host controller driver and
-> > Altera PCIe MSI driver.
-> >
-> > Signed-off-by: Ley Foon Tan <lftan@altera.com>
-> > ---
-> >  .../devicetree/bindings/pci/altera-pcie-msi.txt    | 28 +++++++++++++
-> >  .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
-> >  2 files changed, 77 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> > new file mode 100644
-> > index 0000000..53ad2388
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> > @@ -0,0 +1,28 @@
-> > +* Altera PCIe MSI controller
-> > +
-> > +Required properties:
-> > +- compatible:        should contain "altr,msi-1.0"
-> > +- reg:               specifies the physical base address of the controller and
-> > +             the length of the memory mapped region.
-> > +- reg-names: must include the following entries:
-> > +             "csr": CSR registers
-> > +             "vector_slave": vectors slave port region
-> > +- interrupt-parent:  interrupt source phandle.
-> > +- interrupts:        specifies the interrupt source of the parent interrupt
-> > +             controller. The format of the interrupt specifier depends on the
-> > +             parent interrupt controller.
-> > +- num-vectors:       number of vectors, range 1 to 32.
-> > +- msi-controller:    indicates that this is MSI controller node
-> > +
-> > +
-> > +Example
-> > +msi0: msi@0xFF200000 {
-> > +     compatible = "altr,msi-1.0";
-> > +     reg = <0xFF200000 0x00000010
-> > +             0xFF200010 0x00000080>;
-> > +     reg-names = "csr", "vector_slave";
-> > +     interrupt-parent = <&hps_0_arm_gic_0>;
-> > +     interrupts = <0 42 4>;
-> > +     msi-controller = <1>;
->
-> This should not have a value.
-Okay.
+> On Thu, Sep 10, 2015 at 9:28 PM, Ulf Hansson <ulf.hansson@linaro.org
+> <mailto:ulf.hansson@linaro.org>> wrote:
+>  >
+>  > On 14 August 2015 at 18:55, Hongtao Wu <wuht06@gmail.com
+> <mailto:wuht06@gmail.com>> wrote:
+
+[...]
 
 >
-> > +     num-vectors = <32>;
-> > +};
-> > diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> > new file mode 100644
-> > index 0000000..4440db1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> > @@ -0,0 +1,49 @@
-> > +* Altera PCIe controller
-> > +
-> > +Required properties:
-> > +- compatible :       should contain "altr,pcie-root-port-1.0"
-> > +- reg:               a list of physical base address and length for TXS and CRA.
-> > +- reg-names: must include the following entries:
-> > +             "Txs" or "txs": TX slave port region
-> > +             "Cra" or "cra": Control register access region
->
-> Why both cases? Can we please just have one (or none is better IMO).
-The PCIe IP on different device families use different register names.
-And our device tree generator will auto generate the register names
-based on the hardware description name. Too bad we can't change the
-hardware description names now.
->
-> txs contains the config space?
-It is not the config space, but a memory slave port.
+> Yes, most of this data can be removed, such as caps, caps2, base_clk.
+> However ocr_avail and signal_default_voltage are useful for us.
+> We can't fetch ocr_avail from external regulator via
+> mmc_regulator_get_supply,
+> because our regulator driver can't supply mmc_regulator_get_ocrmask()
+> interface for MMC driver.
 
+Sorry for the noise but... IMO, your need to quirk your regulator driver 
+stuffs rather than mmc.
+
+> And sometimes our external regulator can not supply 3.0v or 1.8v default
+> signal voltage that we expect. So this 3.0v or 1.8v default signal
+> voltage are
+> mandatory.
 >
-> > +- interrupt-parent:  interrupt source phandle.
-> > +- interrupts:        specifies the interrupt source of the parent interrupt controller.
-> > +             The format of the interrupt specifier depends on the parent interrupt
-> > +             controller.
-> > +- device_type:       must be "pci"
-> > +- #address-cells:    set to <3>
-> > +- #size-cells:       set to <2>
-> > +- #interrupt-cells:  set to <1>
-> > +- ranges:            describes the translation of addresses for root ports and standard
-> > +             PCI regions.
-> > +- interrupt-map-mask and interrupt-map: standard PCI properties to define the
-> > +             mapping of the PCIe interface to interrupt numbers.
-> > +
-> > +Optional properties:
-> > +- msi-parent:        Link to the hardware entity that serves as the MSI controller for this PCIe
-> > +             controller.
-> > +- bus-range: PCI bus numbers covered
-> > +
-> > +Example
-> > +     pcie_0: pcie@0xc00000000 {
-> > +             compatible = "altr,pcie-root-port-1.0";
-> > +             reg = <0xc0000000 0x20000000>,
-> > +                     <0xff220000 0x00004000>;
-> > +             reg-names = "Txs", "Cra";
-> > +             interrupt-parent = <&hps_0_arm_gic_0>;
-> > +             interrupts = <0 40 4>;
-> > +             interrupt-controller;
-> > +             #interrupt-cells = <1>;
-> > +             bus-range = <0x0 0xFF>;
-> > +             device_type = "pci";
-> > +             msi-parent = <&msi_to_gic_gen_0>;
-> > +             #address-cells = <3>;
-> > +             #size-cells = <2>;
-> > +             interrupt-map-mask = <0 0 0 7>;
-> > +             interrupt-map = <0 0 0 1 &pcie_0 1>,
-> > +                                 <0 0 0 2 &pcie_0 2>,
-> > +                                 <0 0 0 3 &pcie_0 3>,
-> > +                                 <0 0 0 4 &pcie_0 4>;
-> > +             ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-> > +                         0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-> > +     };
-> >
->
+
+
+
+-- 
+Best Regards
+Shawn Lin
+
