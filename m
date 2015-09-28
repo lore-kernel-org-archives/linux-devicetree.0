@@ -1,107 +1,61 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 01/15] dt: power: bq24257-charger: Cover additional
- devices
-Date: Mon, 28 Sep 2015 21:16:22 +0900
-Message-ID: <56092F96.4000502@samsung.com>
-References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
- <1443196460-26156-2-git-send-email-dannenberg@ti.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH RFC v4 3/8] ASoC: hdmi-codec: Add hdmi-codec for external
+ HDMI-encoders
+Date: Mon, 28 Sep 2015 14:21:41 +0200
+Message-ID: <20150928122141.GC3383@phenom.ffwll.local>
+References: <mailman.310.1442574427.844.alsa-devel@alsa-project.org>
+ <56057A9E.9080602@st.com> <560901EE.60407@st.com>
+ <20150928112628.GC21626@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443196460-26156-2-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150928112628.GC21626@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, Jyri Sarha <jsarha@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-W dniu 26.09.2015 o 00:54, Andreas Dannenberg pisze:
-> Extend the bq24257 charger's device tree documentation to cover the
-> bq24250 and bq24251 devices as well feature additions.
-> 
-> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/power/bq24257.txt          | 53 ++++++++++++++++++++--
->  1 file changed, 48 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
-> index 5c9d394..6c376ef 100644
-> --- a/Documentation/devicetree/bindings/power/bq24257.txt
-> +++ b/Documentation/devicetree/bindings/power/bq24257.txt
-> @@ -1,21 +1,64 @@
-> -Binding for TI bq24257 Li-Ion Charger
-> +Binding for TI bq24250/bq24251/bq24257 Li-Ion Charger
->  
->  Required properties:
->  - compatible: Should contain one of the following:
-> + * "ti,bq24250"
-> + * "ti,bq24251"
->   * "ti,bq24257"
-> -- reg:			   integer, i2c address of the device.
-> +- reg: integer, i2c address of the device.
-> +- interrupt-parent: Should be the phandle for the interrupt controller. Use in
-> +    conjunction with "interrupts".
-> +- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
-> +    conjunction with "interrupt-parent".
->  - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
-> -- ti,charge-current:	   integer, maximum charging current in uA.
-> -- ti,termination-current:  integer, charge will be terminated when current in
-> -			   constant-voltage phase drops below this value (in uA).
-> +- ti,charge-current: integer, maximum charging current in uA.
-> +- ti,termination-current: integer, charge will be terminated when current in
-> +    constant-voltage phase drops below this value (in uA).
-> +
-> +Optional properties:
-> +- pg-gpios: GPIO used for connecting the bq2425x device PG (Power Good) pin.
-> +    This pin is not available on all devices however it should be used if
-> +    possible as this is the recommended way to obtain the charger's input PG
-> +    state. If this pin is not specified a software-based approach for PG
-> +    detection is used.
-> +- ti,current-limit: The maximum current to be drawn from the charger's input
-> +    (in uA). If this property is not specified a USB D+/D- signal based charger
-> +    type detection is used (if available) and the input limit current is set
-> +    accordingly. If the D+/D- based detection is not available on a given device
-> +    a default of 500,000 is used (=500mA).
-> +- ti,ovp-voltage: Configures the over voltage protection voltage (in uV). If
-> +    not specified a default of 6,5000,000 (=6.5V) is used.
-> +- ti,in-dpm-voltage: Configures the threshold input voltage for the dynamic
-> +    power path management (in uV). If not specified a default of 4,360,000
-> +    (=4.36V) is used.
->  
->  Example:
->  
->  bq24257 {
->  	compatible = "ti,bq24257";
->  	reg = <0x6a>;
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
-> +
-> +	pg-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->  
->  	ti,battery-regulation-voltage = <4200000>;
->  	ti,charge-current = <1000000>;
->  	ti,termination-current = <50000>;
->  };
-> +
-> +Example:
-> +
-> +bq24250 {
-> +	compatible = "ti,bq24250";
-> +	reg = <0x6a>;
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
-> +
-> +	ti,battery-regulation-voltage = <4200000>;
-> +	ti,charge-current = <500000>;
-> +	ti,termination-current = <50000>;
-> +	ti,current-limit = <900000>;
-> +	ti,ovp-voltage = <9500000>;
-> +	ti,in-dpm-voltage = <4440000>;
-> +};
-
-Once again:
-
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Best regards,
-Krzysztof
+T24gTW9uLCBTZXAgMjgsIDIwMTUgYXQgMTI6MjY6MjhQTSArMDEwMCwgUnVzc2VsbCBLaW5nIC0g
+QVJNIExpbnV4IHdyb3RlOgo+IE9uIE1vbiwgU2VwIDI4LCAyMDE1IGF0IDExOjAxOjM0QU0gKzAy
+MDAsIEFybmF1ZCBQb3VsaXF1ZW4gd3JvdGU6Cj4gPiBmZXcgcXVlc3Rpb25zL3JlbWFya3MKPiA+
+IEJSLAo+ID4gQXJuYXVkCj4gPiAKPiA+ID4rc3RhdGljIHZvaWQgaGRtaV9jb2RlY19hYm9ydChz
+dHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+K3sKPiA+ID4rICAgIHN0cnVjdCBoZG1pX2NvZGVjX3By
+aXYgKmhjcCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+ID4gPisKPiA+ID4rICAgIGRldl9kYmco
+ZGV2LCAiJXMoKVxuIiwgX19mdW5jX18pOwo+ID4gPisKPiA+ID4rICAgIG11dGV4X2xvY2soJmhj
+cC0+Y3VycmVudF9zdHJlYW1fbG9jayk7Cj4gPiA+KyAgICBpZiAoaGNwLT5jdXJyZW50X3N0cmVh
+bSAmJiBoY3AtPmN1cnJlbnRfc3RyZWFtLT5ydW50aW1lICYmCj4gPiA+KyAgICAgICAgc25kX3Bj
+bV9ydW5uaW5nKGhjcC0+Y3VycmVudF9zdHJlYW0pKSB7Cj4gPiA+KyAgICAgICAgZGV2X2luZm8o
+ZGV2LCAiSERNSSBhdWRpbyBwbGF5YmFjayBhYm9ydGVkXG4iKTsKPiA+ID4rICAgICAgICBzbmRf
+cGNtX3N0cmVhbV9sb2NrX2lycShoY3AtPmN1cnJlbnRfc3RyZWFtKTsKPiA+ID4rICAgICAgICBz
+bmRfcGNtX3N0b3AoaGNwLT5jdXJyZW50X3N0cmVhbSwgU05EUlZfUENNX1NUQVRFX0RJU0NPTk5F
+Q1RFRCk7Cj4gPiA+KyAgICAgICAgc25kX3BjbV9zdHJlYW1fdW5sb2NrX2lycShoY3AtPmN1cnJl
+bnRfc3RyZWFtKTsKPiA+ID4rICAgIH0KPiA+ID4rICAgIG11dGV4X3VubG9jaygmaGNwLT5jdXJy
+ZW50X3N0cmVhbV9sb2NrKTsKPiA+ID4rfQo+ID4gRG9lcyBkcml2ZXIgc2hvdWxkIHN0b3AgdGhl
+IHN0cmVhbSBpbiBjYXNlIG9mIHVucGx1Zz8KPiA+IFRoaXMgY291bGQgZ2VuZXJhdGUgdW5leHBl
+Y3RlZCBiZWhhdmlvciBhdCBhcHBsaWNhdGlvbiBsZXZlbC4KPiA+IFBlcmhhcHMgc2hvdWxkIGJl
+IGJldHRlciBpZiB0aGlzIHBhcnQgaXMgbWFuYWdlZCBpbiBEUk0gZHJpdmVyLiBpZiBIRE1JCj4g
+PiBtYXN0ZXIsIEkyUyBidXMgc2hvdWxkIGJlIG1haW50YWluZWQgT04gdG8gY29uc3VtZSB0aGUg
+YXVkaW8gc3RyZWFtIHVudGlsCj4gPiBhcHBsaWNhdGlvbiBhY3Rpb24uCj4gCj4gSWYgaXQgZG9l
+cywgdGhhdCdzIHJlYWxseSBob3JyaWQuCgpBdG0gdGhlIHJ1bGUgZm9yIGRpc3BsYXkgb3V0cHV0
+cyBpcyB0aGF0IG5vdGhpbmcgZ2V0cyB5YW5rZWQgdW50aWwKdXNlcnNwYWNlIGFwcHJvdmVzLCBz
+aW5jZSBvdGhlcndpc2UgY29tcG9zaXRvcnMgZ2V0IHN0dWNrIChvciBmYWxsIG92ZXIKd2l0aCBh
+biB1bmV4cGVjdGVkIC1FSU5WQUwgZnJvbSB0aGUga2VybmVsKS4gVGhlIGV4Y2VwdGlvbiBpcyBE
+UCBNU1QKYmVjYXVzZSB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBpcyBhIGNvbXBsZXRlIGhh
+Y2sgZm9yIERQIE1TVCBzaW5rCmxpZmV0aW1lcyBhbmQgdGhhdCdzIHdoeSB3ZSBuZWVkIHRvIHN5
+bmNocm9ub3VzbHkgbnVrZSB0aGVtICh3aGljaCBtZWFucwpzaHV0dGluZyBkb3duIGV2ZXJ5dGhp
+bmcpLiBJJ20gc3VycHJpc2VkIG5vdCBhIGhvbGUgbG90IG1vcmUgcGVvcGxlCmNvbXBsYWluIGFi
+b3V0IHRoaXMgLi4uCi1EYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIs
+IEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
