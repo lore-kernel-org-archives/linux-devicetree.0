@@ -1,59 +1,55 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 3/3] ARM: bcm2835: Add the auxiliary clocks to the device tree.
-Date: Mon, 28 Sep 2015 12:26:37 -0700
-Message-ID: <87si5ymjki.fsf@eliezer.anholt.net>
-References: <1441923750-19404-1-git-send-email-eric@anholt.net> <1441923750-19404-4-git-send-email-eric@anholt.net> <5600BAC3.70506@wwwdotorg.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: License for ARM device tree file
+Date: Mon, 28 Sep 2015 20:29:31 +0100
+Message-ID: <20150928192931.GE21513@n2100.arm.linux.org.uk>
+References: <DM2PR0301MB07343BCB0B5059C96CA31438BA4F0@DM2PR0301MB0734.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5600BAC3.70506@wwwdotorg.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <DM2PR0301MB07343BCB0B5059C96CA31438BA4F0-Cwg/PA1lyPnRfvLtmsd4/5wN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Peter Newton <Peter.Newton-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Sep 28, 2015 at 07:14:30PM +0000, Li Leo wrote:
+> I saw some discussion going on last year about the permissive license
+> to be used in ARM device tree files.  I know a lot of files have been
+> changed to use GPLv2/X11 license.  But may I know if GPLv2/BSD 3-clause
+> dual license is still a valid license to use in ARM device tree files.
+> It has been our standard permissive license used for a long time in
+> many components like device trees in Power architecture.
 
-Stephen Warren <swarren@wwwdotorg.org> writes:
+It would have been nice to have had some input at the time that what
+little discussion there was happened.
 
-> On 09/10/2015 03:22 PM, Eric Anholt wrote:
->> These will be used for enabling UART1, SPI1, and SPI2.
->
->> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
->
->> +		aux_clocks: aux-clocks@0x7e215004 {
->> +			compatible = "brcm,bcm2835-aux-clock";
->> +			#clock-cells = <1>;
->> +			reg = <0x7e215004 0x4>;
->
-> Actually, I take back the ack on this patch. This HW module has two
-> registers. The reg property should include both of those registers so
-> that if SW needs to start using the other register at some time in the
-> future, the entire set of registers is already represented in DT.
+I'm sorry, but at this point I'm of the opinion that the window for
+discussing what license we switch to has been had, and the matter is
+settled; those who didn't take part in the discussion have themselves
+to blame if they don't like the outcome.
 
-If I changed it to "reg = <0x7e215000 0x8>" and use a #define for the
-clock register offset in patch 2/3, would I then have your ack?
+What I'm saying is that I doubt anyone has the stomach to go through
+another set of license changes on the existing files to suit some
+late-commer to the party.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+However, we can't dictate to people what license they wish to submit
+their work under; though, we can make the decision whether to accept
+it under the license terms or not.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I think the problem will come if we try to mix a file that's licensed
+one way, which includes files licensed under a different set of
+licenses... if you want to use a file licensed under BSD 3-clause but
+don't want to agree to the GPL license (so you're only bound by the
+BSD 3-clause license) and that file includes some GPL/X11 licensed
+files, then what?
 
-iQIcBAEBCgAGBQJWCZRtAAoJELXWKTbR/J7oJ1IQAIAG3pLxo/9VK8052WBjn0Y7
-0rhNcJkq20SPG+/BUt3524eDSLORnjIoS23jEAcalgI31srlE7MlE6CE3pilnqG2
-y/lk9YN3Eo4za2w/+rkOn2xMtDNoH/GuvL+Uxzcqex7z+u6djfTMZaRg8CMLEe4S
-Nn41YZsCfp1rfHSmKQZK1J7YkPeqgs3DonSCdmjvzVO5PZEPKHsULmXD1PbL8rGB
-ag7MMN68YUDd0axHqAmmNgkJ935QxTl0d6qWWsM1TCM00Lc8/NNpLH28gWvfQ9OT
-k6u6JFq+Ez+HFWLT8AOgWZukCBVLeyuMZYlDURPIQZnas9E6nErGOSnC7ClfyKwQ
-MRJ6DJr8czwGLufftlg9UkS5LTuOleJ6JO1IXNQwMFtFNDmRYGBY0VXjtjAG4MCb
-089o2QGiQvLFTKLbn1vu/+vZ1TzrWyIRlyrEUdDMV8ks7h6gR2w7o2TdK/KSBMeu
-br9/YbQOKt4HxEixTg4hkDyUMXsx73/aM581qDcpenSpC84BUtXYWhVigdtXM60S
-3ef4/UZUzYKQJwH2RM1VWyKvqP2alSw8Rqf7LZcdJe84Ipa2mb2aWzZobFNsnbcD
-3J1V1wBYb+OifQaNqNunmGDphDTt9vddilr7VDyjZWfjNYvWWHYztvdPPxCjTv/G
-v8D2JeT3tUlVRUKVTjpD
-=ERNW
------END PGP SIGNATURE-----
---=-=-=--
+IANAL.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
