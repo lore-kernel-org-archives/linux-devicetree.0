@@ -1,62 +1,77 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 0/9] Marvell NFC drivers for i2c and spi
-Date: Mon, 28 Sep 2015 14:33:05 +0200
-Message-ID: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v2 1/9] NFC: nfcmrvl: remove unneeded version defines
+Date: Mon, 28 Sep 2015 14:33:06 +0200
+Message-ID: <1443443594-14353-2-git-send-email-cuissard@marvell.com>
+References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443443594-14353-1-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/nfc/nfcmrvl/main.c | 7 ++-----
+ drivers/nfc/nfcmrvl/usb.c  | 5 +----
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-Please find patches that enable Marvell NFC controlled over i2c
-and spi. This patchset includes also firmware download support and
-few enhancements.
-
-V2 update: Add module license in spi driver, update makefile
-
-Br,
-
-Vincent Cuissard (9):
-  NFC: nfcmrvl: remove unneeded version defines
-  NFC: NCI: export nci_send_frame function
-  NFC: nfcmrvl: add firmware download support
-  NFC: nfcmrvl: allow low level drivers to configure head/tail room
-  NFC: nfcmrvl: add i2c driver
-  NFC: NCI: move generic spi driver to a module
-  NFC: NCI: allow spi driver to choose transfer clock
-  NFC: nfcmrvl: add spi driver
-  NFC: nfcmrvl: update device tree bindings for Marvell NFC
-
- .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  61 ++-
- drivers/nfc/nfcmrvl/Kconfig                        |  22 +
- drivers/nfc/nfcmrvl/Makefile                       |   8 +-
- drivers/nfc/nfcmrvl/fw_dnld.c                      | 561 +++++++++++++++++++++
- drivers/nfc/nfcmrvl/fw_dnld.h                      | 105 ++++
- drivers/nfc/nfcmrvl/i2c.c                          | 302 +++++++++++
- drivers/nfc/nfcmrvl/main.c                         |  64 ++-
- drivers/nfc/nfcmrvl/nfcmrvl.h                      |  22 +-
- drivers/nfc/nfcmrvl/spi.c                          | 242 +++++++++
- drivers/nfc/nfcmrvl/uart.c                         |  16 +-
- drivers/nfc/nfcmrvl/usb.c                          |   7 +-
- include/linux/platform_data/nfcmrvl.h              |  11 +
- include/net/nfc/nci.h                              |   1 +
- include/net/nfc/nci_core.h                         |   5 +
- net/nfc/nci/Kconfig                                |   2 +-
- net/nfc/nci/Makefile                               |   3 +-
- net/nfc/nci/core.c                                 |   3 +-
- net/nfc/nci/spi.c                                  |  11 +-
- 18 files changed, 1408 insertions(+), 38 deletions(-)
- create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.c
- create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.h
- create mode 100644 drivers/nfc/nfcmrvl/i2c.c
- create mode 100644 drivers/nfc/nfcmrvl/spi.c
-
---
+diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
+index 4a8866d..77e292f 100644
+--- a/drivers/nfc/nfcmrvl/main.c
++++ b/drivers/nfc/nfcmrvl/main.c
+@@ -1,7 +1,7 @@
+ /*
+  * Marvell NFC driver: major functions
+  *
+- * Copyright (C) 2014, Marvell International Ltd.
++ * Copyright (C) 2014-2015 Marvell International Ltd.
+  *
+  * This software file (the "File") is distributed by Marvell International
+  * Ltd. under the terms of the GNU General Public License Version 2, June 1991
+@@ -25,8 +25,6 @@
+ #include <net/nfc/nci_core.h>
+ #include "nfcmrvl.h"
+ 
+-#define VERSION "1.0"
+-
+ static int nfcmrvl_nci_open(struct nci_dev *ndev)
+ {
+ 	struct nfcmrvl_private *priv = nci_get_drvdata(ndev);
+@@ -252,6 +250,5 @@ int nfcmrvl_parse_dt(struct device_node *node,
+ EXPORT_SYMBOL_GPL(nfcmrvl_parse_dt);
+ 
+ MODULE_AUTHOR("Marvell International Ltd.");
+-MODULE_DESCRIPTION("Marvell NFC driver ver " VERSION);
+-MODULE_VERSION(VERSION);
++MODULE_DESCRIPTION("Marvell NFC driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
+index 7d1fe43..5e624d1 100644
+--- a/drivers/nfc/nfcmrvl/usb.c
++++ b/drivers/nfc/nfcmrvl/usb.c
+@@ -23,8 +23,6 @@
+ #include <net/nfc/nci_core.h>
+ #include "nfcmrvl.h"
+ 
+-#define VERSION "1.0"
+-
+ static struct usb_device_id nfcmrvl_table[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1286, 0x2046,
+ 					USB_CLASS_VENDOR_SPEC, 4, 1) },
+@@ -469,6 +467,5 @@ static struct usb_driver nfcmrvl_usb_driver = {
+ module_usb_driver(nfcmrvl_usb_driver);
+ 
+ MODULE_AUTHOR("Marvell International Ltd.");
+-MODULE_DESCRIPTION("Marvell NFC-over-USB driver ver " VERSION);
+-MODULE_VERSION(VERSION);
++MODULE_DESCRIPTION("Marvell NFC-over-USB driver");
+ MODULE_LICENSE("GPL v2");
+-- 
 2.2.0.33.gc18b867
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
