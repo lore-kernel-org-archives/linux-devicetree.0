@@ -1,36 +1,47 @@
-From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] powerpc/512x: add a device tree binding for
- LocalPlus Bus FIFO
-Date: Mon, 28 Sep 2015 08:26:55 -0500
-Message-ID: <5609401F.3010603@tabi.org>
-References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
- <1443115737-3948-3-git-send-email-alex.popov@linux.com>
- <560492C1.307@tabi.org> <56093F89.1020004@linux.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v7 06/15] power: bq24257: Add basic support for
+ bq24250/bq24251
+Date: Mon, 28 Sep 2015 08:38:10 -0500
+Message-ID: <20150928133810.GB12676@borg>
+References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
+ <1443196460-26156-7-git-send-email-dannenberg@ti.com>
+ <56093D50.5010604@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56093F89.1020004-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56093D50.5010604@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Alexander Popov wrote:
-> I've just followed devicetree/bindings/dma/dma.txt...
-> This "rx-tx" doesn't mean much but it could show that LocalPlus Bus FIFO
-> uses a single DMA read-write channel. Should I really drop it?
+On Mon, Sep 28, 2015 at 10:14:56PM +0900, Krzysztof Kozlowski wrote:
+> W dniu 26.09.2015 o 00:54, Andreas Dannenberg pisze:
+> > This patch adds basic support for bq24250 and bq24251 which are very
+> > similar to the bq24257 the driver was originally written for. Basic
+> > support means the ability to select a device through Kconfig, DT and
+> > ACPI, an instance variable allowing to check which chip is active, and
+> > the reporting back of the selected device through the model_name power
+> > supply sysfs property.
+> > 
+> > This patch by itself is not sufficient to actually use those two added
+> > devices in a real-world setting due to some feature differences which
+> > are addressed by other patches in this series.
+> > 
+> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> 
+> For the second time (after 1st patch changing DT documentation) I am
+> confused - my reviewed-by was not added.
+> 
+> I assume it got lost due to misunderstanding or something else but
+> anyway I won't insist. If you want it, just let me know.
 
-Hmmm, I'm not sure.  Is there anything else (besides your driver) that 
-parses this device tree node?
+Hi Krzysztof, thanks for the reviewed-by's. Yes there was a
+misunderstanding. Will make sure to carry them forward from now on.
 
-dma.txt says this:
+Regards,
 
-	"The specific strings that can be used are defined in the binding of 
-the DMA client device."
-
-So this looks like it's driver-specific, but it is a required property.
-I guess you should keep it, but I think you should get a second opinion.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andreas Dannenberg
+Texas Instruments Inc
