@@ -1,30 +1,32 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 05/15] power: bq24257: Simplify
- bq24257_power_supply_init()
-Date: Mon, 28 Sep 2015 22:10:45 +0900
-Message-ID: <56093C55.2030900@samsung.com>
-References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
- <1443196460-26156-6-git-send-email-dannenberg@ti.com>
+From: Alexander Popov <alex.popov@linux.com>
+Subject: Re: [PATCH v3 3/3] dmaengine: mpc512x: initialize with
+ subsys_initcall()
+Date: Mon, 28 Sep 2015 16:15:08 +0300
+Message-ID: <56093D5C.70809@linux.com>
+References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
+ <1443115737-3948-4-git-send-email-alex.popov@linux.com>
+ <5604925C.1050803@tabi.org>
+Reply-To: alex.popov@linux.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443196460-26156-6-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5604925C.1050803@tabi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@tabi.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Anatolij Gustschin <agust@denx.de>, Gerhard Sittig <gsi@denx.de>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Popov <alex.popov@linux.com>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 26.09.2015 o 00:54, Andreas Dannenberg pisze:
-> Eliminate a few lines of code by using the PTR_ERR_OR_ZERO() macro.
+On 25.09.2015 03:16, Timur Tabi wrote:
+> Alexander Popov wrote:
+>> Initialize Freescale MPC512x DMA driver with subsys_initcall()
+>> to allow the depending drivers to call dma_request_slave_channel()
+>> during their probe.
+>>
+>> Signed-off-by: Alexander Popov<alex.popov@linux.com>
 > 
-> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/power/bq24257_charger.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
+> Is there any way we can use -EPROBEDEFER instead?
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Thanks Timur, I'll try.
 
 Best regards,
-Krzysztof
+Alexander
