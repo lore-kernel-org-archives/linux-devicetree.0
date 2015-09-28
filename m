@@ -1,67 +1,85 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 02/15] power: bq24257: Remove IRQ config through
- stat-gpios
-Date: Mon, 28 Sep 2015 18:38:26 +0200
-Message-ID: <20150928163825.GD3660@earth>
-References: <1443196460-26156-1-git-send-email-dannenberg@ti.com>
- <1443196460-26156-3-git-send-email-dannenberg@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1sNVjLsmu1MXqwQ/"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443196460-26156-3-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH v4 0/9] Making the generic ACPI GSI layer irqdomain aware
+Date: Mon, 28 Sep 2015 17:42:53 +0100
+Message-ID: <1443458582-7497-1-git-send-email-marc.zyngier@arm.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Jason Cooper <jason@lakedaemon.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Graeme Gregory <graeme@xora.org.uk>, Jake Oshins <jakeo@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
+The irqdomain code is not entierely ACPI friendly, as it has some
+built-in knowledge of the device-tree. Nothing too harmful, but enough
+to scare the ARM ACPI developpers which end up with their own version
+of the square wheel.
 
---1sNVjLsmu1MXqwQ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This small patch series adapts the irqdomain code to remove the
+hurdles that prevent the full blown irqdomain subsystem to be used on
+ACPI, creates an interface between the GSI layer and the irqdomain,
+and as an example, convert the ARM GIC ACPI support to use irqdomains
+as originally intended.
 
-Hi,
+Overall, this gives us a way to use irqdomains on both DT and ACPI
+enabled platforms, having very little changes made to the actual
+drivers (other than the probing infrastructure). Because we keep the
+flow of information between the various layers identical between ACPI
+and DT, we immediately benefit from the existing infrastructure. The
+"convert the GSI information to be DT friendly" is admitedly not very
+pretty, but I see it as a stepping stone towards unifying the two
+structures.
 
-On Fri, Sep 25, 2015 at 10:54:07AM -0500, Andreas Dannenberg wrote:
-> At the time the driver was written GpioInt resources in ACPI were not
-> passed to the driver in client->irq, as opposed to DT enumeration. To
-> accommodate this use case, a "stat-gpios" property was introduced to
-> allow configuring the IRQ.
->=20
-> However this issue with ACPI was fixed in commit "845c877 i2c / ACPI:
-> Assign IRQ for devices that have GpioInt automatically" and makes this
-> workaround no longer necessary, hence we can remove the support for the
-> "stat-gpios" property and the associated code from the bq24257 driver.
+This has been test-booted on Juno, is based on 4.3-rc3, and available at:
 
-Thanks, queued.
+git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/gsi-irq-domain-v4
 
--- Sebastian
+* From v3:
+   - Got rid of the whole "void *" malarchy, and introduce a DT-based
+     fwnode_handle allocator. Much smaller patch, better type checking,
+     and a path forward to introduce fwnode_handle as the irqdomain
+     identifier.
+   - Small rework of the GIC stuff (cleanup, mostly).
 
---1sNVjLsmu1MXqwQ/
-Content-Type: application/pgp-signature; name="signature.asc"
+* From v2:
+   - Rebased on vanilla 4.3-rc1
+   - Added the IDR infrastructure to irqdomain.c so that drivers don't
+     have to come up with their own way of allocating identifiers
+   - Changed the acpi_set_irq_model() signature to directly take a
+     void *domain_token
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+* From v1:
+  - Improved my Coccinelle foo and hopefully caught all the
+    irq_domain.of_node users this time
+  - Decoupled acpi_irq_model from domain_token. These are now two
+    separate values that can be set independently
+  - Moved the duty of populating acpi_gsi_descriptor to the interrupt
+    controller, as it keeps the knowledge of the mapping with
+    of_phandle_args in a single location
+  - Generic accessor to set acpi_irq_model, domain_token and the
+    populate function all in one go from the interrupt controller
+  - General cleanup
 
-iQIcBAEBCgAGBQJWCW0BAAoJENju1/PIO/qaUOsP/AslesqcRf3DIzhbbZik7xR2
-1j6fMTnWqkVOT+tGk5gFF+DhWJwXKmfibPG04yNNojuMZ1FXjY9CVsqrIl5ncUWP
-cvjDRde1wRwibtnxhMjIDw14B3gxk3wVGEHRELCSTFiMpISsKL83PbqqdIKMJpKW
-me0p0BpS0u1xq4DGRsnw7XFE5TB+DRj/Is9SPt9ErjWIxHKxQEAsSWalk+oX3c4v
-ZSf/oLnoj/iuXLMOindPuhYKS6HWadoJjxKfJV6/cxvPw9nLeVLTJk1NJ1itlo9E
-N6rCj6wTNcMdacD05kEJGIzJoShdpUxgcfXwqOXJXPGGocmJPpRUaFlF3QPeb9ii
-pLI8qz/5ljIGeSh7tG29ziyqm6IWPNINzupWgjL4ljKuYR5Bqpiw2iVInCt6dMAy
-ImCpWZLc2OYOw/aGaORthe+DHRPsp7lGbppEmwYNkjvysvDxxjbKm+HahxDr/2kA
-490K3EeYpQVXzKFHHRJpqWUwcYaxi8VWlbpjCSaaSt4s/GPh6iL/Rr0xBdBXDkco
-D+jW+Gm+FA/ox+ct0nQME4inHXvynFOEu8vencRUfE1LrXMaVLhTRvDven6BfePr
-ttUMGqzpGfsC9iVnZJ2I4sVy/1lUMs9ZBVR9dAS2GGtvGPX099Pcds9CPAA0ch9G
-QNKe5csieX/OaTkx4GLB
-=RlQL
------END PGP SIGNATURE-----
+Marc Zyngier (9):
+  drivers/of: Introduce of_node_alloc
+  genirq/irqdomain: Add irq_create_acpi_mapping
+  genirq/irqdomain: Add a fwnode_handle allocator
+  acpi/gsi: Always perform an irq domain lookup
+  acpi/gsi: Add acpi_set_irq_model to initialize the GSI layer
+  acpi/gsi: Select OF_DYNAMIC when ACPI_GENERIC_GSI is selected
+  irqchip/GIC: Get rid of gic_init_bases()
+  irqchip/GIC: Switch ACPI support to stacked domains
+  acpi/gsi: Cleanup acpi_register_gsi
 
---1sNVjLsmu1MXqwQ/--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/acpi/Kconfig            |  1 +
+ drivers/acpi/gsi.c              | 61 ++++++++++++++++++++++++-------------
+ drivers/irqchip/irq-gic.c       | 66 ++++++++++++++++++++++++++++++-----------
+ drivers/of/dynamic.c            | 22 ++++++++++++++
+ include/linux/acpi.h            | 14 +++++++++
+ include/linux/irqchip/arm-gic.h |  9 ++----
+ include/linux/irqdomain.h       |  2 ++
+ include/linux/of.h              |  5 ++++
+ kernel/irq/irqdomain.c          | 48 ++++++++++++++++++++++++++++++
+ 9 files changed, 183 insertions(+), 45 deletions(-)
+
+-- 
+2.1.4
+
