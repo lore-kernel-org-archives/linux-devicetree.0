@@ -1,28 +1,35 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [RESEND PATCH 0/2] ST PLL fixes for 4.3-rc2
-Date: Sun, 27 Sep 2015 23:48:06 +0100
-Message-ID: <20150927224806.GB18435@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
+From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] ASoC: atmel-classd: add driver for Atmel CLASSD
+Date: Mon, 28 Sep 2015 09:36:37 +0800
+Message-ID: <560899A5.4050602@atmel.com>
+References: <1443073287-17849-1-git-send-email-songjun.wu@atmel.com>
+ <20150925180728.GP30445@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442389379-9298-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150925180728.GP30445-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
 
-On Wed, 16 Sep 2015, Gabriel Fernandez wrote:
 
-> This patch set fixes a kernel crash :
-
-For the series: -
-
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
-
-regards,
-
-Peter
+On 9/26/2015 02:07, Mark Brown wrote:
+> On Thu, Sep 24, 2015 at 01:41:25PM +0800, Songjun Wu wrote:
+>
+>> Songjun Wu (2):
+>>    ASoC: atmel-classd: add the Audio Class D Amplifier
+>>    ASoC: atmel-classd: DT binding for Class D audio amplifier driver
+>
+> I don't seem to have the second patch with the binding documentation.
+>
+Sorry, I use the patman to send the patch this time.
+And the patman will sent the patch automatically.
+I didn't check, and it missed you.
+I will forward to you at once.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
