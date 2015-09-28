@@ -1,82 +1,31 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH v4 3/9] genirq/irqdomain: Add a fwnode_handle allocator
-Date: Mon, 28 Sep 2015 17:42:56 +0100
-Message-ID: <1443458582-7497-4-git-send-email-marc.zyngier@arm.com>
-References: <1443458582-7497-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443458582-7497-1-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Jason Cooper <jason@lakedaemon.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Graeme Gregory <graeme@xora.org.uk>, Jake Oshins <jakeo@microsoft.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] memory: pl17x: add support of PL175 and PL176 controllers
+Date: Mon, 28 Sep 2015 19:50:43 +0300
+Message-ID: <1443459043-24144-1-git-send-email-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to be able to reference an irqdomain from ACPI, we need
-to be able to create an identifier, which is a struct device_node.
+The change adds support of ARM PrimeCell PL175 MPMC and PL176 MPMC,
+the static memory controllers on devices are similar to one found on
+ARM PrimeCell PL172, add support to the existing driver.
 
-This device node does't really fit the ACPI infrastructure, so
-we cunningly hide it by returning the contained fwnode_handle.
-This will help a (still hypothetical) further migration of
-irqdomain from device_node to fwnode_handle.
+Vladimir Zapolskiy (4):
+  memory: pl172: correct MPMC peripheral ID register bits
+  memory: pl172: add ARM PrimeCell PL175 MPMC support
+  memory: pl172: add ARM PrimeCell PL176 MPMC support
+  doc: dt: arm,pl172: add description of PL175 and PL176 controllers
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- include/linux/irqdomain.h |  2 ++
- kernel/irq/irqdomain.c    | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ .../bindings/memory-controllers/arm,pl172.txt      |  8 ++++---
+ drivers/memory/pl172.c                             | 26 +++++++++++++++++++---
+ 2 files changed, 28 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index d3ca792..3193c61 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -162,6 +162,8 @@ enum {
- };
- 
- #ifdef CONFIG_IRQ_DOMAIN
-+struct fwnode_handle *irq_domain_alloc_fwnode(void *data);
-+void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
- struct irq_domain *__irq_domain_add(struct device_node *of_node, int size,
- 				    irq_hw_number_t hwirq_max, int direct_max,
- 				    const struct irq_domain_ops *ops,
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index e5c1e4c..5e7214a 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -29,6 +29,36 @@ static int irq_domain_alloc_descs(int virq, unsigned int nr_irqs,
- static void irq_domain_check_hierarchy(struct irq_domain *domain);
- 
- /**
-+ * irq_domain_alloc_fwnode - Allocate a OF-backed fwnode_handle suitable for
-+ *                           identifying an irq domain
-+ * @data: optional user-provided data
-+ *
-+ * Allocate a struct device_node, and return a poiner to the embedded
-+ * fwnode_handle (or NULL on failure).
-+ */
-+struct fwnode_handle *irq_domain_alloc_fwnode(void *data)
-+{
-+	struct device_node *of_node;
-+
-+	of_node = of_node_alloc("irqdomain@%p", data);
-+	if (!of_node)
-+		return NULL;
-+
-+	of_node->data = data;
-+	return &of_node->fwnode;
-+}
-+
-+/**
-+ * irq_domain_free_fwnode - Free a OF-backed fwnode_handle
-+ *
-+ * Free a fwnode_handle allocated with irq_domain_alloc_fwnode.
-+ */
-+void irq_domain_free_fwnode(struct fwnode_handle *fwnode)
-+{
-+	of_node_put(to_of_node(fwnode));
-+}
-+
-+/**
-  * __irq_domain_add() - Allocate a new irq_domain data structure
-  * @of_node: optional device-tree node of the interrupt controller
-  * @size: Size of linear map; 0 for radix mapping only
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
