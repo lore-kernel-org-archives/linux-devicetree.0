@@ -1,315 +1,305 @@
-From: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] powerpc/dts: Add DT alias for Freescale eSPI controller
-Date: Mon, 28 Sep 2015 03:02:28 +0000
-Message-ID: <CY1PR0301MB07808FF05FF2D1554F2085008B4F0@CY1PR0301MB0780.namprd03.prod.outlook.com>
-References: <1439985305-27193-1-git-send-email-B48286@freescale.com>
- <CY1PR0301MB0780386D9EE54B15390F44178B5C0@CY1PR0301MB0780.namprd03.prod.outlook.com>
+From: chunfeng yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v8 3/5] usb: phy: add usb3.0 phy driver for mt65xx SoCs
+Date: Mon, 28 Sep 2015 11:35:03 +0800
+Message-ID: <1443411303.5901.9.camel@mhfsdcap03>
+References: <1442385864-4368-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1442385864-4368-4-git-send-email-chunfeng.yun@mediatek.com>
+	 <55FBB24A.2010600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CY1PR0301MB0780386D9EE54B15390F44178B5C0-YrwGdl+PljnwWZenWrSUgZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Hu Vincent <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55FBB24A.2010600@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpDb3VsZCB5b3UgcGxlYXNlIGhlbHAgdG8gYXBwbHkgdGhpcyBwYXRjaCwgbm8g
-Y29tbWVudCBmb3IgYSBtb250aC4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIb3UgWmhpcWlhbmctQjQ4Mjg2DQo+IFNlbnQ6IDIw
-MTXE6jnUwjE1yNUgMTU6NTENCj4gVG86IEhvdSBaaGlxaWFuZy1CNDgyODY7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsNCj4gcm9iaCtkdEBrZXJuZWwu
-b3JnOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBpamMrZGV2
-aWNldHJlZUBoZWxsaW9uLm9yZy51aw0KPiBDYzogSHUgTWluZ2thaS1CMjEyODQNCj4gU3ViamVj
-dDogUkU6IFtQQVRDSF0gcG93ZXJwYy9kdHM6IEFkZCBEVCBhbGlhcyBmb3IgRnJlZXNjYWxlIGVT
-UEkNCj4gY29udHJvbGxlcg0KPiANCj4gSGksDQo+IA0KPiBBbnkgcmVzcG9uc2UsIHBsZWFzZSBj
-b21tZW50Lg0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IFpo
-aXFpYW5nIEhvdSBbbWFpbHRvOkI0ODI4NkBmcmVlc2NhbGUuY29tXQ0KPiA+IFNlbnQ6IDIwMTXE
-6jjUwjE5yNUgMTk6NTUNCj4gPiBUbzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGdhbGFr
-QGNvZGVhdXJvcmEub3JnOw0KPiA+IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0u
-Y29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9y
-Zy51aw0KPiA+IENjOiBIdSBNaW5na2FpLUIyMTI4NDsgSG91IFpoaXFpYW5nLUI0ODI4Ng0KPiA+
-IFN1YmplY3Q6IFtQQVRDSF0gcG93ZXJwYy9kdHM6IEFkZCBEVCBhbGlhcyBmb3IgRnJlZXNjYWxl
-IGVTUEkNCj4gPiBjb250cm9sbGVyDQo+ID4NCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPEI0ODI4
-NkBmcmVlc2NhbGUuY29tPg0KPiA+DQo+ID4gQWRkIGFsaWFzZXMgZm9yIGVTUEkgZGV2aWNlIG5v
-ZGUgdG8gYXNzaWduIHRoZSBhbGlhcyBpZCB0byB0aGUgYnVzDQo+ID4gbnVtYmVyIG9mIHNwaV9t
-YXN0ZXIuDQo+ID4NCj4gPiBGb3IgdGhlIHBsYXRmb3JtcyB1c2VkIHRoZSBkZXZpY2UgdHJlZSwg
-dGhlIGJ1cyBudW1iZXJzIGFyZQ0KPiA+IGR5bmFtaWNhbGx5IGFzc2lnbmVkIGFuZCBhcmUgbm90
-IHByZWRpY3RhYmxlLiBIb3dldmVyLCBzb21ldGltZXMgaXQNCj4gPiBtdXN0IGJlIGZpZ3VyZWQg
-b3V0LCBlLmcuIHVzaW5nIG10ZHBhcnRzIGluIGNtZGxpbmUgdG8gc3BlY2lmeSB0aGUNCj4gbGF5
-b3V0IG9mIHNwaSBmbGFzaC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8
-QjQ4Mjg2QGZyZWVzY2FsZS5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvYjQ0MjBzaS1wcmUuZHRzaSAgICB8IDEgKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9k
-dHMvZnNsL2I0ODYwc2ktcHJlLmR0c2kgICAgfCAxICsNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaSAgICAgIHwgMiArLQ0KPiA+ICBhcmNoL3Bvd2VycGMvYm9v
-dC9kdHMvZnNsL21wYzg1MzZzaS1wb3N0LmR0c2kgfCAyICstDQo+ID4gYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC9tcGM4NTM2c2ktcHJlLmR0c2kgIHwgMSArDQo+ID4gIGFyY2gvcG93ZXJwYy9i
-b290L2R0cy9mc2wvcDEwMjBzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4gPiAgYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9wMTAyMHNpLXByZS5kdHNpICAgIHwgMSArDQo+ID4gIGFyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDEwMjFzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4gPiAgYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMXNpLXByZS5kdHNpICAgIHwgMSArDQo+ID4gIGFyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvcDEwMjJzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4gPiAgYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMnNpLXByZS5kdHNpICAgIHwgMSArDQo+ID4gIGFyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4gPiAgYXJj
-aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyM3NpLXByZS5kdHNpICAgIHwgMSArDQo+ID4gIGFy
-Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4gPiAg
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXByZS5kdHNpICAgIHwgMSArDQo+ID4g
-IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kgICB8IDIgKy0NCj4g
-PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXByZS5kdHNpICAgIHwgMSArDQo+
-ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kgICB8IDIgKy0N
-Cj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXByZS5kdHNpICAgIHwgMSAr
-DQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgICB8IDIg
-Ky0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXByZS5kdHNpICAgIHwg
-MSArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwNDBzaS1wb3N0LmR0c2kgICB8
-IDIgKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXByZS5kdHNpICAg
-IHwgMSArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwMjNzaS1wb3N0LmR0c2kg
-ICB8IDIgKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyeHNpLXByZS5kdHNp
-ICAgIHwgMSArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0
-c2kgICB8IDIgKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0eHNpLXByZS5k
-dHNpICAgIHwgMSArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0
-LmR0c2kgICB8IDIgKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4eHNpLXBy
-ZS5kdHNpICAgIHwgMSArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1w
-b3N0LmR0c2kgICB8IDIgKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90NDI0MHNp
-LXByZS5kdHNpICAgIHwgMSArDQo+ID4gIDMxIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMo
-KyksIDE1IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9i
-b290L2R0cy9mc2wvYjQ0MjBzaS1wcmUuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L2ZzbC9iNDQyMHNpLXByZS5kdHNpDQo+ID4gaW5kZXggMzM4YWY3ZS4uN2UxNjRkYSAxMDA2NDQN
-Cj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0NDIwc2ktcHJlLmR0c2kNCj4g
-PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0NDIwc2ktcHJlLmR0c2kNCj4gPiBA
-QCAtNTQsNiArNTQsNyBAQA0KPiA+ICAJCWRtYTAgPSAmZG1hMDsNCj4gPiAgCQlkbWExID0gJmRt
-YTE7DQo+ID4gIAkJc2RoYyA9ICZzZGhjOw0KPiA+ICsJCXNwaTAgPSAmc3BpMDsNCj4gPiAgCX07
-DQo+ID4NCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0
-ODYwc2ktcHJlLmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1w
-cmUuZHRzaQ0KPiA+IGluZGV4IDE5NDhmNzMuLmI2ZTE3MjQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJj
-aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXByZS5kdHNpDQo+ID4gKysrIGIvYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXByZS5kdHNpDQo+ID4gQEAgLTU0LDYgKzU0LDcg
-QEANCj4gPiAgCQlkbWEwID0gJmRtYTA7DQo+ID4gIAkJZG1hMSA9ICZkbWExOw0KPiA+ICAJCXNk
-aGMgPSAmc2RoYzsNCj4gPiArCQlzcGkwID0gJnNwaTA7DQo+ID4gIAl9Ow0KPiA+DQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQ0K
-PiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNHNpLXBvc3QuZHRzaQ0KPiA+IGluZGV4
-IDYwMzkxMGEuLjZmYmQ2NTEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L2ZzbC9iNHNpLXBvc3QuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
-YjRzaS1wb3N0LmR0c2kNCj4gPiBAQCAtNDM5LDcgKzQzOSw3IEBADQo+ID4gIAl9Ow0KPiA+DQo+
-ID4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+ID4gLQlzcGlAMTEwMDAwIHsNCj4g
-PiArCXNwaTA6IHNwaUAxMTAwMDAgew0KPiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9
-IDw0PjsNCj4gPiAgCX07DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9tcGM4NTM2c2ktcG9zdC5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL21wYzg1MzZzaS1wb3N0LmR0c2kNCj4gPiBpbmRleCBjOGIyZGFhLi4xYzFjMWZlIDEwMDY0
-NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXBvc3QuZHRz
-aQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXBvc3QuZHRz
-aQ0KPiA+IEBAIC0xNjQsNyArMTY0LDcgQEANCj4gPiAgL2luY2x1ZGUvICJwcTMtZHVhcnQtMC5k
-dHNpIg0KPiA+DQo+ID4gIC9pbmNsdWRlLyAicHEzLWVzcGktMC5kdHNpIg0KPiA+IC0Jc3BpQDcw
-MDAgew0KPiA+ICsJc3BpMDogc3BpQDcwMDAgew0KPiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2Vs
-ZWN0cyA9IDw0PjsNCj4gPiAgCX07DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9tcGM4NTM2c2ktcHJlLmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvbXBjODUzNnNpLXByZS5kdHNpDQo+ID4gaW5kZXggMTUyOTA2Zi4uOGE2YjdlNyAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL21wYzg1MzZzaS1wcmUu
-ZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvbXBjODUzNnNpLXByZS5k
-dHNpDQo+ID4gQEAgLTUxLDYgKzUxLDcgQEANCj4gPiAgCQlwY2kxID0gJnBjaTE7DQo+ID4gIAkJ
-cGNpMiA9ICZwY2kyOw0KPiA+ICAJCXBjaTMgPSAmcGNpMzsNCj4gPiArCQlzcGkwID0gJnNwaTA7
-DQo+ID4gIAl9Ow0KPiA+DQo+ID4gIAljcHVzIHsNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMHNpLXBvc3QuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC9wMTAyMHNpLXBvc3QuZHRzaQ0KPiA+IGluZGV4IDY0MmRjM2EuLjJlZTJjMGYg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMHNpLXBvc3Qu
-ZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjBzaS1wb3N0LmR0
-c2kNCj4gPiBAQCAtMTI3LDcgKzEyNyw3IEBADQo+ID4gIC9pbmNsdWRlLyAicHEzLWR1YXJ0LTAu
-ZHRzaSINCj4gPg0KPiA+ICAvaW5jbHVkZS8gInBxMy1lc3BpLTAuZHRzaSINCj4gPiAtCXNwaUA3
-MDAwIHsNCj4gPiArCXNwaTA6IHNwaUA3MDAwIHsNCj4gPiAgCQlmc2wsZXNwaS1udW0tY2hpcHNl
-bGVjdHMgPSA8ND47DQo+ID4gIAl9Ow0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDEwMjBzaS1wcmUuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9wMTAyMHNpLXByZS5kdHNpDQo+ID4gaW5kZXggZmVkOWM0Yy4uZTQwZWVmOCAxMDA2
-NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIwc2ktcHJlLmR0c2kN
-Cj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIwc2ktcHJlLmR0c2kNCj4g
-PiBAQCAtNTAsNiArNTAsNyBAQA0KPiA+ICAJCWV0aGVybmV0MiA9ICZlbmV0MjsNCj4gPiAgCQlw
-Y2kwID0gJnBjaTA7DQo+ID4gIAkJcGNpMSA9ICZwY2kxOw0KPiA+ICsJCXNwaTAgPSAmc3BpMDsN
-Cj4gPiAgCX07DQo+ID4NCj4gPiAgCWNwdXMgew0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL3AxMDIxc2ktcG9zdC5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9v
-dC9kdHMvZnNsL3AxMDIxc2ktcG9zdC5kdHNpDQo+ID4gaW5kZXggNDA3Y2I1Zi4uMjZmZmNiNSAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIxc2ktcG9zdC5k
-dHNpDQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMXNpLXBvc3QuZHRz
-aQ0KPiA+IEBAIC0xMjcsNyArMTI3LDcgQEANCj4gPiAgL2luY2x1ZGUvICJwcTMtZHVhcnQtMC5k
-dHNpIg0KPiA+DQo+ID4gIC9pbmNsdWRlLyAicHEzLWVzcGktMC5kdHNpIg0KPiA+IC0Jc3BpQDcw
-MDAgew0KPiA+ICsJc3BpMDogc3BpQDcwMDAgew0KPiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2Vs
-ZWN0cyA9IDw0PjsNCj4gPiAgCX07DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9wMTAyMXNpLXByZS5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9k
-dHMvZnNsL3AxMDIxc2ktcHJlLmR0c2kNCj4gPiBpbmRleCAzNjE2MWI1Li4wZTQxNWY2IDEwMDY0
-NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjFzaS1wcmUuZHRzaQ0K
-PiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjFzaS1wcmUuZHRzaQ0KPiA+
-IEBAIC01MCw2ICs1MCw3IEBADQo+ID4gIAkJZXRoZXJuZXQyID0gJmVuZXQyOw0KPiA+ICAJCXBj
-aTAgPSAmcGNpMDsNCj4gPiAgCQlwY2kxID0gJnBjaTE7DQo+ID4gKwkJc3BpMCA9ICZzcGkwOw0K
-PiA+ICAJfTsNCj4gPg0KPiA+ICAJY3B1cyB7DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDEwMjJzaS1wb3N0LmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvcDEwMjJzaS1wb3N0LmR0c2kNCj4gPiBpbmRleCBlYmYyMDIyLi5iMjIwZTNlIDEw
-MDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjJzaS1wb3N0LmR0
-c2kNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIyc2ktcG9zdC5kdHNp
-DQo+ID4gQEAgLTE1OSw3ICsxNTksNyBAQA0KPiA+ICAvaW5jbHVkZS8gInBxMy1pMmMtMS5kdHNp
-Ig0KPiA+ICAvaW5jbHVkZS8gInBxMy1kdWFydC0wLmR0c2kiDQo+ID4gIC9pbmNsdWRlLyAicHEz
-LWVzcGktMC5kdHNpIg0KPiA+IC0Jc3BpQDcwMDAgew0KPiA+ICsJc3BpMDogc3BpQDcwMDAgew0K
-PiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gPiAgCX07DQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMTAyMnNpLXByZS5kdHNp
-DQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIyc2ktcHJlLmR0c2kNCj4gPiBp
-bmRleCAxOTU2ZGVhLi44NGYzMjIyIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvcDEwMjJzaS1wcmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvcDEwMjJzaS1wcmUuZHRzaQ0KPiA+IEBAIC01MCw2ICs1MCw3IEBADQo+ID4gIAkJcGNp
-MCA9ICZwY2kwOw0KPiA+ICAJCXBjaTEgPSAmcGNpMTsNCj4gPiAgCQlwY2kyID0gJnBjaTI7DQo+
-ID4gKwkJc3BpMCA9ICZzcGkwOw0KPiA+ICAJfTsNCj4gPg0KPiA+ICAJY3B1cyB7DQo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kNCj4g
-PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kNCj4gPiBpbmRl
-eCBkYTZkM2ZjLi5kN2YyMWM4IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3AxMDIzc2ktcG9zdC5kdHNpDQo+ID4gQEAgLTE4OSw3ICsxODksNyBAQA0KPiA+ICAvaW5j
-bHVkZS8gInBxMy1kdWFydC0wLmR0c2kiDQo+ID4NCj4gPiAgL2luY2x1ZGUvICJwcTMtZXNwaS0w
-LmR0c2kiDQo+ID4gLQlzcGlANzAwMCB7DQo+ID4gKwlzcGkwOiBzcGlANzAwMCB7DQo+ID4gIAkJ
-ZnNsLGVzcGktbnVtLWNoaXBzZWxlY3RzID0gPDQ+Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AxMDIzc2ktcHJlLmR0c2kNCj4gPiBi
-L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wcmUuZHRzaQ0KPiA+IGluZGV4IDEz
-MmExNTIuLjcwNjAxZWM4IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvcDEwMjNzaS1wcmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
-cDEwMjNzaS1wcmUuZHRzaQ0KPiA+IEBAIC00OCw2ICs0OCw3IEBADQo+ID4gIAkJcGNpMCA9ICZw
-Y2kwOw0KPiA+ICAJCXBjaTEgPSAmcGNpMTsNCj4gPiAgCQlwY2kyID0gJnBjaTI7DQo+ID4gKwkJ
-c3BpMCA9ICZzcGkwOw0KPiA+DQo+ID4gIAkJY3J5cHRvID0gJmNyeXB0bzsNCj4gPiAgCQlzZWNf
-anIwID0gJnNlY19qcjA7DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvcDIwNDFzaS1wb3N0LmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIw
-NDFzaS1wb3N0LmR0c2kNCj4gPiBpbmRleCAwNGFkMTc3Li44ZWRkMmJjIDEwMDY0NA0KPiA+IC0t
-LSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kNCj4gPiArKysg
-Yi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpDQo+ID4gQEAgLTM3
-Niw3ICszNzYsNyBAQA0KPiA+ICAJfTsNCj4gPg0KPiA+ICAvaW5jbHVkZS8gInFvcmlxLWVzcGkt
-MC5kdHNpIg0KPiA+IC0Jc3BpQDExMDAwMCB7DQo+ID4gKwlzcGkwOiBzcGlAMTEwMDAwIHsNCj4g
-PiAgCQlmc2wsZXNwaS1udW0tY2hpcHNlbGVjdHMgPSA8ND47DQo+ID4gIAl9Ow0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wcmUuZHRzaQ0K
-PiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXByZS5kdHNpDQo+ID4gaW5k
-ZXggYjFlYTE0Ny4uNDc2YzAzMiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9k
-dHMvZnNsL3AyMDQxc2ktcHJlLmR0c2kNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3AyMDQxc2ktcHJlLmR0c2kNCj4gPiBAQCAtNTMsNiArNTMsNyBAQA0KPiA+ICAJCXBjaTAg
-PSAmcGNpMDsNCj4gPiAgCQlwY2kxID0gJnBjaTE7DQo+ID4gIAkJcGNpMiA9ICZwY2kyOw0KPiA+
-ICsJCXNwaTAgPSAmc3BpMDsNCj4gPiAgCQl1c2IwID0gJnVzYjA7DQo+ID4gIAkJdXNiMSA9ICZ1
-c2IxOw0KPiA+ICAJCWRtYTAgPSAmZG1hMDsNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaQ0KPiA+IGluZGV4IDJjYWIxOGEuLmMzOGJmNjcgMTAw
-NjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRz
-aQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kN
-Cj4gPiBAQCAtNDAzLDcgKzQwMyw3IEBADQo+ID4gIAl9Ow0KPiA+DQo+ID4gIC9pbmNsdWRlLyAi
-cW9yaXEtZXNwaS0wLmR0c2kiDQo+ID4gLQlzcGlAMTEwMDAwIHsNCj4gPiArCXNwaTA6IHNwaUAx
-MTAwMDAgew0KPiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gPiAgCX07
-DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNp
-LXByZS5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcHJlLmR0
-c2kNCj4gPiBpbmRleCBkYzVmNGIzLi5lN2YyOTBmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wcmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDMwNDFzaS1wcmUuZHRzaQ0KPiA+IEBAIC01NCw2ICs1NCw3IEBADQo+
-ID4gIAkJcGNpMSA9ICZwY2kxOw0KPiA+ICAJCXBjaTIgPSAmcGNpMjsNCj4gPiAgCQlwY2kzID0g
-JnBjaTM7DQo+ID4gKwkJc3BpMCA9ICZzcGkwOw0KPiA+ICAJCXVzYjAgPSAmdXNiMDsNCj4gPiAg
-CQl1c2IxID0gJnVzYjE7DQo+ID4gIAkJZG1hMCA9ICZkbWEwOw0KPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpDQo+ID4gYi9hcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpDQo+ID4gaW5kZXggZGZjNzZiYy4u
-MTVkZDBjNCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgw
-c2ktcG9zdC5kdHNpDQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNp
-LXBvc3QuZHRzaQ0KPiA+IEBAIC00NzUsNyArNDc1LDcgQEANCj4gPiAgCX07DQo+ID4NCj4gPiAg
-L2luY2x1ZGUvICJxb3JpcS1lc3BpLTAuZHRzaSINCj4gPiAtCXNwaUAxMTAwMDAgew0KPiA+ICsJ
-c3BpMDogc3BpQDExMDAwMCB7DQo+ID4gIAkJZnNsLGVzcGktbnVtLWNoaXBzZWxlY3RzID0gPDQ+
-Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3A0MDgwc2ktcHJlLmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQw
-ODBzaS1wcmUuZHRzaQ0KPiA+IGluZGV4IDM4YmRlMDkuLjExMGQzYmMgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXByZS5kdHNpDQo+ID4gKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXByZS5kdHNpDQo+ID4gQEAgLTUzLDYg
-KzUzLDcgQEANCj4gPiAgCQlwY2kwID0gJnBjaTA7DQo+ID4gIAkJcGNpMSA9ICZwY2kxOw0KPiA+
-ICAJCXBjaTIgPSAmcGNpMjsNCj4gPiArCQlzcGkwID0gJnNwaTA7DQo+ID4gIAkJdXNiMCA9ICZ1
-c2IwOw0KPiA+ICAJCXVzYjEgPSAmdXNiMTsNCj4gPiAgCQlkbWEwID0gJmRtYTA7DQo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kNCj4g
-PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kNCj4gPiBpbmRl
-eCBiNzc5MjNhLi4xMTBjOGJlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3A1MDIwc2ktcG9zdC5kdHNpDQo+ID4gQEAgLTM5MCw3ICszOTAsNyBAQA0KPiA+ICAJfTsN
-Cj4gPg0KPiA+ICAvaW5jbHVkZS8gInFvcmlxLWVzcGktMC5kdHNpIg0KPiA+IC0Jc3BpQDExMDAw
-MCB7DQo+ID4gKwlzcGkwOiBzcGlAMTEwMDAwIHsNCj4gPiAgCQlmc2wsZXNwaS1udW0tY2hpcHNl
-bGVjdHMgPSA8ND47DQo+ID4gIAl9Ow0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDUwMjBzaS1wcmUuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9wNTAyMHNpLXByZS5kdHNpDQo+ID4gaW5kZXggMWNjNjFlMS4uOGI4NDZjYSAxMDA2
-NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcHJlLmR0c2kN
-Cj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcHJlLmR0c2kNCj4g
-PiBAQCAtNTQsNiArNTQsNyBAQA0KPiA+ICAJCXBjaTEgPSAmcGNpMTsNCj4gPiAgCQlwY2kyID0g
-JnBjaTI7DQo+ID4gIAkJcGNpMyA9ICZwY2kzOw0KPiA+ICsJCXNwaTAgPSAmc3BpMDsNCj4gPiAg
-CQl1c2IwID0gJnVzYjA7DQo+ID4gIAkJdXNiMSA9ICZ1c2IxOw0KPiA+ICAJCWRtYTAgPSAmZG1h
-MDsNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXBv
-c3QuZHRzaQ0KPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRz
-aQ0KPiA+IGluZGV4IDZkMjE0NTIuLjU0MTc0MzkgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDUwNDBzaS1wb3N0LmR0c2kNCj4gPiBAQCAtMzY4LDcgKzM2OCw3IEBA
-DQo+ID4gIAl9Ow0KPiA+DQo+ID4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+ID4g
-LQlzcGlAMTEwMDAwIHsNCj4gPiArCXNwaTA6IHNwaUAxMTAwMDAgew0KPiA+ICAJCWZzbCxlc3Bp
-LW51bS1jaGlwc2VsZWN0cyA9IDw0PjsNCj4gPiAgCX07DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXByZS5kdHNpDQo+ID4gYi9hcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2ktcHJlLmR0c2kNCj4gPiBpbmRleCBiMDQ4YTJiLi4w
-MjhjMTFiIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwNDBz
-aS1wcmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwNDBzaS1w
-cmUuZHRzaQ0KPiA+IEBAIC01Myw2ICs1Myw3IEBADQo+ID4gIAkJcGNpMCA9ICZwY2kwOw0KPiA+
-ICAJCXBjaTEgPSAmcGNpMTsNCj4gPiAgCQlwY2kyID0gJnBjaTI7DQo+ID4gKwkJc3BpMCA9ICZz
-cGkwOw0KPiA+ICAJCXVzYjAgPSAmdXNiMDsNCj4gPiAgCQl1c2IxID0gJnVzYjE7DQo+ID4gIAkJ
-ZG1hMCA9ICZkbWEwOw0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
-L3QxMDIzc2ktcG9zdC5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDIz
-c2ktcG9zdC5kdHNpDQo+ID4gaW5kZXggZGYxZjA2OC4uYTE0ZDQwMCAxMDA2NDQNCj4gPiAtLS0g
-YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNpDQo+ID4gKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyM3NpLXBvc3QuZHRzaQ0KPiA+IEBAIC0yODQs
-NyArMjg0LDcgQEANCj4gPiAgL2luY2x1ZGUvICJlbG8zLWRtYS0xLmR0c2kiDQo+ID4NCj4gPiAg
-L2luY2x1ZGUvICJxb3JpcS1lc3BpLTAuZHRzaSINCj4gPiAtCXNwaUAxMTAwMDAgew0KPiA+ICsJ
-c3BpMDogc3BpQDExMDAwMCB7DQo+ID4gIAkJZnNsLGVzcGktbnVtLWNoaXBzZWxlY3RzID0gPDQ+
-Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3QxMDJ4c2ktcHJlLmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEw
-MnhzaS1wcmUuZHRzaQ0KPiA+IGluZGV4IDFmMWE5ZjguLmRhNjU2YWUgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyeHNpLXByZS5kdHNpDQo+ID4gKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyeHNpLXByZS5kdHNpDQo+ID4gQEAgLTU0LDYg
-KzU0LDcgQEANCj4gPiAgCQlwY2kwID0gJnBjaTA7DQo+ID4gIAkJcGNpMSA9ICZwY2kxOw0KPiA+
-ICAJCXBjaTIgPSAmcGNpMjsNCj4gPiArCQlzcGkwID0gJnNwaTA7DQo+ID4gIAkJdXNiMCA9ICZ1
-c2IwOw0KPiA+ICAJCXVzYjEgPSAmdXNiMTsNCj4gPiAgCQlzZGhjID0gJnNkaGM7DQo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kNCj4g
-PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kNCj4gPiBpbmRl
-eCA5ZTlmN2UyLi5hMDE4NjM5IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvdDEwNDBzaS1wb3N0LmR0c2kNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3QxMDQwc2ktcG9zdC5kdHNpDQo+ID4gQEAgLTQ4Nyw3ICs0ODcsNyBAQA0KPiA+ICAvaW5j
-bHVkZS8gImVsbzMtZG1hLTAuZHRzaSINCj4gPiAgL2luY2x1ZGUvICJlbG8zLWRtYS0xLmR0c2ki
-DQo+ID4gIC9pbmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+ID4gLQlzcGlAMTEwMDAwIHsN
-Cj4gPiArCXNwaTA6IHNwaUAxMTAwMDAgew0KPiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0
-cyA9IDw0PjsNCj4gPiAgCX07DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC90MTA0eHNpLXByZS5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3QxMDR4c2ktcHJlLmR0c2kNCj4gPiBpbmRleCBiYmI3MDI1Li5kMTM2OGFiIDEwMDY0NA0K
-PiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNHhzaS1wcmUuZHRzaQ0KPiA+
-ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNHhzaS1wcmUuZHRzaQ0KPiA+IEBA
-IC01Myw2ICs1Myw3IEBADQo+ID4gIAkJcGNpMSA9ICZwY2kxOw0KPiA+ICAJCXBjaTIgPSAmcGNp
-MjsNCj4gPiAgCQlwY2kzID0gJnBjaTM7DQo+ID4gKwkJc3BpMCA9ICZzcGkwOw0KPiA+ICAJCXVz
-YjAgPSAmdXNiMDsNCj4gPiAgCQl1c2IxID0gJnVzYjE7DQo+ID4gIAkJc2RoYyA9ICZzZGhjOw0K
-PiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5k
-dHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpDQo+
-ID4gaW5kZXggMzJjNzkwYS4uM2VhMmFkZiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMv
-Ym9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpDQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaQ0KPiA+IEBAIC01OTEsNyArNTkxLDcgQEANCj4g
-PiAgCX07DQo+ID4NCj4gPiAgL2luY2x1ZGUvICJxb3JpcS1lc3BpLTAuZHRzaSINCj4gPiAtCXNw
-aUAxMTAwMDAgew0KPiA+ICsJc3BpMDogc3BpQDExMDAwMCB7DQo+ID4gIAkJZnNsLGVzcGktbnVt
-LWNoaXBzZWxlY3RzID0gPDQ+Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNo
-L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4c2ktcHJlLmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvdDIwOHhzaS1wcmUuZHRzaQ0KPiA+IGluZGV4IGU3MWNlYjAuLmVjODdh
-MGUgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4eHNpLXBy
-ZS5kdHNpDQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4eHNpLXByZS5k
-dHNpDQo+ID4gQEAgLTU1LDYgKzU1LDcgQEANCj4gPiAgCQlwY2kxID0gJnBjaTE7DQo+ID4gIAkJ
-cGNpMiA9ICZwY2kyOw0KPiA+ICAJCXBjaTMgPSAmcGNpMzsNCj4gPiArCQlzcGkwID0gJnNwaTA7
-DQo+ID4gIAkJdXNiMCA9ICZ1c2IwOw0KPiA+ICAJCXVzYjEgPSAmdXNiMTsNCj4gPiAgCQlkbWEw
-ID0gJmRtYTA7DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQy
-NDBzaS1wb3N0LmR0c2kNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1w
-b3N0LmR0c2kNCj4gPiBpbmRleCBkODA2MzYwLi45NzhiMTZlIDEwMDY0NA0KPiA+IC0tLSBhL2Fy
-Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDBzaS1wb3N0LmR0c2kNCj4gPiArKysgYi9hcmNo
-L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpDQo+ID4gQEAgLTEwMzMsNyAr
-MTAzMyw3IEBADQo+ID4gIC9pbmNsdWRlLyAiZWxvMy1kbWEtMi5kdHNpIg0KPiA+DQo+ID4gIC9p
-bmNsdWRlLyAicW9yaXEtZXNwaS0wLmR0c2kiDQo+ID4gLQlzcGlAMTEwMDAwIHsNCj4gPiArCXNw
-aTA6IHNwaUAxMTAwMDAgew0KPiA+ICAJCWZzbCxlc3BpLW51bS1jaGlwc2VsZWN0cyA9IDw0PjsN
-Cj4gPiAgCX07DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
-bC90NDI0MHNpLXByZS5kdHNpDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQw
-c2ktcHJlLmR0c2kNCj4gPiBpbmRleCAyNjFhM2FiYi4uYmU1NjE5NSAxMDA2NDQNCj4gPiAtLS0g
-YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcHJlLmR0c2kNCj4gPiArKysgYi9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcHJlLmR0c2kNCj4gPiBAQCAtNTUsNiAr
-NTUsNyBAQA0KPiA+ICAJCXBjaTEgPSAmcGNpMTsNCj4gPiAgCQlwY2kyID0gJnBjaTI7DQo+ID4g
-IAkJcGNpMyA9ICZwY2kzOw0KPiA+ICsJCXNwaTAgPSAmc3BpMDsNCj4gPiAgCQlkbWEwID0gJmRt
-YTA7DQo+ID4gIAkJZG1hMSA9ICZkbWExOw0KPiA+ICAJCWRtYTIgPSAmZG1hMjsNCj4gPiAtLQ0K
-PiA+IDIuMS4wLjI3Lmc5NmRiMzI0DQo+IA0KPiBUaGFua3MsDQo+IFpoaXFpYW5nDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+hi,
+On Fri, 2015-09-18 at 12:12 +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Wednesday 16 September 2015 12:14 PM, Chunfeng Yun wrote:
+> > support usb3.0 phy of mt65xx SoCs
+> few nitpicks:
+> 
+> change $subject. This driver is no longer in usb directory.
+> 
+> It can be just "phy: add usb3.0 phy driver for mt65xx SoCs".
+Ok
+
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  drivers/phy/Kconfig           |   9 +
+> >  drivers/phy/Makefile          |   1 +
+> >  drivers/phy/phy-mt65xx-usb3.c | 456 ++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 466 insertions(+)
+> >  create mode 100644 drivers/phy/phy-mt65xx-usb3.c
+> > 
+> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> > index 47da573..ec436c1 100644
+> > --- a/drivers/phy/Kconfig
+> > +++ b/drivers/phy/Kconfig
+> > @@ -206,6 +206,15 @@ config PHY_HIX5HD2_SATA
+> >  	help
+> >  	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
+> >  
+> > +config PHY_MT65XX_USB3
+> > +	tristate "Mediatek USB3.0 PHY Driver"
+> > +	depends on ARCH_MEDIATEK && OF
+> > +	select GENERIC_PHY
+> > +	help
+> > +	  Say 'Y' here to add support for Mediatek USB3.0 PHY driver
+> > +	  for mt65xx SoCs. it supports two usb2.0 ports and
+> > +	  one usb3.0 port.
+> > +
+> >  config PHY_SUN4I_USB
+> >  	tristate "Allwinner sunxi SoC USB PHY driver"
+> >  	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> > index a5b18c1..a7cc629 100644
+> > --- a/drivers/phy/Makefile
+> > +++ b/drivers/phy/Makefile
+> > @@ -23,6 +23,7 @@ obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+> >  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+> >  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
+> >  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+> > +obj-$(CONFIG_PHY_MT65XX_USB3)		+= phy-mt65xx-usb3.o
+> >  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
+> >  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
+> >  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
+> > diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
+> > new file mode 100644
+> > index 0000000..1f00b05
+> > --- /dev/null
+> > +++ b/drivers/phy/phy-mt65xx-usb3.c
+> > @@ -0,0 +1,456 @@
+> > +/*
+> > + * Copyright (c) 2015 MediaTek Inc.
+> > + * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > + *
+> > + * This software is licensed under the terms of the GNU General Public
+> > + * License version 2, as published by the Free Software Foundation, and
+> > + * may be copied, distributed, and modified under those terms.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + */
+> > +
+> > +#include <dt-bindings/phy/phy.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +/*
+> > + * for sifslv2 register, but exclude port's;
+> > + * relative to USB3_SIF2_BASE base address
+> > + */
+> > +#define SSUSB_SIFSLV_SPLLC		0x0000
+> > +
+> > +/* offsets of sub-segment in each port registers */
+> > +#define SSUSB_SIFSLV_U2PHY_COM_BASE	0x0000
+> > +#define SSUSB_SIFSLV_U3PHYD_BASE	0x0100
+> > +#define SSUSB_USB30_PHYA_SIV_B_BASE	0x0300
+> > +#define SSUSB_SIFSLV_U3PHYA_DA_BASE	0x0400
+> > +
+> > +#define U3P_USBPHYACR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0000)
+> > +#define PA0_RG_U2PLL_FORCE_ON		BIT(15)
+> > +
+> > +#define U3P_USBPHYACR2		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0008)
+> > +#define PA2_RG_SIF_U2PLL_FORCE_EN	BIT(18)
+> > +
+> > +#define U3P_USBPHYACR5		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0014)
+> > +#define PA5_RG_U2_HSTX_SRCTRL		GENMASK(14, 12)
+> > +#define PA5_RG_U2_HSTX_SRCTRL_VAL(x)	((0x7 & (x)) << 12)
+> > +#define PA5_RG_U2_HS_100U_U3_EN	BIT(11)
+> > +
+> > +#define U3P_USBPHYACR6		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0018)
+> > +#define PA6_RG_U2_ISO_EN		BIT(31)
+> > +#define PA6_RG_U2_BC11_SW_EN		BIT(23)
+> > +#define PA6_RG_U2_OTG_VBUSCMP_EN	BIT(20)
+> > +
+> > +#define U3P_U2PHYACR4		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0020)
+> > +#define P2C_RG_USB20_GPIO_CTL		BIT(9)
+> > +#define P2C_USB20_GPIO_MODE		BIT(8)
+> > +#define P2C_U2_GPIO_CTR_MSK	(P2C_RG_USB20_GPIO_CTL | P2C_USB20_GPIO_MODE)
+> > +
+> > +#define U3D_U2PHYDCR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0060)
+> > +#define P2C_RG_SIF_U2PLL_FORCE_ON	BIT(24)
+> > +
+> > +#define U3P_U2PHYDTM0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0068)
+> > +#define P2C_FORCE_UART_EN		BIT(26)
+> > +#define P2C_FORCE_DATAIN		BIT(23)
+> > +#define P2C_FORCE_DM_PULLDOWN		BIT(21)
+> > +#define P2C_FORCE_DP_PULLDOWN		BIT(20)
+> > +#define P2C_FORCE_XCVRSEL		BIT(19)
+> > +#define P2C_FORCE_SUSPENDM		BIT(18)
+> > +#define P2C_FORCE_TERMSEL		BIT(17)
+> > +#define P2C_RG_DATAIN			GENMASK(13, 10)
+> > +#define P2C_RG_DATAIN_VAL(x)		((0xf & (x)) << 10)
+> > +#define P2C_RG_DMPULLDOWN		BIT(7)
+> > +#define P2C_RG_DPPULLDOWN		BIT(6)
+> > +#define P2C_RG_XCVRSEL			GENMASK(5, 4)
+> > +#define P2C_RG_XCVRSEL_VAL(x)		((0x3 & (x)) << 4)
+> > +#define P2C_RG_SUSPENDM			BIT(3)
+> > +#define P2C_RG_TERMSEL			BIT(2)
+> > +#define P2C_DTM0_PART_MASK \
+> > +		(P2C_FORCE_DATAIN | P2C_FORCE_DM_PULLDOWN | \
+> > +		P2C_FORCE_DP_PULLDOWN | P2C_FORCE_XCVRSEL | \
+> > +		P2C_FORCE_TERMSEL | P2C_RG_DMPULLDOWN | \
+> > +		P2C_RG_DPPULLDOWN | P2C_RG_TERMSEL)
+> > +
+> > +#define U3P_U2PHYDTM1		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x006C)
+> > +#define P2C_RG_UART_EN			BIT(16)
+> > +#define P2C_RG_VBUSVALID		BIT(5)
+> > +#define P2C_RG_SESSEND			BIT(4)
+> > +#define P2C_RG_AVALID			BIT(2)
+> > +
+> > +#define U3P_U3_PHYA_REG0	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0000)
+> > +#define P3A_RG_U3_VUSB10_ON		BIT(5)
+> > +
+> > +#define U3P_U3_PHYA_REG6	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0018)
+> > +#define P3A_RG_TX_EIDLE_CM		GENMASK(31, 28)
+> > +#define P3A_RG_TX_EIDLE_CM_VAL(x)	((0xf & (x)) << 28)
+> > +
+> > +#define U3P_U3_PHYA_REG9	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0024)
+> > +#define P3A_RG_RX_DAC_MUX		GENMASK(5, 1)
+> > +#define P3A_RG_RX_DAC_MUX_VAL(x)	((0x1f & (x)) << 1)
+> > +
+> > +#define U3P_U3PHYA_DA_REG0	(SSUSB_SIFSLV_U3PHYA_DA_BASE + 0x0000)
+> > +#define P3A_RG_XTAL_EXT_EN_U3		GENMASK(11, 10)
+> > +#define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
+> > +
+> > +#define U3P_PHYD_CDR1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x005c)
+> > +#define P3D_RG_CDR_BIR_LTD1		GENMASK(28, 24)
+> > +#define P3D_RG_CDR_BIR_LTD1_VAL(x)	((0x1f & (x)) << 24)
+> > +#define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
+> > +#define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
+> > +
+> > +#define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
+> > +#define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
+> > +#define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
+> > +
+> > +struct mt65xx_phy_instance {
+> > +	struct phy *phy;
+> > +	void __iomem *port_base;
+> > +	u32 index;
+> > +	u8 type;
+> > +};
+> > +
+> > +struct mt65xx_u3phy {
+> > +	struct device *dev;
+> > +	void __iomem *sif_base;	/* include sif2, but exclude port's */
+> > +	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+> > +	struct mt65xx_phy_instance **phys;
+> > +	int nphys;
+> > +};
+> > +
+> > +static void phy_instance_init(struct mt65xx_u3phy *u3phy,
+> > +	struct mt65xx_phy_instance *instance)
+> > +{
+> > +	void __iomem *port_base = instance->port_base;
+> > +	u32 index = instance->index;
+> > +	u32 tmp;
+> > +
+> > +	/* switch to USB function. (system register, force ip into usb mode) */
+> > +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> > +	tmp &= ~P2C_FORCE_UART_EN;
+> > +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> > +
+> > +	tmp = readl(port_base + U3P_U2PHYDTM1);
+> > +	tmp &= ~P2C_RG_UART_EN;
+> > +	writel(tmp, port_base + U3P_U2PHYDTM1);
+> > +
+> > +	if (!index) {
+> > +		tmp = readl(port_base + U3P_U2PHYACR4);
+> > +		tmp &= ~P2C_U2_GPIO_CTR_MSK;
+> > +		writel(tmp, port_base + U3P_U2PHYACR4);
+> > +	}
+> > +
+> > +	/* DP/DM BC1.1 path Disable */
+> > +	tmp = readl(port_base + U3P_USBPHYACR6);
+> > +	tmp &= ~PA6_RG_U2_BC11_SW_EN;
+> > +	writel(tmp, port_base + U3P_USBPHYACR6);
+> > +
+> > +	tmp = readl(port_base + U3P_U3PHYA_DA_REG0);
+> > +	tmp &= ~P3A_RG_XTAL_EXT_EN_U3;
+> > +	tmp |= P3A_RG_XTAL_EXT_EN_U3_VAL(2);
+> > +	writel(tmp, port_base + U3P_U3PHYA_DA_REG0);
+> > +
+> > +	tmp = readl(port_base + U3P_U3_PHYA_REG9);
+> > +	tmp &= ~P3A_RG_RX_DAC_MUX;
+> > +	tmp |= P3A_RG_RX_DAC_MUX_VAL(4);
+> > +	writel(tmp, port_base + U3P_U3_PHYA_REG9);
+> > +
+> > +	tmp = readl(port_base + U3P_U3_PHYA_REG6);
+> > +	tmp &= ~P3A_RG_TX_EIDLE_CM;
+> > +	tmp |= P3A_RG_TX_EIDLE_CM_VAL(0xe);
+> > +	writel(tmp, port_base + U3P_U3_PHYA_REG6);
+> > +
+> > +	tmp = readl(port_base + U3P_PHYD_CDR1);
+> > +	tmp &= ~(P3D_RG_CDR_BIR_LTD0 | P3D_RG_CDR_BIR_LTD1);
+> > +	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
+> > +	writel(tmp, port_base + U3P_PHYD_CDR1);
+> > +
+> > +	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
+> > +}
+> > +
+> > +static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
+> > +	struct mt65xx_phy_instance *instance)
+> > +{
+> > +	void __iomem *port_base = instance->port_base;
+> > +	u32 index = instance->index;
+> > +	u32 tmp;
+> > +
+> > +	if (!index) {
+> > +		/* Set RG_SSUSB_VUSB10_ON as 1 after VUSB10 ready */
+> > +		tmp = readl(port_base + U3P_U3_PHYA_REG0);
+> > +		tmp |= P3A_RG_U3_VUSB10_ON;
+> > +		writel(tmp, port_base + U3P_U3_PHYA_REG0);
+> > +	}
+> > +
+> > +	/* (force_suspendm=0) (let suspendm=1, enable usb 480MHz pll) */
+> > +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> > +	tmp &= ~(P2C_FORCE_SUSPENDM | P2C_RG_XCVRSEL);
+> > +	tmp &= ~(P2C_RG_DATAIN | P2C_DTM0_PART_MASK);
+> > +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> > +
+> > +	/* OTG Enable */
+> > +	tmp = readl(port_base + U3P_USBPHYACR6);
+> > +	tmp |= PA6_RG_U2_OTG_VBUSCMP_EN;
+> > +	writel(tmp, port_base + U3P_USBPHYACR6);
+> > +
+> > +	if (!index) {
+> > +		tmp = readl(u3phy->sif_base + U3P_XTALCTL3);
+> > +		tmp |= XC3_RG_U3_XTAL_RX_PWD | XC3_RG_U3_FRC_XTAL_RX_PWD;
+> > +		writel(tmp, u3phy->sif_base + U3P_XTALCTL3);
+> > +		/* [mt8173]disable Change 100uA current from SSUSB */
+> > +		tmp = readl(port_base + U3P_USBPHYACR5);
+> > +		tmp &= ~PA5_RG_U2_HS_100U_U3_EN;
+> > +		writel(tmp, port_base + U3P_USBPHYACR5);
+> > +	}
+> > +	udelay(800);
+> 
+> It's good to document delay values. Is it a recommended value from the
+> data manual?
+> 
+I check it with DE, and revise it after many tests.
+
+> Also now the registers doesn't seem to be shared between the PHYs. But
+> if it is then all these functions have to be protected with spinlock.
+> 
+I will pay attention to it.
+
+Thanks a lot
+
+> Thanks
+> Kishon
