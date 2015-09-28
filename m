@@ -1,135 +1,52 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: [PATCH v8 13/14] power: bq24257: Add platform data based initialization
-Date: Mon, 28 Sep 2015 17:34:01 -0500
-Message-ID: <1443479642-23712-14-git-send-email-dannenberg@ti.com>
-References: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v4 1/9] drivers/of: Introduce of_node_alloc
+Date: Mon, 28 Sep 2015 15:50:38 -0700
+Message-ID: <5609C43E.1040106@gmail.com>
+References: <1443458582-7497-1-git-send-email-marc.zyngier@arm.com> <1443458582-7497-2-git-send-email-marc.zyngier@arm.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443458582-7497-2-git-send-email-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Jason Cooper <jason@lakedaemon.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Graeme Gregory <graeme@xora.org.uk>, Jake Oshins <jakeo@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds a way to setup and initialize the device through the use
-of platform data with configuration options equivalent to when using
-device firmware (DT or ACPI) for systems where this is not available.
+On 9/28/2015 9:42 AM, Marc Zyngier wrote:
+> We want to be able to generate "fake" device nodes that can be
+> used as an identifier for irq domains. For that, we reuse the
+> dynamic DT layer in order to generate DT nodes in a detached state
+> (so that it doesn't interfere with the rest of the tree).
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  drivers/of/dynamic.c | 22 ++++++++++++++++++++++
+>  include/linux/of.h   |  5 +++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 53826b8..709d363 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -445,6 +445,28 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
+>  	return NULL;
+>  }
+>  
+> +/**
+> + * of_node_alloc() - Allocate an empty device node dynamically.
+> + * @fmt: Format string (plus vargs) for new full name of the device node
+> + *
+> + * Create an device tree node, either by by allocating an empty one
 
-Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
----
- drivers/power/bq24257_charger.c       | 38 +++++++++++++++++++++++++++++++++--
- include/linux/power/bq24257_charger.h | 25 +++++++++++++++++++++++
- 2 files changed, 61 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/power/bq24257_charger.h
+      Create a device tree node by allocating an empty one
 
-diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-index 1fea2c7..c59c22b 100644
---- a/drivers/power/bq24257_charger.c
-+++ b/drivers/power/bq24257_charger.c
-@@ -31,6 +31,8 @@
- #include <linux/acpi.h>
- #include <linux/of.h>
- 
-+#include <linux/power/bq24257_charger.h>
-+
- #define BQ24257_REG_1			0x00
- #define BQ24257_REG_2			0x01
- #define BQ24257_REG_3			0x02
-@@ -888,6 +890,36 @@ static void bq24257_pg_gpio_probe(struct bq24257_device *bq)
- 		dev_dbg(bq->dev, "probed PG pin = %d\n", desc_to_gpio(bq->pg));
- }
- 
-+static void bq24257_pdata_probe(struct bq24257_device *bq,
-+				struct bq24257_platform_data *pdata)
-+{
-+	bq->init_data.ichg = bq24257_find_idx(pdata->ichg,
-+					      bq24257_ichg_map,
-+					      BQ24257_ICHG_MAP_SIZE);
-+
-+	bq->init_data.vbat = bq24257_find_idx(pdata->vbat,
-+					      bq24257_vbat_map,
-+					      BQ24257_VBAT_MAP_SIZE);
-+
-+	bq->init_data.iterm = bq24257_find_idx(pdata->iterm,
-+					       bq24257_iterm_map,
-+					       BQ24257_ITERM_MAP_SIZE);
-+
-+	bq->init_data.iilimit = bq24257_find_idx(pdata->iilimit,
-+						 bq24257_iilimit_map,
-+						 BQ24257_IILIMIT_MAP_SIZE);
-+
-+	bq->init_data.vovp = bq24257_find_idx(pdata->vovp,
-+					      bq24257_vovp_map,
-+					      BQ24257_VOVP_MAP_SIZE);
-+
-+	bq->init_data.vindpm = bq24257_find_idx(pdata->vindpm,
-+						bq24257_vindpm_map,
-+						BQ24257_VINDPM_MAP_SIZE);
-+
-+	bq->iilimit_autoset_enable = pdata->iilimit_autoset_enable;
-+}
-+
- static int bq24257_fw_probe(struct bq24257_device *bq)
- {
- 	int ret;
-@@ -963,6 +995,7 @@ static int bq24257_probe(struct i2c_client *client,
- 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
- 	struct device *dev = &client->dev;
- 	const struct acpi_device_id *acpi_id;
-+	struct bq24257_platform_data *pdata = client->dev.platform_data;
- 	struct bq24257_device *bq;
- 	int ret;
- 	int i;
-@@ -1012,14 +1045,15 @@ static int bq24257_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, bq);
- 
--	if (!dev->platform_data) {
-+	if (!pdata) {
- 		ret = bq24257_fw_probe(bq);
- 		if (ret < 0) {
- 			dev_err(dev, "Cannot read device properties.\n");
- 			return ret;
- 		}
- 	} else {
--		return -ENODEV;
-+		dev_dbg(dev, "init using platform data\n");
-+		bq24257_pdata_probe(bq, pdata);
- 	}
- 
- 	/*
-diff --git a/include/linux/power/bq24257_charger.h b/include/linux/power/bq24257_charger.h
-new file mode 100644
-index 0000000..c131c5d
---- /dev/null
-+++ b/include/linux/power/bq24257_charger.h
-@@ -0,0 +1,25 @@
-+/*
-+ * Platform data for the TI bq24257 battery charger driver.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef _BQ24257_CHARGER_H_
-+#define _BQ24257_CHARGER_H_
-+
-+#include <asm/types.h>
-+#include <linux/types.h>
-+
-+struct bq24257_platform_data {
-+	u32 ichg;				       /* charge current (uA) */
-+	u32 vbat;				   /* regulation voltage (uV) */
-+	u32 iterm;				  /* termination current (uA) */
-+	u32 iilimit;				  /* input current limit (uA) */
-+	u32 vovp;		      /* over voltage protection voltage (uV) */
-+	u32 vindpm;			 /* VDMP input threshold voltage (uV) */
-+	bool iilimit_autoset_enable;	/* auto-detect of input current limit */
-+};
-+
-+#endif /* _BQ24257_CHARGER_H_ */
--- 
-1.9.1
+> + * suitable for further modification.  The node data are dynamically
+> + * allocated and all the node flags have the OF_DYNAMIC & OF_DETACHED
+> + * bits set. Returns the newly allocated node or NULL on out of memory
+> + * error.
+> + */
+> +struct device_node *of_node_alloc(const char *fmt, ...)
 
+< snip >
