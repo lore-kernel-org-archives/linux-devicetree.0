@@ -1,49 +1,57 @@
 From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH v7 1/7] ARM: dts: imx: imx7d-sbd remove fixed can2-3v3 regulator
-Date: Mon, 28 Sep 2015 16:56:35 -0500
-Message-ID: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
+Subject: [PATCH v7 3/7] ARM: dts: imx: imx7d-sbd add usb_otg2_vbus pinctrl settings
+Date: Mon, 28 Sep 2015 16:56:37 -0500
+Message-ID: <1443477401-17238-3-git-send-email-aalonso@freescale.com>
+References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Remove incorrect can2-3v3 fixed regulator, imx7d-sdb doesn't
-have a dedicated can2 fixed regulator instead it shares PERI_3V3
-fixed regulator (RT8070ZS) which is enabled by default (hardwired)
-from pmic pfuze3000 NVCC_3V3 power rail.
+Add usb_otg2_vbus pinctrl settings
 
 Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 ---
 Changes for V7: New patch in series
 
- arch/arm/boot/dts/imx7d-sdb.dts | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ arch/arm/boot/dts/imx7d-sdb.dts | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 8059458..83f0053 100644
+index a5c7a44..96c1e1a 100644
 --- a/arch/arm/boot/dts/imx7d-sdb.dts
 +++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -78,16 +78,7 @@
+@@ -77,6 +77,8 @@
+ 			regulator-min-microvolt = <5000000>;
+ 			regulator-max-microvolt = <5000000>;
+ 			gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 =  <&pinctrl_usb_otg2_vbus>;
  			enable-active-high;
  		};
  
--		reg_can2_3v3: regulator@2 {
--			compatible = "regulator-fixed";
--			reg = <2>;
--			regulator-name = "can2-3v3";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			gpio = <&gpio1 7 GPIO_ACTIVE_LOW>;
--		};
--
--		reg_vref_1v8: regulator@3 {
-+		reg_vref_1v8: regulator@2 {
- 			compatible = "regulator-fixed";
- 			reg = <3>;
- 			regulator-name = "vref-1v8";
+@@ -254,11 +256,16 @@
+ 	imx7d-sdb {
+ 		pinctrl_hog: hoggrp {
+ 			fsl,pins = <
+-				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
+ 				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
+ 			>;
+ 		};
+ 
++		pinctrl_usb_otg2_vbus: usbotg2vbusgrp {
++			fsl,pins = <
++				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14 /* usb_otg2_pwr */
++			>;
++		};
++
+ 		pinctrl_i2c1: i2c1grp {
+ 			fsl,pins = <
+ 				MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
 -- 
 2.1.4
 
