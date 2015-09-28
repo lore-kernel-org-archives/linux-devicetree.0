@@ -1,52 +1,23 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RFC] ASoC: simple-card: Update clocks binding for
- simple-card DAI subnodes
-Date: Mon, 28 Sep 2015 21:49:35 +0300
-Message-ID: <56098BBF.2010700@ti.com>
-References: <1441977482-29215-1-git-send-email-jsarha@ti.com>
- <20150919184225.GR30445@sirena.org.uk>
+From: Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: License for ARM device tree file
+Date: Mon, 28 Sep 2015 19:14:30 +0000
+Message-ID: <DM2PR0301MB07343BCB0B5059C96CA31438BA4F0@DM2PR0301MB0734.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150919184225.GR30445-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Peter Newton <Peter.Newton-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/15 21:42, Mark Brown wrote:
-> On Fri, Sep 11, 2015 at 04:18:02PM +0300, Jyri Sarha wrote:
->
->> The updated binding provides a way to set clock-ID and direction
->> parameters for DAI drivers set_sysclk() call back.
->
->> I proposed something similar about a year ago, but Mark rejected that
->> at the time. This RFC is to start that discussion again. This time
->> before I do any code changes.
->
-> What's the use case again?  Can we address this by converting the
-> relevant drivers to the clock API (or improving their clock API
-> support)?
->
+Hi All,
 
-Sorry, I forgot to reply this earlier. The reason why we need this is 
-the way McASP driver uses and provides clocks for different purposes. 
-The most pressing need is to be able to select if we want to use some 
-external clock pin as an input for McASP clock divider that produces the 
-i2s bit-clock or if we want to use McASP's internal clock source.
+I saw some discussion going on last year about the permissive license to be used in ARM device tree files.  I know a lot of files have been changed to use GPLv2/X11 license.  But may I know if GPLv2/BSD 3-clause dual license is still a valid license to use in ARM device tree files.  It has been our standard permissive license used for a long time in many components like device trees in Power architecture.
 
-There are several other things this binding would allow us, and others 
-with flexible i2s HW, to do. Some TI codecs would also benefit from a 
-flexible way of describing the used clock configuration, but Peter know 
-that part better.
-
-I tried to make the binding as flexible and generic as possible. But I 
-do not currently see any immediate need for more than one set_sysclk() 
-call per dai. I just did not see any reason to not allow it either.
-
-Best regards,
-Jyri
+Regards,
+Leo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
