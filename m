@@ -1,42 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 5/6] Documentation: dt-bindings: pci: altera pcie device tree binding
-Date: Mon, 28 Sep 2015 21:38:33 +0200
-Message-ID: <1803658.W77SUJGE4K@wuerfel>
-References: <1442801587-3812-1-git-send-email-lftan@altera.com> <CAFiDJ59PuhRj3F288A_451pLiKnqPUKin9C2t5uuH2iNPnJfAg@mail.gmail.com> <CAL_JsqL9eoTRa2-eeNJgVoO=0LyuaaJ87E4_BS0KocRKBXGdGA@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 3/3] ARM: bcm2835: Add the auxiliary clocks to the device
+ tree.
+Date: Mon, 28 Sep 2015 13:49:10 -0600
+Message-ID: <560999B6.7080400@wwwdotorg.org>
+References: <1441923750-19404-1-git-send-email-eric@anholt.net>
+ <1441923750-19404-4-git-send-email-eric@anholt.net>
+ <5600BAC3.70506@wwwdotorg.org> <87si5ymjki.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL9eoTRa2-eeNJgVoO=0LyuaaJ87E4_BS0KocRKBXGdGA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ley Foon Tan <lftan@altera.com>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <87si5ymjki.fsf@eliezer.anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 28 September 2015 12:31:36 Rob Herring wrote:
-> >> > +
-> >> > +Required properties:
-> >> > +- compatible :       should contain "altr,pcie-root-port-1.0"
-> >> > +- reg:               a list of physical base address and length for TXS and CRA.
-> >> > +- reg-names: must include the following entries:
-> >> > +             "Txs" or "txs": TX slave port region
-> >> > +             "Cra" or "cra": Control register access region
-> >>
-> >> Why both cases? Can we please just have one (or none is better IMO).
-> > The PCIe IP on different device families use different register names.
-> > And our device tree generator will auto generate the register names
-> > based on the hardware description name. Too bad we can't change the
-> > hardware description names now.
-> 
-> Okay, your problem to maintain. Hopefully the driver just goes by index then.
-> 
-> Strictly speaking, if you have undocumented bindings downstream that
-> is your problem and we don't have to accept them as-is upstream. I'm
-> not going to worry about that here.
+On 09/28/2015 01:26 PM, Eric Anholt wrote:
+> Stephen Warren <swarren@wwwdotorg.org> writes:
+>
+>> On 09/10/2015 03:22 PM, Eric Anholt wrote:
+>>> These will be used for enabling UART1, SPI1, and SPI2.
+>>
+>>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+>>
+>>> +		aux_clocks: aux-clocks@0x7e215004 {
+>>> +			compatible = "brcm,bcm2835-aux-clock";
+>>> +			#clock-cells = <1>;
+>>> +			reg = <0x7e215004 0x4>;
+>>
+>> Actually, I take back the ack on this patch. This HW module has two
+>> registers. The reg property should include both of those registers so
+>> that if SW needs to start using the other register at some time in the
+>> future, the entire set of registers is already represented in DT.
+>
+> If I changed it to "reg = <0x7e215000 0x8>" and use a #define for the
+> clock register offset in patch 2/3, would I then have your ack?
 
-Are they always in the same order? If you don't mandate any names for the
-registers in the binding but just use them by index, we can keep that
-bit of ugliness out of the binding and the driver and still be compatible
-with all the devices.
+I suspect the compatible should then be "brcm,bcm2835-aux" (or similar) 
+since the node would represent the entire aux module, not just the clock 
+gate feature of the module (assuming there are other features in the aux 
+module besides just the clock gate).
 
-	Arnd
+With the reg change and the compatible change if appropriate, you can 
+have my ack,
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+
