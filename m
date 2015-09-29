@@ -1,356 +1,57 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Tue, 29 Sep 2015 19:42:18 +1000
-Message-ID: <1443519738.2865.8.camel@kernel.crashing.org>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-	 <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-	 <20150828123228.GE31748@leverpostej>
-	 <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
-	 <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
+From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: [PATCHv3 2/2] iio: ti-ads8688: Add DT binding documentation
+Date: Tue, 29 Sep 2015 13:08:15 +0200
+Message-ID: <1443524895-14610-2-git-send-email-sean.nyekjaer@prevas.dk>
+References: <1443524895-14610-1-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak@codeaurora>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443524895-14610-1-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-29 at 14:08 +0530, Ganapatrao Kulkarni wrote:
-> (sending again, by mistake it was set to html mode)
+Adding binding documentation for Texas Instruments ADS8688 ADC.
 
-I sorry, I was trying to get OpenPower to move faster & release PAPR
-publicly but it looks like it's going to take a bit longer, so I'll try
-to write a summary in the next couple of days.
+Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+---
+Changes since v2:
+- Moved vref-supply to Optional properties
+ .../devicetree/bindings/iio/adc/ti-ads8688.txt       | 20 ++++++++++++=
+++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads868=
+8.txt
 
-Ben.
-
-> On Tue, Sep 29, 2015 at 2:05 PM, Ganapatrao Kulkarni
-> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Mark,
-> > 
-> > I have tried to answer your comments, in the meantime we are
-> > waiting for Ben
-> > to share the details.
-> > 
-> > On Fri, Aug 28, 2015 at 6:02 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org
-> > > wrote:
-> > > 
-> > > Hi,
-> > > 
-> > > On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni
-> > > wrote:
-> > > > DT bindings for numa map for memory, cores and IOs using
-> > > > arm,associativity device node property.
-> > > 
-> > > Given this is just a copy of ibm,associativity, I'm not sure I
-> > > see much
-> > > point in renaming the properties.
-> > > 
-> > > However, (somewhat counter to that) I'm also concerned that this
-> > > isn't
-> > > sufficient for systems we're beginning to see today (more on that
-> > > below), so I don't think a simple copy of ibm,associativity is
-> > > good
-> > > enough.
-> > 
-> > it is just copy right now, however it can evolve when we come
-> > across more
-> > arm64 numa platforms
-> > > 
-> > > 
-> > > > 
-> > > > Signed-off-by: Ganapatrao Kulkarni <
-> > > > gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/arm/numa.txt | 212
-> > > > +++++++++++++++++++++++++
-> > > >  1 file changed, 212 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/arm/numa.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/arm/numa.txt
-> > > > b/Documentation/devicetree/bindings/arm/numa.txt
-> > > > new file mode 100644
-> > > > index 0000000..dc3ef86
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/arm/numa.txt
-> > > > @@ -0,0 +1,212 @@
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +NUMA binding description.
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +1 - Introduction
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +
-> > > > +Systems employing a Non Uniform Memory Access (NUMA)
-> > > > architecture
-> > > > contain
-> > > > +collections of hardware resources including processors,
-> > > > memory, and I/O
-> > > > buses,
-> > > > +that comprise what is commonly known as a NUMA node.
-> > > > +Processor accesses to memory within the local NUMA node is
-> > > > generally
-> > > > faster
-> > > > +than processor accesses to memory outside of the local NUMA
-> > > > node.
-> > > > +DT defines interfaces that allow the platform to convey NUMA
-> > > > node
-> > > > +topology information to OS.
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +2 - arm,associativity
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +The mapping is done using arm,associativity device property.
-> > > > +this property needs to be present in every device node which
-> > > > needs to
-> > > > to be
-> > > > +mapped to numa nodes.
-> > > 
-> > > Can't there be some inheritance? e.g. all devices on a bus with
-> > > an
-> > > arm,associativity property being assumed to share that value?
-> > 
-> > yes there is inheritance and respective bus drivers should take
-> > care of it,
-> > like pci driver does at present.
-> > > 
-> > > 
-> > > > +
-> > > > +arm,associativity property is set of 32-bit integers which
-> > > > defines
-> > > > level of
-> > > 
-> > > s/set/list/ -- the order is important.
-> > 
-> > ok
-> > > 
-> > > 
-> > > > +topology and boundary in the system at which a significant
-> > > > difference
-> > > > in
-> > > > +performance can be measured between cross-device accesses
-> > > > within
-> > > > +a single location and those spanning multiple locations.
-> > > > +The first cell always contains the broadest subdivision within
-> > > > the
-> > > > system,
-> > > > +while the last cell enumerates the individual devices, such as
-> > > > an SMT
-> > > > thread
-> > > > +of a CPU, or a bus bridge within an SoC".
-> > > 
-> > > While this gives us some hierarchy, this doesn't seem to encode
-> > > relative
-> > > distances at all. That seems like an oversight.
-> > 
-> > 
-> > distance is computed, will add the details to document.
-> > local nodes will have distance as 10(LOCAL_DISTANCE) and every
-> > level, the
-> > distance multiplies by 2.
-> > for example, for level 1 numa topology, distance from local node to
-> > remote
-> > node will be 20.
-> > 
-> > > 
-> > > 
-> > > Additionally, I'm somewhat unclear on how what you'd be expected
-> > > to
-> > > provide for this property in cases like ring or mesh
-> > > interconnects,
-> > > where there isn't a strict hierarchy (see systems with ARM's own
-> > > CCN, or
-> > > Tilera's TILE-Mx), but there is some measure of closeness.
-> > 
-> > 
-> > IIUC, as per ARMs CCN architecture, all core/clusters are at equal
-> > distance
-> > of DDR, i dont see any NUMA topology.
-> > however, if there are 2 SoC connected thorough the CCN, then it is
-> > very much
-> > similar to cavium topology.
-> > 
-> > > Must all of these have the same length? If so, why not have a
-> > > #(whatever)-cells property in the root to describe the expected
-> > > length?
-> > > If not, how are they to be interpreted relative to each other?
-> > 
-> > 
-> > yes, all are of default size.
-> > IMHO, there is no need to add cells property.
-> > > 
-> > > 
-> > > > +
-> > > > +ex:
-> > > 
-> > > s/ex/Example:/, please. There's no need to contract that.
-> > > 
-> > > > +       /* board 0, socket 0, cluster 0, core 0  thread 0 */
-> > > > +       arm,associativity = <0 0 0 0 0>;
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +3 - arm,associativity-reference-points
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +This property is a set of 32-bit integers, each representing
-> > > > an index
-> > > > into
-> > > 
-> > > Likeise, s/set/list/
-> > 
-> > ok
-> > > 
-> > > 
-> > > > +the arm,associativity nodes. The first integer is the most
-> > > > significant
-> > > > +NUMA boundary and the following are progressively less
-> > > > significant
-> > > > boundaries.
-> > > > +There can be more than one level of NUMA.
-> > > 
-> > > I'm not clear on why this is necessary; the arm,associativity
-> > > property
-> > > is already ordered from most significant to least significant per
-> > > its
-> > > description.
-> > 
-> > 
-> > first entry in arm,associativity-reference-points is used to find
-> > which
-> > entry in associativity defines node id.
-> > also entries in arm,associativity-reference-points defines,
-> > how many entries(depth) in associativity can be used to calculate
-> > node
-> > distance
-> > in both level 1 and  multi level(hierarchical) numa topology.
-> > 
-> > > 
-> > > 
-> > > What does this property achieve?
-> > > 
-> > > The description also doesn't describe where this property is
-> > > expected to
-> > > live. The example isn't sufficient to disambiguate that,
-> > > especially as
-> > > it seems like a trivial case.
-> > 
-> > sure, will add one more example to describe the
-> > arm,associativity-reference-points
-> > > 
-> > > 
-> > > Is this only expected at the root of the tree? Can it be re
-> > > -defined in
-> > > sub-nodes?
-> > 
-> > yes it is defined only at the root.
-> > > 
-> > > 
-> > > > +
-> > > > +Ex:
-> > > 
-> > > s/Ex/Example:/, please
-> > 
-> > sure.
-> > > 
-> > > 
-> > > > +       arm,associativity-reference-points = <0 1>;
-> > > > +       The board Id(index 0) used first to calculate the
-> > > > associativity
-> > > > (node
-> > > > +       distance), then follows the  socket id(index 1).
-> > > > +
-> > > > +       arm,associativity-reference-points = <1 0>;
-> > > > +       The socket Id(index 1) used first to calculate the
-> > > > associativity,
-> > > > +       then follows the board id(index 0).
-> > > > +
-> > > > +       arm,associativity-reference-points = <0>;
-> > > > +       Only the board Id(index 0) used to calculate the
-> > > > associativity.
-> > > > +
-> > > > +       arm,associativity-reference-points = <1>;
-> > > > +       Only socket Id(index 1) used to calculate the
-> > > > associativity.
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +4 - Example dts
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +
-> > > > +Example: 2 Node system consists of 2 boards and each board
-> > > > having one
-> > > > socket
-> > > > +and 8 core in each socket.
-> > > > +
-> > > > +       arm,associativity-reference-points = <0>;
-> > > > +
-> > > > +       memory@00c00000 {
-> > > > +               device_type = "memory";
-> > > > +               reg = <0x0 0x00c00000 0x0 0x80000000>;
-> > > > +               /* board 0, socket 0, no specific core */
-> > > > +               arm,associativity = <0 0 0xffff>;
-> > > > +       };
-> > > > +
-> > > > +       memory@10000000000 {
-> > > > +               device_type = "memory";
-> > > > +               reg = <0x100 0x00000000 0x0 0x80000000>;
-> > > > +               /* board 1, socket 0, no specific core */
-> > > > +               arm,associativity = <1 0 0xffff>;
-> > > > +       };
-> > > > +
-> > > > +       cpus {
-> > > > +               #address-cells = <2>;
-> > > > +               #size-cells = <0>;
-> > > > +
-> > > > +               cpu@000 {
-> > > > +                       device_type = "cpu";
-> > > > +                       compatible =  "arm,armv8";
-> > > > +                       reg = <0x0 0x000>;
-> > > > +                       enable-method = "psci";
-> > > > +                       /* board 0, socket 0, core 0*/
-> > > > +                       arm,associativity = <0 0 0>;
-> > > 
-> > > We should specify w.r.t. memory and CPUs how the property is
-> > > expected to
-> > > be used (e.g. in the CPU nodes rather than the cpu-map, with
-> > > separate
-> > > memory nodes, etc). The generic description of arm,associativity
-> > > isn't
-> > > sufficient to limit confusion there.
-> > 
-> > ok, will add the details like which nodes can use this property.
-> > 
-> > > 
-> > > 
-> > > Thanks,
-> > > Mark.
-> > 
-> > 
-> > thanks
-> > Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt b=
+/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+new file mode 100644
+index 0000000..a02337d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+@@ -0,0 +1,20 @@
++* Texas Instruments' ADS8684 and ADS8688 ADC chip
++
++Required properties:
++ - compatible: Should be "ti,ads8684" or "ti,ads8688"
++ - reg: spi chip select number for the device
++
++Recommended properties:
++ - spi-max-frequency: Definition as per
++		Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Optional properties:
++ - vref-supply: The regulator supply for ADC reference voltage
++
++Example:
++adc@0 {
++	compatible =3D "ti,ads8688";
++	reg =3D <0>;
++	vref-supply =3D <&vdd_supply>;
++	spi-max-frequency =3D <1000000>;
++};
+--=20
+2.5.3
