@@ -1,83 +1,75 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v3 1/5] Input: goodix - reset device at init
-Date: Tue, 29 Sep 2015 17:47:06 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0EBB24@irsmsx105.ger.corp.intel.com>
-References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
-	 <1435595304-4840-2-git-send-email-irina.tirdea@intel.com>
-	 <1435679809.2612.13.camel@hadess.net>
-	 <1F3AC3675D538145B1661F571FE1805F2F0AC0D3@irsmsx105.ger.corp.intel.com>
-	 <1441818159.27328.30.camel@hadess.net>
-	 <1F3AC3675D538145B1661F571FE1805F2F0C9F85@irsmsx105.ger.corp.intel.com>
-	 <1443192251.17020.29.camel@hadess.net>
-	 <1F3AC3675D538145B1661F571FE1805F2F0E98FC@irsmsx105.ger.corp.intel.com>
- <1443492265.17930.9.camel@hadess.net>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Tue, 29 Sep 2015 13:08:50 -0500
+Message-ID: <560AD3B2.1070102@ti.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk> <5605AA1C.3090905@ti.com>
+ <20150929151320.GT30445@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1443492265.17930.9.camel@hadess.net>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Purdila, Octavian" <octavian.purdila@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150929151320.GT30445@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
-W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMjkgU2VwdGVtYmVyLCAyMDE1IDU6
-MDQNCj4gVG86IFRpcmRlYSwgSXJpbmE7IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZw0KPiBD
-YzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUm9iIEhlcnJpbmc7IFBhd2VsIE1vbGw7
-IElhbiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgUHVyZGlsYSwgT2N0YXZpYW47IERtaXRyeSBUb3Jv
-a2hvdjsgTWFyaw0KPiBSdXRsYW5kOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJq
-ZWN0OiBSZTogW1BBVENIIHYzIDEvNV0gSW5wdXQ6IGdvb2RpeCAtIHJlc2V0IGRldmljZSBhdCBp
-bml0DQo+IA0KPiBPbiBGcmksIDIwMTUtMDktMjUgYXQgMjE6MDQgKzAwMDAsIFRpcmRlYSwgSXJp
-bmEgd3JvdGU6DQo+ID4NCjxzbmlwPg0KPiA+DQo+ID4gVGhlIHdhcm5pbmcgZnJvbSB5b3VyIGRt
-ZXNnIG91dHB1dCB3aWxsIG5vdCBjYXVzZSBwcm9iZSB0byBmYWlsLg0KPiA+IElmIHlvdSBsb29r
-IGF0IHRoZSBjb2RlIGZvciBieXRfZ3Bpb19kaXJlY3Rpb25fb3V0cHV0LCBpdCB3aWxsIGp1c3QN
-Cj4gPiBwcmludA0KPiA+IGEgd2FybmluZyBhbmQgY29udGludWUgWzFdOg0KPiA+IAlXQVJOKHJl
-YWRsKGNvbmZfcmVnKSAmIEJZVF9ESVJFQ1RfSVJRX0VOLA0KPiA+IAkJIlBvdGVudGlhbCBFcnJv
-cjogU2V0dGluZyBHUElPIHdpdGggZGlyZWN0X2lycV9lbiB0bw0KPiA+IG91dHB1dCIpOw0KPiA+
-IEkgdGhvdWdodCBwcm9iZSBmaW5pc2hlcyBzdWNjZXNzZnVsbHksIGJ1dCBkdWUgdG8gdGhlIHdh
-cm5pbmcgaW4NCj4gPiBkbWVzZyB5b3UNCj4gPiBhcmUgbm90IHN1cmUgd2hldGhlciB0aGUgSVJR
-IEdQSU8gcGluIGNhbiBiZSB1c2VkIGFzIG91dHB1dC4NCj4gPiBJZiBwcm9iZSBmYWlscywgaXQg
-bXVzdCBiZSBmb3IgYW5vdGhlciByZWFzb24gdGhhbiB0aGUgZGlyZWN0X2lycV9lbg0KPiA+IHdh
-cm5pbmcuDQo+ID4NCj4gPiA+IFdvdWxkIHlvdSBoYXZlIGEgcGF0Y2ggZm9yIG1lIHRvIHRlc3Qg
-dGhhdCB3b3VsZCBieXBhc3MgdGhpcyBlcnJvciwNCj4gPiA+IG9yDQo+ID4gPiBhdCBsZWFzdCBm
-YWxsYmFjayBncmFjZWZ1bGx5IHRvIG5vdCByZXNldHRpbmcsIG5vdCBwcm9iaW5nIEdQSU9zIGlm
-DQo+ID4gPiB0aGV5J3JlIGJhZGx5IHNldHVwPw0KPiA+DQo+ID4gSWYgdGhlIGRyaXZlciBmYWls
-cyB0byBpbml0aWFsaXplIHRoZSBHUElPcywgaXQgd2lsbCBhdCBsZWFzdCBwcmludA0KPiA+IHNv
-bWUNCj4gPiAiRmFpbGVkIHRvIGdldCBHUElPIiB3YXJuaW5ncyBpbiBkbWVzZy4gRG8geW91IGhh
-dmUgc3VjaCBtZXNzYWdlcyBpbg0KPiA+IGRtZXNnIG9yIGFueSBhZGRpdGlvbmFsIGluZm9ybWF0
-aW9uIG9uIHdoeSBwcm9iZSBmYWlscz8NCj4gPg0KPiA+IFRoZSBjdXJyZW50IGNvZGUgd2lsbCBp
-Z25vcmUgR1BJT3MgaWYgdGhleSBhcmUgbm90IGRlZmluZWQgaW4gQUNQSQ0KPiA+IChzZWUgdGhl
-IGNoZWNrIGZvciAtRU5PRU5UKSwgYnV0IGRvZXMgbm90IGlnbm9yZSBvdGhlciBlcnJvciBjb2Rl
-cy4NCj4gPiBJZiB5b3Ugd2FudCB0byBieXBhc3MgYWxsIEdQSU8gZXJyb3JzLCB5b3UgY2FuIHVz
-ZSB0aGUgY29kZSBiZWxvdy4NCj4gDQo+IFRoZSBmYWlsdXJlIGlzbid0IHRoZXJlLCBpdCdzIHdo
-ZW4gcnVubmluZ8KgZ29vZGl4X2kyY190ZXN0KCk6DQo+IFNlcCAyNSAxNjozOToyMCB3aW5ib29r
-IGtlcm5lbDogR29vZGl4LVRTIGkyYy1HRElYMTAwMTowMDogaTJjIHRlc3QgZmFpbGVkIGF0dGVt
-cHQgMTogLTEyMQ0KPiBTZXAgMjUgMTY6Mzk6MjAgd2luYm9vayBrZXJuZWw6IEdvb2RpeC1UUyBp
-MmMtR0RJWDEwMDE6MDA6IGkyYyB0ZXN0IGZhaWxlZCBhdHRlbXB0IDI6IC0xMjENCj4gU2VwIDI1
-IDE2OjM5OjIwIHdpbmJvb2sga2VybmVsOiBHb29kaXgtVFMgaTJjLUdESVgxMDAxOjAwOiBJMkMg
-Y29tbXVuaWNhdGlvbiBmYWlsdXJlOiAtMTIxDQo+IFNlcCAyNSAxNjozOToyMCB3aW5ib29rIGtl
-cm5lbDogR29vZGl4LVRTOiBwcm9iZSBvZiBpMmMtR0RJWDEwMDE6MDAgZmFpbGVkIHdpdGggZXJy
-b3IgLTEyMQ0KPiANCg0KQXJlIHlvdSB1c2luZyB2NiBvZiB0aGUgcGF0Y2hlcz8gVGhlcmUgd2Fz
-IGFuIGlzc3VlIHdpdGggcmVzZXQgdGhhdCBBbGVrc2VpIHJlcG9ydGVkDQphbmQgd2FzIGZpeGVk
-IGluIHY2IChhbHRob3VnaCBoZSBoYWQgYSBkaWZmZXJlbnQgaTJjIGVycm9yIGFuZCBhIGRpZmZl
-cmVudCBzY2VuYXJpbykuDQoNCj4gVGhlIEdQSU8gc2V0dXAgc2VlbXMgdG8gd29yayAoYmFyIHRo
-ZSB3YXJuaW5ncyksIGFuZCB0aGUgcmVzZXQgYXMgd2VsbCwNCj4gYnV0IHRoZW4gdGhlIGRldmlj
-ZSBmYWlscyB0byBjb21tdW5pY2F0ZS4gTGlrZWx5IGEgZmFsbG91dCBmcm9tIHRoZQ0KPiByZXNl
-dCBhY3R1YWxseSBmYWlsaW5nLg0KPiANCj4gU3dhcHBpbmcgYXJvdW5kIHRoZSBSU1QgYW5kIElO
-VCBwaW5zIGxlYWRzIHRvIHRoZSBzYW1lIHByb2JsZW0uIEVpdGhlcg0KPiB0aGlzIGRldmljZSdz
-IEdQSU8gUElOcyBhcmVuJ3QgYWN0dWFsbHkgZnVuY3Rpb25hbCwgYW5kIHRoZSBmaXJtd2FyZQ0K
-PiBjb250YWlucyBnYXJiYWdlLCBvciBzb21ldGhpbmcgZWxzZSBpcyB3cm9uZy4NCj4gDQoNCkkg
-YWdyZWUuIEVpdGhlciB0aGUgaW50ZXJydXB0IHBpbiBjYW5ub3QgYmUgdXNlZCBhcyBvdXRwdXQg
-aW4geW91ciBjb25maWd1cmF0aW9uDQpvciB0aGVyZSBhcmUgc29tZSBzcGVjaWZpY3MgaW4gdGhl
-IEFDUEkgdGFibGVzIHRoYXQgcHJldmVudCB1c2luZyB0aGVzZSBwaW5zLiANCg0KPiBJJ20gbm90
-IHN1cmUgaG93IHdlIGNhbiBkZXRlY3QsIGFuZCBibGFja2xpc3QsIHRob3NlIGRldmljZXMuIEF0
-IGxlYXN0DQo+IG15IG9yaWdpbmFsIGRldmljZSwgdGhlIE9uZGEgdjk3NXcsIGFuZCB0aGUgV2lu
-Qm9vayBUVzEwMCB3b3VsZCBoYXZlDQo+IHRob3NlIHByb2JsZW1zLg0KPiANCg0KSSBjYW4gdXNl
-IERNSSBxdWlya3MgdG8gZXhjbHVkZSB0aGVzZSBkZXZpY2VzIGZyb20gdXNpbmcgdGhlIGZlYXR1
-cmVzIHRoYXQNCmRlcGVuZCBvbiB0aGUgZ3BpbyBwaW5zLiBJIGFscmVhZHkgaGF2ZSB0aGUgRE1J
-IGluZm9ybWF0aW9uIGZvciBXaW5Cb29rIFRXMTAwDQphbmQgV2luQm9vayBUVzcwMC4gQ291bGQg
-eW91IHRlbGwgbWUgdGhlIERNSV9TWVNfVkVORE9SIGFuZA0KRE1JX1BST0RVQ1RfTkFNRSBmb3Ig
-T25kYSB2OTc1dyBzbyBJIGNhbiBhZGQgaXQgYXMgd2VsbD8NCg0KVGhhbmtzLA0KSXJpbmENCg0K
-PiBDaGVlcnMNCg==
+On 09/29/2015 10:13 AM, Mark Brown wrote:
+> On Fri, Sep 25, 2015 at 03:10:04PM -0500, Andrew F. Davis wrote:
+>> On 09/25/2015 01:05 PM, Mark Brown wrote:
+>>> On Thu, Sep 24, 2015 at 09:52:53AM -0500, Andrew F. Davis wrote:
+>
+>>>> +	match = of_match_device(tps65912_regulator_of_match_table, &pdev->dev);
+>>>> +	if (!match)
+>>>> +		return -ENODEV;
+>
+>>>> +	template = match->data;
+>>>> +	id = template->id;
+>>>> +	init_data = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node,
+>>>> +					       &regulators[id]);
+>
+>>> Don't open code this stuff, use the core DT matching in the
+>>> regulator_desc instead.
+>
+>> I assume you are referring to your additions in a0c7b164ad11? If so I'm not
+>
+> Please don't refer to commits by ID only, include a human readable
+> description of the commit for the benefit of any humans who might read
+> your mail.
+>
+
+Forgot about those pesky humans :), OK, will do from now on.
+
+>> sure that will save me anything as my probe function is called with a DT
+>> match already, so no searching is needed.
+>
+> You've not understood what that change is replacing, the code I'm
+> quoting above is exactly that code.  Check out some of the existing
+> drivers using this API.
+>
+
+Looking at other drivers that use this API they all call regulator_register
+in a loop in their probe, once for each possible regulator, in this case
+letting the API do the DT node search makes sense. My probe on the other-hand
+is only called when we already have a DT match, therefor searching is not
+necessary and all I have to do is call of_get_regulator_init_data myself on
+the already found DT node. No need to add node names to my regulator_desc
+and make the API re-search for the node.
+
+I have further cleaned up this code to show this.
+
+If this is acceptable, I'll push the re-spin so you can review further.
+
+>>> Please also use subject lines mathcing the style for the subsystem.
+>
+>> I'm not sure I know what you mean? What is wrong with my subject line, it looks
+>> like the others I've looked at?
+>
+> You are using "regulators:", the regulator API uses "regulator:" - this
+> should be really clear if you do something like a git shortlog.
+>
+
+Ah, slipped right past me, thanks for clarifying, fixed.
