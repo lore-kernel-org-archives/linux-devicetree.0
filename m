@@ -1,38 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH] ARM: shmobile: dt: Rename incorrect interrupt related binding
-Date: Tue, 29 Sep 2015 09:43:08 +0100
-Message-ID: <1443516188-3308-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, geert+renesas@glider.be, horms+renesas@verge.net.au, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: STi: DT: STiH407: Rename incorrect interrupt related binding
+Date: Tue, 29 Sep 2015 09:52:18 +0100
+Message-ID: <1443516738-3569-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 interrupts-names => interrupt-names
 
-Other line changes are re-aligning.
-
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/memory-controllers/renesas-memory-controllers.txt      | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/renesas-memory-controllers.txt b/Documentation/devicetree/bindings/memory-controllers/renesas-memory-controllers.txt
-index c64b792..9f78e6c 100644
---- a/Documentation/devicetree/bindings/memory-controllers/renesas-memory-controllers.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/renesas-memory-controllers.txt
-@@ -24,9 +24,9 @@ Required properties:
- Optional properties:
-   - interrupts: Must contain a list of interrupt specifiers for memory
- 		controller interrupts, if available.
--  - interrupts-names: Must contain a list of interrupt names corresponding to
--		      the interrupts in the interrupts property, if available.
--		      Valid interrupt names are:
-+  - interrupt-names: Must contain a list of interrupt names corresponding to
-+		     the interrupts in the interrupts property, if available.
-+		     Valid interrupt names are:
- 			- "sec" (secure interrupt)
- 			- "temp" (normal (temperature) interrupt)
-   - power-domains: Must contain a reference to the PM domain that the memory
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index 1683deb..7992063 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -53,7 +53,7 @@
+ 			reg = <0x0961f080 0x4>;
+ 			reg-names = "irqmux";
+ 			interrupts = <GIC_SPI 188 IRQ_TYPE_NONE>;
+-			interrupts-names = "irqmux";
++			interrupt-names = "irqmux";
+ 			ranges = <0 0x09610000 0x6000>;
+ 
+ 			pio0: gpio@09610000 {
+@@ -264,7 +264,7 @@
+ 			reg = <0x0920f080 0x4>;
+ 			reg-names = "irqmux";
+ 			interrupts = <GIC_SPI 189 IRQ_TYPE_NONE>;
+-			interrupts-names = "irqmux";
++			interrupt-names = "irqmux";
+ 			ranges = <0 0x09200000 0x10000>;
+ 
+ 			pio10: pio@09200000 {
+@@ -637,7 +637,7 @@
+ 			reg = <0x0921f080 0x4>;
+ 			reg-names = "irqmux";
+ 			interrupts = <GIC_SPI 190 IRQ_TYPE_NONE>;
+-			interrupts-names = "irqmux";
++			interrupt-names = "irqmux";
+ 			ranges = <0 0x09210000 0x10000>;
+ 
+ 			tsin4 {
+@@ -670,7 +670,7 @@
+ 			reg = <0x0922f080 0x4>;
+ 			reg-names = "irqmux";
+ 			interrupts = <GIC_SPI 191 IRQ_TYPE_NONE>;
+-			interrupts-names = "irqmux";
++			interrupt-names = "irqmux";
+ 			ranges = <0 0x09220000 0x6000>;
+ 
+ 			pio30: gpio@09220000 {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
