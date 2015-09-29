@@ -1,117 +1,50 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Tue, 29 Sep 2015 08:19:33 +0100
-Message-ID: <20150929071933.GV27197@x1>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-4-git-send-email-afd@ti.com>
- <20150925165059.GI27197@x1>
- <56059CDA.4020004@ti.com>
- <20150925212446.GL27197@x1>
- <56096010.5010202@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH RESEND] ARM: dts: Move display-timings node from fimd to
+ dp
+Date: Tue, 29 Sep 2015 16:21:07 +0900
+Message-ID: <560A3BE3.3090504@samsung.com>
+References: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56096010.5010202@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1442494120-463-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Sep 2015, Andrew F. Davis wrote:
+W dniu 17.09.2015 o 21:48, Tomeu Vizoso pisze:
+> From: Sean Paul <seanpaul@chromium.org>
+> 
+> This patch moves the display-timings node from fimd to dp to reflect the
+> device tree bindings change.
+> 
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> [tomeu.vizoso@collabora.com: Rebased]
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> 
+> ---
+> 
+> Hi,
+> 
+> looks like a long time ago the bindings were changed and the DTs for
+> these boards weren't updated.
+> 
+> I have retaken Sean's forgotten patch and rebased it, but I have only
+> tested on an Arndale that exynos-drm doesn't complain about missing
+> timings.
+> 
+> Regards,
+> 
+> Tomeu
+> ---
+>  arch/arm/boot/dts/exynos5250-arndale.dts  |  8 ++++----
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts | 16 ++++++++--------
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts |  7 ++++---
+>  3 files changed, 16 insertions(+), 15 deletions(-)
 
-> On 09/25/2015 04:24 PM, Lee Jones wrote:
-> >On Fri, 25 Sep 2015, Andrew F. Davis wrote:
-> >
-> >>On 09/25/2015 11:50 AM, Lee Jones wrote:
-> >>>On Thu, 24 Sep 2015, Andrew F. Davis wrote:
-> >>>
-> >>>>This patch adds support for TPS65912 mfd device. It provides
-> >>>>communication through the I2C and SPI interfaces. It contains
-> >>>>the following components:
-> >>>>
-> >>>>  - Regulators
-> >>>>  - GPIO controller
-> >>>>
-> >>>>Signed-off-by: Andrew F. Davis <afd@ti.com>
-> >>>>---
-> >>>>  drivers/mfd/Kconfig          |  24 +++
-> >>>>  drivers/mfd/Makefile         |   3 +
-> >>>>  drivers/mfd/tps65912-core.c  | 114 +++++++++++++
-> >>>>  drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
-> >>>>  drivers/mfd/tps65912-spi.c   |  85 ++++++++++
-> >>>>  include/linux/mfd/tps65912.h | 393 ++++++++++++++++++++++++++++=
-+++++++++++++++
-> >>>>  6 files changed, 705 insertions(+)
-> >>>>  create mode 100644 drivers/mfd/tps65912-core.c
-> >>>>  create mode 100644 drivers/mfd/tps65912-i2c.c
-> >>>>  create mode 100644 drivers/mfd/tps65912-spi.c
-> >>>>  create mode 100644 include/linux/mfd/tps65912.h
-> >>>
-> >>>[...]
-> >>>
-> >>>>+#define TPS65912_IRQ(_name, _reg, _offset)			\
-> >>>>+	[TPS65912_IRQ_ ## _name] =3D {				\
-> >>>>+		.mask =3D TPS65912_ ## _reg ## _ ## _name,	\
-> >>>>+		.reg_offset =3D _offset,				\
-> >>>>+	}
-> >>>
-> >>>I told you about this already.
-> >>>
-> >>>If you want this set to be merged for v4.3 then you'll need commit
-> >>>b4fe8ba ("regmap: Add generic macro to define regmap_irq") from my
-> >>>tree.
-> >>
-> >>You asked me to submit this to Mark Brown, I didn't realize you als=
-o
-> >>wanted me to use the one in your tree. Using yours will make my lin=
-es
-> >>over 80 chars and so it kind of defeats the purpose but I'll do it
-> >>for v4.
-> >
-> >I asked two of you to upstream a generic incarnation of your
-> >implementation.  The other guy got there first.  Now I want everyone
-> >to use it instead of hand-rolling their own.
-> >
->=20
-> Got it.
->=20
-> >>>[...]
-> >>>
-> >>>>+static struct i2c_driver tps65912_i2c_driver =3D {
-> >>>>+	.driver		=3D {
-> >>>>+		.name	=3D "tps65912",
-> >>>>+		.of_match_table =3D tps65912_i2c_of_match_table,
-> >>>
-> >>>of_match_ptr()
-> >>>
-> >>
-> >>Why? tps65912_i2c_of_match_table is always compiled in.
-> >
-> >But it needn't be.
-> >
->=20
-> This driver is DT only, would it make more sense to just add a depend=
-ency
-> on CONFIG_OF in the Kconfig?
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Yes, that is the alternitive.
-
-> I don't see many other drivers that are DT
-> only doing this, the driver should compile just fine without OF enabl=
-ed,
-> it just wont have DT functionality, so is it really dependent on OF?
-
-Then it should be "depends on OF || COMPILE_TEST"
-
-> The of_match_ptr(x) macro looks to be useful when the x is conditiona=
-lly
-> compiled in, but in my case the x (my of_device_id table) is always c=
-ompiled.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best regards,
+Krzysztof
