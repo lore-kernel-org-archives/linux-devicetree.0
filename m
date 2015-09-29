@@ -1,105 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding documentation
-Date: Tue, 29 Sep 2015 16:15:25 +0200
-Message-ID: <2737791.qJkUc2COQb@wuerfel>
-References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org> <1842713.tkjrhSVazj@wuerfel> <20150929134215.GA21591@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
+Date: Tue, 29 Sep 2015 15:18:07 +0100
+Message-ID: <560A9D9F.2070109@nvidia.com>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com>
+ <2417622.fOrcl680Fe@wuerfel> <560A817E.6010405@nvidia.com>
+ <2496965.bMvvDEqHin@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150929134215.GA21591@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2496965.bMvvDEqHin@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 September 2015 14:42:15 Peter Griffin wrote:
-> On Tue, 29 Sep 2015, Arnd Bergmann wrote:
-> > On Tuesday 29 September 2015 13:11:55 Peter Griffin wrote:
-> > > Does it? I didn't think it did.
-> > > 
-> > > Using the instance number as a DT property defers the decision over what firmware to
-> > > load to the driver, which can choose whatever firmware name it wishes.
-> > > 
-> > > e.g. in v4.3 it could load xyz.elf, in v4.4 it could choose abc.elf. The DT will remain
-> > > unchanged, but the use of that fdma instance has changed.
-> > > 
-> > > We currently only have one firmware for each instance with the "use" compiled into it.
-> > > If in the future we had two firmwares with different "uses" for the same instance some extra
-> > > logic would be required in the driver to make a decision on which firmware to load.
-> > 
-> > Ok, I probably need some more background about what the firmware on this
-> > device does, and what it could do with a different firmware. Could you
-> > elaborate?
+
+On 29/09/15 13:39, Arnd Bergmann wrote:
+
+[snip]
+
+> Ok, that makes more sense then. A few questions still:
 > 
-> So the fdma hw is a dma engine based around a xp70 slim core. It supports: -
-> * block memory move between 2 system locations
-> * paced transfer from system memory to paced peripheral
-> * paced transfer from a paced peripheral to system memory
-> 
-> I believe each firmware for each instance supports those 3 things.
+> * Would the admaif in turn provide a #dma-cells and have the real slaves
+>   hooked up to it?
 
-Ok
+I don't think that that would be necessary. If you look at the existing
+tegra i2s binding [0], there is a ahub-cif-ids property which maps the
+actual slave to the apbif (equivalent of the adma-if). This ID is used
+to get the appropriate dma channel for this client interface (cif).
 
-> However the xp70 also has some ancilary HW to facilitate Start Code Detection.
-> It is this feature which I believe would require a different firmware if we wanted to make
-> use of it. Looking at the functional spec each xp70 also
-> has 16 gp output signals which we could also control from the firmware. Whether
-> these are actually connected to anything useful inside the SoC I don't know.
+> * How do you model the xbar in this scenario?
 
-I still don't understand what Start Code Detection is here.
+The xbar is common to existing tegra devices and today is configured via
+the ahub-cif-ids property.
 
-> > > > and you correctly describe the problem with
-> > > > using the compatible string for the firmware name if the driver for the FDMA
-> > > > does not actually care what firmware is being used here.
-> > > > 
-> > > > Whatever code makes the decision as to how the FDMA is used should also
-> > > > decide on the name of the firmware file.
-> > > 
-> > > The code which makes this decision currently is the st_fdma.c driver. However it does
-> > > need to know which fdma controller it is operating on to make this decision correctly.
-> > > 
-> > > Apart from passing the fdma instance number in DT, how else can we determine which
-> > > controller we are?
-> > > 
-> > > I guess we could infer it by having a table in the driver containing the base addresses
-> > > of the controllers for a given SoC, and match that against what DT passes us in the
-> > > reg property. But that seems ugly, and is encoding the same information in two
-> > > different places.
-> > > 
-> > > I'm open to suggestions if there is a better way to do this.
-> > 
-> > Using the address would be the same thing, that doesn't change the
-> > fundamental logic. Can you explain why it matters which instance
-> > a firmware is used on for this driver?
-> 
-> The reason we care, is that each instance has its own firmware file.
-> 
-> I just did a hexdump on the 3 different firmwares and compared them. Although the majority
-> of the binary is the same, there are various bytes which change at several different offsets
-> in the firmware file depending on the instance.
-> 
-> I don't have a xp70 toolchain or know enough about the cpu architecture to analyze what exactly
-> the firmware is doing at these locations.
+> * How does the adma driver know whether you are using a rx or tx channel
+>   in the above example, should that perhaps be another cell in dma
+>   specifier? It seems that the numbers are all overlapping between rx and
+>   tx (each has 1 through 10).
 
-This sounds like we should indeed treat them as different things: We don't
-know what the difference is, but we know that each of them needs a different
-firmware, and presumably if you get a new SoC variant, it will in turn
-need three new ones.
+The channels can be configured to be either rx or tx and yes the IDs do
+overlap so you have 1-10 for both rx and tx. However, if you are asking
+how do I ensure that only one channel uses a specific hardware request,
+then yes I probably need to add the direction to the specifier to ensure
+only one channel uses a request at any given time.
 
-In this case, I'd say using the compatible string to identify them is best,
-using whatever the SoC documentation uses to describe them. You can use the
-of_device_id data fields to look up the firmware name then.
+Cheers
+Jon
 
-If the output signals end up being connected to something we want to
-control through the firmware, that also makes sense for a new compatible
-string, as the driver needs to know about the feature in order to
-communicate with the firmware, and the DT needs to be able to describe
-the pins (e.g. by making the node act as a GPIO controller) in a way that
-requires a different string, too.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0]
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.txt
