@@ -1,121 +1,56 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
- DT binding documentation
-Date: Tue, 29 Sep 2015 14:42:15 +0100
-Message-ID: <20150929134215.GA21591@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
- <35211759.Jca4RWVLIS@wuerfel>
- <20150929121155.GA17986@griffinp-ThinkPad-X1-Carbon-2nd>
- <1842713.tkjrhSVazj@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v2 4/4] clk: shmobile: rcar-gen2: Switch from old MSTP
+ to new MSSR driver
+Date: Tue, 29 Sep 2015 15:43:37 +0200
+Message-ID: <CAMuHMdXWONWNBQocy4=PPB93BYvRuz1=3SLH6u6xLOykj+x71w@mail.gmail.com>
+References: <1442936646-30362-1-git-send-email-geert+renesas@glider.be>
+	<1442936646-30362-5-git-send-email-geert+renesas@glider.be>
+	<CAMuHMdW3o0WCGCXuyYJtd8nC691N62wK7NNTzTQTM7fAvCn8jg@mail.gmail.com>
+	<CANqRtoTMgZRU6bmp9VoK6O5xDNKc0zkf-xmepgkY2ZyYXW5-mQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1842713.tkjrhSVazj@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, vinod.koul@intel.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Ludovic Barre <ludovic.barre@st.com>, dmaengine@vger.kernel.org, maxime.coquelin@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoTMgZRU6bmp9VoK6O5xDNKc0zkf-xmepgkY2ZyYXW5-mQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Magnus,
 
-On Tue, 29 Sep 2015, Arnd Bergmann wrote:
+On Tue, Sep 29, 2015 at 3:30 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
+> On Tue, Sep 29, 2015 at 9:48 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Tue, Sep 22, 2015 at 5:44 PM, Geert Uytterhoeven
+>> <geert+renesas@glider.be> wrote:
+>>> --- a/drivers/clk/shmobile/clk-rcar-gen2.c
+>>> +++ b/drivers/clk/shmobile/clk-rcar-gen2.c
+>>> @@ -431,7 +431,7 @@ static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
+>>>
+>>>         of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
+>>>
+>>> -       cpg_mstp_add_clk_domain(np);
+>>> +       cpg_mssr_add_clk_domain(np);
+>>
+>> Of course this should become conditional on the presence of the new
+>> "renesas,r8a7791-cpg-mssr" compatible value, to preserve
+>> backwards-compatibility with old DTSes.
+>
+> Yeah, and we should probably link in both clk-mstp.o and clk-mssr.o
+> for older SoCs.
 
-> On Tuesday 29 September 2015 13:11:55 Peter Griffin wrote:
-> > Hi Arnd,
-> > 
-> > On Tue, 29 Sep 2015, Arnd Bergmann wrote:
-> > 
-> > > On Tuesday 29 September 2015 11:04:40 Peter Griffin wrote:
-> > > > 
-> > > > "The hardware is identical, and different firmware is used to apply
-> > > >    it in different ways."
-> > > > 
-> > > > Which is the case with fdma. By encoding the "way you wish to apply it" into the
-> > > > compatible string, it causes problems if you want to change for example fdma0
-> > > > to do some other function other than audio.
-> > > > 
-> > > > You then require a DT update, (when the hardware hasn't changed, just the
-> > > > firmware) which is the same problem as using the filename directly in DT.
-> > > > 
-> > > > Therefore I believe it is important that the DT binding does *not* encode the
-> > > > way the hardware is to be applied into the binding in *any* way, and defers this
-> > > >  decision to the driver.
-> > > > That is the rationale / reasoning behind choosing the fdma instance number.
-> > > > 
-> > > > Assuming you agree with my arguments above, then the choice becomes between 
-> > > > having a fdma instance DT property, or having lots of compatibles where the only
-> > > > difference is the appending of the instance number. I think out of the two I prefer
-> > > > my original approach.
-> > > > 
-> > > > Any thoughts from the DT folks?
-> > > 
-> > > To me both approaches sound wrong: basing the firmware name on the instance
-> > > number requires that each instance is always used in the same way, which
-> > > is not guaranteed to be the case,
-> > 
-> > Does it? I didn't think it did.
-> > 
-> > Using the instance number as a DT property defers the decision over what firmware to
-> > load to the driver, which can choose whatever firmware name it wishes.
-> > 
-> > e.g. in v4.3 it could load xyz.elf, in v4.4 it could choose abc.elf. The DT will remain
-> > unchanged, but the use of that fdma instance has changed.
-> > 
-> > We currently only have one firmware for each instance with the "use" compiled into it.
-> > If in the future we had two firmwares with different "uses" for the same instance some extra
-> > logic would be required in the driver to make a decision on which firmware to load.
-> 
-> Ok, I probably need some more background about what the firmware on this
-> device does, and what it could do with a different firmware. Could you
-> elaborate?
+Yep, been there, done that (local code updated and working ;-)
 
-So the fdma hw is a dma engine based around a xp70 slim core. It supports: -
-* block memory move between 2 system locations
-* paced transfer from system memory to paced peripheral
-* paced transfer from a paced peripheral to system memory
+The conditional in drivers/sh/pm_runtime.c is getting a bit too gory for my
+appetite. I think we should make PM (and thus PM_GENERIC_DOMAINS) mandatory.
 
-I believe each firmware for each instance supports those 3 things.
+Gr{oetje,eeting}s,
 
-However the xp70 also has some ancilary HW to facilitate Start Code Detection.
-It is this feature which I believe would require a different firmware if we wanted to make
-use of it. Looking at the functional spec each xp70 also
-has 16 gp output signals which we could also control from the firmware. Whether
-these are actually connected to anything useful inside the SoC I don't know.
+                        Geert
 
-> > > and you correctly describe the problem with
-> > > using the compatible string for the firmware name if the driver for the FDMA
-> > > does not actually care what firmware is being used here.
-> > > 
-> > > Whatever code makes the decision as to how the FDMA is used should also
-> > > decide on the name of the firmware file.
-> > 
-> > The code which makes this decision currently is the st_fdma.c driver. However it does
-> > need to know which fdma controller it is operating on to make this decision correctly.
-> > 
-> > Apart from passing the fdma instance number in DT, how else can we determine which
-> > controller we are?
-> > 
-> > I guess we could infer it by having a table in the driver containing the base addresses
-> > of the controllers for a given SoC, and match that against what DT passes us in the
-> > reg property. But that seems ugly, and is encoding the same information in two
-> > different places.
-> > 
-> > I'm open to suggestions if there is a better way to do this.
-> 
-> Using the address would be the same thing, that doesn't change the
-> fundamental logic. Can you explain why it matters which instance
-> a firmware is used on for this driver?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-The reason we care, is that each instance has its own firmware file.
-
-I just did a hexdump on the 3 different firmwares and compared them. Although the majority
-of the binary is the same, there are various bytes which change at several different offsets
-in the firmware file depending on the instance.
-
-I don't have a xp70 toolchain or know enough about the cpu architecture to analyze what exactly
-the firmware is doing at these locations.
-
-regards,
-
-Peter.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
