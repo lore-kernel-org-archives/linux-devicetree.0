@@ -1,96 +1,58 @@
-From: Jose Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 2/3] Docs: dt: fsl-mc update binding to include definition
- of ranges
-Date: Tue, 29 Sep 2015 19:21:37 +0000
-Message-ID: <DM2PR0301MB1309154EC128853314F9CB41FE4E0@DM2PR0301MB1309.namprd03.prod.outlook.com>
-References: <1443215286-3126-1-git-send-email-stuart.yoder@freescale.com>
- <1443215286-3126-3-git-send-email-stuart.yoder@freescale.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sun6i: Turn on gmac on Colombus
+Date: Tue, 29 Sep 2015 22:10:20 +0200
+Message-ID: <560AF02C.2010308@redhat.com>
+References: <1438960955-6551-1-git-send-email-hdegoede@redhat.com>
+ <1438960955-6551-2-git-send-email-hdegoede@redhat.com>
+ <20150819151754.GH30520@lukather> <55D5725F.6000106@redhat.com>
+ <20150820221259.GM30520@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443215286-3126-3-git-send-email-stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20150820221259.GM30520@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Katz Itai <itai.katz-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Stuart Yoder [mailto:stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
-> Sent: Friday, September 25, 2015 4:08 PM
-> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rivera
-> Jose-B46482; Sharma Bhupesh-B45370; katz Itai-RM05202; Yoder Stuart-
-> B08248
-> Subject: [PATCH 2/3] Docs: dt: fsl-mc update binding to include
-> definition of ranges
-> 
-> Define a ranges property to specify the mapping between the MC address
-> space and the system address space.
-> 
-> Signed-off-by: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 30
-> +++++++++++++++++++++-
->  1 file changed, 29 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> index 6aac955..848975f 100644
-> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> @@ -35,6 +35,26 @@ Required properties:
->          Definition: Must be present and point to the MSI controller node
->                      handling message interrupts for the MC.
-> 
-> +    - ranges
-> +        Value type: <prop-encoded-array>
-> +        Definition: A standard property.  Defines the mapping between
-> the child
-> +                    MC address space and the parent system address
-> space.
-> +
-> +                    The MC address space is defined by 3 components:
-> +                       <region type> <offset hi> <offset lo>
-> +
-> +                    Valid values for region type are
-> +                       0x0 - MC portals
-> +                       0x1 - QBMAN portals
-> +
-> +    - #address-cells
-> +        Value type: <u32>
-> +        Definition: Must be 3.  (see definition in 'ranges' property)
-> +
-> +    - #size-cells
-> +        Value type: <u32>
-> +        Definition: Must be 1.
-> +
->  Example:
-> 
->          fsl_mc: fsl-mc@80c000000 {
-> @@ -42,5 +62,13 @@ Example:
->                  reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal
-> base */
->                        <0x00000000 0x08340000 0 0x40000>; /* MC control
-> reg */
->                  msi-parent = <&its>;
-> -        };
-> +                #address-cells = <3>;
-> +                #size-cells = <1>;
-> 
-> +                /*
-> +                 * Region type 0x0 - MC portals
-> +                 * Region type 0x1 - QBMAN portals
-> +                 */
-> +                ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
-> +                          0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
-> +        };
-> --
-> 2.3.3
+Hi,
 
-Acked-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 08/21/2015 12:12 AM, Maxime Ripard wrote:
+> On Thu, Aug 20, 2015 at 08:23:27AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 08/19/2015 05:17 PM, Maxime Ripard wrote:
+>>> On Fri, Aug 07, 2015 at 05:22:34PM +0200, Hans de Goede wrote:
+>>>> We've everything we need to support the gmac on Colombus, turn it on.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> I recall that the phy was powered by one of the AXP221 regulators,
+>>> does it require some additional stuff (like a recent u-boot), or does
+>>> it just work and my memory is bad :) ?
+>>
+>> I think it just works, it MAY be connected to aldo1 but according to
+>> the git history for the u-boot defconfig that one is used for wifi not
+>> for the gmac, and we do not enable any other "spare" regulators in the
+>> u-boot config.
+>>
+>> I do not have any schematics, so no way to say for sure.
+>>
+>> I can confirm that the GMAC work fine with the latest u-boot
+>> master. Looking in the history we've always enabled ALDO1
+>> on the Colombus in upstream u-boot, so this should all just work.
+>
+> Except that if it is the case, the DT was working fine with the stock
+> bootloader, and it doesn't anymore, while we have no way to upgrade
+> it.
 
+Ok, I've finally made some time to test this, the gmac works fine
+with aldo1 disabled, so I believe this patch can be merged as is.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
