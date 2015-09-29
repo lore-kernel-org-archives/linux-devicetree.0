@@ -1,651 +1,83 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] iio: adc: Add TI ADS868X
-Date: Tue, 29 Sep 2015 18:34:50 +0100
-Message-ID: <560ACBBA.7060201@kernel.org>
-References: <1443162580-28293-1-git-send-email-sean.nyekjaer@prevas.dk>
- <5607FF50.9070207@kernel.org> <56096A51.7020803@prevas.dk>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v3 1/5] Input: goodix - reset device at init
+Date: Tue, 29 Sep 2015 17:47:06 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0EBB24@irsmsx105.ger.corp.intel.com>
+References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
+	 <1435595304-4840-2-git-send-email-irina.tirdea@intel.com>
+	 <1435679809.2612.13.camel@hadess.net>
+	 <1F3AC3675D538145B1661F571FE1805F2F0AC0D3@irsmsx105.ger.corp.intel.com>
+	 <1441818159.27328.30.camel@hadess.net>
+	 <1F3AC3675D538145B1661F571FE1805F2F0C9F85@irsmsx105.ger.corp.intel.com>
+	 <1443192251.17020.29.camel@hadess.net>
+	 <1F3AC3675D538145B1661F571FE1805F2F0E98FC@irsmsx105.ger.corp.intel.com>
+ <1443492265.17930.9.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56096A51.7020803-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1443492265.17930.9.camel@hadess.net>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Purdila, Octavian" <octavian.purdila@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/09/15 17:26, Sean Nyekj=C3=A6r wrote:
-> Hi
->=20
-> Just to clear thing up :-)
->=20
-> All the mess in the write_raw functions are from the allowed scales.
-> if you are in =C2=B10.625=C3=97Vref mode you are not allowed set an o=
-ffset value of 0.
-Ah.  Thanks for clarifying that.
->=20
-> INPUT RANGE POSITIVE FULL SCALE NEGATIVE FULL SCALE FULL-SCALE RANGE
-> =C2=B12.5 =C3=97 V REF 10.24 V =E2=80=9310.24 V 20.48 V
-> =C2=B11.25 =C3=97 V REF 5.12 V =E2=80=935.12 V 10.24 V
-> =C2=B10.625 =C3=97 V REF 2.56 V =E2=80=932.56 V 5.12 V
-> 0 to 2.5 =C3=97 V REF 10.24 V 0V 10.24 V
-> 0 to 1.25 =C3=97 V REF 5.12 V 0V 5.12 V
->=20
-> I will update the driver with your comments :-)
->=20
-> /Sean
->=20
-> On 2015-09-27 16:38, Jonathan Cameron wrote:
->> On 25/09/15 07:29, Sean Nyekjaer wrote:
->>> This patch adds support for the Texas Intruments ADS868x ADC.
->>>
->>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
->>> Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
->> Hi
->>
->> The driver is fundamentally good, but I think a few small changes wo=
-uld make
->> it less complex to read which is always a good thing!
->>
->> Comments inline.
->>
->> Jonathan
->>> ---
->>> Changes since v1:
->>> - Now possible to read and write the actual offset and scale values
->>> - Removed unused includes
->>> - Removed unused buffer references
->>>
->>>   drivers/iio/adc/Kconfig      |  10 +
->>>   drivers/iio/adc/Makefile     |   1 +
->>>   drivers/iio/adc/ti-ads868x.c | 456 ++++++++++++++++++++++++++++++=
-+++++++++++++
->>>   3 files changed, 467 insertions(+)
->>>   create mode 100644 drivers/iio/adc/ti-ads868x.c
->>>
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index deea62c..39924d5 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -322,6 +322,16 @@ config TI_ADC128S052
->>>         This driver can also be built as a module. If so, the modul=
-e will be
->>>         called ti-adc128s052.
->>>   +config TI_ADS868X
->>> +    tristate "Texas Instruments ADS8684/8"
->>> +    depends on SPI && OF
->>> +    help
->>> +      If you say yes here you get support for Texas Instruments AD=
-S8684 and
->>> +      and ADS8688 ADC chips
->>> +
->>> +      This driver can also be built as a module. If so, the module=
- will be
->>> +      called ti-ads868x.
->>> +
->>>   config TI_AM335X_ADC
->>>       tristate "TI's AM335X ADC driver"
->>>       depends on MFD_TI_AM335X_TSCADC
->>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->>> index fa5723a..75170d2 100644
->>> --- a/drivers/iio/adc/Makefile
->>> +++ b/drivers/iio/adc/Makefile
->>> @@ -31,6 +31,7 @@ obj-$(CONFIG_QCOM_SPMI_VADC) +=3D qcom-spmi-vadc.=
-o
->>>   obj-$(CONFIG_ROCKCHIP_SARADC) +=3D rockchip_saradc.o
->>>   obj-$(CONFIG_TI_ADC081C) +=3D ti-adc081c.o
->>>   obj-$(CONFIG_TI_ADC128S052) +=3D ti-adc128s052.o
->>> +obj-$(CONFIG_TI_ADS868X) +=3D ti-ads868x.o
->>>   obj-$(CONFIG_TI_AM335X_ADC) +=3D ti_am335x_adc.o
->>>   obj-$(CONFIG_TWL4030_MADC) +=3D twl4030-madc.o
->>>   obj-$(CONFIG_TWL6030_GPADC) +=3D twl6030-gpadc.o
->>> diff --git a/drivers/iio/adc/ti-ads868x.c b/drivers/iio/adc/ti-ads8=
-68x.c
->>> new file mode 100644
->>> index 0000000..66d9b64
->>> --- /dev/null
->>> +++ b/drivers/iio/adc/ti-ads868x.c
->>> @@ -0,0 +1,456 @@
->>> +/*
->>> + * Copyright (C) 2015 Prevas A/S
->>> + *
->>> + * This program is free software; you can redistribute it and/or m=
-odify
->>> + * it under the terms of the GNU General Public License version 2 =
-as
->>> + * published by the Free Software Foundation.
->>> + */
->>> +
->>> +#include <linux/device.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/sysfs.h>
->>> +#include <linux/spi/spi.h>
->>> +#include <linux/regulator/consumer.h>
->>> +#include <linux/err.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +
->>> +#include <linux/iio/iio.h>
->>> +#include <linux/iio/sysfs.h>
->>> +
->>> +#define ADS868X_CMD_REG(x)        (x << 8)
->>> +#define ADS868X_CMD_REG_NOOP        0x00
->>> +#define ADS868X_CMD_REG_RST        0x85
->>> +#define ADS868X_CMD_REG_MAN_CH(chan)    (0xC0 | (4 * chan))
->>> +#define ADS868X_CMD_DONT_CARE_BITS    16
->>> +
->>> +#define ADS868X_PROG_REG(x)        (x << 9)
->>> +#define ADS868X_PROG_REG_RANGE_CH(chan)    (0x05 + chan)
->>> +#define ADS868X_PROG_WR_BIT        BIT(8)
->>> +#define ADS868X_PROG_DONT_CARE_BITS    8
->>> +
->>> +#define ADS868X_VREF_MV            4096
->>> +#define ADS868X_REALBITS        16
->>> +
->>> +struct ads868x_chip_info {
->>> +    unsigned int id;
->>> +    const struct iio_chan_spec *channels;
->>> +    unsigned int num_channels;
->>> +    unsigned int flags;
->> flags isn't used that I can see.
->>> +    const struct iio_info *iio_info;
->> Why bother? Right now you only have one iio_info structure for both
->> supported parts.  Just use it directly and drop it form this structu=
-re.
->>> +};
->>> +
->>> +struct ads868x_state {
->>> +    const struct ads868x_chip_info    *chip_info;
->>> +    struct spi_device        *spi;
->>> +    struct regulator        *reg;
->>> +    unsigned int            vref_mv;
->> prefer u8 type to a char as it clearly isn't actually a character.
->>
->> See below for more detail, but I'd suggest having a contiguous enum =
-to
->> reference into the below ranges structure then store that in your
->> device instance specific structure rather than these values.
->> It avoids a fair bit of searching!  That would also change the type
->> of this to be an array of enums rather than u8/chars.
->>
->>> +    char                range[8];
->>> +    union {
->>> +        __be32 d32;
->>> +        u8 d8[4];
->>> +    } data[2] ____cacheline_aligned;
->>> +};
->>> +
->>> +enum ads868x_id {
->>> +    ID_ADS8684,
->>> +    ID_ADS8688,
->>> +};
->>> +
->>> +enum ads868x_range {
->>> +    ADS868X_PLUSMINUS25VREF        =3D 0x00,
->>> +    ADS868X_PLUSMINUS125VREF    =3D 0x01,
->>> +    ADS868X_PLUSMINUS0625VREF    =3D 0x02,
->>> +    ADS868X_PLUS25VREF        =3D 0x05,
->>> +    ADS868X_PLUS125VREF        =3D 0x06,
->>> +};
->>> +
->>> +struct ads868x_ranges {
->>> +    enum ads868x_range range;
->>> +    unsigned int scale;
->>> +    int offset;
->>> +};
->>> +
->> const
->>> +static struct ads868x_ranges ads868x_range_def[5] =3D {
->>> +    {
->>> +        .range =3D ADS868X_PLUSMINUS25VREF,
->>> +        .scale =3D 76295,
->>> +        .offset =3D -(1 << (ADS868X_REALBITS - 1)),
->>> +    }, {
->>> +        .range =3D ADS868X_PLUSMINUS125VREF,
->>> +        .scale =3D 38148,
->>> +        .offset =3D -(1 << (ADS868X_REALBITS - 1)),
->>> +    }, {
->>> +        .range =3D ADS868X_PLUSMINUS0625VREF,
->>> +        .scale =3D 19074,
->>> +        .offset =3D -(1 << (ADS868X_REALBITS - 1)),
->>> +    }, {
->>> +        .range =3D ADS868X_PLUS25VREF,
->>> +        .scale =3D 38148,
->>> +        .offset =3D 0,
->>> +    }, {
->>> +        .range =3D ADS868X_PLUS125VREF,
->>> +        .scale =3D 19074,
->>> +        .offset =3D 0,
->>> +    }
->>> +};
->>> +
->>> +static ssize_t ads868x_show_scales(struct device *dev,
->>> +                   struct device_attribute *attr, char *buf)
->>> +{
->>> +    struct ads868x_state *st =3D iio_priv(dev_to_iio_dev(dev));
->>> +
->>> +    return sprintf(buf, "0.%09u 0.%09u 0.%09u\n",
->>> +               ads868x_range_def[0].scale * st->vref_mv,
->>> +               ads868x_range_def[1].scale * st->vref_mv,
->>> +               ads868x_range_def[2].scale * st->vref_mv);
->>> +}
->>> +
->>> +static ssize_t ads868x_show_offsets(struct device *dev,
->>> +                    struct device_attribute *attr, char *buf)
->>> +{
->>> +    return sprintf(buf, "%d %d\n", ads868x_range_def[0].offset,
->>> +               ads868x_range_def[3].offset);
->>> +}
->>> +
->>> +static IIO_DEVICE_ATTR(in_voltage_scale_available, S_IRUGO,
->>> +               ads868x_show_scales, NULL, 0);
->>> +static IIO_DEVICE_ATTR(in_voltage_offset_available, S_IRUGO,
->>> +               ads868x_show_offsets, NULL, 0);
->>> +
->>> +static struct attribute *ads868x_attributes[] =3D {
->>> +    &iio_dev_attr_in_voltage_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage_offset_available.dev_attr.attr,
->>> +    NULL,
->>> +};
->>> +
->>> +static const struct attribute_group ads868x_attribute_group =3D {
->>> +    .attrs =3D ads868x_attributes,
->>> +};
->>> +
->>> +#define ADS868X_CHAN(index)                    \
->>> +{                                \
->>> +    .type =3D IIO_VOLTAGE,                    \
->>> +    .indexed =3D 1,                        \
->>> +    .channel =3D index,                    \
->>> +    .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW)        \
->>> +                  | BIT(IIO_CHAN_INFO_SCALE)    \
->>> +                  | BIT(IIO_CHAN_INFO_OFFSET),    \
->>> +}
->>> +
->>> +static const struct iio_chan_spec ads8684_channels[] =3D {
->>> +    ADS868X_CHAN(0),
->>> +    ADS868X_CHAN(1),
->>> +    ADS868X_CHAN(2),
->>> +    ADS868X_CHAN(3),
->>> +};
->>> +
->>> +static const struct iio_chan_spec ads8688_channels[] =3D {
->>> +    ADS868X_CHAN(0),
->>> +    ADS868X_CHAN(1),
->>> +    ADS868X_CHAN(2),
->>> +    ADS868X_CHAN(3),
->>> +    ADS868X_CHAN(4),
->>> +    ADS868X_CHAN(5),
->>> +    ADS868X_CHAN(6),
->>> +    ADS868X_CHAN(7),
->>> +};
->>> +
->>> +static int ads868x_prog_write(struct iio_dev *indio_dev, unsigned =
-int addr,
->>> +                  unsigned int val)
->>> +{
->>> +    struct ads868x_state *st =3D iio_priv(indio_dev);
->>> +    unsigned int tmp;
->>> +
->>> +    tmp =3D ADS868X_PROG_REG(addr) | ADS868X_PROG_WR_BIT | val;
->>> +    tmp <<=3D ADS868X_PROG_DONT_CARE_BITS;
->>> +    st->data[0].d32 =3D cpu_to_be32(tmp);
->>> +
->>> +    return spi_write(st->spi, &st->data[0].d8[1], 3);
->>> +}
->>> +
->>> +static int ads868x_reset(struct iio_dev *indio_dev)
->>> +{
->>> +    struct ads868x_state *st =3D iio_priv(indio_dev);
->>> +    unsigned int tmp;
->>> +
->>> +    tmp =3D ADS868X_CMD_REG(ADS868X_CMD_REG_RST);
->>> +    tmp <<=3D ADS868X_CMD_DONT_CARE_BITS;
->>> +    st->data[0].d32 =3D cpu_to_be32(tmp);
->>> +
->>> +    return spi_write(st->spi, &st->data[0].d8[0], 4);
->>> +}
->>> +
->>> +static int ads868x_read(struct iio_dev *indio_dev, unsigned int ch=
-an)
->>> +{
->>> +    struct ads868x_state *st =3D iio_priv(indio_dev);
->>> +    int ret;
->>> +    unsigned int tmp;
->>> +    struct spi_transfer t[] =3D {
->>> +        {
->>> +            .tx_buf =3D &st->data[0].d8[0],
->>> +            .len =3D 4,
->>> +            .cs_change =3D 1,
->>> +        }, {
->>> +            .tx_buf =3D &st->data[1].d8[0],
->>> +            .rx_buf =3D &st->data[1].d8[0],
->>> +            .len =3D 4,
->>> +        },
->>> +    };
->>> +
->>> +    tmp =3D ADS868X_CMD_REG(ADS868X_CMD_REG_MAN_CH(chan));
->>> +    tmp <<=3D ADS868X_CMD_DONT_CARE_BITS;
->>> +    st->data[0].d32 =3D cpu_to_be32(tmp);
->>> +
->>> +    tmp =3D ADS868X_CMD_REG(ADS868X_CMD_REG_NOOP);
->>> +    tmp <<=3D ADS868X_CMD_DONT_CARE_BITS;
->>> +    st->data[1].d32 =3D cpu_to_be32(tmp);
->>> +
->>> +    ret =3D spi_sync_transfer(st->spi, t, ARRAY_SIZE(t));
->>> +    if (ret < 0)
->>> +        return ret;
->>> +
->>> +    return be32_to_cpu(st->data[1].d32) & 0xffff;
->>> +}
->>> +
->>> +static int ads868x_read_raw(struct iio_dev *indio_dev,
->>> +                struct iio_chan_spec const *chan,
->>> +                int *val, int *val2, long m)
->>> +{
->>> +    int ret, offset, i;
->>> +    unsigned long scale_mv;
->>> +
->>> +    struct ads868x_state *st =3D iio_priv(indio_dev);
->>> +
->>> +    switch (m) {
->>> +    case IIO_CHAN_INFO_RAW:
->>> +        mutex_lock(&indio_dev->mlock);
->>> +        ret =3D ads868x_read(indio_dev, chan->channel);
->>> +        mutex_unlock(&indio_dev->mlock);
->>> +        if (ret < 0)
->>> +            return ret;
->>> +        *val =3D ret;
->>> +        return IIO_VAL_INT;
->>> +    case IIO_CHAN_INFO_SCALE:
->>> +        scale_mv =3D st->vref_mv;
->>> +        for (i =3D 0; i < ARRAY_SIZE(ads868x_range_def); i++) {
->> Having this lookup in several places seems overly complex.
->>
->> If there weren't gaps in the ads868x_range, I'd suggest just using
->> that as an index, but clearly that's awkward here.
->>
->> Perhaps you just need to define a new enum which doesn't correspond
->> directly to the register value and having a reg_value field in your
->> indexed structure alongside range etc.
->>
->> That way your stored channel range enum entries will allow a direct
->> lookup rather than searching on each read for the right entry.
->>
->>> +            if (st->range[chan->channel] =3D=3D ads868x_range_def[=
-i].range)
->>> +                scale_mv *=3D ads868x_range_def[i].scale;
->>> +        }
->>> +        *val =3D 0;
->>> +        *val2 =3D scale_mv;
->>> +        return IIO_VAL_INT_PLUS_NANO;
->>> +    case IIO_CHAN_INFO_OFFSET:
->>> +        for (i =3D 0; i < ARRAY_SIZE(ads868x_range_def); i++) {
->>> +            if (st->range[chan->channel] =3D=3D ads868x_range_def[=
-i].range)
->>> +                offset =3D ads868x_range_def[i].offset;
->>> +        }
->>> +        *val =3D offset;
->>> +        return IIO_VAL_INT;
->>> +    }
->>> +
->>> +    return -EINVAL;
->>> +}
->>> +
->>> +static int ads868x_write_reg_range(struct iio_dev *indio_dev,
->>> +                   struct iio_chan_spec const *chan,
->>> +                   enum ads868x_range range)
->>> +{
->>> +    unsigned int tmp;
->>> +    int ret;
->>> +
->>> +    tmp =3D ADS868X_PROG_REG_RANGE_CH(chan->channel);
->> Technically this lock is really meant to be device state changes (mo=
-ving
->> in and out of buffered mode for example) rather than use in drivers =
-to
->> protect bus accesses which is a much lower level.  It probably doesn=
-'t actually
->> matter, but I'd prefer a locally defined lock for this.
->>
->>> +    mutex_lock(&indio_dev->mlock);
->>> +    ret =3D ads868x_prog_write(indio_dev, tmp, range);
->>> +    mutex_unlock(&indio_dev->mlock);
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static int ads868x_write_raw(struct iio_dev *indio_dev,
->>> +                 struct iio_chan_spec const *chan,
->>> +                 int val, int val2, long mask)
->>> +{
->>> +    struct ads868x_state *st =3D iio_priv(indio_dev);
->>> +    unsigned int scale =3D 0;
->>> +    int ret =3D -EINVAL, i, offset =3D 0;
->>> +
->>> +    switch (mask) {
->>> +    case IIO_CHAN_INFO_SCALE:
->>> +        for (i =3D 0; i < ARRAY_SIZE(ads868x_range_def); i++)
->>> +            if (st->range[chan->channel] =3D=3D
->>> +                ads868x_range_def[i].range) {
->>> +                offset =3D ads868x_range_def[i].offset;
->>> +                if (offset =3D=3D 0 &&
->>> +                    val2 =3D=3D ads868x_range_def[0].scale *
->>> +                    st->vref_mv / 1000)
->> Is this a nasty trick of mess to avoid having iio_val_int_plus nano
->> on the write?  Just provide the callback write_raw_get_fmt and keep
->> all your units the same across _avail, _read_raw and _write_raw.
->>
->>> +                    return ret;
->>> +                break;
->>> +            }
->>> +        for (i =3D 0; i < ARRAY_SIZE(ads868x_range_def); i++)
->>> +            if (val2 =3D=3D
->>> +                ads868x_range_def[i].scale * st->vref_mv / 1000 &&
->>> +                offset =3D=3D ads868x_range_def[i].offset) {
->>> +                ret =3D ads868x_write_reg_range(indio_dev, chan,
->>> +                    ads868x_range_def[i].range);
->>> +            }
->>> +        break;
->>> +    case IIO_CHAN_INFO_OFFSET:
->> The depth of nesting here is making this next block rather hard to r=
-ead.
->> I'd be tempted to try breaking it out to a utility function  thus dr=
-opping
->> at least one level of indentation.
->>
->> A comment here to explain why only the two values are of interest.
->> (clearly these are the only choiced, but it's not obvious without se=
-arching
->> around for where they are defined).
->>
->>> +        if (!(ads868x_range_def[0].offset =3D=3D val ||
->>> +            ads868x_range_def[3].offset =3D=3D val))
->>> +            return ret;
->> return -EINVAL to make it obvious that we have an error here rather =
-than
->> an uninteresting good return path.
->>
->>> +        if (0 =3D=3D val &&
->>> +            st->range[chan->channel] =3D=3D ADS868X_PLUSMINUS25VRE=
-=46)
->>> +            return ret;
->> same here.
->> I'd also like a comment or two in here to help me understand what is=
- happening.
->> First check is about establishing if we have a valid range and picki=
-ng the
->> scale from that, the second about finding the right one to get the o=
-ffset
->> as well?  I can't see why these are separate or for that matter why =
-you
->> don't stop looking once a good answer has been found.
->> Basically I'm confused :(
->>
->>
->>> +        for (i =3D 0; i < ARRAY_SIZE(ads868x_range_def); i++)
->>> +            if (st->range[chan->channel] =3D=3D
->>> +                ads868x_range_def[i].range)
->>> +                scale =3D ads868x_range_def[i].scale;
->> Found a scale for the current range?
->>> +        for (i =3D 0; i < ARRAY_SIZE(ads868x_range_def); i++)
->>> +            if (val =3D=3D ads868x_range_def[i].offset &&
->>> +                scale =3D=3D ads868x_range_def[i].scale) {
->> Found an offset compatible with the current scale and hence range?
->> I'm clearly missing something here!
->>> +                ret =3D ads868x_write_reg_range(indio_dev, chan,
->>> +                    ads868x_range_def[i].range);
->>> +            }
->>> +        break;
->>> +    default:
->>> +        ret =3D -EINVAL;
->> return -EINVAL then you don't need the if (!ret) below.
->>> +    }
->>> +
->>> +    if (!ret)
->>> +        st->range[chan->channel] =3D ads868x_range_def[i].range;
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static const struct iio_info ads868x_info =3D {
->>> +    .read_raw =3D &ads868x_read_raw,
->>> +    .write_raw =3D &ads868x_write_raw,
->>> +    .attrs =3D &ads868x_attribute_group,
->>> +    .driver_module =3D THIS_MODULE,
->>> +};
->>> +
->>> +static const struct ads868x_chip_info ads868x_chip_info_tbl[] =3D =
-{
->>> +    [ID_ADS8684] =3D {
->>> +        .channels =3D ads8684_channels,
->>> +        .num_channels =3D ARRAY_SIZE(ads8684_channels),
->>> +        .iio_info =3D &ads868x_info,
->>> +    },
->>> +    [ID_ADS8688] =3D {
->>> +        .channels =3D ads8688_channels,
->>> +        .num_channels =3D ARRAY_SIZE(ads8688_channels),
->>> +        .iio_info =3D &ads868x_info,
->>> +    },
->>> +};
->>> +
->>> +static int ads868x_probe(struct spi_device *spi)
->>> +{
->>> +    struct ads868x_state *st;
->>> +    struct iio_dev *indio_dev;
->>> +    bool ext_ref;
->>> +    int ret;
->>> +
->>> +    indio_dev =3D devm_iio_device_alloc(&spi->dev, sizeof(*st));
->>> +    if (indio_dev =3D=3D NULL)
->>> +        return -ENOMEM;
->>> +
->>> +    st =3D iio_priv(indio_dev);
->>> +
->>> +    if (spi->dev.of_node)
->>> +        ext_ref =3D of_property_read_bool(spi->dev.of_node,
->>> +                        "vref-supply");
->>> +    else
->>> +        ext_ref =3D false;
->>> +
->> Could do this as
->>          if (spi->dev.of_node && of_property_read_bool(spi->dev.of_n=
-ode,
->>                                                   "vref-supply"))
->>
->> I'm not entirely sure it's a good idea even if it saves introducing
->> a local variable. Up to you.
->>> +    if (ext_ref) {
->>> +        st->reg =3D devm_regulator_get(&spi->dev, "vref");
->>> +        if (!IS_ERR(st->reg)) {
->>> +            ret =3D regulator_enable(st->reg);
->>> +            if (ret)
->>> +                return ret;
->>> +
->>> +            ret =3D regulator_get_voltage(st->reg);
->>> +            if (ret < 0)
->>> +                goto error_out;
->>> +        st->vref_mv =3D ret / 1000;
->>> +        }
->>> +    } else {
->>> +        /* Use internal reference */
->>> +        st->vref_mv =3D ADS868X_VREF_MV;
->>> +    }
->>> +
->>> +    st->chip_info =3D    &ads868x_chip_info_tbl[spi_get_device_id(=
-spi)->driver_data];
->>> +
->>> +    spi->mode =3D SPI_MODE_1;
->>> +
->>> +    spi_set_drvdata(spi, indio_dev);
->>> +
->>> +    st->spi =3D spi;
->>> +
->>> +    indio_dev->name =3D spi_get_device_id(spi)->name;
->>> +    indio_dev->dev.parent =3D &spi->dev;
->>> +    indio_dev->modes =3D INDIO_DIRECT_MODE;
->>> +    indio_dev->channels =3D st->chip_info->channels;
->>> +    indio_dev->num_channels =3D st->chip_info->num_channels;
->>> +    indio_dev->info =3D st->chip_info->iio_info;
->>> +
->>> +    /* Reset ADS868x */
->>> +    mutex_lock(&indio_dev->mlock);
->>> +    ads868x_reset(indio_dev);
->>> +    mutex_unlock(&indio_dev->mlock);
->>> +
->>> +    ret =3D iio_device_register(indio_dev);
->>> +    if (ret)
->>> +        goto error_out;
->>> +
->>> +    return 0;
->>> +
->>> +error_out:
->>> +    if (!IS_ERR_OR_NULL(st->reg))
->>> +        regulator_disable(st->reg);
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static int ads868x_remove(struct spi_device *spi)
->>> +{
->>> +    struct iio_dev *indio_dev =3D spi_get_drvdata(spi);
->>> +    struct ads868x_state *st =3D iio_priv(indio_dev);
->>> +
->>> +    iio_device_unregister(indio_dev);
->>> +
->>> +    if (!IS_ERR_OR_NULL(st->reg))
->>> +        regulator_disable(st->reg);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static const struct spi_device_id ads868x_id[] =3D {
->>> +    {"ads8684", ID_ADS8684},
->>> +    {"ads8688", ID_ADS8688},
->>> +    {}
->>> +};
->>> +MODULE_DEVICE_TABLE(spi, ads868x_id);
->>> +
->>> +static const struct of_device_id ads868x_of_match[] =3D {
->>> +    { .compatible =3D "ti,ads8684" },
->>> +    { .compatible =3D "ti,ads8688" },
->>> +    { }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, ads868x_of_match);
->>> +
->>> +static struct spi_driver ads868x_driver =3D {
->>> +    .driver =3D {
->>> +        .name    =3D "ads868x",
->>> +        .owner    =3D THIS_MODULE,
->>> +    },
->>> +    .probe        =3D ads868x_probe,
->>> +    .remove        =3D ads868x_remove,
->>> +    .id_table    =3D ads868x_id,
->>> +};
->>> +module_spi_driver(ads868x_driver);
->>> +
->>> +MODULE_AUTHOR("Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>");
->>> +MODULE_DESCRIPTION("Texas Instruments ADS868x driver");
->>> +MODULE_LICENSE("GPL v2");
->>>
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
+W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMjkgU2VwdGVtYmVyLCAyMDE1IDU6
+MDQNCj4gVG86IFRpcmRlYSwgSXJpbmE7IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZw0KPiBD
+YzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUm9iIEhlcnJpbmc7IFBhd2VsIE1vbGw7
+IElhbiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgUHVyZGlsYSwgT2N0YXZpYW47IERtaXRyeSBUb3Jv
+a2hvdjsgTWFyaw0KPiBSdXRsYW5kOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIHYzIDEvNV0gSW5wdXQ6IGdvb2RpeCAtIHJlc2V0IGRldmljZSBhdCBp
+bml0DQo+IA0KPiBPbiBGcmksIDIwMTUtMDktMjUgYXQgMjE6MDQgKzAwMDAsIFRpcmRlYSwgSXJp
+bmEgd3JvdGU6DQo+ID4NCjxzbmlwPg0KPiA+DQo+ID4gVGhlIHdhcm5pbmcgZnJvbSB5b3VyIGRt
+ZXNnIG91dHB1dCB3aWxsIG5vdCBjYXVzZSBwcm9iZSB0byBmYWlsLg0KPiA+IElmIHlvdSBsb29r
+IGF0IHRoZSBjb2RlIGZvciBieXRfZ3Bpb19kaXJlY3Rpb25fb3V0cHV0LCBpdCB3aWxsIGp1c3QN
+Cj4gPiBwcmludA0KPiA+IGEgd2FybmluZyBhbmQgY29udGludWUgWzFdOg0KPiA+IAlXQVJOKHJl
+YWRsKGNvbmZfcmVnKSAmIEJZVF9ESVJFQ1RfSVJRX0VOLA0KPiA+IAkJIlBvdGVudGlhbCBFcnJv
+cjogU2V0dGluZyBHUElPIHdpdGggZGlyZWN0X2lycV9lbiB0bw0KPiA+IG91dHB1dCIpOw0KPiA+
+IEkgdGhvdWdodCBwcm9iZSBmaW5pc2hlcyBzdWNjZXNzZnVsbHksIGJ1dCBkdWUgdG8gdGhlIHdh
+cm5pbmcgaW4NCj4gPiBkbWVzZyB5b3UNCj4gPiBhcmUgbm90IHN1cmUgd2hldGhlciB0aGUgSVJR
+IEdQSU8gcGluIGNhbiBiZSB1c2VkIGFzIG91dHB1dC4NCj4gPiBJZiBwcm9iZSBmYWlscywgaXQg
+bXVzdCBiZSBmb3IgYW5vdGhlciByZWFzb24gdGhhbiB0aGUgZGlyZWN0X2lycV9lbg0KPiA+IHdh
+cm5pbmcuDQo+ID4NCj4gPiA+IFdvdWxkIHlvdSBoYXZlIGEgcGF0Y2ggZm9yIG1lIHRvIHRlc3Qg
+dGhhdCB3b3VsZCBieXBhc3MgdGhpcyBlcnJvciwNCj4gPiA+IG9yDQo+ID4gPiBhdCBsZWFzdCBm
+YWxsYmFjayBncmFjZWZ1bGx5IHRvIG5vdCByZXNldHRpbmcsIG5vdCBwcm9iaW5nIEdQSU9zIGlm
+DQo+ID4gPiB0aGV5J3JlIGJhZGx5IHNldHVwPw0KPiA+DQo+ID4gSWYgdGhlIGRyaXZlciBmYWls
+cyB0byBpbml0aWFsaXplIHRoZSBHUElPcywgaXQgd2lsbCBhdCBsZWFzdCBwcmludA0KPiA+IHNv
+bWUNCj4gPiAiRmFpbGVkIHRvIGdldCBHUElPIiB3YXJuaW5ncyBpbiBkbWVzZy4gRG8geW91IGhh
+dmUgc3VjaCBtZXNzYWdlcyBpbg0KPiA+IGRtZXNnIG9yIGFueSBhZGRpdGlvbmFsIGluZm9ybWF0
+aW9uIG9uIHdoeSBwcm9iZSBmYWlscz8NCj4gPg0KPiA+IFRoZSBjdXJyZW50IGNvZGUgd2lsbCBp
+Z25vcmUgR1BJT3MgaWYgdGhleSBhcmUgbm90IGRlZmluZWQgaW4gQUNQSQ0KPiA+IChzZWUgdGhl
+IGNoZWNrIGZvciAtRU5PRU5UKSwgYnV0IGRvZXMgbm90IGlnbm9yZSBvdGhlciBlcnJvciBjb2Rl
+cy4NCj4gPiBJZiB5b3Ugd2FudCB0byBieXBhc3MgYWxsIEdQSU8gZXJyb3JzLCB5b3UgY2FuIHVz
+ZSB0aGUgY29kZSBiZWxvdy4NCj4gDQo+IFRoZSBmYWlsdXJlIGlzbid0IHRoZXJlLCBpdCdzIHdo
+ZW4gcnVubmluZ8KgZ29vZGl4X2kyY190ZXN0KCk6DQo+IFNlcCAyNSAxNjozOToyMCB3aW5ib29r
+IGtlcm5lbDogR29vZGl4LVRTIGkyYy1HRElYMTAwMTowMDogaTJjIHRlc3QgZmFpbGVkIGF0dGVt
+cHQgMTogLTEyMQ0KPiBTZXAgMjUgMTY6Mzk6MjAgd2luYm9vayBrZXJuZWw6IEdvb2RpeC1UUyBp
+MmMtR0RJWDEwMDE6MDA6IGkyYyB0ZXN0IGZhaWxlZCBhdHRlbXB0IDI6IC0xMjENCj4gU2VwIDI1
+IDE2OjM5OjIwIHdpbmJvb2sga2VybmVsOiBHb29kaXgtVFMgaTJjLUdESVgxMDAxOjAwOiBJMkMg
+Y29tbXVuaWNhdGlvbiBmYWlsdXJlOiAtMTIxDQo+IFNlcCAyNSAxNjozOToyMCB3aW5ib29rIGtl
+cm5lbDogR29vZGl4LVRTOiBwcm9iZSBvZiBpMmMtR0RJWDEwMDE6MDAgZmFpbGVkIHdpdGggZXJy
+b3IgLTEyMQ0KPiANCg0KQXJlIHlvdSB1c2luZyB2NiBvZiB0aGUgcGF0Y2hlcz8gVGhlcmUgd2Fz
+IGFuIGlzc3VlIHdpdGggcmVzZXQgdGhhdCBBbGVrc2VpIHJlcG9ydGVkDQphbmQgd2FzIGZpeGVk
+IGluIHY2IChhbHRob3VnaCBoZSBoYWQgYSBkaWZmZXJlbnQgaTJjIGVycm9yIGFuZCBhIGRpZmZl
+cmVudCBzY2VuYXJpbykuDQoNCj4gVGhlIEdQSU8gc2V0dXAgc2VlbXMgdG8gd29yayAoYmFyIHRo
+ZSB3YXJuaW5ncyksIGFuZCB0aGUgcmVzZXQgYXMgd2VsbCwNCj4gYnV0IHRoZW4gdGhlIGRldmlj
+ZSBmYWlscyB0byBjb21tdW5pY2F0ZS4gTGlrZWx5IGEgZmFsbG91dCBmcm9tIHRoZQ0KPiByZXNl
+dCBhY3R1YWxseSBmYWlsaW5nLg0KPiANCj4gU3dhcHBpbmcgYXJvdW5kIHRoZSBSU1QgYW5kIElO
+VCBwaW5zIGxlYWRzIHRvIHRoZSBzYW1lIHByb2JsZW0uIEVpdGhlcg0KPiB0aGlzIGRldmljZSdz
+IEdQSU8gUElOcyBhcmVuJ3QgYWN0dWFsbHkgZnVuY3Rpb25hbCwgYW5kIHRoZSBmaXJtd2FyZQ0K
+PiBjb250YWlucyBnYXJiYWdlLCBvciBzb21ldGhpbmcgZWxzZSBpcyB3cm9uZy4NCj4gDQoNCkkg
+YWdyZWUuIEVpdGhlciB0aGUgaW50ZXJydXB0IHBpbiBjYW5ub3QgYmUgdXNlZCBhcyBvdXRwdXQg
+aW4geW91ciBjb25maWd1cmF0aW9uDQpvciB0aGVyZSBhcmUgc29tZSBzcGVjaWZpY3MgaW4gdGhl
+IEFDUEkgdGFibGVzIHRoYXQgcHJldmVudCB1c2luZyB0aGVzZSBwaW5zLiANCg0KPiBJJ20gbm90
+IHN1cmUgaG93IHdlIGNhbiBkZXRlY3QsIGFuZCBibGFja2xpc3QsIHRob3NlIGRldmljZXMuIEF0
+IGxlYXN0DQo+IG15IG9yaWdpbmFsIGRldmljZSwgdGhlIE9uZGEgdjk3NXcsIGFuZCB0aGUgV2lu
+Qm9vayBUVzEwMCB3b3VsZCBoYXZlDQo+IHRob3NlIHByb2JsZW1zLg0KPiANCg0KSSBjYW4gdXNl
+IERNSSBxdWlya3MgdG8gZXhjbHVkZSB0aGVzZSBkZXZpY2VzIGZyb20gdXNpbmcgdGhlIGZlYXR1
+cmVzIHRoYXQNCmRlcGVuZCBvbiB0aGUgZ3BpbyBwaW5zLiBJIGFscmVhZHkgaGF2ZSB0aGUgRE1J
+IGluZm9ybWF0aW9uIGZvciBXaW5Cb29rIFRXMTAwDQphbmQgV2luQm9vayBUVzcwMC4gQ291bGQg
+eW91IHRlbGwgbWUgdGhlIERNSV9TWVNfVkVORE9SIGFuZA0KRE1JX1BST0RVQ1RfTkFNRSBmb3Ig
+T25kYSB2OTc1dyBzbyBJIGNhbiBhZGQgaXQgYXMgd2VsbD8NCg0KVGhhbmtzLA0KSXJpbmENCg0K
+PiBDaGVlcnMNCg==
