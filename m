@@ -1,108 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] Documentation: add DT bindings for ARM SCPI sensors
-Date: Tue, 29 Sep 2015 13:20:55 -0500
-Message-ID: <CAL_Jsq+_Rrv5XqNsL-gwQZv3HK20dQC3jY7qCoxQ8KWhhs4Fdw@mail.gmail.com>
-References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com> <1442335861-7282-2-git-send-email-punit.agrawal@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for
+ the TPS65912 PMIC
+Date: Tue, 29 Sep 2015 19:38:18 +0100
+Message-ID: <20150929183818.GA15635@sirena.org.uk>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk>
+ <5605AA1C.3090905@ti.com>
+ <20150929151320.GT30445@sirena.org.uk>
+ <560AD3B2.1070102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442335861-7282-2-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <560AD3B2.1070102@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 11:50 AM, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> wrote:
-> The System Control Processor (SCP) provides access to SoC sensors via
-> the System Control and Power Interface (SCPI) Message Protocol. Add
-> bindings to allow probing of these sensors. Also support referencing
-> of the sensors for setting up thermal zones via the thermal DT
-> bindings.
->
-> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> index f002460..86302de 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> @@ -72,8 +72,25 @@ Required sub-node properties:
->  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
->                shared memory on Juno platforms
->
-> +Sensor bindings for the sensors based on SCPI Message Protocol
-> +--------------------------------------------------------------
-> +SCPI provides an API to access the various sensors on the SoC.
-> +
-> +Required properties:
-> +- compatible : should be "arm,scpi-sensors".
-> +- #thermal-sensor-cells: should be set to 1. This property follows the
-> +                        thermal device tree bindings[2].
-> +
-> +                        Valid cell values are raw identifiers (Sensor
-> +                        ID) as used by the firmware. Refer to
-> +                        platform documentation for your
-> +                        implementation for the IDs to use. For Juno
-> +                        R0 and Juno R1 refer to [3].
-> +
->  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
->  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
-> +[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
->
->  Example:
->
-> @@ -122,6 +139,11 @@ scpi_protocol: scpi@2e000000 {
->                         clock-output-names = "pxlclk0", "pxlclk1";
->                 };
->         };
-> +
-> +       scpi_sensors0: sensors {
-> +               compatible = "arm,scpi-sensors";
-> +               #thermal-sensor-cells = <1>;
-> +       };
->  };
->
->  cpu@0 {
-> @@ -136,6 +158,17 @@ hdlcd@7ff60000 {
->         clocks = <&scpi_clk 4>;
->  };
->
-> +thermal-zones {
-> +       soc_thermal {
-> +               polling-delay-passive = <100>;
-> +               polling-delay = <1000>;
-> +
-> +                               /* sensor         ID */
-> +               thermal-sensors = <&scpi_sensors0 3>;
-> +               ...
-> +       };
-> +};
-> +
->  In the above example, the #clock-cells is set to 1 as required.
->  scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
->  1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
-> @@ -148,3 +181,8 @@ scpi_dvfs i.e. "atlclk".
->  Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
->  clock. '4' in the clock specifier here points to the second entry
->  in the output clocks of scpi_clocks  i.e. "pxlclk1"
-> +
-> +The thermal-sensors property in the soc_thermal node uses the
-> +temperature sensor provided by SCP firmware to setup a thermal
-> +zone. The ID "3" is the sensor identifier for the temperature sensor
-> +as used by the firmware.
-> --
-> 2.5.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Sep 29, 2015 at 01:08:50PM -0500, Andrew F. Davis wrote:
+> On 09/29/2015 10:13 AM, Mark Brown wrote:
+
+> >>sure that will save me anything as my probe function is called with a DT
+> >>match already, so no searching is needed.
+
+> >You've not understood what that change is replacing, the code I'm
+> >quoting above is exactly that code.  Check out some of the existing
+> >drivers using this API.
+
+> Looking at other drivers that use this API they all call regulator_register
+> in a loop in their probe, once for each possible regulator, in this case
+> letting the API do the DT node search makes sense. My probe on the other-hand
+> is only called when we already have a DT match, therefor searching is not
+> necessary and all I have to do is call of_get_regulator_init_data myself on
+> the already found DT node. No need to add node names to my regulator_desc
+> and make the API re-search for the node.
+
+Oh, ick.  The binding has a compatible string in the individual
+regulator bindings which is broken unless there really are lots of
+variants being configured via DT (which is just not the case here).
+It's not only more typing in the DT, it also means that we can't read
+back the configuration of the device unless the user goes and creates a
+DT which explicitly lists each regulator on the device which is
+unhelpful.  We should be able to read back the configurations of all the
+regulators by simply listing the device in DT.
+
+The fact that this is different to the bindings for other regulator
+drivers and requires more code ought to have been a big warning sign
+here :(
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWCtqZAAoJECTWi3JdVIfQtTIH/3T4chIy5DqUEBznGkQEHK4g
+iIdZ3drD8lRaXKA5mIHv5qo9fSP/x9kP3rQAgSSFJ7lsjPYKtcPMUIAFrFHtd2WT
+qhxxPTJsoSvQq8YNFj5V65T0ZWM5ujn1xClPvMmZ8hbjhHmHyqZ4Oj0o9wqn8D0Z
+4XVZOkbw9JHEEBne+v3m0RmbVJXYyuDjXpu6JenRDeR6+KwEVwrv/PZYd087FjVy
+hXShaW/EG+pBCUH2D4eTNLnoDGiEGwZx0jEuE3/qK3kk7r38LwFH3dpBzlBlfH6r
+ccW8zyvqTgLq6TmNkAWfCePbBxBkf07o64oDyWmujdQpHsVwqUEEvOK180llIJk=
+=26T7
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
