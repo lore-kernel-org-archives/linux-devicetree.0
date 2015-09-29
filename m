@@ -1,140 +1,106 @@
-From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 3/4] ASoC: da7219: Add bindings documentation for DA7219 audio
- codec
-Date: Tue, 29 Sep 2015 16:44:07 +0100
-Message-ID: <fdddf925ad14de8424a41f5c34ecf1fedd8d0b16.1443538420.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1443538420.git.Adam.Thomson.Opensource@diasemi.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
+Date: Tue, 29 Sep 2015 10:50:21 -0500
+Message-ID: <560AB33D.1020201@ti.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-4-git-send-email-afd@ti.com> <20150925165059.GI27197@x1>
+ <56059CDA.4020004@ti.com> <20150925212446.GL27197@x1>
+ <56096010.5010202@ti.com> <20150929071933.GV27197@x1>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1443538420.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Jason Coughlan <jason.coughlan-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150929071933.GV27197@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/da7219.txt | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/da7219.txt
+On 09/29/2015 02:19 AM, Lee Jones wrote:
+> On Mon, 28 Sep 2015, Andrew F. Davis wrote:
+>
+>> On 09/25/2015 04:24 PM, Lee Jones wrote:
+>>> On Fri, 25 Sep 2015, Andrew F. Davis wrote:
+>>>
+>>>> On 09/25/2015 11:50 AM, Lee Jones wrote:
+>>>>> On Thu, 24 Sep 2015, Andrew F. Davis wrote:
+>>>>>
+>>>>>> This patch adds support for TPS65912 mfd device. It provides
+>>>>>> communication through the I2C and SPI interfaces. It contains
+>>>>>> the following components:
+>>>>>>
+>>>>>>   - Regulators
+>>>>>>   - GPIO controller
+>>>>>>
+>>>>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>>>>>> ---
+>>>>>>   drivers/mfd/Kconfig          |  24 +++
+>>>>>>   drivers/mfd/Makefile         |   3 +
+>>>>>>   drivers/mfd/tps65912-core.c  | 114 +++++++++++++
+>>>>>>   drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
+>>>>>>   drivers/mfd/tps65912-spi.c   |  85 ++++++++++
+>>>>>>   include/linux/mfd/tps65912.h | 393 +++++++++++++++++++++++++++++++++++++++++++
+>>>>>>   6 files changed, 705 insertions(+)
+>>>>>>   create mode 100644 drivers/mfd/tps65912-core.c
+>>>>>>   create mode 100644 drivers/mfd/tps65912-i2c.c
+>>>>>>   create mode 100644 drivers/mfd/tps65912-spi.c
+>>>>>>   create mode 100644 include/linux/mfd/tps65912.h
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>> +#define TPS65912_IRQ(_name, _reg, _offset)			\
+>>>>>> +	[TPS65912_IRQ_ ## _name] = {				\
+>>>>>> +		.mask = TPS65912_ ## _reg ## _ ## _name,	\
+>>>>>> +		.reg_offset = _offset,				\
+>>>>>> +	}
+>>>>>
+>>>>> I told you about this already.
+>>>>>
+>>>>> If you want this set to be merged for v4.3 then you'll need commit
+>>>>> b4fe8ba ("regmap: Add generic macro to define regmap_irq") from my
+>>>>> tree.
+>>>>
+>>>> You asked me to submit this to Mark Brown, I didn't realize you also
+>>>> wanted me to use the one in your tree. Using yours will make my lines
+>>>> over 80 chars and so it kind of defeats the purpose but I'll do it
+>>>> for v4.
+>>>
+>>> I asked two of you to upstream a generic incarnation of your
+>>> implementation.  The other guy got there first.  Now I want everyone
+>>> to use it instead of hand-rolling their own.
+>>>
+>>
+>> Got it.
+>>
+>>>>> [...]
+>>>>>
+>>>>>> +static struct i2c_driver tps65912_i2c_driver = {
+>>>>>> +	.driver		= {
+>>>>>> +		.name	= "tps65912",
+>>>>>> +		.of_match_table = tps65912_i2c_of_match_table,
+>>>>>
+>>>>> of_match_ptr()
+>>>>>
+>>>>
+>>>> Why? tps65912_i2c_of_match_table is always compiled in.
+>>>
+>>> But it needn't be.
+>>>
+>>
+>> This driver is DT only, would it make more sense to just add a dependency
+>> on CONFIG_OF in the Kconfig?
+>
+> Yes, that is the alternitive.
+>
+>> I don't see many other drivers that are DT
+>> only doing this, the driver should compile just fine without OF enabled,
+>> it just wont have DT functionality, so is it really dependent on OF?
+>
+> Then it should be "depends on OF || COMPILE_TEST"
+>
 
-diff --git a/Documentation/devicetree/bindings/sound/da7219.txt b/Documentation/devicetree/bindings/sound/da7219.txt
-new file mode 100644
-index 0000000..1b70309
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/da7219.txt
-@@ -0,0 +1,106 @@
-+Dialog Semiconductor DA7219 Audio Codec bindings
-+
-+DA7219 is an audio codec with advanced accessory detect features.
-+
-+======
-+
-+Required properties:
-+- compatible : Should be "dlg,da7219"
-+- reg: Specifies the I2C slave address
-+
-+- interrupt-parent : Specifies the phandle of the interrupt controller to which
-+  the IRQs from DA7219 are delivered to.
-+- interrupts : IRQ line info for DA7219.
-+  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
-+   further information relating to interrupt properties)
-+
-+- VDD-supply: VDD power supply for the device
-+- VDDMIC-supply: VDDMIC power supply for the device
-+- VDDIO-supply: VDDIO power supply for the device
-+  (See Documentation/devicetree/bindings/regulator/regulator.txt for further
-+   information relating to regulators)
-+
-+Optional properties:
-+- interrupt-names : Name associated with interrupt line. Should be "wakeup" if
-+  interrupt is to be used to wake system, otherwise "irq" should be used.
-+- wakeup-source: Flag to indicate this device can wake system (suspend/resume).
-+
-+- clocks : phandle and clock specifier for codec MCLK.
-+- clock-names : Clock name string for 'clocks' attribute, should be "mclk".
-+
-+- dlg,ldo-lvl : Required internal LDO voltage (mV) level for digital engine
-+	[<1050>, <1100>, <1200>, <1400>]
-+- dlg,micbias-lvl : Voltage (mV) for Mic Bias
-+	[<1800>, <2000>, <2200>, <2400>, <2600>]
-+- dlg,mic-amp-in-sel : Mic input source type
-+	["diff", "se_p", "se_n"]
-+
-+======
-+
-+Child node - 'da7219_aad':
-+
-+Optional properties:
-+- dlg,micbias-pulse-lvl : Mic bias higher voltage pulse level (mV).
-+	[<2800>, <2900>]
-+- dlg,micbias-pulse-time : Mic bias higher voltage pulse duration (ms)
-+- dlg,btn-cfg : Periodic button press measurements for 4-pole jack (ms)
-+	[<2>, <5>, <10>, <50>, <100>, <200>, <500>]
-+- dlg,mic-det-thr : Impedance threshold for mic detection measurement (Ohms)
-+	[<200>, <500>, <750>, <1000>]
-+- dlg,jack-ins-deb : Debounce time for jack insertion (ms)
-+	[<5>, <10>, <20>, <50>, <100>, <200>, <500>, <1000>]
-+- dlg,jack-det-rate: Jack type detection latency (3/4 pole)
-+	["32ms_64ms", "64ms_128ms", "128ms_256ms", "256ms_512ms"]
-+- dlg,jack-rem-deb : Debounce time for jack removal (ms)
-+	[<1>, <5>, <10>, <20>]
-+- dlg,a-d-btn-thr : Impedance threshold between buttons A and D
-+	[0x0 - 0xFF]
-+- dlg,d-b-btn-thr : Impedance threshold between buttons D and B
-+	[0x0 - 0xFF]
-+- dlg,b-c-btn-thr : Impedance threshold between buttons B and C
-+	[0x0 - 0xFF]
-+- dlg,c-mic-btn-thr : Impedance threshold between button C and Mic
-+	[0x0 - 0xFF]
-+- dlg,btn-avg : Number of 8-bit readings for averaged button measurement
-+	[<1>, <2>, <4>, <8>]
-+- dlg,adc-1bit-rpt : Repeat count for 1-bit button measurement
-+	[<1>, <2>, <4>, <8>]
-+
-+======
-+
-+Example:
-+
-+	codec: da7219@1a {
-+		compatible = "dlg,da7219";
-+		reg = <0x1a>;
-+
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		VDD-supply = <&reg_audio>;
-+		VDDMIC-supply = <&reg_audio>;
-+		VDDIO-supply = <&reg_audio>;
-+
-+		clocks = <&clks 201>;
-+		clock-names = "mclk";
-+
-+		dlg,ldo-lvl = <1200>;
-+		dlg,micbias-lvl = <2600>;
-+		dlg,mic-amp-in-sel = "diff";
-+
-+		da7219_aad {
-+			dlg,btn-cfg = <50>;
-+			dlg,mic-det-thr = <500>;
-+			dlg,jack-ins-deb = <20>;
-+			dlg,jack-det-rate = "32ms_64ms";
-+			dlg,jack-rem-deb = <1>;
-+
-+			dlg,a-d-btn-thr = <0xa>;
-+			dlg,d-b-btn-thr = <0x16>;
-+			dlg,b-c-btn-thr = <0x21>;
-+			dlg,c-mic-btn-thr = <0x3E>;
-+
-+			dlg,btn-avg = <4>;
-+			dlg,adc-1bit-rpt = <1>;
-+		};
-+	};
---
-1.9.3
+OK, I'll add this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> The of_match_ptr(x) macro looks to be useful when the x is conditionally
+>> compiled in, but in my case the x (my of_device_id table) is always compiled.
+>
