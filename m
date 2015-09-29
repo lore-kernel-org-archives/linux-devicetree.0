@@ -1,52 +1,48 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 resend 3/4] ARM: dts: sunxi: Enable PWM
- controller on Q8 format tablets
-Date: Tue, 29 Sep 2015 12:29:50 +0200
-Message-ID: <1443522591-6590-4-git-send-email-hdegoede@redhat.com>
-References: <1443522591-6590-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH v2 0/7] hwrng: Add support for
+ STMicroelectronics' RNG IP
+Date: Tue, 29 Sep 2015 11:42:01 +0100
+Message-ID: <20150929104201.GX27197@x1>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+ <20150929092047.GA16955@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBJ6QVGYAKGQESKUPDSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1443522591-6590-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150929092047.GA16955@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.com, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Tue, 29 Sep 2015, Peter Griffin wrote:
+> On Thu, 17 Sep 2015, Lee Jones wrote:
+>=20
+> > v1 =3D> v2:
+> >  - New patch: Also fixing /dev/hw_random =3D> /dev/hwrng in Kconfig
+> >  - Fix 2099 =3D> 2009 typo in commit log
+> >  - Fix 'number of random numbers sourced' return value
+> >  - Treat devm_clk_get()'s return value correctly
+> >  - Check return value of clk_prepare_enable()
+> >  - Use sysfs_streq() instead of manually stripping '\n' from sysfs
+> >=20
+> > The main aim of this set is to allow users to access ST's hardware
+> > random number generator.  It's a simple device, which only requires
+> > a simple driver.
+> >=20
+> > We're also taking the liberty to update some out of date HWRNG
+> > documentation and making the sysfs interface a little easier to
+> > use by ignoring any '\n' which may have been inadvertently passed.
+>=20
+> Looks good, for the series: -
+>=20
+> Acked-by: Peter Griffin <peter.griffin@linaro.org>
 
-Q8 format tablets use channel 0 of the PWM controller for backlight dimming.
+Thanks, but Herbert already applied the series.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Enable the pwm controller in sunxi-q8-common.dtsi rather then in
- sun8i-q8-common.dtsi
----
- arch/arm/boot/dts/sunxi-q8-common.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sunxi-q8-common.dtsi b/arch/arm/boot/dts/sunxi-q8-common.dtsi
-index 17b26ff..b824146 100644
---- a/arch/arm/boot/dts/sunxi-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sunxi-q8-common.dtsi
-@@ -75,3 +75,9 @@
- 		voltage = <400000>;
- 	};
- };
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins>;
-+	status = "okay";
-+};
--- 
-2.5.0
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
