@@ -1,30 +1,104 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] mailbox: rockchip: Add mailbox driver for Rockchip platform
-Date: Mon, 28 Sep 2015 19:52:18 -0700
-Message-ID: <CABb+yY3VD0H-JBNwugLpa5UbyUvaLdKtxg367Fwp8rVfkdV-UQ@mail.gmail.com>
-References: <1442228798-15191-1-git-send-email-wxt@rock-chips.com>
-	<5608A16D.4090109@gmail.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v9 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
+Date: Tue, 29 Sep 2015 11:01:34 +0800
+Message-ID: <1443495698-32233-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5608A16D.4090109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1443495698-32233-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 27, 2015 at 7:09 PM, Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Jassi,
->
-> Friendly Ping!
->
-> Could you review this series patchs if you have free time?
->
-It's been only 2 weeks since you posted the driver and I have been
-busy with stuff that missed the last release. I did not miss your
-patchset.
+add a DT binding documentation of usb3.0 phy for MT65xx
+SoCs from Mediatek.
 
--Jassi
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+new file mode 100644
+index 0000000..00100cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+@@ -0,0 +1,68 @@
++mt65xx USB3.0 PHY binding
++--------------------------
++
++This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
++
++Required properties (controller (parent) node):
++ - compatible	: should be "mediatek,mt8173-u3phy"
++ - reg		: offset and length of register for phy, exclude port's
++		  register.
++ - clocks	: a list of phandle + clock-specifier pairs, one for each
++		  entry in clock-names
++ - clock-names	: must contain
++		  "u3phya_ref": for reference clock of usb3.0 analog phy.
++
++Required nodes	: a sub-node is required for each port the controller
++		  provides. Address range information including the usual
++		  'reg' property is used inside these nodes to describe
++		  the controller's topology.
++
++Required properties (port (child) node):
++- reg		: address and length of the register set for the port.
++- #phy-cells	: should be 1 (See second example)
++		  cell after port phandle is phy type from:
++			- PHY_TYPE_USB2
++			- PHY_TYPE_USB3
++
++Example:
++
++u3phy: usb-phy@11290000 {
++	compatible = "mediatek,mt8173-u3phy";
++	reg = <0 0x11290000 0 0x800>;
++	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
++	clock-names = "u3phya_ref";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	ranges;
++	status = "okay";
++
++	phy_port0: port@11290800 {
++		reg = <0 0x11290800 0 0x800>;
++		#phy-cells = <1>;
++		status = "okay";
++	};
++
++	phy_port1: port@11291000 {
++		reg = <0 0x11291000 0 0x800>;
++		#phy-cells = <1>;
++		status = "okay";
++	};
++};
++
++Specifying phy control of devices
++---------------------------------
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type;
++phy-names for each port are optional.
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++usb30: usb@11270000 {
++	...
++	phys = <&phy_port0 PHY_TYPE_USB3>;
++	phy-names = "usb3-0";
++	...
++};
+-- 
+1.8.1.1.dirty
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
