@@ -1,43 +1,31 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH v2 0/7] hwrng: Add support for
- STMicroelectronics' RNG IP
-Date: Tue, 29 Sep 2015 10:20:47 +0100
-Message-ID: <20150929092047.GA16955@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/2] usb: renesas_usbhs: Add support for R-Car H3
+Date: Tue, 29 Sep 2015 18:21:17 +0900
+Message-ID: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.com, kernel@stlinux.com
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+ This patch is based on the latest Felipe's usb.git / testing/next
+branch (The commit id = f3a464c9f5be1bb93a4355bd5a433dbc2c0bf7fd).
 
-On Thu, 17 Sep 2015, Lee Jones wrote:
+Changes from v1:
+ - Add a patch to fix build warning if 64-bit environment as patch 1/2
+ - Add a comment in patch 2/2
 
-> v1 => v2:
->  - New patch: Also fixing /dev/hw_random => /dev/hwrng in Kconfig
->  - Fix 2099 => 2009 typo in commit log
->  - Fix 'number of random numbers sourced' return value
->  - Treat devm_clk_get()'s return value correctly
->  - Check return value of clk_prepare_enable()
->  - Use sysfs_streq() instead of manually stripping '\n' from sysfs
-> 
-> The main aim of this set is to allow users to access ST's hardware
-> random number generator.  It's a simple device, which only requires
-> a simple driver.
-> 
-> We're also taking the liberty to update some out of date HWRNG
-> documentation and making the sysfs interface a little easier to
-> use by ignoring any '\n' which may have been inadvertently passed.
+Yoshihiro Shimoda (2):
+  usb: renesas_usbhs: fix build warning if 64-bit architecture
+  usb: renesas_usbhs: Add support for R-Car H3
 
-Looks good, for the series: -
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ drivers/usb/renesas_usbhs/common.c                      | 7 ++++++-
+ include/linux/usb/renesas_usbhs.h                       | 2 +-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
+-- 
+1.9.1
 
-regards,
-
-Peter.
