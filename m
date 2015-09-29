@@ -1,102 +1,68 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: porter: initial device tree
-Date: Wed, 30 Sep 2015 02:26:08 +0300
-Message-ID: <2022535.FYlSB7sRz4@wasted.cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
+ DA9062 OnKey
+Date: Tue, 29 Sep 2015 16:54:08 -0700
+Message-ID: <20150929235408.GC29469@dtor-ws>
+References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
+ <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
+ <20150727224300.GG3613@dtor-ws>
+ <20150728054024.GA4558@dtor-ws>
+ <6ED8E3B22081A4459DAC7699F3695FB70173D121FD@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB70173D121FD@SW-EX-MBX02.diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the initial device tree for the R8A7791 SoC based Porter low cost board
-(which  is a  slightly modified version  of the Henninger board).
+On Mon, Sep 28, 2015 at 08:19:27AM +0000, Opensource [Steve Twiss] wrote:
+> 
+> > Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for DA9062 OnKey
+> > 
+> > On Mon, Jul 27, 2015 at 03:43:00PM -0700, Dmitry Torokhov wrote:
+> > > On Thu, Jul 23, 2015 at 05:17:41PM +0100, S Twiss wrote:
+> > > > From: S Twiss <stwiss.opensource@diasemi.com>
+> > > >
+> > > > Add device tree bindings for the DA9062 OnKey driver component
+> > > >
+> > > > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> > > >
+> > > > ---
+> > > > Changes in V3:
+> > > >  - Child driver specifics separated out into separate document
+> > > >    in this case ../input/da9062-onkey.txt
+> > > > Changes in V2:
+> > > >  - No change
+> > > >
+> > > > This patch applies against linux-next and next-20150708
+> > > >
+> > > >
+> > > >  .../devicetree/bindings/input/da9062-onkey.txt     | 36
+> > ++++++++++++++++++++++
+> > > >  Documentation/devicetree/bindings/mfd/da9062.txt   |  3 ++
+> > >
+> > > I dropped bits for mfd/da9062.txt, changed to mention both 9062 and
+> > > 9063, folded into the onkey patch and applied.
+> > 
+> > Argh, da9062 core is not in mainline yet... OK, below is the patch I
+> > had; if Lee does not pick it up I'll re-apply it when da9062 core hits
+> > mainline.
+> > 
+> 
+> Hi Lee and Dmitry,
+> 
+> This patch seems to have been missed. It is the main OnKey driver for DA9062 and this
+> component was waiting for the DA9062 MFD core to make it into linux-mainline/v4.3-rc1.
+> 
+> Is there any reply on this yet please? There just seems to be a little patch administration
+> problem holding things up.
 
-SCIF0 serial port support is included, so that the serial console can work. 
+I queued it for 4.4.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Thanks.
 
----
-This patch is against the 'renesas-devel-20150928-v4.3-rc3' tag of Simon
-Horman's 'renesas.git' repo.
-
- arch/arm/boot/dts/Makefile           |    1 
- arch/arm/boot/dts/r8a7791-porter.dts |   54 +++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/Makefile
-===================================================================
---- renesas.orig/arch/arm/boot/dts/Makefile
-+++ renesas/arch/arm/boot/dts/Makefile
-@@ -532,6 +532,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7790-lager.dtb \
- 	r8a7791-henninger.dtb \
- 	r8a7791-koelsch.dtb \
-+	r8a7791-porter.dtb \
- 	r8a7793-gose.dtb \
- 	r8a7794-alt.dtb \
- 	r8a7794-silk.dtb \
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- /dev/null
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -0,0 +1,54 @@
-+/*
-+ * Device Tree Source for the Porter board
-+ *
-+ * Copyright (C) 2015 Cogent Embedded, Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7791.dtsi"
-+
-+/ {
-+	model = "Porter";
-+	compatible = "renesas,porter", "renesas,r8a7791";
-+
-+	aliases {
-+		serial0 = &scif0;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySC0,115200 ignore_loglevel";
-+		stdout-path = &scif0;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x40000000>;
-+	};
-+
-+	memory@200000000 {
-+		device_type = "memory";
-+		reg = <2 0x00000000 0 0x40000000>;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
-+
-+&pfc {
-+	scif0_pins: serial0 {
-+		renesas,groups = "scif0_data_d";
-+		renesas,function = "scif0";
-+	};
-+};
-+
-+&scif0 {
-+	pinctrl-0 = <&scif0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-
+-- 
+Dmitry
