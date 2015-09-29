@@ -1,54 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH linux-next 0/4] mtd: spi-nor: fix Quad SPI memory support
-Date: Tue, 29 Sep 2015 16:31:06 +0100
-Message-ID: <20150929153106.GW30445@sirena.org.uk>
-References: <cover.1442590224.git.cyrille.pitchen@atmel.com>
- <56094A49.7000304@atmel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
+Date: Tue, 29 Sep 2015 17:34:28 +0200
+Message-ID: <5513519.ARXvF8rdlP@wuerfel>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com> <2496965.bMvvDEqHin@wuerfel> <560A9D9F.2070109@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oMQ/0Eds4GFUZehv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56094A49.7000304@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, ben@decadent.org.uk, jogo@openwrt.org, jteki@openedev.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <560A9D9F.2070109-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 29 September 2015 15:18:07 Jon Hunter wrote:
+> On 29/09/15 13:39, Arnd Bergmann wrote:
+> > Ok, that makes more sense then. A few questions still:
+> > 
+> > * Would the admaif in turn provide a #dma-cells and have the real slaves
+> >   hooked up to it?
+> 
+> I don't think that that would be necessary. If you look at the existing
+> tegra i2s binding [0], there is a ahub-cif-ids property which maps the
+> actual slave to the apbif (equivalent of the adma-if). This ID is used
+> to get the appropriate dma channel for this client interface (cif).
+> 
+> > * How do you model the xbar in this scenario?
+> 
+> The xbar is common to existing tegra devices and today is configured via
+> the ahub-cif-ids property.
 
---oMQ/0Eds4GFUZehv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see, so instead of modeling the xbar as part of the DMA engine in DT, you
+model it as part of the slave. This probably adds a bit of complexity
+and a somewhat nonstandard binding, but it's too late to change that anyway.
 
-On Mon, Sep 28, 2015 at 04:10:17PM +0200, Cyrille Pitchen wrote:
-> Hi all,
+> > * How does the adma driver know whether you are using a rx or tx channel
+> >   in the above example, should that perhaps be another cell in dma
+> >   specifier? It seems that the numbers are all overlapping between rx and
+> >   tx (each has 1 through 10).
+> 
+> The channels can be configured to be either rx or tx and yes the IDs do
+> overlap so you have 1-10 for both rx and tx. However, if you are asking
+> how do I ensure that only one channel uses a specific hardware request,
+> then yes I probably need to add the direction to the specifier to ensure
+> only one channel uses a request at any given time.
 
-Please don't top post. =20
+If each channel is either rx or tx, but the two cannot be used simultaneously,
+you can just list each of them only once, like this:
 
-> Brian, Mark, Marek, with this series I've removed the Atmel QSPI controll=
-er
-> driver to focus only on the common spi-nor framework. I will send a dedic=
-ated
+	dmas = <&adma 0>, <&adma 1>, <&adma 2>, ...
+	dma-names = "if0", "if1", "if2", ...
 
-I'm deleting most of these threads unread unless there is some specific
-mention of SPI in the subject line of a patch.  I don't really have much
-to contribute on the flash-specific portions of the discussion.
+Otherwise you end up allocating twice the number of channels that you
+really need.
 
---oMQ/0Eds4GFUZehv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWCq65AAoJECTWi3JdVIfQieMH/0zZ4ItML4gAii0CbDNiRdlj
-od6ON0VXLIiGbmBPgbEiLLbyXSQA2axdJUjwxu90zuq9cQbLgE5IUtqsgsPwpenO
-wwKJzAvSx4RQ22dv3xNOM/9eneebDxvrXzSl8TnKg1bw/xRdW0E9KizObbiR5B14
-SmdSqYb/SJQAkZLY67yuD87BD57h8kjXABKRG9f66YmPWUz816eXA0ajK8U5XkFM
-kyuBE6TqykhY5YJwpFFFUWg79etx8W++QLK2anYQUGT7pfgwXToZgh/PqA+3ccSp
-oq4GBm9wypO9t024fANETxdHJTvMwmbZW/PycPU8X+qtXnkd4yMhPPNKtkeB/Wk=
-=AWh0
------END PGP SIGNATURE-----
-
---oMQ/0Eds4GFUZehv--
+	Arnd
