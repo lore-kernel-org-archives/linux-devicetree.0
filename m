@@ -1,111 +1,114 @@
 From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
- DT binding documentation
-Date: Tue, 29 Sep 2015 11:04:40 +0100
-Message-ID: <20150929100440.GC16955@griffinp-ThinkPad-X1-Carbon-2nd>
+Subject: Re: [PATCH v2 4/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Tue, 29 Sep 2015 11:23:20 +0100
+Message-ID: <20150929102320.GD16955@griffinp-ThinkPad-X1-Carbon-2nd>
 References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
- <1441980871-24475-2-git-send-email-peter.griffin@linaro.org>
- <51503956.PMFrWKUjxX@wuerfel>
- <20150912120752.GA19897@griffinp-ThinkPad-X1-Carbon-2nd>
- <20150914081937.GF27591@x1>
+ <1441980871-24475-5-git-send-email-peter.griffin@linaro.org>
+ <2502961.3gtPceE427@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150914081937.GF27591@x1>
+In-Reply-To: <2502961.3gtPceE427@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Arnd,
 
-On Mon, 14 Sep 2015, Lee Jones wrote:
+Thanks for reviewing.
 
-> > On Fri, 11 Sep 2015, Arnd Bergmann wrote:
-> > 
-> > > On Friday 11 September 2015 15:14:23 Peter Griffin wrote:
-> > > > +- st,fdma-id	: Must contain fdma controller number
-> > > 
-> > > What for?
-> > 
-> > It is used by the driver to generate a unique firmware name.
-> > Basically we need to know which controller instance we
-> > are as each controller has a different firmware which needs
-> > to be loaded.
-> > 
-> > Rob did say that having a index type property is undesirable
-> > over here, see my reply at the bottom
-> > http://www.spinics.net/lists/devicetree/msg92529.html.
-> > 
-> > However I can't think of any other useful properties we could add
-> > to derive this information.
+On Fri, 11 Sep 2015, Arnd Bergmann wrote:
+
+> On Friday 11 September 2015 15:14:26 Peter Griffin wrote:
+> > +
+> > +#include "st_fdma.h"
 > 
-> I wouldn't use a property at all.  Why not use the compatible string?
-> 
-> Who chooses the naming scheme of the firmware binary?
+> Just move the contents of that file here, no other driver should
+> be including it.
 
-ST
+There is another file st_fdma_xbar.c which will be upstreamed shortly
+which uses some parts of this header. It was originally part of the
+v1 series here: -
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/355069.html
+
+But I removed it from subsequent submissions as it needs to be re-worked
+to use some of the new xbar functionality recently added by TI.
+
+However large parts probably aren't required by xbar, and could be
+moved into the c file, so I will move those parts in the next submission.
 
 > 
-> Is there any reason they can't be:
+> > +static struct dma_chan *st_fdma_of_xlate(struct of_phandle_args *dma_spec,
+> > +					 struct of_dma *ofdma)
+> > +{
+> > +	struct st_fdma_dev *fdev = ofdma->of_dma_data;
+> > +	struct st_fdma_cfg cfg;
+> > +
+> > +	if (dma_spec->args_count < 1)
+> > +		return NULL;
+> > +
+> > +	cfg.of_node = dma_spec->np;
+> > +	cfg.req_line = dma_spec->args[0];
+> > +	cfg.req_ctrl = 0;
+> > +	cfg.type = ST_FDMA_TYPE_FREE_RUN;
+> > +
+> > +	if (dma_spec->args_count > 1)
+> > +		cfg.req_ctrl = dma_spec->args[1] & REQ_CTRL_CFG_MASK;
+> > +
+> > +	if (dma_spec->args_count > 2)
+> > +		cfg.type = dma_spec->args[2];
 > 
->   fdma_STiH407_audio.elf
->   fdma_STiH407_app.elf
->   fdma_STiH407_free_running.elf
+> The binding mandates #dma-cells=<3>, so you can just return an error
+> otherwise.
 
-Not sure, we could easily rename them locally. Getting ST to change
-the firmware names in the stlinux distro might be harder.
-My personal preference is to leave the firmware names "as is", unless
-there is a real show stopper reason where we *have* to change them e.g.
-we can't support all STi platforms with the same userspace because
-the firmware filenames aren't unique enough.
+Ok will fix in next submission
+> 
+> > +	dev_dbg(fdev->dev, "xlate req_line:%d type:%d req_ctrl:%#x\n",
+> > +		cfg.req_line, cfg.type, cfg.req_ctrl);
+> > +
+> > +	return dma_request_channel(fdev->dma_device.cap_mask,
+> > +			st_fdma_filter_fn, &cfg);
+> > +}
+> 
+> Why this indirection? You should be able to just use
+> dma_get_any_slave_channel() to get the first available channel and
+> then configure it the same way that the filter function does.
+
+Ok I will look at using this API instead of dma_request_channel
+in the next submission.
 
 > 
-> Then you can have a different compatible for each:
+> > +bool st_fdma_filter_fn(struct dma_chan *chan, void *param)
+> > +{
+> > +	struct st_fdma_cfg *config = param;
+> > +	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
+> > +
+> > +	if (!param)
+> > +		return false;
+> > +
+> > +	if (fchan->fdev->dma_device.dev->of_node != config->of_node)
+> > +		return false;
+> > +
+> > +	fchan->cfg = *config;
+> > +
+> > +	return true;
+> > +}
 > 
->   compatible = "st,stih407-fdma-mpe31-audio";
->   compatible = "st,stih407-fdma-mpe31-app";
->   compatible = "st,stih407-fdma-mpe31-free-running";
+> Please drop this until there is a board file that references the
+> function. Otherwise it's just dead code. I assume there are some
+> users in arch/sh/ in a private tree?
 
-I think if you took the approach of only using the compatible
-you would still need to use the fdma instance number
-otherwise you end up with the same problems discussed in the 
-"Firmware filename in DT" thread [1] e.g.
-
-   compatible = "st,stih407-fdma-mpe31-0";
-   compatible = "st,stih407-fdma-mpe31-1";
-   compatible = "st,stih407-fdma-mpe31-2";
-
-Specifically the problem is related to
-
-"The hardware is identical, and different firmware is used to apply
-   it in different ways."
-
-Which is the case with fdma. By encoding the "way you wish to apply it" into the
-compatible string, it causes problems if you want to change for example fdma0
-to do some other function other than audio.
-
-You then require a DT update, (when the hardware hasn't changed, just the
-firmware) which is the same problem as using the filename directly in DT.
-
-Therefore I believe it is important that the DT binding does *not* encode the
-way the hardware is to be applied into the binding in *any* way, and defers this
- decision to the driver.
-That is the rationale / reasoning behind choosing the fdma instance number.
-
-Assuming you agree with my arguments above, then the choice becomes between 
-having a fdma instance DT property, or having lots of compatibles where the only
-difference is the appending of the instance number. I think out of the two I prefer
-my original approach.
-
-Any thoughts from the DT folks?
+I'll drop this in the next submission. There aren't any users I can
+see in the private tree. This function is currently only used by
+dma_reuest_channel above, so won't be required if we move over to
+using dma_get_any_slave_channel().
 
 regards,
 
 Peter.
-
-[1] http://comments.gmane.org/gmane.linux.drivers.devicetree/133782
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
