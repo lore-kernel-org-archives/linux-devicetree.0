@@ -1,40 +1,111 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] usb: renesas_usbhs: Add support for R-Car H3
-Date: Tue, 29 Sep 2015 11:25:45 +0200
-Message-ID: <CAMuHMdW-HLyuvTA3WSu39kboj_GLQxNKsRZ4rNzCfxSvzs+Q6w@mail.gmail.com>
-References: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1443518479-2864-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ DT binding documentation
+Date: Tue, 29 Sep 2015 11:04:40 +0100
+Message-ID: <20150929100440.GC16955@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+ <1441980871-24475-2-git-send-email-peter.griffin@linaro.org>
+ <51503956.PMFrWKUjxX@wuerfel>
+ <20150912120752.GA19897@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20150914081937.GF27591@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443518479-2864-3-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150914081937.GF27591@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 29, 2015 at 11:21 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds a compatible string to support for R-Car H3.
->
-> Since the HS-USB controller of R-Car H3 is almost the same specification
-> with R-Car Gen2 (these have 16 pipes and usb-dmac), this patch
-> sets the "type" of renesas_usbhs_driver_param to USBHS_TYPE_RCAR_GEN2.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Hi Lee,
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+On Mon, 14 Sep 2015, Lee Jones wrote:
 
-Gr{oetje,eeting}s,
+> > On Fri, 11 Sep 2015, Arnd Bergmann wrote:
+> > 
+> > > On Friday 11 September 2015 15:14:23 Peter Griffin wrote:
+> > > > +- st,fdma-id	: Must contain fdma controller number
+> > > 
+> > > What for?
+> > 
+> > It is used by the driver to generate a unique firmware name.
+> > Basically we need to know which controller instance we
+> > are as each controller has a different firmware which needs
+> > to be loaded.
+> > 
+> > Rob did say that having a index type property is undesirable
+> > over here, see my reply at the bottom
+> > http://www.spinics.net/lists/devicetree/msg92529.html.
+> > 
+> > However I can't think of any other useful properties we could add
+> > to derive this information.
+> 
+> I wouldn't use a property at all.  Why not use the compatible string?
+> 
+> Who chooses the naming scheme of the firmware binary?
 
-                        Geert
+ST
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> Is there any reason they can't be:
+> 
+>   fdma_STiH407_audio.elf
+>   fdma_STiH407_app.elf
+>   fdma_STiH407_free_running.elf
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Not sure, we could easily rename them locally. Getting ST to change
+the firmware names in the stlinux distro might be harder.
+My personal preference is to leave the firmware names "as is", unless
+there is a real show stopper reason where we *have* to change them e.g.
+we can't support all STi platforms with the same userspace because
+the firmware filenames aren't unique enough.
+
+> 
+> Then you can have a different compatible for each:
+> 
+>   compatible = "st,stih407-fdma-mpe31-audio";
+>   compatible = "st,stih407-fdma-mpe31-app";
+>   compatible = "st,stih407-fdma-mpe31-free-running";
+
+I think if you took the approach of only using the compatible
+you would still need to use the fdma instance number
+otherwise you end up with the same problems discussed in the 
+"Firmware filename in DT" thread [1] e.g.
+
+   compatible = "st,stih407-fdma-mpe31-0";
+   compatible = "st,stih407-fdma-mpe31-1";
+   compatible = "st,stih407-fdma-mpe31-2";
+
+Specifically the problem is related to
+
+"The hardware is identical, and different firmware is used to apply
+   it in different ways."
+
+Which is the case with fdma. By encoding the "way you wish to apply it" into the
+compatible string, it causes problems if you want to change for example fdma0
+to do some other function other than audio.
+
+You then require a DT update, (when the hardware hasn't changed, just the
+firmware) which is the same problem as using the filename directly in DT.
+
+Therefore I believe it is important that the DT binding does *not* encode the
+way the hardware is to be applied into the binding in *any* way, and defers this
+ decision to the driver.
+That is the rationale / reasoning behind choosing the fdma instance number.
+
+Assuming you agree with my arguments above, then the choice becomes between 
+having a fdma instance DT property, or having lots of compatibles where the only
+difference is the appending of the instance number. I think out of the two I prefer
+my original approach.
+
+Any thoughts from the DT folks?
+
+regards,
+
+Peter.
+
+[1] http://comments.gmane.org/gmane.linux.drivers.devicetree/133782
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
