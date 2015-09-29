@@ -1,248 +1,144 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v6 0/22] On-demand device probing
-Date: Tue, 29 Sep 2015 10:08:16 +0200
-Message-ID: <CAAObsKCBOoBZOzyZiqR=mpZwy5u3ZEr2ZE6qFOCedpHug2gHaA@mail.gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <5606E120.3070305@kernel.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
+Date: Tue, 29 Sep 2015 09:13:59 +0100
+Message-ID: <560A4847.8090007@nvidia.com>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com>
+ <56056589.9010704@nvidia.com> <56056A8F.5010103@nvidia.com>
+ <1783348.ocWL5DWVKG@wuerfel> <5609556A.8060908@nvidia.com>
+ <56096C9E.7070608@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <5606E120.3070305@kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56096C9E.7070608-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 September 2015 at 20:17, Rob Herring <robh@kernel.org> wrote:
-> On 09/21/2015 09:02 AM, Tomeu Vizoso wrote:
->> Hello,
->>
->> I have a problem with the panel on my Tegra Chromebook taking longer
->> than expected to be ready during boot (St=C3=A9phane Marchesin repor=
-ted what
->> is basically the same issue in [0]), and have looked into ordered
->> probing as a better way of solving this than moving nodes around in =
-the
->> DT or playing with initcall levels and linking order.
->>
->> While reading the thread [1] that Alexander Holler started with his
->> series to make probing order deterministic, it occurred to me that i=
-t
->> should be possible to achieve the same by probing devices as they ar=
-e
->> referenced by other devices.
->>
->> This basically reuses the information that is already implicit in th=
-e
->> probe() implementations, saving us from refactoring existing drivers=
- or
->> adding information to DTBs.
->>
->> During review of v1 of this series Linus Walleij suggested that it
->> should be the device driver core to make sure that dependencies are
->> ready before probing a device. I gave this idea a try [2] but Mark B=
-rown
->> pointed out to the logic duplication between the resource acquisitio=
-n
->> and dependency discovery code paths (though I think it's fairly mino=
-r).
->>
->> To address that code duplication I experimented with Arnd's devm_pro=
-be
->> [3] concept of having drivers declare their dependencies instead of
->> acquiring them during probe, and while it worked [4], I don't think =
-we
->> end up winning anything when compared to just probing devices on-dem=
-and
->> from resource getters.
->>
->> One remaining objection is to the "sprinkling" of calls to
->> of_device_probe() in the resource getters of each subsystem, but I t=
-hink
->> it's the right thing to do given that the storage of resources is
->> currently subsystem-specific.
->>
->> We could avoid the above by moving resource storage into the core, b=
-ut I
->> don't think there's a compelling case for that.
->>
->> I have tested this on boards with Tegra, iMX.6, Exynos, Rockchip and
->> OMAP SoCs, and these patches were enough to eliminate all the deferr=
-ed
->> probes (except one in PandaBoard because omap_dma_system doesn't hav=
-e a
->> firmware node as of yet).
->>
->> Have submitted a branch [5][6][7] with these patches on top of today=
-'s
->> linux-next (20150921) to kernelci.org and I don't see any issues tha=
-t
->> could be caused by them.
->>
->> With this series I get the kernel to output to the panel in 0.5s,
->> instead of 2.8s.
->
-> I think we're pretty close other than some minor comments. I would li=
-ke
-> to see ack's from Greg and some reviewed-bys from others. The subsyst=
-em
-> changes are minor and there has been plenty of chance to comment, so =
-I
-> don't think acks from all subsystems are needed.
->
-> Your branch is based on -next. Is there any dependence on something i=
-n
-> -next? I want to get this into -next soon, but need a branch not base=
-d
-> on -next. Please send me a pull request with the collected acks and
-> minor comments I have addressed.
 
-Great, I'm going to send one more revision rebased on top of v4.3-rc1,
-without 21 and with the minor changes you suggested, and once Greg is
-happy I can send the pull request.
+On 28/09/15 17:36, Stephen Warren wrote:
+> On 09/28/2015 08:57 AM, Jon Hunter wrote:
+>>
+>> On 25/09/15 16:47, Arnd Bergmann wrote:
+>>> On Friday 25 September 2015 16:38:55 Jon Hunter wrote:
+>>>> On 25/09/15 16:17, Jon Hunter wrote:
+>>>>>
+>>>>> On 25/09/15 16:03, Arnd Bergmann wrote:
+>>>>>> On Friday 25 September 2015 15:56:40 Jon Hunter wrote:
+>>>>>>> +       case DMA_MEM_TO_DEV:
+>>>>>>> +               burst_size = fls(tdc->config.dst_maxburst);
+>>>>>>> +               ch_regs->config = ADMA_CH_CONFIG_SRC_BUF(num_bufs
+>>>>>>> - 1);
+>>>>>>> +               ch_regs->ctrl =
+>>>>>>> ADMA_CH_CTRL_XFER_DIR(ADMA_MEM_TO_AHUB) |
+>>>>>>> +                              
+>>>>>>> ADMA_CH_CTRL_TX_REQ(tdc->config.slave_id);
+>>>>>>> +               ch_regs->src_addr = buf_addr;
+>>>>>>> +               break;
+>>>>>>> +
+>>>>>>> +       case DMA_DEV_TO_MEM:
+>>>>>>> +               burst_size = fls(tdc->config.src_maxburst);
+>>>>>>> +               ch_regs->config = ADMA_CH_CONFIG_TRG_BUF(num_bufs
+>>>>>>> - 1);
+>>>>>>> +               ch_regs->ctrl =
+>>>>>>> ADMA_CH_CTRL_XFER_DIR(ADMA_AHUB_TO_MEM) |
+>>>>>>> +                              
+>>>>>>> ADMA_CH_CTRL_RX_REQ(tdc->config.slave_id);
+>>>>>>> +               ch_regs->trg_addr = buf_addr;
+>>>>>>> +               break;
+>>>>>>
+>>>>>> Do not use the 'slave_id' field here to identify the slave device,
+>>>>>> that
+>>>>>> concept is broken. Instead, put the slave identification into the
+>>>>>> dma specifier in DT and read it out in your xlate function.
+>>>>>
+>>>>> Why is it broken?
+>>>>>
+>>>>> What happens if I don't know the slave-id? In other words, the
+>>>>> slave-id
+>>>>> can be dynamically allocated and associated with a given slave.
+>>>>
+>>>> I guess thinking about it some more, the driver could assign an id
+>>>> itself to a given channel and I could avoid using slave_id here. There
+>>>> are 22 channels and 10 tx and 10 rx requests.
+>>>
+>>> This sounds roughly right. So you could pick the ch_regs->ctrl value
+>>> when you allocate the tegra_adma_chan structure, and then map it to
+>>> the slave in the xlate() function.
+>>
+>> Actually, what I mentioned about would not work as it is not the DMA
+>> that should assign the requests to the channel.
+>>
+>> I think that I have poorly described the hardware and how it works, so
+>> let me try and explain a bit more.
+>>
+>>  From a hardware perspective it looks like the following ...
+>>
+>> memory <-> adma <-> adma-if <-> xbar <-> clients
+>>
+>> where:
+>> - memory is the system memory
+>> - adma is the dma controller
+>> - adma-if is the dma interface to a crossbar
+>> - xbar is the crossbar
+>> - clients are various audio interfaces, such as i2s, etc
+>>
+>> The adma-if is essentially a mux with 10 tx and 10 rx ports. Any of the
+>> 22 adma channels can be mapped to any of the 10 tx or rx ports. The
+>> request signal used by the adma is determined by which port it is
+>> configured to use. However, what makes this even more configurable is
+>> the xbar is also a mux that can route adma-if ports to the various
+>> clients.
+>>
+>> So potentially, you could use any adma channel and any port to route
+>> audio to any of the clients. However, the adma-if needs to know which
+>> adma channel is mapped to which port
+> 
+> It does? I'm pretty sure it didn't in earlier chips; what changed?
 
-Thanks,
+I *believe* that T210 is the first one to have the ADMA controller where
+as previous chips used the APB-DMA controller. Looking at the APB-DMA on
+T124 I can see that there is a fixed REQ_SEL value for each of the APBIF
+(equivalent of the ADMA-IF on T210).
 
-Tomeu
+> For earlier chips, I believe all that's required is:
+> 
+> When programming the DMA engine, you need to know which ADMA-IF is in
+> use, so the correct DMA request selector can be programmed into the DMA
+> engine for flow-control.
+> 
+> ADMA-IF simply receives the data from DMA, and forwards it to the XBAR
+> tagged with the ADMA-IF's own ID.
+> 
+> The XBAR programming selects which data source (ADMA-IF TX, I2S RX, ...)
+> each sink (ADMARX, I2S TX, ...) receives.
 
-> Rob
->
->>
->> Regards,
->>
->> Tomeu
->>
->> [0] http://lists.freedesktop.org/archives/dri-devel/2014-August/0665=
-27.html
->>
->> [1] https://lkml.org/lkml/2014/5/12/452
->>
->> [2] https://lkml.org/lkml/2015/6/17/305
->>
->> [3] http://article.gmane.org/gmane.linux.ports.arm.kernel/277689
->>
->> [4] https://lkml.org/lkml/2015/7/21/441a
->>
->> [5] https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=3Don-=
-demand-probes-v8
->>
->> [6] http://kernelci.org/boot/all/job/collabora/kernel/v4.3-rc2-2587-=
-gf92b0ab33d14/
->>
->> [7] http://kernelci.org/boot/all/job/next/kernel/next-20150921
->>
->> Changes in v6:
->> - Drop bus_type.pre_probe and read the periphid in match() instead a=
-s
->>   suggested by Alan Stern.
->> - Merge changes to the regulator subsystem's locking so no reference=
-s
->>   are leaked between commits.
->>
->> Changes in v5:
->> - Set the pointer to struct device also for AMBA devices
->> - Unset the pointer to struct device when the platform device is abo=
-ut
->>   to be unregistered
->> - Increase the reference count of the device before returning from
->>   of_find_device_by_node()
->> - Move the assignment to device_node->device for AMBA devices to ano=
-ther
->>   commit.
->> - Hold a reference to the struct device while it's in use in
->>   of_device_probe().
->> - Use regulator_class' klist of devices instead of regulator_list to
->>   store and lookup regulator devices.
->>
->> Changes in v4:
->> - Added bus.pre_probe callback so the probes of Primecell devices ca=
-n be
->>   deferred if their device IDs cannot be yet read because of the clo=
-ck
->>   driver not having probed when they are registered. Maybe this goes
->>   overboard and the matching information should be in the DT if ther=
-e is
->>   one.
->> - Rename of_platform_probe to of_device_probe
->> - Use device_node.device instead of device_node.platform_dev
->> - Add Kconfig DELAY_DEVICE_PROBES to allow disabling delayed probing=
- in
->>   machines with initcalls that depend on devices probing at a given =
-time.
->> - Start processing deferred probes in device_initcall_sync
->> - Also defer probes of AMBA devices registered from the DT as they c=
-an
->>   also request resources.
->>
->> Changes in v3:
->> - Set and use device_node.platform_dev instead of reversing the logi=
-c to
->>   find the platform device that encloses a device node.
->> - Drop the fwnode API to probe firmware nodes and add OF-only API fo=
-r
->>   now. I think this same scheme could be used for machines with ACPI=
-,
->>   but I haven't been able to find one that had to defer its probes b=
-ecause
->>   of the device probe order.
->>
->> Tomeu Vizoso (22):
->>   driver core: handle -EPROBE_DEFER from bus_type.match()
->>   ARM: amba: Move reading of periphid to amba_match()
->>   of/platform: Point to struct device from device node
->>   of: add function to allow probing a device from a OF node
->>   gpio: Probe GPIO drivers on demand
->>   gpio: Probe pinctrl devices on demand
->>   regulator: core: Remove regulator_list
->>   regulator: core: Probe regulators on demand
->>   drm: Probe panels on demand
->>   drm/tegra: Probe dpaux devices on demand
->>   i2c: core: Probe i2c adapters and devices on demand
->>   pwm: Probe PWM chip devices on demand
->>   backlight: Probe backlight devices on demand
->>   usb: phy: Probe phy devices on demand
->>   clk: Probe clk providers on demand
->>   pinctrl: Probe pinctrl devices on demand
->>   phy: core: Probe phy providers on demand
->>   dma: of: Probe DMA controllers on demand
->>   power-supply: Probe power supplies on demand
->>   driver core: Allow deferring probes until late init
->>   driver core: Start processing deferred probes earlier
->>   of/platform: Defer probes of registered devices
->>
->>  drivers/amba/bus.c                  |  88 ++++++------
->>  drivers/base/Kconfig                |  18 +++
->>  drivers/base/dd.c                   |  35 ++++-
->>  drivers/clk/clk.c                   |   3 +
->>  drivers/dma/of-dma.c                |   3 +
->>  drivers/gpio/gpiolib-of.c           |   5 +
->>  drivers/gpu/drm/drm_panel.c         |   3 +
->>  drivers/gpu/drm/tegra/dpaux.c       |   3 +
->>  drivers/i2c/i2c-core.c              |   4 +
->>  drivers/of/device.c                 |  61 +++++++++
->>  drivers/of/platform.c               |  30 +++--
->>  drivers/phy/phy-core.c              |   3 +
->>  drivers/pinctrl/devicetree.c        |   3 +
->>  drivers/power/power_supply_core.c   |   3 +
->>  drivers/pwm/core.c                  |   3 +
->>  drivers/regulator/core.c            | 257 +++++++++++++++++++++++--=
------------
->>  drivers/usb/phy/phy.c               |   3 +
->>  drivers/video/backlight/backlight.c |   3 +
->>  include/linux/device.h              |   4 +-
->>  include/linux/of.h                  |   1 +
->>  include/linux/of_device.h           |   3 +
->>  21 files changed, 386 insertions(+), 150 deletions(-)
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, exactly, this part sounds the same. However, just the ADMA itself
+allows for even more configuration.
+
+> Ideally, when an I2S controller needs to start transmitting data, it
+> should dynamically allocate an ADMA-IF, query it for its DMA slave
+> request ID, and then forward this information to the ASoC code that sets
+> up the DMA transfer.
+
+Agree.
+
+> In practice, this means that since any I2S module could use any ADMA-IF,
+> you probably need to list all DMA request selectors possible in the
+> I2S's DMA-related properties, so it can choose which one to use.
+
+Possibly, but really I think that the i2s only cares about the ADMA-IF
+and the hardware request used by the ADMA can be abstracted by the
+ADMA-IF. In other words, if you allocate an ADMA channel to work with a
+specific ADMA-IF, then let the ADMA-IF select the hardware request
+because as long as one is available, you don't care which.
+
+> Or perhaps the XBAR binding should list all the DMA requestors so that
+> each I2S node doesn't have to.
+
+Yes, however, I think that the ADMA-IF would make sense as it really
+cares about the mapping of hardware request to the ADMA-IF port.
+
+Cheers
+Jon
