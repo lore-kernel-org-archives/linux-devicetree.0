@@ -1,83 +1,45 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v9 2/5] dt-bindings: Add a binding for Mediatek xHCI host controller
-Date: Tue, 29 Sep 2015 11:01:35 +0800
-Message-ID: <1443495698-32233-3-git-send-email-chunfeng.yun@mediatek.com>
-References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
+ compatible
+Date: Tue, 29 Sep 2015 06:18:03 +0200
+Message-ID: <560A10FB.7040408@linaro.org>
+References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
+ <1443147298-12603-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1443147298-12603-2-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Caesar Wang <wxt@rock-chips.com>, heiko@sntech.de, will.deacon@arm.com, catalin.marinas@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding documentation of xHCI host controller for the
-MT8173 SoC from Mediatek.
+On 09/25/2015 04:14 AM, Caesar Wang wrote:
+> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
+> There are some failure with build up on timer driver for rockchip.
+>
+> Says:
+> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  operand 1=
+ --
+> `dsb`
+> ...
+>
+> The problem was different semantics of dsb on btw arm32 and arm64,
+> Here we can convert the dsb with insteading of dsb(sy).The "sy" param
+> is the default which you are allow to omit, so on arm32 dsb()and dsb(=
+sy)
+> are the same.
+>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- .../devicetree/bindings/usb/mt8173-xhci.txt        | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-new file mode 100644
-index 0000000..0c96273
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-@@ -0,0 +1,52 @@
-+MT8173 xHCI
-+
-+The device node for Mediatek SOC USB3.0 host controller
-+
-+Required properties:
-+ - compatible : should contain "mediatek,mt8173-xhci"
-+ - reg : specifies physical base address and size of the registers,
-+	the first one for MAC, the second for IPPC
-+ - interrupts : interrupt used by the controller
-+ - power-domains : a phandle to USB power domain node to control USB's
-+	mtcmos
-+ - vusb33-supply : regulator of USB avdd3.3v
-+
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must contain
-+	"sys_ck": for clock of xHCI MAC
-+	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-+	"wakeup_deb_p0": for USB wakeup debounce clock of port1
-+
-+ - phys : a list of phandle + phy specifier pairs
-+ - usb3-lpm-capable : supports USB3.0 LPM
-+
-+Optional properties:
-+ - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
-+	mode;
-+ - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-+	control register, it depends on "mediatek,wakeup-src".
-+ - vbus-supply : reference to the VBUS regulator;
-+
-+Example:
-+usb30: usb@11270000 {
-+	compatible = "mediatek,mt8173-xhci";
-+	reg = <0 0x11270000 0 0x1000>,
-+	      <0 0x11280700 0 0x0100>;
-+	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-+		 <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB1>;
-+	clock-names = "sys_ck",
-+		      "wakeup_deb_p0",
-+		      "wakeup_deb_p1";
-+	phys = <&phy_port0 PHY_TYPE_USB3>,
-+	       <&phy_port1 PHY_TYPE_USB2>;
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	vbus-supply = <&usb_p1_vbus>;
-+	usb3-lpm-capable;
-+	mediatek,syscon-wakeup = <&pericfg>;
-+	mediatek,wakeup-src = <1>;
-+	status = "okay";
-+};
--- 
-1.8.1.1.dirty
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
