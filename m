@@ -1,55 +1,38 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding documentation
-Date: Tue, 29 Sep 2015 13:17:20 +0200
-Message-ID: <35211759.Jca4RWVLIS@wuerfel>
-References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org> <20150914081937.GF27591@x1> <20150929100440.GC16955@griffinp-ThinkPad-X1-Carbon-2nd>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: Re: [PATCH 0/7] tty: serial: msm: Add DMA support and fix bit
+ definitions
+Date: Tue, 29 Sep 2015 14:51:47 +0300
+Message-ID: <1443527507.2412.3.camel@linaro.org>
+References: <1442062934-13449-1-git-send-email-ivan.ivanov@linaro.org>
+	 <560486D7.3090003@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150929100440.GC16955@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <560486D7.3090003@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 September 2015 11:04:40 Peter Griffin wrote:
-> 
-> "The hardware is identical, and different firmware is used to apply
->    it in different ways."
-> 
-> Which is the case with fdma. By encoding the "way you wish to apply it" into the
-> compatible string, it causes problems if you want to change for example fdma0
-> to do some other function other than audio.
-> 
-> You then require a DT update, (when the hardware hasn't changed, just the
-> firmware) which is the same problem as using the filename directly in DT.
-> 
-> Therefore I believe it is important that the DT binding does *not* encode the
-> way the hardware is to be applied into the binding in *any* way, and defers this
->  decision to the driver.
-> That is the rationale / reasoning behind choosing the fdma instance number.
-> 
-> Assuming you agree with my arguments above, then the choice becomes between 
-> having a fdma instance DT property, or having lots of compatibles where the only
-> difference is the appending of the instance number. I think out of the two I prefer
-> my original approach.
-> 
-> Any thoughts from the DT folks?
 
-To me both approaches sound wrong: basing the firmware name on the instance
-number requires that each instance is always used in the same way, which
-is not guaranteed to be the case, and you correctly describe the problem with
-using the compatible string for the firmware name if the driver for the FDMA
-does not actually care what firmware is being used here.
+On Fri, 2015-09-25 at 00:27 +0100, Srinivas Kandagatla wrote:
+> Hi Ivan,
+> On 12/09/15 14:02, Ivan T. Ivanov wrote:
+> > Hi,
+> > 
+> > Following patches add DMA support for UARTDM type of hardware.
+> > 
+> > Changes have been tested on UARTDM v1.3(APQ8064) and v1.4(APQ8016).
+> > 
+> > Patches from Gurav were published long ago here[1], I just addressed
+> > remaining comments and coding style issues.
+> > 
+> > Any comments are welcome.
+> Looks like Magic Sysrq is broken with this patches.
 
-Whatever code makes the decision as to how the FDMA is used should also
-decide on the name of the firmware file. You can have a mapping in the
-driver that contains the file names that are used by ST's distro, possibly
-with a fallback mechanism that tries more meaningful names first.
+Oh, sorry. Interrupts have to be enabled during 
+SysRq processing. I will send updated patch-set.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan
