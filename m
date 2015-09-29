@@ -1,57 +1,58 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 2/2] usb: renesas_usbhs: Add support for R-Car H3
-Date: Tue, 29 Sep 2015 18:21:19 +0900
-Message-ID: <1443518479-2864-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/2] usb: renesas_usbhs: fix build warning if 64-bit architecture
+Date: Tue, 29 Sep 2015 18:21:18 +0900
+Message-ID: <1443518479-2864-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a compatible string to support for R-Car H3.
+This patch fixes the following warning if 64-bit architecture environment:
 
-Since the HS-USB controller of R-Car H3 is almost the same specification
-with R-Car Gen2 (these have 16 pipes and usb-dmac), this patch
-sets the "type" of renesas_usbhs_driver_param to USBHS_TYPE_RCAR_GEN2.
+./drivers/usb/renesas_usbhs/common.c:496:25: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+  dparam->type = of_id ? (u32)of_id->data : 0;
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
- drivers/usb/renesas_usbhs/common.c                      | 5 +++++
- 2 files changed, 6 insertions(+)
+ drivers/usb/renesas_usbhs/common.c | 2 +-
+ include/linux/usb/renesas_usbhs.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 64a4ca6..7d48f63 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -5,6 +5,7 @@ Required properties:
- 	- "renesas,usbhs-r8a7790"
- 	- "renesas,usbhs-r8a7791"
- 	- "renesas,usbhs-r8a7794"
-+	- "renesas,usbhs-r8a7795"
-   - reg: Base address and length of the register for the USBHS
-   - interrupts: Interrupt specifier for the USBHS
-   - clocks: A list of phandle + clock specifier pairs
 diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 0ce398c..d82fa36 100644
+index 7b98e1d..0ce398c 100644
 --- a/drivers/usb/renesas_usbhs/common.c
 +++ b/drivers/usb/renesas_usbhs/common.c
-@@ -476,6 +476,11 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,usbhs-r8a7794",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
- 	},
-+	{
-+		/* Gen3 is compatible with Gen2 */
-+		.compatible = "renesas,usbhs-r8a7795",
-+		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usbhs_of_match);
+@@ -493,7 +493,7 @@ static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
+ 		return NULL;
+ 
+ 	dparam = &info->driver_param;
+-	dparam->type = of_id ? (u32)of_id->data : 0;
++	dparam->type = of_id ? (uintptr_t)of_id->data : 0;
+ 	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
+ 		dparam->buswait_bwait = tmp;
+ 	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
+diff --git a/include/linux/usb/renesas_usbhs.h b/include/linux/usb/renesas_usbhs.h
+index 3dd5a78..bfb7472 100644
+--- a/include/linux/usb/renesas_usbhs.h
++++ b/include/linux/usb/renesas_usbhs.h
+@@ -157,7 +157,7 @@ struct renesas_usbhs_driver_param {
+ 	 */
+ 	int pio_dma_border; /* default is 64byte */
+ 
+-	u32 type;
++	uintptr_t type;
+ 	u32 enable_gpio;
+ 
+ 	/*
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
