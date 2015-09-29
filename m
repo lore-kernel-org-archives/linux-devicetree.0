@@ -1,124 +1,79 @@
-From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] Documentation: add DT bindings for ARM SCPI sensors
-Date: Tue, 29 Sep 2015 16:11:10 +0100
-Message-ID: <9hhd1x16z1t.fsf@e105922-lin.cambridge.arm.com>
-References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
-	<1442335861-7282-2-git-send-email-punit.agrawal@arm.com>
-	<9hhoagubk4m.fsf@e105922-lin.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for
+ the TPS65912 PMIC
+Date: Tue, 29 Sep 2015 16:13:20 +0100
+Message-ID: <20150929151320.GT30445@sirena.org.uk>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk>
+ <5605AA1C.3090905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9hhoagubk4m.fsf-Z9gB6HwUD+TZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org> (Punit Agrawal's
-	message of "Tue, 22 Sep 2015 15:31:53 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dBO7RQoQeylDOh0t"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5605AA1C.3090905@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> writes:
 
-> Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> writes:
->
->> The System Control Processor (SCP) provides access to SoC sensors via
->> the System Control and Power Interface (SCPI) Message Protocol. Add
->> bindings to allow probing of these sensors. Also support referencing
->> of the sensors for setting up thermal zones via the thermal DT
->> bindings.
->>
->> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->
-> Gentle reminder for review of the below bindings. They've been updated
-> based on feedback on the earlier version [a].
->
-> If there are no further comments, I'd like to request an ack from the DT
-> reviewers.
+--dBO7RQoQeylDOh0t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ping!
+On Fri, Sep 25, 2015 at 03:10:04PM -0500, Andrew F. Davis wrote:
+> On 09/25/2015 01:05 PM, Mark Brown wrote:
+> >On Thu, Sep 24, 2015 at 09:52:53AM -0500, Andrew F. Davis wrote:
 
->
-> [a] http://thread.gmane.org/gmane.linux.power-management.general/65475/focus=134976
->
->> ---
->>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 38 ++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> index f002460..86302de 100644
->> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> @@ -72,8 +72,25 @@ Required sub-node properties:
->>  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
->>  	       shared memory on Juno platforms
->>  
->> +Sensor bindings for the sensors based on SCPI Message Protocol
->> +--------------------------------------------------------------
->> +SCPI provides an API to access the various sensors on the SoC.
->> +
->> +Required properties:
->> +- compatible : should be "arm,scpi-sensors".
->> +- #thermal-sensor-cells: should be set to 1. This property follows the
->> +			 thermal device tree bindings[2].
->> +
->> +			 Valid cell values are raw identifiers (Sensor
->> +			 ID) as used by the firmware. Refer to
->> +			 platform documentation for your
->> +			 implementation for the IDs to use. For Juno
->> +			 R0 and Juno R1 refer to [3].
->> +
->>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
->>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
->> +[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
->>  
->>  Example:
->>  
->> @@ -122,6 +139,11 @@ scpi_protocol: scpi@2e000000 {
->>  			clock-output-names = "pxlclk0", "pxlclk1";
->>  		};
->>  	};
->> +
->> +	scpi_sensors0: sensors {
->> +		compatible = "arm,scpi-sensors";
->> +		#thermal-sensor-cells = <1>;
->> +	};
->>  };
->>  
->>  cpu@0 {
->> @@ -136,6 +158,17 @@ hdlcd@7ff60000 {
->>  	clocks = <&scpi_clk 4>;
->>  };
->>  
->> +thermal-zones {
->> +	soc_thermal {
->> +		polling-delay-passive = <100>;
->> +		polling-delay = <1000>;
->> +
->> +				/* sensor         ID */
->> +		thermal-sensors = <&scpi_sensors0 3>;
->> +		...
->> +	};
->> +};
->> +
->>  In the above example, the #clock-cells is set to 1 as required.
->>  scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
->>  1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
->> @@ -148,3 +181,8 @@ scpi_dvfs i.e. "atlclk".
->>  Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
->>  clock. '4' in the clock specifier here points to the second entry
->>  in the output clocks of scpi_clocks  i.e. "pxlclk1"
->> +
->> +The thermal-sensors property in the soc_thermal node uses the
->> +temperature sensor provided by SCP firmware to setup a thermal
->> +zone. The ID "3" is the sensor identifier for the temperature sensor
->> +as used by the firmware.
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>+	match = of_match_device(tps65912_regulator_of_match_table, &pdev->dev);
+> >>+	if (!match)
+> >>+		return -ENODEV;
+
+> >>+	template = match->data;
+> >>+	id = template->id;
+> >>+	init_data = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node,
+> >>+					       &regulators[id]);
+
+> >Don't open code this stuff, use the core DT matching in the
+> >regulator_desc instead.
+
+> I assume you are referring to your additions in a0c7b164ad11? If so I'm not
+
+Please don't refer to commits by ID only, include a human readable
+description of the commit for the benefit of any humans who might read
+your mail.
+
+> sure that will save me anything as my probe function is called with a DT
+> match already, so no searching is needed.
+
+You've not understood what that change is replacing, the code I'm
+quoting above is exactly that code.  Check out some of the existing
+drivers using this API.
+
+> >Please also use subject lines mathcing the style for the subsystem.
+
+> I'm not sure I know what you mean? What is wrong with my subject line, it looks
+> like the others I've looked at?
+
+You are using "regulators:", the regulator API uses "regulator:" - this
+should be really clear if you do something like a git shortlog.
+
+--dBO7RQoQeylDOh0t
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWCqqPAAoJECTWi3JdVIfQXyYH/jsAgXlhyWqBDDO74YxEDUrs
+GMql3c0AkUuqzocdOlY3Q4GL5k7AxblNcTPWGD/iMG1SoCuAukOUOaqjRcQpGfRa
+4uz5E8NGa2i8m4L281hicghhT0Bhr7akuDJXh/IE/H6ua9tzi0Vcv7bCMyH+gc4G
+ypKSUAVllZTXE1EKBw7gZXz3JQJ6Zx/RxLy5HmupKbKJK2zqHp5gNQ7Wn5E6hHIT
+7OWiajHR1lfVfpmboP5nl/58WVGrTiNgJ9bjK8smBUNBj2njt/Q64cEyJ3Khcs+L
+YtCmIg8f8EHln3TCpguic17VTRqPaF4W+zlqPcmKKYkHc/psFAAjVqRktRR8gbQ=
+=7DKR
+-----END PGP SIGNATURE-----
+
+--dBO7RQoQeylDOh0t--
