@@ -1,58 +1,41 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/2] usb: renesas_usbhs: fix build warning if 64-bit architecture
-Date: Tue, 29 Sep 2015 18:21:18 +0900
-Message-ID: <1443518479-2864-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v2 2/9] dmaengine: st_fdma: Add st fdma platform specific
+ header
+Date: Tue, 29 Sep 2015 10:24:42 +0100
+Message-ID: <20150929092442.GB16955@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+ <1441980871-24475-3-git-send-email-peter.griffin@linaro.org>
+ <2654563.3IzPKrUkAU@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443518479-2864-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2654563.3IzPKrUkAU@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following warning if 64-bit architecture environment:
+Hi Arnd,
 
-./drivers/usb/renesas_usbhs/common.c:496:25: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-  dparam->type = of_id ? (u32)of_id->data : 0;
+On Fri, 11 Sep 2015, Arnd Bergmann wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- drivers/usb/renesas_usbhs/common.c | 2 +-
- include/linux/usb/renesas_usbhs.h  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> On Friday 11 September 2015 15:14:24 Peter Griffin wrote:
+> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  include/linux/platform_data/dma-st_fdma.h | 72 +++++++++++++++++++++++++++++++
+> >  1 file changed, 72 insertions(+)
+> >  create mode 100644 include/linux/platform_data/dma-st_fdma.h
+> > 
+> 
+> This clearly needs an explanation of which platforms require the header.
+> 
+> On ARM, all new platforms use DT, so it's obviously not one of them.
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 7b98e1d..0ce398c 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -493,7 +493,7 @@ static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
- 		return NULL;
- 
- 	dparam = &info->driver_param;
--	dparam->type = of_id ? (u32)of_id->data : 0;
-+	dparam->type = of_id ? (uintptr_t)of_id->data : 0;
- 	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
- 		dparam->buswait_bwait = tmp;
- 	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
-diff --git a/include/linux/usb/renesas_usbhs.h b/include/linux/usb/renesas_usbhs.h
-index 3dd5a78..bfb7472 100644
---- a/include/linux/usb/renesas_usbhs.h
-+++ b/include/linux/usb/renesas_usbhs.h
-@@ -157,7 +157,7 @@ struct renesas_usbhs_driver_param {
- 	 */
- 	int pio_dma_border; /* default is 64byte */
- 
--	u32 type;
-+	uintptr_t type;
- 	u32 enable_gpio;
- 
- 	/*
--- 
-1.9.1
+I will move the relevant parts into the st_fdma.h header file, as no other platforms
+will be upstreamed that are not DT based.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+
+Peter.
