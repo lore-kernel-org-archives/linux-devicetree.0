@@ -1,78 +1,43 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v3 0/8] Build and support rk3036 SoC platform
-Date: Tue, 29 Sep 2015 10:13:45 +0800
-Message-ID: <1443492833-15630-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Xing Zheng <zhengxing@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 7/8] ARM: dts: enable smp for rk3036
+Date: Tue, 29 Sep 2015 10:37:03 +0800
+Message-ID: <1443494223-15952-1-git-send-email-zhengxing@rock-chips.com>
+References: <1443492833-15630-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443492833-15630-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, =ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Enable the rk3036's cpu1 and smp.
 
-Hi,
-  We need to support rk3036 soc platform via upstream, there are
-3 primary parts for the initial release of minimum system: dts,
-pinctrl, and clock tree for rk3036, and additional, we can use
-these startup and run to init processs.
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
 
-Thanks.
+Changes in v3: None
 
-Changed in v3:
-- optimized some codes based on v2
-- removed the patch "initial set time for rtc-hym8563" (useless)
-- removed the patch "pinctrl" (approved)
+ arch/arm/boot/dts/rk3036.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-Changed in v2:
-- based on v1, add clock controller documentation
-- enable timer5 startup
-- add smp for cpu1
-- initial set time for rtc-hym8563
-
-Changes in v1:
-- add dts, pinctrl and clock tree for rk3036 soc platform
-
-The patchset (8):
-8) rockchip: make sure timer5 is enabled on rk3036 platforms
-7) ARM: dts: enable smp for rk3036
-6) ARM: rockchip: add support smp for rk3036
-5) clk: rockchip: add new clock type and controller for rk3036
-4) dt-bindings: add documentation of rk3036 clock controller
-3) clk: rockchip: add clock controller for rk3036
-2) clk: rockchip: add dt-binding header for rk3036
-1) ARM: dts: rockchip: add core rk3036 dts
-
-
-Changes in v3:
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-Xing Zheng (8):
-  ARM: dts: rockchip: add core rk3036 dts
-  clk: rockchip: add dt-binding header for rk3036
-  clk: rockchip: add clock controller for rk3036
-  dt-bindings: add documentation of rk3036 clock controller
-  clk: rockchip: add new clock type and controller for rk3036
-  ARM: rockchip: add support smp for rk3036
-  ARM: dts: enable smp for rk3036
-  rockchip: make sure timer5 is enabled on rk3036 platforms
-
- .../bindings/clock/rockchip,rk3036-cru.txt         |   56 +++
- arch/arm/boot/dts/Makefile                         |    1 +
- arch/arm/boot/dts/rk3036-evb.dts                   |   64 +++
- arch/arm/boot/dts/rk3036.dtsi                      |  383 +++++++++++++++
- arch/arm/mach-rockchip/platsmp.c                   |  142 ++++++
- arch/arm/mach-rockchip/rockchip.c                  |   44 +-
- drivers/clk/rockchip/Makefile                      |    1 +
- drivers/clk/rockchip/clk-pll.c                     |  243 +++++++++-
- drivers/clk/rockchip/clk-rk3036.c                  |  500 ++++++++++++++++++++
- drivers/clk/rockchip/clk.h                         |   30 ++
- include/dt-bindings/clock/rk3036-cru.h             |  195 ++++++++
- 11 files changed, 1641 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
- create mode 100644 arch/arm/boot/dts/rk3036-evb.dts
- create mode 100644 arch/arm/boot/dts/rk3036.dtsi
- create mode 100644 drivers/clk/rockchip/clk-rk3036.c
- create mode 100644 include/dt-bindings/clock/rk3036-cru.h
-
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index fea51de..ecd053d 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -72,6 +72,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "rockchip,rk3036-smp";
+ 
+ 		cpu0: cpu@f00 {
+ 			device_type = "cpu";
 -- 
 1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
