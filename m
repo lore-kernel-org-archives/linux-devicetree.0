@@ -1,117 +1,108 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v3 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Tue, 29 Sep 2015 13:16:36 -0500
-Message-ID: <560AD584.6000906@ti.com>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-4-git-send-email-afd@ti.com> <56096447.8020804@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] Documentation: add DT bindings for ARM SCPI sensors
+Date: Tue, 29 Sep 2015 13:20:55 -0500
+Message-ID: <CAL_Jsq+_Rrv5XqNsL-gwQZv3HK20dQC3jY7qCoxQ8KWhhs4Fdw@mail.gmail.com>
+References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com> <1442335861-7282-2-git-send-email-punit.agrawal@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56096447.8020804@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442335861-7282-2-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2015 11:01 AM, Grygorii Strashko wrote:
-> On 09/24/2015 09:52 AM, Andrew F. Davis wrote:
->> This patch adds support for TPS65912 mfd device. It provides
->> communication through the I2C and SPI interfaces. It contains
->> the following components:
->>
->>    - Regulators
->>    - GPIO controller
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>    drivers/mfd/Kconfig          |  24 +++
->>    drivers/mfd/Makefile         |   3 +
->>    drivers/mfd/tps65912-core.c  | 114 +++++++++++++
->>    drivers/mfd/tps65912-i2c.c   |  86 ++++++++++
->>    drivers/mfd/tps65912-spi.c   |  85 ++++++++++
->>    include/linux/mfd/tps65912.h | 393 +++++++++++++++++++++++++++++++++++++++++++
->>    6 files changed, 705 insertions(+)
->>    create mode 100644 drivers/mfd/tps65912-core.c
->>    create mode 100644 drivers/mfd/tps65912-i2c.c
->>    create mode 100644 drivers/mfd/tps65912-spi.c
->>    create mode 100644 include/linux/mfd/tps65912.h
->>
+On Tue, Sep 15, 2015 at 11:50 AM, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> wrote:
+> The System Control Processor (SCP) provides access to SoC sensors via
+> the System Control and Power Interface (SCPI) Message Protocol. Add
+> bindings to allow probing of these sensors. Also support referencing
+> of the sensors for setting up thermal zones via the thermal DT
+> bindings.
 >
-> [...]
->
->> +
->> +/*
->> + * struct tps_info - packages regulator constraints
->> + * @id: Id of the regulator
->> + * @name: Voltage regulator name
->> + * @min_uV: Minimum micro volts
->> + * @max_uV: Minimum micro volts
->> + *
->> + * This data is used to check the regulator voltage limits while setting.
->> + */
->> +struct tps_info {
->> +	int id;
->> +	const char *name;
->> +	int min_uV;
->> +	int max_uV;
->> +};
->
-> Could you move structure's definitions to the corresponding c-files
-> if they are used only locally in this files, pls?
->
+> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-ACK
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->> +
->> +/*
->> + * struct tps65912 - state holder for the tps65912 driver
->> + *
->> + * Device data may be used to access the TPS65912 chip
->> + */
->> +struct tps65912 {
->> +	struct device *dev;
->> +	unsigned int id;
->> +
->> +	/* IRQ Data */
->> +	int irq;
->> +	struct regmap_irq_chip_data *irq_data;
->> +
->> +	struct regulator_desc desc[TPS65912_NUM_REGULATOR];
->> +	struct tps_info *info[TPS65912_NUM_REGULATOR];
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 >
-> seems above two field are not used (and id?).
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index f002460..86302de 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -72,8 +72,25 @@ Required sub-node properties:
+>  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+>                shared memory on Juno platforms
 >
-
-The idea was for a someday use, but because I never did that I'll
-remove them for now.
-
-Thanks,
-Andrew
-
->> +	struct regmap *regmap;
->> +};
->> +
->> +static const struct regmap_range tps65912_yes_ranges[] = {
->> +	regmap_reg_range(TPS65912_INT_STS, TPS65912_GPIO5),
->> +};
->> +
->> +static const struct regmap_access_table tps65912_volatile_table = {
->> +	.yes_ranges = tps65912_yes_ranges,
->> +	.n_yes_ranges = ARRAY_SIZE(tps65912_yes_ranges),
->> +};
->> +
->> +static const struct regmap_config tps65912_regmap_co	nfig = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +	.cache_type = REGCACHE_RBTREE,
->> +	.volatile_table = &tps65912_volatile_table,
->> +};
->> +
->> +int tps65912_device_init(struct tps65912 *tps);
->> +int tps65912_device_exit(struct tps65912 *tps);
->> +
->> +#endif /*  __LINUX_MFD_TPS65912_H */
->>
+> +Sensor bindings for the sensors based on SCPI Message Protocol
+> +--------------------------------------------------------------
+> +SCPI provides an API to access the various sensors on the SoC.
+> +
+> +Required properties:
+> +- compatible : should be "arm,scpi-sensors".
+> +- #thermal-sensor-cells: should be set to 1. This property follows the
+> +                        thermal device tree bindings[2].
+> +
+> +                        Valid cell values are raw identifiers (Sensor
+> +                        ID) as used by the firmware. Refer to
+> +                        platform documentation for your
+> +                        implementation for the IDs to use. For Juno
+> +                        R0 and Juno R1 refer to [3].
+> +
+>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
+> +[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
 >
+>  Example:
 >
+> @@ -122,6 +139,11 @@ scpi_protocol: scpi@2e000000 {
+>                         clock-output-names = "pxlclk0", "pxlclk1";
+>                 };
+>         };
+> +
+> +       scpi_sensors0: sensors {
+> +               compatible = "arm,scpi-sensors";
+> +               #thermal-sensor-cells = <1>;
+> +       };
+>  };
+>
+>  cpu@0 {
+> @@ -136,6 +158,17 @@ hdlcd@7ff60000 {
+>         clocks = <&scpi_clk 4>;
+>  };
+>
+> +thermal-zones {
+> +       soc_thermal {
+> +               polling-delay-passive = <100>;
+> +               polling-delay = <1000>;
+> +
+> +                               /* sensor         ID */
+> +               thermal-sensors = <&scpi_sensors0 3>;
+> +               ...
+> +       };
+> +};
+> +
+>  In the above example, the #clock-cells is set to 1 as required.
+>  scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
+>  1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
+> @@ -148,3 +181,8 @@ scpi_dvfs i.e. "atlclk".
+>  Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
+>  clock. '4' in the clock specifier here points to the second entry
+>  in the output clocks of scpi_clocks  i.e. "pxlclk1"
+> +
+> +The thermal-sensors property in the soc_thermal node uses the
+> +temperature sensor provided by SCP firmware to setup a thermal
+> +zone. The ID "3" is the sensor identifier for the temperature sensor
+> +as used by the firmware.
+> --
+> 2.5.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
