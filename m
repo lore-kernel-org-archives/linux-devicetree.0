@@ -1,42 +1,102 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH 3/3] ARM: dts: stih410: Enable USB2.0 and
- related PHY nodes at board level
-Date: Tue, 29 Sep 2015 10:56:03 +0200
-Message-ID: <560A5223.7000505@st.com>
-References: <1443037049-6167-1-git-send-email-maxime.coquelin@st.com>
- <1443037049-6167-4-git-send-email-maxime.coquelin@st.com>
- <56039EFC.9010405@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56039EFC.9010405-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v7 01/20] driver core: handle -EPROBE_DEFER from bus_type.match()
+Date: Tue, 29 Sep 2015 11:10:39 +0200
+Message-ID: <1443517859-30376-2-git-send-email-tomeu.vizoso@collabora.com>
+References: <1443517859-30376-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1443517859-30376-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+Lets implementations of the match() callback in struct bus_type to
+return errors and if it's -EPROBE_DEFER then queue the device for
+deferred probing.
+
+This is useful to buses such as AMBA in which devices are registered
+before their matching information can be retrieved from the HW
+(typically because a clock driver hasn't probed yet).
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
 
 
-On 09/24/2015 08:58 AM, Patrice Chotard wrote:
-> Hi Max
->
-> On 09/23/2015 09:37 PM, Maxime Coquelin wrote:
->> A borad might not expose the USB2.0 ports, so disable them by default 
->> in SoC
->
-> typo borad
->
-> Otherwise, for the series
->
-> Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
->
+ drivers/base/dd.c      | 24 ++++++++++++++++++++++--
+ include/linux/device.h |  2 +-
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-Thanks Patrice, I will fix the typo before sending the pull request.
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index be0eb4639128..7dc04ee81c8b 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -488,6 +488,7 @@ static int __device_attach_driver(struct device_driver *drv, void *_data)
+ 	struct device_attach_data *data = _data;
+ 	struct device *dev = data->dev;
+ 	bool async_allowed;
++	int ret;
+ 
+ 	/*
+ 	 * Check if device has already been claimed. This may
+@@ -498,8 +499,17 @@ static int __device_attach_driver(struct device_driver *drv, void *_data)
+ 	if (dev->driver)
+ 		return -EBUSY;
+ 
+-	if (!driver_match_device(drv, dev))
++	ret = driver_match_device(drv, dev);
++	if (!ret)
+ 		return 0;
++	else if (ret < 0) {
++		if (ret == -EPROBE_DEFER) {
++			dev_dbg(dev, "Device match requests probe deferral\n");
++			driver_deferred_probe_add(dev);
++		} else
++			dev_warn(dev, "Bus failed to match device: %d", ret);
++		return ret;
++	}
+ 
+ 	async_allowed = driver_allows_async_probing(drv);
+ 
+@@ -619,6 +629,7 @@ void device_initial_probe(struct device *dev)
+ static int __driver_attach(struct device *dev, void *data)
+ {
+ 	struct device_driver *drv = data;
++	int ret;
+ 
+ 	/*
+ 	 * Lock device and try to bind to it. We drop the error
+@@ -630,8 +641,17 @@ static int __driver_attach(struct device *dev, void *data)
+ 	 * is an error.
+ 	 */
+ 
+-	if (!driver_match_device(drv, dev))
++	ret = driver_match_device(drv, dev);
++	if (!ret)
++		return 0;
++	else if (ret < 0) {
++		if (ret == -EPROBE_DEFER) {
++			dev_dbg(dev, "Device match requests probe deferral\n");
++			driver_deferred_probe_add(dev);
++		} else
++			dev_warn(dev, "Bus failed to match device: %d", ret);
+ 		return 0;
++	}
+ 
+ 	if (dev->parent)	/* Needed for USB */
+ 		device_lock(dev->parent);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 5d7bc6349930..8e7b806f0744 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -70,7 +70,7 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
+  * @dev_groups:	Default attributes of the devices on the bus.
+  * @drv_groups: Default attributes of the device drivers on the bus.
+  * @match:	Called, perhaps multiple times, whenever a new device or driver
+- *		is added for this bus. It should return a nonzero value if the
++ *		is added for this bus. It should return a positive value if the
+  *		given device can be handled by the given driver.
+  * @uevent:	Called when a device is added, removed, or a few other things
+  *		that generate uevents to add the environment variables.
+-- 
+2.4.3
 
-Regards,
-Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
