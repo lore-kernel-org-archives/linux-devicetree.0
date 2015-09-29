@@ -1,40 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7794: link PCI USB devices to USB PHY
-Date: Tue, 29 Sep 2015 15:52:39 +0300
-Message-ID: <560A8997.8090301@cogentembedded.com>
-References: <10927620.1TFu7PRvi4@wasted.cogentembedded.com>
- <20150929003751.GB20067@verge.net.au>
+From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+Subject: How to parse delete-property annotations
+Date: Tue, 29 Sep 2015 08:54:13 -0400
+Message-ID: <jwvzj05s842.fsf-monnier+INBOX@gnu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150929003751.GB20067@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+[ In the context of Emacs's dts-mode (http://elpa.gnu.org/packages/dts-mode). ]
 
-On 9/29/2015 3:37 AM, Simon Horman wrote:
+I recently came across the following piece of DTS code:
 
->> Describe the PCI USB devices that are behind the PCI bridges, adding necessary
->> links to the USB PHY device.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> This patch is against 'renesas-devel-20150911v2-v4.2' tag of Simon Horman's
->> 'renesas.git' repo plus the R8A7794/SILK PCI USB and USB PHY support patches
->> just posted.
+   &usbphy {
+        /* Unset otg detect pins as we force dr_mode */
+        /delete-property/ usb0_id_det-gpio;
+        /delete-property/ usb0_vbus_det-gpio;
+   };
 
-> Does this series have any dependencies (e.g. bindings) other
+and was wondering how dts-mode should understand this.  `dts-mode'
+doesn't try to understand the actual *meaning* of such code, but it does
+try to understand the syntax (i.e. how the abstract-syntax-tree would
+look like).
 
-    This patch, you mean?
+Is "/delete-property/" is special syntax in itself, or is it a special
+case of a more general syntax (like "/.../ blabla;")?  Where exactly is
+it allowed to appear?
+Could someone point me to some documentation explaining/describing this syntax?
 
-> than the aforementioned R8A7794/SILK PCI USB and USB PHY support patches?
 
-    No.
-
-MBR, Sergei
-
+        Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
