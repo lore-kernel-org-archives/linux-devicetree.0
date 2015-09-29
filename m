@@ -1,42 +1,80 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] memory: pl17x: add support of PL175 and PL176 controllers
-Date: Tue, 29 Sep 2015 22:39:05 +0200
-Message-ID: <CAGhQ9VzUwkkXqRQ-WZ_cjRKCrE=co1LNwFaQfGmBbuEOsVZ6_A@mail.gmail.com>
-References: <1443459043-24144-1-git-send-email-vz@mleia.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v12 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
+ MPC5125 and others
+Date: Tue, 29 Sep 2015 13:55:48 -0700
+Message-ID: <20150929205548.GO31505@google.com>
+References: <1441242397-870-1-git-send-email-stefan@agner.ch>
+ <1441242397-870-2-git-send-email-stefan@agner.ch>
+ <CALW4P+LDwFnCjOorh7iCr8TrUnync7a_zkdZ4Hp_91=60AtUQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443459043-24144-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALW4P+LDwFnCjOorh7iCr8TrUnync7a_zkdZ4Hp_91=60AtUQw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Klimov <klimov.linux@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>, David Woodhouse <dwmw2@infradead.org>, sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, Bill Pringlemeir <bpringlemeir@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, albert.aribaud@3adev.fr, Bill Pringlemeir <bpringlemeir@nbsps.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+On Fri, Sep 04, 2015 at 07:10:10AM +0300, Alexey Klimov wrote:
+> On Thu, Sep 3, 2015 at 4:06 AM, Stefan Agner <stefan@agner.ch> wrote:
+> > --- /dev/null
+> > +++ b/drivers/mtd/nand/vf610_nfc.c
 
-On 28 September 2015 at 18:50, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
-> The change adds support of ARM PrimeCell PL175 MPMC and PL176 MPMC,
-> the static memory controllers on devices are similar to one found on
-> ARM PrimeCell PL172, add support to the existing driver.
->
-> Vladimir Zapolskiy (4):
->   memory: pl172: correct MPMC peripheral ID register bits
->   memory: pl172: add ARM PrimeCell PL175 MPMC support
->   memory: pl172: add ARM PrimeCell PL176 MPMC support
->   doc: dt: arm,pl172: add description of PL175 and PL176 controllers
+> > +static int vf610_nfc_probe(struct platform_device *pdev)
+> > +{
+> > +       struct vf610_nfc *nfc;
+> > +       struct resource *res;
+> > +       struct mtd_info *mtd;
+> > +       struct nand_chip *chip;
+> > +       struct device_node *child;
+> > +       const struct of_device_id *of_id;
+> > +       int err = 0;
+> 
+> According to usage you don't need to initialize err to zero here.
 
-Changes look good to me.
+Fixed this one.
 
-What LPC32xx board did you test this on, btw?
+> > +       int irq;
+> > +
+> > +       nfc = devm_kzalloc(&pdev->dev, sizeof(*nfc), GFP_KERNEL);
+> > +       if (!nfc)
+> > +               return -ENOMEM;
+> > +
+> > +       nfc->dev = &pdev->dev;
+> > +       mtd = &nfc->mtd;
+> > +       chip = &nfc->chip;
+> > +
+> > +       mtd->priv = chip;
+> > +       mtd->owner = THIS_MODULE;
+> > +       mtd->dev.parent = nfc->dev;
+> > +       mtd->name = DRV_NAME;
+> > +
+> > +       irq = platform_get_irq(pdev, 0);
+> > +       if (irq <= 0)
+> > +               return -EINVAL;
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       nfc->regs = devm_ioremap_resource(nfc->dev, res);
+> > +       if (IS_ERR(nfc->regs))
+> > +               return PTR_ERR(nfc->regs);
+> > +
+> > +       nfc->clk = devm_clk_get(&pdev->dev, NULL);
+> > +       if (IS_ERR(nfc->clk))
+> > +               return PTR_ERR(nfc->clk);
+> > +
+> > +       err = clk_prepare_enable(nfc->clk);
+> > +       if (err) {
+> > +               dev_err(nfc->dev, "Unable to enable clock!\n");
+> > +               return err;
+> > +       }
+> 
+> After fixing that feel free to use:
+> 
+> Reviewed-by: Alexey Klimov <klimov.linux@gmail.com>
 
-Also if you have added the controller to lpc32xx.dtsi it would be
-great if you could also submit those changes to the lpc32xx
-maintainer.
+Also, fixed up the nand_chip field name change (from 'dn' to
+'flash_node'), and pushed to l2-mtd.git
 
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Brian
