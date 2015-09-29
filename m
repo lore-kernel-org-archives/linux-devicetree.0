@@ -1,76 +1,72 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Tue, 29 Sep 2015 13:58:41 -0500
-Message-ID: <560ADF61.9030105@ti.com>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
- <1443106374-4126-5-git-send-email-afd@ti.com>
- <20150925180533.GN30445@sirena.org.uk> <5605AA1C.3090905@ti.com>
- <20150929151320.GT30445@sirena.org.uk> <560AD3B2.1070102@ti.com>
- <20150929183818.GA15635@sirena.org.uk>
+From: Jose Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/3] Docs: dt: fsl-mc: update binding to include
+ msi-parent
+Date: Tue, 29 Sep 2015 19:21:21 +0000
+Message-ID: <DM2PR0301MB13099F9FC85FC5F88D1BEB17FE4E0@DM2PR0301MB1309.namprd03.prod.outlook.com>
+References: <1443215286-3126-1-git-send-email-stuart.yoder@freescale.com>
+ <1443215286-3126-2-git-send-email-stuart.yoder@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150929183818.GA15635@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443215286-3126-2-git-send-email-stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Katz Itai <itai.katz-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/29/2015 01:38 PM, Mark Brown wrote:
-> On Tue, Sep 29, 2015 at 01:08:50PM -0500, Andrew F. Davis wrote:
->> On 09/29/2015 10:13 AM, Mark Brown wrote:
->
->>>> sure that will save me anything as my probe function is called with a DT
->>>> match already, so no searching is needed.
->
->>> You've not understood what that change is replacing, the code I'm
->>> quoting above is exactly that code.  Check out some of the existing
->>> drivers using this API.
->
->> Looking at other drivers that use this API they all call regulator_register
->> in a loop in their probe, once for each possible regulator, in this case
->> letting the API do the DT node search makes sense. My probe on the other-hand
->> is only called when we already have a DT match, therefor searching is not
->> necessary and all I have to do is call of_get_regulator_init_data myself on
->> the already found DT node. No need to add node names to my regulator_desc
->> and make the API re-search for the node.
->
-> Oh, ick.  The binding has a compatible string in the individual
-> regulator bindings which is broken unless there really are lots of
-> variants being configured via DT (which is just not the case here).
-> It's not only more typing in the DT,
+> -----Original Message-----
+> From: Stuart Yoder [mailto:stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
+> Sent: Friday, September 25, 2015 4:08 PM
+> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rivera
+> Jose-B46482; Sharma Bhupesh-B45370; katz Itai-RM05202; Yoder Stuart-
+> B08248
+> Subject: [PATCH 1/3] Docs: dt: fsl-mc: update binding to include msi-
+> parent
+> 
+> The Freescale Management Complex and all associated objects use message
+> interrupts, and thus an msi-parent is required.
+> 
+> Signed-off-by: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> index c7a26ca..6aac955 100644
+> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> @@ -30,11 +30,17 @@ Required properties:
+>                          region may not be present in some scenarios,
+> such
+>                          as in the device tree presented to a virtual
+> machine.
+> 
+> +    - msi-parent
+> +        Value type: <phandle>
+> +        Definition: Must be present and point to the MSI controller node
+> +                    handling message interrupts for the MC.
+> +
+>  Example:
+> 
+>          fsl_mc: fsl-mc@80c000000 {
+>                  compatible = "fsl,qoriq-mc";
+>                  reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal
+> base */
+>                        <0x00000000 0x08340000 0 0x40000>; /* MC control
+> reg */
+> +                msi-parent = <&its>;
+>          };
+> 
+> --
+> 2.3.3
 
-I don't see this, the alternative is matching to this "regulator-compatible",
-why not just use the existing compatible.
+Acked-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-> it also means that we can't read
-> back the configuration of the device unless the user goes and creates a
-> DT which explicitly lists each regulator on the device which is
-> unhelpful.  We should be able to read back the configurations of all the
-> regulators by simply listing the device in DT.
->
-
-Could you expand this? I'm not sure I understand why we still cant do this
-using this new way.
-
-Bindings should have compatible strings when they describe hardware like this,
-we can then do stuff like put the LDO and DCDC drivers in separate modules for
-instance, letting DT only load what we need. There are other benefits like
-not having to search our own DT binding for data, and we only get probed for
-devices in the DT.
-
-This also eliminates the need for MFD_CORE, we just call
-of_platform_populate on ourself and DT helpers do the rest. Why hard code
-mfd_cell's and do matching when DT does the same thing.
-
-> The fact that this is different to the bindings for other regulator
-> drivers and requires more code ought to have been a big warning sign
-> here :(
->
-
-The binding is the same as the new tps65218 driver, different isn't always
-a warning sign. And what do you mean "requires more code"? This regulator
-driver is smaller than almost any other. DT takes care of everything for
-us relating to hardware instantiation like it should.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
