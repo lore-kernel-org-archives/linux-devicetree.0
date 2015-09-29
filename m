@@ -1,89 +1,151 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding documentation
-Date: Tue, 29 Sep 2015 14:30:46 +0200
-Message-ID: <1842713.tkjrhSVazj@wuerfel>
-References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org> <35211759.Jca4RWVLIS@wuerfel> <20150929121155.GA17986@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: tegra-adma: Add support for Tegra210 ADMA
+Date: Tue, 29 Sep 2015 14:39:25 +0200
+Message-ID: <2496965.bMvvDEqHin@wuerfel>
+References: <1443193000-457-1-git-send-email-jonathanh@nvidia.com> <2417622.fOrcl680Fe@wuerfel> <560A817E.6010405@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150929121155.GA17986@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, vinod.koul@intel.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Ludovic Barre <ludovic.barre@st.com>, dmaengine@vger.kernel.org, maxime.coquelin@st.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <560A817E.6010405-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 September 2015 13:11:55 Peter Griffin wrote:
-> Hi Arnd,
+On Tuesday 29 September 2015 13:18:06 Jon Hunter wrote:
 > 
-> On Tue, 29 Sep 2015, Arnd Bergmann wrote:
+> On 28/09/15 16:07, Arnd Bergmann wrote:
+> > On Monday 28 September 2015 15:57:46 Jon Hunter wrote:
 > 
-> > On Tuesday 29 September 2015 11:04:40 Peter Griffin wrote:
-> > > 
-> > > "The hardware is identical, and different firmware is used to apply
-> > >    it in different ways."
-> > > 
-> > > Which is the case with fdma. By encoding the "way you wish to apply it" into the
-> > > compatible string, it causes problems if you want to change for example fdma0
-> > > to do some other function other than audio.
-> > > 
-> > > You then require a DT update, (when the hardware hasn't changed, just the
-> > > firmware) which is the same problem as using the filename directly in DT.
-> > > 
-> > > Therefore I believe it is important that the DT binding does *not* encode the
-> > > way the hardware is to be applied into the binding in *any* way, and defers this
-> > >  decision to the driver.
-> > > That is the rationale / reasoning behind choosing the fdma instance number.
-> > > 
-> > > Assuming you agree with my arguments above, then the choice becomes between 
-> > > having a fdma instance DT property, or having lots of compatibles where the only
-> > > difference is the appending of the instance number. I think out of the two I prefer
-> > > my original approach.
-> > > 
-> > > Any thoughts from the DT folks?
+> [snip]
+> 
+> >> Actually, what I mentioned about would not work as it is not the DMA
+> >> that should assign the requests to the channel.
+> >>
+> >> I think that I have poorly described the hardware and how it works, so
+> >> let me try and explain a bit more.
+> >>
+> >> From a hardware perspective it looks like the following ...
+> >>
+> >> memory <-> adma <-> adma-if <-> xbar <-> clients
+> >>
+> >> where:
+> >> - memory is the system memory
+> >> - adma is the dma controller
+> >> - adma-if is the dma interface to a crossbar
+> >> - xbar is the crossbar
+> >> - clients are various audio interfaces, such as i2s, etc
+> >>
+> >> The adma-if is essentially a mux with 10 tx and 10 rx ports. Any of the
+> >> 22 adma channels can be mapped to any of the 10 tx or rx ports. The
+> >> request signal used by the adma is determined by which port it is
+> >> configured to use. However, what makes this even more configurable is
+> >> the xbar is also a mux that can route adma-if ports to the various clients.
+> >>
+> >> So potentially, you could use any adma channel and any port to route
+> >> audio to any of the clients. However, the adma-if needs to know which
+> >> adma channel is mapped to which port and so it probably makes most sense
+> >> for the adma-if binding (not in the mainline yet) so specify a mapping
+> >> even though any mapping could be used.
+> >>
+> >> 	admaif@0x702d0000 {
+> >> 		dmas = <&adma 1>, <&adma 1>, <&adma 2>, <&adma 2>,
+> >> 		...
+> >> 		dma-names = "rx1", "tx1", "rx2", "tx2",
+> >> 		...
+> >> 	};
+> >>
+> >> Alternatively, I was thinking that I could set #dma-cells = 0, but what
+> >> I should have done is just have something like ...
+> >>
+> >> 	admaif@0x702d0000 {
+> >> 		dmas = <&adma>, <&adma>, <&adma>, <&adma>,
+> >> 		...
+> >> 		dma-names = "rx1", "tx1", "rx2", "tx2",
+> >> 		...
+> >> 	};
+> >>
+> >> In the above case the adma-if driver can just pick whatever channel it
+> >> wants for each of the ports.
+> >>
+> >> Hope this is clearer.
 > > 
-> > To me both approaches sound wrong: basing the firmware name on the instance
-> > number requires that each instance is always used in the same way, which
-> > is not guaranteed to be the case,
+> > I think what you are saying here is that the ADMA driver does not talk
+> > to dma slave devices at all, but only talks to the adma-if, which in
+> > turn only talks to the xbar.
 > 
-> Does it? I didn't think it did.
+> Yes, this is the use-case that this current version of the driver
+> supports. However ...
 > 
-> Using the instance number as a DT property defers the decision over what firmware to
-> load to the driver, which can choose whatever firmware name it wishes.
+> > That is fine, but the result of that is that there is no point in
+> > using the DMA slave binding for this device, or for the driver to
+> > register itself as a generic slave driver, which it is not.
 > 
-> e.g. in v4.3 it could load xyz.elf, in v4.4 it could choose abc.elf. The DT will remain
-> unchanged, but the use of that fdma instance has changed.
-> 
-> We currently only have one firmware for each instance with the "use" compiled into it.
-> If in the future we had two firmwares with different "uses" for the same instance some extra
-> logic would be required in the driver to make a decision on which firmware to load.
+> ... the DMA controller itself has a source and destination register and
+> from a hardware perspective, the source and/or destination does not need
+> to be the ADMA-IF. Potentially, we could support memory to memory
+> transfers, but currently we are not using the DMA for this. So I can see
+> that with the current usage it may not make sense for it to be
+> registered as a generic slave driver, but from a hardware perspective I
+> think it still does.
 
-Ok, I probably need some more background about what the firmware on this
-device does, and what it could do with a different firmware. Could you
-elaborate?
+Ok, but imagine a device where the ADMA is actually wired up to a slave
+directly. In this case, you need #dma-cells=<1> (or higher) to identify
+which slave that is. If you want the binding to be generic enough to
+handle that case, it needs to correctly describe the identification of
+the request lines.
+ 
+> The current tegra audio drivers use the snd_dmaengine_xxx helpers and so
+> it would be nice to do the same here.
 
-> > and you correctly describe the problem with
-> > using the compatible string for the firmware name if the driver for the FDMA
-> > does not actually care what firmware is being used here.
-> > 
-> > Whatever code makes the decision as to how the FDMA is used should also
-> > decide on the name of the firmware file.
-> 
-> The code which makes this decision currently is the st_fdma.c driver. However it does
-> need to know which fdma controller it is operating on to make this decision correctly.
-> 
-> Apart from passing the fdma instance number in DT, how else can we determine which
-> controller we are?
-> 
-> I guess we could infer it by having a table in the driver containing the base addresses
-> of the controllers for a given SoC, and match that against what DT passes us in the
-> reg property. But that seems ugly, and is encoding the same information in two
-> different places.
-> 
-> I'm open to suggestions if there is a better way to do this.
+That seems to be a separate (non-)problem, as the audio devices would
+have their 'dmas' properties pointing to the adma-if or the xbar (depending
+on how you define those bindings), and don't need to change either way.
 
-Using the address would be the same thing, that doesn't change the
-fundamental logic. Can you explain why it matters which instance
-a firmware is used on for this driver?
+> > We should look at this driver in combination with the adma-if and
+> > xbar drivers and then define a binding for the combination of those.
+> 
+> Yes that makes sense, but I think that I have confused matters here a
+> bit and not thought through this entirely. So while we could configure
+> an audio interface, such as i2s, to use any adma-if port and hence any
+> dma channel with the appropriate hardware request signal, the mapping
+> between the adma-if port and request signal is fixed. For example,
+> 
+> adma-if rx1 port uses adma request signal 1
+> adma-if rx2 port uses adma request signal 2
+> adma-if rx3 port uses adma request signal 3
+> ...
+> adma-if rx10 port uses adma request signal 10
+> 
+> and
+> 
+> adma-if tx1 port uses adma request signal 1
+> adma-if tx2 port uses adma request signal 2
+> adma-if tx3 port uses adma request signal 3
+> ...
+> adma-if tx10 port uses adma request signal 10
+> 
+> What is connected to these adma-if tx and rx ports who knows but I think
+> that is where I was going wrong and made this more complex than it
+> should have been. So I think that the adma binding should have
+> #dma-cells = 1 and the adma-if binding have the following ...
+> 
+>  	admaif@0x702d0000 {
+>  		dmas = <&adma 1>, <&adma 1>, <&adma 2>, <&adma 2>,
+>  		...
+>  		dma-names = "rx1", "tx1", "rx2", "tx2",
+>  		...
+>  	};
+
+Ok, that makes more sense then. A few questions still:
+
+* Would the admaif in turn provide a #dma-cells and have the real slaves
+  hooked up to it?
+* How do you model the xbar in this scenario?
+* How does the adma driver know whether you are using a rx or tx channel
+  in the above example, should that perhaps be another cell in dma
+  specifier? It seems that the numbers are all overlapping between rx and
+  tx (each has 1 through 10).
 
 	Arnd
