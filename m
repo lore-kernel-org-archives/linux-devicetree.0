@@ -1,134 +1,55 @@
-Return-Path: <hns@goldelico.com>
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Subject: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <cover.1443031678.git.hns@goldelico.com>
-Date: Wed, 23 Sep 2015 20:13:56 +0200
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com>
-References: <cover.1443031678.git.hns@goldelico.com>
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, eric miao <eric.miao@marvell.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Marek Belisko <marek@goldelico.com>, Grazvydas Ignotas <notaz@openpandora.org>
+Return-Path: <sureshraj@google.com>
+MIME-Version: 1.0
+In-Reply-To: <1443576270-36548-2-git-send-email-sureshraj@google.com>
+References: <1443576270-36548-1-git-send-email-sureshraj@google.com> <1443576270-36548-2-git-send-email-sureshraj@google.com>
+From: Suresh Rajashekara <sureshraj@google.com>
+Date: Tue, 29 Sep 2015 18:29:19 -0700
+Message-ID: <CACVnMDpj5qXxCi5B140CvzUNROtoy4fMPmA1P06pKQ3kdzoN0w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] iio:light:tsl2563: Add DT support
+Content-Type: multipart/alternative; boundary=001a113971805d53080520ecde5c
+To: linux-iio@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, matthias.bgg@gmail.com, linux-kernel@vger.kernel.org, jic23@kernel.org, Suresh Rajashekara <sureshraj@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-1. add a DT property to specify the list of GPIO pins that are to become
-   "open drain"
-2. if a pin is configured as "open drain", set value by either =
-outputting a
-   "0" (low level) or switching to input (high impedance)
+--001a113971805d53080520ecde5c
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Tested on OMAP5 uEVM with TCA6424 and some LEDs connected to 5V.
+On Tue, Sep 29, 2015 at 6:24 PM, Suresh Rajashekara <sureshraj@google.com>
+wrote:
+>
+> * Add Device Tree support for the Dyna Image AP3223 ambient light sensor
+and
+> * proximity driver,
+> * Document the binding and
+> * Add a vendor prefix for Dyna Image
+>
+> v2
+> * Seperating the device tree changes from code
+>
+> Signed-off-by: Suresh Rajashekara <sureshraj@google.com>
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
-.../devicetree/bindings/gpio/gpio-pca953x.txt      |  6 +++++
-drivers/gpio/gpio-pca953x.c                        | 30 =
-++++++++++++++++++++++
-2 files changed, 36 insertions(+)
+=E2=80=8BPlease ignore this patch. I have a typo in subject. Will fix and r=
+esubmit
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt =
-b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-index b9a42f2..699b895 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-@@ -26,6 +26,11 @@ Required properties:
-	ti,tca6424
-	exar,xra1202
+Suresh=E2=80=8B
 
-+Optional property:
-+ - open-drain-pins: list of pin numbers (starting at 0)
-+	which will be simulating open-drain outputs
-+	(by swithing between input and output(0)).
-+
-Example:
+--001a113971805d53080520ecde5c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><br>On Tue, Sep 29, 2015 at 6:24 PM, Suresh Rajashekara &l=
+t;<a href=3D"mailto:sureshraj@google.com">sureshraj@google.com</a>&gt; wrot=
+e:<br>&gt;<br>&gt; * Add Device Tree support for the Dyna Image AP3223 ambi=
+ent light sensor and<br>&gt; * proximity driver,<br>&gt; * Document the bin=
+ding and<br>&gt; * Add a vendor prefix for Dyna Image<br>&gt;<br>&gt; v2<br=
+>&gt; * Seperating the device tree changes from code<br>&gt;<br>&gt; Signed=
+-off-by: Suresh Rajashekara &lt;<a href=3D"mailto:sureshraj@google.com">sur=
+eshraj@google.com</a>&gt;<div><br></div><div><div class=3D"gmail_default" s=
+tyle=3D"font-family:&#39;trebuchet ms&#39;,sans-serif">=E2=80=8BPlease igno=
+re this patch. I have a typo in subject. Will fix and resubmit</div><div cl=
+ass=3D"gmail_default" style=3D"font-family:&#39;trebuchet ms&#39;,sans-seri=
+f"><br></div><div class=3D"gmail_default" style=3D"font-family:&#39;trebuch=
+et ms&#39;,sans-serif">Suresh=E2=80=8B</div><br></div></div>
 
-@@ -36,4 +41,5 @@ Example:
-		pinctrl-0 =3D <&pinctrl_pca9505>;
-		interrupt-parent =3D <&gpio3>;
-		interrupts =3D <23 IRQ_TYPE_LEVEL_LOW>;
-+		open-drain-pins =3D <1 3 4>;
-	};
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 50caeb1..34fb9d3 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -81,6 +81,7 @@ struct pca953x_chip {
-	unsigned gpio_start;
-	u8 reg_output[MAX_BANK];
-	u8 reg_direction[MAX_BANK];
-+	u8 reg_open_drain[MAX_BANK];
-	struct mutex i2c_lock;
-
-#ifdef CONFIG_GPIO_PCA953X_IRQ
-@@ -237,6 +238,11 @@ static int pca953x_gpio_direction_output(struct =
-gpio_chip *gc,
-	u8 reg_val;
-	int ret, offset =3D 0;
-
-+	if (val && (chip->reg_open_drain[off / BANK_SZ] &
-+						(1u << (off % =
-BANK_SZ))))
-+		/* make high impedance */
-+		return pca953x_gpio_direction_input(gc, off);
-+
-	mutex_lock(&chip->i2c_lock);
-	/* set output level */
-	if (val)
-@@ -315,6 +321,12 @@ static void pca953x_gpio_set_value(struct gpio_chip =
-*gc, unsigned off, int val)
-	u8 reg_val;
-	int ret, offset =3D 0;
-
-+	if ((chip->reg_open_drain[off / BANK_SZ] & (1u << (off % =
-BANK_SZ)))) {
-+		/* switch between input (1=3DHigh-Z) and output (0=3DLow) =
-*/
-+		pca953x_gpio_direction_output(gc, off, val);
-+		return;
-+	}
-+
-	mutex_lock(&chip->i2c_lock);
-	if (val)
-		reg_val =3D chip->reg_output[off / BANK_SZ]
-@@ -660,6 +672,8 @@ static int pca953x_probe(struct i2c_client *client,
-	if (chip =3D=3D NULL)
-		return -ENOMEM;
-
-+	memset(chip->reg_open_drain, 0, NBANK(chip));
-+
-	pdata =3D dev_get_platdata(&client->dev);
-	if (pdata) {
-		irq_base =3D pdata->irq_base;
-@@ -667,8 +681,24 @@ static int pca953x_probe(struct i2c_client *client,
-		invert =3D pdata->invert;
-		chip->names =3D pdata->names;
-	} else {
-+		int size, i;
-+
-+		size =3D =
-of_property_count_elems_of_size(client->dev.of_node,
-+						"open-drain-pins", =
-sizeof(u32));
-		chip->gpio_start =3D -1;
-		irq_base =3D 0;
-+
-+		/* negative sizes (errno) are simply ignored */
-+
-+		for (i =3D 0; i < size; i++) {
-+			u32 off;
-+			int r =3D =
-of_property_read_u32_index(client->dev.of_node,
-+						"open-drain-pins", i, =
-&off);
-+			if (r =3D=3D 0 && off < (MAX_BANK * BANK_SZ)) {
-+				chip->reg_open_drain[off / BANK_SZ] |=3D
-+						(1u << (off % BANK_SZ));
-+			}
-+		}
-	}
-
-	chip->client =3D client;
---=20
-2.5.1
+--001a113971805d53080520ecde5c--
