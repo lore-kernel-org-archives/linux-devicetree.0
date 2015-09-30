@@ -1,73 +1,204 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] dt-bindings: pmic: Document Hi655x pmic driver
-Date: Wed, 30 Sep 2015 18:39:21 +0100
-Message-ID: <20150930173921.GJ15635@sirena.org.uk>
-References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
- <1443611111-3196-2-git-send-email-w.f@huawei.com>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Wed, 30 Sep 2015 23:20:32 +0530
+Message-ID: <CAFpQJXVegqortRLK+g7_9p82KMYwq0hg8n3_9bJqjGHsJvngaA@mail.gmail.com>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+	<20150828123228.GE31748@leverpostej>
+	<CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
+	<CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
+	<20150930105331.GA10066@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HkMjoL2LAeBLhbFV"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443611111-3196-2-git-send-email-w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20150930105331.GA10066@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, william.wfei-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>a
 List-Id: devicetree@vger.kernel.org
 
+Hi Ben,
 
---HkMjoL2LAeBLhbFV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Sep 30, 2015 at 07:05:04PM +0800, Fei Wang wrote:
-
-> +Hisilicon hi655x Power Management Integrated Circuit (PMIC)
-> +
-> +hi655x consists of a large and varied group of sub-devices:
-> +
-> +Device			 Supply Names	 Description
-> +------			 ------------	 -----------
-> +hi655x-powerkey		:		: Powerkey
-> +hi655x-regulator-pmic	:		: Regulators
-> +hi655x-usbvbus		:		: USB plug detection
-> +hi655x-pmu-rtc		:		: RTC
-> +hi655x-coul		:		: Coulomb
-
-...counter?
-
-There's no documentation of the bindings for any of the above devices or
-how things are structured, you need to provide binding documentation
-which is understandable standalone.  None of the properties are
-documented, nor is the set of regulators supported or how this is
-structured.
-
-> +                coul: coul@1 {
-> +                        compatible = "hisilicon,hi655x-coul";
-> +                        interrupt-parent = <&pmic>;
-> +                        interrupts = <24 0>, <25 0>, <26 0>, <27 0>;
-> +                        interrupt-names = "cl_int_i", "cl_out_i", "cl_in_i", "vbat_int_i";
-> +                        battery_product_index = <0>;
-
-For example, the "battery_product_index" property here is undocumented.
-
---HkMjoL2LAeBLhbFV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWDB5IAAoJECTWi3JdVIfQuO0H/0M/kWh41VA1rb1m+7boZOEw
-3pfopLMbJR57H/9HQCqA/LFlei88/uY9omUgZwL0D4QI1PY4GJiifI9rvi+L7DRP
-aIadlfBo3bz3WURWK4iZ1w5ipQwYJsLtxLDfETRZeeG0mVAnqx0A1YY+0caTlVGi
-Yo3qXDbnVdDB4NyZWt65Iq4b7ULgdTQviDa3zU43kAlnjK9hSCOgg9k2j+1V5qOm
-nlWqbKblnCpyjZ0OsBev0ubp8lRySBFkKC08gkgekNuqHkixPGv3TrIULwOQJAy9
-LgexOUFXZ4JCLSutCZdNId55n8GNv0e5AMMnLO7UKRqGifGForBUF0XtzYZmRXU=
-=Fgaz
------END PGP SIGNATURE-----
-
---HkMjoL2LAeBLhbFV--
+On Wed, Sep 30, 2015 at 4:23 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Sep 29, 2015 at 09:38:04AM +0100, Ganapatrao Kulkarni wrote:
+>> (sending again, by mistake it was set to html mode)
+>>
+>> On Tue, Sep 29, 2015 at 2:05 PM, Ganapatrao Kulkarni
+>> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > Hi Mark,
+>> >
+>> > I have tried to answer your comments, in the meantime we are waiting for Ben
+>> > to share the details.
+>> >
+>> > On Fri, Aug 28, 2015 at 6:02 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> >>
+>> >> Hi,
+>> >>
+>> >> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
+>> >> > DT bindings for numa map for memory, cores and IOs using
+>> >> > arm,associativity device node property.
+>> >>
+>> >> Given this is just a copy of ibm,associativity, I'm not sure I see much
+>> >> point in renaming the properties.
+>> >>
+>> >> However, (somewhat counter to that) I'm also concerned that this isn't
+>> >> sufficient for systems we're beginning to see today (more on that
+>> >> below), so I don't think a simple copy of ibm,associativity is good
+>> >> enough.
+>> >
+>> > it is just copy right now, however it can evolve when we come across more
+>> > arm64 numa platforms
+>
+> Whatever we do I suspect we'll have to evolve it as new platforms
+> appear. As I mentioned there are contemporary NUMA ARM64 platforms (e.g.
+> those with CCN) that I don't think we can ignore now given we'll have to
+> cater for them.
+>
+>> >> > +==============================================================================
+>> >> > +2 - arm,associativity
+>> >> >
+>> >> > +==============================================================================
+>> >> > +The mapping is done using arm,associativity device property.
+>> >> > +this property needs to be present in every device node which needs to
+>> >> > to be
+>> >> > +mapped to numa nodes.
+>> >>
+>> >> Can't there be some inheritance? e.g. all devices on a bus with an
+>> >> arm,associativity property being assumed to share that value?
+>> >
+>> > yes there is inheritance and respective bus drivers should take care of it,
+>> > like pci driver does at present.
+>
+> Ok.
+>
+> That seems counter to my initial interpretation of the wording that the
+> property must be present on device nodes that need to be mapped to NUMA
+> nodes.
+>
+> Is there any simple way of describing the set of nodes that need this
+> property?
+>
+>> >> > +topology and boundary in the system at which a significant difference
+>> >> > in
+>> >> > +performance can be measured between cross-device accesses within
+>> >> > +a single location and those spanning multiple locations.
+>> >> > +The first cell always contains the broadest subdivision within the
+>> >> > system,
+>> >> > +while the last cell enumerates the individual devices, such as an SMT
+>> >> > thread
+>> >> > +of a CPU, or a bus bridge within an SoC".
+>> >>
+>> >> While this gives us some hierarchy, this doesn't seem to encode relative
+>> >> distances at all. That seems like an oversight.
+>> >
+>> >
+>> > distance is computed, will add the details to document.
+>> > local nodes will have distance as 10(LOCAL_DISTANCE) and every level, the
+>> > distance multiplies by 2.
+>> > for example, for level 1 numa topology, distance from local node to remote
+>> > node will be 20.
+>
+> This seems arbitrary.
+>
+> Why not always have this explicitly described?
+>
+>> >> Additionally, I'm somewhat unclear on how what you'd be expected to
+>> >> provide for this property in cases like ring or mesh interconnects,
+>> >> where there isn't a strict hierarchy (see systems with ARM's own CCN, or
+>> >> Tilera's TILE-Mx), but there is some measure of closeness.
+>> >
+>> >
+>> > IIUC, as per ARMs CCN architecture, all core/clusters are at equal distance
+>> > of DDR, i dont see any NUMA topology.
+>
+> The CCN is a ring interconnect, so CPU clusters (henceforth CPUs) can be
+> connected with differing distances to RAM instances (or devices).
+>
+> Consider the simplified network below:
+>
+>   +-------+      +--------+      +-------+
+>   | CPU 0 |------| DRAM A |------| CPU 1 |
+>   +-------+      +--------+      +-------+
+>       |                              |
+>       |                              |
+>   +--------+                     +--------+
+>   | DRAM B |                     | DRAM C |
+>   +--------+                     +--------+
+>       |                              |
+>       |                              |
+>   +-------+      +--------+      +-------+
+>   | CPU 2 |------| DRAM D |------| CPU 3 |
+>   +-------+      +--------+      +-------+
+>
+> In this case CPUs and DRAMs are spaced evenly on the ring, but the
+> distance between an arbitrary CPU and DRAM is not uniform.
+>
+> CPU 0 can access DRAM A or DRAM B with a single hop, but accesses to
+> DRAM C or DRAM D take three hops.
+>
+> An access from CPU 0 to DRAM C could contend with accesses from CPU 1 to
+> DRAM D, as they share hops on the ring.
+>
+> There is definitely a NUMA topology here, but there's not a strict
+> hierarchy. I don't see how you would represent this with the proposed
+> binding.
+can you please explain, how associativity property will represent this
+numa topology?
+>
+> Likewise for the mesh networks (e.g. that of TILE-Mx)
+>
+>> > however, if there are 2 SoC connected thorough the CCN, then it is very much
+>> > similar to cavium topology.
+>> >
+>> >> Must all of these have the same length? If so, why not have a
+>> >> #(whatever)-cells property in the root to describe the expected length?
+>> >> If not, how are they to be interpreted relative to each other?
+>> >
+>> >
+>> > yes, all are of default size.
+>
+> Where that size is...?
+>
+>> > IMHO, there is no need to add cells property.
+>
+> That might be the case, but it's unclear from the documentation. I don't
+> see how one would parse / verify values currently.
+>
+>> >> > +the arm,associativity nodes. The first integer is the most significant
+>> >> > +NUMA boundary and the following are progressively less significant
+>> >> > boundaries.
+>> >> > +There can be more than one level of NUMA.
+>> >>
+>> >> I'm not clear on why this is necessary; the arm,associativity property
+>> >> is already ordered from most significant to least significant per its
+>> >> description.
+>> >
+>> >
+>> > first entry in arm,associativity-reference-points is used to find which
+>> > entry in associativity defines node id.
+>> > also entries in arm,associativity-reference-points defines,
+>> > how many entries(depth) in associativity can be used to calculate node
+>> > distance
+>> > in both level 1 and  multi level(hierarchical) numa topology.
+>
+> I think this needs a more thorough description; I don't follow the
+> current one.
+>
+>> >> Is this only expected at the root of the tree? Can it be re-defined in
+>> >> sub-nodes?
+>> >
+>> > yes it is defined only at the root.
+>
+> This needs to be stated explicitly.
+>
+> I see that this being the case, *,associativity-reference-points would
+> be a more powerful property than the #(whatever)-cells property I
+> mentioned earlier, but a more thorough description is required.
+>
+> Thanks,
+> Mark.
+thanks
+Ganapat
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
