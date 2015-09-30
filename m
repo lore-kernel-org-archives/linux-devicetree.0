@@ -1,350 +1,85 @@
-From: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 7/8] mtcmos: Hi6220: Add Hi6220 mtcmos regulator driver
-Date: Wed, 30 Sep 2015 19:05:10 +0800
-Message-ID: <1443611111-3196-8-git-send-email-w.f@huawei.com>
-References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
+ DA9062 OnKey
+Date: Wed, 30 Sep 2015 12:47:17 +0100
+Message-ID: <20150930114717.GB27197@x1>
+References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
+ <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
+ <20150727224300.GG3613@dtor-ws>
+ <20150728054024.GA4558@dtor-ws>
+ <6ED8E3B22081A4459DAC7699F3695FB70173D121FD@SW-EX-MBX02.diasemi.com>
+ <20150929235408.GC29469@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443611111-3196-1-git-send-email-w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, william.wfei-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150929235408.GC29469@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Hi6220 mtcmos regulator driver.
+On Tue, 29 Sep 2015, Dmitry Torokhov wrote:
 
-Signed-off-by: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- drivers/regulator/Kconfig         |    8 ++
- drivers/regulator/Makefile        |    1 +
- drivers/regulator/hi6220-mtcmos.c |  281 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/regulator/hi6220-mtcmos.c
+> On Mon, Sep 28, 2015 at 08:19:27AM +0000, Opensource [Steve Twiss] wr=
+ote:
+> >=20
+> > > Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree b=
+indings for DA9062 OnKey
+> > >=20
+> > > On Mon, Jul 27, 2015 at 03:43:00PM -0700, Dmitry Torokhov wrote:
+> > > > On Thu, Jul 23, 2015 at 05:17:41PM +0100, S Twiss wrote:
+> > > > > From: S Twiss <stwiss.opensource@diasemi.com>
+> > > > >
+> > > > > Add device tree bindings for the DA9062 OnKey driver componen=
+t
+> > > > >
+> > > > > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> > > > >
+> > > > > ---
+> > > > > Changes in V3:
+> > > > >  - Child driver specifics separated out into separate documen=
+t
+> > > > >    in this case ../input/da9062-onkey.txt
+> > > > > Changes in V2:
+> > > > >  - No change
+> > > > >
+> > > > > This patch applies against linux-next and next-20150708
+> > > > >
+> > > > >
+> > > > >  .../devicetree/bindings/input/da9062-onkey.txt     | 36
+> > > ++++++++++++++++++++++
+> > > > >  Documentation/devicetree/bindings/mfd/da9062.txt   |  3 ++
+> > > >
+> > > > I dropped bits for mfd/da9062.txt, changed to mention both 9062=
+ and
+> > > > 9063, folded into the onkey patch and applied.
+> > >=20
+> > > Argh, da9062 core is not in mainline yet... OK, below is the patc=
+h I
+> > > had; if Lee does not pick it up I'll re-apply it when da9062 core=
+ hits
+> > > mainline.
+> > >=20
+> >=20
+> > Hi Lee and Dmitry,
+> >=20
+> > This patch seems to have been missed. It is the main OnKey driver f=
+or DA9062 and this
+> > component was waiting for the DA9062 MFD core to make it into linux=
+-mainline/v4.3-rc1.
+> >=20
+> > Is there any reply on this yet please? There just seems to be a lit=
+tle patch administration
+> > problem holding things up.
+>=20
+> I queued it for 4.4.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index d13210b..b5af2c6 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -269,6 +269,14 @@ config REGULATOR_HI655X
-           This driver provides support for the voltage regulators of the
-           Hisilicon Hi655x PMIC device.
- 
-+config REGULATOR_HI6220
-+        tristate "Hisilicon Hi6220 MTCMOS regulator support"
-+        depends on ARCH_HISI
-+        default ARCH_HISI
-+        help
-+          This driver provides support for the mtcmos regulators on the
-+          Hisilicon Hi6220 chip.
-+
- config REGULATOR_ISL9305
- 	tristate "Intersil ISL9305 regulator"
- 	depends on I2C
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 8e4db96..0590e8f 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_REGULATOR_FAN53555) += fan53555.o
- obj-$(CONFIG_REGULATOR_GPIO) += gpio-regulator.o
- obj-$(CONFIG_REGULATOR_HI6421) += hi6421-regulator.o
- obj-$(CONFIG_REGULATOR_HI655X) += hi655x-regulator.o
-+obj-$(CONFIG_REGULATOR_HI6220) += hi6220-mtcmos.o
- obj-$(CONFIG_REGULATOR_ISL6271A) += isl6271a-regulator.o
- obj-$(CONFIG_REGULATOR_ISL9305) += isl9305.o
- obj-$(CONFIG_REGULATOR_LP3971) += lp3971.o
-diff --git a/drivers/regulator/hi6220-mtcmos.c b/drivers/regulator/hi6220-mtcmos.c
-new file mode 100644
-index 0000000..4e84843
---- /dev/null
-+++ b/drivers/regulator/hi6220-mtcmos.c
-@@ -0,0 +1,281 @@
-+/*
-+ * Device driver for MTCMOS DRIVER in hi6220 SOC
-+ *
-+ * Copyright (c) 2015 Hisilicon Co. Ltd
-+ *
-+ * Fei Wang  <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program; if not, write to the Free Software Foundation, Inc.,
-+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+ */
-+#include <linux/slab.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/delay.h>
-+#include <linux/time.h>
-+
-+enum {
-+	HI6220_MTCMOS1,
-+	HI6220_MTCMOS2,
-+	HI6220_RG_MAX,
-+};
-+
-+struct hi6220_mtcmos_ctrl_regs {
-+	unsigned int enable_reg;
-+	unsigned int disable_reg;
-+	unsigned int status_reg;
-+};
-+
-+struct hi6220_mtcmos_ctrl_data {
-+	int shift;
-+	unsigned int mask;
-+};
-+
-+struct hi6220_mtcmos_info {
-+	struct regulator_desc rdesc;
-+	struct hi6220_mtcmos_ctrl_regs ctrl_regs;
-+	struct hi6220_mtcmos_ctrl_data ctrl_data;
-+};
-+
-+struct hi6220_mtcmos {
-+	struct regulator_dev *rdev[HI6220_RG_MAX];
-+	void __iomem *sc_on_regs;
-+	int mtcmos_steady_time;
-+	spinlock_t mtcmos_spin_lock;
-+};
-+
-+static int hi6220_mtcmos_is_on(struct hi6220_mtcmos *mtcmos,
-+				unsigned int regs, unsigned int mask, int shift)
-+{
-+	unsigned int ret;
-+	unsigned long mtcmos_spin_flag = 0;
-+
-+	spin_lock_irqsave(&mtcmos->mtcmos_spin_lock, mtcmos_spin_flag);
-+	ret = readl(mtcmos->sc_on_regs + regs);
-+	spin_unlock_irqrestore(&mtcmos->mtcmos_spin_lock, mtcmos_spin_flag);
-+
-+	ret &= (mask << shift);
-+	return !!ret;
-+}
-+
-+int hi6220_mtcmos_on(struct hi6220_mtcmos *mtcmos,
-+				unsigned int regs, unsigned int mask, int shift)
-+{
-+	unsigned long mtcmos_spin_flag = 0;
-+
-+	spin_lock_irqsave(&mtcmos->mtcmos_spin_lock, mtcmos_spin_flag);
-+	writel(mask << shift, mtcmos->sc_on_regs + regs);
-+	udelay(mtcmos->mtcmos_steady_time);
-+	spin_unlock_irqrestore(&mtcmos->mtcmos_spin_lock, mtcmos_spin_flag);
-+
-+	return 0;
-+}
-+
-+int hi6220_mtcmos_off(struct hi6220_mtcmos *mtcmos,
-+			unsigned int regs, unsigned int mask, int shift)
-+{
-+	unsigned long mtcmos_spin_flag = 0;
-+
-+	spin_lock_irqsave(&mtcmos->mtcmos_spin_lock, mtcmos_spin_flag);
-+	writel(mask << shift, mtcmos->sc_on_regs + regs);
-+	udelay(mtcmos->mtcmos_steady_time);
-+	spin_unlock_irqrestore(&mtcmos->mtcmos_spin_lock,
-+		mtcmos_spin_flag);
-+
-+	return 0;
-+}
-+
-+static int hi6220_regulator_mtcmos_is_enabled(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct hi6220_mtcmos_info *sreg = rdev_get_drvdata(rdev);
-+	struct platform_device *pdev =
-+		container_of(rdev->dev.parent, struct platform_device, dev);
-+	struct hi6220_mtcmos *mtcmos = platform_get_drvdata(pdev);
-+	struct hi6220_mtcmos_ctrl_regs *ctrl_regs = &(sreg->ctrl_regs);
-+	struct hi6220_mtcmos_ctrl_data *ctrl_data = &(sreg->ctrl_data);
-+
-+	ret = hi6220_mtcmos_is_on(mtcmos, ctrl_regs->status_reg,
-+					ctrl_data->mask, ctrl_data->shift);
-+	return ret;
-+}
-+
-+static int hi6220_regulator_mtcmos_enabled(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct hi6220_mtcmos_info *sreg = rdev_get_drvdata(rdev);
-+	struct platform_device *pdev =
-+		container_of(rdev->dev.parent, struct platform_device, dev);
-+	struct hi6220_mtcmos *mtcmos = platform_get_drvdata(pdev);
-+	struct hi6220_mtcmos_ctrl_regs *ctrl_regs = &(sreg->ctrl_regs);
-+	struct hi6220_mtcmos_ctrl_data *ctrl_data = &(sreg->ctrl_data);
-+
-+	ret =  hi6220_mtcmos_on(mtcmos, ctrl_regs->enable_reg,
-+					ctrl_data->mask, ctrl_data->shift);
-+	if (0 == hi6220_mtcmos_is_on(mtcmos, ctrl_regs->status_reg,
-+					ctrl_data->mask, ctrl_data->shift)) {
-+		return -1;
-+	}
-+	return ret;
-+}
-+
-+static int hi6220_regulator_mtcmos_disabled(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct hi6220_mtcmos_info *sreg = rdev_get_drvdata(rdev);
-+	struct platform_device *pdev =
-+		container_of(rdev->dev.parent, struct platform_device, dev);
-+	struct hi6220_mtcmos *mtcmos = platform_get_drvdata(pdev);
-+	struct hi6220_mtcmos_ctrl_regs  *ctrl_regs = &(sreg->ctrl_regs);
-+	struct hi6220_mtcmos_ctrl_data  *ctrl_data = &(sreg->ctrl_data);
-+
-+	ret = hi6220_mtcmos_off(mtcmos, ctrl_regs->disable_reg,
-+					ctrl_data->mask, ctrl_data->shift);
-+
-+	return ret;
-+}
-+
-+static struct regulator_ops hi6220_mtcmos_mtcmos_rops = {
-+	.is_enabled = hi6220_regulator_mtcmos_is_enabled,
-+	.enable = hi6220_regulator_mtcmos_enabled,
-+	.disable = hi6220_regulator_mtcmos_disabled,
-+};
-+
-+#define HI6220_MTCMOS(vreg) \
-+{								\
-+	.rdesc = {					\
-+		.name = #vreg,			\
-+		.ops	= &hi6220_mtcmos_mtcmos_rops, \
-+		.type = REGULATOR_VOLTAGE,			\
-+		.owner = THIS_MODULE,		\
-+	},							\
-+}
-+
-+static struct hi6220_mtcmos_info hi6220_mtcmos_info[] = {
-+	HI6220_MTCMOS(MTCMOS1),
-+	HI6220_MTCMOS(MTCMOS2),
-+};
-+
-+static struct of_regulator_match hi6220_mtcmos_matches[] = {
-+	{ .name = "mtcmos1",
-+		.driver_data = &hi6220_mtcmos_info[HI6220_MTCMOS1], },
-+	{ .name = "mtcmos2",
-+		.driver_data = &hi6220_mtcmos_info[HI6220_MTCMOS2], },
-+};
-+
-+static int hi6220_mtcmos_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct hi6220_mtcmos *mtcmos;
-+	const __be32 *sc_on_regs = NULL;
-+	void __iomem	*regs;
-+	struct device *dev;
-+	struct device_node *np, *child;
-+	int count, i;
-+	struct regulator_config config = { };
-+	struct regulator_init_data *init_data;
-+	struct hi6220_mtcmos_info *sreg;
-+
-+	dev = &pdev->dev;
-+	np = dev->of_node;
-+	mtcmos = devm_kzalloc(dev,
-+		sizeof(struct hi6220_mtcmos), GFP_KERNEL);
-+	if (!mtcmos)
-+		return -ENOMEM;
-+
-+	spin_lock_init((spinlock_t *)&mtcmos->mtcmos_spin_lock);
-+	sc_on_regs = of_get_property(np, "hisilicon,mtcmos-sc-on-base", NULL);
-+	if (sc_on_regs) {
-+		regs = ioremap(be32_to_cpu(*sc_on_regs), 0x1000);
-+		mtcmos->sc_on_regs = regs;
-+	}
-+	ret = of_property_read_u32(np, "hisilicon,mtcmos-steady-us",
-+						&mtcmos->mtcmos_steady_time);
-+
-+	count = of_regulator_match(&pdev->dev, np,
-+				 hi6220_mtcmos_matches,
-+				 ARRAY_SIZE(hi6220_mtcmos_matches));
-+
-+	for (i = 0; i < HI6220_RG_MAX; i++) {
-+		init_data = hi6220_mtcmos_matches[i].init_data;
-+		if (!init_data)
-+			continue;
-+		sreg = hi6220_mtcmos_matches[i].driver_data;
-+		config.dev = &pdev->dev;
-+		config.init_data = init_data;
-+		config.driver_data = sreg;
-+		config.of_node = hi6220_mtcmos_matches[i].of_node;
-+		child = config.of_node;
-+
-+		ret = of_property_read_u32_array(child, "hisilicon,ctrl-regs",
-+				(unsigned int *)(&sreg->ctrl_regs), 0x3);
-+		ret = of_property_read_u32_array(child, "hisilicon,ctrl-data",
-+				(unsigned int *)(&sreg->ctrl_data), 0x2);
-+
-+		mtcmos->rdev[i] = regulator_register(&sreg->rdesc, &config);
-+		if (IS_ERR(mtcmos->rdev[i])) {
-+			ret = PTR_ERR(mtcmos->rdev[i]);
-+			dev_err(&pdev->dev, "failed to register mtcmos %s\n",
-+					sreg->rdesc.name);
-+			while (--i >= 0)
-+				regulator_unregister(mtcmos->rdev[i]);
-+
-+			return ret;
-+		}
-+	}
-+
-+	platform_set_drvdata(pdev, mtcmos);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_hi6220_mtcmos_match_tbl[] = {
-+	{ .compatible = "hisilicon,hi6220-mtcmos-driver", },
-+	{}
-+};
-+
-+static struct platform_driver mtcmos_driver = {
-+	.driver = {
-+		.name = "hisi_hi6220_mtcmos",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_hi6220_mtcmos_match_tbl,
-+	},
-+	.probe = hi6220_mtcmos_probe,
-+};
-+
-+static int __init hi6220_mtcmos_init(void)
-+{
-+	return platform_driver_register(&mtcmos_driver);
-+}
-+
-+static void __exit hi6220_mtcmos_exit(void)
-+{
-+	platform_driver_unregister(&mtcmos_driver);
-+}
-+
-+fs_initcall(hi6220_mtcmos_init);
-+module_exit(hi6220_mtcmos_exit);
-+
-+MODULE_AUTHOR("Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("Hi6220 mtcmo interface driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+Thanks Dmitry.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
