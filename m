@@ -1,70 +1,264 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 4/6] tty: serial: msm: Add TX DMA support
-Date: Wed, 30 Sep 2015 18:32:01 +0100
-Message-ID: <20150930173201.GB745@leverpostej>
-References: <1443614906-2196-1-git-send-email-ivan.ivanov@linaro.org>
- <1443614906-2196-5-git-send-email-ivan.ivanov@linaro.org>
- <20150930132919.GI10997@leverpostej>
- <1443621086.2412.11.camel@linaro.org>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v5] ARM: sun7i: dt: Add new Olimex A20 EVB device
+Date: Wed, 30 Sep 2015 19:34:39 +0200
+Message-ID: <1443634479-18111-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443621086.2412.11.camel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Cc: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBMV2WCYAKGQEZBYM3LA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 30, 2015 at 02:51:26PM +0100, Ivan T. Ivanov wrote:
-> 
-> On Wed, 2015-09-30 at 14:29 +0100, Mark Rutland wrote:
-> > On Wed, Sep 30, 2015 at 01:08:24PM +0100, Ivan T. Ivanov wrote:
-> > > Add transmit DMA support for UARTDM type of controllers.
-> > > 
-> > > Tested on APQ8064, which have UARTDM v1.3 and ADM DMA engine
-> > > and APQ8016, which have UARTDM v1.4 and BAM DMA engine.
-> > > 
-> > > Signed-off-by: Ivan T. Ivanov ivanov@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/serial/qcom,msm-uartdm.txt |   3 +
-> > >  drivers/tty/serial/msm_serial.c                    | 312 +++++++++++++++++++--
-> > >  drivers/tty/serial/msm_serial.h                    |   3 +
-> > >  3 files changed, 294 insertions(+), 24 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-> > > index a2114c217376..a600023d9ec1 100644
-> > > --- a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-> > > +++ b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-> > > @@ -26,6 +26,9 @@ Required properties:
-> > >  Optional properties:
-> > >  - dmas: Should contain dma specifiers for transmit and receive channels
-> > >  - dma-names: Should contain "tx" for transmit and "rx" for receive channels
-> > > +- qcom,tx-crci: Identificator <u32> for Client Rate Control Interface to be
-> > > +           used with TX DMA channel. Required when using DMA for transmission
-> > > +           with UARTDM v1.3 and bellow.
-> > 
-> > This sounds like it belongs in the dma-specifier, and dealt with by the
-> > DMA controller driver.
-> > 
-> > Why does the UART driver need to know about this?
-> 
-> CRCI information was part of the first version of ADM DMA engine driver
-> bindings, but Andy remove it because some client devices are requiring
-> more that one CRCI number. See here[1] and here [2].
-> 
-> Regards,
-> Ivan
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/314190.html
-> [2] https://lkml.org/lkml/2015/8/19/19
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This leaves me more confused. If different writes from the same agent
-are being distinguished then it sounds like you actually have two
-logical DMA channels.
+The A20-SOM-EVB is a reference design of a 2-layer board for the
+A20-SOM.
+It expands the features of A20-SOM by adding VGA connector, HDMI
+connector, audio In/Out, LCD connector, 2 Mpix camera, gigabit
+Ethernet, SATA, USB-OTG and 2 USB hosts.
 
-Could you elaborate on the qcom,ebi2-nand binding? From a brief read I'd
-expect you to have "txrx" and "cmd" dmas, rather than describing the
-CRCI information on the side.
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v4:
+- removed reg_usb0_vbus which will return when usb otg is added.
+Changes since v3:
+- removed i2c1 as it's not used
+- removed axp_ipsout regulator
+Changes since v2:
+- changed dcdc2 to have max voltage of 1.4V
+Changes since v1:
+- renamed dts from sun7i-a20-olinuxino-evb to sun7i-a20-olimex-som-evb
+- added "axp209 dtsi"
+- change regulator settings
+---
+ arch/arm/boot/dts/Makefile                     |   1 +
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 198 +++++++++++++++++++++++++
+ 2 files changed, 199 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
 
-Mark.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cce5468..19d39a9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -619,6 +619,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-m3.dtb \
+ 	sun7i-a20-mk808c.dtb \
++	sun7i-a20-olimex-som-evb.dtb \
+ 	sun7i-a20-olinuxino-lime.dtb \
+ 	sun7i-a20-olinuxino-lime2.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+new file mode 100644
+index 0000000..f6c37cd
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+@@ -0,0 +1,198 @@
++/*
++ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Olimex A20-Olimex-SOM-EVB";
++	compatible = "olimex,a20-olimex-som-evb", "allwinner,sun7i-a20";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_olimex_som_evb>;
++
++		green {
++			label = "a20-olimex-som-evb:green:usr";
++			gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&ahci {
++	target-supply = <&reg_ahci_5v>;
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_rgmii_a>;
++	phy = <&phy1>;
++	phy-mode = "rgmii";
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&pio {
++	ahci_pwr_pin_olimex_som_evb: ahci_pwr_pin@1 {
++		allwinner,pins = "PC3";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	led_pins_olimex_som_evb: led_pins@0 {
++		allwinner,pins = "PH2";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_ahci_5v {
++	pinctrl-0 = <&ahci_pwr_pin_olimex_som_evb>;
++	gpio = <&pio 2 3 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1425000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+2.6.0
