@@ -1,50 +1,57 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7794: add USB PHY DT support
-Date: Wed, 30 Sep 2015 17:33:25 +0900
-Message-ID: <20150930083324.GA3426@verge.net.au>
-References: <1442100737.hcefR9HyDq@wasted.cogentembedded.com>
- <1590842.9hQm6l1zli@wasted.cogentembedded.com>
- <55F9F82E.4000809@cogentembedded.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 00/11] Hi Maxime / Patrice / Srini,
+Date: Wed, 30 Sep 2015 10:37:19 +0200
+Message-ID: <560B9F3F.1080701@st.com>
+References: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F9F82E.4000809@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443443867-4099-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 17, 2015 at 02:15:58AM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 09/13/2015 01:50 AM, Sergei Shtylyov wrote:
-> 
-> >Define the R8A7794 generic part of the USB PHY device node. It is up to the
-> >board file to enable the device.
-> >
-> >Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >
-> >---
-> >  arch/arm/boot/dts/r8a7794.dtsi |   19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> >Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-> >===================================================================
-> >--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-> >+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-> >@@ -690,6 +690,25 @@
-> >  				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-> >  	};
-> >
-> >+	usbphy: usb-phy@e6590100 {
-> >+		compatible = "renesas,usb-phy-r8a7794";
-> >+		reg = <0 0xe6590100 0 0x100>;
-> >+		#address-cells = <1>;
-> >+		#size-cells = <0>;
-> >+		clocks = <&mstp7_clks R8A7794_CLK_HSUSB>;
-> >+		clock-names = "usbhs";
-> 
->    Forgot to add "power-domains" prop here. :-(
+Hi Peter,
 
-Are you planning to repost this?
+On 09/28/2015 02:37 PM, Peter Griffin wrote:
+> This series makes a series of updates to the stih407 pinctrl groups
+> and makes the upstream kernel more closely aligned in terms of pin
+> configuration to the vendor kernel.
+>
+> A number of new periphs are added such as spi fsm, nand, cec0, and
+> for others such as SPI the various alternate function pin muxings have
+> been added. Finally for SPI the controller nodes have been updated
+> to have the default pin assignment in the controller node.
+>
+> Changes since v1:
+>   - Rebase on v4.3-rc3
+>   - Remove some SoBs (Lee)
+>   - Collect up Acks
+>
+> kind regards,
+>
+> Peter.
+>
+> Peter Griffin (11):
+>    ARM: STi: DT: STiH407: Add a cec0 pin definition
+>    ARM: STi: DT: STiH407: Add i2c3 alternate pin configs
+>    ARM: DT: STiH407: Add SPI 3 wire and 4 wire pinctrl configs
+>    ARM: DT: STiH407: Add serial3 pinctrl configuration
+>    ARM: DT: STiH407: Add SPI FSM (NOR Flash) Controller pin config
+>    ARM: DT: STiH407: Add NAND flash controller pin configuration
+>    ARM: DT: STiH407: Add systrace pin configuration
+>    ARM: DT: STiH407: Add SD pinctrl config for mmc0 controller
+>    ARM: DT: STiH407: Add pinconfig for IRB UHF and IRB TX
+>    ARM: DT: STiH407: Add RMII pinctrl support
+>    ARM: STi: STiH407: Add spi default pinctrl groups.
+>
+>   arch/arm/boot/dts/stih407-family.dtsi  |  14 ++
+>   arch/arm/boot/dts/stih407-pinctrl.dtsi | 378 ++++++++++++++++++++++++++++++++-
+>   2 files changed, 387 insertions(+), 5 deletions(-)
+>
+
+Series applied to sti-dt-for-v4.4.
+Thanks!
+Maxime
