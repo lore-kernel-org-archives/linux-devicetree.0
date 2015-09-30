@@ -1,133 +1,39 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v7 7/7] pinctrl: freescale: imx: imx7d iomuxc-lpsr
- devicetree bindings
-Date: Wed, 30 Sep 2015 10:03:47 +0800
-Message-ID: <20150930020347.GD15771@tiger>
-References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
- <1443477401-17238-7-git-send-email-aalonso@freescale.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] usb: change clock information for chipidea
+Date: Wed, 30 Sep 2015 10:10:53 +0800
+Message-ID: <CAAQ0ZWTXCYceSkT0QdaZqzGCYOBhzZxFz6dvOqtemQOrj5Hc9w@mail.gmail.com>
+References: <1442796186-2574-1-git-send-email-peter.chen@freescale.com>
+	<CAOMZO5BG9=m18tLqtv8Dsg6bEQVtzGMC2e1oOfHQ__aknW1Mjw@mail.gmail.com>
+	<20150921235655.GD23664@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443477401-17238-7-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Adrian Alonso <aalonso@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150921235655.GD23664@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 28, 2015 at 04:56:41PM -0500, Adrian Alonso wrote:
-> Add iomuxc-lpsr devicetree bindings documentation
-> Provide documentation context as well an example on
-> pheriperals that could use pad from either iomuxc controller
-> supported by iMX7D SoC
-> 
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
-> ---
-> Changes for V2: New patch on imx7d iomuxc-lpsr patch series
-> Changes for V3: Add shared input select register notes
-> Changes for V4: Resend
-> Changes for V5:
-> - Fix spell error
-> - Remove references of SHARE_INPUT_SELECT_REG flag
-> Changes for V6: Resend
-> Changes for v7: Resend
-> 
->  .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         | 63 +++++++++++++++++++++-
->  1 file changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> index 8bbf25d..aae069f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> @@ -1,16 +1,42 @@
->  * Freescale i.MX7 Dual IOMUX Controller
->  
-> +iMX7D supports two iomuxc controllers, fsl,imx7d-iomuxc controller is similar
-> +as previous iMX SoC generation and fsl,imx7d-iomuxc-lpsr which provides low
-> +power state retention capabilities on gpios that are part of iomuxc-lpsr
-> +(GPIO1_IO7..GPIO1_IO0). While iomuxc-lpsr provides its own set of registers for
-> +mux and pad control settings, it shares the input select register from main
-> +iomuxc controller for daisy chain settings, the fsl,input-sel property extends
-> +fsl,imx-pinctrl driver to support iomuxc-lpsr controller.
-> +
-> +iomuxc_lpsr: iomuxc-lpsr@302c0000 {
-> +	compatible = "fsl,imx7d-iomuxc-lpsr";
-> +	reg = <0x302c0000 0x10000>;
-> +	fsl,input-sel = <&iomuxc>;
-> +};
-> +
-> +iomuxc: iomuxc@30330000 {
-> +	compatible = "fsl,imx7d-iomuxc";
-> +	reg = <0x30330000 0x10000>;
-> +};
-> +
-> +Pheriparials using pads from iomuxc-lpsr support low state retention power
-> +state, under LPSR mode GPIO's state of pads are retain.
-> +
->  Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
->  and usage.
->  
->  Required properties:
-> -- compatible: "fsl,imx7d-iomuxc"
-> +- compatible: "fsl,imx7d-iomuxc" for main IOMUXC controller, or
-> +  "fsl,imx7d-iomuxc-lpsr" for Low Power State Retention IOMUXC controller.
->  - fsl,pins: each entry consists of 6 integers and represents the mux and config
->    setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
->    input_val> are specified using a PIN_FUNC_ID macro, which can be found in
->    imx7d-pinfunc.h under device tree source folder.  The last integer CONFIG is
->    the pad setting value like pull-up on this pin.  Please refer to i.MX7 Dual
->    Reference Manual for detailed CONFIG settings.
-> +- fsl,input-sel: required property for iomuxc-lpsr controller, this property is
-> +  a phandle for main iomuxc controller which shares the input select register for
-> +  daisy chain settings.
->  
->  CONFIG bits definition:
->  PAD_CTL_PUS_100K_DOWN           (0 << 5)
-> @@ -25,3 +51,38 @@ PAD_CTL_DSE_X1                  (0 << 0)
->  PAD_CTL_DSE_X2                  (1 << 0)
->  PAD_CTL_DSE_X3                  (2 << 0)
->  PAD_CTL_DSE_X4                  (3 << 0)
-> +
-> +Examples:
-> +While iomuxc-lpsr is intended to be used by dedicated peripherals to take
-> +advantages of LPSR power mode, is also possible that an IP to use pads from
-> +any of the iomux controllers. For example the I2C1 IP can use SCL pad from
-> +iomuxc-lpsr controller and SDA pad from iomuxc controller as:
-> +
-> +i2c1: i2c@30a20000 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1_1 &pinctrl_i2c1_2>;
-> +	status = "okay";
-> +};
-> +
-> +iomuxc-lpsr@302c0000 {
-> +	compatible = "fsl,imx7d-iomuxc-lpsr";
-> +	reg = <0x302c0000 0x10000>;
-> +	fsl,input-sel = <&iomuxc>;
-> +
-> +	pinctrl_i2c1_1: i2c1grp-1 {
-> +		fsl,pins = <
-> +			MX7D_PAD_GPIO1_IO04__I2C1_SCL 0x4000007f
-> +		>;
-> +	};
-> +};
-> +
-> +iomuxc@30330000 {
-> +	compatible = "fsl,imx7d-iomuxc";
-> +	reg = <0x30330000 0x10000>;
-> +
-> +	pinctrl_i2c1_2: i2c1grp-2 {
-> +		fsl,pins = <
-> +			MX7D_PAD_I2C1_SCL__I2C1_SCL 0x4000007f
+On Tue, Sep 22, 2015 at 7:56 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Mon, Sep 21, 2015 at 09:49:11PM -0300, Fabio Estevam wrote:
+>> On Sun, Sep 20, 2015 at 9:43 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > This patch set changes usb clock information for legacy i.mx platforms.
+>> > At these platforms, they needs three clocks to let controller work.
+>> >
+>> > Hi Fabio,
+>> >
+>> > Would you please have a test at imx27 and imx25 boards, thanks.
+>>
+>> Works fine on both boards, thanks
+>
+> Hi Shawn,
+>
+> Would you please help to queue dts changes (2/5, 3/5, 4/5)?
 
-I'm not sure how many times I should repeat: you should set up a
-I2C1_SDA instead of two I2C1_SCL in this example.
+Please send them to Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>.
 
 Shawn
-
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.1.4
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
