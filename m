@@ -1,61 +1,278 @@
-From: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 8/8] arm64: dts: Add Hi6220 mtcmos regulator node
-Date: Wed, 30 Sep 2015 19:05:11 +0800
-Message-ID: <1443611111-3196-9-git-send-email-w.f@huawei.com>
+From: Fei Wang <w.f@huawei.com>
+Subject: [PATCH 5/8] arm64: dts: Add Hi655x regulator config node
+Date: Wed, 30 Sep 2015 19:05:08 +0800
+Message-ID: <1443611111-3196-6-git-send-email-w.f@huawei.com>
 References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443611111-3196-1-git-send-email-w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, william.wfei-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443611111-3196-1-git-send-email-w.f@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, khilman@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, broonie@kernel.org, lgirdwood@gmail.com
+Cc: bintian.wang@huawei.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, puck.chen@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, william.wfei@gmail.com, zhongkaihua@huawei.com, w.f@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add mtcmos regulator dts file for Hi6220 SoC.
+This patch add hi655x regulator dts file for Hi6220 SoC.
 
-Signed-off-by: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Fei Wang <w.f@huawei.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi |  245 +++++++++++++++++++++++++++++
+ 1 file changed, 245 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 40f895b..9b1a6ed 100644
+index 4e4830b..40f895b 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -167,6 +167,27 @@
- 			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+@@ -176,5 +176,250 @@
+                 interrupt-controller;
+                 pmu_irq_gpio = <&gpio_pmu_irq_n>;
+                 status = "ok";
 +
-+		mtcmos {
-+			compatible = "hisilicon,hi6220-mtcmos-driver";
-+			hisilicon,mtcmos-steady-us = <10>;
-+			hisilicon,mtcmos-sc-on-base  = <0xf7800000>;
-+			hisilicon,mtcmos-acpu-on-base = <0xf65a0000>;
++		ldo2: regulator@a21 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo2";
++                        regulator-min-microvolt = <2500000>;
++                        regulator-max-microvolt = <3200000>;
++                        hisilicon,valid-modes-mask = <0x02>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
 +
-+			mtcmos1: regulator@a1{
-+				regulator-name = "G3D_PD_VDD";
-+				regulator-compatible = "mtcmos1";
-+				hisilicon,ctrl-regs = <0x830 0x834 0x83c>;
-+				hisilicon,ctrl-data = <1 0x1>;
-+			};
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x029 0x02a 0x02b>;
++                        hisilicon,ctrl-data = <0x1 0x1>;
++                        hisilicon,vset-regs = <0x072>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <2500000>,<2600000>,
++						<2700000>,<2800000>,
++						<2900000>,<3000000>,
++						<3100000>,<3200000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "sensor_analog";
++                };
 +
-+			mtcmos2: regulator@a2{
-+				regulator-name = "SOC_MED";
-+				regulator-compatible = "mtcmos2";
-+				hisilicon,ctrl-regs = <0x830 0x834 0x83c>;
-+				hisilicon,ctrl-data = <2 0x1>;
-+			};
++		ldo7: regulator@a26 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo7";
++                        regulator-min-microvolt = <1800000>;
++                        regulator-max-microvolt = <3300000>;
++                        hisilicon,valid-modes-mask = <0x0a>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x029 0x02a 0x02b>;
++                        hisilicon,ctrl-data = <0x6 0x1>;
++                        hisilicon,vset-regs = <0x078>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <1800000>,<1850000>,
++						<2850000>,<2900000>,
++						<3000000>,<3100000>,
++						<3200000>,<3300000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "sd_card_io";
 +		};
++
++		ldo10: regulator@a29 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo10";
++                        regulator-min-microvolt = <1800000>;
++                        regulator-max-microvolt = <3000000>;
++                        hisilicon,valid-modes-mask = <0x0a>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <360>;
++                        hisilicon,ctrl-regs = <0x02c 0x02d 0x02e>;
++                        hisilicon,ctrl-data = <0x1 0x1>;
++                        hisilicon,vset-regs = <0x07b>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <1800000>,<1850000>,
++						<1900000>,<2750000>,
++						<2800000>,<2850000>,
++						<2900000>,<3000000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "sd_card";
++                };
++
++		ldo13: regulator@a32 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo13";
++                        regulator-min-microvolt = <1600000>;
++                        regulator-max-microvolt = <1950000>;
++                        hisilicon,valid-modes-mask = <0x0a>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x02c 0x02d 0x02e>;
++                        hisilicon,ctrl-data = <0x4 0x1>;
++                        hisilicon,vset-regs = <0x07e>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <1600000>,<1650000>,
++						<1700000>,<1750000>,
++						<1800000>,<1850000>,
++						<1900000>,<1950000>;
++                        hisilicon,num_consumer_supplies = <3>;
++                        hisilicon,consumer-supplies = "scamera_core",
++							"mcamera_io",
++							"scamera_io";
++                };
++
++		ldo14: regulator@a33 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo14";
++                        regulator-min-microvolt = <2500000>;
++                        regulator-max-microvolt = <3200000>;
++                        hisilicon,valid-modes-mask = <0x02>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x02c 0x02d 0x02e>;
++                        hisilicon,ctrl-data = <0x5 0x1>;
++                        hisilicon,vset-regs = <0x07f>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <2500000>,<2600000>,
++						<2700000>,<2800000>,
++						<2900000>,<3000000>,
++						<3100000>,<3200000>;
++                        hisilicon,num_consumer_supplies = <3>;
++                        hisilicon,consumer-supplies  = "scamera_avdd",
++							"mcamera_avdd",
++							"mcamera_vcm";
++                };
++
++		ldo15: regulator@a34 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo15";
++                        regulator-min-microvolt = <1600000>;
++                        regulator-max-microvolt = <1950000>;
++                        regulator-boot-on;
++                        regulator-always-on;
++                        hisilicon,valid-modes-mask = <0x0a>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x02c 0x02d 0x02e>;
++                        hisilicon,ctrl-data = <0x6 0x1>;
++                        hisilicon,vset-regs = <0x080>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <1600000>,<1650000>,
++						<1700000>,<1750000>,
++						<1800000>,<1850000>,
++						<1900000>,<1950000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "codec_analog";
++                };
++
++		ldo17: regulator@a36 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo17";
++                        regulator-min-microvolt = <2500000>;
++                        regulator-max-microvolt = <3200000>;
++                        hisilicon,valid-modes-mask = <0x02>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x02f 0x030 0x031>;
++                        hisilicon,ctrl-data = <0x0 0x1>;
++                        hisilicon,vset-regs = <0x082>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <2500000>,<2600000>,
++						<2700000>,<2800000>,
++						<2900000>,<3000000>,
++						<3100000>,<3200000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "vibrator";
++                };
++
++		ldo19: regulator@a38 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo19";
++                        regulator-min-microvolt = <1800000>;
++                        regulator-max-microvolt = <3000000>;
++                        hisilicon,valid-modes-mask = <0x0a>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <360>;
++                        hisilicon,ctrl-regs = <0x02f 0x030 0x031>;
++                        hisilicon,ctrl-data = <0x2 0x1>;
++                        hisilicon,vset-regs = <0x084>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <1800000>,<1850000>,
++						<1900000>,<2750000>,
++						<2800000>,<2850000>,
++						<2900000>,<3000000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "emmc_vddm";
++                };
++
++		ldo21: regulator@a40 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo21";                                                                                                       regulator-min-microvolt = <1650000>;
++                        regulator-max-microvolt = <2000000>;
++                        regulator-always-on;
++                        hisilicon,valid-modes-mask = <0x02>;                                                                                            hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x02f 0x030 0x031>;
++                        hisilicon,ctrl-data = <0x4 0x1>;
++                        hisilicon,vset-regs = <0x086>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <1650000>,<1700000>,
++						<1750000>,<1800000>,
++						<1850000>,<1900000>,
++						<1950000>,<2000000>;
++                };
++
++		ldo22: regulator@a41 {
++                        compatible = "hisilicon,hi655x-regulator-pmic";
++                        regulator-name = "ldo22";
++                        regulator-min-microvolt = <900000>;
++                        regulator-max-microvolt = <1200000>;
++                        regulator-boot-on;
++                        regulator-always-on;
++                        hisilicon,valid-modes-mask = <0x02>;
++                        hisilicon,valid-ops-mask = <0x01d>;
++                        hisilicon,initial-mode = <0x02>;
++                        hisilicon,regulator-type = <0x01>;
++
++                        hisilicon,off-on-delay = <120>;
++                        hisilicon,ctrl-regs = <0x02f 0x030 0x031>;
++                        hisilicon,ctrl-data = <0x5 0x1>;
++                        hisilicon,vset-regs = <0x087>;
++                        hisilicon,vset-data = <0 0x3>;
++                        hisilicon,regulator-n-vol = <8>;
++                        hisilicon,vset-table  = <900000>,<1000000>,
++						<1050000>,<1100000>,
++						<1150000>,<1175000>,
++						<1185000>,<1200000>;
++                        hisilicon,num_consumer_supplies = <1>;
++                        hisilicon,consumer-supplies = "mcamera_core";
++                };
  	};
- 
- 	pmic: pmic@F8000000 {
+ };
 -- 
 1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
