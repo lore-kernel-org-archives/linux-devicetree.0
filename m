@@ -1,66 +1,35 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add Exynos5250 Snow Rev5+ support
-Date: Wed, 30 Sep 2015 08:42:10 +0200
-Message-ID: <560B8442.1070901@osg.samsung.com>
-References: <1443527855-434-1-git-send-email-javier@osg.samsung.com>
- <560B2D29.5060707@samsung.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Add support to make output voltage determined by VSET2[] bits
+Date: Wed, 30 Sep 2015 14:39:16 +0800
+Message-ID: <1443595158-550-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <560B2D29.5060707@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+The patch is to add support to make the output voltage of ACT8865
+DC/DC regulator determined by VSET2[] bits. The DT property
+"active-semi,vsel-high" is used to specify the VSEL pin at high
+on the board. When the VSEL pin is high, output voltage is programmed
+by VSET2[] bits.
 
-On 09/30/2015 02:30 AM, Krzysztof Kozlowski wrote:
 
-[snip]
+Wenyou Yang (2):
+  regulator: act8865: support output voltage by VSET2[] bits
+  regulator: act8865: add DT binding for property
+    "active-semi,vsel-high"
 
->>
->> The DTS in the vendor ChromeOS tree are called exynos5250-snow-rev{4,5}.dtb
->> but I decided to leave Rev4 as exynos5250-snow.dtb to avoid breaking u-boot
->> that has CONFIG_DEFAULT_DEVICE_TREE="exynos5250-snow" in snow_defconfig.
->>
->> Also, ChromiumOS Rev4 DTS has "google,snow-rev4" in its compatible string
->> but was not added in mainline since Rev4 firmware fallbacks to "google,snow"
->> and Rev5 searches for "google,snow-rev5". That way the compatible string
->> could be consistent with the DTS naming and still be able to pack both Rev4
->> and Rev5 FDT in the same FIT image and let the firmware pick the correct FDT.
->>
->>  arch/arm/boot/dts/Makefile                    |   1 +
->>  arch/arm/boot/dts/exynos5250-snow-common.dtsi | 684 ++++++++++++++++++++++++++
->>  arch/arm/boot/dts/exynos5250-snow-rev5.dts    |  47 ++
->>  arch/arm/boot/dts/exynos5250-snow.dts         | 666 +------------------------
->>  4 files changed, 733 insertions(+), 665 deletions(-)
->>  create mode 100644 arch/arm/boot/dts/exynos5250-snow-common.dtsi
->>  create mode 100644 arch/arm/boot/dts/exynos5250-snow-rev5.dts
-> 
-> Now the exynos5250-snow.dts means in fact Rev4... but there is no
-> information in DTS about it. I think adding compatible
-> "google,snow-rev4" makes sense:
-> 1. For informational purposes (this could be also handled with a comment).
-> 2. Later one could decide to switch the default meaning of "google,snow"
-> to Rev5 and the real compatible (rev4) will be there already.
->
+ .../bindings/regulator/act8865-regulator.txt       |    3 +++
+ drivers/regulator/act8865-regulator.c              |   24 ++++++++++++++++++--
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-Ok, I explained my rationale about why I did not add a "google,snow-rev4"
-but I don't have a strong opinion on this so I'll add it on v2.
- 
-> Could you add the new compatible and fix patch issues pointed by Doug?
->
-
-Sure.
-
-> Best regards,
-> Krzysztof
-> 
-
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
