@@ -1,49 +1,44 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for QiaoDian Xianshi
-Date: Thu, 1 Oct 2015 00:54:28 +0200
-Message-ID: <20150930225428.GH3639@piout.net>
-References: <1443649337-32307-1-git-send-email-alexandre.belloni@free-electrons.com>
- <CAL_JsqKXKDOf3JKDvhOS=sEEQ2buwzEWV6F-1iW+jV369aOUAg@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 1/2] ARM: shmobile: add Porter board DT bindings
+Date: Thu, 01 Oct 2015 02:01:38 +0300
+Message-ID: <1498934.YIZP7CvbA4@wasted.cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKXKDOf3JKDvhOS=sEEQ2buwzEWV6F-1iW+jV369aOUAg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/2015 at 17:16:10 -0500, Rob Herring wrote :
-> On Wed, Sep 30, 2015 at 4:42 PM, Alexandre Belloni
-> <alexandre.belloni@free-electrons.com> wrote:
-> > Use "qiaodian" as the vendor prefix for QiaoDian Xianshi Corporation in
-> > device tree compatible strings.
-> >
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index ac5f0c34ae00..76579e2ef162 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -174,6 +174,7 @@ qca Qualcomm Atheros, Inc.
-> >  qcom   Qualcomm Technologies, Inc
-> >  qemu   QEMU, a generic and open source machine emulator and virtualizer
-> >  qi     Qi Hardware
-> > +qd     QiaoDian XianShi Corporation
-> 
-> Doesn't match the commit msg...
-> 
+Add Porter device tree bindings documentation, listing it as a supported board.
+    
+This allows to use checkpatch to validate DTSes referring to the Porter board.
+ 
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Yeah, I was not sure which one I should use actually, is "qd"
-sufficient? I couldn't find much information on the company, I chose to
-use the prefix they use for their parts.
+---
+This patch is against the 'renesas-devel-20150930-v4.3-rc3' tag of Simon
+Horman's 'renesas.git' repo.
 
+Changes in version 2:
+- new patch.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+ Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
+ 1 file changed, 2 insertions(+)
+
+Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
+===================================================================
+--- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
++++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -55,5 +55,7 @@ Boards:
+     compatible = "renesas,lager", "renesas,r8a7790"
+   - Marzen
+     compatible = "renesas,marzen", "renesas,r8a7779"
++  - Porter (M2-LCDP)
++    compatible = "renesas,porter", "renesas,r8a7791"
+   - Silk
+     compatible = "renesas,silk", "renesas,r8a7794";
+
