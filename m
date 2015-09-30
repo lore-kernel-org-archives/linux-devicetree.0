@@ -1,87 +1,122 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 4/6] tty: serial: msm: Add TX DMA support
-Date: Wed, 30 Sep 2015 15:24:37 -0500
-Message-ID: <20150930202437.GA18486@qualcomm.com>
-References: <1443614906-2196-1-git-send-email-ivan.ivanov@linaro.org>
- <1443614906-2196-5-git-send-email-ivan.ivanov@linaro.org>
- <20150930132919.GI10997@leverpostej>
- <1443621086.2412.11.camel@linaro.org>
- <20150930173201.GB745@leverpostej>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Wed, 30 Sep 2015 15:29:30 -0500
+Message-ID: <560C462A.1000707@ti.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk> <5605AA1C.3090905@ti.com>
+ <20150929151320.GT30445@sirena.org.uk> <560AD3B2.1070102@ti.com>
+ <20150929183818.GA15635@sirena.org.uk> <560ADF61.9030105@ti.com>
+ <20150930172844.GF15635@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150930173201.GB745@leverpostej>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, David Brown <davidb@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20150930172844.GF15635@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 30, 2015 at 06:32:01PM +0100, Mark Rutland wrote:
-> On Wed, Sep 30, 2015 at 02:51:26PM +0100, Ivan T. Ivanov wrote:
-> > 
-> > On Wed, 2015-09-30 at 14:29 +0100, Mark Rutland wrote:
-> > > On Wed, Sep 30, 2015 at 01:08:24PM +0100, Ivan T. Ivanov wrote:
-> > > > Add transmit DMA support for UARTDM type of controllers.
-> > > > 
-> > > > Tested on APQ8064, which have UARTDM v1.3 and ADM DMA engine
-> > > > and APQ8016, which have UARTDM v1.4 and BAM DMA engine.
-> > > > 
-> > > > Signed-off-by: Ivan T. Ivanov ivanov@linaro.org>
-> > > > ---
-> > > >  .../devicetree/bindings/serial/qcom,msm-uartdm.txt |   3 +
-> > > >  drivers/tty/serial/msm_serial.c                    | 312 +++++++++++++++++++--
-> > > >  drivers/tty/serial/msm_serial.h                    |   3 +
-> > > >  3 files changed, 294 insertions(+), 24 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-> > > > index a2114c217376..a600023d9ec1 100644
-> > > > --- a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-> > > > +++ b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-> > > > @@ -26,6 +26,9 @@ Required properties:
-> > > >  Optional properties:
-> > > >  - dmas: Should contain dma specifiers for transmit and receive channels
-> > > >  - dma-names: Should contain "tx" for transmit and "rx" for receive channels
-> > > > +- qcom,tx-crci: Identificator <u32> for Client Rate Control Interface to be
-> > > > +           used with TX DMA channel. Required when using DMA for transmission
-> > > > +           with UARTDM v1.3 and bellow.
-> > > 
-> > > This sounds like it belongs in the dma-specifier, and dealt with by the
-> > > DMA controller driver.
-> > > 
-> > > Why does the UART driver need to know about this?
-> > 
-> > CRCI information was part of the first version of ADM DMA engine driver
-> > bindings, but Andy remove it because some client devices are requiring
-> > more that one CRCI number. See here[1] and here [2].
-> > 
-> > Regards,
-> > Ivan
-> > 
-> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/314190.html
-> > [2] https://lkml.org/lkml/2015/8/19/19
-> 
-> This leaves me more confused. If different writes from the same agent
-> are being distinguished then it sounds like you actually have two
-> logical DMA channels.
-> 
-> Could you elaborate on the qcom,ebi2-nand binding? From a brief read I'd
-> expect you to have "txrx" and "cmd" dmas, rather than describing the
-> CRCI information on the side.
+On 09/30/2015 12:28 PM, Mark Brown wrote:
+> On Tue, Sep 29, 2015 at 01:58:41PM -0500, Andrew F. Davis wrote:
+>> On 09/29/2015 01:38 PM, Mark Brown wrote:
+>
+>>> Oh, ick.  The binding has a compatible string in the individual
+>>> regulator bindings which is broken unless there really are lots of
+>>> variants being configured via DT (which is just not the case here).
+>>> It's not only more typing in the DT,
+>
+>> I don't see this, the alternative is matching to this "regulator-compatible",
+>> why not just use the existing compatible.
+>
+> No, you don't need to use regulator-compatible - that's deprecated.
+> Just use the node names.
+>
 
-The ADM does have physical channels, but when you utilize those channels you may
-also need to describe the flow control used for specific transactions.  And this
-flow control has to be configured for that specific transaction, if you are
-interleaving different flow control origination/end points.
+Are we sure matching on node names is a good idea? Most are just arbitrary
+names meant to be human readable and reference-able, giving them function
+may lead to confusion. This seems to be why we have "compatible", for specific
+identification of node function. But I'm new so maybe I'm wrong?
 
-In the case of nand, they actually use different flow controls on the same
-physical channel.  For UART/I2C/SPI, they use just one flow control identifier.
+>>> it also means that we can't read
+>>> back the configuration of the device unless the user goes and creates a
+>>> DT which explicitly lists each regulator on the device which is
+>>> unhelpful.  We should be able to read back the configurations of all the
+>>> regulators by simply listing the device in DT.
+>
+>> Could you expand this? I'm not sure I understand why we still cant do this
+>> using this new way.
+>
+> I'm not sure what there is to add...  if the regulator is only
+> instantiated when it features in the device tree then obviously it must
+> be included in the device to be instantiated.
+>
 
-I see your point at specifying these as logical channels.  That is certainly a
-possibility.  Then the ADM driver would just have to handle the logical channel
-allocation.  That would remove the need for the slave_config being sent.
+This is already the case then, missing regulator nodes in old drivers will not
+get instantiated ether. And old drivers don't always store any more info about
+available regulators than mine does.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> Bindings should have compatible strings when they describe hardware like this,
+>> we can then do stuff like put the LDO and DCDC drivers in separate modules for
+>> instance, letting DT only load what we need. There are other benefits like
+>> not having to search our own DT binding for data, and we only get probed for
+>> devices in the DT.
+>
+> Only getting probed for device is in DT is exactly the problem here, and
+> nothing prevents us having separate modules for things without
+> enumerating everything in DT.
+>
+
+Sure, but then we have to do some fiddling with MFD_CORE to do that work,
+why not remove the dependency and let DT do that for DT only drivers?
+
+>> This also eliminates the need for MFD_CORE, we just call
+>> of_platform_populate on ourself and DT helpers do the rest. Why hard code
+>> mfd_cell's and do matching when DT does the same thing.
+>
+> Putting everything in DT means more work for people integrating the
+> device and means that we have to have a full and complete understanding
+> of the device at the time we write the DT, including decions about how
+> we split the functionality of the device between subsystems.
+>
+
+We are not adding anything extra to the DT node, we just use the "compatible"
+string to identify and match the node vs. "regulator-name", or the nodes name,
+or whatever else has been used. The node is then just filled with the standard
+optional properties just like every other driver's node.
+
+>>> The fact that this is different to the bindings for other regulator
+>>> drivers and requires more code ought to have been a big warning sign
+>>> here :(
+>
+>> The binding is the same as the new tps65218 driver, different isn't always
+>> a warning sign. And what do you mean "requires more code"? This regulator
+>> driver is smaller than almost any other. DT takes care of everything for
+>> us relating to hardware instantiation like it should.
+>
+> That's not a new driver, it's from more than a year ago (before or about
+> the same time the helpers got added IIRC).
+>
+
+Newer than a lot, I chose to base my driver off of that not just because
+it is a similar TI part, but because it was the cleanest, simplest looking
+one IMHO. The helpers would require more code (you need to know how many
+regulators you have and call the helpers in a loop).
+
+I have another PMIC I'm about to push a driver for when this gets figured out
+that does the same thing, and it's more important I think to do it this way for
+this new part. Some of the new regulators are designed without a dedicated
+SOC or board to power in mind, so they will have a whole bunch for different
+regulator types on one chip and it will be up to the designer to pick which ones
+to turn on and use. With this DT approach you can just list the ones you want,
+and we may even be able to split different types into different modules, then
+we can use the same regulator driver in different spins of the PMIC with more
+or less of that type of regulator, we just add that same node under a different
+parent PMIC driver.
+
+I could use the helper with this style and save a couple lines of code if we
+could make regulator_of_get_init_data to also match on "compatible", it
+currently only matches on "regulator-compatible" or the node name. I could make
+this addition and send the patch if you would like to see what I have in mind.
