@@ -1,88 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 2/2] drm: panel: simple: add QiaoDian qd43003c0-40
-Date: Wed, 30 Sep 2015 23:42:17 +0200
-Message-ID: <1443649337-32307-2-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1443649337-32307-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Arun Parameswaran <aparames@broadcom.com>
+Subject: Re: [PATCH 4/4] net: phy: Broadcom Cygnus internal Etherent PHY driver
+Date: Wed, 30 Sep 2015 14:43:05 -0700
+Message-ID: <560C5769.4070607@broadcom.com>
+References: <1443645163-2822-1-git-send-email-arunp@broadcom.com> <1443645163-2822-5-git-send-email-arunp@broadcom.com> <560C5633.5080203@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443649337-32307-1-git-send-email-alexandre.belloni@free-electrons.com>
+In-Reply-To: <560C5633.5080203@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Josh Wu <josh.wu@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, Arun Parameswaran <arunp@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Josh Wu <josh.wu@atmel.com>
 
-The QiaoDian Xianshi QD43003C0-40 is a 4"3 TFT LCD panel.
 
-Timings from the OTA5180A document, ver 0.9, section
-10.1.1:
-  http://www.orientdisplay.com/pdf/OTA5180A.pdf
+On 15-09-30 02:37 PM, Florian Fainelli wrote:
+> On 30/09/15 13:32, Arun Parameswaran wrote:
+>> Add support for the Broadcom Cygnus SoCs internal PHY's.
+>> The PHYs are 1000M/100M/10M capable with support for 'EEE'
+>> and 'APD' (Auto Power Down).
+>>
+>> This driver supports the following Broadcom Cygnus SoCs:
+>>  - BCM583XX (BCM58300, BCM58302, BCM58303, BCM58305)
+>>  - BCM113XX (BCM11300, BCM11320, BCM11350, BCM11360)
+>>
+>> The PHY's on these SoC's require some workarounds for
+>> stable operation, both during configuration time and
+>> during suspend/resume. This driver handles the
+>> application of the workarounds.
+>>
+>> Signed-off-by: Arun Parameswaran <arunp@broadcom.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>
+> Some suggestions if you need to respin this patch series below, sorry
+> for not catching that during the internal review:
+>
+>> +/* Broadcom Cygnus Phy specific registers */
+>> +#define MII_BCM_CORE_BASE1E       0x1E /* Core BASE1E register */
+>> +#define MII_BCM_EXPB0             0xB0 /* EXPB0 register */
+>> +#define MII_BCM_EXPB1             0xB1 /* EXPB1 register */
+> These defines could be moved to brcmphy.h for instance, since they are
+> shared between all Broadcom PHY drivers AFAICT.
 
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- .../devicetree/bindings/panel/qd,qd43003c0-40.txt  |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/qd,qd43003c0-40.txt
+Ok, Will move these and modify the corresponding PHY drivers.
 
-diff --git a/Documentation/devicetree/bindings/panel/qd,qd43003c0-40.txt b/Documentation/devicetree/bindings/panel/qd,qd43003c0-40.txt
-new file mode 100644
-index 000000000000..900bc6ebeaff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/qd,qd43003c0-40.txt
-@@ -0,0 +1,7 @@
-+QiaoDian XianShi Corporation 4"3 TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "qd,qd43003c0-40"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index f97b73ec4713..667cac37d2e5 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1027,6 +1027,30 @@ static const struct panel_desc ortustech_com43h4m85ulc = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
- 
-+static const struct drm_display_mode qd43003c0_40_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 8,
-+	.hsync_end = 480 + 8 + 4,
-+	.htotal = 480 + 8 + 4 + 39,
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 4,
-+	.vsync_end = 272 + 4 + 10,
-+	.vtotal = 272 + 4 + 10 + 2,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc qd43003c0_40 = {
-+	.modes = &qd43003c0_40_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 95,
-+		.height = 53,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+};
-+
- static const struct drm_display_mode samsung_ltn101nt05_mode = {
- 	.clock = 54030,
- 	.hdisplay = 1024,
-@@ -1182,6 +1206,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "ortustech,com43h4m85ulc",
- 		.data = &ortustech_com43h4m85ulc,
- 	}, {
-+		.compatible = "qd,qd43003c0-40",
-+		.data = &qd43003c0_40,
-+	}, {
- 		.compatible = "samsung,ltn101nt05",
- 		.data = &samsung_ltn101nt05,
- 	}, {
--- 
-2.1.4
+Thanks,
+Arun
