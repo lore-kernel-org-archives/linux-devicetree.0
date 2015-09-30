@@ -1,145 +1,269 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 30 Sep 2015 14:00:43 +0300
-Message-ID: <560BC0DB.5020205@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v4 3/3] ARM: dts: uniphier: add outer cache controller nodes
+Date: Wed, 30 Sep 2015 20:01:46 +0900
+Message-ID: <1443610906-8608-4-git-send-email-yamada.masahiro@socionext.com>
+References: <1443610906-8608-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <1443610906-8608-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, arm@kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Add L2 cache controller nodes for all the UniPhier SoC DTSI.
+Also, add an L3 cache controller node for PH1-Pro5 DTSI.
 
-On 18/09/15 17:53, Roger Quadros wrote:
-> Hi,
-> 
-> We do a couple of things in this series which result in
-> cleaner device tree implementation, faster perfomance and
-> multi-platform support. As an added bonus we get new GPI/Interrupt pins
-> for use in the system.
-> 
-> - Establish a custom interface between NAND and GPMC driver. This is
-> needed because all of the NAND registers sit in the GPMC register space.
-> Some bits like NAND IRQ are even shared with GPMC.
-> 
-> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
-> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
-> This causes performance increase when using prefetch-irq mode.
-> 30% increase in read, 17% increase in write in prefetch-irq mode.
-> 
-> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
-> driver can be used on non-OMAP platforms. e.g. Keystone.
-> 
-> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
-> 2 to 4 of these and most of them would be unused otherwise. It also
-> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
-> 
-> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
-> 
-> This series is available at
-> git@github.com:rogerq/linux.git
-> in branch
-> for-v4.4/gpmc-v3
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-I've verified this series with the following boards
--dra7-evm
--am437x-gp-evm
--am335x-evm
--beagleboard-c4
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     | 13 +++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    | 14 ++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro5.dtsi    | 27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    | 14 ++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    | 13 +++++++++++++
+ arch/arm/boot/dts/uniphier-proxstream2.dtsi | 16 ++++++++++++++++
+ 6 files changed, 97 insertions(+)
 
-For legacy boot I've checked only on beagleboard-c4.
-
-Test procedure was to read an existing ubifs partition,
-create a new one and read it back.
-
-Need you to Ack if it looks good.
-Do you mind taking it via omap-soc once MTD maintainers ack their relevant parts?
-
-cheers,
--roger
-
-> 
-> Changelog:
-> v3:
-> -Fixed and tested NAND using legacy boot on omap3-beagle.
-> -Support rising and falling edge interrupts on WAITpins.
-> -Update DT node of all gpmc users.
-> 
-> Roger Quadros (27):
->   ARM: OMAP2+: gpmc: Add platform data
->   ARM: OMAP2+: gpmc: Add gpmc timings and settings to platform data
->   memory: omap-gpmc: Introduce GPMC to NAND interface
->   mtd: nand: omap2: Use gpmc_omap_get_nand_ops() to get NAND registers
->   memory: omap-gpmc: Add GPMC-NAND ops to get writebufferempty status
->   mtd: nand: omap2: Switch to using GPMC-NAND ops for writebuffer empty
->     check
->   memory: omap-gpmc: Remove NAND IRQ code
->   memory: omap-gpmc: Add IRQ ops for GPMC-NAND interface
->   mtd: nand: omap2: manage NAND interrupts
->   mtd: nand: omap: Copy platform data parameters to omap_nand_info data
->   mtd: nand: omap: Clean up device tree support
->   mtd: nand: omap: Update DT binding documentation
->   memory: omap-gpmc: Prevent mapping into 1st 16MB
->   memory: omap-gpmc: Move device tree binding to correct location
->   memory: omap-gpmc: Support general purpose input for WAITPINs
->   memory: omap-gpmc: Reserve WAITPIN if needed for WAIT monitoring
->   memory: omap-gpmc: Add irqchip support to the gpiochip
->   mtd: nand: omap2: Implement NAND ready using gpiolib
->   memory: omap-gpmc: Prevent GPMC_STATUS from being accessed via
->     gpmc_regs
->   ARM: dts: dra7: Fix NAND device nodes.
->   ARM: dts: dra7x-evm: Provide NAND ready pin
->   ARM: dts: am437x: Fix NAND device nodes
->   ARM: dts: am437x-gp-evm: Provide NAND ready pin
->   ARM: dts: am335x: Fix NAND device nodes
->   ARM: dts: am335x: Provide NAND ready pin
->   ARM: dts: dm816x: Fix gpmc and NAND node
->   ARM: dts: omap3: Fix gpmc and NAND nodes
-> 
->  Documentation/devicetree/bindings/bus/ti-gpmc.txt  | 130 -----
->  .../bindings/memory-controllers/omap-gpmc.txt      | 130 +++++
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  16 +-
->  arch/arm/boot/dts/am335x-chilisom.dtsi             |   7 +-
->  arch/arm/boot/dts/am335x-evm.dts                   |   7 +-
->  arch/arm/boot/dts/am335x-igep0033.dtsi             |   7 +-
->  arch/arm/boot/dts/am33xx.dtsi                      |   4 +
->  arch/arm/boot/dts/am4372.dtsi                      |   4 +
->  arch/arm/boot/dts/am437x-gp-evm.dts                |   8 +-
->  arch/arm/boot/dts/am43x-epos-evm.dts               |   8 +-
->  arch/arm/boot/dts/dm8168-evm.dts                   |   7 +-
->  arch/arm/boot/dts/dm816x.dtsi                      |   4 +
->  arch/arm/boot/dts/dra7-evm.dts                     |   6 +-
->  arch/arm/boot/dts/dra7.dtsi                        |   4 +
->  arch/arm/boot/dts/dra72-evm.dts                    |   6 +-
->  arch/arm/boot/dts/logicpd-torpedo-som.dtsi         |   7 +-
->  arch/arm/boot/dts/omap3-beagle.dts                 |   2 +
->  arch/arm/boot/dts/omap3-cm-t3x.dtsi                |   5 +-
->  arch/arm/boot/dts/omap3-devkit8000-common.dtsi     |   3 +
->  arch/arm/boot/dts/omap3-evm-37xx.dts               |   7 +-
->  arch/arm/boot/dts/omap3-gta04.dtsi                 |   3 +
->  arch/arm/boot/dts/omap3-igep.dtsi                  |   5 +-
->  arch/arm/boot/dts/omap3-igep0020-common.dtsi       |   4 +-
->  arch/arm/boot/dts/omap3-igep0030-common.dtsi       |   4 +
->  arch/arm/boot/dts/omap3-ldp.dts                    |   9 +-
->  arch/arm/boot/dts/omap3-lilly-a83x.dtsi            |   5 +-
->  arch/arm/boot/dts/omap3-pandora-common.dtsi        |   3 +
->  arch/arm/boot/dts/omap3-tao3530.dtsi               |   5 +-
->  arch/arm/boot/dts/omap3.dtsi                       |   4 +
->  arch/arm/boot/dts/omap3430-sdp.dts                 |   5 +-
->  arch/arm/mach-omap2/gpmc-nand.c                    |  11 +-
->  drivers/memory/omap-gpmc.c                         | 640 ++++++++++++---------
->  drivers/mtd/nand/omap2.c                           | 261 ++++++---
->  include/linux/omap-gpmc.h                          | 183 ++----
->  include/linux/platform_data/gpmc-omap.h            | 167 ++++++
->  include/linux/platform_data/mtd-nand-omap2.h       |  12 +-
->  36 files changed, 1045 insertions(+), 648 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
->  create mode 100644 include/linux/platform_data/gpmc-omap.h
-> 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+index a6a185f..ae13469 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+@@ -55,6 +55,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -91,6 +92,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(512 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+index e8bbc45..85377b2 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+@@ -56,12 +56,14 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -98,6 +100,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(768 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+index 59c2b12..96da01e 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+@@ -56,12 +56,14 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -98,6 +100,31 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 190 4>, <0 191 4>;
++			cache-unified;
++			cache-size = <(2 * 1024 * 1024)>;
++			cache-sets = <512>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++			next-level-cache = <&l3>;
++		};
++
++		l3: l3-cache@500c8000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
++			      <0x506c8000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(2 * 1024 * 1024)>;
++			cache-sets = <512>;
++			cache-line-size = <256>;
++			cache-level = <3>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index 3cc90cd..945b37f 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -56,12 +56,14 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -120,6 +122,18 @@
+ 			      <0x20000100 0x100>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(512 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+index 58067df..c98428c 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+@@ -55,6 +55,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -91,6 +92,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(256 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2.dtsi b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+index 4c7b246..ad5fb39 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2.dtsi
++++ b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+@@ -56,24 +56,28 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -110,6 +114,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>, <0 190 4>, <0 191 4>;
++			cache-unified;
++			cache-size = <(1280 * 1024)>;
++			cache-sets = <512>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+-- 
+1.9.1
