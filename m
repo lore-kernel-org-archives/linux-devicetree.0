@@ -1,66 +1,39 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add Exynos5250 Snow Rev5+ support
-Date: Wed, 30 Sep 2015 09:25:27 +0200
-Message-ID: <560B8E67.1080202@osg.samsung.com>
-References: <1443527855-434-1-git-send-email-javier@osg.samsung.com>
- <560B2D29.5060707@samsung.com> <560B8818.8020002@kernel.org>
- <560B890C.3060200@samsung.com> <560B8A0F.8090709@osg.samsung.com>
- <560B8A8A.5050506@samsung.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] Add support to make output voltage determined by VSET2[] bits
+Date: Wed, 30 Sep 2015 15:25:48 +0800
+Message-ID: <1443597950-27849-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <560B8A8A.5050506@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+The patch is to add support to make the output voltage of ACT8865
+DC/DC regulator determined by VSET2[] bits. The DT property
+"active-semi,vsel-high" is used to specify the VSEL pin at high
+on the board. When the VSEL pin is high, output voltage is programmed
+by VSET2[] bits.
 
-On 09/30/2015 09:08 AM, Krzysztof Kozlowski wrote:
-> On 30.09.2015 16:06, Javier Martinez Canillas wrote:
->> Hello,
->>
->> On 09/30/2015 09:02 AM, Krzysztof Kozlowski wrote:
->>> On 30.09.2015 15:58, Kukjin Kim wrote:
->>
->> [snip]
->>
->>>>>
->>>>> Could you add the new compatible and fix patch issues pointed by Doug?
->>>>>
->>>> Documenting for the compatibles would be required even I already applied
->>>> its updated patch...
->>>
->>
->> Kukjin, I agree that they should be documented but I thought it would
->> be a separate patch since currently we don't document any board.
->>  
->>> What do you mean by "documenting compatibles"? These are board
->>> compatibles, they are not documented...
->>>
->>
->> Krzysztof, I've on my TODO list to add a file describing all Exynos
->> platforms and DT bindings, something like what other SoC do, i.e:
->>
->> Documentation/devicetree/bindings/arm/omap/omap.txt
->> Documentation/devicetree/bindings/arm/rockchip.txt
-> 
-> Right, that's a good idea. However lack of it does not affect current
-> work because compatibles for Exynos board are not documented at all.
-> 
+Changes in v2:
+ - fix missed argument of macro "ACT88xx_REG" for act8865_alt_regulators
+   structure variable.
+ - set variable "voltage_select" initial value to avoid compile warning.
 
-Agreed. That's why I didn't add it, even when checkpatch.pl complains:
+Wenyou Yang (2):
+  regulator: act8865: support output voltage by VSET2[] bits
+  regulator: act8865: add DT binding for property
+    "active-semi,vsel-high"
 
-WARNING: DT compatible string "google,snow-rev5" appears un-documented -- check ./Documentation/devicetree/bindings/
+ .../bindings/regulator/act8865-regulator.txt       |    3 +++
+ drivers/regulator/act8865-regulator.c              |   24 ++++++++++++++++++--
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-> Best regards,
-> Krzysztof
-> 
-
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
