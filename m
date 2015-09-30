@@ -1,46 +1,129 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for QiaoDian Xianshi
-Date: Wed, 30 Sep 2015 17:16:10 -0500
-Message-ID: <CAL_JsqKXKDOf3JKDvhOS=sEEQ2buwzEWV6F-1iW+jV369aOUAg@mail.gmail.com>
-References: <1443649337-32307-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for
+ the TPS65912 PMIC
+Date: Wed, 30 Sep 2015 23:20:22 +0100
+Message-ID: <20150930222022.GC15635@sirena.org.uk>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk>
+ <5605AA1C.3090905@ti.com>
+ <20150929151320.GT30445@sirena.org.uk>
+ <560AD3B2.1070102@ti.com>
+ <20150929183818.GA15635@sirena.org.uk>
+ <560ADF61.9030105@ti.com>
+ <20150930172844.GF15635@sirena.org.uk>
+ <560C462A.1000707@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443649337-32307-1-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AdjLlRqdF7kYRNze"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <560C462A.1000707@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 30, 2015 at 4:42 PM, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Use "qiaodian" as the vendor prefix for QiaoDian Xianshi Corporation in
-> device tree compatible strings.
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ac5f0c34ae00..76579e2ef162 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -174,6 +174,7 @@ qca Qualcomm Atheros, Inc.
->  qcom   Qualcomm Technologies, Inc
->  qemu   QEMU, a generic and open source machine emulator and virtualizer
->  qi     Qi Hardware
-> +qd     QiaoDian XianShi Corporation
 
-Doesn't match the commit msg...
+--AdjLlRqdF7kYRNze
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  qnap   QNAP Systems, Inc.
->  radxa  Radxa
->  raidsonic      RaidSonic Technology GmbH
-> --
-> 2.1.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Sep 30, 2015 at 03:29:30PM -0500, Andrew F. Davis wrote:
+> On 09/30/2015 12:28 PM, Mark Brown wrote:
+
+> >No, you don't need to use regulator-compatible - that's deprecated.
+> >Just use the node names.
+
+> Are we sure matching on node names is a good idea? Most are just arbitrary
+> names meant to be human readable and reference-able, giving them function
+> may lead to confusion. This seems to be why we have "compatible", for specific
+> identification of node function. But I'm new so maybe I'm wrong?
+
+Yes, I'm sure.  The regulators are just properties on the device, they
+are not devices themselves.
+
+> >I'm not sure what there is to add...  if the regulator is only
+> >instantiated when it features in the device tree then obviously it must
+> >be included in the device to be instantiated.
+
+> This is already the case then, missing regulator nodes in old drivers will not
+> get instantiated ether. And old drivers don't always store any more info about
+> available regulators than mine does.
+
+No, well implemented older drivers will still unconditionally register
+everything.
+
+> >Only getting probed for device is in DT is exactly the problem here, and
+> >nothing prevents us having separate modules for things without
+> >enumerating everything in DT.
+
+> Sure, but then we have to do some fiddling with MFD_CORE to do that work,
+> why not remove the dependency and let DT do that for DT only drivers?
+
+For the reasons I've outlined repeatedly.
+
+> >Putting everything in DT means more work for people integrating the
+> >device and means that we have to have a full and complete understanding
+> >of the device at the time we write the DT, including decions about how
+> >we split the functionality of the device between subsystems.
+
+> We are not adding anything extra to the DT node, we just use the "compatible"
+> string to identify and match the node vs. "regulator-name", or the nodes name,
+> or whatever else has been used. The node is then just filled with the standard
+> optional properties just like every other driver's node.
+
+No, you are missing the point.  The point is that only regulators
+explicitly listed in the DT will be instantiated.
+
+> Newer than a lot, I chose to base my driver off of that not just because
+> it is a similar TI part, but because it was the cleanest, simplest looking
+> one IMHO. The helpers would require more code (you need to know how many
+> regulators you have and call the helpers in a loop).
+
+You're talking about a trivial loop that takes perhaps a couple of lines
+to open and close the for loop and another line to declare an iterator
+variable.
+
+Look, please stop arguing about this.  There appears to be nothing
+special about this device that makes it different to other devices.
+
+> I have another PMIC I'm about to push a driver for when this gets figured out
+> that does the same thing, and it's more important I think to do it this way for
+> this new part. Some of the new regulators are designed without a dedicated
+> SOC or board to power in mind, so they will have a whole bunch for different
+> regulator types on one chip and it will be up to the designer to pick which ones
+> to turn on and use. With this DT approach you can just list the ones you want,
+> and we may even be able to split different types into different modules, then
+> we can use the same regulator driver in different spins of the PMIC with more
+> or less of that type of regulator, we just add that same node under a different
+> parent PMIC driver.
+
+This sounds exactly the same as the majority of PMIC drivers, there is
+nothing remarkable here.
+
+> I could use the helper with this style and save a couple lines of code if we
+> could make regulator_of_get_init_data to also match on "compatible", it
+> currently only matches on "regulator-compatible" or the node name. I could make
+> this addition and send the patch if you would like to see what I have in mind.
+
+No, this would be broken - devices are instantiated via the driver
+model.
+
+--AdjLlRqdF7kYRNze
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWDGAiAAoJECTWi3JdVIfQ71cH/jG8lvJbcSkrQL063bXufWgj
+b3DRJDhO/uNLtoYyggD+Mjfc8qqLIcv9O1xh0OmKzWMux0vEI4grBNxv/6Cg6Te3
+kdfkAcN14lGxc7pVV3QX+eox4GiiEYo4sbw5A22TDeqR24aG2fAJHtL/0MeL7Im2
+FR6uJtSuGQG9ToT3mhZfOlzi9SHbZCQamjNB0ysJRvgXnK5GdwdyVKDOaY6wi9sX
+kU8tvFefcA1ygpkidYAmjw5yAwvhPIQok3EZ/TA8yqnH+3/Lsd2F9oTd27r4zLRG
+JDlvET04nmHTFKZCvjz7mfsFI/98VlaDVPN42H81xQ2LkHNOS4pi+aCFsBc8/OQ=
+=azWT
+-----END PGP SIGNATURE-----
+
+--AdjLlRqdF7kYRNze--
