@@ -1,47 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: porter: initial device tree
-Date: Wed, 30 Sep 2015 16:33:17 +0300
-Message-ID: <560BE49D.4010706@cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <2022535.FYlSB7sRz4@wasted.cogentembedded.com>
- <CAMuHMdV9HXHiRPWMKW_c2mHinjuvioRxU2aq7202H+_X4TFTpg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV9HXHiRPWMKW_c2mHinjuvioRxU2aq7202H+_X4TFTpg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [RESEND][PATCH v3 7/9] ARM: dts: imx6dl-nitrogen6x: change manufacturer to Boundary Devices
+Date: Wed, 30 Sep 2015 15:46:44 +0200
+Message-ID: <1443620806-14792-8-git-send-email-gary.bisson@boundarydevices.com>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1443620806-14792-1-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443620806-14792-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6dl-nitrogen6x.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 9/30/2015 9:51 AM, Geert Uytterhoeven wrote:
+diff --git a/arch/arm/boot/dts/imx6dl-nitrogen6x.dts b/arch/arm/boot/dts/imx6dl-nitrogen6x.dts
+index 54bc4cd..8398f97 100644
+--- a/arch/arm/boot/dts/imx6dl-nitrogen6x.dts
++++ b/arch/arm/boot/dts/imx6dl-nitrogen6x.dts
+@@ -46,6 +46,6 @@
+ #include "imx6qdl-nitrogen6x.dtsi"
+ 
+ / {
+-	model = "Freescale i.MX6 DualLite Nitrogen6x Board";
+-	compatible = "fsl,imx6dl-nitrogen6x", "fsl,imx6dl";
++	model = "Boundary Devices i.MX6 DualLite Nitrogen6x Board";
++	compatible = "boundary,imx6dl-nitrogen6x", "fsl,imx6dl";
+ };
+-- 
+2.5.3
 
->> Add the initial device tree for the R8A7791 SoC based Porter low cost board
->> (which  is a  slightly modified version  of the Henninger board).
-
-> Can you please tell us more about the differences?
-> It will help us reviewing future DTS updates.
-
-    Sorry, I don't have such list handy. I'll be going thru the Henninger 
-patches one by one and look if they'd need any changes for Porter...
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-> If you update Documentation/devicetree/bindings/arm/shmobile.txt, you can
-
-    Sorry, forgot about this one for the moment, will do.
-
-> add my
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-    Thank you!
-
-> Gr{oetje,eeting}s,
->
->                          Geert
-
-MBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
