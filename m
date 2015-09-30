@@ -1,60 +1,63 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 03/17] drm: bridge: analogix/dp: fix some obvious code
- style
-Date: Wed, 30 Sep 2015 14:22:34 +0900
-Message-ID: <560B719A.4040309@samsung.com>
-References: <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
- <1442907276-2997-1-git-send-email-ykk@rock-chips.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 0/5] usb: change clock information for chipidea
+Date: Wed, 30 Sep 2015 13:28:36 +0800
+Message-ID: <20150930052835.GC18468@tiger>
+References: <1443579925-1330-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1442907276-2997-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443579925-1330-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22.09.2015 16:34, Yakir Yang wrote:
-> Fix some obvious alignment problems, like alignment and line
-> over 80 characters problems, make this easy to be maintained
-> later.
+On Wed, Sep 30, 2015 at 10:25:20AM +0800, Peter Chen wrote:
+> This patch set changes usb clock information for legacy i.mx platforms.
+> At these platforms, they needs three clocks to let controller work.
 > 
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> ---
-> Changes in v5:
-> - Resequence this patch after analogix_dp driver have been split
->   from exynos_dp code, and rephrase reasonable commit message, and
->   remove some controversial style (Krzysztof)
->     -		analogix_dp_write_byte_to_dpcd(
->     - 				dp, DP_TEST_RESPONSE,
->     +		analogix_dp_write_byte_to_dpcd(dp,
->     +				DP_TEST_RESPONSE,
-> 				DP_TEST_EDID_CHECKSUM_WRITE);
+> Hi Shawn,
 > 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
-> - Improved commit message more readable, and avoid using some
->   uncommon style like bellow: (Joe Preches)
->     -  retval = exynos_dp_read_bytes_from_i2c(...
->   				  ...);
->     +  retval =
->     +  exynos_dp_read_bytes_from_i2c(......);
+> Fabio has tested for both imx27 and imx25 platforms.
+> I have queued 1/5 and 5/5, would you please help to queue others,
+> thanks.
 > 
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 129 ++++++++++-----------
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  72 ++++++------
->  drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  | 124 ++++++++++----------
->  3 files changed, 163 insertions(+), 162 deletions(-)
+> Changes for v3:
+> - Delete property "needs-three-clocks", and using of_device_id->data
+>   to differentiate platforms
+> - change <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+ to <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v4.1+
+
+So the last patch will be sent as a fix with stable on copy?  In that
+case, will USB driver just work without corresponding DTS change?  Or
+the driver change has a dependency on the DTS change?
+
+Shawn
+
 > 
-
-IMHO much better than in previous attempt. The code looks good:
-
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-BTW my opinion is not enough, you still need an ack from Exynos DP
-maintainer (or DRM guys).
-
-
-Best regards,
-Krzysztof
+> Changes for v2:
+> - Add imx25 & imx27 dts change
+> - Add Fabio's tested-by and Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+
+> - Some typo and commit description
+> 
+> Peter Chen (5):
+>   doc: dt-binding: ci-hdrc-usb2: split vendor specific properties
+>   ARM: dts: imx27.dtsi: change the clock information for usb
+>   ARM: dts: imx25.dtsi: change the clock information for usb
+>   ARM: dts: imx35.dtsi: change the clock information for usb
+>   usb: chipidea: imx: refine clock operations to adapt for all platforms
+> 
+>  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  10 +-
+>  arch/arm/boot/dts/imx25.dtsi                       |   8 +-
+>  arch/arm/boot/dts/imx27.dtsi                       |  16 ++-
+>  arch/arm/boot/dts/imx35.dtsi                       |   8 +-
+>  drivers/usb/chipidea/ci_hdrc_imx.c                 | 156 ++++++++++++++++++---
+>  5 files changed, 164 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
