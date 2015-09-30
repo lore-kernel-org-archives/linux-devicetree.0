@@ -1,199 +1,145 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Wed, 30 Sep 2015 11:53:31 +0100
-Message-ID: <20150930105331.GA10066@leverpostej>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
- <20150828123228.GE31748@leverpostej>
- <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
- <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 30 Sep 2015 14:00:43 +0300
+Message-ID: <560BC0DB.5020205@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>a
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 29, 2015 at 09:38:04AM +0100, Ganapatrao Kulkarni wrote:
-> (sending again, by mistake it was set to html mode)
+Tony,
+
+On 18/09/15 17:53, Roger Quadros wrote:
+> Hi,
 > 
-> On Tue, Sep 29, 2015 at 2:05 PM, Ganapatrao Kulkarni
-> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Mark,
-> >
-> > I have tried to answer your comments, in the meantime we are waiting for Ben
-> > to share the details.
-> >
-> > On Fri, Aug 28, 2015 at 6:02 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
-> >> > DT bindings for numa map for memory, cores and IOs using
-> >> > arm,associativity device node property.
-> >>
-> >> Given this is just a copy of ibm,associativity, I'm not sure I see much
-> >> point in renaming the properties.
-> >>
-> >> However, (somewhat counter to that) I'm also concerned that this isn't
-> >> sufficient for systems we're beginning to see today (more on that
-> >> below), so I don't think a simple copy of ibm,associativity is good
-> >> enough.
-> >
-> > it is just copy right now, however it can evolve when we come across more
-> > arm64 numa platforms
+> We do a couple of things in this series which result in
+> cleaner device tree implementation, faster perfomance and
+> multi-platform support. As an added bonus we get new GPI/Interrupt pins
+> for use in the system.
+> 
+> - Establish a custom interface between NAND and GPMC driver. This is
+> needed because all of the NAND registers sit in the GPMC register space.
+> Some bits like NAND IRQ are even shared with GPMC.
+> 
+> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+> This causes performance increase when using prefetch-irq mode.
+> 30% increase in read, 17% increase in write in prefetch-irq mode.
+> 
+> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
+> driver can be used on non-OMAP platforms. e.g. Keystone.
+> 
+> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
+> 2 to 4 of these and most of them would be unused otherwise. It also
+> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
+> 
+> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
+> 
+> This series is available at
+> git@github.com:rogerq/linux.git
+> in branch
+> for-v4.4/gpmc-v3
 
-Whatever we do I suspect we'll have to evolve it as new platforms
-appear. As I mentioned there are contemporary NUMA ARM64 platforms (e.g.
-those with CCN) that I don't think we can ignore now given we'll have to
-cater for them.
+I've verified this series with the following boards
+-dra7-evm
+-am437x-gp-evm
+-am335x-evm
+-beagleboard-c4
 
-> >> > +==============================================================================
-> >> > +2 - arm,associativity
-> >> >
-> >> > +==============================================================================
-> >> > +The mapping is done using arm,associativity device property.
-> >> > +this property needs to be present in every device node which needs to
-> >> > to be
-> >> > +mapped to numa nodes.
-> >>
-> >> Can't there be some inheritance? e.g. all devices on a bus with an
-> >> arm,associativity property being assumed to share that value?
-> >
-> > yes there is inheritance and respective bus drivers should take care of it,
-> > like pci driver does at present.
+For legacy boot I've checked only on beagleboard-c4.
 
-Ok. 
+Test procedure was to read an existing ubifs partition,
+create a new one and read it back.
 
-That seems counter to my initial interpretation of the wording that the
-property must be present on device nodes that need to be mapped to NUMA
-nodes.
+Need you to Ack if it looks good.
+Do you mind taking it via omap-soc once MTD maintainers ack their relevant parts?
 
-Is there any simple way of describing the set of nodes that need this
-property?
+cheers,
+-roger
 
-> >> > +topology and boundary in the system at which a significant difference
-> >> > in
-> >> > +performance can be measured between cross-device accesses within
-> >> > +a single location and those spanning multiple locations.
-> >> > +The first cell always contains the broadest subdivision within the
-> >> > system,
-> >> > +while the last cell enumerates the individual devices, such as an SMT
-> >> > thread
-> >> > +of a CPU, or a bus bridge within an SoC".
-> >>
-> >> While this gives us some hierarchy, this doesn't seem to encode relative
-> >> distances at all. That seems like an oversight.
-> >
-> >
-> > distance is computed, will add the details to document.
-> > local nodes will have distance as 10(LOCAL_DISTANCE) and every level, the
-> > distance multiplies by 2.
-> > for example, for level 1 numa topology, distance from local node to remote
-> > node will be 20.
-
-This seems arbitrary.
-
-Why not always have this explicitly described?
-
-> >> Additionally, I'm somewhat unclear on how what you'd be expected to
-> >> provide for this property in cases like ring or mesh interconnects,
-> >> where there isn't a strict hierarchy (see systems with ARM's own CCN, or
-> >> Tilera's TILE-Mx), but there is some measure of closeness.
-> >
-> >
-> > IIUC, as per ARMs CCN architecture, all core/clusters are at equal distance
-> > of DDR, i dont see any NUMA topology.
-
-The CCN is a ring interconnect, so CPU clusters (henceforth CPUs) can be
-connected with differing distances to RAM instances (or devices).
-
-Consider the simplified network below:
-
-  +-------+      +--------+      +-------+
-  | CPU 0 |------| DRAM A |------| CPU 1 |
-  +-------+      +--------+      +-------+
-      |                              |
-      |                              |
-  +--------+                     +--------+
-  | DRAM B |                     | DRAM C |
-  +--------+                     +--------+
-      |                              |
-      |                              |
-  +-------+      +--------+      +-------+
-  | CPU 2 |------| DRAM D |------| CPU 3 |
-  +-------+      +--------+      +-------+
-
-In this case CPUs and DRAMs are spaced evenly on the ring, but the
-distance between an arbitrary CPU and DRAM is not uniform.
-
-CPU 0 can access DRAM A or DRAM B with a single hop, but accesses to
-DRAM C or DRAM D take three hops.
-
-An access from CPU 0 to DRAM C could contend with accesses from CPU 1 to
-DRAM D, as they share hops on the ring.
-
-There is definitely a NUMA topology here, but there's not a strict
-hierarchy. I don't see how you would represent this with the proposed
-binding.
-
-Likewise for the mesh networks (e.g. that of TILE-Mx)
-
-> > however, if there are 2 SoC connected thorough the CCN, then it is very much
-> > similar to cavium topology.
-> >
-> >> Must all of these have the same length? If so, why not have a
-> >> #(whatever)-cells property in the root to describe the expected length?
-> >> If not, how are they to be interpreted relative to each other?
-> >
-> >
-> > yes, all are of default size.
-
-Where that size is...?
-
-> > IMHO, there is no need to add cells property.
-
-That might be the case, but it's unclear from the documentation. I don't
-see how one would parse / verify values currently.
-
-> >> > +the arm,associativity nodes. The first integer is the most significant
-> >> > +NUMA boundary and the following are progressively less significant
-> >> > boundaries.
-> >> > +There can be more than one level of NUMA.
-> >>
-> >> I'm not clear on why this is necessary; the arm,associativity property
-> >> is already ordered from most significant to least significant per its
-> >> description.
-> >
-> >
-> > first entry in arm,associativity-reference-points is used to find which
-> > entry in associativity defines node id.
-> > also entries in arm,associativity-reference-points defines,
-> > how many entries(depth) in associativity can be used to calculate node
-> > distance
-> > in both level 1 and  multi level(hierarchical) numa topology.
-
-I think this needs a more thorough description; I don't follow the
-current one.
-
-> >> Is this only expected at the root of the tree? Can it be re-defined in
-> >> sub-nodes?
-> >
-> > yes it is defined only at the root.
-
-This needs to be stated explicitly.
-
-I see that this being the case, *,associativity-reference-points would
-be a more powerful property than the #(whatever)-cells property I
-mentioned earlier, but a more thorough description is required.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Changelog:
+> v3:
+> -Fixed and tested NAND using legacy boot on omap3-beagle.
+> -Support rising and falling edge interrupts on WAITpins.
+> -Update DT node of all gpmc users.
+> 
+> Roger Quadros (27):
+>   ARM: OMAP2+: gpmc: Add platform data
+>   ARM: OMAP2+: gpmc: Add gpmc timings and settings to platform data
+>   memory: omap-gpmc: Introduce GPMC to NAND interface
+>   mtd: nand: omap2: Use gpmc_omap_get_nand_ops() to get NAND registers
+>   memory: omap-gpmc: Add GPMC-NAND ops to get writebufferempty status
+>   mtd: nand: omap2: Switch to using GPMC-NAND ops for writebuffer empty
+>     check
+>   memory: omap-gpmc: Remove NAND IRQ code
+>   memory: omap-gpmc: Add IRQ ops for GPMC-NAND interface
+>   mtd: nand: omap2: manage NAND interrupts
+>   mtd: nand: omap: Copy platform data parameters to omap_nand_info data
+>   mtd: nand: omap: Clean up device tree support
+>   mtd: nand: omap: Update DT binding documentation
+>   memory: omap-gpmc: Prevent mapping into 1st 16MB
+>   memory: omap-gpmc: Move device tree binding to correct location
+>   memory: omap-gpmc: Support general purpose input for WAITPINs
+>   memory: omap-gpmc: Reserve WAITPIN if needed for WAIT monitoring
+>   memory: omap-gpmc: Add irqchip support to the gpiochip
+>   mtd: nand: omap2: Implement NAND ready using gpiolib
+>   memory: omap-gpmc: Prevent GPMC_STATUS from being accessed via
+>     gpmc_regs
+>   ARM: dts: dra7: Fix NAND device nodes.
+>   ARM: dts: dra7x-evm: Provide NAND ready pin
+>   ARM: dts: am437x: Fix NAND device nodes
+>   ARM: dts: am437x-gp-evm: Provide NAND ready pin
+>   ARM: dts: am335x: Fix NAND device nodes
+>   ARM: dts: am335x: Provide NAND ready pin
+>   ARM: dts: dm816x: Fix gpmc and NAND node
+>   ARM: dts: omap3: Fix gpmc and NAND nodes
+> 
+>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  | 130 -----
+>  .../bindings/memory-controllers/omap-gpmc.txt      | 130 +++++
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  16 +-
+>  arch/arm/boot/dts/am335x-chilisom.dtsi             |   7 +-
+>  arch/arm/boot/dts/am335x-evm.dts                   |   7 +-
+>  arch/arm/boot/dts/am335x-igep0033.dtsi             |   7 +-
+>  arch/arm/boot/dts/am33xx.dtsi                      |   4 +
+>  arch/arm/boot/dts/am4372.dtsi                      |   4 +
+>  arch/arm/boot/dts/am437x-gp-evm.dts                |   8 +-
+>  arch/arm/boot/dts/am43x-epos-evm.dts               |   8 +-
+>  arch/arm/boot/dts/dm8168-evm.dts                   |   7 +-
+>  arch/arm/boot/dts/dm816x.dtsi                      |   4 +
+>  arch/arm/boot/dts/dra7-evm.dts                     |   6 +-
+>  arch/arm/boot/dts/dra7.dtsi                        |   4 +
+>  arch/arm/boot/dts/dra72-evm.dts                    |   6 +-
+>  arch/arm/boot/dts/logicpd-torpedo-som.dtsi         |   7 +-
+>  arch/arm/boot/dts/omap3-beagle.dts                 |   2 +
+>  arch/arm/boot/dts/omap3-cm-t3x.dtsi                |   5 +-
+>  arch/arm/boot/dts/omap3-devkit8000-common.dtsi     |   3 +
+>  arch/arm/boot/dts/omap3-evm-37xx.dts               |   7 +-
+>  arch/arm/boot/dts/omap3-gta04.dtsi                 |   3 +
+>  arch/arm/boot/dts/omap3-igep.dtsi                  |   5 +-
+>  arch/arm/boot/dts/omap3-igep0020-common.dtsi       |   4 +-
+>  arch/arm/boot/dts/omap3-igep0030-common.dtsi       |   4 +
+>  arch/arm/boot/dts/omap3-ldp.dts                    |   9 +-
+>  arch/arm/boot/dts/omap3-lilly-a83x.dtsi            |   5 +-
+>  arch/arm/boot/dts/omap3-pandora-common.dtsi        |   3 +
+>  arch/arm/boot/dts/omap3-tao3530.dtsi               |   5 +-
+>  arch/arm/boot/dts/omap3.dtsi                       |   4 +
+>  arch/arm/boot/dts/omap3430-sdp.dts                 |   5 +-
+>  arch/arm/mach-omap2/gpmc-nand.c                    |  11 +-
+>  drivers/memory/omap-gpmc.c                         | 640 ++++++++++++---------
+>  drivers/mtd/nand/omap2.c                           | 261 ++++++---
+>  include/linux/omap-gpmc.h                          | 183 ++----
+>  include/linux/platform_data/gpmc-omap.h            | 167 ++++++
+>  include/linux/platform_data/mtd-nand-omap2.h       |  12 +-
+>  36 files changed, 1045 insertions(+), 648 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+>  create mode 100644 include/linux/platform_data/gpmc-omap.h
+> 
