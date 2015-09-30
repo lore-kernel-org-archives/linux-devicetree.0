@@ -1,125 +1,100 @@
-From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] Documentation: add DT bindings for ARM SCPI sensors
-Date: Wed, 30 Sep 2015 09:57:37 +0100
-Message-ID: <9hh612s708u.fsf@e105922-lin.cambridge.arm.com>
-References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
-	<1442335861-7282-2-git-send-email-punit.agrawal@arm.com>
-	<CAL_Jsq+_Rrv5XqNsL-gwQZv3HK20dQC3jY7qCoxQ8KWhhs4Fdw@mail.gmail.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: Re: [PATCH 1/2] i2c: at91: add DT property for the HOLD field of
+ TWIHS_CWGR
+Date: Wed, 30 Sep 2015 11:01:02 +0200
+Message-ID: <560BA4CE.70606@atmel.com>
+References: <1443602831-27069-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+_Rrv5XqNsL-gwQZv3HK20dQC3jY7qCoxQ8KWhhs4Fdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Rob Herring's message of "Tue, 29 Sep 2015 13:20:55 -0500")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sudeep.holla-5wv7dgnIgG8@public.gmane.org
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1443602831-27069-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>, wsa@the-dreams.de
+Cc: devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+Hi all,
 
-> On Tue, Sep 15, 2015 at 11:50 AM, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> wrote:
->> The System Control Processor (SCP) provides access to SoC sensors via
->> the System Control and Power Interface (SCPI) Message Protocol. Add
->> bindings to allow probing of these sensors. Also support referencing
->> of the sensors for setting up thermal zones via the thermal DT
->> bindings.
->>
->> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+it looks good to me.
 
-Thanks, Rob!
+Le 30/09/2015 10:47, Ludovic Desroches a =E9crit :
+> From: Wenyou Yang <wenyou.yang@atmel.com>
+>=20
+> Add the HOLD field setting in order to support I2C slave devices whic=
+h need
+> a longer hold time of the data.
+> Since it depends on the slave devices connected to the bus, add a DT
+> property "atmel,twd-hold-cycles" to specify this HOLD field.
+>=20
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-Sudeep, now that we have acks for all the patches, are you OK to take
-this patchset along with your series adding support for SCPI?
+Acked-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
 
-Punit
-
->
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 38 ++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> index f002460..86302de 100644
->> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> @@ -72,8 +72,25 @@ Required sub-node properties:
->>  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
->>                shared memory on Juno platforms
->>
->> +Sensor bindings for the sensors based on SCPI Message Protocol
->> +--------------------------------------------------------------
->> +SCPI provides an API to access the various sensors on the SoC.
->> +
->> +Required properties:
->> +- compatible : should be "arm,scpi-sensors".
->> +- #thermal-sensor-cells: should be set to 1. This property follows the
->> +                        thermal device tree bindings[2].
->> +
->> +                        Valid cell values are raw identifiers (Sensor
->> +                        ID) as used by the firmware. Refer to
->> +                        platform documentation for your
->> +                        implementation for the IDs to use. For Juno
->> +                        R0 and Juno R1 refer to [3].
->> +
->>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
->>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
->> +[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
->>
->>  Example:
->>
->> @@ -122,6 +139,11 @@ scpi_protocol: scpi@2e000000 {
->>                         clock-output-names = "pxlclk0", "pxlclk1";
->>                 };
->>         };
->> +
->> +       scpi_sensors0: sensors {
->> +               compatible = "arm,scpi-sensors";
->> +               #thermal-sensor-cells = <1>;
->> +       };
->>  };
->>
->>  cpu@0 {
->> @@ -136,6 +158,17 @@ hdlcd@7ff60000 {
->>         clocks = <&scpi_clk 4>;
->>  };
->>
->> +thermal-zones {
->> +       soc_thermal {
->> +               polling-delay-passive = <100>;
->> +               polling-delay = <1000>;
->> +
->> +                               /* sensor         ID */
->> +               thermal-sensors = <&scpi_sensors0 3>;
->> +               ...
->> +       };
->> +};
->> +
->>  In the above example, the #clock-cells is set to 1 as required.
->>  scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
->>  1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
->> @@ -148,3 +181,8 @@ scpi_dvfs i.e. "atlclk".
->>  Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
->>  clock. '4' in the clock specifier here points to the second entry
->>  in the output clocks of scpi_clocks  i.e. "pxlclk1"
->> +
->> +The thermal-sensors property in the soc_thermal node uses the
->> +temperature sensor provided by SCP firmware to setup a thermal
->> +zone. The ID "3" is the sensor identifier for the temperature sensor
->> +as used by the firmware.
->> --
->> 2.5.1
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/i2c/busses/i2c-at91.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-a=
+t91.c
+> index 1c758cd..06e66ef 100644
+> --- a/drivers/i2c/busses/i2c-at91.c
+> +++ b/drivers/i2c/busses/i2c-at91.c
+> @@ -64,6 +64,7 @@
+>  #define	AT91_TWI_IADR		0x000c	/* Internal Address Register */
+> =20
+>  #define	AT91_TWI_CWGR		0x0010	/* Clock Waveform Generator Reg */
+> +#define	AT91_TWI_CWGR_HOLD(x)	(((x) & 0x1f) << 24)
+> =20
+>  #define	AT91_TWI_SR		0x0020	/* Status Register */
+>  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+> @@ -185,7 +186,8 @@ static void at91_init_twi_bus(struct at91_twi_dev=
+ *dev)
+>   * Calculate symmetric clock as stated in datasheet:
+>   * twi_clk =3D F_MAIN / (2 * (cdiv * (1 << ckdiv) + offset))
+>   */
+> -static void at91_calc_twi_clock(struct at91_twi_dev *dev, int twi_cl=
+k)
+> +static void at91_calc_twi_clock(struct at91_twi_dev *dev,
+> +				int twi_clk, u32 twd_hold)
+>  {
+>  	int ckdiv, cdiv, div;
+>  	struct at91_twi_pdata *pdata =3D dev->pdata;
+> @@ -204,7 +206,9 @@ static void at91_calc_twi_clock(struct at91_twi_d=
+ev *dev, int twi_clk)
+>  		cdiv =3D 255;
+>  	}
+> =20
+> -	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv;
+> +	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv
+> +			    | AT91_TWI_CWGR_HOLD(twd_hold);
+> +
+>  	dev_dbg(dev->dev, "cdiv %d ckdiv %d\n", cdiv, ckdiv);
+>  }
+> =20
+> @@ -936,6 +940,7 @@ static int at91_twi_probe(struct platform_device =
+*pdev)
+>  	int rc;
+>  	u32 phy_addr;
+>  	u32 bus_clk_rate;
+> +	u32 twd_hold_cycles;
+> =20
+>  	dev =3D devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+>  	if (!dev)
+> @@ -992,7 +997,12 @@ static int at91_twi_probe(struct platform_device=
+ *pdev)
+>  	if (rc)
+>  		bus_clk_rate =3D DEFAULT_TWI_CLK_HZ;
+> =20
+> -	at91_calc_twi_clock(dev, bus_clk_rate);
+> +	rc =3D of_property_read_u32(dev->dev->of_node,
+> +				  "atmel,twd-hold-cycles", &twd_hold_cycles);
+> +	if (rc)
+> +		twd_hold_cycles =3D 0;
+> +
+> +	at91_calc_twi_clock(dev, bus_clk_rate, twd_hold_cycles);
+>  	at91_init_twi_bus(dev);
+> =20
+>  	snprintf(dev->adapter.name, sizeof(dev->adapter.name), "AT91");
+>=20
