@@ -1,70 +1,36 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] memory: pl17x: add support of PL175 and PL176 controllers
-Date: Wed, 30 Sep 2015 23:40:33 +0200
-Message-ID: <CAGhQ9Vxbz1dGacYay6qM80_ysgR6TVKeJQDX5W0W0D6q7qOyvA@mail.gmail.com>
-References: <1443459043-24144-1-git-send-email-vz@mleia.com>
-	<CAGhQ9VzUwkkXqRQ-WZ_cjRKCrE=co1LNwFaQfGmBbuEOsVZ6_A@mail.gmail.com>
-	<560B028D.1040402@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/2] of: Add vendor prefix for QiaoDian Xianshi
+Date: Wed, 30 Sep 2015 23:42:16 +0200
+Message-ID: <1443649337-32307-1-git-send-email-alexandre.belloni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <560B028D.1040402-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 September 2015 at 23:28, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Joachim,
->
-> On 29.09.2015 23:39, Joachim Eastwood wrote:
->> Hi Vladimir,
->>
->> On 28 September 2015 at 18:50, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
->>> The change adds support of ARM PrimeCell PL175 MPMC and PL176 MPMC,
->>> the static memory controllers on devices are similar to one found on
->>> ARM PrimeCell PL172, add support to the existing driver.
->>>
->>> Vladimir Zapolskiy (4):
->>>   memory: pl172: correct MPMC peripheral ID register bits
->>>   memory: pl172: add ARM PrimeCell PL175 MPMC support
->>>   memory: pl172: add ARM PrimeCell PL176 MPMC support
->>>   doc: dt: arm,pl172: add description of PL175 and PL176 controllers
->>
->> Changes look good to me.
->>
->> What LPC32xx board did you test this on, btw?
->
-> I tested PL175 on Timll Devkit3250 board with 4Mb NOR.
+Use "qiaodian" as the vendor prefix for QiaoDian Xianshi Corporation in
+device tree compatible strings.
 
-Okey, good.
+Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I have now tested your changes on my two lpc18xx boards here and
-everything seems fine.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac5f0c34ae00..76579e2ef162 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -174,6 +174,7 @@ qca	Qualcomm Atheros, Inc.
+ qcom	Qualcomm Technologies, Inc
+ qemu	QEMU, a generic and open source machine emulator and virtualizer
+ qi	Qi Hardware
++qd	QiaoDian XianShi Corporation
+ qnap	QNAP Systems, Inc.
+ radxa	Radxa
+ raidsonic	RaidSonic Technology GmbH
+-- 
+2.1.4
 
-
->> Also if you have added the controller to lpc32xx.dtsi it would be
->> great if you could also submit those changes to the lpc32xx
->> maintainer.
->>
->
-> Right, this is in my plans. To avoid any mess in the controller driver,
-> mach-lpc32xx must be converted to common clock framework firstly, that's
-> what I'm doing at the moment, then I'll send the corresponding EMC
-> updates in lpc32xx.dtsi.
-
-Nice to hear that you are working on a clk driver lpc32xx!
-
-
-> By the way I've tested your clocksource driver on LPC32xx and it works
-> fine, but again clean switching to it is not possible until LPC32xx
-> clocks are out of the common clock framework.
-
-ah, good, then we could eventually get rid of the timer driver in mach-lpc32xx.
-
-
-regards,
-Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
