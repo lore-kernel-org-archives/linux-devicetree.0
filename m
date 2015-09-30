@@ -1,204 +1,161 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Wed, 30 Sep 2015 23:20:32 +0530
-Message-ID: <CAFpQJXVegqortRLK+g7_9p82KMYwq0hg8n3_9bJqjGHsJvngaA@mail.gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-	<20150828123228.GE31748@leverpostej>
-	<CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
-	<CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
-	<20150930105331.GA10066@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/8] regulator: Hi655x: Add support for Hi655x regulator
+Date: Wed, 30 Sep 2015 18:58:57 +0100
+Message-ID: <20150930175857.GK15635@sirena.org.uk>
+References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
+ <1443611111-3196-5-git-send-email-w.f@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="C7PTD44AewjTsiSV"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150930105331.GA10066@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <1443611111-3196-5-git-send-email-w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>a
+To: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, william.wfei-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
 
-On Wed, Sep 30, 2015 at 4:23 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Sep 29, 2015 at 09:38:04AM +0100, Ganapatrao Kulkarni wrote:
->> (sending again, by mistake it was set to html mode)
->>
->> On Tue, Sep 29, 2015 at 2:05 PM, Ganapatrao Kulkarni
->> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > Hi Mark,
->> >
->> > I have tried to answer your comments, in the meantime we are waiting for Ben
->> > to share the details.
->> >
->> > On Fri, Aug 28, 2015 at 6:02 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> >>
->> >> Hi,
->> >>
->> >> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
->> >> > DT bindings for numa map for memory, cores and IOs using
->> >> > arm,associativity device node property.
->> >>
->> >> Given this is just a copy of ibm,associativity, I'm not sure I see much
->> >> point in renaming the properties.
->> >>
->> >> However, (somewhat counter to that) I'm also concerned that this isn't
->> >> sufficient for systems we're beginning to see today (more on that
->> >> below), so I don't think a simple copy of ibm,associativity is good
->> >> enough.
->> >
->> > it is just copy right now, however it can evolve when we come across more
->> > arm64 numa platforms
->
-> Whatever we do I suspect we'll have to evolve it as new platforms
-> appear. As I mentioned there are contemporary NUMA ARM64 platforms (e.g.
-> those with CCN) that I don't think we can ignore now given we'll have to
-> cater for them.
->
->> >> > +==============================================================================
->> >> > +2 - arm,associativity
->> >> >
->> >> > +==============================================================================
->> >> > +The mapping is done using arm,associativity device property.
->> >> > +this property needs to be present in every device node which needs to
->> >> > to be
->> >> > +mapped to numa nodes.
->> >>
->> >> Can't there be some inheritance? e.g. all devices on a bus with an
->> >> arm,associativity property being assumed to share that value?
->> >
->> > yes there is inheritance and respective bus drivers should take care of it,
->> > like pci driver does at present.
->
-> Ok.
->
-> That seems counter to my initial interpretation of the wording that the
-> property must be present on device nodes that need to be mapped to NUMA
-> nodes.
->
-> Is there any simple way of describing the set of nodes that need this
-> property?
->
->> >> > +topology and boundary in the system at which a significant difference
->> >> > in
->> >> > +performance can be measured between cross-device accesses within
->> >> > +a single location and those spanning multiple locations.
->> >> > +The first cell always contains the broadest subdivision within the
->> >> > system,
->> >> > +while the last cell enumerates the individual devices, such as an SMT
->> >> > thread
->> >> > +of a CPU, or a bus bridge within an SoC".
->> >>
->> >> While this gives us some hierarchy, this doesn't seem to encode relative
->> >> distances at all. That seems like an oversight.
->> >
->> >
->> > distance is computed, will add the details to document.
->> > local nodes will have distance as 10(LOCAL_DISTANCE) and every level, the
->> > distance multiplies by 2.
->> > for example, for level 1 numa topology, distance from local node to remote
->> > node will be 20.
->
-> This seems arbitrary.
->
-> Why not always have this explicitly described?
->
->> >> Additionally, I'm somewhat unclear on how what you'd be expected to
->> >> provide for this property in cases like ring or mesh interconnects,
->> >> where there isn't a strict hierarchy (see systems with ARM's own CCN, or
->> >> Tilera's TILE-Mx), but there is some measure of closeness.
->> >
->> >
->> > IIUC, as per ARMs CCN architecture, all core/clusters are at equal distance
->> > of DDR, i dont see any NUMA topology.
->
-> The CCN is a ring interconnect, so CPU clusters (henceforth CPUs) can be
-> connected with differing distances to RAM instances (or devices).
->
-> Consider the simplified network below:
->
->   +-------+      +--------+      +-------+
->   | CPU 0 |------| DRAM A |------| CPU 1 |
->   +-------+      +--------+      +-------+
->       |                              |
->       |                              |
->   +--------+                     +--------+
->   | DRAM B |                     | DRAM C |
->   +--------+                     +--------+
->       |                              |
->       |                              |
->   +-------+      +--------+      +-------+
->   | CPU 2 |------| DRAM D |------| CPU 3 |
->   +-------+      +--------+      +-------+
->
-> In this case CPUs and DRAMs are spaced evenly on the ring, but the
-> distance between an arbitrary CPU and DRAM is not uniform.
->
-> CPU 0 can access DRAM A or DRAM B with a single hop, but accesses to
-> DRAM C or DRAM D take three hops.
->
-> An access from CPU 0 to DRAM C could contend with accesses from CPU 1 to
-> DRAM D, as they share hops on the ring.
->
-> There is definitely a NUMA topology here, but there's not a strict
-> hierarchy. I don't see how you would represent this with the proposed
-> binding.
-can you please explain, how associativity property will represent this
-numa topology?
->
-> Likewise for the mesh networks (e.g. that of TILE-Mx)
->
->> > however, if there are 2 SoC connected thorough the CCN, then it is very much
->> > similar to cavium topology.
->> >
->> >> Must all of these have the same length? If so, why not have a
->> >> #(whatever)-cells property in the root to describe the expected length?
->> >> If not, how are they to be interpreted relative to each other?
->> >
->> >
->> > yes, all are of default size.
->
-> Where that size is...?
->
->> > IMHO, there is no need to add cells property.
->
-> That might be the case, but it's unclear from the documentation. I don't
-> see how one would parse / verify values currently.
->
->> >> > +the arm,associativity nodes. The first integer is the most significant
->> >> > +NUMA boundary and the following are progressively less significant
->> >> > boundaries.
->> >> > +There can be more than one level of NUMA.
->> >>
->> >> I'm not clear on why this is necessary; the arm,associativity property
->> >> is already ordered from most significant to least significant per its
->> >> description.
->> >
->> >
->> > first entry in arm,associativity-reference-points is used to find which
->> > entry in associativity defines node id.
->> > also entries in arm,associativity-reference-points defines,
->> > how many entries(depth) in associativity can be used to calculate node
->> > distance
->> > in both level 1 and  multi level(hierarchical) numa topology.
->
-> I think this needs a more thorough description; I don't follow the
-> current one.
->
->> >> Is this only expected at the root of the tree? Can it be re-defined in
->> >> sub-nodes?
->> >
->> > yes it is defined only at the root.
->
-> This needs to be stated explicitly.
->
-> I see that this being the case, *,associativity-reference-points would
-> be a more powerful property than the #(whatever)-cells property I
-> mentioned earlier, but a more thorough description is required.
->
-> Thanks,
-> Mark.
-thanks
-Ganapat
+--C7PTD44AewjTsiSV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Sep 30, 2015 at 07:05:07PM +0800, Fei Wang wrote:
+
+> +config REGULATOR_HI655X
+> +        tristate "Hisilicon HI655X PMIC regulators support"
+> +        depends on ARCH_HISI
+> +	depends on MFD_HI655X_PMIC && OF
+
+You've got some tab/space confusion above.  Also, can't we have an ||
+COMPILE_TEST here?
+
+> +#define REG_VALUE_SETBITS(reg_value, pos, bits, bits_value) \
+> +		(reg_value = (reg_value & \
+> +		~((((unsigned int)1 << bits) - 1) << pos)) | \
+> +		((unsigned int)(bits_value & \
+> +		(((unsigned int)1 << bits) - 1)) << pos))
+> +
+> +#define REG_VALUE_GETBITS(reg_value, pos, bits) \
+> +			((reg_value >> pos) & (((unsigned int)1 << bits) - 1))
+
+These are just really hard to read, sorry, and they appear to duplicate
+existing regmap functionality.  If there is a strong reason to add them
+consider doing so in the core and if you can then please at least make
+them regular inline functions rather than using macros.  It's much safer
+and more readable.
+
+> +static int hi655x_regulator_pmic_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	int ret = 0;
+> +	unsigned int value = 0;
+> +
+> +	struct hi655x_regulator *sreg = rdev_get_drvdata(rdev);
+> +	struct hi655x_regulator_ctrl_regs  *ctrl_regs = &(sreg->ctrl_regs);
+> +	struct hi655x_regulator_ctrl_data  *ctrl_data = &(sreg->ctrl_data);
+> +
+> +	/*
+> +	* regulator is all set,but the pmu is only subset.
+> +	* maybe this "buck"/"ldo"/"lvs" is not contrl by a core.
+> +	* and in regulator have a "status" member ("okey" or "disable").
+> +	*/
+
+I'm having a hard time parsing the above comment.  Please also use the
+normal kernel comment style (this is a problem throughout the driver).
+
+> +	regmap_read(rdev->regmap, ctrl_regs->status_reg, &value);
+> +	ret = (int)REG_VALUE_GETBITS(value, ctrl_data->shift,
+> +					ctrl_data->mask);
+
+This appears to just duplicate regulator core functionality for reading
+enable state from a bitfield?  Also note that the cast here isn't a
+great advert for the macros above.
+
+> +static int hi655x_regulator_pmic_enable(struct regulator_dev *rdev)
+> +{
+> +	int ret = 0;
+> +	unsigned char value_u8 = 0;
+> +	unsigned int value_u32 = 0;
+> +	struct hi655x_regulator *sreg = rdev_get_drvdata(rdev);
+> +	struct hi655x_regulator_ctrl_regs  *ctrl_regs = &(sreg->ctrl_regs);
+> +	struct hi655x_regulator_ctrl_data  *ctrl_data = &(sreg->ctrl_data);
+> +
+> +	REG_VALUE_SETBITS(value_u32, ctrl_data->shift, ctrl_data->mask, 0x1);
+> +	value_u8  = (unsigned char)value_u32;
+> +	regmap_write(rdev->regmap, ctrl_regs->enable_reg, value_u8);
+
+I'm not *entirely* sure what this is supposed to be doing but it looks
+like it's duplicating core functionality in a fashion that's really
+quite hard to read.  Why not just use the core functions for setting
+bits?
+
+> +	udelay(sreg->off_on_delay);
+
+Use the regualtor core delay functionality please.
+
+> +static int hi655x_regulator_pmic_list_voltage_linear(struct regulator_dev *rdev,
+> +				  unsigned int selector)
+
+This is *definitely* duplicating core functionality, I think you want to
+use regulator_list_voltage_linear_range() or possibly just plain
+_linear() and use separate operations for the LVS regulator.
+
+We at least need to restructure the code so that the core helper
+functions are used and we don't have regulator type decisions everywhere
+- the whole goal of having per regulator ops is to avoid having to open
+code decisions about which regulator we're dealing with into each op
+function.
+
+> +static unsigned int hi655x_regulator_pmic_get_mode(
+> +			struct regulator_dev *rdev)
+> +{
+> +	return REGULATOR_MODE_NORMAL;
+> +}
+
+Don't implement empty functions, remove all these.
+
+> +	num_consumer_supplies = of_get_property(np,
+> +				"hisilicon,num_consumer_supplies", NULL);
+> +
+> +	if ((NULL == num_consumer_supplies) || (0 == *num_consumer_supplies)) {
+> +		dev_warn(dev, "%s no consumer_supplies\n", __func__);
+> +		return init_data;
+> +	}
+
+Obviously the binding is completely undocumented but this is setting off
+alarm bells - why is the driver even considering consumers?  Please make
+sure you are using the core regulator bindings rather than open coding
+something which translates into platform data (which is what this looks
+like).
+
+I'm not going to review any more of the DT code without binding
+documentation.
+
+> +	/*
+> +	*initdata mem will release auto;
+> +	*this is kernel 3.10 import.
+> +	*/
+
+Remove anything related to your vendor kernel support, this is not
+relevant to upstream.
+
+--C7PTD44AewjTsiSV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWDCLhAAoJECTWi3JdVIfQFqMH/jHWJlIR+ZTXgv9uV5eiYK+D
+npW154vzDXFhj7uWoivcFNLp+V6yMgy3KwZaFYpcZUrXAB0Be/xNmLux7Zgv4CkN
+0oFAABqOmIE2wgJ2ZI71/rLwbjZsLHHP7kSQLvRkZGN4JC7Z5YC7I5Oc7psQ2vKO
+UU2OiZfOaPfigIA55P7WKwmy3eRgYQwXSqF0aKWxCMCEezjJHrvieFXU4kyMEiXo
+0BkRUk3nT3Z1a3VWlIqYlNYiCkru4LUd+Uon5THRL5ReuURCt+rrY9j3hDshsgrZ
+Sw7ssqU3wGhqXOoQhuBZo13H/JhqglkxQ4/TmzDjnfaB56hgRrDI2qebmGzC+a4=
+=bXx/
+-----END PGP SIGNATURE-----
+
+--C7PTD44AewjTsiSV--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
