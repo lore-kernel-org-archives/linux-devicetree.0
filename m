@@ -1,85 +1,61 @@
-From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] PCI: st: Provide support for the sti PCIe controller
-Date: Wed, 30 Sep 2015 11:18:45 +0200
-Message-ID: <CAG374jAx8DN8GXkv7O0jcgnvVTnH4U3LegX-hPq5RWo1_cy+OQ@mail.gmail.com>
-References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
- <1440678857-27118-4-git-send-email-gabriel.fernandez@linaro.org> <CAHM4w1=g=UFoz=R-6hxJC0=fSieN1WDvZT97ykL1b3_YPhBjZg@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCHv4 3/3] devicetree: Add led-backlight binding
+Date: Wed, 30 Sep 2015 12:32:02 +0300
+Message-ID: <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
+References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHM4w1=g=UFoz=R-6hxJC0=fSieN1WDvZT97ykL1b3_YPhBjZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding@>
+Content-Type: text/plain
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org, linux-fbdev@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pratyush,
+Add DT binding for led-backlight.
 
-Thanks for the review.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org
+---
+ .../bindings/video/backlight/led-backlight.txt     | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
 
-Best regards
-
-Gabriel
-
-On 27 August 2015 at 19:31, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Gabriel,
->
-> Looks good to me.
->
-> On Thu, Aug 27, 2015 at 6:04 PM, Gabriel Fernandez
-> <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> sti pcie is built around a Synopsis Designware PCIe IP.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
->
->> +static int st_pcie_link_up(struct pcie_port *pp)
->> +{
->> +       u32 status;
->> +       int link_up;
->
-> nit: why not bool
-
-i prefer to keep it as 'int' because the prototype of link_up callback
-is an 'int'.
-
->
->> +       int count = 0;
->
-> [...]
->
->> +static void st_pcie_board_reset(struct pcie_port *pp)
->> +{
->> +       struct st_pcie *pcie = to_st_pcie(pp);
->> +
->> +       if (!gpio_is_valid(pcie->reset_gpio))
->> +               return;
->> +
->> +       if (gpio_direction_output(pcie->reset_gpio, 0)) {
->> +               dev_err(pp->dev, "Cannot set PERST# (gpio %u) to output\n",
->> +                       pcie->reset_gpio);
->> +               return;
->> +       }
->> +
->> +       /* From PCIe spec */
->> +       msleep(2);
->> +       gpio_direction_output(pcie->reset_gpio, 1);
->> +
->> +       /*
->> +        * PCIe specification states that you should not issue any config
->> +        * requests until 100ms after asserting reset, so we enforce that here
->> +        */
->> +       msleep(100);
->
-> IIRC, specification says to wait after link training completes. So
-> shouldn't it be after st_pcie_enable_ltssm. Moreover, I wonder why
-> others do not need it.
->
-Ok i will fix it.
-
-> Reviewed-by: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
+new file mode 100644
+index 000000000000..d4621d7414bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
+@@ -0,0 +1,30 @@
++led-backlight bindings
++
++Required properties:
++  - compatible: "led-backlight"
++  - leds: phandle to a led OF node [0]
++  - brightness-levels: Array of distinct LED brightness levels. These
++      are in the range from 0 to 255, passed to the LED class driver.
++  - default-brightness-level: the default brightness level (index into the
++      array defined by the "brightness-levels" property)
++
++Optional properties:
++  - power-supply: regulator for supply voltage
++  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
++                  and disables the backlight (see GPIO binding[1])
++
++[0]: Documentation/devicetree/bindings/leds/common.txt
++[1]: Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++	backlight {
++		compatible = "led-backlight";
++		leds = <&backlight_led>;
++
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
++
++		power-supply = <&vdd_bl_reg>;
++		enable-gpios = <&gpio 58 0>;
++	};
+-- 
+2.1.4
