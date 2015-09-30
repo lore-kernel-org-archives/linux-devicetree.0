@@ -1,50 +1,105 @@
 From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH v8 1/7] ARM: dts: imx: imx7d-sbd remove fixed can2-3v3 regulator
-Date: Wed, 30 Sep 2015 11:11:03 -0500
-Message-ID: <1443629469-12294-1-git-send-email-aalonso@freescale.com>
+Subject: [PATCH v8 5/7] pinctrl: freescale: imx: add shared input select reg support
+Date: Wed, 30 Sep 2015 11:11:07 -0500
+Message-ID: <1443629469-12294-5-git-send-email-aalonso@freescale.com>
+References: <1443629469-12294-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1443629469-12294-1-git-send-email-aalonso@freescale.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com, Aisheng.Dong@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Remove incorrect can2-3v3 fixed regulator, imx7d-sdb doesn't
-have a dedicated can2 fixed regulator instead it shares PERI_3V3
-fixed regulator (RT8070ZS) which is enabled by default (hardwired)
-from pmic pfuze3000 NVCC_3V3 power rail.
+- Add shared input select register support
+- imx7d has two iomux controllers iomuxc and iomuxc-lpsr
+  which share select_input register for daisy chain settings
 
 Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 ---
-Changes for V7: New patch in series
+Changes for V2: Resend
+Changes for V3:
+- Use of_parse_phandle instead of of_get_child_by_name to get input select
+  base register address
+Changes for V4: Resend
+Changes for V5:
+- Remove SHARE_INPUT_SELECT_REG flag
+- Use fsl,input-sel to check if shared input select register support is used
+Changes for V6: Resend
+Changes for V7: Resend
 Changes for V8: Resend
 
- arch/arm/boot/dts/imx7d-sdb.dts | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/pinctrl/freescale/pinctrl-imx.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 432aaf5..88308f3 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -78,16 +78,7 @@
- 			enable-active-high;
- 		};
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 151d50d..a5bb939 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -18,6 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_address.h>
+ #include <linux/pinctrl/machine.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -39,6 +40,7 @@ struct imx_pinctrl {
+ 	struct device *dev;
+ 	struct pinctrl_dev *pctl;
+ 	void __iomem *base;
++	void __iomem *input_sel_base;
+ 	const struct imx_pinctrl_soc_info *info;
+ };
  
--		reg_can2_3v3: regulator@2 {
--			compatible = "regulator-fixed";
--			reg = <2>;
--			regulator-name = "can2-3v3";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			gpio = <&gpio1 7 GPIO_ACTIVE_LOW>;
--		};
--
--		reg_vref_1v8: regulator@3 {
-+		reg_vref_1v8: regulator@2 {
- 			compatible = "regulator-fixed";
- 			reg = <3>;
- 			regulator-name = "vref-1v8";
+@@ -254,7 +256,12 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
+ 			 * Regular select input register can never be at offset
+ 			 * 0, and we only print register value for regular case.
+ 			 */
+-			writel(pin->input_val, ipctl->base + pin->input_reg);
++			if (ipctl->input_sel_base)
++				writel(pin->input_val, ipctl->input_sel_base +
++						pin->input_reg);
++			else
++				writel(pin->input_val, ipctl->base +
++						pin->input_reg);
+ 			dev_dbg(ipctl->dev,
+ 				"==>select_input: offset 0x%x val 0x%x\n",
+ 				pin->input_reg, pin->input_val);
+@@ -685,6 +692,8 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 		      struct imx_pinctrl_soc_info *info)
+ {
++	struct device_node *dev_np = pdev->dev.of_node;
++	struct device_node *np;
+ 	struct imx_pinctrl *ipctl;
+ 	struct resource *res;
+ 	int ret, i;
+@@ -715,6 +724,23 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+ 	if (IS_ERR(ipctl->base))
+ 		return PTR_ERR(ipctl->base);
+ 
++	if (of_property_read_bool(dev_np, "fsl,input-sel")) {
++		np = of_parse_phandle(dev_np, "fsl,input-sel", 0);
++		if (np) {
++			ipctl->input_sel_base = of_iomap(np, 0);
++			if (IS_ERR(ipctl->input_sel_base)) {
++				of_node_put(np);
++				dev_err(&pdev->dev,
++					"iomuxc input select base address not found\n");
++				return PTR_ERR(ipctl->input_sel_base);
++			}
++		} else {
++			dev_err(&pdev->dev, "iomuxc fsl,input-sel property not found\n");
++			return -EINVAL;
++		}
++		of_node_put(np);
++	}
++
+ 	imx_pinctrl_desc.name = dev_name(&pdev->dev);
+ 	imx_pinctrl_desc.pins = info->pins;
+ 	imx_pinctrl_desc.npins = info->npins;
 -- 
 2.1.4
 
