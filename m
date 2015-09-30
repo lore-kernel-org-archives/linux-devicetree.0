@@ -1,134 +1,58 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 30 Sep 2015 10:39:04 +0300
-Message-ID: <560B9198.70103@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
+ DA9062 OnKey
+Date: Wed, 30 Sep 2015 07:45:50 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB70173D13566@SW-EX-MBX02.diasemi.com>
+References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
+ <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
+ <20150727224300.GG3613@dtor-ws> <20150728054024.GA4558@dtor-ws>
+ <6ED8E3B22081A4459DAC7699F3695FB70173D121FD@SW-EX-MBX02.diasemi.com>
+ <20150929235408.GC29469@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <20150929235408.GC29469@dtor-ws>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com
-Cc: tony@atomide.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Brian/David,
+On 30 September 2015 00:54 Dmitry Torokhov wrote:
 
-On 18/09/15 17:53, Roger Quadros wrote:
-> Hi,
+> To: Opensource [Steve Twiss]
+> Cc: Lee Jones; DEVICETREE; Ian Campbell; Kumar Gala; LINUXINPUT;
+> LINUXKERNEL; Mark Rutland; Pawel Moll; RTCLINUX; Rob Herring; David
+> Dajun Chen; Samuel Ortiz; Support Opensource
+> Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
+> DA9062 OnKey
 > 
-> We do a couple of things in this series which result in
-> cleaner device tree implementation, faster perfomance and
-> multi-platform support. As an added bonus we get new GPI/Interrupt pins
-> for use in the system.
+> On Mon, Sep 28, 2015 at 08:19:27AM +0000, Opensource [Steve Twiss]
+> wrote:
+> >
+> > Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings
+> > for DA9062 OnKey
+> >
+> > Hi Lee and Dmitry,
+> >
+> > This patch seems to have been missed. It is the main OnKey driver for
+> > DA9062 and this
+> > component was waiting for the DA9062 MFD core to make it into linux-
+> > mainline/v4.3-rc1.
+> >
+> >
 > 
-> - Establish a custom interface between NAND and GPMC driver. This is
-> needed because all of the NAND registers sit in the GPMC register space.
-> Some bits like NAND IRQ are even shared with GPMC.
+> I queued it for 4.4.
 > 
-> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
-> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
-> This causes performance increase when using prefetch-irq mode.
-> 30% increase in read, 17% increase in write in prefetch-irq mode.
+> Thanks.
 > 
-> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
-> driver can be used on non-OMAP platforms. e.g. Keystone.
-> 
-> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
-> 2 to 4 of these and most of them would be unused otherwise. It also
-> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
-> 
-> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
-> 
-> This series is available at
-> git@github.com:rogerq/linux.git
-> in branch
-> for-v4.4/gpmc-v3
+> --
+> Dmitry
 
-Could you please ack the patches affecting the omap2 nand driver?
-These would be patches 4, 6, 9, 10, 11, 12, 18. Thanks.
-
-cheers,
--roger
-
-> 
-> Changelog:
-> v3:
-> -Fixed and tested NAND using legacy boot on omap3-beagle.
-> -Support rising and falling edge interrupts on WAITpins.
-> -Update DT node of all gpmc users.
-> 
-> Roger Quadros (27):
->   ARM: OMAP2+: gpmc: Add platform data
->   ARM: OMAP2+: gpmc: Add gpmc timings and settings to platform data
->   memory: omap-gpmc: Introduce GPMC to NAND interface
->   mtd: nand: omap2: Use gpmc_omap_get_nand_ops() to get NAND registers
->   memory: omap-gpmc: Add GPMC-NAND ops to get writebufferempty status
->   mtd: nand: omap2: Switch to using GPMC-NAND ops for writebuffer empty
->     check
->   memory: omap-gpmc: Remove NAND IRQ code
->   memory: omap-gpmc: Add IRQ ops for GPMC-NAND interface
->   mtd: nand: omap2: manage NAND interrupts
->   mtd: nand: omap: Copy platform data parameters to omap_nand_info data
->   mtd: nand: omap: Clean up device tree support
->   mtd: nand: omap: Update DT binding documentation
->   memory: omap-gpmc: Prevent mapping into 1st 16MB
->   memory: omap-gpmc: Move device tree binding to correct location
->   memory: omap-gpmc: Support general purpose input for WAITPINs
->   memory: omap-gpmc: Reserve WAITPIN if needed for WAIT monitoring
->   memory: omap-gpmc: Add irqchip support to the gpiochip
->   mtd: nand: omap2: Implement NAND ready using gpiolib
->   memory: omap-gpmc: Prevent GPMC_STATUS from being accessed via
->     gpmc_regs
->   ARM: dts: dra7: Fix NAND device nodes.
->   ARM: dts: dra7x-evm: Provide NAND ready pin
->   ARM: dts: am437x: Fix NAND device nodes
->   ARM: dts: am437x-gp-evm: Provide NAND ready pin
->   ARM: dts: am335x: Fix NAND device nodes
->   ARM: dts: am335x: Provide NAND ready pin
->   ARM: dts: dm816x: Fix gpmc and NAND node
->   ARM: dts: omap3: Fix gpmc and NAND nodes
-> 
->  Documentation/devicetree/bindings/bus/ti-gpmc.txt  | 130 -----
->  .../bindings/memory-controllers/omap-gpmc.txt      | 130 +++++
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  16 +-
->  arch/arm/boot/dts/am335x-chilisom.dtsi             |   7 +-
->  arch/arm/boot/dts/am335x-evm.dts                   |   7 +-
->  arch/arm/boot/dts/am335x-igep0033.dtsi             |   7 +-
->  arch/arm/boot/dts/am33xx.dtsi                      |   4 +
->  arch/arm/boot/dts/am4372.dtsi                      |   4 +
->  arch/arm/boot/dts/am437x-gp-evm.dts                |   8 +-
->  arch/arm/boot/dts/am43x-epos-evm.dts               |   8 +-
->  arch/arm/boot/dts/dm8168-evm.dts                   |   7 +-
->  arch/arm/boot/dts/dm816x.dtsi                      |   4 +
->  arch/arm/boot/dts/dra7-evm.dts                     |   6 +-
->  arch/arm/boot/dts/dra7.dtsi                        |   4 +
->  arch/arm/boot/dts/dra72-evm.dts                    |   6 +-
->  arch/arm/boot/dts/logicpd-torpedo-som.dtsi         |   7 +-
->  arch/arm/boot/dts/omap3-beagle.dts                 |   2 +
->  arch/arm/boot/dts/omap3-cm-t3x.dtsi                |   5 +-
->  arch/arm/boot/dts/omap3-devkit8000-common.dtsi     |   3 +
->  arch/arm/boot/dts/omap3-evm-37xx.dts               |   7 +-
->  arch/arm/boot/dts/omap3-gta04.dtsi                 |   3 +
->  arch/arm/boot/dts/omap3-igep.dtsi                  |   5 +-
->  arch/arm/boot/dts/omap3-igep0020-common.dtsi       |   4 +-
->  arch/arm/boot/dts/omap3-igep0030-common.dtsi       |   4 +
->  arch/arm/boot/dts/omap3-ldp.dts                    |   9 +-
->  arch/arm/boot/dts/omap3-lilly-a83x.dtsi            |   5 +-
->  arch/arm/boot/dts/omap3-pandora-common.dtsi        |   3 +
->  arch/arm/boot/dts/omap3-tao3530.dtsi               |   5 +-
->  arch/arm/boot/dts/omap3.dtsi                       |   4 +
->  arch/arm/boot/dts/omap3430-sdp.dts                 |   5 +-
->  arch/arm/mach-omap2/gpmc-nand.c                    |  11 +-
->  drivers/memory/omap-gpmc.c                         | 640 ++++++++++++---------
->  drivers/mtd/nand/omap2.c                           | 261 ++++++---
->  include/linux/omap-gpmc.h                          | 183 ++----
->  include/linux/platform_data/gpmc-omap.h            | 167 ++++++
->  include/linux/platform_data/mtd-nand-omap2.h       |  12 +-
->  36 files changed, 1045 insertions(+), 648 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
->  create mode 100644 include/linux/platform_data/gpmc-omap.h
-> 
+Hi Dmitry,
+I can see it in your repo now.
+(a27b5e0 Input: add DA9062 OnKey capability to DA9063 OnKey driver)
+Thanks for your efforts on this patch.
+Regards,
+Stephen
