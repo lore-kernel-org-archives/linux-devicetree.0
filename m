@@ -1,113 +1,47 @@
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-Subject: [PATCH v3 1/6] tty: serial: msm: Add mask value for UART_DM registers
-Date: Wed, 30 Sep 2015 15:26:58 +0300
-Message-ID: <1443616023-28625-2-git-send-email-ivan.ivanov@linaro.org>
-References: <1443616023-28625-1-git-send-email-ivan.ivanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1443616023-28625-1-git-send-email-ivan.ivanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Pramod Gurav <gpramod@codeaurora.org>, David Brown <davidb@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [RESEND][PATCH v3 0/2] ARM: dts: add Okaya LCD display for Nitrogen and Sabrelite
+Date: Wed, 30 Sep 2015 15:05:18 +0200
+Message-ID: <1443618320-12708-1-git-send-email-gary.bisson@boundarydevices.com>
+References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1432314867-30888-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pramod Gurav <gpramod@codeaurora.org>
+This is just a resend of my v3 with Shawn's correct e-mail address. I've also
+made sure it applies (and builds) on latest linux-next 20150930.
 
-The bit masks for RFR_LEVEL1 and STALE_TIMEOUT_MSB values in MR1 and
-IPR registers respectively are different for UART and UART_DM hardware
-cores. We have been using UART core mask values for these. Add the same
-for UART_DM core.
+This series adds the Okaya 7" LCD support as a simple panel for both Nitrogen
+and Sabrelite.
 
-There is no bit setting as UART_IPR_RXSTALE_LAST for UART_DM core so do
-it only for UART core.
+This v3 updates the series as the compatible name has been changed from
+"okaya,rs800480t_7x0gp" to "okaya,rs800480t-7x0gp" when the drm patch has been
+merged into linux-next branch.
+http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=ec9000c
 
-Signed-off-by: Pramod Gurav <gpramod@codeaurora.org>
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
----
- drivers/tty/serial/msm_serial.c | 26 ++++++++++++++++++++------
- drivers/tty/serial/msm_serial.h |  2 ++
- 2 files changed, 22 insertions(+), 6 deletions(-)
+Also note that Philipp Zabel's patch that enables the parallel-display driver
+to work with a simple panel has been merged.
+http://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/commit/?id=553a59f
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index b73889c8ed4b..d08cfd3e1c3a 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -421,7 +421,7 @@ msm_find_best_baud(struct uart_port *port, unsigned int baud)
+A U-Boot script to configure the displays based on detection of the
+touch controller is available for reference here:
+https://github.com/boundarydevices/u-boot-imx6/blob/staging/board/boundary/nitrogen6x/6x_bootscript-mainline.txt
 
- static int msm_set_baud_rate(struct uart_port *port, unsigned int baud)
- {
--	unsigned int rxstale, watermark;
-+	unsigned int rxstale, watermark, mask;
- 	struct msm_port *msm_port = UART_TO_MSM(port);
- 	const struct msm_baud_map *entry;
 
-@@ -432,8 +432,15 @@ static int msm_set_baud_rate(struct uart_port *port, unsigned int baud)
- 	/* RX stale watermark */
- 	rxstale = entry->rxstale;
- 	watermark = UART_IPR_STALE_LSB & rxstale;
--	watermark |= UART_IPR_RXSTALE_LAST;
--	watermark |= UART_IPR_STALE_TIMEOUT_MSB & (rxstale << 2);
-+	if (msm_port->is_uartdm) {
-+		mask = UART_DM_IPR_STALE_TIMEOUT_MSB;
-+	} else {
-+		watermark |= UART_IPR_RXSTALE_LAST;
-+		mask = UART_IPR_STALE_TIMEOUT_MSB;
-+	}
-+
-+	watermark |= mask & (rxstale << 2);
-+
- 	msm_write(port, watermark, UART_IPR);
+Gary Bisson (2):
+  ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD panel
+  ARM: dts: imx6qdl-sabrelite: add Okaya LCD panel
 
- 	/* set RX watermark */
-@@ -476,7 +483,7 @@ static void msm_init_clock(struct uart_port *port)
- static int msm_startup(struct uart_port *port)
- {
- 	struct msm_port *msm_port = UART_TO_MSM(port);
--	unsigned int data, rfr_level;
-+	unsigned int data, rfr_level, mask;
- 	int ret;
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 76 ++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi  | 76 ++++++++++++++++++++++++++++++-
+ 2 files changed, 150 insertions(+), 2 deletions(-)
 
- 	snprintf(msm_port->name, sizeof(msm_port->name),
-@@ -496,11 +503,18 @@ static int msm_startup(struct uart_port *port)
+-- 
+2.5.3
 
- 	/* set automatic RFR level */
- 	data = msm_read(port, UART_MR1);
--	data &= ~UART_MR1_AUTO_RFR_LEVEL1;
-+
-+	if (msm_port->is_uartdm)
-+		mask = UART_DM_MR1_AUTO_RFR_LEVEL1;
-+	else
-+		mask = UART_MR1_AUTO_RFR_LEVEL1;
-+
-+	data &= ~mask;
- 	data &= ~UART_MR1_AUTO_RFR_LEVEL0;
--	data |= UART_MR1_AUTO_RFR_LEVEL1 & (rfr_level << 2);
-+	data |= mask & (rfr_level << 2);
- 	data |= UART_MR1_AUTO_RFR_LEVEL0 & rfr_level;
- 	msm_write(port, data, UART_MR1);
-+
- 	return 0;
- }
-
-diff --git a/drivers/tty/serial/msm_serial.h b/drivers/tty/serial/msm_serial.h
-index 737f69fe7113..5b7722c3938b 100644
---- a/drivers/tty/serial/msm_serial.h
-+++ b/drivers/tty/serial/msm_serial.h
-@@ -20,6 +20,7 @@
-
- #define UART_MR1_AUTO_RFR_LEVEL0	0x3F
- #define UART_MR1_AUTO_RFR_LEVEL1	0x3FF00
-+#define UART_DM_MR1_AUTO_RFR_LEVEL1	0xFFFFFF00
- #define UART_MR1_RX_RDY_CTL    		(1 << 7)
- #define UART_MR1_CTS_CTL       		(1 << 6)
-
-@@ -78,6 +79,7 @@
- #define UART_IPR_RXSTALE_LAST		0x20
- #define UART_IPR_STALE_LSB		0x1F
- #define UART_IPR_STALE_TIMEOUT_MSB	0x3FF80
-+#define UART_DM_IPR_STALE_TIMEOUT_MSB	0xFFFFFF80
-
- #define UART_IPR	0x0018
- #define UART_TFWR	0x001C
 --
-1.9.1
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
