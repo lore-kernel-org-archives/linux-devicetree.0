@@ -1,48 +1,60 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH 2/2] i2c: at91: update documentation for new "atmel,twd-hold-cycles" property
-Date: Wed, 30 Sep 2015 10:47:11 +0200
-Message-ID: <1443602831-27069-2-git-send-email-ludovic.desroches@atmel.com>
-References: <1443602831-27069-1-git-send-email-ludovic.desroches@atmel.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v7 1/2] pwm: Add device tree binding document for R-Car PWM Timer
+Date: Wed, 30 Sep 2015 17:47:52 +0900
+Message-ID: <1443602873-4316-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1443602873-4316-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443602831-27069-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@atmel.com, Wenyou Yang <wenyou.yang@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1443602873-4316-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wenyou Yang <wenyou.yang@atmel.com>
+Add binding document for Renesas PWM Timer on R-Car SoCs.
 
-Add a DT property "atmel,twd-hold-cycles" to specify the HOLD
-field of TWIHS_CWGR register to increase the TWD hold time.
-
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- Documentation/devicetree/bindings/i2c/i2c-at91.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-index 6e81dc1..f14c0b2 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-@@ -17,6 +17,8 @@ Optional properties:
- - dma-names: should contain "tx" and "rx".
- - atmel,fifo-size: maximum number of data the RX and TX FIFOs can store for FIFO
-   capable I2C controllers.
-+- atmel,twd-hold-cycles: increase the TWD hold time by
-+  (atmel,twd-hold-cycles + 3) x t_periperal_clk, maximum value is 0x1f.
- - Child nodes conforming to i2c bus binding
- 
- Examples :
-@@ -29,6 +31,7 @@ i2c0: i2c@fff84000 {
- 	#size-cells = <0>;
- 	clocks = <&twi0_clk>;
- 	clock-frequency = <400000>;
-+	atmel,twd-hold-cycles = <2>;
- 
- 	24c512@50 {
- 		compatible = "24c512";
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+new file mode 100644
+index 0000000..ea0a27b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+@@ -0,0 +1,27 @@
++* Renesas R-Car PWM Timer Controller
++
++Required Properties:
++- compatible: should be one of the following.
++ - "renesas,pwm-rcar": for generic R-Car compatible PWM Timer
++ - "renesas,pwm-r8a7778": for R-Car M1A
++ - "renesas,pwm-r8a7779": for R-Car H1
++ - "renesas,pwm-r8a7790": for R-Car H2
++ - "renesas,pwm-r8a7791": for R-Car M2-W
++ - "renesas,pwm-r8a7794": for R-Car E2
++- reg: base address and length of the registers block for the PWM.
++- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
++  the cells format.
++- clocks: clock phandle and specifier pair.
++- pinctrl-0: phandle, referring to a default pin configuration node.
++- pinctrl-names: Set to "default".
++
++Example: R8A7790 (R-Car H2) PWM Timer node
++
++	pwm0: pwm@e6e30000 {
++		compatible = "renesas,pwm-r8a7790", "renesas,pwm-rcar";
++		reg = <0 0xe6e30000 0 0x8>;
++		#pwm-cells = <2>;
++		clocks = <&mstp5_clks R8A7790_CLK_PWM>;
++		pinctrl-0 = <&pwm0_pins>;
++		pinctrl-names = "default";
++	};
 -- 
-2.5.0
+1.9.1
+
