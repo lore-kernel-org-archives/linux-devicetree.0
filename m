@@ -1,88 +1,179 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [RESEND][PATCH v3 0/9] ARM: dts: update Boundary Devices boards support
-Date: Wed, 30 Sep 2015 15:46:37 +0200
-Message-ID: <1443620806-14792-1-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [RESEND][PATCH v3 4/9] ARM: dts: imx6qdl-sabrelite: relicense under GPLv2/X11
+Date: Wed, 30 Sep 2015 15:46:41 +0200
+Message-ID: <1443620806-14792-5-git-send-email-gary.bisson@boundarydevices.com>
 References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1443620806-14792-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441645069-27263-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <1443620806-14792-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6dl-sabrelite.dts   | 40 ++++++++++++++++++++++++++++----
+ arch/arm/boot/dts/imx6q-sabrelite.dts    | 40 ++++++++++++++++++++++++++++----
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 40 ++++++++++++++++++++++++++++----
+ 3 files changed, 105 insertions(+), 15 deletions(-)
 
-This is just a resend of my v3 with Shawn's correct e-mail address. I've also
-made sure it applies (and builds) on latest linux-next 20150930.
-
-This series is a follow-up to the previous series that added LCD display
-support.
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/364425.html
-
-This one aims at adding touchscreen and WiFi support for Nitrogen6x as well as
-adding two boards: Nitrogen6_Max and Nit6xlite.
-
-It also takes care of updating the licenses to be GPLv2/X11.
-
-The series has been tested against linux-next tag next-20150909.
-
-Note that imx_v6_v7_defconfig has been used with the following additions:
-CONFIG_TOUCHSCREEN_EDT_FT5X06=y
-CONFIG_I2C_MUX_GPIO=y
-CONFIG_RTC_DRV_M41T80=y
-
-Modifications:
-v2->v3:
-- Rename nodes to general class of device as suggested by Philipp and Russell.
-- Remove useless wakeup-gpio field for edt,ft5x06 touchscreen
-- Add missing muxing for interrupt GPIO
-- Rebased on next-20150909
-v1->v2:
-- Add Boundary Devices Inc. to vendor prefixes
-- Relicense devices trees to GPLv2/X11 as suggested by Fabio for:
-  - Nitrogen6x
-  - SabreLite
-  - Nit6xLite
-  - Nitrogen6_MAX
-- Change manufacturer to Boundary Devices as suggested by Fabio for:
-  - Nitrogen6x
-  - Nit6xLite
-  - Nitrogen6_MAX
-- Fixed missing macros for gpio/irq values as suggested by Philipp.
-- Rebased on next-20150908
-
-Regards,
-Gary
-
-Gary Bisson (9):
-  ARM: dts: imx6dql-nitrogen6x: add touchscreen support
-  ARM: dts: imx6qdl-nitrogen6x: add wifi wl1271 support
-  ARM: dts: imx6qdl-nitrogen6x: relicense under GPLv2/X11
-  ARM: dts: imx6qdl-sabrelite: relicense under GPLv2/X11
-  of: Add Boundary Devices Inc. vendor prefix
-  ARM: dts: imx6q-nitrogen6x: change manufacturer to Boundary Devices
-  ARM: dts: imx6dl-nitrogen6x: change manufacturer to Boundary Devices
-  ARM: dts: imx: add Boundary Devices Nitrogen6_Max board
-  ARM: dts: imx: add Boundary Devices Nitrogen6_Lite board
-
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/imx6dl-nit6xlite.dts             |  49 ++
- arch/arm/boot/dts/imx6dl-nitrogen6x.dts            |  44 +-
- arch/arm/boot/dts/imx6dl-sabrelite.dts             |  40 +-
- arch/arm/boot/dts/imx6q-nitrogen6_max.dts          |  53 ++
- arch/arm/boot/dts/imx6q-nitrogen6x.dts             |  44 +-
- arch/arm/boot/dts/imx6q-sabrelite.dts              |  40 +-
- ...6qdl-nitrogen6x.dtsi => imx6qdl-nit6xlite.dtsi} | 396 ++++++----
- arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi       | 873 +++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi          | 111 ++-
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi           |  40 +-
- 12 files changed, 1523 insertions(+), 170 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx6dl-nit6xlite.dts
- create mode 100644 arch/arm/boot/dts/imx6q-nitrogen6_max.dts
- copy arch/arm/boot/dts/{imx6qdl-nitrogen6x.dtsi => imx6qdl-nit6xlite.dtsi} (50%)
- create mode 100644 arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-
+diff --git a/arch/arm/boot/dts/imx6dl-sabrelite.dts b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+index 2de0447..0f06ca5 100644
+--- a/arch/arm/boot/dts/imx6dl-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+@@ -2,12 +2,42 @@
+  * Copyright 2011 Freescale Semiconductor, Inc.
+  * Copyright 2011 Linaro Ltd.
+  *
+- * The code contained herein is licensed under the GNU General Public
+- * License. You may obtain a copy of the GNU General Public License
+- * Version 2 or later at the following locations:
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
+  *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+index 96e4688..66d10d8 100644
+--- a/arch/arm/boot/dts/imx6q-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+@@ -2,12 +2,42 @@
+  * Copyright 2011 Freescale Semiconductor, Inc.
+  * Copyright 2011 Linaro Ltd.
+  *
+- * The code contained herein is licensed under the GNU General Public
+- * License. You may obtain a copy of the GNU General Public License
+- * Version 2 or later at the following locations:
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
+  *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 2f85106..d2cb491 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -2,12 +2,42 @@
+  * Copyright 2011 Freescale Semiconductor, Inc.
+  * Copyright 2011 Linaro Ltd.
+  *
+- * The code contained herein is licensed under the GNU General Public
+- * License. You may obtain a copy of the GNU General Public License
+- * Version 2 or later at the following locations:
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
+  *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
 -- 
 2.5.3
 
