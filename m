@@ -1,62 +1,199 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/3] thermal: Add Mediatek thermal controller support
-Date: Wed, 30 Sep 2015 12:37:04 +0200
-Message-ID: <20150930103704.GA7858@pengutronix.de>
-References: <1443015463-23639-1-git-send-email-s.hauer@pengutronix.de>
- <1443015463-23639-3-git-send-email-s.hauer@pengutronix.de>
- <9hhpp105jw1.fsf@e105922-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Wed, 30 Sep 2015 11:53:31 +0100
+Message-ID: <20150930105331.GA10066@leverpostej>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+ <20150828123228.GE31748@leverpostej>
+ <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
+ <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9hhpp105jw1.fsf@e105922-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+In-Reply-To: <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>a
 List-Id: devicetree@vger.kernel.org
 
-Hi Punit,
-
-On Wed, Sep 30, 2015 at 10:36:14AM +0100, Punit Agrawal wrote:
-> Hi Sascha,
+On Tue, Sep 29, 2015 at 09:38:04AM +0100, Ganapatrao Kulkarni wrote:
+> (sending again, by mistake it was set to html mode)
 > 
-> Re-posting a comment from v7. Perhaps you missed it...
+> On Tue, Sep 29, 2015 at 2:05 PM, Ganapatrao Kulkarni
+> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Hi Mark,
+> >
+> > I have tried to answer your comments, in the meantime we are waiting for Ben
+> > to share the details.
+> >
+> > On Fri, Aug 28, 2015 at 6:02 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
+> >> > DT bindings for numa map for memory, cores and IOs using
+> >> > arm,associativity device node property.
+> >>
+> >> Given this is just a copy of ibm,associativity, I'm not sure I see much
+> >> point in renaming the properties.
+> >>
+> >> However, (somewhat counter to that) I'm also concerned that this isn't
+> >> sufficient for systems we're beginning to see today (more on that
+> >> below), so I don't think a simple copy of ibm,associativity is good
+> >> enough.
+> >
+> > it is just copy right now, however it can evolve when we come across more
+> > arm64 numa platforms
 
-Uh, sorry. In fact I didn't miss it and I thought I have answered it.
-Appearantly I haven't.
+Whatever we do I suspect we'll have to evolve it as new platforms
+appear. As I mentioned there are contemporary NUMA ARM64 platforms (e.g.
+those with CCN) that I don't think we can ignore now given we'll have to
+cater for them.
 
-> > +	struct mtk_thermal *mt = bank->mt;
-> > +	int temp, i, max;
-> > +	u32 raw;
-> > +
-> > +	temp = max = INT_MIN;
-> > +
-> > +	for (i = 0; i < bank_data[bank->id].num_sensors; i++) {
-> > +		raw = readl(mt->thermal_base + sensing_points[i].msr);
-> > +
-> > +		temp = raw_to_mcelsius(mt, raw);
-> > +
-> > +		/*
-> > +		 * The first read of a sensor often contains very high bogus
-> > +		 * temperature value. Filter these out so that the system does
-> > +		 * not immediately shut down.
-> > +		 */
-> > +		if (temp > 200000)
-> > +			temp = 0;
-> > +
-> 
-> If the bogus value is only the first time the sensor is read, instead of
-> filtering here, you could call mtk_thermal_bank_temperature at probe
-> time when you are initialising the banks and ignore the returned value.
+> >> > +==============================================================================
+> >> > +2 - arm,associativity
+> >> >
+> >> > +==============================================================================
+> >> > +The mapping is done using arm,associativity device property.
+> >> > +this property needs to be present in every device node which needs to
+> >> > to be
+> >> > +mapped to numa nodes.
+> >>
+> >> Can't there be some inheritance? e.g. all devices on a bus with an
+> >> arm,associativity property being assumed to share that value?
+> >
+> > yes there is inheritance and respective bus drivers should take care of it,
+> > like pci driver does at present.
 
-It seems that after initialization the hardware needs some time to
-settle before correct values can be read. Doing what you suggest would
-mean we have to delay the boot by several 100ms. I'd rather not do that.
+Ok. 
 
-Sascha
+That seems counter to my initial interpretation of the wording that the
+property must be present on device nodes that need to be mapped to NUMA
+nodes.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Is there any simple way of describing the set of nodes that need this
+property?
+
+> >> > +topology and boundary in the system at which a significant difference
+> >> > in
+> >> > +performance can be measured between cross-device accesses within
+> >> > +a single location and those spanning multiple locations.
+> >> > +The first cell always contains the broadest subdivision within the
+> >> > system,
+> >> > +while the last cell enumerates the individual devices, such as an SMT
+> >> > thread
+> >> > +of a CPU, or a bus bridge within an SoC".
+> >>
+> >> While this gives us some hierarchy, this doesn't seem to encode relative
+> >> distances at all. That seems like an oversight.
+> >
+> >
+> > distance is computed, will add the details to document.
+> > local nodes will have distance as 10(LOCAL_DISTANCE) and every level, the
+> > distance multiplies by 2.
+> > for example, for level 1 numa topology, distance from local node to remote
+> > node will be 20.
+
+This seems arbitrary.
+
+Why not always have this explicitly described?
+
+> >> Additionally, I'm somewhat unclear on how what you'd be expected to
+> >> provide for this property in cases like ring or mesh interconnects,
+> >> where there isn't a strict hierarchy (see systems with ARM's own CCN, or
+> >> Tilera's TILE-Mx), but there is some measure of closeness.
+> >
+> >
+> > IIUC, as per ARMs CCN architecture, all core/clusters are at equal distance
+> > of DDR, i dont see any NUMA topology.
+
+The CCN is a ring interconnect, so CPU clusters (henceforth CPUs) can be
+connected with differing distances to RAM instances (or devices).
+
+Consider the simplified network below:
+
+  +-------+      +--------+      +-------+
+  | CPU 0 |------| DRAM A |------| CPU 1 |
+  +-------+      +--------+      +-------+
+      |                              |
+      |                              |
+  +--------+                     +--------+
+  | DRAM B |                     | DRAM C |
+  +--------+                     +--------+
+      |                              |
+      |                              |
+  +-------+      +--------+      +-------+
+  | CPU 2 |------| DRAM D |------| CPU 3 |
+  +-------+      +--------+      +-------+
+
+In this case CPUs and DRAMs are spaced evenly on the ring, but the
+distance between an arbitrary CPU and DRAM is not uniform.
+
+CPU 0 can access DRAM A or DRAM B with a single hop, but accesses to
+DRAM C or DRAM D take three hops.
+
+An access from CPU 0 to DRAM C could contend with accesses from CPU 1 to
+DRAM D, as they share hops on the ring.
+
+There is definitely a NUMA topology here, but there's not a strict
+hierarchy. I don't see how you would represent this with the proposed
+binding.
+
+Likewise for the mesh networks (e.g. that of TILE-Mx)
+
+> > however, if there are 2 SoC connected thorough the CCN, then it is very much
+> > similar to cavium topology.
+> >
+> >> Must all of these have the same length? If so, why not have a
+> >> #(whatever)-cells property in the root to describe the expected length?
+> >> If not, how are they to be interpreted relative to each other?
+> >
+> >
+> > yes, all are of default size.
+
+Where that size is...?
+
+> > IMHO, there is no need to add cells property.
+
+That might be the case, but it's unclear from the documentation. I don't
+see how one would parse / verify values currently.
+
+> >> > +the arm,associativity nodes. The first integer is the most significant
+> >> > +NUMA boundary and the following are progressively less significant
+> >> > boundaries.
+> >> > +There can be more than one level of NUMA.
+> >>
+> >> I'm not clear on why this is necessary; the arm,associativity property
+> >> is already ordered from most significant to least significant per its
+> >> description.
+> >
+> >
+> > first entry in arm,associativity-reference-points is used to find which
+> > entry in associativity defines node id.
+> > also entries in arm,associativity-reference-points defines,
+> > how many entries(depth) in associativity can be used to calculate node
+> > distance
+> > in both level 1 and  multi level(hierarchical) numa topology.
+
+I think this needs a more thorough description; I don't follow the
+current one.
+
+> >> Is this only expected at the root of the tree? Can it be re-defined in
+> >> sub-nodes?
+> >
+> > yes it is defined only at the root.
+
+This needs to be stated explicitly.
+
+I see that this being the case, *,associativity-reference-points would
+be a more powerful property than the #(whatever)-cells property I
+mentioned earlier, but a more thorough description is required.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
