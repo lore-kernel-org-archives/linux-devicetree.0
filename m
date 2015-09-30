@@ -1,85 +1,104 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v7 0/8] Watchdog: introduce ARM SBSA watchdog driver
-Date: Wed, 30 Sep 2015 13:22:56 -0400
-Message-ID: <CADyBb7tS+_6nSLdiOB0ohrzqiPyc0aBkO=b3Uq+pyGMy_m=ALg@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1440435683-7343-1-git-send-email-fu.wei@linaro.org>
-	<20150930171338.GC15745@dhcppc0.redhat.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for
+ the TPS65912 PMIC
+Date: Wed, 30 Sep 2015 18:28:44 +0100
+Message-ID: <20150930172844.GF15635@sirena.org.uk>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+ <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk>
+ <5605AA1C.3090905@ti.com>
+ <20150929151320.GT30445@sirena.org.uk>
+ <560AD3B2.1070102@ti.com>
+ <20150929183818.GA15635@sirena.org.uk>
+ <560ADF61.9030105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20150930171338.GC15745@dhcppc0.redhat.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Hanjun Guo <hanjun.guo@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Dave Young <dyoung@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XuV1QlJbYrcVoo+x"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <560ADF61.9030105@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pratyush,
 
-Great thanks for your testing, this info is very helpful. :-)
-my new patchset will come out soon.
+--XuV1QlJbYrcVoo+x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 30 September 2015 at 13:13, Pratyush Anand <panand@redhat.com> wrote:
-> Hi Fu Wei,
->
-> On 25/08/2015:01:01:15 AM, fu.wei@linaro.org wrote:
->> From: Fu Wei <fu.wei@linaro.org>
->>
->> This patchset:
->>     (1)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
->>     for FDT info of SBSA Generic Watchdog, and give two examples of
->>     adding SBSA Generic Watchdog device node into the dts files:
->>     foundation-v8.dts and amd-seattle-soc.dtsi.
->>
->>     (2)Introduce "pretimeout" into the watchdog framework, and update
->>     Documentation/watchdog/watchdog-kernel-api.txt to introduce:
->>         (1)the new elements in the watchdog_device and watchdog_ops struct;
->>         (2)the new API "watchdog_init_timeouts".
->>
->>     (3)Introduce ARM SBSA watchdog driver:
->>         a.Use linux kernel watchdog framework;
->>         b.Work with FDT on ARM64;
->>         c.Use "pretimeout" in watchdog framework;
->>         d.Support getting timeout and pretimeout from parameter and FDT
->>           at the driver init stage.
->>         e.In the first timeout, do panic to save system context;
->>         f.In the second stage, user can still feed the dog without
->>           cleaning WS0. By this feature, we can avoid the panic infinite
->>           loops, while backing up a large system context in a server.
->>         g.In the second stage, can trigger WS1 by setting pretimeout = 0
->>           if necessary.
->>
->>     (4)Introduce ACPI GTDT parser: drivers/acpi/gtdt.c
->>     Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
->>     and create a platform device with that information.
->>     This platform device can be used by This Watchdog driver.
->>     drivers/clocksource/arm_arch_timer.c is simplified by this GTDT support.
->>
->> This patchset has been tested with watchdog daemon
->> (ACPI/FDT, module/build-in) on the following platforms:
->>     (1)ARM Foundation v8 model
->>
->
-> I tested it with kdump on fedora-arm64 Seattle platform. I enabled watchdog
-> using systemd (with 30s timeout), insured that watchdog is active and then
-> crashed the system. I can see that kdump kernel loads sbsa_wdt and activates
-> watchdog, still vmcore copy is done successfully.
-> My test kernel is here [1]
->
-> ~Pratyush
->
-> [1] https://github.com/pratyushanand/linux/commits/wdt/sbsa-test-kexec
+On Tue, Sep 29, 2015 at 01:58:41PM -0500, Andrew F. Davis wrote:
+> On 09/29/2015 01:38 PM, Mark Brown wrote:
 
+> >Oh, ick.  The binding has a compatible string in the individual
+> >regulator bindings which is broken unless there really are lots of
+> >variants being configured via DT (which is just not the case here).
+> >It's not only more typing in the DT,
 
+> I don't see this, the alternative is matching to this "regulator-compatible",
+> why not just use the existing compatible.
 
--- 
-Best regards,
+No, you don't need to use regulator-compatible - that's deprecated.
+Just use the node names.
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+> >it also means that we can't read
+> >back the configuration of the device unless the user goes and creates a
+> >DT which explicitly lists each regulator on the device which is
+> >unhelpful.  We should be able to read back the configurations of all the
+> >regulators by simply listing the device in DT.
+
+> Could you expand this? I'm not sure I understand why we still cant do this
+> using this new way.
+
+I'm not sure what there is to add...  if the regulator is only
+instantiated when it features in the device tree then obviously it must
+be included in the device to be instantiated.
+
+> Bindings should have compatible strings when they describe hardware like this,
+> we can then do stuff like put the LDO and DCDC drivers in separate modules for
+> instance, letting DT only load what we need. There are other benefits like
+> not having to search our own DT binding for data, and we only get probed for
+> devices in the DT.
+
+Only getting probed for device is in DT is exactly the problem here, and
+nothing prevents us having separate modules for things without
+enumerating everything in DT.
+
+> This also eliminates the need for MFD_CORE, we just call
+> of_platform_populate on ourself and DT helpers do the rest. Why hard code
+> mfd_cell's and do matching when DT does the same thing.
+
+Putting everything in DT means more work for people integrating the
+device and means that we have to have a full and complete understanding
+of the device at the time we write the DT, including decions about how
+we split the functionality of the device between subsystems.
+
+> >The fact that this is different to the bindings for other regulator
+> >drivers and requires more code ought to have been a big warning sign
+> >here :(
+
+> The binding is the same as the new tps65218 driver, different isn't always
+> a warning sign. And what do you mean "requires more code"? This regulator
+> driver is smaller than almost any other. DT takes care of everything for
+> us relating to hardware instantiation like it should.
+
+That's not a new driver, it's from more than a year ago (before or about
+the same time the helpers got added IIRC).
+
+--XuV1QlJbYrcVoo+x
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWDBvLAAoJECTWi3JdVIfQHYgH/2I5Rx1woUYHckuTrw9QDPZj
+Hpd+94g6RQh2RuJU1C1KUfKThAJaAqftsPSEWcw5xH2hch9xZF141L4udkMyfcVr
+kBT/222kec1I4rFLiE6Na8xLoA1wRqrXCMIUDVsovoscursqVeNoWHPBj1Xx7aS1
++kbg3dYwlT4ooy6bbsCTMSfUg+1YVZko6LMUKdVINHTrb2SEDi5Omg8fKhHW8hCj
+E8THUnv65j2jzGCf6w/E8tyFe5C+r5qt4EPLgL0jLnfr2d49NmnSiGEvB2zzhiPj
+qydXp7D4+7iethYBhXeYfKjCKsD82/ZWzKGohaMJrFsGGFjFkGLjqFJqj6Y2eBI=
+=Efvy
+-----END PGP SIGNATURE-----
+
+--XuV1QlJbYrcVoo+x--
