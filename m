@@ -1,502 +1,101 @@
-From: Damien Horsley <Damien.Horsley@imgtec.com>
-Subject: [PATCH 10/10] ASoC: img: Add driver for SPDIF output
-	controller
-Date: Wed, 30 Sep 2015 16:08:16 +0100
-Message-ID: <1443625696-29296-11-git-send-email-Damien.Horsley@imgtec.com>
-References: <1443625696-29296-1-git-send-email-Damien.Horsley@imgtec.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RFC v3 5/7] dt-bindings: drm/mediatek: Add Mediatek HDMI dts binding
+Date: Wed, 30 Sep 2015 17:30:04 +0200
+Message-ID: <1443627006-15319-6-git-send-email-p.zabel@pengutronix.de>
+References: <1443627006-15319-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1443625696-29296-1-git-send-email-Damien.Horsley@imgtec.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1443627006-15319-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
-
-Add driver for Imagination Technologies SPDIF output
-controller
-
-Signed-off-by: Damien.Horsley <Damien.Horsley@imgtec.com>
----
- sound/soc/img/Kconfig         |   8 +
- sound/soc/img/Makefile        |   1 +
- sound/soc/img/img-spdif-out.c | 432 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 441 insertions(+)
- create mode 100644 sound/soc/img/img-spdif-out.c
-
-diff --git a/sound/soc/img/Kconfig b/sound/soc/img/Kconfig
-index 161ce90..d08537e 100644
---- a/sound/soc/img/Kconfig
-+++ b/sound/soc/img/Kconfig
-@@ -34,3 +34,11 @@ config SND_SOC_IMG_SPDIF_IN
- 	help
- 	  Say Y or M if you want to add support for SPDIF input driver for
- 	  Imagination Technologies SPDIF input device.
-+
-+config SND_SOC_IMG_SPDIF_OUT
-+	tristate "Imagination SPDIF Output Device Driver"
-+	depends on SND_SOC_IMG
-+	select SND_SOC_GENERIC_DMAENGINE_PCM
-+	help
-+	  Say Y or M if you want to add support for SPDIF out driver for
-+	  Imagination Technologies SPDIF out device.
-diff --git a/sound/soc/img/Makefile b/sound/soc/img/Makefile
-index 85ded5e..1a44fb4 100644
---- a/sound/soc/img/Makefile
-+++ b/sound/soc/img/Makefile
-@@ -2,3 +2,4 @@ obj-$(CONFIG_SND_SOC_IMG_I2S_IN) += img-i2s-in.o
- obj-$(CONFIG_SND_SOC_IMG_I2S_OUT) += img-i2s-out.o
- obj-$(CONFIG_SND_SOC_IMG_PARALLEL_OUT) += img-parallel-out.o
- obj-$(CONFIG_SND_SOC_IMG_SPDIF_IN) += img-spdif-in.o
-+obj-$(CONFIG_SND_SOC_IMG_SPDIF_OUT) += img-spdif-out.o
-diff --git a/sound/soc/img/img-spdif-out.c b/sound/soc/img/img-spdif-out.c
-new file mode 100644
-index 0000000..efddf5a
---- /dev/null
-+++ b/sound/soc/img/img-spdif-out.c
-@@ -0,0 +1,432 @@
-+/*
-+ * IMG SPDIF output controller driver
-+ *
-+ * Copyright (C) 2015 Imagination Technologies Ltd.
-+ *
-+ * Author: Damien Horsley <Damien.Horsley@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/reset.h>
-+
-+#include <sound/core.h>
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/initval.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+
-+#define IMG_SPDIF_OUT_TX_FIFO		0x0
-+
-+#define IMG_SPDIF_OUT_CTL		0x4
-+#define IMG_SPDIF_OUT_CTL_FS_MASK	BIT(4)
-+#define IMG_SPDIF_OUT_CTL_CLK_MASK	BIT(2)
-+#define IMG_SPDIF_OUT_CTL_SRT_MASK	BIT(0)
-+
-+#define IMG_SPDIF_OUT_CSL		0x14
-+
-+#define IMG_SPDIF_OUT_CSH_UV		0x18
-+#define IMG_SPDIF_OUT_CSH_UV_CSH_SHIFT	0
-+#define IMG_SPDIF_OUT_CSH_UV_CSH_MASK	0xff
-+
-+struct img_spdif_out {
-+	spinlock_t lock;
-+	void __iomem *base;
-+	struct clk *clk_sys;
-+	struct clk *clk_ref;
-+	struct snd_dmaengine_dai_dma_data dma_data;
-+	struct device *dev;
-+	struct reset_control *rst;
-+};
-+
-+static int img_spdif_out_suspend(struct device *dev)
-+{
-+	struct img_spdif_out *spdif = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(spdif->clk_ref);
-+
-+	return 0;
-+}
-+
-+static int img_spdif_out_resume(struct device *dev)
-+{
-+	struct img_spdif_out *spdif = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(spdif->clk_ref);
-+	if (ret) {
-+		dev_err(dev, "clk_enable failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static inline void img_spdif_out_writel(struct img_spdif_out *spdif, u32 val,
-+				u32 reg)
-+{
-+	writel(val, spdif->base + reg);
-+}
-+
-+static inline u32 img_spdif_out_readl(struct img_spdif_out *spdif, u32 reg)
-+{
-+	return readl(spdif->base + reg);
-+}
-+
-+static void img_spdif_out_reset(struct img_spdif_out *spdif)
-+{
-+	u32 ctl, status_low, status_high;
-+
-+	ctl = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CTL) &
-+			~IMG_SPDIF_OUT_CTL_SRT_MASK;
-+	status_low = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CSL);
-+	status_high = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CSH_UV);
-+
-+	reset_control_assert(spdif->rst);
-+	reset_control_deassert(spdif->rst);
-+
-+	img_spdif_out_writel(spdif, ctl, IMG_SPDIF_OUT_CTL);
-+	img_spdif_out_writel(spdif, status_low, IMG_SPDIF_OUT_CSL);
-+	img_spdif_out_writel(spdif, status_high, IMG_SPDIF_OUT_CSH_UV);
-+}
-+
-+static int img_spdif_out_info(struct snd_kcontrol *kcontrol,
-+					struct snd_ctl_elem_info *uinfo)
-+{
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_IEC958;
-+	uinfo->count = 1;
-+
-+	return 0;
-+}
-+
-+static int img_spdif_out_get_status_mask(struct snd_kcontrol *kcontrol,
-+				       struct snd_ctl_elem_value *ucontrol)
-+{
-+	ucontrol->value.iec958.status[0] = 0xff;
-+	ucontrol->value.iec958.status[1] = 0xff;
-+	ucontrol->value.iec958.status[2] = 0xff;
-+	ucontrol->value.iec958.status[3] = 0xff;
-+	ucontrol->value.iec958.status[4] = 0xff;
-+
-+	return 0;
-+}
-+
-+static int img_spdif_out_get_status(struct snd_kcontrol *kcontrol,
-+				  struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_dai *cpu_dai = snd_kcontrol_chip(kcontrol);
-+	struct img_spdif_out *spdif = snd_soc_dai_get_drvdata(cpu_dai);
-+	u32 reg;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&spdif->lock, flags);
-+
-+	reg = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CSL);
-+	ucontrol->value.iec958.status[0] = reg & 0xff;
-+	ucontrol->value.iec958.status[1] = (reg >> 8) & 0xff;
-+	ucontrol->value.iec958.status[2] = (reg >> 16) & 0xff;
-+	ucontrol->value.iec958.status[3] = (reg >> 24) & 0xff;
-+
-+	reg = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CSH_UV);
-+	ucontrol->value.iec958.status[4] =
-+		(reg & IMG_SPDIF_OUT_CSH_UV_CSH_MASK) >>
-+		IMG_SPDIF_OUT_CSH_UV_CSH_SHIFT;
-+
-+	spin_unlock_irqrestore(&spdif->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int img_spdif_out_set_status(struct snd_kcontrol *kcontrol,
-+				  struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_dai *cpu_dai = snd_kcontrol_chip(kcontrol);
-+	struct img_spdif_out *spdif = snd_soc_dai_get_drvdata(cpu_dai);
-+	u32 reg;
-+	unsigned long flags;
-+
-+	reg = ((u32)ucontrol->value.iec958.status[3] << 24);
-+	reg |= ((u32)ucontrol->value.iec958.status[2] << 16);
-+	reg |= ((u32)ucontrol->value.iec958.status[1] << 8);
-+	reg |= (u32)ucontrol->value.iec958.status[0];
-+
-+	spin_lock_irqsave(&spdif->lock, flags);
-+
-+	img_spdif_out_writel(spdif, reg, IMG_SPDIF_OUT_CSL);
-+
-+	reg = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CSH_UV);
-+	reg &= ~IMG_SPDIF_OUT_CSH_UV_CSH_MASK;
-+	reg |= (u32)ucontrol->value.iec958.status[4] <<
-+			IMG_SPDIF_OUT_CSH_UV_CSH_SHIFT;
-+	img_spdif_out_writel(spdif, reg, IMG_SPDIF_OUT_CSH_UV);
-+
-+	spin_unlock_irqrestore(&spdif->lock, flags);
-+
-+	return 0;
-+}
-+
-+static struct snd_kcontrol_new img_spdif_out_controls[] = {
-+	{
-+		.access = SNDRV_CTL_ELEM_ACCESS_READ,
-+		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name = SNDRV_CTL_NAME_IEC958("", PLAYBACK, MASK),
-+		.info = img_spdif_out_info,
-+		.get = img_spdif_out_get_status_mask
-+	},
-+	{
-+		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name = SNDRV_CTL_NAME_IEC958("", PLAYBACK, DEFAULT),
-+		.info = img_spdif_out_info,
-+		.get = img_spdif_out_get_status,
-+		.put = img_spdif_out_set_status
-+	}
-+};
-+
-+static int img_spdif_out_trigger(struct snd_pcm_substream *substream, int cmd,
-+			struct snd_soc_dai *dai)
-+{
-+	struct img_spdif_out *spdif = snd_soc_dai_get_drvdata(dai);
-+	u32 reg;
-+	unsigned long flags;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		reg = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CTL);
-+		reg |= IMG_SPDIF_OUT_CTL_SRT_MASK;
-+		img_spdif_out_writel(spdif, reg, IMG_SPDIF_OUT_CTL);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		spin_lock_irqsave(&spdif->lock, flags);
-+		img_spdif_out_reset(spdif);
-+		spin_unlock_irqrestore(&spdif->lock, flags);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int img_spdif_out_hw_params(struct snd_pcm_substream *substream,
-+	struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
-+{
-+	struct img_spdif_out *spdif = snd_soc_dai_get_drvdata(dai);
-+	unsigned int format, channels;
-+	long pre_div_a, pre_div_b, diff_a, diff_b, rate, clk_rate;
-+	u32 reg;
-+
-+	rate = params_rate(params);
-+	format = params_format(params);
-+	channels = params_channels(params);
-+
-+	dev_dbg(spdif->dev, "hw_params rate %ld channels %u format %u\n",
-+			rate, channels, format);
-+
-+	if (format != SNDRV_PCM_FORMAT_S32_LE)
-+		return -EINVAL;
-+
-+	if (channels != 2)
-+		return -EINVAL;
-+
-+	pre_div_a = clk_round_rate(spdif->clk_ref, rate * 256);
-+	if (pre_div_a < 0)
-+		return pre_div_a;
-+	pre_div_b = clk_round_rate(spdif->clk_ref, rate * 384);
-+	if (pre_div_b < 0)
-+		return pre_div_b;
-+
-+	diff_a = abs((pre_div_a / 256) - rate);
-+	diff_b = abs((pre_div_b / 384) - rate);
-+
-+	/* If diffs are equal, use lower clock rate */
-+	if (diff_a > diff_b)
-+		clk_set_rate(spdif->clk_ref, pre_div_b);
-+	else
-+		clk_set_rate(spdif->clk_ref, pre_div_a);
-+
-+	/*
-+	 * Another driver (eg machine driver) may have rejected the above
-+	 * change. Get the current rate and set the register bit according to
-+	 * the new min diff
-+	 */
-+	clk_rate = clk_get_rate(spdif->clk_ref);
-+
-+	diff_a = abs((clk_rate / 256) - rate);
-+	diff_b = abs((clk_rate / 384) - rate);
-+
-+	reg = img_spdif_out_readl(spdif, IMG_SPDIF_OUT_CTL);
-+	if (diff_a <= diff_b)
-+		reg &= ~IMG_SPDIF_OUT_CTL_CLK_MASK;
-+	else
-+		reg |= IMG_SPDIF_OUT_CTL_CLK_MASK;
-+	img_spdif_out_writel(spdif, reg, IMG_SPDIF_OUT_CTL);
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_dai_ops img_spdif_out_dai_ops = {
-+	.trigger = img_spdif_out_trigger,
-+	.hw_params = img_spdif_out_hw_params
-+};
-+
-+static int img_spdif_out_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct img_spdif_out *spdif = snd_soc_dai_get_drvdata(dai);
-+
-+	snd_soc_dai_init_dma_data(dai, &spdif->dma_data, NULL);
-+
-+	snd_soc_add_dai_controls(dai, img_spdif_out_controls,
-+			ARRAY_SIZE(img_spdif_out_controls));
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_dai_driver img_spdif_out_dai = {
-+	.probe = img_spdif_out_dai_probe,
-+	.playback = {
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_192000,
-+		.formats = SNDRV_PCM_FMTBIT_S32_LE
-+	},
-+	.ops = &img_spdif_out_dai_ops
-+};
-+
-+static const struct snd_soc_component_driver img_spdif_out_component = {
-+	.name = "img-spdif-out"
-+};
-+
-+static int img_spdif_out_probe(struct platform_device *pdev)
-+{
-+	struct img_spdif_out *spdif;
-+	struct resource *res;
-+	void __iomem *base;
-+	int ret;
-+
-+	spdif = devm_kzalloc(&pdev->dev, sizeof(*spdif), GFP_KERNEL);
-+	if (!spdif)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, spdif);
-+
-+	spdif->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	spdif->base = base;
-+
-+	spdif->rst = devm_reset_control_get(&pdev->dev, "rst");
-+	if (IS_ERR(spdif->rst)) {
-+		dev_err(&pdev->dev, "No top level reset found\n");
-+		return PTR_ERR(spdif->rst);
-+	}
-+
-+	spdif->clk_sys = devm_clk_get(&pdev->dev, "sys");
-+	if (IS_ERR(spdif->clk_sys))
-+		return PTR_ERR(spdif->clk_sys);
-+
-+	spdif->clk_ref = devm_clk_get(&pdev->dev, "ref");
-+	if (IS_ERR(spdif->clk_ref))
-+		return PTR_ERR(spdif->clk_ref);
-+
-+	ret = clk_prepare_enable(spdif->clk_sys);
-+	if (ret)
-+		return ret;
-+
-+	img_spdif_out_writel(spdif, IMG_SPDIF_OUT_CTL_FS_MASK,
-+				IMG_SPDIF_OUT_CTL);
-+
-+	img_spdif_out_reset(spdif);
-+
-+	pm_runtime_enable(&pdev->dev);
-+	if (!pm_runtime_enabled(&pdev->dev)) {
-+		ret = img_spdif_out_resume(&pdev->dev);
-+		if (ret)
-+			goto err_pm_disable;
-+	}
-+
-+	spin_lock_init(&spdif->lock);
-+
-+	spdif->dma_data.addr = res->start + IMG_SPDIF_OUT_TX_FIFO;
-+	spdif->dma_data.addr_width = 4;
-+	spdif->dma_data.maxburst = 4;
-+
-+	ret = devm_snd_soc_register_component(&pdev->dev,
-+			&img_spdif_out_component,
-+			&img_spdif_out_dai, 1);
-+	if (ret)
-+		goto err_suspend;
-+
-+	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
-+	if (ret)
-+		goto err_suspend;
-+
-+	dev_dbg(&pdev->dev, "Probe successful\n");
-+
-+	return 0;
-+
-+err_suspend:
-+	if (!pm_runtime_status_suspended(&pdev->dev))
-+		img_spdif_out_suspend(&pdev->dev);
-+err_pm_disable:
-+	pm_runtime_disable(&pdev->dev);
-+	clk_disable_unprepare(spdif->clk_sys);
-+
-+	return ret;
-+}
-+
-+static int img_spdif_out_dev_remove(struct platform_device *pdev)
-+{
-+	struct img_spdif_out *spdif = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(&pdev->dev);
-+	if (!pm_runtime_status_suspended(&pdev->dev))
-+		img_spdif_out_suspend(&pdev->dev);
-+
-+	clk_disable_unprepare(spdif->clk_sys);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id img_spdif_out_of_match[] = {
-+	{ .compatible = "img,spdif-out" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, img_spdif_out_of_match);
-+
-+static const struct dev_pm_ops img_spdif_out_pm_ops = {
-+	SET_RUNTIME_PM_OPS(img_spdif_out_suspend,
-+			   img_spdif_out_resume, NULL)
-+};
-+
-+static struct platform_driver img_spdif_out_driver = {
-+	.driver = {
-+		.name = "img-spdif-out",
-+		.of_match_table = img_spdif_out_of_match,
-+		.pm = &img_spdif_out_pm_ops
-+	},
-+	.probe = img_spdif_out_probe,
-+	.remove = img_spdif_out_dev_remove
-+};
-+module_platform_driver(img_spdif_out_driver);
-+
-+MODULE_AUTHOR("Damien Horsley <Damien.Horsley@imgtec.com>");
-+MODULE_DESCRIPTION("IMG SPDIF Output driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+QWRkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIE1lZGlhdGVrIEhE
+TUksCkhETUkgUEhZIGFuZCBIRE1JIEREQyBkZXZpY2VzLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlw
+cCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KLS0tCiAuLi4vYmluZGluZ3MvZHJtL21l
+ZGlhdGVrL21lZGlhdGVrLGhkbWkudHh0ICAgICAgICB8IDExNyArKysrKysrKysrKysrKysrKysr
+KysKIDEgZmlsZSBjaGFuZ2VkLCAxMTcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
+aGRtaS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZHJtL21lZGlhdGVrL21lZGlhdGVrLGhkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2RybS9tZWRpYXRlay9tZWRpYXRlayxoZG1pLnR4dApuZXcgZmlsZSBtb2RlIDEw
+MDY0NAppbmRleCAwMDAwMDAwLi45NmQwOWJmCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9tZWRpYXRlay9tZWRpYXRlayxoZG1pLnR4dApA
+QCAtMCwwICsxLDExNyBAQAorTWVkaWF0ZWsgSERNSSBFbmNvZGVyCis9PT09PT09PT09PT09PT09
+PT09PT0KKworVGhlIE1lZGlhdGVrIEhETUkgZW5jb2RlciBjYW4gZ2VuZXJhdGUgSERNSSAxLjRh
+IG9yIE1ITCAyLjAgc2lnbmFscyBmcm9tCitpdHMgcGFyYWxsZWwgaW5wdXQuCisKK1JlcXVpcmVk
+IHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IFNob3VsZCBiZSAibWVkaWF0ZWssPGNoaXA+LWhk
+bWkiLgorLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250
+cm9sbGVyJ3MgcmVnaXN0ZXJzCistIHJlZy1uYW1lczogbXVzdCBjb250YWluICJncmwiLCAiY2Vj
+IiwgYW5kICJzeXMiLgorLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRo
+ZSBmdW5jdGlvbiBibG9jay4KKy0gY2xvY2tzOiBkZXZpY2UgY2xvY2tzCisgIFNlZSBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0IGZvciBk
+ZXRhaWxzLgorLSBjbG9jay1uYW1lczogbXVzdCBjb250YWluICJjZWMiLCAiaGRtaV9zZWwiLCAi
+aGRtaV9kaXYxIiwgImhkbWlfZGl2MiIsCisgICJoZG1pX2RpdjMiLCAiaGRtaV9waXhlbCIsICJo
+ZG1pX3BsbCIsICJhdWRfYmNsayIsIGFuZCAiYXVkX3NwZGlmIi4KKy0gZGRjLWkyYy1idXM6IHBo
+YW5kbGUgbGluayB0byB0aGUgSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmlu
+ZworLSBwaHlzOiBwaGFuZGxlIGxpbmsgdG8gdGhlIEhETUkgUEhZIG5vZGUuCisgIFNlZSBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1iaW5kaW5ncy50eHQgZm9yIGRl
+dGFpbHMuCistIHBoeS1uYW1lczogbXVzdCBjb250YWluICJoZG1pIgorLSBwb3J0czogQSBub2Rl
+IGNvbnRhaW5pbmcgaW5wdXQgYW5kIG91dHB1dCBwb3J0IG5vZGVzIHdpdGggZW5kcG9pbnQKKyAg
+ZGVmaW5pdGlvbnMgYXMgZG9jdW1lbnRlZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZ3JhcGgudHh0LgorLSBwb3J0QDA6IFRoZSBpbnB1dCBwb3J0IGluIHRoZSBwb3J0cyBu
+b2RlIHNob3VsZCBiZSBjb25uZWN0ZWQgdG8gYSBEUEkgb3V0cHV0CisgIHBvcnQuCisKK09wdGlv
+bmFsIHByb3BlcnRpZXM6CistIHBvcnRAMTogVGhlIG91dHB1dCBwb3J0IGluIHRoZSBwb3J0cyBu
+b2RlIGNhbiBiZSBjb25uZWN0ZWQgdG8gdGhlIGlucHV0IHBvcnQKKyAgb2YgYW4gYXR0YWNoZWQg
+YnJpZGdlIGNoaXAsIHN1Y2ggYXMgYSBTbGltUG9ydCB0cmFuc21pdHRlci4KKworSERNSSBEREMK
+Kz09PT09PT09CisKK1RoZSBIRE1JIEREQyBpMmMgY29udHJvbGxlciBpcyB1c2VkIHRvIGludGVy
+ZmFjZSB3aXRoIHRoZSBIRE1JIEREQyBwaW5zLgorVGhlIE1lZGlhdGVrJ3MgSTJDIGNvbnRyb2xs
+ZXIgaXMgdXNlZCB0byBpbnRlcmZhY2Ugd2l0aCBJMkMgZGV2aWNlcy4KKworUmVxdWlyZWQgcHJv
+cGVydGllczoKKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJtZWRpYXRlayw8Y2hpcD4taGRtaS1k
+ZGMiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRy
+b2xsZXIncyByZWdpc3RlcnMKKy0gY2xvY2tzOiBkZXZpY2UgY2xvY2sKKy0gY2xvY2stbmFtZXM6
+IE11c3QgY29udGFpbiAiZGRjLWkyYyIuCisKK0hETUkgUEhZCis9PT09PT09PQorCitUaGUgSERN
+SSBQSFkgc2VyaWFsaXplcyB0aGUgSERNSSBlbmNvZGVyJ3MgdGhyZWUgY2hhbm5lbCAxMC1iaXQg
+cGFyYWxsZWwKK291dHB1dCBhbmQgZHJpdmVzIHRoZSBIRE1JIHBhZHMuCisKK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6CistIGNvbXBhdGlibGU6ICJtZWRpYXRlayw8Y2hpcD4taGRtaS1waHkiCistIHJl
+ZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIG1vZHVsZSdzIHJlZ2lz
+dGVycworLSAjcGh5LWNlbGxzOiBtdXN0IGJlIDwwPi4KKworT3B0aW9uYWwgcHJvcGVydGllczoK
+Ky0gaWJpYXM6IFRYIERSViBiaWFzIGN1cnJlbnQgZm9yIDwxLjY1R2JwcywgZGVmYXVsdHMgdG8g
+MHhhCistIGliaWFzX3VwOiBUWCBEUlYgYmlhcyBjdXJyZW50IGZvciA+MS42NUdicHMsIGRlZmF1
+bHRzIHRvIDB4MWMKKworRXhhbXBsZToKKworaGRtaV9waHk6IGhkbWktcGh5QDEwMjA5MTAwIHsK
+Kwljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1oZG1pLXBoeSI7CisJcmVnID0gPDAgMHgx
+MDIwOTEwMCAwIDB4MjQ+OworCWliaWFzID0gPDB4YT47CisJaWJpYXNfdXAgPSA8MHgxYz47CisJ
+I3BoeS1jZWxscyA9IDwwPjsKK307CisKK2hkbWlfZGRjMDogaTJjQDExMDEyMDAwIHsKKwljb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1oZG1pLWRkYyI7CisJcmVnID0gPDAgMHgxMTAxMjAw
+MCAwIDB4MWM+OworCWludGVycnVwdHMgPSA8R0lDX1NQSSA4MSBJUlFfVFlQRV9MRVZFTF9MT1c+
+OworCWNsb2NrcyA9IDwmcGVyaWNmZyBDTEtfUEVSSV9JMkM1PjsKK307CisKK2hkbWkwOiBoZG1p
+QDE0MDI1MDAwIHsKKwljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1oZG1pIjsKKwlyZWcg
+PSA8MCAweDE0MDI1MDAwIDAgMHg0MDA+LAkvKiBHUkwgKi8KKwkgICAgICA8MCAweDEwMDEzMDAw
+IDAgMHhiYz4sCS8qIENFQyAqLworCSAgICAgIDwwIDB4MTQwMDA5MDAgMCAweDg+OwkvKiBTWVMg
+Ki8KKwlyZWctbmFtZXMgPSAiZ3JsIiwgImNlYyIsICJzeXMiOworCWludGVycnVwdHMgPSA8R0lD
+X1NQSSAxNjcgSVJRX1RZUEVfTEVWRUxfTE9XPjsKKwljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19J
+TkZSQV9DRUM+LAorCQkgPCZ0b3Bja2dlbiBDTEtfVE9QX0hETUlfU0VMPiwKKwkJIDwmdG9wY2tn
+ZW4gQ0xLX1RPUF9IRE1JVFhfRElHX0NUUz4sCisJCSA8JnRvcGNrZ2VuIENMS19UT1BfSERNSVRY
+UExMX0QyPiwKKwkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9IRE1JVFhQTExfRDM+LAorCQkgPCZtbXN5
+cyBDTEtfTU1fSERNSV9QSVhFTD4sCisJCSA8Jm1tc3lzIENMS19NTV9IRE1JX1BMTENLPiwKKwkJ
+IDwmbW1zeXMgQ0xLX01NX0hETUlfQVVESU8+LAorCQkgPCZtbXN5cyBDTEtfTU1fSERNSV9TUERJ
+Rj47CisJY2xvY2stbmFtZXMgPSAiY2VjIiwKKwkJICAgICAgImhkbWlfc2VsIiwKKwkJICAgICAg
+ImhkbWlfZGl2MSIsCisJCSAgICAgICJoZG1pX2RpdjIiLAorCQkgICAgICAiaGRtaV9kaXYzIiwK
+KwkJICAgICAgImhkbWlfcGl4ZWwiLAorCQkgICAgICAiaGRtaV9wbGwiLAorCQkgICAgICAiYXVk
+X2JjbGsiLAorCQkgICAgICAiYXVkX3NwZGlmIjsKKwlkZGMtaTJjLWJ1cyA9IDwmaGRtaV9kZGMw
+PjsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0cmwtMCA9IDwmaGRtaV9waW4+
+OworCXBoeXMgPSA8JmhkbWlfcGh5PjsKKwlwaHktbmFtZXMgPSAiaGRtaSI7CisJc3RhdHVzID0g
+ImRpc2FibGVkIjsKKworCXBvcnRzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXpl
+LWNlbGxzID0gPDA+OworCisJCXBvcnRAMCB7CisJCQlyZWcgPSA8MD47CisKKwkJCWhkbWkwX2lu
+OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcGkwX291dD47CisJCQl9Owor
+CQl9OworCX07Cit9OwotLSAKMi41LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
