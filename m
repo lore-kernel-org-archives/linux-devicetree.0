@@ -1,108 +1,154 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] ARM: dts: update Boundary Devices boards support
-Date: Wed, 30 Sep 2015 14:03:13 +0800
-Message-ID: <20150930060312.GC16362@tiger>
-References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
- <1441801853-10264-1-git-send-email-gary.bisson@boundarydevices.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/3] thermal: Add Mediatek thermal controller support
+Date: Wed, 30 Sep 2015 08:13:49 +0200
+Message-ID: <20150930061349.GV7858@pengutronix.de>
+References: <1443015463-23639-1-git-send-email-s.hauer@pengutronix.de>
+ <1443015463-23639-3-git-send-email-s.hauer@pengutronix.de>
+ <20150929230438.GB22673@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1441801853-10264-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20150929230438.GB22673@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 09, 2015 at 02:30:44PM +0200, Gary Bisson wrote:
-> Hi all,
-> 
-> This series is a follow-up to the previous series that added LCD display
-> support.
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/364425.html
+Hi Eduardo,
 
-The MAINTAINERS file has been updated for a couple of release cycles
-with my new email address.  Please stop sending patches to
-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, and resend any patches you want me to collect to
-shawnguo-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org
+On Tue, Sep 29, 2015 at 04:04:40PM -0700, Eduardo Valentin wrote:
+> On Wed, Sep 23, 2015 at 03:37:42PM +0200, Sascha Hauer wrote:
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+>=20
+> You dont seam to be using this header. Can you please clean up to hav=
+e
+> only the headers you need?
 
-Shawn
+Ok, did that.
 
-> 
-> This one aims at adding touchscreen and WiFi support for Nitrogen6x as well as
-> adding two boards: Nitrogen6_Max and Nit6xlite.
-> 
-> It also takes care of updating the licenses to be GPLv2/X11.
-> 
-> The series has been tested against linux-next tag next-20150909.
-> 
-> Note that imx_v6_v7_defconfig has been used with the following additions:
-> CONFIG_TOUCHSCREEN_EDT_FT5X06=y
-> CONFIG_I2C_MUX_GPIO=y
-> CONFIG_RTC_DRV_M41T80=y
-> 
-> Modifications:
-> v2->v3:
-> - Rename nodes to general class of device as suggested by Philipp and Russell.
-> - Remove useless wakeup-gpio field for edt,ft5x06 touchscreen
-> - Add missing muxing for interrupt GPIO
-> - Rebased on next-20150909
-> v1->v2:
-> - Add Boundary Devices Inc. to vendor prefixes
-> - Relicense devices trees to GPLv2/X11 as suggested by Fabio for:
->   - Nitrogen6x
->   - SabreLite
->   - Nit6xLite
->   - Nitrogen6_MAX
-> - Change manufacturer to Boundary Devices as suggested by Fabio for:
->   - Nitrogen6x
->   - Nit6xLite
->   - Nitrogen6_MAX
-> - Fixed missing macros for gpio/irq values as suggested by Philipp.
-> - Rebased on next-20150908
-> 
-> Regards,
-> Gary
-> 
-> Gary Bisson (9):
->   ARM: dts: imx6dql-nitrogen6x: add touchscreen support
->   ARM: dts: imx6qdl-nitrogen6x: add wifi wl1271 support
->   ARM: dts: imx6qdl-nitrogen6x: relicense under GPLv2/X11
->   ARM: dts: imx6qdl-sabrelite: relicense under GPLv2/X11
->   of: Add Boundary Devices Inc. vendor prefix
->   ARM: dts: imx6q-nitrogen6x: change manufacturer to Boundary Devices
->   ARM: dts: imx6dl-nitrogen6x: change manufacturer to Boundary Devices
->   ARM: dts: imx: add Boundary Devices Nitrogen6_Max board
->   ARM: dts: imx: add Boundary Devices Nitrogen6_Lite board
-> 
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  arch/arm/boot/dts/Makefile                         |   2 +
->  arch/arm/boot/dts/imx6dl-nit6xlite.dts             |  49 ++
->  arch/arm/boot/dts/imx6dl-nitrogen6x.dts            |  44 +-
->  arch/arm/boot/dts/imx6dl-sabrelite.dts             |  40 +-
->  arch/arm/boot/dts/imx6q-nitrogen6_max.dts          |  53 ++
->  arch/arm/boot/dts/imx6q-nitrogen6x.dts             |  44 +-
->  arch/arm/boot/dts/imx6q-sabrelite.dts              |  40 +-
->  ...6qdl-nitrogen6x.dtsi => imx6qdl-nit6xlite.dtsi} | 396 ++++++----
->  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi       | 873 +++++++++++++++++++++
->  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi          | 111 ++-
->  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi           |  40 +-
->  12 files changed, 1523 insertions(+), 170 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx6dl-nit6xlite.dts
->  create mode 100644 arch/arm/boot/dts/imx6q-nitrogen6_max.dts
->  copy arch/arm/boot/dts/{imx6qdl-nitrogen6x.dtsi => imx6qdl-nit6xlite.dtsi} (50%)
->  create mode 100644 arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> 
-> -- 
-> 2.5.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +	struct mtk_thermal *mt =3D bank->mt;
+> > +	int temp, i, max;
+> > +	u32 raw;
+> > +
+> > +	temp =3D max =3D INT_MIN;
+> > +
+> > +	for (i =3D 0; i < bank_data[bank->id].num_sensors; i++) {
+> > +		raw =3D readl(mt->thermal_base + sensing_points[i].msr);
+> > +
+> > +		temp =3D raw_to_mcelsius(mt, raw);
+> > +
+> > +		/*
+> > +		 * The first read of a sensor often contains very high bogus
+> > +		 * temperature value. Filter these out so that the system does
+> > +		 * not immediately shut down.
+> > +		 */
+> > +		if (temp > 200000)
+>=20
+> Ok... How about after the first read?  is > 200000 a valid (supported=
+) value range?
+
+No, temperatures over 200=B0C are not supported for this SoC.
+
+> > +
+> > +	mt->dev =3D &pdev->dev;
+> > +
+> > +	auxadc =3D of_parse_phandle(np, "mediatek,auxadc", 0);
+> of_put?
+
+added
+
+> > +	if (!auxadc) {
+> > +		dev_err(&pdev->dev, "missing auxadc node\n");
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	auxadc_phys_base =3D of_get_phys_base(auxadc);
+> > +	if (auxadc_phys_base =3D=3D OF_BAD_ADDR) {
+> > +		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	apmixedsys =3D of_parse_phandle(np, "mediatek,apmixedsys", 0);
+> > +	if (!apmixedsys) {
+> > +		dev_err(&pdev->dev, "missing apmixedsys node\n");
+> > +		return -ENODEV;
+> > +	}
+
+=46or this one aswell.
+
+> > +	/*
+> > +	 * These calibration values should finally be provided by the
+> > +	 * firmware or fuses. For now use default values.
+> > +	 */
+> > +	mt->calib_slope =3D -123;
+> > +	mt->calib_offset =3D 465124;
+>=20
+> I would still prefer that this driver would not have these hardcoded
+> values. Specially considering the fact that we could map it in DT for
+> instance. What is the impact of using this? Does it work across all c=
+hip
+> distribution?
+
+I think yes, but not that accurate.
+
+>=20
+> Should we wait until you have the code to read the fuses before mergi=
+ng
+> this?
+
+I'd say we should merge this. It makes the life easier for the guys
+writing the cpufreq driver. Adding a dependency on a not yet written
+driver IMO only adds unnecessary delays.
+
+>=20
+> > +
+> > +	for (i =3D 0; i < MT8173_NUM_ZONES; i++)
+> > +		mtk_thermal_init_bank(mt, i, apmixed_phys_base, auxadc_phys_base=
+);
+> > +
+> > +	platform_set_drvdata(pdev, mt);
+> > +
+> > +	for (i =3D 0; i < MT8173_NUM_ZONES; i++) {
+> > +		struct mtk_thermal_bank *bank =3D &mt->banks[i];
+> > +
+> > +		bank->tzd =3D thermal_zone_of_sensor_register(&pdev->dev, i, ban=
+k,
+> > +				&mtk_thermal_ops);
+>=20
+> You need to error handle this.
+
+Errors here are pretty much expected. This is due to the behaviour of
+thermal_zone_of_sensor_register which errors out when no user for a
+sensor is found. Normally I would expect that I can register a sensor
+regardless if it is used or not, but that's not how
+thermal_zone_of_sensor_register is written.
+
+I could catch -EPROBE_DEFER here, but currently I see no case where thi=
+s
+can actually be returned from thermal_zone_of_sensor_register.
+
+What I can and should do though is to call
+thermal_zone_of_sensor_unregister only for sensors that are successfull=
+y
+registered.
+
+Sascha
+
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
