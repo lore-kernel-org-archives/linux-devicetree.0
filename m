@@ -1,46 +1,125 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH v5 0/6] Add support for DA9150 Fuel-Gauge
-Date: Wed, 30 Sep 2015 08:52:36 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D46067BA@SW-EX-MBX01.diasemi.com>
-References: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
- <20150922160405.GC4235@earth> <20150922171032.GH11284@x1>
+From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] Documentation: add DT bindings for ARM SCPI sensors
+Date: Wed, 30 Sep 2015 09:57:37 +0100
+Message-ID: <9hh612s708u.fsf@e105922-lin.cambridge.arm.com>
+References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
+	<1442335861-7282-2-git-send-email-punit.agrawal@arm.com>
+	<CAL_Jsq+_Rrv5XqNsL-gwQZv3HK20dQC3jY7qCoxQ8KWhhs4Fdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150922171032.GH11284@x1>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>
-Cc: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+_Rrv5XqNsL-gwQZv3HK20dQC3jY7qCoxQ8KWhhs4Fdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Rob Herring's message of "Tue, 29 Sep 2015 13:20:55 -0500")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2VwdGVtYmVyIDIyLCAyMDE1IDE4OjExLCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gT24gVHVl
-LCAyMiBTZXAgMjAxNSwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6DQo+ID4gT24gRnJpLCBTZXAg
-MTEsIDIwMTUgYXQgMTE6MDU6MjFBTSArMDEwMCwgQWRhbSBUaG9tc29uIHdyb3RlOg0KPiA+ID4g
-VGhpcyBwYXRjaCBzZXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgRGlhbG9nIERBOTE1MCBGdWVsLUdh
-dWdlLg0KPiA+ID4NCj4gPiA+IFsuLi5dDQo+ID4gPg0KPiA+ID4gQWRhbSBUaG9tc29uICg2KToN
-Cj4gPiA+ICAgbWZkOiBkYTkxNTA6IEFkZCBzdXBwb3J0IGZvciBGdWVsLUdhdWdlDQo+ID4gPiAg
-IG1mZDogZGE5MTUwOiBVcGRhdGUgRFQgYmluZGluZ3MgZm9yIEZ1ZWwtR2F1Z2Ugc3VwcG9ydA0K
-PiA+ID4gICBwb3dlcjogQWRkIHN1cHBvcnQgZm9yIERBOTE1MCBGdWVsLUdhdWdlDQo+ID4gPiAg
-IHBvd2VyOiBkYTkxNTA6IEFkZCBEVCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBGdWVsLUdh
-dWdlDQo+ID4gPiAgIG1mZDogZGE5MTUwOiBVc2UgcmVsYXRpdmUgcGF0aHMgaW4gRFQgYmluZGlu
-Z3MgZG9jdW1lbnQNCj4gPiA+ICAgbWZkOiBkYTkxNTA6IFVzZSBERUZJTkVfUkVTX0lSUV9OQU1F
-RCgpIGhlbHAgbWFjcm8gZm9yIElSUSByZXNvdXJjZQ0KPiA+ID4NCj4gPiA+ICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTE1MC50eHQgICB8ICAzMyArLQ0KPiA+ID4g
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL2RhOTE1MC1mZy50eHQgICAgICAgIHwgIDIz
-ICsNCj4gPiA+ICBkcml2ZXJzL21mZC9kYTkxNTAtY29yZS5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8IDE5MSArKysrKy0tDQo+ID4gPiAgZHJpdmVycy9wb3dlci9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKw0KPiA+ID4gIGRyaXZlcnMvcG93ZXIvTWFrZWZp
-bGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiA+ICBkcml2ZXJzL3Bv
-d2VyL2RhOTE1MC1mZy5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDU3OCArKysrKysrKysr
-KysrKysrKysrKysNCj4gPiA+ICBpbmNsdWRlL2xpbnV4L21mZC9kYTkxNTAvY29yZS5oICAgICAg
-ICAgICAgICAgICAgICB8ICAxOSArLQ0KPiA+ID4gIDcgZmlsZXMgY2hhbmdlZCwgODEwIGluc2Vy
-dGlvbnMoKyksIDQ1IGRlbGV0aW9ucygtKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvZGE5MTUwLWZnLnR4dA0KPiA+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Bvd2VyL2RhOTE1MC1mZy5jDQo+ID4NCj4gPiBJ
-IHN1Z2dlc3QsIHRoYXQgeW91IHRha2UgdGhlIHdob2xlIHBhdGNoc2V0IHZpYSB0aGUgbWZkIHRy
-ZWUuDQo+IA0KPiBUaGF0J3MgZmluZSwgYnV0IEknbSBzdGlsbCBtaXNzaW5nIGFuIEFjayBmb3Ig
-cGF0Y2ggNC4NCg0KSGkgTGVlLA0KDQpJIGJlbGlldmUgYWxsIHBhdGNoZXMgYXJlIG5vdyBhY2tl
-ZC4gSXMgdGhlcmUgYW55dGhpbmcgZWxzZSBuZWVkZWQgdG8gaGVscCB0aGlzDQphbG9uZz8NCg0K
-VGhhbmtzDQpBZGFtDQo=
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+
+> On Tue, Sep 15, 2015 at 11:50 AM, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> wrote:
+>> The System Control Processor (SCP) provides access to SoC sensors via
+>> the System Control and Power Interface (SCPI) Message Protocol. Add
+>> bindings to allow probing of these sensors. Also support referencing
+>> of the sensors for setting up thermal zones via the thermal DT
+>> bindings.
+>>
+>> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Thanks, Rob!
+
+Sudeep, now that we have acks for all the patches, are you OK to take
+this patchset along with your series adding support for SCPI?
+
+Punit
+
+>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 38 ++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>> index f002460..86302de 100644
+>> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>> @@ -72,8 +72,25 @@ Required sub-node properties:
+>>  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+>>                shared memory on Juno platforms
+>>
+>> +Sensor bindings for the sensors based on SCPI Message Protocol
+>> +--------------------------------------------------------------
+>> +SCPI provides an API to access the various sensors on the SoC.
+>> +
+>> +Required properties:
+>> +- compatible : should be "arm,scpi-sensors".
+>> +- #thermal-sensor-cells: should be set to 1. This property follows the
+>> +                        thermal device tree bindings[2].
+>> +
+>> +                        Valid cell values are raw identifiers (Sensor
+>> +                        ID) as used by the firmware. Refer to
+>> +                        platform documentation for your
+>> +                        implementation for the IDs to use. For Juno
+>> +                        R0 and Juno R1 refer to [3].
+>> +
+>>  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+>>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
+>> +[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
+>>
+>>  Example:
+>>
+>> @@ -122,6 +139,11 @@ scpi_protocol: scpi@2e000000 {
+>>                         clock-output-names = "pxlclk0", "pxlclk1";
+>>                 };
+>>         };
+>> +
+>> +       scpi_sensors0: sensors {
+>> +               compatible = "arm,scpi-sensors";
+>> +               #thermal-sensor-cells = <1>;
+>> +       };
+>>  };
+>>
+>>  cpu@0 {
+>> @@ -136,6 +158,17 @@ hdlcd@7ff60000 {
+>>         clocks = <&scpi_clk 4>;
+>>  };
+>>
+>> +thermal-zones {
+>> +       soc_thermal {
+>> +               polling-delay-passive = <100>;
+>> +               polling-delay = <1000>;
+>> +
+>> +                               /* sensor         ID */
+>> +               thermal-sensors = <&scpi_sensors0 3>;
+>> +               ...
+>> +       };
+>> +};
+>> +
+>>  In the above example, the #clock-cells is set to 1 as required.
+>>  scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
+>>  1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
+>> @@ -148,3 +181,8 @@ scpi_dvfs i.e. "atlclk".
+>>  Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
+>>  clock. '4' in the clock specifier here points to the second entry
+>>  in the output clocks of scpi_clocks  i.e. "pxlclk1"
+>> +
+>> +The thermal-sensors property in the soc_thermal node uses the
+>> +temperature sensor provided by SCP firmware to setup a thermal
+>> +zone. The ID "3" is the sensor identifier for the temperature sensor
+>> +as used by the firmware.
+>> --
+>> 2.5.1
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
