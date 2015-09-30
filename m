@@ -1,81 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
-Date: Wed, 30 Sep 2015 14:03:04 -0500
-Message-ID: <CAL_JsqLSDXGCush7TMavRkw5F=vbBbrFaexFyBdXHyrfNVGjXg@mail.gmail.com>
-References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
- <1459065.BtzC7pyUYF@wuerfel> <20150930173145.GG15635@sirena.org.uk> <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: porter: initial device tree
+Date: Wed, 30 Sep 2015 22:08:33 +0300
+Message-ID: <560C3331.3030606@cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <2022535.FYlSB7sRz4@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2022535.FYlSB7sRz4@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 30, 2015 at 1:12 PM, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 30 September 2015 at 10:31, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Sep 30, 2015 at 10:24:56AM +0200, Arnd Bergmann wrote:
->>> On Tuesday 29 September 2015 13:29:12 Tyler Baker wrote:
->>
->>> >         aliases {
->>> >                 serial0 = &uart0;
->>> > +               serial1 = &uart1;
->>> > +               serial2 = &uart2;
->>> > +               serial3 = &uart3;
->>> > +               serial4 = &uart4;
->>> >         };
->>
->>> In the changelog you mention "both uarts", but here you have five of them.
->>> Are they all accessible on the connector? If not, only provide aliases
->>> for the ones that are, using numbering that makes most sense for given
->>> how one would use the board.
->
-> Thanks for the comment Arnd. Mark's comment below is correct, there
-> are only two UARTs accessible on the LS connection in addition to the
-> one on the board (solder pad).
->
-> Is the following definition any clearer?
->
-> serial0 = &uart0; // Onboard UART0
-> serial1 = &uart2; // LS expansion UART0
-> serial2 = &uart3; // LS expansion UART1
+Hello.
 
-Yes, but use C style comments.
+On 09/30/2015 02:26 AM, Sergei Shtylyov wrote:
 
-What about the BT UART?
-
+> Add the initial device tree for the R8A7791 SoC based Porter low cost board
+> (which  is a  slightly modified version  of the Henninger board).
 >
-> If so, I'll respin this patch.
+> SCIF0 serial port support is included, so that the serial console can work.
 >
->> Unless I'm missing something there's only two UARTs brought out on the
->> low speed expansion connector (in addition to the one on the solder pads
->> which is currently supported).  We should also adjust the console
->> default to match whatever one of the low speed expansion connector UARTs
->> is being used by the bootloader.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >
-> Your not missing anything, I should not have added the additional
-> aliases, it is confusing, will remove. The UART boards by default come
-> configured to use UART1 on the LS connector.
+> ---
+> This patch is against the 'renesas-devel-20150928-v4.3-rc3' tag of Simon
+> Horman's 'renesas.git' repo.
 
-Also, the console default should be set in chosen stdout-path so we
-can move away from having to set it on the kernel command line. Then
-the aliases don't matter so much, but there may be some work to do to
-setup a getty correctly.
+    Forgot to mention I had to disable USB-DMAC.
 
-> + Peter as he has been submitting u-boot patches recently for the HiKey.
->
-> Obviously, both UEFI and u-boot can be configured to use either UART,
-> and at the moment u-boot defaults to using the on board UART. Whereas
-> UEFI is using UART1 on the LS connector. I'm fine with switching the
-> console default to use the UART1 on the LS connector as long as there
-> is agreement to do so.
+> Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+> ===================================================================
+> --- /dev/null
+> +++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+> @@ -0,0 +1,54 @@
+> +/*
+> + * Device Tree Source for the Porter board
+> + *
+> + * Copyright (C) 2015 Cogent Embedded, Inc.
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +#include "r8a7791.dtsi"
+> +
+> +/ {
+> +	model = "Porter";
+> +	compatible = "renesas,porter", "renesas,r8a7791";
+> +
+> +	aliases {
+> +		serial0 = &scif0;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttySC0,115200 ignore_loglevel";
 
-BTW, u-boot can output to multiple serial ports. I think I gave Peter
-details on how to do it.
+    Oops, scratch that. I thought I removed console= but I forgot to refresh 
+the patch. :-/
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
+
