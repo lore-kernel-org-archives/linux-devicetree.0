@@ -1,61 +1,47 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH v2 2/2] regulator: act8865: add DT binding for property
- "active-semi, vsel-high"
-Date: Wed, 30 Sep 2015 15:21:54 +0200
-Message-ID: <20150930132154.GI31199@odux.rfo.atmel.com>
-References: <1443597950-27849-1-git-send-email-wenyou.yang@atmel.com>
- <1443597950-27849-3-git-send-email-wenyou.yang@atmel.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 4/6] tty: serial: msm: Add TX DMA support
+Date: Wed, 30 Sep 2015 14:29:19 +0100
+Message-ID: <20150930132919.GI10997@leverpostej>
+References: <1443614906-2196-1-git-send-email-ivan.ivanov@linaro.org>
+ <1443614906-2196-5-git-send-email-ivan.ivanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443597950-27849-3-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1443614906-2196-5-git-send-email-ivan.ivanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Cc: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 30, 2015 at 03:25:50PM +0800, Wenyou Yang wrote:
-> Add a DT property "active-semi,vsel-high" to indicate the VSEL pin
-> is high. If this property is missing, then assume the VSEL pin is
-> low(0).
+On Wed, Sep 30, 2015 at 01:08:24PM +0100, Ivan T. Ivanov wrote:
+> Add transmit DMA support for UARTDM type of controllers.
 > 
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-Reviewed-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-
+> Tested on APQ8064, which have UARTDM v1.3 and ADM DMA engine
+> and APQ8016, which have UARTDM v1.4 and BAM DMA engine.
+> 
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 > ---
+>  .../devicetree/bindings/serial/qcom,msm-uartdm.txt |   3 +
+>  drivers/tty/serial/msm_serial.c                    | 312 +++++++++++++++++++--
+>  drivers/tty/serial/msm_serial.h                    |   3 +
+>  3 files changed, 294 insertions(+), 24 deletions(-)
 > 
-> Changes in v2: None
-> 
->  .../bindings/regulator/act8865-regulator.txt       |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-> index e91485d..6067d98 100644
-> --- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-> @@ -8,6 +8,8 @@ Required properties:
+> diff --git a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> index a2114c217376..a600023d9ec1 100644
+> --- a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> +++ b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> @@ -26,6 +26,9 @@ Required properties:
 >  Optional properties:
->  - system-power-controller: Telling whether or not this pmic is controlling
->    the system power. See Documentation/devicetree/bindings/power/power-controller.txt .
-> +- active-semi,vsel-high: Indicates the VSEL pin is high.
-> +  If this property is missing, assume the VSEL pin is low(0).
->  
->  Optional input supply properties:
->  - for act8600:
-> @@ -49,6 +51,7 @@ Example:
->  			pmic: act8865@5b {
->  				compatible = "active-semi,act8865";
->  				reg = <0x5b>;
-> +				active-semi,vsel-high;
->  				status = "disabled";
->  
->  				regulators {
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  - dmas: Should contain dma specifiers for transmit and receive channels
+>  - dma-names: Should contain "tx" for transmit and "rx" for receive channels
+> +- qcom,tx-crci: Identificator <u32> for Client Rate Control Interface to be
+> +           used with TX DMA channel. Required when using DMA for transmission
+> +           with UARTDM v1.3 and bellow.
+
+This sounds like it belongs in the dma-specifier, and dealt with by the
+DMA controller driver.
+
+Why does the UART driver need to know about this?
+
+Mark.
