@@ -1,413 +1,780 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Wed, 30 Sep 2015 10:28:03 +1000
-Message-ID: <1443572883.2865.42.camel@kernel.crashing.org>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-	 <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-	 <20150828123228.GE31748@leverpostej>
-	 <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
-	 <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak@codeaurora>
+From: Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] iio:light: Add Dyna-Image AP3223 ambient light and proximity driver
+Date: Tue, 29 Sep 2015 18:24:29 -0700
+Message-ID: <1443576270-36548-1-git-send-email-sureshraj@google.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-29 at 14:08 +0530, Ganapatrao Kulkarni wrote:
-> (sending again, by mistake it was set to html mode)
+Minimal implementation with support for raw light and proximity reading.
 
-The representation consists of a hierarchy of domains, the idea being
-that resources are grouped in domains of similar average performance
-relative to each other.
+This is based on the driver provided by the vendor
+(which was an input driver). Authors of the
+driver from the vendor included
+* John Huang <john.huang-qvb3surRQ5wkmLvzuZlaBw@public.gmane.org>
+* Templeton Tsai <templeton.tsai-qvb3surRQ5wkmLvzuZlaBw@public.gmane.org>
+* Vic Lee <Vic_Lee-4gYQFoH7KfQ@public.gmane.org>
 
-The platform decides which "levels" of that hierarchy are significant. 
+v2
+* Using regmap framework
+* Error handling
+* Code cleanups following comments
 
-The "ibm,associativity" property allows to determine the associatitivy
-between two resources (ie nodes) at a given level.
+Signed-off-by: Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/light/Kconfig  |  11 +
+ drivers/iio/light/Makefile |   1 +
+ drivers/iio/light/ap3223.c | 706 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 718 insertions(+)
+ create mode 100644 drivers/iio/light/ap3223.c
 
-Unfortunately that property went through changes, so another property
-in the DT (ibm,architecture-vec-5) contains, among a bunch of other
-things, a bit indicating which form of the ibm,associativity property
-is used. I'm going to stick to the new "form 1" in this description.
-
-The ibm,associativity contains one or more lists of numbers (32-bit
-cells), which represent the domains:
-
-	< C1 , L1_1, L1_2, ... , C2, L2_1, L2_2, ... >
-
-Where C1 (count 1) is the number of items for list 1, and L1_1,
-L1_2, ... L1_C1 are the items for list 1, and same for C2/L2.
-
-The entries in those lists are domain numbers from the highest level of
-grouping to the lowest (successive numbers are sub divisions)
-for example drawer#, socket#, chip#, core#... with the lowest level
-being the actual resource itself. So within a domain that last number
-is generally unique.
-
-Different resources can have different number of levels, for example if
-we have a grouping of node,socket,chip,core, a CPU core node would have
-a list with all 4 but a memory controller on a chip might have only the
-first 3.
-
-This is an important statement in the spec:
-
-<<
-The user of this information is cautioned not to imply
-any specific physical/logical significance of the various intermediate
-levels.
->>
-
-We can have multiple lists because a given resource can be connected
-via multiple path in the same platform.
-
-That means that to properly calculate the distance to another resource,
-all the path need to be looked at (assuming the HW will pick the
-shortest).
-
-Additionally, to help the OS, another property "ibm,associativity
--reference-points" property indicates which levels (which indices in
-the above lists) are of biggest significance to the platform. This can
-typically be used by an OS to decide what to consider a "NUMA node"
-if the OS cannot operate on distances alone. This is a list of 1-based
-numbers representing indices in the associativity list. They should
-be in order of significance of the boundary.
-
-Finally, the ibm,max-associativity-domains (in the /rtas node on
-pseries) is an array of cells < C, M1, M2, ... MC > (first is
-count) containing for each domain/level the max number supported
-by the platform.
-
-Ben.
-
-> On Tue, Sep 29, 2015 at 2:05 PM, Ganapatrao Kulkarni
-> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Mark,
-> > 
-> > I have tried to answer your comments, in the meantime we are
-> > waiting for Ben
-> > to share the details.
-> > 
-> > On Fri, Aug 28, 2015 at 6:02 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org
-> > > wrote:
-> > > 
-> > > Hi,
-> > > 
-> > > On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni
-> > > wrote:
-> > > > DT bindings for numa map for memory, cores and IOs using
-> > > > arm,associativity device node property.
-> > > 
-> > > Given this is just a copy of ibm,associativity, I'm not sure I
-> > > see much
-> > > point in renaming the properties.
-> > > 
-> > > However, (somewhat counter to that) I'm also concerned that this
-> > > isn't
-> > > sufficient for systems we're beginning to see today (more on that
-> > > below), so I don't think a simple copy of ibm,associativity is
-> > > good
-> > > enough.
-> > 
-> > it is just copy right now, however it can evolve when we come
-> > across more
-> > arm64 numa platforms
-> > > 
-> > > 
-> > > > 
-> > > > Signed-off-by: Ganapatrao Kulkarni <
-> > > > gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/arm/numa.txt | 212
-> > > > +++++++++++++++++++++++++
-> > > >  1 file changed, 212 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/arm/numa.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/arm/numa.txt
-> > > > b/Documentation/devicetree/bindings/arm/numa.txt
-> > > > new file mode 100644
-> > > > index 0000000..dc3ef86
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/arm/numa.txt
-> > > > @@ -0,0 +1,212 @@
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +NUMA binding description.
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +1 - Introduction
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +
-> > > > +Systems employing a Non Uniform Memory Access (NUMA)
-> > > > architecture
-> > > > contain
-> > > > +collections of hardware resources including processors,
-> > > > memory, and I/O
-> > > > buses,
-> > > > +that comprise what is commonly known as a NUMA node.
-> > > > +Processor accesses to memory within the local NUMA node is
-> > > > generally
-> > > > faster
-> > > > +than processor accesses to memory outside of the local NUMA
-> > > > node.
-> > > > +DT defines interfaces that allow the platform to convey NUMA
-> > > > node
-> > > > +topology information to OS.
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +2 - arm,associativity
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +The mapping is done using arm,associativity device property.
-> > > > +this property needs to be present in every device node which
-> > > > needs to
-> > > > to be
-> > > > +mapped to numa nodes.
-> > > 
-> > > Can't there be some inheritance? e.g. all devices on a bus with
-> > > an
-> > > arm,associativity property being assumed to share that value?
-> > 
-> > yes there is inheritance and respective bus drivers should take
-> > care of it,
-> > like pci driver does at present.
-> > > 
-> > > 
-> > > > +
-> > > > +arm,associativity property is set of 32-bit integers which
-> > > > defines
-> > > > level of
-> > > 
-> > > s/set/list/ -- the order is important.
-> > 
-> > ok
-> > > 
-> > > 
-> > > > +topology and boundary in the system at which a significant
-> > > > difference
-> > > > in
-> > > > +performance can be measured between cross-device accesses
-> > > > within
-> > > > +a single location and those spanning multiple locations.
-> > > > +The first cell always contains the broadest subdivision within
-> > > > the
-> > > > system,
-> > > > +while the last cell enumerates the individual devices, such as
-> > > > an SMT
-> > > > thread
-> > > > +of a CPU, or a bus bridge within an SoC".
-> > > 
-> > > While this gives us some hierarchy, this doesn't seem to encode
-> > > relative
-> > > distances at all. That seems like an oversight.
-> > 
-> > 
-> > distance is computed, will add the details to document.
-> > local nodes will have distance as 10(LOCAL_DISTANCE) and every
-> > level, the
-> > distance multiplies by 2.
-> > for example, for level 1 numa topology, distance from local node to
-> > remote
-> > node will be 20.
-> > 
-> > > 
-> > > 
-> > > Additionally, I'm somewhat unclear on how what you'd be expected
-> > > to
-> > > provide for this property in cases like ring or mesh
-> > > interconnects,
-> > > where there isn't a strict hierarchy (see systems with ARM's own
-> > > CCN, or
-> > > Tilera's TILE-Mx), but there is some measure of closeness.
-> > 
-> > 
-> > IIUC, as per ARMs CCN architecture, all core/clusters are at equal
-> > distance
-> > of DDR, i dont see any NUMA topology.
-> > however, if there are 2 SoC connected thorough the CCN, then it is
-> > very much
-> > similar to cavium topology.
-> > 
-> > > Must all of these have the same length? If so, why not have a
-> > > #(whatever)-cells property in the root to describe the expected
-> > > length?
-> > > If not, how are they to be interpreted relative to each other?
-> > 
-> > 
-> > yes, all are of default size.
-> > IMHO, there is no need to add cells property.
-> > > 
-> > > 
-> > > > +
-> > > > +ex:
-> > > 
-> > > s/ex/Example:/, please. There's no need to contract that.
-> > > 
-> > > > +       /* board 0, socket 0, cluster 0, core 0  thread 0 */
-> > > > +       arm,associativity = <0 0 0 0 0>;
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +3 - arm,associativity-reference-points
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +This property is a set of 32-bit integers, each representing
-> > > > an index
-> > > > into
-> > > 
-> > > Likeise, s/set/list/
-> > 
-> > ok
-> > > 
-> > > 
-> > > > +the arm,associativity nodes. The first integer is the most
-> > > > significant
-> > > > +NUMA boundary and the following are progressively less
-> > > > significant
-> > > > boundaries.
-> > > > +There can be more than one level of NUMA.
-> > > 
-> > > I'm not clear on why this is necessary; the arm,associativity
-> > > property
-> > > is already ordered from most significant to least significant per
-> > > its
-> > > description.
-> > 
-> > 
-> > first entry in arm,associativity-reference-points is used to find
-> > which
-> > entry in associativity defines node id.
-> > also entries in arm,associativity-reference-points defines,
-> > how many entries(depth) in associativity can be used to calculate
-> > node
-> > distance
-> > in both level 1 and  multi level(hierarchical) numa topology.
-> > 
-> > > 
-> > > 
-> > > What does this property achieve?
-> > > 
-> > > The description also doesn't describe where this property is
-> > > expected to
-> > > live. The example isn't sufficient to disambiguate that,
-> > > especially as
-> > > it seems like a trivial case.
-> > 
-> > sure, will add one more example to describe the
-> > arm,associativity-reference-points
-> > > 
-> > > 
-> > > Is this only expected at the root of the tree? Can it be re
-> > > -defined in
-> > > sub-nodes?
-> > 
-> > yes it is defined only at the root.
-> > > 
-> > > 
-> > > > +
-> > > > +Ex:
-> > > 
-> > > s/Ex/Example:/, please
-> > 
-> > sure.
-> > > 
-> > > 
-> > > > +       arm,associativity-reference-points = <0 1>;
-> > > > +       The board Id(index 0) used first to calculate the
-> > > > associativity
-> > > > (node
-> > > > +       distance), then follows the  socket id(index 1).
-> > > > +
-> > > > +       arm,associativity-reference-points = <1 0>;
-> > > > +       The socket Id(index 1) used first to calculate the
-> > > > associativity,
-> > > > +       then follows the board id(index 0).
-> > > > +
-> > > > +       arm,associativity-reference-points = <0>;
-> > > > +       Only the board Id(index 0) used to calculate the
-> > > > associativity.
-> > > > +
-> > > > +       arm,associativity-reference-points = <1>;
-> > > > +       Only socket Id(index 1) used to calculate the
-> > > > associativity.
-> > > > +
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +4 - Example dts
-> > > > 
-> > > > +==============================================================
-> > > > ================
-> > > > +
-> > > > +Example: 2 Node system consists of 2 boards and each board
-> > > > having one
-> > > > socket
-> > > > +and 8 core in each socket.
-> > > > +
-> > > > +       arm,associativity-reference-points = <0>;
-> > > > +
-> > > > +       memory@00c00000 {
-> > > > +               device_type = "memory";
-> > > > +               reg = <0x0 0x00c00000 0x0 0x80000000>;
-> > > > +               /* board 0, socket 0, no specific core */
-> > > > +               arm,associativity = <0 0 0xffff>;
-> > > > +       };
-> > > > +
-> > > > +       memory@10000000000 {
-> > > > +               device_type = "memory";
-> > > > +               reg = <0x100 0x00000000 0x0 0x80000000>;
-> > > > +               /* board 1, socket 0, no specific core */
-> > > > +               arm,associativity = <1 0 0xffff>;
-> > > > +       };
-> > > > +
-> > > > +       cpus {
-> > > > +               #address-cells = <2>;
-> > > > +               #size-cells = <0>;
-> > > > +
-> > > > +               cpu@000 {
-> > > > +                       device_type = "cpu";
-> > > > +                       compatible =  "arm,armv8";
-> > > > +                       reg = <0x0 0x000>;
-> > > > +                       enable-method = "psci";
-> > > > +                       /* board 0, socket 0, core 0*/
-> > > > +                       arm,associativity = <0 0 0>;
-> > > 
-> > > We should specify w.r.t. memory and CPUs how the property is
-> > > expected to
-> > > be used (e.g. in the CPU nodes rather than the cpu-map, with
-> > > separate
-> > > memory nodes, etc). The generic description of arm,associativity
-> > > isn't
-> > > sufficient to limit confusion there.
-> > 
-> > ok, will add the details like which nodes can use this property.
-> > 
-> > > 
-> > > 
-> > > Thanks,
-> > > Mark.
-> > 
-> > 
-> > thanks
-> > Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+index ae68c64..5c93ef0 100644
+--- a/drivers/iio/light/Kconfig
++++ b/drivers/iio/light/Kconfig
+@@ -27,6 +27,17 @@ config AL3320A
+ 	 To compile this driver as a module, choose M here: the
+ 	 module will be called al3320a.
+ 
++config AP3223
++	tristate "AP3223 ambient light and proximity sensor"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	 Say Y here if you want to build a driver for the Dyna Image AP3223
++	 ambient light and proximity sensor.
++
++	 To compile this driver as a module, choose M here: the
++	 module will be called ap3223.
++
+ config APDS9300
+ 	tristate "APDS9300 ambient light sensor"
+ 	depends on I2C
+diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+index b12a516..13a74f9 100644
+--- a/drivers/iio/light/Makefile
++++ b/drivers/iio/light/Makefile
+@@ -5,6 +5,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
+ obj-$(CONFIG_AL3320A)		+= al3320a.o
++obj-$(CONFIG_AP3223)		+= ap3223.o
+ obj-$(CONFIG_APDS9300)		+= apds9300.o
+ obj-$(CONFIG_CM32181)		+= cm32181.o
+ obj-$(CONFIG_CM3232)		+= cm3232.o
+diff --git a/drivers/iio/light/ap3223.c b/drivers/iio/light/ap3223.c
+new file mode 100644
+index 0000000..6b457c1
+--- /dev/null
++++ b/drivers/iio/light/ap3223.c
+@@ -0,0 +1,706 @@
++/*
++ * Copyright (C) 2015 Google, Inc.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * Note about the original authors:
++ *
++ * The driver for AP3223 was originally distributed by dyna image in a
++ * different framework (as an input driver). This driver uses code from
++ * that driver and converts it to iio framework. The non-iio driver from
++ * dyna image is not available online anywhere, so there is no reference
++ * for it here. However, that driver is also GPLv2.
++ * The following is part of the header found in that file
++ * (The GPL notice from the original header is removed)
++ *
++ * >> This file is part of the AP3223, AP3212C and AP3216C sensor driver.
++ * >> AP3426 is combined proximity and ambient light sensor.
++ * >> AP3216C is combined proximity, ambient light sensor and IRLED.
++ * >>
++ * >> Contact: John Huang <john.huang-qvb3surRQ5wkmLvzuZlaBw@public.gmane.org>
++ * >>	       Templeton Tsai <templeton.tsai-qvb3surRQ5wkmLvzuZlaBw@public.gmane.org>
++ *
++ * Another author initials mentioned in that file was just YC (and no name).
++ *
++ * Not sure for what kernel version the driver from dyna image was written for.
++ * Vic Lee <Vic_Lee-4gYQFoH7KfQ@public.gmane.org> made modifications to it to run on 3.14.
++ *
++ * Datasheet:
++ * http://www.dyna-image.com/english/product/optical-sensor-detail.php?cpid=2&dpid=8#doc
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/i2c.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/mutex.h>
++#include <linux/delay.h>
++#include <linux/of_gpio.h>
++#include <linux/regmap.h>
++#include <linux/timer.h>
++#include <linux/gpio.h>
++#include <linux/device.h>
++
++#define AP3223_DRV_NAME "ap3223"
++
++/* ap3223 control registers */
++
++#define	AP3223_REG_SYS_CTRL		0x00
++#define AP3223_REG_SYS_CTRL_SHIFT	(0)
++#define AP3223_REG_SYS_CTRL_MASK	0x07
++
++/* System Mode (AP3223_REG_SYS_CTRL) */
++
++#define AP3223_SYS_DEV_DOWN		0x00
++#define AP3223_SYS_ALS_ENABLE		0x01
++#define AP3223_SYS_PS_ENABLE		0x02
++#define AP3223_SYS_ALS_PS_ENABLE	0x03
++#define AP3223_SYS_DEV_RESET		0x04
++
++#define AP3223_REG_SYS_INTSTATUS	0x01
++#define AP3223_REG_SYS_INT_SHIFT	(0)
++#define AP3223_REG_SYS_INT_ALS_SHIFT	(0)
++#define AP3223_REG_SYS_INT_PS_SHIFT	(1)
++#define AP3223_REG_SYS_INT_OBJ_SHIFT	(4)
++#define AP3223_REG_SYS_INT_IR_OV_SHIFT	(5)
++
++/* INT FLAG BIT MASK */
++
++#define AP3223_REG_SYS_INT_MASK		0x03
++#define AP3223_REG_SYS_INT_AMASK	0x01
++#define AP3223_REG_SYS_INT_PMASK	0x02
++#define AP3223_REG_SYS_INT_OBJ_MASK	0x10
++#define AP3223_REG_SYS_INT_IR_OV_MASK	0x20
++
++#define AP3223_REG_SYS_INTCTRL		0x02
++
++/* INT Clear Manner */
++
++#define	AP3223_SYS_INT_CLEAR_AUTO	0x00
++#define	AP3223_SYS_INT_CLEAR_MANUAL	0x01
++
++#define AP3223_REG_SYS_WAITTIME		0x06
++
++#define AP3223_WAITTIME_SLOT(n)		(n)
++
++/* ap3223 data registers */
++
++#define AP3223_REG_IR_DATA_LOW		0x0A
++#define AP3223_REG_IR_DATA_LOW_SHIFT	(0)
++#define AP3223_REG_IR_DATA_LOW_MASK	0xFF
++
++#define AP3223_REG_IR_DATA_HIGH		0x0B
++#define AP3223_REG_IR_DATA_HIGH_SHIFT	(0)
++#define AP3223_REG_IR_DATA_HIGH_MASK	0x03
++
++#define AP3223_REG_ALS_DATA_LOW		0x0C
++
++#define AP3223_REG_ALS_DATA_HIGH	0x0D
++
++#define AP3223_REG_PS_DATA_LOW		0x0E
++#define AP3223_REG_PS_DATA_LOW_SHIFT	(0)
++#define AL3223_REG_PS_DATA_LOW_MASK	0xFF
++
++#define AP3223_REG_PS_DATA_HIGH		0x0F
++#define AP3223_REG_PS_DATA_HIGH_SHIFT	(0)
++#define AL3223_REG_PS_DATA_HIGH_MASK	0x03
++
++#define AP3223_REG_ALS_GAIN		0x10
++
++/* ALS Gain */
++
++#define AP3223_ALS_RANGE_0		0x00	/* Full range 65535 lux */
++#define AP3223_ALS_RANGE_1		0x01	/* Full range 16383 lux */
++#define AP3223_ALS_RANGE_2		0x02	/* Full range 4095 lux */
++#define AP3223_ALS_RANGE_3		0x03	/* Full range 1023 lux */
++#define AP3223_ALS_RANGE_MASK		0x30
++#define AP3223_ALS_RANGE_SHIFT		(4)
++#define AP3223_ALS_PERSIST_MASK		0x0F
++
++#define AP3223_REG_ALS_PERSIST		0x14
++#define AP3223_REG_ALS_PERSIST_SHIFT	(0)
++#define AP3223_REG_ALS_PERSIST_MASK	0x3F
++
++#define AP3223_REG_ALS_THDL_L		0x1A
++#define AP3223_REG_ALS_THDL_L_SHIFT	(0)
++#define AP3223_REG_ALS_THDL_L_MASK	0xFF
++
++#define AP3223_REG_ALS_THDL_H		0x1B
++#define AP3223_REG_ALS_THDL_H_SHIFT	(0)
++#define AP3223_REG_ALS_THDL_H_MASK	0xFF
++
++#define AP3223_REG_ALS_THDH_L		0x1C
++#define AP3223_REG_ALS_THDH_L_SHIFT	(0)
++#define AP3223_REG_ALS_THDH_L_MASK	0xFF
++
++#define AP3223_REG_ALS_THDH_H		0x1D
++#define AP3223_REG_ALS_THDH_H_SHIFT	(0)
++#define AP3223_REG_ALS_THDH_H_MASK	0xFF
++
++/* ap3223 PS Gain registers */
++
++#define AP3223_REG_PS_GAIN		0x20
++#define AP3223_REG_PS_GAIN_SHIFT	(2)
++#define AP3223_REG_PS_GAIN_MASK		0x0C
++
++/* PS Gain */
++
++#define AP3223_PS_GAIN_1		0x00	/* PS resolution * 1 */
++#define AP3223_PS_GAIN_2		0x01	/* PS resolution * 2 */
++#define AP3223_PS_GAIN_4		0x02	/* PS resolution * 4 */
++#define AP3223_PS_GAIN_8		0x03	/* PS resolution * 8 */
++
++#define AP3223_REG_PS_LEDD		0x21	/* PS LED DRIVER */
++#define AP3223_REG_PS_LEDD_SHIFT	(0)
++#define AP3223_REG_PS_LEDD_MASK		0x03
++
++/* PS LED Driver current percentage */
++
++#define AP3223_PS_LED_DRVR_CUR_P_16_7	0x00	/* 16.7% */
++#define AP3223_PS_LED_DRVR_CUR_P_33_3	0x01	/* 33.3% */
++#define AP3223_PS_LED_DRVR_CUR_P_66_7	0x02	/* 66.7% */
++#define AP3223_PS_LED_DRVR_CUR_P_100	0x03	/* 100% (default) */
++
++#define AP3223_REG_PS_IFORM		0x22	/* PS INT Mode */
++
++#define AP3223_PS_INT_ALGO_ZONE_MODE	0x00
++#define AP3223_PS_INT_ALSO_HYST_MODE	0x01
++
++#define AP3223_REG_PS_MEAN		0x23
++#define AP3223_REG_PS_MEAN_SHIFT	(0)
++#define AP3223_REG_PS_MEAN_MASK		0x03
++
++/* PS MEAN */
++
++#define AP3223_PS_MEAN_0		0x00	/* 5ms @2T */
++#define AP3223_PS_MEAN_1		0x01	/* 9.6ms @2T */
++#define AP3223_PS_MEAN_2		0x02	/* 14.1ms @2T */
++#define AP3223_PS_MEAN_3		0x03	/* 18.7ms @2T */
++
++#define AP3223_REG_PS_SMARTINT		0x24	/* PS Smart INT for low power */
++#define AP3223_PS_SMARTINT_DISABLE	0x00
++#define AP3223_PS_SMARTINT_ENABLE	0x01
++
++#define AP3223_REG_PS_INTEGR_TIME	0x25
++
++#define AP3223_PS_INTEGR_TIME_SEL(t)	(t)
++
++#define AP3223_REG_PS_PERSIST		0x26
++#define AP3223_REG_PS_PERSIST_SHIFT	(0)
++#define AP3223_REG_PS_PERSIST_MASK	0x3F
++
++#define AP3223_PS_PERSIST_CONV_TIME(t)	(t)
++
++#define AP3223_REG_PS_CAL_L		0x28
++#define AP3223_REG_PS_CAL_L_SHIFT	(0)
++#define AP3223_REG_PS_CAL_L_MASK	0xFF
++
++#define AP3223_REG_PS_CAL_H		0x29
++#define AP3223_REG_PS_CAL_H_SHIFT	(0)
++#define AP3223_REG_PS_CAL_H_MASK	0x01
++
++#define AP3223_REG_PS_THDL_L		0x2A
++#define AP3223_REG_PS_THDL_L_SHIFT	(0)
++#define AP3223_REG_PS_THDL_L_MASK	0xFF
++
++#define AP3223_REG_PS_THDL_H		0x2B
++#define AP3223_REG_PS_THDL_H_SHIFT	(0)
++#define AP3223_REG_PS_THDL_H_MASK	0x03
++
++#define AP3223_REG_PS_THDH_L		0x2C
++#define AP3223_REG_PS_THDH_L_SHIFT	(0)
++#define AP3223_REG_PS_THDH_L_MASK	0xFF
++
++#define AP3223_REG_PS_THDH_H		0x2D
++#define AP3223_REG_PS_THDH_H_SHIFT	(0)
++#define AP3223_REG_PS_THDH_H_MASK	0x03
++
++/* PS Engineering Registers */
++
++#define AP3223_REG_PS_DC_1		0x30	/* Only in Engineering chip,
++						couldn't find in datasheet */
++#define AP3223_REG_PS_DC_1_SHIFT	(0)
++#define AP3223_REG_PS_DC_1_MASK		0xFF
++
++#define AP3223_REG_PS_DC_2		0x32	/* Only in Engineering chip,
++						couldn't find in datasheet */
++#define AP3223_REG_PS_DC_2_SHIFT	(0)
++#define AP3223_REG_PS_DC_2_MASK		0xFF
++
++/* No adjustment to lux value reading */
++#define AP3223_DEFAULT_CAL			100
++
++#define AP3223_GAIN_65535_LUX_PER_RES_BIT	65535
++#define AP3223_GAIN_16383_LUX_PER_RES_BIT	16383
++#define AP3223_GAIN_4095_LUX_PER_RES_BIT	4095
++#define AP3223_GAIN_1023_LUX_PER_RES_BIT	1023
++
++/* Initial Threshold Configuration */
++#define AP3223_ALS_LOW_THD_L_INIT		0xE8
++#define AP3223_ALS_LOW_THD_H_INIT		0x03
++#define AP3223_ALS_HIGH_THD_L_INIT		0xD0
++#define AP3223_ALS_HIGH_THD_H_INIT		0x07
++
++#define AP3223_PS_LOW_THD_L_INIT		0x64
++#define AP3223_PS_LOW_THD_H_INIT		0x00
++#define AP3223_PS_HIGH_THD_L_INIT		0xF4
++#define AP3223_PS_HIGH_THD_H_INIT		0x00
++
++struct ap3223_data {
++	struct i2c_client *client;
++	int cali;
++	struct regmap *regmap;
++};
++
++static const u8 ap3223_initial_reg_conf[] = {
++	AP3223_REG_SYS_CTRL, AP3223_SYS_ALS_PS_ENABLE,
++	AP3223_REG_SYS_WAITTIME, AP3223_WAITTIME_SLOT(0),
++	AP3223_REG_ALS_GAIN, (AP3223_ALS_RANGE_2 << AP3223_ALS_RANGE_SHIFT),
++	AP3223_REG_ALS_THDL_L, AP3223_ALS_LOW_THD_L_INIT,
++	AP3223_REG_ALS_THDL_H, AP3223_ALS_LOW_THD_H_INIT,
++	AP3223_REG_ALS_THDH_L, AP3223_ALS_HIGH_THD_L_INIT,
++	AP3223_REG_ALS_THDH_H, AP3223_ALS_HIGH_THD_H_INIT,
++	AP3223_REG_PS_GAIN, (AP3223_PS_GAIN_8 << AP3223_REG_PS_GAIN_SHIFT),
++	AP3223_REG_PS_LEDD, AP3223_PS_LED_DRVR_CUR_P_100,
++	AP3223_REG_PS_IFORM, AP3223_PS_INT_ALSO_HYST_MODE,
++	AP3223_REG_PS_MEAN, AP3223_PS_MEAN_0,
++	AP3223_REG_PS_SMARTINT, AP3223_PS_SMARTINT_ENABLE,
++	AP3223_REG_PS_INTEGR_TIME, AP3223_PS_INTEGR_TIME_SEL(0x1F),
++	AP3223_REG_PS_PERSIST, AP3223_PS_PERSIST_CONV_TIME(0x01),
++	AP3223_REG_PS_THDL_L, AP3223_PS_LOW_THD_L_INIT,
++	AP3223_REG_PS_THDH_L, AP3223_PS_HIGH_THD_L_INIT,
++	AP3223_REG_PS_THDH_H, AP3223_PS_HIGH_THD_H_INIT
++};
++
++static const int ap3223_range[] = {
++	AP3223_GAIN_65535_LUX_PER_RES_BIT,
++	AP3223_GAIN_16383_LUX_PER_RES_BIT,
++	AP3223_GAIN_4095_LUX_PER_RES_BIT,
++	AP3223_GAIN_1023_LUX_PER_RES_BIT
++};
++
++static bool ap3223_is_writable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case AP3223_REG_SYS_CTRL:
++	case AP3223_REG_SYS_INTSTATUS:
++	case AP3223_REG_SYS_INTCTRL:
++	case AP3223_REG_SYS_WAITTIME:
++	case AP3223_REG_ALS_GAIN:
++	case AP3223_REG_ALS_PERSIST:
++	case AP3223_REG_ALS_THDL_L:
++	case AP3223_REG_ALS_THDL_H:
++	case AP3223_REG_ALS_THDH_L:
++	case AP3223_REG_ALS_THDH_H:
++	case AP3223_REG_PS_GAIN:
++	case AP3223_REG_PS_LEDD:
++	case AP3223_REG_PS_IFORM:
++	case AP3223_REG_PS_MEAN:
++	case AP3223_REG_PS_SMARTINT:
++	case AP3223_REG_PS_INTEGR_TIME:
++	case AP3223_REG_PS_PERSIST:
++	case AP3223_REG_PS_CAL_L:
++	case AP3223_REG_PS_CAL_H:
++	case AP3223_REG_PS_THDL_L:
++	case AP3223_REG_PS_THDL_H:
++	case AP3223_REG_PS_THDH_L:
++	case AP3223_REG_PS_THDH_H:
++		return true;
++
++	default:
++		return false;
++	}
++}
++
++static bool ap3223_is_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case AP3223_REG_SYS_CTRL:
++	case AP3223_REG_SYS_INTSTATUS:
++	case AP3223_REG_SYS_INTCTRL:
++	case AP3223_REG_SYS_WAITTIME:
++	case AP3223_REG_IR_DATA_LOW:
++	case AP3223_REG_IR_DATA_HIGH:
++	case AP3223_REG_ALS_DATA_LOW:
++	case AP3223_REG_ALS_DATA_HIGH:
++	case AP3223_REG_PS_DATA_LOW:
++	case AP3223_REG_PS_DATA_HIGH:
++	case AP3223_REG_ALS_GAIN:
++	case AP3223_REG_ALS_PERSIST:
++	case AP3223_REG_ALS_THDL_L:
++	case AP3223_REG_ALS_THDL_H:
++	case AP3223_REG_ALS_THDH_L:
++	case AP3223_REG_ALS_THDH_H:
++	case AP3223_REG_PS_GAIN:
++	case AP3223_REG_PS_LEDD:
++	case AP3223_REG_PS_IFORM:
++	case AP3223_REG_PS_MEAN:
++	case AP3223_REG_PS_SMARTINT:
++	case AP3223_REG_PS_INTEGR_TIME:
++	case AP3223_REG_PS_PERSIST:
++	case AP3223_REG_PS_CAL_L:
++	case AP3223_REG_PS_CAL_H:
++	case AP3223_REG_PS_THDL_L:
++	case AP3223_REG_PS_THDL_H:
++	case AP3223_REG_PS_THDH_L:
++	case AP3223_REG_PS_THDH_H:
++		return true;
++
++	default:
++		return false;
++	}
++}
++
++static bool ap3223_is_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case AP3223_REG_SYS_CTRL:
++	case AP3223_REG_SYS_INTSTATUS:
++	case AP3223_REG_IR_DATA_LOW:
++	case AP3223_REG_IR_DATA_HIGH:
++	case AP3223_REG_ALS_DATA_LOW:
++	case AP3223_REG_ALS_DATA_HIGH:
++	case AP3223_REG_PS_DATA_LOW:
++	case AP3223_REG_PS_DATA_HIGH:
++		return true;
++
++	default:
++		return false;
++	}
++}
++
++static const struct regmap_config ap3223_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = AP3223_REG_PS_THDH_H,
++	.cache_type = REGCACHE_RBTREE,
++
++	.writeable_reg = ap3223_is_writable_reg,
++	.readable_reg = ap3223_is_readable_reg,
++	.volatile_reg = ap3223_is_volatile_reg,
++};
++
++#define AP3223_LIGHT_CHANNEL {				\
++	.type = IIO_LIGHT,				\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
++}
++
++#define AP3223_PROXIMITY_CHANNEL {			\
++	.type = IIO_PROXIMITY,				\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
++}
++
++static const struct iio_chan_spec ap3223_channels[] = {
++	AP3223_LIGHT_CHANNEL,
++	AP3223_PROXIMITY_CHANNEL,
++};
++
++static int ap3223_read_reg(struct i2c_client *client,
++			   u32 reg, u8 mask, u8 shift)
++{
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++	unsigned int tmp;
++
++	if (regmap_read(data->regmap, reg, &tmp) < 0)
++		return -EINVAL;
++
++	return (tmp & mask) >> shift;
++}
++
++static int ap3223_write_reg(struct i2c_client *client,
++			    u32 reg, u8 mask, u8 shift, u8 val)
++{
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++	int ret = 0;
++	unsigned int tmp;
++
++	if (regmap_read(data->regmap, reg, &tmp) < 0)
++		return -EINVAL;
++
++	tmp &= ~mask;
++	tmp |= val << shift;
++
++	ret = regmap_write(data->regmap, reg, tmp);
++	if (ret)
++		return -EINVAL;
++
++	return ret;
++}
++
++static int ap3223_get_mode(struct i2c_client *client)
++{
++	return ap3223_read_reg(client, AP3223_REG_SYS_CTRL,
++			       AP3223_REG_SYS_CTRL_MASK,
++			       AP3223_REG_SYS_CTRL_SHIFT);
++}
++
++static int ap3223_set_mode(struct i2c_client *client, int mode)
++{
++	int err = 0;
++
++	err = ap3223_write_reg(client, AP3223_REG_SYS_CTRL,
++			       AP3223_REG_SYS_CTRL_MASK,
++			       AP3223_REG_SYS_CTRL_SHIFT, mode);
++	if (err < 0)
++		dev_err(&client->dev, "Failed to set mode\n");
++
++	return err;
++}
++
++static int ap3223_get_range(struct i2c_client *client)
++{
++	u8 idx = ap3223_read_reg(client, AP3223_REG_ALS_GAIN,
++				 AP3223_ALS_RANGE_MASK,
++				 AP3223_ALS_RANGE_SHIFT);
++	if (idx < 0)
++		return -EINVAL;
++
++	return ap3223_range[idx];
++}
++
++static int ap3223_set_range(struct i2c_client *client, int range)
++{
++	int err = 0;
++
++	err = ap3223_write_reg(client, AP3223_REG_ALS_GAIN,
++			       AP3223_ALS_RANGE_MASK,
++			       AP3223_ALS_RANGE_SHIFT, range);
++	if (err < 0)
++		dev_err(&client->dev, "Failed to set range\n");
++
++	return err;
++}
++
++static int ap3223_get_adc_value(struct i2c_client *client)
++{
++	int range;
++	unsigned int lsb, msb;
++	unsigned int tmp;
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++
++	range = ap3223_get_range(client);
++	if (range < 0)
++		return range;
++
++	if (regmap_read(data->regmap, AP3223_REG_ALS_DATA_LOW, &lsb) < 0)
++		return -EINVAL;
++
++	if (regmap_read(data->regmap, AP3223_REG_ALS_DATA_HIGH, &msb) < 0)
++		return -EINVAL;
++
++	tmp = (((msb << 8) | lsb) * range) >> 16;
++	tmp = tmp * data->cali / 100;
++
++	return tmp;
++}
++
++static int ap3223_get_object(struct i2c_client *client)
++{
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++	unsigned int val;
++
++	if (regmap_read(data->regmap, AP3223_REG_SYS_INTSTATUS, &val) < 0)
++		return -EINVAL;
++
++	val &= AP3223_REG_SYS_INT_OBJ_MASK;
++
++	return val >> AP3223_REG_SYS_INT_OBJ_SHIFT;
++}
++
++static int ap3223_sw_reset(struct i2c_client *client)
++{
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++	int err = 0;
++
++	err = regmap_write(data->regmap, AP3223_REG_SYS_CTRL,
++		     AP3223_SYS_DEV_RESET);
++	if (err < 0)
++		dev_err(&client->dev, "Failed to set mode\n");
++
++	return err;
++}
++
++static int ap3223_init_client(struct i2c_client *client)
++{
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++
++	if (ap3223_set_range(client, AP3223_ALS_RANGE_0) < 0)
++		return -EINVAL;
++
++	if (ap3223_set_mode(data->client, AP3223_SYS_DEV_DOWN) < 0)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int ap3223_read_raw(struct iio_dev *indio_dev,
++			   struct iio_chan_spec const *chan, int *val,
++			   int *val2, long mask)
++{
++	struct ap3223_data *data = iio_priv(indio_dev);
++	int ret;
++
++	switch (chan->type) {
++	case IIO_LIGHT:
++		switch (mask) {
++		case IIO_CHAN_INFO_RAW:
++			ret = ap3223_get_mode(data->client);
++			if (ret < 0)
++				break;
++
++			*val = ap3223_get_adc_value(data->client);
++			if (*val < 0)
++				break;
++
++			return IIO_VAL_INT;
++		}
++		break;
++
++	case IIO_PROXIMITY:
++		switch (mask) {
++		case IIO_CHAN_INFO_RAW:
++			*val = ap3223_get_object(data->client);
++			if (*val < 0)
++				break;
++
++			return IIO_VAL_INT;
++		}
++		break;
++
++	default:
++		break;
++	}
++	return -EINVAL;
++}
++
++static const struct iio_info ap3223_info = {
++	.driver_module  = THIS_MODULE,
++	.read_raw       = ap3223_read_raw,
++};
++
++static int ap3223_init_reg_config(struct i2c_client *client)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(ap3223_initial_reg_conf); i += 2) {
++		if (ap3223_write_reg(client, ap3223_initial_reg_conf[i], 0xff,
++					 0, ap3223_initial_reg_conf[i + 1]) < 0)
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int ap3223_init(struct ap3223_data *data)
++{
++	struct i2c_client *client = data->client;
++	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
++	int err = 0;
++
++	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE)) {
++		err = -EIO;
++		goto exit_ap3223_init;
++	}
++
++	err = ap3223_sw_reset(client);
++	if (err < 0)
++		goto exit_ap3223_init;
++
++	err = ap3223_init_client(client);
++	if (err < 0)
++		goto exit_ap3223_init;
++
++	err = ap3223_init_reg_config(client);
++	if (err < 0) {
++		dev_err(&client->dev, "Failed to write initial reg config\n");
++		goto exit_ap3223_init;
++	}
++
++	err = regcache_sync(data->regmap);
++
++exit_ap3223_init:
++	return err;
++}
++
++static int ap3223_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct ap3223_data *data;
++	struct iio_dev *indio_dev;
++	int ret;
++	struct regmap *regmap;
++
++	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	data = iio_priv(indio_dev);
++
++	regmap = devm_regmap_init_i2c(client, &ap3223_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&client->dev, "Regmap initialization failed.\n");
++		ret = PTR_ERR(regmap);
++		return ret;
++	}
++
++	i2c_set_clientdata(client, indio_dev);
++
++	data->regmap = regmap;
++	data->client = client;
++	data->cali = AP3223_DEFAULT_CAL;
++	indio_dev->dev.parent = &client->dev;
++	indio_dev->info = &ap3223_info;
++	indio_dev->name = AP3223_DRV_NAME;
++	indio_dev->channels = ap3223_channels;
++	indio_dev->num_channels = ARRAY_SIZE(ap3223_channels);
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	ret = ap3223_init(data);
++	if (ret < 0) {
++		dev_err(&client->dev, "Chip init failed\n");
++		return ret;
++	}
++
++	return devm_iio_device_register(&client->dev, indio_dev);
++}
++
++static int ap3223_remove(struct i2c_client *client)
++{
++	struct ap3223_data *data = iio_priv(i2c_get_clientdata(client));
++
++	ap3223_sw_reset(data->client);
++	ap3223_set_mode(data->client, 0);
++
++	return 0;
++}
++
++static const struct i2c_device_id ap3223_id[] = {
++	{AP3223_DRV_NAME, 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, ap3223_id);
++
++static struct i2c_driver ap3223_driver = {
++	.driver = {
++		.name = AP3223_DRV_NAME,
++		.owner = THIS_MODULE,
++	},
++	.probe          = ap3223_probe,
++	.remove         = ap3223_remove,
++	.id_table       = ap3223_id,
++};
++
++module_i2c_driver(ap3223_driver);
++
++MODULE_AUTHOR("Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("AP3223 Ambient Light and Proximity Sensor Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.6.0.rc2.230.g3dd15c0
