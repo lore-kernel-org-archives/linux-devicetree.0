@@ -1,120 +1,134 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 05/17] drm: bridge: analogix/dp: dynamic parse sync_pol
- & interlace & dynamic_range
-Date: Wed, 30 Sep 2015 16:34:13 +0900
-Message-ID: <560B9075.1000304@samsung.com>
-References: <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
- <1442907477-3283-1-git-send-email-ykk@rock-chips.com>
- <560B73D4.30109@samsung.com> <560B8CF1.7050102@rock-chips.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 30 Sep 2015 10:39:04 +0300
+Message-ID: <560B9198.70103@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <560B8CF1.7050102@rock-chips.com>
+In-Reply-To: <1442588029-13769-1-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: tony@atomide.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30.09.2015 16:19, Yakir Yang wrote:
-> Hi Krzysztof,
-> 
-> On 09/30/2015 01:32 PM, Krzysztof Kozlowski wrote:
->> On 22.09.2015 16:37, Yakir Yang wrote:
->>> Both hsync/vsync polarity and interlace mode can be parsed from
->>> drm display mode, and dynamic_range and ycbcr_coeff can be judge
->>> by the video code.
->>>
->>> But presumably Exynos still relies on the DT properties, so take
->>> good use of mode_fixup() in to achieve the compatibility hacks.
->>>
->>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->>> ---
->>> Changes in v5:
->>> - Switch video timing type to "u32", so driver could use "of_property_read_u32"
->>>   to get the backword timing values. 
->> Okay
->>
->>> Krzysztof suggest me that driver could use
->>>   the "of_property_read_bool" to get backword timing values, but that interfacs
->>>   would modify the original drm_display_mode timing directly (whether those
->>>   properties exists or not).
->> Hmm, I don't understand. You have a:
->> 	struct video_info {
->> 		bool h_sync_polarity;
->> 		bool v_sync_polarity;
->> 		bool interlaced;
->> 	};
->>
->> so what is wrong with:
->> 	dp_video_config->h_sync_polarity =
->> 		of_property_read_bool(dp_node, "hsync-active-high");
->>
->> Is it exactly the same binding as previously?
-> 
-> Yes, it is the same binding as previously. But just a note that we already
-> mark those DT binding as deprecated.
-> 
-> +-interlaced:            deprecated prop that can parsed frm drm_display_mode.
-> +-vsync-active-high:     deprecated prop that can parsed frm drm_display_mode.
-> +-hsync-active-high:     deprecated prop that can parsed frm drm_display_mode.
-> 
-> 
-> For now those values should come from "struct drm_display_mode",
-> and we already parsed them out from "drm_display_mode" before
-> driver provide the backward compatibility.
-> 
-> Let's used the "hsync-active-high" example:
->     As for now the code would like:
->     static void analogix_dp_bridge_mode_set(...)
->     {
->         // Parsed timing value from "drm_display_mode"
->         video->h_sync_polarity = !!(mode->flags & DRM_MODE_FLAG_NHSYNC);
-> 
->         // Try to detect the deprecated property, providing
->         // the backward compatibility
->         of_property_read_u32(dp_node, "hsync-active-high",
->                                  &video->h_sync_polarity);    
-> 
->         /*
->          * In this case, if "hsync-active-high" property haven't been
->          * found, then the video timing "h_sync_polarity" would  keep
->          * no change, keeping the parsed value from "drm_display_mode"
->          */     
->     }   
-> 
->     But if keep the "of_property_read_bool", then code would like:
->     static void analogix_dp_bridge_mode_set(...)
->     {
->         // Parsed timing value from "drm_display_mode"
->         video->h_sync_polarity = !!(mode->flags & DRM_MODE_FLAG_NHSYNC);
-> 
->         // Try to detect the deprecated property, providing
->         // the backward compatibility
->         video->h_sync_polarity =
->                     of_property_read_bool(dp_node, "hsync-active-high");
->    
-> 
->         /*
->          * In this case, if "hsync-active-high" property haven't been
->          * found, then the video timing "h_sync_polarity" would just
->          * modify to "false". That is the place we don't want, cause
->          * it would always modify the timing value parsed from
->          * "drm_display_mode"
->          */  
->     }   
-> 
+Brian/David,
 
-OK, I see the point of overwriting values from drm_display_mode. However
-I think you changed the binding. I believe the of_property_read_u32()
-will behave differently for such DTS:
+On 18/09/15 17:53, Roger Quadros wrote:
+> Hi,
+> 
+> We do a couple of things in this series which result in
+> cleaner device tree implementation, faster perfomance and
+> multi-platform support. As an added bonus we get new GPI/Interrupt pins
+> for use in the system.
+> 
+> - Establish a custom interface between NAND and GPMC driver. This is
+> needed because all of the NAND registers sit in the GPMC register space.
+> Some bits like NAND IRQ are even shared with GPMC.
+> 
+> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+> This causes performance increase when using prefetch-irq mode.
+> 30% increase in read, 17% increase in write in prefetch-irq mode.
+> 
+> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
+> driver can be used on non-OMAP platforms. e.g. Keystone.
+> 
+> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
+> 2 to 4 of these and most of them would be unused otherwise. It also
+> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
+> 
+> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
+> 
+> This series is available at
+> git@github.com:rogerq/linux.git
+> in branch
+> for-v4.4/gpmc-v3
 
-exynos_dp {
-	...
-	hsync-active-high;
-}
+Could you please ack the patches affecting the omap2 nand driver?
+These would be patches 4, 6, 9, 10, 11, 12, 18. Thanks.
 
-It will return -EOVERFLOW which means it would be broken now...
+cheers,
+-roger
 
-Best regards,
-Krzysztof
+> 
+> Changelog:
+> v3:
+> -Fixed and tested NAND using legacy boot on omap3-beagle.
+> -Support rising and falling edge interrupts on WAITpins.
+> -Update DT node of all gpmc users.
+> 
+> Roger Quadros (27):
+>   ARM: OMAP2+: gpmc: Add platform data
+>   ARM: OMAP2+: gpmc: Add gpmc timings and settings to platform data
+>   memory: omap-gpmc: Introduce GPMC to NAND interface
+>   mtd: nand: omap2: Use gpmc_omap_get_nand_ops() to get NAND registers
+>   memory: omap-gpmc: Add GPMC-NAND ops to get writebufferempty status
+>   mtd: nand: omap2: Switch to using GPMC-NAND ops for writebuffer empty
+>     check
+>   memory: omap-gpmc: Remove NAND IRQ code
+>   memory: omap-gpmc: Add IRQ ops for GPMC-NAND interface
+>   mtd: nand: omap2: manage NAND interrupts
+>   mtd: nand: omap: Copy platform data parameters to omap_nand_info data
+>   mtd: nand: omap: Clean up device tree support
+>   mtd: nand: omap: Update DT binding documentation
+>   memory: omap-gpmc: Prevent mapping into 1st 16MB
+>   memory: omap-gpmc: Move device tree binding to correct location
+>   memory: omap-gpmc: Support general purpose input for WAITPINs
+>   memory: omap-gpmc: Reserve WAITPIN if needed for WAIT monitoring
+>   memory: omap-gpmc: Add irqchip support to the gpiochip
+>   mtd: nand: omap2: Implement NAND ready using gpiolib
+>   memory: omap-gpmc: Prevent GPMC_STATUS from being accessed via
+>     gpmc_regs
+>   ARM: dts: dra7: Fix NAND device nodes.
+>   ARM: dts: dra7x-evm: Provide NAND ready pin
+>   ARM: dts: am437x: Fix NAND device nodes
+>   ARM: dts: am437x-gp-evm: Provide NAND ready pin
+>   ARM: dts: am335x: Fix NAND device nodes
+>   ARM: dts: am335x: Provide NAND ready pin
+>   ARM: dts: dm816x: Fix gpmc and NAND node
+>   ARM: dts: omap3: Fix gpmc and NAND nodes
+> 
+>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  | 130 -----
+>  .../bindings/memory-controllers/omap-gpmc.txt      | 130 +++++
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  16 +-
+>  arch/arm/boot/dts/am335x-chilisom.dtsi             |   7 +-
+>  arch/arm/boot/dts/am335x-evm.dts                   |   7 +-
+>  arch/arm/boot/dts/am335x-igep0033.dtsi             |   7 +-
+>  arch/arm/boot/dts/am33xx.dtsi                      |   4 +
+>  arch/arm/boot/dts/am4372.dtsi                      |   4 +
+>  arch/arm/boot/dts/am437x-gp-evm.dts                |   8 +-
+>  arch/arm/boot/dts/am43x-epos-evm.dts               |   8 +-
+>  arch/arm/boot/dts/dm8168-evm.dts                   |   7 +-
+>  arch/arm/boot/dts/dm816x.dtsi                      |   4 +
+>  arch/arm/boot/dts/dra7-evm.dts                     |   6 +-
+>  arch/arm/boot/dts/dra7.dtsi                        |   4 +
+>  arch/arm/boot/dts/dra72-evm.dts                    |   6 +-
+>  arch/arm/boot/dts/logicpd-torpedo-som.dtsi         |   7 +-
+>  arch/arm/boot/dts/omap3-beagle.dts                 |   2 +
+>  arch/arm/boot/dts/omap3-cm-t3x.dtsi                |   5 +-
+>  arch/arm/boot/dts/omap3-devkit8000-common.dtsi     |   3 +
+>  arch/arm/boot/dts/omap3-evm-37xx.dts               |   7 +-
+>  arch/arm/boot/dts/omap3-gta04.dtsi                 |   3 +
+>  arch/arm/boot/dts/omap3-igep.dtsi                  |   5 +-
+>  arch/arm/boot/dts/omap3-igep0020-common.dtsi       |   4 +-
+>  arch/arm/boot/dts/omap3-igep0030-common.dtsi       |   4 +
+>  arch/arm/boot/dts/omap3-ldp.dts                    |   9 +-
+>  arch/arm/boot/dts/omap3-lilly-a83x.dtsi            |   5 +-
+>  arch/arm/boot/dts/omap3-pandora-common.dtsi        |   3 +
+>  arch/arm/boot/dts/omap3-tao3530.dtsi               |   5 +-
+>  arch/arm/boot/dts/omap3.dtsi                       |   4 +
+>  arch/arm/boot/dts/omap3430-sdp.dts                 |   5 +-
+>  arch/arm/mach-omap2/gpmc-nand.c                    |  11 +-
+>  drivers/memory/omap-gpmc.c                         | 640 ++++++++++++---------
+>  drivers/mtd/nand/omap2.c                           | 261 ++++++---
+>  include/linux/omap-gpmc.h                          | 183 ++----
+>  include/linux/platform_data/gpmc-omap.h            | 167 ++++++
+>  include/linux/platform_data/mtd-nand-omap2.h       |  12 +-
+>  36 files changed, 1045 insertions(+), 648 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+>  create mode 100644 include/linux/platform_data/gpmc-omap.h
+> 
