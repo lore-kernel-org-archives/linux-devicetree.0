@@ -1,100 +1,165 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: Re: [PATCH 1/2] i2c: at91: add DT property for the HOLD field of
- TWIHS_CWGR
-Date: Wed, 30 Sep 2015 11:01:02 +0200
-Message-ID: <560BA4CE.70606@atmel.com>
-References: <1443602831-27069-1-git-send-email-ludovic.desroches@atmel.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel
+ init
+Date: Wed, 30 Sep 2015 11:07:02 +0200
+Message-ID: <1443604022.3185.17.camel@pengutronix.de>
+References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
+	 <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1443602831-27069-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Daniel,
 
-it looks good to me.
+Am Dienstag, den 29.09.2015, 18:25 +0800 schrieb Daniel Kurtz:
+> Hi Matthias & Lucas,
+> 
+> On Sun, Sep 27, 2015 at 7:25 PM, Matthias Brugger
+> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> >
+> >
+> > On 25/09/15 10:26, Lucas Stach wrote:
+> >>
+> >> Am Freitag, den 25.09.2015, 14:31 +0800 schrieb James Liao:
+> >>>
+> >>> In kernel late init, it turns off all unused clocks, which
+> >>> needs to access subsystem registers such as VENC and VENC_LT.
+> >>>
+> >>> Accessing MT8173 VENC registers needs two top clocks, mm_sel and
+> >>> venc_sel. Accessing VENC_LT registers needs mm_sel and venclt_sel.
+> >>> So we need to keep these clocks on before accessing their registers.
+> >>>
+> >>> This patch keeps venc_sel / venclt_sel clock on when
+> >>> VENC / VENC_LT's power is on, to prevent system hang up while
+> >>> accessing its registeres.
+> >>>
+> >> This changes the binding of an existing driver, so it needs some more
+> >> consideration. Are VENC_SEL and VENC_LT_SEL really direct clock inputs
+> >> to the VENC module, or are they some kind of parent clock for one of the
+> >> existing clocks used by the old VENC binding?
+> >>
+> >> If they are direct clock inputs to the VENC module, changing the binding
+> >> might be still ok at that point, as there shouldn't be many users of
+> >> that yet.
+> 
+> The MT8173 VENC subsystem clock registers are modeled by the vencsys
+> clock-controller node:
+> 
+> vencsys: clock-controller@18000000 {
+>   compatible = "mediatek,mt8173-vencsys", "syscon";
+>   reg = <0 0x18000000 0 0x1000>;
+>   #clock-cells = <1>;
+> };
+> 
+> These registers, however, are only accessible if:
+>   (a) the VENC power domain is enabled, and
+>   (b) the "venc_sel" clock is enabled.
+> 
+> According to James, venc_sel is a direct clock input the VENC module,
+> and it is an ancestor to some, but not all, of the subsystem clocks, in
+> particular it is not an ancestor to "venc_cke0":
+> 
+>  static const struct mtk_gate venc_clks[] __initconst = {
+>          GATE_VENC(CLK_VENC_CKE0, "venc_cke0", "mm_sel", 0),
+>          GATE_VENC(CLK_VENC_CKE1, "venc_cke1", "venc_sel", 4),
+>          GATE_VENC(CLK_VENC_CKE2, "venc_cke2", "venc_sel", 8),
+>          GATE_VENC(CLK_VENC_CKE3, "venc_cke3", "venc_sel", 12),
+>  };
+> 
+> If the VENC power domain is disabled, then accesses to the vencsys
+> registers just silently fail (i.e., reads probably
+> return all 0s). 
 
-Le 30/09/2015 10:47, Ludovic Desroches a =E9crit :
-> From: Wenyou Yang <wenyou.yang@atmel.com>
->=20
-> Add the HOLD field setting in order to support I2C slave devices whic=
-h need
-> a longer hold time of the data.
-> Since it depends on the slave devices connected to the bus, add a DT
-> property "atmel,twd-hold-cycles" to specify this HOLD field.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+If this ever happens it is really unfortunate and needs fixing, too. If
+you need the power domain to be powered ON to properly read or even
+change the clock registers, the clock driver needs to be a consumer of
+the power domain, so any clock operations powers the domain up.
 
-Acked-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+> However, if the power domain is ON but venc_sel is
+> disabled, then accessing the clock-controller registers results in a
+> system hang (until the power domain is disabled).
+> 
+> At boot the VENC power domain is forced on by scpsys (like all other
+> power domains).  Later both unused clocks and power domains get
+> disabled. If clocks are disabled first, and venc_sel is disabled
+> before venc_cke0, then when unused_clock tries to disable venc_cke0,
+> the system will hang when it reads the vencsys "is clock enabled" bit
+> since:
+>   (a) VENC power domain is still enabled, and
+>   (b) venc_sel is already disabled
+> 
+> In theory, we could add "clocks=<&topckgen CLK_TOP_VENC_SEL>;" to the
+> vencsys clock-controller node.  On initialization, mtk_vencsys_init()
+> could then pass venc_sel to the generic MT8173 gate clock driver, and
+> it would then clk_enable(venc_sel)/_disable(venc_sel) around any
+> access to the clock-controller registers.  James, however, thinks
+> this is a lot of extra overhead, and instead has proposed the fix in this patch,
+> where venc_sel is forced on whenever the VENC power domain is enabled.
+> 
+I would still say this is the correct solution. If the vencsys clock
+registers are itself clocked by VENC_SEL this driver needs to make sure
+this clock is running at the appropriate times. I understand that this
+may be a bit of an overhead, but clock enable/disable paths are not
+really performance critical.
 
-> ---
->  drivers/i2c/busses/i2c-at91.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-a=
-t91.c
-> index 1c758cd..06e66ef 100644
-> --- a/drivers/i2c/busses/i2c-at91.c
-> +++ b/drivers/i2c/busses/i2c-at91.c
-> @@ -64,6 +64,7 @@
->  #define	AT91_TWI_IADR		0x000c	/* Internal Address Register */
-> =20
->  #define	AT91_TWI_CWGR		0x0010	/* Clock Waveform Generator Reg */
-> +#define	AT91_TWI_CWGR_HOLD(x)	(((x) & 0x1f) << 24)
-> =20
->  #define	AT91_TWI_SR		0x0020	/* Status Register */
->  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
-> @@ -185,7 +186,8 @@ static void at91_init_twi_bus(struct at91_twi_dev=
- *dev)
->   * Calculate symmetric clock as stated in datasheet:
->   * twi_clk =3D F_MAIN / (2 * (cdiv * (1 << ckdiv) + offset))
->   */
-> -static void at91_calc_twi_clock(struct at91_twi_dev *dev, int twi_cl=
-k)
-> +static void at91_calc_twi_clock(struct at91_twi_dev *dev,
-> +				int twi_clk, u32 twd_hold)
->  {
->  	int ckdiv, cdiv, div;
->  	struct at91_twi_pdata *pdata =3D dev->pdata;
-> @@ -204,7 +206,9 @@ static void at91_calc_twi_clock(struct at91_twi_d=
-ev *dev, int twi_clk)
->  		cdiv =3D 255;
->  	}
-> =20
-> -	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv;
-> +	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv
-> +			    | AT91_TWI_CWGR_HOLD(twd_hold);
-> +
->  	dev_dbg(dev->dev, "cdiv %d ckdiv %d\n", cdiv, ckdiv);
->  }
-> =20
-> @@ -936,6 +940,7 @@ static int at91_twi_probe(struct platform_device =
-*pdev)
->  	int rc;
->  	u32 phy_addr;
->  	u32 bus_clk_rate;
-> +	u32 twd_hold_cycles;
-> =20
->  	dev =3D devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
->  	if (!dev)
-> @@ -992,7 +997,12 @@ static int at91_twi_probe(struct platform_device=
- *pdev)
->  	if (rc)
->  		bus_clk_rate =3D DEFAULT_TWI_CLK_HZ;
-> =20
-> -	at91_calc_twi_clock(dev, bus_clk_rate);
-> +	rc =3D of_property_read_u32(dev->dev->of_node,
-> +				  "atmel,twd-hold-cycles", &twd_hold_cycles);
-> +	if (rc)
-> +		twd_hold_cycles =3D 0;
-> +
-> +	at91_calc_twi_clock(dev, bus_clk_rate, twd_hold_cycles);
->  	at91_init_twi_bus(dev);
-> =20
->  	snprintf(dev->adapter.name, sizeof(dev->adapter.name), "AT91");
->=20
+> So, this patch is a bit of a hack, but the mtk scpsys driver already
+> does something similar for the MM & MFG clocks - these clocks are
+> always enabled whenever certain power domains are enabled, and they
+> are only disabled when all such power domains are disabled.  I'm not
+> 100% why these clocks must always be kept on whenever these power
+> domains are enabled, but probably to solve a similar problem where
+> these clocks are needed to access some registers at a time when these
+> clocks would not otherwise be explicitly enabled.
+> 
+I can't really argue with this being the wrong solution if we already
+have precedent of the same solution being used for other domains. But I
+would still ask you to re-evaluate with the above in mind.
+
+> Is the above clear?
+> 
+> >> But then we at least need a corresponding change to the binding documentation.
+> 
+> Agreed.
+> 
+> > Yes, we will need a really good reason to change the bindings.
+> 
+> There is a race where the system can sometimes hang at boot with the
+> existing implementation & bindings.
+> This seems like a really good reason to change the bindings, if the
+> proposed solution is acceptable (it may be possible to fix the hang
+> without changing the bindings).
+> 
+> > Apart from that we would need to find a solution which works with the old (and wrong bindings) as well.
+> 
+> Why do we need to support the old bindings?
+> This patch fixes a problem in MT8173, for which the mainline kernel is
+> still under active bringup.
+> If the existing bindings are not used anywhere yet (*), it seems like
+> unnecessary overhead to enforce backwards compatibility at this stage.
+> 
+I tend to agree. DT backwards compatibility isn't easily done (and is a
+constant burden, as it gets harder to test over time) and if the SoC is
+in early bringup one might just admit that the first iteration of the
+bindings were wrong and need an incompatible change.
+
+But that's not up to me to decide, but something Matthias needs to make
+a decision on.
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
