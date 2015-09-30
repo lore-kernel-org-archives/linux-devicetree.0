@@ -1,85 +1,37 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree bindings for
- DA9062 OnKey
-Date: Wed, 30 Sep 2015 12:47:17 +0100
-Message-ID: <20150930114717.GB27197@x1>
-References: <cover.1437668261.git.stwiss.opensource@diasemi.com>
- <6bfae9b4f5475b59bddc4b71091121f1c0697a2d.1437668261.git.stwiss.opensource@diasemi.com>
- <20150727224300.GG3613@dtor-ws>
- <20150728054024.GA4558@dtor-ws>
- <6ED8E3B22081A4459DAC7699F3695FB70173D121FD@SW-EX-MBX02.diasemi.com>
- <20150929235408.GC29469@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150929235408.GC29469@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>, DEVICETREE <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, RTCLINUX <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH v2 0/6] tty: serial: msm: Add DMA support and fix bit definitions
+Date: Wed, 30 Sep 2015 15:08:20 +0300
+Message-ID: <1443614906-2196-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: David Brown <davidb@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Sep 2015, Dmitry Torokhov wrote:
+Hi,
 
-> On Mon, Sep 28, 2015 at 08:19:27AM +0000, Opensource [Steve Twiss] wr=
-ote:
-> >=20
-> > > Subject: Re: [PATCH V3 3/3] devicetree: da9062: Add device tree b=
-indings for DA9062 OnKey
-> > >=20
-> > > On Mon, Jul 27, 2015 at 03:43:00PM -0700, Dmitry Torokhov wrote:
-> > > > On Thu, Jul 23, 2015 at 05:17:41PM +0100, S Twiss wrote:
-> > > > > From: S Twiss <stwiss.opensource@diasemi.com>
-> > > > >
-> > > > > Add device tree bindings for the DA9062 OnKey driver componen=
-t
-> > > > >
-> > > > > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> > > > >
-> > > > > ---
-> > > > > Changes in V3:
-> > > > >  - Child driver specifics separated out into separate documen=
-t
-> > > > >    in this case ../input/da9062-onkey.txt
-> > > > > Changes in V2:
-> > > > >  - No change
-> > > > >
-> > > > > This patch applies against linux-next and next-20150708
-> > > > >
-> > > > >
-> > > > >  .../devicetree/bindings/input/da9062-onkey.txt     | 36
-> > > ++++++++++++++++++++++
-> > > > >  Documentation/devicetree/bindings/mfd/da9062.txt   |  3 ++
-> > > >
-> > > > I dropped bits for mfd/da9062.txt, changed to mention both 9062=
- and
-> > > > 9063, folded into the onkey patch and applied.
-> > >=20
-> > > Argh, da9062 core is not in mainline yet... OK, below is the patc=
-h I
-> > > had; if Lee does not pick it up I'll re-apply it when da9062 core=
- hits
-> > > mainline.
-> > >=20
-> >=20
-> > Hi Lee and Dmitry,
-> >=20
-> > This patch seems to have been missed. It is the main OnKey driver f=
-or DA9062 and this
-> > component was waiting for the DA9062 MFD core to make it into linux=
--mainline/v4.3-rc1.
-> >=20
-> > Is there any reply on this yet please? There just seems to be a lit=
-tle patch administration
-> > problem holding things up.
->=20
-> I queued it for 4.4.
+This is second version of patches which DMA support for UARTDM type
+of hardware found in Qualcomm chip sets.
 
-Thanks Dmitry.
+Changes since v0 (https://lkml.org/lkml/2015/9/12/108):
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+* Fixed SysRq issue reported by Srini.
+* Dropped [PATCH 3/7], which did not make any functional change.
+
+Ivan T. Ivanov (4):
+  tty: serial: msm: Add msm prefix to all driver functions
+  tty: serial: msm: Add TX DMA support
+  tty: serial: msm: Add RX DMA support
+  tty: serial: msm: Remove 115.2 Kbps maximum baud rate limitation
+
+Pramod Gurav (2):
+  tty: serial: msm: Add mask value for UART_DM registers
+  tty: serial: msm: replaces (1 << x) with BIT(x) macro
+
+ .../devicetree/bindings/serial/qcom,msm-uartdm.txt |   6 +
+ drivers/tty/serial/msm_serial.c                    | 620 +++++++++++++++++++--
+ drivers/tty/serial/msm_serial.h                    |  53 +-
+ 3 files changed, 606 insertions(+), 73 deletions(-)
+
+--
+1.9.1
