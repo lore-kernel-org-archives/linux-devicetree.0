@@ -1,67 +1,66 @@
-From: Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 2/2] iio:light:ap3223: Add DT support
-Date: Tue, 29 Sep 2015 18:36:21 -0700
-Message-ID: <1443576981-1210-2-git-send-email-sureshraj@google.com>
-References: <1443576981-1210-1-git-send-email-sureshraj@google.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443576981-1210-1-git-send-email-sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v7 1/7] ARM: dts: imx: imx7d-sbd remove fixed can2-3v3
+ regulator
+Date: Wed, 30 Sep 2015 09:56:22 +0800
+Message-ID: <20150930015622.GC15771@tiger>
+References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Adrian Alonso <aalonso@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-* Add Device Tree support for the Dyna Image AP3223 ambient light sensor and
-* proximity driver,
-* Document the binding and
-* Add a vendor prefix for Dyna Image
+On Mon, Sep 28, 2015 at 04:56:35PM -0500, Adrian Alonso wrote:
+> Remove incorrect can2-3v3 fixed regulator, imx7d-sdb doesn't
+> have a dedicated can2 fixed regulator instead it shares PERI_3V3
+> fixed regulator (RT8070ZS) which is enabled by default (hardwired)
+> from pmic pfuze3000 NVCC_3V3 power rail.
 
-v3
-* Fixing typo in comment
-v2
-* Seperating the device tree changes from code
+@Frank, can you please confirm it? 
 
-Signed-off-by: Suresh Rajashekara <sureshraj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/light/ap3223.txt | 18 ++++++++++++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt  |  1 +
- 2 files changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/ap3223.txt
+> 
+> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 
-diff --git a/Documentation/devicetree/bindings/iio/light/ap3223.txt b/Documentation/devicetree/bindings/iio/light/ap3223.txt
-new file mode 100644
-index 0000000..b255d27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/ap3223.txt
-@@ -0,0 +1,18 @@
-+* Dyna Image AP3223 ambient light sensor and proximity sensor
-+
-+http://www.dyna-image.com/english/product/optical-sensor-detail.php?cpid=2&dpid=8
-+
-+Required properties:
-+
-+  - compatible : should be "dynaimage,ap3223"
-+  - reg : the I2C address of the sensor
-+
-+Example:
-+
-+ap3223@1c {
-+	compatible = "dynaimage,ap3223";
-+	reg = <0x1c>;
-+
-+	pinctrl-0 = <&ap3223_pins>;
-+	pinctrl-names = "default";
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 5f20add..704da45 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -46,6 +46,7 @@ digilent	Diglent, Inc.
- dlg	Dialog Semiconductor
- dlink	D-Link Corporation
- dmo	Data Modul AG
-+dynaimage	Dyna-Image
- ebv	EBV Elektronik
- edt	Emerging Display Technologies
- elan	Elan Microelectronic Corp.
--- 
-2.6.0.rc2.230.g3dd15c0
+Please stop sending patch to shawn.guo@linaro.org, and
+shawnguo@kernel.org is good enough.
+
+> ---
+> Changes for V7: New patch in series
+
+I do not understand why the patch has to be included in this series. 
+
+Shawn
+
+> 
+>  arch/arm/boot/dts/imx7d-sdb.dts | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+> index 8059458..83f0053 100644
+> --- a/arch/arm/boot/dts/imx7d-sdb.dts
+> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
+> @@ -78,16 +78,7 @@
+>  			enable-active-high;
+>  		};
+>  
+> -		reg_can2_3v3: regulator@2 {
+> -			compatible = "regulator-fixed";
+> -			reg = <2>;
+> -			regulator-name = "can2-3v3";
+> -			regulator-min-microvolt = <3300000>;
+> -			regulator-max-microvolt = <3300000>;
+> -			gpio = <&gpio1 7 GPIO_ACTIVE_LOW>;
+> -		};
+> -
+> -		reg_vref_1v8: regulator@3 {
+> +		reg_vref_1v8: regulator@2 {
+>  			compatible = "regulator-fixed";
+>  			reg = <3>;
+>  			regulator-name = "vref-1v8";
+> -- 
+> 2.1.4
+> 
