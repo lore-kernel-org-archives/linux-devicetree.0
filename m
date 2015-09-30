@@ -1,24 +1,47 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] dmaengine: xgene-dma: Fix overwritting DMA tx ring
-Date: Wed, 30 Sep 2015 13:35:24 +0530
-Message-ID: <20150930080524.GG21690@vkoul-mobl.iind.intel.com>
-References: <1442390603-21129-1-git-send-email-rsahu@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] ARM: dts: sun6i: hummingbird: Add aliases for rtc devices
+Date: Wed, 30 Sep 2015 16:15:37 +0800
+Message-ID: <1443600937-11071-1-git-send-email-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442390603-21129-1-git-send-email-rsahu@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rameshwar Prasad Sahu <rsahu@apm.com>
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 01:33:23PM +0530, Rameshwar Prasad Sahu wrote:
-> This patch fixes an over flow issue with the TX ring descriptor. Each
-> descriptor is 32B in size and an operation requires 2 of these
-> descriptors.
+The hummingbird A31 has 2 rtc devices available: one in the SoC, and
+a pcf8563 external rtc on i2c2.
 
-Applied, thanks
+For some unknown reason, the onboard backup battery to power the
+internal rtc when power is removed, and its time would reset. Hence
+we want to use the external one by default.
 
+Add aliases for the rtc devices with the external one as rtc0.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+
+Can someone else with the Hummingbird A31 also test the internal RTC
+and see if it doesn't survive power removal?
+
+Thanks
+ChenYu
+
+---
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 06d9391ca30e..358781113582 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -55,6 +55,8 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		rtc0 = &pcf8563;
++		rtc1 = &rtc;
+ 	};
+ 
+ 	chosen {
 -- 
-~Vinod
+2.5.3
