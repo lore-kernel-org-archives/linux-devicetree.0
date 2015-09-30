@@ -1,52 +1,61 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 09/14] ARM: dts: ifc6410: Add missing pinctrl to gsbi7
- uart
-Date: Wed, 30 Sep 2015 14:22:39 +0100
-Message-ID: <560BE21F.8090901@linaro.org>
-References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>	<1442579507-20314-1-git-send-email-srinivas.kandagatla@linaro.org> <CAMAWPa_7U-PBwsngU+qc5SAt4HcCvPwUGvGY9nPUu+pZtPA7Uw@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH v2 2/2] regulator: act8865: add DT binding for property
+ "active-semi, vsel-high"
+Date: Wed, 30 Sep 2015 15:21:54 +0200
+Message-ID: <20150930132154.GI31199@odux.rfo.atmel.com>
+References: <1443597950-27849-1-git-send-email-wenyou.yang@atmel.com>
+ <1443597950-27849-3-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAMAWPa_7U-PBwsngU+qc5SAt4HcCvPwUGvGY9nPUu+pZtPA7Uw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Olof Johansson <olof@lixom.net>, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443597950-27849-3-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+On Wed, Sep 30, 2015 at 03:25:50PM +0800, Wenyou Yang wrote:
+> Add a DT property "active-semi,vsel-high" to indicate the VSEL pin
+> is high. If this property is missing, then assume the VSEL pin is
+> low(0).
+> 
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+Reviewed-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-Thanks for reporting this issue.
-
-On 25/09/15 19:54, Kevin Hilman wrote:
-> Hi Srini,
->
-> On Fri, Sep 18, 2015 at 5:31 AM, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->> This patch adds missing 2pin uart pinctrl property to gsbi7 uart on
->> IFC6410.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> kernelci.org found some new boot failures in -next on 8064[1].  I
-> bisected it down to this patch, which landed in linux next in the form
-> of commit d3a578ed4310 ARM: dts: ifc6410: Add missing pinctrl to gsbi7
-> uart.
->
-This issue is due to missing CONFIG_PINCTRL_APQ8064 Kconfig in 
-multi_v7_defconfig.
-
-In my tests I always enable this config which is why I could not spot 
-this breakage.
-
-This patch as it is the right thing to do however we need a fix to 
-multi_v7_defconfig. I will send a patch for multi_v7_defconfig to 
-address this and add few more missing configs too.
-
-
-thanks,
---srini
-> Kevin
->
-> [1] http://kernelci.org/boot/qcom-apq8064-ifc6410/job/next/kernel/next-20150925/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5605083c59b51466d26c3250
->
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../bindings/regulator/act8865-regulator.txt       |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+> index e91485d..6067d98 100644
+> --- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+> @@ -8,6 +8,8 @@ Required properties:
+>  Optional properties:
+>  - system-power-controller: Telling whether or not this pmic is controlling
+>    the system power. See Documentation/devicetree/bindings/power/power-controller.txt .
+> +- active-semi,vsel-high: Indicates the VSEL pin is high.
+> +  If this property is missing, assume the VSEL pin is low(0).
+>  
+>  Optional input supply properties:
+>  - for act8600:
+> @@ -49,6 +51,7 @@ Example:
+>  			pmic: act8865@5b {
+>  				compatible = "active-semi,act8865";
+>  				reg = <0x5b>;
+> +				active-semi,vsel-high;
+>  				status = "disabled";
+>  
+>  				regulators {
+> -- 
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
