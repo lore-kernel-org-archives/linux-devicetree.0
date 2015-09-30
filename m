@@ -1,164 +1,36 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel
- init
-Date: Wed, 30 Sep 2015 11:07:02 +0200
-Message-ID: <1443604022.3185.17.camel@pengutronix.de>
-References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
-	 <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: STi: DT: STiH407: Rename incorrect interrupt related
+ binding
+Date: Wed, 30 Sep 2015 11:13:18 +0200
+Message-ID: <560BA7AE.20103@st.com>
+References: <1443516738-3569-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1443516738-3569-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Lee,
 
-Am Dienstag, den 29.09.2015, 18:25 +0800 schrieb Daniel Kurtz:
-> Hi Matthias & Lucas,
-> 
-> On Sun, Sep 27, 2015 at 7:25 PM, Matthias Brugger
-> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> >
-> >
-> > On 25/09/15 10:26, Lucas Stach wrote:
-> >>
-> >> Am Freitag, den 25.09.2015, 14:31 +0800 schrieb James Liao:
-> >>>
-> >>> In kernel late init, it turns off all unused clocks, which
-> >>> needs to access subsystem registers such as VENC and VENC_LT.
-> >>>
-> >>> Accessing MT8173 VENC registers needs two top clocks, mm_sel and
-> >>> venc_sel. Accessing VENC_LT registers needs mm_sel and venclt_sel.
-> >>> So we need to keep these clocks on before accessing their registers.
-> >>>
-> >>> This patch keeps venc_sel / venclt_sel clock on when
-> >>> VENC / VENC_LT's power is on, to prevent system hang up while
-> >>> accessing its registeres.
-> >>>
-> >> This changes the binding of an existing driver, so it needs some more
-> >> consideration. Are VENC_SEL and VENC_LT_SEL really direct clock inputs
-> >> to the VENC module, or are they some kind of parent clock for one of the
-> >> existing clocks used by the old VENC binding?
-> >>
-> >> If they are direct clock inputs to the VENC module, changing the binding
-> >> might be still ok at that point, as there shouldn't be many users of
-> >> that yet.
-> 
-> The MT8173 VENC subsystem clock registers are modeled by the vencsys
-> clock-controller node:
-> 
-> vencsys: clock-controller@18000000 {
->   compatible = "mediatek,mt8173-vencsys", "syscon";
->   reg = <0 0x18000000 0 0x1000>;
->   #clock-cells = <1>;
-> };
-> 
-> These registers, however, are only accessible if:
->   (a) the VENC power domain is enabled, and
->   (b) the "venc_sel" clock is enabled.
-> 
-> According to James, venc_sel is a direct clock input the VENC module,
-> and it is an ancestor to some, but not all, of the subsystem clocks, in
-> particular it is not an ancestor to "venc_cke0":
-> 
->  static const struct mtk_gate venc_clks[] __initconst = {
->          GATE_VENC(CLK_VENC_CKE0, "venc_cke0", "mm_sel", 0),
->          GATE_VENC(CLK_VENC_CKE1, "venc_cke1", "venc_sel", 4),
->          GATE_VENC(CLK_VENC_CKE2, "venc_cke2", "venc_sel", 8),
->          GATE_VENC(CLK_VENC_CKE3, "venc_cke3", "venc_sel", 12),
->  };
-> 
-> If the VENC power domain is disabled, then accesses to the vencsys
-> registers just silently fail (i.e., reads probably
-> return all 0s). 
+On 09/29/2015 10:52 AM, Lee Jones wrote:
+> interrupts-names => interrupt-names
+>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/stih407-pinctrl.dtsi | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+>
 
-If this ever happens it is really unfortunate and needs fixing, too. If
-you need the power domain to be powered ON to properly read or even
-change the clock registers, the clock driver needs to be a consumer of
-the power domain, so any clock operations powers the domain up.
+Good spot!
+Applied to sti-dt-for-v4.4.
 
-> However, if the power domain is ON but venc_sel is
-> disabled, then accessing the clock-controller registers results in a
-> system hang (until the power domain is disabled).
-> 
-> At boot the VENC power domain is forced on by scpsys (like all other
-> power domains).  Later both unused clocks and power domains get
-> disabled. If clocks are disabled first, and venc_sel is disabled
-> before venc_cke0, then when unused_clock tries to disable venc_cke0,
-> the system will hang when it reads the vencsys "is clock enabled" bit
-> since:
->   (a) VENC power domain is still enabled, and
->   (b) venc_sel is already disabled
-> 
-> In theory, we could add "clocks=<&topckgen CLK_TOP_VENC_SEL>;" to the
-> vencsys clock-controller node.  On initialization, mtk_vencsys_init()
-> could then pass venc_sel to the generic MT8173 gate clock driver, and
-> it would then clk_enable(venc_sel)/_disable(venc_sel) around any
-> access to the clock-controller registers.  James, however, thinks
-> this is a lot of extra overhead, and instead has proposed the fix in this patch,
-> where venc_sel is forced on whenever the VENC power domain is enabled.
-> 
-I would still say this is the correct solution. If the vencsys clock
-registers are itself clocked by VENC_SEL this driver needs to make sure
-this clock is running at the appropriate times. I understand that this
-may be a bit of an overhead, but clock enable/disable paths are not
-really performance critical.
-
-> So, this patch is a bit of a hack, but the mtk scpsys driver already
-> does something similar for the MM & MFG clocks - these clocks are
-> always enabled whenever certain power domains are enabled, and they
-> are only disabled when all such power domains are disabled.  I'm not
-> 100% why these clocks must always be kept on whenever these power
-> domains are enabled, but probably to solve a similar problem where
-> these clocks are needed to access some registers at a time when these
-> clocks would not otherwise be explicitly enabled.
-> 
-I can't really argue with this being the wrong solution if we already
-have precedent of the same solution being used for other domains. But I
-would still ask you to re-evaluate with the above in mind.
-
-> Is the above clear?
-> 
-> >> But then we at least need a corresponding change to the binding documentation.
-> 
-> Agreed.
-> 
-> > Yes, we will need a really good reason to change the bindings.
-> 
-> There is a race where the system can sometimes hang at boot with the
-> existing implementation & bindings.
-> This seems like a really good reason to change the bindings, if the
-> proposed solution is acceptable (it may be possible to fix the hang
-> without changing the bindings).
-> 
-> > Apart from that we would need to find a solution which works with the old (and wrong bindings) as well.
-> 
-> Why do we need to support the old bindings?
-> This patch fixes a problem in MT8173, for which the mainline kernel is
-> still under active bringup.
-> If the existing bindings are not used anywhere yet (*), it seems like
-> unnecessary overhead to enforce backwards compatibility at this stage.
-> 
-I tend to agree. DT backwards compatibility isn't easily done (and is a
-constant burden, as it gets harder to test over time) and if the SoC is
-in early bringup one might just admit that the first iteration of the
-bindings were wrong and need an incompatible change.
-
-But that's not up to me to decide, but something Matthias needs to make
-a decision on.
-
-Regards,
-Lucas
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
+thanks,
+Maxime
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
