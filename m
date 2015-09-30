@@ -1,46 +1,91 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: sun6i: hummingbird: Drop
- AXP221 DC1SW and DC5LDO supplies
-Date: Wed, 30 Sep 2015 14:39:47 +0800
-Message-ID: <1443595188-1283-4-git-send-email-wens@csie.org>
-References: <1443595188-1283-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] regulator: act8865: support output voltage by VSET2[] bits
+Date: Wed, 30 Sep 2015 14:39:17 +0800
+Message-ID: <1443595158-550-2-git-send-email-wenyou.yang@atmel.com>
+References: <1443595158-550-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ4IV2YAKGQEQEZPMYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1443595188-1283-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443595158-550-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-"dcdc1-supply" and "dcdc5-supply" have been dropped, as they are
-internally connected and should not be represented in the device
-tree.
+For the step-down DC/DC regulators, the output voltage is
+selectable by setting VSEL pin that when VSEL is low, output
+voltage is programmed by VSET1[] bits, and when VSEL is high,
+output voltage is programmed by VSET2[] bits.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+The DT property "active-semi,vsel-high" is used to specify
+the VSEL pin at high on the board.
+
+Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index 06d9391ca30e..f93cf4c42a7a 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -178,8 +178,6 @@
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
--		dcdc1-supply = <&vcc_3v0>;
--		dcdc5-supply = <&vcc_dram>;
+ drivers/regulator/act8865-regulator.c |   24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 896db16..e2b50f3 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -261,6 +261,16 @@ static const struct regulator_desc act8865_regulators[] = {
+ 	ACT88xx_REG("LDO_REG4", ACT8865, LDO4, VSET, "inl67"),
+ };
  
- 		regulators {
- 			x-powers,dcdc-freq = <3000>;
++static const struct regulator_desc act8865_alt_regulators[] = {
++	ACT88xx_REG("DCDC_REG1", ACT8865, DCDC1, VSET2),
++	ACT88xx_REG("DCDC_REG2", ACT8865, DCDC2, VSET2),
++	ACT88xx_REG("DCDC_REG3", ACT8865, DCDC3, VSET2),
++	ACT88xx_REG("LDO_REG1", ACT8865, LDO1, VSET),
++	ACT88xx_REG("LDO_REG2", ACT8865, LDO2, VSET),
++	ACT88xx_REG("LDO_REG3", ACT8865, LDO3, VSET),
++	ACT88xx_REG("LDO_REG4", ACT8865, LDO4, VSET),
++};
++
+ #ifdef CONFIG_OF
+ static const struct of_device_id act8865_dt_ids[] = {
+ 	{ .compatible = "active-semi,act8600", .data = (void *)ACT8600 },
+@@ -413,6 +423,7 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 	struct act8865 *act8865;
+ 	unsigned long type;
+ 	int off_reg, off_mask;
++	int voltage_select;
+ 
+ 	pdata = dev_get_platdata(dev);
+ 
+@@ -424,6 +435,10 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 			return -ENODEV;
+ 
+ 		type = (unsigned long) id->data;
++
++		voltage_select = !!of_get_property(dev->of_node,
++						   "active-semi,vsel-high",
++						   NULL);
+ 	} else {
+ 		type = i2c_id->driver_data;
+ 	}
+@@ -442,8 +457,13 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 		off_mask = ACT8846_OFF_SYSMASK;
+ 		break;
+ 	case ACT8865:
+-		regulators = act8865_regulators;
+-		num_regulators = ARRAY_SIZE(act8865_regulators);
++		if (voltage_select) {
++			regulators = act8865_alt_regulators;
++			num_regulators = ARRAY_SIZE(act8865_alt_regulators);
++		} else {
++			regulators = act8865_regulators;
++			num_regulators = ARRAY_SIZE(act8865_regulators);
++		}
+ 		off_reg = ACT8865_SYS_CTRL;
+ 		off_mask = ACT8865_MSTROFF;
+ 		break;
 -- 
-2.5.3
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
