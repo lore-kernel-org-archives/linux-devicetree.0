@@ -1,40 +1,40 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/7] hwrng: Add support for STMicroelectronics' RNG IP
-Date: Wed, 30 Sep 2015 21:47:57 +0800
-Message-ID: <20150930134757.GA18408@gondor.apana.org.au>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
- <20150918140756.GK9249@gondor.apana.org.au>
- <CAF2Aj3h7Jy=tpYdZTdbxAJwa=147_hAu3reOFrbEh=JdrMFWLQ@mail.gmail.com>
- <20150918151137.GA10763@gondor.apana.org.au>
- <20150918155112.GE3218@x1>
- <20150929142932.GY27197@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150929142932.GY27197@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, Peter Korsgaard <peter@korsgaard.com>, Fabio Estevam <festevam@gmail.com>, Kieran Bingham <kieranbingham@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Linus Torvalds <torvalds@linux-foundation.org>
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [RESEND][PATCH v3 6/9] ARM: dts: imx6q-nitrogen6x: change manufacturer to Boundary Devices
+Date: Wed, 30 Sep 2015 15:46:43 +0200
+Message-ID: <1443620806-14792-7-git-send-email-gary.bisson@boundarydevices.com>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1443620806-14792-1-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443620806-14792-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 29, 2015 at 03:29:32PM +0100, Lee Jones wrote:
-> 
-> I see that your tree is 8 days old, so this may have been resolved
-> already, but would you be kind enough to ensure you remove the 6th
-> (ARM) patch from your repo please?  I wouldn't want it to cause
-> conflicts and for Maxime and yourself to get shouted at by Linus.
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-nitrogen6x.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I prefer not to merge patches that cannot be tested.  Without
-the DT bits in patch 6 the other five patches are useless.  So
-I think patch 6 should be applied together with the other five
-which add the driver.
-
-Of course if Linus wants me to revert patch 6 in case of any
-potential conflicts with Maxime's tree I'll do that.  Linus?
-
-Cheers,
+diff --git a/arch/arm/boot/dts/imx6q-nitrogen6x.dts b/arch/arm/boot/dts/imx6q-nitrogen6x.dts
+index 8088cfc..d168633 100644
+--- a/arch/arm/boot/dts/imx6q-nitrogen6x.dts
++++ b/arch/arm/boot/dts/imx6q-nitrogen6x.dts
+@@ -46,8 +46,8 @@
+ #include "imx6qdl-nitrogen6x.dtsi"
+ 
+ / {
+-	model = "Freescale i.MX6 Quad Nitrogen6x Board";
+-	compatible = "fsl,imx6q-nitrogen6x", "fsl,imx6q";
++	model = "Boundary Devices i.MX6 Quad Nitrogen6x Board";
++	compatible = "boundary,imx6q-nitrogen6x", "fsl,imx6q";
+ };
+ 
+ &sata {
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
