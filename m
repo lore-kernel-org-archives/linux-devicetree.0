@@ -1,60 +1,81 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add Exynos5250 Snow Rev5+ support
-Date: Thu, 01 Oct 2015 08:44:44 +0900
-Message-ID: <560C73EC.40608@samsung.com>
-References: <1443527855-434-1-git-send-email-javier@osg.samsung.com>
- <560B2D29.5060707@samsung.com>
- <CAD=FV=VfGeWdynFd+5YqnRGn+jsC0G_2VhTm1FKsR5o2WpcH1A@mail.gmail.com>
+From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
+Date: Wed, 30 Sep 2015 16:51:25 -0700
+Message-ID: <CANMBJr4hMBUiNQkCW0o=HAJzthu7jsWi+qjpnQ=i6cwk33SQnA@mail.gmail.com>
+References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
+	<1459065.BtzC7pyUYF@wuerfel>
+	<20150930173145.GG15635@sirena.org.uk>
+	<CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+	<CAL_JsqLSDXGCush7TMavRkw5F=vbBbrFaexFyBdXHyrfNVGjXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAD=FV=VfGeWdynFd+5YqnRGn+jsC0G_2VhTm1FKsR5o2WpcH1A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLSDXGCush7TMavRkw5F=vbBbrFaexFyBdXHyrfNVGjXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01.10.2015 01:17, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Sep 29, 2015 at 5:30 PM, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
->> Now the exynos5250-snow.dts means in fact Rev4... but there is no
->> information in DTS about it. I think adding compatible
->> "google,snow-rev4" makes sense:
->> 1. For informational purposes (this could be also handled with a comment).
->> 2. Later one could decide to switch the default meaning of "google,snow"
->> to Rev5 and the real compatible (rev4) will be there already.
+On 30 September 2015 at 12:03, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Sep 30, 2015 at 1:12 PM, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 30 September 2015 at 10:31, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Wed, Sep 30, 2015 at 10:24:56AM +0200, Arnd Bergmann wrote:
+>>>> On Tuesday 29 September 2015 13:29:12 Tyler Baker wrote:
+>>>
+>>>> >         aliases {
+>>>> >                 serial0 = &uart0;
+>>>> > +               serial1 = &uart1;
+>>>> > +               serial2 = &uart2;
+>>>> > +               serial3 = &uart3;
+>>>> > +               serial4 = &uart4;
+>>>> >         };
+>>>
+>>>> In the changelog you mention "both uarts", but here you have five of them.
+>>>> Are they all accessible on the connector? If not, only provide aliases
+>>>> for the ones that are, using numbering that makes most sense for given
+>>>> how one would use the board.
 >>
->> Could you add the new compatible and fix patch issues pointed by Doug?
-> 
-> Looks like everything got applied, but just for the record:
-> 
-> Switching the default meaning of "google,snow" to Rev5 is probably not
-> something we'd ever want to do, since it could confuse "rev3" boards
-> (which should be serviced by the rev4 dts).  From comments in the
-> Chrome OS tree:
-> 
-> In the "rev4" DTS:
->          * - Any real rev 0-3 boards in the field will match "google,snow",
->          *   since older U-Boots don't look for a revision specific device tree.
->          * - Any real rev 4 boards in the field will match "google,snow-rev4"
->          *   first.  If that's not present they will pick the first
->          *   "google,snow" device tree that they find (ignoring the kernel
->          *   ordering).
-> 
-> In the "rev5" DTS:
->          * - Purposely don't add "google,snow" so old firmware (which didn't
->          *   include a -revN suffix) won't pick this one.
+>> Thanks for the comment Arnd. Mark's comment below is correct, there
+>> are only two UARTs accessible on the LS connection in addition to the
+>> one on the board (solder pad).
+>>
+>> Is the following definition any clearer?
+>>
+>> serial0 = &uart0; // Onboard UART0
+>> serial1 = &uart2; // LS expansion UART0
+>> serial2 = &uart3; // LS expansion UART1
+>
+> Yes, but use C style comments.
 
-These are requirements written somewhere in the downstream tree... not
-in upstream. Have in mind that someone may not be using Chrome OS on
-Chromebook but custom U-Boot and different distro.
+Ok.
 
-You cannot expect that everyone will new some requirements of some
-downstream OS. If you need such requirements, write them in bindings
-documentation *in the upstream*.
+> What about the BT UART?
 
-Best regards,
-Krzysztof
+According to the schematic it will use UART1, will add.
+
+>> If so, I'll respin this patch.
+>>
+>>> Unless I'm missing something there's only two UARTs brought out on the
+>>> low speed expansion connector (in addition to the one on the solder pads
+>>> which is currently supported).  We should also adjust the console
+>>> default to match whatever one of the low speed expansion connector UARTs
+>>> is being used by the bootloader.
+>>
+>> Your not missing anything, I should not have added the additional
+>> aliases, it is confusing, will remove. The UART boards by default come
+>> configured to use UART1 on the LS connector.
+>
+> Also, the console default should be set in chosen stdout-path so we
+> can move away from having to set it on the kernel command line. Then
+> the aliases don't matter so much, but there may be some work to do to
+> setup a getty correctly.
+
+Ok.
+
+Cheers,
+
+Tyler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
