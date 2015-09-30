@@ -1,76 +1,87 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
-Date: Wed, 30 Sep 2015 20:18:18 +0100
-Message-ID: <20150930191818.GZ15635@sirena.org.uk>
-References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
- <1459065.BtzC7pyUYF@wuerfel>
- <20150930173145.GG15635@sirena.org.uk>
- <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 4/6] tty: serial: msm: Add TX DMA support
+Date: Wed, 30 Sep 2015 15:24:37 -0500
+Message-ID: <20150930202437.GA18486@qualcomm.com>
+References: <1443614906-2196-1-git-send-email-ivan.ivanov@linaro.org>
+ <1443614906-2196-5-git-send-email-ivan.ivanov@linaro.org>
+ <20150930132919.GI10997@leverpostej>
+ <1443621086.2412.11.camel@linaro.org>
+ <20150930173201.GB745@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YPAu9GJT3m1iC0FS"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150930173201.GB745@leverpostej>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, David Brown <davidb@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Frank Rowand <frank.rowand@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 30, 2015 at 06:32:01PM +0100, Mark Rutland wrote:
+> On Wed, Sep 30, 2015 at 02:51:26PM +0100, Ivan T. Ivanov wrote:
+> > 
+> > On Wed, 2015-09-30 at 14:29 +0100, Mark Rutland wrote:
+> > > On Wed, Sep 30, 2015 at 01:08:24PM +0100, Ivan T. Ivanov wrote:
+> > > > Add transmit DMA support for UARTDM type of controllers.
+> > > > 
+> > > > Tested on APQ8064, which have UARTDM v1.3 and ADM DMA engine
+> > > > and APQ8016, which have UARTDM v1.4 and BAM DMA engine.
+> > > > 
+> > > > Signed-off-by: Ivan T. Ivanov ivanov@linaro.org>
+> > > > ---
+> > > >  .../devicetree/bindings/serial/qcom,msm-uartdm.txt |   3 +
+> > > >  drivers/tty/serial/msm_serial.c                    | 312 +++++++++++++++++++--
+> > > >  drivers/tty/serial/msm_serial.h                    |   3 +
+> > > >  3 files changed, 294 insertions(+), 24 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> > > > index a2114c217376..a600023d9ec1 100644
+> > > > --- a/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> > > > +++ b/Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> > > > @@ -26,6 +26,9 @@ Required properties:
+> > > >  Optional properties:
+> > > >  - dmas: Should contain dma specifiers for transmit and receive channels
+> > > >  - dma-names: Should contain "tx" for transmit and "rx" for receive channels
+> > > > +- qcom,tx-crci: Identificator <u32> for Client Rate Control Interface to be
+> > > > +           used with TX DMA channel. Required when using DMA for transmission
+> > > > +           with UARTDM v1.3 and bellow.
+> > > 
+> > > This sounds like it belongs in the dma-specifier, and dealt with by the
+> > > DMA controller driver.
+> > > 
+> > > Why does the UART driver need to know about this?
+> > 
+> > CRCI information was part of the first version of ADM DMA engine driver
+> > bindings, but Andy remove it because some client devices are requiring
+> > more that one CRCI number. See here[1] and here [2].
+> > 
+> > Regards,
+> > Ivan
+> > 
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/314190.html
+> > [2] https://lkml.org/lkml/2015/8/19/19
+> 
+> This leaves me more confused. If different writes from the same agent
+> are being distinguished then it sounds like you actually have two
+> logical DMA channels.
+> 
+> Could you elaborate on the qcom,ebi2-nand binding? From a brief read I'd
+> expect you to have "txrx" and "cmd" dmas, rather than describing the
+> CRCI information on the side.
 
---YPAu9GJT3m1iC0FS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The ADM does have physical channels, but when you utilize those channels you may
+also need to describe the flow control used for specific transactions.  And this
+flow control has to be configured for that specific transaction, if you are
+interleaving different flow control origination/end points.
 
-On Wed, Sep 30, 2015 at 11:12:58AM -0700, Tyler Baker wrote:
-> On 30 September 2015 at 10:31, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+In the case of nand, they actually use different flow controls on the same
+physical channel.  For UART/I2C/SPI, they use just one flow control identifier.
 
-> + Peter as he has been submitting u-boot patches recently for the HiKey.
+I see your point at specifying these as logical channels.  That is certainly a
+possibility.  Then the ADM driver would just have to handle the logical channel
+allocation.  That would remove the need for the slave_config being sent.
 
-> Obviously, both UEFI and u-boot can be configured to use either UART,
-> and at the moment u-boot defaults to using the on board UART. Whereas
-> UEFI is using UART1 on the LS connector. I'm fine with switching the
-> console default to use the UART1 on the LS connector as long as there
-> is agreement to do so.
-
-Given that UEFI is switching and the requirement for soldering to get to
-the on board UART it does seem to make sense, though it will create some
-pain for current users.
-
-> > While we're at it there was a recent talk which mentioned a fairly large
-> > amount of functionality that's apparently already "upstream" for this
-> > device but not included in the DT, assuming that means that driver
-> > support is there it would be good to add the corresponding DT.
-
-> Indeed, I think this comment is targeted to toward the d410c though as
-> there are drivers for eMMC, and microsd drivers upstream but no DT
-> bindings. I do not believe currently this is the case for HiKey.
-
-My understanding is that it applies to both with slightly different
-driver sets, the slides aren't online yet (!) but if you look at 10:52
-or so in the video we should have SD/eMMC on HiKey in v4.1 with thermal
-and CPUfreq added in v4.2.  It also looks like there's just some DT
-additions needed to enable reset, cpuidle and CPU hotplug using generic
-code (mainly the constants for PSCI I expect).
-
---YPAu9GJT3m1iC0FS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWDDV5AAoJECTWi3JdVIfQ9y8H/RU3WROzGKt08qXiArUrWZGy
-wNnkhzWN5Mh5jemZQGaZRQQ6rzBkEgfUuPLAeh6FFejMUB+J//R4klHteVE3z5v6
-F9tUe5rmPe/GIeLixGBSCqzQJXHrYVJ9CGlSzIyrUqxDGyvLPIFckdDhCJ4eeyXr
-8McMebxqhWb0ZpVR5RUw/JvPqtY+Xbd+dLwoOXeF/QxbGJCQCE4PYu7Q0wYOFxug
-ACwNFFVrDFnTNmhem1sI8kr/9bbAyxjcyO6uJm6XifkYR2j5yPOXVv+w49FYhlxU
-64JOg31fWIW17f3LgFAIzVZ+f7x9jD/UmgFmpLw3Ny3tvrE3YWZHNBnoHXxzKN0=
-=KD/Q
------END PGP SIGNATURE-----
-
---YPAu9GJT3m1iC0FS--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
