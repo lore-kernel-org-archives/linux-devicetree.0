@@ -1,50 +1,21 @@
 From: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-Subject: [PATCH 2/2] V4L2: platform: rcar_jpu: switch off clock on release later
-Date: Thu,  1 Oct 2015 15:03:32 +0300
-Message-ID: <1443701012-20730-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
-References: <1443701012-20730-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1443701012-20730-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
+Subject: [PATCH 0/2] media: platform: rcar_jpu: code cleanup and release function changes
+Date: Thu,  1 Oct 2015 15:03:30 +0300
+Message-ID: <1443701012-20730-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
 To: hverkuil@xs4all.nl, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mchehab@osg.samsung.com
 Cc: laurent.pinchart@ideasonboard.com, j.anaszewski@samsung.com, kamil@wypas.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Give JPU peripheral chance to finish current job.
-Don't switch off clock until context release.
+This series of patches includes improvements and code cleanup for rcar_jpu driver.
 
-Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
----
- drivers/media/platform/rcar_jpu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Mikhail Ulyanov (2):
+  V4L2: platform: rcar_jpu: remove redundant code
+  V4L2: platform: rcar_jpu: switch off clock on release later
 
-diff --git a/drivers/media/platform/rcar_jpu.c b/drivers/media/platform/rcar_jpu.c
-index 039bbbc..aa327e6 100644
---- a/drivers/media/platform/rcar_jpu.c
-+++ b/drivers/media/platform/rcar_jpu.c
-@@ -1296,17 +1296,17 @@ static int jpu_release(struct file *file)
- 	struct jpu *jpu = video_drvdata(file);
- 	struct jpu_ctx *ctx = fh_to_ctx(file->private_data);
- 
--	mutex_lock(&jpu->mutex);
--	if (--jpu->ref_count == 0)
--		clk_disable_unprepare(jpu->clk);
--	mutex_unlock(&jpu->mutex);
--
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
- 	v4l2_ctrl_handler_free(&ctx->ctrl_handler);
- 	v4l2_fh_del(&ctx->fh);
- 	v4l2_fh_exit(&ctx->fh);
- 	kfree(ctx);
- 
-+	mutex_lock(&jpu->mutex);
-+	if (--jpu->ref_count == 0)
-+		clk_disable_unprepare(jpu->clk);
-+	mutex_unlock(&jpu->mutex);
-+
- 	return 0;
- }
- 
+ drivers/media/platform/rcar_jpu.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
 -- 
 2.5.1
-
