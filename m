@@ -1,45 +1,85 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 13/13] scsi: ufs: Add exynos ufs platform data
-Date: Thu, 01 Oct 2015 13:29:10 +0200
-Message-ID: <1790578.NZeHVGuJeN@wuerfel>
-References: <201510011845.GN7Kisc4%fengguang.wu@intel.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH] of/fdt: Allow memory node and root to have different size/address cells
+Date: Thu, 1 Oct 2015 16:59:42 +0530
+Message-ID: <1443698982-27227-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201510011845.GN7Kisc4%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, JBottomley-wo1vFcy6AUs@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 October 2015 18:46:34 kbuild test robot wrote:
-> [auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
-> 
-> config: x86_64-allmodconfig (attached as .config)
-> reproduce:
->         git checkout 6e153e3bf7c68b019e987c5a0ffadebd9c7d4fbb
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
-> >> ERROR: "ufs_hba_exynos_ops" [drivers/scsi/ufs/ufshcd-pltfrm.ko] undefined!
-> 
-> 
+Currently memory node parsing uses root "#size-cells", "#address-cells"
+This doesn't work correctly when memory address/size is different or
+greater than root's.
 
-Ah, this seems to be a case of layering violation. It would be best to
-restructure the code so that the exynos driver registers a platform_driver
-by itself for the respective DT compatible string, and then calls
-into the common code from its probe function, rather than having the
-generic driver know about the specific backends.
+e.g. ARC 32-bit systems implementing physical adressing extension and
+say 4GB of memory. All peripherals mappings stay within the 4GB (so root
+address/size cells remain 1 each), only the memory node address/size
+cells needs to specify greater than 32-bits as below
 
-That approach will also make the generic driver more scalable as we
-add further chip-specific variations, and matches what we do in other
-drivers.
+	memory {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x1 0x00000000>;	/* 4 GB */
+		#address-cells = <2>;
+		#size-cells = <2>;
+	};
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch lets me boot a ARC system with PAE40 + 4GB of memory specified
+as above and fails to boot otherwise as memory parsing doesn't populate
+right base, size.
+
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+ drivers/of/fdt.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 07496560e5b9..3af808f45965 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -888,8 +888,8 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data)
+ {
+ 	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+-	const __be32 *reg, *endp;
+-	int l;
++	const __be32 *reg, *endp, *prop;
++	int l, dt_mem_addr_cells, dt_mem_size_cells;
+ 
+ 	/* We are scanning "memory" nodes only */
+ 	if (type == NULL) {
+@@ -912,11 +912,22 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 
+ 	pr_debug("memory scan node %s, reg size %d,\n", uname, l);
+ 
+-	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++
++	dt_mem_size_cells = dt_root_size_cells,;
++	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
++	if (prop)
++		dt_mem_size_cells = be32_to_cpup(prop);
++
++	dt_mem_addr_cells = dt_root_addr_cells;
++	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
++	if (prop)
++		dt_mem_addr_cells = be32_to_cpup(prop);
++
++	while ((endp - reg) >= (dt_mem_addr_cells + dt_mem_size_cells)) {
+ 		u64 base, size;
+ 
+-		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-		size = dt_mem_next_cell(dt_root_size_cells, &reg);
++		base = dt_mem_next_cell(dt_mem_addr_cells, &reg);
++		size = dt_mem_next_cell(dt_mem_size_cells, &reg);
+ 
+ 		if (size == 0)
+ 			continue;
+-- 
+1.9.1
