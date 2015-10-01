@@ -1,30 +1,58 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: Enable eMMC on apq8016-sbc board
-Date: Thu,  1 Oct 2015 12:59:31 +0300
-Message-ID: <1443693571-32068-1-git-send-email-georgi.djakov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: agross@codeaurora.org
-Cc: georgi.djakov@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+Date: Thu, 1 Oct 2015 10:01:29 +0000
+Message-ID: <SG2PR06MB09198E86925430DC0D500B59D84C0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1440493835-6732-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <55FBAA4D.3000704@ti.com> <56000DB2.5010004@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: ja-JP
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the eMMC on the APQ8016 SBC board (also known as DragonBoard 410c),
-so that we can use its internal storage.
+Hi Rob,
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+> Sent: Friday, September 25, 2015 9:42 PM
+> 
+> Hi Rob,
+> 
+> Thank you for your comment!
+> And, I'm sorry for the delayed response.
+> 
+> > Sent: Monday, September 21, 2015 11:01 PM
+> >
+> > On 09/18/2015 01:08 AM, Kishon Vijay Abraham I wrote:
+< snip >
+> > >> +Example (R-Car H3):
+> > >> +
+> > >> +	usb-phy@ee080200 {
+> > >> +		compatible = "renesas,usb2-phy-r8a7795";
+> > >> +		reg = <0 0xee080200 0 0x6ff>, <0 0xe6590100 0 0x100>;
+> > >> +		reg-names = "usb2", "hsusb";
+> > >
+> > > hsusb is missing in Documentation.
+> >
+> > usb2 is the host controller? It is questionable that these should be
+> > combined. Does this appear under another node? If so, don't overlap
+> > resources in the DT.
+> 
+> Thank you for the point.
+> I don't think that this appears under another node.
+> However, to avoid such a situation, I should change the name somehow.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 3fc3be447edd..8cea426e58af 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -86,3 +86,7 @@
- 		};
- 	};
- };
-+
-+&sdhc_1 {
-+	status = "okay";
-+};
+Perhaps I misunderstood your point. So, let me comment below again:
+
+- This "usb2" means the partial registers of USB 2.0 host block.
+  That host registers can control the USB2.0 PHY.
+  This "hsusb" means the partial registers of USB 2.0 peripheral block.
+  That peripheral registers can control the selector (host or peripheral).
+  So, these should be combined in this driver.
+
+- These resources don't appear under another nodes.
+
+Best regards,
+Yoshihiro Shimoda
