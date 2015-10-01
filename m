@@ -1,142 +1,156 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel init
-Date: Thu, 1 Oct 2015 16:07:21 +0800
-Message-ID: <CAGS+omCpWqtKPKoyjFb=q4BxmfUGGsfvQGEZas8g8VLZKPtKbQ@mail.gmail.com>
-References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
- <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
- <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
- <1443604022.3185.17.camel@pengutronix.de> <1443683750.1714.25.camel@mtksdaap41>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 2/3] mtd: mtk-nor: mtk serial flash controller driver
+Date: Thu, 1 Oct 2015 16:17:30 +0800
+Message-ID: <201510011630.yO6mbrG3%fengguang.wu@intel.com>
+References: <1443685492-9996-3-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443683750.1714.25.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443685492-9996-3-git-send-email-bayi.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, Bayi Cheng <bayi.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+Hi Bayi,
 
-On Thu, Oct 1, 2015 at 3:15 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Lucas,
->
-> On Wed, 2015-09-30 at 11:07 +0200, Lucas Stach wrote:
->> > If the VENC power domain is disabled, then accesses to the vencsys
->> > registers just silently fail (i.e., reads probably
->> > return all 0s).
->>
->> If this ever happens it is really unfortunate and needs fixing, too. If
->> you need the power domain to be powered ON to properly read or even
->> change the clock registers, the clock driver needs to be a consumer of
->> the power domain, so any clock operations powers the domain up.
->
-> A subsystem should be powered on before its clock operations. But I
-> think this flow should be guaranteed by VENC driver. This patch is
-> focused on the race between disabling unused clocks and power domains by
-> frameworks.
->
->> > In theory, we could add "clocks=<&topckgen CLK_TOP_VENC_SEL>;" to the
->> > vencsys clock-controller node.  On initialization, mtk_vencsys_init()
->> > could then pass venc_sel to the generic MT8173 gate clock driver, and
->> > it would then clk_enable(venc_sel)/_disable(venc_sel) around any
->> > access to the clock-controller registers.  James, however, thinks
->> > this is a lot of extra overhead, and instead has proposed the fix in this patch,
->> > where venc_sel is forced on whenever the VENC power domain is enabled.
->> >
->> I would still say this is the correct solution. If the vencsys clock
->> registers are itself clocked by VENC_SEL this driver needs to make sure
->> this clock is running at the appropriate times. I understand that this
->> may be a bit of an overhead, but clock enable/disable paths are not
->> really performance critical.
->>
->> > So, this patch is a bit of a hack, but the mtk scpsys driver already
->> > does something similar for the MM & MFG clocks - these clocks are
->> > always enabled whenever certain power domains are enabled, and they
->> > are only disabled when all such power domains are disabled.  I'm not
->> > 100% why these clocks must always be kept on whenever these power
->> > domains are enabled, but probably to solve a similar problem where
->> > these clocks are needed to access some registers at a time when these
->> > clocks would not otherwise be explicitly enabled.
->> >
->> I can't really argue with this being the wrong solution if we already
->> have precedent of the same solution being used for other domains. But I
->> would still ask you to re-evaluate with the above in mind.
->
-> One cause of the hang up issue is frameworks' behavior. Power domain
-> framework and clock framework work independently during kernel init. So
-> their control flow can't be guaranteed by a suitable driver, such as
-> VENC driver.
+[auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
 
-Hmm... below is my current understanding.
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-In the current software architecture, we have split the "venc"
-subsystem register space into two parts (two dt nodes), with each node
-handled instantiated as its own  platform device, and handled by a
-different platform driver:
 
-vencsys: clock-controller@18000000 {
-  compatible = "mediatek,mt8173-vencsys", "syscon";
-  reg = <0 0x18000000 0 0x1000>;
-  #clock-cells = <1>;
-};
+sparse warnings: (new ones prefixed by >>)
 
-/* TBD - a venc driver has not been posted to the list so I don't
-really know yet what it will look like */
- venc: encoder@~18000000 {
-   compatible = "mediatek,mt8173-venc?";
-   reg = <0 ~0x18000000 0 ?>;
-   clocks = <& <&vencsys CLK_VENC_CKE1>, <&vencsys CLK_VENC_CKE0>, ...;
-   clock-names = "apb", "smi", ...;
-   ...
- };
+>> drivers/mtd/spi-nor/mtk-quadspi.c:310:52: sparse: incorrect type in argument 4 (different modifiers)
+   drivers/mtd/spi-nor/mtk-quadspi.c:310:52:    expected unsigned char [usertype] *[assigned] data
+   drivers/mtd/spi-nor/mtk-quadspi.c:310:52:    got unsigned char const [usertype] *[assigned] buf
+>> drivers/mtd/spi-nor/mtk-quadspi.c:391:18: sparse: incorrect type in assignment (different base types)
+   drivers/mtd/spi-nor/mtk-quadspi.c:391:18:    expected struct mtd_info *mtd
+   drivers/mtd/spi-nor/mtk-quadspi.c:391:18:    got struct mtd_info <noident>
+   drivers/mtd/spi-nor/mtk-quadspi.c:402:17: sparse: expected structure or union
+   drivers/mtd/spi-nor/mtk-quadspi.c:403:17: sparse: expected structure or union
+   drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mt8173_nor_write':
+   drivers/mtd/spi-nor/mtk-quadspi.c:310:10: warning: passing argument 4 of 'mt8173_nor_write_single_byte' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+             buf);
+             ^
+   drivers/mtd/spi-nor/mtk-quadspi.c:246:12: note: expected 'u8 * {aka unsigned char *}' but argument is of type 'const u_char * {aka const unsigned char *}'
+    static int mt8173_nor_write_single_byte(struct mt8173_nor *mt8173_nor,
+               ^
+   drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mtk_nor_init':
+   drivers/mtd/spi-nor/mtk-quadspi.c:391:11: error: incompatible types when assigning to type 'struct mtd_info *' from type 'struct mtd_info'
+     nor->mtd = *mtd;
+              ^
+   drivers/mtd/spi-nor/mtk-quadspi.c:402:10: error: request for member 'owner' in something not a structure or union
+     nor->mtd.owner = THIS_MODULE;
+             ^
+   drivers/mtd/spi-nor/mtk-quadspi.c:403:10: error: request for member 'name' in something not a structure or union
+     nor->mtd.name = "mtk_nor";
+             ^
+   drivers/mtd/spi-nor/mtk-quadspi.c:410:36: warning: passing argument 1 of 'mtd_device_parse_register' from incompatible pointer type [-Wincompatible-pointer-types]
+     return  mtd_device_parse_register(&nor->mtd, NULL, ppdata, NULL, 0);
+                                       ^
+   In file included from drivers/mtd/spi-nor/mtk-quadspi.c:24:0:
+   include/linux/mtd/mtd.h:372:12: note: expected 'struct mtd_info *' but argument is of type 'struct mtd_info **'
+    extern int mtd_device_parse_register(struct mtd_info *mtd,
+               ^
 
-Each independent driver must take appropriate independent action to
-ensure that any clock required to access its associated registers is
-enabled when accessing said registers.
-In other words,
- * the venc *clock-controller* driver that must enable any clocks
-required to access the *clock control* registers
- * the venc *encoder* driver must enable clocks any clocks required to
-access the *encoder* registers
+vim +310 drivers/mtd/spi-nor/mtk-quadspi.c
 
-Actually, the situation is a little worse that this, since we also
-have a 'larb' node in the same register space, whose driver must also
-ensure that VENC_SEL is enabled before accessing its registers:
+   304		ret = mt8173_nor_write_buffer_disable(mt8173_nor);
+   305		if (ret < 0)
+   306			dev_warn(mt8173_nor->dev, "write buffer disable failed!\n");
+   307	
+   308		if (len) {
+   309			ret = mt8173_nor_write_single_byte(mt8173_nor, to, (int)len,
+ > 310							   buf);
+   311			if (ret < 0)
+   312				dev_warn(mt8173_nor->dev, "write single byte failed!\n");
+   313			(*retlen) += len;
+   314		}
+   315	}
+   316	
+   317	static int mt8173_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
+   318	{
+   319		int ret;
+   320		struct mt8173_nor *mt8173_nor = nor->priv;
+   321	
+   322		/* mtk nor controller doesn't supoort SPINOR_OP_RDCR */
+   323		switch (opcode) {
+   324		case SPINOR_OP_RDID:
+   325			/* read JEDEC ID need 4 bytes commands */
+   326			ret = mt8173_nor_set_cmd(mt8173_nor, 0, 32, SPINOR_OP_RDID);
+   327			if (ret < 0)
+   328				return ret;
+   329	
+   330			/* mtk nor flash controller only support 3 bytes IDs */
+   331			buf[2] = readb(mt8173_nor->base + MTK_NOR_SHREG0_REG);
+   332			buf[1] = readb(mt8173_nor->base + MTK_NOR_SHREG1_REG);
+   333			buf[0] = readb(mt8173_nor->base + MTK_NOR_SHREG2_REG);
+   334			break;
+   335		case SPINOR_OP_RDSR:
+   336			ret = mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_RDSR_CMD);
+   337			if (ret < 0)
+   338				return ret;
+   339			*buf = readb(mt8173_nor->base + MTK_NOR_RDSR_REG);
+   340			break;
+   341		default:
+   342			ret = -EINVAL;
+   343			break;
+   344		}
+   345		return ret;
+   346	}
+   347	
+   348	static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
+   349					int len, int write_enable)
+   350	{
+   351		int ret;
+   352		struct mt8173_nor *mt8173_nor = nor->priv;
+   353	
+   354		switch (opcode) {
+   355		case SPINOR_OP_WRSR:
+   356			ret = mt8173_nor_set_para(mt8173_nor, *buf,
+   357						  MTK_NOR_WRSR_CMD);
+   358			break;
+   359		case SPINOR_OP_CHIP_ERASE:
+   360			ret = mt8173_nor_set_para(mt8173_nor, opcode,
+   361						  MTK_NOR_PRG_CMD);
+   362			break;
+   363		case SPINOR_OP_WREN:
+   364			ret = mt8173_nor_set_cmd(mt8173_nor, 0, 8, opcode);
+   365			if (ret)
+   366				dev_warn(mt8173_nor->dev, "set write enable fail!\n");
+   367			break;
+   368		case SPINOR_OP_WRDI:
+   369			ret = mt8173_nor_set_cmd(mt8173_nor, 0, 8, opcode);
+   370			if (ret)
+   371				dev_warn(mt8173_nor->dev, "set write disable fail!\n");
+   372			break;
+   373		default:
+   374			dev_warn(mt8173_nor->dev, "doesn't support cmd %d\n", opcode);
+   375			ret = -EINVAL;
+   376			break;
+   377		}
+   378		return ret;
+   379	}
+   380	
+   381	static int __init mtk_nor_init(struct mt8173_nor *mt8173_nor,
+   382				       struct mtd_part_parser_data *ppdata)
+   383	{
+   384		int ret;
+   385		struct spi_nor *nor;
+   386		struct mtd_info *mtd;
+   387	
+   388		writel(MTK_NOR_ENABLE_SF_CMD, mt8173_nor->base + MTK_NOR_WRPROT_REG);
+   389		nor = &mt8173_nor->nor;
+   390		mtd = &mt8173_nor->mtd;
+ > 391		nor->mtd = *mtd;
+   392		nor->dev = mt8173_nor->dev;
+   393		nor->priv = mt8173_nor;
+   394		mtd->priv = nor;
 
-larb3: larb@18001000 {
-  compatible = "mediatek,mt8173-smi-larb";
-  reg = <0 0x18001000 0 0x1000>;
-  mediatek,smi = <&smi_common>;
-  power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
-  clocks = <&vencsys CLK_VENC_CKE1>, <&vencsys CLK_VENC_CKE0>;
-  clock-names = "apb", "smi";
-};
-
-Personally, I am not opposed to using the power-domain enable/disable
-as a proxy for also enabling/disabling the "subsystem register bank"
-clock as is done in this patch and by the scpsys driver in general.
-However, it feels a bit like an abuse of the power domain api.
-
-> I preferred to keep venc_sel on during VENC power on because I'm not
-> sure there is any other framework may control VENC's registers during
-> kernel init.
-
-The misunderstanding here is the interpretation of "VENC's registers".
-In this case, the registers in question are those owned by the
-"vencsys: clock-controller@18000000" node, and the driver accessing
-them is drivers/clk/mediatek/clk-gate.c.
-
-Best,
--Dan
-
->
->
-> Best regards,
->
-> James
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
