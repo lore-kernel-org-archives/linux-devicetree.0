@@ -1,139 +1,57 @@
-From: Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH v3 2/4] clk: bcm2835: Add binding docs for the new
- platform clock driver.
-Date: Thu, 1 Oct 2015 13:27:06 +0100
-Message-ID: <20151001122706.GW3214@x1>
-References: <1443475325-22270-1-git-send-email-eric@anholt.net>
- <1443475325-22270-2-git-send-email-eric@anholt.net>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2] ARM: dts: sun6i: hummingbird: Add aliases for rtc devices
+Date: Thu,  1 Oct 2015 20:48:29 +0800
+Message-ID: <1443703709-24835-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443475325-22270-2-git-send-email-eric@anholt.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Sep 2015, Eric Anholt wrote:
+The hummingbird A31 has 2 rtc devices available: one in the SoC,
+and a pcf8563 external rtc on i2c2.
 
-> Previously we've only supported a few fixed clocks based on
-> assumptions about how the firmware sets up the clocks, but this
-> binding will let us control the actual (audio power domain) clock
-> manager.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> ---
->  .../bindings/clock/brcm,bcm2835-cprman.txt         | 45 +++++++++++++++++++++
->  include/dt-bindings/clock/bcm2835.h                | 47 ++++++++++++++++++++++
->  2 files changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
->  create mode 100644 include/dt-bindings/clock/bcm2835.h
+For some unknown reason, the onboard backup battery alone can not
+supply enough power to the internal rtc. When external power is
+removed, the internal rtc would reset. Hence we want to use the
+external one by default.
 
-Acked-by: Lee Jones <lee@kernel.org>
+Add aliases for the rtc devices with the external one as rtc0.
 
-> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt b/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-> new file mode 100644
-> index 0000000..e56a1df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-> @@ -0,0 +1,45 @@
-> +Broadcom BCM2835 CPRMAN clocks
-> +
-> +This binding uses the common clock binding:
-> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +The CPRMAN clock controller generates clocks in the audio power domain
-> +of the BCM2835.  There is a level of PLLs deriving from an external
-> +oscillator, a level of PLL dividers that produce channels off of the
-> +few PLLs, and a level of mostly-generic clock generators sourcing from
-> +the PLL channels.  Most other hardware components source from the
-> +clock generators, but a few (like the ARM or HDMI) will source from
-> +the PLL dividers directly.
-> +
-> +Required properties:
-> +- compatible:	Should be "brcm,bcm2835-cprman"
-> +- #clock-cells:	Should be <1>. The permitted clock-specifier values can be
-> +		  found in include/dt-bindings/clock/bcm2835.h
-> +- reg:		Specifies base physical address and size of the registers
-> +- clocks:	The external oscillator clock phandle
-> +
-> +Example:
-> +
-> +	clk_osc: clock@3 {
-> +		compatible = "fixed-clock";
-> +		reg = <3>;
-> +		#clock-cells = <0>;
-> +		clock-output-names = "osc";
-> +		clock-frequency = <19200000>;
-> +	};
-> +
-> +	clocks: cprman@7e101000 {
-> +		compatible = "brcm,bcm2835-cprman";
-> +		#clock-cells = <1>;
-> +		reg = <0x7e101000 0x2000>;
-> +		clocks = <&clk_osc>;
-> +	};
-> +
-> +	i2c0: i2c@7e205000 {
-> +		compatible = "brcm,bcm2835-i2c";
-> +		reg = <0x7e205000 0x1000>;
-> +		interrupts = <2 21>;
-> +		clocks = <&clocks BCM2835_CLOCK_VPU>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-> new file mode 100644
-> index 0000000..d323efa
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/bcm2835.h
-> @@ -0,0 +1,47 @@
-> +/*
-> + * Copyright (C) 2015 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#define BCM2835_PLLA			0
-> +#define BCM2835_PLLB			1
-> +#define BCM2835_PLLC			2
-> +#define BCM2835_PLLD			3
-> +#define BCM2835_PLLH			4
-> +
-> +#define BCM2835_PLLA_CORE		5
-> +#define BCM2835_PLLA_PER		6
-> +#define BCM2835_PLLB_ARM		7
-> +#define BCM2835_PLLC_CORE0		8
-> +#define BCM2835_PLLC_CORE1		9
-> +#define BCM2835_PLLC_CORE2		10
-> +#define BCM2835_PLLC_PER		11
-> +#define BCM2835_PLLD_CORE		12
-> +#define BCM2835_PLLD_PER		13
-> +#define BCM2835_PLLH_RCAL		14
-> +#define BCM2835_PLLH_AUX		15
-> +#define BCM2835_PLLH_PIX		16
-> +
-> +#define BCM2835_CLOCK_TIMER		17
-> +#define BCM2835_CLOCK_OTP		18
-> +#define BCM2835_CLOCK_UART		19
-> +#define BCM2835_CLOCK_VPU		20
-> +#define BCM2835_CLOCK_V3D		21
-> +#define BCM2835_CLOCK_ISP		22
-> +#define BCM2835_CLOCK_H264		23
-> +#define BCM2835_CLOCK_VEC		24
-> +#define BCM2835_CLOCK_HSM		25
-> +#define BCM2835_CLOCK_SDRAM		26
-> +#define BCM2835_CLOCK_TSENS		27
-> +#define BCM2835_CLOCK_EMMC		28
-> +#define BCM2835_CLOCK_PERI_IMAGE	29
-> +
-> +#define BCM2835_CLOCK_COUNT		30
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+
+Changes since v1:
+
+  - Cleared up commit message
+
+---
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 06d9391ca30e..358781113582 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -55,6 +55,8 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		rtc0 = &pcf8563;
++		rtc1 = &rtc;
+ 	};
+ 
+ 	chosen {
+-- 
+2.5.3
