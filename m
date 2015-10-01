@@ -1,119 +1,55 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.1 24/29] of_mdio: add new DT property managed to specify the PHY management type
-Date: Thu,  1 Oct 2015 11:32:00 +0200
-Message-ID: <20151001093146.766047355@linuxfoundation.org>
-References: <20151001093145.730759857@linuxfoundation.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC v3 0/7] MT8173 DRM support
+Date: Thu, 01 Oct 2015 11:53:29 +0200
+Message-ID: <1443693209.3272.27.camel@pengutronix.de>
+References: <1443627006-15319-1-git-send-email-p.zabel@pengutronix.de>
+	 <CAGS+omCnpYxO1A1rAD+x6NURa9YEVBi6qg7sp6K2JWC6wuqaCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151001093145.730759857@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omCnpYxO1A1rAD+x6NURa9YEVBi6qg7sp6K2JWC6wuqaCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-4.1-stable review patch.  If anyone has any objections, please let me know.
+Hi Daniel,
 
-------------------
+Am Donnerstag, den 01.10.2015, 16:55 +0800 schrieb Daniel Kurtz:
+[...]
+> > CK Hu (3):
+> >   dt-bindings: drm/mediatek: Add Mediatek display subsystem dts binding
+> >   drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.
+> >   drm/mediatek: Add DSI sub driver
+> >
+> > Daniel Kurtz (1):
+> >   drm/mediatek: Add HDMI support
+> 
+> Thanks for the shout-out, but I really can't take any credit for this patch :-)
+> Somewhere along the life of this patch its ownership changed.
+> It should probably be Jie Qiu as per its SOB.
 
-From: Stas Sergeev <stsp@list.ru>
+Whoops, I'll change the author for this patch as you suggest.
 
-[ Upstream commit 4cba5c2103657d43d0886e4cff8004d95a3d0def in net-next tree,
-  will be pushed to Linus very soon. ]
+> > Jie Qiu (2):
+> >   drm/mediatek: Add DPI sub driver
+> >   drm/mediatek: enable hdmi output control bit
+> >
+> > Philipp Zabel (1):
+> >   dt-bindings: drm/mediatek: Add Mediatek HDMI dts binding
+> 
+> Can you also include the actual mt8173.dtsi (& mt8173-evb.dts) changes
+> that use this binding next time?
+> This will make it possible to actually build and test the driver.
 
-Currently the PHY management type is selected by the MAC driver arbitrary.
-The decision is based on the presence of the "fixed-link" node and on a
-will of the driver's authors.
-This caused a regression recently, when mvneta driver suddenly started
-to use the in-band status for auto-negotiation on fixed links.
-It appears the auto-negotiation may not work when expected by the MAC driver.
-Sebastien Rannou explains:
-<< Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
-a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
-inband status) is connected to the switch through QSGMII, and in this context
-we are on the media side of the PHY. >>
-https://lkml.org/lkml/2015/7/10/206
+I'll include the mt8173.dtsi changes next time, but I'm not aware what
+needs to be done for mt8173-evb apart from enabling the hdmi node.
 
-This patch introduces the new string property 'managed' that allows
-the user to set the management type explicitly.
-The supported values are:
-"auto" - default. Uses either MDIO or nothing, depending on the presence
-of the fixed-link node
-"in-band-status" - use in-band status
+best regards
+Philipp
 
-Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
-
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Pawel Moll <pawel.moll@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-CC: Kumar Gala <galak@codeaurora.org>
-CC: Florian Fainelli <f.fainelli@gmail.com>
-CC: Grant Likely <grant.likely@linaro.org>
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: netdev@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/devicetree/bindings/net/ethernet.txt |    4 ++++
- drivers/of/of_mdio.c                               |   19 +++++++++++++++++--
- 2 files changed, 21 insertions(+), 2 deletions(-)
-
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -25,7 +25,11 @@ The following properties are common to t
-   flow control thresholds.
- - tx-fifo-depth: the size of the controller's transmit fifo in bytes. This
-   is used for components that can have configurable fifo sizes.
-+- managed: string, specifies the PHY management type. Supported values are:
-+  "auto", "in-band-status". "auto" is the default, it usess MDIO for
-+  management if fixed-link is not specified.
- 
- Child nodes of the Ethernet controller are typically the individual PHY devices
- connected via the MDIO bus (sometimes the MDIO bus controller is separate).
- They are described in the phy.txt file in this same directory.
-+For non-MDIO PHY management see fixed-link.txt.
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -263,7 +263,8 @@ EXPORT_SYMBOL(of_phy_attach);
- bool of_phy_is_fixed_link(struct device_node *np)
- {
- 	struct device_node *dn;
--	int len;
-+	int len, err;
-+	const char *managed;
- 
- 	/* New binding */
- 	dn = of_get_child_by_name(np, "fixed-link");
-@@ -272,6 +273,10 @@ bool of_phy_is_fixed_link(struct device_
- 		return true;
- 	}
- 
-+	err = of_property_read_string(np, "managed", &managed);
-+	if (err == 0 && strcmp(managed, "auto") != 0)
-+		return true;
-+
- 	/* Old binding */
- 	if (of_get_property(np, "fixed-link", &len) &&
- 	    len == (5 * sizeof(__be32)))
-@@ -286,8 +291,18 @@ int of_phy_register_fixed_link(struct de
- 	struct fixed_phy_status status = {};
- 	struct device_node *fixed_link_node;
- 	const __be32 *fixed_link_prop;
--	int len;
-+	int len, err;
- 	struct phy_device *phy;
-+	const char *managed;
-+
-+	err = of_property_read_string(np, "managed", &managed);
-+	if (err == 0) {
-+		if (strcmp(managed, "in-band-status") == 0) {
-+			/* status is zeroed, namely its .link member */
-+			phy = fixed_phy_register(PHY_POLL, &status, np);
-+			return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+		}
-+	}
- 
- 	/* New binding */
- 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
