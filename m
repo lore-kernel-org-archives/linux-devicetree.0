@@ -1,77 +1,98 @@
 From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 15/16] ARM: dts: lpc4350-hitex-eval: add i2c0 and devices
-Date: Thu,  1 Oct 2015 22:54:52 +0200
-Message-ID: <1443732893-17145-16-git-send-email-manabian@gmail.com>
+Subject: [PATCH 14/16] ARM: dts: lpc4350-hitex-eval: add spifi and flash device
+Date: Thu,  1 Oct 2015 22:54:51 +0200
+Message-ID: <1443732893-17145-15-git-send-email-manabian@gmail.com>
 References: <1443732893-17145-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1443732893-17145-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+The Hitex LPC4350 eval board has a Spansion S25SL064P SPI-NOR Flash connected
+to the SPIFI perherial.
 
-Add the I2C0 bus and the some of the I2C devices on the Hitex
-LPC4350 eval board.
-
-Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/lpc4350-hitex-eval.dts | 33 ++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/boot/dts/lpc4350-hitex-eval.dts | 57 ++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
 diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-index c1dd76e5fc45..5c529f45947b 100644
+index 32bc7ff4eb2a..c1dd76e5fc45 100644
 --- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
 +++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-@@ -186,6 +186,14 @@
+@@ -186,6 +186,35 @@
  		};
  	};
  
-+	i2c0_pins: i2c0-pins {
-+		i2c0_pins_cfg {
-+			pins = "i2c0_scl", "i2c0_sda";
-+			function = "i2c0";
++	spifi_pins: spifi-pins {
++		spifi_clk_cfg {
++			pins = "p3_3";
++			function = "spifi";
++			slew-rate = <1>;
++			bias-disable;
 +			input-enable;
++			input-schmitt-disable;
++		};
++
++		spifi_mosi_miso_sio2_3_cfg {
++			pins = "p3_7", "p3_6", "p3_5", "p3_4";
++			function = "spifi";
++			slew-rate = <1>;
++			bias-disable;
++			input-enable;
++			input-schmitt-disable;
++		};
++
++		spifi_cs_cfg {
++			pins = "p3_8";
++			function = "spifi";
++			slew-rate = <1>;
++			bias-disable;
++			input-enable;
++			input-schmitt-disable;
 +		};
 +	};
 +
- 	spifi_pins: spifi-pins {
- 		spifi_clk_cfg {
- 			pins = "p3_3";
-@@ -300,6 +308,31 @@
- 	clock-frequency = <25000000>;
+ 	uart0_pins: uart0-pins {
+ 		uart0_rx_cfg {
+ 			pins = "pf_11";
+@@ -278,6 +307,34 @@
+ 	pinctrl-0 = <&enet_mii_pins>;
  };
  
-+&i2c0 {
++&spifi {
 +	status = "okay";
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	clock-frequency = <400000>;
++	pinctrl-0 = <&spifi_pins>;
 +
-+	/* NXP SE97BTP with temperature sensor + eeprom */
-+	sensor@18 {
-+		compatible = "nxp,jc42";
-+		reg = <0x18>;
-+	};
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		spi-rx-bus-width = <4>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+	eeprom@50 {
-+		compatible = "nxp,24c02";
-+		reg = <0x50>;
-+	};
++		partition@0 {
++			label = "bootloader";
++			reg = <0x000000 0x040000>; /* 256 KiB */
++		};
 +
-+	pca_gpio: gpio@24 {
-+		compatible = "nxp,pca9673";
-+		reg = <0x24>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
++		partition@1 {
++			label = "kernel";
++			reg = <0x040000 0x2c0000>; /* 2.75 MiB */
++		};
++
++		partition@2 {
++			label = "rootfs";
++			reg = <0x300000 0x500000>; /* 5 MiB */
++		};
 +	};
 +};
 +
- &mac {
+ &uart0 {
  	status = "okay";
- 	phy-mode = "mii";
+ 	pinctrl-names = "default";
 -- 
 1.8.0
 
