@@ -1,51 +1,126 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] ARM: mediatek: add smp bringup code
-Date: Thu, 1 Oct 2015 21:45:49 +0800
-Message-ID: <1443707149.22188.1.camel@mtksdaap41>
-References: <1443109140-5406-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1443109140-5406-4-git-send-email-yingjoe.chen@mediatek.com>
-	 <20150926093835.GA20255@n2100.arm.linux.org.uk>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
+ subsystem dts binding
+Date: Thu, 1 Oct 2015 22:29:34 +0800
+Message-ID: <CAGS+omAs4Jvu7tKEMoNL9BSMQMwW=9UHzXW8_jS=5MbajaJzOg@mail.gmail.com>
+References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
+ <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
+ <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
+ <1442823067.3277.35.camel@pengutronix.de>
+ <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
+ <1443689957.3272.18.camel@pengutronix.de>
+ <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150926093835.GA20255-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-09-26 at 10:38 +0100, Russell King - ARM Linux wrote:
-> On Thu, Sep 24, 2015 at 11:38:58PM +0800, Yingjoe Chen wrote:
-> > +struct mtk_smp_boot_info {
-> > +	unsigned long smp_base;
-> ...
-> > +static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
-> > +	0x80002000, 0x3fc,
-> ...
-> > +static const struct mtk_smp_boot_info mtk_mt6589_boot = {
-> > +	0x10002000, 0x34,
-> ...
-> > +	if (trustzone) {
-> > +		/* smp_base(trustzone-bootinfo) is reserved by device tree */
-> > +		mtk_smp_base = phys_to_virt(mtk_smp_info->smp_base);
-> 
-> I can't say whether this is correct or not, as we've got rid of most of
-> the information that would allow me to make that decision.
-> 
-> The address passed to phys_to_virt() _must_ be one which is mapped by
-> the kernel as lowmem.  I've no idea if the above would fall into that
-> category though.
-> 
-
-Currently only mt8127/mt8135 trustzone firmware use this reserve
-location. The reserved memory is before kernel code, so it will
-definitely in lowmem.
-
-Joe.C
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBPY3QgMSwgMjAxNSBhdCA4OjU4IFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPiB3cm90ZToKPiBPbiBUaHUsIE9jdCAxLCAyMDE1IGF0IDM6NTkgQU0sIFBoaWxpcHAgWmFi
+ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiBBbSBNaXR0d29jaCwgZGVuIDMw
+LjA5LjIwMTUsIDEyOjEzIC0wNTAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4+PiBPbiBNb24sIFNl
+cCAyMSwgMjAxNSBhdCAzOjExIEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
+LmRlPiB3cm90ZToKPj4+ID4gTm90ZSBob3cgdGhlIGRpc3BsYXktc3Vic3lzdGVtIG5vZGUgb3Zl
+cmxhcHMgdGhlIGxhcmIgbm9kZS4gSXMgdGhhdAo+Pj4gPiBhY2NlcHRhYmxlPwo+Pj4KPj4+IEdp
+dmVuIHdoYXQgdGhlIGdyYXBoIGxvb2tzIGxpa2UsIHBlcmhhcHMuIEhvd2V2ZXIsIGRvIHlvdSBy
+ZWFsbHkgbmVlZAo+Pj4gYSBjb250YWluZXIgbm9kZT8gSXQgb25seSBzZXJ2ZXMgdG8gcHJvdmlk
+ZSBhIGxpc3Qgb2Ygbm9kZXMgKGUuZy4gYWxsCj4+PiB0aGUgY2hpbGRyZW4pIHRvIGluY2x1ZGUg
+YXMgY29tcG9uZW50cy4gVGhlcmUgYXJlIG90aGVyIHdheXMgdG8KPj4+IGRldGVybWluZSB0aGlz
+IGxpc3QuIFlvdSBjb3VsZCBmaW5kIGFsbCBub2RlcyBqdXN0IHNlYXJjaGluZwo+Pj4gY29tcGF0
+aWJsZSBzdHJpbmdzIGZvciBlYWNoIGNvbXBvbmVudC4gWW91IGp1c3QgbmVlZCB0byBiaW5kIHRo
+ZSBkcm0KPj4+IGRyaXZlciB0byBzb21lIG90aGVyIERUIG5vZGUuIElzIHRoZXJlIG5vIG5vZGUg
+eW91IGNhbiBwaWNrIGFzIHRoZQo+Pj4gbWFzdGVyIGNvbXBvbmVudD8KPj4KPj4gVGhlcmUgaXMg
+dGhlIG1tc3lzIGNsb2NrLWNvbnRyb2xsZXIgbm9kZSBhdCB0aGUgdG9wIG9mIHRoZSBNTVNZUyBh
+ZGRyZXNzCj4+IHNwYWNlICgweDE0MDAwMDAwLTB4MTRmZmZmZmYpOgo+Pgo+PiAgICAgICAgIG1t
+c3lzOiBjbG9jay1jb250cm9sbGVyQDE0MDAwMDAwIHsKPj4gICAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLW1tc3lzIiwgInN5c2NvbiI7Cj4+ICAgICAgICAgICAg
+ICAgICByZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsKPj4gICAgICAgICAgICAgICAgICNj
+bG9jay1jZWxscyA9IDwxPjsKPj4gICAgICAgICB9Owo+Pgo+PiBJdHMgcmVnaXN0ZXIgc3BhY2Ug
+YWxzbyBjb250YWlucyB0aGUgTU1TWVNfQ09ORklHIHJlZ2lvbiB0aGF0IGNvbnRyb2xzCj4+IHRo
+ZSBtdWx0aXBsZXhlcnMgYmV0d2VlbiB0aGUgZGlzcGxheSBmdW5jdGlvbiBibG9ja3MsIHNvIHRo
+YXQgd291bGQgYmUgYQo+PiBnb29kIGNhbmRpZGF0ZS4KPj4gTm8gZHJpdmVyIGJpbmRzIHRvIHRo
+aXMgbm9kZSB5ZXQsIHRoZSBjbG9ja3MgYXJlIHJlZ2lzdGVyZWQgd2l0aAo+PiBDTEtfT0ZfREVD
+TEFSRS4KPj4KPj4gSSdsbCB0cnkgdG8gYmluZCB0byB0aGlzIG5vZGUgYW5kIGhhdmUgdGhlIGRy
+aXZlciBmaW5kIHNpYmxpbmcgbm9kZXMKPj4gdXNpbmcgdGhlaXIgY29tcGF0aWJsZSBzdHJpbmdz
+Lgo+Cj4gVGhhdCBkb2Vzbid0IHNlZW0gbGlrZSBhIGdvb2QgY2hvaWNlIHNpbmNlIHRoZXJlIGFy
+ZSBvdGhlciBmdW5jdGlvbnMKPiBpbiB0aGUgYmxvY2suIEkgd2FzIHRoaW5raW5nIG9uZSBvZiB0
+aGUgZGlzcGxheSByZWxhdGVkIGJsb2NrcyBsaWtlCj4gd2hhdGV2ZXIgYmxvY2sgcHJvdmlkZXMg
+dGhlIG1haW4gY3J0YyBmdW5jdGlvbnMuCgpUaGUgdHdvICJPVkwiIG5vZGVzIGNvcnJlc3BvbmQg
+dG8gdGhlICJjcnRjIiBmdW5jdGlvbnMgb2YgdGhlIHR3bwpkaXNwbGF5IHBpcGVzIGluIHRoaXMg
+U29DLCB3ZSB3b3VsZCBzZXR1cCB0aGUgZGlzcGxheS1zdWJzeXN0ZW0gbm9kZQpsaWtlIHRoaXM6
+CgpkaXNwbGF5LXN1YnN5c3RlbSB7CiAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxkaXNwbGF5LXN1
+YnN5c3RlbSI7CiAgcG9ydHMgPSA8Jm92bDA+LCA8Jm92bDE+Owp9OwoKQW5kLCBhbnkgbm9kZSB0
+aGF0IG5lZWRzIHRvIHBva2UgYXJvdW5kIGluIHRoZSBtbXN5c19jb25maWcgYXJlYSwgbGlrZQph
+biBvdmwsIGNvdWxkIGFjY2VzcyBpdCB1c2luZyBhIHBoYW5kbGUgPCZtbXN5cz4gdG8gdGhlIGNv
+bW1vbgoibWVkaWF0ZWssbXQ4MTczLW1tc3lzIiBkZXZpY2UsIGxpa2UgdGhpczoKCm92bDA6IG92
+bEAxNDAwYzAwMCB7CiAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1vdmwiOwog
+ICAgICAgcmVnID0gPDAgMHgxNDAwYzAwMCAwIDB4MTAwMD47CiAgICAgICBpbnRlcnJ1cHRzID0g
+PEdJQ19TUEkgMTgwIElSUV9UWVBFX0xFVkVMX0xPVz47CiAgICAgICBjbG9ja3MgPSA8Jm1tc3lz
+IENMS19NTV9ESVNQX09WTDA+OwogICAgICAgaW9tbXVzID0gPCZpb21tdSBNNFVfTEFSQjBfSUQg
+TTRVX1BPUlRfRElTUF9PVkwwPjsKICAgICAgIG1lZGlhdGVrLG1tc3lzID0gPCZtbXN5cz47CiAg
+ICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwp9OwoKT25lIGlkZWEgdG8gcmVkdWNlIHRoZSBzaXpl
+IG9mIHRoZSBvZl9ncmFwaCB3b3VsZCBiZSB0byBqdXN0IG1vZGVsIHRoZQplbnRyYW5jZS9leGl0
+IHBvaW50cyBmcm9tIHRoZSBNTSBzdWJzeXN0ZW0gaW4gZHQuICBTbywgaW5zdGVhZCBvZjoKICBv
+dmwwIC0+IGNvbG9yMCAtPiBhYWwgLT4gb2QgLT4gdWZvZSAtPiBkc2kwIC0+IGRzaS1lZHAtYnJp
+ZGdlCiAgb3ZsMSAtPiBjb2xvcjEgLT4gZ2FtbWEwIC0+IGRwaTAgLT4gaGRtaQoKV2UgY2FuIGRv
+IHNvbWV0aGluZyBsaWtlIHRoaXM6CiAgb3ZsMCAtPiBkc2kwIC0+IGRzaS1lZHAtYnJpZGdlCiAg
+b3ZsMSAtPiBkcGkwIC0+IGhkbWkKCkJ1dCAuLi4gdGhpcyBtaWdodCBiZSB0b28gbGltaXRpbmcg
+Zm9yIHNvbWUgYXBwbGljYXRpb25zLgpTbywgSSB0aGluayB3ZSBzaG91bGQganVzdCBsaXZlIHdp
+dGggdGhlIGJpZyBncmFwaC4KSSB3b3VsZCwgaG93ZXZlciwgcmVjb21tZW5kIHRoYXQgeW91IG1v
+dmUgdGhlIGdyYXBoIHRvIGl0cyBvd24KbXQ4MTczLWRpc3BsYXktZ3JhcGguZHRzaSBmaWxlIHdo
+aWNoIHdvdWxkIGJlICNpbmNsdWRlZCBpbnRvIGEgYm9hcmQKc3BlY2lmaWMgLmR0cyBmaWxlLgoK
+SWYgeW91IGxldCB0aGUgYm9hcmQgLmR0cyBpbmNsdWRlIHRoZSBncmFwaCwgdGhlbiB3ZSBjYW4g
+cG9zc2libHkKc2hyaW5rIHRoZSByZXN1bHRpbmcgYm9hcmQgc3BlY2lmaWMgZGV2aWNlIHRyZWUg
+LQpBdCBmaXJzdCB3ZSB3b3VsZCBtYWtlIHRoZSBmdWxsIGdyYXBoIGluIG9uZSAuZHRzaSBhcyBh
+Ym92ZQoibXQ4MTczLWRpc3BsYXktZ3JhcGguZHRzaSIuClRoaXMgaXMgdGhlIGZ1bGwgcmVmZXJl
+bmNlIGdyYXBoIHRoYXQgd2lsbCBhbHdheXMgd29yay4KClRoZW4sIGlmIGEgcGFydGljdWxhciBi
+b2FyZCB1c2VkIGEgZml4ZWQgY29uZmlndXJhdGlvbiwgdGhlIHN5c3RlbQppbnRlZ3JhdG9yIGNv
+dWxkIGNyZWF0ZSBhIHNtYWxsZXIgZ3JhcGggd2l0aCBqdXN0IHRoZSBncmFwaCBub2RlcyB0aGF0
+CnRoZXkgY2FyZSBhYm91dC4KCkZvciBleGFtcGxlLCBpZiBtdDgxNzMtZXZiIG9ubHkgc3VwcG9y
+dHMgYSBzaW5nbGUgSERNSSBvdXRwdXQsIHRoZW4KcGVyaGFwcyB5b3Ugd291bGQganVzdApzZXQg
+dXAgdGhlIGVuZHBvaW50cyBmb3IgdGhpcyBzaW5nbGUgZml4ZWQgZnVuY3Rpb24gZGlzcGxheSBw
+aXBlIGluCm10ODE3My1ldmItZGlzcGxheS1ncmFwaC5kdHNpOgoKJm92bDEgewogICAgc3RhdHVz
+ID0gIm9rYXkiOwogICAgcG9ydCB7CiAgICAgICAgb3ZsMV90b19jb2xvcjE6IGVuZHBvaW50QDAg
+ewogICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmNvbG9yMV9mcm9tX292bDE+OwogICAg
+ICAgIH07CiAgICB9Owp9OwoKJmNvbG9yMSB7CiAgICBzdGF0dXMgPSAib2theSI7CiAgICBwb3J0
+QDAgewogICAgICAgIGNvbG9yMV9mcm9tX292bDE6IGVuZHBvaW50QDEgewogICAgICAgICAgICBy
+ZW1vdGUtZW5kcG9pbnQgPSA8Jm92bDFfdG9fY29sb3IxPjsKICAgICAgICB9OwogICAgfTsKCiAg
+ICBwb3J0QDEgewogICAgICAgIGNvbG9yMV90b19nYW1tYTogZW5kcG9pbnRAMCB7CiAgICAgICAg
+ICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZ2FtbWFfZnJvbV9jb2xvcjE+OwogICAgICAgIH07CiAg
+ICB9Owp9OwoKJmdhbW1hIHsKICAgIHN0YXR1cyA9ICJva2F5IjsKICAgIHBvcnRAMCB7CiAgICAg
+ICAgZ2FtbWFfZnJvbV9jb2xvcjE6IGVuZHBvaW50IHsKICAgICAgICAgICAgcmVtb3RlLWVuZHBv
+aW50ID0gPCZjb2xvcjFfdG9fZ2FtbWE+OwogICAgICAgIH07CiAgICB9OwoKICAgIHBvcnRAMSB7
+CiAgICAgICAgZ2FtbWFfdG9fZHBpMDogZW5kcG9pbnRAMyB7CiAgICAgICAgICAgIHJlbW90ZS1l
+bmRwb2ludCA9IDwmZHBpMF9mcm9tX2dhbW1hPjsKICAgICAgICB9OwogICAgfTsKfTsKCiZkcGkw
+IHsKICAgIHN0YXR1cyA9ICJva2F5IjsKICAgIHBvcnRAMCB7CiAgICAgICAgZHBpMF9mcm9tX2dh
+bW1hOiBlbmRwb2ludEAyIHsKICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZnYW1tYV90
+b19kcGkwPjsKICAgICAgICB9OwogICAgfTsKCiAgICBwb3J0QDEgewogICAgICAgIGRwaTBfdG9f
+aGRtaTogZW5kcG9pbnQgewogICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfZnJv
+bV9kcGkwPjsKICAgICAgICB9OwogICAgfTsKfTsKCk5vdGljZSB0aGF0IHRoaXMgYWxzbyBvbmx5
+IGVuYWJsZXMgdGhlIG5vZGVzIHRoYXQgd2UgY2FyZSBhYm91dCAoYWxsCm9mIHRoZSBvdGhlciBu
+b2RlcyB3b3VsZCBiZSBkaXNhYmxlZCBieSBkZWZhdWx0KS4KCkkgdGhpcyB3b3VsZCBhbGxvdyBm
+dWxsIGZsZXhpYmlsaXR5IGJ1dCBhbHNvIGRyYXN0aWNhbGx5IGN1dCBkb3duIG9uCnRoZSByZXN1
+bHRpbmcgLmR0cyBzaXplLgoKVGhlIGluZGl2aWR1YWwgY29tcG9uZW50IGRyaXZlcnMgd291bGQg
+dGhlbiBtYXJjaCBkb3duIHRoZWlyIGdyYXBocwplbnN1cmluZyB0aGF0IGFsbCBvZiB0aGUgY29y
+cmVzcG9uZGluZyBjb21wb25lbnRzIGhhdmUgYmVlbiBib3VuZCwgYW5kCnRoZW4gdGhlbXNlbHZl
+cyBhcHByb3ByaWF0ZWx5IGJhc2VkIG9uIHRoZWlyIHNldCBvZiBlbmRwb2ludHMgdGhhdCBhcmUK
+YXZhaWxhYmxlLgoKV2hhdCBkbyB5b3UgdGhpbms/CgotRGFuCgoKPgo+IFJvYgo+IF9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxp
+bmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
