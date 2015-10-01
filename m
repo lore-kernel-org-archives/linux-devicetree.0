@@ -1,76 +1,40 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel
- init
-Date: Thu, 1 Oct 2015 15:15:50 +0800
-Message-ID: <1443683750.1714.25.camel@mtksdaap41>
-References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
-	 <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
-	 <1443604022.3185.17.camel@pengutronix.de>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Thu, 01 Oct 2015 17:17:07 +1000
+Message-ID: <1443683827.2828.46.camel@kernel.crashing.org>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+	 <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+	 <20150828123228.GE31748@leverpostej>
+	 <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
+	 <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
+	 <20150930105331.GA10066@leverpostej>
+	 <CAFpQJXVegqortRLK+g7_9p82KMYwq0hg8n3_9bJqjGHsJvngaA@mail.gmail.com>
+	 <1443661547.2828.40.camel@kernel.crashing.org>
+	 <CAFpQJXXKcwks0iZN+3B=U0-9uYKFpAXcZE90GCHN9WyM45Hdpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443604022.3185.17.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXXKcwks0iZN+3B=U0-9uYKFpAXcZE90GCHN9WyM45Hdpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd@ar
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+On Thu, 2015-10-01 at 10:41 +0530, Ganapatrao Kulkarni wrote:
+> i still could not represent the ring/mesh numa topology using
+> associativity, which will be present in other upcoming arm64
+> platforms.
 
-On Wed, 2015-09-30 at 11:07 +0200, Lucas Stach wrote:
-> > If the VENC power domain is disabled, then accesses to the vencsys
-> > registers just silently fail (i.e., reads probably
-> > return all 0s). 
-> 
-> If this ever happens it is really unfortunate and needs fixing, too. If
-> you need the power domain to be powered ON to properly read or even
-> change the clock registers, the clock driver needs to be a consumer of
-> the power domain, so any clock operations powers the domain up.
+Right. It should be possible to represent it using the multiple list as
+a multi-path problem, but it's a bit awkward.
 
-A subsystem should be powered on before its clock operations. But I
-think this flow should be guaranteed by VENC driver. This patch is
-focused on the race between disabling unused clocks and power domains by
-frameworks. 
+It does look like the representation might not work well for that case
 
-> > In theory, we could add "clocks=<&topckgen CLK_TOP_VENC_SEL>;" to the
-> > vencsys clock-controller node.  On initialization, mtk_vencsys_init()
-> > could then pass venc_sel to the generic MT8173 gate clock driver, and
-> > it would then clk_enable(venc_sel)/_disable(venc_sel) around any
-> > access to the clock-controller registers.  James, however, thinks
-> > this is a lot of extra overhead, and instead has proposed the fix in this patch,
-> > where venc_sel is forced on whenever the VENC power domain is enabled.
-> > 
-> I would still say this is the correct solution. If the vencsys clock
-> registers are itself clocked by VENC_SEL this driver needs to make sure
-> this clock is running at the appropriate times. I understand that this
-> may be a bit of an overhead, but clock enable/disable paths are not
-> really performance critical.
-> 
-> > So, this patch is a bit of a hack, but the mtk scpsys driver already
-> > does something similar for the MM & MFG clocks - these clocks are
-> > always enabled whenever certain power domains are enabled, and they
-> > are only disabled when all such power domains are disabled.  I'm not
-> > 100% why these clocks must always be kept on whenever these power
-> > domains are enabled, but probably to solve a similar problem where
-> > these clocks are needed to access some registers at a time when these
-> > clocks would not otherwise be explicitly enabled.
-> > 
-> I can't really argue with this being the wrong solution if we already
-> have precedent of the same solution being used for other domains. But I
-> would still ask you to re-evaluate with the above in mind.
+Cheers,
+Ben.
 
-One cause of the hang up issue is frameworks' behavior. Power domain
-framework and clock framework work independently during kernel init. So
-their control flow can't be guaranteed by a suitable driver, such as
-VENC driver.
-
-I preferred to keep venc_sel on during VENC power on because I'm not
-sure there is any other framework may control VENC's registers during
-kernel init.
-
-
-Best regards,
-
-James
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
