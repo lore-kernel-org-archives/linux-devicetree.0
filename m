@@ -1,54 +1,51 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [STLinux Kernel] [PATCH v2 6/7] ARM: STi: STiH407: Enable the 2
- HW Random Number Generators for STiH4{07, 10}
-Date: Thu, 1 Oct 2015 12:57:27 +0200
-Message-ID: <560D1197.2000606@st.com>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
- <1442497557-9271-7-git-send-email-lee.jones@linaro.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] phy: exynos-ufs: exynos_ufs_phy_calibrate() can be static
+Date: Thu, 1 Oct 2015 19:04:30 +0800
+Message-ID: <20151001110430.GA12682@athens>
+References: <201510011920.tppZbk0e%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442497557-9271-7-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.comHerbert Xu <herbert@gondor.apana.org.au>
-Cc: kernel@stlinux.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443686970-28104-3-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: kbuild-all@01.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee, Herbert,
 
-On 09/17/2015 03:45 PM, Lee Jones wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   arch/arm/boot/dts/stih407-family.dtsi | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> index 838b812..9452b42 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -565,5 +565,19 @@
->   						  <&phy_port2 PHY_TYPE_USB3>;
->   			};
->   		};
-> +
-> +		rng10: rng@08a89000 {
-> +			compatible      = "st,rng";
-> +			reg		= <0x08a89000 0x1000>;
-> +			clocks          = <&clk_sysin>;
-> +			status		= "okay";
-> +		};
-> +
-> +		rng11: rng@08a8a000 {
-> +			compatible      = "st,rng";
-> +			reg		= <0x08a8a000 0x1000>;
-> +			clocks          = <&clk_sysin>;
-> +			status		= "okay";
-> +		};
->   	};
->   };
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+ phy-exynos-ufs.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Patch applied to STi tree (sti-dt-for-v4.4).
-
-Thanks,
-Maxime
+diff --git a/drivers/phy/phy-exynos-ufs.c b/drivers/phy/phy-exynos-ufs.c
+index 343fcaf..835ee78 100644
+--- a/drivers/phy/phy-exynos-ufs.c
++++ b/drivers/phy/phy-exynos-ufs.c
+@@ -66,7 +66,7 @@ static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
+ 	return false;
+ }
+ 
+-int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag tag, u8 pwr)
++static int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag tag, u8 pwr)
+ {
+ 	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+ 	struct exynos_ufs_phy_cfg **cfgs = ufs_phy->cfg;
+@@ -93,14 +93,14 @@ out:
+ 	return 0;
+ }
+ 
+-void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
++static void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
+ {
+ 	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+ 
+ 	ufs_phy->lane_cnt = lane_cnt;
+ }
+ 
+-int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
++static int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
+ {
+ 	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+ 	const unsigned int timeout_us = 100000;
