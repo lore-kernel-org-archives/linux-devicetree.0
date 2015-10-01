@@ -1,82 +1,24 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v2 07/10] dts/ls2085a: Update DTSI to add support of
- various peripherals
-Date: Thu, 1 Oct 2015 16:58:57 -0500
-Message-ID: <1443736737.5336.158.camel@freescale.com>
-References: <1441350322-4671-1-git-send-email-bhupesh.sharma@freescale.com>
- <CAL_Jsq+9izV8vkrF1tK96M-VRGTMJ+GN5o=RsnCBDcnh-at5kA@mail.gmail.com>
- <CALRxmdC9ZzGiw6CVnVTqhH1xvA-P9s8cpYbk8DoVq7CodFS0VA@mail.gmail.com>
- <CY1PR0301MB0748A8F37E3FBE1922AF9D3F874C0@CY1PR0301MB0748.namprd03.prod.outlook.com>
- <CADRPPNRz-yM_48HvHYv3r31u_b_tHkAjg5H5r+V2mE2=oJTGDA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/2] Add USB PHY device tree support for R8A7794/SILK board
+Date: Fri, 02 Oct 2015 01:03:41 +0300
+Message-ID: <4938706.NQELE8A71r@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADRPPNRz-yM_48HvHYv3r31u_b_tHkAjg5H5r+V2mE2=oJTGDA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Li Yang <leoli@freescale.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Shaohui Xie <Shaohui.Xie@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Huan Wang <alison.wang@freescale.com>, Sharma Bhupesh <bhupesh.sharma@freescale.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, Stuart Yoder <stuart.yoder@freescale.com>, Will Deacon <will.deacon@arm.com>, "Lian
- M.H." <Minghuan.Lian@freescale.com>, Liu Gang <Gang.Liu@freescale.com>, Rob Herring <robherring2@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Badola Nikhil-B46172 <nikhil.badola@freescale.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lu Y.B." <yangbo.lu@freescale.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-10-01 at 16:42 -0500, Li Yang wrote:
-> On Thu, Oct 1, 2015 at 3:05 PM, Stuart Yoder <stuart.yoder@freescale.com> 
-> wrote:
-> > Hi Rob,
-> > 
-> > Had a question about your comments on the patch below.
-> > 
-> > You singled out 3 nodes (gic,uart,clockgen) and said "This should be 
-> > under a bus node."
-> > 
-> > What is special about those 3 nodes types?  There are a bunch of other 
-> > memory
-> > mapped SoC devices as well in the DTS.
-> > 
-> > I skimmed the dts files under arch/arm64 and it looks like most have a 
-> > simple-bus
-> > SoC node like this where SoC devices are under:
-> > 
-> >         soc {
-> >                 #address-cells = <2>;
-> >                 #size-cells = <2>;
-> >                 compatible = "simple-bus";
-> >                 ranges;
-> > 
-> > Is that what you are looking for-- for all SoC devices?
-> 
-> I think the key is to have the soc node and have all the on-chip
-> devices defined underneath it.
-> 
-> I read the following from the booting-without-of.txt document:
-> 
->   f) the /soc<SOCname> node
-> 
->   This node is used to represent a system-on-a-chip (SoC) and must be
->   present if the processor is a SoC. The top-level soc node contains
->   information that is global to all devices on the SoC. The node name
->   should contain a unit address for the SoC, which is the base address
->   of the memory-mapped register set for the SoC. The name of an SoC
->   node should start with "soc", and the remainder of the name should
->   represent the part number for the soc.  For example, the MPC8540's
->   soc node would be called "soc8540".
-> 
-> A lot of device trees didn't follow the soc<SOCname> naming scheme and
-> just used "soc" as the node name.  I am not sure if we want to enforce
-> the naming in the future or update the document to make it more relax.
+Hello.
 
-Update the document.  Having the SoC name in the node name was a pain, which 
-is why we don't do it anymore.  Ideally, this text should be moved into a 
-binding for Freescale PPC/LS SoCs.  It really doesn't have the broad 
-applicability that this historical document suggests, and even on our SoCs it 
-doesn't represent the entire SoC.  It represents CCSR/IMMR.
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20151001-v4.3-rc3' tag. Here we add the USB PHY device tree
+support on the R8A7794/SILK low cost board.
 
--Scott
+[1/2] ARM: shmobile: r8a7794: add USB PHY DT support
+[2/2] ARM: shmobile: silk: enable USB PHY
+
+WBR, Sergei
+
