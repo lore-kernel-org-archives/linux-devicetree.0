@@ -1,88 +1,52 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v3 1/2] fsl: Add binding for RCPM
-Date: Thu, 1 Oct 2015 12:07:44 -0500
-Message-ID: <1443719264.5336.133.camel@freescale.com>
-References: <1443083354-37369-1-git-send-email-dongsheng.wang@freescale.com>
- <CALRxmdDwGgxCG5SfSOaEXK8_fJcG4UUw_9D2=NA7nQhikDyb+A@mail.gmail.com>
- <CY1PR0301MB0748AB1CE2D93FFD79FE6009874C0@CY1PR0301MB0748.namprd03.prod.outlook.com>
+From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] powerpc/512x: add LocalPlus Bus FIFO device driver
+Date: Thu, 1 Oct 2015 12:11:10 -0500
+Message-ID: <560D692E.1010309@tabi.org>
+References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
+ <1443115737-3948-2-git-send-email-alex.popov@linux.com>
+ <56049CD0.7080104@tabi.org> <560C5325.6070406@linux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CY1PR0301MB0748AB1CE2D93FFD79FE6009874C0@CY1PR0301MB0748.namprd03.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yoder Stuart-B08248 <stuart.yoder@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zhao Chenhui-B35336 <chenhui.zhao@freescale.com>, Wang Huan-B18965 <alison.wang@freescale.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Wang Dongsheng-B40534 <Dongsheng.Wang@freescale.com>, Tang Yuantian-B29983 <Yuantian.Tang@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Jin Zhengxiong-R64188 <Jason.Jin@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <560C5325.6070406-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-10-01 at 12:05 -0500, Yoder Stuart-B08248 wrote:
-> > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > @@ -0,0 +1,63 @@
-> > +* Run Control and Power Management
-> > +-------------------------------------------
-> > +The RCPM performs all device-level tasks associated with device run 
-> > control
-> > +and power management.
-> > +
-> > +Required properites:
-> > +  - reg : Offset and length of the register set of RCPM block.
-> 
-> s/RCPM block/the RCPM block/
-> 
-> > +  - fsl,#rcpm-wakeup-cells : The number of cells in rcpm-wakeup property.
-> 
-> s/rcpm-wakeup-property/the rcpm-wakeup-property/
-> 
-> > +  - compatible : Sould contain a chip-specific RCPM block compatible 
-> > string
-> 
-> s/Sould/Should
-> 
-> "Should" means it is recommended, but does not mean "must".  Is it really 
-> optional?
-> 
-> > +       and (if applicable) may contain a chassis-version RCPM compatible
-> > +       string. Chip-specific strings are of the form "fsl,<chip>-rcpm",
-> > +       such as:
-> > +       * "fsl,p2041-rcpm"
-> > +       * "fsl,p3041-rcpm"
-> > +       * "fsl,p4080-rcpm"
-> > +       * "fsl,p5020-rcpm"
-> > +       * "fsl,p5040-rcpm"
-> > +       * "fsl,t4240-rcpm"
-> > +       * "fsl,b4420-rcpm"
-> > +       * "fsl,b4860-rcpm"
-> 
-> 2 or 3 examples is enough.
-> 
-> > +       Chassis-version strings are of the form "fsl,qoriq-rcpm-
-> > <version>",
-> > +       such as:
-> > +       * "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
-> > +       * "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
-> > +       * "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-> > +
-> > +All references to "1.0" and "2.0" refer to the QorIQ chassis version to
-> > +which the chip complies.
-> > +Chassis Version                Example Chips
-> > +---------------                -------------------------------
-> > +1.0                            p4080, p5020, p5040, p2041, p3041
-> > +2.0                            t4240, b4860, b4420
-> > +2.1                            t1040, ls1021
-> 
-> Not sure this binding is the place to maintain a table of chassis
-> versions to SoCs.
+On 09/30/2015 04:24 PM, Alexander Popov wrote:
 
-This is something I've been encouraging, given that the block versions are 
-not publicly documented.  It lets people find a manual that describes the 
-advertised programming interface.
+>> Can you test for "!cs" here instead?
+>>
+>>> +        e = -EFAULT;
+>>> +        goto err_param;
+>>> +    }
+>
+> Unfortunately no: 0 is a valid value for Chip Select.
+> Is it OK to leave it like that?
 
--Scott
+Yes.
+
+>>> +    lpbfifo.ram_bus_addr = sg_dma_address(&sg); /* For freeing later */
+>>> +    sg_dma_len(&sg) = lpbfifo.req->size;
+>>
+>> I don't think sg_dma_len() is meant to be used as an lvalue.
+>
+> I've double-checked and found many cases of such usage of this macro.
+> It seems that I can't avoid it too.
+
+Ok.
+
+>> Driver code that has to parse #address-cells or #size-cells
+>> is usually wrong.
+>
+> I would not call it "parsing", I just check whether the dts-file is good.
+> Anyway, could you give me a clue how to do better?
+
+You should use of_n_size_cells() and of_n_addr_cells().
+
+-- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
