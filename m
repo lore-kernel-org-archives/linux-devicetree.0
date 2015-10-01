@@ -1,71 +1,142 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v4 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Thu, 1 Oct 2015 15:37:49 -0500
-Message-ID: <1443731874-21362-1-git-send-email-afd@ti.com>
+Subject: [PATCH v4 1/5] Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
+Date: Thu, 1 Oct 2015 15:37:50 -0500
+Message-ID: <1443731874-21362-2-git-send-email-afd@ti.com>
+References: <1443731874-21362-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443731874-21362-1-git-send-email-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-In an effort to cleanup this driver and add Device Tree support
-the driver has been rewritten based on new driver styles and
-modern kernel driver helpers. This has nearly halved the lines
-of code while keeping all previous functionality.
+The TPS65912 PMIC contains several regulators and a GPIO controller.
+Add bindings for the TPS65912 PMIC.
 
-Platform file based initialization has been dropped as there is
-no examples of this use in the kernel.
-
-v1 can be found here: [1] v2: [2] v3: [3]
-
-Changes from v3:
- - Reorganized regulator driver and related DT node
- - Other small fixes as discussed in v3 thread
-
-Changes from v2:
- - Split the series further into subsystems
-
-Changes from v1:
- - Split the rewrite into delete/create patches
- - Several small fixes as discussed in v1 thread
-
-[1] http://www.spinics.net/lists/devicetree/msg93863.html
-[2] http://www.spinics.net/lists/devicetree/msg95003.html
-[3] http://www.spinics.net/lists/devicetree/msg95133.html
-
-Andrew F. Davis (5):
-  Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
-  mfd: tps65912: Remove old driver in preparation for new driver
-  mfd: tps65912: Add driver for the TPS65912 PMIC
-  regulator: tps65912: Add regulator driver for the TPS65912 PMIC
-  gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
-
- .../devicetree/bindings/gpio/gpio-tps65912.txt     |  16 +
- Documentation/devicetree/bindings/mfd/tps65912.txt |  51 ++
- .../bindings/regulator/tps65912-regulator.txt      |  28 +
- drivers/gpio/Kconfig                               |   2 +-
- drivers/gpio/gpio-tps65912.c                       | 290 ++++-----
- drivers/mfd/Kconfig                                |  23 +-
- drivers/mfd/Makefile                               |   3 +-
- drivers/mfd/tps65912-core.c                        | 283 ++++----
- drivers/mfd/tps65912-i2c.c                         | 221 +++----
- drivers/mfd/tps65912-irq.c                         | 217 -------
- drivers/mfd/tps65912-spi.c                         | 222 +++----
- drivers/regulator/Kconfig                          |   2 +-
- drivers/regulator/tps65912-regulator.c             | 712 +++++----------------
- include/linux/mfd/tps65912.h                       | 211 +++---
- 14 files changed, 802 insertions(+), 1479 deletions(-)
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
+ Documentation/devicetree/bindings/mfd/tps65912.txt | 51 ++++++++++++++++++++++
+ .../bindings/regulator/tps65912-regulator.txt      | 28 ++++++++++++
+ 3 files changed, 95 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
  create mode 100644 Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
- rewrite drivers/gpio/gpio-tps65912.c (69%)
- rewrite drivers/mfd/tps65912-core.c (96%)
- rewrite drivers/mfd/tps65912-i2c.c (93%)
- delete mode 100644 drivers/mfd/tps65912-irq.c
- rewrite drivers/mfd/tps65912-spi.c (92%)
- rewrite drivers/regulator/tps65912-regulator.c (94%)
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+new file mode 100644
+index 0000000..0c5c05c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+@@ -0,0 +1,16 @@
++* TPS65912 GPIO Controller bindings
++
++Required properties:
++ - compatible : Should be "ti,tps65912-gpio".
++ - gpio-controller : Marks the device node as a GPIO Controller.
++ - #gpio-cells : Should be two.  The first cell is the pin number and
++     the second cell is used to specify flags.
++     See include/dt-bindings/gpio/gpio.h for possible values.
++
++Example:
++
++	gpio4: tps65912_gpio {
++		compatible = "ti,tps65912-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
+diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
+new file mode 100644
+index 0000000..da5804a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+@@ -0,0 +1,51 @@
++* TPS65912 Power Management Integrated Circuit bindings
++
++Required properties:
++ - compatible : Should be "ti,tps65912".
++ - reg : Slave address or chip select number (I2C / SPI).
++ - interrupt-parent : The parent interrupt controller.
++ - interrupts : The interrupt line the device is connected to.
++ - interrupt-controller : Marks the device node as an interrupt controller.
++ - #interrupt-cells: The number of cells to describe an IRQ, this should be 2.
++     The first cell is the IRQ number.
++     The second cell is the flags, encoded as the trigger masks from
++     ../interrupt-controller/interrupts.txt
++
++Additional nodes defined in:
++ - Regulators: ../regulator/tps65912-regulator.txt
++ - GPIO: ../gpio/gpio-tps65912.txt.
++
++Example:
++
++	pmic: tps65912@2d {
++		compatible = "ti,tps65912";
++		reg = <0x2d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		regulators {
++			compatible = "ti,tps65912-regulator";
++
++			dcdc1 {
++				regulator-name = "vdd_core";
++				regulator-min-microvolt = <912000>;
++				regulator-max-microvolt = <1144000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1 {
++				regulator-name = "ldo1";
++				regulator-min-microvolt = <1900000>;
++				regulator-max-microvolt = <1900000>;
++			};
++		};
++
++		gpio4: tps65912_gpio {
++			compatible = "ti,tps65912-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+new file mode 100644
+index 0000000..4cd05fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+@@ -0,0 +1,28 @@
++* TPS65912 regulator bindings
++
++Required properties:
++ - compatible: "ti,tps65912-regulator"
++ - list of regulators provided by this controller, must be named
++     after their hardware counterparts: dcdc[1-4] and ldo[1-10]
++
++Each regulator is defined using the standard binding for regulators.
++
++Example:
++
++	tps65912_regulator {
++		compatible = "ti,tps65912-regulator";
++
++		dcdc1 {
++			regulator-name = "vdd_core";
++			regulator-min-microvolt = <912000>;
++			regulator-max-microvolt = <1144000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		ldo1 {
++			regulator-name = "ldo1";
++			regulator-min-microvolt = <1900000>;
++			regulator-max-microvolt = <1900000>;
++		};
++	};
 -- 
 1.9.1
