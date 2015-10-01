@@ -1,130 +1,63 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/5] clk: berlin: add clk support for berlin4ct
-Date: Thu, 1 Oct 2015 15:42:38 -0700
-Message-ID: <20151001224238.GS19319@codeaurora.org>
+Subject: Re: [PATCH 4/5] dt-bindings: add binding for marvell berlin4ct SoC
+Date: Thu, 1 Oct 2015 15:50:27 -0700
+Message-ID: <20151001225027.GT19319@codeaurora.org>
 References: <1442931156-5877-1-git-send-email-jszhang@marvell.com>
- <1442931156-5877-4-git-send-email-jszhang@marvell.com>
+ <1442931156-5877-5-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1442931156-5877-4-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1442931156-5877-5-git-send-email-jszhang@marvell.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: Jisheng Zhang <jszhang@marvell.com>
 Cc: sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 09/22, Jisheng Zhang wrote:
-> + */
-> +#include <linux/clk-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
+> +This binding uses the common clock binding[1].
 > +
-> +#include "clk.h"
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 > +
-> +#define CLK_SOURCE_MAX	5
+> +The berlin4ct clock subsystem generates and supplies clock to various
+> +controllers within the berlin4ct SoC. The berlin4ct contains 3 clock controller
+> +blocks: pll, gateclk, berlin-clk.
 > +
-> +static struct clk_onecell_data gateclk_data;
-> +static struct clk_onecell_data clk_data;
+> +Required Properties:
 > +
-> +static DEFINE_SPINLOCK(lock);
+> +- compatible: should be one of the following.
+> +  - "marvell,berlin-pll" - pll compatible
+> +  - "marvell,berlin4ct-clk" - berlin clk compatible
+> +  - "marvell,berlin4ct-gateclk" - gateclk compatible
+> +- reg: physical base address of the clock controller and length of memory mapped
+> +  region. For pll, the second reg defines the bypass register base address and
+> +  length of memory mapped region.
+> +- #clock-cells: for pll should 0, for gateclk and berlin clk should be 1.
+> +- #bypass-shift: the bypass bit in bypass register.
+> +
+> +Example:
+> +
+> +syspll: syspll {
+> +	compatible = "marvell,berlin-pll";
+> +	reg = <0xea0200 0x14>, <0xea0710 4>;
+> +	#clock-cells = <0>;
+> +	clocks = <&osc>;
+> +	bypass-shift = /bits/ 8 <0>;
+> +};
+> +
+> +clk: clk {
+> +	compatible = "marvell,berlin4ct-clk";
+> +	reg = <0xea0720 0x144>;
+> +	#clock-cells = <1>;
+> +	clocks = <&syspll>;
+> +};
 
-This is really generic. How about berlin4ct_lock? That will make
-lockdep happy because the name for the key will have some
-meaning.
-
-> +static void __init berlin4ct_gateclk_setup(struct device_node *np)
-> +{
-> +	int i, n, ret;
-> +	void __iomem *base;
-> +	struct clk **clks;
-> +
-> +	base = of_iomap(np, 0);
-> +	if (WARN_ON(!base))
-> +		return;
-> +
-> +	n = ARRAY_SIZE(berlin4ct_gates);
-> +	clks = kzalloc(n * sizeof(struct clk *), GFP_KERNEL);
-
-kcalloc()
-
-> +	if (WARN_ON(!clks))
-
-Same comment about dropping WARN_ON for an allocation failure.
-
-> +		return;
-> +
-> +	for (i = 0; i < n; i++) {
-> +		clks[i] = clk_register_gate(NULL, berlin4ct_gates[i].name,
-> +				berlin4ct_gates[i].parent_name,
-> +				berlin4ct_gates[i].flags, base,
-> +				berlin4ct_gates[i].bit_idx, 0, &lock);
-> +		WARN_ON(IS_ERR(clks[i]));
-> +	}
-> +
-> +	gateclk_data.clks = clks;
-> +	gateclk_data.clk_num = i;
-> +
-> +	ret = of_clk_add_provider(np, of_clk_src_onecell_get,
-> +				  &gateclk_data);
-> +	if (WARN_ON(ret))
-> +		return;
-
-Drop that return please.
-
-> +
-> +}
-> +CLK_OF_DECLARE(berlin4ct_gateclk, "marvell,berlin4ct-gateclk",
-> +	       berlin4ct_gateclk_setup);
-> +
-> +static void __init berlin4ct_clk_setup(struct device_node *np)
-> +{
-> +	int i, n, ret, num_parents;
-> +	void __iomem *base;
-> +	struct clk **clks;
-> +	const char *parent_names[CLK_SOURCE_MAX];
-> +
-> +	num_parents = of_clk_get_parent_count(np);
-> +	if (num_parents <= 0 || num_parents > CLK_SOURCE_MAX)
-> +		return;
-> +
-> +	of_clk_parent_fill(np, parent_names, num_parents);
-> +
-> +	base = of_iomap(np, 0);
-> +	if (WARN_ON(!base))
-> +		return;
-> +
-> +	n = ARRAY_SIZE(berlin4ct_descs);
-> +	clks = kzalloc(n * sizeof(struct clk *), GFP_KERNEL);
-
-kcalloc()
-
-> +	if (WARN_ON(!clks))
-
-Same comment about dropping WARN_ON for an allocation failure.
-
-> +		return;
-> +
-> +	for (i = 0; i < n; i++) {
-> +		clks[i] = berlin_clk_register(berlin4ct_descs[i].name,
-> +				num_parents, parent_names,
-> +				berlin4ct_descs[i].flags,
-> +				base + berlin4ct_descs[i].offset);
-> +		WARN_ON(IS_ERR(clks[i]));
-> +	}
-> +
-> +	clk_data.clks = clks;
-> +	clk_data.clk_num = i;
-> +
-> +	ret = of_clk_add_provider(np, of_clk_src_onecell_get,
-> +				  &clk_data);
-> +	if (WARN_ON(ret))
-> +		return;
-
-Drop that return please.
+Is there one clock controller at 0xea0000 of size 0x1000? We've
+been trying to push people towards using the device model and
+writing drivers with probe instead of using CLK_OF_DECLARE() for
+their platform clocks. From the looks of this binding, we're
+splitting up the different types of clocks into their own nodes
+and then registering them with CLK_OF_DECLARE.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
