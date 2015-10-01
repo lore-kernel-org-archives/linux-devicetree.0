@@ -1,142 +1,94 @@
-From: =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4] QEMU fw_cfg DMA interface documentation
-Date: Thu,  1 Oct 2015 14:15:32 +0200
-Message-ID: <1443701732-13696-1-git-send-email-markmb@redhat.com>
-References: <1443701677-13629-1-git-send-email-markmb@redhat.com>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] of/fdt: Allow memory node and root to have different size/address cells
+Date: Thu, 1 Oct 2015 17:48:21 +0530
+Message-ID: <1443701901-362-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443701677-13629-1-git-send-email-markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Laszlo <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add fw_cfg DMA interface specfication in the fw_cfg documentation.
+Currently memory node parsing uses root "#size-cells", "#address-cells"
+This doesn't work correctly when memory address/size is different or
+greater than root's.
 
-Signed-off-by: Marc Mar=C3=AD <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+e.g. ARC 32-bit systems implementing physical adressing extension and
+say 4GB of memory. All peripherals mappings stay within the 4GB (so root
+address/size cells remain 1 each), only the memory node address/size
+cells needs to specify greater than 32-bits as below
+
+	memory {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x1 0x00000000>;	/* 4 GB */
+		#address-cells = <2>;
+		#size-cells = <2>;
+	};
+
+This patch lets me boot a ARC system with PAE40 + 4GB of memory specified
+as above and fails to boot otherwise as memory parsing doesn't populate
+right base, size.
+
 ---
- Documentation/devicetree/bindings/arm/fw-cfg.txt | 52 ++++++++++++++++=
-+++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
+Changes since v2:
+   silly typo creeped in due to last minute change to use root props
+---
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ drivers/of/fdt.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documen=
-tation/devicetree/bindings/arm/fw-cfg.txt
-index 953fb64..10cd81c 100644
---- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
-+++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-@@ -38,6 +38,9 @@ The presence of the registers can be verified by sele=
-cting the "signature" blob
- with key 0x0000, and reading four bytes from the data register. The re=
-turned
- signature is "QEMU".
-=20
-+Additionaly, if the DMA interface is available then a read to the DMA =
-Address
-+will return 0x51454d5520434647 ("QEMU CFG" in big-endian format).
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 07496560e5b9..48618bb2674a 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -888,8 +888,8 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data)
+ {
+ 	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+-	const __be32 *reg, *endp;
+-	int l;
++	const __be32 *reg, *endp, *prop;
++	int l, dt_mem_addr_cells, dt_mem_size_cells;
+ 
+ 	/* We are scanning "memory" nodes only */
+ 	if (type == NULL) {
+@@ -912,11 +912,22 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 
+ 	pr_debug("memory scan node %s, reg size %d,\n", uname, l);
+ 
+-	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
 +
- The outermost protocol (involving the write / read sequences of the co=
-ntrol and
- data registers) is expected to be versioned, and/or described by featu=
-re bits.
- The interface revision / feature bitmap can be retrieved with key 0x00=
-01. The
-@@ -45,6 +48,51 @@ blob to be read from the data register has size 4, a=
-nd it is to be interpreted
- as a uint32_t value in little endian byte order. The current value
- (corresponding to the above outer protocol) is zero.
-=20
-+If bit 1 of the feature bitmap is set, the DMA interface is present. T=
-his
-+can be used through the 64-bit wide address register.
++	dt_mem_size_cells = dt_root_size_cells;
++	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
++	if (prop)
++		dt_mem_size_cells = be32_to_cpup(prop);
 +
-+The address register is in big-endian format. The value for the regist=
-er is 0
-+at startup and after an operation. A write to the lower half triggers =
-an
-+operation. This means, that operations with 32-bit addresses can be tr=
-iggered
-+with just one write, whereas operations with 64-bit addresses can be t=
-riggered
-+with one 64-bit write or two 32-bit writes, starting with the higher p=
-art.
++	dt_mem_addr_cells = dt_root_addr_cells;
++	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
++	if (prop)
++		dt_mem_addr_cells = be32_to_cpup(prop);
 +
-+In this register, the physical address of a FWCfgDmaAccess structure i=
-n RAM
-+should be written. This is the format of the FWCfgDmaAccess structure:
-+
-+typedef struct FWCfgDmaAccess {
-+    uint32_t control;
-+    uint32_t length;
-+    uint64_t address;
-+} FWCfgDmaAccess;
-+
-+The fields of the structure are in big endian mode, and the field at t=
-he lowest
-+address is the "control" field.
-+
-+The "control" field has the following bits:
-+ - Bit 0: Error
-+ - Bit 1: Read
-+ - Bit 2: Skip
-+ - Bit 3: Select. The upper 16 bits are the selected index.
-+
-+When an operation is triggered, if the "control" field has bit 3 set, =
-the
-+upper 16 bits are interpreted as an index of a firmware configuration =
-item.
-+This has the same effect as writing the selector register.
-+
-+If the "control" field has bit 1 set, a read operation will be perform=
-ed.
-+"length" bytes for the current selector and offset will be copied into=
- the
-+physical RAM address specified by the "address" field.
-+
-+If the "control" field has bit 2 set (and not bit 1), a skip operation=
- will be
-+performed. The offset for the current selector will be advanced "lengt=
-h" bytes.
-+
-+To check the result, read the "control" field:
-+   error bit set        ->  something went wrong.
-+   all bits cleared     ->  transfer finished successfully.
-+   otherwise            ->  transfer still in progress (doesn't happen
-+                            today due to implementation not being asyn=
-c,
-+                            but may in the future).
-+
- The guest kernel is not expected to use these registers (although it i=
-s
- certainly allowed to); the device tree bindings are documented here be=
-cause
- this is where device tree bindings reside in general.
-@@ -56,6 +104,8 @@ Required properties:
- - reg: the MMIO region used by the device.
-   * Bytes 0x0 to 0x7 cover the data register.
-   * Bytes 0x8 to 0x9 cover the selector register.
-+  * With DMA interface enabled: Bytes 0x10 to 0x17 cover the DMA addre=
-ss
-+    register.
-   * Further registers may be appended to the region in case of future =
-interface
-     revisions / feature bits.
-=20
-@@ -66,7 +116,7 @@ Example:
- 	#address-cells =3D <0x2>;
-=20
- 	fw-cfg@9020000 {
-+		reg =3D <0x0 0x9020000 0x0 0x18>;
- 		compatible =3D "qemu,fw-cfg-mmio";
--		reg =3D <0x0 0x9020000 0x0 0xa>;
- 	};
- };
---=20
-2.4.3
++	while ((endp - reg) >= (dt_mem_addr_cells + dt_mem_size_cells)) {
+ 		u64 base, size;
+ 
+-		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-		size = dt_mem_next_cell(dt_root_size_cells, &reg);
++		base = dt_mem_next_cell(dt_mem_addr_cells, &reg);
++		size = dt_mem_next_cell(dt_mem_size_cells, &reg);
+ 
+ 		if (size == 0)
+ 			continue;
+-- 
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
