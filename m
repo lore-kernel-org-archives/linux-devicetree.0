@@ -1,126 +1,111 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
- subsystem dts binding
-Date: Thu, 1 Oct 2015 22:29:34 +0800
-Message-ID: <CAGS+omAs4Jvu7tKEMoNL9BSMQMwW=9UHzXW8_jS=5MbajaJzOg@mail.gmail.com>
-References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
- <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
- <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
- <1442823067.3277.35.camel@pengutronix.de>
- <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
- <1443689957.3272.18.camel@pengutronix.de>
- <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mt8173: add timer node
+Date: Thu, 1 Oct 2015 22:33:36 +0800
+Message-ID: <1443710016.22188.10.camel@mtksdaap41>
+References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
+	 <55FAC570.8040307@arm.com> <1442501816.4784.3.camel@mtksdaap41>
+	 <55FAE69C.2000906@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <55FAE69C.2000906@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Kurtz <djkurtz@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMSwgMjAxNSBhdCA4OjU4IFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToKPiBPbiBUaHUsIE9jdCAxLCAyMDE1IGF0IDM6NTkgQU0sIFBoaWxpcHAgWmFi
-ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiBBbSBNaXR0d29jaCwgZGVuIDMw
-LjA5LjIwMTUsIDEyOjEzIC0wNTAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4+PiBPbiBNb24sIFNl
-cCAyMSwgMjAxNSBhdCAzOjExIEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
-LmRlPiB3cm90ZToKPj4+ID4gTm90ZSBob3cgdGhlIGRpc3BsYXktc3Vic3lzdGVtIG5vZGUgb3Zl
-cmxhcHMgdGhlIGxhcmIgbm9kZS4gSXMgdGhhdAo+Pj4gPiBhY2NlcHRhYmxlPwo+Pj4KPj4+IEdp
-dmVuIHdoYXQgdGhlIGdyYXBoIGxvb2tzIGxpa2UsIHBlcmhhcHMuIEhvd2V2ZXIsIGRvIHlvdSBy
-ZWFsbHkgbmVlZAo+Pj4gYSBjb250YWluZXIgbm9kZT8gSXQgb25seSBzZXJ2ZXMgdG8gcHJvdmlk
-ZSBhIGxpc3Qgb2Ygbm9kZXMgKGUuZy4gYWxsCj4+PiB0aGUgY2hpbGRyZW4pIHRvIGluY2x1ZGUg
-YXMgY29tcG9uZW50cy4gVGhlcmUgYXJlIG90aGVyIHdheXMgdG8KPj4+IGRldGVybWluZSB0aGlz
-IGxpc3QuIFlvdSBjb3VsZCBmaW5kIGFsbCBub2RlcyBqdXN0IHNlYXJjaGluZwo+Pj4gY29tcGF0
-aWJsZSBzdHJpbmdzIGZvciBlYWNoIGNvbXBvbmVudC4gWW91IGp1c3QgbmVlZCB0byBiaW5kIHRo
-ZSBkcm0KPj4+IGRyaXZlciB0byBzb21lIG90aGVyIERUIG5vZGUuIElzIHRoZXJlIG5vIG5vZGUg
-eW91IGNhbiBwaWNrIGFzIHRoZQo+Pj4gbWFzdGVyIGNvbXBvbmVudD8KPj4KPj4gVGhlcmUgaXMg
-dGhlIG1tc3lzIGNsb2NrLWNvbnRyb2xsZXIgbm9kZSBhdCB0aGUgdG9wIG9mIHRoZSBNTVNZUyBh
-ZGRyZXNzCj4+IHNwYWNlICgweDE0MDAwMDAwLTB4MTRmZmZmZmYpOgo+Pgo+PiAgICAgICAgIG1t
-c3lzOiBjbG9jay1jb250cm9sbGVyQDE0MDAwMDAwIHsKPj4gICAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLW1tc3lzIiwgInN5c2NvbiI7Cj4+ICAgICAgICAgICAg
-ICAgICByZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsKPj4gICAgICAgICAgICAgICAgICNj
-bG9jay1jZWxscyA9IDwxPjsKPj4gICAgICAgICB9Owo+Pgo+PiBJdHMgcmVnaXN0ZXIgc3BhY2Ug
-YWxzbyBjb250YWlucyB0aGUgTU1TWVNfQ09ORklHIHJlZ2lvbiB0aGF0IGNvbnRyb2xzCj4+IHRo
-ZSBtdWx0aXBsZXhlcnMgYmV0d2VlbiB0aGUgZGlzcGxheSBmdW5jdGlvbiBibG9ja3MsIHNvIHRo
-YXQgd291bGQgYmUgYQo+PiBnb29kIGNhbmRpZGF0ZS4KPj4gTm8gZHJpdmVyIGJpbmRzIHRvIHRo
-aXMgbm9kZSB5ZXQsIHRoZSBjbG9ja3MgYXJlIHJlZ2lzdGVyZWQgd2l0aAo+PiBDTEtfT0ZfREVD
-TEFSRS4KPj4KPj4gSSdsbCB0cnkgdG8gYmluZCB0byB0aGlzIG5vZGUgYW5kIGhhdmUgdGhlIGRy
-aXZlciBmaW5kIHNpYmxpbmcgbm9kZXMKPj4gdXNpbmcgdGhlaXIgY29tcGF0aWJsZSBzdHJpbmdz
-Lgo+Cj4gVGhhdCBkb2Vzbid0IHNlZW0gbGlrZSBhIGdvb2QgY2hvaWNlIHNpbmNlIHRoZXJlIGFy
-ZSBvdGhlciBmdW5jdGlvbnMKPiBpbiB0aGUgYmxvY2suIEkgd2FzIHRoaW5raW5nIG9uZSBvZiB0
-aGUgZGlzcGxheSByZWxhdGVkIGJsb2NrcyBsaWtlCj4gd2hhdGV2ZXIgYmxvY2sgcHJvdmlkZXMg
-dGhlIG1haW4gY3J0YyBmdW5jdGlvbnMuCgpUaGUgdHdvICJPVkwiIG5vZGVzIGNvcnJlc3BvbmQg
-dG8gdGhlICJjcnRjIiBmdW5jdGlvbnMgb2YgdGhlIHR3bwpkaXNwbGF5IHBpcGVzIGluIHRoaXMg
-U29DLCB3ZSB3b3VsZCBzZXR1cCB0aGUgZGlzcGxheS1zdWJzeXN0ZW0gbm9kZQpsaWtlIHRoaXM6
-CgpkaXNwbGF5LXN1YnN5c3RlbSB7CiAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxkaXNwbGF5LXN1
-YnN5c3RlbSI7CiAgcG9ydHMgPSA8Jm92bDA+LCA8Jm92bDE+Owp9OwoKQW5kLCBhbnkgbm9kZSB0
-aGF0IG5lZWRzIHRvIHBva2UgYXJvdW5kIGluIHRoZSBtbXN5c19jb25maWcgYXJlYSwgbGlrZQph
-biBvdmwsIGNvdWxkIGFjY2VzcyBpdCB1c2luZyBhIHBoYW5kbGUgPCZtbXN5cz4gdG8gdGhlIGNv
-bW1vbgoibWVkaWF0ZWssbXQ4MTczLW1tc3lzIiBkZXZpY2UsIGxpa2UgdGhpczoKCm92bDA6IG92
-bEAxNDAwYzAwMCB7CiAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1vdmwiOwog
-ICAgICAgcmVnID0gPDAgMHgxNDAwYzAwMCAwIDB4MTAwMD47CiAgICAgICBpbnRlcnJ1cHRzID0g
-PEdJQ19TUEkgMTgwIElSUV9UWVBFX0xFVkVMX0xPVz47CiAgICAgICBjbG9ja3MgPSA8Jm1tc3lz
-IENMS19NTV9ESVNQX09WTDA+OwogICAgICAgaW9tbXVzID0gPCZpb21tdSBNNFVfTEFSQjBfSUQg
-TTRVX1BPUlRfRElTUF9PVkwwPjsKICAgICAgIG1lZGlhdGVrLG1tc3lzID0gPCZtbXN5cz47CiAg
-ICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwp9OwoKT25lIGlkZWEgdG8gcmVkdWNlIHRoZSBzaXpl
-IG9mIHRoZSBvZl9ncmFwaCB3b3VsZCBiZSB0byBqdXN0IG1vZGVsIHRoZQplbnRyYW5jZS9leGl0
-IHBvaW50cyBmcm9tIHRoZSBNTSBzdWJzeXN0ZW0gaW4gZHQuICBTbywgaW5zdGVhZCBvZjoKICBv
-dmwwIC0+IGNvbG9yMCAtPiBhYWwgLT4gb2QgLT4gdWZvZSAtPiBkc2kwIC0+IGRzaS1lZHAtYnJp
-ZGdlCiAgb3ZsMSAtPiBjb2xvcjEgLT4gZ2FtbWEwIC0+IGRwaTAgLT4gaGRtaQoKV2UgY2FuIGRv
-IHNvbWV0aGluZyBsaWtlIHRoaXM6CiAgb3ZsMCAtPiBkc2kwIC0+IGRzaS1lZHAtYnJpZGdlCiAg
-b3ZsMSAtPiBkcGkwIC0+IGhkbWkKCkJ1dCAuLi4gdGhpcyBtaWdodCBiZSB0b28gbGltaXRpbmcg
-Zm9yIHNvbWUgYXBwbGljYXRpb25zLgpTbywgSSB0aGluayB3ZSBzaG91bGQganVzdCBsaXZlIHdp
-dGggdGhlIGJpZyBncmFwaC4KSSB3b3VsZCwgaG93ZXZlciwgcmVjb21tZW5kIHRoYXQgeW91IG1v
-dmUgdGhlIGdyYXBoIHRvIGl0cyBvd24KbXQ4MTczLWRpc3BsYXktZ3JhcGguZHRzaSBmaWxlIHdo
-aWNoIHdvdWxkIGJlICNpbmNsdWRlZCBpbnRvIGEgYm9hcmQKc3BlY2lmaWMgLmR0cyBmaWxlLgoK
-SWYgeW91IGxldCB0aGUgYm9hcmQgLmR0cyBpbmNsdWRlIHRoZSBncmFwaCwgdGhlbiB3ZSBjYW4g
-cG9zc2libHkKc2hyaW5rIHRoZSByZXN1bHRpbmcgYm9hcmQgc3BlY2lmaWMgZGV2aWNlIHRyZWUg
-LQpBdCBmaXJzdCB3ZSB3b3VsZCBtYWtlIHRoZSBmdWxsIGdyYXBoIGluIG9uZSAuZHRzaSBhcyBh
-Ym92ZQoibXQ4MTczLWRpc3BsYXktZ3JhcGguZHRzaSIuClRoaXMgaXMgdGhlIGZ1bGwgcmVmZXJl
-bmNlIGdyYXBoIHRoYXQgd2lsbCBhbHdheXMgd29yay4KClRoZW4sIGlmIGEgcGFydGljdWxhciBi
-b2FyZCB1c2VkIGEgZml4ZWQgY29uZmlndXJhdGlvbiwgdGhlIHN5c3RlbQppbnRlZ3JhdG9yIGNv
-dWxkIGNyZWF0ZSBhIHNtYWxsZXIgZ3JhcGggd2l0aCBqdXN0IHRoZSBncmFwaCBub2RlcyB0aGF0
-CnRoZXkgY2FyZSBhYm91dC4KCkZvciBleGFtcGxlLCBpZiBtdDgxNzMtZXZiIG9ubHkgc3VwcG9y
-dHMgYSBzaW5nbGUgSERNSSBvdXRwdXQsIHRoZW4KcGVyaGFwcyB5b3Ugd291bGQganVzdApzZXQg
-dXAgdGhlIGVuZHBvaW50cyBmb3IgdGhpcyBzaW5nbGUgZml4ZWQgZnVuY3Rpb24gZGlzcGxheSBw
-aXBlIGluCm10ODE3My1ldmItZGlzcGxheS1ncmFwaC5kdHNpOgoKJm92bDEgewogICAgc3RhdHVz
-ID0gIm9rYXkiOwogICAgcG9ydCB7CiAgICAgICAgb3ZsMV90b19jb2xvcjE6IGVuZHBvaW50QDAg
-ewogICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmNvbG9yMV9mcm9tX292bDE+OwogICAg
-ICAgIH07CiAgICB9Owp9OwoKJmNvbG9yMSB7CiAgICBzdGF0dXMgPSAib2theSI7CiAgICBwb3J0
-QDAgewogICAgICAgIGNvbG9yMV9mcm9tX292bDE6IGVuZHBvaW50QDEgewogICAgICAgICAgICBy
-ZW1vdGUtZW5kcG9pbnQgPSA8Jm92bDFfdG9fY29sb3IxPjsKICAgICAgICB9OwogICAgfTsKCiAg
-ICBwb3J0QDEgewogICAgICAgIGNvbG9yMV90b19nYW1tYTogZW5kcG9pbnRAMCB7CiAgICAgICAg
-ICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZ2FtbWFfZnJvbV9jb2xvcjE+OwogICAgICAgIH07CiAg
-ICB9Owp9OwoKJmdhbW1hIHsKICAgIHN0YXR1cyA9ICJva2F5IjsKICAgIHBvcnRAMCB7CiAgICAg
-ICAgZ2FtbWFfZnJvbV9jb2xvcjE6IGVuZHBvaW50IHsKICAgICAgICAgICAgcmVtb3RlLWVuZHBv
-aW50ID0gPCZjb2xvcjFfdG9fZ2FtbWE+OwogICAgICAgIH07CiAgICB9OwoKICAgIHBvcnRAMSB7
-CiAgICAgICAgZ2FtbWFfdG9fZHBpMDogZW5kcG9pbnRAMyB7CiAgICAgICAgICAgIHJlbW90ZS1l
-bmRwb2ludCA9IDwmZHBpMF9mcm9tX2dhbW1hPjsKICAgICAgICB9OwogICAgfTsKfTsKCiZkcGkw
-IHsKICAgIHN0YXR1cyA9ICJva2F5IjsKICAgIHBvcnRAMCB7CiAgICAgICAgZHBpMF9mcm9tX2dh
-bW1hOiBlbmRwb2ludEAyIHsKICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZnYW1tYV90
-b19kcGkwPjsKICAgICAgICB9OwogICAgfTsKCiAgICBwb3J0QDEgewogICAgICAgIGRwaTBfdG9f
-aGRtaTogZW5kcG9pbnQgewogICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfZnJv
-bV9kcGkwPjsKICAgICAgICB9OwogICAgfTsKfTsKCk5vdGljZSB0aGF0IHRoaXMgYWxzbyBvbmx5
-IGVuYWJsZXMgdGhlIG5vZGVzIHRoYXQgd2UgY2FyZSBhYm91dCAoYWxsCm9mIHRoZSBvdGhlciBu
-b2RlcyB3b3VsZCBiZSBkaXNhYmxlZCBieSBkZWZhdWx0KS4KCkkgdGhpcyB3b3VsZCBhbGxvdyBm
-dWxsIGZsZXhpYmlsaXR5IGJ1dCBhbHNvIGRyYXN0aWNhbGx5IGN1dCBkb3duIG9uCnRoZSByZXN1
-bHRpbmcgLmR0cyBzaXplLgoKVGhlIGluZGl2aWR1YWwgY29tcG9uZW50IGRyaXZlcnMgd291bGQg
-dGhlbiBtYXJjaCBkb3duIHRoZWlyIGdyYXBocwplbnN1cmluZyB0aGF0IGFsbCBvZiB0aGUgY29y
-cmVzcG9uZGluZyBjb21wb25lbnRzIGhhdmUgYmVlbiBib3VuZCwgYW5kCnRoZW4gdGhlbXNlbHZl
-cyBhcHByb3ByaWF0ZWx5IGJhc2VkIG9uIHRoZWlyIHNldCBvZiBlbmRwb2ludHMgdGhhdCBhcmUK
-YXZhaWxhYmxlLgoKV2hhdCBkbyB5b3UgdGhpbms/CgotRGFuCgoKPgo+IFJvYgo+IF9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxp
-bmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, 2015-09-17 at 17:13 +0100, Sudeep Holla wrote:
+> 
+> On 17/09/15 15:56, Yingjoe Chen wrote:
+> > On Thu, 2015-09-17 at 14:51 +0100, Sudeep Holla wrote:
+> >>
+> >> On 16/09/15 03:04, Yingjoe Chen wrote:
+> >>> From: Daniel Kurtz <djkurtz@chromium.org>
+> >>>
+> >>> Add device node to enable GPT timer. This timer will be
+> >>> used as sched clock source.
+> >>>
+> >>
+> >> Interesting any known issues with or advantage over the arch timers
+> >> to prefer it as sched clock source. I see even arch timers are present
+> >> in DT, hence the question. Or is it just a incorrect commit log ?
+> >>
+> >> How does this get selected as sched clock source ? I don't see
+> >> sched_clock_register in mtk_timer.c
+> >>
+> >> To be clear, I am not against adding this timer support, but just want
+> >> to know is it preferred for sched clock source ? if yes why ? better
+> >> resolution ?
+> >
+> > Hi Sudeep,
+> >
+> > Thanks for your review.
+> >
+> > I hit the send too soon and missed cover letter, please see:
+> > http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002303.html
+> >
+> 
+> OK
+> 
+> > The main reason to use GPT as sched clock is it won't stop during idle.
+> >
+> >
+> 
+> I think your are confusing the system counter with arch timers. System
+> counter is always-on, but the arch timers(logic implementing timers
+> comparators) might not be off when the processor is powered down.
+> 
+> I think you need this timer and are using it for low power idle states
+> in which case you will use this as a clock event and not clock source.
+> It will be used as a hardware broadcast event source.
+> 
+> There's no call to sched_clock_register in mtk_timer.c, so it can't be
+> the sched clock, so you need to fix the commit log.
+
+Hi Sudeep,
+
+Sorry for late reply.
+
+For sched_clock_register, please see
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001547.html
+which was accepted in
+https://git.linaro.org/people/daniel.lezcano/linux.git/shortlog/refs/heads/clockevents/4.4
+
+
+You are right it is also used as clock event. I think we don't need to
+mention those detail in commit message, so I'll change to just:
+
+"Add device node to enable GPT timer."
+
+> 
+> [...]
+> 
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >>> index d18ee42..d763803 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >>> @@ -238,6 +238,15 @@
+> >>>    			reg = <0 0x10007000 0 0x100>;
+> >>>    		};
+> >>>
+> >>> +		timer: timer@10008000 {
+> >>> +			compatible = "mediatek,mt8173-timer",
+> >>
+> >> Missing documentation ? I am referring upstream and it might be in some
+> >> patches already queued perhaps ?
+> >
+> > This is documented in
+> > Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt.
+> > Do you mean I should add "mediatek,mt8173-timer" to that file?
+> >
+> 
+> Yes
+
+Will do in next round.
+Thanks
+
+Joe.C
+
+
