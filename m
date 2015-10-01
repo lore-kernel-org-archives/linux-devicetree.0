@@ -1,111 +1,119 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 3/4] PCI/MSI:  Add helper function pci_msi_domain_get_msi_rid().
-Date: Thu, 01 Oct 2015 10:24:44 +0100
-Message-ID: <560CFBDC.4020901@arm.com>
-References: <1443653222-24924-1-git-send-email-ddaney.cavm@gmail.com> <1443653222-24924-4-git-send-email-ddaney.cavm@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.2 28/30] of_mdio: add new DT property managed to specify the PHY management type
+Date: Thu,  1 Oct 2015 11:21:50 +0200
+Message-ID: <20151001092039.411588779@linuxfoundation.org>
+References: <20151001092038.213304276@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443653222-24924-4-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc: David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20151001092038.213304276@linuxfoundation.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Stas Sergeev <stsp@users.sourceforge.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+4.2-stable review patch.  If anyone has any objections, please let me know.
 
-On 30/09/15 23:47, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> Add pci_msi_domain_get_msi_rid() to return the MSI requester id (RID).
-> Initially needed by gic-v3 based systems. It will be used by follow on
-> patch to drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> 
-> Initially supports mapping the RID via OF device tree.  In the future,
-> this could be extended to use ACPI _IORT tables as well.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  drivers/pci/msi.c   | 31 +++++++++++++++++++++++++++++++
->  include/linux/msi.h |  1 +
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index d449714..92b6dc9 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -20,6 +20,7 @@
->  #include <linux/io.h>
->  #include <linux/slab.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
->  
->  #include "pci.h"
->  
-> @@ -1327,4 +1328,34 @@ struct irq_domain *pci_msi_create_default_irq_domain(struct device_node *node,
->  
->  	return domain;
->  }
-> +
-> +struct get_mis_id_data {
-> +	u32	alias;
-> +};
-> +
-> +static int get_msi_id_cb(struct pci_dev *pdev, u16 alias, void *data)
-> +{
-> +	struct get_mis_id_data *s = data;
-> +
-> +	s->alias = alias;
-> +	return 0;
-> +}
+------------------
 
-Why not use a naked u32, since you only have a single field in this
-structure? Or is it that you are anticipating other fields there?
+From: Stas Sergeev <stsp@list.ru>
 
-> +/**
-> + * pci_msi_domain_get_msi_rid - Get the MSI requester id (RID)
-> + * @domain:	The interrupt domain
-> + * @pdev:	The PCI device.
-> + *
-> + * The RID for a device is formed from the alias, with a firmware
-> + * supplied mapping applied
-> + *
-> + * Returns: The RID.
-> + */
-> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
-> +{
-> +	struct get_mis_id_data d;
-> +
-> +	d.alias = 0;
-> +	pci_for_each_dma_alias(pdev, get_msi_id_cb, &d);
-> +	return of_msi_map_rid(&pdev->dev, domain->of_node, d.alias);
+[ Upstream commit 4cba5c2103657d43d0886e4cff8004d95a3d0def in net-next tree,
+  will be pushed to Linus very soon. ]
 
-Should you check whether domain->of_node is NULL first? I don't think
-of_msi_map_rid would have any problem with that, but a domain that is
-not backed by an of_node makes me feel a bit uneasy and would tend to
-indicate that we're not using DT.
+Currently the PHY management type is selected by the MAC driver arbitrary.
+The decision is based on the presence of the "fixed-link" node and on a
+will of the driver's authors.
+This caused a regression recently, when mvneta driver suddenly started
+to use the in-band status for auto-negotiation on fixed links.
+It appears the auto-negotiation may not work when expected by the MAC driver.
+Sebastien Rannou explains:
+<< Yes, I confirm that my HW does not generate an in-band status. AFAIK, it's
+a PHY that aggregates 4xSGMIIs to 1xQSGMII ; the MAC side of the PHY (with
+inband status) is connected to the switch through QSGMII, and in this context
+we are on the media side of the PHY. >>
+https://lkml.org/lkml/2015/7/10/206
 
-> +}
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index ad939d0..56e3b76 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -293,6 +293,7 @@ irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
->  					  struct msi_desc *desc);
->  int pci_msi_domain_check_cap(struct irq_domain *domain,
->  			     struct msi_domain_info *info, struct device *dev);
-> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
->  
->  #endif /* LINUX_MSI_H */
-> 
+This patch introduces the new string property 'managed' that allows
+the user to set the management type explicitly.
+The supported values are:
+"auto" - default. Uses either MDIO or nothing, depending on the presence
+of the fixed-link node
+"in-band-status" - use in-band status
 
-Otherwise looks good to me.
+Signed-off-by: Stas Sergeev <stsp@users.sourceforge.net>
 
-Thanks,
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Florian Fainelli <f.fainelli@gmail.com>
+CC: Grant Likely <grant.likely@linaro.org>
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: netdev@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ Documentation/devicetree/bindings/net/ethernet.txt |    4 ++++
+ drivers/of/of_mdio.c                               |   19 +++++++++++++++++--
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -25,7 +25,11 @@ The following properties are common to t
+   flow control thresholds.
+ - tx-fifo-depth: the size of the controller's transmit fifo in bytes. This
+   is used for components that can have configurable fifo sizes.
++- managed: string, specifies the PHY management type. Supported values are:
++  "auto", "in-band-status". "auto" is the default, it usess MDIO for
++  management if fixed-link is not specified.
+ 
+ Child nodes of the Ethernet controller are typically the individual PHY devices
+ connected via the MDIO bus (sometimes the MDIO bus controller is separate).
+ They are described in the phy.txt file in this same directory.
++For non-MDIO PHY management see fixed-link.txt.
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -266,7 +266,8 @@ EXPORT_SYMBOL(of_phy_attach);
+ bool of_phy_is_fixed_link(struct device_node *np)
+ {
+ 	struct device_node *dn;
+-	int len;
++	int len, err;
++	const char *managed;
+ 
+ 	/* New binding */
+ 	dn = of_get_child_by_name(np, "fixed-link");
+@@ -275,6 +276,10 @@ bool of_phy_is_fixed_link(struct device_
+ 		return true;
+ 	}
+ 
++	err = of_property_read_string(np, "managed", &managed);
++	if (err == 0 && strcmp(managed, "auto") != 0)
++		return true;
++
+ 	/* Old binding */
+ 	if (of_get_property(np, "fixed-link", &len) &&
+ 	    len == (5 * sizeof(__be32)))
+@@ -289,8 +294,18 @@ int of_phy_register_fixed_link(struct de
+ 	struct fixed_phy_status status = {};
+ 	struct device_node *fixed_link_node;
+ 	const __be32 *fixed_link_prop;
+-	int len;
++	int len, err;
+ 	struct phy_device *phy;
++	const char *managed;
++
++	err = of_property_read_string(np, "managed", &managed);
++	if (err == 0) {
++		if (strcmp(managed, "in-band-status") == 0) {
++			/* status is zeroed, namely its .link member */
++			phy = fixed_phy_register(PHY_POLL, &status, np);
++			return IS_ERR(phy) ? PTR_ERR(phy) : 0;
++		}
++	}
+ 
+ 	/* New binding */
+ 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
