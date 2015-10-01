@@ -1,40 +1,52 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Thu, 01 Oct 2015 17:17:07 +1000
-Message-ID: <1443683827.2828.46.camel@kernel.crashing.org>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-	 <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-	 <20150828123228.GE31748@leverpostej>
-	 <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
-	 <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
-	 <20150930105331.GA10066@leverpostej>
-	 <CAFpQJXVegqortRLK+g7_9p82KMYwq0hg8n3_9bJqjGHsJvngaA@mail.gmail.com>
-	 <1443661547.2828.40.camel@kernel.crashing.org>
-	 <CAFpQJXXKcwks0iZN+3B=U0-9uYKFpAXcZE90GCHN9WyM45Hdpw@mail.gmail.com>
+From: Bayi Cheng <bayi.cheng@mediatek.com>
+Subject: [PATCH v3 0/3] Mediatek SPI-NOR flash driver
+Date: Thu, 1 Oct 2015 15:44:49 +0800
+Message-ID: <1443685492-9996-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXXKcwks0iZN+3B=U0-9uYKFpAXcZE90GCHN9WyM45Hdpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd@ar
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-10-01 at 10:41 +0530, Ganapatrao Kulkarni wrote:
-> i still could not represent the ring/mesh numa topology using
-> associativity, which will be present in other upcoming arm64
-> platforms.
+The patch supports MediaTek's NOR flash controller.
+THe NOR flash controller is specifically for spi nor flash,
+and it is more stable and faster than SPI bus, the MTK
+NOR controller not only support single mode but also support
+dual mode and quad mode.
 
-Right. It should be possible to represent it using the multiple list as
-a multi-path problem, but it's a bit awkward.
+This series is based on v4.3-rc1 and l2-mtd.git
+(git://git.infradead.org/l2-mtd.git)
 
-It does look like the representation might not work well for that case
+Change in v3:
+1: use switch() to replace some if-else statement
+2: use shifts to replace endianness statement
+3: delete some unused macros
+4: use auto-increment mechanism for single write
+5: write address added to 32bytes
 
-Cheers,
-Ben.
+Change in v2:
+1. Rebase to 4.3-rc1
+2. propagate error code
+3. delete mux clock and axi clock in dts file
+4. descripts more exactly for binding file
+5. change file names from mtk-nor.c to mtk_quadspi.c
+6. delete some functions witch were used once time
+
+Bayi Cheng (3):
+  doc: dt: add documentation for Mediatek spi-nor controller
+  mtd: mtk-nor: mtk serial flash controller driver
+  arm64: dts: mt8173: Add nor flash node
+
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |  30 ++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  15 +
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/mtk-quadspi.c                  | 486 +++++++++++++++++++++
+ 5 files changed, 539 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+ create mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
