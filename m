@@ -1,63 +1,48 @@
 From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 07/16] ARM: dts: lpc18xx: add i2c nodes
-Date: Thu,  1 Oct 2015 22:54:44 +0200
-Message-ID: <1443732893-17145-8-git-send-email-manabian@gmail.com>
+Subject: [PATCH 09/16] ARM: dts: lpc18xx: add sct pwm node
+Date: Thu,  1 Oct 2015 22:54:46 +0200
+Message-ID: <1443732893-17145-10-git-send-email-manabian@gmail.com>
 References: <1443732893-17145-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1443732893-17145-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add NXP LPC1778 I2C controller nodes to the dtsi for all
-lpc18xx/43xx devices.
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 
+NXP LPC SoCs family, which includes LPC18xx/LPC43xx, provides a State
+Configurable Timer (SCT) which can be configured as a Pulse Width
+Modulator.
+
+Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/lpc18xx.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/lpc18xx.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
-index f97feea5f5da..04bea2dc0e66 100644
+index 4ea82536a8a0..19c6f2951129 100644
 --- a/arch/arm/boot/dts/lpc18xx.dtsi
 +++ b/arch/arm/boot/dts/lpc18xx.dtsi
-@@ -287,6 +287,17 @@
- 			clocks = <&ccu1 CLK_CPU_SCU>;
- 		};
+@@ -68,6 +68,16 @@
+ 	};
  
-+		i2c0: i2c@400a1000 {
-+			compatible = "nxp,lpc1788-i2c";
-+			reg = <0x400a1000 0x1000>;
-+			interrupts = <18>;
-+			clocks = <&ccu1 CLK_APB1_I2C0>;
-+			resets = <&rgu 48>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
+ 	soc {
++		sct_pwm: pwm@40000000 {
++			compatible = "nxp,lpc1850-sct-pwm";
++			reg = <0x40000000 0x1000>;
++			clocks =<&ccu1 CLK_CPU_SCT>;
++			clock-names = "pwm";
++			resets = <&rgu 37>;
++			#pwm-cells = <3>;
 +			status = "disabled";
 +		};
 +
- 		can1: can@400a4000 {
- 			compatible = "bosch,c_can";
- 			reg = <0x400a4000 0x1000>;
-@@ -360,6 +371,17 @@
- 			status = "disabled";
- 		};
- 
-+		i2c1: i2c@400e0000 {
-+			compatible = "nxp,lpc1788-i2c";
-+			reg = <0x400e0000 0x1000>;
-+			interrupts = <19>;
-+			clocks = <&ccu1 CLK_APB3_I2C1>;
-+			resets = <&rgu 49>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		can0: can@400e2000 {
- 			compatible = "bosch,c_can";
- 			reg = <0x400e2000 0x1000>;
+ 		dmac: dma-controller@40002000 {
+ 			compatible = "arm,pl080", "arm,primecell";
+ 			arm,primecell-periphid = <0x00041080>;
 -- 
 1.8.0
 
