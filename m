@@ -1,72 +1,129 @@
-From: Eric Blake <eblake-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [Qemu-devel] QEMU fw_cfg DMA interface
-Date: Thu, 1 Oct 2015 10:11:07 -0600
-Message-ID: <560D5B1B.10104@redhat.com>
-References: <1443701677-13629-1-git-send-email-markmb@redhat.com>
- <560D5945.5050700@redhat.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] PCI/MSI:  Add helper function pci_msi_domain_get_msi_rid().
+Date: Thu, 1 Oct 2015 09:13:12 -0700
+Message-ID: <560D5B98.5050400@caviumnetworks.com>
+References: <1443653222-24924-1-git-send-email-ddaney.cavm@gmail.com> <1443653222-24924-4-git-send-email-ddaney.cavm@gmail.com> <560CFBDC.4020901@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="R0ltJd8H8qVfPRbIXrQ3tDlQf3lGuIruC"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <560D5945.5050700-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <560CFBDC.4020901-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Marc_Mar=c3=ad?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, seabios-VcxPKcuBGKdAfugRpC6u6w@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Laszlo <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---R0ltJd8H8qVfPRbIXrQ3tDlQf3lGuIruC
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 10/01/2015 02:24 AM, Marc Zyngier wrote:
+> Hi David,
+>
+> On 30/09/15 23:47, David Daney wrote:
+>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>
+>> Add pci_msi_domain_get_msi_rid() to return the MSI requester id (RID).
+>> Initially needed by gic-v3 based systems. It will be used by follow on
+>> patch to drivers/irqchip/irq-gic-v3-its-pci-msi.c
+>>
+>> Initially supports mapping the RID via OF device tree.  In the future,
+>> this could be extended to use ACPI _IORT tables as well.
+>>
+>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   drivers/pci/msi.c   | 31 +++++++++++++++++++++++++++++++
+>>   include/linux/msi.h |  1 +
+>>   2 files changed, 32 insertions(+)
+>>
+>> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+>> index d449714..92b6dc9 100644
+>> --- a/drivers/pci/msi.c
+>> +++ b/drivers/pci/msi.c
+>> @@ -20,6 +20,7 @@
+>>   #include <linux/io.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/irqdomain.h>
+>> +#include <linux/of_irq.h>
+>>
+>>   #include "pci.h"
+>>
+>> @@ -1327,4 +1328,34 @@ struct irq_domain *pci_msi_create_default_irq_domain(struct device_node *node,
+>>
+>>   	return domain;
+>>   }
+>> +
+>> +struct get_mis_id_data {
+>> +	u32	alias;
+>> +};
+>> +
+>> +static int get_msi_id_cb(struct pci_dev *pdev, u16 alias, void *data)
+>> +{
+>> +	struct get_mis_id_data *s = data;
+>> +
+>> +	s->alias = alias;
+>> +	return 0;
+>> +}
+>
+> Why not use a naked u32, since you only have a single field in this
+> structure? Or is it that you are anticipating other fields there?
 
-On 10/01/2015 10:03 AM, Eric Blake wrote:
-> [meta-comment]
->=20
-> On 10/01/2015 06:14 AM, Marc Mar=C3=AD wrote:
->> Implementation of the FW CFG DMA interface.
->=20
-> The subject line is missing "v4" and "0/7". Also, the cover letter is
-> missing a diffstat.  That makes it harder to see from the cover letter
-> what the rest of the series is about.  'git format-patch/send-email
-> --cover-letter' does what you want; you can even 'git config
-> format.coverletter=3Dauto' to always include a decent cover letter on a=
-ny
-> multi-patch series.
+In this case, I think using a pointer to u32 is a good idea.  It would 
+simplify the source code somewhat.  Although, I think the generated 
+binary would likely be the same.  I don't foresee adding things to this 
+structure.  If it becomes necessary in the future, we can just go back 
+to using a pointer to a structure.
 
-Oh, I see - you sent a meta-cover letter (the one I replied to in this
-subthread), and then a patch series including a cover letter (the real
-0/7, then 1/7 and friends in-reply-to the 0/7) as a child of the
-meta-cover.  It's still a bit awkward for tools that expect the 0/7 as
-the start of the thread, and part of my confusion was caused by
-out-of-order mail delivery due to the nongnu.org mail server still
-recovering from its mail delays.
+>
+>> +/**
+>> + * pci_msi_domain_get_msi_rid - Get the MSI requester id (RID)
+>> + * @domain:	The interrupt domain
+>> + * @pdev:	The PCI device.
+>> + *
+>> + * The RID for a device is formed from the alias, with a firmware
+>> + * supplied mapping applied
+>> + *
+>> + * Returns: The RID.
+>> + */
+>> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
+>> +{
+>> +	struct get_mis_id_data d;
+>> +
+>> +	d.alias = 0;
+>> +	pci_for_each_dma_alias(pdev, get_msi_id_cb, &d);
+>> +	return of_msi_map_rid(&pdev->dev, domain->of_node, d.alias);
+>
+> Should you check whether domain->of_node is NULL first? I don't think
+> of_msi_map_rid would have any problem with that, but a domain that is
+> not backed by an of_node makes me feel a bit uneasy and would tend to
+> indicate that we're not using DT.
 
---=20
-Eric Blake   eblake redhat com    +1-919-301-3266
-Libvirt virtualization library http://libvirt.org
+Yes, that makes sense.  As you observe, I think it probably works as is, 
+but it would be good to make it more clear.  This is especially true 
+when we add ACPI support.  We will want to be clear on which of 
+device-tree or ACPI we are using.
 
 
---R0ltJd8H8qVfPRbIXrQ3tDlQf3lGuIruC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+>
+>> +}
+>>   #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
+>> diff --git a/include/linux/msi.h b/include/linux/msi.h
+>> index ad939d0..56e3b76 100644
+>> --- a/include/linux/msi.h
+>> +++ b/include/linux/msi.h
+>> @@ -293,6 +293,7 @@ irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+>>   					  struct msi_desc *desc);
+>>   int pci_msi_domain_check_cap(struct irq_domain *domain,
+>>   			     struct msi_domain_info *info, struct device *dev);
+>> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+>>   #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
+>>
+>>   #endif /* LINUX_MSI_H */
+>>
+>
+> Otherwise looks good to me.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-Comment: Public key at http://people.redhat.com/eblake/eblake.gpg
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+I will send what I hope is the final revision of the patches later today.
 
-iQEcBAEBCAAGBQJWDVscAAoJEKeha0olJ0Nq288H/A3b9MJiRAu+blnbTajSM4rv
-xzryT+7YG1oUjjWkWSvOjtdMtnOiKh0+8+iQwmwHMr+z/DxjAtpmrIFaxO5qywfL
-07+frd/Sxw8sJkZKC1Pno8VEYnufvYj3i9xEKeEml0Ac7CvgOHbE5Yw3h8gD5o5S
-9O6UKyybNPYDE+OySj56L/XfBNuCl48UHt0X/362zpegm+/2vxYMZMhawxNeTFie
-0wXUtT+ZyutcgRJkJKtGme7JUWxY6t7QD6sIbsqG8srK7kLJjjUcRuBkivEyHGas
-6nuYP6e0ckLhAgUBAdf6XkF6rHdvmSTYf96aIm1lBk4sc9svbGravcMsSz3eE+E=
-=Gujz
------END PGP SIGNATURE-----
+David Daney
 
---R0ltJd8H8qVfPRbIXrQ3tDlQf3lGuIruC--
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
