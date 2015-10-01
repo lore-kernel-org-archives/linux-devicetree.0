@@ -1,7 +1,7 @@
 From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: [PATCH 3/4] ARM: dts: Enable Ethernet on STi's B2120 boards
-Date: Thu, 1 Oct 2015 17:56:21 +0200
-Message-ID: <1443714982-16251-4-git-send-email-maxime.coquelin@st.com>
+Subject: [PATCH 4/4] ARM: dts: Enable Ethernet on STi's B2199 board
+Date: Thu, 1 Oct 2015 17:56:22 +0200
+Message-ID: <1443714982-16251-5-git-send-email-maxime.coquelin@st.com>
 References: <1443714982-16251-1-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,34 +12,20 @@ To: Giuseppe Cavallaro <peppe.cavallaro@st.com>, peter.griffin@linaro.org, lee.j
 Cc: maxime.coquelin@st.com, kernel@stlinux.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These boards are mounted with Realtek RTL8367 switch.
+The B2199 board is mounted with Realtek RTL8367 switch.
 We consider the bootloader will have intiliazed the switch before jumping into
 the kernel, so we declare it as a fixed link.
 
 Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
 ---
- arch/arm/boot/dts/stih407-b2120.dts  | 1 +
- arch/arm/boot/dts/stih410-b2120.dts  | 1 +
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 6 ++++++
- 3 files changed, 8 insertions(+)
+ arch/arm/boot/dts/stih418-b2199.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-index 6d93475..c8ad905 100644
---- a/arch/arm/boot/dts/stih407-b2120.dts
-+++ b/arch/arm/boot/dts/stih407-b2120.dts
-@@ -25,6 +25,7 @@
- 
- 	aliases {
- 		ttyAS0 = &sbc_serial0;
-+		ethernet0 = &ethernet0;
- 	};
- 
- };
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 8af1e73..118ac28 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -25,6 +25,7 @@
+diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
+index 82eee39..772d2bb 100644
+--- a/arch/arm/boot/dts/stih418-b2199.dts
++++ b/arch/arm/boot/dts/stih418-b2199.dts
+@@ -24,6 +24,7 @@
  
  	aliases {
  		ttyAS0 = &sbc_serial0;
@@ -47,14 +33,11 @@ index 8af1e73..118ac28 100644
  	};
  
  	soc {
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index ab029f7..ad21a42 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -87,5 +87,11 @@
+@@ -101,5 +102,12 @@
+ 		st_dwc3: dwc3@8f94000 {
  			status = "okay";
  		};
- 
++
 +		ethernet0: dwmac@9630000 {
 +			st,tx-retime-src = "clkgen";
 +			status = "okay";
