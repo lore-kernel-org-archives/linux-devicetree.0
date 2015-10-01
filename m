@@ -1,66 +1,67 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: "clk: sunxi: Add a simple gates driver" breaks kernel with older DTB
-Date: Thu, 1 Oct 2015 09:47:11 +0100
-Message-ID: <1443689231.16718.225.camel@citrix.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [RFC v3 0/7] MT8173 DRM support
+Date: Thu, 1 Oct 2015 16:55:36 +0800
+Message-ID: <CAGS+omCnpYxO1A1rAD+x6NURa9YEVBi6qg7sp6K2JWC6wuqaCg@mail.gmail.com>
+References: <1443627006-15319-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, KumarGala <galak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1443627006-15319-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sasha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Booting a recent kernel with the DTB supplied with Debian Jessie (3.16
-based) breaks on Cubietruck because that DTB lacks the clock-indices nodes
-which the new driver from the commit below adds (replacing the hardcoding
-which used to be in clk-sunxi.c).
-
-It is panicing in drivers/clocksource/timer-sun5i.c with:
-
-[    0.015413] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
-[    0.025049] Kernel panic - not syncing: Can't get timer clock
-[    0.030794] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.3.0-rc2-arm-native+ #6
-[    0.038002] Hardware name: Allwinner sun7i (A20) Family
-[    0.043253] [<c0219794>] (unwind_backtrace) from [<c0214e44>] (show_stack+0x10/0x14)
-[    0.050992] [<c0214e44>] (show_stack) from [<c048159c>] (dump_stack+0x88/0x98)
-[    0.058213] [<c048159c>] (dump_stack) from [<c02caa98>] (panic+0xa4/0x22c)
-[    0.065090] [<c02caa98>] (panic) from [<c0d7c518>] (sun5i_timer_init+0x80/0x384)
-[    0.072482] [<c0d7c518>] (sun5i_timer_init) from [<c0d7aad0>] (clocksource_of_init+0x4c/0x8c)
-[    0.081001] [<c0d7aad0>] (clocksource_of_init) from [<c0d39b48>] (start_kernel+0x28c/0x3c4)
-[    0.089343] [<c0d39b48>] (start_kernel) from [<4020807c>] (0x4020807c)
-[    0.095866] ---[ end Kernel panic - not syncing: Can't get timer clock
-
-Reverting ee38b2698ae2 fixes this specific issue for me (it boots further,
-but there seems to be other problems later when earlycon hands over to
-proper console, which I've not yet looked into).
-
-Is this considered acceptable linkage between the kernel and the dtbs?
-
-I suspect that even if anyone does care this is going to be an uphill
-struggle for that minority so I'm going to adjust our test infrastructure
-to pickup the dtbs from the kernel it is trying to test rather then reusing
-the one from the OS install.
-
-Ian.
-
-commit ee38b2698ae234c03f65ccafa1811d4dda3c316d
-Author: Maxime Ripard <maxime.ripard@free-electrons.com>
-Date:   Fri Jul 31 19:46:22 2015 +0200
-
-    clk: sunxi: Add a simple gates driver
-    
-    The gates were handled with a common piece of framework that was
-    registering all gates array, that was not using the CLK_OF_DECLARE logic,
-    and was not using clock-indices but some private masks that were pretty
-    much equivalent.
-    
-    Move this code in a new driver that handles all the gates array and solves
-    both these issues.
-    
-    Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-    Signed-off-by: Michael Turquette <mturquette@baylibre.com>
-    [sboyd@codeaurora.org: Include clk.h for consumer API usage]
-    Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-
-
+SGkgUGhpbGlwcCwKCk9uIFdlZCwgU2VwIDMwLCAyMDE1IGF0IDExOjI5IFBNLCBQaGlsaXBwIFph
+YmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiBIaSwKPgo+IHRoaXMgaXMgYW4g
+dXBkYXRlIHRvIHRoZSBNVDgxNzMgRFJNIHN1cHBvcnQgUkZDLiBUaGVzZSBwYXRjaGVzIGhhdmUK
+PiBhIGJ1aWxkIGRlcGVuZGVuY3kgb24gdHdvIG90aGVyIHBhdGNoZXMgb24gdG9wIG9mIHY0LjMt
+cmMxOgo+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNjkxNDk0MSAoImlvbW11
+OiBJbXBsZW1lbnQgY29tbW9uIElPTU1VCj4gb3BzIGZvciBETUEgbWFwcGluZyIpLCBhbmQKPiBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzY5Mjg2MjEgKCJtZW1vcnk6IG1lZGlh
+dGVrOiBBZGQgU01JIGRyaXZlciIpLgo+Cj4gSSBoYXZlIGNoYW5nZWQgdGhlIGRldmljZSB0cmVl
+IGJpbmRpbmdzIHRvIGdyb3VwIHRoZSBkaXNwbGF5IGZ1bmN0aW9uIGJsb2Nrcwo+IHVuZGVyIGEg
+ZGlzcGxheS1zdWJzeXN0ZW0gbm9kZS4gSSdtIG5vdCBoYXBweSB3aXRoIHRoaXMgb3JnYW5pc2F0
+aW9uIGFzIHRoZQo+IGRpc3BsYXktc3Vic3lzdGVtIG5vZGUgaXMgbm90IHJlYWxseSBhIHBoeXNp
+Y2FsIGJ1cy4gSSdkIG11Y2ggcHJlZmVyIGNvbm5lY3RpbmcKPiB0aGUgZnVuY3Rpb24gYmxvY2tz
+IHdpdGggYW4gb2YtZ3JhcGgsIGlmIGl0IGlzIGFjY2VwdGFibGUgZm9yIGp1c3QgdGhlIGdyYXBo
+Cj4gdG8gY29zdCA+OCBLaUIgZHRiIHNpemUuCj4KPiBUaGUgYWRkZWQgSERNSSBkcml2ZXIgc3Rp
+bGwgZGlyZWN0bHkgYWNjZXNzZXMgYW4gdW5kb2N1bWVudGVkIHJlZ2lzdGVyIGluIHRoZQo+IGFw
+bWl4ZWRzeXMgKGNsb2NrLWNvbnRyb2xsZXIpIHJlZ2lzdGVyIHNwYWNlIHRvIHNldCBhIGRpdmlk
+ZXIgb2YgdGhlIFRWRFBMTC4KPiBUaGF0IHdpbGwgYmUgZml4ZWQgYXMgc29vbiBhcyBJIHVuZGVy
+c3RhbmQgd2hhdCB0aGlzIGNsb2NrIGlzIGNvbm5lY3RlZCB0by4KPgo+IENoYW5nZXMgc2luY2Ug
+djI6Cj4gIC0gR3JvdXBlZCBESVNQIGZ1bmN0aW9uIGJsb2NrIG5vZGVzIHVuZGVyIHRoZSBkaXNw
+bGF5LXN1YnN5c3RlbSBub2RlCj4gIC0gQWRkZWQgb2YtZ3JhcGggcG9ydHMgdG8gYmluZGluZyBk
+b2N1bWVudGF0aW9uCj4gIC0gRHJvcHBlZCBsZWdhY3kgZnJhbWVidWZmZXIgc3VwcG9ydAo+ICAt
+IERyb3BwZWQgcGxhbmUgenBvcyBwcm9wZXJ0eQo+ICAtIFVwZGF0ZSBwbGFuZS0+ZGlzcF9zaXpl
+IGluIGF0b21pY191cGRhdGUgaW5zdGVhZCBvZiBhdG9taWNfY2hlY2sKPiAgLSBBZGRlZCBhc3lu
+Y2hyb25vdXMgY29tbWl0IHN1cHBvcnQKPiAgLSBTcGxpdCBEU0kgYW5kIE1JUEkgVFggKE1JUEkg
+RC1QSFkpIGRyaXZlcnMKPiAgLSBBZGRlZCBEUEkgZHJpdmVyCj4gIC0gQWRkZWQgSERNSSBkcml2
+ZXIKPiAgLSBBZGRlZCBIRE1JIEREQyBJMkMgbWFzdGVyIGRyaXZlcgo+ICAtIEFkZGVkIEhETUkg
+UEhZIGRyaXZlcgo+Cj4gQ0sgSHUgKDMpOgo+ICAgZHQtYmluZGluZ3M6IGRybS9tZWRpYXRlazog
+QWRkIE1lZGlhdGVrIGRpc3BsYXkgc3Vic3lzdGVtIGR0cyBiaW5kaW5nCj4gICBkcm0vbWVkaWF0
+ZWs6IEFkZCBEUk0gRHJpdmVyIGZvciBNZWRpYXRlayBTb0MgTVQ4MTczLgo+ICAgZHJtL21lZGlh
+dGVrOiBBZGQgRFNJIHN1YiBkcml2ZXIKPgo+IERhbmllbCBLdXJ0eiAoMSk6Cj4gICBkcm0vbWVk
+aWF0ZWs6IEFkZCBIRE1JIHN1cHBvcnQKClRoYW5rcyBmb3IgdGhlIHNob3V0LW91dCwgYnV0IEkg
+cmVhbGx5IGNhbid0IHRha2UgYW55IGNyZWRpdCBmb3IgdGhpcyBwYXRjaCA6LSkKU29tZXdoZXJl
+IGFsb25nIHRoZSBsaWZlIG9mIHRoaXMgcGF0Y2ggaXRzIG93bmVyc2hpcCBjaGFuZ2VkLgpJdCBz
+aG91bGQgcHJvYmFibHkgYmUgSmllIFFpdSBhcyBwZXIgaXRzIFNPQi4KCj4KPiBKaWUgUWl1ICgy
+KToKPiAgIGRybS9tZWRpYXRlazogQWRkIERQSSBzdWIgZHJpdmVyCj4gICBkcm0vbWVkaWF0ZWs6
+IGVuYWJsZSBoZG1pIG91dHB1dCBjb250cm9sIGJpdAo+Cj4gUGhpbGlwcCBaYWJlbCAoMSk6Cj4g
+ICBkdC1iaW5kaW5nczogZHJtL21lZGlhdGVrOiBBZGQgTWVkaWF0ZWsgSERNSSBkdHMgYmluZGlu
+ZwoKQ2FuIHlvdSBhbHNvIGluY2x1ZGUgdGhlIGFjdHVhbCBtdDgxNzMuZHRzaSAoJiBtdDgxNzMt
+ZXZiLmR0cykgY2hhbmdlcwp0aGF0IHVzZSB0aGlzIGJpbmRpbmcgbmV4dCB0aW1lPwpUaGlzIHdp
+bGwgbWFrZSBpdCBwb3NzaWJsZSB0byBhY3R1YWxseSBidWlsZCBhbmQgdGVzdCB0aGUgZHJpdmVy
+LgoKVGhhbmtzLAotRGFuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
