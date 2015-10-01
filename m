@@ -1,61 +1,58 @@
-From: Bayi Cheng <bayi.cheng@mediatek.com>
-Subject: [PATCH v3 1/3] doc: dt: add documentation for Mediatek spi-nor controller
-Date: Thu, 1 Oct 2015 15:44:50 +0800
-Message-ID: <1443685492-9996-2-git-send-email-bayi.cheng@mediatek.com>
+From: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 3/3] arm64: dts: mt8173: Add nor flash node
+Date: Thu, 1 Oct 2015 15:44:52 +0800
+Message-ID: <1443685492-9996-4-git-send-email-bayi.cheng@mediatek.com>
 References: <1443685492-9996-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443685492-9996-1-git-send-email-bayi.cheng@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, Bayi Cheng <bayi.cheng@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1443685492-9996-1-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for serial flash with
-Mediatek serial flash controller
+Add Mediatek nor flash node
 
-Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
+Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/mtd/mtk-quadspi.txt        | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-new file mode 100644
-index 0000000..8fff0ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-@@ -0,0 +1,30 @@
-+* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index d18ee42..385c2e4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -365,6 +365,21 @@
+ 			status = "disabled";
+ 		};
+ 
++		nor_flash: spi@1100d000 {
++			compatible = "mediatek,mt8173-nor";
++			reg = <0 0x1100d000 0 0xe0>;
++			clocks = <&pericfg CLK_PERI_SPI>,
++				 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
++			clock-names = "spi", "sf";
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+Required properties:
-+- compatible: 	  should be "mediatek,mt8173-nor";
-+- reg: 		  physical base address and length of the controller's register
-+- clocks: 	  the phandle of the clock needed by the nor controller
-+- clock-names: 	  the name of the clocks
-+		  the clocks needed "spi" and "sf". "spi" is used for spi bus,
-+		  and "sf" is used for controller, these are the clocks witch
-+		  hardware needs to enabling nor flash and nor flash controller.
-+		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- #address-cells: should be <1>
-+- #size-cells:	  should be <0>
++			flash@0 {
++				compatible = "jedec,spi-nor";
++				reg = <0>;
++			};
++		};
 +
-+Example:
-+
-+nor_flash: spi@1100d000 {
-+	compatible = "mediatek,mt8173-nor";
-+	reg = <0 0x1100d000 0 0xe0>;
-+	clocks = <&pericfg CLK_PERI_SPI>,
-+		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+	clock-names = "spi", "sf";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	flash@0 {
-+		....
-+	};
-+};
-+
+ 		i2c3: i2c3@11010000 {
+ 			compatible = "mediatek,mt8173-i2c";
+ 			reg = <0 0x11010000 0 0x70>,
 -- 
 1.8.1.1.dirty
