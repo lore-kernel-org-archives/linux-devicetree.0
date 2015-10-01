@@ -1,44 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] ARM: shmobile: add Porter board DT bindings
-Date: Thu, 1 Oct 2015 07:59:31 +0200
-Message-ID: <CAMuHMdUoSYqeCqSMu39qkMyWLttdV1YNQuToNZM8hfO8HAps4g@mail.gmail.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <1498934.YIZP7CvbA4@wasted.cogentembedded.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel
+ init
+Date: Thu, 1 Oct 2015 14:58:52 +0800
+Message-ID: <1443682732.1714.11.camel@mtksdaap41>
+References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
+	 <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1498934.YIZP7CvbA4@wasted.cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 1, 2015 at 1:01 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add Porter device tree bindings documentation, listing it as a supported board.
->
-> This allows to use checkpatch to validate DTSes referring to the Porter board.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Hi Daniel,
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks for your help to explain the patch.
 
-Gr{oetje,eeting}s,
+On Tue, 2015-09-29 at 18:25 +0800, Daniel Kurtz wrote:
+> On Sun, Sep 27, 2015 at 7:25 PM, Matthias Brugger
+> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> But then we at least need a corresponding change to the binding documentation.
 
-                        Geert
+I'll send a new patch with changing binding document.
+
+> If the existing bindings are not used anywhere yet (*), it seems like
+> unnecessary overhead to enforce backwards compatibility at this stage.
+> 
+> (*) I don't actually know if this is true, perhaps only Mediatek can
+> answer this.
+
+What does the meaning of existing bindings are used anywhere? Do you
+mean this binding is used by other SoCs ?
+
+Currently scpsys driver can't be shared between different Mediatek SoCs
+because the power domains are different from each other. So I think it
+should no need to maintain backward compatibility on scpsys's binding.
+
+> > Apart from that, please send the dtsi part as a seperate patch.
+
+OK.
+
+
+Best regards,
+
+James
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
