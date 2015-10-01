@@ -1,50 +1,48 @@
 From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: [PATCH 4/4] ARM: dts: Enable Ethernet on STi's B2199 board
-Date: Thu, 1 Oct 2015 17:56:22 +0200
-Message-ID: <1443714982-16251-5-git-send-email-maxime.coquelin@st.com>
+Subject: [PATCH 1/4] ARM: dts: Fix RGMII pinctrl timings
+Date: Thu, 1 Oct 2015 17:56:19 +0200
+Message-ID: <1443714982-16251-2-git-send-email-maxime.coquelin@st.com>
 References: <1443714982-16251-1-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1443714982-16251-1-git-send-email-maxime.coquelin@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Giuseppe Cavallaro <peppe.cavallaro@st.com>, peter.griffin@linaro.org, lee.jones@linaro.org, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: maxime.coquelin@st.com, kernel@stlinux.com, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-The B2199 board is mounted with Realtek RTL8367 switch.
-We consider the bootloader will have intiliazed the switch before jumping into
-the kernel, so we declare it as a fixed link.
+These new re-timing values provides a better stability on Ethernet link.
 
 Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
 ---
- arch/arm/boot/dts/stih418-b2199.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 82eee39..772d2bb 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -24,6 +24,7 @@
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index 8fe542a..a538ae5 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -216,9 +216,9 @@
+ 						rxd2 = <&pio1 6 ALT1 IN DE_IO 0 CLK_A>;
+ 						rxd3 = <&pio1 7 ALT1 IN DE_IO 0 CLK_A>;
+ 						rxdv = <&pio2 0 ALT1 IN DE_IO 0 CLK_A>;
+-						rxclk = <&pio2 2 ALT1 IN NICLK 500 CLK_A>;
++						rxclk = <&pio2 2 ALT1 IN NICLK 0 CLK_A>;
+ 						clk125 = <&pio3 7 ALT4 IN NICLK 0 CLK_A>;
+-						phyclk = <&pio2 3 ALT4 OUT NICLK 1750 CLK_B>;
++						phyclk = <&pio2 3 ALT4 OUT NICLK 1250 CLK_B>;
+ 					};
+ 				};
  
- 	aliases {
- 		ttyAS0 = &sbc_serial0;
-+		ethernet0 = &ethernet0;
- 	};
- 
- 	soc {
-@@ -101,5 +102,12 @@
- 		st_dwc3: dwc3@8f94000 {
- 			status = "okay";
- 		};
-+
-+		ethernet0: dwmac@9630000 {
-+			st,tx-retime-src = "clkgen";
-+			status = "okay";
-+			phy-mode = "rgmii";
-+			fixed-link = <0 1 1000 0 0>;
-+		};
- 	};
- };
 -- 
 1.9.1
