@@ -1,79 +1,137 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/8] dt-bindings: move backlight bindings under leds
-Date: Thu,  1 Oct 2015 17:12:28 -0500
-Message-ID: <1443737554-10352-3-git-send-email-robh@kernel.org>
-References: <1443737554-10352-1-git-send-email-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443737554-10352-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/5] clk: berlin: add common pll driver
+Date: Thu, 1 Oct 2015 15:32:20 -0700
+Message-ID: <20151001223220.GQ19319@codeaurora.org>
+References: <1442931156-5877-1-git-send-email-jszhang@marvell.com>
+ <1442931156-5877-2-git-send-email-jszhang@marvell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442931156-5877-2-git-send-email-jszhang@marvell.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Backlights are generally a subtype of LEDs at least from a software
-point of view if not always electrically. Move the bindings from the
-video directory to underneath the leds dir.
+On 09/22, Jisheng Zhang wrote:
+> diff --git a/drivers/clk/berlin/pll.c b/drivers/clk/berlin/pll.c
+> new file mode 100644
+> index 0000000..9aad0b6
+> --- /dev/null
+> +++ b/drivers/clk/berlin/pll.c
+> @@ -0,0 +1,119 @@
+> +
+> +#define to_berlin_pll(hw)       container_of(hw, struct berlin_pll, hw)
+> +
+> +static u8 vcodiv_berlin[] = {1, 2, 4, 8, 16, 32, 64, 128};
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/{video => leds}/backlight/88pm860x.txt  | 0
- .../devicetree/bindings/{video => leds}/backlight/gpio-backlight.txt      | 0
- Documentation/devicetree/bindings/{video => leds}/backlight/lp855x.txt    | 0
- .../devicetree/bindings/{video => leds}/backlight/max8925-backlight.txt   | 0
- .../devicetree/bindings/{video => leds}/backlight/pm8941-wled.txt         | 0
- .../devicetree/bindings/{video => leds}/backlight/pwm-backlight.txt       | 0
- .../devicetree/bindings/{video => leds}/backlight/sky81452-backlight.txt  | 0
- .../devicetree/bindings/{video => leds}/backlight/tps65217-backlight.txt  | 0
- 8 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/88pm860x.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/gpio-backlight.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/lp855x.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/max8925-backlight.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/pm8941-wled.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/pwm-backlight.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/sky81452-backlight.txt (100%)
- rename Documentation/devicetree/bindings/{video => leds}/backlight/tps65217-backlight.txt (100%)
+This is an array of 1 << index position...
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/88pm860x.txt b/Documentation/devicetree/bindings/leds/backlight/88pm860x.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/88pm860x.txt
-rename to Documentation/devicetree/bindings/leds/backlight/88pm860x.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
-rename to Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/lp855x.txt b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/lp855x.txt
-rename to Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/max8925-backlight.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
-rename to Documentation/devicetree/bindings/leds/backlight/max8925-backlight.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-rename to Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-rename to Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/sky81452-backlight.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-rename to Documentation/devicetree/bindings/leds/backlight/sky81452-backlight.txt
-diff --git a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-rename to Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt
+> +
+> +static unsigned long berlin_pll_recalc_rate(struct clk_hw *hw,
+> +					    unsigned long parent_rate)
+> +{
+> +	u32 val, fbdiv, rfdiv, vcodivsel, bypass;
+> +	struct berlin_pll *pll = to_berlin_pll(hw);
+> +
+> +	bypass = readl_relaxed(pll->bypass);
+> +	if (bypass & (1 << pll->bypass_shift))
+> +		return parent_rate;
+> +
+> +	val = readl_relaxed(pll->ctrl + PLL_CTRL0);
+> +	fbdiv = (val >> 12) & 0x1FF;
+> +	rfdiv = (val >> 3) & 0x1FF;
+> +	val = readl_relaxed(pll->ctrl + PLL_CTRL1);
+> +	vcodivsel = (val >> 9) & 0x7;
+> +	return parent_rate * fbdiv * 4 / rfdiv /
+> +		vcodiv_berlin[vcodivsel];
+
+so we can replace this with 1 << vcodivsel?
+
+> +}
+> +
+> +static u8 berlin_pll_get_parent(struct clk_hw *hw)
+> +{
+> +	struct berlin_pll *pll = to_berlin_pll(hw);
+> +	u32 bypass = readl_relaxed(pll->bypass);
+> +
+> +	if (bypass & (1 << pll->bypass_shift))
+> +		return 1;
+> +	else
+> +		return 0;
+
+Simplify this to 
+
+	if (bypass & (1 << pll->bypass_shift))
+		return 1;
+	return 0;
+
+or
+
+	return !!(bypass & (1 << pll->bypass_shift)) 
+
+> +}
+> +
+> +static const struct clk_ops berlin_pll_ops = {
+> +	.recalc_rate	= berlin_pll_recalc_rate,
+> +	.get_parent	= berlin_pll_get_parent,
+> +};
+> +
+> +void __init berlin_pll_setup(struct device_node *np)
+
+static?
+
+> +{
+> +	struct clk_init_data init;
+> +	struct berlin_pll *pll;
+> +	const char *parent_names[PLL_SOURCE_MAX];
+> +	struct clk *clk;
+> +	int ret, num_parents;
+> +
+> +	num_parents = of_clk_get_parent_count(np);
+> +	if (num_parents <= 0 || num_parents > PLL_SOURCE_MAX)
+> +		return;
+> +
+> +	of_clk_parent_fill(np, parent_names, num_parents);
+> +
+> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> +	if (WARN_ON(!pll))
+
+We already print a big warning on allocation failures, so drop
+the WARN_ON please.
+
+> +		return;
+> +
+> +	pll->ctrl = of_iomap(np, 0);
+> +	pll->bypass = of_iomap(np, 1);
+> +	ret = of_property_read_u8(np, "bypass-shift", &pll->bypass_shift);
+> +	if (WARN_ON(!pll->ctrl || !pll->bypass || ret))
+> +		return;
+> +
+> +	init.name = np->name;
+> +	init.ops = &berlin_pll_ops;
+> +	init.parent_names = parent_names;
+> +	init.num_parents = num_parents;
+
+init.flags is not initialized. Please initialize the init struct
+on the stack to 0 to avoid future problems.
+
+> +
+> +	pll->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &pll->hw);
+> +	if (WARN_ON(IS_ERR(clk)))
+> +		return;
+> +
+> +	ret = of_clk_add_provider(np, of_clk_src_simple_get, clk);
+> +	if (WARN_ON(ret))
+> +		return;
+
+This return is useless.
+
+> +}
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
