@@ -1,75 +1,60 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH 2/2] arm64: dts: mt8173: add timer node
-Date: Thu, 1 Oct 2015 22:50:53 +0800
-Message-ID: <1443711053.22188.21.camel@mtksdaap41>
+Date: Thu, 1 Oct 2015 16:32:55 +0100
+Message-ID: <560D5227.8050600@arm.com>
 References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
-	 <55FAC570.8040307@arm.com> <1442501816.4784.3.camel@mtksdaap41>
-	 <20150917164108.GF12808@leverpostej>
+ <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
+ <55FAC570.8040307@arm.com> <1442501816.4784.3.camel@mtksdaap41>
+ <55FAE69C.2000906@arm.com> <1443710016.22188.10.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20150917164108.GF12808@leverpostej>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sudeep Holla <Sudeep.Holla@arm.com>, James Liao <jamesjj.liao@mediatek.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, linux-arm-kernel@
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443710016.22188.10.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-cl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-09-17 at 17:41 +0100, Mark Rutland wrote:
-> On Thu, Sep 17, 2015 at 03:56:56PM +0100, Yingjoe Chen wrote:
-> > On Thu, 2015-09-17 at 14:51 +0100, Sudeep Holla wrote:
-> > > 
-> > > On 16/09/15 03:04, Yingjoe Chen wrote:
-> > > > From: Daniel Kurtz <djkurtz@chromium.org>
-> > > >
-> > > > Add device node to enable GPT timer. This timer will be
-> > > > used as sched clock source.
-> > > >
-> > > 
-> > > Interesting any known issues with or advantage over the arch timers
-> > > to prefer it as sched clock source. I see even arch timers are present
-> > > in DT, hence the question. Or is it just a incorrect commit log ?
-> > > 
-> > > How does this get selected as sched clock source ? I don't see
-> > > sched_clock_register in mtk_timer.c
-> > > 
-> > > To be clear, I am not against adding this timer support, but just want
-> > > to know is it preferred for sched clock source ? if yes why ? better
-> > > resolution ?
-> > 
-> > Hi Sudeep,
-> > 
-> > Thanks for your review.
-> > 
-> > I hit the send too soon and missed cover letter, please see:
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002303.html
-> > 
-> > The main reason to use GPT as sched clock is it won't stop during idle.
-> 
-> You don't mean sched clock, you just mean a clock_event_device.
-> 
-> A sched_clock is a high-precision clocksource that is read from (which
-> by definition requires the CPUs to be non-idle). It doesn't have
-> anything to do with interrupts and therefore cannot wake devices from
-> idle.
-> 
-> While the clock_event_device for the generic timer can't necessarily
-> wake CPUs from idle. The generic timer system counter counts even if
-> CPUs are idle, so the generic timer is fine as a sched_clock. 
-
-Hi, Mark,
-
-Thanks for your info and sorry for late reply. 
-
-I notice ARM ARM said the arch timer shouldn't stop when idle, but
-unfortunately that not true for mt8173. The last CPU enter idle can
-choose to enter deep idle mode and the counter value would be lost. Our
-firmware backup/recover the counter so it looks like it is stopped.
-
-We will change the firmware to add missing count when back from deep
-idle to make it looks like the counter never stop.
-
-Joe.C
 
 
+On 01/10/15 15:33, Yingjoe Chen wrote:
+> On Thu, 2015-09-17 at 17:13 +0100, Sudeep Holla wrote:
+>>
+
+[...]
+
+>>
+>> I think your are confusing the system counter with arch timers. System
+>> counter is always-on, but the arch timers(logic implementing timers
+>> comparators) might not be off when the processor is powered down.
+>>
+>> I think you need this timer and are using it for low power idle states
+>> in which case you will use this as a clock event and not clock source.
+>> It will be used as a hardware broadcast event source.
+>>
+>> There's no call to sched_clock_register in mtk_timer.c, so it can't be
+>> the sched clock, so you need to fix the commit log.
+>
+> Hi Sudeep,
+>
+> Sorry for late reply.
+>
+> For sched_clock_register, please see
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001547.html
+> which was accepted in
+> https://git.linaro.org/people/daniel.lezcano/linux.git/shortlog/refs/heads/clockevents/4.4
+>
+
+The commit message makes no sense to me. The counters should continue to
+work as long as they are in always-on domain. Only timers are lost
+when you enter deeper idle states. So I agree with using MTK timer as
+broadcast timer/eventsource. You still didn't answer what's the need
+to use MTK timer as sched clocksource ?
+
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
