@@ -1,64 +1,60 @@
-From: Laszlo Ersek <lersek@redhat.com>
-Subject: Re: [Qemu-devel] QEMU fw_cfg DMA interface
-Date: Thu, 1 Oct 2015 18:34:56 +0200
-Message-ID: <560D60B0.5000902@redhat.com>
-References: <1443701677-13629-1-git-send-email-markmb@redhat.com>
- <560D5945.5050700@redhat.com> <560D5C7E.8080900@redhat.com>
- <560D5DA1.90607@redhat.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v8 00/14] power: bq24257: Add support for bq24250/bq24251
+Date: Thu, 1 Oct 2015 11:53:48 -0500
+Message-ID: <20151001165348.GA31342@beast>
+References: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
+ <20151001025847.GA12283@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <560D5DA1.90607@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Blake <eblake@redhat.com>, =?UTF-8?Q?Marc_Mar=c3=ad?= <markmb@redhat.com>, linux-kernel@vger.kernel.org, qemu-devel@nongnu.org, seabios@seabios.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, Drew <drjones@redhat.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Stefan Hajnoczi <stefanha@gmail.com>, Alexander Graf <agraf@suse.de>, Kevin O'Connor <kevin@koconnor.net>, Gerd Hoffmann <kraxel@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151001025847.GA12283@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/15 18:21, Eric Blake wrote:
-> On 10/01/2015 10:17 AM, Laszlo Ersek wrote:
->> On 10/01/15 18:03, Eric Blake wrote:
->>> [meta-comment]
->>>
->>> On 10/01/2015 06:14 AM, Marc Mar=C3=AD wrote:
->>>> Implementation of the FW CFG DMA interface.
->>>
->>> The subject line is missing "v4" and "0/7". Also, the cover letter =
-is
->>> missing a diffstat.  That makes it harder to see from the cover let=
-ter
->>> what the rest of the series is about.  'git format-patch/send-email
->>> --cover-letter' does what you want; you can even 'git config
->>> format.coverletter=3Dauto' to always include a decent cover letter =
-on any
->>> multi-patch series.
->>>
->>
->> This posting follows a little bit different pattern, one that I myse=
-lf
->> follow when posting patches for two (or more) components that must w=
-ork
->> in sync.
->=20
-> Ok, makes sense. Maybe the only additional suggestions would be to ma=
-ke
-> it more obvious in the subject line (put the text 'cross-post'
-> somewhere?) or have the first paragraph of the meta-cover be more
-> explicit that there are going to be multiple sub-threads, one per
-> project, where all subthreads must be applied to their corresponding
-> project for the overall feature to be complete?
+On Thu, Oct 01, 2015 at 04:58:47AM +0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Mon, Sep 28, 2015 at 05:33:48PM -0500, Andreas Dannenberg wrote:
+> > This patch series extends the driver to also support bq24250/bq24251.
+> > 
+> > The bq24250/251/257 devices have a very similar feature set and are
+> > virtually identical from a control register point of view so it made
+> > sense to extend the existing driver rather than submitting a new driver.
+> > In addition to the new device support the driver is also extended to
+> > allow access to some device features previously hidden. Basic and
+> > potentially dangerous charger config parameters affecting the actual
+> > charging of the Li-Ion battery are only configurable through firmware
+> > rather than sysfs properties. However some newly introduced properties
+> > are exposed through sysfs properties as access to them may be desired
+> > from userspace. For example, it is now possible to manually configure
+> > the maximum current drawn from the input source to accommodate different
+> > chargers (0.5A, 1.5A, 2.0A and so on) based on system knowledge a
+> > userspace application may have rather than rely on the auto-detection
+> > mechanism that may not work in all possible scenarios.
+> 
+> Thanks, I queued all remaining patches except for
 
-That's a good idea. I think prefixing the main blurb's subject with
-[cross-post], and a "standard" first paragraph based on your above
-suggestion, would be helpful.
+Sebastian, I just pulled your tree and re-ran some of my tests. Looks
+like everything is still working as it should. Thanks again for your
+help reviewing. Same goes for Krzysztof and Laurentiu -- thanks for
+your time and feedback too.
 
-> [And maybe I should wait a few minutes for the full thread to appear =
-in
-> my inbox, rather than immediately replying to the first mail while th=
-e
-> series is still incomplete due to mail delays...]
+> >   power: bq24257: Add platform data based initialization
+> 
+> I'm still not convinced, that it should be added without any
+> consumer in the mainline kernel.
 
-I'm not patient; it would be unfair from me to expect others to be... :=
-)
+Well I tried to make my case (giving access to the largest audience
+possible). If you don't want to include it that's fine. I guess it can
+always get added if a specific need arises... For future reference here
+is the link to the latest version of that patch:
 
-Laszlo
+http://marc.info/?l=linux-pm&m=144347973708093&w=2
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
