@@ -1,57 +1,71 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/4] DRA7 Timer12 Support
-Date: Thu, 1 Oct 2015 14:32:36 -0500
-Message-ID: <1443727960-32232-1-git-send-email-s-anna@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v4 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Thu, 1 Oct 2015 15:37:49 -0500
+Message-ID: <1443731874-21362-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+In an effort to cleanup this driver and add Device Tree support
+the driver has been rewritten based on new driver styles and
+modern kernel driver helpers. This has nearly halved the lines
+of code while keeping all previous functionality.
 
-The DRA7 Timer12 is completely missing from the kernel. This series
-adds the support for it, so that all the Timers on DRA7 are represented
-in the kernel. Timer12 is a special Timer, and is not available for
-kernel on HS devices, very much similar to the equivalent timer on OMAP3. 
+Platform file based initialization has been dropped as there is
+no examples of this use in the kernel.
 
-Patch 1 is a bit debatable, as I am not entirely sure if the clk API used
-are acceptable outside the drivers/clk folders. It keeps intact the
-omap_dm_timer_set_source() API though, and allows it to handle the
-non-configurability of Timer12 parent within that API. The need for
-this API is questionable, I am not a big fan as the dmtimer code blindly
-tries to set the source of every requested API to OMAP_TIMER_SRC_32_KHZ,
-and then the requestors would have to reset the proper parent source again.
-It also supports configuring only one of 3 parents (which are valid when
-added originally for the then SoCs), requiring specific clock aliases to
-work across different SoCs, but the DRA7 SoC does have more than 3
-configurable clock parents, and the indexes may not necessarily match
-for different timers on different SoCs. Patch 1 won't be needed if we
-can kill the omap_dm_timer_set_source() API.
+v1 can be found here: [1] v2: [2] v3: [3]
 
-Patches baselined on 4.3-rc3, but should apply just fine on -rc1 as well.
+Changes from v3:
+ - Reorganized regulator driver and related DT node
+ - Other small fixes as discussed in v3 thread
 
-regards
-Suman
+Changes from v2:
+ - Split the series further into subsystems
 
-Suman Anna (4):
-  ARM: OMAP: dmtimer: check for fixed timers during config
-  ARM: OMAP2+: timer: Remove secure timer for DRA7xx devices
-  ARM: dts: DRA7: Add timer12 node
-  ARM: DRA7: hwmod: Add data for GPTimer 12
+Changes from v1:
+ - Split the rewrite into delete/create patches
+ - Several small fixes as discussed in v1 thread
 
- arch/arm/boot/dts/dra7.dtsi               | 10 +++++++++
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 36 +++++++++++++++++++++++++++++--
- arch/arm/mach-omap2/timer.c               |  6 +++---
- arch/arm/plat-omap/dmtimer.c              |  5 +++++
- 4 files changed, 52 insertions(+), 5 deletions(-)
+[1] http://www.spinics.net/lists/devicetree/msg93863.html
+[2] http://www.spinics.net/lists/devicetree/msg95003.html
+[3] http://www.spinics.net/lists/devicetree/msg95133.html
+
+Andrew F. Davis (5):
+  Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
+  mfd: tps65912: Remove old driver in preparation for new driver
+  mfd: tps65912: Add driver for the TPS65912 PMIC
+  regulator: tps65912: Add regulator driver for the TPS65912 PMIC
+  gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
+
+ .../devicetree/bindings/gpio/gpio-tps65912.txt     |  16 +
+ Documentation/devicetree/bindings/mfd/tps65912.txt |  51 ++
+ .../bindings/regulator/tps65912-regulator.txt      |  28 +
+ drivers/gpio/Kconfig                               |   2 +-
+ drivers/gpio/gpio-tps65912.c                       | 290 ++++-----
+ drivers/mfd/Kconfig                                |  23 +-
+ drivers/mfd/Makefile                               |   3 +-
+ drivers/mfd/tps65912-core.c                        | 283 ++++----
+ drivers/mfd/tps65912-i2c.c                         | 221 +++----
+ drivers/mfd/tps65912-irq.c                         | 217 -------
+ drivers/mfd/tps65912-spi.c                         | 222 +++----
+ drivers/regulator/Kconfig                          |   2 +-
+ drivers/regulator/tps65912-regulator.c             | 712 +++++----------------
+ include/linux/mfd/tps65912.h                       | 211 +++---
+ 14 files changed, 802 insertions(+), 1479 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+ rewrite drivers/gpio/gpio-tps65912.c (69%)
+ rewrite drivers/mfd/tps65912-core.c (96%)
+ rewrite drivers/mfd/tps65912-i2c.c (93%)
+ delete mode 100644 drivers/mfd/tps65912-irq.c
+ rewrite drivers/mfd/tps65912-spi.c (92%)
+ rewrite drivers/regulator/tps65912-regulator.c (94%)
 
 -- 
-2.6.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
