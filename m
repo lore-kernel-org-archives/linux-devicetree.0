@@ -1,37 +1,181 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 7/8] dt-bindings: move Calxeda bindings to appropriate subsystems
-Date: Thu,  1 Oct 2015 17:12:33 -0500
-Message-ID: <1443737554-10352-8-git-send-email-robh@kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 6/8] dt-bindings: consolidate USB PHYs in bindings/phy
+Date: Thu,  1 Oct 2015 17:12:32 -0500
+Message-ID: <1443737554-10352-7-git-send-email-robh@kernel.org>
 References: <1443737554-10352-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443737554-10352-1-git-send-email-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443737554-10352-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move the Calxeda memory controller and PHY bindings to appropriate
-subsystem directories.
+Move USB PHY bindings under usb directory to phy directory which already
+contains other USB PHY bindings.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
+The Samsung USB PHY binding is obsolete and can be removed.
+
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- .../calxeda/mem-ctrlr.txt => memory-controllers/calxeda-ddr-ctrlr.txt}    | 0
- .../bindings/{arm/calxeda/combophy.txt => phy/calxeda-combophy.txt}       | 0
- 2 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{arm/calxeda/mem-ctrlr.txt => memory-controllers/calxeda-ddr-ctrlr.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/calxeda/combophy.txt => phy/calxeda-combophy.txt} (100%)
+ .../keystone-phy.txt => phy/keystone-usb-phy.txt}  |   0
+ .../{usb/mxs-phy.txt => phy/mxs-usb-phy.txt}       |   0
+ .../{usb => phy}/nvidia,tegra20-usb-phy.txt        |   0
+ .../bindings/{usb => phy}/qcom,usb-8x16-phy.txt    |   0
+ .../devicetree/bindings/usb/samsung-usbphy.txt     | 117 ---------------------
+ 5 files changed, 117 deletions(-)
+ rename Documentation/devicetree/bindings/{usb/keystone-phy.txt => phy/keystone-usb-phy.txt} (100%)
+ rename Documentation/devicetree/bindings/{usb/mxs-phy.txt => phy/mxs-usb-phy.txt} (100%)
+ rename Documentation/devicetree/bindings/{usb => phy}/nvidia,tegra20-usb-phy.txt (100%)
+ rename Documentation/devicetree/bindings/{usb => phy}/qcom,usb-8x16-phy.txt (100%)
+ delete mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
+diff --git a/Documentation/devicetree/bindings/usb/keystone-phy.txt b/Documentation/devicetree/bindings/phy/keystone-usb-phy.txt
 similarity index 100%
-rename from Documentation/devicetree/bindings/arm/calxeda/mem-ctrlr.txt
-rename to Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
-diff --git a/Documentation/devicetree/bindings/arm/calxeda/combophy.txt b/Documentation/devicetree/bindings/phy/calxeda-combophy.txt
+rename from Documentation/devicetree/bindings/usb/keystone-phy.txt
+rename to Documentation/devicetree/bindings/phy/keystone-usb-phy.txt
+diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
 similarity index 100%
-rename from Documentation/devicetree/bindings/arm/calxeda/combophy.txt
-rename to Documentation/devicetree/bindings/phy/calxeda-combophy.txt
+rename from Documentation/devicetree/bindings/usb/mxs-phy.txt
+rename to Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra20-usb-phy.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/usb/nvidia,tegra20-usb-phy.txt
+rename to Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-8x16-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-8x16-phy.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/usb/qcom,usb-8x16-phy.txt
+rename to Documentation/devicetree/bindings/phy/qcom,usb-8x16-phy.txt
+diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+deleted file mode 100644
+index 33fd354..0000000
+--- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
++++ /dev/null
+@@ -1,117 +0,0 @@
+-SAMSUNG USB-PHY controllers
+-
+-** Samsung's usb 2.0 phy transceiver
+-
+-The Samsung's usb 2.0 phy transceiver is used for controlling
+-usb 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
+-usb controllers across Samsung SOCs.
+-TODO: Adding the PHY binding with controller(s) according to the under
+-development generic PHY driver.
+-
+-Required properties:
+-
+-Exynos4210:
+-- compatible : should be "samsung,exynos4210-usb2phy"
+-- reg : base physical address of the phy registers and length of memory mapped
+-	region.
+-- clocks: Clock IDs array as required by the controller.
+-- clock-names: names of clock correseponding IDs clock property as requested
+-	       by the controller driver.
+-
+-Exynos5250:
+-- compatible : should be "samsung,exynos5250-usb2phy"
+-- reg : base physical address of the phy registers and length of memory mapped
+-	region.
+-
+-Optional properties:
+-- #address-cells: should be '1' when usbphy node has a child node with 'reg'
+-		  property.
+-- #size-cells: should be '1' when usbphy node has a child node with 'reg'
+-	       property.
+-- ranges: allows valid translation between child's address space and parent's
+-	  address space.
+-
+-- The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
+-  interface for usb-phy. It should provide the following information required by
+-  usb-phy controller to control phy.
+-  - reg : base physical address of PHY_CONTROL registers.
+-	  The size of this register is the total sum of size of all PHY_CONTROL
+-	  registers that the SoC has. For example, the size will be
+-	  '0x4' in case we have only one PHY_CONTROL register (e.g.
+-	  OTHERS register in S3C64XX or USB_PHY_CONTROL register in S5PV210)
+-	  and, '0x8' in case we have two PHY_CONTROL registers (e.g.
+-	  USBDEVICE_PHY_CONTROL and USBHOST_PHY_CONTROL registers in exynos4x).
+-	  and so on.
+-
+-Example:
+- - Exynos4210
+-
+-	usbphy@125B0000 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "samsung,exynos4210-usb2phy";
+-		reg = <0x125B0000 0x100>;
+-		ranges;
+-
+-		clocks = <&clock 2>, <&clock 305>;
+-		clock-names = "xusbxti", "otg";
+-
+-		usbphy-sys {
+-			/* USB device and host PHY_CONTROL registers */
+-			reg = <0x10020704 0x8>;
+-		};
+-	};
+-
+-
+-** Samsung's usb 3.0 phy transceiver
+-
+-Starting exynso5250, Samsung's SoC have usb 3.0 phy transceiver
+-which is used for controlling usb 3.0 phy for dwc3-exynos usb 3.0
+-controllers across Samsung SOCs.
+-
+-Required properties:
+-
+-Exynos5250:
+-- compatible : should be "samsung,exynos5250-usb3phy"
+-- reg : base physical address of the phy registers and length of memory mapped
+-	region.
+-- clocks: Clock IDs array as required by the controller.
+-- clock-names: names of clocks correseponding to IDs in the clock property
+-	       as requested by the controller driver.
+-
+-Optional properties:
+-- #address-cells: should be '1' when usbphy node has a child node with 'reg'
+-		  property.
+-- #size-cells: should be '1' when usbphy node has a child node with 'reg'
+-	       property.
+-- ranges: allows valid translation between child's address space and parent's
+-	  address space.
+-
+-- The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
+-  interface for usb-phy. It should provide the following information required by
+-  usb-phy controller to control phy.
+-  - reg : base physical address of PHY_CONTROL registers.
+-	  The size of this register is the total sum of size of all PHY_CONTROL
+-	  registers that the SoC has. For example, the size will be
+-	  '0x4' in case we have only one PHY_CONTROL register (e.g.
+-	  OTHERS register in S3C64XX or USB_PHY_CONTROL register in S5PV210)
+-	  and, '0x8' in case we have two PHY_CONTROL registers (e.g.
+-	  USBDEVICE_PHY_CONTROL and USBHOST_PHY_CONTROL registers in exynos4x).
+-	  and so on.
+-
+-Example:
+-	usbphy@12100000 {
+-		compatible = "samsung,exynos5250-usb3phy";
+-		reg = <0x12100000 0x100>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		clocks = <&clock 1>, <&clock 286>;
+-		clock-names = "ext_xtal", "usbdrd30";
+-
+-		usbphy-sys {
+-			/* USB device and host PHY_CONTROL registers */
+-			reg = <0x10040704 0x8>;
+-		};
+-	};
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
