@@ -1,156 +1,79 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Thu, 1 Oct 2015 16:17:30 +0800
-Message-ID: <201510011630.yO6mbrG3%fengguang.wu@intel.com>
-References: <1443685492-9996-3-git-send-email-bayi.cheng@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v3 00/13] exynos-ufs: add support for Exynos
+Date: Thu, 01 Oct 2015 13:39:17 +0530
+Message-ID: <1443686970-28104-1-git-send-email-alim.akhtar@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443685492-9996-3-git-send-email-bayi.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, Bayi Cheng <bayi.cheng@mediatek.com>
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bayi,
+This patch-set introduces UFS (Universal Flash Storage) host support
+for Samsung Exynos SoC. Mostly, it consists of UFS PHY and host specific driver.
+And it also contains some quirks handling for Exynos.
 
-[auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
+-Chanes since v2:
+* Addressed review comments from Kishon[1] and Rob Herring [2]
+* Splited ufs dt binding documetation from ufs driver patch
 
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+-Changes since v1:
+* Addressed review comments from Alexey[3] and various review comments from Amit.
+* Updated email id of Seungwon as his samsung id is void now.
+* Added ufs platform data
 
+[1]-> https://lkml.org/lkml/2015/9/18/29
+[2]-> https://lkml.org/lkml/2015/9/21/668
+[3]-> https://lkml.org/lkml/2015/8/23/124
 
-sparse warnings: (new ones prefixed by >>)
+This patch set is tested on exynos7-espresso board. 
 
->> drivers/mtd/spi-nor/mtk-quadspi.c:310:52: sparse: incorrect type in argument 4 (different modifiers)
-   drivers/mtd/spi-nor/mtk-quadspi.c:310:52:    expected unsigned char [usertype] *[assigned] data
-   drivers/mtd/spi-nor/mtk-quadspi.c:310:52:    got unsigned char const [usertype] *[assigned] buf
->> drivers/mtd/spi-nor/mtk-quadspi.c:391:18: sparse: incorrect type in assignment (different base types)
-   drivers/mtd/spi-nor/mtk-quadspi.c:391:18:    expected struct mtd_info *mtd
-   drivers/mtd/spi-nor/mtk-quadspi.c:391:18:    got struct mtd_info <noident>
-   drivers/mtd/spi-nor/mtk-quadspi.c:402:17: sparse: expected structure or union
-   drivers/mtd/spi-nor/mtk-quadspi.c:403:17: sparse: expected structure or union
-   drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mt8173_nor_write':
-   drivers/mtd/spi-nor/mtk-quadspi.c:310:10: warning: passing argument 4 of 'mt8173_nor_write_single_byte' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-             buf);
-             ^
-   drivers/mtd/spi-nor/mtk-quadspi.c:246:12: note: expected 'u8 * {aka unsigned char *}' but argument is of type 'const u_char * {aka const unsigned char *}'
-    static int mt8173_nor_write_single_byte(struct mt8173_nor *mt8173_nor,
-               ^
-   drivers/mtd/spi-nor/mtk-quadspi.c: In function 'mtk_nor_init':
-   drivers/mtd/spi-nor/mtk-quadspi.c:391:11: error: incompatible types when assigning to type 'struct mtd_info *' from type 'struct mtd_info'
-     nor->mtd = *mtd;
-              ^
-   drivers/mtd/spi-nor/mtk-quadspi.c:402:10: error: request for member 'owner' in something not a structure or union
-     nor->mtd.owner = THIS_MODULE;
-             ^
-   drivers/mtd/spi-nor/mtk-quadspi.c:403:10: error: request for member 'name' in something not a structure or union
-     nor->mtd.name = "mtk_nor";
-             ^
-   drivers/mtd/spi-nor/mtk-quadspi.c:410:36: warning: passing argument 1 of 'mtd_device_parse_register' from incompatible pointer type [-Wincompatible-pointer-types]
-     return  mtd_device_parse_register(&nor->mtd, NULL, ppdata, NULL, 0);
-                                       ^
-   In file included from drivers/mtd/spi-nor/mtk-quadspi.c:24:0:
-   include/linux/mtd/mtd.h:372:12: note: expected 'struct mtd_info *' but argument is of type 'struct mtd_info **'
-    extern int mtd_device_parse_register(struct mtd_info *mtd,
-               ^
+Alim Akhtar (2):
+  Documentation: samsung-phy: Add dt bindings for UFS
+  scsi: ufs: Add exynos ufs platform data
 
-vim +310 drivers/mtd/spi-nor/mtk-quadspi.c
+Seungwon Jeon (11):
+  phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
+  scsi: ufs: add quirk to contain unconformable utrd field
+  scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
+  scsi: ufs: add quirk not to allow reset of interrupt aggregation
+  scsi: ufs: add quirk to enable host controller without hce
+  scsi: ufs: add specific callback for nexus type
+  scsi: ufs: add add specific callback for hibern8
+  scsi: ufs: make ufshcd_config_pwr_mode of non-static func
+  scsi: ufs: return value of pwr_change_notify
+  Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
+    controller
+  scsi: ufs-exynos: add UFS host support for Exynos SoCs
 
-   304		ret = mt8173_nor_write_buffer_disable(mt8173_nor);
-   305		if (ret < 0)
-   306			dev_warn(mt8173_nor->dev, "write buffer disable failed!\n");
-   307	
-   308		if (len) {
-   309			ret = mt8173_nor_write_single_byte(mt8173_nor, to, (int)len,
- > 310							   buf);
-   311			if (ret < 0)
-   312				dev_warn(mt8173_nor->dev, "write single byte failed!\n");
-   313			(*retlen) += len;
-   314		}
-   315	}
-   316	
-   317	static int mt8173_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
-   318	{
-   319		int ret;
-   320		struct mt8173_nor *mt8173_nor = nor->priv;
-   321	
-   322		/* mtk nor controller doesn't supoort SPINOR_OP_RDCR */
-   323		switch (opcode) {
-   324		case SPINOR_OP_RDID:
-   325			/* read JEDEC ID need 4 bytes commands */
-   326			ret = mt8173_nor_set_cmd(mt8173_nor, 0, 32, SPINOR_OP_RDID);
-   327			if (ret < 0)
-   328				return ret;
-   329	
-   330			/* mtk nor flash controller only support 3 bytes IDs */
-   331			buf[2] = readb(mt8173_nor->base + MTK_NOR_SHREG0_REG);
-   332			buf[1] = readb(mt8173_nor->base + MTK_NOR_SHREG1_REG);
-   333			buf[0] = readb(mt8173_nor->base + MTK_NOR_SHREG2_REG);
-   334			break;
-   335		case SPINOR_OP_RDSR:
-   336			ret = mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_RDSR_CMD);
-   337			if (ret < 0)
-   338				return ret;
-   339			*buf = readb(mt8173_nor->base + MTK_NOR_RDSR_REG);
-   340			break;
-   341		default:
-   342			ret = -EINVAL;
-   343			break;
-   344		}
-   345		return ret;
-   346	}
-   347	
-   348	static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
-   349					int len, int write_enable)
-   350	{
-   351		int ret;
-   352		struct mt8173_nor *mt8173_nor = nor->priv;
-   353	
-   354		switch (opcode) {
-   355		case SPINOR_OP_WRSR:
-   356			ret = mt8173_nor_set_para(mt8173_nor, *buf,
-   357						  MTK_NOR_WRSR_CMD);
-   358			break;
-   359		case SPINOR_OP_CHIP_ERASE:
-   360			ret = mt8173_nor_set_para(mt8173_nor, opcode,
-   361						  MTK_NOR_PRG_CMD);
-   362			break;
-   363		case SPINOR_OP_WREN:
-   364			ret = mt8173_nor_set_cmd(mt8173_nor, 0, 8, opcode);
-   365			if (ret)
-   366				dev_warn(mt8173_nor->dev, "set write enable fail!\n");
-   367			break;
-   368		case SPINOR_OP_WRDI:
-   369			ret = mt8173_nor_set_cmd(mt8173_nor, 0, 8, opcode);
-   370			if (ret)
-   371				dev_warn(mt8173_nor->dev, "set write disable fail!\n");
-   372			break;
-   373		default:
-   374			dev_warn(mt8173_nor->dev, "doesn't support cmd %d\n", opcode);
-   375			ret = -EINVAL;
-   376			break;
-   377		}
-   378		return ret;
-   379	}
-   380	
-   381	static int __init mtk_nor_init(struct mt8173_nor *mt8173_nor,
-   382				       struct mtd_part_parser_data *ppdata)
-   383	{
-   384		int ret;
-   385		struct spi_nor *nor;
-   386		struct mtd_info *mtd;
-   387	
-   388		writel(MTK_NOR_ENABLE_SF_CMD, mt8173_nor->base + MTK_NOR_WRPROT_REG);
-   389		nor = &mt8173_nor->nor;
-   390		mtd = &mt8173_nor->mtd;
- > 391		nor->mtd = *mtd;
-   392		nor->dev = mt8173_nor->dev;
-   393		nor->priv = mt8173_nor;
-   394		mtd->priv = nor;
+ .../devicetree/bindings/phy/samsung-phy.txt        |   22 +
+ .../devicetree/bindings/ufs/ufs-exynos.txt         |   93 ++
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-exynos-ufs.c                       |  257 +++++
+ drivers/phy/phy-exynos-ufs.h                       |   87 ++
+ drivers/phy/phy-exynos7-ufs.h                      |   89 ++
+ drivers/scsi/ufs/Kconfig                           |   12 +
+ drivers/scsi/ufs/Makefile                          |    1 +
+ drivers/scsi/ufs/ufs-exynos-hw.c                   |  147 +++
+ drivers/scsi/ufs/ufs-exynos-hw.h                   |   43 +
+ drivers/scsi/ufs/ufs-exynos.c                      | 1186 ++++++++++++++++++++
+ drivers/scsi/ufs/ufs-exynos.h                      |  463 ++++++++
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   |    2 +
+ drivers/scsi/ufs/ufshcd.c                          |  196 +++-
+ drivers/scsi/ufs/ufshcd.h                          |   35 +
+ drivers/scsi/ufs/ufshci.h                          |   26 +-
+ drivers/scsi/ufs/unipro.h                          |   47 +
+ include/linux/phy/phy-exynos-ufs.h                 |  101 ++
+ 19 files changed, 2788 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+ create mode 100644 drivers/phy/phy-exynos-ufs.c
+ create mode 100644 drivers/phy/phy-exynos-ufs.h
+ create mode 100644 drivers/phy/phy-exynos7-ufs.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+ create mode 100644 include/linux/phy/phy-exynos-ufs.h
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+1.7.10.4
