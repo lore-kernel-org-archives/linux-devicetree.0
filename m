@@ -1,126 +1,59 @@
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: add all hi6220 uart nodes
-Date: Wed, 30 Sep 2015 18:19:48 -0700
-Message-ID: <1443662388-25686-1-git-send-email-tyler.baker@linaro.org>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
+Date: Thu, 1 Oct 2015 09:43:41 +0800
+Message-ID: <CAN1soZyKEFd6aqcDuttf6VwS7v2f+R9N1V5bAacUOeMHMt+dUQ@mail.gmail.com>
+References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
+	<1459065.BtzC7pyUYF@wuerfel>
+	<20150930173145.GG15635@sirena.org.uk>
+	<CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+	<CAL_JsqLSDXGCush7TMavRkw5F=vbBbrFaexFyBdXHyrfNVGjXg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLSDXGCush7TMavRkw5F=vbBbrFaexFyBdXHyrfNVGjXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ricardo Salveti <ricardo.salveti-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds all UART nodes for the Hi6220 SoC. Recently a board[1] has
-been developed to standardize UART access across all the 96boards consumer
-edition boards. To use this hardware on HiKey we must configure and enable
-UART3. However, to ensure backward compatibility we must keep UART0 enabled
-as well.
+On Thu, Oct 1, 2015 at 3:03 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Sep 30, 2015 at 1:12 PM, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 30 September 2015 at 10:31, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Wed, Sep 30, 2015 at 10:24:56AM +0200, Arnd Bergmann wrote:
+>>>> On Tuesday 29 September 2015 13:29:12 Tyler Baker wrote:
+>>>
+>>>> >         aliases {
+>>>> >                 serial0 = &uart0;
+>>>> > +               serial1 = &uart1;
+>>>> > +               serial2 = &uart2;
+>>>> > +               serial3 = &uart3;
+>>>> > +               serial4 = &uart4;
+>>>> >         };
+>>>
+>>>> In the changelog you mention "both uarts", but here you have five of them.
+>>>> Are they all accessible on the connector? If not, only provide aliases
+>>>> for the ones that are, using numbering that makes most sense for given
+>>>> how one would use the board.
+>>
+>> Thanks for the comment Arnd. Mark's comment below is correct, there
+>> are only two UARTs accessible on the LS connection in addition to the
+>> one on the board (solder pad).
+>>
+>> Is the following definition any clearer?
+>>
+>> serial0 = &uart0; // Onboard UART0
+>> serial1 = &uart2; // LS expansion UART0
+>> serial2 = &uart3; // LS expansion UART1
+>
+> Yes, but use C style comments.
+>
+> What about the BT UART?
+>
 
-I have removed the hard coded clock index values in favor of using the ones
-already defined in include/dt-bindings/clock/hi6220-clock.h.
-
-Since UART0 needs to be soldered, it has been suggested to use the UART3 as
-the default console.
-
-This patch was boot tested on top of next-20150930, with both UART
-configurations.
-
-[1] http://www.seeedstudio.com/depot/96Boards-UART-p-2525.html?ref=newInBazaar
-
-Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-In v2:
-  - Drop unused alias, and add comments. (Arnd, Rob)
-  - Switch default console to use UART3 with stdout-path. (Mark, Rob)
-
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |  7 +++--
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 43 +++++++++++++++++++++++++-
- 2 files changed, 47 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index e36a539..aa101ac 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -17,11 +17,14 @@
- 	compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
- 
- 	aliases {
--		serial0 = &uart0;
-+		serial0 = &uart0; /* On board UART0 */
-+		serial1 = &uart1; /* BT UART */
-+		serial2 = &uart2; /* LS Expansion UART0 */
-+		serial3 = &uart3; /* LS Expansion UART1 */
- 	};
- 
- 	chosen {
--		stdout-path = "serial0:115200n8";
-+		stdout-path = "serial3:115200n8";
- 	};
- 
- 	memory@0 {
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 3f03380..82d2488 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -5,6 +5,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/hi6220-clock.h>
- 
- / {
- 	compatible = "hisilicon,hi6220";
-@@ -164,8 +165,48 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
-+			clocks = <&ao_ctrl HI6220_UART0_PCLK>,
-+				 <&ao_ctrl HI6220_UART0_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
- 		};
-+
-+		uart1: uart@f7111000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xf7111000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sys_ctrl HI6220_UART1_PCLK>,
-+				 <&sys_ctrl HI6220_UART1_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart2: uart@f7112000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xf7112000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sys_ctrl HI6220_UART2_PCLK>,
-+				 <&sys_ctrl HI6220_UART2_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart3: uart@f7113000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xf7113000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sys_ctrl HI6220_UART3_PCLK>,
-+				 <&sys_ctrl HI6220_UART3_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		uart4: uart@f7114000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xf7114000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sys_ctrl HI6220_UART4_PCLK>,
-+				 <&sys_ctrl HI6220_UART4_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-2.1.4
-
+Yes, all four uarts are used in hikey board. uar0 is onboard serial
+uart. uart1 is
+BT uart. uart2 & uart3 are connected to low speed expansion board. So Tyler
+shouldn't decrease any uart from his current patch.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
