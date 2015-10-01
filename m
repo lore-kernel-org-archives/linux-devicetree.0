@@ -1,71 +1,61 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun6i: hummingbird: Add aliases for rtc
- devices
-Date: Thu, 1 Oct 2015 14:56:43 +0200
-Message-ID: <20151001125643.GI7104@lukather>
-References: <1443703709-24835-1-git-send-email-wens@csie.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
+ subsystem dts binding
+Date: Thu, 1 Oct 2015 07:58:42 -0500
+Message-ID: <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
+References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
+ <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
+ <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
+ <1442823067.3277.35.camel@pengutronix.de>
+ <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
+ <1443689957.3272.18.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PoUpPrJlcBv0qM6G"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443703709-24835-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1443689957.3272.18.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-mediatek@lists.infradead.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---PoUpPrJlcBv0qM6G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Oct 01, 2015 at 08:48:29PM +0800, Chen-Yu Tsai wrote:
-> The hummingbird A31 has 2 rtc devices available: one in the SoC,
-> and a pcf8563 external rtc on i2c2.
->=20
-> For some unknown reason, the onboard backup battery alone can not
-> supply enough power to the internal rtc. When external power is
-> removed, the internal rtc would reset. Hence we want to use the
-> external one by default.
->=20
-> Add aliases for the rtc devices with the external one as rtc0.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Ordered the aliases alphabetically, and applied. Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---PoUpPrJlcBv0qM6G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWDS2LAAoJEBx+YmzsjxAg/CQP/2P8d/oAYEgDPrvmALBx49T9
-ojEJAZvee7cQ9RATu6MZuuXrQ0M+nRgpxUNf5UefxTco0iSnkvTfvdL0rJoarSyr
-lttwvor2d0XtuuDsoAIQwKgN6A3Pza1lrFmmrX9QiJUumAuwwMD9+nE1Msw043qq
-ODrVI0Hin6Hufm2cxzeNS15ZTNJ8FetdJ4tQ7MTAwBXh3e9jkFOz0J42vhFKAyZM
-BUEbRx+Frxm+O6nJNy8B/1dfankftL0Zidwn2TQClMPSETnLIZyRgRzpN+iJFYgv
-NCz8xfJr5lu0SnvFljsk///+OMJ6QzKPyySPj2E0SG31Rq0lseNQ4TGBH0wqDczE
-4rNPWtyjcMwtlerdRTPucbVVj+Ax2m0szOEaJXd1DoweTJkkULo5BHjDLxcIgTD5
-WT0MLU8ERw5FEiM7xlIaoH/FKlq1dZqv7TwRRyqkK+1a6kvBuhy3KmmNz/KoypY/
-c1FlY0znK2mQN6kLRll+lyZouPMPvLydnXA/m0oagSihD2oFOSjAOPu39d8n3irn
-R2FSg1QbXHMDdWBKzYo3EeTiJmuwXV9pUm6abzIb74bp7xmrZrp2RjRsUGBoMNA6
-zWnYjpMXkqw2yYRQYWjAWU0Ss5JKEoYHOSuLHrFJBZR/V8ZR3sg9Hai3PkSR3KqW
-tw3QmnRjrklodjcii0tz
-=7zzu
------END PGP SIGNATURE-----
-
---PoUpPrJlcBv0qM6G--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBPY3QgMSwgMjAxNSBhdCAzOjU5IEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBl
+bmd1dHJvbml4LmRlPiB3cm90ZToKPiBBbSBNaXR0d29jaCwgZGVuIDMwLjA5LjIwMTUsIDEyOjEz
+IC0wNTAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4+IE9uIE1vbiwgU2VwIDIxLCAyMDE1IGF0IDM6
+MTEgQU0sIFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiA+
+IE5vdGUgaG93IHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlIG92ZXJsYXBzIHRoZSBsYXJiIG5v
+ZGUuIElzIHRoYXQKPj4gPiBhY2NlcHRhYmxlPwo+Pgo+PiBHaXZlbiB3aGF0IHRoZSBncmFwaCBs
+b29rcyBsaWtlLCBwZXJoYXBzLiBIb3dldmVyLCBkbyB5b3UgcmVhbGx5IG5lZWQKPj4gYSBjb250
+YWluZXIgbm9kZT8gSXQgb25seSBzZXJ2ZXMgdG8gcHJvdmlkZSBhIGxpc3Qgb2Ygbm9kZXMgKGUu
+Zy4gYWxsCj4+IHRoZSBjaGlsZHJlbikgdG8gaW5jbHVkZSBhcyBjb21wb25lbnRzLiBUaGVyZSBh
+cmUgb3RoZXIgd2F5cyB0bwo+PiBkZXRlcm1pbmUgdGhpcyBsaXN0LiBZb3UgY291bGQgZmluZCBh
+bGwgbm9kZXMganVzdCBzZWFyY2hpbmcKPj4gY29tcGF0aWJsZSBzdHJpbmdzIGZvciBlYWNoIGNv
+bXBvbmVudC4gWW91IGp1c3QgbmVlZCB0byBiaW5kIHRoZSBkcm0KPj4gZHJpdmVyIHRvIHNvbWUg
+b3RoZXIgRFQgbm9kZS4gSXMgdGhlcmUgbm8gbm9kZSB5b3UgY2FuIHBpY2sgYXMgdGhlCj4+IG1h
+c3RlciBjb21wb25lbnQ/Cj4KPiBUaGVyZSBpcyB0aGUgbW1zeXMgY2xvY2stY29udHJvbGxlciBu
+b2RlIGF0IHRoZSB0b3Agb2YgdGhlIE1NU1lTIGFkZHJlc3MKPiBzcGFjZSAoMHgxNDAwMDAwMC0w
+eDE0ZmZmZmZmKToKPgo+ICAgICAgICAgbW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAg
+ewo+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIs
+ICJzeXNjb24iOwo+ICAgICAgICAgICAgICAgICByZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAw
+PjsKPiAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+Owo+ICAgICAgICAgfTsKPgo+
+IEl0cyByZWdpc3RlciBzcGFjZSBhbHNvIGNvbnRhaW5zIHRoZSBNTVNZU19DT05GSUcgcmVnaW9u
+IHRoYXQgY29udHJvbHMKPiB0aGUgbXVsdGlwbGV4ZXJzIGJldHdlZW4gdGhlIGRpc3BsYXkgZnVu
+Y3Rpb24gYmxvY2tzLCBzbyB0aGF0IHdvdWxkIGJlIGEKPiBnb29kIGNhbmRpZGF0ZS4KPiBObyBk
+cml2ZXIgYmluZHMgdG8gdGhpcyBub2RlIHlldCwgdGhlIGNsb2NrcyBhcmUgcmVnaXN0ZXJlZCB3
+aXRoCj4gQ0xLX09GX0RFQ0xBUkUuCj4KPiBJJ2xsIHRyeSB0byBiaW5kIHRvIHRoaXMgbm9kZSBh
+bmQgaGF2ZSB0aGUgZHJpdmVyIGZpbmQgc2libGluZyBub2Rlcwo+IHVzaW5nIHRoZWlyIGNvbXBh
+dGlibGUgc3RyaW5ncy4KClRoYXQgZG9lc24ndCBzZWVtIGxpa2UgYSBnb29kIGNob2ljZSBzaW5j
+ZSB0aGVyZSBhcmUgb3RoZXIgZnVuY3Rpb25zCmluIHRoZSBibG9jay4gSSB3YXMgdGhpbmtpbmcg
+b25lIG9mIHRoZSBkaXNwbGF5IHJlbGF0ZWQgYmxvY2tzIGxpa2UKd2hhdGV2ZXIgYmxvY2sgcHJv
+dmlkZXMgdGhlIG1haW4gY3J0YyBmdW5jdGlvbnMuCgpSb2IKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
