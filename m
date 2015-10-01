@@ -1,73 +1,77 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v8 00/14] power: bq24257: Add support for bq24250/bq24251
-Date: Thu, 1 Oct 2015 04:58:47 +0200
-Message-ID: <20151001025847.GA12283@earth>
-References: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
+Date: Thu, 1 Oct 2015 11:15:52 +0800
+Message-ID: <20151001031552.GC15675@leoy-linaro>
+References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
+ <1459065.BtzC7pyUYF@wuerfel>
+ <20150930173145.GG15635@sirena.org.uk>
+ <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+ <20150930191818.GZ15635@sirena.org.uk>
+ <CANMBJr6aU4wPO5HqP-Oh-ND7_DZXSH30ykNHyvDtUp3nQFG6sA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1443479642-23712-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org
+In-Reply-To: <CANMBJr6aU4wPO5HqP-Oh-ND7_DZXSH30ykNHyvDtUp3nQFG6sA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tyler, Mark,
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Sep 30, 2015 at 04:54:51PM -0700, Tyler Baker wrote:
+> On 30 September 2015 at 12:18, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Sep 30, 2015 at 11:12:58AM -0700, Tyler Baker wrote:
+> >> On 30 September 2015 at 10:31, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >
+> >> + Peter as he has been submitting u-boot patches recently for the HiKey.
+> >
+> >> Obviously, both UEFI and u-boot can be configured to use either UART,
+> >> and at the moment u-boot defaults to using the on board UART. Whereas
+> >> UEFI is using UART1 on the LS connector. I'm fine with switching the
+> >> console default to use the UART1 on the LS connector as long as there
+> >> is agreement to do so.
+> >
+> > Given that UEFI is switching and the requirement for soldering to get to
+> > the on board UART it does seem to make sense, though it will create some
+> > pain for current users.
+> >
+> >> > While we're at it there was a recent talk which mentioned a fairly large
+> >> > amount of functionality that's apparently already "upstream" for this
+> >> > device but not included in the DT, assuming that means that driver
+> >> > support is there it would be good to add the corresponding DT.
+> >
+> >> Indeed, I think this comment is targeted to toward the d410c though as
+> >> there are drivers for eMMC, and microsd drivers upstream but no DT
+> >> bindings. I do not believe currently this is the case for HiKey.
+> >
+> > My understanding is that it applies to both with slightly different
+> > driver sets, the slides aren't online yet (!) but if you look at 10:52
+> > or so in the video we should have SD/eMMC on HiKey in v4.1 with thermal
+> > and CPUfreq added in v4.2.  It also looks like there's just some DT
+> > additions needed to enable reset, cpuidle and CPU hotplug using generic
+> > code (mainly the constants for PSCI I expect).
+> 
+> I just skimmed the video and I see your point. I'll need to
+> investigate a bit but I'm up for sending some follow up patches to get
+> these drivers functioning. First lets get the UART working :)
 
-Hi,
+For Hikey's PM, related patches are ready for upstreaming [1].
 
-On Mon, Sep 28, 2015 at 05:33:48PM -0500, Andreas Dannenberg wrote:
-> This patch series extends the driver to also support bq24250/bq24251.
->=20
-> The bq24250/251/257 devices have a very similar feature set and are
-> virtually identical from a control register point of view so it made
-> sense to extend the existing driver rather than submitting a new driver.
-> In addition to the new device support the driver is also extended to
-> allow access to some device features previously hidden. Basic and
-> potentially dangerous charger config parameters affecting the actual
-> charging of the Li-Ion battery are only configurable through firmware
-> rather than sysfs properties. However some newly introduced properties
-> are exposed through sysfs properties as access to them may be desired
-> from userspace. For example, it is now possible to manually configure
-> the maximum current drawn from the input source to accommodate different
-> chargers (0.5A, 1.5A, 2.0A and so on) based on system knowledge a
-> userspace application may have rather than rely on the auto-detection
-> mechanism that may not work in all possible scenarios.
+Previously i'm waiting for merging mailbox driver, after that i plan
+to send out all DT patches to enable cpuidle/cpufreq/thermal/suspend
+in one going. Now pending on mailbox driver's merging.
 
-Thanks, I queued all remaining patches except for
+If you think it's necessary, i could send out patches to enable cpuidle
+firstly (actually now PSCI has been enabled yet); for cpufreq and
+thermal features, need wait until mailbox driver has been merged.
 
->   power: bq24257: Add platform data based initialization
+[1] https://github.com/Leo-Yan/linux/commits/tracking-hikey-pm
 
-I'm still not convinced, that it should be added without any
-consumer in the mainline kernel.
-
--- Sebastian
-
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWDKFiAAoJENju1/PIO/qa1OwQAKeoqrNeMzia0AD5gnT/3dKt
-EvNnOS9E1DfxLx3j3etfO5fpoN2d6TaJsOCEXJNlhcd5gM2vMIO/N7lx2U33cGUr
-rdaokmm4nR0PUwNv2S5vToBwcH2KGrNPk9uikUBalgtkeJSlWYeLbGzp05XSZt5d
-PKdBYWdC5SUCJwj+K/kuX2ZDm+oURt5Zlku8WcgEZcAHexxxWYqlHMxOrXqW8GZT
-JzbqCSrbQWOkLx885XNbiNU6OWwS7E0R5X/v6AtXiqgIm6q1v/y9TrRPPgz0l6O9
-XuttDdK/sUCNt/yscu/Ci/zMmnHk7wiqjwov2vhANWlHILjZLH8QROV9c2WAWor8
-sjeI9wteZFHUrPbvaitKuEeoQ4G7iIR3khxqlYq+h4NYy0dQm4oUZJ8cdaWbgtsU
-IubVnUE48YQeBJ8O1sjzge6adowvVwnkRKLrREUIrTK3Cu1X2sZG5KNvAoKlBT3Z
-/AhWpPIbTr0scEjnSleuK/pc5/Ukdw1It0VxuqJ0EDApFS5l5++fTE3vLucfOZik
-sEtbIXQ15sQ4GOKM7Sp5A1mP4mMyQ83uKyLNHTLi2Y+UO4L9fKX7mrhyuICcTY8W
-vgcvjR2BPBFjlyiTTzC8/BAiik5bGpelXrZGrMzp2EwHW/7cDsYQ1+Lky4U1z8x0
-IL2omdObbxL3deNNgb7Z
-=04yO
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
+Thanks,
+Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
