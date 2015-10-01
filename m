@@ -1,7 +1,7 @@
 From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 13/16] ARM: dts: lpc4357-ea4357: add i2c0 and devices
-Date: Thu,  1 Oct 2015 22:54:50 +0200
-Message-ID: <1443732893-17145-14-git-send-email-manabian@gmail.com>
+Subject: [PATCH 11/16] ARM: dts: lpc4357-ea4357: add spifi and flash device
+Date: Thu,  1 Oct 2015 22:54:48 +0200
+Message-ID: <1443732893-17145-12-git-send-email-manabian@gmail.com>
 References: <1443732893-17145-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1443732893-17145-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,54 +10,76 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add I2C0 and some of the I2C devices on the EA4357 dev kit.
+The EA4357 dev kit has a Spansion S25FL016K SPI-NOR Flash connected
+to the SPIFI perherial.
 
 Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/lpc4357-ea4357-devkit.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/lpc4357-ea4357-devkit.dts | 46 +++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
 diff --git a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
-index 4d2d74a064c4..391121d24daa 100644
+index 5f7bdad80963..9fcc0f357c2d 100644
 --- a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
 +++ b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
-@@ -332,6 +332,14 @@
+@@ -363,6 +363,32 @@
  		};
  	};
  
-+	i2c0_pins: i2c0-pins {
-+		i2c0_pins_cfg {
-+			pins = "i2c0_scl", "i2c0_sda";
-+			function = "i2c0";
++	spifi_pins: spifi-pins {
++		spifi_clk_cfg {
++			pins = "p3_3";
++			function = "spifi";
++			slew-rate = <1>;
++			bias-disable;
 +			input-enable;
++			input-schmitt-disable;
++		};
++
++		spifi_mosi_miso_sio2_3_cfg {
++			pins = "p3_7", "p3_6", "p3_5", "p3_4";
++			function = "spifi";
++			slew-rate = <0>;
++			bias-disable;
++			input-enable;
++			input-schmitt-disable;
++		};
++
++		spifi_cs_cfg {
++			pins = "p3_8";
++			function = "spifi";
++			bias-disable;
 +		};
 +	};
 +
- 	sdmmc_pins: sdmmc-pins {
- 		sdmmc_clk_cfg {
- 			pins = "pc_0";
-@@ -453,6 +461,23 @@
- 	};
+ 	uart0_pins: uart0-pins {
+ 		uart0_rx_cfg {
+ 			pins = "pf_11";
+@@ -489,6 +515,26 @@
+ 	pinctrl-0 = <&sdmmc_pins>;
  };
  
-+&i2c0 {
++&spifi {
 +	status = "okay";
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	clock-frequency = <400000>;
++	pinctrl-0 = <&spifi_pins>;
 +
-+	lm75@48 {
-+		compatible = "nxp,lm75";
-+		reg = <0x48>;
-+	};
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		spi-cpol;
++		spi-cpha;
++		spi-rx-bus-width = <4>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+	eeprom@57 {
-+		compatible = "microchip,24c64";
-+		reg = <0x57>;
++		partition@0 {
++			label = "data";
++			reg = <0 0x200000>;
++		};
 +	};
 +};
 +
- &emc {
+ &uart0 {
  	status = "okay";
  	pinctrl-names = "default";
 -- 
