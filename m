@@ -1,55 +1,76 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: James Liao <jamesjj.liao@mediatek.com>
 Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel
  init
-Date: Thu, 1 Oct 2015 14:58:52 +0800
-Message-ID: <1443682732.1714.11.camel@mtksdaap41>
+Date: Thu, 1 Oct 2015 15:15:50 +0800
+Message-ID: <1443683750.1714.25.camel@mtksdaap41>
 References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
 	 <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
 	 <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
+	 <1443604022.3185.17.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443604022.3185.17.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Lucas,
 
-Thanks for your help to explain the patch.
-
-On Tue, 2015-09-29 at 18:25 +0800, Daniel Kurtz wrote:
-> On Sun, Sep 27, 2015 at 7:25 PM, Matthias Brugger
-> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> But then we at least need a corresponding change to the binding documentation.
-
-I'll send a new patch with changing binding document.
-
-> If the existing bindings are not used anywhere yet (*), it seems like
-> unnecessary overhead to enforce backwards compatibility at this stage.
+On Wed, 2015-09-30 at 11:07 +0200, Lucas Stach wrote:
+> > If the VENC power domain is disabled, then accesses to the vencsys
+> > registers just silently fail (i.e., reads probably
+> > return all 0s). 
 > 
-> (*) I don't actually know if this is true, perhaps only Mediatek can
-> answer this.
+> If this ever happens it is really unfortunate and needs fixing, too. If
+> you need the power domain to be powered ON to properly read or even
+> change the clock registers, the clock driver needs to be a consumer of
+> the power domain, so any clock operations powers the domain up.
 
-What does the meaning of existing bindings are used anywhere? Do you
-mean this binding is used by other SoCs ?
+A subsystem should be powered on before its clock operations. But I
+think this flow should be guaranteed by VENC driver. This patch is
+focused on the race between disabling unused clocks and power domains by
+frameworks. 
 
-Currently scpsys driver can't be shared between different Mediatek SoCs
-because the power domains are different from each other. So I think it
-should no need to maintain backward compatibility on scpsys's binding.
+> > In theory, we could add "clocks=<&topckgen CLK_TOP_VENC_SEL>;" to the
+> > vencsys clock-controller node.  On initialization, mtk_vencsys_init()
+> > could then pass venc_sel to the generic MT8173 gate clock driver, and
+> > it would then clk_enable(venc_sel)/_disable(venc_sel) around any
+> > access to the clock-controller registers.  James, however, thinks
+> > this is a lot of extra overhead, and instead has proposed the fix in this patch,
+> > where venc_sel is forced on whenever the VENC power domain is enabled.
+> > 
+> I would still say this is the correct solution. If the vencsys clock
+> registers are itself clocked by VENC_SEL this driver needs to make sure
+> this clock is running at the appropriate times. I understand that this
+> may be a bit of an overhead, but clock enable/disable paths are not
+> really performance critical.
+> 
+> > So, this patch is a bit of a hack, but the mtk scpsys driver already
+> > does something similar for the MM & MFG clocks - these clocks are
+> > always enabled whenever certain power domains are enabled, and they
+> > are only disabled when all such power domains are disabled.  I'm not
+> > 100% why these clocks must always be kept on whenever these power
+> > domains are enabled, but probably to solve a similar problem where
+> > these clocks are needed to access some registers at a time when these
+> > clocks would not otherwise be explicitly enabled.
+> > 
+> I can't really argue with this being the wrong solution if we already
+> have precedent of the same solution being used for other domains. But I
+> would still ask you to re-evaluate with the above in mind.
 
-> > Apart from that, please send the dtsi part as a seperate patch.
+One cause of the hang up issue is frameworks' behavior. Power domain
+framework and clock framework work independently during kernel init. So
+their control flow can't be guaranteed by a suitable driver, such as
+VENC driver.
 
-OK.
+I preferred to keep venc_sel on during VENC power on because I'm not
+sure there is any other framework may control VENC's registers during
+kernel init.
 
 
 Best regards,
 
 James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
