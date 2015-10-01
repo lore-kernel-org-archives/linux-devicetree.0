@@ -1,135 +1,142 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/8] dt-bindings: pmic: Document Hi655x pmic driver
-Date: Thu, 1 Oct 2015 08:58:44 +0100
-Message-ID: <20151001075844.GL3214@x1>
-References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
- <1443611111-3196-2-git-send-email-w.f@huawei.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel init
+Date: Thu, 1 Oct 2015 16:07:21 +0800
+Message-ID: <CAGS+omCpWqtKPKoyjFb=q4BxmfUGGsfvQGEZas8g8VLZKPtKbQ@mail.gmail.com>
+References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1443169573.3135.9.camel@pengutronix.de> <5607D224.4050801@gmail.com>
+ <CAGS+omCXMRf4bxWancSJSq2a1pc38TYYY46Os9ASWWCRp95_ig@mail.gmail.com>
+ <1443604022.3185.17.camel@pengutronix.de> <1443683750.1714.25.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443611111-3196-2-git-send-email-w.f@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fei Wang <w.f@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, khilman@linaro.org, sameo@linux.intel.com, broonie@kernel.org, lgirdwood@gmail.com, bintian.wang@huawei.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, puck.chen@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, william.wfei@gmail.com, zhongkaihua@huawei.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443683750.1714.25.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I just noticed that you Cc'ed all of the Core ARM people too.  Please
-do not do that.  I'm sure they have enough of their own mail to trawl
-though.
+Hi James,
 
-Only mail relevant parties i.e. those who show up when you use:
+On Thu, Oct 1, 2015 at 3:15 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Lucas,
+>
+> On Wed, 2015-09-30 at 11:07 +0200, Lucas Stach wrote:
+>> > If the VENC power domain is disabled, then accesses to the vencsys
+>> > registers just silently fail (i.e., reads probably
+>> > return all 0s).
+>>
+>> If this ever happens it is really unfortunate and needs fixing, too. If
+>> you need the power domain to be powered ON to properly read or even
+>> change the clock registers, the clock driver needs to be a consumer of
+>> the power domain, so any clock operations powers the domain up.
+>
+> A subsystem should be powered on before its clock operations. But I
+> think this flow should be guaranteed by VENC driver. This patch is
+> focused on the race between disabling unused clocks and power domains by
+> frameworks.
+>
+>> > In theory, we could add "clocks=<&topckgen CLK_TOP_VENC_SEL>;" to the
+>> > vencsys clock-controller node.  On initialization, mtk_vencsys_init()
+>> > could then pass venc_sel to the generic MT8173 gate clock driver, and
+>> > it would then clk_enable(venc_sel)/_disable(venc_sel) around any
+>> > access to the clock-controller registers.  James, however, thinks
+>> > this is a lot of extra overhead, and instead has proposed the fix in this patch,
+>> > where venc_sel is forced on whenever the VENC power domain is enabled.
+>> >
+>> I would still say this is the correct solution. If the vencsys clock
+>> registers are itself clocked by VENC_SEL this driver needs to make sure
+>> this clock is running at the appropriate times. I understand that this
+>> may be a bit of an overhead, but clock enable/disable paths are not
+>> really performance critical.
+>>
+>> > So, this patch is a bit of a hack, but the mtk scpsys driver already
+>> > does something similar for the MM & MFG clocks - these clocks are
+>> > always enabled whenever certain power domains are enabled, and they
+>> > are only disabled when all such power domains are disabled.  I'm not
+>> > 100% why these clocks must always be kept on whenever these power
+>> > domains are enabled, but probably to solve a similar problem where
+>> > these clocks are needed to access some registers at a time when these
+>> > clocks would not otherwise be explicitly enabled.
+>> >
+>> I can't really argue with this being the wrong solution if we already
+>> have precedent of the same solution being used for other domains. But I
+>> would still ask you to re-evaluate with the above in mind.
+>
+> One cause of the hang up issue is frameworks' behavior. Power domain
+> framework and clock framework work independently during kernel init. So
+> their control flow can't be guaranteed by a suitable driver, such as
+> VENC driver.
 
-  ./scripts/get_maintainer.pl.
+Hmm... below is my current understanding.
 
-> Document the new compatible for Hisilicon Hi655x pmic driver.
->=20
-> Signed-off-by: Fei Wang <w.f@huawei.com>
-> ---
->  .../devicetree/bindings/mfd/hisilicon,hi655x.txt   |   80 ++++++++++=
-++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,h=
-i655x.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.t=
-xt b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
-> new file mode 100644
-> index 0000000..17bd8ca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
-> @@ -0,0 +1,80 @@
-> +Hisilicon hi655x Power Management Integrated Circuit (PMIC)
-> +
-> +hi655x consists of a large and varied group of sub-devices:
-> +
-> +Device			 Supply Names	 Description
-> +------			 ------------	 -----------
-> +hi655x-powerkey		:		: Powerkey
-> +hi655x-regulator-pmic	:		: Regulators
-> +hi655x-usbvbus		:		: USB plug detection
-> +hi655x-pmu-rtc		:		: RTC
-> +hi655x-coul		:		: Coulomb
-> +
-> +Required properties:
-> +- compatible : Should be "hisilicon,hi655x-pmic-driver"
-> +- reg: Base address of PMIC on hi6220 soc
-> +- #interrupt-cells: Should be 2, is the local IRQ number for hi655x.
-> +- interrupt-controller: hi655x has internal IRQs (has own IRQ domain=
-).
-> +- pmu_irq_gpio: should be &gpio_pmu_irq_n, is the IRQ gpio of hi655x=
-=2E
-> +
-> +Example:
-> +	pmic: pmic@F8000000 {
-> +                compatible =3D "hisilicon,hi655x-pmic-driver";
-> +                reg =3D <0x0 0xF8000000 0x0 0x1000>;
-> +                #interrupt-cells =3D <2>;
-> +                interrupt-controller;
-> +                pmu_irq_gpio =3D <&gpio_pmu_irq_n>;
-> +                status =3D "ok";
-> +
-> +                ponkey:ponkey@b1{
-> +                        compatible =3D "hisilicon,hi655x-powerkey";
-> +                        interrupt-parent =3D <&pmic>;
-> +                        interrupts =3D <6 0>, <5 0>, <4 0>;
-> +                        interrupt-names =3D "down", "up", "hold 1s";
-> +                };
-> +
-> +                coul: coul@1 {
-> +                        compatible =3D "hisilicon,hi655x-coul";
-> +                        interrupt-parent =3D <&pmic>;
-> +                        interrupts =3D <24 0>, <25 0>, <26 0>, <27 0=
->;
-> +                        interrupt-names =3D "cl_int_i", "cl_out_i", =
-"cl_in_i", "vbat_int_i";
-> +                        battery_product_index =3D <0>;
-> +                        status =3D "ok";
-> +                };
-> +
-> +                rtc: rtc@1 {
-> +                        compatible =3D "hisilicon,hi655x-pmu-rtc";
-> +                        interrupt-parent =3D <&pmic>;
-> +                        interrupts =3D <20 0>;
-> +                        interrupt-names =3D "hi655x_pmu_rtc";
-> +                        board_id =3D <1>;
-> +                };
-> +
-> +                usbvbus:usbvbus@b2{
-> +                        compatible =3D "hisilicon,hi655x-usbvbus";
-> +                        interrupt-parent =3D <&pmic>;
-> +                        interrupts =3D <9 0>, <8 0>;
-> +                        interrupt-names =3D "connect", "disconnect";
-> +                };
-> +
-> +		ldo2: regulator@a21 {
-> +                        compatible =3D "hisilicon,hi655x-regulator-p=
-mic";
-> +                        regulator-name =3D "ldo2";
-> +                        regulator-min-microvolt =3D <2500000>;
-> +                        regulator-max-microvolt =3D <3200000>;
-> +                        hisilicon,valid-modes-mask =3D <0x02>;
-> +                        hisilicon,valid-ops-mask =3D <0x01d>;
-> +                        hisilicon,initial-mode =3D <0x02>;
-> +                        hisilicon,regulator-type =3D <0x01>;
-> +
-> +                        hisilicon,off-on-delay =3D <120>;
-> +                        hisilicon,ctrl-regs =3D <0x029 0x02a 0x02b>;
-> +                        hisilicon,ctrl-data =3D <0x1 0x1>;
-> +                        hisilicon,vset-regs =3D <0x072>;
-> +                        hisilicon,vset-data =3D <0 0x3>;
-> +                        hisilicon,regulator-n-vol =3D <8>;
-> +                        hisilicon,vset-table =3D <2500000>,<2600000>=
-,<2700000>,<2800000>,<2900000>,<3000000>,<3100000>,<3200000>;
-> +                        hisilicon,num_consumer_supplies =3D <1>;
-> +                        hisilicon,consumer-supplies =3D "sensor_anal=
-og";
-> +                };
-> +	};
+In the current software architecture, we have split the "venc"
+subsystem register space into two parts (two dt nodes), with each node
+handled instantiated as its own  platform device, and handled by a
+different platform driver:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+vencsys: clock-controller@18000000 {
+  compatible = "mediatek,mt8173-vencsys", "syscon";
+  reg = <0 0x18000000 0 0x1000>;
+  #clock-cells = <1>;
+};
+
+/* TBD - a venc driver has not been posted to the list so I don't
+really know yet what it will look like */
+ venc: encoder@~18000000 {
+   compatible = "mediatek,mt8173-venc?";
+   reg = <0 ~0x18000000 0 ?>;
+   clocks = <& <&vencsys CLK_VENC_CKE1>, <&vencsys CLK_VENC_CKE0>, ...;
+   clock-names = "apb", "smi", ...;
+   ...
+ };
+
+Each independent driver must take appropriate independent action to
+ensure that any clock required to access its associated registers is
+enabled when accessing said registers.
+In other words,
+ * the venc *clock-controller* driver that must enable any clocks
+required to access the *clock control* registers
+ * the venc *encoder* driver must enable clocks any clocks required to
+access the *encoder* registers
+
+Actually, the situation is a little worse that this, since we also
+have a 'larb' node in the same register space, whose driver must also
+ensure that VENC_SEL is enabled before accessing its registers:
+
+larb3: larb@18001000 {
+  compatible = "mediatek,mt8173-smi-larb";
+  reg = <0 0x18001000 0 0x1000>;
+  mediatek,smi = <&smi_common>;
+  power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
+  clocks = <&vencsys CLK_VENC_CKE1>, <&vencsys CLK_VENC_CKE0>;
+  clock-names = "apb", "smi";
+};
+
+Personally, I am not opposed to using the power-domain enable/disable
+as a proxy for also enabling/disabling the "subsystem register bank"
+clock as is done in this patch and by the scpsys driver in general.
+However, it feels a bit like an abuse of the power domain api.
+
+> I preferred to keep venc_sel on during VENC power on because I'm not
+> sure there is any other framework may control VENC's registers during
+> kernel init.
+
+The misunderstanding here is the interpretation of "VENC's registers".
+In this case, the registers in question are those owned by the
+"vencsys: clock-controller@18000000" node, and the driver accessing
+them is drivers/clk/mediatek/clk-gate.c.
+
+Best,
+-Dan
+
+>
+>
+> Best regards,
+>
+> James
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
