@@ -1,7 +1,7 @@
 From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 05/16] ARM: dts: lpc18xx: add dma to ssp0/1
-Date: Thu,  1 Oct 2015 22:54:42 +0200
-Message-ID: <1443732893-17145-6-git-send-email-manabian@gmail.com>
+Subject: [PATCH 12/16] ARM: dts: lpc4357-ea4357: add ssp0
+Date: Thu,  1 Oct 2015 22:54:49 +0200
+Message-ID: <1443732893-17145-13-git-send-email-manabian@gmail.com>
 References: <1443732893-17145-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1443732893-17145-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,45 +10,55 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add dmas entries to the two SSP peripherals on LPC18xx/43xx devices
-so that DMA can be used to transfer data.
+The SSP0 can be found on the EA4357 Dev Kit on J15 pin 3-6.
 
 Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/lpc18xx.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/lpc4357-ea4357-devkit.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
-index f0d1a099507f..5b7ca7066161 100644
---- a/arch/arm/boot/dts/lpc18xx.dtsi
-+++ b/arch/arm/boot/dts/lpc18xx.dtsi
-@@ -249,6 +249,9 @@
- 			interrupts = <22>;
- 			clocks = <&ccu2 CLK_APB0_SSP0>, <&ccu1 CLK_CPU_SSP0>;
- 			clock-names = "sspclk", "apb_pclk";
-+			dmas = <&dmamux  9 0 2
-+				&dmamux 10 0 2>;
-+			dma-names = "rx", "tx";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -326,6 +329,16 @@
- 			interrupts = <23>;
- 			clocks = <&ccu2 CLK_APB2_SSP1>, <&ccu1 CLK_CPU_SSP1>;
- 			clock-names = "sspclk", "apb_pclk";
-+			dmas = <&dmamux 11 2 2
-+				&dmamux 12 2 2
-+				&dmamux  3 3 2
-+				&dmamux  4 3 2
-+				&dmamux  5 2 2
-+				&dmamux  6 2 2
-+				&dmamux 13 2 2
-+				&dmamux 14 2 2>;
-+			dma-names = "rx", "tx", "tx", "rx",
-+				    "tx", "rx", "rx", "tx";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
+index 9fcc0f357c2d..4d2d74a064c4 100644
+--- a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
++++ b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
+@@ -389,6 +389,23 @@
+ 		};
+ 	};
+ 
++	ssp0_pins: ssp0-pins {
++		ssp0_sck_miso_mosi {
++			pins = "pf_0", "pf_2", "pf_3";
++			function = "ssp0";
++			slew-rate = <1>;
++			bias-pull-down;
++			input-enable;
++			input-schmitt-disable;
++		};
++
++		ssp0_ssel {
++			pins = "pf_1";
++			function = "ssp0";
++			bias-pull-up;
++		};
++	};
++
+ 	uart0_pins: uart0-pins {
+ 		uart0_rx_cfg {
+ 			pins = "pf_11";
+@@ -535,6 +552,13 @@
+ 	};
+ };
+ 
++&ssp0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&ssp0_pins>;
++	num-cs = <1>;
++};
++
+ &uart0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
 -- 
 1.8.0
 
