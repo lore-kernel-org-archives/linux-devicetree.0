@@ -1,61 +1,277 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
- subsystem dts binding
-Date: Thu, 1 Oct 2015 07:58:42 -0500
-Message-ID: <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
-References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
- <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
- <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
- <1442823067.3277.35.camel@pengutronix.de>
- <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
- <1443689957.3272.18.camel@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] Docs: dt: Add PCI MSI map bindings
+Date: Thu, 1 Oct 2015 08:02:07 -0500
+Message-ID: <CAL_JsqJu2BuaGzdT-DUwX0bv1Scev7h2atBMi+7mdF=ObbgXuw@mail.gmail.com>
+References: <1443653222-24924-1-git-send-email-ddaney.cavm@gmail.com> <1443653222-24924-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1443689957.3272.18.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-mediatek@lists.infradead.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443653222-24924-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMSwgMjAxNSBhdCAzOjU5IEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBl
-bmd1dHJvbml4LmRlPiB3cm90ZToKPiBBbSBNaXR0d29jaCwgZGVuIDMwLjA5LjIwMTUsIDEyOjEz
-IC0wNTAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4+IE9uIE1vbiwgU2VwIDIxLCAyMDE1IGF0IDM6
-MTEgQU0sIFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiA+
-IE5vdGUgaG93IHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlIG92ZXJsYXBzIHRoZSBsYXJiIG5v
-ZGUuIElzIHRoYXQKPj4gPiBhY2NlcHRhYmxlPwo+Pgo+PiBHaXZlbiB3aGF0IHRoZSBncmFwaCBs
-b29rcyBsaWtlLCBwZXJoYXBzLiBIb3dldmVyLCBkbyB5b3UgcmVhbGx5IG5lZWQKPj4gYSBjb250
-YWluZXIgbm9kZT8gSXQgb25seSBzZXJ2ZXMgdG8gcHJvdmlkZSBhIGxpc3Qgb2Ygbm9kZXMgKGUu
-Zy4gYWxsCj4+IHRoZSBjaGlsZHJlbikgdG8gaW5jbHVkZSBhcyBjb21wb25lbnRzLiBUaGVyZSBh
-cmUgb3RoZXIgd2F5cyB0bwo+PiBkZXRlcm1pbmUgdGhpcyBsaXN0LiBZb3UgY291bGQgZmluZCBh
-bGwgbm9kZXMganVzdCBzZWFyY2hpbmcKPj4gY29tcGF0aWJsZSBzdHJpbmdzIGZvciBlYWNoIGNv
-bXBvbmVudC4gWW91IGp1c3QgbmVlZCB0byBiaW5kIHRoZSBkcm0KPj4gZHJpdmVyIHRvIHNvbWUg
-b3RoZXIgRFQgbm9kZS4gSXMgdGhlcmUgbm8gbm9kZSB5b3UgY2FuIHBpY2sgYXMgdGhlCj4+IG1h
-c3RlciBjb21wb25lbnQ/Cj4KPiBUaGVyZSBpcyB0aGUgbW1zeXMgY2xvY2stY29udHJvbGxlciBu
-b2RlIGF0IHRoZSB0b3Agb2YgdGhlIE1NU1lTIGFkZHJlc3MKPiBzcGFjZSAoMHgxNDAwMDAwMC0w
-eDE0ZmZmZmZmKToKPgo+ICAgICAgICAgbW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAg
-ewo+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIs
-ICJzeXNjb24iOwo+ICAgICAgICAgICAgICAgICByZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAw
-PjsKPiAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+Owo+ICAgICAgICAgfTsKPgo+
-IEl0cyByZWdpc3RlciBzcGFjZSBhbHNvIGNvbnRhaW5zIHRoZSBNTVNZU19DT05GSUcgcmVnaW9u
-IHRoYXQgY29udHJvbHMKPiB0aGUgbXVsdGlwbGV4ZXJzIGJldHdlZW4gdGhlIGRpc3BsYXkgZnVu
-Y3Rpb24gYmxvY2tzLCBzbyB0aGF0IHdvdWxkIGJlIGEKPiBnb29kIGNhbmRpZGF0ZS4KPiBObyBk
-cml2ZXIgYmluZHMgdG8gdGhpcyBub2RlIHlldCwgdGhlIGNsb2NrcyBhcmUgcmVnaXN0ZXJlZCB3
-aXRoCj4gQ0xLX09GX0RFQ0xBUkUuCj4KPiBJJ2xsIHRyeSB0byBiaW5kIHRvIHRoaXMgbm9kZSBh
-bmQgaGF2ZSB0aGUgZHJpdmVyIGZpbmQgc2libGluZyBub2Rlcwo+IHVzaW5nIHRoZWlyIGNvbXBh
-dGlibGUgc3RyaW5ncy4KClRoYXQgZG9lc24ndCBzZWVtIGxpa2UgYSBnb29kIGNob2ljZSBzaW5j
-ZSB0aGVyZSBhcmUgb3RoZXIgZnVuY3Rpb25zCmluIHRoZSBibG9jay4gSSB3YXMgdGhpbmtpbmcg
-b25lIG9mIHRoZSBkaXNwbGF5IHJlbGF0ZWQgYmxvY2tzIGxpa2UKd2hhdGV2ZXIgYmxvY2sgcHJv
-dmlkZXMgdGhlIG1haW4gY3J0YyBmdW5jdGlvbnMuCgpSb2IKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Sep 30, 2015 at 5:46 PM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>
+> Currently msi-parent is used by a few bindings to describe the
+> relationship between a PCI root complex and a single MSI controller, but
+> this property does not have a generic binding document.
+>
+> Additionally, msi-parent is insufficient to describe more complex
+> relationships between MSI controllers and devices under a root complex,
+> where devices may be able to target multiple MSI controllers, or where
+> MSI controllers use (non-probeable) sideband information to distinguish
+> devices.
+>
+> This patch adds a generic binding for mapping PCI devices to MSI
+> controllers. This document covers msi-parent, and a new msi-map property
+> (specific to PCI*) which may be used to map devices (identified by their
+> Requester ID) to sideband data for each MSI controller that they may
+> target.
+>
+> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+>  1 file changed, 220 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> new file mode 100644
+> index 0000000..9b3cc81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> @@ -0,0 +1,220 @@
+> +This document describes the generic device tree binding for describing the
+> +relationship between PCI devices and MSI controllers.
+> +
+> +Each PCI device under a root complex is uniquely identified by its Requester ID
+> +(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+> +Function number.
+> +
+> +For the purpose of this document, when treated as a numeric value, a RID is
+> +formatted such that:
+> +
+> +* Bits [15:8] are the Bus number.
+> +* Bits [7:3] are the Device number.
+> +* Bits [2:0] are the Function number.
+> +* Any other bits required for padding must be zero.
+> +
+> +MSIs may be distinguished in part through the use of sideband data accompanying
+> +writes. In the case of PCI devices, this sideband data may be derived from the
+> +Requester ID. A mechanism is required to associate a device with both the MSI
+> +controllers it can address, and the sideband data that will be associated with
+> +its writes to those controllers.
+> +
+> +For generic MSI bindings, see
+> +Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+> +
+> +
+> +PCI root complex
+> +================
+> +
+> +Optional properties
+> +-------------------
+> +
+> +- msi-map: Maps a Requester ID to an MSI controller and associated
+> +  msi-specifier data. The property is an arbitrary number of tuples of
+> +  (rid-base,msi-controller,msi-base,length), where:
+> +
+> +  * rid-base is a single cell describing the first RID matched by the entry.
+> +
+> +  * msi-controller is a single phandle to an MSI controller
+> +
+> +  * msi-base is an msi-specifier describing the msi-specifier produced for the
+> +    first RID matched by the entry.
+> +
+> +  * length is a single cell describing how many consecutive RIDs are matched
+> +    following the rid-base.
+> +
+> +  Any RID r in the interval [rid-base, rid-base + length) is associated with
+> +  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
+> +
+> +- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
+> +  to an msi-specifier per the msi-map property.
+> +
+> +- msi-parent: Describes the MSI parent of the root complex itself. Where
+> +  the root complex and MSI controller do not pass sideband data with MSI
+> +  writes, this property may be used to describe the MSI controller(s)
+> +  used by PCI devices under the root complex, if defined as such in the
+> +  binding for the root complex.
+> +
+> +
+> +Example (1)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, identity-mapped.
+> +                */
+> +               msi-map = <0x0 &msi_a 0x0 0x10000>,
+> +       };
+> +};
+> +
+> +
+> +Example (2)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, masked to only the device and function bits.
+> +                */
+> +               msi-map = <0x0 &msi_a 0x0 0x100>,
+> +               msi-map-mask = <0xff>
+> +       };
+> +};
+> +
+> +
+> +Example (3)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, but the high bit of the bus number is
+> +                * ignored.
+> +                */
+> +               msi-map = <0x0000 &msi 0x0000 0x8000>,
+> +                         <0x8000 &msi 0x0000 0x8000>;
+> +       };
+> +};
+> +
+> +
+> +Example (4)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, but the high bit of the bus number is
+> +                * negated.
+> +                */
+> +               msi-map = <0x0000 &msi 0x8000 0x8000>,
+> +                         <0x8000 &msi 0x0000 0x8000>;
+> +       };
+> +};
+> +
+> +
+> +Example (5)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi_a: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       msi_b: msi-controller@b {
+> +               reg = <0xb 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       msi_c: msi-controller@c {
+> +               reg = <0xc 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@c {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to MSI controller a is the
+> +                * RID, but the high bit of the bus number is negated.
+> +                * The sideband data provided to MSI controller b is the
+> +                * RID, identity-mapped.
+> +                * MSI controller c is not addressable.
+> +                */
+> +               msi-map = <0x0000 &msi_a 0x8000 0x08000>,
+> +                         <0x8000 &msi_a 0x0000 0x08000>,
+> +                         <0x0000 &msi_b 0x0000 0x10000>;
+> +       };
+> +};
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
