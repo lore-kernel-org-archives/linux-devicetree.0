@@ -1,47 +1,189 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] of/fdt: Allow memory node and root to have different size/address cells
-Date: Thu, 01 Oct 2015 14:21:59 +0200
-Message-ID: <1712345.yOlLsP4Oji@wuerfel>
-References: <1443701901-362-1-git-send-email-vgupta@synopsys.com>
+From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ARM: bcm2835: Switch to using the new clock
+ driver support.
+Date: Thu, 1 Oct 2015 13:25:55 +0100
+Message-ID: <20151001122555.GV3214@x1>
+References: <1443475325-22270-1-git-send-email-eric@anholt.net>
+ <1443475325-22270-4-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1443701901-362-1-git-send-email-vgupta@synopsys.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>, kbuild test robot <lkp@intel.com>, "kbuild-all@01.org" <kbuild-all@01.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443475325-22270-4-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 October 2015 17:48:21 Vineet Gupta wrote:
-> Currently memory node parsing uses root "#size-cells", "#address-cells"
-> This doesn't work correctly when memory address/size is different or
-> greater than root's.
-> 
-> e.g. ARC 32-bit systems implementing physical adressing extension and
-> say 4GB of memory. All peripherals mappings stay within the 4GB (so root
-> address/size cells remain 1 each), only the memory node address/size
-> cells needs to specify greater than 32-bits as below
-> 
->         memory {
->                 device_type = "memory";
->                 reg = <0x0 0x80000000 0x1 0x00000000>;  /* 4 GB */
->                 #address-cells = <2>;
->                 #size-cells = <2>;
->         };
-> 
-> This patch lets me boot a ARC system with PAE40 + 4GB of memory specified
-> as above and fails to boot otherwise as memory parsing doesn't populate
-> right base, size.
-> 
+On Mon, 28 Sep 2015, Eric Anholt wrote:
 
-This looks wrong: the #address-cells property in a device node is used
-to parse the reg property of its child nodes, not the node itself.
+> This will give us the ability to set the pixel and HDMI state machine
+> clocks for the VC4 KMS driver, change the CPU frequency, and
+> potentially gate clocks in the future (once we also write a power
+> domain driver).  It also gives the uart an explicit clock reference,
+> so that we don't need to change the physical addresses of the old
+> fixed clk_bcm2835.c clocks for Raspberry Pi 2 port.
+> 
+> Two clocks get their frequencies updated as a result of this.  One is
+> uart's apb_pclk, which was previously accidentally grabbing the fixed
+> uart0_pclk due to the apb_pclk not having clk_register_clkdev()
+> called.  The uart doesn't seem to do anything with apb_pclk other than
+> make sure it's on, so that appears safe (also, as far as I can see,
+> the apb clock is actually the same as the VPU clock).  The other is
+> EMMC, which according to the docs was supposed to be in the 50-100Mhz
+> range, but it turns out the firmware needed to change to running it at
+> the 250Mhz core clock speed to avoid a bug in clock domain crossing.
+> 
+> Additionally, anything using BCM2835_CLOCK_VPU will now have a correct
+> clock rate if the user configures the boot-time core clock speed using
+> config.txt.
+> 
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/bcm2835.dtsi | 52 +++++++++++++++++++++++-------------------
+>  1 file changed, 28 insertions(+), 24 deletions(-)
 
-The only way to list memory like this is to put #size-cells=<2>
-into the root node. All lower bus nodes can then use the
-normal #address-cells/#size-cells again and use a ranges property
-to convert the register ranges so you don't need to update all
-nodes.
+Couple of small nits.
 
-	Arnd
+> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+> index 301c73f..a6a55b7 100644
+> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> @@ -1,4 +1,5 @@
+>  #include <dt-bindings/pinctrl/bcm2835.h>
+> +#include <dt-bindings/clock/bcm2835.h>
+>  #include "skeleton.dtsi"
+>  
+>  / {
+> @@ -21,6 +22,10 @@
+>  			compatible = "brcm,bcm2835-system-timer";
+>  			reg = <0x7e003000 0x1000>;
+>  			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
+> +			/* This could be a reference to BCM2835_CLOCK_TIMER,
+> +			 * but we don't have the driver using the common clock
+> +			 * support yet.
+> +			 */
+
+Nit: Please use correct multi-line comment formatting.
+
+>From Documentation/CodingStyle:
+
+/*
+ * This is the preferred style for multi-line
+ * comments in the Linux kernel source code.
+ * Please use it consistently.
+ *
+ * Description:  A column of asterisks on the left side,
+ * with beginning and ending almost-blank lines.
+ */
+
+>  			clock-frequency = <1000000>;
+>  		};
+>  
+> @@ -57,6 +62,17 @@
+>  			reg = <0x7e100000 0x28>;
+>  		};
+>  
+> +		clocks: cprman@7e101000 {
+> +			compatible = "brcm,bcm2835-cprman";
+> +			#clock-cells = <1>;
+> +			reg = <0x7e101000 0x2000>;
+> +
+> +			/* CPRMAN derives everything from the platform's
+> +			 * oscillator.
+> +			 */
+
+As above.
+
+> +			clocks = <&clk_osc>;
+> +		};
+> +
+>  		rng@7e104000 {
+>  			compatible = "brcm,bcm2835-rng";
+>  			reg = <0x7e104000 0x10>;
+> @@ -96,7 +112,9 @@
+>  			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+>  			reg = <0x7e201000 0x1000>;
+>  			interrupts = <2 25>;
+> -			clock-frequency = <3000000>;
+> +			clocks = <&clocks BCM2835_CLOCK_UART>,
+> +				 <&clocks BCM2835_CLOCK_VPU>;
+> +			clock-names = "uartclk", "apb_pclk";
+>  			arm,primecell-periphid = <0x00241011>;
+>  		};
+>  
+> @@ -115,7 +133,7 @@
+>  			compatible = "brcm,bcm2835-spi";
+>  			reg = <0x7e204000 0x1000>;
+>  			interrupts = <2 22>;
+> -			clocks = <&clk_spi>;
+> +			clocks = <&clocks BCM2835_CLOCK_VPU>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			status = "disabled";
+> @@ -125,7 +143,7 @@
+>  			compatible = "brcm,bcm2835-i2c";
+>  			reg = <0x7e205000 0x1000>;
+>  			interrupts = <2 21>;
+> -			clocks = <&clk_i2c>;
+> +			clocks = <&clocks BCM2835_CLOCK_VPU>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			status = "disabled";
+> @@ -135,7 +153,7 @@
+>  			compatible = "brcm,bcm2835-sdhci";
+>  			reg = <0x7e300000 0x100>;
+>  			interrupts = <2 30>;
+> -			clocks = <&clk_mmc>;
+> +			clocks = <&clocks BCM2835_CLOCK_EMMC>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -143,7 +161,7 @@
+>  			compatible = "brcm,bcm2835-i2c";
+>  			reg = <0x7e804000 0x1000>;
+>  			interrupts = <2 21>;
+> -			clocks = <&clk_i2c>;
+> +			clocks = <&clocks BCM2835_CLOCK_VPU>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			status = "disabled";
+> @@ -165,28 +183,14 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  
+> -		clk_mmc: clock@0 {
+> -			compatible = "fixed-clock";
+> -			reg = <0>;
+> -			#clock-cells = <0>;
+> -			clock-output-names = "mmc";
+> -			clock-frequency = <100000000>;
+> -		};
+> -
+> -		clk_i2c: clock@1 {
+> +		/* The oscillator is the root of the clock tree. */
+> +		clk_osc: clock@3 {
+>  			compatible = "fixed-clock";
+> -			reg = <1>;
+> +			reg = <3>;
+>  			#clock-cells = <0>;
+> -			clock-output-names = "i2c";
+> -			clock-frequency = <250000000>;
+> +			clock-output-names = "osc";
+> +			clock-frequency = <19200000>;
+>  		};
+>  
+> -		clk_spi: clock@2 {
+> -			compatible = "fixed-clock";
+> -			reg = <2>;
+> -			#clock-cells = <0>;
+> -			clock-output-names = "spi";
+> -			clock-frequency = <250000000>;
+> -		};
+>  	};
+>  };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
