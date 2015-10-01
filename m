@@ -1,84 +1,55 @@
-From: Eric Blake <eblake-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [Qemu-devel] QEMU fw_cfg DMA interface
-Date: Thu, 1 Oct 2015 10:21:53 -0600
-Message-ID: <560D5DA1.90607@redhat.com>
-References: <1443701677-13629-1-git-send-email-markmb@redhat.com>
- <560D5945.5050700@redhat.com> <560D5C7E.8080900@redhat.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulators: tps65912: Add regulator driver for
+ the TPS65912 PMIC
+Date: Thu, 1 Oct 2015 17:25:45 +0100
+Message-ID: <20151001162545.GK12635@sirena.org.uk>
+References: <1443106374-4126-5-git-send-email-afd@ti.com>
+ <20150925180533.GN30445@sirena.org.uk>
+ <5605AA1C.3090905@ti.com>
+ <20150929151320.GT30445@sirena.org.uk>
+ <560AD3B2.1070102@ti.com>
+ <20150929183818.GA15635@sirena.org.uk>
+ <560ADF61.9030105@ti.com>
+ <20150930172844.GF15635@sirena.org.uk>
+ <560C462A.1000707@ti.com>
+ <560D525D.1040401@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="tIRQ79gjTSlrHj0Q2pnjsKowv4kg7smiK"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <560D5C7E.8080900-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Marc_Mar=c3=ad?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, seabios-VcxPKcuBGKdAfugRpC6u6w@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="mPOSj6iWmtyhwOMz"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <560D525D.1040401@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---tIRQ79gjTSlrHj0Q2pnjsKowv4kg7smiK
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On 10/01/2015 10:17 AM, Laszlo Ersek wrote:
-> On 10/01/15 18:03, Eric Blake wrote:
->> [meta-comment]
->>
->> On 10/01/2015 06:14 AM, Marc Mar=C3=AD wrote:
->>> Implementation of the FW CFG DMA interface.
->>
->> The subject line is missing "v4" and "0/7". Also, the cover letter is
->> missing a diffstat.  That makes it harder to see from the cover letter=
+--mPOSj6iWmtyhwOMz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> what the rest of the series is about.  'git format-patch/send-email
->> --cover-letter' does what you want; you can even 'git config
->> format.coverletter=3Dauto' to always include a decent cover letter on =
-any
->> multi-patch series.
->>
->=20
-> This posting follows a little bit different pattern, one that I myself
-> follow when posting patches for two (or more) components that must work=
+On Thu, Oct 01, 2015 at 10:33:49AM -0500, Grygorii Strashko wrote:
 
-> in sync.
+> So, in my opinion, the tps65217-regulator.c driver is really good
+> example of how it could be done.
 
-Ok, makes sense. Maybe the only additional suggestions would be to make
-it more obvious in the subject line (put the text 'cross-post'
-somewhere?) or have the first paragraph of the meta-cover be more
-explicit that there are going to be multiple sub-threads, one per
-project, where all subthreads must be applied to their corresponding
-project for the overall feature to be complete?
+Yes, this should be a good example to refer to.
 
-[And maybe I should wait a few minutes for the full thread to appear in
-my inbox, rather than immediately replying to the first mail while the
-series is still incomplete due to mail delays...]
-
---=20
-Eric Blake   eblake redhat com    +1-919-301-3266
-Libvirt virtualization library http://libvirt.org
-
-
---tIRQ79gjTSlrHj0Q2pnjsKowv4kg7smiK
+--mPOSj6iWmtyhwOMz
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
-Comment: Public key at http://people.redhat.com/eblake/eblake.gpg
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQEcBAEBCAAGBQJWDV2hAAoJEKeha0olJ0Nq0/MIAIxKIcNd/na0Pnxm2O6c8hny
-/j4/M2eC7lOfSDc74RTmkSBhA5yYJIphlgXYxYDWRi25qtb5+WHpdZRGjNKNzNfk
-q4DE2i1G9BZqKAklqQDsNmyFXgWiZlZalUPUQG/JCm/qpZnoyr2HCNWwv2actMwS
-CH/OvjivorrMKbCOx5FRoejOOroaDY9V/DtDg8aLtFVsoxEyaTv16BXvis6TnZox
-McUagStYKjw7/2icRkNbScwS44Kk678yYiG1jbuTbmtHReMKGmNVaVlbZuL4MxUM
-MRZpW7r5hWu2ngjQAsJrebJDNRbV9AYpV9eaCG7ytxPjsTsRZ9J/zylU60rzJDw=
-=2MBY
+iQEcBAEBCAAGBQJWDV6IAAoJECTWi3JdVIfQicIH/1wBy4aWijaViFfm3qEnUGyN
+bT41jd+ZbY6VmMDiKy3Hg026oCkyNwqyKxB6Q1lrf1btbwMDYB9J3INNkhsBY9Up
+Mk4HItbNLbcZmKv0args6717HJvN+aWF/9Lo2zfvNlDYwmg3p8/bxiQK7/8qN/tD
+KpYCzEqaMHBAeBacBIlzy8kAG2OFdv56TTITaqE5RJg9qYE9SCdO5FLsqVGaEQqC
+lxvzOvmnUFf/pVbDds6PqImuyL9sZUjdzUTOQrJjcavA1z2NGGuTyfN4KgPcdkvC
+HO4g8Y1clp3qJhOmBSUYPTLMcNWSdB96H+SBmCQYQCjNqnpQsMJRhrI/YG8bMQM=
+=lNse
 -----END PGP SIGNATURE-----
 
---tIRQ79gjTSlrHj0Q2pnjsKowv4kg7smiK--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--mPOSj6iWmtyhwOMz--
