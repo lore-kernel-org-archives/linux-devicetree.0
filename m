@@ -1,7 +1,7 @@
 From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 16/16] ARM: dts: lpc4350-hitex-eval: add joystick, buttons and leds
-Date: Thu,  1 Oct 2015 22:54:53 +0200
-Message-ID: <1443732893-17145-17-git-send-email-manabian@gmail.com>
+Subject: [PATCH 05/16] ARM: dts: lpc18xx: add dma to ssp0/1
+Date: Thu,  1 Oct 2015 22:54:42 +0200
+Message-ID: <1443732893-17145-6-git-send-email-manabian@gmail.com>
 References: <1443732893-17145-1-git-send-email-manabian@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1443732893-17145-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,116 +10,45 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the joystick, buttons and LEDs connected to the I2C I/O expander.
+Add dmas entries to the two SSP peripherals on LPC18xx/43xx devices
+so that DMA can be used to transfer data.
 
 Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/lpc4350-hitex-eval.dts | 85 ++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ arch/arm/boot/dts/lpc18xx.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-index 5c529f45947b..022d495432c1 100644
---- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-+++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-@@ -15,6 +15,9 @@
- #include "lpc18xx.dtsi"
- #include "lpc4350.dtsi"
- 
-+#include "dt-bindings/input/input.h"
-+#include "dt-bindings/gpio/gpio.h"
-+
- / {
- 	model = "Hitex LPC4350 Evaluation Board";
- 	compatible = "hitex,lpc4350-eval-board", "nxp,lpc4350";
-@@ -34,6 +37,88 @@
- 		device_type = "memory";
- 		reg = <0x28000000 0x800000>; /* 8 MB */
- 	};
-+
-+	pca_buttons {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+		autorepeat;
-+
-+		button@0 {
-+			label = "joy:right";
-+			linux,code = <KEY_RIGHT>;
-+			gpios = <&pca_gpio 8 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@1 {
-+			label = "joy:up";
-+			linux,code = <KEY_UP>;
-+			gpios = <&pca_gpio 9 GPIO_ACTIVE_LOW>;
-+		};
-+
-+
-+		button@2 {
-+			label = "joy:enter";
-+			linux,code = <KEY_ENTER>;
-+			gpios = <&pca_gpio 10 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@3 {
-+			label = "joy:left";
-+			linux,code = <KEY_LEFT>;
-+			gpios = <&pca_gpio 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@4 {
-+			label = "joy:down";
-+			linux,code = <KEY_DOWN>;
-+			gpios = <&pca_gpio 12 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@5 {
-+			label = "user:sw3";
-+			linux,code = <KEY_F1>;
-+			gpios = <&pca_gpio 13 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@6 {
-+			label = "user:sw4";
-+			linux,code = <KEY_F2>;
-+			gpios = <&pca_gpio 14 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@7 {
-+			label = "user:sw5";
-+			linux,code = <KEY_F3>;
-+			gpios = <&pca_gpio 15 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	pca_leds {
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			label = "ext:led0";
-+			gpios = <&pca_gpio 0 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led1 {
-+			label = "ext:led1";
-+			gpios = <&pca_gpio 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led2 {
-+			label = "ext:led2";
-+			gpios = <&pca_gpio 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		led3 {
-+			label = "ext:led3";
-+			gpios = <&pca_gpio 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
- 
- &pinctrl {
+diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
+index f0d1a099507f..5b7ca7066161 100644
+--- a/arch/arm/boot/dts/lpc18xx.dtsi
++++ b/arch/arm/boot/dts/lpc18xx.dtsi
+@@ -249,6 +249,9 @@
+ 			interrupts = <22>;
+ 			clocks = <&ccu2 CLK_APB0_SSP0>, <&ccu1 CLK_CPU_SSP0>;
+ 			clock-names = "sspclk", "apb_pclk";
++			dmas = <&dmamux  9 0 2
++				&dmamux 10 0 2>;
++			dma-names = "rx", "tx";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -326,6 +329,16 @@
+ 			interrupts = <23>;
+ 			clocks = <&ccu2 CLK_APB2_SSP1>, <&ccu1 CLK_CPU_SSP1>;
+ 			clock-names = "sspclk", "apb_pclk";
++			dmas = <&dmamux 11 2 2
++				&dmamux 12 2 2
++				&dmamux  3 3 2
++				&dmamux  4 3 2
++				&dmamux  5 2 2
++				&dmamux  6 2 2
++				&dmamux 13 2 2
++				&dmamux 14 2 2>;
++			dma-names = "rx", "tx", "tx", "rx",
++				    "tx", "rx", "rx", "tx";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
 -- 
 1.8.0
 
