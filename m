@@ -1,54 +1,64 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: Add Exynos5250 Snow Rev5+ support
-Date: Wed, 30 Sep 2015 16:58:43 -0700
-Message-ID: <CAD=FV=WmqDSbnA8OWL00WS-qc9A4wCpkgxHhLBW3qEE=SkzupA@mail.gmail.com>
-References: <1443527855-434-1-git-send-email-javier@osg.samsung.com>
-	<560B2D29.5060707@samsung.com>
-	<CAD=FV=VfGeWdynFd+5YqnRGn+jsC0G_2VhTm1FKsR5o2WpcH1A@mail.gmail.com>
-	<560C73EC.40608@samsung.com>
+From: Arun Parameswaran <arunp@broadcom.com>
+Subject: [PATCH v2 0/5] Add support for Broadcom's iProc MDIO and Cygnus Ethernet PHY
+Date: Wed, 30 Sep 2015 17:16:38 -0700
+Message-ID: <1443658603-1848-1-git-send-email-arunp@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <560C73EC.40608@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arunp@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi
+This patchset adds support for the iProc MDIO interface and the
+Broadcom Cygnus SoC's internal Ethernet PHY.
 
-On Wed, Sep 30, 2015 at 4:44 PM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
->> Switching the default meaning of "google,snow" to Rev5 is probably not
->> something we'd ever want to do, since it could confuse "rev3" boards
->> (which should be serviced by the rev4 dts).  From comments in the
->> Chrome OS tree:
->>
->> In the "rev4" DTS:
->>          * - Any real rev 0-3 boards in the field will match "google,snow",
->>          *   since older U-Boots don't look for a revision specific device tree.
->>          * - Any real rev 4 boards in the field will match "google,snow-rev4"
->>          *   first.  If that's not present they will pick the first
->>          *   "google,snow" device tree that they find (ignoring the kernel
->>          *   ordering).
->>
->> In the "rev5" DTS:
->>          * - Purposely don't add "google,snow" so old firmware (which didn't
->>          *   include a -revN suffix) won't pick this one.
->
-> These are requirements written somewhere in the downstream tree... not
-> in upstream. Have in mind that someone may not be using Chrome OS on
-> Chromebook but custom U-Boot and different distro.
->
-> You cannot expect that everyone will new some requirements of some
-> downstream OS. If you need such requirements, write them in bindings
-> documentation *in the upstream*.
+The internal Ethernet PHY(s) in the Cygnus SoC's are accessed
+via the MDIO interface found in most of the iProc based chips.
 
-Agreed, which is why I bring it up here.  I think Javier wasn't aware
-of these when he sent up his patch.  I believe when he adds the
-bindings docs he'll put this information.
+The patch also consolidates the common API's used by the
+Broadcom phys to a common library. Existing Broadcom phy
+drivers have been modified to use the common library API's.
 
-Previously rev5 wasn't supported upstream and I believe rev5 didn't
-even exist when the upstream stuff was submitted.
+The Ethernet driver for the iProc family will be submitted soon,
+as will the device tree configurations for the different iProc
+family SoCs.
 
--Doug
+Changes from v1:
+- Updated device tree documentation for the iProc MDIO driver
+  based on Florian's feedback.
+- Moved the core register defines from the Cygnus PHY driver to
+  'include/linux/brcmphy.h' based on Florian's feedback.
+- Created a new patch/commit to modify the bcm7xxx phy driver
+  to use the new core register defines.
+- Modified the Kconfig entry for the Broadcom PHY library to
+  'tristate' instead of 'bool'
+
+Arun Parameswaran (5):
+  dt-bindings: net: Broadcom iProc MDIO bus driver device tree binding
+  net: phy: Broadcom iProc MDIO bus driver
+  net: phy: Add Broadcom phy library for common interfaces
+  net: phy: Broadcom Cygnus internal Etherent PHY driver
+  net: phy: bcm7xxx: Modified to use global core register defines
+
+ .../devicetree/bindings/net/brcm,iproc-mdio.txt    |  23 +++
+ drivers/net/phy/Kconfig                            |  28 +++
+ drivers/net/phy/Makefile                           |   3 +
+ drivers/net/phy/bcm-cygnus.c                       | 158 +++++++++++++++
+ drivers/net/phy/bcm-phy-lib.c                      | 209 ++++++++++++++++++++
+ drivers/net/phy/bcm-phy-lib.h                      |  37 ++++
+ drivers/net/phy/bcm63xx.c                          |  38 +---
+ drivers/net/phy/bcm7xxx.c                          | 136 +++----------
+ drivers/net/phy/broadcom.c                         | 149 +++++---------
+ drivers/net/phy/mdio-bcm-iproc.c                   | 213 +++++++++++++++++++++
+ include/linux/brcmphy.h                            |  29 +--
+ 11 files changed, 761 insertions(+), 262 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/brcm,iproc-mdio.txt
+ create mode 100644 drivers/net/phy/bcm-cygnus.c
+ create mode 100644 drivers/net/phy/bcm-phy-lib.c
+ create mode 100644 drivers/net/phy/bcm-phy-lib.h
+ create mode 100644 drivers/net/phy/mdio-bcm-iproc.c
+
+-- 
+2.5.2
