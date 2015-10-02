@@ -1,93 +1,72 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
-Date: Fri, 2 Oct 2015 05:01:54 -0700
-Message-ID: <CACRpkdbLihw_1piTeaMcMekido-yra7kZiZjqih=0UrJ8-Y2xQ@mail.gmail.com>
-References: <cover.1443031678.git.hns@goldelico.com>
-	<1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com>
-	<CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
-	<FEB50554-2A45-4B3C-A896-EBF723AB3572@goldelico.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v3 02/09] ARM: shmobile: Add APMU DT support via Enable method
+Date: Fri, 2 Oct 2015 14:02:06 +0200
+Message-ID: <CAMuHMdUYNRuPnm=U3S1XTLKwQ5XMOBj9_r5YoEZ1iem25PhNyg@mail.gmail.com>
+References: <20150917063240.26016.93772.sendpatchset@little-apple>
+	<20150917063300.26016.23728.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <FEB50554-2A45-4B3C-A896-EBF723AB3572-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <20150917063300.26016.23728.sendpatchset@little-apple>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, eric miao <eric.miao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Grazvydas Ignotas <notaz-in7WBhxDdJqvTmjiLVyRpw@public.gmane.org>
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 11:49 PM, H. Nikolaus Schaller
-<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-> [Me]
->> I understand the approach, but this is the wrong way to do it.
->> Instead of indicating that a pin on the pin controller should be
->> open drain, the *consumer* specifying its gpios =3D <....> should
->> do this.
->
-> On a second thought I am no longer sure if that is the right approach=
-=2E
->
-> A gpio is for input and output of =E2=80=9C0=E2=80=9D and =E2=80=9C1=E2=
-=80=9D values. And a gpio consumer
-> can control if the output should be active or inactive and input.
->
-> How the output is physically represented (totem-pole or single-ended,
-> high power, low power etc.) is not a property of the gpio itself and
-> there is IMHO no need for the consumer to be able to define (or chang=
-e)
-> it.
+Hi Magnus,
 
-As it is today we already have support for open drain/collector in the
-GPIO subsystem, as open drain pins should not be actively driven
-to 1 and open source pins not actively driven to 0, instead set as
-input for each of these use cases.
-(See drivers/gpio/gpiolib.c, grep for OPEN_DRAIN)
+On Thu, Sep 17, 2015 at 8:33 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> --- 0001/arch/arm/mach-shmobile/platsmp-apmu.c
+> +++ work/arch/arm/mach-shmobile/platsmp-apmu.c  2015-09-16 20:46:23.400513000 +0900
 
-> On SoC with integrated gpio controllers it is very common to have
-> pinmux definitions completely separated from the gpio controller
-> properties. But the gpio consumer can connect to pinctrl settings
-> to describe that the pin should have certain physical properties.
->
-> There, it is common to be able to enable/disable pull-up/downs as
-> well.
+> +static void __init shmobile_smp_apmu_prepare_cpus_dt(unsigned int max_cpus)
+> +{
+> +       shmobile_smp_apmu_setup_boot();
+> +       apmu_parse_dt(apmu_init_cpu);
+> +       rcar_gen2_pm_init();
+> +}
 
-So this is up to the driver to implement today, but last week
-Tony Lindgren and Grygorii Strashko approached me to add flags
-for this into the GPIO subsystem as well.
+The non-DT code in arch/arm/mach-shmobile/smp-r8a7790.c has two calls to
+rcar_sysc_power_up() here, cfr.:
 
-We already have a few GPIO drivers cross-calling
-pinctrl_request_gpio()
-pinctrl_free_gpio()
-pinctrl_gpio_direction_input()
-pinctrl_gpio_direction_output()
+        static void __init r8a7790_smp_prepare_cpus(unsigned int max_cpus)
+        {
+               /* let APMU code install data related to shmobile_boot_vector */
+               shmobile_smp_apmu_prepare_cpus(max_cpus,
+                                              r8a7790_apmu_config,
+                                              ARRAY_SIZE(r8a7790_apmu_config));
 
-So we can very well add a
-pinctrl_gpio_set_config() to set up pulls, open drain/source,
-drive strength etc if it makes sense.
+                /* turn on power to SCU */
+                rcar_gen2_pm_init();
+===>            rcar_sysc_power_up(&r8a7790_ca15_scu);
+===>            rcar_sysc_power_up(&r8a7790_ca7_scu);
+        }
 
-> So turning a totem-pole output (as it is available in the tca6424)
-> into an open-drain output is sort of turning off the pull-up transist=
-or.
-> I.e. comparable to a pinmux setting.
->
-> So such controllers should get the option to define pinctrl.
+The non-DT code in arch/arm/mach-shmobile/smp-r8a7791.c does not have such
+a call for its CA15 cluster.
 
-Yes and Tony/Grygorii want to do that from the GPIO consumer
-side.
+Does that mean they're not needed on Gen2 in general, and that they can be
+removed? I'd be happy to hear a confirming answer, as it's one less
+dependency on SYSC PM Domains in early SMP code ;-)
 
-> Some chips might have special control registers for doing that
-> while others need the trick to switch between input and output
-> mode but that is driver implementation detail.
->
-> But I am not sure if this has other implications.
+Ah, this is because r8a7790 can boot from either CA15 or CA7, and only the
+SCU for the boot CPU is powered up (r8a7791 has only one cluster/SCU, so it's
+always the one with the boot CPU)?
 
-We will hash it out as we go along, but I see no immediate
-blocker for this.
+Note that on r8a7779 we're also stuck with this dependency, as r8a7779 uses
+SYSC instead of APMU for secondary core control.
 
-Yours,
-Linus Walleij
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
