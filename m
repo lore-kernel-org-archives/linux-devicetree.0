@@ -1,32 +1,39 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 3/4] PCI/MSI:  Add helper function pci_msi_domain_get_msi_rid().
-Date: Fri, 02 Oct 2015 16:11:12 +0100
-Message-ID: <560E9E90.6000709@arm.com>
-References: <1443747025-9918-1-git-send-email-ddaney.cavm@gmail.com> <1443747025-9918-4-git-send-email-ddaney.cavm@gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v4 0/3] add GPT timer support for mt8173
+Date: Fri, 2 Oct 2015 23:13:03 +0800
+Message-ID: <1443798783.24788.1.camel@mtksdaap41>
+References: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1443747025-9918-4-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc: David Daney <david.daney@cavium.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, erin.lo@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/15 01:50, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
+On Fri, 2015-10-02 at 23:05 +0800, Yingjoe Chen wrote:
+> This is based on v4.3-rc1 + clockevents-4.4[1] and James's mediatek-clk
+> tree[2].
 > 
-> Add pci_msi_domain_get_msi_rid() to return the MSI requester id (RID).
-> Initially needed by gic-v3 based systems. It will be used by follow on
-> patch to drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> Changes compare to previous version[3]:
+> - Add more MediaTek SoC to mtk-timer binding
+> - Update commit message to better describe the purpose.
 > 
-> Initially supports mapping the RID via OF device tree.  In the future,
-> this could be extended to use ACPI _IORT tables as well.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> Changes compare to v2[4]:
+> - the first two mtk_timer related changes are removed because they are
+> replaced/accepted in clockevents tree.
+> - Remove 'add 13mhz clock for MT8173' because it is accepted in
+> mediatek-clk tree.
+> - Kconfig.platforms path change.
 
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Hi Sudeep, Mark,
+
+I just post a new version of this patch. Sorry I forgot to CC you.
+
+Joe.C
+
+
+
