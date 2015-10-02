@@ -1,29 +1,33 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 2/5] mfd: tps65912: Remove old driver in preparation
- for new driver
-Date: Fri, 2 Oct 2015 05:16:14 -0700
-Message-ID: <CACRpkdaTVM9ojb3g5FqnXGtMRP3fhnyFSgTw7K45u+LUCc0x=Q@mail.gmail.com>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
-	<1443106374-4126-3-git-send-email-afd@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] pinctrl: freescale: imx: fix system crash if
+ enable two pinctl instances
+Date: Fri, 2 Oct 2015 05:19:41 -0700
+Message-ID: <CACRpkdauecXzxmveqEYRE=-iKf8JoJCj7q8kG+k0AGcDQqYGEA@mail.gmail.com>
+References: <1443128043-21063-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1443106374-4126-3-git-send-email-afd@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443128043-21063-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?5p2O5pm6?= <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 7:52 AM, Andrew F. Davis <afd@ti.com> wrote:
+On Thu, Sep 24, 2015 at 1:53 PM, Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-> The old tps65912 driver is being replaced, delete old driver.
+> From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 >
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Fix system chrash caused by groups whose number is smaller than the number
+> of groups of the last pinctl instance which is not initialized.
+>
+> iMX7D supports two iomux controllers (iomuxc-lpsr and iomuxc) on probing
+> the second instance (iomuxc) the chrash below occurs.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-The merge collisions are unpredictable. Will this be merged
-through the MFD tree?
+This 1/7 patch applied for next with Shawn's ACK.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
