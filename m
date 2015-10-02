@@ -1,114 +1,93 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 02/09] ARM: shmobile: Add APMU DT support via Enable method
-Date: Fri, 2 Oct 2015 13:32:38 +0200
-Message-ID: <CAMuHMdVzau7LJiy3W+KrxhR3rU+4kXa6hCt5o4aowYLMfU8Wyg@mail.gmail.com>
-References: <20150917063240.26016.93772.sendpatchset@little-apple>
-	<20150917063300.26016.23728.sendpatchset@little-apple>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio:pca953x: add mechanism to simulate open drain outputs
+Date: Fri, 2 Oct 2015 05:01:54 -0700
+Message-ID: <CACRpkdbLihw_1piTeaMcMekido-yra7kZiZjqih=0UrJ8-Y2xQ@mail.gmail.com>
+References: <cover.1443031678.git.hns@goldelico.com>
+	<1B9C7F91-0025-4C1D-95AD-FD5A4B0B4176@goldelico.com>
+	<CACRpkdYYGn71Z_pgtBpk5nwknDZ1VyRam9Fj=JDkNyt4KCWFmQ@mail.gmail.com>
+	<FEB50554-2A45-4B3C-A896-EBF723AB3572@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150917063300.26016.23728.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym@renesas.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <FEB50554-2A45-4B3C-A896-EBF723AB3572-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, eric miao <eric.miao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Grazvydas Ignotas <notaz-in7WBhxDdJqvTmjiLVyRpw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
-
-On Thu, Sep 17, 2015 at 8:33 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
-> --- 0001/arch/arm/mach-shmobile/platsmp-apmu.c
-> +++ work/arch/arm/mach-shmobile/platsmp-apmu.c  2015-09-16 20:46:23.400513000 +0900
-> @@ -24,6 +24,7 @@
->  #include <asm/suspend.h>
->  #include "common.h"
->  #include "platsmp-apmu.h"
-> +#include "rcar-gen2.h"
+On Thu, Sep 24, 2015 at 11:49 PM, H. Nikolaus Schaller
+<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+> [Me]
+>> I understand the approach, but this is the wrong way to do it.
+>> Instead of indicating that a pin on the pin controller should be
+>> open drain, the *consumer* specifying its gpios =3D <....> should
+>> do this.
 >
->  static struct {
->         void __iomem *iomem;
-> @@ -117,15 +118,67 @@ static void apmu_parse_cfg(void (*fn)(st
->         }
->  }
+> On a second thought I am no longer sure if that is the right approach=
+=2E
 >
-> -void __init shmobile_smp_apmu_prepare_cpus(unsigned int max_cpus,
-> -                                          struct rcar_apmu_config *apmu_config,
-> -                                          int num)
-> +static const struct of_device_id apmu_ids[] = {
-> +       { .compatible = "renesas,apmu" },
-> +       { /*sentinel*/ }
-> +};
-> +
-> +static void apmu_parse_dt(void (*fn)(struct resource *res, int cpu, int bit))
-> +{
-> +       struct device_node *np_apmu, *np_cpu;
-> +       struct resource res;
-> +       u32 id;
-> +       int bit, index;
-> +
-> +       for_each_matching_node(np_apmu, apmu_ids) {
-> +               /* only enable the cluster that includes the boot CPU */
-> +               bool is_allowed = false;
-> +               for (bit = 0; bit < CONFIG_NR_CPUS; bit++) {
-> +                       np_cpu = of_parse_phandle(np_apmu, "cpus", bit);
-> +                       if (np_cpu) {
-> +                               if (!of_property_read_u32(np_cpu, "reg", &id)) {
-> +                                       if (id == cpu_logical_map(0)) {
-> +                                               is_allowed = true;
-> +                                               of_node_put(np_cpu);
-> +                                               break;
-> +                                       }
-> +
+> A gpio is for input and output of =E2=80=9C0=E2=80=9D and =E2=80=9C1=E2=
+=80=9D values. And a gpio consumer
+> can control if the output should be active or inactive and input.
+>
+> How the output is physically represented (totem-pole or single-ended,
+> high power, low power etc.) is not a property of the gpio itself and
+> there is IMHO no need for the consumer to be able to define (or chang=
+e)
+> it.
 
-Trailing whitespace (thanks, checkpatch.pl!)
+As it is today we already have support for open drain/collector in the
+GPIO subsystem, as open drain pins should not be actively driven
+to 1 and open source pins not actively driven to 0, instead set as
+input for each of these use cases.
+(See drivers/gpio/gpiolib.c, grep for OPEN_DRAIN)
 
-> +                               }
-> +                               of_node_put(np_cpu);
-> +                       }
-> +               }
-> +               if (!is_allowed)
-> +                       continue;
-> +
-> +               for (bit = 0; bit < CONFIG_NR_CPUS; bit++) {
-> +                       np_cpu = of_parse_phandle(np_apmu, "cpus", bit);
-> +                       if (np_cpu) {
-> +                               if (!of_property_read_u32(np_cpu, "reg", &id)) {
-> +                                       index = get_logical_index(id);
-> +                                       if ((index >= 0) &&
-> +                                           !of_address_to_resource(np_apmu,
-> +                                                                   0, &res))
-> +                                               fn(&res, index, bit);
-> +                               }
-> +                               of_node_put(np_cpu);
-> +                       }
-> +               }
-> +               of_node_put(np_apmu);
+> On SoC with integrated gpio controllers it is very common to have
+> pinmux definitions completely separated from the gpio controller
+> properties. But the gpio consumer can connect to pinctrl settings
+> to describe that the pin should have certain physical properties.
+>
+> There, it is common to be able to enable/disable pull-up/downs as
+> well.
 
-ERROR: Bad of_node_put() on /apmu@e6152000
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-4.3.0-rc3-koelsch-02290-gca074b0726212a2f #1797
-Hardware name: Generic R8A7791 (Flattened Device Tree)
-[<c0017e9c>] (unwind_backtrace) from [<c00139f8>] (show_stack+0x10/0x14)
-[<c00139f8>] (show_stack) from [<c01efd24>] (dump_stack+0x70/0x8c)
-[<c01efd24>] (dump_stack) from [<c01f1eec>] (kobject_release+0x12c/0x19c)
-[<c01f1eec>] (kobject_release) from [<c032a89c>]
-(of_find_matching_node_and_match+0x78/0x90)
-[<c032a89c>] (of_find_matching_node_and_match) from [<c062e424>]
-(shmobile_smp_apmu_prepare_cpus_dt+0x150/0x178)
-[<c062e424>] (shmobile_smp_apmu_prepare_cpus_dt) from [<c0626c98>]
-(kernel_init_freeable+0x60/0x1e4)
+So this is up to the driver to implement today, but last week
+Tony Lindgren and Grygorii Strashko approached me to add flags
+for this into the GPIO subsystem as well.
 
-for_each_matching_node() takes care of calling of_node_put() on each
-element iterated over, cfr. of_find_matching_node_and_match().
+We already have a few GPIO drivers cross-calling
+pinctrl_request_gpio()
+pinctrl_free_gpio()
+pinctrl_gpio_direction_input()
+pinctrl_gpio_direction_output()
 
-> +       }
+So we can very well add a
+pinctrl_gpio_set_config() to set up pulls, open drain/source,
+drive strength etc if it makes sense.
 
-Gr{oetje,eeting}s,
+> So turning a totem-pole output (as it is available in the tca6424)
+> into an open-drain output is sort of turning off the pull-up transist=
+or.
+> I.e. comparable to a pinmux setting.
+>
+> So such controllers should get the option to define pinctrl.
 
-                        Geert
+Yes and Tony/Grygorii want to do that from the GPIO consumer
+side.
 
+> Some chips might have special control registers for doing that
+> while others need the trick to switch between input and output
+> mode but that is driver implementation detail.
+>
+> But I am not sure if this has other implications.
+
+We will hash it out as we go along, but I see no immediate
+blocker for this.
+
+Yours,
+Linus Walleij
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
