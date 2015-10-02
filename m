@@ -1,92 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
- subsystem dts binding
-Date: Fri, 2 Oct 2015 09:24:13 -0500
-Message-ID: <CAL_JsqJhoysg=39gsArwmxf3xpzeXeHhxJ7THq4SbVc-NyertQ@mail.gmail.com>
-References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
- <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
- <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
- <1442823067.3277.35.camel@pengutronix.de>
- <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
- <1443689957.3272.18.camel@pengutronix.de>
- <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
- <1443770319.3445.20.camel@pengutronix.de>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
+Date: Fri, 2 Oct 2015 22:28:09 +0800
+Message-ID: <20151002142809.GA13483@leoy-linaro>
+References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
+ <1459065.BtzC7pyUYF@wuerfel>
+ <20150930173145.GG15635@sirena.org.uk>
+ <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+ <20150930191818.GZ15635@sirena.org.uk>
+ <CANMBJr6aU4wPO5HqP-Oh-ND7_DZXSH30ykNHyvDtUp3nQFG6sA@mail.gmail.com>
+ <20151001031552.GC15675@leoy-linaro>
+ <20151001102136.GC12635@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1443770319.3445.20.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-mediatek@lists.infradead.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151001102136.GC12635-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMiwgMjAxNSBhdCAyOjE4IEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBl
-bmd1dHJvbml4LmRlPiB3cm90ZToKPiBBbSBEb25uZXJzdGFnLCBkZW4gMDEuMTAuMjAxNSwgMDc6
-NTggLTA1MDAgc2NocmllYiBSb2IgSGVycmluZzoKPj4gT24gVGh1LCBPY3QgMSwgMjAxNSBhdCAz
-OjU5IEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPj4g
-PiBBbSBNaXR0d29jaCwgZGVuIDMwLjA5LjIwMTUsIDEyOjEzIC0wNTAwIHNjaHJpZWIgUm9iIEhl
-cnJpbmc6Cj4+ID4+IE9uIE1vbiwgU2VwIDIxLCAyMDE1IGF0IDM6MTEgQU0sIFBoaWxpcHAgWmFi
-ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiA+PiA+IE5vdGUgaG93IHRoZSBk
-aXNwbGF5LXN1YnN5c3RlbSBub2RlIG92ZXJsYXBzIHRoZSBsYXJiIG5vZGUuIElzIHRoYXQKPj4g
-Pj4gPiBhY2NlcHRhYmxlPwo+PiA+Pgo+PiA+PiBHaXZlbiB3aGF0IHRoZSBncmFwaCBsb29rcyBs
-aWtlLCBwZXJoYXBzLiBIb3dldmVyLCBkbyB5b3UgcmVhbGx5IG5lZWQKPj4gPj4gYSBjb250YWlu
-ZXIgbm9kZT8gSXQgb25seSBzZXJ2ZXMgdG8gcHJvdmlkZSBhIGxpc3Qgb2Ygbm9kZXMgKGUuZy4g
-YWxsCj4+ID4+IHRoZSBjaGlsZHJlbikgdG8gaW5jbHVkZSBhcyBjb21wb25lbnRzLiBUaGVyZSBh
-cmUgb3RoZXIgd2F5cyB0bwo+PiA+PiBkZXRlcm1pbmUgdGhpcyBsaXN0LiBZb3UgY291bGQgZmlu
-ZCBhbGwgbm9kZXMganVzdCBzZWFyY2hpbmcKPj4gPj4gY29tcGF0aWJsZSBzdHJpbmdzIGZvciBl
-YWNoIGNvbXBvbmVudC4gWW91IGp1c3QgbmVlZCB0byBiaW5kIHRoZSBkcm0KPj4gPj4gZHJpdmVy
-IHRvIHNvbWUgb3RoZXIgRFQgbm9kZS4gSXMgdGhlcmUgbm8gbm9kZSB5b3UgY2FuIHBpY2sgYXMg
-dGhlCj4+ID4+IG1hc3RlciBjb21wb25lbnQ/Cj4+ID4KPj4gPiBUaGVyZSBpcyB0aGUgbW1zeXMg
-Y2xvY2stY29udHJvbGxlciBub2RlIGF0IHRoZSB0b3Agb2YgdGhlIE1NU1lTIGFkZHJlc3MKPj4g
-PiBzcGFjZSAoMHgxNDAwMDAwMC0weDE0ZmZmZmZmKToKPj4gPgo+PiA+ICAgICAgICAgbW1zeXM6
-IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAgewo+PiA+ICAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIsICJzeXNjb24iOwo+PiA+ICAgICAgICAgICAg
-ICAgICByZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsKPj4gPiAgICAgICAgICAgICAgICAg
-I2Nsb2NrLWNlbGxzID0gPDE+Owo+PiA+ICAgICAgICAgfTsKPj4gPgo+PiA+IEl0cyByZWdpc3Rl
-ciBzcGFjZSBhbHNvIGNvbnRhaW5zIHRoZSBNTVNZU19DT05GSUcgcmVnaW9uIHRoYXQgY29udHJv
-bHMKPj4gPiB0aGUgbXVsdGlwbGV4ZXJzIGJldHdlZW4gdGhlIGRpc3BsYXkgZnVuY3Rpb24gYmxv
-Y2tzLCBzbyB0aGF0IHdvdWxkIGJlIGEKPj4gPiBnb29kIGNhbmRpZGF0ZS4KPj4gPiBObyBkcml2
-ZXIgYmluZHMgdG8gdGhpcyBub2RlIHlldCwgdGhlIGNsb2NrcyBhcmUgcmVnaXN0ZXJlZCB3aXRo
-Cj4+ID4gQ0xLX09GX0RFQ0xBUkUuCj4+ID4KPj4gPiBJJ2xsIHRyeSB0byBiaW5kIHRvIHRoaXMg
-bm9kZSBhbmQgaGF2ZSB0aGUgZHJpdmVyIGZpbmQgc2libGluZyBub2Rlcwo+PiA+IHVzaW5nIHRo
-ZWlyIGNvbXBhdGlibGUgc3RyaW5ncy4KPj4KPj4gVGhhdCBkb2Vzbid0IHNlZW0gbGlrZSBhIGdv
-b2QgY2hvaWNlIHNpbmNlIHRoZXJlIGFyZSBvdGhlciBmdW5jdGlvbnMKPj4gaW4gdGhlIGJsb2Nr
-LiBJIHdhcyB0aGlua2luZyBvbmUgb2YgdGhlIGRpc3BsYXkgcmVsYXRlZCBibG9ja3MgbGlrZQo+
-PiB3aGF0ZXZlciBibG9jayBwcm92aWRlcyB0aGUgbWFpbiBjcnRjIGZ1bmN0aW9ucy4KPgo+IFdo
-eSBleGFjdGx5IGlzbid0IHRoaXMgYSBnb29kIGNob2ljZT8gU2luY2UgYWxsIGRpc3BsYXkgZnVu
-Y3Rpb24gYmxvY2tzCj4gYXJlIHNwcmVhZCB0aHJvdWdob3V0IHRoZSBNTVNZUyBhZGRyZXNzIHNw
-YWNlLCB1c2luZyB0aGUgbW1zeXMgZHJpdmVyIHRvCj4gY3JlYXRlIHRoZSBEUk0vY29tcG9uZW50
-IG1hc3RlciBwbGF0Zm9ybSBkcml2ZXIgdGhhdCBjb2xsZWN0cyBpdHMKPiBzdWJkZXZpY2VzIHNv
-dW5kZWQgbG9naWNhbC4KCkdpdmVuIGl0IGlzIGEgc3lzY29uLCBJIHdhcyBhc3N1bWluZyB0aGVy
-ZSBhcmUgb3RoZXIgdW5yZWxhdGVkCmZ1bmN0aW9ucy4gSWYgZXZlcnl0aGluZyBpbiBpdCBpcyBk
-aXNwbGF5IHJlbGF0ZWQsIHRoZW4gaXQgd291bGQgYmUgYQpmaW5lIGNob2ljZS4KCj4gQW5vdGhl
-ciBjYW5kaWRhdGUgd291bGQgYmUgdGhlIG11dGV4IG5vZGUsIHdoaWNoIGNhbiBzeW5jaHJvbml6
-ZSB0aGUKPiBjb25maWd1cmF0aW9uIHVwZGF0ZXMgdG8gdGhlIGZ1bmN0aW9uIGJsb2NrcyBpbiB0
-aGUgTU1TWVMgcmVnaW9uIHRvCj4gZnJhbWUgYm9yZGVycy4KPgo+IFRoZSBoYXJkd2FyZSBibG9j
-a3MgdGhhdCBtb3N0IGNsb3NlbHkgY29ycmVzcG9uZCB0byBjcnRjIGZ1bmN0aW9uYWxpdHkKPiBh
-cmUgdGhlIHR3byBPVkwgYmxvY2tzLCBhcyBEYW5pZWwgcG9pbnRzIG91dC4gVGhleSBwcm92aWRl
-IERNQSBhbmQgcGxhbmUKPiBjb21wb3NpdGlvbi4gQnV0IHRoZXkgYXJlIGVxdWl2YWxlbnQsIGFu
-ZCB0aGVyZSBpcyBubyBzaW5nbGUgY2VudHJhbAo+IG5vZGUsIHNhbWUgYXMgd2l0aCB0aGUgdHdv
-IElQVXMgb24gaS5NWDYuCgpKdXN0IGN1cmlvdXMsIGFyZSAyIElQVXMgcmVwcmVzZW50ZWQgYXMg
-MSBvciAyIHN0cnVjdCBkcm1fZGV2aWNlPwoKPiBBbHNvLCBJJ2QgbGlrZSB0byBrZWVwIHRoZSBw
-b3NzaWJpbGl0eSBvZiBub3QgdHlpbmcgT1ZMIGJsb2NrcyB0byBjcnRjCj4gZnVuY3Rpb25hbGl0
-eSB0b28gY2xvc2VseSwgYmVjYXVzZSB0aGVyZSBhcmUgdGhyZWUgbW9yZSBzZXBhcmF0ZSBSRE1B
-Cj4gdW5pdHMsIGF0IGxlYXN0IG9uZSBvZiB3aGljaCBjb3VsZCBiZSB1c2VkIHRvIGltcGxlbWVu
-dCBhIHRoaXJkIHBpcGUgaW4KPiB0aGUgZnV0dXJlLgo+Cj4gRWl0aGVyIHdheSwgaWYgd2UgZ28g
-dGhpcyBwYXRoIChvbmUgZHJpdmVyIHNjYW5uaW5nIERUIGZvciBrbm93bgo+IGNvbXBvbmVudCBk
-cml2ZXIgY29tcGF0aWJsZSB2YWx1ZXMpLCB3aGljaGV2ZXIgbm9kZSB0aGUgbWFzdGVyIGRyaXZl
-cgo+IGJpbmRzIHRvIGlzIGEgTGludXggaW1wbGVtZW50YXRpb24gZGV0YWlsLCBhbmQgaXQgc2hv
-dWxkIGJlIGNvbXBsZXRlbHkKPiBoaWRkZW4gZnJvbSB0aGUgZGV2aWNlIHRyZWUgYW5kIGJpbmRp
-bmcgc3BlY3MuCgpBZ3JlZWQuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Thu, Oct 01, 2015 at 11:21:36AM +0100, Mark Brown wrote:
+> On Thu, Oct 01, 2015 at 11:15:52AM +0800, Leo Yan wrote:
+> > On Wed, Sep 30, 2015 at 04:54:51PM -0700, Tyler Baker wrote:
+> > > On 30 September 2015 at 12:18, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+> > > > My understanding is that it applies to both with slightly different
+> > > > driver sets, the slides aren't online yet (!) but if you look at 10:52
+> > > > or so in the video we should have SD/eMMC on HiKey in v4.1 with thermal
+> > > > and CPUfreq added in v4.2.  It also looks like there's just some DT
+> > > > additions needed to enable reset, cpuidle and CPU hotplug using generic
+> > > > code (mainly the constants for PSCI I expect).
+> 
+> > > I just skimmed the video and I see your point. I'll need to
+> > > investigate a bit but I'm up for sending some follow up patches to get
+> > > these drivers functioning. First lets get the UART working :)
+> 
+> > If you think it's necessary, i could send out patches to enable cpuidle
+> > firstly (actually now PSCI has been enabled yet); for cpufreq and
+> > thermal features, need wait until mailbox driver has been merged.
+> 
+> It seems sensible to get the DT bits for functionality that is already
+> supported on the driver side upstream, that way we get the maximum
+> functionality available as soon as possible and even if other bits get
+> problems in review users can take advantage of things that are OK.
+
+Okay, i will prepare patches for enabling CPUIdle ASAP.
+
+Thanks,
+Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
