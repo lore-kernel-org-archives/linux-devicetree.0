@@ -1,39 +1,80 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v4 0/3] add GPT timer support for mt8173
-Date: Fri, 2 Oct 2015 23:13:03 +0800
-Message-ID: <1443798783.24788.1.camel@mtksdaap41>
-References: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v5 0/5] Add SMP bringup support for mt65xx socs
+Date: Fri, 2 Oct 2015 23:19:36 +0800
+Message-ID: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, erin.lo@mediatek.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-10-02 at 23:05 +0800, Yingjoe Chen wrote:
-> This is based on v4.3-rc1 + clockevents-4.4[1] and James's mediatek-clk
-> tree[2].
-> 
-> Changes compare to previous version[3]:
-> - Add more MediaTek SoC to mtk-timer binding
-> - Update commit message to better describe the purpose.
-> 
-> Changes compare to v2[4]:
-> - the first two mtk_timer related changes are removed because they are
-> replaced/accepted in clockevents tree.
-> - Remove 'add 13mhz clock for MT8173' because it is accepted in
-> mediatek-clk tree.
-> - Kconfig.platforms path change.
+This series add SMP brinup support for MediaTek SoCs. This is v5 and
+is based on v4.3-rc1.
+
+There are similar but different SMP bringup up methods on MediaTek
+mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+directly in secure world.
+
+Patch 1 enable arch timer support.
+Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
+"mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+and TZ platform.
+Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
+
+Changes in v5:
+- Fix dts error
+- Add Rob's Ack tag.
+
+Changes in v4[3]:
+- rebase to v4.3-rc1
+- Reserve trustzone bootinfo memory area in device tree.
+
+Changes in v3:
+- v3 in [1]
+- The first 2 patches in v2 are merged in v4.2-rc1.
+- Patch 3~4 in v2 are moved to another series [2]
+- platsmp.c changes based on Stephen's suggestion
+- Change cpu enable-method name to "mediatek,mt6589-smp"
+
+Changes in v2:
+- Fix boot issue for THUMB2 kernel.
+- Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
+- Change platsmp.c according to Matthias' suggestion
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
+
+v1:
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001570.html
+
+[2]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
+
+[3]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002377.html
 
 
-Hi Sudeep, Mark,
+Matthias Brugger (1):
+  ARM: mediatek: enable gpt6 on boot up to make arch timer working
 
-I just post a new version of this patch. Sorry I forgot to CC you.
+Yingjoe Chen (4):
+  devicetree: bindings: add new SMP enable method Mediatek SoC
+  ARM: mediatek: add smp bringup code
+  ARM: dts: mt8135: enable basic SMP bringup for mt8135
+  ARM: dts: mt8127: enable basic SMP bringup for mt8127
 
-Joe.C
+ Documentation/devicetree/bindings/arm/cpus.txt |   2 +
+ arch/arm/boot/dts/mt8127.dtsi                  |  27 +++++
+ arch/arm/boot/dts/mt8135.dtsi                  |  27 +++++
+ arch/arm/mach-mediatek/Makefile                |   3 +
+ arch/arm/mach-mediatek/mediatek.c              |  27 +++++
+ arch/arm/mach-mediatek/platsmp.c               | 141 +++++++++++++++++++++++++
+ 6 files changed, 227 insertions(+)
+ create mode 100644 arch/arm/mach-mediatek/platsmp.c
 
-
-
+-- 
+1.9.1
