@@ -1,122 +1,55 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Thu, 1 Oct 2015 17:44:36 -0700
-Message-ID: <560DD374.4000708@broadcom.com>
-References: <1443689961-23909-1-git-send-email-bharatku@xilinx.com>
- <2677327.lnRZhqx5GI@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2677327.lnRZhqx5GI@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tinamdar-qTEPVZfXA3Y@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v4 0/4] MSI, of, irqchip/gicv3-its: Handle "msi-map" properties.
+Date: Thu,  1 Oct 2015 17:50:21 -0700
+Message-ID: <1443747025-9918-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+From: David Daney <david.daney@cavium.com>
 
-On 10/1/2015 2:52 AM, Arnd Bergmann wrote:
-> On Thursday 01 October 2015 14:29:21 Bharat Kumar Gogada wrote:
->> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
->>
->> Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->> Removed unneccessary comments
->> Modified setup_sspl implementation
->> Added more details in binding Documentation
->> ---
->>  .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   49 +
->>  drivers/pci/host/Kconfig                           |    9 +
->>  drivers/pci/host/Makefile                          |    1 +
->>  drivers/pci/host/pcie-xilinx-nwl.c                 | 1029 ++++++++++++++++++++
->>  4 files changed, 1088 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
->>  create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
->>
->> diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
->> new file mode 100644
->> index 0000000..ed87184
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
->> @@ -0,0 +1,49 @@
->> +* Xilinx NWL PCIe Root Port Bridge DT description
->> +
->> +Required properties:
->> +- compatible: Should contain "xlnx,nwl-pcie-2.11"
->> +- #address-cells: Address representation for root ports, set to <3>
->> +- #size-cells: Size representation for root ports, set to <2>
->> +- #interrupt-cells: specifies the number of cells needed to encode an
->> +	interrupt source. The value must be 1.
->> +- reg: Should contain Bridge, PCIe Controller registers location,
->> +	configuration sapce, and length
->> +- reg-names: Must include the following entries:
->> +	"breg": bridge registers
->> +	"pcireg": PCIe controller registers
->> +	"cfg": configuration space region
->> +- device_type: must be "pci"
->> +- interrupts: Should contain NWL PCIe interrupt
->> +- interrupt-names: Must include the following entries:
->> +	"misc": interrupt asserted when miscellaneous is recieved
->> +	"intx": interrupt that is asserted when an legacy interrupt is received
->> +	"msi_1, msi_0": interrupt asserted when msi is recieved
-> 
-> The msi and intx interrupts don't really belong here: For intx, please
-> use an interrupt-map property as the other host drivers do.
-> 
-> For MSI, the usual answer is that there should be a separate device node
-> for the MSI controller, and an msi-parent property in the PCI host.
-> 
-> This lets you use the same code for hosts that have a GICv2m or GICv3
-> that comes with its own MSI controller.
-> 
+The first patch from Mark Rutland adds the OF device tree binding
+description, which explains what we are attempting to do here.  For
+MSI messages on GICv3 systems there is some side-band data that
+accompanies the message, this data is specified in the OF device tree
+"msi-map" property of the PCI host driver.
 
-Sorry for stealing this discussion, :)
+The second patch adds a parser to get the required information out of
+the device tree.
 
-I have some questions here, since this affects how I should implement
-the MSI support for iProc based PCIe controller. I understand it makes
-more sense to use separate device node for MSI and have "msi-parent"
-from the pci node points to the MSI node, and that MSI node can be
-gicv2m or gicv3 based on more advanced ARMv8 platforms.
+The third patch creates the pci_msi_domain_get_msi_rid() function to
+make it more convenient to generate the proper PCI/MSI requester id.
 
-Then I would assume the MSI controller would deserve its own driver?
-Which is a lot of people do nowadays. In that case, how I should handle
-the case when the iProc MSI support is handled through some event queue
-mechanism with their registers embedded in the PCIe controller register
-space?
+The final patch converts gicv3-its to use the new infrastructure.
 
-Does the following logic make sense to you?
+Changes from v1: Factor out the device tree access code to a separate
+function in drivers/of/irq.c
 
-1. parse phandle of "msi-parent"
-2. Call of_pci_find_msi_chip_by_node to hook it up to msi chip already
-registered (in the gicv2m and gicv3 case)
-3. If failed, fall back to use the iProc's own event queue logic by
-calling iproc_pcie_msi_init.
+Changes from v2: Added the pci_msi_domain_get_msi_rid() patch to
+generalize the support a bit more.
 
-The iProc MSI still has its own node that looks like this:
-141 msi0: msi@20020000 {
-142                         msi-controller;
-143                         interrupt-parent = <&gic>;
-144                         interrupts = <GIC_SPI 277 IRQ_TYPE_NONE>,
-145                                      <GIC_SPI 278 IRQ_TYPE_NONE>,
-146                                      <GIC_SPI 279 IRQ_TYPE_NONE>,
-147                                      <GIC_SPI 280 IRQ_TYPE_NONE>,
-148                                      <GIC_SPI 281 IRQ_TYPE_NONE>,
-149                                      <GIC_SPI 282 IRQ_TYPE_NONE>;
-150                         brcm,num-eq-region = <1>;
-151                         brcm,num-msi-msg-region = <1>;
-152                 };
+Changes from v3: Added Acked-by to 2/4.  Simplified and improved
+pci_msi_domain_get_msi_rid() as suggested by Marc Zyngier in 3/4.  1/4
+and 4/4 unchanged.
 
-But it does not have its own "reg" since they are embedded in the PCI
-controller's registers and it relies on one calling iproc_pcie_msi_init
-to pass in base register value and some other information.
+David Daney (3):
+  of/irq: Add new function of_msi_map_rid()
+  PCI/MSI:  Add helper function pci_msi_domain_get_msi_rid().
+  irqchip/gic-v3-its:  Add handling of PCI requester id.
 
-Thanks,
+Mark Rutland (1):
+  Docs: dt: Add PCI MSI map bindings
 
-Ray
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v3-its-pci-msi.c          |   4 +-
+ drivers/of/irq.c                                  |  84 +++++++++
+ drivers/pci/msi.c                                 |  30 +++
+ include/linux/msi.h                               |   1 +
+ include/linux/of_irq.h                            |   7 +
+ 6 files changed, 343 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+
+-- 
+1.9.1
