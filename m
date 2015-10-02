@@ -1,31 +1,49 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] firmware: arm_scpi: Extend to support sensors
-Date: Fri, 2 Oct 2015 17:36:03 +0100
-Message-ID: <560EB273.7000804@arm.com>
-References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
- <1442335861-7282-3-git-send-email-punit.agrawal@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442335861-7282-3-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH] mmc: read alias from device-tree if probing via of.
+Date: Fri,  2 Oct 2015 17:36:53 +0100
+Message-ID: <1443803813-13369-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-kernel@lists.codethink.co.uk, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kejia.hu@codethink.co.uk
+Cc: devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+The mmc host controller fails to check for the presence
+of an aliases entry in the device tree when creating a
+new mmc host. This means that  mmc bus numbers are not
+as specified in the aliases node.
 
+For example, the following on an imx6 would make mmc0
+the second sdhci, and mmc2 the first sdhci:
 
-On 15/09/15 17:50, Punit Agrawal wrote:
-> ARM System Control Processor (SCP) provides an API to query and use
-> the sensors available in the system. Extend the SCPI driver to support
->   sensor messages.
->
-> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+aliases {
+	mmc0 = &usdhc2;
+	mmc2 = &usdhc0;
+}
 
-Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Tested-by: Kejia Hu <kejia.hu@codethink.co.uk>
+---
+ drivers/mmc/core/host.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index abd933b..3bed4d0 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -561,7 +561,11 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
+ 	host->rescan_disable = 1;
+ 	idr_preload(GFP_KERNEL);
+ 	spin_lock(&mmc_host_lock);
+-	err = idr_alloc(&mmc_host_idr, host, 0, 0, GFP_NOWAIT);
++	err = of_alias_get_id(dev->of_node, "mmc");
++	if (err >= 0)
++		err = idr_alloc(&mmc_host_idr, host, err, err+1, GFP_NOWAIT);
++	if (err < 0)
++		err = idr_alloc(&mmc_host_idr, host, 0, 0, GFP_NOWAIT);
+ 	if (err >= 0)
+ 		host->index = err;
+ 	spin_unlock(&mmc_host_lock);
+-- 
+2.5.3
+
