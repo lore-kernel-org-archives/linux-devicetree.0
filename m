@@ -1,55 +1,92 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH 1/2] gpio: xgene: add support to configure GPIO line as
- input, output or external IRQ pin
-Date: Fri, 2 Oct 2015 21:03:47 +0700
-Message-ID: <CAL4ahLfYO5nGvUbi6L5SUfhrj6o-O4-uvhFdrppojvH8Hwumjg@mail.gmail.com>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com>
-	<1441963332-13329-2-git-send-email-yvo@apm.com>
-	<CACRpkdbos6r_S06r9gR9Mn7qu-ri61UJcQM332JK6S4gFwSN-A@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
+ subsystem dts binding
+Date: Fri, 2 Oct 2015 09:24:13 -0500
+Message-ID: <CAL_JsqJhoysg=39gsArwmxf3xpzeXeHhxJ7THq4SbVc-NyertQ@mail.gmail.com>
+References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
+ <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
+ <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
+ <1442823067.3277.35.camel@pengutronix.de>
+ <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
+ <1443689957.3272.18.camel@pengutronix.de>
+ <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
+ <1443770319.3445.20.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbos6r_S06r9gR9Mn7qu-ri61UJcQM332JK6S4gFwSN-A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1443770319.3445.20.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-mediatek@lists.infradead.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 2, 2015 at 4:51 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Sep 11, 2015 at 2:22 AM, Y Vo <yvo@apm.com> wrote:
->
->> Add support to configure GPIO line as input, output or external IRQ pin.
->>
->> Signed-off-by: Y Vo <yvo@apm.com>
->
-> Mostly OK but...
->
->>  #define XGENE_MAX_GPIO_DS              22
->>  #define XGENE_MAX_GPIO_DS_IRQ          6
->> +#define XGENE_GPIO8_HWIRQ              0x48
->> +#define XGENE_GPIO8_IDX                        8
-> (...)
->> +static int xgene_irq_to_line(u32 irq)
->> +{
->> +       u32 offset = irq_get_irq_data(irq)->hwirq - XGENE_GPIO8_HWIRQ;
->> +
->> +       return (offset < XGENE_MAX_GPIO_DS_IRQ) ?
->> +                       (offset + XGENE_GPIO8_IDX) : -EINVAL;
->> +}
->
-> What is this hardcoded IRQ 0x48 business?
-
-This is hardware irq number ~ GPIO_DS8. So we use it to get the gpio
-number from hwirq. But we are preparing another version which is
-better to configure the GPIO lines as interrupt or direction(in/out).
-
->
-> This patch needs kerneldoc for this xgene_irq_to_line() to explain
-> what exactly is going on, or noone will understand it enough to
-> debug or refactor the code.
->
-> I hope this 0x48 is not some way of compensating for Linux internal
-> IRQ offsets, that is what irqdomain is for.
->
-> Yours,
-> Linus Walleij
+T24gRnJpLCBPY3QgMiwgMjAxNSBhdCAyOjE4IEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBl
+bmd1dHJvbml4LmRlPiB3cm90ZToKPiBBbSBEb25uZXJzdGFnLCBkZW4gMDEuMTAuMjAxNSwgMDc6
+NTggLTA1MDAgc2NocmllYiBSb2IgSGVycmluZzoKPj4gT24gVGh1LCBPY3QgMSwgMjAxNSBhdCAz
+OjU5IEFNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPj4g
+PiBBbSBNaXR0d29jaCwgZGVuIDMwLjA5LjIwMTUsIDEyOjEzIC0wNTAwIHNjaHJpZWIgUm9iIEhl
+cnJpbmc6Cj4+ID4+IE9uIE1vbiwgU2VwIDIxLCAyMDE1IGF0IDM6MTEgQU0sIFBoaWxpcHAgWmFi
+ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiA+PiA+IE5vdGUgaG93IHRoZSBk
+aXNwbGF5LXN1YnN5c3RlbSBub2RlIG92ZXJsYXBzIHRoZSBsYXJiIG5vZGUuIElzIHRoYXQKPj4g
+Pj4gPiBhY2NlcHRhYmxlPwo+PiA+Pgo+PiA+PiBHaXZlbiB3aGF0IHRoZSBncmFwaCBsb29rcyBs
+aWtlLCBwZXJoYXBzLiBIb3dldmVyLCBkbyB5b3UgcmVhbGx5IG5lZWQKPj4gPj4gYSBjb250YWlu
+ZXIgbm9kZT8gSXQgb25seSBzZXJ2ZXMgdG8gcHJvdmlkZSBhIGxpc3Qgb2Ygbm9kZXMgKGUuZy4g
+YWxsCj4+ID4+IHRoZSBjaGlsZHJlbikgdG8gaW5jbHVkZSBhcyBjb21wb25lbnRzLiBUaGVyZSBh
+cmUgb3RoZXIgd2F5cyB0bwo+PiA+PiBkZXRlcm1pbmUgdGhpcyBsaXN0LiBZb3UgY291bGQgZmlu
+ZCBhbGwgbm9kZXMganVzdCBzZWFyY2hpbmcKPj4gPj4gY29tcGF0aWJsZSBzdHJpbmdzIGZvciBl
+YWNoIGNvbXBvbmVudC4gWW91IGp1c3QgbmVlZCB0byBiaW5kIHRoZSBkcm0KPj4gPj4gZHJpdmVy
+IHRvIHNvbWUgb3RoZXIgRFQgbm9kZS4gSXMgdGhlcmUgbm8gbm9kZSB5b3UgY2FuIHBpY2sgYXMg
+dGhlCj4+ID4+IG1hc3RlciBjb21wb25lbnQ/Cj4+ID4KPj4gPiBUaGVyZSBpcyB0aGUgbW1zeXMg
+Y2xvY2stY29udHJvbGxlciBub2RlIGF0IHRoZSB0b3Agb2YgdGhlIE1NU1lTIGFkZHJlc3MKPj4g
+PiBzcGFjZSAoMHgxNDAwMDAwMC0weDE0ZmZmZmZmKToKPj4gPgo+PiA+ICAgICAgICAgbW1zeXM6
+IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAgewo+PiA+ICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIsICJzeXNjb24iOwo+PiA+ICAgICAgICAgICAg
+ICAgICByZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsKPj4gPiAgICAgICAgICAgICAgICAg
+I2Nsb2NrLWNlbGxzID0gPDE+Owo+PiA+ICAgICAgICAgfTsKPj4gPgo+PiA+IEl0cyByZWdpc3Rl
+ciBzcGFjZSBhbHNvIGNvbnRhaW5zIHRoZSBNTVNZU19DT05GSUcgcmVnaW9uIHRoYXQgY29udHJv
+bHMKPj4gPiB0aGUgbXVsdGlwbGV4ZXJzIGJldHdlZW4gdGhlIGRpc3BsYXkgZnVuY3Rpb24gYmxv
+Y2tzLCBzbyB0aGF0IHdvdWxkIGJlIGEKPj4gPiBnb29kIGNhbmRpZGF0ZS4KPj4gPiBObyBkcml2
+ZXIgYmluZHMgdG8gdGhpcyBub2RlIHlldCwgdGhlIGNsb2NrcyBhcmUgcmVnaXN0ZXJlZCB3aXRo
+Cj4+ID4gQ0xLX09GX0RFQ0xBUkUuCj4+ID4KPj4gPiBJJ2xsIHRyeSB0byBiaW5kIHRvIHRoaXMg
+bm9kZSBhbmQgaGF2ZSB0aGUgZHJpdmVyIGZpbmQgc2libGluZyBub2Rlcwo+PiA+IHVzaW5nIHRo
+ZWlyIGNvbXBhdGlibGUgc3RyaW5ncy4KPj4KPj4gVGhhdCBkb2Vzbid0IHNlZW0gbGlrZSBhIGdv
+b2QgY2hvaWNlIHNpbmNlIHRoZXJlIGFyZSBvdGhlciBmdW5jdGlvbnMKPj4gaW4gdGhlIGJsb2Nr
+LiBJIHdhcyB0aGlua2luZyBvbmUgb2YgdGhlIGRpc3BsYXkgcmVsYXRlZCBibG9ja3MgbGlrZQo+
+PiB3aGF0ZXZlciBibG9jayBwcm92aWRlcyB0aGUgbWFpbiBjcnRjIGZ1bmN0aW9ucy4KPgo+IFdo
+eSBleGFjdGx5IGlzbid0IHRoaXMgYSBnb29kIGNob2ljZT8gU2luY2UgYWxsIGRpc3BsYXkgZnVu
+Y3Rpb24gYmxvY2tzCj4gYXJlIHNwcmVhZCB0aHJvdWdob3V0IHRoZSBNTVNZUyBhZGRyZXNzIHNw
+YWNlLCB1c2luZyB0aGUgbW1zeXMgZHJpdmVyIHRvCj4gY3JlYXRlIHRoZSBEUk0vY29tcG9uZW50
+IG1hc3RlciBwbGF0Zm9ybSBkcml2ZXIgdGhhdCBjb2xsZWN0cyBpdHMKPiBzdWJkZXZpY2VzIHNv
+dW5kZWQgbG9naWNhbC4KCkdpdmVuIGl0IGlzIGEgc3lzY29uLCBJIHdhcyBhc3N1bWluZyB0aGVy
+ZSBhcmUgb3RoZXIgdW5yZWxhdGVkCmZ1bmN0aW9ucy4gSWYgZXZlcnl0aGluZyBpbiBpdCBpcyBk
+aXNwbGF5IHJlbGF0ZWQsIHRoZW4gaXQgd291bGQgYmUgYQpmaW5lIGNob2ljZS4KCj4gQW5vdGhl
+ciBjYW5kaWRhdGUgd291bGQgYmUgdGhlIG11dGV4IG5vZGUsIHdoaWNoIGNhbiBzeW5jaHJvbml6
+ZSB0aGUKPiBjb25maWd1cmF0aW9uIHVwZGF0ZXMgdG8gdGhlIGZ1bmN0aW9uIGJsb2NrcyBpbiB0
+aGUgTU1TWVMgcmVnaW9uIHRvCj4gZnJhbWUgYm9yZGVycy4KPgo+IFRoZSBoYXJkd2FyZSBibG9j
+a3MgdGhhdCBtb3N0IGNsb3NlbHkgY29ycmVzcG9uZCB0byBjcnRjIGZ1bmN0aW9uYWxpdHkKPiBh
+cmUgdGhlIHR3byBPVkwgYmxvY2tzLCBhcyBEYW5pZWwgcG9pbnRzIG91dC4gVGhleSBwcm92aWRl
+IERNQSBhbmQgcGxhbmUKPiBjb21wb3NpdGlvbi4gQnV0IHRoZXkgYXJlIGVxdWl2YWxlbnQsIGFu
+ZCB0aGVyZSBpcyBubyBzaW5nbGUgY2VudHJhbAo+IG5vZGUsIHNhbWUgYXMgd2l0aCB0aGUgdHdv
+IElQVXMgb24gaS5NWDYuCgpKdXN0IGN1cmlvdXMsIGFyZSAyIElQVXMgcmVwcmVzZW50ZWQgYXMg
+MSBvciAyIHN0cnVjdCBkcm1fZGV2aWNlPwoKPiBBbHNvLCBJJ2QgbGlrZSB0byBrZWVwIHRoZSBw
+b3NzaWJpbGl0eSBvZiBub3QgdHlpbmcgT1ZMIGJsb2NrcyB0byBjcnRjCj4gZnVuY3Rpb25hbGl0
+eSB0b28gY2xvc2VseSwgYmVjYXVzZSB0aGVyZSBhcmUgdGhyZWUgbW9yZSBzZXBhcmF0ZSBSRE1B
+Cj4gdW5pdHMsIGF0IGxlYXN0IG9uZSBvZiB3aGljaCBjb3VsZCBiZSB1c2VkIHRvIGltcGxlbWVu
+dCBhIHRoaXJkIHBpcGUgaW4KPiB0aGUgZnV0dXJlLgo+Cj4gRWl0aGVyIHdheSwgaWYgd2UgZ28g
+dGhpcyBwYXRoIChvbmUgZHJpdmVyIHNjYW5uaW5nIERUIGZvciBrbm93bgo+IGNvbXBvbmVudCBk
+cml2ZXIgY29tcGF0aWJsZSB2YWx1ZXMpLCB3aGljaGV2ZXIgbm9kZSB0aGUgbWFzdGVyIGRyaXZl
+cgo+IGJpbmRzIHRvIGlzIGEgTGludXggaW1wbGVtZW50YXRpb24gZGV0YWlsLCBhbmQgaXQgc2hv
+dWxkIGJlIGNvbXBsZXRlbHkKPiBoaWRkZW4gZnJvbSB0aGUgZGV2aWNlIHRyZWUgYW5kIGJpbmRp
+bmcgc3BlY3MuCgpBZ3JlZWQuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
