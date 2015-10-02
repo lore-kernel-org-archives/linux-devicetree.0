@@ -1,192 +1,147 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v2 1/6] pinctrl: berlin: regmap as an extra argument of
- berlin_pinctrl_probe()
-Date: Fri, 2 Oct 2015 15:04:56 +0200
-Message-ID: <20151002130456.GC3162@kwain>
-References: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
- <1442829860-4647-2-git-send-email-jszhang@marvell.com>
+From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/3] iio: ad5064: Explicitly configure whether to use external supply
+Date: Fri, 2 Oct 2015 14:41:41 +0200
+Message-ID: <1443789702-24945-2-git-send-email-paul.cercueil@analog.com>
+References: <1443789702-24945-1-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442829860-4647-2-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1443789702-24945-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jisheng,
+Previously the driver would revert to internal supply if the
+external supply couldn't be found. This had multiple problems:
+- it caused silently ignored errors when a regulator was intended
+  to be supplied, but was not specified correctly.
+- if CONFIG_REGULATOR is disabled, regulator_get() will always
+  return a dummy regulator, which caused a device to always use
+  the external vref mode, even though there is none.
 
-Thanks for providing this!
+This patch addresses the issue by adding a platform data structure,
+containing a boolean field use_external_ref. If the platform data
+structure is present and if that boolean is set, the external vref
+is used; otherwise the internal vref is used.
 
-On Mon, Sep 21, 2015 at 06:04:15PM +0800, Jisheng Zhang wrote:
-> Let berlin_pinctrl_probe() accepts an extra argument: regmap, this is=
- to
-> prepare for the next berlin4ct support, where we won't use simple-mfd
-> any more.
+In the case where devicetree is used, and if regulators are listed
+as external references in the device tree, we assume that the
+external reference should be used.
 
-Just a question here: why don't we have instead one
-berlin_pinctrl_probe() and one berlin_pinctrl_probe_regmap(), both
-calling a static probe function in berlin.c, to avoid duplicating code?
+In the case where an external vref is wanted but regulator_get()
+fails, the driver no longer reverts to using the internal vref,
+but returns an error instead.
 
-Antoine
+Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/dac/ad5064.c             | 36 +++++++++++++++++++++++++++---------
+ include/linux/platform_data/ad5064.h | 21 +++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 9 deletions(-)
+ create mode 100644 include/linux/platform_data/ad5064.h
 
-> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-> ---
->  drivers/pinctrl/berlin/berlin-bg2.c   | 10 +++++++++-
->  drivers/pinctrl/berlin/berlin-bg2cd.c | 10 +++++++++-
->  drivers/pinctrl/berlin/berlin-bg2q.c  | 10 +++++++++-
->  drivers/pinctrl/berlin/berlin.c       |  9 +--------
->  drivers/pinctrl/berlin/berlin.h       |  1 +
->  5 files changed, 29 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/berlin/berlin-bg2.c b/drivers/pinctrl/be=
-rlin/berlin-bg2.c
-> index 274c553..4aede2e 100644
-> --- a/drivers/pinctrl/berlin/berlin-bg2.c
-> +++ b/drivers/pinctrl/berlin/berlin-bg2.c
-> @@ -10,6 +10,7 @@
->   * warranty of any kind, whether express or implied.
->   */
-> =20
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> @@ -233,8 +234,15 @@ static int berlin2_pinctrl_probe(struct platform=
-_device *pdev)
->  {
->  	const struct of_device_id *match =3D
->  		of_match_device(berlin2_pinctrl_match, &pdev->dev);
-> +	struct device *dev =3D &pdev->dev;
-> +	struct device_node *parent_np =3D of_get_parent(dev->of_node);
-> +	struct regmap *regmap =3D syscon_node_to_regmap(parent_np);
-> =20
-> -	return berlin_pinctrl_probe(pdev, match->data);
-> +	of_node_put(parent_np);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	return berlin_pinctrl_probe(pdev, regmap, match->data);
->  }
-> =20
->  static struct platform_driver berlin2_pinctrl_driver =3D {
-> diff --git a/drivers/pinctrl/berlin/berlin-bg2cd.c b/drivers/pinctrl/=
-berlin/berlin-bg2cd.c
-> index 0cb793a..6378dd8 100644
-> --- a/drivers/pinctrl/berlin/berlin-bg2cd.c
-> +++ b/drivers/pinctrl/berlin/berlin-bg2cd.c
-> @@ -10,6 +10,7 @@
->   * warranty of any kind, whether express or implied.
->   */
-> =20
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> @@ -176,8 +177,15 @@ static int berlin2cd_pinctrl_probe(struct platfo=
-rm_device *pdev)
->  {
->  	const struct of_device_id *match =3D
->  		of_match_device(berlin2cd_pinctrl_match, &pdev->dev);
-> +	struct device *dev =3D &pdev->dev;
-> +	struct device_node *parent_np =3D of_get_parent(dev->of_node);
-> +	struct regmap *regmap =3D syscon_node_to_regmap(parent_np);
-> =20
-> -	return berlin_pinctrl_probe(pdev, match->data);
-> +	of_node_put(parent_np);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	return berlin_pinctrl_probe(pdev, regmap, match->data);
->  }
-> =20
->  static struct platform_driver berlin2cd_pinctrl_driver =3D {
-> diff --git a/drivers/pinctrl/berlin/berlin-bg2q.c b/drivers/pinctrl/b=
-erlin/berlin-bg2q.c
-> index a466054..907bdf0 100644
-> --- a/drivers/pinctrl/berlin/berlin-bg2q.c
-> +++ b/drivers/pinctrl/berlin/berlin-bg2q.c
-> @@ -10,6 +10,7 @@
->   * warranty of any kind, whether express or implied.
->   */
-> =20
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> @@ -395,8 +396,15 @@ static int berlin2q_pinctrl_probe(struct platfor=
-m_device *pdev)
->  {
->  	const struct of_device_id *match =3D
->  		of_match_device(berlin2q_pinctrl_match, &pdev->dev);
-> +	struct device *dev =3D &pdev->dev;
-> +	struct device_node *parent_np =3D of_get_parent(dev->of_node);
-> +	struct regmap *regmap =3D syscon_node_to_regmap(parent_np);
-> =20
-> -	return berlin_pinctrl_probe(pdev, match->data);
-> +	of_node_put(parent_np);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	return berlin_pinctrl_probe(pdev, regmap, match->data);
->  }
-> =20
->  static struct platform_driver berlin2q_pinctrl_driver =3D {
-> diff --git a/drivers/pinctrl/berlin/berlin.c b/drivers/pinctrl/berlin=
-/berlin.c
-> index f495806..0557bbe 100644
-> --- a/drivers/pinctrl/berlin/berlin.c
-> +++ b/drivers/pinctrl/berlin/berlin.c
-> @@ -11,7 +11,6 @@
->   */
-> =20
->  #include <linux/io.h>
-> -#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> @@ -293,19 +292,13 @@ static struct pinctrl_desc berlin_pctrl_desc =3D=
- {
->  };
-> =20
->  int berlin_pinctrl_probe(struct platform_device *pdev,
-> +			 struct regmap *regmap,
->  			 const struct berlin_pinctrl_desc *desc)
->  {
->  	struct device *dev =3D &pdev->dev;
-> -	struct device_node *parent_np =3D of_get_parent(dev->of_node);
->  	struct berlin_pinctrl *pctrl;
-> -	struct regmap *regmap;
->  	int ret;
-> =20
-> -	regmap =3D syscon_node_to_regmap(parent_np);
-> -	of_node_put(parent_np);
-> -	if (IS_ERR(regmap))
-> -		return PTR_ERR(regmap);
-> -
->  	pctrl =3D devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
->  	if (!pctrl)
->  		return -ENOMEM;
-> diff --git a/drivers/pinctrl/berlin/berlin.h b/drivers/pinctrl/berlin=
-/berlin.h
-> index e1aa841..bf5781a 100644
-> --- a/drivers/pinctrl/berlin/berlin.h
-> +++ b/drivers/pinctrl/berlin/berlin.h
-> @@ -56,6 +56,7 @@ struct berlin_pinctrl_function {
->  #define BERLIN_PINCTRL_FUNCTION_UNKNOWN		{}
-> =20
->  int berlin_pinctrl_probe(struct platform_device *pdev,
-> +			 struct regmap *regmap,
->  			 const struct berlin_pinctrl_desc *desc);
-> =20
->  #endif /* __PINCTRL_BERLIN_H */
-> --=20
-> 2.5.3
->=20
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
+index c067e68..7146f42 100644
+--- a/drivers/iio/dac/ad5064.c
++++ b/drivers/iio/dac/ad5064.c
+@@ -2,7 +2,7 @@
+  * AD5024, AD5025, AD5044, AD5045, AD5064, AD5064-1, AD5065, AD5628, AD5629R,
+  * AD5648, AD5666, AD5668, AD5669R Digital to analog converters driver
+  *
+- * Copyright 2011 Analog Devices Inc.
++ * Copyright 2011, 2015 Analog Devices Inc.
+  *
+  * Licensed under the GPL-2.
+  */
+@@ -21,6 +21,8 @@
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+ 
++#include <linux/platform_data/ad5064.h>
++
+ #define AD5064_MAX_DAC_CHANNELS			8
+ #define AD5064_MAX_VREFS			4
+ 
+@@ -446,6 +448,7 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 	unsigned int midscale;
+ 	unsigned int i;
+ 	int ret;
++	bool ext_vref;
+ 
+ 	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+ 	if (indio_dev == NULL)
+@@ -461,11 +464,30 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 	for (i = 0; i < ad5064_num_vref(st); ++i)
+ 		st->vref_reg[i].supply = ad5064_vref_name(st, i);
+ 
+-	ret = devm_regulator_bulk_get(dev, ad5064_num_vref(st),
+-		st->vref_reg);
+-	if (ret) {
+-		if (!st->chip_info->internal_vref)
++	if (dev->of_node) {
++		for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
++			ext_vref = of_property_read_bool(dev->of_node,
++					ad5064_vref_name(st, i));
++	} else {
++		struct ad5064_platform_data *pdata = dev->platform_data;
++
++		ext_vref = pdata && pdata->use_external_ref;
++	}
++
++	if (ext_vref) {
++		ret = devm_regulator_bulk_get(dev, ad5064_num_vref(st),
++					st->vref_reg);
++		if (ret)
+ 			return ret;
++		ret = regulator_bulk_enable(ad5064_num_vref(st), st->vref_reg);
++		if (ret)
++			return ret;
++	} else {
++		if (!st->chip_info->internal_vref) {
++			dev_err(dev, "No vref available\n");
++			return -ENXIO;
++		}
++
+ 		st->use_internal_vref = true;
+ 		ret = ad5064_write(st, AD5064_CMD_CONFIG, 0,
+ 			AD5064_CONFIG_INT_VREF_ENABLE, 0);
+@@ -474,10 +496,6 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 				ret);
+ 			return ret;
+ 		}
+-	} else {
+-		ret = regulator_bulk_enable(ad5064_num_vref(st), st->vref_reg);
+-		if (ret)
+-			return ret;
+ 	}
+ 
+ 	indio_dev->dev.parent = dev;
+diff --git a/include/linux/platform_data/ad5064.h b/include/linux/platform_data/ad5064.h
+new file mode 100644
+index 0000000..69bb5fe
+--- /dev/null
++++ b/include/linux/platform_data/ad5064.h
+@@ -0,0 +1,21 @@
++/*
++ * Analog Devices AD5064 DAC driver
++ *
++ * Copyright 2015 Analog Devices Inc.
++ *
++ * Licensed under the GPL-2.
++ */
++
++#ifndef __IIO_ADC_AD5064_H__
++#define __IIO_ADC_AD5064_H__
++
++/**
++ * struct ad5064_platform_data - AD5064 platform data
++ * @use_external_ref: If set to true use an external voltage reference connected
++ * to the VREF pin, otherwise use the internal reference derived from Vdd.
++ */
++struct ad5064_platform_data {
++	bool use_external_ref;
++};
++
++#endif
+-- 
+2.5.3
