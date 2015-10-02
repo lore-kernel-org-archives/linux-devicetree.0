@@ -1,29 +1,44 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] Add USB PHY device tree support for R8A7794/SILK
- board
-Date: Fri, 2 Oct 2015 10:25:41 +0900
-Message-ID: <20151002012541.GE22640@verge.net.au>
-References: <4938706.NQELE8A71r@wasted.cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: r8a7794: link PCI USB devices to USB PHY
+Date: Fri, 2 Oct 2015 11:00:23 +0900
+Message-ID: <20151002020021.GF22640@verge.net.au>
+References: <10927620.1TFu7PRvi4@wasted.cogentembedded.com>
+ <20150929003751.GB20067@verge.net.au>
+ <560A8997.8090301@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4938706.NQELE8A71r@wasted.cogentembedded.com>
+In-Reply-To: <560A8997.8090301@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Sergei,
 
-On Fri, Oct 02, 2015 at 01:03:41AM +0300, Sergei Shtylyov wrote:
+On Tue, Sep 29, 2015 at 03:52:39PM +0300, Sergei Shtylyov wrote:
 > Hello.
 > 
->    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20151001-v4.3-rc3' tag. Here we add the USB PHY device tree
-> support on the R8A7794/SILK low cost board.
+> On 9/29/2015 3:37 AM, Simon Horman wrote:
 > 
-> [1/2] ARM: shmobile: r8a7794: add USB PHY DT support
-> [2/2] ARM: shmobile: silk: enable USB PHY
+> >>Describe the PCI USB devices that are behind the PCI bridges, adding necessary
+> >>links to the USB PHY device.
+> >>
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >>
+> >>---
+> >>This patch is against 'renesas-devel-20150911v2-v4.2' tag of Simon Horman's
+> >>'renesas.git' repo plus the R8A7794/SILK PCI USB and USB PHY support patches
+> >>just posted.
+> 
+> >Does this series have any dependencies (e.g. bindings) other
+> 
+>    This patch, you mean?
+> 
+> >than the aforementioned R8A7794/SILK PCI USB and USB PHY support patches?
 
-Thanks, I have queued these up for v4.4.
+Thanks, I have queued this up for v4.4.
+
+I think I have got everything now but please let me know if you have any
+shmobile DT patches outstanding which are ready to be queued-up.
