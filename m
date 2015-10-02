@@ -1,39 +1,42 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH 0/5] NAND support for Broadcom NS2 SoC
-Date: Fri, 2 Oct 2015 23:26:41 +0530
-Message-ID: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH 4/5] Documentation: dt-bindings: Add info about brcm,nand-iproc-reset DT flag
+Date: Fri, 2 Oct 2015 23:26:45 +0530
+Message-ID: <1443808606-21203-5-git-send-email-anup.patel@broadcom.com>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-We enable NAND support for Broadcom NS2 SoC by reusing existing
-BRCMNAND driver.
+This patch updates the BRCM NAND controller DT bindings documentation
+to add info about newly added optional flag "brcm,nand-iproc-reset".
 
-This patchset applies on-top of "arm64: Simple additions to
-NS2 DT" patchset and is available in ns2_nand_v1 branch of 
-https://github.com/Broadcom/arm64-linux.git.
+Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Reviewed-by: Pramod KUMAR <pramodku@broadcom.com>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+---
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The patchset is tested on NS2 SVK.
-
-Anup Patel (5):
-  mtd: brcmnand: Fix pointer type-cast in brcmnand_write()
-  mtd: nand: Allow MTD_NAND_BRCMNAND to be selected for ARM64
-  mtd: brcmnand: Optional DT flag to reset IPROC NAND controller
-  Documentation: dt-bindings: Add info about brcm,nand-iproc-reset DT
-    flag
-  arm64: dts: Add BRCM IPROC NAND DT node for NS2
-
- .../devicetree/bindings/mtd/brcm,brcmnand.txt         |  4 ++++
- arch/arm64/boot/dts/broadcom/ns2-svk.dts              | 12 ++++++++++++
- arch/arm64/boot/dts/broadcom/ns2.dtsi                 | 15 +++++++++++++++
- drivers/mtd/nand/Kconfig                              |  2 +-
- drivers/mtd/nand/brcmnand/brcmnand.c                  |  4 ++--
- drivers/mtd/nand/brcmnand/iproc_nand.c                | 19 +++++++++++++++++++
- 6 files changed, 53 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 4ff7128..19b7a3c 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -78,6 +78,10 @@ we define additional 'compatible' properties and associated register resources w
+        for interrupt status/ack.
+      - reg-names: (required) a list of the names corresponding to the previous
+        register ranges. Should contain "iproc-idm" and "iproc-ext".
++     - brcm,nand-iproc-reset: (optional) Some of the Broadcom IPROC SoCs
++       require NAND controller to be resetted for cleanup of previously
++       configured NAND controller state. This optional flag resets the
++       NAND controller once before any NAND commands are issued.
+ 
+ 
+ * NAND chip-select
 -- 
 1.9.1
