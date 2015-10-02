@@ -1,32 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] pinctrl: freescale: imx: fix system crash if
- enable two pinctl instances
-Date: Fri, 2 Oct 2015 05:19:41 -0700
-Message-ID: <CACRpkdauecXzxmveqEYRE=-iKf8JoJCj7q8kG+k0AGcDQqYGEA@mail.gmail.com>
-References: <1443128043-21063-1-git-send-email-aalonso@freescale.com>
+From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 3/3] iio: ad5064: Always use external vref if there is no internal vref
+Date: Fri, 2 Oct 2015 14:41:42 +0200
+Message-ID: <1443789702-24945-3-git-send-email-paul.cercueil@analog.com>
+References: <1443789702-24945-1-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443128043-21063-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1443789702-24945-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?5p2O5pm6?= <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 1:53 PM, Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+If the device does not have an internal reference, there is no
+other choice but to use the external reference. In that case,
+it does not make much sense to have to specify it.
 
-> From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> Fix system chrash caused by groups whose number is smaller than the number
-> of groups of the last pinctl instance which is not initialized.
->
-> iMX7D supports two iomux controllers (iomuxc-lpsr and iomuxc) on probing
-> the second instance (iomuxc) the chrash below occurs.
+This patch ensures that the external reference is used if the
+device does not feature an internal reference.
 
-This 1/7 patch applied for next with Shawn's ACK.
+Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/dac/ad5064.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
+index 7146f42..daee39e 100644
+--- a/drivers/iio/dac/ad5064.c
++++ b/drivers/iio/dac/ad5064.c
+@@ -464,7 +464,9 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 	for (i = 0; i < ad5064_num_vref(st); ++i)
+ 		st->vref_reg[i].supply = ad5064_vref_name(st, i);
+ 
+-	if (dev->of_node) {
++	if (!st->chip_info->internal_vref) {
++		ext_vref = true;
++	} else if (dev->of_node) {
+ 		for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
+ 			ext_vref = of_property_read_bool(dev->of_node,
+ 					ad5064_vref_name(st, i));
+@@ -483,11 +485,6 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 		if (ret)
+ 			return ret;
+ 	} else {
+-		if (!st->chip_info->internal_vref) {
+-			dev_err(dev, "No vref available\n");
+-			return -ENXIO;
+-		}
+-
+ 		st->use_internal_vref = true;
+ 		ret = ad5064_write(st, AD5064_CMD_CONFIG, 0,
+ 			AD5064_CONFIG_INT_VREF_ENABLE, 0);
+-- 
+2.5.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
