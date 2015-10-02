@@ -1,74 +1,192 @@
-From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/3] Documentation: ad5064: Added devicetree bindings documentation
-Date: Fri, 2 Oct 2015 14:41:40 +0200
-Message-ID: <1443789702-24945-1-git-send-email-paul.cercueil@analog.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v2 1/6] pinctrl: berlin: regmap as an extra argument of
+ berlin_pinctrl_probe()
+Date: Fri, 2 Oct 2015 15:04:56 +0200
+Message-ID: <20151002130456.GC3162@kwain>
+References: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
+ <1442829860-4647-2-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442829860-4647-2-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/iio/dac/ad5064.txt         | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5064.txt
+Hi Jisheng,
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5064.txt b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
-new file mode 100644
-index 0000000..fa2d328
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
-@@ -0,0 +1,48 @@
-+Analog Devices AD5064 DAC device driver
-+
-+Required properties:
-+	- compatible: Must be one of:
-+		* "adi,ad5024"
-+		* "adi,ad5025"
-+		* "adi,ad5044"
-+		* "adi,ad5045"
-+		* "adi,ad5064"
-+		* "adi,ad5064-1"
-+		* "adi,ad5065"
-+		* "adi,ad5628-1"
-+		* "adi,ad5628-2"
-+		* "adi,ad5648-1"
-+		* "adi,ad5648-2"
-+		* "adi,ad5666-1"
-+		* "adi,ad5666-2"
-+		* "adi,ad5668-1"
-+		* "adi,ad5668-2"
-+		* "adi,ad5668-3"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use (< 30000000)
-+	- vrefA-supply, vrefB-supply: phandles to external reference voltage
-+	  supplies for channels 0 and 1 respectively.
-+	  This property must be present for ad5024, ad5025, ad5044, ad5045,
-+	  ad5064, ad5065.
-+	- vrefC-supply, vrefD-supply: phandles to external reference voltage
-+	  supplies for channels 2 and 3 respectively.
-+	  This property must be present for ad5024, ad5044, ad5064.
-+
-+Optional properties:
-+	- vref-supply: phandle to the external reference voltage supply.
-+	  This should only be set if there is an external reference voltage
-+	  connected to the vref or vref[A-D] pins.
-+	  If the property is not set, the internal reference voltage supply
-+	  is used if present.
-+	  This property can be used with ad5064-1, ad5628-1, ad5628-2, ad5648-1,
-+	  ad5648-2, ad5666-1, ad5666-2, ad5668-1, ad5668-2, ad5668-3.
-+
-+Example:
-+
-+		ad5668-2@4 {
-+			compatible = "adi,ad5668-2";
-+			reg = <4>;
-+			spi-max-frequency = <10000000>;
-+			adi,use-external-reference;
-+			vref-supply = <&vref_supply>;
-+		};
--- 
-2.5.3
+Thanks for providing this!
+
+On Mon, Sep 21, 2015 at 06:04:15PM +0800, Jisheng Zhang wrote:
+> Let berlin_pinctrl_probe() accepts an extra argument: regmap, this is=
+ to
+> prepare for the next berlin4ct support, where we won't use simple-mfd
+> any more.
+
+Just a question here: why don't we have instead one
+berlin_pinctrl_probe() and one berlin_pinctrl_probe_regmap(), both
+calling a static probe function in berlin.c, to avoid duplicating code?
+
+Antoine
+
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> ---
+>  drivers/pinctrl/berlin/berlin-bg2.c   | 10 +++++++++-
+>  drivers/pinctrl/berlin/berlin-bg2cd.c | 10 +++++++++-
+>  drivers/pinctrl/berlin/berlin-bg2q.c  | 10 +++++++++-
+>  drivers/pinctrl/berlin/berlin.c       |  9 +--------
+>  drivers/pinctrl/berlin/berlin.h       |  1 +
+>  5 files changed, 29 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/berlin/berlin-bg2.c b/drivers/pinctrl/be=
+rlin/berlin-bg2.c
+> index 274c553..4aede2e 100644
+> --- a/drivers/pinctrl/berlin/berlin-bg2.c
+> +++ b/drivers/pinctrl/berlin/berlin-bg2.c
+> @@ -10,6 +10,7 @@
+>   * warranty of any kind, whether express or implied.
+>   */
+> =20
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> @@ -233,8 +234,15 @@ static int berlin2_pinctrl_probe(struct platform=
+_device *pdev)
+>  {
+>  	const struct of_device_id *match =3D
+>  		of_match_device(berlin2_pinctrl_match, &pdev->dev);
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *parent_np =3D of_get_parent(dev->of_node);
+> +	struct regmap *regmap =3D syscon_node_to_regmap(parent_np);
+> =20
+> -	return berlin_pinctrl_probe(pdev, match->data);
+> +	of_node_put(parent_np);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return berlin_pinctrl_probe(pdev, regmap, match->data);
+>  }
+> =20
+>  static struct platform_driver berlin2_pinctrl_driver =3D {
+> diff --git a/drivers/pinctrl/berlin/berlin-bg2cd.c b/drivers/pinctrl/=
+berlin/berlin-bg2cd.c
+> index 0cb793a..6378dd8 100644
+> --- a/drivers/pinctrl/berlin/berlin-bg2cd.c
+> +++ b/drivers/pinctrl/berlin/berlin-bg2cd.c
+> @@ -10,6 +10,7 @@
+>   * warranty of any kind, whether express or implied.
+>   */
+> =20
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> @@ -176,8 +177,15 @@ static int berlin2cd_pinctrl_probe(struct platfo=
+rm_device *pdev)
+>  {
+>  	const struct of_device_id *match =3D
+>  		of_match_device(berlin2cd_pinctrl_match, &pdev->dev);
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *parent_np =3D of_get_parent(dev->of_node);
+> +	struct regmap *regmap =3D syscon_node_to_regmap(parent_np);
+> =20
+> -	return berlin_pinctrl_probe(pdev, match->data);
+> +	of_node_put(parent_np);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return berlin_pinctrl_probe(pdev, regmap, match->data);
+>  }
+> =20
+>  static struct platform_driver berlin2cd_pinctrl_driver =3D {
+> diff --git a/drivers/pinctrl/berlin/berlin-bg2q.c b/drivers/pinctrl/b=
+erlin/berlin-bg2q.c
+> index a466054..907bdf0 100644
+> --- a/drivers/pinctrl/berlin/berlin-bg2q.c
+> +++ b/drivers/pinctrl/berlin/berlin-bg2q.c
+> @@ -10,6 +10,7 @@
+>   * warranty of any kind, whether express or implied.
+>   */
+> =20
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> @@ -395,8 +396,15 @@ static int berlin2q_pinctrl_probe(struct platfor=
+m_device *pdev)
+>  {
+>  	const struct of_device_id *match =3D
+>  		of_match_device(berlin2q_pinctrl_match, &pdev->dev);
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *parent_np =3D of_get_parent(dev->of_node);
+> +	struct regmap *regmap =3D syscon_node_to_regmap(parent_np);
+> =20
+> -	return berlin_pinctrl_probe(pdev, match->data);
+> +	of_node_put(parent_np);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return berlin_pinctrl_probe(pdev, regmap, match->data);
+>  }
+> =20
+>  static struct platform_driver berlin2q_pinctrl_driver =3D {
+> diff --git a/drivers/pinctrl/berlin/berlin.c b/drivers/pinctrl/berlin=
+/berlin.c
+> index f495806..0557bbe 100644
+> --- a/drivers/pinctrl/berlin/berlin.c
+> +++ b/drivers/pinctrl/berlin/berlin.c
+> @@ -11,7 +11,6 @@
+>   */
+> =20
+>  #include <linux/io.h>
+> -#include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> @@ -293,19 +292,13 @@ static struct pinctrl_desc berlin_pctrl_desc =3D=
+ {
+>  };
+> =20
+>  int berlin_pinctrl_probe(struct platform_device *pdev,
+> +			 struct regmap *regmap,
+>  			 const struct berlin_pinctrl_desc *desc)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+> -	struct device_node *parent_np =3D of_get_parent(dev->of_node);
+>  	struct berlin_pinctrl *pctrl;
+> -	struct regmap *regmap;
+>  	int ret;
+> =20
+> -	regmap =3D syscon_node_to_regmap(parent_np);
+> -	of_node_put(parent_np);
+> -	if (IS_ERR(regmap))
+> -		return PTR_ERR(regmap);
+> -
+>  	pctrl =3D devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
+>  	if (!pctrl)
+>  		return -ENOMEM;
+> diff --git a/drivers/pinctrl/berlin/berlin.h b/drivers/pinctrl/berlin=
+/berlin.h
+> index e1aa841..bf5781a 100644
+> --- a/drivers/pinctrl/berlin/berlin.h
+> +++ b/drivers/pinctrl/berlin/berlin.h
+> @@ -56,6 +56,7 @@ struct berlin_pinctrl_function {
+>  #define BERLIN_PINCTRL_FUNCTION_UNKNOWN		{}
+> =20
+>  int berlin_pinctrl_probe(struct platform_device *pdev,
+> +			 struct regmap *regmap,
+>  			 const struct berlin_pinctrl_desc *desc);
+> =20
+>  #endif /* __PINCTRL_BERLIN_H */
+> --=20
+> 2.5.3
+>=20
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
