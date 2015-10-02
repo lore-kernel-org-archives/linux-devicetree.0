@@ -1,7 +1,7 @@
 From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH 08/10] clk: iproc: define Broadcom NS2 iProc clock binding
-Date: Fri, 2 Oct 2015 18:57:43 -0400
-Message-ID: <1443826665-17570-9-git-send-email-jonmason@broadcom.com>
+Subject: [PATCH 10/10] ARM: dts: enable clock support for Broadcom NS2
+Date: Fri, 2 Oct 2015 18:57:45 -0400
+Message-ID: <1443826665-17570-11-git-send-email-jonmason@broadcom.com>
 References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,69 +12,111 @@ To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for Broadcom Northstar 2 architecture
-based clock controller
+Add device tree entries for clock support for Broadcom Northstar 2 SoC
 
 Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- .../bindings/clock/brcm,iproc-clocks.txt           | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 81 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index b3c3e9d..ede65a5 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -160,3 +160,51 @@ Northstar Plus.  These clock IDs are defined in:
-     pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
-     sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
-     ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index 3c92d92..0b8921e 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -31,6 +31,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/bcm-ns2.h>
+ 
+ /memreserve/ 0x84b00000 0x00000008;
+ 
+@@ -89,6 +90,86 @@
+ 			      IRQ_TYPE_EDGE_RISING)>;
+ 	};
+ 
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x6501c000 0x00002000>;
 +
-+Northstar 2
-+-----------
-+PLL and leaf clock compatible strings for Northstar 2 are:
-+    "brcm,ns2-genpll-scr"
-+    "brcm,ns2-genpll-sw"
-+    "brcm,ns2-lcpll-ddr"
-+    "brcm,ns2-lcpll-ports"
++		osc: oscillator {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <25000000>;
++		};
 +
-+The following table defines the set of PLL/clock index and ID for Northstar 2.
-+These clock IDs are defined in:
-+    "include/dt-bindings/clock/bcm-ns2.h"
++		lcpll_ddr: lcpll_ddr@1058 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-lcpll-ddr";
++			reg = <0x1058 0x20>,
++			      <0x0020 0x4>,
++			      <0x104c 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll_ddr", "pcie_sata_usb",
++					     "ddr", "ddr_ch2_unused",
++					     "ddr_ch3_unused", "ddr_ch4_unused",
++					     "ddr_ch5_unused";
++		};
 +
-+    Clock	Source		Index	ID
-+    ---		-----		-----	---------
-+    crystal	N/A		N/A	N/A
++		lcpll_ports: lcpll_ports@1078 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-lcpll-ports";
++			reg = <0x1078 0x20>,
++			      <0x0020 0x4>,
++			      <0x1054 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll_ports", "wan", "rgmii",
++					     "ports_ch2_unused",
++					     "ports_ch3_unused",
++					     "ports_ch4_unused",
++					     "ports_ch5_unused";
++		};
 +
-+    genpll_scr	crystal		0	BCM_NS2_GENPLL_SCR
-+    scr		genpll_scr	1	BCM_NS2_GENPLL_SCR_SCR_CLK
-+    fs		genpll_scr	2	BCM_NS2_GENPLL_SCR_FS_CLK
-+    audio_ref	genpll_scr	3	BCM_NS2_GENPLL_SCR_AUDIO_CLK
-+    ch3_unused	genpll_scr	4	BCM_NS2_GENPLL_SCR_CH3_UNUSED
-+    ch4_unused	genpll_scr	5	BCM_NS2_GENPLL_SCR_CH4_UNUSED
-+    ch5_unused	genpll_scr	6	BCM_NS2_GENPLL_SCR_CH5_UNUSED
++		genpll_scr: genpll_scr@1098 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-genpll-scr";
++			reg = <0x1098 0x32>,
++			      <0x0020 0x4>,
++			      <0x1044 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll_scr", "scr", "fs",
++					     "audio_ref", "scr_ch3_unused",
++					     "scr_ch4_unused", "scr_ch5_unused";
++		};
 +
-+    genpll_sw	crystal		0	BCM_NS2_GENPLL_SW
-+    rpe		genpll_sw	1	BCM_NS2_GENPLL_SW_RPE_CLK
-+    250		genpll_sw	2	BCM_NS2_GENPLL_SW_250_CLK
-+    nic		genpll_sw	3	BCM_NS2_GENPLL_SW_NIC_CLK
-+    chimp	genpll_sw	4	BCM_NS2_GENPLL_SW_CHIMP_CLK
-+    port	genpll_sw	5	BCM_NS2_GENPLL_SW_PORT_CLK
-+    sdio	genpll_sw	6	BCM_NS2_GENPLL_SW_SDIO_CLK
++		genpll_sw: genpll_sw@10c4 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-genpll-sw";
++			reg = <0x10c4 0x32>,
++			      <0x0020 0x4>,
++			      <0x1044 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll_sw", "rpe", "250", "nic",
++					     "chimp", "port", "sdio";
++		};
 +
-+    lcpll_ddr	crystal		0	BCM_NS2_LCPLL_DDR
-+    pcie_sata_usb lcpll_ddr	1	BCM_NS2_LCPLL_DDR_PCIE_SATA_USB_CLK
-+    ddr		lcpll_ddr	2	BCM_NS2_LCPLL_DDR_DDR_CLK
-+    ch2_unused	lcpll_ddr	3	BCM_NS2_LCPLL_DDR_CH2_UNUSED
-+    ch3_unused	lcpll_ddr	4	BCM_NS2_LCPLL_DDR_CH3_UNUSED
-+    ch4_unused	lcpll_ddr	5	BCM_NS2_LCPLL_DDR_CH4_UNUSED
-+    ch5_unused	lcpll_ddr	6	BCM_NS2_LCPLL_DDR_CH5_UNUSED
++		iprocmed: iprocmed {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll_scr BCM_NS2_GENPLL_SCR_SCR_CLK>;
++			clock-div = <2>;
++			clock-mult = <1>;
++			clock-output-names = "iprocmed";
++		};
 +
-+    lcpll_ports	crystal		0	BCM_NS2_LCPLL_PORTS
-+    wan		lcpll_ports	1	BCM_NS2_LCPLL_PORTS_WAN_CLK
-+    rgmii	lcpll_ports	2	BCM_NS2_LCPLL_PORTS_RGMII_CLK
-+    ch2_unused	lcpll_ports	3	BCM_NS2_LCPLL_PORTS_CH2_UNUSED
-+    ch3_unused	lcpll_ports	4	BCM_NS2_LCPLL_PORTS_CH3_UNUSED
-+    ch4_unused	lcpll_ports	5	BCM_NS2_LCPLL_PORTS_CH4_UNUSED
-+    ch5_unused	lcpll_ports	6	BCM_NS2_LCPLL_PORTS_CH5_UNUSED
++		iprocslow: iprocslow {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll_scr BCM_NS2_GENPLL_SCR_SCR_CLK>;
++			clock-div = <4>;
++			clock-mult = <1>;
++			clock-output-names = "iprocslow";
++		};
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
 1.9.1
