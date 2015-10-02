@@ -1,72 +1,29 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 02/09] ARM: shmobile: Add APMU DT support via Enable method
-Date: Fri, 2 Oct 2015 14:02:06 +0200
-Message-ID: <CAMuHMdUYNRuPnm=U3S1XTLKwQ5XMOBj9_r5YoEZ1iem25PhNyg@mail.gmail.com>
-References: <20150917063240.26016.93772.sendpatchset@little-apple>
-	<20150917063300.26016.23728.sendpatchset@little-apple>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 2/5] mfd: tps65912: Remove old driver in preparation
+ for new driver
+Date: Fri, 2 Oct 2015 05:16:14 -0700
+Message-ID: <CACRpkdaTVM9ojb3g5FqnXGtMRP3fhnyFSgTw7K45u+LUCc0x=Q@mail.gmail.com>
+References: <1443106374-4126-1-git-send-email-afd@ti.com>
+	<1443106374-4126-3-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150917063300.26016.23728.sendpatchset@little-apple>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1443106374-4126-3-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+On Thu, Sep 24, 2015 at 7:52 AM, Andrew F. Davis <afd@ti.com> wrote:
 
-On Thu, Sep 17, 2015 at 8:33 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> --- 0001/arch/arm/mach-shmobile/platsmp-apmu.c
-> +++ work/arch/arm/mach-shmobile/platsmp-apmu.c  2015-09-16 20:46:23.400513000 +0900
+> The old tps65912 driver is being replaced, delete old driver.
+>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-> +static void __init shmobile_smp_apmu_prepare_cpus_dt(unsigned int max_cpus)
-> +{
-> +       shmobile_smp_apmu_setup_boot();
-> +       apmu_parse_dt(apmu_init_cpu);
-> +       rcar_gen2_pm_init();
-> +}
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-The non-DT code in arch/arm/mach-shmobile/smp-r8a7790.c has two calls to
-rcar_sysc_power_up() here, cfr.:
+The merge collisions are unpredictable. Will this be merged
+through the MFD tree?
 
-        static void __init r8a7790_smp_prepare_cpus(unsigned int max_cpus)
-        {
-               /* let APMU code install data related to shmobile_boot_vector */
-               shmobile_smp_apmu_prepare_cpus(max_cpus,
-                                              r8a7790_apmu_config,
-                                              ARRAY_SIZE(r8a7790_apmu_config));
-
-                /* turn on power to SCU */
-                rcar_gen2_pm_init();
-===>            rcar_sysc_power_up(&r8a7790_ca15_scu);
-===>            rcar_sysc_power_up(&r8a7790_ca7_scu);
-        }
-
-The non-DT code in arch/arm/mach-shmobile/smp-r8a7791.c does not have such
-a call for its CA15 cluster.
-
-Does that mean they're not needed on Gen2 in general, and that they can be
-removed? I'd be happy to hear a confirming answer, as it's one less
-dependency on SYSC PM Domains in early SMP code ;-)
-
-Ah, this is because r8a7790 can boot from either CA15 or CA7, and only the
-SCU for the boot CPU is powered up (r8a7791 has only one cluster/SCU, so it's
-always the one with the boot CPU)?
-
-Note that on r8a7779 we're also stuck with this dependency, as r8a7779 uses
-SYSC instead of APMU for secondary core control.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
