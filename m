@@ -1,43 +1,48 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 0/2] Add RT5033 Flash LED driver
-Date: Fri, 02 Oct 2015 16:59:12 +0200
-Message-ID: <560E9BC0.20804@samsung.com>
-References: <1443778875-18261-1-git-send-email-ingi2.kim@samsung.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 0/3] add GPT timer support for mt8173
+Date: Fri, 2 Oct 2015 23:05:16 +0800
+Message-ID: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1443778875-18261-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rpurdie@rpsys.net, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, erin.lo@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ingi,
+This is based on v4.3-rc1 + clockevents-4.4[1] and James's mediatek-clk
+tree[2].
 
-Thanks for the patches. Please fix build errors
-and resubmit.
+Changes compare to previous version[3]:
+- Add more MediaTek SoC to mtk-timer binding
+- Update commit message to better describe the purpose.
 
-On 10/02/2015 11:41 AM, Ingi Kim wrote:
-> This patch adds ktd2692 Flash LED driver with LED Flash class
->
-> Ingi Kim (2):
->    leds: rt5033: add DT binding for RT5033
->    leds: rt5033: Add RT5033 Flash led device driver
->
->   .../devicetree/bindings/leds/leds-rt5033.txt       |  38 ++++
->   drivers/leds/Kconfig                               |   8 +
->   drivers/leds/Makefile                              |   1 +
->   drivers/leds/leds-rt5033.c                         | 222 +++++++++++++++++++++
->   drivers/mfd/rt5033.c                               |   3 +
->   include/linux/mfd/rt5033-private.h                 |  67 ++++++-
->   include/linux/mfd/rt5033.h                         |  27 ++-
->   7 files changed, 355 insertions(+), 11 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-rt5033.txt
->   create mode 100644 drivers/leds/leds-rt5033.c
->
+Changes compare to v2[4]:
+- the first two mtk_timer related changes are removed because they are
+replaced/accepted in clockevents tree.
+- Remove 'add 13mhz clock for MT8173' because it is accepted in
+mediatek-clk tree.
+- Kconfig.platforms path change.
+
+[1]
+https://git.linaro.org/people/daniel.lezcano/linux.git clockevents/4.4
+[2]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-August/002069.html
+[3]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002301.html
+[4]
+http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
 
 
--- 
-Best Regards,
-Jacek Anaszewski
+Daniel Kurtz (1):
+  arm64: dts: mt8173: add timer node
+
+Yingjoe Chen (2):
+  dt-bindings: add more MediaTek SoC to mtk-timer binding
+  arm64: mediatek: enable MTK_TIMER
+
+ Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 8 +++++---
+ arch/arm64/Kconfig.platforms                                   | 1 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi                       | 9 +++++++++
+ 3 files changed, 15 insertions(+), 3 deletions(-)
+
