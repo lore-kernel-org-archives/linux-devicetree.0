@@ -1,91 +1,103 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [RFC v2 1/4] dt-bindings: drm/mediatek: Add Mediatek display
- subsystem dts binding
-Date: Fri, 2 Oct 2015 21:47:48 +0800
-Message-ID: <CAGS+omC3M71q8XMRevnM-_aocZXryK7NFDnVnJCdiG6tM-PjUQ@mail.gmail.com>
-References: <1442592722-29004-1-git-send-email-p.zabel@pengutronix.de>
- <1442592722-29004-2-git-send-email-p.zabel@pengutronix.de>
- <CAL_JsqLZQXMoKxGZ6c56e6d1UuLiJKzVB=sH15ihTvwpOgSU8Q@mail.gmail.com>
- <1442823067.3277.35.camel@pengutronix.de>
- <CAL_JsqLcraiS+Yq48-m-xTksohU5wPSPrjtjV2GLzDTSDcUCUA@mail.gmail.com>
- <1443689957.3272.18.camel@pengutronix.de>
- <CAL_Jsq+aBxjvPyAR3nUtXny6JwgcopSCENrBaGzo7OKXFA1cvg@mail.gmail.com>
- <CAGS+omAs4Jvu7tKEMoNL9BSMQMwW=9UHzXW8_jS=5MbajaJzOg@mail.gmail.com>
- <1443771628.3445.33.camel@pengutronix.de>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/2] iio: dac: Add support for the AD5592R/AD5593R
+ ADCs/DACs
+Date: Fri, 2 Oct 2015 21:53:06 +0800
+Message-ID: <201510022121.1QklnZU3%fengguang.wu@intel.com>
+References: <1443789956-25340-2-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1443771628.3445.33.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443789956-25340-2-git-send-email-paul.cercueil@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Antonio Fiol <antonio@fiol.es>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Paul Cercueil <paul.cercueil@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMiwgMjAxNSBhdCAzOjQwIFBNLCBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBl
-bmd1dHJvbml4LmRlPiB3cm90ZToKPiBBbSBEb25uZXJzdGFnLCBkZW4gMDEuMTAuMjAxNSwgMjI6
-MjkgKzA4MDAgc2NocmllYiBEYW5pZWwgS3VydHo6Cj4+IE9uIFRodSwgT2N0IDEsIDIwMTUgYXQg
-ODo1OCBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+ID4gSSB3YXMg
-dGhpbmtpbmcgb25lIG9mIHRoZSBkaXNwbGF5IHJlbGF0ZWQgYmxvY2tzIGxpa2UKPj4gPiB3aGF0
-ZXZlciBibG9jayBwcm92aWRlcyB0aGUgbWFpbiBjcnRjIGZ1bmN0aW9ucy4KPj4KPj4gVGhlIHR3
-byAiT1ZMIiBub2RlcyBjb3JyZXNwb25kIHRvIHRoZSAiY3J0YyIgZnVuY3Rpb25zIG9mIHRoZSB0
-d28KPj4gZGlzcGxheSBwaXBlcyBpbiB0aGlzIFNvQywgd2Ugd291bGQgc2V0dXAgdGhlIGRpc3Bs
-YXktc3Vic3lzdGVtIG5vZGUKPj4gbGlrZSB0aGlzOgo+Pgo+PiBkaXNwbGF5LXN1YnN5c3RlbSB7
-Cj4+ICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxkaXNwbGF5LXN1YnN5c3RlbSI7Cj4KPiBZZXMs
-IHRoZSBwcm9ibGVtIHdpdGggdGhlIG92bCBub2RlcyBpcyB0aGF0IHRoZXJlIGFyZSB0d28gZXF1
-aXZhbGVudAo+IG9uZXMuIEhhdmluZyB0d28gZXF1aXZhbGVudCBpcHUgbm9kZXMgb24gaS5NWDYg
-d2FzIHRoZSByZWFzb24gdG8KPiBpbnRyb2R1Y2UgdGhlIGRpc3BsYXktc3Vic3lzdGVtIG5vZGUg
-aW4gdGhlIGZpcnN0IHBsYWNlLCBidXQgSSdkIHZlcnkKPiBtdWNoIHByZWZlciB0byBhdm9pZCBp
-dCwgaWYgcG9zc2libGUuCgpPaCwgaW50ZXJlc3RpbmcuICBIb3cgaXMgaXQgYSBwcm9ibGVtIHRo
-YXQgdGhlcmUgYXJlIHR3byBlcXVpdmFsZW50IG92bCBub2Rlcz8KV2h5IGRvIHlvdSBwcmVmZXIg
-dG8gYXZvaWQgdGhlIGRpc3BsYXktc3Vic3lzdGVtIG5vZGU/CgpCVFcsIHdoYXQgSSByZWFsbHkg
-bWVhbnQgd2FzIGZvciBteSBleGFtcGxlIHdhcyB0aGF0IHRoZQonZGlzcGxheS1zdWJzeXN0ZW0n
-ICdwb3J0cycgbm9kZSBsaXN0cyBwaGFuZGxlcyByZXByZXNlbnRpbmcgdGhlCidyb290JyBub2Rl
-cyBmb3IgdGhlIGZvciB0aGUgZGlzcGxheS1zdWJzeXN0ZW0gZ3JhcGguClRoaXMgbWF0Y2hlcyB3
-aGF0IHdlIGRpZCBmb3IgcmszMjg4LmR0c2k6CgpkaXNwbGF5LXN1YnN5c3RlbSB7CiAgY29tcGF0
-aWJsZSA9ICJtZWRpYXRlayxkaXNwbGF5LXN1YnN5c3RlbSI7CiAgcG9ydHMgPSA8Jm92bDBfb3V0
-PiwgPCZvdmwxX291dD47Cn07Cgo+IFsuLi5dCj4+IEFuZCwgYW55IG5vZGUgdGhhdCBuZWVkcyB0
-byBwb2tlIGFyb3VuZCBpbiB0aGUgbW1zeXNfY29uZmlnIGFyZWEsIGxpa2UKPj4gYW4gb3ZsLCBj
-b3VsZCBhY2Nlc3MgaXQgdXNpbmcgYSBwaGFuZGxlIDwmbW1zeXM+IHRvIHRoZSBjb21tb24KPj4g
-Im1lZGlhdGVrLG10ODE3My1tbXN5cyIgZGV2aWNlLCBsaWtlIHRoaXM6Cj4+Cj4+IG92bDA6IG92
-bEAxNDAwYzAwMCB7Cj4+ICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1vdmwi
-Owo+PiAgICAgICAgcmVnID0gPDAgMHgxNDAwYzAwMCAwIDB4MTAwMD47Cj4+ICAgICAgICBpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgMTgwIElSUV9UWVBFX0xFVkVMX0xPVz47Cj4+ICAgICAgICBjbG9j
-a3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09WTDA+Owo+PiAgICAgICAgaW9tbXVzID0gPCZpb21t
-dSBNNFVfTEFSQjBfSUQgTTRVX1BPUlRfRElTUF9PVkwwPjsKPj4gICAgICAgIG1lZGlhdGVrLG1t
-c3lzID0gPCZtbXN5cz47Cj4+ICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiB9Owo+Cj4g
-SSB0aGluayB0aGUgb3ZsIG5vZGUgaGFzIG5vIGJ1c2luZXNzIGxpbmtpbmcgdG8gbW1zeXNfY29u
-ZmlnLgo+IEl0J3MgdGhlIGRybSBkcml2ZXIgY29kZSB0aGF0IHNldHMgdXAgdGhlIHBpcGVsaW5l
-LCBpbmNsdWRpbmcgdGhlIGNydGMKPiAtPiBlbmNvZGVyIGNvbm5lY3Rpb25zCgpNeSBvcmlnaW5h
-bCB0aGlua2luZyBpcyB0aGF0IHRoZSAib3ZsIiBub2RlIHNob3VsZCBsaW5rIHRvIHRoZQptbXN5
-c19jb25maWcgc2luY2UgdGhlIG1tc3lzX2NvbmZpZyBoYXMgdGhlIG92bCBvdXRwdXQgc2VsZWN0
-CnJlZ2lzdGVycy4KQW4gJ292bCcgZHJpdmVyIHdvdWxkIHRoZW4gdXNlIHRoZSBwaGFuZGxlIHRv
-IHRoZSBzeXNjb24gdG8gZmluZCBhCnJlZ21hcCB0byBzYWZlbHkgYWNjZXNzIHRoZSByZWdpc3Rl
-cnMgaXQgbmVlZHMuCgo+PiBPbmUgaWRlYSB0byByZWR1Y2UgdGhlIHNpemUgb2YgdGhlIG9mX2dy
-YXBoIHdvdWxkIGJlIHRvIGp1c3QgbW9kZWwgdGhlCj4+IGVudHJhbmNlL2V4aXQgcG9pbnRzIGZy
-b20gdGhlIE1NIHN1YnN5c3RlbSBpbiBkdC4gIFNvLCBpbnN0ZWFkIG9mOgo+PiAgIG92bDAgLT4g
-Y29sb3IwIC0+IGFhbCAtPiBvZCAtPiB1Zm9lIC0+IGRzaTAgLT4gZHNpLWVkcC1icmlkZ2UKPj4g
-ICBvdmwxIC0+IGNvbG9yMSAtPiBnYW1tYTAgLT4gZHBpMCAtPiBoZG1pCj4+Cj4+IFdlIGNhbiBk
-byBzb21ldGhpbmcgbGlrZSB0aGlzOgo+PiAgIG92bDAgLT4gZHNpMCAtPiBkc2ktZWRwLWJyaWRn
-ZQo+PiAgIG92bDEgLT4gZHBpMCAtPiBoZG1pCj4+Cj4+IEJ1dCAuLi4gdGhpcyBtaWdodCBiZSB0
-b28gbGltaXRpbmcgZm9yIHNvbWUgYXBwbGljYXRpb25zLgo+Cj4gSSdtIGFscmVhZHkgd29ycmll
-ZCBhYm91dCBoYXZpbmcgbGVmdCBvdXQgdGhlIERJU1BfUEFUSDAgYW5kIERJU1BfUEFUSDEKPiBt
-dWx0aXBsZXhlcnMgZnJvbSBteSBEVCBncmFwaCBleGFtcGxlLiBUaGVyZSBhcmUgc28gbWFueSB3
-YXlzIHRvIGRvIHRoaXMKPiBzbGlnaHRseSB3cm9uZyBhbmQgdGhlbiBoYXZpbmcgdG8gbGl2ZSB3
-aXRoIHRoZSBzdGFibGUgYmluZGluZ3MsIHRoYXQKPiBJJ2QgcmF0aGVyIG5vdCBwdXQgYW4gYXBw
-cm94aW1hdGlvbiBvZiB0aGUgcmVhbCBoYXJkd2FyZSBpbnRvIHRoZSBkZXZpY2UKPiB0cmVlLgo+
-IE5vdyB0aGF0IEkndmUgaGVhcmQgaXQgaXMgYWNjZXB0YWJsZSBmb3Igb25lIGRyaXZlciB0byBs
-b29rIGZvciBpdHMKPiBjb21wb25lbnRzIGJ5IHRoZWlyIGNvbXBhdGlibGUgdmFsdWUsIEknbSBs
-ZWFuaW5nIHRvd2FyZHMgbm90IGRlc2NyaWJpbmcKPiB0aGUgZ3JhcGggaW4gdGhlIERULgoKU3Vy
-ZSwgaXQgd291bGQgYmUgaW50ZXJlc3RpbmcgdG8gc2VlIGhvdyB0aGF0IHdvdWxkIGxvb2ssIHRv
-by4KCi1EYW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Paul,
+
+[auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
+
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/iio/dac/ad5592r.c:20:19: sparse: incorrect type in initializer (different base types)
+   drivers/iio/dac/ad5592r.c:20:19:    expected unsigned short [unsigned] [usertype] msg
+   drivers/iio/dac/ad5592r.c:20:19:    got restricted __be16 [usertype] <noident>
+   drivers/iio/dac/ad5592r.c:28:19: sparse: incorrect type in initializer (different base types)
+   drivers/iio/dac/ad5592r.c:28:19:    expected unsigned short [unsigned] [usertype] msg
+   drivers/iio/dac/ad5592r.c:28:19:    got restricted __be16 [usertype] <noident>
+>> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
+>> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
+>> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
+>> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5592r.c:48:19: sparse: incorrect type in initializer (different base types)
+   drivers/iio/dac/ad5592r.c:48:19:    expected unsigned short [unsigned] [usertype] msg
+   drivers/iio/dac/ad5592r.c:48:19:    got restricted __be16 [usertype] <noident>
+   drivers/iio/dac/ad5592r.c:56:19: sparse: incorrect type in initializer (different base types)
+   drivers/iio/dac/ad5592r.c:56:19:    expected unsigned short [unsigned] [usertype] msg
+   drivers/iio/dac/ad5592r.c:56:19:    got restricted __be16 [usertype] <noident>
+   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
+--
+>> drivers/iio/dac/ad5593r.c:28:15: sparse: incorrect type in assignment (different base types)
+   drivers/iio/dac/ad5593r.c:28:15:    expected unsigned short [unsigned] [usertype] value
+   drivers/iio/dac/ad5593r.c:28:15:    got restricted __be16 [usertype] <noident>
+>> drivers/iio/dac/ad5593r.c:38:25: sparse: incorrect type in argument 3 (different base types)
+   drivers/iio/dac/ad5593r.c:38:25:    expected unsigned short [unsigned] [usertype] value
+   drivers/iio/dac/ad5593r.c:38:25:    got restricted __be16 [usertype] <noident>
+>> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
+>> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
+>> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
+>> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5593r.c:56:15: sparse: incorrect type in assignment (different base types)
+   drivers/iio/dac/ad5593r.c:56:15:    expected unsigned short [unsigned] [usertype] value
+   drivers/iio/dac/ad5593r.c:56:15:    got restricted __be16 [usertype] <noident>
+   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
+   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
+
+vim +20 drivers/iio/dac/ad5592r.c
+
+    14	#include <linux/of.h>
+    15	#include <linux/spi/spi.h>
+    16	
+    17	static int ad5592r_dac_write(struct ad5592r_state *st, unsigned chan, u16 value)
+    18	{
+    19		struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
+  > 20		u16 msg = cpu_to_be16(BIT(15) | (chan << 12) | value);
+    21	
+    22		return spi_write(spi, &msg, sizeof(msg));
+    23	}
+    24	
+    25	static int ad5592r_adc_read(struct ad5592r_state *st, unsigned chan, u16 *value)
+    26	{
+    27		struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
+    28		u16 msg = cpu_to_be16((AD5592R_REG_ADC_SEQ << 11) | BIT(chan));
+    29		int ret;
+    30	
+    31		ret = spi_write(spi, &msg, sizeof(msg));
+    32		if (ret)
+    33			return ret;
+    34	
+    35		spi_read(spi, &msg, sizeof(msg)); /* Invalid data */
+    36	
+    37		ret = spi_read(spi, &msg, sizeof(msg));
+    38		if (ret)
+    39			return ret;
+    40	
+  > 41		*value = be16_to_cpu(msg);
+    42		return 0;
+    43	}
+    44	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
