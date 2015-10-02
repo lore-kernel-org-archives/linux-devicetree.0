@@ -1,41 +1,47 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 3/5] extcon: arizona: Add device binding for jack detect polarity inversion
-Date: Fri, 2 Oct 2015 17:29:21 +0100
-Message-ID: <1443803363-3251-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v2 0/5] Arizona Extcon Update Device Bindings
+Date: Fri, 2 Oct 2015 17:29:18 +0100
+Message-ID: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lee.jones@linaro.org, cw00.choi@samsung.com
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-By default the driver expects the jackdet pin to be pulled low when a
-jack is inserted. This patch adds a device binding that allows the user
-to specify that the jackdet pin will be pulled high when a jack is
-inserted.
+This patch chain adds device bindings for the jack and
+microphone detection system specific settings.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/extcon/extcon-arizona.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+Mark, I have added you on the chain as getting a DT ack is
+proving challenging and Lee said he would appreciate your
+opinion on these, hope that is ok. Note that some of the
+changes backing the DT doc updates in the first of the two
+MFD changes have already been merged hence why they are
+not in this series.
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index e8dd19cb..58e4dc9 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1239,6 +1239,9 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
- 	pdata->micd_software_compare = device_property_read_bool(arizona->dev,
- 						"wlf,micd-software-compare");
- 
-+	pdata->jd_invert = device_property_read_bool(arizona->dev,
-+						     "wlf,jd-invert");
-+
- 	device_property_read_u32(arizona->dev, "wlf,gpsw", &pdata->gpsw);
- 
- 	return 0;
+Changes since v1:
+ - I have removed the stuff for the second jack detect pin
+   from the series. It seems that it will probably be better
+   to get these bindings in first as I can't see anyway they
+   could be contentious then we can deal with that and if it
+   needs to be a pinmux/gpio thing later.
+
+Thanks,
+Charles
+
+Charles Keepax (5):
+  extcon: arizona: Add device binding to enable ADC mode micdet
+  extcon: arizona: Add device binding for the general purpose switch
+  extcon: arizona: Add device binding for jack detect polarity
+    inversion
+  mfd: arizona: Update DT binding documentation for mic detection
+  mfd: arizona: Update DT binding document for jack detection invert
+
+ Documentation/devicetree/bindings/mfd/arizona.txt |   23 +++++++++++++++++++++
+ drivers/extcon/extcon-arizona.c                   |    8 +++++++
+ include/dt-bindings/mfd/arizona.h                 |    5 ++++
+ 3 files changed, 36 insertions(+), 0 deletions(-)
+
 -- 
 1.7.2.5
