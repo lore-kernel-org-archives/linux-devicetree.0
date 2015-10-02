@@ -1,90 +1,68 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: add all hi6220 uart nodes
-Date: Fri, 2 Oct 2015 19:00:58 +0100
-Message-ID: <20151002180058.GA4220@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1443558552-5734-1-git-send-email-tyler.baker@linaro.org>
- <1459065.BtzC7pyUYF@wuerfel>
- <20150930173145.GG15635@sirena.org.uk>
- <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2] Add driver for the si514 clock generator chip
+Date: Fri, 2 Oct 2015 11:10:42 -0700
+Message-ID: <20151002181042.GL12338@codeaurora.org>
+References: <1442478495-23522-1-git-send-email-mike.looijmans@topic.nl>
+ <1442487891-20477-1-git-send-email-mike.looijmans@topic.nl>
+ <20151001233407.GW19319@codeaurora.org>
+ <560E1DF6.9010901@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANMBJr7yY1PJChnFSRknqfOLORuWZSEONV+e=M=9heX3i-ADKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kevin's boot bot <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <560E1DF6.9010901@topic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tyler,
-
-On Wed, 30 Sep 2015, Tyler Baker wrote:
-
-> On 30 September 2015 at 10:31, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, Sep 30, 2015 at 10:24:56AM +0200, Arnd Bergmann wrote:
-> >> On Tuesday 29 September 2015 13:29:12 Tyler Baker wrote:
+On 10/02, Mike Looijmans wrote:
+> =EF=BB=BFOn 02-10-15 01:34, Stephen Boyd wrote:
+> >>+ - clock-output-names: From common clock bindings. Recommended to =
+be "si514".
+> >>+ - clock-frequency: Output frequency to generate. This defines the=
+ output
+> >>+		    frequency set during boot. It can be reprogrammed during
+> >>+		    runtime through the common clock framework.
 > >
-> >> >         aliases {
-> >> >                 serial0 = &uart0;
-> >> > +               serial1 = &uart1;
-> >> > +               serial2 = &uart2;
-> >> > +               serial3 = &uart3;
-> >> > +               serial4 = &uart4;
-> >> >         };
+> >Can we use assigned clock rates instead of this property?
+>=20
+> I'll first need to learn what 'assigned clock rates' means. But I
+> suspect the answer will be yes.
+
+See the "Assigned clock parents and rates" section of
+Documentation/devicetree/bindings/clock/clock-bindings.txt and
+commit 86be408bfbd8 (clk: Support for clock parents and rates
+assigned from device tree, 2014-06-18).
+
+>=20
+> >>+
+> >>+Example:
+> >>+	si514: clock-generator@55 {
+> >>+		reg =3D <0x55>;
+> >>+		#clock-cells =3D <0>;
+> >>+		compatible =3D "silabs,si514";
+> >>+	};
+> >>diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> >>index 42f7120..6ac7deb5 100644
+> >>--- a/drivers/clk/Kconfig
+> >>+++ b/drivers/clk/Kconfig
+> >>@@ -68,6 +68,16 @@ config COMMON_CLK_SI5351
+> >>  	  This driver supports Silicon Labs 5351A/B/C programmable clock
+> >>  	  generators.
+> >>
+> >>+config COMMON_CLK_SI514
+> >>+	tristate "Clock driver for SiLabs 514 devices"
+> >>+	depends on I2C
+> >>+	depends on OF
 > >
-> >> In the changelog you mention "both uarts", but here you have five of them.
-> >> Are they all accessible on the connector? If not, only provide aliases
-> >> for the ones that are, using numbering that makes most sense for given
-> >> how one would use the board.
-> 
-> Thanks for the comment Arnd. Mark's comment below is correct, there
-> are only two UARTs accessible on the LS connection in addition to the
-> one on the board (solder pad).
-> 
-> Is the following definition any clearer?
-> 
-> serial0 = &uart0; // Onboard UART0
-> serial1 = &uart2; // LS expansion UART0
-> serial2 = &uart3; // LS expansion UART1
-> 
-> If so, I'll respin this patch.
-> 
-> > Unless I'm missing something there's only two UARTs brought out on the
-> > low speed expansion connector (in addition to the one on the solder pads
-> > which is currently supported).  We should also adjust the console
-> > default to match whatever one of the low speed expansion connector UARTs
-> > is being used by the bootloader.
-> 
-> Your not missing anything, I should not have added the additional
-> aliases, it is confusing, will remove. The UART boards by default come
-> configured to use UART1 on the LS connector.
-> 
-> + Peter as he has been submitting u-boot patches recently for the HiKey.
+> >It actually depends on this to build?
+>=20
+> It calls various 'of_' methods unconditionally, so I'd think so.
 
-Thanks :)
+Aren't there stubs for those if CONFIG_OF=3Dn?
 
-> 
-> Obviously, both UEFI and u-boot can be configured to use either UART,
-> and at the moment u-boot defaults to using the on board UART. Whereas
-> UEFI is using UART1 on the LS connector. I'm fine with switching the
-> console default to use the UART1 on the LS connector as long as there
-> is agreement to do so.
-
-Eek... "serial2 = uart3 //UART1"
-
-I sent the following patch
-http://lists.denx.de/pipermail/u-boot/2015-September/227465.html
-
-which has been accepted which switches from using UART0 (onboard) to
-UART3 (LS connector). This matched up with the change made in ATF i.e. both ATF
-and u-boot were then both outputting on the same UART.
-
-So u-boot has already been migrated over.
-
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
