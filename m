@@ -1,45 +1,47 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH 0/6] arm64: Simple additions to NS2 DT
-Date: Fri, 2 Oct 2015 23:24:17 +0530
-Message-ID: <1443808463-21120-1-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH 1/5] mtd: brcmnand: Fix pointer type-cast in brcmnand_write()
+Date: Fri, 2 Oct 2015 23:26:42 +0530
+Message-ID: <1443808606-21203-2-git-send-email-anup.patel@broadcom.com>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Pramod KUMAR <pramodku@broadcom.com>, Anup Patel <anup.patel@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-We add l2-cache, SMMU, reboot, PMUv3, RNG, and I2C DT nodes
-for NS2 SVK.
+We should always type-cast pointer to "long" or "unsigned long"
+because size of pointer is same as machine word size. This will
+avoid pointer type-cast issues on both 32bit and 64bit systems.
 
-This patchset is based on v4.3-rc3 and available in ns2_dt1_v1
-branch of https://github.com/Broadcom/arm64-linux.git.
+This patch fixes pointer type-cast issue in brcmnand_write()
+as-per above info.
 
-The patchset is tested on NS2 SVK.
+Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+---
+ drivers/mtd/nand/brcmnand/brcmnand.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Anup Patel (5):
-  arm64: dts: Add L2-cache DT node for NS2
-  arm64: dts: Add SMMU DT node for NS2
-  arm64: dts: Add syscon based reboot in DT for NS2
-  arm64: dts: Add ARM PMUv3 DT node in NS2 DT
-  arm64: dts: Add IPROC RNG200 DT node for NS2
-
-Ray Jui (1):
-  arm64: dts: Add I2C nodes for NS2
-
- arch/arm64/boot/dts/broadcom/ns2-svk.dts |   8 +++
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 106 +++++++++++++++++++++++++++++--
- 2 files changed, 110 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+index fddb795..4cba03d 100644
+--- a/drivers/mtd/nand/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+@@ -1544,9 +1544,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
+ 
+ 	dev_dbg(ctrl->dev, "write %llx <- %p\n", (unsigned long long)addr, buf);
+ 
+-	if (unlikely((u32)buf & 0x03)) {
++	if (unlikely((unsigned long)buf & 0x03)) {
+ 		dev_warn(ctrl->dev, "unaligned buffer: %p\n", buf);
+-		buf = (u32 *)((u32)buf & ~0x03);
++		buf = (u32 *)((unsigned long)buf & ~0x03);
+ 	}
+ 
+ 	brcmnand_wp(mtd, 0);
 -- 
 1.9.1
