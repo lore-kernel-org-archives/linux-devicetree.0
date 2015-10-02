@@ -1,29 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/5] Documentation: tps65912: Add DT bindings for the
- TPS65912 PMIC
-Date: Fri, 2 Oct 2015 04:12:10 -0700
-Message-ID: <CACRpkdbfXyOOfUW_Oqr5fsvgBQ-qDhHasxNR6NUwVu1DWoNu_w@mail.gmail.com>
-References: <1443106374-4126-1-git-send-email-afd@ti.com>
-	<1443106374-4126-2-git-send-email-afd@ti.com>
+From: Julien Grall <julien.grall@citrix.com>
+Subject: Re: "clk: sunxi: Add a simple gates driver" breaks kernel with older
+ DTB
+Date: Fri, 2 Oct 2015 12:15:52 +0100
+Message-ID: <560E6768.6040705@citrix.com>
+References: <1443689231.16718.225.camel@citrix.com>
+ <20151001204506.GR7104@lukather> <560E5767.2040502@citrix.com>
+ <20151002105333.GA2696@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443106374-4126-2-git-send-email-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151002105333.GA2696@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, =?windows-1252?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, KumarGala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "freebsd-arm@freebsd.org" <freebsd-arm@FreeBSD.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 7:52 AM, Andrew F. Davis <afd@ti.com> wrote:
+On 02/10/15 11:53, Maxime Ripard wrote:
+>> If no, that's very unfortunate because it means that you can't
+>> re-use the same DT across multiple OS and the DT provided by the
+>> firmware (if it's built-in).
+> 
+> Is there such OS yet (and by that, I mean one that actually shares our
+> DT, instead of rewriting its own) ?
 
-> The TPS65912 PMIC contains several regulators and a GPIO controller.
-> Add bindings for the TPS65912 PMIC.
->
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
+Yes, FreeBSD started to support the DT provided by vendors which are
+based on Linux bindings. The ARM64 port is only using DTB provided by
+the hardware. For ARM32, there is still some platform using a specific
+DT for FreeBSD but they are trying to get a ride.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Regards,
 
-For GPIO bindings.
-
-Yours,
-Linus Walleij
+-- 
+Julien Grall
