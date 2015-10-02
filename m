@@ -1,98 +1,57 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v2] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Fri, 2 Oct 2015 15:44:39 -0700
-Message-ID: <560F08D7.7040707@broadcom.com>
-References: <1443689961-23909-1-git-send-email-bharatku@xilinx.com>
- <2677327.lnRZhqx5GI@wuerfel> <560DD374.4000708@broadcom.com>
- <5225360.GkBHX0QnIA@wuerfel>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/10] clk: iproc: add support for BCM NS, NSP, and NS2
+Date: Fri, 2 Oct 2015 18:57:35 -0400
+Message-ID: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5225360.GkBHX0QnIA@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, hauke@hauke-m.de, linux-pci@vger.kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, Minghuan.Lian@freescale.com, robh+dt@kernel.org, Ravi Kiran Gummaluri <rgummal@xilinx.com>, tinamdar@apm.com, galak@codeaurora.org, bhelgaas@google.com, treding@nvidia.com, soren.brinkmann@xilinx.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds support for the Broadcom Northstar, Northstar
+Plus, and Northstar 2 clocks.  Some slight modifications were necessary
+to clk-iproc-pll to get Northstar and Northstar Plus working, due to
+differences in register layout.  This is the reason why the first patch
+is necessary.  Some more modifications were necessary to clk-iproc-pll
+to get Northstar 2 working, due to differences in register layout (and
+resulting fallout in Cygnus and NSP).  This is the reason why the sixth
+and seventh patches are necessary.  The fifth patch is clean-up to
+prevent accidentally forgetting to adjust for the base write errata
+(which happened a few times, but was caught in internal review).
 
+There is a potential merge "race" between the device tree changes and
+the clk changes.  If the device tree changes go in before the clk
+changes, there is a window where there are non-working clk entries in
+the device tree.  So, it makes the most sense for this series to be
+pulled into the clk maintainer's tree solely.  
 
-On 10/2/2015 3:36 PM, Arnd Bergmann wrote:
-> On Thursday 01 October 2015 17:44:36 Ray Jui wrote:
->>
->> Sorry for stealing this discussion, :)
->>
->> I have some questions here, since this affects how I should implement
->> the MSI support for iProc based PCIe controller. I understand it makes
->> more sense to use separate device node for MSI and have "msi-parent"
->> from the pci node points to the MSI node, and that MSI node can be
->> gicv2m or gicv3 based on more advanced ARMv8 platforms.
->>
->> Then I would assume the MSI controller would deserve its own driver?
->> Which is a lot of people do nowadays. In that case, how I should handle
->> the case when the iProc MSI support is handled through some event queue
->> mechanism with their registers embedded in the PCIe controller register
->> space?
->>
->> Does the following logic make sense to you?
->>
->> 1. parse phandle of "msi-parent"
->> 2. Call of_pci_find_msi_chip_by_node to hook it up to msi chip already
->> registered (in the gicv2m and gicv3 case)
->> 3. If failed, fall back to use the iProc's own event queue logic by
->> calling iproc_pcie_msi_init.
->>
->> The iProc MSI still has its own node that looks like this:
->> 141 msi0: msi@20020000 {
->> 142                         msi-controller;
->> 143                         interrupt-parent = <&gic>;
->> 144                         interrupts = <GIC_SPI 277 IRQ_TYPE_NONE>,
->> 145                                      <GIC_SPI 278 IRQ_TYPE_NONE>,
->> 146                                      <GIC_SPI 279 IRQ_TYPE_NONE>,
->> 147                                      <GIC_SPI 280 IRQ_TYPE_NONE>,
->> 148                                      <GIC_SPI 281 IRQ_TYPE_NONE>,
->> 149                                      <GIC_SPI 282 IRQ_TYPE_NONE>;
->> 150                         brcm,num-eq-region = <1>;
->> 151                         brcm,num-msi-msg-region = <1>;
->> 152                 };
->>
->> But it does not have its own "reg" since they are embedded in the PCI
->> controller's registers and it relies on one calling iproc_pcie_msi_init
->> to pass in base register value and some other information.
-> 
-> I don't think I have a perfect answer to this. One way would be to
-> separate the actual PCI root device node from the IP block that
-> contains both the PCI root and the MSI catcher, but I guess that
-> would require an incompatible change to your binding and it's not
-> worth the pain.
-
-Indeed, that's going to be very painful given that this iProc PCIe
-controller driver is used on multiple platforms including Northstar,
-Cygnus, Northstar+, and Northstar 2.
-
-> 
-> It's probably also ok to make the PCI host node itself be the msi-controller
-> node and have an msi-parent phandle that points to the node itself. Not
-> sure if that violates any rules that we may want or need to follow though.
-> 
-> Having a device node without registers is also a bit problematic,
-> especially the 'msi@20020000' name doesn't make sense if 0x20020000
-> is not the first number in the reg property. Maybe it's best to 
-> put that node directly under the PCI host controller and not assign
-> any registers. This is still a bit ugly because we'd expect devices
-> under the host bridge to be PCI devices rather than random other things,
-> but it may be the least of the evils.
-
-This is what I have right now. With the msi node under the PCIe
-controller node and have msi-parent points to the msi node. Maybe it
-will be a lot easier to discuss this when I submit the code for review
-within the next couple weeks.
-
-> 
-> 	Arnd
-> 
+Also, the Northstar Plus device tree modifications were left out of this
+series due to potential complications with the merging of this series.
+Northstar Plus was recently accepted, and only exists in Florian's tree.
+This would cause merge issues in the clk tree.  So, the NSP device tree
+changes will be submitted at a later date.
 
 Thanks,
+Jon
 
-Ray
+
+ .../bindings/clock/brcm,iproc-clocks.txt           |  78 ++++++
+ arch/arm/boot/dts/bcm5301x.dtsi                    |  67 ++++-
+ arch/arm64/Kconfig.platforms                       |   1 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  81 ++++++
+ drivers/clk/Makefile                               |   3 +-
+ drivers/clk/bcm/Makefile                           |   3 +
+ drivers/clk/bcm/clk-cygnus.c                       |  17 +-
+ drivers/clk/bcm/clk-iproc-pll.c                    | 183 +++++++------
+ drivers/clk/bcm/clk-iproc.h                        |  22 +-
+ drivers/clk/bcm/clk-ns2.c                          | 290 +++++++++++++++++++++
+ drivers/clk/bcm/clk-nsp.c                          | 143 ++++++++++
+ include/dt-bindings/clock/bcm-ns2.h                |  72 +++++
+ include/dt-bindings/clock/bcm-nsp.h                |  51 ++++
+ 13 files changed, 918 insertions(+), 93 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
