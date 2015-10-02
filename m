@@ -1,7 +1,7 @@
 From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH 03/10] clk: iproc: define Broadcom NSP iProc clock binding
-Date: Fri, 2 Oct 2015 18:57:38 -0400
-Message-ID: <1443826665-17570-4-git-send-email-jonmason@broadcom.com>
+Subject: [PATCH 01/10] clk: iproc: Add PWRCTRL support
+Date: Fri, 2 Oct 2015 18:57:36 -0400
+Message-ID: <1443826665-17570-2-git-send-email-jonmason@broadcom.com>
 References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,51 +21,124 @@ To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.
 Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for Broadcom Northstar Plus
-architecture based clock controller
+Some iProc SoC clocks use a different way to control clock power, via
+the PWRDWN bit in the PLL control register.  Since the PLL control
+register is used to access the PWRDWN bit, there is no need for the
+pwr_base when this is being used.  A new flag, IPROC_CLK_EMBED_PWRCTRL,
+has been added to identify this usage.  We can use the AON interface to
+write the values to enable/disable PWRDOWN.
 
 Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- .../bindings/clock/brcm,iproc-clocks.txt           | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/clk/bcm/clk-iproc-pll.c | 55 ++++++++++++++++++++++++++++-------------
+ drivers/clk/bcm/clk-iproc.h     |  6 +++++
+ 2 files changed, 44 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index da8d9bb..b3c3e9d 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -130,3 +130,33 @@ These clock IDs are defined in:
-     ch3_unused mipipll          4       BCM_CYGNUS_MIPIPLL_CH3_UNUSED
-     ch4_unused mipipll          5       BCM_CYGNUS_MIPIPLL_CH4_UNUSED
-     ch5_unused mipipll          6       BCM_CYGNUS_MIPIPLL_CH5_UNUSED
+diff --git a/drivers/clk/bcm/clk-iproc-pll.c b/drivers/clk/bcm/clk-iproc-pll.c
+index 2dda4e8..e029ab3 100644
+--- a/drivers/clk/bcm/clk-iproc-pll.c
++++ b/drivers/clk/bcm/clk-iproc-pll.c
+@@ -148,14 +148,25 @@ static void __pll_disable(struct iproc_pll *pll)
+ 		writel(val, pll->asiu_base + ctrl->asiu.offset);
+ 	}
+ 
+-	/* latch input value so core power can be shut down */
+-	val = readl(pll->pwr_base + ctrl->aon.offset);
+-	val |= (1 << ctrl->aon.iso_shift);
+-	writel(val, pll->pwr_base + ctrl->aon.offset);
+-
+-	/* power down the core */
+-	val &= ~(bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
+-	writel(val, pll->pwr_base + ctrl->aon.offset);
++	if (ctrl->flags & IPROC_CLK_EMBED_PWRCTRL) {
++		val = readl(pll->pll_base + ctrl->aon.offset);
++		val |= (bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
++		writel(val, pll->pll_base + ctrl->aon.offset);
 +
-+Northstar and Northstar Plus
-+------
-+PLL and leaf clock compatible strings for Northstar and Northstar Plus are:
-+ "brcm,nsp-armpll"
-+ "brcm,nsp-genpll"
-+ "brcm,nsp-lcpll0"
++		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
++			readl(pll->pll_base + ctrl->aon.offset);
++	}
 +
-+The following table defines the set of PLL/clock index and ID for Northstar and
-+Northstar Plus.  These clock IDs are defined in:
-+    "include/dt-bindings/clock/bcm-nsp.h"
++	if (pll->pwr_base) {
++		/* latch input value so core power can be shut down */
++		val = readl(pll->pwr_base + ctrl->aon.offset);
++		val |= (1 << ctrl->aon.iso_shift);
++		writel(val, pll->pwr_base + ctrl->aon.offset);
 +
-+    Clock	Source		Index	ID
-+    ---		-----		-----	---------
-+    crystal	N/A		N/A	N/A
++		/* power down the core */
++		val &= ~(bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
++		writel(val, pll->pwr_base + ctrl->aon.offset);
++	}
+ }
+ 
+ static int __pll_enable(struct iproc_pll *pll)
+@@ -163,11 +174,22 @@ static int __pll_enable(struct iproc_pll *pll)
+ 	const struct iproc_pll_ctrl *ctrl = pll->ctrl;
+ 	u32 val;
+ 
+-	/* power up the PLL and make sure it's not latched */
+-	val = readl(pll->pwr_base + ctrl->aon.offset);
+-	val |= bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift;
+-	val &= ~(1 << ctrl->aon.iso_shift);
+-	writel(val, pll->pwr_base + ctrl->aon.offset);
++	if (ctrl->flags & IPROC_CLK_EMBED_PWRCTRL) {
++		val = readl(pll->pll_base + ctrl->aon.offset);
++		val &= ~(bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
++		writel(val, pll->pll_base + ctrl->aon.offset);
 +
-+    armpll	crystal		N/A	N/A
++		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
++			readl(pll->pll_base + ctrl->aon.offset);
++	}
 +
-+    genpll	crystal		0	BCM_NSP_GENPLL
-+    phy		genpll		1	BCM_NSP_GENPLL_PHY_CLK
-+    ethernetclk	genpll		2	BCM_NSP_GENPLL_ENET_SW_CLK
-+    usbclk	genpll		3	BCM_NSP_GENPLL_USB_PHY_REF_CLK
-+    iprocfast	genpll		4	BCM_NSP_GENPLL_IPROCFAST_CLK
-+    sata1	genpll		5	BCM_NSP_GENPLL_SATA1_CLK
-+    sata2	genpll		6	BCM_NSP_GENPLL_SATA2_CLK
++	if (pll->pwr_base) {
++		/* power up the PLL and make sure it's not latched */
++		val = readl(pll->pwr_base + ctrl->aon.offset);
++		val |= bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift;
++		val &= ~(1 << ctrl->aon.iso_shift);
++		writel(val, pll->pwr_base + ctrl->aon.offset);
++	}
+ 
+ 	/* certain PLLs also need to be ungated from the ASIU top level */
+ 	if (ctrl->flags & IPROC_CLK_PLL_ASIU) {
+@@ -610,9 +632,8 @@ void __init iproc_pll_clk_setup(struct device_node *node,
+ 	if (WARN_ON(!pll->pll_base))
+ 		goto err_pll_iomap;
+ 
++	/* Some SoCs do not require the pwr_base, thus failing is not fatal */
+ 	pll->pwr_base = of_iomap(node, 1);
+-	if (WARN_ON(!pll->pwr_base))
+-		goto err_pwr_iomap;
+ 
+ 	/* some PLLs require gating control at the top ASIU level */
+ 	if (pll_ctrl->flags & IPROC_CLK_PLL_ASIU) {
+@@ -695,9 +716,9 @@ err_pll_register:
+ 		iounmap(pll->asiu_base);
+ 
+ err_asiu_iomap:
+-	iounmap(pll->pwr_base);
++	if (pll->pwr_base)
++		iounmap(pll->pwr_base);
+ 
+-err_pwr_iomap:
+ 	iounmap(pll->pll_base);
+ 
+ err_pll_iomap:
+diff --git a/drivers/clk/bcm/clk-iproc.h b/drivers/clk/bcm/clk-iproc.h
+index d834b7a..ff7bfad 100644
+--- a/drivers/clk/bcm/clk-iproc.h
++++ b/drivers/clk/bcm/clk-iproc.h
+@@ -49,6 +49,12 @@
+ #define IPROC_CLK_PLL_NEEDS_SW_CFG BIT(4)
+ 
+ /*
++ * Some PLLs use a different way to control clock power, via the PWRDWN bit in
++ * the PLL control register
++ */
++#define IPROC_CLK_EMBED_PWRCTRL BIT(5)
 +
-+    lcpll0	crystal		0	BCM_NSP_LCPLL0
-+    pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
-+    sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
-+    ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
++/*
+  * Parameters for VCO frequency configuration
+  *
+  * VCO frequency =
 -- 
 1.9.1
