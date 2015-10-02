@@ -1,7 +1,7 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH 3/6] arm64: dts: Add syscon based reboot in DT for NS2
-Date: Fri, 2 Oct 2015 23:24:20 +0530
-Message-ID: <1443808463-21120-4-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH 5/6] arm64: dts: Add IPROC RNG200 DT node for NS2
+Date: Fri, 2 Oct 2015 23:24:22 +0530
+Message-ID: <1443808463-21120-6-git-send-email-anup.patel@broadcom.com>
 References: <1443808463-21120-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,44 +12,32 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Vikram Prakash <vikramp@broadcom.com>, Anup Patel <anup.patel@broadcom.com>, Pramod KUMAR <pramodku@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-To reset NS2, we simply have to write '0' to BIT[1] at offset 0x90
-of CRMU space.
-
-The above can be easily achieved by writing 0xfffffffd at offset 0x90
-using syscon-reboot driver. We don't need to have separate driver for
-rebooting NS2.
-
-This patch enables syscon-reboot driver for NS2 using DT.
+We have IPROC RNG200 hardware random number generation in
+NS2 SoC, lets enable it for NS2 in NS2 DT.
 
 Signed-off-by: Anup Patel <anup.patel@broadcom.com>
 Reviewed-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Pramod KUMAR <pramodku@broadcom.com>
+Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
 Reviewed-by: Scott Branden <sbranden@broadcom.com>
 ---
- arch/arm64/boot/dts/broadcom/ns2.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index c5d90e4..5d2ac6b 100644
+index bc31c0e..92ecf1c 100644
 --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
 +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -144,6 +144,18 @@
- 			mmu-masters;
+@@ -187,5 +187,10 @@
+ 			clock-frequency = <23961600>;
+ 			status = "disabled";
  		};
- 
-+		crmu: crmu@65024000 {
-+			compatible = "syscon";
-+			reg = <0x65024000 0x100>;
-+		};
 +
-+		reboot@65024000 {
-+			compatible ="syscon-reboot";
-+			regmap = <&crmu>;
-+			offset = <0x90>;
-+			mask = <0xfffffffd>;
++		hwrng: hwrng@66220000 {
++			compatible = "brcm,iproc-rng200";
++			reg = <0x66220000 0x28>;
 +		};
-+
- 		gic: interrupt-controller@65210000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
+ 	};
+ };
 -- 
 1.9.1
