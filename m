@@ -1,65 +1,26 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v4 4/4] irqchip/gic-v3-its: Add handling of PCI requester id.
-Date: Thu,  1 Oct 2015 17:50:25 -0700
-Message-ID: <1443747025-9918-5-git-send-email-ddaney.cavm@gmail.com>
-References: <1443747025-9918-1-git-send-email-ddaney.cavm@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] ARM: shmobile: add Porter board DT bindings
+Date: Fri, 2 Oct 2015 10:16:37 +0900
+Message-ID: <20151002011637.GC22640@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1498934.YIZP7CvbA4@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1443747025-9918-1-git-send-email-ddaney.cavm@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc: David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1498934.YIZP7CvbA4@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+On Thu, Oct 01, 2015 at 02:01:38AM +0300, Sergei Shtylyov wrote:
+> Add Porter device tree bindings documentation, listing it as a supported board.
+>     
+> This allows to use checkpatch to validate DTSes referring to the Porter board.
+>  
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Replace open coded generation PCI/MSI requester id with call to the
-new function pci_msi_domain_get_msi_rid() which applies the "msi-map"
-to the id value.
+Thanks Sergei,
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- drivers/irqchip/irq-gic-v3-its-pci-msi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-index cf351c6..7bbf64a 100644
---- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-+++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-@@ -42,7 +42,6 @@ static struct irq_chip its_msi_irq_chip = {
- 
- struct its_pci_alias {
- 	struct pci_dev	*pdev;
--	u32		dev_id;
- 	u32		count;
- };
- 
-@@ -60,7 +59,6 @@ static int its_get_pci_alias(struct pci_dev *pdev, u16 alias, void *data)
- {
- 	struct its_pci_alias *dev_alias = data;
- 
--	dev_alias->dev_id = alias;
- 	if (pdev != dev_alias->pdev)
- 		dev_alias->count += its_pci_msi_vec_count(dev_alias->pdev);
- 
-@@ -86,7 +84,7 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
- 	pci_for_each_dma_alias(pdev, its_get_pci_alias, &dev_alias);
- 
- 	/* ITS specific DeviceID, as the core ITS ignores dev. */
--	info->scratchpad[0].ul = dev_alias.dev_id;
-+	info->scratchpad[0].ul = pci_msi_domain_get_msi_rid(domain, pdev);
- 
- 	return msi_info->ops->msi_prepare(domain->parent,
- 					  dev, dev_alias.count, info);
--- 
-1.9.1
+I have queued this and the following patch up for v4.4.
