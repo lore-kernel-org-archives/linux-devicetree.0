@@ -1,61 +1,56 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v4 0/5] PCI: generic: Misc. bug fixes/enhancements
-Date: Fri,  2 Oct 2015 11:43:58 -0700
-Message-ID: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 5/5] PCI: generic: Pass proper starting bus number to
+ pci_scan_root_bus().
+Date: Fri,  2 Oct 2015 11:44:03 -0700
+Message-ID: <1443811443-18878-6-git-send-email-ddaney.cavm@gmail.com>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
 Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-While using the pci-host-generic driver to add PCI support for the
-Cavium ThunderX processors, several bugs were discovered.  This patch
-set fixes the bugs, a follow-on set will add the ThunderX support.
+If the bus is being configured with a bus-range that does not start at
+zero, pass that starting bus number to pci_scan_root_bus().  Passing
+the incorrect value of zero causes attempted config accesses outside
+of the supported range, which cascades to an OOPs spew and eventual
+kernel panic.
 
-Changes from v3:
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+No change from v3.
 
-  - Drop "PCI: generic: Claim device resources if PCI_PROBE_ONLY"
+ drivers/pci/host/pci-host-generic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  - Add some Acked-by:
-
-  - Add to explanation of "reg" property in host-generic-pci.txt.
-
-  - Add error message if "reg" property is too big.
-
-  - Use pointer to ops rather than make a copy.
-
-Changes from v2:
-
-  - Added " PCI: generic: Claim device resources if PCI_PROBE_ONLY"
-
-Changes from v1:
-
-  - "PCI: generic: Allow bus default MSI controller to be specified."
-    patch was dropped as it is no longer necessary.
-
-  - "PCI: Make global and export pdev_fixup_irq()." and "PCI: generic:
-    Only fixup irqs for bus we are creating." were rewritten to move
-    the support into a somewhat more generic form in setup-irq.c.
-
-  - Add some clarifying text to host-generic-pci.txt
-
-  - Add some Acked-by:
-
-
-David Daney (5):
-  PCI: Add pci_bus_fixup_irqs().
-  PCI: generic: Only fixup irqs for bus we are creating.
-  PCI: generic: Quit clobbering our pci_ops.
-  PCI: generic: Correct, and avoid overflow, in bus_max calculation.
-  PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
-
- .../devicetree/bindings/pci/host-generic-pci.txt   |  6 +++-
- drivers/pci/host/pci-host-generic.c                | 42 +++++++++++++---------
- drivers/pci/setup-irq.c                            | 30 ++++++++++++++++
- include/linux/pci.h                                |  4 +++
- 4 files changed, 65 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+index 5cce837..eb4b7c7 100644
+--- a/drivers/pci/host/pci-host-generic.c
++++ b/drivers/pci/host/pci-host-generic.c
+@@ -264,7 +264,8 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 	if (!pci_has_flag(PCI_PROBE_ONLY))
+ 		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+ 
+-	bus = pci_scan_root_bus(dev, 0,
++
++	bus = pci_scan_root_bus(dev, pci->cfg.bus_range->start,
+ 				&pci->cfg.ops->ops, pci, &pci->resources);
+ 	if (!bus) {
+ 		dev_err(dev, "Scanning rootbus failed");
 -- 
 1.9.1
