@@ -1,72 +1,55 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 2/2] arm64: dts: mt8173: add timer node
-Date: Fri, 2 Oct 2015 22:00:44 +0800
-Message-ID: <1443794444.10908.9.camel@mtksdaap41>
-References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
-	 <55FAC570.8040307@arm.com> <1442501816.4784.3.camel@mtksdaap41>
-	 <55FAE69C.2000906@arm.com> <1443710016.22188.10.camel@mtksdaap41>
-	 <560D5227.8050600@arm.com>
+From: Y Vo <yvo@apm.com>
+Subject: Re: [PATCH 1/2] gpio: xgene: add support to configure GPIO line as
+ input, output or external IRQ pin
+Date: Fri, 2 Oct 2015 21:03:47 +0700
+Message-ID: <CAL4ahLfYO5nGvUbi6L5SUfhrj6o-O4-uvhFdrppojvH8Hwumjg@mail.gmail.com>
+References: <1441963332-13329-1-git-send-email-yvo@apm.com>
+	<1441963332-13329-2-git-send-email-yvo@apm.com>
+	<CACRpkdbos6r_S06r9gR9Mn7qu-ri61UJcQM332JK6S4gFwSN-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <560D5227.8050600@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Kurtz <djkurtz@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbos6r_S06r9gR9Mn7qu-ri61UJcQM332JK6S4gFwSN-A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-10-01 at 16:32 +0100, Sudeep Holla wrote:
-> 
-> On 01/10/15 15:33, Yingjoe Chen wrote:
-> > On Thu, 2015-09-17 at 17:13 +0100, Sudeep Holla wrote:
-> >>
-> 
-> [...]
-> 
-> >>
-> >> I think your are confusing the system counter with arch timers. System
-> >> counter is always-on, but the arch timers(logic implementing timers
-> >> comparators) might not be off when the processor is powered down.
-> >>
-> >> I think you need this timer and are using it for low power idle states
-> >> in which case you will use this as a clock event and not clock source.
-> >> It will be used as a hardware broadcast event source.
-> >>
-> >> There's no call to sched_clock_register in mtk_timer.c, so it can't be
-> >> the sched clock, so you need to fix the commit log.
-> >
-> > Hi Sudeep,
-> >
-> > Sorry for late reply.
-> >
-> > For sched_clock_register, please see
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001547.html
-> > which was accepted in
-> > https://git.linaro.org/people/daniel.lezcano/linux.git/shortlog/refs/heads/clockevents/4.4
-> >
-> 
-> The commit message makes no sense to me. The counters should continue to
-> work as long as they are in always-on domain. Only timers are lost
-> when you enter deeper idle states. So I agree with using MTK timer as
-> broadcast timer/eventsource. You still didn't answer what's the need
-> to use MTK timer as sched clocksource ?
+On Fri, Oct 2, 2015 at 4:51 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Fri, Sep 11, 2015 at 2:22 AM, Y Vo <yvo@apm.com> wrote:
+>
+>> Add support to configure GPIO line as input, output or external IRQ pin.
+>>
+>> Signed-off-by: Y Vo <yvo@apm.com>
+>
+> Mostly OK but...
+>
+>>  #define XGENE_MAX_GPIO_DS              22
+>>  #define XGENE_MAX_GPIO_DS_IRQ          6
+>> +#define XGENE_GPIO8_HWIRQ              0x48
+>> +#define XGENE_GPIO8_IDX                        8
+> (...)
+>> +static int xgene_irq_to_line(u32 irq)
+>> +{
+>> +       u32 offset = irq_get_irq_data(irq)->hwirq - XGENE_GPIO8_HWIRQ;
+>> +
+>> +       return (offset < XGENE_MAX_GPIO_DS_IRQ) ?
+>> +                       (offset + XGENE_GPIO8_IDX) : -EINVAL;
+>> +}
+>
+> What is this hardcoded IRQ 0x48 business?
 
+This is hardware irq number ~ GPIO_DS8. So we use it to get the gpio
+number from hwirq. But we are preparing another version which is
+better to configure the GPIO lines as interrupt or direction(in/out).
 
-Hi, Sudeep,
-
-ARM ARM said the counter should be in always-on domain, but
-unfortunately that not true for mt8173. The last CPU enter idle can
-choose to enter deep idle mode and the counter value would be lost. Our
-firmware backup/recover the counter so it looks like it is stopped.
-That's why I thought we need to use it as sched clocksource.
-
-On mt8173, we will fix the firmware to add missing counts, so it will
-looks like the counter keep counting. But other mediatek platform have
-similar issue, and the 2 counter have same resolution, so I still want
-to keep using GPT as sched clocksource.
-
-Joe.C
-
-
+>
+> This patch needs kerneldoc for this xgene_irq_to_line() to explain
+> what exactly is going on, or noone will understand it enough to
+> debug or refactor the code.
+>
+> I hope this 0x48 is not some way of compensating for Linux internal
+> IRQ offsets, that is what irqdomain is for.
+>
+> Yours,
+> Linus Walleij
