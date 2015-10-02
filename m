@@ -1,103 +1,72 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 2/2] iio: dac: Add support for the AD5592R/AD5593R
- ADCs/DACs
-Date: Fri, 2 Oct 2015 21:53:06 +0800
-Message-ID: <201510022121.1QklnZU3%fengguang.wu@intel.com>
-References: <1443789956-25340-2-git-send-email-paul.cercueil@analog.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mt8173: add timer node
+Date: Fri, 2 Oct 2015 22:00:44 +0800
+Message-ID: <1443794444.10908.9.camel@mtksdaap41>
+References: <1442369095-1094-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1442369095-1094-2-git-send-email-yingjoe.chen@mediatek.com>
+	 <55FAC570.8040307@arm.com> <1442501816.4784.3.camel@mtksdaap41>
+	 <55FAE69C.2000906@arm.com> <1443710016.22188.10.camel@mtksdaap41>
+	 <560D5227.8050600@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443789956-25340-2-git-send-email-paul.cercueil@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Antonio Fiol <antonio@fiol.es>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Paul Cercueil <paul.cercueil@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <560D5227.8050600@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Kurtz <djkurtz@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Thu, 2015-10-01 at 16:32 +0100, Sudeep Holla wrote:
+> 
+> On 01/10/15 15:33, Yingjoe Chen wrote:
+> > On Thu, 2015-09-17 at 17:13 +0100, Sudeep Holla wrote:
+> >>
+> 
+> [...]
+> 
+> >>
+> >> I think your are confusing the system counter with arch timers. System
+> >> counter is always-on, but the arch timers(logic implementing timers
+> >> comparators) might not be off when the processor is powered down.
+> >>
+> >> I think you need this timer and are using it for low power idle states
+> >> in which case you will use this as a clock event and not clock source.
+> >> It will be used as a hardware broadcast event source.
+> >>
+> >> There's no call to sched_clock_register in mtk_timer.c, so it can't be
+> >> the sched clock, so you need to fix the commit log.
+> >
+> > Hi Sudeep,
+> >
+> > Sorry for late reply.
+> >
+> > For sched_clock_register, please see
+> > http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001547.html
+> > which was accepted in
+> > https://git.linaro.org/people/daniel.lezcano/linux.git/shortlog/refs/heads/clockevents/4.4
+> >
+> 
+> The commit message makes no sense to me. The counters should continue to
+> work as long as they are in always-on domain. Only timers are lost
+> when you enter deeper idle states. So I agree with using MTK timer as
+> broadcast timer/eventsource. You still didn't answer what's the need
+> to use MTK timer as sched clocksource ?
 
-[auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
 
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+Hi, Sudeep,
+
+ARM ARM said the counter should be in always-on domain, but
+unfortunately that not true for mt8173. The last CPU enter idle can
+choose to enter deep idle mode and the counter value would be lost. Our
+firmware backup/recover the counter so it looks like it is stopped.
+That's why I thought we need to use it as sched clocksource.
+
+On mt8173, we will fix the firmware to add missing counts, so it will
+looks like the counter keep counting. But other mediatek platform have
+similar issue, and the 2 counter have same resolution, so I still want
+to keep using GPT as sched clocksource.
+
+Joe.C
 
 
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/iio/dac/ad5592r.c:20:19: sparse: incorrect type in initializer (different base types)
-   drivers/iio/dac/ad5592r.c:20:19:    expected unsigned short [unsigned] [usertype] msg
-   drivers/iio/dac/ad5592r.c:20:19:    got restricted __be16 [usertype] <noident>
-   drivers/iio/dac/ad5592r.c:28:19: sparse: incorrect type in initializer (different base types)
-   drivers/iio/dac/ad5592r.c:28:19:    expected unsigned short [unsigned] [usertype] msg
-   drivers/iio/dac/ad5592r.c:28:19:    got restricted __be16 [usertype] <noident>
->> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
->> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
->> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
->> drivers/iio/dac/ad5592r.c:41:18: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5592r.c:48:19: sparse: incorrect type in initializer (different base types)
-   drivers/iio/dac/ad5592r.c:48:19:    expected unsigned short [unsigned] [usertype] msg
-   drivers/iio/dac/ad5592r.c:48:19:    got restricted __be16 [usertype] <noident>
-   drivers/iio/dac/ad5592r.c:56:19: sparse: incorrect type in initializer (different base types)
-   drivers/iio/dac/ad5592r.c:56:19:    expected unsigned short [unsigned] [usertype] msg
-   drivers/iio/dac/ad5592r.c:56:19:    got restricted __be16 [usertype] <noident>
-   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5592r.c:68:26: sparse: cast to restricted __be16
---
->> drivers/iio/dac/ad5593r.c:28:15: sparse: incorrect type in assignment (different base types)
-   drivers/iio/dac/ad5593r.c:28:15:    expected unsigned short [unsigned] [usertype] value
-   drivers/iio/dac/ad5593r.c:28:15:    got restricted __be16 [usertype] <noident>
->> drivers/iio/dac/ad5593r.c:38:25: sparse: incorrect type in argument 3 (different base types)
-   drivers/iio/dac/ad5593r.c:38:25:    expected unsigned short [unsigned] [usertype] value
-   drivers/iio/dac/ad5593r.c:38:25:    got restricted __be16 [usertype] <noident>
->> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
->> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
->> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
->> drivers/iio/dac/ad5593r.c:48:18: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5593r.c:56:15: sparse: incorrect type in assignment (different base types)
-   drivers/iio/dac/ad5593r.c:56:15:    expected unsigned short [unsigned] [usertype] value
-   drivers/iio/dac/ad5593r.c:56:15:    got restricted __be16 [usertype] <noident>
-   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
-   drivers/iio/dac/ad5593r.c:69:18: sparse: cast to restricted __be16
-
-vim +20 drivers/iio/dac/ad5592r.c
-
-    14	#include <linux/of.h>
-    15	#include <linux/spi/spi.h>
-    16	
-    17	static int ad5592r_dac_write(struct ad5592r_state *st, unsigned chan, u16 value)
-    18	{
-    19		struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
-  > 20		u16 msg = cpu_to_be16(BIT(15) | (chan << 12) | value);
-    21	
-    22		return spi_write(spi, &msg, sizeof(msg));
-    23	}
-    24	
-    25	static int ad5592r_adc_read(struct ad5592r_state *st, unsigned chan, u16 *value)
-    26	{
-    27		struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
-    28		u16 msg = cpu_to_be16((AD5592R_REG_ADC_SEQ << 11) | BIT(chan));
-    29		int ret;
-    30	
-    31		ret = spi_write(spi, &msg, sizeof(msg));
-    32		if (ret)
-    33			return ret;
-    34	
-    35		spi_read(spi, &msg, sizeof(msg)); /* Invalid data */
-    36	
-    37		ret = spi_read(spi, &msg, sizeof(msg));
-    38		if (ret)
-    39			return ret;
-    40	
-  > 41		*value = be16_to_cpu(msg);
-    42		return 0;
-    43	}
-    44	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
