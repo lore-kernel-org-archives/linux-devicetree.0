@@ -1,32 +1,56 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 3/4] drivers: clk: st: Correct the pll-type for A9 for
- stih418
-Date: Fri, 2 Oct 2015 12:32:41 -0700
-Message-ID: <20151002193241.GV12338@codeaurora.org>
-References: <1440409251-11166-1-git-send-email-gabriel.fernandez@linaro.org>
- <1440409251-11166-4-git-send-email-gabriel.fernandez@linaro.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v3 3/4] clk: bcm2835: Add support for programming the audio domain clocks.
+Date: Fri, 02 Oct 2015 12:53:03 -0700
+Message-ID: <87lhblt5cw.fsf@eliezer.anholt.net>
+References: <1443475325-22270-1-git-send-email-eric@anholt.net> <1443475325-22270-3-git-send-email-eric@anholt.net> <20151002000741.GA1213@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1440409251-11166-4-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151002000741.GA1213@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/24, Gabriel Fernandez wrote:
-> Add support for new PLL-type for stih418 A9-PLL.
-> Currently the 407_A9_PLL type being used, it is corrected with this patch
-> 4600c28 PLL allows to reach higher frequencies
-> so its programming algorithm is extended.
-> 
-> Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> ---
+--=-=-=
+Content-Type: text/plain
 
-Applied to clk-next
+Stephen Boyd <sboyd@codeaurora.org> writes:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> On 09/28, Eric Anholt wrote:
+>> +
+>> +static const char *bcm2835_clock_per_parents[] = {
+>> +static const char *bcm2835_clock_vpu_parents[] = {
+>> +static const char *bcm2835_clock_osc_parents[] = {
+>
+> Can these parent arrays be const char * const ?
+
+They couldn't because I was editing them in place to do the
+s/"xosc"/of_clk_get_parent_name()/ edit.  I've moved the edit to being
+in a stack allocation at probe time.
+
+I think I've done all of your suggested changes in the new version (and
+explained the extra ana2 read/write).
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWDuCfAAoJELXWKTbR/J7oi/oP/23CxW5II/otWnJ4DMmiLRq5
+sgYnPc5XmXW3mhWnIYnwMcEGWLB6bPMBrp8qw+O1Czs7Cl0sVpW3Y3uQmYKH/u0f
+LiDzSV1J5x5S0dqrDqeM0iKKjX7osHbuTUjLbwFG3FYTa0dNVm6pPF7XDKaM9SAy
+/jXNavYuOgfzhJj6IkVwpm2sIm9qLXxzjYVu9fp5tGHPYAnbHlTzHFff5nuJiecn
++AsXuR8U1ZE/5D8qqHBsSMaNO+AMK85eyb6moKl8BWyW6LhnK21uSh/XYXoD2aTw
+uRzxHQhTc36ADve8e5RlWfFOKKiUo8fGwFsngMIlC5ocdaVxusIcOGTSPQQyp7Zl
+DxHPGReeeMK3vjN+RB1IZPvOAHnu4szUVBnB5F2hCjEA9c+Mtgk2NHU3t7zj0ZIs
+Fw0C9LsPORm0iZLyMXbKbk6q6iTKGrWU54ewXe/ZCh5VXm2qc3vjMZP2IPcDXCWW
+jpUaAurZI0vwMx7irTXMLYlPyYhJKdeXla9s+ZMF1qQnmlVI9l7RC+ud0k2mGdEQ
+/rNe9I/YGDdrR7Ry6I0RMfFP6lmfnCvpziukfgL5Fsy7AnlyPEsL0rf/65aVDz0K
+KMrxOnNmAiHzVzfMA5T4Z8DzjUj1ng6AU8UKsZwSsNZcSO9Ndz7Pe76osW6cpWv0
+t6eyMbXEW/hNaL8Ild2Q
+=FsyV
+-----END PGP SIGNATURE-----
+--=-=-=--
