@@ -1,48 +1,32 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v4 3/3] arm64: dts: mt8173: add timer node
-Date: Fri, 2 Oct 2015 23:05:19 +0800
-Message-ID: <1443798319-45744-4-git-send-email-yingjoe.chen@mediatek.com>
-References: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 3/4] PCI/MSI:  Add helper function pci_msi_domain_get_msi_rid().
+Date: Fri, 02 Oct 2015 16:11:12 +0100
+Message-ID: <560E9E90.6000709@arm.com>
+References: <1443747025-9918-1-git-send-email-ddaney.cavm@gmail.com> <1443747025-9918-4-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, erin.lo@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1443747025-9918-4-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Kurtz <djkurtz@chromium.org>
+On 02/10/15 01:50, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> Add pci_msi_domain_get_msi_rid() to return the MSI requester id (RID).
+> Initially needed by gic-v3 based systems. It will be used by follow on
+> patch to drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> 
+> Initially supports mapping the RID via OF device tree.  In the future,
+> this could be extended to use ACPI _IORT tables as well.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-Add device node to enable GPT timer.
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index d18ee42..d763803 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -238,6 +238,15 @@
- 			reg = <0 0x10007000 0 0x100>;
- 		};
- 
-+		timer: timer@10008000 {
-+			compatible = "mediatek,mt8173-timer",
-+				     "mediatek,mt6577-timer";
-+			reg = <0 0x10008000 0 0x1000>;
-+			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_CLK_13M>,
-+				 <&topckgen CLK_TOP_RTC_SEL>;
-+		};
-+
- 		pwrap: pwrap@1000d000 {
- 			compatible = "mediatek,mt8173-pwrap";
- 			reg = <0 0x1000d000 0 0x1000>;
+	M.
 -- 
-1.9.1
-
+Jazz is not dead. It just smells funny...
