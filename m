@@ -1,7 +1,7 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v4 2/5] PCI: generic: Only fixup irqs for bus we are creating.
-Date: Fri,  2 Oct 2015 11:44:00 -0700
-Message-ID: <1443811443-18878-3-git-send-email-ddaney.cavm@gmail.com>
+Subject: [PATCH v4 1/5] PCI: Add pci_bus_fixup_irqs().
+Date: Fri,  2 Oct 2015 11:43:59 -0700
+Message-ID: <1443811443-18878-2-git-send-email-ddaney.cavm@gmail.com>
 References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,34 +23,71 @@ List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-If we create multiple buses with pci-host-generic, or there are buses
-created by other drivers, we don't want to call pci_fixup_irqs() which
-operates on all devices, not just the devices on the bus being added.
-The consequence is that either the fixups are done more than once, or
-in some cases incorrect fixups could be applied.
+pci_bus_fixup_irqs() works like pci_fixup_irqs(), except it only does
+the fixups for devices on the specified bus.
 
-Call pci_bus_fixup_irqs() instead of pci_fixup_irqs().
+Follow-on patch will use the new function.
 
-Acked-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
 No change from v2.
 
- drivers/pci/host/pci-host-generic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/setup-irq.c | 30 ++++++++++++++++++++++++++++++
+ include/linux/pci.h     |  4 ++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-index 265dd25..9e9f1c3 100644
---- a/drivers/pci/host/pci-host-generic.c
-+++ b/drivers/pci/host/pci-host-generic.c
-@@ -262,7 +262,7 @@ static int gen_pci_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+	pci_bus_fixup_irqs(bus, pci_common_swizzle, of_irq_parse_and_map_pci);
- 
- 	if (!pci_has_flag(PCI_PROBE_ONLY)) {
- 		pci_bus_size_bridges(bus);
+diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+index 95c225b..189ad17 100644
+--- a/drivers/pci/setup-irq.c
++++ b/drivers/pci/setup-irq.c
+@@ -66,3 +66,33 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+ 		pdev_fixup_irq(dev, swizzle, map_irq);
+ }
+ EXPORT_SYMBOL_GPL(pci_fixup_irqs);
++
++struct pci_bus_fixup_cb_info {
++	u8 (*swizzle)(struct pci_dev *, u8 *);
++	int (*map_irq)(const struct pci_dev *, u8, u8);
++};
++
++static int pci_bus_fixup_irq_cb(struct pci_dev *dev, void *arg)
++{
++	struct pci_bus_fixup_cb_info *info = arg;
++
++	pdev_fixup_irq(dev, info->swizzle, info->map_irq);
++	return 0;
++}
++
++/*
++ * Fixup the irqs only for devices on the given bus using supplied
++ * swizzle and map_irq function pointers
++ */
++void pci_bus_fixup_irqs(struct pci_bus *bus,
++			u8 (*swizzle)(struct pci_dev *, u8 *),
++			int (*map_irq)(const struct pci_dev *, u8, u8))
++{
++	struct pci_bus_fixup_cb_info info;
++
++	info.swizzle = swizzle;
++	info.map_irq = map_irq;
++	pci_walk_bus(bus, pci_bus_fixup_irq_cb, &info);
++
++}
++EXPORT_SYMBOL_GPL(pci_bus_fixup_irqs);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index e90eb22..b505b50 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1120,6 +1120,10 @@ void pdev_enable_device(struct pci_dev *);
+ int pci_enable_resources(struct pci_dev *, int mask);
+ void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
+ 		    int (*)(const struct pci_dev *, u8, u8));
++void pci_bus_fixup_irqs(struct pci_bus *,
++			u8 (*)(struct pci_dev *, u8 *),
++			int (*)(const struct pci_dev *, u8, u8));
++
+ #define HAVE_PCI_REQ_REGIONS	2
+ int __must_check pci_request_regions(struct pci_dev *, const char *);
+ int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
 -- 
 1.9.1
