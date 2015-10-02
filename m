@@ -1,35 +1,50 @@
-From: Julien Grall <julien.grall@citrix.com>
-Subject: Re: "clk: sunxi: Add a simple gates driver" breaks kernel with older
- DTB
-Date: Fri, 2 Oct 2015 12:15:52 +0100
-Message-ID: <560E6768.6040705@citrix.com>
-References: <1443689231.16718.225.camel@citrix.com>
- <20151001204506.GR7104@lukather> <560E5767.2040502@citrix.com>
- <20151002105333.GA2696@lukather>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v3 00/09] ARM: shmobile: APMU DT support via SMP Enable
+ method V3
+Date: Fri, 2 Oct 2015 13:25:40 +0200
+Message-ID: <CAMuHMdV7WkVKjP59DjrGULF=-uBiirKUwVSAfREO6sNC+_1jUQ@mail.gmail.com>
+References: <20150917063240.26016.93772.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151002105333.GA2696@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, =?windows-1252?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, KumarGala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "freebsd-arm@freebsd.org" <freebsd-arm@FreeBSD.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150917063240.26016.93772.sendpatchset@little-apple>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/15 11:53, Maxime Ripard wrote:
->> If no, that's very unfortunate because it means that you can't
->> re-use the same DT across multiple OS and the DT provided by the
->> firmware (if it's built-in).
-> 
-> Is there such OS yet (and by that, I mean one that actually shares our
-> DT, instead of rewriting its own) ?
+Hi Magnus,
 
-Yes, FreeBSD started to support the DT provided by vendors which are
-based on Linux bindings. The ARM64 port is only using DTB provided by
-the hardware. For ARM32, there is still some platform using a specific
-DT for FreeBSD but they are trying to get a ride.
+On Thu, Sep 17, 2015 at 8:32 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> ARM: shmobile: APMU DT support via SMP Enable method V3
+>
+> [PATCH v3 01/09] devicetree: bindings: Renesas APMU and SMP Enable method
+> [PATCH v3 02/09] ARM: shmobile: Add APMU DT support via Enable method
+> [PATCH v3 03/09] ARM: shmobile: Add APMU nodes to r8a7793 DTSI
+> [PATCH v3 04/09] ARM: shmobile: r8a7793 boot address update
+> [PATCH v3 05/09] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
+> [PATCH v3 06/09] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
+> [PATCH v3 07/09] ARM: shmobile: Add function to prioritize DT SMP
+> [PATCH v3 08/09] ARM: shmobile: Prioritize r8a7790 DT APMU support
+> [PATCH v3 09/09] ARM: shmobile: Prioritize r8a7791 DT APMU support
 
-Regards,
+Thanks for your series!
 
--- 
-Julien Grall
+> via the DT enable-method then it will not be overriden by older non-DT
+
+overridden (thanks, checkpatch.pl!)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
