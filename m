@@ -1,40 +1,34 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Fri, 2 Oct 2015 14:21:15 -0500
-Message-ID: <560ED92B.30803@ti.com>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] drivers: clk: st: Support for enable/disable in
+ Clockgen PLLs
+Date: Fri, 2 Oct 2015 12:32:35 -0700
+Message-ID: <20151002193234.GT12338@codeaurora.org>
+References: <1440409251-11166-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1440409251-11166-2-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443731874-21362-5-git-send-email-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440409251-11166-2-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2015 03:37 PM, Andrew F. Davis wrote:
-> This patch adds support for TPS65912 PMIC regulators.
->
-> The regulators set consists of 4 DCDCs and 10 LDOs. The output
-> voltages are configurable and are meant to supply power to the
-> main processor and other components.
->
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
+On 08/24, Gabriel Fernandez wrote:
+> The patch adds support for enable/disable of the Clockgen PLLs.
+> clkgen_pll_enable/clkgen_pll_disable added as generic function for all PLLs.
+> 
+> Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->   drivers/regulator/Kconfig              |   6 ++
->   drivers/regulator/Makefile             |   1 +
->   drivers/regulator/tps65912-regulator.c | 171 +++++++++++++++++++++++++++++++++
->   3 files changed, 178 insertions(+)
->   create mode 100644 drivers/regulator/tps65912-regulator.c
 
-Looks good for me:
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-
-[...]
+Applied to clk-next
 
 -- 
-regards,
--grygorii
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
