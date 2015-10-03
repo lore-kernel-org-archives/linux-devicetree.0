@@ -1,37 +1,105 @@
-From: Eric Nelson <eric@nelint.com>
-Subject: [PATCH V2 1/2] rc-core: define a default timeout for drivers
-Date: Sat,  3 Oct 2015 08:18:50 -0700
-Message-ID: <1443885530-4980-1-git-send-email-eric@nelint.com>
-References: <20151003112510.54fe2a25@recife.lan>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20151003112510.54fe2a25@recife.lan>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, sean@mess.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br, Eric Nelson <eric@nelint.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH] video: fbdev: add Marvell PXA framebuffer binding
+Date: Sat,  3 Oct 2015 18:11:34 +0200
+Message-ID: <1443888694-12311-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A default timeout value of 125 ms should work for all decoders.
+Add documentation for the PXA frambuffer devicetree binding.
 
-Declare a constant to help standardize its' use.
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-fbdev@vger.kernel.org
 
-Signed-off-by: Eric Nelson <eric@nelint.com>
 ---
-V2 increases the default timeout to 125ms as requested by Mauro
+ .../devicetree/bindings/video/marvell,pxafb.txt    | 75 ++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/marvell,pxafb.txt
 
- include/media/rc-core.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/media/rc-core.h b/include/media/rc-core.h
-index ec921f6..f649470 100644
---- a/include/media/rc-core.h
-+++ b/include/media/rc-core.h
-@@ -239,6 +239,7 @@ static inline void init_ir_raw_event(struct ir_raw_event *ev)
- 	memset(ev, 0, sizeof(*ev));
- }
- 
-+#define IR_DEFAULT_TIMEOUT	MS_TO_NS(125)
- #define IR_MAX_DURATION         500000000	/* 500 ms */
- #define US_TO_NS(usec)		((usec) * 1000)
- #define MS_TO_US(msec)		((msec) * 1000)
+diff --git a/Documentation/devicetree/bindings/video/marvell,pxafb.txt b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
+new file mode 100644
+index 000000000000..489055bf3c57
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
+@@ -0,0 +1,75 @@
++PXA LCDC Framebuffer
++-----------------------------------------------------
++
++Required properties:
++- compatible :
++	"marvell,pxa2xx-fb",
++- reg : Should contain 1 register ranges(address and length).
++	Can contain an additional register range(address and length)
++	for fixed framebuffer memory. Useful for dedicated memories.
++- interrupts : framebuffer controller interrupt
++- display: a phandle pointing to the display node
++
++Required nodes:
++- display: a display node is required to initialize the lcd panel
++	   This should be in the board dts.
++- default-mode: a videomode within the display with timing parameters
++		as specified below.
++- bits-per-pixel: pixel data bus width of the LCD panel
++
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
++- enable-transparency-bit: if framebuffer colorspace reserves a bit for
++			   transparency
++- enable-greyscale-cmap: true if palette is a grayscale based instead of color
++
++Example:
++
++	fb0: video@0x44000000 {
++		compatible = "marvell,pxa2xx-fb";
++		reg = <0x44000000 0x10000>;
++		interrupts = <17>;
++		clocks = <&clks CLK_LCD>;
++		interrupts = <23>;
++		display = <&display0>;
++		status = "okay";
++
++		enable-transparency-bit = <0>;
++		enable-greyscale-cmap = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++
++PXA LCDC Display
++-----------------------------------------------------
++Required properties (as per of_videomode_helper):
++ - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
++   	     	    "color-tft", "smart-panel"
++ - bits-per-pixel: LCD data bus width
++
++Optional properties (as per of_videomode_helper):
++ - power-regulator: power supply regulator to the LCD to power it on or off
++
++Example:
++	display0: display {
++		lcd-type = "color-tft";
++		bits-per-pixel = <16>;
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: 240p {
++				/* 240x320p24 */
++				clock-frequency = <4545000>;
++				hactive = <240>;
++				vactive = <320>;
++				hfront-porch = <4>;
++				hback-porch = <6>;
++				hsync-len = <4>;
++				vback-porch = <5>;
++				vfront-porch = <3>;
++				vsync-len = <2>;
++				pixelclk-active = <0>;
++				de-active = <1>;
++			};
++		};
++	};
 -- 
-2.6.0
+2.1.4
