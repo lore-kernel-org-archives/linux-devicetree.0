@@ -1,49 +1,84 @@
 From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH V2 0/3] ARM: dts/keystone: Introduce SoC specific compatible matches
-Date: Sat, 3 Oct 2015 18:38:47 -0500
-Message-ID: <1443915530-15035-1-git-send-email-nm@ti.com>
+Subject: [PATCH V2 1/3] Documentation: dt: keystone: provide SoC specific compatible flags
+Date: Sat, 3 Oct 2015 18:38:48 -0500
+Message-ID: <1443915530-15035-2-git-send-email-nm@ti.com>
 References: <1442938118-4718-1-git-send-email-nm@ti.com>
+ <1443915530-15035-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442938118-4718-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1443915530-15035-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Keystone2 devices are used on more platforms than just Texas
+Instruments reference evaluation platforms called EVMs. Providing a
+generic compatible "ti,keystone" is not sufficient to differentiate
+various SoC definitions possible on various platforms for the
+following reasons:
+a) Userspace applications have no way of knowing which SoC they are
+functioning, providing the compatible matches provide a mechanism for
+them to enable SoC specific functionality. Such userspace applications
+are typically automated test framework or SoC custom hardware
+acceleration entitlement from a common file system.
+b) Provides an accurate hardware description. This allows
+SoC specific logic to be run time handled based on
+of_machine_is_compatible("ti,k2hk") or as needed for the dependent
+processor instead of needing to use board dependent compatibles that
+are needed now.
 
-Round 2 of the series with updated patch #1. This series introduces
-SoC specific dt compatible property to allow for future SoCs to be
-handled and for userspace applications that can introduce features
-based on SoC they are functioning on.
+Hence, provide compatible matches for each SoC in the Keystone family.
 
-V1 of the series: http://marc.info/?l=devicetree&m=144309031109988&w=2
-V2 of the series has the following changes:
-	- updated commit message in patch #1
-	- picked up acked-by for patch #1
+Acked-By: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+---
 
-Series based on v4.3-rc1
+Changes since V2:
+	- elaborated reasoning why this change is useful - highlighted
+	  potential userspace usage as well.
+	- picked up Acked-by from Murali
 
-Tested on v4.3-rc3: http://pastebin.ubuntu.com/12659000/
-
-Nishanth Menon (3):
-  Documentation: dt: keystone: provide SoC specific compatible flags
-  ARM: keystone: Update compatible to have SoC specific matches
-  ARM: dts: keystone: Update SoC specific compatible flags
+V1: https://patchwork.kernel.org/patch/7240891/
 
  .../devicetree/bindings/arm/keystone/keystone.txt    | 20 +++++++++++++++++---
- arch/arm/boot/dts/k2e-evm.dts                        |  2 +-
- arch/arm/boot/dts/k2e.dtsi                           |  3 +++
- arch/arm/boot/dts/k2hk-evm.dts                       |  2 +-
- arch/arm/boot/dts/k2hk.dtsi                          |  3 +++
- arch/arm/boot/dts/k2l-evm.dts                        |  2 +-
- arch/arm/boot/dts/k2l.dtsi                           |  3 +++
- arch/arm/boot/dts/keystone.dtsi                      |  1 +
- arch/arm/mach-keystone/keystone.c                    |  3 +++
- 9 files changed, 33 insertions(+), 6 deletions(-)
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+index 59d7a46f85eb..800d2d02e27b 100644
+--- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
++++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+@@ -9,12 +9,26 @@ Required properties:
+    the form "ti,keystone-*". Generic devices like gic, arch_timers, ns16550
+    type UART should use the specified compatible for those devices.
+ 
++SoC families:
++
++- Keystone 2 generic SoC:
++   compatible = "ti,keystone"
++
++SoCs:
++
++- Keystone 2 Hawking/Kepler
++   compatible = ti,k2hk", "ti,keystone"
++- Keystone 2 Lamarr
++   compatible = ti,k2l", "ti,keystone"
++- Keystone 2 Edison
++   compatible = ti,k2e", "ti,keystone"
++
+ Boards:
+ -  Keystone 2 Hawking/Kepler EVM
+-   compatible = "ti,k2hk-evm","ti,keystone"
++   compatible = "ti,k2hk-evm", "ti,k2hk", "ti,keystone"
+ 
+ -  Keystone 2 Lamarr EVM
+-   compatible = "ti,k2l-evm","ti,keystone"
++   compatible = "ti,k2l-evm", "ti, k2l", "ti,keystone"
+ 
+ -  Keystone 2 Edison EVM
+-   compatible = "ti,k2e-evm","ti,keystone"
++   compatible = "ti,k2e-evm", "ti,k2e", "ti,keystone"
 -- 
 2.1.4
 
