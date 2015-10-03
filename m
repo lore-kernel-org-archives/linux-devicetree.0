@@ -1,50 +1,52 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 5/6] Documentation: dt-bindings: pci: altera pcie
- device tree binding
-Date: Sat, 3 Oct 2015 14:10:37 +0100
-Message-ID: <20151003141037.140fcbc3@arm.com>
-References: <1442801587-3812-1-git-send-email-lftan@altera.com>
-	<CAL_JsqL9eoTRa2-eeNJgVoO=0LyuaaJ87E4_BS0KocRKBXGdGA@mail.gmail.com>
-	<CAFiDJ5_MYC=V_L1LyRNq00z=DerzKAF=RF5av9vHnUPP+9a1nw@mail.gmail.com>
-	<6497772.rqSurELzER@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <6497772.rqSurELzER@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ley Foon Tan <lftan@altera.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+From: Mans Rullgard <mans@mansr.com>
+Subject: [PATCH 1/2] devicetree: add binding for generic mmio clocksource
+Date: Sat,  3 Oct 2015 15:24:46 +0100
+Message-ID: <1443882287-29963-1-git-send-email-mans@mansr.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2 Oct 2015 23:56:37 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+This adds a DT binding for a generic mmio clocksource as implemented
+by clocksource_mmio_init().
 
-> On Friday 02 October 2015 15:53:44 Ley Foon Tan wrote:
-> > > Strictly speaking, if you have undocumented bindings downstream that
-> > > is your problem and we don't have to accept them as-is upstream. I'm
-> > > not going to worry about that here.
-> > >
-> > >>> txs contains the config space?
-> > >> It is not the config space, but a memory slave port.
-> > >
-> > > Then where is the config space? It should not be part of "ranges" is
-> > > all I care about.
-> > The config space is not part of "ranges". Our IP uses TLP packet to
-> > access config space.
-> > 
-> 
-> It took me a bit to figure out what you mean here. To save others
-> from reading the source, here is what I found:
-> 
-> * The config space is accessed indirectly through registers from the
->   "cra" register range, which is the right approach according to the
->   point that Rob made.
-> * hardware-wise this basically looks like bit-banged PCIe, which is
->   both awesome and scary ;-)
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+ .../devicetree/bindings/timer/clocksource-mmio.txt | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/clocksource-mmio.txt
 
-drivers/pcie/host/pcie-host-gpio.c anyone? ;-)
-
-	M.
+diff --git a/Documentation/devicetree/bindings/timer/clocksource-mmio.txt b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
+new file mode 100644
+index 0000000..d8e93f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
+@@ -0,0 +1,26 @@
++Generic MMIO clocksource
++
++Required properties:
++
++- compatible: should be "clocksource-mmio"
++- reg: the physical address of the counter register
++- reg-io-width: size of counter register in bytes, should be 2 or 4
++- clocks: phandle to the source clock
++- clocksource-bits: number of valid bits
++- clocksource-rating: rating of the clocksource
++
++Optional properties:
++
++- clocksource-counts-down: indicates that counter counts down
++- label: name of the clocksource
++
++Example:
++
++clocksource {
++	compatible = "clocksource-mmio";
++        reg = <0x10000 4>;
++        reg-io-width = <4>;
++        clocksource-bits = <32>;
++        clocksource-rating = <300>;
++        clocks = <&clk>;
++}
 -- 
-Jazz is not dead. It just smells funny.
+2.5.3
