@@ -1,59 +1,37 @@
 From: Eric Nelson <eric@nelint.com>
-Subject: Re: [PATCH V2 0/2] rc: Add timeout support to gpio-ir-recv
-Date: Sat, 3 Oct 2015 08:10:00 -0700
-Message-ID: <560FEFC8.20908@nelint.com>
-References: <1441980024-1944-1-git-send-email-eric@nelint.com>
- <1442862524-3694-1-git-send-email-eric@nelint.com>
- <20151003112712.4f54925d@recife.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH V2 1/2] rc-core: define a default timeout for drivers
+Date: Sat,  3 Oct 2015 08:18:50 -0700
+Message-ID: <1443885530-4980-1-git-send-email-eric@nelint.com>
+References: <20151003112510.54fe2a25@recife.lan>
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20151003112712.4f54925d@recife.lan>
+In-Reply-To: <20151003112510.54fe2a25@recife.lan>
 Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br
+To: linux-media@vger.kernel.org, sean@mess.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br, Eric Nelson <eric@nelint.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
+A default timeout value of 125 ms should work for all decoders.
 
-On 10/03/2015 07:27 AM, Mauro Carvalho Chehab wrote:
-> Em Mon, 21 Sep 2015 12:08:42 -0700
-> Eric Nelson <eric@nelint.com> escreveu:
-> 
->> Add timeout support to the gpio-ir-recv driver as discussed
->> in this original patch:
->>
->> 	https://patchwork.ozlabs.org/patch/516827/
->>
->> V2 uses the timeout field of the rcdev instead of a device tree 
->> field to set the timeout value as suggested by Sean Young.
->>
->> Eric Nelson (2):
->>   rc-core: define a default timeout for drivers
->>   rc: gpio-ir-recv: add timeout on idle
-> 
-> I'm ok on having a default timeout for drivers, but the better would
-> be to implement it at the RC core, and not inside each driver.
-> 
+Declare a constant to help standardize its' use.
 
-Can you elaborate?
+Signed-off-by: Eric Nelson <eric@nelint.com>
+---
+V2 increases the default timeout to 125ms as requested by Mauro
 
-I'm not sure how that can be done, since the issue with the
-gpio-ir driver stems from the fact that there's no tail-end
-interrupt at the end of a burst. I think this isn't needed
-for other hardware.
+ include/media/rc-core.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-It seems that the call to schedule() in ir_raw_event_thread()
-could be changed to schedule_timeout(), but
-
-	- this should only be done when not idle, and
-	- only some hardware drivers need it
-
-I'm also not familiar with the rest of the code, so I'd
-be concerned about breaking other interfaces.
-
-Please advise,
-
-
-Eric
+diff --git a/include/media/rc-core.h b/include/media/rc-core.h
+index ec921f6..f649470 100644
+--- a/include/media/rc-core.h
++++ b/include/media/rc-core.h
+@@ -239,6 +239,7 @@ static inline void init_ir_raw_event(struct ir_raw_event *ev)
+ 	memset(ev, 0, sizeof(*ev));
+ }
+ 
++#define IR_DEFAULT_TIMEOUT	MS_TO_NS(125)
+ #define IR_MAX_DURATION         500000000	/* 500 ms */
+ #define US_TO_NS(usec)		((usec) * 1000)
+ #define MS_TO_US(msec)		((msec) * 1000)
+-- 
+2.6.0
