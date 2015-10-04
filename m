@@ -1,72 +1,99 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
-Date: Sun, 4 Oct 2015 21:46:32 +0200
-Message-ID: <20151004194632.GA27633@xo-6d-61-c0.localdomain>
-References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
- <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
+ controller
+Date: Sun, 4 Oct 2015 22:49:43 +0100
+Message-ID: <20151004214943.GA28904@localhost>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+ <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Rafal Milecki <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2015-09-07 17:36:15, Irina Tirdea wrote:
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> ---
->  drivers/input/touchscreen/goodix.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
++ Rafal (to extend this mighty CC list)
 
-Don't.
-
-Yes, we sometimes sort includes... to avoid patch rejects.
-
-This is guaranteed to cause rejects.
-
-If we do sort them, we use "longest-first" usually.
-
+On Fri, Oct 02, 2015 at 11:26:44PM +0530, Anup Patel wrote:
+> The BRCM NAND controller on NS2 SoC requires a reset to
+> cleanup previously configured NAND controller state.
 > 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index e36162b..6ae28c5 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -14,18 +14,18 @@
->   * Software Foundation; version 2 of the License.
+> This patch adds optional boolean device tree flag named
+> "brcm,nand-iproc-reset". If this flag is present in NAND
+> controller DT node then BRCM IPROC NAND driver will reset
+> the NAND controller before any commands are issued.
+
+Is there a reason not to do this reset unconditionally? I recall this
+came up in discussion previously, when the OpenWRT folks were trying to
+integrate with BCMA, where this reset was one of the few differences
+between the platform-device-based driver (i.e., this one) and the BCMA
+based driver. Might it help simplify things a bit if we just did the
+same thing everywhere?
+
+Brian
+
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Pramod KUMAR <pramodku@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>  drivers/mtd/nand/brcmnand/iproc_nand.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/brcmnand/iproc_nand.c b/drivers/mtd/nand/brcmnand/iproc_nand.c
+> index 683495c..d837207 100644
+> --- a/drivers/mtd/nand/brcmnand/iproc_nand.c
+> +++ b/drivers/mtd/nand/brcmnand/iproc_nand.c
+> @@ -11,6 +11,7 @@
+>   * GNU General Public License for more details.
 >   */
 >  
-> -#include <linux/kernel.h>
-> +#include <linux/acpi.h>
 > +#include <linux/delay.h>
->  #include <linux/dmi.h>
->  #include <linux/i2c.h>
->  #include <linux/input.h>
->  #include <linux/input/mt.h>
-> -#include <linux/module.h>
-> -#include <linux/delay.h>
-> -#include <linux/irq.h>
->  #include <linux/interrupt.h>
-> -#include <linux/slab.h>
-> -#include <linux/acpi.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/slab.h>
->  #include <asm/unaligned.h>
+>  #include <linux/device.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> @@ -35,6 +36,10 @@ struct iproc_nand_soc_priv {
+>  #define IPROC_NAND_APB_LE_MODE             BIT(24)
+>  #define IPROC_NAND_INT_CTRL_READ_ENABLE    BIT(6)
 >  
->  struct goodix_ts_data {
+> +#define IPROC_NAND_RESET_OFFSET            0x3f8
+> +#define IPROC_NAND_RESET_BIT_SHIFT         0
+> +#define IPROC_NAND_RESET_BIT               BIT(IPROC_NAND_RESET_BIT_SHIFT)
+> +
+>  static bool iproc_nand_intc_ack(struct brcmnand_soc *soc)
+>  {
+>  	struct iproc_nand_soc_priv *priv = soc->priv;
+> @@ -93,6 +98,7 @@ static void iproc_nand_apb_access(struct brcmnand_soc *soc, bool prepare)
+>  
+>  static int iproc_nand_probe(struct platform_device *pdev)
+>  {
+> +	u32 reset;
+>  	struct device *dev = &pdev->dev;
+>  	struct iproc_nand_soc_priv *priv;
+>  	struct brcmnand_soc *soc;
+> @@ -124,6 +130,19 @@ static int iproc_nand_probe(struct platform_device *pdev)
+>  	soc->ctlrdy_set_enabled = iproc_nand_intc_set;
+>  	soc->prepare_data_bus = iproc_nand_apb_access;
+>  
+> +	if (of_property_read_bool(dev->of_node, "brcm,nand-iproc-reset")) {
+> +		/* Put controller in reset and wait 10 usecs */
+> +		reset = readl(priv->idm_base + IPROC_NAND_RESET_OFFSET);
+> +		reset |= IPROC_NAND_RESET_BIT;
+> +		writel(reset, priv->idm_base + IPROC_NAND_RESET_OFFSET);
+> +		udelay(10);
+> +		/* Bring controller out of reset and wait 10 usecs */
+> +		reset = readl(priv->idm_base + IPROC_NAND_RESET_OFFSET);
+> +		reset &= ~IPROC_NAND_RESET_BIT;
+> +		writel(reset, priv->idm_base + IPROC_NAND_RESET_OFFSET);
+> +		udelay(10);
+> +	}
+> +
+>  	return brcmnand_probe(pdev, soc);
+>  }
+>  
 > -- 
 > 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
