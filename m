@@ -1,50 +1,42 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/4] sysfs: Support is_visible() on binary attributes
-Date: Sun, 4 Oct 2015 19:33:34 +0100
-Message-ID: <20151004183334.GA23538@kroah.com>
-References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1442842703-5309-2-git-send-email-emilio.lopez@collabora.co.uk>
+From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: sun4i: USB DRC and
+ voltage-scaling for pcDuino1/2
+Date: Sun,  4 Oct 2015 21:58:45 +0300
+Message-ID: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
+Reply-To: siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1442842703-5309-2-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio.lopez@collabora.co.uk>
-Cc: olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH4DA7NUEBBB3PNYWYAKGQEYQXDORA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 21, 2015 at 10:38:20AM -0300, Emilio L=F3pez wrote:
-> According to the sysfs header file:
->=20
->     "The returned value will replace static permissions defined in
->      struct attribute or struct bin_attribute."
->=20
-> but this isn't the case, as is_visible is only called on struct attri=
-bute
-> only. This patch introduces a new is_bin_visible() function to implem=
-ent
-> the same functionality for binary attributes, and updates documentati=
-on
-> accordingly.
->=20
-> Note that to keep functionality and code similar to that of normal
-> attributes, the mode is now checked as well to ensure it contains onl=
-y
-> read/write permissions or SYSFS_PREALLOC.
->=20
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Emilio L=F3pez <emilio.lopez@collabora.co.uk>
+Hello,
 
-As this should probably go through the "platform drivers" maintainer,
-I'll just give you this:
+This brings LinkSprite pcDuino1/2 boards up to date with the latest
+kernel features. And the first patch in this set is a bugfix for the
+PH3/PH6 pins misuse.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There is currently a single dts file for pcDuino1 and pcDuino2 boards.
+They obviously had been designed to be compatible with each other, but
+have some minor differences, as can be seen when comparing schematics:
+    https://s3.amazonaws.com/pcduino/Hardware/PC+Duino_V01-20130128.pdf
+    https://s3.amazonaws.com/pcduino/Hardware/v2/pcDuino_v2_sch.pdf
 
-So it can go through their tree and not require me to just take this
-one.
+Siarhei Siamashka (3):
+  ARM: dts: sun4i: Allow to use the PH6 pin for GPIO on pcDuino1/2
+  ARM: dts: sun4i: Enable USB DRC on pcDuino1/2
+  ARM: dts: sun4i: Add AXP209 PMU regulators for pcDuino1/2
 
-thanks,
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts | 56 +++++++++++++++++++++++++++------
+ 1 file changed, 46 insertions(+), 10 deletions(-)
 
-greg k-h
+-- 
+2.4.9
