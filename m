@@ -1,129 +1,112 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] hwrng: stm32 - add support for STM32 HW RNG
-Date: Sun, 4 Oct 2015 12:32:15 +0200
-Message-ID: <CACRpkdaCBUnFMYMSdjF4bHwQH3zxu2ou7b54E4FzgH9UbNQEHw@mail.gmail.com>
-References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
-	<1443904519-24012-3-git-send-email-daniel.thompson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
+Date: Sun,  4 Oct 2015 12:31:23 +0200
+Message-ID: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443904519-24012-3-git-send-email-daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 3, 2015 at 10:35 PM, Daniel Thompson
-<daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Add documentation for the PXA frambuffer devicetree binding.
 
-> Add support for STMicroelectronics STM32 random number generator.
->
-> The config value defaults to N, reflecting the fact that STM32 is a
-> very low resource microcontroller platform and unlikely to be targeted
-> by any "grown up" defconfigs.
->
-> Signed-off-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+Since v1: Philipp's review on the whole binding
+---
+ .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/marvell,pxafb.txt
 
-Incidentally both you and Lee Jones submitted similar RNG drivers from
-the same company (ST) recent weeks:
+diff --git a/Documentation/devicetree/bindings/video/marvell,pxafb.txt b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
+new file mode 100644
+index 000000000000..4d6bd490680d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
+@@ -0,0 +1,80 @@
++PXA LCDC Framebuffer
++--------------------
++
++Required properties:
++ - compatible :
++	"marvell,pxa2xx-lcdc",
++ - reg : Should contain 1 register ranges(address and length).
++	 Can contain an additional register range(address and length)
++	 for fixed framebuffer memory. Useful for dedicated memories.
++ - interrupts : framebuffer controller interrupt
++
++Required nodes:
++ - clocks: phandle to input clocks.
++ - port: connection to the LCD panel (see video-interfaces.txt)
++	 This nodes must have its properties bus-width and remote-endpoint set.
++	 This should be in the board dts.
++
++Example:
++
++	lcd-controller@40500000 {
++		compatible = "marvell,pxa2xx-lcdc";
++		reg = <0x44000000 0x10000>;
++		interrupts = <17>;
++		clocks = <&clks CLK_LCD>;
++		interrupts = <23>;
++		status = "okay";
++
++		port {
++			lcdc_out: endpoint {
++				remote-endpoint = <&panel_in>;
++				bus-width = <16>;
++			};
++		};
++	};
++
++PXA LCDC Display
++----------------
++Required properties (as per of_videomode_helper):
++ - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
++		    "color-tft", "smart-panel"
++
++Optional properties (as per of_videomode_helper):
++ - power-supply: power supply regulator to the LCD to power it on or off
++		 (see regulator.txt)
++ - backlight: backlight control (see backlight.txt)
++
++Required nodes:
++ - port: connection to the LCD controller
++ - display-timings: panel timings (see display-timing.txt)
++
++Example:
++	panel {
++		compatible = "toshiba,ltm0305a776";
++		lcd-type = "color-tft";
++
++		power-supply = <&lcd_supply>;
++		backlight = <&lcd_backlight>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lcdc_out>;
++			};
++		};
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: 240p {
++				/* 240x320p24 */
++				clock-frequency = <4545000>;
++				hactive = <240>;
++				vactive = <320>;
++				hfront-porch = <4>;
++				hback-porch = <6>;
++				hsync-len = <4>;
++				vback-porch = <5>;
++				vfront-porch = <3>;
++				vsync-len = <2>;
++			};
++		};
++	};
+-- 
+2.1.4
 
-Lee's ST thing:
-http://marc.info/?l=linux-crypto-vger&m=144249760524971&w=2
-
-Daniel's ST thing:
-http://marc.info/?l=linux-crypto-vger&m=144390463810134&w=2
-
-And we also have from old ST:
-drivers/char/hw_random/nomadik-rng.c
-
-1. Are these similar IPs that could be unified in a driver, just different
-offsets in memory?
-
-2. Could you at least cross-review each others drivers because both
-tight loops to read bytes seem to contain similar semantics.
-
-3. I took out the datasheet for Nomadik STn8820 and it seems that
-the hardware is very similar to what this driver is trying to drive.
-CR, SR and DR are in the same place, can you check if you also even
-have the PrimeCell magic in the words at offset 0xfe0 thru 0xffc?
-
-In any case it seems likely that this driver should supercede and replace
-drivers/char/hw_random/nomadik-rng.c
-still using the PrimeCell bus, and if it doesn't have the PrimeCell
-IDs in hardware, this can be specified in the device tree using
-arm,primecell-periphid = <0x000805e1>; in the node if need be.
-The in-tree driver is dangerously simple and assume too much IMO.
-
-Now the rest:
-
-> +       /* enable random number generation */
-> +       clk_enable(priv->clk);
-> +       cr = readl(priv->base + RNG_CR);
-> +       writel(cr | RNG_CR_RNGEN, priv->base + RNG_CR);
-
-The Nomadik datasheet says this works the inverse way: setting
-bit 2 to 1 *disables* the RNG. Can you double-check this?
-
-The Nomadik version also has a TSTCLK bit 3, that should
-always be set and loop-back checked in SR bit 1 to see that the block
-is properly clocked. (Read data will hang on an AHB stall if it's
-unclocked) Is this missing from STM32?
-
-> + sr = readl(priv->base + RNG_SR);
-
-I strongly recommend that you use readl_relaxed() for this and
-all other reads on the hotpath, the Nomadik uses __raw_readl()
-but that is just for the same reasons that readl_relaxed() should
-be used: we just wanna read, not clean buffers etc.
-
-> + /* Has h/ware error dection been triggered? */
-> + if (WARN_ON(sr & (RNG_SR_SEIS | RNG_SR_CEIS)))
-> +     break;
-> +
-> + /* No data ready... */
-> + if (!sr)
-> +     break;
-
-This assumes that only bits 6,5 and 0 are ever used in this hardware.
-Are you sure? On Nomadik DRDY bit 0 is the same, bit 1
-is the clock test bit mentioned above, bit 2 is FAULT set if an invalid
-bit sequence is detected and should definately be checked if
-the HW supports it. Please mask explicitly for DRDY at least.
-
-The bit layout gives at hand that this is indeed a derived IP block,
-I wonder what bits 3 & 4 may be used for in some or all
-revisions?
-
-Then this construct:
-
-> +static int stm32_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
-> +{
-(...)
-> + /* enable random number generation */
-> + clk_enable(priv->clk);
-> + cr = readl(priv->base + RNG_CR);
-> + writel(cr | RNG_CR_RNGEN, priv->base + RNG_CR);
-(...)
-> + /* disable the generator */
-> + writel(cr, priv->base + RNG_CR);
-> + clk_disable(priv->clk);
-
-This is in the hotpath where megabytes of data may be read out
-by consecutive reads. I think it's wise to move the clock enable/disable
-and also the write to cr to enable/disable the block to runtime PM
-hooks, so that you can e.g. set some hysteresis around the disablement
-with pm_runtime_set_autosuspend_delay(&dev->dev, 50);
-pm_runtime_use_autosuspend(&dev->dev);pm_runtime_put_autosuspend().
-For a primecell check the usage in drivers/mmc/host/mmci.c
-for a complex usecase or e.g. drivers/hwtracing/coresight/coresight-tpiu.c
-for a simpler usecase.
-
-For the performance hints I guess you can even test whether
-what I'm saying makes sense or not by reading some megabytes
-of random and timing it.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
