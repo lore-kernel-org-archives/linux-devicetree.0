@@ -1,97 +1,162 @@
-From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: sun4i: Add AXP209 PMU regulators
- for pcDuino1/2
-Date: Sun,  4 Oct 2015 21:58:48 +0300
-Message-ID: <1443985128-23137-4-git-send-email-siarhei.siamashka@gmail.com>
-References: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
-Reply-To: siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] of: overlay: kobjectify overlay objects
+Date: Sun, 4 Oct 2015 20:22:10 +0100
+Message-ID: <20151004192210.GD9649@kroah.com>
+References: <1442419751-4846-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1442419751-4846-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH4DA7NUEBBB4PNYWYAKGQEJA2RA7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1443985128-23137-1-git-send-email-siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442419751-4846-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This allows voltage-scaling with cpufreq-dt. The reliability of
-voltage-scaling has been checked by reducing the voltage of all
-operating points by 0.025V (for extra safety headroom) and running
-libjpeg-turbo decoding tests on 5 pcDuino2 boards. It means that
-the standard sun4i voltages should be perfectly fine too.
+On Wed, Sep 16, 2015 at 07:09:08PM +0300, Pantelis Antoniou wrote:
+> We are going to need the overlays to appear on sysfs with runtime
+> global properties (like master enable) so turn them into kobjects.
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/base.c       |  7 +++++++
+>  drivers/of/of_private.h |  9 +++++++++
+>  drivers/of/overlay.c    | 52 +++++++++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 66 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 8b5a187..31c0c8f 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -192,6 +192,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+>  void __init of_core_init(void)
+>  {
+>  	struct device_node *np;
+> +	int ret;
+>  
+>  	/* Create the kset, and register existing nodes */
+>  	mutex_lock(&of_mutex);
+> @@ -208,6 +209,12 @@ void __init of_core_init(void)
+>  	/* Symlink in /proc as required by userspace ABI */
+>  	if (of_root)
+>  		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+> +
+> +	ret = of_overlay_init();
+> +	if (ret != 0)
+> +		pr_warn("of_init: of_overlay_init failed!\n");
+> +
+> +	return 0;
+>  }
+>  
+>  static struct property *__of_find_property(const struct device_node *np,
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> index 8e882e7..120eb44 100644
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -90,4 +90,13 @@ extern void __of_detach_node_sysfs(struct device_node *np);
+>  #define for_each_transaction_entry_reverse(_oft, _te) \
+>  	list_for_each_entry_reverse(_te, &(_oft)->te_list, node)
+>  
+> +#if defined(CONFIG_OF_OVERLAY)
+> +extern int of_overlay_init(void);
+> +#else
+> +static inline int of_overlay_init(void)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  #endif /* _LINUX_OF_PRIVATE_H */
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 24e025f..eeb3ec2 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/err.h>
+>  #include <linux/idr.h>
+> +#include <linux/sysfs.h>
+>  
+>  #include "of_private.h"
+>  
+> @@ -51,6 +52,7 @@ struct of_overlay {
+>  	int count;
+>  	struct of_overlay_info *ovinfo_tab;
+>  	struct of_changeset cset;
+> +	struct kobject kobj;
+>  };
+>  
+>  static int of_overlay_apply_one(struct of_overlay *ov,
+> @@ -325,6 +327,24 @@ static int of_free_overlay_info(struct of_overlay *ov)
+>  static LIST_HEAD(ov_list);
+>  static DEFINE_IDR(ov_idr);
+>  
+> +static inline struct of_overlay *kobj_to_overlay(struct kobject *kobj)
+> +{
+> +	return container_of(kobj, struct of_overlay, kobj);
+> +}
+> +
+> +void of_overlay_release(struct kobject *kobj)
+> +{
+> +	struct of_overlay *ov = kobj_to_overlay(kobj);
+> +
+> +	kfree(ov);
+> +}
+> +
+> +static struct kobj_type of_overlay_ktype = {
+> +	.release = of_overlay_release,
+> +};
+> +
+> +static struct kset *ov_kset;
+> +
+>  /**
+>   * of_overlay_create() - Create and apply an overlay
+>   * @tree:	Device node containing all the overlays
+> @@ -350,6 +370,9 @@ int of_overlay_create(struct device_node *tree)
+>  
+>  	of_changeset_init(&ov->cset);
+>  
+> +	/* initialize kobject */
+> +	kobject_init(&ov->kobj, &of_overlay_ktype);
+> +
+>  	mutex_lock(&of_mutex);
+>  
+>  	id = idr_alloc(&ov_idr, ov, 0, 0, GFP_KERNEL);
+> @@ -385,6 +408,14 @@ int of_overlay_create(struct device_node *tree)
+>  		goto err_revert_overlay;
+>  	}
+>  
+> +	ov->kobj.kset = ov_kset;
+> +	err = kobject_add(&ov->kobj, NULL, "%d", id);
 
-Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-pcduino.dts | 35 +++++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+NULL for the parent?  Really?  Where does that cause this kobject to
+show up in the sysfs tree?
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-index c9b9330..55714d0 100644
---- a/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-@@ -104,6 +104,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -129,12 +133,8 @@
- 	status = "okay";
- 
- 	axp209: pmic@34 {
--		compatible = "x-powers,axp209";
- 		reg = <0x34>;
- 		interrupts = <0>;
--
--		interrupt-controller;
--		#interrupt-cells = <1>;
- 	};
- };
- 
-@@ -191,6 +191,33 @@
- 	};
- };
- 
-+#include "axp209.dtsi"
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.4.9
+> @@ -512,7 +545,9 @@ int of_overlay_destroy(int id)
+>  	of_free_overlay_info(ov);
+>  	idr_remove(&ov_idr, id);
+>  	of_changeset_destroy(&ov->cset);
+> -	kfree(ov);
+> +
+> +	kobject_del(&ov->kobj);
+> +	kobject_put(&ov->kobj);
+
+Two drops of the reference?
+
+>  
+>  	err = 0;
+>  
+> @@ -542,7 +577,8 @@ int of_overlay_destroy_all(void)
+>  		of_changeset_revert(&ov->cset);
+>  		of_free_overlay_info(ov);
+>  		idr_remove(&ov_idr, ov->id);
+> -		kfree(ov);
+> +		kobject_del(&ov->kobj);
+> +		kobject_put(&ov->kobj);
+
+Again, why 2?
+
+thanks,
+
+greg k-h
