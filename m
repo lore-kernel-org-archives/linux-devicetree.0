@@ -1,78 +1,72 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] of: overlay: add per overlay sysfs attributes
-Date: Sun, 4 Oct 2015 20:23:11 +0100
-Message-ID: <20151004192311.GE9649@kroah.com>
-References: <1442419751-4846-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1442419751-4846-4-git-send-email-pantelis.antoniou@konsulko.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
+Date: Sun, 4 Oct 2015 21:46:32 +0200
+Message-ID: <20151004194632.GA27633@xo-6d-61-c0.localdomain>
+References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
+ <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1442419751-4846-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 16, 2015 at 07:09:10PM +0300, Pantelis Antoniou wrote:
-> The two default overlay attributes are:
-> 
-> * A targets sysfs attribute listing the targets of the installed
-> overlay. The targets list the path on the kernel's device tree
-> where each overlay fragment is applied to
-> 
-> * A per overlay can_remove sysfs attribute that reports whether
-> the overlay can be removed or not due to another overlapping overlay.
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+On Mon 2015-09-07 17:36:15, Irina Tirdea wrote:
+> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
 > ---
->  drivers/of/overlay.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
+>  drivers/input/touchscreen/goodix.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+
+Don't.
+
+Yes, we sometimes sort includes... to avoid patch rejects.
+
+This is guaranteed to cause rejects.
+
+If we do sort them, we use "longest-first" usually.
+
 > 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 62cfb99..cff3c05 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -373,8 +373,61 @@ static const struct attribute *overlay_global_attrs[] = {
->  	NULL
->  };
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index e36162b..6ae28c5 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -14,18 +14,18 @@
+>   * Software Foundation; version 2 of the License.
+>   */
 >  
-> +static ssize_t can_remove_show(struct kobject *kobj,
-> +		struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct of_overlay *ov = kobj_to_overlay(kobj);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", overlay_removal_is_ok(ov));
-> +}
-> +
-> +static ssize_t targets_show(struct kobject *kobj,
-> +		struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct of_overlay *ov = kobj_to_overlay(kobj);
-> +	struct of_overlay_info *ovinfo;
-> +	char *s, *e;
-> +	ssize_t ret;
-> +	int i, len;
-> +
-> +	s = buf;
-> +	e = buf + PAGE_SIZE;
-> +
-> +	mutex_lock(&of_mutex);
-> +
-> +	/* targets */
-> +	for (i = 0; i < ov->count; i++) {
-> +		ovinfo = &ov->ovinfo_tab[i];
-> +
-> +		len = snprintf(s, e - s, "%s\n",
-> +				of_node_full_name(ovinfo->target));
-> +		if (len == 0) {
-> +			ret = -ENOSPC;
-> +			goto err;
-> +		}
-> +		s += len;
-> +	}
+> -#include <linux/kernel.h>
+> +#include <linux/acpi.h>
+> +#include <linux/delay.h>
+>  #include <linux/dmi.h>
+>  #include <linux/i2c.h>
+>  #include <linux/input.h>
+>  #include <linux/input/mt.h>
+> -#include <linux/module.h>
+> -#include <linux/delay.h>
+> -#include <linux/irq.h>
+>  #include <linux/interrupt.h>
+> -#include <linux/slab.h>
+> -#include <linux/acpi.h>
+> +#include <linux/irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/slab.h>
+>  #include <asm/unaligned.h>
+>  
+>  struct goodix_ts_data {
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-Multiple values per sysfs file?  Not ok, this is not going to work,
-sorry, please fix.
-
-greg k-h
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
