@@ -1,67 +1,50 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] iio: ad5064: Always use external vref if there is no
- internal vref
-Date: Sun, 4 Oct 2015 14:52:22 +0100
-Message-ID: <56112F16.5090307@kernel.org>
-References: <1443789702-24945-1-git-send-email-paul.cercueil@analog.com>
- <1443789702-24945-3-git-send-email-paul.cercueil@analog.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] soc: sunxi: Add driver for Allwinner
+ Reduced Serial Bus
+Date: Sun, 4 Oct 2015 16:16:39 +0200
+Message-ID: <20151004141639.GD2696@lukather>
+References: <1443700673-24312-1-git-send-email-wens@csie.org>
+ <1443700673-24312-3-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443789702-24945-3-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSHJYSYAKGQEAL5E74A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443700673-24312-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/15 13:41, Paul Cercueil wrote:
-> If the device does not have an internal reference, there is no
-> other choice but to use the external reference. In that case,
-> it does not make much sense to have to specify it.
-> 
-> This patch ensures that the external reference is used if the
-> device does not feature an internal reference.
-> 
-> Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Other than the issue the autobuilder found I'm happy enough
-with the series.
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Given it is Lars' driver I'd like him to take a look as well
-before I apply it.
+Hi,
 
-Thanks,
+On Thu, Oct 01, 2015 at 07:57:48PM +0800, Chen-Yu Tsai wrote:
+> Reduced Serial Bus (RSB) is an Allwinner proprietery interface
+> used to communicate with PMICs and other peripheral ICs.
+> 
+> RSB is a two-wire push-pull serial bus that supports 1 master
+> device and up to 15 active slave devices.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Jonathan
-> ---
->  drivers/iio/dac/ad5064.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
-> index 7146f42..daee39e 100644
-> --- a/drivers/iio/dac/ad5064.c
-> +++ b/drivers/iio/dac/ad5064.c
-> @@ -464,7 +464,9 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
->  	for (i = 0; i < ad5064_num_vref(st); ++i)
->  		st->vref_reg[i].supply = ad5064_vref_name(st, i);
->  
-> -	if (dev->of_node) {
-> +	if (!st->chip_info->internal_vref) {
-> +		ext_vref = true;
-> +	} else if (dev->of_node) {
->  		for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
->  			ext_vref = of_property_read_bool(dev->of_node,
->  					ad5064_vref_name(st, i));
-> @@ -483,11 +485,6 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
->  		if (ret)
->  			return ret;
->  	} else {
-> -		if (!st->chip_info->internal_vref) {
-> -			dev_err(dev, "No vref available\n");
-> -			return -ENXIO;
-> -		}
-> -
->  		st->use_internal_vref = true;
->  		ret = ad5064_write(st, AD5064_CMD_CONFIG, 0,
->  			AD5064_CONFIG_INT_VREF_ENABLE, 0);
-> 
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--QRj9sO5tAVLaXnSD--
