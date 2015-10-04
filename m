@@ -1,113 +1,34 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Sun,  4 Oct 2015 12:31:23 +0200
-Message-ID: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH][RESEND] drm: panel-simple: add URT UMSH-8596MD-xT panel
+ support
+Date: Sun, 4 Oct 2015 11:43:09 +0100
+Message-ID: <CACvgo52s6Gc7Oh=yqS76619gzhMC7TxzZM3o1kyyz0AiS0TVig@mail.gmail.com>
+References: <55E5AD23.8070309@maciej.szmigiero.name>
+ <560EF9C0.7080407@maciej.szmigiero.name>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <560EF9C0.7080407@maciej.szmigiero.name>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the PXA frambuffer devicetree binding.
-
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
----
-Since v1: Philipp's review on the whole binding
----
- .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/marvell,pxafb.txt
-
-diff --git a/Documentation/devicetree/bindings/video/marvell,pxafb.txt b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
-new file mode 100644
-index 000000000000..4d6bd490680d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
-@@ -0,0 +1,80 @@
-+PXA LCDC Framebuffer
-+--------------------
-+
-+Required properties:
-+ - compatible :
-+	"marvell,pxa2xx-lcdc",
-+ - reg : Should contain 1 register ranges(address and length).
-+	 Can contain an additional register range(address and length)
-+	 for fixed framebuffer memory. Useful for dedicated memories.
-+ - interrupts : framebuffer controller interrupt
-+
-+Required nodes:
-+ - clocks: phandle to input clocks.
-+ - port: connection to the LCD panel (see video-interfaces.txt)
-+	 This nodes must have its properties bus-width and remote-endpoint set.
-+	 This should be in the board dts.
-+
-+Example:
-+
-+	lcd-controller@40500000 {
-+		compatible = "marvell,pxa2xx-lcdc";
-+		reg = <0x44000000 0x10000>;
-+		interrupts = <17>;
-+		clocks = <&clks CLK_LCD>;
-+		interrupts = <23>;
-+		status = "okay";
-+
-+		port {
-+			lcdc_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+				bus-width = <16>;
-+			};
-+		};
-+	};
-+
-+PXA LCDC Display
-+----------------
-+Required properties (as per of_videomode_helper):
-+ - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
-+		    "color-tft", "smart-panel"
-+
-+Optional properties (as per of_videomode_helper):
-+ - power-supply: power supply regulator to the LCD to power it on or off
-+		 (see regulator.txt)
-+ - backlight: backlight control (see backlight.txt)
-+
-+Required nodes:
-+ - port: connection to the LCD controller
-+ - display-timings: panel timings (see display-timing.txt)
-+
-+Example:
-+	panel {
-+		compatible = "toshiba,ltm0305a776";
-+		lcd-type = "color-tft";
-+
-+		power-supply = <&lcd_supply>;
-+		backlight = <&lcd_backlight>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lcdc_out>;
-+			};
-+		};
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: 240p {
-+				/* 240x320p24 */
-+				clock-frequency = <4545000>;
-+				hactive = <240>;
-+				vactive = <320>;
-+				hfront-porch = <4>;
-+				hback-porch = <6>;
-+				hsync-len = <4>;
-+				vback-porch = <5>;
-+				vfront-porch = <3>;
-+				vsync-len = <2>;
-+			};
-+		};
-+	};
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWFjaWVqLAoKT24gMiBPY3RvYmVyIDIwMTUgYXQgMjI6NDAsIE1hY2llaiBTLiBTem1pZ2ll
+cm8KPG1haWxAbWFjaWVqLnN6bWlnaWVyby5uYW1lPiB3cm90ZToKPiBBbnlib2R5IGhlcmU/Cj4K
+PiBJJ3ZlIGFscmVhZHkgc3VibWl0dGVkIHRoaXMgcGF0Y2ggdHdvIHRpbWVzIGJ1dCByZWNlaXZl
+ZCBubyByZXNwb25zZS4uLgo+ClNlZW1zIHRoYXQgdGhlIG1haW50YWluZXIgKFRoaWVycnkpIGlz
+bid0IENjJ2VkLiBZb3UgbWlnaHQgd2FudCB0bwpzcGxpdCB0aGUgRFQgYmluZGluZyBhbmQgdmVu
+ZG9yIHByZWZpeCB0byBzZXBhcmF0ZSBwYXRjaGVzLgoKLUVtaWwKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
