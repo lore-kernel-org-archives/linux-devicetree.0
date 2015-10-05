@@ -1,47 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun4i: Add AXP209 PMU
- regulators for pcDuino1/2
-Date: Mon, 5 Oct 2015 14:56:30 +0200
-Message-ID: <20151005125630.GN2696@lukather>
-References: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
- <1443985128-23137-4-git-send-email-siarhei.siamashka@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="00sTfE/IIAT5d2r5"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMPHZGYAKGQEDF2SETY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443985128-23137-4-git-send-email-siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/5] Mailbox: Provide support STi based platforms
+Date: Mon,  5 Oct 2015 14:02:15 +0100
+Message-ID: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---00sTfE/IIAT5d2r5
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Jassi,
 
-On Sun, Oct 04, 2015 at 09:58:48PM +0300, Siarhei Siamashka wrote:
-> This allows voltage-scaling with cpufreq-dt. The reliability of
-> voltage-scaling has been checked by reducing the voltage of all
-> operating points by 0.025V (for extra safety headroom) and running
-> libjpeg-turbo decoding tests on 5 pcDuino2 boards. It means that
-> the standard sun4i voltages should be perfectly fine too.
-> 
-> Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This should be it.  Exciting times!
 
-Applied, thanks!
+ST's platforms currently support a maximum of 5 Mailboxes, one for
+each of the supported co-processors situated on the platform.  Each
+Mailbox is divided up into 4 instances which consist of 32 channels.
+Messages are passed between the application and co-processors using
+shared memory areas.
 
-Maxime
+Also included in the set is an example Client which should be generic
+enough to use as a testing environment for all Mailbox IPs which use
+shared memory or the API to pass messages.  With small changes, it
+should also be able to test more extravagant implementations.
+
+v3 -> v4:
+ - More protection in MBOX_BASE() MACRO
+ - Remove unused tx-only marker
+
+v2 => v3:
+ - Controller
+   - Shared (DT <=> Device Driver) defines removed
+   - Return actual error codes instead of NULL in xlate()
+   - Not passing 'direction' configuration via DT anymore
+     - Removed all accompanying configuration checking code
+ - Test F/W
+   - Allow Rx-only and Tx-only controllers to be tested
+   - Cater for controllers requiring pre-Tx 'signal' to be sent
+   - Supply 'wr-' message debugfs file
+     - When written to, will Tx message through Mailbox Framework
+     - When read from, will print out a hexdump of Rx'ed message
+
+v1 => v2:
+ - New MACRO() to obtain base address for a given instance
+ - Move locking into the structure it protects
+ - Stop checking for 'ready' state when sending data
+ - Don't clear channel data (that belongs to the API)
+ - #define register offsets instead of providing via pdata
+ - Register driver with module_platform_driver()
+
+Lee Jones (5):
+  mailbox: dt: Supply bindings for ST's Mailbox IP
+  mailbox: Add support for ST's Mailbox IP
+  ARM: STi: stih407-family: Add nodes for Mailbox
+  mailbox: Add generic mechanism for testing Mailbox Controllers
+  ARM: STi: DT: STiH407: Enable Mailbox testing facility
+
+ .../devicetree/bindings/mailbox/sti-mailbox.txt    |  52 +++
+ arch/arm/boot/dts/stih407-family.dtsi              |  42 ++
+ drivers/mailbox/Kconfig                            |  14 +
+ drivers/mailbox/Makefile                           |   4 +
+ drivers/mailbox/mailbox-sti.c                      | 516 +++++++++++++++++++++
+ drivers/mailbox/mailbox-test.c                     | 361 ++++++++++++++
+ 6 files changed, 989 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+ create mode 100644 drivers/mailbox/mailbox-sti.c
+ create mode 100644 drivers/mailbox/mailbox-test.c
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---00sTfE/IIAT5d2r5--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
