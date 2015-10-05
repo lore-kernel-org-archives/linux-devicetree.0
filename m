@@ -1,61 +1,82 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [PATCH 1/2] ASoC: da7213: Add DT support to codec
-	driver
-Date: Mon, 5 Oct 2015 22:24:37 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D46082F3@SW-EX-MBX01.diasemi.com>
-References: <cover.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
- <8b10191f4e14b32f831d32c66c7edebd861b70ac.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
- <20151005155543.GY12635@sirena.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: porter: add Ether DT support
+Date: Tue, 06 Oct 2015 01:51:01 +0300
+Message-ID: <1507520.6rxyDiKYNB@wasted.cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20151005155543.GY12635@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On October 05, 2015 16:56, Mark Brown wrote:
+Define  the Porter board dependent part of  the Ether device node.
+Enable DHCP and NFS root for the kernel booting.
 
-> On Mon, Oct 05, 2015 at 04:40:18PM +0100, Adam Thomson wrote:
-> 
-> > This patch adds support for DT bindings in the codec driver.
-> > As part of this support, the mclk data can now be provided and
-> > used to control the mclk during codec operation.
-> 
-> Please split out the new MCLK configuration into a separate patch which
-> describes what that configuration is, it's much easier to review that
-> way.  Otherwise there's a couple of minor issues here but nothing too
-> critical.
+This  patch  is analogous to the commit 26b0d2cf73cb (ARM: shmobile: henninger:
+add Ether DT support)  as there  are no differences between those boards in this
+respect.
 
-Ok, no problem. Will do.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> 
-> >  	case SND_SOC_BIAS_STANDBY:
-> >  		if (snd_soc_codec_get_bias_level(codec) == SND_SOC_BIAS_OFF) {
-> > +			/* MCLK */
-> > +			clk_prepare_enable(da7213->mclk);
-> > +
-> 
-> This doesn't check the return value.
+---
+This patch is against the 'renesas-devel-20151005-v4.3-rc4' tag of Simon
+Horman's 'renesas.git' repo.
 
-Yep, will update.
+ arch/arm/boot/dts/r8a7791-porter.dts |   28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-> 
-> >  	.driver = {
-> >  		.name = "da7213",
-> > +		.of_match_table = da7213_of_match,
-> 
-> Please use of_match_ptr() here.
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -20,7 +20,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "ignore_loglevel";
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+ 		stdout-path = &scif0;
+ 	};
+ 
+@@ -44,6 +44,16 @@
+ 		renesas,groups = "scif0_data_d";
+ 		renesas,function = "scif0";
+ 	};
++
++	ether_pins: ether {
++		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
++		renesas,function = "eth";
++	};
++
++	phy1_pins: phy1 {
++		renesas,groups = "intc_irq0";
++		renesas,function = "intc";
++	};
+ };
+ 
+ &scif0 {
+@@ -52,3 +62,19 @@
+ 
+ 	status = "okay";
+ };
++
++&ether {
++	pinctrl-0 = <&ether_pins &phy1_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&phy1>;
++	renesas,ether-link-active-low;
++	status = "ok";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++		interrupt-parent = <&irqc0>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		micrel,led-mode = <1>;
++	};
++};
 
-Ok, didn't know about that. Will update.
