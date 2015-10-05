@@ -1,26 +1,82 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v6 3/6] power: Add support for DA9150 Fuel-Gauge
-Date: Mon, 5 Oct 2015 13:10:12 -0300
-Message-ID: <CAOMZO5BnrNrXnuVOdhtNXsmgtm4KVVzs41g3CfZX9penEHLutg@mail.gmail.com>
-References: <cover.1444059987.git.Adam.Thomson.Opensource@diasemi.com>
-	<80d467703ba19bef12e9bcdd246e1de7bd33a8b1.1444059987.git.Adam.Thomson.Opensource@diasemi.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: max77802: Add input supply properties to DT
+ binding doc
+Date: Mon, 5 Oct 2015 11:15:16 -0500
+Message-ID: <CAL_JsqKg-NdDFuVcff2YGZExkPHwTaO5c-hpyy2Dai75RAReDA@mail.gmail.com>
+References: <1444057643-29672-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <80d467703ba19bef12e9bcdd246e1de7bd33a8b1.1444059987.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444057643-29672-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 5, 2015 at 1:03 PM, Adam Thomson
-<Adam.Thomson.Opensource@diasemi.com> wrote:
+On Mon, Oct 5, 2015 at 10:07 AM, Javier Martinez Canillas
+<javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
+> The max77802 regulator driver defines the supply name for each regulator
+> so these can be described in DT but is not mentioned in the binding doc.
+>
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>
+> ---
+>
+>  .../devicetree/bindings/regulator/max77802.txt     | 23 +++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/max77802.txt b/Documentation/devicetree/bindings/regulator/max77802.txt
+> index 79e5476444f7..b466689c47ea 100644
+> --- a/Documentation/devicetree/bindings/regulator/max77802.txt
+> +++ b/Documentation/devicetree/bindings/regulator/max77802.txt
+> @@ -8,7 +8,26 @@ regulators that can be controlled over I2C.
+>
+>  Following properties should be present in main device node of the MFD chip.
+>
+> -Optional node:
 
-> +       /* Register IRQ */
-> +       irq = platform_get_irq_byname(pdev, "FG");
-> +       if (irq < 0) {
-> +               dev_err(dev, "Failed to get IRQ FG: %d\n", irq);
+regulators is still a node, so you should have 2 sections.
 
-You need to do "ret = irq" here. Otherwise you will return success in irq_fail.
-
-> +               goto irq_fail;
+> +Optional properties:
+> +- inb1-supply:  The input supply for BUCK1
+> +- inb2-supply:  The input supply for BUCK2
+> +- inb3-supply:  The input supply for BUCK3
+> +- inb4-supply:  The input supply for BUCK4
+> +- inb5-supply:  The input supply for BUCK5
+> +- inb6-supply:  The input supply for BUCK6
+> +- inb7-supply:  The input supply for BUCK7
+> +- inb8-supply:  The input supply for BUCK8
+> +- inb9-supply:  The input supply for BUCK9
+> +- inb10-supply: The input supply for BUCK10
+> +- inl1-supply:  The input supply for LDO8 and LDO15
+> +- inl2-supply:  The input supply for LDO17, LDO27, LDO30 and LDO35
+> +- inl3-supply:  The input supply for LDO3, LDO5, LDO6 and LDO7
+> +- inl4-supply:  The input supply for LDO10, LDO11, LDO13 and LDO14
+> +- inl5-supply:  The input supply for LDO9 and LDO19
+> +- inl6-supply:  The input supply for LDO4, LDO21, LDO24 and LDO33
+> +- inl7-supply:  The input supply for LDO18, LDO20, LDO28 and LDO29
+> +- inl9-supply:  The input supply for LDO12, LDO23, LDO25, LDO26, LDO32 and LDO34
+> +- inl10-supply: The input supply for LDO1 and LDO2
+>  - regulators : The regulators of max77802 have to be instantiated
+>    under subnode named "regulators" using the following format.
+>
+> @@ -58,6 +77,8 @@ Example:
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+> +               inb1-supply = <&parent_reg>;
+> +
+>                 regulators {
+>                         ldo1_reg: LDO1 {
+>                                 regulator-name = "vdd_1v0";
+> --
+> 2.4.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
