@@ -1,76 +1,56 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: "clk: sunxi: Add a simple gates driver" breaks kernel with older
- DTB
-Date: Mon, 5 Oct 2015 14:29:52 +0200
-Message-ID: <20151005122952.GJ2696@lukather>
-References: <1443689231.16718.225.camel@citrix.com>
- <20151001204506.GR7104@lukather>
- <560E5767.2040502@citrix.com>
- <20151002105333.GA2696@lukather>
- <560E6768.6040705@citrix.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: sun4i: USB DRC and
+ voltage-scaling for pcDuino1/2
+Date: Mon, 5 Oct 2015 14:38:48 +0200
+Message-ID: <20151005123848.GL2696@lukather>
+References: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PWfwoUCx3AFJRUBq"
-Return-path: <linux-clk-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="ZG5hGh9V5E9QzVHS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBY66ZGYAKGQEXIWZAVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <560E6768.6040705@citrix.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Julien Grall <julien.grall@citrix.com>
-Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, KumarGala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "freebsd-arm@freebsd.org" <freebsd-arm@FreeBSD.org>
+In-Reply-To: <1443985128-23137-1-git-send-email-siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---PWfwoUCx3AFJRUBq
-Content-Type: text/plain; charset=us-ascii
+--ZG5hGh9V5E9QzVHS
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-1;3803;0c
-On Fri, Oct 02, 2015 at 12:15:52PM +0100, Julien Grall wrote:
-> On 02/10/15 11:53, Maxime Ripard wrote:
-> >> If no, that's very unfortunate because it means that you can't
-> >> re-use the same DT across multiple OS and the DT provided by the
-> >> firmware (if it's built-in).
-> >=20
-> > Is there such OS yet (and by that, I mean one that actually shares our
-> > DT, instead of rewriting its own) ?
->=20
-> Yes, FreeBSD started to support the DT provided by vendors which are
-> based on Linux bindings. The ARM64 port is only using DTB provided by
-> the hardware. For ARM32, there is still some platform using a specific
-> DT for FreeBSD but they are trying to get a ride.
+Hi,
 
-Well, it would have been good if they contacted us in the first place
-then, because this has never been considered seriously afaik, and we
-never stated that it actually was an ABI.
+On Sun, Oct 04, 2015 at 09:58:45PM +0300, Siarhei Siamashka wrote:
+> Hello,
+> 
+> This brings LinkSprite pcDuino1/2 boards up to date with the latest
+> kernel features. And the first patch in this set is a bugfix for the
+> PH3/PH6 pins misuse.
+> 
+> There is currently a single dts file for pcDuino1 and pcDuino2 boards.
+> They obviously had been designed to be compatible with each other, but
+> have some minor differences, as can be seen when comparing schematics:
+>     https://s3.amazonaws.com/pcduino/Hardware/PC+Duino_V01-20130128.pdf
+>     https://s3.amazonaws.com/pcduino/Hardware/v2/pcDuino_v2_sch.pdf
 
+Usually, the way we handle this is simply by including just the other
+DT that will only hold those differences.
+
+What are those differences exactly ?
+
+Thanks,
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---PWfwoUCx3AFJRUBq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWEm1AAAoJEBx+YmzsjxAgPGgP/2bJvcUNNNST6oRh5TGpu2kY
-1B/+N34aE81+/fTHu2ZlqgI965r20aHaLKUxCes9YmI1B4I/6sUQPMlb5Hs9nnza
-Omtu7JURXLRs4KI7Gn6aJcnQ/1ulaOoQyFM7zpEFB4/LEIHgViuPdYOib8gi7tNd
-Pa77fi2Th04eZZIVboubtZC7tynSaQD9bROx2B89qSA5N2i2NgC18NkvMYkDpsc7
-xy+a4sx+N788KIJ5S6aP2JSPoSH1OqJ4oH+8pLm985PYW7JZkUYZioesfev41rV7
-w8poMvyyteWRysu3zhIKzyEhZT6fiHR0jUVTS4L6ifvg3gT9oe8v6zajPJtdgoW7
-hFqKedQQX06LzSzqCxLOMvS5HVSnYtWVrRelsZVOk3IgMl2adththiO7a3onvIt4
-uHkaNKNH+dheKDIhr3IVztvQyShbG6ys7m64U4WZKGRs0urxRfK9pz5chwk5184v
-ffCa80ro26uU7Mj0iQ/WSCI1PUP+b0XDrpD+oWhAYdWESQGatTcvifnVjjSqafuk
-NZ7omK1Hh+FJL2MLXmAmarviSQLh/oNY9ILwzgVsx8yzMWQ4icZRc43SuElXaljW
-DnruaQMZbB/J0pNKeheNn8Yey7sRFnRBml+X6hd1WoFsz49px4ktN2hLSQJ3ORR0
-mktzhw9Q1vZjA/X8xeOm
-=BKpj
------END PGP SIGNATURE-----
-
---PWfwoUCx3AFJRUBq--
+--ZG5hGh9V5E9QzVHS--
