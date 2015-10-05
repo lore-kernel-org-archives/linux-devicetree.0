@@ -1,120 +1,92 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2] extcon: gpio: Add the support for Device tree bindings
-Date: Mon, 05 Oct 2015 19:39:31 +0900
-Message-ID: <56125363.4060203@samsung.com>
-References: <194162595.571031444032234245.JavaMail.weblogic@epmlwas07a>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH 1/2] leds: rt5033: add DT binding for RT5033
+Date: Mon, 05 Oct 2015 19:40:04 +0900
+Message-ID: <56125384.5030603@samsung.com>
+References: <1443778875-18261-1-git-send-email-ingi2.kim@samsung.com>
+ <1443778875-18261-2-git-send-email-ingi2.kim@samsung.com>
+ <CAL_JsqL13SC132eGRrUmrH4LTD61ZtNshFibSWLC8OEP+4zoQA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <194162595.571031444032234245.JavaMail.weblogic@epmlwas07a>
+In-reply-to: <CAL_JsqL13SC132eGRrUmrH4LTD61ZtNshFibSWLC8OEP+4zoQA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015=EB=85=84 10=EC=9B=94 05=EC=9D=BC 17:03, MyungJoo Ham wrote:
->>  =20
->>  This patch adds the support for Device tree bindings of extcon-gpio=
- driver.
->> The extcon-gpio device tree node must include the both 'extcon-id' a=
-nd
->> 'extcon-gpio' property.
+Hello, Rob Herring
+
+I'll push ver2 patch soon with your acked
+because other patch has some issues.
+
+Thanks for the review.
+
+On 2015=EB=85=84 10=EC=9B=94 02=EC=9D=BC 23:31, Rob Herring wrote:
+> On Fri, Oct 2, 2015 at 4:41 AM, Ingi Kim <ingi2.kim@samsung.com> wrot=
+e:
+>> This patch adds the device tree bindings for RT5033 flash LEDs.
 >>
-> []
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
 >=20
->=20
-> Except for some beautification issues described below,
->=20
-> Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 >=20
 >> ---
->> This patch is based on following patch[1].
->> [1] https://lkml.org/lkml/2015/10/3/304
+>>  .../devicetree/bindings/leds/leds-rt5033.txt       | 38 +++++++++++=
++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-rt50=
+33.txt
 >>
->> Changes from v1:
->> - Create the include/dt-bindings/extcon/extcon.h including the ident=
-ification
->>   of external connector. These definitions are used in dts file.
->> - Fix error if CONFIG_OF is disabled.
->>
->>  .../devicetree/bindings/extcon/extcon-gpio.txt     |  38 +++++++
->>  drivers/extcon/extcon-gpio.c                       | 110 ++++++++++=
-++++++-----
->>  include/dt-bindings/extcon/extcon.h                |  44 +++++++++
->>  include/linux/extcon/extcon-gpio.h                 |   6 +-
->>  4 files changed, 173 insertions(+), 25 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-=
-gpio.txt
->>  create mode 100644 include/dt-bindings/extcon/extcon.h
->>
->> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.tx=
-t b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-rt5033.txt =
+b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
 >> new file mode 100644
->> index 000000000000..70c36f729963
+>> index 0000000..2ef7bdc
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> []
->> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gp=
-io.c
->> index 279ff8f6637d..7f3e24aae0c4 100644
->> --- a/drivers/extcon/extcon-gpio.c
->> +++ b/drivers/extcon/extcon-gpio.c
->> @@ -1,8 +1,8 @@
->>  /*
->>   * extcon_gpio.c - Single-state GPIO extcon driver based on extcon =
-class
->>   *
->> - * Copyright (C) 2008 Google, Inc.
->> - * Author: Mike Lockwood <lockwood@android.com>
->> + * Copyright (C) 2015 Chanwoo Choi <cw00.choi@samsung.com>, Samsung=
- Electronics
->> + * Copyright (C) 2008 Mike Lockwood <lockwood@android.com>, Google,=
- Inc.
->>   *
->>   * Modified by MyungJoo Ham <myungjoo.ham@samsung.com> to support e=
-xtcon
->>   * (originally switch class is supported)
+>> +++ b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
+>> @@ -0,0 +1,38 @@
+>> +* Richtek Technology Corporation - RT5033 Flash LED Driver
+>> +
+>> +The RT5033 Flash LED Circuit is designed for one or two LEDs drivin=
+g
+>> +for torch and strobe applications, it provides an I2C software comm=
+and
+>> +to trigger the torch and strobe operation.
+>> +
+>> +Required properties:
+>> +- compatible : Must be "richtek,rt5033-led".
+>> +
+>> +A discrete LED element connected to the device must be represented =
+by a child
+>> +node - see Documentation/devicetree/bindings/leds/common.txt.
+>> +
+>> +Required properties of the LED child node:
+>> +  See Documentation/devicetree/bindings/leds/common.txt
+>> +- led-max-microamp : Minimum Threshold for Timer protection
+>> +  is defined internally (Maximum 200mA).
+>> +- flash-max-microamp : Flash LED maximum current
+>> +- flash-max-timeout-us : Flash LED maximum timeout
+>> +
+>> +Optional properties of the LED child node:
+>> +- label : see Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +Example:
+>> +
+>> +rt5033 {
+>> +       compatible =3D "richtek,rt5033";
+>> +
+>> +       led {
+>> +               compatible =3D "richtek,rt5033-led";
+>> +
+>> +               flash-led {
+>> +                       label =3D "rt5033-flash";
+>> +                       led-max-microamp =3D <200000>;
+>> +                       flash-max-microamp =3D <800000>;
+>> +                       flash-max-timeout-us =3D <1216000>;
+>> +               };
+>> +       };
+>> +}
+>> --
+>> 2.0.5
+>>
 >=20
-> Let's make it in chronological order.
-> (may need to "beautify the last two lines as well)
->=20
-> I.e., 2008-->2012-->2015 or 2015-->2012-->2008.
-> Not 2015-->2008-->2012
-
-OK. I'll modify it.
-
->=20
->=20
->> @@ -26,12 +26,14 @@
-> []
->> diff --git a/include/dt-bindings/extcon/extcon.h b/include/dt-bindin=
-gs/extcon/extcon.h
->> new file mode 100644
->> index 000000000000..14c7f36b2206
->> --- /dev/null
->> +++ b/include/dt-bindings/extcon/extcon.h
-> []
->> diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extc=
-on/extcon-gpio.h
->> index 7cacafb78b09..bcc6d7f7116a 100644
->> --- a/include/linux/extcon/extcon-gpio.h
->> +++ b/include/linux/extcon/extcon-gpio.h
-> []
->> @@ -38,7 +38,7 @@ struct gpio_extcon_pdata {
->>  	unsigned int extcon_id;
->>  	unsigned gpio;
->>  	bool gpio_active_low;
->> -	unsigned long debounce;
->> +	unsigned int debounce;
->=20
-> What about u32, making it more clear?
-> ( > +	device_property_read_u32(dev, "debounce-ms", &pdata->debounce);=
- )
-
-OK.
-
-Thanks,
-Chanwoo Choi
