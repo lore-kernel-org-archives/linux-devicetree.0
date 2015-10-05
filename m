@@ -1,200 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/2] leds: rt5033: Add RT5033 Flash led device driver
-Date: Mon, 5 Oct 2015 08:21:29 +0100
-Message-ID: <20151005072129.GE3377@x1>
-References: <1443778875-18261-1-git-send-email-ingi2.kim@samsung.com>
- <1443778875-18261-3-git-send-email-ingi2.kim@samsung.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCH v2] extcon: gpio: Add the support for Device tree bindings
+Date: Mon, 05 Oct 2015 08:03:54 +0000 (GMT)
+Message-ID: <194162595.571031444032234245.JavaMail.weblogic@epmlwas07a>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443778875-18261-3-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rpurdie@rpsys.net, j.anaszewski@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 02 Oct 2015, Ingi Kim wrote:
-
-> This patch adds device driver of Richtek RT5033 PMIC.
-> The driver supports a current regulated output to drive
-> white LEDs for camera flash.
->=20
-> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
-> ---
->  drivers/leds/Kconfig               |   8 ++
->  drivers/leds/Makefile              |   1 +
->  drivers/leds/leds-rt5033.c         | 222 +++++++++++++++++++++++++++=
-++++++++++
->  drivers/mfd/rt5033.c               |   3 +
->  include/linux/mfd/rt5033-private.h |  67 +++++++++--
->  include/linux/mfd/rt5033.h         |  27 ++++-
-
-Please pull the MFD changes out into to separate patch(es).
-
->  6 files changed, 317 insertions(+), 11 deletions(-)
->  create mode 100644 drivers/leds/leds-rt5033.c
-
-[...]
-
-> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
-> index d60f916..035421c 100644
-> --- a/drivers/mfd/rt5033.c
-> +++ b/drivers/mfd/rt5033.c
-> @@ -47,6 +47,9 @@ static const struct mfd_cell rt5033_devs[] =3D {
->  	}, {
->  		.name =3D "rt5033-battery",
->  		.of_compatible =3D "richtek,rt5033-battery",
-> +	}, {
-> +		.name =3D "rt5033-led",
-> +		.of_compatible =3D "richtek,rt5033-led",
->  	},
->  };
-
-Needs to be in a patch of its own.
-
-> diff --git a/include/linux/mfd/rt5033-private.h b/include/linux/mfd/r=
-t5033-private.h
-> index 1b63fc2..21c3aff 100644
-> --- a/include/linux/mfd/rt5033-private.h
-> +++ b/include/linux/mfd/rt5033-private.h
-> @@ -25,15 +25,15 @@ enum rt5033_reg {
->  	/* Reserved 0x09~0x18 */
->  	RT5033_REG_RT_CTRL1		=3D 0x19,
->  	/* Reserved 0x1A~0x20 */
-> -	RT5033_REG_FLED_FUNCTION1	=3D 0x21,
-> -	RT5033_REG_FLED_FUNCTION2	=3D 0x22,
-> -	RT5033_REG_FLED_STROBE_CTRL1	=3D 0x23,
-> -	RT5033_REG_FLED_STROBE_CTRL2	=3D 0x24,
-> -	RT5033_REG_FLED_CTRL1		=3D 0x25,
-> -	RT5033_REG_FLED_CTRL2		=3D 0x26,
-> -	RT5033_REG_FLED_CTRL3		=3D 0x27,
-> -	RT5033_REG_FLED_CTRL4		=3D 0x28,
-> -	RT5033_REG_FLED_CTRL5		=3D 0x29,
-> +	RT5033_REG_FL_FUNCTION1		=3D 0x21,
-> +	RT5033_REG_FL_FUNCTION2		=3D 0x22,
-> +	RT5033_REG_FL_STROBE_CTRL1	=3D 0x23,
-> +	RT5033_REG_FL_STROBE_CTRL2	=3D 0x24,
-> +	RT5033_REG_FL_CTRL1		=3D 0x25,
-> +	RT5033_REG_FL_CTRL2		=3D 0x26,
-> +	RT5033_REG_FL_CTRL3		=3D 0x27,
-> +	RT5033_REG_FL_CTRL4		=3D 0x28,
-> +	RT5033_REG_FL_CTRL5		=3D 0x29,
-
-Why this change?
-
-The previous naming convention was better.
-
->  	/* Reserved 0x2A~0x40 */
->  	RT5033_REG_CTRL			=3D 0x41,
->  	RT5033_REG_BUCK_CTRL		=3D 0x42,
-> @@ -93,6 +93,55 @@ enum rt5033_reg {
->  #define RT5033_RT_CTRL1_UUG_MASK	0x02
->  #define RT5033_RT_HZ_MASK		0x01
-> =20
-> +/* RT5033 FLED Function1 register */
-> +#define RT5033_FL_FLED1_MASK		0x94
-> +#define RT5033_FL_STROBE_SEL		0x04
-> +#define RT5033_FL_PIN_CTRL		0x10
-> +#define RT5033_FL_RESET			0x80
-> +
-> +/* RT5033 FLED Function2 register */
-> +#define RT5033_FL_FLED2_MASK		0x81
-> +#define RT5033_FL_ENFLED		0x01
-> +#define RT5033_FL_SREG_STROBE		0x80
-> +
-> +/* RT5033 FLED Strobe Control1 */
-> +#define RT5033_FL_STRBCTRL1_MASK	0xFF
-> +#define RT5033_FL_STRBCTRL1_TM_CUR_MAX	0xE0
-> +#define RT5033_FL_STRBCTRL1_FL_CUR_DEF	0x0D
-> +#define RT5033_FL_STRBCTRL1_FL_CUR_MAX	0x1F
-> +
-> +/* RT5033 FLED Strobe Control2 */
-> +#define RT5033_FL_STRBCTRL2_MASK	0x3F
-> +#define RT5033_FL_STRBCTRL2_TM_DEF	0x0F
-> +#define RT5033_FL_STRBCTRL2_TM_MAX	0x3F
-> +
-> +/* RT5033 FLED Control1 */
-> +#define RT5033_FL_CTRL1_MASK		0xF7
-> +#define RT5033_FL_CTRL1_TORCH_CUR_DEF	0x20
-> +#define RT5033_FL_CTRL1_TORCH_CUR_MAX	0xF0
-> +#define RT5033_FL_CTRL1_LBP_DEF		0x02
-> +#define RT5033_FL_CTRL1_LBP_MAX		0x07
-> +
-> +/* RT5033 FLED Control2 */
-> +#define RT5033_FL_CTRL2_MASK		0xFF
-> +#define RT5033_FL_CTRL2_VMID_DEF	0x37
-> +#define RT5033_FL_CTRL2_VMID_MAX	0x3F
-> +#define RT5033_FL_CTRL2_TRACK_ALIVE	0x40
-> +#define RT5033_FL_CTRL2_MID_TRACK	0x80
-> +
-> +/* RT5033 FLED Control4 */
-> +#define RT5033_FL_CTRL4_MASK		0xE0
-> +#define RT5033_FL_CTRL4_RESV		0x14
-> +#define RT5033_FL_CTRL4_VTRREG_DEF	0x40
-> +#define RT5033_FL_CTRL4_VTRREG_MAX	0x60
-> +#define RT5033_FL_CTRL4_TRACK_CLK	0x80
-> +
-> +/* RT5033 FLED Control5 */
-> +#define RT5033_FL_CTRL5_MASK		0xC0
-> +#define RT5033_FL_CTRL5_RESV		0x10
-> +#define RT5033_FL_CTRL5_TA_GOOD		0x40
-> +#define RT5033_FL_CTRL5_TA_EXIST	0x80
-> +
->  /* RT5033 control register */
->  #define RT5033_CTRL_FCCM_BUCK_MASK		0x00
->  #define RT5033_CTRL_BUCKOMS_MASK		0x01
-> diff --git a/include/linux/mfd/rt5033.h b/include/linux/mfd/rt5033.h
-> index 6cff5cf..45c97b7 100644
-> --- a/include/linux/mfd/rt5033.h
-> +++ b/include/linux/mfd/rt5033.h
-> @@ -12,10 +12,11 @@
->  #ifndef __RT5033_H__
->  #define __RT5033_H__
-> =20
-> -#include <linux/regulator/consumer.h>
-> +#include <linux/led-class-flash.h>
->  #include <linux/i2c.h>
-> -#include <linux/regmap.h>
->  #include <linux/power_supply.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> =20
->  /* RT5033 regulator IDs */
->  enum rt5033_regulators {
-> @@ -59,4 +60,26 @@ struct rt5033_charger {
->  	struct rt5033_charger_data	*chg;
->  };
-> =20
-> +/* RT5033 led platform data */
-> +
-> +struct rt5033_led_config_data {
-> +	/* maximum LED current in movie mode */
-> +	u32 torch_max_microamp;
-> +	/* maximum LED current in flash mode */
-> +	u32 flash_max_microamp;
-> +	/* maximum flash timeout */
-> +	u32 flash_max_timeout;
-> +	/* max LED brightness level */
-> +	enum led_brightness max_brightness;
-> +};
-
-Rid these comments.  Use kerneldoc format instead.
-
-> +struct rt5033_led {
-> +	struct device		*dev;
-> +	struct rt5033_dev	*rt5033;
-> +	struct regmap		*regmap;
-> +
-> +	/* Related LED class device */
-> +	struct led_classdev	cdev;
-> +};
-> +
->  #endif /* __RT5033_H__ */
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBzdXBwb3J0IGZvciBEZXZpY2UgdHJlZSBiaW5k
+aW5ncyBvZiBleHRjb24tZ3BpbyBkcml2ZXIuDQo+IFRoZSBleHRjb24tZ3BpbyBkZXZpY2UgdHJl
+ZSBub2RlIG11c3QgaW5jbHVkZSB0aGUgYm90aCAnZXh0Y29uLWlkJyBhbmQNCj4gJ2V4dGNvbi1n
+cGlvJyBwcm9wZXJ0eS4NCj4gDQpbXQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2hhbndvbyBDaG9p
+IDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+DQoNCg0KRXhjZXB0IGZvciBzb21lIGJlYXV0aWZpY2F0
+aW9uIGlzc3VlcyBkZXNjcmliZWQgYmVsb3csDQoNClNpZ25lZC1vZmYtYnk6IE15dW5nSm9vIEhh
+bSA8bXl1bmdqb28uaGFtQHNhbXN1bmcuY29tPg0KDQo+IC0tLQ0KPiBUaGlzIHBhdGNoIGlzIGJh
+c2VkIG9uIGZvbGxvd2luZyBwYXRjaFsxXS4NCj4gWzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
+MDE1LzEwLzMvMzA0DQo+IA0KPiBDaGFuZ2VzIGZyb20gdjE6DQo+IC0gQ3JlYXRlIHRoZSBpbmNs
+dWRlL2R0LWJpbmRpbmdzL2V4dGNvbi9leHRjb24uaCBpbmNsdWRpbmcgdGhlIGlkZW50aWZpY2F0
+aW9uDQo+ICAgb2YgZXh0ZXJuYWwgY29ubmVjdG9yLiBUaGVzZSBkZWZpbml0aW9ucyBhcmUgdXNl
+ZCBpbiBkdHMgZmlsZS4NCj4gLSBGaXggZXJyb3IgaWYgQ09ORklHX09GIGlzIGRpc2FibGVkLg0K
+PiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2V4dGNvbi9leHRjb24tZ3Bpby50eHQgICAg
+IHwgIDM4ICsrKysrKysNCj4gIGRyaXZlcnMvZXh0Y29uL2V4dGNvbi1ncGlvLmMgICAgICAgICAg
+ICAgICAgICAgICAgIHwgMTEwICsrKysrKysrKysrKysrKystLS0tLQ0KPiAgaW5jbHVkZS9kdC1i
+aW5kaW5ncy9leHRjb24vZXh0Y29uLmggICAgICAgICAgICAgICAgfCAgNDQgKysrKysrKysrDQo+
+ICBpbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oICAgICAgICAgICAgICAgICB8ICAg
+NiArLQ0KPiAgNCBmaWxlcyBjaGFuZ2VkLCAxNzMgaW5zZXJ0aW9ucygrKSwgMjUgZGVsZXRpb25z
+KC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2V4dGNvbi9leHRjb24tZ3Bpby50eHQNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
+L2R0LWJpbmRpbmdzL2V4dGNvbi9leHRjb24uaA0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9leHRjb24vZXh0Y29uLWdwaW8udHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2V4dGNvbi9leHRjb24tZ3Bpby50eHQNCj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi43MGMzNmY3Mjk5NjMNCj4g
+LS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZXh0Y29uL2V4dGNvbi1ncGlvLnR4dA0KW10NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZXh0Y29u
+L2V4dGNvbi1ncGlvLmMgYi9kcml2ZXJzL2V4dGNvbi9leHRjb24tZ3Bpby5jDQo+IGluZGV4IDI3
+OWZmOGY2NjM3ZC4uN2YzZTI0YWFlMGM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2V4dGNvbi9l
+eHRjb24tZ3Bpby5jDQo+ICsrKyBiL2RyaXZlcnMvZXh0Y29uL2V4dGNvbi1ncGlvLmMNCj4gQEAg
+LTEsOCArMSw4IEBADQo+ICAvKg0KPiAgICogZXh0Y29uX2dwaW8uYyAtIFNpbmdsZS1zdGF0ZSBH
+UElPIGV4dGNvbiBkcml2ZXIgYmFzZWQgb24gZXh0Y29uIGNsYXNzDQo+ICAgKg0KPiAtICogQ29w
+eXJpZ2h0IChDKSAyMDA4IEdvb2dsZSwgSW5jLg0KPiAtICogQXV0aG9yOiBNaWtlIExvY2t3b29k
+IDxsb2Nrd29vZEBhbmRyb2lkLmNvbT4NCj4gKyAqIENvcHlyaWdodCAoQykgMjAxNSBDaGFud29v
+IENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4sIFNhbXN1bmcgRWxlY3Ryb25pY3MNCj4gKyAq
+IENvcHlyaWdodCAoQykgMjAwOCBNaWtlIExvY2t3b29kIDxsb2Nrd29vZEBhbmRyb2lkLmNvbT4s
+IEdvb2dsZSwgSW5jLg0KPiAgICoNCj4gICAqIE1vZGlmaWVkIGJ5IE15dW5nSm9vIEhhbSA8bXl1
+bmdqb28uaGFtQHNhbXN1bmcuY29tPiB0byBzdXBwb3J0IGV4dGNvbg0KPiAgICogKG9yaWdpbmFs
+bHkgc3dpdGNoIGNsYXNzIGlzIHN1cHBvcnRlZCkNCg0KTGV0J3MgbWFrZSBpdCBpbiBjaHJvbm9s
+b2dpY2FsIG9yZGVyLg0KKG1heSBuZWVkIHRvICJiZWF1dGlmeSB0aGUgbGFzdCB0d28gbGluZXMg
+YXMgd2VsbCkNCg0KSS5lLiwgMjAwOC0tPjIwMTItLT4yMDE1IG9yIDIwMTUtLT4yMDEyLS0+MjAw
+OC4NCk5vdCAyMDE1LS0+MjAwOC0tPjIwMTINCg0KDQo+IEBAIC0yNiwxMiArMjYsMTQgQEANCltd
+DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2V4dGNvbi9leHRjb24uaCBiL2lu
+Y2x1ZGUvZHQtYmluZGluZ3MvZXh0Y29uL2V4dGNvbi5oDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTRjN2YzNmIyMjA2DQo+IC0tLSAvZGV2L251bGwNCj4g
+KysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9leHRjb24vZXh0Y29uLmgNCltdDQo+IGRpZmYgLS1n
+aXQgYS9pbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oIGIvaW5jbHVkZS9saW51eC9l
+eHRjb24vZXh0Y29uLWdwaW8uaA0KPiBpbmRleCA3Y2FjYWZiNzhiMDkuLmJjYzZkN2Y3MTE2YSAx
+MDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9leHRjb24vZXh0Y29uLWdwaW8uaA0KPiArKysg
+Yi9pbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oDQpbXQ0KPiBAQCAtMzgsNyArMzgs
+NyBAQCBzdHJ1Y3QgZ3Bpb19leHRjb25fcGRhdGEgew0KPiAgCXVuc2lnbmVkIGludCBleHRjb25f
+aWQ7DQo+ICAJdW5zaWduZWQgZ3BpbzsNCj4gIAlib29sIGdwaW9fYWN0aXZlX2xvdzsNCj4gLQl1
+bnNpZ25lZCBsb25nIGRlYm91bmNlOw0KPiArCXVuc2lnbmVkIGludCBkZWJvdW5jZTsNCg0KV2hh
+dCBhYm91dCB1MzIsIG1ha2luZyBpdCBtb3JlIGNsZWFyPw0KKCA+ICsJZGV2aWNlX3Byb3BlcnR5
+X3JlYWRfdTMyKGRldiwgImRlYm91bmNlLW1zIiwgJnBkYXRhLT5kZWJvdW5jZSk7ICkNCg0KPiAg
+CXVuc2lnbmVkIGxvbmcgaXJxX2ZsYWdzOw0KPiAgDQo+ICAJYm9vbCBjaGVja19vbl9yZXN1bWU7
+DQo+IC0tIA0KPiAxLjguMA0K
