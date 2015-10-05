@@ -1,11 +1,13 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Subject: [PATCH v2] extcon: gpio: Add the support for Device tree bindings
-Date: Mon, 05 Oct 2015 15:58:19 +0900
-Message-ID: <1444028299-11755-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org
+Date: Mon, 05 Oct 2015 16:00:33 +0900
+Message-ID: <1444028433-11837-1-git-send-email-cw00.choi@samsung.com>
+References: <1444028299-11755-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1444028299-11755-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 This patch adds the support for Device tree bindings of extcon-gpio driver.
@@ -35,8 +37,11 @@ For exmaple:
 		extcon = <&ta_cable>;
 	};
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
+This patch is based on following patch[1].
+[1] https://lkml.org/lkml/2015/10/3/304
+
 Changes from v1:
 - Create the include/dt-bindings/extcon/extcon.h including the identification
   of external connector. These definitions are used in dts file.
@@ -103,11 +108,11 @@ index 279ff8f6637d..7f3e24aae0c4 100644
   * extcon_gpio.c - Single-state GPIO extcon driver based on extcon class
   *
 - * Copyright (C) 2008 Google, Inc.
-- * Author: Mike Lockwood <lockwood@android.com>
-+ * Copyright (C) 2015 Chanwoo Choi <cw00.choi@samsung.com>, Samsung Electronics
-+ * Copyright (C) 2008 Mike Lockwood <lockwood@android.com>, Google, Inc.
+- * Author: Mike Lockwood <lockwood-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
++ * Copyright (C) 2015 Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samsung Electronics
++ * Copyright (C) 2008 Mike Lockwood <lockwood-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Google, Inc.
   *
-  * Modified by MyungJoo Ham <myungjoo.ham@samsung.com> to support extcon
+  * Modified by MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> to support extcon
   * (originally switch class is supported)
 @@ -26,12 +26,14 @@
  #include <linux/kernel.h>
@@ -296,8 +301,8 @@ index 279ff8f6637d..7f3e24aae0c4 100644
  
  module_platform_driver(gpio_extcon_driver);
  
-+MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
- MODULE_AUTHOR("Mike Lockwood <lockwood@android.com>");
++MODULE_AUTHOR("Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+ MODULE_AUTHOR("Mike Lockwood <lockwood-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>");
  MODULE_DESCRIPTION("GPIO extcon driver");
  MODULE_LICENSE("GPL");
 diff --git a/include/dt-bindings/extcon/extcon.h b/include/dt-bindings/extcon/extcon.h
@@ -359,9 +364,9 @@ index 7cacafb78b09..bcc6d7f7116a 100644
   * Single-state GPIO extcon driver based on extcon class
   *
 - * Copyright (C) 2012 Samsung Electronics
-- * Author: MyungJoo Ham <myungjoo.ham@samsung.com>
-+ * Copyright (C) 2015 Chanwoo Choi <cw00.choi@samsung.com>, Samsung Electronics
-+ * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham@samsung.com>, Samsung Electronics
+- * Author: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ * Copyright (C) 2015 Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samsung Electronics
++ * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samsung Electronics
   *
   * based on switch class driver
   * Copyright (C) 2008 Google, Inc.
@@ -376,3 +381,8 @@ index 7cacafb78b09..bcc6d7f7116a 100644
  	bool check_on_resume;
 -- 
 1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
