@@ -1,92 +1,139 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sun4i: Allow to use the PH6
- pin for GPIO on pcDuino1/2
-Date: Mon, 5 Oct 2015 14:49:49 +0200
-Message-ID: <20151005124949.GM2696@lukather>
-References: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
- <1443985128-23137-2-git-send-email-siarhei.siamashka@gmail.com>
- <CAGb2v65n6ymon+sEASa726sam0KLOvMPbxTxCqvV4j0ust2PCA@mail.gmail.com>
- <20151005083940.78d04f63@i7>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 5/7] hwrng: st: Add support for ST's HW Random Number
+ Generator
+Date: Mon, 5 Oct 2015 13:54:04 +0100
+Message-ID: <561272EC.6080300@linaro.org>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+ <1442497557-9271-6-git-send-email-lee.jones@linaro.org>
+ <5612548E.8090405@linaro.org> <20151005121102.GB17172@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lHuqAdgBYNjQz/wy"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDHEZGYAKGQEA27PPJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151005083940.78d04f63@i7>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20151005121102.GB17172@x1>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.com, kernel@stlinux.com, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
---lHuqAdgBYNjQz/wy
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 05/10/15 13:11, Lee Jones wrote:
+> On Mon, 05 Oct 2015, Daniel Thompson wrote:
+>> Late but...
+>
+> That's okay.  Fixup patches can always be submitted.
+>
+> We have forever. :)
+>
+>> On 17/09/15 14:45, Lee Jones wrote:
+>>> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+>>> index 055bb01..8bcfb45 100644
+>>> --- a/drivers/char/hw_random/Makefile
+>>> +++ b/drivers/char/hw_random/Makefile
+>>> @@ -30,4 +30,5 @@ obj-$(CONFIG_HW_RANDOM_TPM) += tpm-rng.o
+>>>   obj-$(CONFIG_HW_RANDOM_BCM2835) += bcm2835-rng.o
+>>>   obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) += iproc-rng200.o
+>>>   obj-$(CONFIG_HW_RANDOM_MSM) += msm-rng.o
+>>> +obj-$(CONFIG_HW_RANDOM_ST) += st-rng.o
+>>>   obj-$(CONFIG_HW_RANDOM_XGENE) += xgene-rng.o
+>>> diff --git a/drivers/char/hw_random/st-rng.c b/drivers/char/hw_random/st-rng.c
+>>> new file mode 100644
+>>> index 0000000..8c8a435
+>>> --- /dev/null
+>>> +++ b/drivers/char/hw_random/st-rng.c
+>>> @@ -0,0 +1,144 @@
+>>> +/*
+>>> + * ST Random Number Generator Driver ST's Platforms
+>>> + *
+>>> + * Author: Pankaj Dev: <pankaj.dev@st.com>
+>>> + *         Lee Jones <lee.jones@linaro.org>
+>>> + *
+>>> + * Copyright (C) 2015 STMicroelectronics (R&D) Limited
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include <linux/clk.h>
+>>> +#include <linux/delay.h>
+>>> +#include <linux/hw_random.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/slab.h>
+>>> +
+>>> +/* Registers */
+>>> +#define ST_RNG_STATUS_REG		0x20
+>>> +#define ST_RNG_DATA_REG			0x24
+>>> +
+>>> +/* Registers fields */
+>>> +#define ST_RNG_STATUS_BAD_SEQUENCE	BIT(0)
+>>> +#define ST_RNG_STATUS_BAD_ALTERNANCE	BIT(1)
+>>> +#define ST_RNG_STATUS_FIFO_FULL		BIT(5)
+>>> +
+>>> +#define ST_RNG_FIFO_SIZE		8
+>>> +#define ST_RNG_SAMPLE_SIZE		2 /* 2 Byte (16bit) samples */
+>>> +
+>>> +/* Samples are available every 0.667us, which we round to 1us */
+>>> +#define ST_RNG_FILL_FIFO_TIMEOUT   (1 * (ST_RNG_FIFO_SIZE / ST_RNG_SAMPLE_SIZE))
+>>> +
+>>> +struct st_rng_data {
+>>> +	void __iomem	*base;
+>>> +	struct clk	*clk;
+>>> +	struct hwrng	ops;
+>>> +};
+>>> +
+>>> +static int st_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
+>>> +{
+>>> +	struct st_rng_data *ddata = (struct st_rng_data *)rng->priv;
+>>> +	u32 status;
+>>> +	int i;
+>>> +
+>>> +	if (max < sizeof(u16))
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* Wait until FIFO is full - max 4uS*/
+>>> +	for (i = 0; i < ST_RNG_FILL_FIFO_TIMEOUT; i++) {
+>>> +		status = readl_relaxed(ddata->base + ST_RNG_STATUS_REG);
+>>> +		if (status & ST_RNG_STATUS_FIFO_FULL)
+>>> +			break;
+>>> +		udelay(1);
+>>
+>> How much bandwidth does using udelay() cost? I think it could be
+>>> 10% compared to a tighter polling loop.
+>
+> Samples are only available every 0.7uS and we only do this for every
+> 4.  The maximum it could 'cost' is <1uS.  Do we really want to fuss
+> over that tiny amount of time?  It's an understandable point if we
+> were talking about milliseconds, but a single microsecond?
 
-On Mon, Oct 05, 2015 at 08:39:40AM +0300, Siarhei Siamashka wrote:
-> On Mon, 5 Oct 2015 09:55:28 +0800
-> Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> 
-> > On Mon, Oct 5, 2015 at 2:58 AM, Siarhei Siamashka
-> > <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > The pcDuino1 board does not use any power switches at all for its
-> > > two USB host ports and the VBUS pins are always connected to 5V.
-> > >
-> > > The pcDuino2 board uses the RT9701GB power switch for its single
-> > > USB host port, but the USB_EN pin (PD2) is pulled up with a 10K
-> > > resistor. So that the USB power is still enabled by default even
-> > > if nobody bothers to configure the PD2 pin or runs the pcDuino1
-> > > firmware.
-> > 
-> > Seems like it would be better if you had a regulator controlled
-> > by PD2. At least can shut down VBUS power when it wants to?
-> 
-> That's a good question.
-> 
-> Describing the regulator controlled by PD2 in the dts file is surely
-> the right solution for pcDuino2 boards. But in the case of using this
-> dts for pcDuino1, the kernel would think that it can shut down VBUS
-> power, while in fact this is not true.
+This code is called in a tight loop so we're not talking about a 
+*single* microsecond! We are are talking about about one microsecond in 
+every five[1] and yes, I think we should care about that.
 
-I do agree that this is the right solution for the pcduino1, but it's
-definitely not the right one for the pcduino 2 then.
+It takes 2.67uS for the FIFO to come ready so with a polling interval of 
+1uS + loop overhead so I would fully expect on average to "waste" 0.5uS 
+each time st_rng_read() is called (in a tight loop).
 
-Declaring this as a regulator isn't just meant for the USB to be
-working, it's also meant so that it keeps working. If the pin is not
-claimed by anyone, the userspace and / or some other driver, will
-actually be able to grab that pin and do whatever it wants with it,
-effectively fiddling with the VBUS supply behind the USB driver's
-back.
 
-It also allows to disable the regulator if VBUS isn't going to be
-used, for example because the driver has not be compiled in, or that
-it's actually a module that might (or might not) be loaded later.
+[1]... point three recurring  ;-)
 
-Finally, it also allows to keep track of who consumes what amount of
-power in the system, which is a nice plus.
 
-> The RT9701GB switch also provides the current limiting feature in
-> addition to the ability to enable/disable the VBUS power. Probably
-> this was a real reason why it was added to the board.
-> 
-> Everything boils down to the question whether we want to have a
-> common dts file for pcDuino1 and pcDuino2 or decide to split them.
+>>> +	}
+>>> +
+>>> +	if (i == ST_RNG_FILL_FIFO_TIMEOUT)
+>>> +		return 0;
+>>
+>> Isn't a timeout an error condition?
+>
+> Yes, which is why we're returning 0.  In this context 0 == 'no data'.
+> This will be converted to -EAGAIN if the caller did not request
+> NONBLOCKING.
 
-You don't have to split them, if this is really the only difference,
-just create a new dts for the pcduino2 that includes the first one,
-and add the supply there.
+I took the view that hitting the timeout means the hardware is broken. 
+Is it likely that the next time we call it there will be data ready? If 
+it is should it be trusted?
 
-Thanks!
-Maxime
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---lHuqAdgBYNjQz/wy--
+Daniel.
