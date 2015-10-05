@@ -1,388 +1,200 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2] extcon: gpio: Add the support for Device tree bindings
-Date: Mon, 05 Oct 2015 16:00:33 +0900
-Message-ID: <1444028433-11837-1-git-send-email-cw00.choi@samsung.com>
-References: <1444028299-11755-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1444028299-11755-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] leds: rt5033: Add RT5033 Flash led device driver
+Date: Mon, 5 Oct 2015 08:21:29 +0100
+Message-ID: <20151005072129.GE3377@x1>
+References: <1443778875-18261-1-git-send-email-ingi2.kim@samsung.com>
+ <1443778875-18261-3-git-send-email-ingi2.kim@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443778875-18261-3-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rpurdie@rpsys.net, j.anaszewski@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the support for Device tree bindings of extcon-gpio driver.
-The extcon-gpio device tree node must include the both 'extcon-id' and
-'extcon-gpio' property.
+On Fri, 02 Oct 2015, Ingi Kim wrote:
 
-For exmaple:
-	usb_cable: extcon-gpio-0 {
-		compatible = "extcon-gpio";
-		extcon-id = <EXTCON_USB>;
-		extcon-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-	}
+> This patch adds device driver of Richtek RT5033 PMIC.
+> The driver supports a current regulated output to drive
+> white LEDs for camera flash.
+>=20
+> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+> ---
+>  drivers/leds/Kconfig               |   8 ++
+>  drivers/leds/Makefile              |   1 +
+>  drivers/leds/leds-rt5033.c         | 222 +++++++++++++++++++++++++++=
+++++++++++
+>  drivers/mfd/rt5033.c               |   3 +
+>  include/linux/mfd/rt5033-private.h |  67 +++++++++--
+>  include/linux/mfd/rt5033.h         |  27 ++++-
 
-	ta_cable: extcon-gpio-1 {
-		compatible = "extcon-gpio";
-		extcon-id = <EXTCON_CHG_USB_DCP>;
-		extcon-gpio = <&gpio3 2 GPIO_ACTIVE_LOW>;
-		debounce-ms = <50>;	/* 50 millisecond */
-		wakeup-source;
-	}
+Please pull the MFD changes out into to separate patch(es).
 
-	&dwc3_usb {
-		extcon = <&usb_cable>;
-	};
+>  6 files changed, 317 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/leds/leds-rt5033.c
 
-	&charger {
-		extcon = <&ta_cable>;
-	};
+[...]
 
-Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-This patch is based on following patch[1].
-[1] https://lkml.org/lkml/2015/10/3/304
+> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
+> index d60f916..035421c 100644
+> --- a/drivers/mfd/rt5033.c
+> +++ b/drivers/mfd/rt5033.c
+> @@ -47,6 +47,9 @@ static const struct mfd_cell rt5033_devs[] =3D {
+>  	}, {
+>  		.name =3D "rt5033-battery",
+>  		.of_compatible =3D "richtek,rt5033-battery",
+> +	}, {
+> +		.name =3D "rt5033-led",
+> +		.of_compatible =3D "richtek,rt5033-led",
+>  	},
+>  };
 
-Changes from v1:
-- Create the include/dt-bindings/extcon/extcon.h including the identification
-  of external connector. These definitions are used in dts file.
-- Fix error if CONFIG_OF is disabled.
+Needs to be in a patch of its own.
 
- .../devicetree/bindings/extcon/extcon-gpio.txt     |  38 +++++++
- drivers/extcon/extcon-gpio.c                       | 110 ++++++++++++++++-----
- include/dt-bindings/extcon/extcon.h                |  44 +++++++++
- include/linux/extcon/extcon-gpio.h                 |   6 +-
- 4 files changed, 173 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
- create mode 100644 include/dt-bindings/extcon/extcon.h
+> diff --git a/include/linux/mfd/rt5033-private.h b/include/linux/mfd/r=
+t5033-private.h
+> index 1b63fc2..21c3aff 100644
+> --- a/include/linux/mfd/rt5033-private.h
+> +++ b/include/linux/mfd/rt5033-private.h
+> @@ -25,15 +25,15 @@ enum rt5033_reg {
+>  	/* Reserved 0x09~0x18 */
+>  	RT5033_REG_RT_CTRL1		=3D 0x19,
+>  	/* Reserved 0x1A~0x20 */
+> -	RT5033_REG_FLED_FUNCTION1	=3D 0x21,
+> -	RT5033_REG_FLED_FUNCTION2	=3D 0x22,
+> -	RT5033_REG_FLED_STROBE_CTRL1	=3D 0x23,
+> -	RT5033_REG_FLED_STROBE_CTRL2	=3D 0x24,
+> -	RT5033_REG_FLED_CTRL1		=3D 0x25,
+> -	RT5033_REG_FLED_CTRL2		=3D 0x26,
+> -	RT5033_REG_FLED_CTRL3		=3D 0x27,
+> -	RT5033_REG_FLED_CTRL4		=3D 0x28,
+> -	RT5033_REG_FLED_CTRL5		=3D 0x29,
+> +	RT5033_REG_FL_FUNCTION1		=3D 0x21,
+> +	RT5033_REG_FL_FUNCTION2		=3D 0x22,
+> +	RT5033_REG_FL_STROBE_CTRL1	=3D 0x23,
+> +	RT5033_REG_FL_STROBE_CTRL2	=3D 0x24,
+> +	RT5033_REG_FL_CTRL1		=3D 0x25,
+> +	RT5033_REG_FL_CTRL2		=3D 0x26,
+> +	RT5033_REG_FL_CTRL3		=3D 0x27,
+> +	RT5033_REG_FL_CTRL4		=3D 0x28,
+> +	RT5033_REG_FL_CTRL5		=3D 0x29,
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 000000000000..70c36f729963
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,38 @@
-+GPIO Extcon device
-+
-+This is a virtual device used to generate specific external connector
-+from the GPIO pin connected to a GPIO pin.
-+
-+Required properties:
-+- compatible: Must be "extcon-gpio".
-+- extcon-id: unique id for specific external connector.
-+	     See include/dt-bindings/extcon/extcon.h.
-+- extcon-gpio: GPIO pin to detect the external connector. See gpio binding.
-+
-+Optional properties:
-+- debounce-ms: the debounce dealy for GPIO pin in millisecond.
-+- wakeup-source: Boolean, extcon can wake-up the system.
-+
-+Example: Examples of extcon-gpio node as listed below:
-+
-+	usb_cable: extcon-gpio-0 {
-+		compatible = "extcon-gpio";
-+		extcon-id = <EXTCON_USB>;
-+		extcon-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-+	}
-+
-+	ta_cable: extcon-gpio-1 {
-+		compatible = "extcon-gpio";
-+		extcon-id = <EXTCON_CHG_USB_DCP>;
-+		extcon-gpio = <&gpio3 2 GPIO_ACTIVE_LOW>;
-+		debounce-ms = <50>;	/* 50 millisecond */
-+		wakeup-source;
-+	}
-+
-+	&dwc3_usb {
-+		extcon = <&usb_cable>;
-+	};
-+
-+	&charger {
-+		extcon = <&ta_cable>;
-+	};
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 279ff8f6637d..7f3e24aae0c4 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -1,8 +1,8 @@
- /*
-  * extcon_gpio.c - Single-state GPIO extcon driver based on extcon class
-  *
-- * Copyright (C) 2008 Google, Inc.
-- * Author: Mike Lockwood <lockwood-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-+ * Copyright (C) 2015 Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samsung Electronics
-+ * Copyright (C) 2008 Mike Lockwood <lockwood-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Google, Inc.
-  *
-  * Modified by MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> to support extcon
-  * (originally switch class is supported)
-@@ -26,12 +26,14 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
- 
- struct gpio_extcon_data {
- 	struct extcon_dev *edev;
- 	int irq;
-+	bool irq_wakeup;
- 	struct delayed_work work;
- 	unsigned long debounce_jiffies;
- 
-@@ -61,19 +63,50 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static int gpio_extcon_init(struct device *dev, struct gpio_extcon_data *data)
-+static int gpio_extcon_parse_of(struct device *dev,
-+				struct gpio_extcon_data *data)
- {
--	struct gpio_extcon_pdata *pdata = data->pdata;
-+	struct gpio_extcon_pdata *pdata;
- 	int ret;
- 
--	ret = devm_gpio_request_one(dev, pdata->gpio, GPIOF_DIR_IN,
--				dev_name(dev));
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	ret = device_property_read_u32(dev, "extcon-id", &pdata->extcon_id);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	data->id_gpiod = devm_gpiod_get(dev, "extcon", GPIOD_IN);
- 	if (ret < 0)
- 		return ret;
- 
--	data->id_gpiod = gpio_to_desc(pdata->gpio);
--	if (!data->id_gpiod)
--		return -EINVAL;
-+	data->irq_wakeup = device_property_read_bool(dev, "wakeup-source");
-+
-+	device_property_read_u32(dev, "debounce-ms", &pdata->debounce);
-+
-+	pdata->irq_flags = (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING
-+				| IRQF_ONESHOT);
-+
-+	data->pdata = pdata;
-+	return 0;
-+}
-+
-+static int gpio_extcon_init(struct device *dev, struct gpio_extcon_data *data)
-+{
-+	struct gpio_extcon_pdata *pdata = data->pdata;
-+	int ret;
-+
-+	if (!data->id_gpiod) {
-+		ret = devm_gpio_request_one(dev, pdata->gpio, GPIOF_DIR_IN,
-+					dev_name(dev));
-+		if (ret < 0)
-+			return ret;
-+
-+		data->id_gpiod = gpio_to_desc(pdata->gpio);
-+		if (!data->id_gpiod)
-+			return -EINVAL;
-+	}
- 
- 	if (pdata->debounce) {
- 		ret = gpiod_set_debounce(data->id_gpiod,
-@@ -96,16 +129,20 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 	struct gpio_extcon_data *data;
- 	int ret;
- 
--	if (!pdata)
--		return -EBUSY;
--	if (!pdata->irq_flags || pdata->extcon_id > EXTCON_NONE)
--		return -EINVAL;
--
--	data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
--				   GFP_KERNEL);
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
--	data->pdata = pdata;
-+
-+	if (!pdata) {
-+		ret = gpio_extcon_parse_of(&pdev->dev, data);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		data->pdata = pdata;
-+	}
-+
-+	if (!data->pdata->irq_flags || data->pdata->extcon_id == EXTCON_NONE)
-+		return -EINVAL;
- 
- 	/* Initialize the gpio */
- 	ret = gpio_extcon_init(&pdev->dev, data);
-@@ -113,7 +150,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	/* Allocate the memory of extcon devie and register extcon device */
--	data->edev = devm_extcon_dev_allocate(&pdev->dev, &pdata->extcon_id);
-+	data->edev = devm_extcon_dev_allocate(&pdev->dev,
-+						&data->pdata->extcon_id);
- 	if (IS_ERR(data->edev)) {
- 		dev_err(&pdev->dev, "failed to allocate extcon device\n");
- 		return -ENOMEM;
-@@ -130,7 +168,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 	 * is attached or detached.
- 	 */
- 	ret = devm_request_any_context_irq(&pdev->dev, data->irq,
--					gpio_irq_handler, pdata->irq_flags,
-+					gpio_irq_handler,
-+					data->pdata->irq_flags,
- 					pdev->name, data);
- 	if (ret < 0)
- 		return ret;
-@@ -139,6 +178,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 	/* Perform initial detection */
- 	gpio_extcon_work(&data->work.work);
- 
-+	device_init_wakeup(&pdev->dev, data->irq_wakeup);
-+
- 	return 0;
- }
- 
-@@ -152,11 +193,23 @@ static int gpio_extcon_remove(struct platform_device *pdev)
- }
- 
- #ifdef CONFIG_PM_SLEEP
-+static int gpio_extcon_suspend(struct device *dev)
-+{
-+	struct gpio_extcon_data *data = dev_get_drvdata(dev);
-+
-+	if (data->irq_wakeup)
-+		enable_irq_wake(data->irq);
-+
-+	return 0;
-+}
-+
- static int gpio_extcon_resume(struct device *dev)
- {
--	struct gpio_extcon_data *data;
-+	struct gpio_extcon_data *data = dev_get_drvdata(dev);
-+
-+	if (data->irq_wakeup)
-+		disable_irq_wake(data->irq);
- 
--	data = dev_get_drvdata(dev);
- 	if (data->pdata->check_on_resume)
- 		queue_delayed_work(system_power_efficient_wq,
- 			&data->work, data->debounce_jiffies);
-@@ -165,7 +218,18 @@ static int gpio_extcon_resume(struct device *dev)
- }
- #endif
- 
--static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
-+#if defined(CONFIG_OF)
-+static const struct of_device_id gpio_extcon_of_match[] = {
-+	{ .compatible = "extcon-gpio", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, gpio_extcon_of_match);
-+#else
-+#define gpio_extcon_of_match	NULL
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops,
-+			gpio_extcon_suspend, gpio_extcon_resume);
- 
- static struct platform_driver gpio_extcon_driver = {
- 	.probe		= gpio_extcon_probe,
-@@ -173,11 +237,13 @@ static struct platform_driver gpio_extcon_driver = {
- 	.driver		= {
- 		.name	= "extcon-gpio",
- 		.pm	= &gpio_extcon_pm_ops,
-+		.of_match_table = gpio_extcon_of_match,
- 	},
- };
- 
- module_platform_driver(gpio_extcon_driver);
- 
-+MODULE_AUTHOR("Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
- MODULE_AUTHOR("Mike Lockwood <lockwood-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>");
- MODULE_DESCRIPTION("GPIO extcon driver");
- MODULE_LICENSE("GPL");
-diff --git a/include/dt-bindings/extcon/extcon.h b/include/dt-bindings/extcon/extcon.h
-new file mode 100644
-index 000000000000..14c7f36b2206
---- /dev/null
-+++ b/include/dt-bindings/extcon/extcon.h
-@@ -0,0 +1,44 @@
-+/*
-+ * This header provides constants for most extcon bindings.
-+ *
-+ * Most extcon bindings include the unique identification format.
-+ * In most cases, the unique id format uses the standard values/macro
-+ * defined in this header.
-+ */
-+
-+#ifndef _DT_BINDINGS_EXTCON_EXTCON_H
-+#define _DT_BINDINGS_EXTCON_EXTCON_H
-+
-+/* USB external connector */
-+#define EXTCON_USB		1
-+#define EXTCON_USB_HOST		2
-+
-+/* Charging external connector */
-+#define EXTCON_CHG_USB		5
-+#define EXTCON_CHG_USB_FAST	6
-+#define EXTCON_CHG_USB_SLOW	7
-+#define EXTCON_CHG_USB_DCP	8
-+#define EXTCON_CHG_USB_CDP	9
-+
-+/* Jack external connector */
-+#define EXTCON_JACK_MICROPHONE	20
-+#define EXTCON_JACK_HEADPHONE	21
-+#define EXTCON_JACK_LINE_IN	22
-+#define EXTCON_JACK_LINE_OUT	23
-+#define EXTCON_JACK_VIDEO_IN	24
-+#define EXTCON_JACK_VIDEO_OUT	25
-+#define EXTCON_JACK_SPDIF_IN	26
-+#define EXTCON_JACK_SPDIF_OUT	27
-+
-+/* Display external connector */
-+#define EXTCON_DISP_HDMI	40
-+#define EXTCON_DISP_MHL		41
-+#define EXTCON_DISP_DVI		42
-+#define EXTCON_DISP_VGA		43
-+
-+/* Miscellaneous external connector */
-+#define EXTCON_DOCK		60
-+#define EXTCON_JIG		61
-+#define EXTCON_MECHANICAL	62
-+
-+#endif /* _DT_BINDINGS_EXTCON_EXTCON_H */
-diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
-index 7cacafb78b09..bcc6d7f7116a 100644
---- a/include/linux/extcon/extcon-gpio.h
-+++ b/include/linux/extcon/extcon-gpio.h
-@@ -1,8 +1,8 @@
- /*
-  * Single-state GPIO extcon driver based on extcon class
-  *
-- * Copyright (C) 2012 Samsung Electronics
-- * Author: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ * Copyright (C) 2015 Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samsung Electronics
-+ * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samsung Electronics
-  *
-  * based on switch class driver
-  * Copyright (C) 2008 Google, Inc.
-@@ -38,7 +38,7 @@ struct gpio_extcon_pdata {
- 	unsigned int extcon_id;
- 	unsigned gpio;
- 	bool gpio_active_low;
--	unsigned long debounce;
-+	unsigned int debounce;
- 	unsigned long irq_flags;
- 
- 	bool check_on_resume;
--- 
-1.8.0
+Why this change?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The previous naming convention was better.
+
+>  	/* Reserved 0x2A~0x40 */
+>  	RT5033_REG_CTRL			=3D 0x41,
+>  	RT5033_REG_BUCK_CTRL		=3D 0x42,
+> @@ -93,6 +93,55 @@ enum rt5033_reg {
+>  #define RT5033_RT_CTRL1_UUG_MASK	0x02
+>  #define RT5033_RT_HZ_MASK		0x01
+> =20
+> +/* RT5033 FLED Function1 register */
+> +#define RT5033_FL_FLED1_MASK		0x94
+> +#define RT5033_FL_STROBE_SEL		0x04
+> +#define RT5033_FL_PIN_CTRL		0x10
+> +#define RT5033_FL_RESET			0x80
+> +
+> +/* RT5033 FLED Function2 register */
+> +#define RT5033_FL_FLED2_MASK		0x81
+> +#define RT5033_FL_ENFLED		0x01
+> +#define RT5033_FL_SREG_STROBE		0x80
+> +
+> +/* RT5033 FLED Strobe Control1 */
+> +#define RT5033_FL_STRBCTRL1_MASK	0xFF
+> +#define RT5033_FL_STRBCTRL1_TM_CUR_MAX	0xE0
+> +#define RT5033_FL_STRBCTRL1_FL_CUR_DEF	0x0D
+> +#define RT5033_FL_STRBCTRL1_FL_CUR_MAX	0x1F
+> +
+> +/* RT5033 FLED Strobe Control2 */
+> +#define RT5033_FL_STRBCTRL2_MASK	0x3F
+> +#define RT5033_FL_STRBCTRL2_TM_DEF	0x0F
+> +#define RT5033_FL_STRBCTRL2_TM_MAX	0x3F
+> +
+> +/* RT5033 FLED Control1 */
+> +#define RT5033_FL_CTRL1_MASK		0xF7
+> +#define RT5033_FL_CTRL1_TORCH_CUR_DEF	0x20
+> +#define RT5033_FL_CTRL1_TORCH_CUR_MAX	0xF0
+> +#define RT5033_FL_CTRL1_LBP_DEF		0x02
+> +#define RT5033_FL_CTRL1_LBP_MAX		0x07
+> +
+> +/* RT5033 FLED Control2 */
+> +#define RT5033_FL_CTRL2_MASK		0xFF
+> +#define RT5033_FL_CTRL2_VMID_DEF	0x37
+> +#define RT5033_FL_CTRL2_VMID_MAX	0x3F
+> +#define RT5033_FL_CTRL2_TRACK_ALIVE	0x40
+> +#define RT5033_FL_CTRL2_MID_TRACK	0x80
+> +
+> +/* RT5033 FLED Control4 */
+> +#define RT5033_FL_CTRL4_MASK		0xE0
+> +#define RT5033_FL_CTRL4_RESV		0x14
+> +#define RT5033_FL_CTRL4_VTRREG_DEF	0x40
+> +#define RT5033_FL_CTRL4_VTRREG_MAX	0x60
+> +#define RT5033_FL_CTRL4_TRACK_CLK	0x80
+> +
+> +/* RT5033 FLED Control5 */
+> +#define RT5033_FL_CTRL5_MASK		0xC0
+> +#define RT5033_FL_CTRL5_RESV		0x10
+> +#define RT5033_FL_CTRL5_TA_GOOD		0x40
+> +#define RT5033_FL_CTRL5_TA_EXIST	0x80
+> +
+>  /* RT5033 control register */
+>  #define RT5033_CTRL_FCCM_BUCK_MASK		0x00
+>  #define RT5033_CTRL_BUCKOMS_MASK		0x01
+> diff --git a/include/linux/mfd/rt5033.h b/include/linux/mfd/rt5033.h
+> index 6cff5cf..45c97b7 100644
+> --- a/include/linux/mfd/rt5033.h
+> +++ b/include/linux/mfd/rt5033.h
+> @@ -12,10 +12,11 @@
+>  #ifndef __RT5033_H__
+>  #define __RT5033_H__
+> =20
+> -#include <linux/regulator/consumer.h>
+> +#include <linux/led-class-flash.h>
+>  #include <linux/i2c.h>
+> -#include <linux/regmap.h>
+>  #include <linux/power_supply.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> =20
+>  /* RT5033 regulator IDs */
+>  enum rt5033_regulators {
+> @@ -59,4 +60,26 @@ struct rt5033_charger {
+>  	struct rt5033_charger_data	*chg;
+>  };
+> =20
+> +/* RT5033 led platform data */
+> +
+> +struct rt5033_led_config_data {
+> +	/* maximum LED current in movie mode */
+> +	u32 torch_max_microamp;
+> +	/* maximum LED current in flash mode */
+> +	u32 flash_max_microamp;
+> +	/* maximum flash timeout */
+> +	u32 flash_max_timeout;
+> +	/* max LED brightness level */
+> +	enum led_brightness max_brightness;
+> +};
+
+Rid these comments.  Use kerneldoc format instead.
+
+> +struct rt5033_led {
+> +	struct device		*dev;
+> +	struct rt5033_dev	*rt5033;
+> +	struct regmap		*regmap;
+> +
+> +	/* Related LED class device */
+> +	struct led_classdev	cdev;
+> +};
+> +
+>  #endif /* __RT5033_H__ */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
