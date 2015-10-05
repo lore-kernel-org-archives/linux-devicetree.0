@@ -1,79 +1,64 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 2/2] dt: update Tegra PCIe binding for Tegra210
-Date: Mon,  5 Oct 2015 17:41:57 -0600
-Message-ID: <1444088517-31615-2-git-send-email-swarren@wwwdotorg.org>
-References: <1444088517-31615-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444088517-31615-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 3/3] mfd: sec-core: Disable buck voltage reset on watchdog
+ falling edge
+Date: Tue, 06 Oct 2015 08:49:16 +0900
+Message-ID: <56130C7C.6000207@samsung.com>
+References: <1443774351-28766-1-git-send-email-k.kozlowski@samsung.com>
+ <1443774351-28766-3-git-send-email-k.kozlowski@samsung.com>
+ <2375080.1KPJ21Fk4I@amdc1976>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <2375080.1KPJ21Fk4I@amdc1976>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 05.10.2015 22:35, Bartlomiej Zolnierkiewicz wrote:
+> 
+> Hi,
+> 
+> On Friday, October 02, 2015 05:25:51 PM Krzysztof Kozlowski wrote:
+>> The WRSTBI bit (disabled by default but enabled by bootloader), when
+>> set, is responsible for resetting voltages to default values of
+>> certain bucks on falling edge of Warm Reset Input pin from AP.
+>>
+>> However on some boards (with S2MPS13) the pin is pulled down so any
+>> suspend will effectively trigger the reset of bucks supplying the power
+>> to the little and big cores. In the same time when resuming, these bucks
+>> must provide voltage greater or equal to voltage before suspend to match
+>> the frequency chosen by cpufreq. If voltage (default value of voltage
+>> after reset) is lower than one set by cpufreq before suspend, then
+>> system will hang during resuming.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> I tested this (with some additional Exynos5433 patches) and it works
+> like expected (suspend/resume issue is fixed).
+> 
+> Tested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> 
 
-Reword the description of the ranges property so it is correct
-irrespective of how many #address-cells the PCI node's parent uses.
+Thanks!
 
-Be more explicit about the valid values for the compatible property, and
-in particular point out that Tegra210 isn't fully backwards-compatible due
-to the introduction of some HW bugs whose workarounds are not present in
-drivers written solely for previous chips. with Tegra124,
+> You could also add:
+> 
+> Reported-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> 
+> (since the issue got narrowed down and reported to you by me :).
 
-Still "TODO" is to fill in a complete "Power supplies for Tegra210"
-section. My main use-case for the binding is U-Boot, which doesn't use
-regulator bindings at present, so I have not yet researched this aspect
-of the hardware.
+I didn't put it because I wasn't sure who was the author of our report.
+I'll wait a one more day for any comments and add it in v2/resend.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/pci/nvidia,tegra20-pcie.txt           | 27 +++++++++++++++-------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+BTW, any comments on the binding itself?
+Actually I had hard time choosing the name for binding because unlike
+the ACOKB the WRSTBI pin is not grounded but pulled down. However it is
+quite similar so I stick to the same convention:
+ - samsung,s2mps11-acokb-ground
+ - samsung,s2mps11-wrstbi-ground
 
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-index 75321ae23c08..3d92934a079c 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-@@ -1,10 +1,15 @@
- NVIDIA Tegra PCIe controller
- 
- Required properties:
--- compatible: For Tegra20, must contain "nvidia,tegra20-pcie".  For Tegra30,
--  "nvidia,tegra30-pcie".  For Tegra124, must contain "nvidia,tegra124-pcie".
--  Otherwise, must contain "nvidia,<chip>-pcie", plus one of the above, where
--  <chip> is tegra132 or tegra210.
-+- compatible: Valid options are:
-+  Tegra20: "nvidia,tegra20-pcie".
-+  Tegra30: "nvidia,tegra30-pcie".
-+  Tegra124: "nvidia,tegra124-pcie".
-+  Tegra132: "nvidia,tegra132-pcie", "nvidia,tegra124-pcie".
-+  Tegra210: "nvidia,tegra210-pcie".
-+    Note that Tegra210 is not backwards-compatible with Tegra124 due to the
-+    introduction of some HW bugs whose workarounds are not present in drivers
-+    written solely for previous chips.
- - device_type: Must be "pci"
- - reg: A list of physical base address and length for each set of controller
-   registers. Must contain an entry for each entry in the reg-names property.
-@@ -27,10 +32,16 @@ Required properties:
-     CPU address space
- - #size-cells: Size representation for root ports (must be 2)
- - ranges: Describes the translation of addresses for root ports and standard
--  PCI regions. The entries must be 6 cells each, where the first three cells
--  correspond to the address as described for the #address-cells property
--  above, the fourth cell is the physical CPU address to translate to and the
--  fifth and six cells are as described for the #size-cells property above.
-+  PCI regions. The entries must be (na_pcie + na_parent + ns_pcie) cells each,
-+  where:
-+    na_pcie refers to #address-cells in the PCIe controller,
-+    na_parent refers to #address-cells in the PCIe controller's parent node,
-+    ns_pcie refers to #size-cells in the PCIe controller,
-+  The first na_pcie cells correspond to the address as described for the
-+  #address-cells property. The next na_parent cells contain the physical CPU
-+  address to translate to and the final ns_pcie cells are as described for the
-+  #size-cells property above.
-+  Multiple entries must be present:
-   - The first two entries are expected to translate the addresses for the root
-     port registers, which are referenced by the assigned-addresses property of
-     the root port nodes (see below).
--- 
-1.9.1
+
+Best regards,
+Krzysztof
