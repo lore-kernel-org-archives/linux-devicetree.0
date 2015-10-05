@@ -1,82 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] regulator: max77802: Add input supply properties to DT
- binding doc
-Date: Mon, 5 Oct 2015 11:15:16 -0500
-Message-ID: <CAL_JsqKg-NdDFuVcff2YGZExkPHwTaO5c-hpyy2Dai75RAReDA@mail.gmail.com>
-References: <1444057643-29672-1-git-send-email-javier@osg.samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] soc: sunxi: Add driver for Allwinner
+ Reduced Serial Bus
+Date: Mon, 5 Oct 2015 17:29:11 +0100
+Message-ID: <20151005162911.GA12635@sirena.org.uk>
+References: <1443700673-24312-1-git-send-email-wens@csie.org>
+ <1443700673-24312-3-git-send-email-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444057643-29672-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/jamoCVtoCI0aYZY"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBIWLZKYAKGQESKXZUEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443700673-24312-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 5, 2015 at 10:07 AM, Javier Martinez Canillas
-<javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
-> The max77802 regulator driver defines the supply name for each regulator
-> so these can be described in DT but is not mentioned in the binding doc.
->
-> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->
-> ---
->
->  .../devicetree/bindings/regulator/max77802.txt     | 23 +++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/regulator/max77802.txt b/Documentation/devicetree/bindings/regulator/max77802.txt
-> index 79e5476444f7..b466689c47ea 100644
-> --- a/Documentation/devicetree/bindings/regulator/max77802.txt
-> +++ b/Documentation/devicetree/bindings/regulator/max77802.txt
-> @@ -8,7 +8,26 @@ regulators that can be controlled over I2C.
->
->  Following properties should be present in main device node of the MFD chip.
->
-> -Optional node:
+--/jamoCVtoCI0aYZY
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-regulators is still a node, so you should have 2 sections.
+On Thu, Oct 01, 2015 at 07:57:48PM +0800, Chen-Yu Tsai wrote:
+> Reduced Serial Bus (RSB) is an Allwinner proprietery interface
+> used to communicate with PMICs and other peripheral ICs.
 
-> +Optional properties:
-> +- inb1-supply:  The input supply for BUCK1
-> +- inb2-supply:  The input supply for BUCK2
-> +- inb3-supply:  The input supply for BUCK3
-> +- inb4-supply:  The input supply for BUCK4
-> +- inb5-supply:  The input supply for BUCK5
-> +- inb6-supply:  The input supply for BUCK6
-> +- inb7-supply:  The input supply for BUCK7
-> +- inb8-supply:  The input supply for BUCK8
-> +- inb9-supply:  The input supply for BUCK9
-> +- inb10-supply: The input supply for BUCK10
-> +- inl1-supply:  The input supply for LDO8 and LDO15
-> +- inl2-supply:  The input supply for LDO17, LDO27, LDO30 and LDO35
-> +- inl3-supply:  The input supply for LDO3, LDO5, LDO6 and LDO7
-> +- inl4-supply:  The input supply for LDO10, LDO11, LDO13 and LDO14
-> +- inl5-supply:  The input supply for LDO9 and LDO19
-> +- inl6-supply:  The input supply for LDO4, LDO21, LDO24 and LDO33
-> +- inl7-supply:  The input supply for LDO18, LDO20, LDO28 and LDO29
-> +- inl9-supply:  The input supply for LDO12, LDO23, LDO25, LDO26, LDO32 and LDO34
-> +- inl10-supply: The input supply for LDO1 and LDO2
->  - regulators : The regulators of max77802 have to be instantiated
->    under subnode named "regulators" using the following format.
->
-> @@ -58,6 +77,8 @@ Example:
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->
-> +               inb1-supply = <&parent_reg>;
-> +
->                 regulators {
->                         ldo1_reg: LDO1 {
->                                 regulator-name = "vdd_1v0";
-> --
-> 2.4.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regmap bits
+
+Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--/jamoCVtoCI0aYZY--
