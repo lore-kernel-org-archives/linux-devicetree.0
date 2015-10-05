@@ -1,189 +1,61 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v2] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Mon, 5 Oct 2015 14:08:52 +0000
-Message-ID: <8520D5D51A55D047800579B0941471980169054D@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1443689961-23909-1-git-send-email-bharatku@xilinx.com>
- <2677327.lnRZhqx5GI@wuerfel>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 13/13] scsi: ufs: Add exynos ufs platform data
+Date: Mon, 5 Oct 2015 09:11:33 -0500
+Message-ID: <CAL_JsqJWzqMkkMH8myFX1eeuV-U25Ri_nWhjj2mb3AWh5tzDZA@mail.gmail.com>
+References: <201510011845.GN7Kisc4%fengguang.wu@intel.com> <1790578.NZeHVGuJeN@wuerfel>
+ <56123165.2060500@samsung.com> <14885029.SsJgQkuPcG@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2677327.lnRZhqx5GI@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rjui@broadcom.com" <rjui@broadcom.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "bhelgaas@google.com" <bhelgaas@google.com>, Ravikiran Gummaluri <rgummal@xilinx.com>, "treding@nvidia.com" <treding@nvidia.com>, "tinamdar@apm.com" <tinamdar@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <14885029.SsJgQkuPcG@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Yaniv Gardi <ygardi@codeaurora.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, Amit Kachhap <amit.daniel@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 October 2015 14:29:21 Bharat Kumar Gogada wrote:
-> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> ---
-> Removed unneccessary comments
-> Modified setup_sspl implementation
-> Added more details in binding Documentation
-> ---
->  .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   49 +
->  drivers/pci/host/Kconfig                           |    9 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pcie-xilinx-nwl.c                 | 1029 ++++++++++++++++++++
->  4 files changed, 1088 insertions(+)
->  create mode 100644 
-> Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
->  create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt 
-> b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-> new file mode 100644
-> index 0000000..ed87184
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-> @@ -0,0 +1,49 @@
-> +* Xilinx NWL PCIe Root Port Bridge DT description
-> +
-> +Required properties:
-> +- compatible: Should contain "xlnx,nwl-pcie-2.11"
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- reg: Should contain Bridge, PCIe Controller registers location,
-> +	configuration sapce, and length
-> +- reg-names: Must include the following entries:
-> +	"breg": bridge registers
-> +	"pcireg": PCIe controller registers
-> +	"cfg": configuration space region
-> +- device_type: must be "pci"
-> +- interrupts: Should contain NWL PCIe interrupt
-> +- interrupt-names: Must include the following entries:
-> +	"misc": interrupt asserted when miscellaneous is recieved
-> +	"intx": interrupt that is asserted when an legacy interrupt is received
-> +	"msi_1, msi_0": interrupt asserted when msi is recieved
+On Mon, Oct 5, 2015 at 4:06 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday 05 October 2015 13:44:29 Alim Akhtar wrote:
+>> CCing Rob Herring,
+>>
+>> Hi Arnd,
+>>
+>> On 10/01/2015 04:59 PM, Arnd Bergmann wrote:
+>> > On Thursday 01 October 2015 18:46:34 kbuild test robot wrote:
+>> >> [auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
+>> >>
+>> >> config: x86_64-allmodconfig (attached as .config)
+>> >> reproduce:
+>> >>          git checkout 6e153e3bf7c68b019e987c5a0ffadebd9c7d4fbb
+>> >>          # save the attached .config to linux build tree
+>> >>          make ARCH=x86_64
+>> >>
+>> >> All error/warnings (new ones prefixed by >>):
+>> >>
+>> >>>> ERROR: "ufs_hba_exynos_ops" [drivers/scsi/ufs/ufshcd-pltfrm.ko] undefined!
+>> >>
+>> >>
+>> >
+>> > Ah, this seems to be a case of layering violation. It would be best to
+>> > restructure the code so that the exynos driver registers a platform_driver
+>> > by itself for the respective DT compatible string, and then calls
+>> > into the common code from its probe function, rather than having the
+>> > generic driver know about the specific backends.
+>> >
+>> > That approach will also make the generic driver more scalable as we
+>> > add further chip-specific variations, and matches what we do in other
+>> > drivers.
+>> >
+>>
+>> Looks like some discussions on ufs variant driver probe method happened
+>> here [1] few months back.
+>> [1]-> https://lkml.org/lkml/2015/6/3/180
+>
+> Hmm, too bad we didn't catch it then, it's much more work to fix now.
 
-The msi and intx interrupts don't really belong here: For intx, please use an interrupt-map property as the other host drivers do.
+What you suggested is what is being implemented[1]. It is not merged
+yet. The core is a library and the platform specific parts create the
+driver.
 
-For MSI, the usual answer is that there should be a separate device node for the MSI controller, and an msi-parent property in the PCI host.
-Our current GIC version does not have separate msi controller, so is it necessary to have separate msi node ?
+Rob
 
-This lets you use the same code for hosts that have a GICv2m or GICv3 that comes with its own MSI controller.
-
-> +/**
-> + * struct nwl_pcie - PCIe port information
-> + *
-> + * @dev: Device pointer
-> + * @breg_base: IO Mapped Bridge Register Base
-> + * @pcireg_base: IO Mapped PCIe controller attributes
-> + * @ecam_base: IO Mapped configuration space
-> + * @phys_breg_base: Physical Bridge Register Base
-> + * @phys_pcie_reg_base: Physical PCIe Controller Attributes
-> + * @phys_ecam_base: Physical Configuration Base
-> + * @breg_size: Bridge Register space
-> + * @pcie_reg_size: PCIe controller attributes space
-> + * @ecam_size: PCIe Configuration space
-> + * @irq_intx: Legacy interrupt number
-> + * @irq_misc: Misc interrupt number
-> + * @ecam_value: ECAM value
-> + * @last_busno: Last Bus number configured
-> + * @link_up: Link status flag
-> + * @enable_msi_fifo: Enable MSI FIFO mode
-> + * @bus: PCI bus
-> + * @msi: MSI interrupt info
-> + */
-> +struct nwl_pcie {
-> +	struct device *dev;
-> +	void __iomem *breg_base;
-> +	void __iomem *pcireg_base;
-> +	void __iomem *ecam_base;
-> +	u32 phys_breg_base;
-> +	u32 phys_pcie_reg_base;
-> +	u32 phys_ecam_base;
-
-These should probably be phys_addr_t.
-
-> + * nwl_setup_sspl - Set Slot Power limit
-> + *
-> + * @pcie: PCIe port information
-> + */
-> +static int nwl_setup_sspl(struct nwl_pcie *pcie) {
-> +	unsigned int status;
-> +	int retval = 0;
-> +
-> +	do {
-> +		status = nwl_bridge_readl(pcie, TX_PCIE_MSG) & MSG_BUSY_BIT;
-> +		if (!status) {
-> +			/*
-> +			 * Generate the TLP message for a single EP
-> +			 * [TODO] Add a multi-endpoint code
-> +			 */
-> +			nwl_bridge_writel(pcie, 0x0,
-> +					  TX_PCIE_MSG + TX_PCIE_MSG_CNTL);
-> +			nwl_bridge_writel(pcie, 0x0,
-> +					  TX_PCIE_MSG + TX_PCIE_MSG_SPEC_LO);
-> +			nwl_bridge_writel(pcie, 0x0,
-> +					  TX_PCIE_MSG + TX_PCIE_MSG_SPEC_HI);
-> +			nwl_bridge_writel(pcie, 0x0,
-> +					  TX_PCIE_MSG + TX_PCIE_MSG_DATA);
-> +			/* Pattern to generate SSLP TLP */
-> +			nwl_bridge_writel(pcie, PATTRN_SSLP_TLP,
-> +					  TX_PCIE_MSG + TX_PCIE_MSG_CNTL);
-> +			nwl_bridge_writel(pcie, RANDOM_DIGIT,
-> +					  TX_PCIE_MSG + TX_PCIE_MSG_DATA);
-> +			nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
-> +					  TX_PCIE_MSG) | 0x1, TX_PCIE_MSG);
-> +			status = 0;
-> +			mdelay(2);
-
-That is a really long delay. Can you use msleep(2) instead here?
-
-> +
-> +/* PCIe operations */
-> +static struct pci_ops nwl_pcie_ops = {
-> +	.read  = nwl_nwl_readl_config,
-> +	.write = nwl_nwl_writel_config,
-> +};
-	
-If the config space access is using ECAM, you should be able to use the generic implementation for that. I don't know how far we got in splitting that out, but it would be nice to not duplicate that here.
-We need configuration base address for checking condition for nwl_setup_sspl function so we are not using the generic implementation.  
-
-> +
-> +static irqreturn_t nwl_pcie_leg_handler(int irq, void *data) {
-> +	struct nwl_pcie *pcie = (struct nwl_pcie *)data;
-> +	u32 leg_stat;
-> +
-> +	/* Checking for legacy interrupts */
-> +	leg_stat = nwl_bridge_readl(pcie, MSGF_LEG_STATUS) &
-> +				MSGF_LEG_SR_MASKALL;
-> +	if (!leg_stat)
-> +		return IRQ_NONE;
-> +
-> +	if (leg_stat & MSGF_LEG_SR_INTA)
-> +		dev_dbg(pcie->dev, "legacy interruptA\n");
-> +
-> +	if (leg_stat & MSGF_LEG_SR_INTB)
-> +		dev_dbg(pcie->dev, "legacy interruptB\n");
-> +
-> +	if (leg_stat & MSGF_LEG_SR_INTC)
-> +		dev_dbg(pcie->dev, "legacy interruptC\n");
-> +
-> +	if (leg_stat & MSGF_LEG_SR_INTD)
-> +		dev_dbg(pcie->dev, "legacy interruptD\n");
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-This does not appear to be an appropriate implementation. I suspect what you need to do here is to model this as an irq_chip_generic, which should be able to handle the status/mask/pending registers and provide the irq domain that you will need for your DT irq-map property.
-
-	Arnd
-
-Bharat
+[1] https://lkml.org/lkml/2015/9/2/364
