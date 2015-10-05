@@ -1,89 +1,41 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 1/5] mailbox: dt: Supply bindings for ST's Mailbox IP
-Date: Mon,  5 Oct 2015 14:02:16 +0100
-Message-ID: <1444050140-24733-2-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v4 5/5] ARM: STi: DT: STiH407: Enable Mailbox testing facility
+Date: Mon,  5 Oct 2015 14:02:20 +0100
+Message-ID: <1444050140-24733-6-git-send-email-lee.jones@linaro.org>
 References: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, jassisinghbrar@gmail.com
+Cc: jassisinghbrar@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
+
+This patch supplies a Client node to enable the Mailbox testing
+facility.  It will be used to send and receive messages from any
+given co-processor in order to test the STi Mailbox Controller
+driver.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/mailbox/sti-mailbox.txt    | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+ arch/arm/boot/dts/stih407-family.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-new file mode 100644
-index 0000000..9fb4400
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-@@ -0,0 +1,52 @@
-+ST Microelectronics Mailbox Driver
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 32da3f8..ac1d1ee 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -566,6 +566,12 @@
+ 			};
+ 		};
+ 
++		mailbox_test {
++			compatible = "mailbox_test";
++			mboxes = <&mailbox2 1 31>, <&mailbox0 1 31>;
++			mbox-names = "tx", "rx";
++		};
 +
-+Each ST Mailbox IP currently consists of 4 instances of 32 channels.  Messages
-+are passed between Application and Remote processors using shared memory.
-+
-+Controller
-+----------
-+
-+Required properties:
-+- compatible		: Should be "st,stih407-mailbox"
-+- reg			: Offset and length of the device's register set
-+- mbox-name		: Name of the mailbox
-+- #mbox-cells:		: Must be 2
-+			  <&phandle instance channel direction>
-+			    phandle   : Label name of controller
-+			    instance  : Instance number
-+			    channel   : Channel number
-+
-+Optional properties
-+- interrupts		: Contains the IRQ line for a Rx mailbox
-+- tx-only		: Denotes Mailbox cannot receive messages
-+
-+Example:
-+
-+mailbox0: mailbox@0  {
-+	compatible	= "st,stih407-mailbox";
-+	reg		= <0x08f00000 0x1000>;
-+	interrupts	= <GIC_SPI 1 IRQ_TYPE_NONE>;
-+	#mbox-cells	= <2>;
-+	mbox-name	= "a9";
-+};
-+
-+Client
-+------
-+
-+Required properties:
-+- compatible		: Many (See the client docs)
-+- reg			: Shared (between Application and Remote) memory address
-+- mboxes		: Standard property to specify a Mailbox (See ./mailbox.txt)
-+			  Cells must match 'mbox-cells' (See Controller docs above)
-+
-+Optional properties
-+- mbox-names		: Name given to channels seen in the 'mboxes' property.
-+
-+Example:
-+
-+mailbox_test {
-+	compatible	= "mailbox_test";
-+	reg		= <0x[shared_memory_address], [shared_memory_size]>;
-+	mboxes		= <&mailbox2 0 1>, <&mailbox0 2 1>;
-+	mbox-names	= "tx",	"rx";
-+};
+ 		mailbox0: mailbox@0  {
+ 			compatible	= "st,stih407-mailbox";
+ 			reg		= <0x8f00000 0x1000>;
 -- 
 1.9.1
