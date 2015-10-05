@@ -1,39 +1,92 @@
-From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] firmware: arm_scpi: Extend to support sensors
-Date: Mon, 05 Oct 2015 13:48:12 +0100
-Message-ID: <9hhlhbhiir7.fsf@e105922-lin.cambridge.arm.com>
-References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
-	<1442335861-7282-3-git-send-email-punit.agrawal@arm.com>
-	<560EB273.7000804@arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun4i: Allow to use the PH6
+ pin for GPIO on pcDuino1/2
+Date: Mon, 5 Oct 2015 14:49:49 +0200
+Message-ID: <20151005124949.GM2696@lukather>
+References: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
+ <1443985128-23137-2-git-send-email-siarhei.siamashka@gmail.com>
+ <CAGb2v65n6ymon+sEASa726sam0KLOvMPbxTxCqvV4j0ust2PCA@mail.gmail.com>
+ <20151005083940.78d04f63@i7>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <560EB273.7000804-5wv7dgnIgG8@public.gmane.org> (Sudeep Holla's message of "Fri, 2 Oct
-	2015 17:36:03 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt@kernel.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "edubezval@gmail.com" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux@roeck-us.net" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lHuqAdgBYNjQz/wy"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDHEZGYAKGQEA27PPJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151005083940.78d04f63@i7>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> writes:
+--lHuqAdgBYNjQz/wy
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> On 15/09/15 17:50, Punit Agrawal wrote:
->> ARM System Control Processor (SCP) provides an API to query and use
->> the sensors available in the system. Extend the SCPI driver to support
->>   sensor messages.
->>
->> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
->> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->
-> Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+On Mon, Oct 05, 2015 at 08:39:40AM +0300, Siarhei Siamashka wrote:
+> On Mon, 5 Oct 2015 09:55:28 +0800
+> Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> 
+> > On Mon, Oct 5, 2015 at 2:58 AM, Siarhei Siamashka
+> > <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > The pcDuino1 board does not use any power switches at all for its
+> > > two USB host ports and the VBUS pins are always connected to 5V.
+> > >
+> > > The pcDuino2 board uses the RT9701GB power switch for its single
+> > > USB host port, but the USB_EN pin (PD2) is pulled up with a 10K
+> > > resistor. So that the USB power is still enabled by default even
+> > > if nobody bothers to configure the PD2 pin or runs the pcDuino1
+> > > firmware.
+> > 
+> > Seems like it would be better if you had a regulator controlled
+> > by PD2. At least can shut down VBUS power when it wants to?
+> 
+> That's a good question.
+> 
+> Describing the regulator controlled by PD2 in the dts file is surely
+> the right solution for pcDuino2 boards. But in the case of using this
+> dts for pcDuino1, the kernel would think that it can shut down VBUS
+> power, while in fact this is not true.
 
-Thanks, Sudeep!
+I do agree that this is the right solution for the pcduino1, but it's
+definitely not the right one for the pcduino 2 then.
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Declaring this as a regulator isn't just meant for the USB to be
+working, it's also meant so that it keeps working. If the pin is not
+claimed by anyone, the userspace and / or some other driver, will
+actually be able to grab that pin and do whatever it wants with it,
+effectively fiddling with the VBUS supply behind the USB driver's
+back.
+
+It also allows to disable the regulator if VBUS isn't going to be
+used, for example because the driver has not be compiled in, or that
+it's actually a module that might (or might not) be loaded later.
+
+Finally, it also allows to keep track of who consumes what amount of
+power in the system, which is a nice plus.
+
+> The RT9701GB switch also provides the current limiting feature in
+> addition to the ability to enable/disable the VBUS power. Probably
+> this was a real reason why it was added to the board.
+> 
+> Everything boils down to the question whether we want to have a
+> common dts file for pcDuino1 and pcDuino2 or decide to split them.
+
+You don't have to split them, if this is really the only difference,
+just create a new dts for the pcduino2 that includes the first one,
+and add the supply there.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--lHuqAdgBYNjQz/wy--
