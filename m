@@ -1,182 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 5/7] hwrng: st: Add support for ST's HW Random Number
- Generator
-Date: Mon, 5 Oct 2015 15:52:59 +0100
-Message-ID: <20151005145259.GD17172@x1>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
- <1442497557-9271-6-git-send-email-lee.jones@linaro.org>
- <5612548E.8090405@linaro.org>
- <20151005121102.GB17172@x1>
- <561272EC.6080300@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <561272EC.6080300@linaro.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.com, kernel@stlinux.com, Pankaj Dev <pankaj.dev@st.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [PATCH] regulator: max77802: Add input supply properties to DT binding doc
+Date: Mon,  5 Oct 2015 17:07:23 +0200
+Message-ID: <1444057643-29672-1-git-send-email-javier@osg.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 05 Oct 2015, Daniel Thompson wrote:
-> On 05/10/15 13:11, Lee Jones wrote:
-> >On Mon, 05 Oct 2015, Daniel Thompson wrote:
-> >>Late but...
-> >
-> >That's okay.  Fixup patches can always be submitted.
-> >
-> >We have forever. :)
-> >
-> >>On 17/09/15 14:45, Lee Jones wrote:
-> >>>diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_ran=
-dom/Makefile
-> >>>index 055bb01..8bcfb45 100644
-> >>>--- a/drivers/char/hw_random/Makefile
-> >>>+++ b/drivers/char/hw_random/Makefile
-> >>>@@ -30,4 +30,5 @@ obj-$(CONFIG_HW_RANDOM_TPM) +=3D tpm-rng.o
-> >>>  obj-$(CONFIG_HW_RANDOM_BCM2835) +=3D bcm2835-rng.o
-> >>>  obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) +=3D iproc-rng200.o
-> >>>  obj-$(CONFIG_HW_RANDOM_MSM) +=3D msm-rng.o
-> >>>+obj-$(CONFIG_HW_RANDOM_ST) +=3D st-rng.o
-> >>>  obj-$(CONFIG_HW_RANDOM_XGENE) +=3D xgene-rng.o
-> >>>diff --git a/drivers/char/hw_random/st-rng.c b/drivers/char/hw_ran=
-dom/st-rng.c
-> >>>new file mode 100644
-> >>>index 0000000..8c8a435
-> >>>--- /dev/null
-> >>>+++ b/drivers/char/hw_random/st-rng.c
-> >>>@@ -0,0 +1,144 @@
-> >>>+/*
-> >>>+ * ST Random Number Generator Driver ST's Platforms
-> >>>+ *
-> >>>+ * Author: Pankaj Dev: <pankaj.dev@st.com>
-> >>>+ *         Lee Jones <lee.jones@linaro.org>
-> >>>+ *
-> >>>+ * Copyright (C) 2015 STMicroelectronics (R&D) Limited
-> >>>+ *
-> >>>+ * This program is free software; you can redistribute it and/or =
-modify
-> >>>+ * it under the terms of the GNU General Public License version 2=
- as
-> >>>+ * published by the Free Software Foundation.
-> >>>+ */
-> >>>+
-> >>>+#include <linux/clk.h>
-> >>>+#include <linux/delay.h>
-> >>>+#include <linux/hw_random.h>
-> >>>+#include <linux/io.h>
-> >>>+#include <linux/module.h>
-> >>>+#include <linux/of.h>
-> >>>+#include <linux/platform_device.h>
-> >>>+#include <linux/slab.h>
-> >>>+
-> >>>+/* Registers */
-> >>>+#define ST_RNG_STATUS_REG		0x20
-> >>>+#define ST_RNG_DATA_REG			0x24
-> >>>+
-> >>>+/* Registers fields */
-> >>>+#define ST_RNG_STATUS_BAD_SEQUENCE	BIT(0)
-> >>>+#define ST_RNG_STATUS_BAD_ALTERNANCE	BIT(1)
-> >>>+#define ST_RNG_STATUS_FIFO_FULL		BIT(5)
-> >>>+
-> >>>+#define ST_RNG_FIFO_SIZE		8
-> >>>+#define ST_RNG_SAMPLE_SIZE		2 /* 2 Byte (16bit) samples */
-> >>>+
-> >>>+/* Samples are available every 0.667us, which we round to 1us */
-> >>>+#define ST_RNG_FILL_FIFO_TIMEOUT   (1 * (ST_RNG_FIFO_SIZE / ST_RN=
-G_SAMPLE_SIZE))
-> >>>+
-> >>>+struct st_rng_data {
-> >>>+	void __iomem	*base;
-> >>>+	struct clk	*clk;
-> >>>+	struct hwrng	ops;
-> >>>+};
-> >>>+
-> >>>+static int st_rng_read(struct hwrng *rng, void *data, size_t max,=
- bool wait)
-> >>>+{
-> >>>+	struct st_rng_data *ddata =3D (struct st_rng_data *)rng->priv;
-> >>>+	u32 status;
-> >>>+	int i;
-> >>>+
-> >>>+	if (max < sizeof(u16))
-> >>>+		return -EINVAL;
-> >>>+
-> >>>+	/* Wait until FIFO is full - max 4uS*/
-> >>>+	for (i =3D 0; i < ST_RNG_FILL_FIFO_TIMEOUT; i++) {
-> >>>+		status =3D readl_relaxed(ddata->base + ST_RNG_STATUS_REG);
-> >>>+		if (status & ST_RNG_STATUS_FIFO_FULL)
-> >>>+			break;
-> >>>+		udelay(1);
-> >>
-> >>How much bandwidth does using udelay() cost? I think it could be
-> >>>10% compared to a tighter polling loop.
-> >
-> >Samples are only available every 0.7uS and we only do this for every
-> >4.  The maximum it could 'cost' is <1uS.  Do we really want to fuss
-> >over that tiny amount of time?  It's an understandable point if we
-> >were talking about milliseconds, but a single microsecond?
->=20
-> This code is called in a tight loop so we're not talking about a
-> *single* microsecond! We are are talking about about one microsecond
-> in every five[1] and yes, I think we should care about that.
->=20
-> It takes 2.67uS for the FIFO to come ready so with a polling
-> interval of 1uS + loop overhead so I would fully expect on average
-> to "waste" 0.5uS each time st_rng_read() is called (in a tight
-> loop).
->=20
-> [1]... point three recurring  ;-)
+The max77802 regulator driver defines the supply name for each regulator
+so these can be described in DT but is not mentioned in the binding doc.
 
-`time dd if=3D/dev/hwrng of=3D/dev/null bs=3D1 count=3D10M`
+Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-/* Current code, inc delay */
-Run 1: real 0m17.996s
-Run 2: real 0m17.991s
-Run 3: real 0m17.996s
-Run 4: real 0m18.000s
-Run 5: real 0m18.000s
-Total       0m89.983s
+---
 
-/* Tight loop, no delay */
-Run 1: real 0m18.011s
-Run 2: real 0m17.995s
-Run 3: real 0m18.005s
-Run 4: real 0m18.020s
-Run 5: real 0m17.990s
-Total       0m90.021s
+ .../devicetree/bindings/regulator/max77802.txt     | 23 +++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-(89.983 / 90.021) * 100 =3D 99.958%
+diff --git a/Documentation/devicetree/bindings/regulator/max77802.txt b/Documentation/devicetree/bindings/regulator/max77802.txt
+index 79e5476444f7..b466689c47ea 100644
+--- a/Documentation/devicetree/bindings/regulator/max77802.txt
++++ b/Documentation/devicetree/bindings/regulator/max77802.txt
+@@ -8,7 +8,26 @@ regulators that can be controlled over I2C.
+ 
+ Following properties should be present in main device node of the MFD chip.
+ 
+-Optional node:
++Optional properties:
++- inb1-supply:  The input supply for BUCK1
++- inb2-supply:  The input supply for BUCK2
++- inb3-supply:  The input supply for BUCK3
++- inb4-supply:  The input supply for BUCK4
++- inb5-supply:  The input supply for BUCK5
++- inb6-supply:  The input supply for BUCK6
++- inb7-supply:  The input supply for BUCK7
++- inb8-supply:  The input supply for BUCK8
++- inb9-supply:  The input supply for BUCK9
++- inb10-supply: The input supply for BUCK10
++- inl1-supply:  The input supply for LDO8 and LDO15
++- inl2-supply:  The input supply for LDO17, LDO27, LDO30 and LDO35
++- inl3-supply:  The input supply for LDO3, LDO5, LDO6 and LDO7
++- inl4-supply:  The input supply for LDO10, LDO11, LDO13 and LDO14
++- inl5-supply:  The input supply for LDO9 and LDO19
++- inl6-supply:  The input supply for LDO4, LDO21, LDO24 and LDO33
++- inl7-supply:  The input supply for LDO18, LDO20, LDO28 and LDO29
++- inl9-supply:  The input supply for LDO12, LDO23, LDO25, LDO26, LDO32 and LDO34
++- inl10-supply: The input supply for LDO1 and LDO2
+ - regulators : The regulators of max77802 have to be instantiated
+   under subnode named "regulators" using the following format.
+ 
+@@ -58,6 +77,8 @@ Example:
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		inb1-supply = <&parent_reg>;
++
+ 		regulators {
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "vdd_1v0";
+-- 
+2.4.3
 
-0.042% saving.
-
-Not quite the >10% predicted.  I'd say that's negligible.=20
-
-> >>>+	}
-> >>>+
-> >>>+	if (i =3D=3D ST_RNG_FILL_FIFO_TIMEOUT)
-> >>>+		return 0;
-> >>
-> >>Isn't a timeout an error condition?
-> >
-> >Yes, which is why we're returning 0.  In this context 0 =3D=3D 'no d=
-ata'.
-> >This will be converted to -EAGAIN if the caller did not request
-> >NONBLOCKING.
->=20
-> I took the view that hitting the timeout means the hardware is
-> broken. Is it likely that the next time we call it there will be
-> data ready? If it is should it be trusted?
-
-=46rom experience gained whilst testing, I can say that when returning
-an error the HNG breaks and the user receives an error.  If instead we
-return 0, we get to have another go and random numbers again pour
-out.  Perhaps we're just not waiting long enough?  Either way, the
-current implementation works real well.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
