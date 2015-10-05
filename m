@@ -1,64 +1,94 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/3] mfd: sec-core: Disable buck voltage reset on watchdog
- falling edge
-Date: Tue, 06 Oct 2015 08:49:16 +0900
-Message-ID: <56130C7C.6000207@samsung.com>
-References: <1443774351-28766-1-git-send-email-k.kozlowski@samsung.com>
- <1443774351-28766-3-git-send-email-k.kozlowski@samsung.com>
- <2375080.1KPJ21Fk4I@amdc1976>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v6 21/22] driver core: Start processing deferred probes
+ earlier
+Date: Mon, 05 Oct 2015 16:52:35 -0700
+Message-ID: <56130D43.10200@gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <2375080.1KPJ21Fk4I@amdc1976>
+In-Reply-To: <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Sangbeom Kim <sbkim73@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 05.10.2015 22:35, Bartlomiej Zolnierkiewicz wrote:
+On 9/21/2015 7:03 AM, Tomeu Vizoso wrote:
+> Some initcalls in the late level assume that some devices will have
+> already probed without explicitly checking for that.
 > 
-> Hi,
+> After the recent move to defer most device probes when they are
+> registered, pressure increased in the late initcall level.
 > 
-> On Friday, October 02, 2015 05:25:51 PM Krzysztof Kozlowski wrote:
->> The WRSTBI bit (disabled by default but enabled by bootloader), when
->> set, is responsible for resetting voltages to default values of
->> certain bucks on falling edge of Warm Reset Input pin from AP.
->>
->> However on some boards (with S2MPS13) the pin is pulled down so any
->> suspend will effectively trigger the reset of bucks supplying the power
->> to the little and big cores. In the same time when resuming, these bucks
->> must provide voltage greater or equal to voltage before suspend to match
->> the frequency chosen by cpufreq. If voltage (default value of voltage
->> after reset) is lower than one set by cpufreq before suspend, then
->> system will hang during resuming.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> By starting the processing of the deferred queue in device_initcall_sync
+> we increase the chances that the initcalls mentioned before will find
+> the devices they depend on to have already probed.
 > 
-> I tested this (with some additional Exynos5433 patches) and it works
-> like expected (suspend/resume issue is fixed).
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> ---
 > 
-> Tested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Changes in v4:
+> - Start processing deferred probes in device_initcall_sync
 > 
+>  drivers/base/dd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 269ea76c1a4f..f0ef9233fcd6 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -176,7 +176,7 @@ static void driver_deferred_probe_trigger(void)
+>   *
+>   * We don't want to get in the way when the bulk of drivers are getting probed.
+>   * Instead, this initcall makes sure that deferred probing is delayed until
+> - * late_initcall time.
+> + * device_initcall_sync time.
 
-Thanks!
+This is a misuse of the *_sync initcall level.
 
-> You could also add:
+If a deferred probe created a thread and expected a wait at the
+following *_sync level then the wait would not occur because
+there is no subsequent *_sync level.  This is not a problem today
+because (as far as I know) there are no threads in the probe
+functions.  But there has been interest in adding parallel
+probing and that could expose this problem.
+
+The purpose of the *_sync initcall levels is to allow the corresponding
+initcall level to use multiple threads of execution instead of a single
+thread.  The *_sync level provides a location for a wait for all of the
+threads at the corresponding init level to complete.  This is better
+explained in the git log:
+
+commit 735a7ffb739b6efeaeb1e720306ba308eaaeb20e
+Author: Andrew Morton <akpm@osdl.org>
+Date:   Fri Oct 27 11:42:37 2006 -0700
+
+    [PATCH] drivers: wait for threaded probes between initcall levels
+
+    The multithreaded-probing code has a problem: after one initcall level (eg,
+    core_initcall) has been processed, we will then start processing the next
+    level (postcore_initcall) while the kernel threads which are handling
+    core_initcall are still executing.  This breaks the guarantees which the
+    layered initcalls previously gave us.
+
+    IOW, we want to be multithreaded _within_ an initcall level, but not between
+    different levels.
+
+    Fix that up by causing the probing code to wait for all outstanding probes at
+    one level to complete before we start processing the next level.
+
+>   */
+>  static int deferred_probe_initcall(void)
+>  {
+> @@ -190,7 +190,7 @@ static int deferred_probe_initcall(void)
+>  	flush_workqueue(deferred_wq);
+>  	return 0;
+>  }
+> -late_initcall(deferred_probe_initcall);
+> +device_initcall_sync(deferred_probe_initcall);
+>  
+>  static void driver_bound(struct device *dev)
+>  {
 > 
-> Reported-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> 
-> (since the issue got narrowed down and reported to you by me :).
-
-I didn't put it because I wasn't sure who was the author of our report.
-I'll wait a one more day for any comments and add it in v2/resend.
-
-BTW, any comments on the binding itself?
-Actually I had hard time choosing the name for binding because unlike
-the ACOKB the WRSTBI pin is not grounded but pulled down. However it is
-quite similar so I stick to the same convention:
- - samsung,s2mps11-acokb-ground
- - samsung,s2mps11-wrstbi-ground
-
-
-Best regards,
-Krzysztof
