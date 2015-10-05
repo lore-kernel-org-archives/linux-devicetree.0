@@ -1,28 +1,43 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: shmobile: fix SILK board name
-Date: Mon, 5 Oct 2015 12:03:55 +0900
-Message-ID: <20151005030355.GD29979@verge.net.au>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <6818713.ulHphNVRsJ@wasted.cogentembedded.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: Re: [PATCH v7 5/6] Documentation: dt-bindings: pci: altera pcie
+ device tree binding
+Date: Mon, 5 Oct 2015 11:14:05 +0800
+Message-ID: <CAFiDJ590c0zG=bBBdERz9sh0Yvrrrv306Pd0simDmMWKw81z9w@mail.gmail.com>
+References: <1442801587-3812-1-git-send-email-lftan@altera.com>
+	<CAL_JsqL9eoTRa2-eeNJgVoO=0LyuaaJ87E4_BS0KocRKBXGdGA@mail.gmail.com>
+	<CAFiDJ5_MYC=V_L1LyRNq00z=DerzKAF=RF5av9vHnUPP+9a1nw@mail.gmail.com>
+	<6497772.rqSurELzER@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6818713.ulHphNVRsJ-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <6497772.rqSurELzER@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 03, 2015 at 12:53:38AM +0300, Sergei Shtylyov wrote:
-> Unfortunately, the SILK board bindings were not quite correct, as the  board
-> name should be all caps.  Fix that,  adding the board model #  in parens and
-> removing stray semicolon.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Sat, Oct 3, 2015 at 5:56 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 02 October 2015 15:53:44 Ley Foon Tan wrote:
+>> > Strictly speaking, if you have undocumented bindings downstream that
+>> > is your problem and we don't have to accept them as-is upstream. I'm
+>> > not going to worry about that here.
+>> >
+>> >>> txs contains the config space?
+>> >> It is not the config space, but a memory slave port.
+>> >
+>> > Then where is the config space? It should not be part of "ranges" is
+>> > all I care about.
+>> The config space is not part of "ranges". Our IP uses TLP packet to
+>> access config space.
+>>
+>
+> It took me a bit to figure out what you mean here. To save others
+> from reading the source, here is what I found:
+>
+> * The config space is accessed indirectly through registers from the
+>   "cra" register range, which is the right approach according to the
+>   point that Rob made.
+You are right.
 
-Thanks, I have queued this up.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> * hardware-wise this basically looks like bit-banged PCIe, which is
+>   both awesome and scary ;-)
