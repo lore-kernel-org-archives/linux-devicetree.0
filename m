@@ -1,61 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 13/13] scsi: ufs: Add exynos ufs platform data
-Date: Mon, 5 Oct 2015 09:11:33 -0500
-Message-ID: <CAL_JsqJWzqMkkMH8myFX1eeuV-U25Ri_nWhjj2mb3AWh5tzDZA@mail.gmail.com>
-References: <201510011845.GN7Kisc4%fengguang.wu@intel.com> <1790578.NZeHVGuJeN@wuerfel>
- <56123165.2060500@samsung.com> <14885029.SsJgQkuPcG@wuerfel>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
+Date: Mon, 5 Oct 2015 14:14:57 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0EE716@irsmsx105.ger.corp.intel.com>
+References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
+ <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
+ <20151004194632.GA27633@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <14885029.SsJgQkuPcG@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Yaniv Gardi <ygardi@codeaurora.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, Amit Kachhap <amit.daniel@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151004194632.GA27633@xo-6d-61-c0.localdomain>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 5, 2015 at 4:06 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 05 October 2015 13:44:29 Alim Akhtar wrote:
->> CCing Rob Herring,
->>
->> Hi Arnd,
->>
->> On 10/01/2015 04:59 PM, Arnd Bergmann wrote:
->> > On Thursday 01 October 2015 18:46:34 kbuild test robot wrote:
->> >> [auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
->> >>
->> >> config: x86_64-allmodconfig (attached as .config)
->> >> reproduce:
->> >>          git checkout 6e153e3bf7c68b019e987c5a0ffadebd9c7d4fbb
->> >>          # save the attached .config to linux build tree
->> >>          make ARCH=x86_64
->> >>
->> >> All error/warnings (new ones prefixed by >>):
->> >>
->> >>>> ERROR: "ufs_hba_exynos_ops" [drivers/scsi/ufs/ufshcd-pltfrm.ko] undefined!
->> >>
->> >>
->> >
->> > Ah, this seems to be a case of layering violation. It would be best to
->> > restructure the code so that the exynos driver registers a platform_driver
->> > by itself for the respective DT compatible string, and then calls
->> > into the common code from its probe function, rather than having the
->> > generic driver know about the specific backends.
->> >
->> > That approach will also make the generic driver more scalable as we
->> > add further chip-specific variations, and matches what we do in other
->> > drivers.
->> >
->>
->> Looks like some discussions on ufs variant driver probe method happened
->> here [1] few months back.
->> [1]-> https://lkml.org/lkml/2015/6/3/180
->
-> Hmm, too bad we didn't catch it then, it's much more work to fix now.
 
-What you suggested is what is being implemented[1]. It is not merged
-yet. The core is a library and the platform specific parts create the
-driver.
 
-Rob
+> -----Original Message-----
+> From: Pavel Machek [mailto:pavel@ucw.cz]
+> Sent: 04 October, 2015 22:47
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
+> 
+> On Mon 2015-09-07 17:36:15, Irina Tirdea wrote:
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > ---
+> >  drivers/input/touchscreen/goodix.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> Don't.
+> 
+> Yes, we sometimes sort includes... to avoid patch rejects.
+> 
+> This is guaranteed to cause rejects.
+> 
+> If we do sort them, we use "longest-first" usually.
+> 
 
-[1] https://lkml.org/lkml/2015/9/2/364
+When using random order, I've been told by reviewers that my ordering
+is wrong [1], but I could not figure out what the "right" ordering is in order to apply.
+I did not find any mention of how to sort includes in  Documentation/CodingStyle,
+but I've seen patches in the kernel that fix random ordering by sorting them
+alphabetically [2].
+
+However, I do not feel strongly about this so I can drop this patch.
+
+Thanks,
+Irina
+
+[1] https://lkml.org/lkml/2015/5/28/363
+[2] https://patchwork.ozlabs.org/patch/408022/
+
+> >
+> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> > index e36162b..6ae28c5 100644
+> > --- a/drivers/input/touchscreen/goodix.c
+> > +++ b/drivers/input/touchscreen/goodix.c
+> > @@ -14,18 +14,18 @@
+> >   * Software Foundation; version 2 of the License.
+> >   */
+> >
+> > -#include <linux/kernel.h>
+> > +#include <linux/acpi.h>
+> > +#include <linux/delay.h>
+> >  #include <linux/dmi.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/input.h>
+> >  #include <linux/input/mt.h>
+> > -#include <linux/module.h>
+> > -#include <linux/delay.h>
+> > -#include <linux/irq.h>
+> >  #include <linux/interrupt.h>
+> > -#include <linux/slab.h>
+> > -#include <linux/acpi.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> >  #include <linux/of.h>
+> > +#include <linux/slab.h>
+> >  #include <asm/unaligned.h>
+> >
+> >  struct goodix_ts_data {
+> > --
+> > 1.9.1
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Please read the FAQ at  http://www.tux.org/lkml/
+> 
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
