@@ -1,92 +1,208 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: [PATCH] ARM64: dts: vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm
-Date: Mon, 5 Oct 2015 12:53:52 +0100
-Message-ID: <1444046032-31310-1-git-send-email-ian.campbell@citrix.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 5/7] hwrng: st: Add support for ST's HW Random Number
+ Generator
+Date: Mon, 5 Oct 2015 13:11:02 +0100
+Message-ID: <20151005121102.GB17172@x1>
+References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
+ <1442497557-9271-6-git-send-email-lee.jones@linaro.org>
+ <5612548E.8090405@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Ian Campbell <ian.campbell@citrix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, Frank Rowand <frank.rowand@sonymobile.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5612548E.8090405@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.com, kernel@stlinux.com, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
-LogicTile Express 20MG" added a new dts file to arch/arm64 which
-included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-.dtsi supplied by arch/arm.
+On Mon, 05 Oct 2015, Daniel Thompson wrote:
+> Late but...
 
-Unfortunately this causes some issues for the split device tree
-repository[0], since things get moved around there. In that context
-the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+That's okay.  Fixup patches can always be submitted.
 
-The sharing of the .dtsi is legitimate since the baseboard is the same
-for various vexpress systems whatever processor they use.
+We have forever. :)
 
-Previously I attempted to resolve this by creating a shared location
-for such things but we have been unable to come to a consensus on
-where that should be.
+> On 17/09/15 14:45, Lee Jones wrote:
+> >diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_rando=
+m/Makefile
+> >index 055bb01..8bcfb45 100644
+> >--- a/drivers/char/hw_random/Makefile
+> >+++ b/drivers/char/hw_random/Makefile
+> >@@ -30,4 +30,5 @@ obj-$(CONFIG_HW_RANDOM_TPM) +=3D tpm-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_BCM2835) +=3D bcm2835-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) +=3D iproc-rng200.o
+> >  obj-$(CONFIG_HW_RANDOM_MSM) +=3D msm-rng.o
+> >+obj-$(CONFIG_HW_RANDOM_ST) +=3D st-rng.o
+> >  obj-$(CONFIG_HW_RANDOM_XGENE) +=3D xgene-rng.o
+> >diff --git a/drivers/char/hw_random/st-rng.c b/drivers/char/hw_rando=
+m/st-rng.c
+> >new file mode 100644
+> >index 0000000..8c8a435
+> >--- /dev/null
+> >+++ b/drivers/char/hw_random/st-rng.c
+> >@@ -0,0 +1,144 @@
+> >+/*
+> >+ * ST Random Number Generator Driver ST's Platforms
+> >+ *
+> >+ * Author: Pankaj Dev: <pankaj.dev@st.com>
+> >+ *         Lee Jones <lee.jones@linaro.org>
+> >+ *
+> >+ * Copyright (C) 2015 STMicroelectronics (R&D) Limited
+> >+ *
+> >+ * This program is free software; you can redistribute it and/or mo=
+dify
+> >+ * it under the terms of the GNU General Public License version 2 a=
+s
+> >+ * published by the Free Software Foundation.
+> >+ */
+> >+
+> >+#include <linux/clk.h>
+> >+#include <linux/delay.h>
+> >+#include <linux/hw_random.h>
+> >+#include <linux/io.h>
+> >+#include <linux/module.h>
+> >+#include <linux/of.h>
+> >+#include <linux/platform_device.h>
+> >+#include <linux/slab.h>
+> >+
+> >+/* Registers */
+> >+#define ST_RNG_STATUS_REG		0x20
+> >+#define ST_RNG_DATA_REG			0x24
+> >+
+> >+/* Registers fields */
+> >+#define ST_RNG_STATUS_BAD_SEQUENCE	BIT(0)
+> >+#define ST_RNG_STATUS_BAD_ALTERNANCE	BIT(1)
+> >+#define ST_RNG_STATUS_FIFO_FULL		BIT(5)
+> >+
+> >+#define ST_RNG_FIFO_SIZE		8
+> >+#define ST_RNG_SAMPLE_SIZE		2 /* 2 Byte (16bit) samples */
+> >+
+> >+/* Samples are available every 0.667us, which we round to 1us */
+> >+#define ST_RNG_FILL_FIFO_TIMEOUT   (1 * (ST_RNG_FIFO_SIZE / ST_RNG_=
+SAMPLE_SIZE))
+> >+
+> >+struct st_rng_data {
+> >+	void __iomem	*base;
+> >+	struct clk	*clk;
+> >+	struct hwrng	ops;
+> >+};
+> >+
+> >+static int st_rng_read(struct hwrng *rng, void *data, size_t max, b=
+ool wait)
+> >+{
+> >+	struct st_rng_data *ddata =3D (struct st_rng_data *)rng->priv;
+> >+	u32 status;
+> >+	int i;
+> >+
+> >+	if (max < sizeof(u16))
+> >+		return -EINVAL;
+> >+
+> >+	/* Wait until FIFO is full - max 4uS*/
+> >+	for (i =3D 0; i < ST_RNG_FILL_FIFO_TIMEOUT; i++) {
+> >+		status =3D readl_relaxed(ddata->base + ST_RNG_STATUS_REG);
+> >+		if (status & ST_RNG_STATUS_FIFO_FULL)
+> >+			break;
+> >+		udelay(1);
+>=20
+> How much bandwidth does using udelay() cost? I think it could be
+> >10% compared to a tighter polling loop.
 
-Instead this patch simply replaces the use of ../../ in the dts
-/include/ with a symlink in arch/arm64/boot/dts/arm pointing to the
-file arch/arm/boot/dts.
+Samples are only available every 0.7uS and we only do this for every
+4.  The maximum it could 'cost' is <1uS.  Do we really want to fuss
+over that tiny amount of time?  It's an understandable point if we
+were talking about milliseconds, but a single microsecond?
 
-Since the split device tree repo will shortly be required to flatten
-symlinks for other reasons this will cause the dtsi file to appear in
-both src/arm and src/arm64 in the split repo, which is an improvement
-on not building for arm64 now.
+> >+	}
+> >+
+> >+	if (i =3D=3D ST_RNG_FILL_FIFO_TIMEOUT)
+> >+		return 0;
+>=20
+> Isn't a timeout an error condition?
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+Yes, which is why we're returning 0.  In this context 0 =3D=3D 'no data=
+'.
+This will be converted to -EAGAIN if the caller did not request
+NONBLOCKING.
 
-Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Kristina Martsenko <kristina.martsenko@arm.com>
-Cc: Kevin Hilman <khilman@linaro.org>
-Cc: Frank Rowand <frank.rowand@sonymobile.com>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: arm@kernel.org
-Cc: linux-kbuild@vger.kernel.org
----
-For more on flattening symlinks see
-http://thread.gmane.org/gmane.linux.kernel.input/45646/focus=45742
----
- arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts | 2 +-
- arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi        | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
- create mode 120000 arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+> >+
+> >+	for (i =3D 0; i < ST_RNG_FIFO_SIZE && i < max; i +=3D 2)
+> >+		*(u16 *)(data + i) =3D
+> >+			readl_relaxed(ddata->base + ST_RNG_DATA_REG);
+> >+
+> >+	return i;	/* No of bytes read */
+> >+}
+> >+
+> >+static int st_rng_probe(struct platform_device *pdev)
+> >+{
+> >+	struct st_rng_data *ddata;
+> >+	struct resource *res;
+> >+	struct clk *clk;
+> >+	void __iomem *base;
+> >+	int ret;
+> >+
+> >+	ddata =3D devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
+> >+	if (!ddata)
+> >+		return -ENOMEM;
+> >+
+> >+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >+	base =3D devm_ioremap_resource(&pdev->dev, res);
+> >+	if (IS_ERR(base))
+> >+		return PTR_ERR(base);
+> >+
+> >+	clk =3D devm_clk_get(&pdev->dev, NULL);
+> >+	if (IS_ERR(clk))
+> >+		return PTR_ERR(clk);
+> >+
+> >+	ret =3D clk_prepare_enable(clk);
+> >+	if (ret)
+> >+		return ret;
+> >+
+> >+	ddata->ops.priv	=3D (unsigned long)ddata;
+> >+	ddata->ops.read	=3D st_rng_read;
+> >+	ddata->ops.name	=3D pdev->name;
+> >+	ddata->base	=3D base;
+> >+	ddata->clk	=3D clk;
+> >+
+> >+	dev_set_drvdata(&pdev->dev, ddata);
+> >+
+> >+	ret =3D hwrng_register(&ddata->ops);
+> >+	if (ret) {
+> >+		dev_err(&pdev->dev, "Failed to register HW RNG\n");
+>=20
+> Why shout about this particular error but not any others? Perhaps
+> just rely on the driver core to report the error here?
 
-diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-index 5b1d018..bb3c26d 100644
---- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-+++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-@@ -186,6 +186,6 @@
- 				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
--		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
-+		/include/ "vexpress-v2m-rs1.dtsi"
- 	};
- };
-diff --git a/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
-new file mode 120000
-index 0000000..68fd0f8
---- /dev/null
-+++ b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi
-\ No newline at end of file
--- 
-2.5.3
+I have omitted error prints from subsystem calls which do all the
+shouting required.  Unfortunately the HWRNG is somewhat stuck in the
+past in a number of ways; a lack of subsystem level shouting being one
+of them.
 
+> >+		return ret;
+> >+	}
+> >+
+> >+	dev_info(&pdev->dev, "Successfully registered HW RNG\n");
+> >+
+> >+	return 0;
+> >+}
+> >+
+> >+static int st_rng_remove(struct platform_device *pdev)
+> >+{
+> >+	struct st_rng_data *ddata =3D dev_get_drvdata(&pdev->dev);
+> >+
+> >+	hwrng_unregister(&ddata->ops);
+> >+
+> >+	clk_disable_unprepare(ddata->clk);
+>=20
+> This mismatches the error paths in the probe function (there is no
+> cleanup of clock counts in probe function).
+
+Good catch.  I am missing a clk_disable_unprepare() in the
+hwrng_register() failure patch.  Will fix.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
