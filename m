@@ -1,106 +1,97 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM: DRA7: hwmod: Add data for GPTimer 12
-Date: Mon, 5 Oct 2015 18:28:24 -0500
-Message-ID: <1444087704-1429-5-git-send-email-s-anna@ti.com>
-References: <1444087704-1429-1-git-send-email-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444087704-1429-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 1/2] dt: update Tegra XUSB padctl binding for Tegra210
+Date: Mon,  5 Oct 2015 17:41:56 -0600
+Message-ID: <1444088517-31615-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the hwmod data for GPTimer 12. GPTimer 12 is present in
-WKUPAON power domain and is clocked from a secure 32K clock.
-GPTimer 12 serves as a secure timer on HS devices, but is
-available for kernel on regular GP devices.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The hwmod link is registered only on GP devices. The hwmod data
-also reused the existing timer class instead of reintroducing
-the identical dra7xx_timer_secure_sysc class which was dropped
-in commit edec17863362 ("ARM: DRA7: hwmod: Fix the hwmod class
-for GPTimer4").
+Tegra210 introduces some new options for pad muxing. Document these in
+the XUSB padctl binding.
 
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Be more explicit about the valid values for the compatible property, and
+in particular point out that Tegra210 isn't fully backwards-compatible
+with Tegra124, since some registers have moved about.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 36 +++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ .../pinctrl/nvidia,tegra124-xusb-padctl.txt        | 34 +++++++++++++++-------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-index 562247bced49..37a10f87fbcd 100644
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-@@ -1929,6 +1929,20 @@ static struct omap_hwmod dra7xx_timer11_hwmod = {
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+index 30676ded85bb..3952d893635c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+@@ -13,9 +13,12 @@ how to describe and reference PHYs in device trees.
  
-+/* timer12 */
-+static struct omap_hwmod dra7xx_timer12_hwmod = {
-+	.name		= "timer12",
-+	.class		= &dra7xx_timer_hwmod_class,
-+	.clkdm_name	= "wkupaon_clkdm",
-+	.main_clk	= "secure_32k_clk_src_ck",
-+	.prcm = {
-+		.omap4 = {
-+			.clkctrl_offs = DRA7XX_CM_WKUPAON_TIMER12_CLKCTRL_OFFSET,
-+			.context_offs = DRA7XX_RM_WKUPAON_TIMER12_CONTEXT_OFFSET,
-+		},
-+	},
-+};
+ Required properties:
+ --------------------
+-- compatible: For Tegra124, must contain "nvidia,tegra124-xusb-padctl".
+-  Otherwise, must contain '"nvidia,<chip>-xusb-padctl",
+-  "nvidia-tegra124-xusb-padctl"', where <chip> is tegra132 or tegra210.
++- compatible: Valid options are:
++  Tegra124: "nvidia,tegra124-xusb-padctl".
++  Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia-tegra124-xusb-padctl".
++  Tegra210: "nvidia-tegra210-xusb-padctl".
++    Note that Tegra210 is not backwards-compatible with Tegra124 due to some
++    registers having been moved.
+ - reg: Physical base address and length of the controller's registers.
+ - resets: Must contain an entry for each entry in reset-names.
+   See ../reset/reset.txt for details.
+@@ -45,18 +48,21 @@ Unspecified is represented as an absent property, and off/on are represented
+ as integer values 0 and 1.
+ 
+ Required properties:
+-- nvidia,lanes: An array of strings. Each string is the name of a lane.
++- nvidia,lanes: An array of strings. Each string is the name of a lane (pad).
++  Valid values for lanes are listed below.
+ 
+ Optional properties:
+-- nvidia,function: A string that is the name of the function (pad) that the
+-  pin or group should be assigned to. Valid values for function names are
+-  listed below.
++- nvidia,function: A string that is the name of the function (IO controller)
++  that the pin or group should be assigned to. Valid values for function names
++  are  listed below.
+ - nvidia,iddq: Enables IDDQ mode of the lane. (0: no, 1: yes)
+ 
+ Note that not all of these properties are valid for all lanes. Lanes can be
+ divided into three groups:
+ 
+-  - otg-0, otg-1, otg-2:
++  - otg-0, otg-1, otg-2, otg-3, usb2-bias:
 +
- /* timer13 */
- static struct omap_hwmod dra7xx_timer13_hwmod = {
- 	.name		= "timer13",
-@@ -3135,6 +3149,14 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per1__timer11 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
++    (otg-3, usb2-bias are valid on Tegra210 only.)
  
-+/* l4_wkup -> timer12 */
-+static struct omap_hwmod_ocp_if dra7xx_l4_wkup__timer12 = {
-+	.master		= &dra7xx_l4_wkup_hwmod,
-+	.slave		= &dra7xx_timer12_hwmod,
-+	.clk		= "wkupaon_iclk_mux",
-+	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-+};
+     Valid functions for this group are: "snps", "xusb", "uart", "rsvd".
+ 
+@@ -64,13 +70,21 @@ divided into three groups:
+ 
+   - ulpi-0, hsic-0, hsic-1:
+ 
++    (ulpi-0 is valid on Tegra124 and Tegra132 only.)
 +
- /* l4_per3 -> timer13 */
- static struct omap_hwmod_ocp_if dra7xx_l4_per3__timer13 = {
- 	.master		= &dra7xx_l4_per3_hwmod,
-@@ -3429,6 +3451,13 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
- 	NULL,
- };
+     Valid functions for this group are: "snps", "xusb".
  
-+/* GP-only hwmod links */
-+static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
-+	&dra7xx_l4_wkup__timer12,
-+	NULL,
-+};
+     The nvidia,iddq property does not apply to this group.
+ 
+-  - pcie-0, pcie-1, pcie-2, pcie-3, pcie-4, sata-0:
++  - pcie-0, pcie-1, pcie-2, pcie-3, pcie-4, pcie-5, pcie-6, sata-0:
 +
-+/* SoC variant specific hwmod links */
- static struct omap_hwmod_ocp_if *dra74x_hwmod_ocp_ifs[] __initdata = {
- 	&dra7xx_l4_per3__usb_otg_ss4,
- 	NULL,
-@@ -3446,9 +3475,12 @@ int __init dra7xx_hwmod_init(void)
- 	ret = omap_hwmod_register_links(dra7xx_hwmod_ocp_ifs);
- 
- 	if (!ret && soc_is_dra74x())
--		return omap_hwmod_register_links(dra74x_hwmod_ocp_ifs);
-+		ret = omap_hwmod_register_links(dra74x_hwmod_ocp_ifs);
- 	else if (!ret && soc_is_dra72x())
--		return omap_hwmod_register_links(dra72x_hwmod_ocp_ifs);
-+		ret = omap_hwmod_register_links(dra72x_hwmod_ocp_ifs);
++    (pcie-5, pcie-6 are valid on Tegra210 only.)
 +
-+	if (!ret && omap_type() == OMAP2_DEVICE_TYPE_GP)
-+		ret = omap_hwmod_register_links(dra7xx_gp_hwmod_ocp_ifs);
++    On Tegra124, Tegra132, valid functions for this group are: "pcie", "usb3",
++    "sata", "rsvd".
  
- 	return ret;
- }
+-    Valid functions for this group are: "pcie", "usb3", "sata", "rsvd".
++    On Tegra210, valid functions for this group are "pcie-x1", "usb3",
++    "sata", "pcie-x4".
+ 
+ 
+ Example:
 -- 
-2.6.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
