@@ -1,75 +1,69 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/5] Mailbox: Provide support STi based platforms
-Date: Mon,  5 Oct 2015 14:02:15 +0100
-Message-ID: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 3/5] ARM: STi: stih407-family: Add nodes for Mailbox
+Date: Mon,  5 Oct 2015 14:02:18 +0100
+Message-ID: <1444050140-24733-4-git-send-email-lee.jones@linaro.org>
+References: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: jassisinghbrar@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+This patch supplies the Mailbox Controller nodes.  In order to
+request channels, these nodes will be referenced by Mailbox
+Client nodes.
 
-This should be it.  Exciting times!
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 36 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-ST's platforms currently support a maximum of 5 Mailboxes, one for
-each of the supported co-processors situated on the platform.  Each
-Mailbox is divided up into 4 instances which consist of 32 channels.
-Messages are passed between the application and co-processors using
-shared memory areas.
-
-Also included in the set is an example Client which should be generic
-enough to use as a testing environment for all Mailbox IPs which use
-shared memory or the API to pass messages.  With small changes, it
-should also be able to test more extravagant implementations.
-
-v3 -> v4:
- - More protection in MBOX_BASE() MACRO
- - Remove unused tx-only marker
-
-v2 => v3:
- - Controller
-   - Shared (DT <=> Device Driver) defines removed
-   - Return actual error codes instead of NULL in xlate()
-   - Not passing 'direction' configuration via DT anymore
-     - Removed all accompanying configuration checking code
- - Test F/W
-   - Allow Rx-only and Tx-only controllers to be tested
-   - Cater for controllers requiring pre-Tx 'signal' to be sent
-   - Supply 'wr-' message debugfs file
-     - When written to, will Tx message through Mailbox Framework
-     - When read from, will print out a hexdump of Rx'ed message
-
-v1 => v2:
- - New MACRO() to obtain base address for a given instance
- - Move locking into the structure it protects
- - Stop checking for 'ready' state when sending data
- - Don't clear channel data (that belongs to the API)
- - #define register offsets instead of providing via pdata
- - Register driver with module_platform_driver()
-
-Lee Jones (5):
-  mailbox: dt: Supply bindings for ST's Mailbox IP
-  mailbox: Add support for ST's Mailbox IP
-  ARM: STi: stih407-family: Add nodes for Mailbox
-  mailbox: Add generic mechanism for testing Mailbox Controllers
-  ARM: STi: DT: STiH407: Enable Mailbox testing facility
-
- .../devicetree/bindings/mailbox/sti-mailbox.txt    |  52 +++
- arch/arm/boot/dts/stih407-family.dtsi              |  42 ++
- drivers/mailbox/Kconfig                            |  14 +
- drivers/mailbox/Makefile                           |   4 +
- drivers/mailbox/mailbox-sti.c                      | 516 +++++++++++++++++++++
- drivers/mailbox/mailbox-test.c                     | 361 ++++++++++++++
- 6 files changed, 989 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
- create mode 100644 drivers/mailbox/mailbox-sti.c
- create mode 100644 drivers/mailbox/mailbox-test.c
-
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 838b812..32da3f8 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -565,5 +565,41 @@
+ 						  <&phy_port2 PHY_TYPE_USB3>;
+ 			};
+ 		};
++
++		mailbox0: mailbox@0  {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f00000 0x1000>;
++			interrupts	= <GIC_SPI 1 IRQ_TYPE_NONE>;
++			#mbox-cells	= <2>;
++			mbox-name	= "a9";
++			status		= "okay";
++		};
++
++		mailbox1: mailbox@1 {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f01000 0x1000>;
++			#mbox-cells	= <2>;
++			mbox-name	= "st231_gp_1";
++			status		= "okay";
++			tx-only;
++		};
++
++		mailbox2: mailbox@2 {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f02000 0x1000>;
++			#mbox-cells	= <2>;
++			mbox-name	= "st231_gp_0";
++			status		= "okay";
++			tx-only;
++		};
++
++		mailbox3: mailbox@3 {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f03000 0x1000>;
++			#mbox-cells	= <2>;
++			mbox-name	= "st231_audio_video";
++			status		= "okay";
++			tx-only;
++		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
