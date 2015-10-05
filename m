@@ -1,72 +1,62 @@
-From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Subject: Re: [PATCH][RESEND] drm: panel-simple: add URT UMSH-8596MD-xT panel
- support
-Date: Mon, 05 Oct 2015 17:25:33 +0200
-Message-ID: <5612966D.3090507@maciej.szmigiero.name>
-References: <55E5AD23.8070309@maciej.szmigiero.name> <560EF9C0.7080407@maciej.szmigiero.name> <20151005110112.GA16920@ulmo>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Document the STM32 HW RNG bindings
+Date: Mon, 5 Oct 2015 10:34:38 -0500
+Message-ID: <CAL_JsqLt2=Cb8SDAQG7XiMNC7NV59MimYETyt87-QYHt31cnsQ@mail.gmail.com>
+References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org> <1443904519-24012-2-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151005110112.GA16920@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443904519-24012-2-git-send-email-daniel.thompson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-crypto@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+On Sat, Oct 3, 2015 at 3:35 PM, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+> This adds documenttaion of device tree binds for the STM32 hardware
+> random number generator.
+>
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  .../devicetree/bindings/hwrng/stm32-rng.txt         | 21 +++++++++++++++++++++
 
-On 05.10.2015 13:01, Thierry Reding wrote:
->> On 01.09.2015 15:50, Maciej S. Szmigiero wrote:
->>> This patch adds support for United Radiant Technology
->>> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels
->>> (both LVDS and parallel versions) to DRM
->>> panel-simple driver.
->>>
->>> Signed-off-by: Maciej Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
->>> ---
->>> This is a resend without changes.
->>>
->>> diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
->>> new file mode 100644
->>> index 0000000..2990e6b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
->>> @@ -0,0 +1,11 @@
->>> +United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
->>> +
->>> +Supported are LVDS versions (-11T, -19T) and parallel ones
->>> +(-T, -1T, -7T, -20T).
-> 
-> Please don't use this kind of wildcard compatible values. If these are
-> different models then each of them deserves a separate compatible
-> string.
+Please use bindings/rng/... as I'm consolidating bindings there.
 
-The differences between these revisions are like different maximum backlight
-luminance or presence / absence of touch panel.
+Otherwise,
 
-None of this changes panel timings - should they be split into different
-compatible values anyway?
+Acked-by: Rob Herring <robh@kernel.org>
 
->>> You might want to
->>> split the DT binding and vendor prefix to separate patches.
->>
->> Do you mean to first submit new vendor prefix then panel patch with docs?
->> Or even docs separately?
-> 
-> This should be three patches: the vendor prefix is usually a separate
-> patch and needs an Acked-by from one of the device tree bindings
-> maintainers. The binding itself should also be a separate patch and the
-> driver changes should come last.
-
-I will split the patch and first submit DT binding docs.
-
-> Thierry
-
-Best regards,
-Maciej
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwrng/stm32-rng.txt
+>
+> diff --git a/Documentation/devicetree/bindings/hwrng/stm32-rng.txt b/Documentation/devicetree/bindings/hwrng/stm32-rng.txt
+> new file mode 100644
+> index 000000000000..47f04176f93b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwrng/stm32-rng.txt
+> @@ -0,0 +1,21 @@
+> +STMicroelectronics STM32 HW RNG
+> +===============================
+> +
+> +The STM32 hardware random number generator is a simple fixed purpose IP and
+> +is fully separated from other crypto functions.
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "st,stm32-rng"
+> +- reg : Should be register base and length as documented in the datasheet
+> +- interrupts : The designated IRQ line for the RNG
+> +- clocks : The clock needed to enable the RNG
+> +
+> +Example:
+> +
+> +       rng: rng@50060800 {
+> +               compatible = "st,stm32-rng";
+> +               reg = <0x50060800 0x400>;
+> +               interrupts = <80>;
+> +               clocks = <&rcc 0 38>;
+> +       };
+> --
+> 2.4.3
+>
