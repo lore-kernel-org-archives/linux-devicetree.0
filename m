@@ -1,71 +1,36 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Re: [PATCH v2] extcon: gpio: Add the support for Device tree bindings
-Date: Mon, 05 Oct 2015 08:03:54 +0000 (GMT)
-Message-ID: <194162595.571031444032234245.JavaMail.weblogic@epmlwas07a>
-Reply-To: myungjoo.ham@samsung.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 0/4] ST PLL improvement
+Date: Mon,  5 Oct 2015 10:06:29 +0200
+Message-ID: <1444032393-13433-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Coquelin <maxime.coquelin@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBzdXBwb3J0IGZvciBEZXZpY2UgdHJlZSBiaW5k
-aW5ncyBvZiBleHRjb24tZ3BpbyBkcml2ZXIuDQo+IFRoZSBleHRjb24tZ3BpbyBkZXZpY2UgdHJl
-ZSBub2RlIG11c3QgaW5jbHVkZSB0aGUgYm90aCAnZXh0Y29uLWlkJyBhbmQNCj4gJ2V4dGNvbi1n
-cGlvJyBwcm9wZXJ0eS4NCj4gDQpbXQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2hhbndvbyBDaG9p
-IDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+DQoNCg0KRXhjZXB0IGZvciBzb21lIGJlYXV0aWZpY2F0
-aW9uIGlzc3VlcyBkZXNjcmliZWQgYmVsb3csDQoNClNpZ25lZC1vZmYtYnk6IE15dW5nSm9vIEhh
-bSA8bXl1bmdqb28uaGFtQHNhbXN1bmcuY29tPg0KDQo+IC0tLQ0KPiBUaGlzIHBhdGNoIGlzIGJh
-c2VkIG9uIGZvbGxvd2luZyBwYXRjaFsxXS4NCj4gWzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
-MDE1LzEwLzMvMzA0DQo+IA0KPiBDaGFuZ2VzIGZyb20gdjE6DQo+IC0gQ3JlYXRlIHRoZSBpbmNs
-dWRlL2R0LWJpbmRpbmdzL2V4dGNvbi9leHRjb24uaCBpbmNsdWRpbmcgdGhlIGlkZW50aWZpY2F0
-aW9uDQo+ICAgb2YgZXh0ZXJuYWwgY29ubmVjdG9yLiBUaGVzZSBkZWZpbml0aW9ucyBhcmUgdXNl
-ZCBpbiBkdHMgZmlsZS4NCj4gLSBGaXggZXJyb3IgaWYgQ09ORklHX09GIGlzIGRpc2FibGVkLg0K
-PiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2V4dGNvbi9leHRjb24tZ3Bpby50eHQgICAg
-IHwgIDM4ICsrKysrKysNCj4gIGRyaXZlcnMvZXh0Y29uL2V4dGNvbi1ncGlvLmMgICAgICAgICAg
-ICAgICAgICAgICAgIHwgMTEwICsrKysrKysrKysrKysrKystLS0tLQ0KPiAgaW5jbHVkZS9kdC1i
-aW5kaW5ncy9leHRjb24vZXh0Y29uLmggICAgICAgICAgICAgICAgfCAgNDQgKysrKysrKysrDQo+
-ICBpbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oICAgICAgICAgICAgICAgICB8ICAg
-NiArLQ0KPiAgNCBmaWxlcyBjaGFuZ2VkLCAxNzMgaW5zZXJ0aW9ucygrKSwgMjUgZGVsZXRpb25z
-KC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2V4dGNvbi9leHRjb24tZ3Bpby50eHQNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
-L2R0LWJpbmRpbmdzL2V4dGNvbi9leHRjb24uaA0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9leHRjb24vZXh0Y29uLWdwaW8udHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2V4dGNvbi9leHRjb24tZ3Bpby50eHQNCj4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi43MGMzNmY3Mjk5NjMNCj4g
-LS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZXh0Y29uL2V4dGNvbi1ncGlvLnR4dA0KW10NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZXh0Y29u
-L2V4dGNvbi1ncGlvLmMgYi9kcml2ZXJzL2V4dGNvbi9leHRjb24tZ3Bpby5jDQo+IGluZGV4IDI3
-OWZmOGY2NjM3ZC4uN2YzZTI0YWFlMGM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2V4dGNvbi9l
-eHRjb24tZ3Bpby5jDQo+ICsrKyBiL2RyaXZlcnMvZXh0Y29uL2V4dGNvbi1ncGlvLmMNCj4gQEAg
-LTEsOCArMSw4IEBADQo+ICAvKg0KPiAgICogZXh0Y29uX2dwaW8uYyAtIFNpbmdsZS1zdGF0ZSBH
-UElPIGV4dGNvbiBkcml2ZXIgYmFzZWQgb24gZXh0Y29uIGNsYXNzDQo+ICAgKg0KPiAtICogQ29w
-eXJpZ2h0IChDKSAyMDA4IEdvb2dsZSwgSW5jLg0KPiAtICogQXV0aG9yOiBNaWtlIExvY2t3b29k
-IDxsb2Nrd29vZEBhbmRyb2lkLmNvbT4NCj4gKyAqIENvcHlyaWdodCAoQykgMjAxNSBDaGFud29v
-IENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4sIFNhbXN1bmcgRWxlY3Ryb25pY3MNCj4gKyAq
-IENvcHlyaWdodCAoQykgMjAwOCBNaWtlIExvY2t3b29kIDxsb2Nrd29vZEBhbmRyb2lkLmNvbT4s
-IEdvb2dsZSwgSW5jLg0KPiAgICoNCj4gICAqIE1vZGlmaWVkIGJ5IE15dW5nSm9vIEhhbSA8bXl1
-bmdqb28uaGFtQHNhbXN1bmcuY29tPiB0byBzdXBwb3J0IGV4dGNvbg0KPiAgICogKG9yaWdpbmFs
-bHkgc3dpdGNoIGNsYXNzIGlzIHN1cHBvcnRlZCkNCg0KTGV0J3MgbWFrZSBpdCBpbiBjaHJvbm9s
-b2dpY2FsIG9yZGVyLg0KKG1heSBuZWVkIHRvICJiZWF1dGlmeSB0aGUgbGFzdCB0d28gbGluZXMg
-YXMgd2VsbCkNCg0KSS5lLiwgMjAwOC0tPjIwMTItLT4yMDE1IG9yIDIwMTUtLT4yMDEyLS0+MjAw
-OC4NCk5vdCAyMDE1LS0+MjAwOC0tPjIwMTINCg0KDQo+IEBAIC0yNiwxMiArMjYsMTQgQEANCltd
-DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2V4dGNvbi9leHRjb24uaCBiL2lu
-Y2x1ZGUvZHQtYmluZGluZ3MvZXh0Y29uL2V4dGNvbi5oDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTRjN2YzNmIyMjA2DQo+IC0tLSAvZGV2L251bGwNCj4g
-KysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9leHRjb24vZXh0Y29uLmgNCltdDQo+IGRpZmYgLS1n
-aXQgYS9pbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oIGIvaW5jbHVkZS9saW51eC9l
-eHRjb24vZXh0Y29uLWdwaW8uaA0KPiBpbmRleCA3Y2FjYWZiNzhiMDkuLmJjYzZkN2Y3MTE2YSAx
-MDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9leHRjb24vZXh0Y29uLWdwaW8uaA0KPiArKysg
-Yi9pbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oDQpbXQ0KPiBAQCAtMzgsNyArMzgs
-NyBAQCBzdHJ1Y3QgZ3Bpb19leHRjb25fcGRhdGEgew0KPiAgCXVuc2lnbmVkIGludCBleHRjb25f
-aWQ7DQo+ICAJdW5zaWduZWQgZ3BpbzsNCj4gIAlib29sIGdwaW9fYWN0aXZlX2xvdzsNCj4gLQl1
-bnNpZ25lZCBsb25nIGRlYm91bmNlOw0KPiArCXVuc2lnbmVkIGludCBkZWJvdW5jZTsNCg0KV2hh
-dCBhYm91dCB1MzIsIG1ha2luZyBpdCBtb3JlIGNsZWFyPw0KKCA+ICsJZGV2aWNlX3Byb3BlcnR5
-X3JlYWRfdTMyKGRldiwgImRlYm91bmNlLW1zIiwgJnBkYXRhLT5kZWJvdW5jZSk7ICkNCg0KPiAg
-CXVuc2lnbmVkIGxvbmcgaXJxX2ZsYWdzOw0KPiAgDQo+ICAJYm9vbCBjaGVja19vbl9yZXN1bWU7
-DQo+IC0tIA0KPiAxLjguMA0K
+Changes in v3:
+ - reorganize patch 1 and 2 to avoid a break git bisect
+
+Changes in v2:
+ - Add const for st_pll4600c28_418_a9 structure
+ - Use readl_relaxed_poll_timeout macro instead Jiffies
+ - Add patch to enable stih418 A9 pll via DT.
+
+This patchset is based on '[PATCH 0/2] ST PLL fixes for 4.3'
+
+Gabriel Fernandez (4):
+  drivers: clk: st: Support for enable/disable in Clockgen PLLs
+  drivers: clk: st: PLL rate change implementation for DVFS
+  drivers: clk: st: Correct the pll-type for A9 for stih418
+  ARM: STi: DT: Add support for stih418 A9 pll
+
+ .../devicetree/bindings/clock/st/st,clkgen-pll.txt |   1 +
+ arch/arm/boot/dts/stih418-clock.dtsi               |   2 +-
+ drivers/clk/st/clkgen-mux.c                        |   3 +
+ drivers/clk/st/clkgen-pll.c                        | 468 ++++++++++++++++++++-
+ drivers/clk/st/clkgen.h                            |   2 +
+ 5 files changed, 467 insertions(+), 9 deletions(-)
+
+-- 
+1.9.1
+
