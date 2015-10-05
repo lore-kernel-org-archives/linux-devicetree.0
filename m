@@ -1,54 +1,23 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: Re: [PATCH 0/2] Add RT5033 Flash LED driver
-Date: Mon, 05 Oct 2015 11:11:49 +0900
-Message-ID: <5611DC65.3060301@samsung.com>
-References: <1443778875-18261-1-git-send-email-ingi2.kim@samsung.com>
- <560E9BC0.20804@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: r8a7794: add HS-USB DT support
+Date: Mon, 5 Oct 2015 12:02:25 +0900
+Message-ID: <20151005030224.GA32390@verge.net.au>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+ <49756124.B9jeO4ArbL@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <560E9BC0.20804@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rpurdie@rpsys.net, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <49756124.B9jeO4ArbL@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jacek
+On Thu, Sep 17, 2015 at 02:53:58AM +0300, Sergei Shtylyov wrote:
+> Define the R8A7794 generic part of the HS-USB device node.
+> It is up to the board file to enable the device.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks for review my patch
-Oops! old version patch is sent.
-I should have checked..
-I'll send new patch, soon.
-
-Thanks
-Ingi Kim
-
-On 2015=EB=85=84 10=EC=9B=94 02=EC=9D=BC 23:59, Jacek Anaszewski wrote:
-> Hi Ingi,
->=20
-> Thanks for the patches. Please fix build errors
-> and resubmit.
->=20
-> On 10/02/2015 11:41 AM, Ingi Kim wrote:
->> This patch adds ktd2692 Flash LED driver with LED Flash class
->>
->> Ingi Kim (2):
->>    leds: rt5033: add DT binding for RT5033
->>    leds: rt5033: Add RT5033 Flash led device driver
->>
->>   .../devicetree/bindings/leds/leds-rt5033.txt       |  38 ++++
->>   drivers/leds/Kconfig                               |   8 +
->>   drivers/leds/Makefile                              |   1 +
->>   drivers/leds/leds-rt5033.c                         | 222 +++++++++=
-++++++++++++
->>   drivers/mfd/rt5033.c                               |   3 +
->>   include/linux/mfd/rt5033-private.h                 |  67 ++++++-
->>   include/linux/mfd/rt5033.h                         |  27 ++-
->>   7 files changed, 355 insertions(+), 11 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-rt5=
-033.txt
->>   create mode 100644 drivers/leds/leds-rt5033.c
->>
->=20
->=20
+Thanks, I have queued this up.
