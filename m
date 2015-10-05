@@ -1,94 +1,53 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v6 21/22] driver core: Start processing deferred probes
- earlier
-Date: Mon, 05 Oct 2015 16:52:35 -0700
-Message-ID: <56130D43.10200@gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com>
-Reply-To: frowand.list@gmail.com
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: How to parse delete-property annotations
+Date: Mon, 05 Oct 2015 16:52:42 -0700
+Message-ID: <56130D4A.40602@gmail.com>
+References: <jwvzj05s842.fsf-monnier+INBOX@gnu.org>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <jwvzj05s842.fsf-monnier+INBOX-mXXj517/zsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/21/2015 7:03 AM, Tomeu Vizoso wrote:
-> Some initcalls in the late level assume that some devices will have
-> already probed without explicitly checking for that.
+On 9/29/2015 5:54 AM, Stefan Monnier wrote:
+> [ In the context of Emacs's dts-mode (http://elpa.gnu.org/packages/dts-mode). ]
 > 
-> After the recent move to defer most device probes when they are
-> registered, pressure increased in the late initcall level.
+> I recently came across the following piece of DTS code:
 > 
-> By starting the processing of the deferred queue in device_initcall_sync
-> we increase the chances that the initcalls mentioned before will find
-> the devices they depend on to have already probed.
+>    &usbphy {
+>         /* Unset otg detect pins as we force dr_mode */
+>         /delete-property/ usb0_id_det-gpio;
+>         /delete-property/ usb0_vbus_det-gpio;
+>    };
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
+> and was wondering how dts-mode should understand this.  `dts-mode'
+> doesn't try to understand the actual *meaning* of such code, but it does
+> try to understand the syntax (i.e. how the abstract-syntax-tree would
+> look like).
 > 
-> Changes in v4:
-> - Start processing deferred probes in device_initcall_sync
+> Is "/delete-property/" is special syntax in itself, or is it a special
+> case of a more general syntax (like "/.../ blabla;")?  Where exactly is
+> it allowed to appear?
+> Could someone point me to some documentation explaining/describing this syntax?
 > 
->  drivers/base/dd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 269ea76c1a4f..f0ef9233fcd6 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -176,7 +176,7 @@ static void driver_deferred_probe_trigger(void)
->   *
->   * We don't want to get in the way when the bulk of drivers are getting probed.
->   * Instead, this initcall makes sure that deferred probing is delayed until
-> - * late_initcall time.
-> + * device_initcall_sync time.
+>         Stefan
 
-This is a misuse of the *_sync initcall level.
+The best documentation that I know of for this is the lexer
+source at:
 
-If a deferred probe created a thread and expected a wait at the
-following *_sync level then the wait would not occur because
-there is no subsequent *_sync level.  This is not a problem today
-because (as far as I know) there are no threads in the probe
-functions.  But there has been interest in adding parallel
-probing and that could expose this problem.
+   https://git.kernel.org/cgit/utils/dtc/dtc.git/tree/dtc-lexer.l
 
-The purpose of the *_sync initcall levels is to allow the corresponding
-initcall level to use multiple threads of execution instead of a single
-thread.  The *_sync level provides a location for a wait for all of the
-threads at the corresponding init level to complete.  This is better
-explained in the git log:
+The lexer detects tokens for "/delete-property/" and "/delete-node/"
+at lines 128 - 140.
 
-commit 735a7ffb739b6efeaeb1e720306ba308eaaeb20e
-Author: Andrew Morton <akpm@osdl.org>
-Date:   Fri Oct 27 11:42:37 2006 -0700
-
-    [PATCH] drivers: wait for threaded probes between initcall levels
-
-    The multithreaded-probing code has a problem: after one initcall level (eg,
-    core_initcall) has been processed, we will then start processing the next
-    level (postcore_initcall) while the kernel threads which are handling
-    core_initcall are still executing.  This breaks the guarantees which the
-    layered initcalls previously gave us.
-
-    IOW, we want to be multithreaded _within_ an initcall level, but not between
-    different levels.
-
-    Fix that up by causing the probing code to wait for all outstanding probes at
-    one level to complete before we start processing the next level.
-
->   */
->  static int deferred_probe_initcall(void)
->  {
-> @@ -190,7 +190,7 @@ static int deferred_probe_initcall(void)
->  	flush_workqueue(deferred_wq);
->  	return 0;
->  }
-> -late_initcall(deferred_probe_initcall);
-> +device_initcall_sync(deferred_probe_initcall);
->  
->  static void driver_bound(struct device *dev)
->  {
-> 
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
