@@ -1,208 +1,76 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 5/7] hwrng: st: Add support for ST's HW Random Number
- Generator
-Date: Mon, 5 Oct 2015 13:11:02 +0100
-Message-ID: <20151005121102.GB17172@x1>
-References: <1442497557-9271-1-git-send-email-lee.jones@linaro.org>
- <1442497557-9271-6-git-send-email-lee.jones@linaro.org>
- <5612548E.8090405@linaro.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: "clk: sunxi: Add a simple gates driver" breaks kernel with older
+ DTB
+Date: Mon, 5 Oct 2015 14:29:52 +0200
+Message-ID: <20151005122952.GJ2696@lukather>
+References: <1443689231.16718.225.camel@citrix.com>
+ <20151001204506.GR7104@lukather>
+ <560E5767.2040502@citrix.com>
+ <20151002105333.GA2696@lukather>
+ <560E6768.6040705@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PWfwoUCx3AFJRUBq"
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5612548E.8090405@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, peter@korsgaard.com, festevam@gmail.com, kieranbingham@gmail.com, kernel@stlinux.com, Pankaj Dev <pankaj.dev@st.com>
+In-Reply-To: <560E6768.6040705@citrix.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Julien Grall <julien.grall@citrix.com>
+Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, KumarGala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "freebsd-arm@freebsd.org" <freebsd-arm@FreeBSD.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 05 Oct 2015, Daniel Thompson wrote:
-> Late but...
 
-That's okay.  Fixup patches can always be submitted.
+--PWfwoUCx3AFJRUBq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We have forever. :)
-
-> On 17/09/15 14:45, Lee Jones wrote:
-> >diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_rando=
-m/Makefile
-> >index 055bb01..8bcfb45 100644
-> >--- a/drivers/char/hw_random/Makefile
-> >+++ b/drivers/char/hw_random/Makefile
-> >@@ -30,4 +30,5 @@ obj-$(CONFIG_HW_RANDOM_TPM) +=3D tpm-rng.o
-> >  obj-$(CONFIG_HW_RANDOM_BCM2835) +=3D bcm2835-rng.o
-> >  obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) +=3D iproc-rng200.o
-> >  obj-$(CONFIG_HW_RANDOM_MSM) +=3D msm-rng.o
-> >+obj-$(CONFIG_HW_RANDOM_ST) +=3D st-rng.o
-> >  obj-$(CONFIG_HW_RANDOM_XGENE) +=3D xgene-rng.o
-> >diff --git a/drivers/char/hw_random/st-rng.c b/drivers/char/hw_rando=
-m/st-rng.c
-> >new file mode 100644
-> >index 0000000..8c8a435
-> >--- /dev/null
-> >+++ b/drivers/char/hw_random/st-rng.c
-> >@@ -0,0 +1,144 @@
-> >+/*
-> >+ * ST Random Number Generator Driver ST's Platforms
-> >+ *
-> >+ * Author: Pankaj Dev: <pankaj.dev@st.com>
-> >+ *         Lee Jones <lee.jones@linaro.org>
-> >+ *
-> >+ * Copyright (C) 2015 STMicroelectronics (R&D) Limited
-> >+ *
-> >+ * This program is free software; you can redistribute it and/or mo=
-dify
-> >+ * it under the terms of the GNU General Public License version 2 a=
-s
-> >+ * published by the Free Software Foundation.
-> >+ */
-> >+
-> >+#include <linux/clk.h>
-> >+#include <linux/delay.h>
-> >+#include <linux/hw_random.h>
-> >+#include <linux/io.h>
-> >+#include <linux/module.h>
-> >+#include <linux/of.h>
-> >+#include <linux/platform_device.h>
-> >+#include <linux/slab.h>
-> >+
-> >+/* Registers */
-> >+#define ST_RNG_STATUS_REG		0x20
-> >+#define ST_RNG_DATA_REG			0x24
-> >+
-> >+/* Registers fields */
-> >+#define ST_RNG_STATUS_BAD_SEQUENCE	BIT(0)
-> >+#define ST_RNG_STATUS_BAD_ALTERNANCE	BIT(1)
-> >+#define ST_RNG_STATUS_FIFO_FULL		BIT(5)
-> >+
-> >+#define ST_RNG_FIFO_SIZE		8
-> >+#define ST_RNG_SAMPLE_SIZE		2 /* 2 Byte (16bit) samples */
-> >+
-> >+/* Samples are available every 0.667us, which we round to 1us */
-> >+#define ST_RNG_FILL_FIFO_TIMEOUT   (1 * (ST_RNG_FIFO_SIZE / ST_RNG_=
-SAMPLE_SIZE))
-> >+
-> >+struct st_rng_data {
-> >+	void __iomem	*base;
-> >+	struct clk	*clk;
-> >+	struct hwrng	ops;
-> >+};
-> >+
-> >+static int st_rng_read(struct hwrng *rng, void *data, size_t max, b=
-ool wait)
-> >+{
-> >+	struct st_rng_data *ddata =3D (struct st_rng_data *)rng->priv;
-> >+	u32 status;
-> >+	int i;
-> >+
-> >+	if (max < sizeof(u16))
-> >+		return -EINVAL;
-> >+
-> >+	/* Wait until FIFO is full - max 4uS*/
-> >+	for (i =3D 0; i < ST_RNG_FILL_FIFO_TIMEOUT; i++) {
-> >+		status =3D readl_relaxed(ddata->base + ST_RNG_STATUS_REG);
-> >+		if (status & ST_RNG_STATUS_FIFO_FULL)
-> >+			break;
-> >+		udelay(1);
+1;3803;0c
+On Fri, Oct 02, 2015 at 12:15:52PM +0100, Julien Grall wrote:
+> On 02/10/15 11:53, Maxime Ripard wrote:
+> >> If no, that's very unfortunate because it means that you can't
+> >> re-use the same DT across multiple OS and the DT provided by the
+> >> firmware (if it's built-in).
+> >=20
+> > Is there such OS yet (and by that, I mean one that actually shares our
+> > DT, instead of rewriting its own) ?
 >=20
-> How much bandwidth does using udelay() cost? I think it could be
-> >10% compared to a tighter polling loop.
+> Yes, FreeBSD started to support the DT provided by vendors which are
+> based on Linux bindings. The ARM64 port is only using DTB provided by
+> the hardware. For ARM32, there is still some platform using a specific
+> DT for FreeBSD but they are trying to get a ride.
 
-Samples are only available every 0.7uS and we only do this for every
-4.  The maximum it could 'cost' is <1uS.  Do we really want to fuss
-over that tiny amount of time?  It's an understandable point if we
-were talking about milliseconds, but a single microsecond?
+Well, it would have been good if they contacted us in the first place
+then, because this has never been considered seriously afaik, and we
+never stated that it actually was an ABI.
 
-> >+	}
-> >+
-> >+	if (i =3D=3D ST_RNG_FILL_FIFO_TIMEOUT)
-> >+		return 0;
->=20
-> Isn't a timeout an error condition?
-
-Yes, which is why we're returning 0.  In this context 0 =3D=3D 'no data=
-'.
-This will be converted to -EAGAIN if the caller did not request
-NONBLOCKING.
-
-> >+
-> >+	for (i =3D 0; i < ST_RNG_FIFO_SIZE && i < max; i +=3D 2)
-> >+		*(u16 *)(data + i) =3D
-> >+			readl_relaxed(ddata->base + ST_RNG_DATA_REG);
-> >+
-> >+	return i;	/* No of bytes read */
-> >+}
-> >+
-> >+static int st_rng_probe(struct platform_device *pdev)
-> >+{
-> >+	struct st_rng_data *ddata;
-> >+	struct resource *res;
-> >+	struct clk *clk;
-> >+	void __iomem *base;
-> >+	int ret;
-> >+
-> >+	ddata =3D devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
-> >+	if (!ddata)
-> >+		return -ENOMEM;
-> >+
-> >+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >+	base =3D devm_ioremap_resource(&pdev->dev, res);
-> >+	if (IS_ERR(base))
-> >+		return PTR_ERR(base);
-> >+
-> >+	clk =3D devm_clk_get(&pdev->dev, NULL);
-> >+	if (IS_ERR(clk))
-> >+		return PTR_ERR(clk);
-> >+
-> >+	ret =3D clk_prepare_enable(clk);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	ddata->ops.priv	=3D (unsigned long)ddata;
-> >+	ddata->ops.read	=3D st_rng_read;
-> >+	ddata->ops.name	=3D pdev->name;
-> >+	ddata->base	=3D base;
-> >+	ddata->clk	=3D clk;
-> >+
-> >+	dev_set_drvdata(&pdev->dev, ddata);
-> >+
-> >+	ret =3D hwrng_register(&ddata->ops);
-> >+	if (ret) {
-> >+		dev_err(&pdev->dev, "Failed to register HW RNG\n");
->=20
-> Why shout about this particular error but not any others? Perhaps
-> just rely on the driver core to report the error here?
-
-I have omitted error prints from subsystem calls which do all the
-shouting required.  Unfortunately the HWRNG is somewhat stuck in the
-past in a number of ways; a lack of subsystem level shouting being one
-of them.
-
-> >+		return ret;
-> >+	}
-> >+
-> >+	dev_info(&pdev->dev, "Successfully registered HW RNG\n");
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+static int st_rng_remove(struct platform_device *pdev)
-> >+{
-> >+	struct st_rng_data *ddata =3D dev_get_drvdata(&pdev->dev);
-> >+
-> >+	hwrng_unregister(&ddata->ops);
-> >+
-> >+	clk_disable_unprepare(ddata->clk);
->=20
-> This mismatches the error paths in the probe function (there is no
-> cleanup of clock counts in probe function).
-
-Good catch.  I am missing a clk_disable_unprepare() in the
-hwrng_register() failure patch.  Will fix.
+Maxime
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--PWfwoUCx3AFJRUBq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWEm1AAAoJEBx+YmzsjxAgPGgP/2bJvcUNNNST6oRh5TGpu2kY
+1B/+N34aE81+/fTHu2ZlqgI965r20aHaLKUxCes9YmI1B4I/6sUQPMlb5Hs9nnza
+Omtu7JURXLRs4KI7Gn6aJcnQ/1ulaOoQyFM7zpEFB4/LEIHgViuPdYOib8gi7tNd
+Pa77fi2Th04eZZIVboubtZC7tynSaQD9bROx2B89qSA5N2i2NgC18NkvMYkDpsc7
+xy+a4sx+N788KIJ5S6aP2JSPoSH1OqJ4oH+8pLm985PYW7JZkUYZioesfev41rV7
+w8poMvyyteWRysu3zhIKzyEhZT6fiHR0jUVTS4L6ifvg3gT9oe8v6zajPJtdgoW7
+hFqKedQQX06LzSzqCxLOMvS5HVSnYtWVrRelsZVOk3IgMl2adththiO7a3onvIt4
+uHkaNKNH+dheKDIhr3IVztvQyShbG6ys7m64U4WZKGRs0urxRfK9pz5chwk5184v
+ffCa80ro26uU7Mj0iQ/WSCI1PUP+b0XDrpD+oWhAYdWESQGatTcvifnVjjSqafuk
+NZ7omK1Hh+FJL2MLXmAmarviSQLh/oNY9ILwzgVsx8yzMWQ4icZRc43SuElXaljW
+DnruaQMZbB/J0pNKeheNn8Yey7sRFnRBml+X6hd1WoFsz49px4ktN2hLSQJ3ORR0
+mktzhw9Q1vZjA/X8xeOm
+=BKpj
+-----END PGP SIGNATURE-----
+
+--PWfwoUCx3AFJRUBq--
