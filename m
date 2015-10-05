@@ -1,30 +1,61 @@
-From: Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] QEMU fw_cfg DMA interface documentation
-Date: Mon, 5 Oct 2015 09:20:55 +0100
-Message-ID: <CAJSP0QVyTAK0zbpUGd_4-4tf=ao_T-j0YcsDuxu0SuR3VFq+2g@mail.gmail.com>
-References: <1443701677-13629-1-git-send-email-markmb@redhat.com>
-	<1443701732-13696-1-git-send-email-markmb@redhat.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v3 13/13] scsi: ufs: Add exynos ufs platform data
+Date: Mon, 05 Oct 2015 13:44:29 +0530
+Message-ID: <56123165.2060500@samsung.com>
+References: <201510011845.GN7Kisc4%fengguang.wu@intel.com>
+ <1790578.NZeHVGuJeN@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443701732-13696-1-git-send-email-markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Marc_Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Laszlo <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1790578.NZeHVGuJeN@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 1, 2015 at 1:15 PM, Marc Mar=C3=AD <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrot=
-e:
-> +Additionaly, if the DMA interface is available then a read to the DM=
-A Address
-> +will return 0x51454d5520434647 ("QEMU CFG" in big-endian format).
+CCing Rob Herring,
 
-What does this mean?
+Hi Arnd,
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 10/01/2015 04:59 PM, Arnd Bergmann wrote:
+> On Thursday 01 October 2015 18:46:34 kbuild test robot wrote:
+>> [auto build test results on v4.3-rc3 -- if it's inappropriate base, please ignore]
+>>
+>> config: x86_64-allmodconfig (attached as .config)
+>> reproduce:
+>>          git checkout 6e153e3bf7c68b019e987c5a0ffadebd9c7d4fbb
+>>          # save the attached .config to linux build tree
+>>          make ARCH=x86_64
+>>
+>> All error/warnings (new ones prefixed by >>):
+>>
+>>>> ERROR: "ufs_hba_exynos_ops" [drivers/scsi/ufs/ufshcd-pltfrm.ko] undefined!
+>>
+>>
+>
+> Ah, this seems to be a case of layering violation. It would be best to
+> restructure the code so that the exynos driver registers a platform_driver
+> by itself for the respective DT compatible string, and then calls
+> into the common code from its probe function, rather than having the
+> generic driver know about the specific backends.
+>
+> That approach will also make the generic driver more scalable as we
+> add further chip-specific variations, and matches what we do in other
+> drivers.
+>
+
+Looks like some discussions on ufs variant driver probe method happened 
+here [1] few months back.
+[1]-> https://lkml.org/lkml/2015/6/3/180
+
+And since ufshcd-pltfrm is already a platform_driver, so I just add a 
+platform data for the variant driver.
+I should have add a IS_ENABLED for it to avoid the compilation error for 
+other ARCH.
+
+
+Thanks!!
+
+> 	Arnd
+>
