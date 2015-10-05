@@ -1,94 +1,92 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] iio:adc:palmas: add DT support
-Date: Mon, 5 Oct 2015 12:17:55 +0100
-Message-ID: <20151005111754.GG19064@leverpostej>
-References: <86F849CB-1A50-4BEB-99C6-79FF97971DCB@goldelico.com>
- <cover.1443973837.git.hns@goldelico.com>
- <6C211191-87B8-4444-ADA7-8BE454C2B3D3@goldelico.com>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: [PATCH] ARM64: dts: vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm
+Date: Mon, 5 Oct 2015 12:53:52 +0100
+Message-ID: <1444046032-31310-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6C211191-87B8-4444-ADA7-8BE454C2B3D3-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Pradeep Goudagunta <pgoudagunta-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Ian Campbell <ian.campbell@citrix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, Frank Rowand <frank.rowand@sonymobile.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 04, 2015 at 06:05:59PM +0200, H. Nikolaus Schaller wrote:
-> From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> 
-> Code was found at:
-> https://android.googlesource.com/kernel/tegra/+/a90856a6626d502d42c6e7abccbdf9d730b36270%5E%21/#F1
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> [Fixed minor typos + add channels list to documentation]
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> ---
-> .../devicetree/bindings/iio/adc/palmas-gpadc.txt   | 46 +++++++++++++++++++
-> drivers/iio/adc/palmas_gpadc.c                     | 52 +++++++++++++++++++---
-> 2 files changed, 93 insertions(+), 5 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt b/Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-> new file mode 100644
-> index 0000000..2149afe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-> @@ -0,0 +1,46 @@
-> +* Palmas general purpose ADC IP block devicetree bindings
-> +
-> +Channels list:
-> +	0 battery type
-> +	1 battery temp NTC (optional current source)
-> +	2 GP
-> +	3 temp (with ext. diode, optional current source)
-> +	4 GP
-> +	5 GP
-> +	6 VBAT_SENSE
-> +	7 VCC_SENSE
-> +	8 Backup Battery voltage
-> +	9 external charger (VCHG)
-> +	10 VBUS
-> +	11 DC-DC current probe (how does this work?)
-> +	12 internal die temp
-> +	13 internal die temp
-> +	14 USB ID pin voltage
-> +	15 test network
-> +
-> +Required properties:
-> +- compatible : Must be "ti,palmas-gpadc".
-> +
-> +Optional sub-nodes:
-> +ti,channel0-current-microamp: Channel 0 current in uA.
-> +	Values are rounded to derive 0uA, 5uA, 15uA, 20uA.
-> +ti,channel3-current-microamp: Channel 3 current in uA.
-> +	Valid are rounded to derive 0uA, 10uA, 400uA, 800uA.
+Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+LogicTile Express 20MG" added a new dts file to arch/arm64 which
+included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+.dtsi supplied by arch/arm.
 
-It's only possible to configure channels 0 and 3 in this manner?
+Unfortunately this causes some issues for the split device tree
+repository[0], since things get moved around there. In that context
+the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+while the include is at src/arm/vexpress-v2m-rs1.dtsi.
 
-> +ti,enable-extended-delay: Enable extended delay.
+The sharing of the .dtsi is legitimate since the baseboard is the same
+for various vexpress systems whatever processor they use.
 
-What is this? When would I select it? Why does it belong in the DT
-rather than being a runtime option?
+Previously I attempted to resolve this by creating a shared location
+for such things but we have been unable to come to a consensus on
+where that should be.
 
-> +Example:
-> +
-> +pmic {
-> +	compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
-> +	...
-> +	gpadc {
-> +		compatible = "ti,palmas-gpadc";
-> +		interrupts = <18 0
-> +			      16 0
-> +			      17 0>;
-> +		ti,channel0-current-microamp = <5>;
-> +		ti,channel3-current-microamp = <10>;
-> +		};
-> +	};
-> +	...
-> +};
+Instead this patch simply replaces the use of ../../ in the dts
+/include/ with a symlink in arch/arm64/boot/dts/arm pointing to the
+file arch/arm/boot/dts.
 
-I thought you needed #iio-cells for encoding the channel?
+Since the split device tree repo will shortly be required to flatten
+symlinks for other reasons this will cause the dtsi file to appear in
+both src/arm and src/arm64 in the split repo, which is an improvement
+on not building for arm64 now.
 
-Mark.
+[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+
+Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Kristina Martsenko <kristina.martsenko@arm.com>
+Cc: Kevin Hilman <khilman@linaro.org>
+Cc: Frank Rowand <frank.rowand@sonymobile.com>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: arm@kernel.org
+Cc: linux-kbuild@vger.kernel.org
+---
+For more on flattening symlinks see
+http://thread.gmane.org/gmane.linux.kernel.input/45646/focus=45742
+---
+ arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts | 2 +-
+ arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi        | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 120000 arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+
+diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+index 5b1d018..bb3c26d 100644
+--- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
++++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+@@ -186,6 +186,6 @@
+ 				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+ 				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
++		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+new file mode 120000
+index 0000000..68fd0f8
+--- /dev/null
++++ b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi
+\ No newline at end of file
+-- 
+2.5.3
+
