@@ -1,62 +1,67 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Document the STM32 HW RNG bindings
-Date: Mon, 5 Oct 2015 10:34:38 -0500
-Message-ID: <CAL_JsqLt2=Cb8SDAQG7XiMNC7NV59MimYETyt87-QYHt31cnsQ@mail.gmail.com>
-References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org> <1443904519-24012-2-git-send-email-daniel.thompson@linaro.org>
+Subject: Re: [PATCH v7 1/2] pwm: Add device tree binding document for R-Car
+ PWM Timer
+Date: Mon, 5 Oct 2015 10:38:59 -0500
+Message-ID: <CAL_JsqJqwk6W5psXY9BZXwm4GwhG1Dr44Xq-7tf-MmSAtqpnzA@mail.gmail.com>
+References: <1443602873-4316-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1443602873-4316-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443904519-24012-2-git-send-email-daniel.thompson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-crypto@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1443602873-4316-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linux PWM List <linux-pwm@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 3, 2015 at 3:35 PM, Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
-> This adds documenttaion of device tree binds for the STM32 hardware
-> random number generator.
+On Wed, Sep 30, 2015 at 3:47 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Add binding document for Renesas PWM Timer on R-Car SoCs.
 >
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 > ---
->  .../devicetree/bindings/hwrng/stm32-rng.txt         | 21 +++++++++++++++++++++
-
-Please use bindings/rng/... as I'm consolidating bindings there.
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwrng/stm32-rng.txt
+>  .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
 >
-> diff --git a/Documentation/devicetree/bindings/hwrng/stm32-rng.txt b/Documentation/devicetree/bindings/hwrng/stm32-rng.txt
+> diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
 > new file mode 100644
-> index 000000000000..47f04176f93b
+> index 0000000..ea0a27b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwrng/stm32-rng.txt
-> @@ -0,0 +1,21 @@
-> +STMicroelectronics STM32 HW RNG
-> +===============================
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+> @@ -0,0 +1,27 @@
+> +* Renesas R-Car PWM Timer Controller
 > +
-> +The STM32 hardware random number generator is a simple fixed purpose IP and
-> +is fully separated from other crypto functions.
+> +Required Properties:
+> +- compatible: should be one of the following.
+> + - "renesas,pwm-rcar": for generic R-Car compatible PWM Timer
+
+Should be this one and one of the following? That is what the example shows.
+
+> + - "renesas,pwm-r8a7778": for R-Car M1A
+> + - "renesas,pwm-r8a7779": for R-Car H1
+> + - "renesas,pwm-r8a7790": for R-Car H2
+> + - "renesas,pwm-r8a7791": for R-Car M2-W
+> + - "renesas,pwm-r8a7794": for R-Car E2
+> +- reg: base address and length of the registers block for the PWM.
+> +- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
+> +  the cells format.
+> +- clocks: clock phandle and specifier pair.
+> +- pinctrl-0: phandle, referring to a default pin configuration node.
+> +- pinctrl-names: Set to "default".
 > +
-> +Required properties:
+> +Example: R8A7790 (R-Car H2) PWM Timer node
 > +
-> +- compatible : Should be "st,stm32-rng"
-> +- reg : Should be register base and length as documented in the datasheet
-> +- interrupts : The designated IRQ line for the RNG
-> +- clocks : The clock needed to enable the RNG
-> +
-> +Example:
-> +
-> +       rng: rng@50060800 {
-> +               compatible = "st,stm32-rng";
-> +               reg = <0x50060800 0x400>;
-> +               interrupts = <80>;
-> +               clocks = <&rcc 0 38>;
+> +       pwm0: pwm@e6e30000 {
+> +               compatible = "renesas,pwm-r8a7790", "renesas,pwm-rcar";
+> +               reg = <0 0xe6e30000 0 0x8>;
+> +               #pwm-cells = <2>;
+> +               clocks = <&mstp5_clks R8A7790_CLK_PWM>;
+> +               pinctrl-0 = <&pwm0_pins>;
+> +               pinctrl-names = "default";
 > +       };
 > --
-> 2.4.3
+> 1.9.1
 >
