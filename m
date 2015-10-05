@@ -1,59 +1,43 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
-Date: Mon, 5 Oct 2015 22:57:52 +0200
-Message-ID: <20151005205752.GA10479@xo-6d-61-c0.localdomain>
-References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
- <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
- <20151004194632.GA27633@xo-6d-61-c0.localdomain>
- <1F3AC3675D538145B1661F571FE1805F2F0EE716@irsmsx105.ger.corp.intel.com>
+From: Alexander Popov <alex.popov@linux.com>
+Subject: Re: [PATCH v3 1/3] powerpc/512x: add LocalPlus Bus FIFO device driver
+Date: Tue, 6 Oct 2015 01:22:42 +0300
+Message-ID: <5612F832.9060407@linux.com>
+References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
+ <1443115737-3948-2-git-send-email-alex.popov@linux.com>
+ <56049CD0.7080104@tabi.org> <560C5325.6070406@linux.com>
+ <560D692E.1010309@tabi.org>
+Reply-To: alex.popov@linux.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F0EE716-pww93C2UFcwu0RiL9chJVbfspsVTdybXVpNB7YpNyf8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <560D692E.1010309@tabi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@tabi.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Anatolij Gustschin <agust@denx.de>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Popov <alex.popov@linux.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> > Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
-> > 
-> > On Mon 2015-09-07 17:36:15, Irina Tirdea wrote:
-> > > Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  drivers/input/touchscreen/goodix.c | 12 ++++++------
-> > >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > Don't.
-> > 
-> > Yes, we sometimes sort includes... to avoid patch rejects.
-> > 
-> > This is guaranteed to cause rejects.
-> > 
-> > If we do sort them, we use "longest-first" usually.
-> > 
+On 01.10.2015 20:11, Timur Tabi wrote:
+> On 09/30/2015 04:24 PM, Alexander Popov wrote:
+>>> Driver code that has to parse #address-cells or #size-cells
+>>> is usually wrong.
+>>
+>> I would not call it "parsing", I just check whether the dts-file is good.
+>> Anyway, could you give me a clue how to do better?
 > 
-> When using random order, I've been told by reviewers that my ordering
-> is wrong [1], but I could not figure out what the "right" ordering is in order to apply.
-> I did not find any mention of how to sort includes in  Documentation/CodingStyle,
-> but I've seen patches in the kernel that fix random ordering by sorting them
-> alphabetically [2].
+> You should use of_n_size_cells() and of_n_addr_cells().
 
-Ok, I have seen this more often:
+It seems that of_n_size_cells() and of_n_addr_cells() don't work well in
+my case. These functions just help to get "#address-cells" and "#size-cells"
+from a parent node of a given node.
 
-https://lkml.org/lkml/2009/3/28/99
- 
-> However, I do not feel strongly about this so I can drop this patch.
+"sclpc" device tree node is a child of "soc" node (not "localbus" node),
+but the driver must use "ranges" property of "localbus" to determine
+the chip select number of a client device which ordered the DMA transfer.
 
-Well, its really nit picking.
+It seems that ns2_leds_get_of_pdata() from linux/drivers/leds/leds-ns2.c
+or pnv_init_idle_states() from arch/powerpc/platforms/powernv/idle.c do
+something similar to get_cs_ranges().
+Is it OK?
 
-										Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Alexander
