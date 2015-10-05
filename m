@@ -1,69 +1,43 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH 2/2] ASoC: da7213: Add bindings documentation for codec driver
-Date: Mon, 5 Oct 2015 16:40:20 +0100
-Message-ID: <d86c170c3eaea34e128026b04126b699e0311d65.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] soc: sunxi: Add driver for Allwinner
+ Reduced Serial Bus
+Date: Mon, 5 Oct 2015 23:43:48 +0800
+Message-ID: <CAGb2v6693tYRFukPw-XaYVxsh9q8QHG9Z=KNs4xgeX+3UkgHWA@mail.gmail.com>
+References: <1443700673-24312-1-git-send-email-wens@csie.org>
+ <1443700673-24312-3-git-send-email-wens@csie.org> <20151004141639.GD2696@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBTFVZKYAKGQEDTLJCYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151004141639.GD2696@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- Documentation/devicetree/bindings/sound/da7213.txt | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/da7213.txt
+On Sun, Oct 4, 2015 at 10:16 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Thu, Oct 01, 2015 at 07:57:48PM +0800, Chen-Yu Tsai wrote:
+>> Reduced Serial Bus (RSB) is an Allwinner proprietery interface
+>> used to communicate with PMICs and other peripheral ICs.
+>>
+>> RSB is a two-wire push-pull serial bus that supports 1 master
+>> device and up to 15 active slave devices.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/sound/da7213.txt b/Documentation/devicetree/bindings/sound/da7213.txt
-new file mode 100644
-index 0000000..7280e82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/da7213.txt
-@@ -0,0 +1,41 @@
-+Dialog Semiconductor DA7213 Audio Codec bindings
-+
-+======
-+
-+Required properties:
-+- compatible : Should be "dlg,da7213"
-+- reg: Specifies the I2C slave address
-+
-+Optional properties:
-+- clocks : phandle and clock specifier for codec MCLK.
-+- clock-names : Clock name string for 'clocks' attribute, should be "mclk".
-+
-+- dlg,micbias1-lvl : Voltage (mV) for Mic Bias 1
-+	[<1600>, <2200>, <2500>, <3000>]
-+- dlg,micbias2-lvl : Voltage (mV) for Mic Bias 2
-+	[<1600>, <2200>, <2500>, <3000>]
-+- dlg,dmic-data-sel : DMIC channel select based on clock edge.
-+	["lrise_rfall", "lfall_rrise"]
-+- dlg,dmic-samplephase : When to sample audio from DMIC.
-+	["on_clkedge", "between_clkedge"]
-+- dlg,dmic-clkrate : DMIC clock frequency (MHz).
-+	[<1500000>, <3000000>]
-+
-+======
-+
-+Example:
-+
-+	codec_i2c: da7213@1a {
-+		compatible = "dlg,da7213";
-+ 		reg = <0x1a>;
-+
-+ 		clocks = <&clks 201>;
-+		clock-names = "mclk";
-+
-+		dlg,micbias1-lvl = <2500>;
-+		dlg,micbias2-lvl = <2500>;
-+
-+		dlg,dmic-data-sel = "lrise_rfall";
-+		dlg,dmic-samplephase = "between_clkedge";
-+		dlg,dmic-clkrate = <3000000>;
-+	};
--- 
-1.9.3
+Slightly confused. Are we merging this through your tree or directly
+through arm-soc?
+
+Thanks!
+ChenYu
