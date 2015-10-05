@@ -1,67 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: da7213: Add DT support to codec driver
-Date: Mon, 5 Oct 2015 16:55:43 +0100
-Message-ID: <20151005155543.GY12635@sirena.org.uk>
-References: <cover.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
- <8b10191f4e14b32f831d32c66c7edebd861b70ac.1444042230.git.Adam.Thomson.Opensource@diasemi.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: pwm: add MediaTek display PWM
+ bindings
+Date: Mon, 5 Oct 2015 17:58:43 +0200
+Message-ID: <20151005155843.GD17612@ulmo>
+References: <1439882875-19596-1-git-send-email-yh.huang@mediatek.com>
+ <1439882875-19596-2-git-send-email-yh.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TrSyUYpaPvvX07X2"
+	protocol="application/pgp-signature"; boundary="pQhZXvAqiZgbeUkD"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8b10191f4e14b32f831d32c66c7edebd861b70ac.1444042230.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1439882875-19596-2-git-send-email-yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+To: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---TrSyUYpaPvvX07X2
+--pQhZXvAqiZgbeUkD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 05, 2015 at 04:40:18PM +0100, Adam Thomson wrote:
+On Tue, Aug 18, 2015 at 03:27:53PM +0800, YH Huang wrote:
+> Document the device-tree binding of MediaTek display PWM.
+> The PWM has one channel to control the backlight brightness for display.
+> It supports MT8173 and MT6595.
+>=20
+> Signed-off-by: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |   42 ++++++++++++++=
+++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
 
-> This patch adds support for DT bindings in the codec driver.
-> As part of this support, the mclk data can now be provided and
-> used to control the mclk during codec operation.
+Applied, thanks.
 
-Please split out the new MCLK configuration into a separate patch which
-describes what that configuration is, it's much easier to review that
-way.  Otherwise there's a couple of minor issues here but nothing too
-critical.
+Thierry
 
->  	case SND_SOC_BIAS_STANDBY:
->  		if (snd_soc_codec_get_bias_level(codec) == SND_SOC_BIAS_OFF) {
-> +			/* MCLK */
-> +			clk_prepare_enable(da7213->mclk);
-> +
-
-This doesn't check the return value.
-
->  	.driver = {
->  		.name = "da7213",
-> +		.of_match_table = da7213_of_match,
-
-Please use of_match_ptr() here.
-
---TrSyUYpaPvvX07X2
+--pQhZXvAqiZgbeUkD
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWEp17AAoJECTWi3JdVIfQzekH/RfMew2zcn2SOlEXmB6NFgDH
-5DXcdrGPttjG92cTWzS2czA9Q523Vyqq+GKR0WG/x720w832fF17y8b6jCyhsoN9
-mg3Run+44NwNvhD6RRI9O4OlB9p0KIK4l71wVIbxoijjESXOLck5tFPwjSs6BV4G
-UKWmtCIz94s3qzhR1M4F0gU8MTSMDVQ0oK/EDNiBuhaiQL6ZXXDR2Mg3fnoxJu0v
-XJ8An7F3/HTGrmpdXfcfmz10RIumS/WomZK8ubQGEThHu1NFxhD0x0ebYaDA7MTr
-n9skQFzWatRRH7rOQpiIXllYRld2xLPGy08KWWD6G7tsymUt6ycjfaVS9EE9OSw=
-=WuPO
+iQIcBAABCAAGBQJWEp4wAAoJEN0jrNd/PrOhgjEP/0PeXNAY/3AsRyB7tGmDzDAK
+qEWnOTcehKNmVWoZ7ULJYGLlfP8hUAsBTQLYxgOERXY/VKPTucjCoNos4hW9OdYL
++a/8R/K2UxLfTXJhHcmilBxKGbgL/kt0hHu6NzU3hp+wCRxto/u+LrBM1Pq/W7NZ
+Bw0A/Xw865nON2Btv6bo5lxqaiaNV5WfCK/LxBSz9dcIqO0qlZntQiJUMp+lMP9Z
+VexRhieNzriIeRtx6cKHgBIifNuDfjh2uHa00i+CFWvTNeA5kn6UO63dRJdDJN8Y
+9L3MbTgFMnoAfdBo8JPqCVaZD2ndLwEblzvQn3auRrB/zGmBXiCle37Jb4NKqPza
+G5gb3znegsM/LL+/eT44nqXhcUcKIjbyeRoJZsZl24EjLR+YR+/vuzPpeMLVYBwd
+0R5Qxdl8t6HCkwTT36l0jUUa0NTfTI2pKMe+1MjgDwOfGQuBQqRTTEUqSkUu+Hh6
+nelr8PH0+2V1CZzaXqzFO7nFidyfHN2tPkXnZinu/EdeuaKPNP4UxgnHQxGmrvB9
+lPjypfnU7n+4X3YDTZPM9/OjTlZWOxzu9+3EkkMwa7t/5WGVtf4QypwZWk804JGQ
+8D7FpnbW00cYr/GeX/ObMh6huL0kljF4p8QzY6DVshJPskhRzue5H399S/LlcS6t
+ZE4H5XZW/GLAnWx6yyMc
+=EoyD
 -----END PGP SIGNATURE-----
 
---TrSyUYpaPvvX07X2--
+--pQhZXvAqiZgbeUkD--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
