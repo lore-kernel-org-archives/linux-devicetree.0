@@ -1,157 +1,48 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: [PATCH v7,3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND device tree nodes
-Date: Tue, 6 Oct 2015 17:27:17 +0100
-Message-ID: <1444148837-10770-4-git-send-email-harvey.hunt@imgtec.com>
-References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Tue, 06 Oct 2015 17:41:44 +0100
+Message-ID: <5613F9C8.9020000@arm.com>
+References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com> <5613F310.6060305@arm.com> <8520D5D51A55D047800579B0941471980169063F@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mtd@lists.infradead.org
-Cc: Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alex Smith <alex@alex-smith.me.uk>, Harvey Hunt <harvey.hunt@imgtec.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8520D5D51A55D047800579B0941471980169063F@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+On 06/10/15 17:27, Bharat Kumar Gogada wrote:
+> Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL PCIe Host Controller
 
-Add device tree nodes for the NEMC and BCH to the JZ4780 device tree,
-and make use of them in the Ci20 device tree to add a node for the
-board's NAND.
+[...]
 
-Note that since the pinctrl driver is not yet upstream, this includes
-neither pin configuration nor busy/write-protect GPIO pins for the
-NAND. Use of the NAND relies on the boot loader to have left the pins
-configured in a usable state, which should be the case when booted
-from the NAND.
+Please use an email client that does proper quoting - I cannot see what
+you are replying to. Or at least annotate your answers so that I can
+spot them.
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: Alex Smith <alex@alex-smith.me.uk>
-Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
----
-v6 -> v7:
- - Add nand-ecc-mode to DT.
- - Add nand-on-flash-bbt to DT.
+>> +struct nwl_msi {			/* struct nwl_msi - MSI information */
+>> +	struct msi_controller chip;	/* chip: MSI controller */
+> 
+>> We're moving away from msi_controller altogether, as the kernel now
+>> has all the necessary infrastructure to do this properly.
+> 
+> Our current GIC version does not have separate msi controller (we are
+> not using GICv2m or GICv3), so is it necessary to have separate msi
+> controller node ? Please give me clarity on this.
 
-v4 -> v5:
- - New patch adding DT nodes for the NAND so that the driver can be
-   tested.
+This has nothing to do with the version of the GIC you are using (XGene
+doesn't have GICv2m or v3 either). This is about reducing code
+duplication and having something that we can maintain. See also
+https://lkml.org/lkml/2015/9/20/193 for yet another example.
 
- arch/mips/boot/dts/ingenic/ci20.dts    | 54 ++++++++++++++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 26 ++++++++++++++++
- 2 files changed, 80 insertions(+)
+I still plan to kill msi_controller, and I'd like to avoid more
+dependencies with it. MSI domains are the way to do it.
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 9fcb9e7..453f1d3 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -42,3 +42,57 @@
- &uart4 {
- 	status = "okay";
- };
-+
-+&nemc {
-+	status = "okay";
-+
-+	nand: nand@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;
-+
-+		ingenic,nemc-tAS = <10>;
-+		ingenic,nemc-tAH = <5>;
-+		ingenic,nemc-tBP = <10>;
-+		ingenic,nemc-tAW = <15>;
-+		ingenic,nemc-tSTRV = <100>;
-+
-+		ingenic,bch-controller = <&bch>;
-+		ingenic,ecc-size = <1024>;
-+		ingenic,ecc-strength = <24>;
-+
-+		nand-ecc-mode = "hw";
-+		nand-on-flash-bbt;
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		partition@0 {
-+			label = "u-boot-spl";
-+			reg = <0x0 0x0 0x0 0x800000>;
-+		};
-+
-+		partition@0x800000 {
-+			label = "u-boot";
-+			reg = <0x0 0x800000 0x0 0x200000>;
-+		};
-+
-+		partition@0xa00000 {
-+			label = "u-boot-env";
-+			reg = <0x0 0xa00000 0x0 0x200000>;
-+		};
-+
-+		partition@0xc00000 {
-+			label = "boot";
-+			reg = <0x0 0xc00000 0x0 0x4000000>;
-+		};
-+
-+		partition@0x8c00000 {
-+			label = "system";
-+			reg = <0x0 0x4c00000 0x1 0xfb400000>;
-+		};
-+	};
-+};
-+
-+&bch {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index 65389f6..b868b42 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -108,4 +108,30 @@
- 
- 		status = "disabled";
- 	};
-+
-+	nemc: nemc@13410000 {
-+		compatible = "ingenic,jz4780-nemc";
-+		reg = <0x13410000 0x10000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <1 0 0x1b000000 0x1000000
-+			  2 0 0x1a000000 0x1000000
-+			  3 0 0x19000000 0x1000000
-+			  4 0 0x18000000 0x1000000
-+			  5 0 0x17000000 0x1000000
-+			  6 0 0x16000000 0x1000000>;
-+
-+		clocks = <&cgu JZ4780_CLK_NEMC>;
-+
-+		status = "disabled";
-+	};
-+
-+	bch: bch@134d0000 {
-+		compatible = "ingenic,jz4780-bch";
-+		reg = <0x134d0000 0x10000>;
-+
-+		clocks = <&cgu JZ4780_CLK_BCH>;
-+
-+		status = "disabled";
-+	};
- };
+Thanks,
+
+	M.
 -- 
-2.6.0
+Jazz is not dead. It just smells funny...
