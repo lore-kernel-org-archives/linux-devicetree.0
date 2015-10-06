@@ -1,66 +1,69 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 21/22] driver core: Start processing deferred probes
- earlier
-Date: Tue, 6 Oct 2015 11:45:15 +0100
-Message-ID: <20151006104515.GJ12635@sirena.org.uk>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com>
- <56130D43.10200@gmail.com>
- <CAL_JsqKBKSsvEuoufc=xesSvcA1bf-X43O0YOvuntUJE5NYCJA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Tue, 6 Oct 2015 04:01:34 -0700
+Message-ID: <20151006110134.GO23801@atomide.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <560BC0DB.5020205@ti.com>
+ <20151006083346.GL23801@atomide.com>
+ <56139A72.6040600@ti.com>
+ <20151006100000.GN23801@atomide.com>
+ <56139CE9.8020002@ti.com>
+ <5613A256.8000105@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="g2qYG+WgOEFhwE/z"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKBKSsvEuoufc=xesSvcA1bf-X43O0YOvuntUJE5NYCJA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5613A256.8000105-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [151006 03:32]:
+> On 06/10/15 13:05, Roger Quadros wrote:
+> > On 06/10/15 13:00, Tony Lindgren wrote:
+> >> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [151006 02:59]:
+> >>> On 06/10/15 11:33, Tony Lindgren wrote:
+> >>>> Does build and boot and use NAND work throughtout the series?
+> >>>> Otherwise we'll have hard time bisecting anything..
+> >>>
+> >>> Yes it does with the following exceptions.
+> >>>
+> >>> - Patch 7 "memory: omap-gpmc: Remove NAND IRQ code" breaks prefetch-irq mode
+> >>> but none of the boards seem to be using it so it shouldn't break NAND on existing boards.
+> >>> At patch 9 "mtd: nand: omap2: manage NAND interrupts" prefetch-irq mode is working again.
+> >>> Do you want me to squash patches 7,8,9 so that pre-fetch irq is not broken at any point?
+> >>
+> >> OK, no that's fine, no need to squash them together then.
+> >>
+> >>> - Then at patch 11 "mtd: nand: omap: Clean up device tree support" we break NAND on all DT
+> >>> boards as we expect NAND to be a real child node with compatible id. Simply applying the
+> >>> DT patch at this point makes it work again.
+> >>
+> >> Hmm can we at least warn about incompatible DT entry when somebody boots
+> >> with an older dtb?
+> > 
+> > Yes that could be done. It looks like we can use the missing compatible property to identify
+> > that it is and old DT entry.
+> > 
+> > I'll send a v4 of patch 11.
+> 
+> There is another issue. Some of the old DT nodes set the NAND IO address to 0.
+> As we prevent mapping into first 16MB we see the following message for those nodes. e.g. dra7-evm
+> 
+> [    1.727598] omap-gpmc 50000000.gpmc: cannot remap GPMC CS 0 to 0x00000000
+> [    1.727605] omap-gpmc 50000000.gpmc: GPMC CS 0 start cannot be lesser than 0x1000000
+> [    1.727611] omap-gpmc 50000000.gpmc: failed to probe DT children
+> 
+> Hope this is good enough information that DT needs to be updated?
 
---g2qYG+WgOEFhwE/z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes I think that should allow users update the out of tree dts file
+easily.
 
-On Mon, Oct 05, 2015 at 09:49:38PM -0500, Rob Herring wrote:
-> On Mon, Oct 5, 2015 at 6:52 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Regards,
 
-> > The purpose of the *_sync initcall levels is to allow the corresponding
-> > initcall level to use multiple threads of execution instead of a single
-> > thread.  The *_sync level provides a location for a wait for all of the
-> > threads at the corresponding init level to complete.  This is better
-> > explained in the git log:
-
-> The things I was worried about like clk and regulator disabling are
-> actually late_initcall_sync, so maybe late_initcall is fine here after
-> all.
-
-> However, looking at other *_initcall_sync users, I'm not so sure they
-> are doing the same abuse.
-
-They're trying to run at the point where we've completed deferred
-probe processing - in other words, at the sync point.  What they really
-want is an additional callback at the point where the syncs have
-actually happened.
-
---g2qYG+WgOEFhwE/z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWE6Y6AAoJECTWi3JdVIfQKRUH/1mUtCLtXBhE6vc5lYkjXBIb
-Xz0SlNQV6+vB/ju/WLw70Iy6uI2+VVsfRaohtrBTt7T28dgBiAl4ifXVrnpWZn6W
-7KNEkk+mzqycPjG1U///Ix/H0RtXCeY6Sqlpxp1H5PrsrICH0f/gAH9fUPGsF+97
-REDaPHVF6NpXBuqjlEGp1g//4r/+z+Q24uM8UpidP4icBdEdDNY009mzD7WFSYPj
-dR+ro490GcBNvP4xAjmZxsHbXHgHqPY0v04uHuDQXoE0C2UBu7zA7FsKKqYIemiv
-j2DI56Doz4/a2BP1CHH3SWBAA//Md0eMAUML4xmMoy1S7MIY79M6GMtIY25L5IY=
-=J/s4
------END PGP SIGNATURE-----
-
---g2qYG+WgOEFhwE/z--
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
