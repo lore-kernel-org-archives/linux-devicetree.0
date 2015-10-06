@@ -1,104 +1,62 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 21/22] driver core: Start processing deferred probes earlier
-Date: Mon, 5 Oct 2015 21:49:38 -0500
-Message-ID: <CAL_JsqKBKSsvEuoufc=xesSvcA1bf-X43O0YOvuntUJE5NYCJA@mail.gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com> <56130D43.10200@gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v7 1/2] pwm: Add device tree binding document for R-Car
+ PWM Timer
+Date: Tue, 6 Oct 2015 06:31:34 +0000
+Message-ID: <TY1PR06MB0928B636CB65D8A647CB1314D8370@TY1PR06MB0928.apcprd06.prod.outlook.com>
+References: <1443602873-4316-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1443602873-4316-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAL_JsqJqwk6W5psXY9BZXwm4GwhG1Dr44Xq-7tf-MmSAtqpnzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <56130D43.10200@gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJqwk6W5psXY9BZXwm4GwhG1Dr44Xq-7tf-MmSAtqpnzA@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linux PWM List <linux-pwm@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 5, 2015 at 6:52 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 9/21/2015 7:03 AM, Tomeu Vizoso wrote:
->> Some initcalls in the late level assume that some devices will have
->> already probed without explicitly checking for that.
->>
->> After the recent move to defer most device probes when they are
->> registered, pressure increased in the late initcall level.
->>
->> By starting the processing of the deferred queue in device_initcall_sync
->> we increase the chances that the initcalls mentioned before will find
->> the devices they depend on to have already probed.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->> ---
->>
->> Changes in v4:
->> - Start processing deferred probes in device_initcall_sync
->>
->>  drivers/base/dd.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->> index 269ea76c1a4f..f0ef9233fcd6 100644
->> --- a/drivers/base/dd.c
->> +++ b/drivers/base/dd.c
->> @@ -176,7 +176,7 @@ static void driver_deferred_probe_trigger(void)
->>   *
->>   * We don't want to get in the way when the bulk of drivers are getting probed.
->>   * Instead, this initcall makes sure that deferred probing is delayed until
->> - * late_initcall time.
->> + * device_initcall_sync time.
->
-> This is a misuse of the *_sync initcall level.
->
-> If a deferred probe created a thread and expected a wait at the
-> following *_sync level then the wait would not occur because
-> there is no subsequent *_sync level.  This is not a problem today
-> because (as far as I know) there are no threads in the probe
-> functions.  But there has been interest in adding parallel
-> probing and that could expose this problem.
->
-> The purpose of the *_sync initcall levels is to allow the corresponding
-> initcall level to use multiple threads of execution instead of a single
-> thread.  The *_sync level provides a location for a wait for all of the
-> threads at the corresponding init level to complete.  This is better
-> explained in the git log:
-
-The things I was worried about like clk and regulator disabling are
-actually late_initcall_sync, so maybe late_initcall is fine here after
-all.
-
-However, looking at other *_initcall_sync users, I'm not so sure they
-are doing the same abuse.
-
-Rob
-
->
-> commit 735a7ffb739b6efeaeb1e720306ba308eaaeb20e
-> Author: Andrew Morton <akpm@osdl.org>
-> Date:   Fri Oct 27 11:42:37 2006 -0700
->
->     [PATCH] drivers: wait for threaded probes between initcall levels
->
->     The multithreaded-probing code has a problem: after one initcall level (eg,
->     core_initcall) has been processed, we will then start processing the next
->     level (postcore_initcall) while the kernel threads which are handling
->     core_initcall are still executing.  This breaks the guarantees which the
->     layered initcalls previously gave us.
->
->     IOW, we want to be multithreaded _within_ an initcall level, but not between
->     different levels.
->
->     Fix that up by causing the probing code to wait for all outstanding probes at
->     one level to complete before we start processing the next level.
->
->>   */
->>  static int deferred_probe_initcall(void)
->>  {
->> @@ -190,7 +190,7 @@ static int deferred_probe_initcall(void)
->>       flush_workqueue(deferred_wq);
->>       return 0;
->>  }
->> -late_initcall(deferred_probe_initcall);
->> +device_initcall_sync(deferred_probe_initcall);
->>
->>  static void driver_bound(struct device *dev)
->>  {
->>
->
+SGkgUm9iLA0KDQo+IFNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIgMDYsIDIwMTUgMTI6MzkgQU0NCj4g
+DQo+IE9uIFdlZCwgU2VwIDMwLCAyMDE1IGF0IDM6NDcgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+
+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIGJpbmRp
+bmcgZG9jdW1lbnQgZm9yIFJlbmVzYXMgUFdNIFRpbWVyIG9uIFItQ2FyIFNvQ3MuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hpbW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhA
+cmVuZXNhcy5jb20+DQo+ID4gQWNrZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVu
+ZXNhc0BnbGlkZXIuYmU+DQo+ID4gUmV2aWV3ZWQtYnk6IFNpbW9uIEhvcm1hbiA8aG9ybXMrcmVu
+ZXNhc0B2ZXJnZS5uZXQuYXU+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3B3bS9yZW5lc2FzLHB3bS1yY2FyLnR4dCAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKw0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9yZW5lc2FzLHB3bS1y
+Y2FyLnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wd20vcmVuZXNhcyxwd20tcmNhci50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcHdtL3JlbmVzYXMscHdtLXJjYXIudHh0DQo+ID4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5lYTBhMjdiDQo+ID4gLS0tIC9kZXYvbnVsbA0K
+PiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcmVuZXNhcyxw
+d20tcmNhci50eHQNCj4gPiBAQCAtMCwwICsxLDI3IEBADQo+ID4gKyogUmVuZXNhcyBSLUNhciBQ
+V00gVGltZXIgQ29udHJvbGxlcg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgUHJvcGVydGllczoNCj4g
+PiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmcuDQo+ID4gKyAt
+ICJyZW5lc2FzLHB3bS1yY2FyIjogZm9yIGdlbmVyaWMgUi1DYXIgY29tcGF0aWJsZSBQV00gVGlt
+ZXINCj4gDQo+IFNob3VsZCBiZSB0aGlzIG9uZSBhbmQgb25lIG9mIHRoZSBmb2xsb3dpbmc/IFRo
+YXQgaXMgd2hhdCB0aGUgZXhhbXBsZSBzaG93cy4NCg0KVGhhbmsgeW91IGZvciB0aGUgcG9pbnQu
+DQpTaW5jZSB0aGlzIHBhdGNoIGlzIGFscmVhZHkgbWVyZ2VkIGluIGxpbnV4LXB3bSByZXBvc2l0
+b3J5LCBJIHdpbGwgc3VibWl0DQphIG5ldyBwYXRjaCB0byByZXZpc2UgaXQuDQoNCkJlc3QgcmVn
+YXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gPiArIC0gInJlbmVzYXMscHdtLXI4YTc3Nzgi
+OiBmb3IgUi1DYXIgTTFBDQo+ID4gKyAtICJyZW5lc2FzLHB3bS1yOGE3Nzc5IjogZm9yIFItQ2Fy
+IEgxDQo+ID4gKyAtICJyZW5lc2FzLHB3bS1yOGE3NzkwIjogZm9yIFItQ2FyIEgyDQo+ID4gKyAt
+ICJyZW5lc2FzLHB3bS1yOGE3NzkxIjogZm9yIFItQ2FyIE0yLVcNCj4gPiArIC0gInJlbmVzYXMs
+cHdtLXI4YTc3OTQiOiBmb3IgUi1DYXIgRTINCj4gPiArLSByZWc6IGJhc2UgYWRkcmVzcyBhbmQg
+bGVuZ3RoIG9mIHRoZSByZWdpc3RlcnMgYmxvY2sgZm9yIHRoZSBQV00uDQo+ID4gKy0gI3B3bS1j
+ZWxsczogc2hvdWxkIGJlIDIuIFNlZSBwd20udHh0IGluIHRoaXMgZGlyZWN0b3J5IGZvciBhIGRl
+c2NyaXB0aW9uIG9mDQo+ID4gKyAgdGhlIGNlbGxzIGZvcm1hdC4NCj4gPiArLSBjbG9ja3M6IGNs
+b2NrIHBoYW5kbGUgYW5kIHNwZWNpZmllciBwYWlyLg0KPiA+ICstIHBpbmN0cmwtMDogcGhhbmRs
+ZSwgcmVmZXJyaW5nIHRvIGEgZGVmYXVsdCBwaW4gY29uZmlndXJhdGlvbiBub2RlLg0KPiA+ICst
+IHBpbmN0cmwtbmFtZXM6IFNldCB0byAiZGVmYXVsdCIuDQo+ID4gKw0KPiA+ICtFeGFtcGxlOiBS
+OEE3NzkwIChSLUNhciBIMikgUFdNIFRpbWVyIG5vZGUNCj4gPiArDQo+ID4gKyAgICAgICBwd20w
+OiBwd21AZTZlMzAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlbmVz
+YXMscHdtLXI4YTc3OTAiLCAicmVuZXNhcyxwd20tcmNhciI7DQo+ID4gKyAgICAgICAgICAgICAg
+IHJlZyA9IDwwIDB4ZTZlMzAwMDAgMCAweDg+Ow0KPiA+ICsgICAgICAgICAgICAgICAjcHdtLWNl
+bGxzID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHA1X2Nsa3MgUjhB
+Nzc5MF9DTEtfUFdNPjsNCj4gPiArICAgICAgICAgICAgICAgcGluY3RybC0wID0gPCZwd20wX3Bp
+bnM+Ow0KPiA+ICsgICAgICAgICAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+
+ICsgICAgICAgfTsNCj4gPiAtLQ0KPiA+IDEuOS4xDQo+ID4NCg==
