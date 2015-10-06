@@ -1,43 +1,93 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: add all hi6220 uart nodes
-Date: Tue, 06 Oct 2015 16:36:03 +0200
-Message-ID: <13756810.CXgbUlyXY5@wuerfel>
-References: <1443662388-25686-1-git-send-email-tyler.baker@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/3] PCI: st: Add Device Tree bindings for sti pcie
+Date: Tue, 6 Oct 2015 09:45:18 -0500
+Message-ID: <CAL_JsqKRby4ZWb6iU7d+yN5Cj0qM+m+sQPsFVM0SgAHGK===uA@mail.gmail.com>
+References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org> <1444118168-13086-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443662388-25686-1-git-send-email-tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ricardo Salveti <ricardo.salveti-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444118168-13086-3-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 30 September 2015 18:19:48 Tyler Baker wrote:
-> This patch adds all UART nodes for the Hi6220 SoC. Recently a board[1] has
-> been developed to standardize UART access across all the 96boards consumer
-> edition boards. To use this hardware on HiKey we must configure and enable
-> UART3. However, to ensure backward compatibility we must keep UART0 enabled
-> as well.
-> 
-> I have removed the hard coded clock index values in favor of using the ones
-> already defined in include/dt-bindings/clock/hi6220-clock.h.
-> 
-> Since UART0 needs to be soldered, it has been suggested to use the UART3 as
-> the default console.
-> 
-> This patch was boot tested on top of next-20150930, with both UART
-> configurations.
-> 
-> [1] http://www.seeedstudio.com/depot/96Boards-UART-p-2525.html?ref=newInBazaar
-> 
-> Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
+On Tue, Oct 6, 2015 at 2:56 AM, Gabriel Fernandez
+<gabriel.fernandez@linaro.org> wrote:
+> sti pcie is built around a Synopsis Designware PCIe IP.
+>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 
-Applied to next/dt, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/pci/st-pcie.txt | 56 +++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Documentation/devicetree/bindings/pci/st-pcie.txt
+> new file mode 100644
+> index 0000000..32e76d0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
+> @@ -0,0 +1,56 @@
+> +STMicroelectronics STi PCIe controller
+> +
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.txt.
+> +
+> +Required properties:
+> + - compatible: Should be "st,pcie", "snps,dw-pcie"
+> +
+> + - reg: base address and length of the pcie controller, mem-window address
+> +   and length available to the controller.
+> +
+> + - interrupts: one GIC interrupt line connected to PCI MSI interrupt line
+> +
+> + - st,syscfg : should be a phandle of the syscfg node. Also contains syscfg
+> +   offset for IP configuration.
+> +
+> + - resets: phandle to the powerdown and reset controller for the PCIe IP.
+> +   See ../reset/reset.txt for details.
+> + - reset-names: should be "powerdown" and "softreset".
+> +
+> + - phys: the phandle for the PHY device (used by generic PHY framework).
+> + - phys-names: must be "pcie".
+> +
+> +Optional properties:
+> + - reset-gpio: a GPIO spec to define which pin is connected to the bus reset.
+> +
+> +Example:
+> +
+> +pcie0: pcie@9b00000 {
+> +       compatible = "st,pcie", "snps,dw-pcie";
+> +       device_type = "pci";
+> +       reg = <0x09b00000 0x4000>,      /* dbi cntrl registers */
+> +             <0x2fff0000 0x00010000>,  /* configuration space */
+> +             <0x40000000 0x80000000>;  /* lmi mem window */
+> +       reg-names = "dbi", "config", "mem-window";
+> +       st,syscfg = <&syscfg_core 0xd8 0xe0>;
+> +       #address-cells = <3>;
+> +       #size-cells = <2>;
+> +       ranges = <0x82000000 0 0x20000000 0x20000000 0 0x0FFF0000>; /* non-prefetchable memory */
+> +       num-lanes = <1>;
+> +       interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "msi";
+> +       #interrupt-cells = <1>;
+> +       interrupt-map-mask = <0 0 0 7>;
+> +       interrupt-map = <0 0 0 1 &intc GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>, /* INT A */
+> +                       <0 0 0 2 &intc GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>, /* INT B */
+> +                       <0 0 0 3 &intc GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>, /* INT C */
+> +                       <0 0 0 4 &intc GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>; /* INT D */
+> +
+> +       resets = <&powerdown STIH407_PCIE0_POWERDOWN>,
+> +                <&softreset STIH407_PCIE0_SOFTRESET>;
+> +       reset-names = "powerdown",
+> +                     "softreset";
+> +       phys = <&phy_port0 PHY_TYPE_PCIE>;
+> +       phy-names = "pcie";
+> +};
+> --
+> 1.9.1
+>
