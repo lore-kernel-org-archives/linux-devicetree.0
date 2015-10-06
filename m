@@ -1,35 +1,44 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 2/4] drivers: clk: st: PLL rate change implementation
- for DVFS
-Date: Tue, 6 Oct 2015 11:06:17 -0700
-Message-ID: <20151006180617.GE12338@codeaurora.org>
-References: <1444032393-13433-1-git-send-email-gabriel.fernandez@linaro.org>
- <1444032393-13433-3-git-send-email-gabriel.fernandez@linaro.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 0/2] pwm: Broadcom BCM7038 PWM controller (v4)
+Date: Tue, 06 Oct 2015 11:14:27 -0700
+Message-ID: <56140F83.2050909@gmail.com>
+References: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com> <20151005151415.GE27759@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444032393-13433-3-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Maxime Coquelin <maxime.coquelin@st.com>, Michael Turquette <mturquette@baylibre.com>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20151005151415.GE27759@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, ariel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-On 10/05, Gabriel Fernandez wrote:
-> @@ -452,7 +651,7 @@ static const struct clk_ops st_pll1200c32_ops = {
->  static struct clk * __init clkgen_pll_register(const char *parent_name,
->  				struct clkgen_pll_data	*pll_data,
->  				void __iomem *reg,
-> -				const char *clk_name)
-> +				const char *clk_name, spinlock_t *lock)
+On 05/10/15 08:14, Thierry Reding wrote:
+> On Mon, Sep 14, 2015 at 04:47:04PM -0700, Florian Fainelli wrote:
+>> Hi,
+>>
+>> This patch series add PWM support for the Broadcom BCM7xxx
+>> chips which feature one or more PWM controllers capable of
+>> output periods from 148ns to ~622ms using a combination of
+>> variable and fixed frequency settings.
+>>
+>> The controller does not support setting a polarity.
+>>
+>> This is based on Thierry's pwm/next branch.
+>>
+>> Florian Fainelli (2):
+>>   Documentation: dt: add Broadcom BCM7038 PWM controller binding
+>>   pwm: Add Broadcom BCM7038 PWM controller support
+> 
+> I've applied both of these patches with a couple of stylistic changes.
 
-Is there a reason we pass lock here but never use it in this
-function?
+Thanks but:
 
->  {
->  	struct clkgen_pll *pll;
->  	struct clk *clk;
+1) you dropped the MODULE_DEVICE_TABLE while doing so which is useful
+for auto-loading OF modules
+2) you introduced a build failure in the CONFIG_PM_SLEEP
 
+There was a patch just submitted for 2), but I can submit an incremental
+for 1) maybe?
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Florian
