@@ -1,38 +1,104 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] soc: mediatek: Fix random hang up issue while kernel init
-Date: Tue, 6 Oct 2015 09:57:50 +0800
-Message-ID: <CAGS+omD0FSefd9vF0iUvFRXK1+m7YPEANpxngTibGwgR_rTNvg@mail.gmail.com>
-References: <1443162717-64831-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v6 21/22] driver core: Start processing deferred probes earlier
+Date: Mon, 5 Oct 2015 21:49:38 -0500
+Message-ID: <CAL_JsqKBKSsvEuoufc=xesSvcA1bf-X43O0YOvuntUJE5NYCJA@mail.gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1442844182-27787-22-git-send-email-tomeu.vizoso@collabora.com> <56130D43.10200@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443162717-64831-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <56130D43.10200@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 25, 2015 at 2:31 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> In kernel late init, it turns off all unused clocks, which
-> needs to access subsystem registers such as VENC and VENC_LT.
+On Mon, Oct 5, 2015 at 6:52 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 9/21/2015 7:03 AM, Tomeu Vizoso wrote:
+>> Some initcalls in the late level assume that some devices will have
+>> already probed without explicitly checking for that.
+>>
+>> After the recent move to defer most device probes when they are
+>> registered, pressure increased in the late initcall level.
+>>
+>> By starting the processing of the deferred queue in device_initcall_sync
+>> we increase the chances that the initcalls mentioned before will find
+>> the devices they depend on to have already probed.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> ---
+>>
+>> Changes in v4:
+>> - Start processing deferred probes in device_initcall_sync
+>>
+>>  drivers/base/dd.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>> index 269ea76c1a4f..f0ef9233fcd6 100644
+>> --- a/drivers/base/dd.c
+>> +++ b/drivers/base/dd.c
+>> @@ -176,7 +176,7 @@ static void driver_deferred_probe_trigger(void)
+>>   *
+>>   * We don't want to get in the way when the bulk of drivers are getting probed.
+>>   * Instead, this initcall makes sure that deferred probing is delayed until
+>> - * late_initcall time.
+>> + * device_initcall_sync time.
 >
-> Accessing MT8173 VENC registers needs two top clocks, mm_sel and
-> venc_sel. Accessing VENC_LT registers needs mm_sel and venclt_sel.
-> So we need to keep these clocks on before accessing their registers.
+> This is a misuse of the *_sync initcall level.
 >
-> This patch keeps venc_sel / venclt_sel clock on when
-> VENC / VENC_LT's power is on, to prevent system hang up while
-> accessing its registeres.
+> If a deferred probe created a thread and expected a wait at the
+> following *_sync level then the wait would not occur because
+> there is no subsequent *_sync level.  This is not a problem today
+> because (as far as I know) there are no threads in the probe
+> functions.  But there has been interest in adding parallel
+> probing and that could expose this problem.
 >
-> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> The purpose of the *_sync initcall levels is to allow the corresponding
+> initcall level to use multiple threads of execution instead of a single
+> thread.  The *_sync level provides a location for a wait for all of the
+> threads at the corresponding init level to complete.  This is better
+> explained in the git log:
 
-After the discussions with James here on the list, I'm happy with this fix.
-Compared to any proposed alternative, this patch seems just as
-effective and is also simpler and more maintainable and extensible (if
-other clocks/power domains need the same treatment).
+The things I was worried about like clk and regulator disabling are
+actually late_initcall_sync, so maybe late_initcall is fine here after
+all.
 
-Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, looking at other *_initcall_sync users, I'm not so sure they
+are doing the same abuse.
+
+Rob
+
+>
+> commit 735a7ffb739b6efeaeb1e720306ba308eaaeb20e
+> Author: Andrew Morton <akpm@osdl.org>
+> Date:   Fri Oct 27 11:42:37 2006 -0700
+>
+>     [PATCH] drivers: wait for threaded probes between initcall levels
+>
+>     The multithreaded-probing code has a problem: after one initcall level (eg,
+>     core_initcall) has been processed, we will then start processing the next
+>     level (postcore_initcall) while the kernel threads which are handling
+>     core_initcall are still executing.  This breaks the guarantees which the
+>     layered initcalls previously gave us.
+>
+>     IOW, we want to be multithreaded _within_ an initcall level, but not between
+>     different levels.
+>
+>     Fix that up by causing the probing code to wait for all outstanding probes at
+>     one level to complete before we start processing the next level.
+>
+>>   */
+>>  static int deferred_probe_initcall(void)
+>>  {
+>> @@ -190,7 +190,7 @@ static int deferred_probe_initcall(void)
+>>       flush_workqueue(deferred_wq);
+>>       return 0;
+>>  }
+>> -late_initcall(deferred_probe_initcall);
+>> +device_initcall_sync(deferred_probe_initcall);
+>>
+>>  static void driver_bound(struct device *dev)
+>>  {
+>>
+>
