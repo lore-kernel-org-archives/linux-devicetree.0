@@ -1,45 +1,53 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v5 1/3] ARM: STi: Kconfig update for PCIe support
-Date: Tue, 6 Oct 2015 20:01:21 +0100
-Message-ID: <20151006190121.GV21513@n2100.arm.linux.org.uk>
-References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
- <1444118168-13086-2-git-send-email-gabriel.fernandez@linaro.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
+Date: Tue, 06 Oct 2015 21:13:25 +0200
+Message-ID: <8737xnbyju.fsf@belgarion.home>
+References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
+	<CA+gwMcciuonC5Ektt3wdUcp7RW3E+caCuktYrhcYSqTrnVng9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444118168-13086-2-git-send-email-gabriel.fernandez@linaro.org>
+In-Reply-To: <CA+gwMcciuonC5Ektt3wdUcp7RW3E+caCuktYrhcYSqTrnVng9Q@mail.gmail.com>
+	(Philipp Zabel's message of "Tue, 6 Oct 2015 08:58:08 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edwor>
+To: Philipp Zabel <philipp.zabel@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 06, 2015 at 09:56:06AM +0200, Gabriel Fernandez wrote:
-> Update Kconfig:
-> - MIGHT_HAVE_PCI
-> - PCI_DOMAINS
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  arch/arm/mach-sti/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
-> index 125865d..5f99e93 100644
-> --- a/arch/arm/mach-sti/Kconfig
-> +++ b/arch/arm/mach-sti/Kconfig
-> @@ -9,6 +9,8 @@ menuconfig ARCH_STI
->  	select ARCH_HAS_RESET_CONTROLLER
->  	select HAVE_ARM_SCU if SMP
->  	select ARCH_REQUIRE_GPIOLIB
-> +	select PCI_DOMAINS if PCI
-> +	select MIGHT_HAVE_PCI
->  	select ARM_ERRATA_754322
->  	select ARM_ERRATA_764369 if SMP
->  	select ARM_ERRATA_775420
+Philipp Zabel <philipp.zabel@gmail.com> writes:
 
-Please, alphabetical ordering for select statements.
+> On Sun, Oct 4, 2015 at 12:31 PM, Robert Jarzmik <robert.jarzmik@free.fr> wrote:
+>> +       lcd-controller@40500000 {
+>> +               compatible = "marvell,pxa2xx-lcdc";
+>> +               reg = <0x44000000 0x10000>;
+>> +               interrupts = <17>;
+>> +               clocks = <&clks CLK_LCD>;
+>> +               interrupts = <23>;
+>
+> The interrupt line is duplicated in the example.
+Indeed, I'll fix that.
+>
+>> +               status = "okay";
+>> +
+>> +               port {
+>> +                       lcdc_out: endpoint {
+>> +                               remote-endpoint = <&panel_in>;
+>> +                               bus-width = <16>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +PXA LCDC Display
+>> +----------------
+>> +Required properties (as per of_videomode_helper):
+>> + - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
+>> +                   "color-tft", "smart-panel"
+>
+> Would it make sense to make this property optional and have the
+> default be "color-tft"? That is probably the most common one by far.
+Yes, sure, let's do it that way for v3.
+
+Cheers.
 
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Robert
