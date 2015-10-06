@@ -1,84 +1,86 @@
-From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Tue, 6 Oct 2015 08:58:08 +0200
-Message-ID: <CA+gwMcciuonC5Ektt3wdUcp7RW3E+caCuktYrhcYSqTrnVng9Q@mail.gmail.com>
-References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: [PATCH] arm64: dts: mt8173: add MT8173 display PWM driver support node
+Date: Tue, 6 Oct 2015 15:40:43 +0800
+Message-ID: <1444117243-28391-1-git-send-email-yh.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443954683-13126-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, YH Huang <yh.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 4, 2015 at 12:31 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> Add documentation for the PXA frambuffer devicetree binding.
->
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> ---
-> Since v1: Philipp's review on the whole binding
-> ---
->  .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/marvell,pxafb.txt
->
-> diff --git a/Documentation/devicetree/bindings/video/marvell,pxafb.txt b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
-> new file mode 100644
-> index 000000000000..4d6bd490680d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
-> @@ -0,0 +1,80 @@
-> +PXA LCDC Framebuffer
-> +--------------------
-> +
-> +Required properties:
-> + - compatible :
-> +       "marvell,pxa2xx-lcdc",
-> + - reg : Should contain 1 register ranges(address and length).
-> +        Can contain an additional register range(address and length)
-> +        for fixed framebuffer memory. Useful for dedicated memories.
-> + - interrupts : framebuffer controller interrupt
-> +
-> +Required nodes:
-> + - clocks: phandle to input clocks.
-> + - port: connection to the LCD panel (see video-interfaces.txt)
-> +        This nodes must have its properties bus-width and remote-endpoint set.
-> +        This should be in the board dts.
-> +
-> +Example:
-> +
-> +       lcd-controller@40500000 {
-> +               compatible = "marvell,pxa2xx-lcdc";
-> +               reg = <0x44000000 0x10000>;
-> +               interrupts = <17>;
-> +               clocks = <&clks CLK_LCD>;
-> +               interrupts = <23>;
+Add display PWM node in mt8173-evb.dts and mt8173.dtsi.
 
-The interrupt line is duplicated in the example.
+Signed-off-by: YH Huang <yh.huang@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   13 +++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi    |   22 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-> +               status = "okay";
-> +
-> +               port {
-> +                       lcdc_out: endpoint {
-> +                               remote-endpoint = <&panel_in>;
-> +                               bus-width = <16>;
-> +                       };
-> +               };
-> +       };
-> +
-> +PXA LCDC Display
-> +----------------
-> +Required properties (as per of_videomode_helper):
-> + - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
-> +                   "color-tft", "smart-panel"
-
-Would it make sense to make this property optional and have the
-default be "color-tft"? That is probably the most common one by far.
-
-regards
-Philipp
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+index 811cb76..1b3fabd 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+@@ -92,6 +92,13 @@
+ };
+ 
+ &pio {
++	disp_pwm0_pins: disp_pwm0_pins {
++		pins1 {
++			pinmux = <MT8173_PIN_87_DISP_PWM0__FUNC_DISP_PWM0>;
++			output-low;
++		};
++	};
++
+ 	mmc0_pins_default: mmc0default {
+ 		pins_cmd_dat {
+ 			pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+@@ -190,6 +197,12 @@
+ 	};
+ };
+ 
++&pwm0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&disp_pwm0_pins>;
++	status = "okay";
++};
++
+ &pwrap {
+ 	pmic: mt6397 {
+ 		compatible = "mediatek,mt6397";
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 4bce167..fd01134 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -500,6 +500,28 @@
+ 			clock-names = "source", "hclk";
+ 			status = "disabled";
+ 		};
++
++		pwm0: pwm@1401e000 {
++			compatible = "mediatek,mt8173-disp-pwm",
++				     "mediatek,mt6595-disp-pwm";
++			reg = <0 0x1401e000 0 0x1000>;
++			#pwm-cells = <2>;
++			clocks = <&mmsys CLK_MM_DISP_PWM026M>,
++				 <&mmsys CLK_MM_DISP_PWM0MM>;
++			clock-names = "main", "mm";
++			status = "disabled";
++		};
++
++		pwm1: pwm@1401f000 {
++			compatible = "mediatek,mt8173-disp-pwm",
++				     "mediatek,mt6595-disp-pwm";
++			reg = <0 0x1401f000 0 0x1000>;
++			#pwm-cells = <2>;
++			clocks = <&mmsys CLK_MM_DISP_PWM126M>,
++				 <&mmsys CLK_MM_DISP_PWM1MM>;
++			clock-names = "main", "mm";
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+-- 
+1.7.9.5
