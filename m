@@ -1,39 +1,30 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/3] ARM: uniphier: add outer cache support and rework SMP operations
-Date: Tue, 06 Oct 2015 16:22:05 +0200
-Message-ID: <5275814.I392BfIEUH@wuerfel>
-References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com> <6239461.UGe6XP3dfB@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [GIT PULL]Hisilicon arm64 dt changes for 4.3
+Date: Tue, 06 Oct 2015 16:24:15 +0200
+Message-ID: <8863339.WR5lqoXBim@wuerfel>
+References: <56003213.2050306@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6239461.UGe6XP3dfB@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, arm@kernel.org, Jiri Slaby <jslaby@suse.com>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Jungseung Lee <js07.lee@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Stefan Agner <stefan@agner.ch>, Pawel Moll <pawel.moll@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Jiang Liu <jiang.liu@linux.intel.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Nathan Lynch <nathan_lynch@mentor.com>, Kees Cook <keescook@chromium.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56003213.2050306-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yanhaifeng <yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Sanil Kumar <sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, zhizhou.zh@g
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 October 2015 16:20:23 Arnd Bergmann wrote:
-> On Friday 18 September 2015 13:37:31 Masahiro Yamada wrote:
-> > Hi Olof,
-> > 
-> > Now Linux 4.3-rc1 is out, so I am back to this.
-> > 
-> > 1/3: add outer cache support
-> > 2/3: rework SMP operations
-> > 3/3: add device tree nodes
-> > 
-> > Because 2/3 highly depends on 1/3, I hope whole of this series
-> > is applied through ARM-SOC tree.
+On Monday 21 September 2015 17:36:35 Wei Xu wrote:
+> ARM64: DT: Hisilicon hip05 soc and D02 board updates for 4.3
 > 
-> Sorry for the long delay here. Is this the latest version of these
-> patches?
-> 
-> Did Russell King review the first patch?
-> Is he ok with merging this through arm-soc?
+> - Updated the hisilicon devicetree bindings document to support hip05-D02 board
+> - Added dts files for hip05 SoC and D02 board
 > 
 
-I found an answer to the first question, as I see you posted
-v5 of the patchset in the meantime.
+Sorry for the long delay on our side, I've now merged these
+into the next/dt branch. Thanks for waiting,
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
