@@ -1,80 +1,82 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Tue, 6 Oct 2015 01:33:47 -0700
-Message-ID: <20151006083346.GL23801@atomide.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <560BC0DB.5020205@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH RESEND] ARM: dts: Fix Makefile target for
+ sun4i-a10-itead-iteaduino-plus
+Date: Tue, 6 Oct 2015 10:37:28 +0200
+Message-ID: <20151006083728.GQ2696@lukather>
+References: <20150904124934.GD464@hansolo.redhat.com>
+ <20150906112046.GK31584@lukather>
+ <1444085717.2956.0.camel@decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TRkqPRiqIDKgfg/F"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <560BC0DB.5020205@ti.com>
+In-Reply-To: <1444085717.2956.0.camel@decadent.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: Josh Boyer <jwboyer@fedoraproject.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Josef Gajdusek <atx@atx.name>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [150930 04:04]:
-> Tony,
-> 
-> On 18/09/15 17:53, Roger Quadros wrote:
-> > Hi,
-> > 
-> > We do a couple of things in this series which result in
-> > cleaner device tree implementation, faster perfomance and
-> > multi-platform support. As an added bonus we get new GPI/Interrupt pins
-> > for use in the system.
-> > 
-> > - Establish a custom interface between NAND and GPMC driver. This is
-> > needed because all of the NAND registers sit in the GPMC register space.
-> > Some bits like NAND IRQ are even shared with GPMC.
-> > 
-> > - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
-> > with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
-> > This causes performance increase when using prefetch-irq mode.
-> > 30% increase in read, 17% increase in write in prefetch-irq mode.
-> > 
-> > - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
-> > driver can be used on non-OMAP platforms. e.g. Keystone.
-> > 
-> > - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
-> > 2 to 4 of these and most of them would be unused otherwise. It also
-> > allows a cleaner implementation of NAND Ready pin status for the NAND driver.
-> > 
-> > - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
-> > 
-> > This series is available at
-> > git@github.com:rogerq/linux.git
-> > in branch
-> > for-v4.4/gpmc-v3
 
-In general, very nice work :)
+--TRkqPRiqIDKgfg/F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I've verified this series with the following boards
-> -dra7-evm
-> -am437x-gp-evm
-> -am335x-evm
-> -beagleboard-c4
-> 
-> For legacy boot I've checked only on beagleboard-c4.
+On Mon, Oct 05, 2015 at 11:55:17PM +0100, Ben Hutchings wrote:
+> On Sun, 2015-09-06 at 13:20 +0200, Maxime Ripard wrote:
+> > On Fri, Sep 04, 2015 at 08:49:34AM -0400, Josh Boyer wrote:
+> > > Commit 79ae3e66f8d (ARM: dts: sun4i: Add Iteaduino Plus A10) added a =
+new
+> > > make target for the sun4i-a10-itead-iteaduino-plus dts file, but mist=
+akenly
+> > > used .dts instead of the correct .dtb suffix.  This resulted in a bui=
+ld error
+> > > like:
+> > >=20
+> > >         scripts/Makefile.dtbinst:42: target 'sun4i-a10-itead-iteaduin=
+o-plus.dts' doesn't match the target pattern
+> > >=20
+> > > when doing a make dtbs_install.
+> > >=20
+> > > Fix it to use the proper file name.
+> > >=20
+> > > Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+> >=20
+> > Queued, thanks!
+>=20
+> This still isn't in Linus's tree; please make sure it gets to him
+> before 4.3.
 
-Great.
+The pull request has been sent on sunday to arm-soc.
 
-Does build and boot and use NAND work throughtout the series?
-Otherwise we'll have hard time bisecting anything..
+Maxime
 
-> Test procedure was to read an existing ubifs partition,
-> create a new one and read it back.
-> 
-> Need you to Ack if it looks good.
-> Do you mind taking it via omap-soc once MTD maintainers ack their relevant parts?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Sure. I'll try to do some testing on the series first too.
+--TRkqPRiqIDKgfg/F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Can the dts changes be merged separtely? Otherwise we'll have
-a dependency between dts branch and the GPMC/NAND changes.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Regards,
+iQIcBAEBAgAGBQJWE4hIAAoJEBx+YmzsjxAgjUUQAJGlP2rGD9t7OQFZBLIE93d1
+ESFDCV0u37YqT0VFKctoxRo5A4Sx3KVhLamWcULcF5rLPUo1p2PGzpjob3Dec2XB
+llOT25JW3VVNi9Du+By3YBlPDOtyZiNxjWHCR9S/Gg32bc6DAnAwyCrSIC8gjuTC
+Ew9DrB2BY+lL1Gpjm0W50id/mz13EY0HR5qs3OK9hFSTVbmut27I4rqtPMPseXEr
+MzaxHQH2DxFAY2Ua4cPh8vCky8nv5ed0W8lrySIJSxihIWJ/7ozLJZ7wWfDaTZpf
++du1Moxal4GdmZvXAWfraDBfGc43hagmpuqG7FxY76O68/LN5b/hNfGyIF4KJKGb
+z6OptT/cAkYgWmBFSF5oCkF6LawWeELA6aIh/sxhr9r4FQuPNwdyOg2qKiZKvJhj
+43W8ZFmAtYZhXpXzxkhIHASaqKVLmeAaY4Rq7zxwCYuep0m8vKYguHdECacRxv5J
+bkMzkx5DtgmbutaopCBUraKMTrdQp5LA7u4KDitKtXmy/J52Hj6Yzzos+SQ1xJYy
+XYBJfqklfiwqnZy3KVOJEolpD52sDP0UpSrjI2dEhOfD1dUy2EHw5/H3N8+alIyg
+W4A2uR0zL1CiOjRFV4VDwZsdA+GMDaS8nEcv6L0VRPXa1gvzhqKIrLvuu1NNa3tj
+7f1I4Qr1C3LaSC8QuXnf
+=kNZ2
+-----END PGP SIGNATURE-----
 
-Tony
+--TRkqPRiqIDKgfg/F--
