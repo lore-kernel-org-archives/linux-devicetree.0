@@ -1,144 +1,91 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Tue, 6 Oct 2015 08:30:30 -0500
-Message-ID: <CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
-References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
+ controller
+Date: Tue, 6 Oct 2015 14:41:19 +0100
+Message-ID: <20151006134119.GB26818@localhost>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+ <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
+ <20151004214943.GA28904@localhost>
+ <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443954683-13126-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rafal
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 4, 2015 at 5:31 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> Add documentation for the PXA frambuffer devicetree binding.
+Hi Anup,
 
-Strictly speaking this is a binding for PXA display controller, not a
-Linux FB driver. There are lots of "framebuffer" and "DRM" bindings
-which I'm trying to curb.
+On Mon, Oct 05, 2015 at 06:27:16AM +0000, Anup Patel wrote:
+> > -----Original Message-----
+> > From: Brian Norris [mailto:computersforpeace@gmail.com]
+> > Sent: 05 October 2015 03:20
+> > To: Anup Patel
+> > Cc: linux-arm-kernel@lists.infradead.org; Rob Herring; Pawel Moll; Mark
+> > Rutland; Ian Campbell; Kumar Gala; Catalin Marinas; Will Deacon; David
+> > Woodhouse; Ray Jui; Scott Branden; Florian Fainelli; Pramod Kumar; Vikram
+> > Prakash; Sandeep Tripathy; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-mtd@lists.infradead.org; bcm-kernel-feedback-
+> > list; Rafal Milecki
+> > Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
+> > controller
+> > 
+> > + Rafal (to extend this mighty CC list)
+> > 
+> > On Fri, Oct 02, 2015 at 11:26:44PM +0530, Anup Patel wrote:
+> > > The BRCM NAND controller on NS2 SoC requires a reset to cleanup
+> > > previously configured NAND controller state.
+> > >
+> > > This patch adds optional boolean device tree flag named
+> > > "brcm,nand-iproc-reset". If this flag is present in NAND controller DT
+> > > node then BRCM IPROC NAND driver will reset the NAND controller before
+> > > any commands are issued.
+> > 
+> > Is there a reason not to do this reset unconditionally? I recall this came up in
+> > discussion previously, when the OpenWRT folks were trying to integrate with
+> > BCMA, where this reset was one of the few differences between the platform-
+> > device-based driver (i.e., this one) and the BCMA based driver. Might it help
+> > simplify things a bit if we just did the same thing everywhere?
+> 
+> This driver is currently shared by Cygnus and NS2.
+> 
+> We had similar suggestion when this patch was reviewed
+> internally in Broadcom.
+> 
+> The rationale for adding optional DT flag is as follows:
+> 1. The NAND controller reset is currently required for NS2 only so
+> that it is in sane state before any NAND commands are issued. We
+> are not sure if Cygnus and all future iProc SoCs will require NAND
+> controller reset.
 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> ---
-> Since v1: Philipp's review on the whole binding
-> ---
->  .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
+I'm not sure this is a very strong reason. It seems fairly reasonable in
+general to reset a HW block before using it.
 
-Please put in bindings/display/ as I'm consolidating all the display
-related bindings there[1].
+> 2. The NAND controller reset in probe would certainly increase
+> Linux boot time so for certain iProc SoCs we might choose avoid
+> NAND controller reset to reduce boot time if possible.
 
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/marvell,pxafb.txt
->
-> diff --git a/Documentation/devicetree/bindings/video/marvell,pxafb.txt b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
-> new file mode 100644
-> index 000000000000..4d6bd490680d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
-> @@ -0,0 +1,80 @@
-> +PXA LCDC Framebuffer
-> +--------------------
-> +
-> +Required properties:
-> + - compatible :
-> +       "marvell,pxa2xx-lcdc",
+I recall this reason being mentioned before. I believe this only happens
+because the brcmnand driver doesn't yet handle configuring the timing
+registers, so iProc is implicitly relying on the bootloader to configure
+the NAND timings. Perhaps it's time that we fix that. I'd rather not add
+extra DT properties unless we actually need to [1]. And having proper
+timing configuration in the Linux driver will help improve speeds for
+all users (whose timings may not be configured in the bootloader).
 
-No differences in h/w for any of the chips?
+I actually had some preliminary work to do some timing configuration
+according to the new timing information from nand_base.c/nand_timing.c.
+Unfortunately, I didn't complete this, and I'm no longer working at
+Broadcom, so I don't exactly have access to the HW docs for all the NAND
+controller revisions, nor do I have access to as much HW for testing...
 
-> + - reg : Should contain 1 register ranges(address and length).
-> +        Can contain an additional register range(address and length)
-> +        for fixed framebuffer memory. Useful for dedicated memories.
+Brian
 
-This is memory that can't be used for anything else? We already have
-reserved-memory for this if it is just RAM. There's also a binding for
-on-chip SRAM which should probably be used if the memory is usable for
-other things.
+[1] If we really do need a device tree differentiation, perhaps it would
+be better to just differentiate the compatible string than to have
+individual boolean properties. e.g.:
 
-> + - interrupts : framebuffer controller interrupt
-> +
-> +Required nodes:
-> + - clocks: phandle to input clocks.
-> + - port: connection to the LCD panel (see video-interfaces.txt)
-> +        This nodes must have its properties bus-width and remote-endpoint set.
-> +        This should be in the board dts.
-> +
-> +Example:
-> +
-> +       lcd-controller@40500000 {
-> +               compatible = "marvell,pxa2xx-lcdc";
-> +               reg = <0x44000000 0x10000>;
-> +               interrupts = <17>;
-> +               clocks = <&clks CLK_LCD>;
-> +               interrupts = <23>;
-> +               status = "okay";
-> +
-> +               port {
-> +                       lcdc_out: endpoint {
-> +                               remote-endpoint = <&panel_in>;
-> +                               bus-width = <16>;
-> +                       };
-> +               };
-> +       };
-> +
-> +PXA LCDC Display
-
-This should not be specific to PXA, but for this panel. This should be
-in bindings/display/panel/.
-
-> +----------------
-> +Required properties (as per of_videomode_helper):
-> + - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
-> +                   "color-tft", "smart-panel"
-> +
-> +Optional properties (as per of_videomode_helper):
-> + - power-supply: power supply regulator to the LCD to power it on or off
-> +                (see regulator.txt)
-> + - backlight: backlight control (see backlight.txt)
-> +
-> +Required nodes:
-> + - port: connection to the LCD controller
-> + - display-timings: panel timings (see display-timing.txt)
-
-If lcd-type is smart-panel, then this node would not make sense.
-
-> +
-> +Example:
-> +       panel {
-> +               compatible = "toshiba,ltm0305a776";
-> +               lcd-type = "color-tft";
-> +
-> +               power-supply = <&lcd_supply>;
-> +               backlight = <&lcd_backlight>;
-> +
-> +               port {
-> +                       panel_in: endpoint {
-> +                               remote-endpoint = <&lcdc_out>;
-> +                       };
-> +               };
-> +
-> +               display-timings {
-> +                       native-mode = <&timing0>;
-> +                       timing0: 240p {
-> +                               /* 240x320p24 */
-> +                               clock-frequency = <4545000>;
-> +                               hactive = <240>;
-> +                               vactive = <320>;
-> +                               hfront-porch = <4>;
-> +                               hback-porch = <6>;
-> +                               hsync-len = <4>;
-> +                               vback-porch = <5>;
-> +                               vfront-porch = <3>;
-> +                               vsync-len = <2>;
-> +                       };
-> +               };
-> +       };
-> --
-> 2.1.4
->
-
-[1] https://lkml.org/lkml/2015/10/1/899
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	compatible = "brcm,iproc-nand-ns2", ...;
