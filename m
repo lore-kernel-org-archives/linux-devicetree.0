@@ -1,91 +1,118 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
- controller
-Date: Tue, 6 Oct 2015 15:25:38 -0700
-Message-ID: <56144A62.70300@broadcom.com>
-References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
- <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
- <20151004214943.GA28904@localhost>
- <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
- <20151006134119.GB26818@localhost>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
+Date: Tue, 6 Oct 2015 17:35:41 -0500
+Message-ID: <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
+References: <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
+ <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151006134119.GB26818@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Anup Patel <anup.patel@broadcom.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rafal Milecki <zajec5@gmail.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Laura Abbott <labbott@fedoraproject.org>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Andrianov <andrew@ncrmnt.org>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, arve@android.com, Colin Cross <ccross@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Riley Andrews <riandrews@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Feng Tang <feng.tang@intel.com>, Grant Likely <grant.likely@linaro.org>, Laura Abbott <laura@labbott.name>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-On 15-10-06 06:41 AM, Brian Norris wrote:
-
->>>
->>> Is there a reason not to do this reset unconditionally? I recall this came up in
->>> discussion previously, when the OpenWRT folks were trying to integrate with
->>> BCMA, where this reset was one of the few differences between the platform-
->>> device-based driver (i.e., this one) and the BCMA based driver. Might it help
->>> simplify things a bit if we just did the same thing everywhere?
->>
->> This driver is currently shared by Cygnus and NS2.
->>
->> We had similar suggestion when this patch was reviewed
->> internally in Broadcom.
->>
->> The rationale for adding optional DT flag is as follows:
->> 1. The NAND controller reset is currently required for NS2 only so
->> that it is in sane state before any NAND commands are issued. We
->> are not sure if Cygnus and all future iProc SoCs will require NAND
->> controller reset.
+On Tue, Oct 6, 2015 at 3:47 PM, Laura Abbott <labbott@fedoraproject.org> wrote:
+> From: Laura Abbott <laura@labbott.name>
 >
-> I'm not sure this is a very strong reason. It seems fairly reasonable in
-> general to reset a HW block before using it.
-
-Efficient Boot time is a very strong reason for needing this actually. 
-We use the NAND controller in the bootROM, boot1/BL1, u-boot/UEFI, and 
-then Kernel stage.  By properly initializing the controller once we do 
-not need to reset it 4 different times.
-
 >
->> 2. The NAND controller reset in probe would certainly increase
->> Linux boot time so for certain iProc SoCs we might choose avoid
->> NAND controller reset to reduce boot time if possible.
+> This adds a base set of devicetree bindings for the Ion memory
+> manager. This supports setting up the generic set of heaps and
+> their properties.
 >
-> I recall this reason being mentioned before. I believe this only happens
-> because the brcmnand driver doesn't yet handle configuring the timing
-> registers, so iProc is implicitly relying on the bootloader to configure
-> the NAND timings. Perhaps it's time that we fix that. I'd rather not add
-> extra DT properties unless we actually need to [1]. And having proper
-> timing configuration in the Linux driver will help improve speeds for
-> all users (whose timings may not be configured in the bootloader).
+> Signed-off-by: Laura Abbott <laura@labbott.name>
+> Signed-off-by: Andrew Andrianov <andrew@ncrmnt.org>
+> ---
+>  drivers/staging/android/ion/devicetree.txt | 53 ++++++++++++++++++++++++++++++
 
-This is the very reason we need the optional reset property.  We need to 
-have timings configured by the linux driver or not.  Yes, in some cases 
-we will be relying on earlier boot stages to configure some of the hardware.
+I have no issue with this going in here, but I do have lots of issues
+with this binding.
 
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 drivers/staging/android/ion/devicetree.txt
 >
-> I actually had some preliminary work to do some timing configuration
-> according to the new timing information from nand_base.c/nand_timing.c.
-> Unfortunately, I didn't complete this, and I'm no longer working at
-> Broadcom, so I don't exactly have access to the HW docs for all the NAND
-> controller revisions, nor do I have access to as much HW for testing...
->
-> Brian
->
-> [1] If we really do need a device tree differentiation, perhaps it would
-> be better to just differentiate the compatible string than to have
-> individual boolean properties. e.g.:
->
-> 	compatible = "brcm,iproc-nand-ns2", ...;
->
-As described above - the option is not SoC specific.  It is system 
-specific.  In some systems we may wish to reset the NAND controller in 
-linux.  In some we may wish to rely on initialization that has already 
-been done to speed up boot times.
+> diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
+> new file mode 100644
+> index 0000000..4a0c941
+> --- /dev/null
+> +++ b/drivers/staging/android/ion/devicetree.txt
+> @@ -0,0 +1,53 @@
+> +Ion Memory Manager
+> +
+> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
+> +Ion allows for different types of allocation via an abstraction called
+> +a 'heap'. A heap represents a specific type of memory. Each heap has
+> +a different type. There can be multiple instances of the same heap
+> +type.
+> +
+> +Required properties for Ion
+> +
+> +- compatible: "linux,ion"
+> +
+> +All child nodes of a linux,ion node are interpreted as heaps
+> +
+> +required properties for heaps
+> +
+> +- linux,ion-heap-id: The Ion heap id used for allocation selection
+> +- linux,ion-heap-type: Ion heap type defined in ion.h
+> +- linux,ion-heap-name: Human readble name of the heap
+> +
+> +
+> +Optional properties
+> +- memory-region: A phandle to a memory region. Required for DMA heap type
+> +(see reserved-memory.txt for details on the reservation)
+> +- linux,ion-heap-align: Alignment for the heap.
+> +
+> +Example:
+> +
+> +       ion {
+> +               compatbile = "linux,ion";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               ion-system-heap {
+> +                       linux,ion-heap-id = <0>;
+> +                       linux,ion-heap-type = <ION_SYSTEM_HEAP_TYPE>;
+> +                       linux,ion-heap-name = "system";
+
+How does this vary across platforms? Is all of this being pushed down
+to DT, because there is no coordination of this at the kernel ABI
+level across platforms. In other words, why can't heap 0 be hardcoded
+as system heap in the driver. It seems to me any 1 of these 3
+properties could be used to derive the other 2.
 
 
+> +               };
+> +
+> +               ion-camera-region {
+> +                       linux,ion-heap-id = <1>;
+> +                       linux,ion-heap-type = <ION_DMA_HEAP_TYPE>;
+> +                       linux,ion-heap-name = "camera"
+> +                       memory-region = <&camera_region>;
 
-Regards,
-  Scott
+Couldn't the memory-region node with addition properties or some
+standardization of existing ones provide enough information for ION's
+needs?
+
+> +               };
+> +
+> +               ion-fb-region {
+> +                       linux,ion-heap-id = <2>;
+> +                       linux,ion-heap-type = <ION_DMA_HEAP_TYPE>;
+> +                       linux,ion-heap-name = "fb"
+> +                       memory-region = <&fb_region>;
+> +               };
+> +       }
+> --
+> 2.4.3
+>
