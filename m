@@ -1,132 +1,157 @@
-From: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v7,1/3] dt-bindings: binding for jz4780-{nand,bch}
-Date: Tue, 6 Oct 2015 17:27:15 +0100
-Message-ID: <1444148837-10770-2-git-send-email-harvey.hunt@imgtec.com>
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: [PATCH v7,3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND device tree nodes
+Date: Tue, 6 Oct 2015 17:27:17 +0100
+Message-ID: <1444148837-10770-4-git-send-email-harvey.hunt@imgtec.com>
 References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444148837-10770-1-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mtd@lists.infradead.org
+Cc: Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alex Smith <alex@alex-smith.me.uk>, Harvey Hunt <harvey.hunt@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Alex Smith <alex.smith@imgtec.com>
 
-Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-drivers.
+Add device tree nodes for the NEMC and BCH to the JZ4780 device tree,
+and make use of them in the Ci20 device tree to add a node for the
+board's NAND.
 
-Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
-Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Note that since the pinctrl driver is not yet upstream, this includes
+neither pin configuration nor busy/write-protect GPIO pins for the
+NAND. Use of the NAND relies on the boot loader to have left the pins
+configured in a usable state, which should be the case when booted
+from the NAND.
+
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: Alex Smith <alex@alex-smith.me.uk>
+Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
 ---
 v6 -> v7:
- - Add nand-ecc-mode to DT bindings.
- - Add nand-on-flash-bbt to DT bindings.
-
-v5 -> v6:
- - No change.
+ - Add nand-ecc-mode to DT.
+ - Add nand-on-flash-bbt to DT.
 
 v4 -> v5:
- - Rename ingenic,bch-device to ingenic,bch-controller to fit with
-   existing convention.
+ - New patch adding DT nodes for the NAND so that the driver can be
+   tested.
 
-v3 -> v4:
- - No change
+ arch/mips/boot/dts/ingenic/ci20.dts    | 54 ++++++++++++++++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 26 ++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-v2 -> v3:
- - Rebase to 4.0-rc6
- - Changed ingenic,ecc-size to common nand-ecc-step-size
- - Changed ingenic,ecc-strength to common nand-ecc-strength
- - Changed ingenic,busy-gpio to common rb-gpios
- - Changed ingenic,wp-gpio to common wp-gpios
-
-v1 -> v2:
- - Rebase to 4.0-rc3
-
- .../bindings/mtd/ingenic,jz4780-nand.txt           | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-new file mode 100644
-index 0000000..44a0468
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -0,0 +1,61 @@
-+* Ingenic JZ4780 NAND/BCH
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 9fcb9e7..453f1d3 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -42,3 +42,57 @@
+ &uart4 {
+ 	status = "okay";
+ };
 +
-+This file documents the device tree bindings for NAND flash devices on the
-+JZ4780. NAND devices are connected to the NEMC controller (described in
-+memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-+be children of the NEMC node.
-+
-+Required NAND device properties:
-+- compatible: Should be set to "ingenic,jz4780-nand".
-+- reg: For each bank with a NAND chip attached, should specify a bank number,
-+  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
-+
-+Optional NAND device properties:
-+- ingenic,bch-controller: To make use of the hardware BCH controller, this
-+  property must contain a phandle for the BCH controller node. The required
-+  properties for this node are described below. If this is not specified,
-+  software BCH will be used instead.
-+- nand-ecc-step-size: ECC block size in bytes.
-+- nand-ecc-strength: ECC strength (max number of correctable bits).
-+- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
-+- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-+- rb-gpios: GPIO specifier for the busy pin.
-+- wp-gpios: GPIO specifier for the write protect pin.
-+
-+Example:
-+
-+nemc: nemc@13410000 {
-+	...
++&nemc {
++	status = "okay";
 +
 +	nand: nand@1 {
 +		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;	/* Bank 1 */
++		reg = <1 0 0x1000000>;
++
++		ingenic,nemc-tAS = <10>;
++		ingenic,nemc-tAH = <5>;
++		ingenic,nemc-tBP = <10>;
++		ingenic,nemc-tAW = <15>;
++		ingenic,nemc-tSTRV = <100>;
 +
 +		ingenic,bch-controller = <&bch>;
-+		nand-ecc-step-size = <1024>;
-+		nand-ecc-strength = <24>;
++		ingenic,ecc-size = <1024>;
++		ingenic,ecc-strength = <24>;
++
 +		nand-ecc-mode = "hw";
 +		nand-on-flash-bbt;
 +
-+		rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
-+		wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		partition@0 {
++			label = "u-boot-spl";
++			reg = <0x0 0x0 0x0 0x800000>;
++		};
++
++		partition@0x800000 {
++			label = "u-boot";
++			reg = <0x0 0x800000 0x0 0x200000>;
++		};
++
++		partition@0xa00000 {
++			label = "u-boot-env";
++			reg = <0x0 0xa00000 0x0 0x200000>;
++		};
++
++		partition@0xc00000 {
++			label = "boot";
++			reg = <0x0 0xc00000 0x0 0x4000000>;
++		};
++
++		partition@0x8c00000 {
++			label = "system";
++			reg = <0x0 0x4c00000 0x1 0xfb400000>;
++		};
 +	};
 +};
 +
-+The BCH controller is a separate SoC component used for error correction on
-+NAND devices. The following is a description of the device properties for a
-+BCH controller.
-+
-+Required BCH properties:
-+- compatible: Should be set to "ingenic,jz4780-bch".
-+- reg: Should specify the BCH controller registers location and length.
-+- clocks: Clock for the BCH controller.
-+
-+Example:
-+
-+bch: bch@134d0000 {
-+	compatible = "ingenic,jz4780-bch";
-+	reg = <0x134d0000 0x10000>;
-+
-+	clocks = <&cgu JZ4780_CLK_BCH>;
++&bch {
++	status = "okay";
 +};
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index 65389f6..b868b42 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -108,4 +108,30 @@
+ 
+ 		status = "disabled";
+ 	};
++
++	nemc: nemc@13410000 {
++		compatible = "ingenic,jz4780-nemc";
++		reg = <0x13410000 0x10000>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <1 0 0x1b000000 0x1000000
++			  2 0 0x1a000000 0x1000000
++			  3 0 0x19000000 0x1000000
++			  4 0 0x18000000 0x1000000
++			  5 0 0x17000000 0x1000000
++			  6 0 0x16000000 0x1000000>;
++
++		clocks = <&cgu JZ4780_CLK_NEMC>;
++
++		status = "disabled";
++	};
++
++	bch: bch@134d0000 {
++		compatible = "ingenic,jz4780-bch";
++		reg = <0x134d0000 0x10000>;
++
++		clocks = <&cgu JZ4780_CLK_BCH>;
++
++		status = "disabled";
++	};
+ };
 -- 
 2.6.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
