@@ -1,41 +1,36 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: DRA7: Add timer12 node
-Date: Tue, 6 Oct 2015 00:52:09 -0700
-Message-ID: <20151006075209.GH23801@atomide.com>
-References: <1444087704-1429-1-git-send-email-s-anna@ti.com>
- <1444087704-1429-4-git-send-email-s-anna@ti.com>
- <87y4fgesbz.fsf@saruman.tx.rr.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87y4fgesbz.fsf-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: [PATCH v5 1/3] ARM: STi: Kconfig update for PCIe support
+Date: Tue,  6 Oct 2015 09:56:06 +0200
+Message-ID: <1444118168-13086-2-git-send-email-gabriel.fernandez@linaro.org>
+References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [151005 17:51]:
-> 
-> according to Tony we should avoid using status at all for in-SoC
-> devices.
-> 
-> Tony, can you confirm I understood you correctly ?
+Update Kconfig:
+- MIGHT_HAVE_PCI
+- PCI_DOMAINS
 
-Yes. With status = "disabled" kernel completely ignores the
-device and struct device is not created at all even with the
-device being there. In general we're better off trying to
-probe the device and idle it.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ arch/arm/mach-sti/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The only time we really want to mark something with
-status = "disabled" is if some coprocessor firmware is
-using that device and the kernel should not touch it at
-all.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index 125865d..5f99e93 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -9,6 +9,8 @@ menuconfig ARCH_STI
+ 	select ARCH_HAS_RESET_CONTROLLER
+ 	select HAVE_ARM_SCU if SMP
+ 	select ARCH_REQUIRE_GPIOLIB
++	select PCI_DOMAINS if PCI
++	select MIGHT_HAVE_PCI
+ 	select ARM_ERRATA_754322
+ 	select ARM_ERRATA_764369 if SMP
+ 	select ARM_ERRATA_775420
+-- 
+1.9.1
