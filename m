@@ -1,121 +1,62 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
- controller
-Date: Tue, 06 Oct 2015 16:20:44 -0700
-Message-ID: <5614574C.2060701@gmail.com>
-References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com> <1443808606-21203-4-git-send-email-anup.patel@broadcom.com> <20151004214943.GA28904@localhost> <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com> <20151006134119.GB26818@localhost> <56144A62.70300@broadcom.com>
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH] ARM: dts: exynos4412-odroid: remove redundant pinctrl
+ settings
+Date: Wed, 7 Oct 2015 01:26:38 +0200
+Message-ID: <561458AE.3040801@math.uni-bielefeld.de>
+References: <1442858340-4584-1-git-send-email-tjakobi@math.uni-bielefeld.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56144A62.70300-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rafal Milecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1442858340-4584-1-git-send-email-tjakobi@math.uni-bielefeld.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/15 15:25, Scott Branden wrote:
-> Hi Brian,
+Gentle ping!
+
+- Tobias
+
+
+Tobias Jakobi wrote:
+> The pinctrl settings in i2c_0 and i2c_1 are already provided
+> through the exynos4 dtsi.
 > 
-> On 15-10-06 06:41 AM, Brian Norris wrote:
+> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+> ---
+>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
->>>>
->>>> Is there a reason not to do this reset unconditionally? I recall
->>>> this came up in
->>>> discussion previously, when the OpenWRT folks were trying to
->>>> integrate with
->>>> BCMA, where this reset was one of the few differences between the
->>>> platform-
->>>> device-based driver (i.e., this one) and the BCMA based driver.
->>>> Might it help
->>>> simplify things a bit if we just did the same thing everywhere?
->>>
->>> This driver is currently shared by Cygnus and NS2.
->>>
->>> We had similar suggestion when this patch was reviewed
->>> internally in Broadcom.
->>>
->>> The rationale for adding optional DT flag is as follows:
->>> 1. The NAND controller reset is currently required for NS2 only so
->>> that it is in sane state before any NAND commands are issued. We
->>> are not sure if Cygnus and all future iProc SoCs will require NAND
->>> controller reset.
->>
->> I'm not sure this is a very strong reason. It seems fairly reasonable in
->> general to reset a HW block before using it.
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> index 3f8bc7b..3c34e74 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -217,8 +217,6 @@
+>  };
+>  
+>  &i2c_0 {
+> -	pinctrl-0 = <&i2c0_bus>;
+> -	pinctrl-names = "default";
+>  	samsung,i2c-sda-delay = <100>;
+>  	samsung,i2c-max-bus-freq = <400000>;
+>  	status = "okay";
+> @@ -444,8 +442,6 @@
+>  };
+>  
+>  &i2c_1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&i2c1_bus>;
+>  	status = "okay";
+>  	max98090: max98090@10 {
+>  		compatible = "maxim,max98090";
+> @@ -460,8 +456,6 @@
+>  
+>  &i2c_2 {
+>  	status = "okay";
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&i2c2_bus>;
+>  };
+>  
+>  &i2c_8 {
 > 
-> Efficient Boot time is a very strong reason for needing this actually.
-> We use the NAND controller in the bootROM, boot1/BL1, u-boot/UEFI, and
-> then Kernel stage.  By properly initializing the controller once we do
-> not need to reset it 4 different times.
-
-This could be used as a reverse argument, issuing a reset will increase
-the boot time.
-
-> 
->>
->>> 2. The NAND controller reset in probe would certainly increase
->>> Linux boot time so for certain iProc SoCs we might choose avoid
->>> NAND controller reset to reduce boot time if possible.
->>
->> I recall this reason being mentioned before. I believe this only happens
->> because the brcmnand driver doesn't yet handle configuring the timing
->> registers, so iProc is implicitly relying on the bootloader to configure
->> the NAND timings. Perhaps it's time that we fix that. I'd rather not add
->> extra DT properties unless we actually need to [1]. And having proper
->> timing configuration in the Linux driver will help improve speeds for
->> all users (whose timings may not be configured in the bootloader).
-> 
-> This is the very reason we need the optional reset property.  We need to
-> have timings configured by the linux driver or not.  Yes, in some cases
-> we will be relying on earlier boot stages to configure some of the
-> hardware.
-
-Then instead of adding a "reset flag" to Device Tree, another approach
-could be to put the desired or currently configured exhaustive list of
-NAND timings in Device Tree, and based on that you could have this:
-
-- the NAND controller driver finds that these timings match the current
-configuration, you are good to go
-
-- the NAND controller drivers finds a difference in how current timings
-are configured vs. desired timings, and issues a controller reset, prior
-to applying new timing configuration
-
-- no timings are configured, reset the controller and use existing
-auto-detection capabilities like ONFI modes
-
-Typically you would put the desired timings instead of the currently
-configured timings though..
-
-> 
->>
->> I actually had some preliminary work to do some timing configuration
->> according to the new timing information from nand_base.c/nand_timing.c.
->> Unfortunately, I didn't complete this, and I'm no longer working at
->> Broadcom, so I don't exactly have access to the HW docs for all the NAND
->> controller revisions, nor do I have access to as much HW for testing...
->>
->> Brian
->>
->> [1] If we really do need a device tree differentiation, perhaps it would
->> be better to just differentiate the compatible string than to have
->> individual boolean properties. e.g.:
->>
->>     compatible = "brcm,iproc-nand-ns2", ...;
->>
-> As described above - the option is not SoC specific.  It is system
-> specific.  In some systems we may wish to reset the NAND controller in
-> linux.  In some we may wish to rely on initialization that has already
-> been done to speed up boot times.
-
-It seems to me like having this property is fine as long as you are
-describing that the controller *needs* a reset to operate properly, it
-does not strike me as a particularly well suited property if its side
-effect and main usage is to keep or wipe-out existing NAND timings.
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
