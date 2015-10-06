@@ -1,91 +1,588 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
- controller
-Date: Tue, 6 Oct 2015 14:41:19 +0100
-Message-ID: <20151006134119.GB26818@localhost>
-References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
- <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
- <20151004214943.GA28904@localhost>
- <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v9 3/5] phy: add usb3.0 phy driver for mt65xx SoCs
+Date: Tue, 6 Oct 2015 19:50:22 +0530
+Message-ID: <5613D8A6.6070007@ti.com>
+References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1443495698-32233-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rafal
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1443495698-32233-4-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anup,
+Hi Chunfeng,
 
-On Mon, Oct 05, 2015 at 06:27:16AM +0000, Anup Patel wrote:
-> > -----Original Message-----
-> > From: Brian Norris [mailto:computersforpeace@gmail.com]
-> > Sent: 05 October 2015 03:20
-> > To: Anup Patel
-> > Cc: linux-arm-kernel@lists.infradead.org; Rob Herring; Pawel Moll; Mark
-> > Rutland; Ian Campbell; Kumar Gala; Catalin Marinas; Will Deacon; David
-> > Woodhouse; Ray Jui; Scott Branden; Florian Fainelli; Pramod Kumar; Vikram
-> > Prakash; Sandeep Tripathy; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-mtd@lists.infradead.org; bcm-kernel-feedback-
-> > list; Rafal Milecki
-> > Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
-> > controller
-> > 
-> > + Rafal (to extend this mighty CC list)
-> > 
-> > On Fri, Oct 02, 2015 at 11:26:44PM +0530, Anup Patel wrote:
-> > > The BRCM NAND controller on NS2 SoC requires a reset to cleanup
-> > > previously configured NAND controller state.
-> > >
-> > > This patch adds optional boolean device tree flag named
-> > > "brcm,nand-iproc-reset". If this flag is present in NAND controller DT
-> > > node then BRCM IPROC NAND driver will reset the NAND controller before
-> > > any commands are issued.
-> > 
-> > Is there a reason not to do this reset unconditionally? I recall this came up in
-> > discussion previously, when the OpenWRT folks were trying to integrate with
-> > BCMA, where this reset was one of the few differences between the platform-
-> > device-based driver (i.e., this one) and the BCMA based driver. Might it help
-> > simplify things a bit if we just did the same thing everywhere?
+On Tuesday 29 September 2015 08:31 AM, Chunfeng Yun wrote:
+> support usb3.0 phy of mt65xx SoCs
+
+I have merged this driver. Can you also send a patch adding yourself as
+the maintainer of this driver?
+
+Thanks
+Kishon
 > 
-> This driver is currently shared by Cygnus and NS2.
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/phy/Kconfig           |   9 +
+>  drivers/phy/Makefile          |   1 +
+>  drivers/phy/phy-mt65xx-usb3.c | 506 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 516 insertions(+)
+>  create mode 100644 drivers/phy/phy-mt65xx-usb3.c
 > 
-> We had similar suggestion when this patch was reviewed
-> internally in Broadcom.
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 47da573..ec436c1 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -206,6 +206,15 @@ config PHY_HIX5HD2_SATA
+>  	help
+>  	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
+>  
+> +config PHY_MT65XX_USB3
+> +	tristate "Mediatek USB3.0 PHY Driver"
+> +	depends on ARCH_MEDIATEK && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Say 'Y' here to add support for Mediatek USB3.0 PHY driver
+> +	  for mt65xx SoCs. it supports two usb2.0 ports and
+> +	  one usb3.0 port.
+> +
+>  config PHY_SUN4I_USB
+>  	tristate "Allwinner sunxi SoC USB PHY driver"
+>  	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index a5b18c1..a7cc629 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -23,6 +23,7 @@ obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+>  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
+>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+> +obj-$(CONFIG_PHY_MT65XX_USB3)		+= phy-mt65xx-usb3.o
+>  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
+>  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
+> diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
+> new file mode 100644
+> index 0000000..f30b28b
+> --- /dev/null
+> +++ b/drivers/phy/phy-mt65xx-usb3.c
+> @@ -0,0 +1,506 @@
+> +/*
+> + * Copyright (c) 2015 MediaTek Inc.
+> + * Author: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +/*
+> + * for sifslv2 register, but exclude port's;
+> + * relative to USB3_SIF2_BASE base address
+> + */
+> +#define SSUSB_SIFSLV_SPLLC		0x0000
+> +
+> +/* offsets of sub-segment in each port registers */
+> +#define SSUSB_SIFSLV_U2PHY_COM_BASE	0x0000
+> +#define SSUSB_SIFSLV_U3PHYD_BASE	0x0100
+> +#define SSUSB_USB30_PHYA_SIV_B_BASE	0x0300
+> +#define SSUSB_SIFSLV_U3PHYA_DA_BASE	0x0400
+> +
+> +#define U3P_USBPHYACR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0000)
+> +#define PA0_RG_U2PLL_FORCE_ON		BIT(15)
+> +
+> +#define U3P_USBPHYACR2		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0008)
+> +#define PA2_RG_SIF_U2PLL_FORCE_EN	BIT(18)
+> +
+> +#define U3P_USBPHYACR5		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0014)
+> +#define PA5_RG_U2_HSTX_SRCTRL		GENMASK(14, 12)
+> +#define PA5_RG_U2_HSTX_SRCTRL_VAL(x)	((0x7 & (x)) << 12)
+> +#define PA5_RG_U2_HS_100U_U3_EN	BIT(11)
+> +
+> +#define U3P_USBPHYACR6		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0018)
+> +#define PA6_RG_U2_ISO_EN		BIT(31)
+> +#define PA6_RG_U2_BC11_SW_EN		BIT(23)
+> +#define PA6_RG_U2_OTG_VBUSCMP_EN	BIT(20)
+> +
+> +#define U3P_U2PHYACR4		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0020)
+> +#define P2C_RG_USB20_GPIO_CTL		BIT(9)
+> +#define P2C_USB20_GPIO_MODE		BIT(8)
+> +#define P2C_U2_GPIO_CTR_MSK	(P2C_RG_USB20_GPIO_CTL | P2C_USB20_GPIO_MODE)
+> +
+> +#define U3D_U2PHYDCR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0060)
+> +#define P2C_RG_SIF_U2PLL_FORCE_ON	BIT(24)
+> +
+> +#define U3P_U2PHYDTM0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0068)
+> +#define P2C_FORCE_UART_EN		BIT(26)
+> +#define P2C_FORCE_DATAIN		BIT(23)
+> +#define P2C_FORCE_DM_PULLDOWN		BIT(21)
+> +#define P2C_FORCE_DP_PULLDOWN		BIT(20)
+> +#define P2C_FORCE_XCVRSEL		BIT(19)
+> +#define P2C_FORCE_SUSPENDM		BIT(18)
+> +#define P2C_FORCE_TERMSEL		BIT(17)
+> +#define P2C_RG_DATAIN			GENMASK(13, 10)
+> +#define P2C_RG_DATAIN_VAL(x)		((0xf & (x)) << 10)
+> +#define P2C_RG_DMPULLDOWN		BIT(7)
+> +#define P2C_RG_DPPULLDOWN		BIT(6)
+> +#define P2C_RG_XCVRSEL			GENMASK(5, 4)
+> +#define P2C_RG_XCVRSEL_VAL(x)		((0x3 & (x)) << 4)
+> +#define P2C_RG_SUSPENDM			BIT(3)
+> +#define P2C_RG_TERMSEL			BIT(2)
+> +#define P2C_DTM0_PART_MASK \
+> +		(P2C_FORCE_DATAIN | P2C_FORCE_DM_PULLDOWN | \
+> +		P2C_FORCE_DP_PULLDOWN | P2C_FORCE_XCVRSEL | \
+> +		P2C_FORCE_TERMSEL | P2C_RG_DMPULLDOWN | \
+> +		P2C_RG_DPPULLDOWN | P2C_RG_TERMSEL)
+> +
+> +#define U3P_U2PHYDTM1		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x006C)
+> +#define P2C_RG_UART_EN			BIT(16)
+> +#define P2C_RG_VBUSVALID		BIT(5)
+> +#define P2C_RG_SESSEND			BIT(4)
+> +#define P2C_RG_AVALID			BIT(2)
+> +
+> +#define U3P_U3_PHYA_REG0	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0000)
+> +#define P3A_RG_U3_VUSB10_ON		BIT(5)
+> +
+> +#define U3P_U3_PHYA_REG6	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0018)
+> +#define P3A_RG_TX_EIDLE_CM		GENMASK(31, 28)
+> +#define P3A_RG_TX_EIDLE_CM_VAL(x)	((0xf & (x)) << 28)
+> +
+> +#define U3P_U3_PHYA_REG9	(SSUSB_USB30_PHYA_SIV_B_BASE + 0x0024)
+> +#define P3A_RG_RX_DAC_MUX		GENMASK(5, 1)
+> +#define P3A_RG_RX_DAC_MUX_VAL(x)	((0x1f & (x)) << 1)
+> +
+> +#define U3P_U3PHYA_DA_REG0	(SSUSB_SIFSLV_U3PHYA_DA_BASE + 0x0000)
+> +#define P3A_RG_XTAL_EXT_EN_U3		GENMASK(11, 10)
+> +#define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
+> +
+> +#define U3P_PHYD_CDR1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x005c)
+> +#define P3D_RG_CDR_BIR_LTD1		GENMASK(28, 24)
+> +#define P3D_RG_CDR_BIR_LTD1_VAL(x)	((0x1f & (x)) << 24)
+> +#define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
+> +#define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
+> +
+> +#define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
+> +#define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
+> +#define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
+> +
+> +struct mt65xx_phy_instance {
+> +	struct phy *phy;
+> +	void __iomem *port_base;
+> +	u32 index;
+> +	u8 type;
+> +};
+> +
+> +struct mt65xx_u3phy {
+> +	struct device *dev;
+> +	void __iomem *sif_base;	/* include sif2, but exclude port's */
+> +	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+> +	struct mt65xx_phy_instance **phys;
+> +	int nphys;
+> +};
+> +
+> +static void phy_instance_init(struct mt65xx_u3phy *u3phy,
+> +	struct mt65xx_phy_instance *instance)
+> +{
+> +	void __iomem *port_base = instance->port_base;
+> +	u32 index = instance->index;
+> +	u32 tmp;
+> +
+> +	/* switch to USB function. (system register, force ip into usb mode) */
+> +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> +	tmp &= ~P2C_FORCE_UART_EN;
+> +	tmp |= P2C_RG_XCVRSEL_VAL(1) | P2C_RG_DATAIN_VAL(0);
+> +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> +
+> +	tmp = readl(port_base + U3P_U2PHYDTM1);
+> +	tmp &= ~P2C_RG_UART_EN;
+> +	writel(tmp, port_base + U3P_U2PHYDTM1);
+> +
+> +	if (!index) {
+> +		tmp = readl(port_base + U3P_U2PHYACR4);
+> +		tmp &= ~P2C_U2_GPIO_CTR_MSK;
+> +		writel(tmp, port_base + U3P_U2PHYACR4);
+> +
+> +		tmp = readl(port_base + U3P_USBPHYACR2);
+> +		tmp |= PA2_RG_SIF_U2PLL_FORCE_EN;
+> +		writel(tmp, port_base + U3P_USBPHYACR2);
+> +
+> +		tmp = readl(port_base + U3D_U2PHYDCR0);
+> +		tmp &= ~P2C_RG_SIF_U2PLL_FORCE_ON;
+> +		writel(tmp, port_base + U3D_U2PHYDCR0);
+> +	} else {
+> +		tmp = readl(port_base + U3D_U2PHYDCR0);
+> +		tmp |= P2C_RG_SIF_U2PLL_FORCE_ON;
+> +		writel(tmp, port_base + U3D_U2PHYDCR0);
+> +
+> +		tmp = readl(port_base + U3P_U2PHYDTM0);
+> +		tmp |= P2C_RG_SUSPENDM | P2C_FORCE_SUSPENDM;
+> +		writel(tmp, port_base + U3P_U2PHYDTM0);
+> +	}
+> +
+> +	/* DP/DM BC1.1 path Disable */
+> +	tmp = readl(port_base + U3P_USBPHYACR6);
+> +	tmp &= ~PA6_RG_U2_BC11_SW_EN;
+> +	writel(tmp, port_base + U3P_USBPHYACR6);
+> +
+> +	tmp = readl(port_base + U3P_U3PHYA_DA_REG0);
+> +	tmp &= ~P3A_RG_XTAL_EXT_EN_U3;
+> +	tmp |= P3A_RG_XTAL_EXT_EN_U3_VAL(2);
+> +	writel(tmp, port_base + U3P_U3PHYA_DA_REG0);
+> +
+> +	tmp = readl(port_base + U3P_U3_PHYA_REG9);
+> +	tmp &= ~P3A_RG_RX_DAC_MUX;
+> +	tmp |= P3A_RG_RX_DAC_MUX_VAL(4);
+> +	writel(tmp, port_base + U3P_U3_PHYA_REG9);
+> +
+> +	tmp = readl(port_base + U3P_U3_PHYA_REG6);
+> +	tmp &= ~P3A_RG_TX_EIDLE_CM;
+> +	tmp |= P3A_RG_TX_EIDLE_CM_VAL(0xe);
+> +	writel(tmp, port_base + U3P_U3_PHYA_REG6);
+> +
+> +	tmp = readl(port_base + U3P_PHYD_CDR1);
+> +	tmp &= ~(P3D_RG_CDR_BIR_LTD0 | P3D_RG_CDR_BIR_LTD1);
+> +	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
+> +	writel(tmp, port_base + U3P_PHYD_CDR1);
+> +
+> +	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
+> +}
+> +
+> +static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
+> +	struct mt65xx_phy_instance *instance)
+> +{
+> +	void __iomem *port_base = instance->port_base;
+> +	u32 index = instance->index;
+> +	u32 tmp;
+> +
+> +	if (!index) {
+> +		/* Set RG_SSUSB_VUSB10_ON as 1 after VUSB10 ready */
+> +		tmp = readl(port_base + U3P_U3_PHYA_REG0);
+> +		tmp |= P3A_RG_U3_VUSB10_ON;
+> +		writel(tmp, port_base + U3P_U3_PHYA_REG0);
+> +	}
+> +
+> +	/* (force_suspendm=0) (let suspendm=1, enable usb 480MHz pll) */
+> +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> +	tmp &= ~(P2C_FORCE_SUSPENDM | P2C_RG_XCVRSEL);
+> +	tmp &= ~(P2C_RG_DATAIN | P2C_DTM0_PART_MASK);
+> +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> +
+> +	/* OTG Enable */
+> +	tmp = readl(port_base + U3P_USBPHYACR6);
+> +	tmp |= PA6_RG_U2_OTG_VBUSCMP_EN;
+> +	writel(tmp, port_base + U3P_USBPHYACR6);
+> +
+> +	if (!index) {
+> +		tmp = readl(u3phy->sif_base + U3P_XTALCTL3);
+> +		tmp |= XC3_RG_U3_XTAL_RX_PWD | XC3_RG_U3_FRC_XTAL_RX_PWD;
+> +		writel(tmp, u3phy->sif_base + U3P_XTALCTL3);
+> +
+> +		/* [mt8173]disable Change 100uA current from SSUSB */
+> +		tmp = readl(port_base + U3P_USBPHYACR5);
+> +		tmp &= ~PA5_RG_U2_HS_100U_U3_EN;
+> +		writel(tmp, port_base + U3P_USBPHYACR5);
+> +	}
+> +
+> +	tmp = readl(port_base + U3P_U2PHYDTM1);
+> +	tmp |= P2C_RG_VBUSVALID | P2C_RG_AVALID;
+> +	tmp &= ~P2C_RG_SESSEND;
+> +	writel(tmp, port_base + U3P_U2PHYDTM1);
+> +
+> +	/* USB 2.0 slew rate calibration */
+> +	tmp = readl(port_base + U3P_USBPHYACR5);
+> +	tmp &= ~PA5_RG_U2_HSTX_SRCTRL;
+> +	tmp |= PA5_RG_U2_HSTX_SRCTRL_VAL(4);
+> +	writel(tmp, port_base + U3P_USBPHYACR5);
+> +
+> +	if (index) {
+> +		tmp = readl(port_base + U3D_U2PHYDCR0);
+> +		tmp |= P2C_RG_SIF_U2PLL_FORCE_ON;
+> +		writel(tmp, port_base + U3D_U2PHYDCR0);
+> +
+> +		tmp = readl(port_base + U3P_U2PHYDTM0);
+> +		tmp |= P2C_RG_SUSPENDM | P2C_FORCE_SUSPENDM;
+> +		writel(tmp, port_base + U3P_U2PHYDTM0);
+> +	}
+> +	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
+> +}
+> +
+> +static void phy_instance_power_off(struct mt65xx_u3phy *u3phy,
+> +	struct mt65xx_phy_instance *instance)
+> +{
+> +	void __iomem *port_base = instance->port_base;
+> +	u32 index = instance->index;
+> +	u32 tmp;
+> +
+> +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> +	tmp &= ~(P2C_RG_XCVRSEL | P2C_RG_DATAIN);
+> +	tmp |= P2C_FORCE_SUSPENDM;
+> +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> +
+> +	/* OTG Disable */
+> +	tmp = readl(port_base + U3P_USBPHYACR6);
+> +	tmp &= ~PA6_RG_U2_OTG_VBUSCMP_EN;
+> +	writel(tmp, port_base + U3P_USBPHYACR6);
+> +
+> +	if (!index) {
+> +		/* (also disable)Change 100uA current switch to USB2.0 */
+> +		tmp = readl(port_base + U3P_USBPHYACR5);
+> +		tmp &= ~PA5_RG_U2_HS_100U_U3_EN;
+> +		writel(tmp, port_base + U3P_USBPHYACR5);
+> +	}
+> +
+> +	/* let suspendm=0, set utmi into analog power down */
+> +	tmp = readl(port_base + U3P_U2PHYDTM0);
+> +	tmp &= ~P2C_RG_SUSPENDM;
+> +	writel(tmp, port_base + U3P_U2PHYDTM0);
+> +	udelay(1);
+> +
+> +	tmp = readl(port_base + U3P_U2PHYDTM1);
+> +	tmp &= ~(P2C_RG_VBUSVALID | P2C_RG_AVALID);
+> +	tmp |= P2C_RG_SESSEND;
+> +	writel(tmp, port_base + U3P_U2PHYDTM1);
+> +
+> +	if (!index) {
+> +		tmp = readl(port_base + U3P_U3_PHYA_REG0);
+> +		tmp &= ~P3A_RG_U3_VUSB10_ON;
+> +		writel(tmp, port_base + U3P_U3_PHYA_REG0);
+> +	} else {
+> +		tmp = readl(port_base + U3D_U2PHYDCR0);
+> +		tmp &= ~P2C_RG_SIF_U2PLL_FORCE_ON;
+> +		writel(tmp, port_base + U3D_U2PHYDCR0);
+> +	}
+> +
+> +	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
+> +}
+> +
+> +static void phy_instance_exit(struct mt65xx_u3phy *u3phy,
+> +	struct mt65xx_phy_instance *instance)
+> +{
+> +	void __iomem *port_base = instance->port_base;
+> +	u32 index = instance->index;
+> +	u32 tmp;
+> +
+> +	if (index) {
+> +		tmp = readl(port_base + U3D_U2PHYDCR0);
+> +		tmp &= ~P2C_RG_SIF_U2PLL_FORCE_ON;
+> +		writel(tmp, port_base + U3D_U2PHYDCR0);
+> +
+> +		tmp = readl(port_base + U3P_U2PHYDTM0);
+> +		tmp &= ~P2C_FORCE_SUSPENDM;
+> +		writel(tmp, port_base + U3P_U2PHYDTM0);
+> +	}
+> +}
+> +
+> +static int mt65xx_phy_init(struct phy *phy)
+> +{
+> +	struct mt65xx_phy_instance *instance = phy_get_drvdata(phy);
+> +	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(u3phy->u3phya_ref);
+> +	if (ret) {
+> +		dev_err(u3phy->dev, "failed to enable u3phya_ref\n");
+> +		return ret;
+> +	}
+> +
+> +	phy_instance_init(u3phy, instance);
+> +	return 0;
+> +}
+> +
+> +static int mt65xx_phy_power_on(struct phy *phy)
+> +{
+> +	struct mt65xx_phy_instance *instance = phy_get_drvdata(phy);
+> +	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
+> +
+> +	phy_instance_power_on(u3phy, instance);
+> +	return 0;
+> +}
+> +
+> +static int mt65xx_phy_power_off(struct phy *phy)
+> +{
+> +	struct mt65xx_phy_instance *instance = phy_get_drvdata(phy);
+> +	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
+> +
+> +	phy_instance_power_off(u3phy, instance);
+> +	return 0;
+> +}
+> +
+> +static int mt65xx_phy_exit(struct phy *phy)
+> +{
+> +	struct mt65xx_phy_instance *instance = phy_get_drvdata(phy);
+> +	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
+> +
+> +	phy_instance_exit(u3phy, instance);
+> +	clk_disable_unprepare(u3phy->u3phya_ref);
+> +	return 0;
+> +}
+> +
+> +static struct phy *mt65xx_phy_xlate(struct device *dev,
+> +					struct of_phandle_args *args)
+> +{
+> +	struct mt65xx_u3phy *u3phy = dev_get_drvdata(dev);
+> +	struct mt65xx_phy_instance *instance = NULL;
+> +	struct device_node *phy_np = args->np;
+> +	int index;
+> +
+> +
+> +	if (args->args_count != 1) {
+> +		dev_err(dev, "invalid number of cells in 'phy' property\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	for (index = 0; index < u3phy->nphys; index++)
+> +		if (phy_np == u3phy->phys[index]->phy->dev.of_node) {
+> +			instance = u3phy->phys[index];
+> +			break;
+> +		}
+> +
+> +	if (!instance) {
+> +		dev_err(dev, "failed to find appropriate phy\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	instance->type = args->args[0];
+> +
+> +	if (!(instance->type == PHY_TYPE_USB2 ||
+> +	      instance->type == PHY_TYPE_USB3)) {
+> +		dev_err(dev, "unsupported device type: %d\n", instance->type);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return instance->phy;
+> +}
+> +
+> +static struct phy_ops mt65xx_u3phy_ops = {
+> +	.init		= mt65xx_phy_init,
+> +	.exit		= mt65xx_phy_exit,
+> +	.power_on	= mt65xx_phy_power_on,
+> +	.power_off	= mt65xx_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int mt65xx_u3phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *child_np;
+> +	struct phy_provider *provider;
+> +	struct resource *sif_res;
+> +	struct mt65xx_u3phy *u3phy;
+> +	struct resource res;
+> +	int port;
+> +
+> +	u3phy = devm_kzalloc(dev, sizeof(*u3phy), GFP_KERNEL);
+> +	if (!u3phy)
+> +		return -ENOMEM;
+> +
+> +	u3phy->nphys = of_get_child_count(np);
+> +	u3phy->phys = devm_kcalloc(dev, u3phy->nphys,
+> +				       sizeof(*u3phy->phys), GFP_KERNEL);
+> +	if (!u3phy->phys)
+> +		return -ENOMEM;
+> +
+> +	u3phy->dev = dev;
+> +	platform_set_drvdata(pdev, u3phy);
+> +
+> +	sif_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	u3phy->sif_base = devm_ioremap_resource(dev, sif_res);
+> +	if (IS_ERR(u3phy->sif_base)) {
+> +		dev_err(dev, "failed to remap sif regs\n");
+> +		return PTR_ERR(u3phy->sif_base);
+> +	}
+> +
+> +	u3phy->u3phya_ref = devm_clk_get(dev, "u3phya_ref");
+> +	if (IS_ERR(u3phy->u3phya_ref)) {
+> +		dev_err(dev, "error to get u3phya_ref\n");
+> +		return PTR_ERR(u3phy->u3phya_ref);
+> +	}
+> +
+> +	port = 0;
+> +	for_each_child_of_node(np, child_np) {
+> +		struct mt65xx_phy_instance *instance;
+> +		struct phy *phy;
+> +		int retval;
+> +
+> +		instance = devm_kzalloc(dev, sizeof(*instance), GFP_KERNEL);
+> +		if (!instance)
+> +			return -ENOMEM;
+> +
+> +		u3phy->phys[port] = instance;
+> +
+> +		phy = devm_phy_create(dev, child_np, &mt65xx_u3phy_ops);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create phy\n");
+> +			return PTR_ERR(phy);
+> +		}
+> +
+> +		retval = of_address_to_resource(child_np, 0, &res);
+> +		if (retval) {
+> +			dev_err(dev, "failed to get address resource(id-%d)\n",
+> +				port);
+> +			return retval;
+> +		}
+> +
+> +		instance->port_base = devm_ioremap_resource(&phy->dev, &res);
+> +		if (IS_ERR(instance->port_base)) {
+> +			dev_err(dev, "failed to remap phy regs\n");
+> +			return PTR_ERR(instance->port_base);
+> +		}
+> +
+> +		instance->phy = phy;
+> +		instance->index = port;
+> +		phy_set_drvdata(phy, instance);
+> +		port++;
+> +	}
+> +
+> +	provider = devm_of_phy_provider_register(dev, mt65xx_phy_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(provider);
+> +}
+> +
+> +static const struct of_device_id mt65xx_u3phy_id_table[] = {
+> +	{ .compatible = "mediatek,mt8173-u3phy", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mt65xx_u3phy_id_table);
+> +
+> +static struct platform_driver mt65xx_u3phy_driver = {
+> +	.probe		= mt65xx_u3phy_probe,
+> +	.driver		= {
+> +		.name	= "mt65xx-u3phy",
+> +		.of_match_table = mt65xx_u3phy_id_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(mt65xx_u3phy_driver);
+> +
+> +MODULE_AUTHOR("Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("mt65xx USB PHY driver");
+> +MODULE_LICENSE("GPL v2");
 > 
-> The rationale for adding optional DT flag is as follows:
-> 1. The NAND controller reset is currently required for NS2 only so
-> that it is in sane state before any NAND commands are issued. We
-> are not sure if Cygnus and all future iProc SoCs will require NAND
-> controller reset.
-
-I'm not sure this is a very strong reason. It seems fairly reasonable in
-general to reset a HW block before using it.
-
-> 2. The NAND controller reset in probe would certainly increase
-> Linux boot time so for certain iProc SoCs we might choose avoid
-> NAND controller reset to reduce boot time if possible.
-
-I recall this reason being mentioned before. I believe this only happens
-because the brcmnand driver doesn't yet handle configuring the timing
-registers, so iProc is implicitly relying on the bootloader to configure
-the NAND timings. Perhaps it's time that we fix that. I'd rather not add
-extra DT properties unless we actually need to [1]. And having proper
-timing configuration in the Linux driver will help improve speeds for
-all users (whose timings may not be configured in the bootloader).
-
-I actually had some preliminary work to do some timing configuration
-according to the new timing information from nand_base.c/nand_timing.c.
-Unfortunately, I didn't complete this, and I'm no longer working at
-Broadcom, so I don't exactly have access to the HW docs for all the NAND
-controller revisions, nor do I have access to as much HW for testing...
-
-Brian
-
-[1] If we really do need a device tree differentiation, perhaps it would
-be better to just differentiate the compatible string than to have
-individual boolean properties. e.g.:
-
-	compatible = "brcm,iproc-nand-ns2", ...;
