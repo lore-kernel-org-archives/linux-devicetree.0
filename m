@@ -1,52 +1,91 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: add label for uart0
-Date: Tue, 06 Oct 2015 14:53:12 -0700
-Message-ID: <87oagbhdfb.fsf@eliezer.anholt.net>
-References: <1443810675-25558-1-git-send-email-stefan.wahren@i2se.com>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
+ controller
+Date: Tue, 6 Oct 2015 15:25:38 -0700
+Message-ID: <56144A62.70300@broadcom.com>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+ <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
+ <20151004214943.GA28904@localhost>
+ <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
+ <20151006134119.GB26818@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443810675-25558-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151006134119.GB26818@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Anup Patel <anup.patel@broadcom.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rafal Milecki <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi Brian,
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+On 15-10-06 06:41 AM, Brian Norris wrote:
 
-> This patch adds a label for uart0 to allow changing of uart0 pins.
+>>>
+>>> Is there a reason not to do this reset unconditionally? I recall this came up in
+>>> discussion previously, when the OpenWRT folks were trying to integrate with
+>>> BCMA, where this reset was one of the few differences between the platform-
+>>> device-based driver (i.e., this one) and the BCMA based driver. Might it help
+>>> simplify things a bit if we just did the same thing everywhere?
+>>
+>> This driver is currently shared by Cygnus and NS2.
+>>
+>> We had similar suggestion when this patch was reviewed
+>> internally in Broadcom.
+>>
+>> The rationale for adding optional DT flag is as follows:
+>> 1. The NAND controller reset is currently required for NS2 only so
+>> that it is in sane state before any NAND commands are issued. We
+>> are not sure if Cygnus and all future iProc SoCs will require NAND
+>> controller reset.
 >
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> I'm not sure this is a very strong reason. It seems fairly reasonable in
+> general to reset a HW block before using it.
 
-This patch seems innocuous, but could you clarify for me how exactly you
-change the uart0 pins, and why one would do that?
+Efficient Boot time is a very strong reason for needing this actually. 
+We use the NAND controller in the bootROM, boot1/BL1, u-boot/UEFI, and 
+then Kernel stage.  By properly initializing the controller once we do 
+not need to reset it 4 different times.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+>> 2. The NAND controller reset in probe would certainly increase
+>> Linux boot time so for certain iProc SoCs we might choose avoid
+>> NAND controller reset to reduce boot time if possible.
+>
+> I recall this reason being mentioned before. I believe this only happens
+> because the brcmnand driver doesn't yet handle configuring the timing
+> registers, so iProc is implicitly relying on the bootloader to configure
+> the NAND timings. Perhaps it's time that we fix that. I'd rather not add
+> extra DT properties unless we actually need to [1]. And having proper
+> timing configuration in the Linux driver will help improve speeds for
+> all users (whose timings may not be configured in the bootloader).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+This is the very reason we need the optional reset property.  We need to 
+have timings configured by the linux driver or not.  Yes, in some cases 
+we will be relying on earlier boot stages to configure some of the hardware.
 
-iQIcBAEBCgAGBQJWFELIAAoJELXWKTbR/J7o3t8P/3FbH8EIONxTERFJH1znPFEq
-w4gAsPCtMDW0Jm+vyLbk42/V+NfcihWQmaI6o6hiP3IwDVa2u79ifTPEW/xp8kwW
-Ch2FBzwCglurU5vrjItcwjWCbylj6JRUiW2q+3WYSZK+Ci50Wn9/eBmztzgf4wI2
-KL/WJc/rimw1p/Y9i7XcbQGQAWV6yenqfKIGQ83sYO7bi0N/gaMUNNY/fawTIi7b
-K7x/F8Mip6MgY4e57borO0If6PpEuDg5ZAr/aNL1Udl+yprisWzahFZwKhzmgC5v
-+cM4BrOBN2lgvoChxHkdYFyGQybbly2BZXVv7UFzCw95UXGmQ/lQroOj0a07goAC
-XyhzB9Tqt3wkxrAf0UN6kx1OwWOvA/Wiak9deOW18v3QihpGTdwTwxvB221FXvnT
-PyX/YGzhkbhFytV10krLIImWMf6aVOskTymaWNdme2v3IzhwJkilDquhccjSArBS
-1H867NC8k0MWYdgQfA4PxBBkdLgjnJBp/bCx5IFdWK/wlfmFhflApt8tcYn/JGhl
-8acm9FQa9aHE+OiFVTXKm7uyJc7TMUDiPc8eDIWaRy6ays+xMchC6xOiQh7RZPaQ
-x55RIeWzLUlIsC8vxKIjKQQC4QQ1NPm5uJmG3QxB2/nnmSs4huMnNfxNInie6/uS
-ekTjjP0WEQ6i2dp0ZY+a
-=MVKN
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> I actually had some preliminary work to do some timing configuration
+> according to the new timing information from nand_base.c/nand_timing.c.
+> Unfortunately, I didn't complete this, and I'm no longer working at
+> Broadcom, so I don't exactly have access to the HW docs for all the NAND
+> controller revisions, nor do I have access to as much HW for testing...
+>
+> Brian
+>
+> [1] If we really do need a device tree differentiation, perhaps it would
+> be better to just differentiate the compatible string than to have
+> individual boolean properties. e.g.:
+>
+> 	compatible = "brcm,iproc-nand-ns2", ...;
+>
+As described above - the option is not SoC specific.  It is system 
+specific.  In some systems we may wish to reset the NAND controller in 
+linux.  In some we may wish to rely on initialization that has already 
+been done to speed up boot times.
+
+
+
+Regards,
+  Scott
