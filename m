@@ -1,47 +1,36 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH] staging: ion: ion_parse_dt_heap_common() can be static
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [RFC][PATCH 2/2] staging: ion: Add files for parsing the
+ devicetree (WIP)
 Date: Wed, 7 Oct 2015 05:29:32 +0800
-Message-ID: <20151006212932.GA59274@xian>
-References: <201510070535.v0amqMb0%fengguang.wu@intel.com>
+Message-ID: <201510070535.v0amqMb0%fengguang.wu@intel.com>
+References: <1444164433-9107-3-git-send-email-labbott@fedoraproject.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444164433-9107-3-git-send-email-labbott-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laura Abbott <labbott-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tom Gall <tom.gall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Feng Tang <feng.tang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1444164433-9107-3-git-send-email-labbott@fedoraproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laura Abbott <labbott@fedoraproject.org>
+Cc: kbuild-all@01.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>, Laura Abbott <laura@labbott.name>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tom Gall <tom.gall@linaro.org>, Colin Cross <ccross@google.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, romlem@google.com, mitchelh@codeaurora.org, linux-arm-kernel@lists.infradead.org, Feng Tang <feng.tang@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laura,
 
-Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+[auto build test WARNING on v4.3-rc4 -- if it's inappropriate base, please ignore]
+
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/staging/android/ion/ion_of.c:31:5: sparse: symbol 'ion_parse_dt_heap_common' was not declared. Should it be static?
+>> drivers/staging/android/ion/ion_of.c:70:5: sparse: symbol 'ion_setup_heap_common' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
 ---
- ion_of.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/android/ion/ion_of.c b/drivers/staging/android/ion/ion_of.c
-index 3c9b1e5..daded0c 100644
---- a/drivers/staging/android/ion/ion_of.c
-+++ b/drivers/staging/android/ion/ion_of.c
-@@ -28,7 +28,7 @@
-  * Future work: allow callback function for each heap?
-  */
- 
--int ion_parse_dt_heap_common(struct device_node *heap_node,
-+static int ion_parse_dt_heap_common(struct device_node *heap_node,
- 			struct ion_platform_heap *heap)
- {
- 	u32 ion_heap_id, ion_heap_align, ion_heap_type;
-@@ -67,7 +67,7 @@ int ion_parse_dt_heap_common(struct device_node *heap_node,
- 	return 0;
- }
- 
--int ion_setup_heap_common(struct platform_device *parent,
-+static int ion_setup_heap_common(struct platform_device *parent,
- 			struct device_node *heap_node,
- 			struct ion_platform_heap *heap)
- {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
