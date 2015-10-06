@@ -1,61 +1,143 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] spi: bcm2835: add bcm2835 auxiliary spi device
- driver
-Date: Tue, 6 Oct 2015 13:38:10 +0200
-Message-ID: <5613B2A2.9020309@martin.sperl.org>
-References: <1441970527-2403-1-git-send-email-kernel@martin.sperl.org>
- <1441970527-2403-3-git-send-email-kernel@martin.sperl.org>
- <20151006112320.GP12635@sirena.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
+Date: Tue, 6 Oct 2015 08:30:30 -0500
+Message-ID: <CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
+References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151006112320.GP12635-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1443954683-13126-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eEric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06.10.2015 13:23, Mark Brown wrote:
-> On Fri, Sep 11, 2015 at 11:22:04AM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+On Sun, Oct 4, 2015 at 5:31 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Add documentation for the PXA frambuffer devicetree binding.
+
+Strictly speaking this is a binding for PXA display controller, not a
+Linux FB driver. There are lots of "framebuffer" and "DRM" bindings
+which I'm trying to curb.
+
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> ---
+> Since v1: Philipp's review on the whole binding
+> ---
+>  .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
+
+Please put in bindings/display/ as I'm consolidating all the display
+related bindings there[1].
+
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/marvell,pxafb.txt
 >
->> +	bs->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
->> +	if (bs->irq <= 0) {
->> +		dev_err(&pdev->dev, "could not get IRQ: %d\n", bs->irq);
->> +		err = bs->irq ? bs->irq : -ENODEV;
->> +		goto out_master_put;
->> +	}
+> diff --git a/Documentation/devicetree/bindings/video/marvell,pxafb.txt b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
+> new file mode 100644
+> index 000000000000..4d6bd490680d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
+> @@ -0,0 +1,80 @@
+> +PXA LCDC Framebuffer
+> +--------------------
+> +
+> +Required properties:
+> + - compatible :
+> +       "marvell,pxa2xx-lcdc",
+
+No differences in h/w for any of the chips?
+
+> + - reg : Should contain 1 register ranges(address and length).
+> +        Can contain an additional register range(address and length)
+> +        for fixed framebuffer memory. Useful for dedicated memories.
+
+This is memory that can't be used for anything else? We already have
+reserved-memory for this if it is just RAM. There's also a binding for
+on-chip SRAM which should probably be used if the memory is usable for
+other things.
+
+> + - interrupts : framebuffer controller interrupt
+> +
+> +Required nodes:
+> + - clocks: phandle to input clocks.
+> + - port: connection to the LCD panel (see video-interfaces.txt)
+> +        This nodes must have its properties bus-width and remote-endpoint set.
+> +        This should be in the board dts.
+> +
+> +Example:
+> +
+> +       lcd-controller@40500000 {
+> +               compatible = "marvell,pxa2xx-lcdc";
+> +               reg = <0x44000000 0x10000>;
+> +               interrupts = <17>;
+> +               clocks = <&clks CLK_LCD>;
+> +               interrupts = <23>;
+> +               status = "okay";
+> +
+> +               port {
+> +                       lcdc_out: endpoint {
+> +                               remote-endpoint = <&panel_in>;
+> +                               bus-width = <16>;
+> +                       };
+> +               };
+> +       };
+> +
+> +PXA LCDC Display
+
+This should not be specific to PXA, but for this panel. This should be
+in bindings/display/panel/.
+
+> +----------------
+> +Required properties (as per of_videomode_helper):
+> + - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
+> +                   "color-tft", "smart-panel"
+> +
+> +Optional properties (as per of_videomode_helper):
+> + - power-supply: power supply regulator to the LCD to power it on or off
+> +                (see regulator.txt)
+> + - backlight: backlight control (see backlight.txt)
+> +
+> +Required nodes:
+> + - port: connection to the LCD controller
+> + - display-timings: panel timings (see display-timing.txt)
+
+If lcd-type is smart-panel, then this node would not make sense.
+
+> +
+> +Example:
+> +       panel {
+> +               compatible = "toshiba,ltm0305a776";
+> +               lcd-type = "color-tft";
+> +
+> +               power-supply = <&lcd_supply>;
+> +               backlight = <&lcd_backlight>;
+> +
+> +               port {
+> +                       panel_in: endpoint {
+> +                               remote-endpoint = <&lcdc_out>;
+> +                       };
+> +               };
+> +
+> +               display-timings {
+> +                       native-mode = <&timing0>;
+> +                       timing0: 240p {
+> +                               /* 240x320p24 */
+> +                               clock-frequency = <4545000>;
+> +                               hactive = <240>;
+> +                               vactive = <320>;
+> +                               hfront-porch = <4>;
+> +                               hback-porch = <6>;
+> +                               hsync-len = <4>;
+> +                               vback-porch = <5>;
+> +                               vfront-porch = <3>;
+> +                               vsync-len = <2>;
+> +                       };
+> +               };
+> +       };
+> --
+> 2.1.4
 >
-> Why are we using this unusual DT specific API here?  I'd expect to see
-> just use platform_get_irq() here and this seems to be the only DT
-> dependency in the driver.
 
-I copied it from spi-bcm2835.c, where it is also used in exactly that
-fashion.
-
-You want me to move to your recommended api instead for both drivers?
-
->
->> +	err = devm_request_irq(&pdev->dev, bs->irq,
->> +			       bcm2835aux_spi_interrupt,
->> +			       IRQF_SHARED,
->> +			       dev_name(&pdev->dev), master);
->> +	if (err) {
->> +		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
->> +		goto out_clk_disable;
->> +	}
->> +
->> +	/* reset SPI-HW block */
->> +	bcm2835aux_spi_reset_hw(bs);
->
-> I'd expect to request the IRQ after we reset the hardware in order to
-> ensure that the hardware is in a known good state
-
-Same copy/paste in this case - i can change the order for both
-drivers if you want.
-
-Martin
-
+[1] https://lkml.org/lkml/2015/10/1/899
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
