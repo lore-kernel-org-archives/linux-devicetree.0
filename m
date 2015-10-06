@@ -1,50 +1,58 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [GIT PULL]Hisilicon arm64 dt changes for 4.3
-Date: Tue, 6 Oct 2015 17:53:03 +0100
-Message-ID: <5613FC6F.9080305@hisilicon.com>
-References: <56003213.2050306@hisilicon.com> <8863339.WR5lqoXBim@wuerfel>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
+Date: Tue, 6 Oct 2015 12:14:43 -0500
+Message-ID: <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
+References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8863339.WR5lqoXBim@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Shenhui (Jacky)" <shenhui-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yanhaifeng <yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Liwenchang <liwenchang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, zhizhou.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof@lixo>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Walker <danielwa@cisco.com>
+Cc: xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Daniel Walker <dwalker@fifo99.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 6, 2015 at 10:47 AM, Daniel Walker <danielwa@cisco.com> wrote:
+> It looks like there's some seepage of cmdline stuff into
+> the generic device tree code. This conflicts with the
+> generic cmdline implementation so I remove it in the case
+> when that's enabled.
 
+Nice series in general. I've had passing desire to do this every time
+I run into the command line code.
 
-On 10/6/2015 3:24 PM, Arnd Bergmann wrote:
-> On Monday 21 September 2015 17:36:35 Wei Xu wrote:
->> ARM64: DT: Hisilicon hip05 soc and D02 board updates for 4.3
->>
->> - Updated the hisilicon devicetree bindings document to support hip05-D02 board
->> - Added dts files for hip05 SoC and D02 board
->>
-> 
+The DT handling of the command line is generic across architectures.
+The current design is working around that the kernel command line code
+is not that way. I think we can take this a bit further by making the
+generic DT code add the command line string directly rather than
+relying on the arch to do that. Then we can remove all command line
+handling from the arch code. I would also look at whether we can make
+boot_command_line static rather than directly accessed. We might have
+to leave it public for now, but could treat it as static for generic
+cmdline case.
 
-Hi Arnd,
+Rob
 
-> Sorry for the long delay on our side, I've now merged these
-> into the next/dt branch. Thanks for waiting,
-
-Thanks!
-
-Best Regards,
-Wei
-
-> 
-> 	Arnd
-> _______________________________________________
-> linuxarm mailing list
-> linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Cc: xe-kernel@external.cisco.com
+> Cc: Daniel Walker <dwalker@fifo99.com>
+> Signed-off-by: Daniel Walker <danielwa@cisco.com>
+> ---
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 6e82bc42..80f1e48 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -953,7 +953,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>          * managed to set the command line, unless CONFIG_CMDLINE_FORCE
+>          * is set in which case we override whatever was found earlier.
+>          */
+> -#ifdef CONFIG_CMDLINE
+> +#if defined(CONFIG_CMDLINE) && !defined(CONFIG_GENERIC_CMDLINE)
+>  #ifndef CONFIG_CMDLINE_FORCE
+>         if (!((char *)data)[0])
+>  #endif
+> --
+> 2.1.4
+>
