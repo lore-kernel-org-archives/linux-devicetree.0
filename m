@@ -1,61 +1,60 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Tue, 6 Oct 2015 13:28:38 +0300
-Message-ID: <5613A256.8000105@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <560BC0DB.5020205@ti.com> <20151006083346.GL23801@atomide.com>
- <56139A72.6040600@ti.com> <20151006100000.GN23801@atomide.com>
- <56139CE9.8020002@ti.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add document of Rockchip mailbox
+Date: Tue, 6 Oct 2015 16:04:53 +0530
+Message-ID: <CABb+yY2Z9soGR0OcCRcfr2Ei7zX29qHPhYEKf3LPe+OhAuZMjA@mail.gmail.com>
+References: <1442228798-15191-1-git-send-email-wxt@rock-chips.com>
+	<1442228798-15191-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56139CE9.8020002-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1442228798-15191-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/15 13:05, Roger Quadros wrote:
-> On 06/10/15 13:00, Tony Lindgren wrote:
->> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [151006 02:59]:
->>> On 06/10/15 11:33, Tony Lindgren wrote:
->>>> Does build and boot and use NAND work throughtout the series?
->>>> Otherwise we'll have hard time bisecting anything..
->>>
->>> Yes it does with the following exceptions.
->>>
->>> - Patch 7 "memory: omap-gpmc: Remove NAND IRQ code" breaks prefetch-irq mode
->>> but none of the boards seem to be using it so it shouldn't break NAND on existing boards.
->>> At patch 9 "mtd: nand: omap2: manage NAND interrupts" prefetch-irq mode is working again.
->>> Do you want me to squash patches 7,8,9 so that pre-fetch irq is not broken at any point?
->>
->> OK, no that's fine, no need to squash them together then.
->>
->>> - Then at patch 11 "mtd: nand: omap: Clean up device tree support" we break NAND on all DT
->>> boards as we expect NAND to be a real child node with compatible id. Simply applying the
->>> DT patch at this point makes it work again.
->>
->> Hmm can we at least warn about incompatible DT entry when somebody boots
->> with an older dtb?
-> 
-> Yes that could be done. It looks like we can use the missing compatible property to identify
-> that it is and old DT entry.
-> 
-> I'll send a v4 of patch 11.
+On Mon, Sep 14, 2015 at 4:36 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This add the necessary binding documentation for mailbox
+> found on RK3368 SoC.
+>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+>  .../bindings/mailbox/rockchip-mailbox.txt          | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+> new file mode 100644
+> index 0000000..b9b4768
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+> @@ -0,0 +1,33 @@
+> +Rockchip mailbox
+> +
+> +The Rockchip mailbox is used by the Rockchip CPU cores to communicate
+> +requests to MCU processor.
+> +
+> +Refer to ./mailbox.txt for generic information about mailbox device-tree
+> +bindings.
+> +
+> +Required properties:
+> +
+> + - compatible: should be one of the following.
+> +   - "rockchip,rk3368-mbox" for rk3368
+> + - reg: physical base address of the controller and length of memory mapped
+> +       region.
+> +       physical base address of the share buffer and length of memory mapped
+> +       region.
+Please make shared-sram a property of user drivers.
 
-There is another issue. Some of the old DT nodes set the NAND IO address to 0.
-As we prevent mapping into first 16MB we see the following message for those nodes. e.g. dra7-evm
-
-[    1.727598] omap-gpmc 50000000.gpmc: cannot remap GPMC CS 0 to 0x00000000
-[    1.727605] omap-gpmc 50000000.gpmc: GPMC CS 0 start cannot be lesser than 0x1000000
-[    1.727611] omap-gpmc 50000000.gpmc: failed to probe DT children
-
-Hope this is good enough information that DT needs to be updated?
-
-cheers,
--roger
+Location and size of shared-memory is a platform property, mailbox
+controller doesn't need sram to function.
+  For example, protocol on some platform, with this controller, may be
+trivial enough to not need a shared sram... say only 32-bits wide
+requests and responses which can be passed via mailbox registers
+directly.   mbox_client.tx_prepare() is where the user driver sets up
+the shared-memory.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
