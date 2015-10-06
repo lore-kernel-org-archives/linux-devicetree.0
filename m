@@ -1,86 +1,41 @@
-From: YH Huang <yh.huang@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8173: add MT8173 display PWM driver support node
-Date: Tue, 6 Oct 2015 15:40:43 +0800
-Message-ID: <1444117243-28391-1-git-send-email-yh.huang@mediatek.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: DRA7: Add timer12 node
+Date: Tue, 6 Oct 2015 00:52:09 -0700
+Message-ID: <20151006075209.GH23801@atomide.com>
+References: <1444087704-1429-1-git-send-email-s-anna@ti.com>
+ <1444087704-1429-4-git-send-email-s-anna@ti.com>
+ <87y4fgesbz.fsf@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, YH Huang <yh.huang@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87y4fgesbz.fsf-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add display PWM node in mt8173-evb.dts and mt8173.dtsi.
+* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [151005 17:51]:
+> 
+> according to Tony we should avoid using status at all for in-SoC
+> devices.
+> 
+> Tony, can you confirm I understood you correctly ?
 
-Signed-off-by: YH Huang <yh.huang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   13 +++++++++++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    |   22 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+Yes. With status = "disabled" kernel completely ignores the
+device and struct device is not created at all even with the
+device being there. In general we're better off trying to
+probe the device and idle it.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 811cb76..1b3fabd 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -92,6 +92,13 @@
- };
- 
- &pio {
-+	disp_pwm0_pins: disp_pwm0_pins {
-+		pins1 {
-+			pinmux = <MT8173_PIN_87_DISP_PWM0__FUNC_DISP_PWM0>;
-+			output-low;
-+		};
-+	};
-+
- 	mmc0_pins_default: mmc0default {
- 		pins_cmd_dat {
- 			pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
-@@ -190,6 +197,12 @@
- 	};
- };
- 
-+&pwm0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&disp_pwm0_pins>;
-+	status = "okay";
-+};
-+
- &pwrap {
- 	pmic: mt6397 {
- 		compatible = "mediatek,mt6397";
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 4bce167..fd01134 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -500,6 +500,28 @@
- 			clock-names = "source", "hclk";
- 			status = "disabled";
- 		};
-+
-+		pwm0: pwm@1401e000 {
-+			compatible = "mediatek,mt8173-disp-pwm",
-+				     "mediatek,mt6595-disp-pwm";
-+			reg = <0 0x1401e000 0 0x1000>;
-+			#pwm-cells = <2>;
-+			clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-+				 <&mmsys CLK_MM_DISP_PWM0MM>;
-+			clock-names = "main", "mm";
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@1401f000 {
-+			compatible = "mediatek,mt8173-disp-pwm",
-+				     "mediatek,mt6595-disp-pwm";
-+			reg = <0 0x1401f000 0 0x1000>;
-+			#pwm-cells = <2>;
-+			clocks = <&mmsys CLK_MM_DISP_PWM126M>,
-+				 <&mmsys CLK_MM_DISP_PWM1MM>;
-+			clock-names = "main", "mm";
-+			status = "disabled";
-+		};
- 	};
- };
- 
--- 
-1.7.9.5
+The only time we really want to mark something with
+status = "disabled" is if some coprocessor firmware is
+using that device and the kernel should not touch it at
+all.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
