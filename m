@@ -1,26 +1,30 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
  PCIe Host Controller
-Date: Tue, 06 Oct 2015 17:13:04 +0100
-Message-ID: <5613F310.6060305@arm.com>
+Date: Tue, 6 Oct 2015 16:27:14 +0000
+Message-ID: <8520D5D51A55D047800579B0941471980169063F@XAP-PVEXMBX01.xlnx.xilinx.com>
 References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com>
+ <5613F310.6060305@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444146289-28940-1-git-send-email-bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tinamdar-qTEPVZfXA3Y@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5613F310.6060305@arm.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
+
+Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL PCIe Host Controller
 
 Hi Bharat,
 
 On 06/10/15 16:44, Bharat Kumar Gogada wrote:
 > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
 > 
-> Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 > ---
 > Added interrupt-map, interrupt-map-mask properties
 > ---
@@ -28,11 +32,12 @@ On 06/10/15 16:44, Bharat Kumar Gogada wrote:
 >  drivers/pci/host/Kconfig                           |    9 +
 >  drivers/pci/host/Makefile                          |    1 +
 >  drivers/pci/host/pcie-xilinx-nwl.c                 | 1029 ++++++++++++++++++++
->  4 files changed, 1095 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+>  4 files changed, 1095 insertions(+), 0 deletions(-)  create mode 
+> 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
 >  create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt 
+> b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
 > new file mode 100644
 > index 0000000..81006ab
 > --- /dev/null
@@ -92,14 +97,13 @@ On 06/10/15 16:44, Bharat Kumar Gogada wrote:
 > +	       0x0 0xfd480000 0x1000
 > +	       0x0 0xE0000000 0x1000000>;
 > +	reg-names = "breg", "pcireg", "cfg";
-> +	ranges = <0x02000000 0x00000000 0xE1000000 0x00000000 0xE1000000 0 0x0F000000>;
-> +};
+> +	ranges = <0x02000000 0x00000000 0xE1000000 0x00000000 0xE1000000 0 
+> +0x0F000000>; };
 
-Please move this to a separate patch. This is big enough, and hard
-enough to review.
+Please move this to a separate patch. This is big enough, and hard enough to review.
 
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index c132bdd..7f5f35e 100644
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig index 
+> c132bdd..7f5f35e 100644
 > --- a/drivers/pci/host/Kconfig
 > +++ b/drivers/pci/host/Kconfig
 > @@ -15,6 +15,15 @@ config PCI_MVEBU
@@ -121,7 +125,7 @@ Add a space after the dot.
 >  config PCIE_DW
 > 	bool
 > 
-> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile 
 > index 140d66f..6a56df7 100644
 > --- a/drivers/pci/host/Makefile
 > +++ b/drivers/pci/host/Makefile
@@ -132,8 +136,9 @@ Add a space after the dot.
 > +obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
 >  obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
 >  obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
->  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-> diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
+>  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o diff --git 
+> a/drivers/pci/host/pcie-xilinx-nwl.c 
+> b/drivers/pci/host/pcie-xilinx-nwl.c
 > new file mode 100644
 > index 0000000..ff25ec1
 > --- /dev/null
@@ -145,8 +150,10 @@ Add a space after the dot.
 > + *
 > + * (C) Copyright 2014 - 2015, Xilinx, Inc.
 > + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
+> + * This program is free software: you can redistribute it and/or 
+> +modify
+> + * it under the terms of the GNU General Public License as published 
+> +by
 > + * the Free Software Foundation, either version 2 of the License, or
 > + * (at your option) any later version.
 > + */
@@ -332,12 +339,12 @@ Add a space after the dot.
 > +struct nwl_msi {			/* struct nwl_msi - MSI information */
 > +	struct msi_controller chip;	/* chip: MSI controller */
 
-We're moving away from msi_controller altogether, as the kernel now has
-all the necessary infrastructure to do this properly.
+We're moving away from msi_controller altogether, as the kernel now has all the necessary infrastructure to do this properly.
 
-Please convert this driver to msi domains (see
-drivers/pci/host/pci-xgene-msi.c or the gic-v2m driver as examples of
-how this is being done).
+Our current GIC version does not have separate msi controller (we are not using GICv2m or GICv3), so is it necessary to have separate msi controller node ?
+Please give me clarity on this.
+
+Please convert this driver to msi domains (see drivers/pci/host/pci-xgene-msi.c or the gic-v2m driver as examples of how this is being done).
 
 > +	DECLARE_BITMAP(used, INT_PCI_MSI_NR);	/* used: Declare Bitmap
 > +						for MSI	*/
@@ -350,8 +357,7 @@ how this is being done).
 
 [...]
 
-> +static irqreturn_t nwl_pcie_misc_handler(int irq, void *data)
-> +{
+> +static irqreturn_t nwl_pcie_misc_handler(int irq, void *data) {
 > +	struct nwl_pcie *pcie = (struct nwl_pcie *)data;
 > +	u32 misc_stat;
 > +
@@ -410,8 +416,7 @@ how this is being done).
 > +							 "unhandled MSI %d\n",
 > +							 irq_msi);
 
-No way. This implements a chained irqchip, not a normal IRQ handler. You
-can't just reenter the core code like this.
+No way. This implements a chained irqchip, not a normal IRQ handler. You can't just reenter the core code like this.
 
 Please convert this to a full chained irqchip.
 
@@ -427,8 +432,7 @@ Please convert this to a full chained irqchip.
 > +	return IRQ_HANDLED;
 > +}
 > +
-> +static irqreturn_t nwl_pcie_leg_handler(int irq, void *data)
-> +{
+> +static irqreturn_t nwl_pcie_leg_handler(int irq, void *data) {
 > +	struct nwl_pcie *pcie = (struct nwl_pcie *)data;
 > +	u32 leg_stat;
 > +
@@ -452,8 +456,7 @@ Please convert this to a full chained irqchip.
 > +
 > +	return IRQ_HANDLED;
 
-And that's it? How useful is that? How do you make sure the line has
-been lowered (if I remember well, legacy interrupts are LEVEL).
+And that's it? How useful is that? How do you make sure the line has been lowered (if I remember well, legacy interrupts are LEVEL).
 
 > +}
 > +
@@ -485,8 +488,7 @@ been lowered (if I remember well, legacy interrupts are LEVEL).
 I already commented on that, and on the need to using msi domains.
 
 > +
-> +static irqreturn_t nwl_pcie_msi_handler(int irq, void *data)
-> +{
+> +static irqreturn_t nwl_pcie_msi_handler(int irq, void *data) {
 > +	struct nwl_pcie *pcie = data;
 > +	unsigned long reg;
 > +	int processed = 0;
@@ -503,14 +505,12 @@ I already commented on that, and on the need to using msi domains.
 > +		processed++;
 > +	}
 > +
-> +	return processed > 0 ? IRQ_HANDLED : IRQ_NONE;
-> +}
+> +	return processed > 0 ? IRQ_HANDLED : IRQ_NONE; }
 
 I think you really need to document what all these handlers are...
 
 > +
-> +static int nwl_msi_alloc(struct nwl_msi *chip)
-> +{
+> +static int nwl_msi_alloc(struct nwl_msi *chip) {
 > +	int msi;
 > +
 > +	mutex_lock(&chip->lock);
@@ -526,8 +526,7 @@ I think you really need to document what all these handlers are...
 > +	return msi;
 > +}
 > +
-> +static void nwl_msi_free(struct nwl_msi *chip, unsigned long irq)
-> +{
+> +static void nwl_msi_free(struct nwl_msi *chip, unsigned long irq) {
 > +	struct device *dev = chip->chip.dev;
 > +
 > +	mutex_lock(&chip->lock);
@@ -572,8 +571,8 @@ I think you really need to document what all these handlers are...
 > +	return 0;
 > +}
 > +
-> +static void nwl_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
-> +{
+> +static void nwl_msi_teardown_irq(struct msi_controller *chip, 
+> +unsigned int irq) {
 > +	struct nwl_msi *msi = to_nwl_msi(chip);
 > +	struct irq_data *d = irq_get_irq_data(irq);
 > +
@@ -605,8 +604,8 @@ All that needs to go.
 > +	.map = nwl_msi_map,
 > +};
 > +
-> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus *bus)
-> +{
+> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus 
+> +*bus) {
 > +	struct platform_device *pdev = to_platform_device(pcie->dev);
 > +	struct nwl_msi *msi = &pcie->msi;
 > +	unsigned long base;
@@ -650,7 +649,8 @@ All that needs to go.
 > +	nwl_bridge_writel(pcie, 0x0, I_MSII_BASE_HI);
 > +
 > +	/* Disable high range msi interrupts */
-> +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_HI_MASK, MSGF_MSI_MASK_HI);
+> +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_HI_MASK, 
+> +MSGF_MSI_MASK_HI);
 > +
 > +	/* Clear pending high range msi interrupts */
 > +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,  MSGF_MSI_STATUS_HI) &
@@ -674,7 +674,8 @@ All that needs to go.
 > +	nwl_bridge_writel(pcie, MSGF_MSI_SR_HI_MASK, MSGF_MSI_MASK_HI);
 > +
 > +	/* Disable low range msi interrupts */
-> +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
+> +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_LO_MASK, 
+> +MSGF_MSI_MASK_LO);
 > +
 > +	/* Clear pending low range msi interrupts */
 > +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_MSI_STATUS_LO) &
@@ -702,8 +703,7 @@ All that needs to go.
 > +	return ret;
 > +}
 > +
-> +static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
-> +{
+> +static int nwl_pcie_bridge_init(struct nwl_pcie *pcie) {
 > +	struct platform_device *pdev = to_platform_device(pcie->dev);
 > +	u32 breg_val, ecam_val, first_busno = 0;
 > +	int err;
@@ -869,7 +869,8 @@ How can this fail?
 > +		return PTR_ERR(pcie->ecam_base);
 > +	pcie->phys_ecam_base = res->start;
 > +
-> +	pcie->enable_msi_fifo = of_property_read_bool(node, "xlnx,msi-fifo");
+> +	pcie->enable_msi_fifo = of_property_read_bool(node, 
+> +"xlnx,msi-fifo");
 > +
 > +	return 0;
 > +}
@@ -879,8 +880,7 @@ How can this fail?
 > +	{}
 > +};
 > +
-> +static int nwl_pcie_probe(struct platform_device *pdev)
-> +{
+> +static int nwl_pcie_probe(struct platform_device *pdev) {
 > +	struct device_node *node = pdev->dev.of_node;
 > +	struct nwl_pcie *pcie;
 > +	struct pci_bus *bus;
@@ -937,8 +937,7 @@ How can this fail?
 > +	return 0;
 > +}
 > +
-> +static int nwl_pcie_remove(struct platform_device *pdev)
-> +{
+> +static int nwl_pcie_remove(struct platform_device *pdev) {
 > +	platform_set_drvdata(pdev, NULL);
 > +
 > +	return 0;
@@ -955,22 +954,19 @@ How can this fail?
 > +module_platform_driver(nwl_pcie_driver);
 > +
 > +MODULE_AUTHOR("Xilinx, Inc");
-> +MODULE_DESCRIPTION("NWL PCIe driver");
-> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("NWL PCIe driver"); MODULE_LICENSE("GPL");
 > --
 > 1.7.1
 
-Overall, I think it would make sense to split the PCIe controller driver
-and the MSI controller (in separate files as well).
+Overall, I think it would make sense to split the PCIe controller driver and the MSI controller (in separate files as well).
 
 Please keep me posted on the updates.
 
 Thanks,
 
 	M.
--- 
-Jazz is not dead. It just smells funny...
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jazz is not dead. It just smells funny...
+
+We will address other comments in the next patch.
+Bharat
