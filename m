@@ -1,133 +1,137 @@
-From: Laura Abbott <laura@labbott.name>
-Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
-Date: Tue, 06 Oct 2015 16:01:45 -0700
-Message-ID: <561452D9.90605@labbott.name>
-References: <1444164433-9107-1-git-send-email-labbott@fedoraproject.org> <1444164433-9107-2-git-send-email-labbott@fedoraproject.org> <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
+Date: Wed, 07 Oct 2015 02:05:41 +0300
+Message-ID: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Laura Abbott <labbott@fedoraproject.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tom Gall <tom.gall@linaro.org>, Colin Cross <ccross@google.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, romlem@google.com, Mitchel Humpherys <mitchelh@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Feng Tang <feng.tang@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/6/15 3:35 PM, Rob Herring wrote:
-> On Tue, Oct 6, 2015 at 3:47 PM, Laura Abbott <labbott@fedoraproject.org> wrote:
->> From: Laura Abbott <laura@labbott.name>
->>
->>
->> This adds a base set of devicetree bindings for the Ion memory
->> manager. This supports setting up the generic set of heaps and
->> their properties.
->>
->> Signed-off-by: Laura Abbott <laura@labbott.name>
->> Signed-off-by: Andrew Andrianov <andrew@ncrmnt.org>
->> ---
->>   drivers/staging/android/ion/devicetree.txt | 53 ++++++++++++++++++++++++++++++
->
-> I have no issue with this going in here, but I do have lots of issues
-> with this binding.
->
->>   1 file changed, 53 insertions(+)
->>   create mode 100644 drivers/staging/android/ion/devicetree.txt
->>
->> diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
->> new file mode 100644
->> index 0000000..4a0c941
->> --- /dev/null
->> +++ b/drivers/staging/android/ion/devicetree.txt
->> @@ -0,0 +1,53 @@
->> +Ion Memory Manager
->> +
->> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
->> +Ion allows for different types of allocation via an abstraction called
->> +a 'heap'. A heap represents a specific type of memory. Each heap has
->> +a different type. There can be multiple instances of the same heap
->> +type.
->> +
->> +Required properties for Ion
->> +
->> +- compatible: "linux,ion"
->> +
->> +All child nodes of a linux,ion node are interpreted as heaps
->> +
->> +required properties for heaps
->> +
->> +- linux,ion-heap-id: The Ion heap id used for allocation selection
->> +- linux,ion-heap-type: Ion heap type defined in ion.h
->> +- linux,ion-heap-name: Human readble name of the heap
->> +
->> +
->> +Optional properties
->> +- memory-region: A phandle to a memory region. Required for DMA heap type
->> +(see reserved-memory.txt for details on the reservation)
->> +- linux,ion-heap-align: Alignment for the heap.
->> +
->> +Example:
->> +
->> +       ion {
->> +               compatbile = "linux,ion";
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               ion-system-heap {
->> +                       linux,ion-heap-id = <0>;
->> +                       linux,ion-heap-type = <ION_SYSTEM_HEAP_TYPE>;
->> +                       linux,ion-heap-name = "system";
->
-> How does this vary across platforms? Is all of this being pushed down
-> to DT, because there is no coordination of this at the kernel ABI
-> level across platforms. In other words, why can't heap 0 be hardcoded
-> as system heap in the driver. It seems to me any 1 of these 3
-> properties could be used to derive the other 2.
->
+Define the Porter board dependent part of the SDHI0/2 device nodes along with
+the  necessary  voltage regulators (note that the Vcc regulators are dummy --
+they are required but don't actually exist on the board). Also, GPIOs have to
+be used for the CD and WP signals due to the SDHI driver constraints...
 
-Right now there is no guarantee heap IDs will be the same across
-platforms. The heap IDs are currently part of the userspace ABI
-as well since userspace clients must pass in a mask of the heap
-IDs to allocate from. If we assume all existing clients could change,
-heaps such as the system heap could be mandated to have the same
-heap ID but we'd still run into problems if you have multiple
-heaps of the same type (e.g. multiple carveouts)
+This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
+add SDHI0/2 DT support) as there  are no differences between those boards in
+this respect.
 
-An alternative might be to have each heap just be a compatible string
-and pull everything (id, type etc.) into C files for setup. I debated
-doing that but decided to try putting everything in DT for my first
-pass.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
->
->> +               };
->> +
->> +               ion-camera-region {
->> +                       linux,ion-heap-id = <1>;
->> +                       linux,ion-heap-type = <ION_DMA_HEAP_TYPE>;
->> +                       linux,ion-heap-name = "camera"
->> +                       memory-region = <&camera_region>;
->
-> Couldn't the memory-region node with addition properties or some
-> standardization of existing ones provide enough information for ION's
-> needs?
->
+---
+This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
+Horman's 'renesas.git' repo.
 
-I think we could probably derive most of it from the memory-region right
-now. If it's reusable, it's DMA, if not it goes to a carveout. Name can
-come from the node name. heap ID and whether or not a region is a chunk
-heap could be added as properties.
+ arch/arm/boot/dts/r8a7791-porter.dts |   76 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-We'd still need to be able to get the same information for heaps that
-don't correspond to a specific region like the system heap.
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -10,6 +10,7 @@
+ 
+ /dts-v1/;
+ #include "r8a7791.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "Porter";
+@@ -33,6 +34,50 @@
+ 		device_type = "memory";
+ 		reg = <2 0x00000000 0 0x40000000>;
+ 	};
++
++	vcc_sdhi0: regulator@0 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "SDHI0 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	vccq_sdhi0: regulator@1 {
++		compatible = "regulator-gpio";
++
++		regulator-name = "SDHI0 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
++		gpios-states = <1>;
++		states = <3300000 1
++			  1800000 0>;
++	};
++
++	vcc_sdhi2: regulator@2 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "SDHI2 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	vccq_sdhi2: regulator@3 {
++		compatible = "regulator-gpio";
++
++		regulator-name = "SDHI2 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
++		gpios-states = <1>;
++		states = <3300000 1
++			  1800000 0>;
++	};
+ };
+ 
+ &extal_clk {
+@@ -54,6 +99,16 @@
+ 		renesas,groups = "intc_irq0";
+ 		renesas,function = "intc";
+ 	};
++
++	sdhi0_pins: sd0 {
++		renesas,groups = "sdhi0_data4", "sdhi0_ctrl";
++		renesas,function = "sdhi0";
++	};
++
++	sdhi2_pins: sd2 {
++		renesas,groups = "sdhi2_data4", "sdhi2_ctrl";
++		renesas,function = "sdhi2";
++	};
+ };
+ 
+ &scif0 {
+@@ -78,3 +133,24 @@
+ 		micrel,led-mode = <1>;
+ 	};
+ };
++
++&sdhi0 {
++	pinctrl-0 = <&sdhi0_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&vcc_sdhi0>;
++	vqmmc-supply = <&vccq_sdhi0>;
++	cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio6 7 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&sdhi2 {
++	pinctrl-0 = <&sdhi2_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&vcc_sdhi2>;
++	vqmmc-supply = <&vccq_sdhi2>;
++	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
 
->> +               };
->> +
->> +               ion-fb-region {
->> +                       linux,ion-heap-id = <2>;
->> +                       linux,ion-heap-type = <ION_DMA_HEAP_TYPE>;
->> +                       linux,ion-heap-name = "fb"
->> +                       memory-region = <&fb_region>;
->> +               };
->> +       }
->> --
->> 2.4.3
->>
