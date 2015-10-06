@@ -1,93 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] PCI: st: Add Device Tree bindings for sti pcie
-Date: Tue, 6 Oct 2015 09:45:18 -0500
-Message-ID: <CAL_JsqKRby4ZWb6iU7d+yN5Cj0qM+m+sQPsFVM0SgAHGK===uA@mail.gmail.com>
-References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org> <1444118168-13086-3-git-send-email-gabriel.fernandez@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add document of Rockchip mailbox
+Date: Tue, 6 Oct 2015 09:50:16 -0500
+Message-ID: <CAL_Jsq+36CqbUnccU_LKgmeswoPgr0vBzh4PLM4nOtsCAYE0SA@mail.gmail.com>
+References: <1442228798-15191-1-git-send-email-wxt@rock-chips.com> <1442228798-15191-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444118168-13086-3-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442228798-15191-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jaswinder Singh <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 6, 2015 at 2:56 AM, Gabriel Fernandez
-<gabriel.fernandez@linaro.org> wrote:
-> sti pcie is built around a Synopsis Designware PCIe IP.
+On Mon, Sep 14, 2015 at 6:06 AM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This add the necessary binding documentation for mailbox
+> found on RK3368 SoC.
 >
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pci/st-pcie.txt | 56 +++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
 >
-> diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Documentation/devicetree/bindings/pci/st-pcie.txt
+>  .../bindings/mailbox/rockchip-mailbox.txt          | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
 > new file mode 100644
-> index 0000000..32e76d0
+> index 0000000..b9b4768
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
-> @@ -0,0 +1,56 @@
-> +STMicroelectronics STi PCIe controller
+> +++ b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+> @@ -0,0 +1,33 @@
+> +Rockchip mailbox
 > +
-> +This PCIe host controller is based on the Synopsis Designware PCIe IP
-> +and thus inherits all the common properties defined in designware-pcie.txt.
+> +The Rockchip mailbox is used by the Rockchip CPU cores to communicate
+> +requests to MCU processor.
+> +
+> +Refer to ./mailbox.txt for generic information about mailbox device-tree
+> +bindings.
 > +
 > +Required properties:
-> + - compatible: Should be "st,pcie", "snps,dw-pcie"
 > +
-> + - reg: base address and length of the pcie controller, mem-window address
-> +   and length available to the controller.
-> +
-> + - interrupts: one GIC interrupt line connected to PCI MSI interrupt line
-> +
-> + - st,syscfg : should be a phandle of the syscfg node. Also contains syscfg
-> +   offset for IP configuration.
-> +
-> + - resets: phandle to the powerdown and reset controller for the PCIe IP.
-> +   See ../reset/reset.txt for details.
-> + - reset-names: should be "powerdown" and "softreset".
-> +
-> + - phys: the phandle for the PHY device (used by generic PHY framework).
-> + - phys-names: must be "pcie".
-> +
-> +Optional properties:
-> + - reset-gpio: a GPIO spec to define which pin is connected to the bus reset.
+> + - compatible: should be one of the following.
+> +   - "rockchip,rk3368-mbox" for rk3368
+> + - reg: physical base address of the controller and length of memory mapped
+> +       region.
+> +       physical base address of the share buffer and length of memory mapped
+
+s/share/shared/
+
+> +       region.
+> + - interrupts: The interrupt number to the cpu. The interrupt specifier format
+> +       depends on the interrupt controller.
+
+Need to specify the value of #mbox-cells.
+
 > +
 > +Example:
+> +--------
 > +
-> +pcie0: pcie@9b00000 {
-> +       compatible = "st,pcie", "snps,dw-pcie";
-> +       device_type = "pci";
-> +       reg = <0x09b00000 0x4000>,      /* dbi cntrl registers */
-> +             <0x2fff0000 0x00010000>,  /* configuration space */
-> +             <0x40000000 0x80000000>;  /* lmi mem window */
-> +       reg-names = "dbi", "config", "mem-window";
-> +       st,syscfg = <&syscfg_core 0xd8 0xe0>;
-> +       #address-cells = <3>;
-> +       #size-cells = <2>;
-> +       ranges = <0x82000000 0 0x20000000 0x20000000 0 0x0FFF0000>; /* non-prefetchable memory */
-> +       num-lanes = <1>;
-> +       interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names = "msi";
-> +       #interrupt-cells = <1>;
-> +       interrupt-map-mask = <0 0 0 7>;
-> +       interrupt-map = <0 0 0 1 &intc GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>, /* INT A */
-> +                       <0 0 0 2 &intc GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>, /* INT B */
-> +                       <0 0 0 3 &intc GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>, /* INT C */
-> +                       <0 0 0 4 &intc GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>; /* INT D */
-> +
-> +       resets = <&powerdown STIH407_PCIE0_POWERDOWN>,
-> +                <&softreset STIH407_PCIE0_SOFTRESET>;
-> +       reset-names = "powerdown",
-> +                     "softreset";
-> +       phys = <&phy_port0 PHY_TYPE_PCIE>;
-> +       phy-names = "pcie";
+> +/* RK3368 */
+> +mbox: mbox@ff6b0000 {
+> +       compatible = "rockchip,rk3368-mailbox";
+> +       reg = <0x0 0xff6b0000 0x0 0x1000>,
+> +             <0x0 0xff8cf000 0x0 0x1000>; /* the end 4k of sram */
+
+If this is just onchip SRAM usable for anything, then use the SRAM
+binding (misc/sram.txt). It has provisions for defining the use.
+
+> +       interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+> +       #mbox-cells = <1>;
 > +};
 > --
 > 1.9.1
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
