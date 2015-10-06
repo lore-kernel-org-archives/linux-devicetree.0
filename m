@@ -1,82 +1,103 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC PATCH v3 1/3] mmc: sprd: Add MMC host driver for Spreadtrum SoC
-Date: Tue, 6 Oct 2015 11:18:13 +0200
-Message-ID: <CAPDyKFo3xp3wU3XW3kMV7Xz7DFgkxts3CArthYY7-CyWk8cjXw@mail.gmail.com>
-References: <1439571353-30165-1-git-send-email-wuht06@gmail.com>
-	<1439571353-30165-2-git-send-email-wuht06@gmail.com>
-	<CAPDyKFp=XH+Vo_diRyhrMuB+v1rmTmxo3Lid3Wc-u1ohqNisKw@mail.gmail.com>
-	<CAG_R4_VTXCV4NVMOwv-9F56-_pVsK0hU4go79ZhV3OFxwcF0mA@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Tue, 6 Oct 2015 12:54:58 +0300
+Message-ID: <56139A72.6040600@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <560BC0DB.5020205@ti.com> <20151006083346.GL23801@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAG_R4_VTXCV4NVMOwv-9F56-_pVsK0hU4go79ZhV3OFxwcF0mA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hongtao Wu <wuht06@gmail.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Lin <shawn.lin@rock-chips.com>, "Orson.Zhai@spreadtrum.com" <Orson.Zhai@spreadtrum.com>, "Chunyan.Zhang@spreadtrum.com" <Chunyan.Zhang@spreadtrum.com>, "Jason.Wu@spreadtrum.com" <Jason.Wu@spreadtrum.com>, Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151006083346.GL23801-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Russell
-
-On 28 September 2015 at 09:18, Hongtao Wu <wuht06@gmail.com> wrote:
+On 06/10/15 11:33, Tony Lindgren wrote:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150930 04:04]:
+>> Tony,
+>>
+>> On 18/09/15 17:53, Roger Quadros wrote:
+>>> Hi,
 >>>
->
-> On Thu, Sep 10, 2015 at 9:28 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>> We do a couple of things in this series which result in
+>>> cleaner device tree implementation, faster perfomance and
+>>> multi-platform support. As an added bonus we get new GPI/Interrupt pins
+>>> for use in the system.
+>>>
+>>> - Establish a custom interface between NAND and GPMC driver. This is
+>>> needed because all of the NAND registers sit in the GPMC register space.
+>>> Some bits like NAND IRQ are even shared with GPMC.
+>>>
+>>> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+>>> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+>>> This causes performance increase when using prefetch-irq mode.
+>>> 30% increase in read, 17% increase in write in prefetch-irq mode.
+>>>
+>>> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
+>>> driver can be used on non-OMAP platforms. e.g. Keystone.
+>>>
+>>> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
+>>> 2 to 4 of these and most of them would be unused otherwise. It also
+>>> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
+>>>
+>>> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
+>>>
+>>> This series is available at
+>>> git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:rogerq/linux.git
+>>> in branch
+>>> for-v4.4/gpmc-v3
+> 
+> In general, very nice work :)
+
+Thanks :)
+
+> 
+>> I've verified this series with the following boards
+>> -dra7-evm
+>> -am437x-gp-evm
+>> -am335x-evm
+>> -beagleboard-c4
 >>
->> On 14 August 2015 at 18:55, Hongtao Wu <wuht06@gmail.com> wrote:
->> > the Spreadtrum MMC host driver is used to supply EMMC, SD, and
->> > SDIO types of memory cards
+>> For legacy boot I've checked only on beagleboard-c4.
+> 
+> Great.
+> 
+> Does build and boot and use NAND work throughtout the series?
+> Otherwise we'll have hard time bisecting anything..
+
+Yes it does with the following exceptions.
+
+- Patch 7 "memory: omap-gpmc: Remove NAND IRQ code" breaks prefetch-irq mode
+but none of the boards seem to be using it so it shouldn't break NAND on existing boards.
+At patch 9 "mtd: nand: omap2: manage NAND interrupts" prefetch-irq mode is working again.
+Do you want me to squash patches 7,8,9 so that pre-fetch irq is not broken at any point?
+
+- Then at patch 11 "mtd: nand: omap: Clean up device tree support" we break NAND on all DT
+boards as we expect NAND to be a real child node with compatible id. Simply applying the
+DT patch at this point makes it work again.
+
+> 
+>> Test procedure was to read an existing ubifs partition,
+>> create a new one and read it back.
 >>
->> Perhaps some more information about the controller. Are there any
->> specific features it support or doesn't support!?
->
-> Thanks for kindly reply.
-> Yes, spreadtrum MMC host controllers have some specific features as follows:
-> (1) We don't have controls for sampling clock tuning and re-tuning, we take
->       place of them with three registers as follows:
->        (a) CLK_WR_DL(Offset 080h): Data write clock delay line.
->        (b) CLK_RD_POS_DL(Offset 0x84h): Posedge data read clock delay line.
->        (c) CLK_RD_NEG_DL(Offset 088h): Negedge data read clock delay line.
->
-> (2) We don't have Power Control Register(Offset 029h), all our controller's
-> power
->       come from PMIC, rather than directly from CPU.
->
-> (3) We don't have bit[6](Card Insertion), bit[7] (Card Removal), bit[8]
-> (Card Interrupt)
-> and bit[12:9] in Normal Interrupt Status Register(Offset 030h). Because the
-> detect
-> gpio pin doesn't connect to the register of our host controller. So we can't
-> operate bit[18:16](Card Detect Pin Level, Card State stable and Card
-> Inserted)
-> in Present State Register(Offset 024h).
+>> Need you to Ack if it looks good.
+>> Do you mind taking it via omap-soc once MTD maintainers ack their relevant parts?
+> 
+> Sure. I'll try to do some testing on the series first too.
+> 
+Thanks.
 
-Thanks for clarifying!
+> Can the dts changes be merged separtely? Otherwise we'll have
+> a dependency between dts branch and the GPMC/NAND changes.
 
-You have some differences towards the "standard" sdhci variant, but
-that doesn't mean you should go off and implement a new driver from
-scratch, instead you should create a new sdhci variant and re-use code
-from the generic sdhci driver.
+I'm afraid no. Patch 11 makes us incompatible with the old DT.
 
-The current problem with such approach, is that the sdhci driver isn't
-designed as a library but instead a driver consisting of too many
-quirks and callbacks. While you start to adopt your driver towards
-sdhci, you will need to add yet another bunch of new quirks and
-callbacks to suite your hw.
-
-Now, as the number of callbacks and quirks continues to increase I
-will sooner or later give up maintaining it, as each line of code will
-depend on a quirk. So, we need to start turning sdhci into a library
-*right now*! Russell King, has pointed out this several times as well,
-but unfortunate I haven't yet seen anyone willing to help out in this
-field.
-
-I would of course be very happy if you would like to have a look at
-that, but I realize it's a difficult task, So, unless you are happy
-with taking on such a challenge, I suggest you go for an intermediate
-step, which thus means convert your driver to a sdhci variant driver
-and add the quirks/callbacks you need to suite your hw.
-
-[...]
-
-Kind regards
-Uffe
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
