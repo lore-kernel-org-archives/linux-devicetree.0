@@ -1,109 +1,58 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Tue, 06 Oct 2015 21:32:29 +0200
-Message-ID: <87y4ffaj3m.fsf@belgarion.home>
-References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
-	<CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] pwm: fix Broadcom BCM7038 PWM driver
+Date: Tue, 06 Oct 2015 21:59:25 +0200
+Message-ID: <6796852.Ynn1zMqb4r@wuerfel>
+References: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com> <20151005151415.GE27759@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
-	(Rob Herring's message of "Tue, 6 Oct 2015 08:30:30 -0500")
+In-Reply-To: <20151005151415.GE27759@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, ariel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
+The newly added pwm-brcmstb driver fails to build if CONFIG_PM_SLEEP
+is enabled:
 
-> On Sun, Oct 4, 2015 at 5:31 AM, Robert Jarzmik <robert.jarzmik@free.fr> wrote:
->> Add documentation for the PXA frambuffer devicetree binding.
->
-> Strictly speaking this is a binding for PXA display controller, not a
-> Linux FB driver. There are lots of "framebuffer" and "DRM" bindings
-> which I'm trying to curb.
-Yes, that's very true. That deserves a new commit message and a new file name
-(marvell,pxa2xx-lcd).
->>  .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
->
-> Please put in bindings/display/ as I'm consolidating all the display
-> related bindings there[1].
-Of course, for v3.
+drivers/pwm/pwm-brcmstb.c: In function 'brcmstb_pwm_suspend':
+drivers/pwm/pwm-brcmstb.c:309:42: error: 'dev' undeclared (first use in this function)
+  struct brcmstb_pwm *p = dev_get_drvdata(dev);
 
->> +++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
->> @@ -0,0 +1,80 @@
->> +PXA LCDC Framebuffer
->> +--------------------
->> +
->> +Required properties:
->> + - compatible :
->> +       "marvell,pxa2xx-lcdc",
->
-> No differences in h/w for any of the chips?
-All pxa25x, pxa27x and pxa3xx are compatible.
-AFAIK, pxa3xx has an IP with additional registers. But :
- - these (this) register(s) is not necessary for the display controller to work
-   (it's more a control to shift red/green/blue values, and energy management)
- - all the registers in pxa2{5,7}x are the same in pxa3xx
+This changes the name of the function argument to match its user.
 
-The pxafb driver acts today on the subset of registers which are the same across
-all pxaXXX variants. This is what made me think only one compatible property was
-required.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+On Monday 05 October 2015 17:14:15 Thierry Reding wrote:
+> On Mon, Sep 14, 2015 at 04:47:04PM -0700, Florian Fainelli wrote:
+> > Florian Fainelli (2):
+> >   Documentation: dt: add Broadcom BCM7038 PWM controller binding
+> >   pwm: Add Broadcom BCM7038 PWM controller support
+> 
+> I've applied both of these patches with a couple of stylistic changes.
 
-If I'm wrong, I could add "marvell,pxa3xx-lcdc", is that what you think I should
-do ?
->
->> + - reg : Should contain 1 register ranges(address and length).
->> +        Can contain an additional register range(address and length)
->> +        for fixed framebuffer memory. Useful for dedicated memories.
->
-> This is memory that can't be used for anything else? We already have
-> reserved-memory for this if it is just RAM. There's also a binding for
-> on-chip SRAM which should probably be used if the memory is usable for
-> other things.
-That is a wrong copy paste I made. I was more thinking of having only 1 register
-range, and no video memory reservation ...
+As in the pwm-berlin driver, one of the fixups was broken.
 
->> +PXA LCDC Display
->
-> This should not be specific to PXA, but for this panel. This should be
-> in bindings/display/panel/.
-Sure, for v3.
-
->> +----------------
->> +Required properties (as per of_videomode_helper):
->> + - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
->> +                   "color-tft", "smart-panel"
->> +
->> +Optional properties (as per of_videomode_helper):
->> + - power-supply: power supply regulator to the LCD to power it on or off
->> +                (see regulator.txt)
->> + - backlight: backlight control (see backlight.txt)
->> +
->> +Required nodes:
->> + - port: connection to the LCD controller
->> + - display-timings: panel timings (see display-timing.txt)
->
-> If lcd-type is smart-panel, then this node would not make sense.
-Ah I see, so this could be optional maybe ?
-
-Actually when I'll move the panel definition to bindings/display/panel, is this
-what I should do :
- - create a file marvell,pxa2xx-panel
- - input all these properties into this file
-
-And then, when a board maintainer will create a devicetree description, he will
-write something like :
-      compatible = "toshiba,ltm0305a776";
-      compatible = "marvell,pxa2xx-panel";
-      lcd-type = "color-tft";
-      ...
-
-If that's the case, I wonder how to "enforce" that a panel used with
-marvell,pxa2xx-lcdc (through the of_graph 'port' node) be compatible with
-marvell,pxa2xx-panel ?
-
-Cheers.
-
--- 
-Robert
+diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
+index 083e3ef5b8e5..423ce087cd9c 100644
+--- a/drivers/pwm/pwm-brcmstb.c
++++ b/drivers/pwm/pwm-brcmstb.c
+@@ -304,7 +304,7 @@ static int brcmstb_pwm_remove(struct platform_device *pdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-static int brcmstb_pwm_suspend(struct device *d)
++static int brcmstb_pwm_suspend(struct device *dev)
+ {
+ 	struct brcmstb_pwm *p = dev_get_drvdata(dev);
+ 
+@@ -313,7 +313,7 @@ static int brcmstb_pwm_suspend(struct device *d)
+ 	return 0;
+ }
+ 
+-static int brcmstb_pwm_resume(struct device *d)
++static int brcmstb_pwm_resume(struct device *dev)
+ {
+ 	struct brcmstb_pwm *p = dev_get_drvdata(dev);
+ 
