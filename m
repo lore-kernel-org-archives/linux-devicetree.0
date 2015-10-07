@@ -1,58 +1,58 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v5 3/3] PCI: st: Provide support for the sti PCIe controller
-Date: Wed, 7 Oct 2015 16:32:16 +0200
-Message-ID: <CAG374jAnKQCerh3nBX9WsmwP4g6uPLKPSZ2EhhwPa-i89RsyZQ@mail.gmail.com>
-References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
- <1444118168-13086-4-git-send-email-gabriel.fernandez@linaro.org> <5139149.TmJY1YjqAU@wuerfel>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for LeMaker BananaPi
+Date: Wed, 07 Oct 2015 07:36:29 -0700
+Message-ID: <7hzizu924y.fsf@deeprootsystems.com>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
+	<20150818153631.GH2547@lukather>
+	<CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
+	<20151005173957.B1BD16C8150E@dd34104.kasserver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5139149.TmJY1YjqAU@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "kernel@stlinux.com" <kernel@stlinux.com>, Viresh Kumar <viresh.kumar@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sachin Kamat <sachin.kamat@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Phil Edworthy <phil.edworthy@renesas.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Muralidharan Karicheri <m-karicheri2@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>T
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151005173957.B1BD16C8150E-RzmsueL7+k6AvxNu/8lEInnhMCiq3JZZ@public.gmane.org> (Timo
+	Sigurdsson's message of "Mon, 5 Oct 2015 19:39:57 +0200 (CEST)")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 October 2015 at 23:01, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 06 October 2015 09:56:08 Gabriel Fernandez wrote:
->> +
->> +/*
->> + * On ARM platforms, we actually get a bus error returned when the PCIe IP
->> + * returns a UR or CRS instead of an OK.
->> + */
->> +static int st_pcie_abort_handler(unsigned long addr, unsigned int fsr,
->> +                                struct pt_regs *regs)
->> +{
->> +       return 0;
->> +}
->>
+"Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org> writes:
+
+> Kevin Hilman schrieb am 24.09.2015 19:57:
+>> kernelci.org started finding boot faiulres[1] on bananapi linux-next
+>> around next-20150918, but it was only failing in some labs and not
+>> others.  I finally bisected it down to this patch, which landed in
+>> linux-next in the form of 2d665a8a8350 ARM: dts: sunxi: Add regulators
+>> for LeMaker BananaPi.  Reverting that commit on top of next-20150923
+>> gets my bananapi booting again.
+>> 
+>> Note it's kind of an interesting boot failure.  The kernel boots fully
+>> to a shell, but panics after running a few commands.  In particular
+>> 'dmesg -n1' seems to trigger it usually[2].
+>> 
+>> Kevin
+>> 
+>> [1]
+>> http://kernelci.org/boot/sun7i-a20-bananapi/job/next/kernel/next-20150923/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5602504359b514be146c326f
+>> [2]
+>> http://storage.kernelci.org/next/next-20150923/arm-multi_v7_defconfig/lab-khilman/boot-sun7i-a20-bananapi.html
 >
-> I'm not sure if we discussed this already for this driver. Usually
-> you should have a register in the PCI host that you can check to see
-> what caused the abort.
+> following up on my last email: I'm back from my vacation and I tried to
+> reproduce your problem, but my board doesn't seem to be affected, so I
+> cannot trigger it.
 >
-> Try to make this as narrow as possible so you return nonzero for
-> any abort except the one you actually try to prevent.
->
->         Arnd
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> I still think that the lower voltages may be the cause of your problem
+> with that specific board, so could you please test the attached patch on
+> top of my patch that you first experienced the problem with? Please let 
+> us know whether this solves your issue or whether we need to dig deeper.
 
-Hi Arnd,
+Thanks for the patch.  Looks like it's the OPPs.
 
-Yes we already discussed about that:
-http://www.spinics.net/lists/arm-kernel/msg393705.html
+I went back to next-20150923 and verified it still fails.  Then, I
+applied your patch and saw that it boots just fine.
 
-We can probably improve the abort handling once the patch below will be merged
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/366215.html
-
-As imx6 does the same, does it sound reasonable to keep this approach
-of the st driver and start discussing about generic way to handle
-abort for DW pci driver ?
-
-Best regards
-
-Gabriel
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
