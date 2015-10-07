@@ -1,110 +1,65 @@
-From: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: sunxi: Add regulators for LeMaker BananaPi
-Date: Thu,  8 Oct 2015 00:18:36 +0200
-Message-ID: <1444256316-2278-1-git-send-email-public_timo.s@silentcreek.de>
-Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH v3 4/4] ARM: dts: Enable EC vboot context support on Peach
+ boards
+Date: Thu, 08 Oct 2015 07:31:05 +0900
+Message-ID: <56159D29.3090801@kernel.org>
+References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk> <1442842703-5309-5-git-send-email-emilio.lopez@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSJLSE35MGBBA5V22YAKGQEUQBLJBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1442842703-5309-5-git-send-email-emilio.lopez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio.lopez@collabora.co.uk>
+Cc: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
-driver, so add them to allow for voltage-scaling with cpufreq-dt. Also
-add board-specific OPP to use slightly higher voltages at lower
-frequencies since Kevin Hilman reported that not all BananaPi boards run
-stable at the default voltages inherited by sun7i-a20.dtsi.
+On 09/21/15 22:38, Emilio L=C3=B3pez wrote:
+> The Peach boards use the EC to store the vboot context information,
+> so add the corresponding properties on the EC node to indicate so.
+>=20
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Acked-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
+> ---
+>=20
+> Changes from v1:
+>  - none
+>=20
+> Changes from v2:
+>  - collect tags from Krzysztof & Javier
+>=20
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
+>  2 files changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/bo=
+ot/dts/exynos5420-peach-pit.dts
+> index 8f4d76c..ac02fb4 100644
+> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> @@ -935,6 +935,7 @@
+>  		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
+>  		reg =3D <0>;
+>  		spi-max-frequency =3D <3125000>;
+> +		google,has-vbc-nvram;
+> =20
+>  		controller-data {
+>  			samsung,spi-feedback-delay =3D <1>;
+> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boo=
+t/dts/exynos5800-peach-pi.dts
+> index 7d5b386..b60dec0 100644
+> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> @@ -898,6 +898,7 @@
+>  		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
+>  		reg =3D <0>;
+>  		spi-max-frequency =3D <3125000>;
+> +		google,has-vbc-nvram;
+> =20
+>  		controller-data {
+>  			samsung,spi-feedback-delay =3D <1>;
 
-Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
----
-Changes since v2:
+Applied, thanks.
 
-- (Re)Added board-specific OPP after Kevin Hilman reported problems with
-the default voltages at lower frequencies
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 45 +++++++++++++++++++++++++++++---
- 1 file changed, 41 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 9f7b472..39b6b67b 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -92,6 +92,20 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+	operating-points = <
-+		/* kHz	  uV */
-+		960000	1400000
-+		912000	1400000
-+		864000	1350000
-+		720000	1250000
-+		528000	1150000
-+		312000	1100000
-+		144000	1050000
-+		>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -119,13 +133,9 @@
- 	status = "okay";
- 
- 	axp209: pmic@34 {
--		compatible = "x-powers,axp209";
- 		reg = <0x34>;
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--
--		interrupt-controller;
--		#interrupt-cells = <1>;
- 	};
- };
- 
-@@ -182,6 +192,33 @@
- 	};
- };
- 
-+#include "axp209.dtsi"
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
- &reg_usb1_vbus {
- 	status = "okay";
- };
--- 
-2.1.4
+- Kukjin
