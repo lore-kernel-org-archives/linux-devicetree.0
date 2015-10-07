@@ -1,56 +1,37 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v5 1/3] ARM: STi: Kconfig update for PCIe support
-Date: Wed, 7 Oct 2015 14:51:06 +0200
-Message-ID: <CAG374jCugYayr7r+3jMH-EcqJPEOOqAzCztUSiuurW0edKnXfw@mail.gmail.com>
-References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
- <1444118168-13086-2-git-send-email-gabriel.fernandez@linaro.org> <20151006190121.GV21513@n2100.arm.linux.org.uk>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH v2 0/3] ASoC: da7213: Add DT support for codec
+Date: Wed, 7 Oct 2015 14:27:04 +0100
+Message-ID: <cover.1444223905.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151006190121.GV21513@n2100.arm.linux.org.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edwort>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell
+This patch set adds DT support to the codec driver, and supporting bindings
+documentation.
 
-no problem, i will fix it
+Patch set is based against v4.3-rc4
 
-Thanks for review.
+Changes in v2:
+ - Split mclk data support changes into separate patch
+ - Use of_match_ptr() for match table assignment
+ - Only call clk_prepare_enable/disable() if mclk data provided (not NULL).
+ - Add error checking for clk_prepare_enable() usage.
 
-BR
+Adam Thomson (3):
+  ASoC: da7213: Add DT support to codec driver
+  ASoC: da7213: Add support to handle mclk data provided to driver
+  ASoC: da7213: Add bindings documentation for codec driver
 
-Gabriel
+ Documentation/devicetree/bindings/sound/da7213.txt |  41 +++++
+ include/sound/da7213.h                             |   3 -
+ sound/soc/codecs/da7213.c                          | 190 +++++++++++++++++++--
+ sound/soc/codecs/da7213.h                          |   8 +-
+ 4 files changed, 221 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/da7213.txt
 
-On 6 October 2015 at 21:01, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Tue, Oct 06, 2015 at 09:56:06AM +0200, Gabriel Fernandez wrote:
->> Update Kconfig:
->> - MIGHT_HAVE_PCI
->> - PCI_DOMAINS
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  arch/arm/mach-sti/Kconfig | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
->> index 125865d..5f99e93 100644
->> --- a/arch/arm/mach-sti/Kconfig
->> +++ b/arch/arm/mach-sti/Kconfig
->> @@ -9,6 +9,8 @@ menuconfig ARCH_STI
->>       select ARCH_HAS_RESET_CONTROLLER
->>       select HAVE_ARM_SCU if SMP
->>       select ARCH_REQUIRE_GPIOLIB
->> +     select PCI_DOMAINS if PCI
->> +     select MIGHT_HAVE_PCI
->>       select ARM_ERRATA_754322
->>       select ARM_ERRATA_764369 if SMP
->>       select ARM_ERRATA_775420
->
-> Please, alphabetical ordering for select statements.
->
-> --
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
+--
+1.9.3
