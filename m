@@ -1,155 +1,37 @@
-From: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mmc: Add support for marking hpi as
- broken through devicetree
-Date: Wed, 07 Oct 2015 10:43:58 +0200
-Message-ID: <5614DB4E.8040807@schinagl.nl>
-References: <1427901984-26469-1-git-send-email-hdegoede@redhat.com>
-Reply-To: oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
+Date: Wed, 7 Oct 2015 10:46:26 +0200
+Message-ID: <5614DBE2.6080102@osg.samsung.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
+ <5614BADD.1070307@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBUNW2OYAKGQEMFO5VFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1427901984-26469-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5614BADD.1070307@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Hans,
+Hello Yakir,
 
-On 01-04-15 17:26, Hans de Goede wrote:
-> The eMMC on a tablet I've will stop working / communicating as soon as
-> the kernel executes:
->
-> 		mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->   				EXT_CSD_HPI_MGMT, 1,
->   				card->ext_csd.generic_cmd6_time);
->
-> There seems to be no way to reliable identify eMMC-s which have a broken
-> hpi implementation, but at least for eMMC's which are soldered onto a board
-> we can work around this by specifying that hpi is broken in devicetree.
-We've been talking about this a little off-list, and I was just 
-triggered again by this so I'm following up on it again.
+On 10/07/2015 08:25 AM, Yakir Yang wrote:
+> Hi all,
+> 
+> Friendly ping.....   :)
+> 
+> 
+> Best regards,
+> - Yakir
+> 
+> 
 
-The same issue bit me in the ass on a Micron 'industrial' grade eMMC 
-(MTFC4GACAANA) and luckily you found this back then to help me.
+Do you have a tree that I can use to test these patches?
 
-As we discussed, this may very well be a limitation of the mmc 
-controller, rather then the MMC chip. While we only have a sample size 
-of 2 on 2 different socs (with likely the same mmc IP) (A13/A20) I found 
-in the JEDEC spec in the appendix on changes from 4.4 to 4.41:
-Introduce of High Priority Interrupt mechanism, HPI background and one 
-of possible solutions.
-
-Which leaves me to believe, that HPI was added to eMMC in version 4.41 
-and was not available before. Both the A13 and A20 user manuals state 
-that the MMC controller in these socs is only version 4.3.
-
-Obviously I know far to little as to what does and what does not work 
-with an MMC-host, since it's just a simple data-bus, but I would not be 
-surprised if these things are somewhere somewhat related, so hopefully 
-someone on this list can give their opinion on this.
-
-I already checked the core/mmc.c where the version is read from the mmc 
-controller to see if we can trigger on this based on version, however it 
-seems only the major version number is stored here [0]?
-
-So in my opinion, it is quite likely that this setting be moved up to 
-the mmc-core level, for the SoC, rather then the card itself?
-
-[0] http://lxr.free-electrons.com/source/drivers/mmc/core/mmc.c#L148
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> -Fix of_node leakage
-> ---
->   Documentation/devicetree/bindings/mmc/mmc-card.txt | 31 ++++++++++++++++++++++
->   drivers/mmc/core/mmc.c                             | 10 ++++++-
->   2 files changed, 40 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/mmc/mmc-card.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> new file mode 100644
-> index 0000000..a70fcd6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
-> @@ -0,0 +1,31 @@
-> +mmc-card / eMMC bindings
-> +------------------------
-> +
-> +This documents describes the devicetree bindings for a mmc-host controller
-> +child node describing a mmc-card / an eMMC, see "Use of Function subnodes"
-> +in mmc.txt
-> +
-> +Required properties:
-> +-compatible : Must be "mmc-card"
-> +-reg        : Must be <0>
-> +
-> +Optional properties:
-> +-broken-hpi : Use this to indicate that the mmc-card has a broken hpi
-> +              implementation, and that hpi should not be used
-> +
-> +Example:
-> +
-> +&mmc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc2_pins_a>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +
-> +	mmccard: mmccard@0 {
-> +		reg = <0>;
-> +		compatible = "mmc-card";
-> +		broken-hpi;
-> +	};
-> +};
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index 1d41e85..c84131e 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -11,6 +11,7 @@
->    */
->   
->   #include <linux/err.h>
-> +#include <linux/of.h>
->   #include <linux/slab.h>
->   #include <linux/stat.h>
->   #include <linux/pm_runtime.h>
-> @@ -336,6 +337,8 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->   {
->   	int err = 0, idx;
->   	unsigned int part_size;
-> +	struct device_node *np;
-> +	bool broken_hpi = false;
->   
->   	/* Version is coded in the CSD_STRUCTURE byte in the EXT_CSD register */
->   	card->ext_csd.raw_ext_csd_structure = ext_csd[EXT_CSD_STRUCTURE];
-> @@ -349,6 +352,11 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->   		}
->   	}
->   
-> +	np = mmc_of_find_child_device(card->host, 0);
-> +	if (np && of_device_is_compatible(np, "mmc-card"))
-> +		broken_hpi = of_property_read_bool(np, "broken-hpi");
-> +	of_node_put(np);
-> +
->   	/*
->   	 * The EXT_CSD format is meant to be forward compatible. As long
->   	 * as CSD_STRUCTURE does not change, all values for EXT_CSD_REV
-> @@ -494,7 +502,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
->   		}
->   
->   		/* check whether the eMMC card supports HPI */
-> -		if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1) {
-> +		if (!broken_hpi && (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1)) {
->   			card->ext_csd.hpi = 1;
->   			if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x2)
->   				card->ext_csd.hpi_cmd =	MMC_STOP_TRANSMISSION;
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
