@@ -1,54 +1,95 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
-Date: Wed, 7 Oct 2015 14:02:11 +0300
-Message-ID: <5614FBB3.5060806@cogentembedded.com>
-References: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
- <20151007033957.GA30650@verge.net.au>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 4/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Wed, 7 Oct 2015 12:15:31 +0100
+Message-ID: <20151007111529.GA4810@vkoul-mobl.iind.intel.com>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+ <1441980871-24475-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151007033957.GA30650@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441980871-24475-5-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, Sep 11, 2015 at 03:14:26PM +0100, Peter Griffin wrote:
 
-On 10/7/2015 6:39 AM, Simon Horman wrote:
+> +static char *fdma_clk_name[CLK_MAX_NUM] = {
+> +	[CLK_SLIM]	= "fdma_slim",
+> +	[CLK_HI]	= "fdma_hi",
+> +	[CLK_LOW]	= "fdma_low",
+> +	[CLK_IC]	= "fdma_ic",
+> +};
 
->> Define the Porter board dependent part of the SDHI0/2 device nodes along with
->> the  necessary  voltage regulators (note that the Vcc regulators are dummy --
->> they are required but don't actually exist on the board). Also, GPIOs have to
->> be used for the CD and WP signals due to the SDHI driver constraints...
->>
->> This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
->> add SDHI0/2 DT support) as there  are no differences between those boards in
->> this respect.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
->> Horman's 'renesas.git' repo.
->
-> Thanks I have queued this up after addressing some issues
-> in the changelog that checkpatch complained about:
->
-> * text > 75 characters wide
-> * Missing '"' around name of patch referred to
->
-> Its looking like there is already quite a log shared between
+why do we want to have this sort of data in kernel, we should get the clocks
+from DT here
 
-    Lot?
+> +static int config_reqctrl(struct st_fdma_chan *fchan)
+> +{
+> +	u32 maxburst = 0, addr = 0;
+> +	enum dma_slave_buswidth width;
+> +	int ch_id = fchan->vchan.chan.chan_id;
+> +	struct st_fdma_dev *fdev = fchan->fdev;
+> +
+> +	if (fchan->scfg.direction == DMA_DEV_TO_MEM) {
+> +		fchan->cfg.req_ctrl &= ~REQ_CTRL_WNR;
+> +		maxburst = fchan->scfg.src_maxburst;
+> +		width = fchan->scfg.src_addr_width;
+> +		addr = fchan->scfg.src_addr;
+> +	} else if (fchan->scfg.direction == DMA_MEM_TO_DEV) {
+> +		fchan->cfg.req_ctrl |= REQ_CTRL_WNR;
+> +		maxburst = fchan->scfg.dst_maxburst;
+> +		width = fchan->scfg.dst_addr_width;
+> +		addr = fchan->scfg.dst_addr;
 
-> r8a7791-porter.dts and r8a7791-henninger.dts. Do you have any
-> thoughts on consolidating or sharing common elements between
-> them somehow?
+This raises red flags, why do we have direction in channel, and where is
+this set. Direction belong to a descriptor and you are supposed to use
+direction from prep_ calls!
 
-    I'm still planning to remove the Henninger's .dts for good. It was never 
-sold and so had no users outside Renesas (and Cogent Embedded), I was told.
 
-MBR, Sergei
+> +	if (!is_slave_direction(direction)) {
+> +		dev_err(fchan->fdev->dev, "bad direction?\n");
+> +		return NULL;
+> +	}
+> +
+> +	if (!config_reqctrl(fchan)) {
+> +		dev_err(fchan->fdev->dev, "bad width or direction\n");
 
+would make sense to print proper error in called fn
+
+> +static enum dma_status st_fdma_tx_status(struct dma_chan *chan,
+> +					 dma_cookie_t cookie,
+> +					 struct dma_tx_state *txstate)
+> +{
+> +	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
+> +	struct virt_dma_desc *vd;
+> +	enum dma_status ret;
+> +	unsigned long flags;
+> +
+> +	ret = dma_cookie_status(chan, cookie, txstate);
+> +	if (ret == DMA_COMPLETE)
+> +		return ret;
+> +
+> +	if (!txstate)
+> +		return fchan->status;
+
+why channel status and not cookie status ?
+
+> +static const struct st_fdma_ram fdma_mpe31_mem[] = {
+> +	{ .name = "dmem", .offset = 0x10000, .size = 0x3000 },
+> +	{ .name = "imem", .offset = 0x18000, .size = 0x8000 },
+> +};
+
+why aren't these coming from DT ?
+
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
+> +MODULE_AUTHOR("Ludovic.barre <Ludovic.barre@st.com>");
+
+No MODULE_ALIAS ?
+
+-- 
+~Vinod
