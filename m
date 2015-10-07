@@ -1,41 +1,97 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
-Date: Wed, 7 Oct 2015 12:39:58 +0900
-Message-ID: <20151007033957.GA30650@verge.net.au>
-References: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 15/18] powerpc/book3e-64/kexec: Enable SMP release
+Date: Tue, 6 Oct 2015 22:48:19 -0500
+Message-ID: <1444189702-17241-16-git-send-email-scottwood@freescale.com>
+References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444189702-17241-1-git-send-email-scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Tiejun Chen <tiejun.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 07, 2015 at 02:05:41AM +0300, Sergei Shtylyov wrote:
-> Define the Porter board dependent part of the SDHI0/2 device nodes along with
-> the  necessary  voltage regulators (note that the Vcc regulators are dummy --
-> they are required but don't actually exist on the board). Also, GPIOs have to
-> be used for the CD and WP signals due to the SDHI driver constraints...
-> 
-> This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
-> add SDHI0/2 DT support) as there  are no differences between those boards in
-> this respect.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
-> Horman's 'renesas.git' repo.
+The SMP release mechanism for FSL book3e is different from when booting
+with normal hardware.  In theory we could simulate the normal spin
+table mechanism, but not at the addresses U-Boot put in the device tree
+-- so there'd need to be even more communication between the kernel and
+kexec to set that up.  Instead, kexec-tools will set a boolean property
+linux,booted-from-kexec in the /chosen node.
 
-Thanks I have queued this up after addressing some issues
-in the changelog that checkpatch complained about:
+Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v2: Use a device tree property instead of a flag in the kernel image
 
-* text > 75 characters wide
-* Missing '"' around name of patch referred to
+This depends on the kexec-tools patch v2 "ppc64: Add a flag to tell the
+kernel it's booting from kexec":
+http://patchwork.ozlabs.org/patch/527050/
+---
+ Documentation/devicetree/bindings/chosen.txt |  8 ++++++++
+ arch/powerpc/kernel/setup_64.c               | 17 ++++++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-Its looking like there is already quite a log shared between
-r8a7791-porter.dts and r8a7791-henninger.dts. Do you have any
-thoughts on consolidating or sharing common elements between
-them somehow?
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index ed838f4..6ae9d82 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -44,3 +44,11 @@ Implementation note: Linux will look for the property "linux,stdout-path" or
+ on PowerPC "stdout" if "stdout-path" is not found.  However, the
+ "linux,stdout-path" and "stdout" properties are deprecated. New platforms
+ should only use the "stdout-path" property.
++
++linux,booted-from-kexec
++-----------------------
++
++This property is set (currently only on PowerPC, and only needed on
++book3e) by some versions of kexec-tools to tell the new kernel that it
++is being booted by kexec, as the booting environment may differ (e.g.
++a different secondary CPU release mechanism)
+diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+index 505ec2c..5c03a6a 100644
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -340,11 +340,26 @@ void early_setup_secondary(void)
+ #endif /* CONFIG_SMP */
+ 
+ #if defined(CONFIG_SMP) || defined(CONFIG_KEXEC)
++static bool use_spinloop(void)
++{
++	if (!IS_ENABLED(CONFIG_PPC_BOOK3E))
++		return true;
++
++	/*
++	 * When book3e boots from kexec, the ePAPR spin table does
++	 * not get used.
++	 */
++	return of_property_read_bool(of_chosen, "linux,booted-from-kexec");
++}
++
+ void smp_release_cpus(void)
+ {
+ 	unsigned long *ptr;
+ 	int i;
+ 
++	if (!use_spinloop())
++		return;
++
+ 	DBG(" -> smp_release_cpus()\n");
+ 
+ 	/* All secondary cpus are spinning on a common spinloop, release them
+@@ -524,7 +539,7 @@ void __init setup_system(void)
+ 	 * Freescale Book3e parts spin in a loop provided by firmware,
+ 	 * so smp_release_cpus() does nothing for them
+ 	 */
+-#if defined(CONFIG_SMP) && !defined(CONFIG_PPC_FSL_BOOK3E)
++#if defined(CONFIG_SMP)
+ 	/* Release secondary cpus out of their spinloops at 0x60 now that
+ 	 * we can map physical -> logical CPU ids
+ 	 */
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
