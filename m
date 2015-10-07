@@ -1,57 +1,101 @@
-From: dwalker@fifo99.com
-Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
-Date: Wed, 7 Oct 2015 09:27:55 -0700
-Message-ID: <20151007162755.GA23283@fifo99.com>
-References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
- <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] devicetree: add binding for generic mmio clocksource
+Date: Wed, 07 Oct 2015 17:47:12 +0100
+Message-ID: <yw1xvbaik4mn.fsf@unicorn.mansr.com>
+References: <1444232234-2133-1-git-send-email-mans@mansr.com>
+	<20151007154727.GC28981@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Daniel Walker <danielwa@cisco.com>, xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151007154727.GC28981@leverpostej> (Mark Rutland's message of
+	"Wed, 7 Oct 2015 16:47:28 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 06, 2015 at 12:14:43PM -0500, Rob Herring wrote:
-> On Tue, Oct 6, 2015 at 10:47 AM, Daniel Walker <danielwa@cisco.com> wrote:
-> > It looks like there's some seepage of cmdline stuff into
-> > the generic device tree code. This conflicts with the
-> > generic cmdline implementation so I remove it in the case
-> > when that's enabled.
-> 
-> Nice series in general. I've had passing desire to do this every time
-> I run into the command line code.
-> 
-> The DT handling of the command line is generic across architectures.
-> The current design is working around that the kernel command line code
-> is not that way. I think we can take this a bit further by making the
-> generic DT code add the command line string directly rather than
-> relying on the arch to do that. Then we can remove all command line
-> handling from the arch code. I would also look at whether we can make
-> boot_command_line static rather than directly accessed. We might have
-> to leave it public for now, but could treat it as static for generic
-> cmdline case.
-> 
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
 
-Sorry I didn't respond sooner. I was waiting to see if there were more replies.
+> On Wed, Oct 07, 2015 at 04:37:13PM +0100, Mans Rullgard wrote:
+>> This adds a DT binding for a generic mmio clocksource as implemented
+>> by clocksource_mmio_init().
+>>=20
+>> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+>> ---
+>> Changed in v2:
+>> - added sched_clock support
+>> ---
+>>  .../devicetree/bindings/timer/clocksource-mmio.txt | 28 +++++++++++=
++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/timer/clocksou=
+rce-mmio.txt
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/timer/clocksource-mmi=
+o.txt b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
+>> new file mode 100644
+>> index 0000000..cfb3601
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
+>> @@ -0,0 +1,28 @@
+>> +Generic MMIO clocksource
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: should be "clocksource-mmio"
+>> +- reg: the physical address of the counter register
+>> +- reg-io-width: size of counter register in bytes, should be 2 or 4
+>
+> Can this not be inferred from the reg?
 
-One of my colleague suggested something similar, I was reluctant to change anything
-prior to sending it out so I could get more feedback on the direction.
+You're right, it can.
 
-So your suggesting this patch be something like,
+> What about 8 byte counters?
 
-#ifdef CONFIG_GENERIC_CMDLINE
-// call generic cmdline functions
-#else
-// keep what's there currently
-#endif
+The existing code only supports 2 or 4, but that of course doesn't
+matter here.
 
-Then remove the arch specific generic cmdline changes in the architecture code for the DT path.. 
-Most of them have two places where they add in the command line. One from the device tree, and
-another place that's from the bootloader. For example , ARM has the device tree call, then another
-for atags. I don't think these device tree changes would allow us to remove the atags version, also
-the boot_command_line wouldn't be able to be static.
+>> +- clocks: phandle to the source clock
+>
+> Is the frequency expected to be exactly the source clock frequency? I
+> imagine it's possible for there to be a divisor.
 
-Daniel
+There could of course be, though there isn't in the hardware I'm dealin=
+g
+with.  Is specifying it here preferable using a fixed-factor-clock?
+
+> We can add properties for that later, but we should be explcit as to
+> what we currently expect the relationship between the clock and the
+> clocksource to be.
+>
+>> +- clocksource-bits: number of valid bits
+>> +- clocksource-rating: rating of the clocksource
+>
+> NAK. This has no meaning w.r.t. the hardware. This should not be in t=
+he
+> DT. If there are criteria that bias this (e.g. frequency, latency), t=
+hey
+> should either be described in the DT or determined dynamically.
+
+I had a bad feeling about this.  How would you suggest determining a
+suitable value from actual hardware parameters?
+
+>> +- linux,sched-clock: boolean, register clocksource as sched_clock
+>
+> Likewise, this property doesn't belong in the DT for the same reasons=
+ as
+> clocksource-rating.
+
+What would be a proper way to select a sched_clock source?  I realise
+it's a Linux-specific thing and DT is supposed to be generic, but the
+information must be provided somehow.
+
+--=20
+M=E5ns Rullg=E5rd
+mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
