@@ -1,31 +1,64 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dmaengine: mpc512x: initialize with
- subsys_initcall()
-Date: Wed, 7 Oct 2015 15:17:41 +0100
-Message-ID: <20151007141740.GF3320@vkoul-mobl.iind.intel.com>
-References: <1443115737-3948-1-git-send-email-alex.popov@linux.com>
- <1443115737-3948-4-git-send-email-alex.popov@linux.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFT 0/3] usb: usb3503: Fix probing on Arndale board (missing phy)
+Date: Wed, 07 Oct 2015 16:26:58 +0200
+Message-ID: <56152BB2.4020202@samsung.com>
+References: <1444177807-15524-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443115737-3948-4-git-send-email-alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <alex.popov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1444177807-15524-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Chen <peter.chen@freescale.com>, Ben Gamari <ben@smart-cactus.org>, Wolfram Sang <wsa@the-dreams.de>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, riku.voipio@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 08:28:57PM +0300, Alexander Popov wrote:
-> Initialize Freescale MPC512x DMA driver with subsys_initcall()
-> to allow the depending drivers to call dma_request_slave_channel()
-> during their probe.
+Hello,
 
-Why can't we use defered probe ? I have been asking people to not move init
-levels and esnure we have right solutions using defered probe
+On 2015-10-07 02:30, Krzysztof Kozlowski wrote:
+> Introduction
+> ============
+> This patchset tries to fix probing of usb3503 on Arndale board
+> if the Samsung PHY driver is probed later (or built as a module).
+>
+> *The patchset was not tested on Arndale board.*
+> I don't have that board. Please test it and say if the usb3503 deferred probe
+> works fine and the issue is solved.
+>
+> The patchset was tested on Odroid U3 board (which is different!)
+> in a simulated environment. It is not sufficient testing.
+>
+>
+> Difference
+> ==========
+> The usb3503 device driver can be used as a I2C device (on Odroid U3)
+> or as a platform device connected through phy (on Arndale). In the second
+> case the necessary phy reference has to be obtained and enabled.
+>
+> For some details please look also at thread [0][1].
+>
+> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348524.html
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348875.html
+>
 
+I'm not sure that this is the correct approach. usb3503 chip is simply 
+connected
+to Exynos USB2 phy, so it visible on the USB bus. The real driver that 
+controls USB2
+PHY is Exynos EHCI driver and USB3503 should not mess around it.
+
+In my opinion all that is needed in case of Arndale board is forcing 
+reset of
+usb3503 chip after successful EHCI and USB2 PHY initialization (for some 
+reason
+initialization of usb3503 chip must be done after usb host initialization).
+However I have no idea which driver should trigger this reset. Right now 
+I didn't
+find any good solution for additional control for devices which are on 
+autoprobed
+bus like usb.
+
+Best regards
 -- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
