@@ -1,7 +1,8 @@
 From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH 2/2] PCI: of: Ignore resources with failed translation
-Date: Wed, 07 Oct 2015 13:49:21 +0300
-Message-ID: <4d98be5a58845f8ee0ffdbefb519486986f36bf5.1444214119.git.p.fedin@samsung.com>
+Subject: [PATCH 1/2] PCI: of: Add 64-bit address recognition without LPAE
+ support
+Date: Wed, 07 Oct 2015 13:49:20 +0300
+Message-ID: <d222dd1e4d8ed59e25248091e90e53b662e007c5.1444214119.git.p.fedin@samsung.com>
 References: <cover.1444214119.git.p.fedin@samsung.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-reply-to: <cover.1444214119.git.p.fedin@samsung.com>
@@ -12,32 +13,45 @@ To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Peter Maydell <peter.maydell@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch allows PCI host controller to function even if part of resources
-is unusable for some reason. An example is non-LPAE kernel on a machine
-which has some 64-bit resources. Unusable resources will be just skipped
-instead of a complete failure.
+If non-LPAE kernel is booted up on a machine with 64-bit PCI resources,
+PCI controller probe fails with:
+
+PCI host bridge /pcie@10000000 ranges:
+   IO 0x3eff0000..0x3effffff -> 0x00000000
+  MEM 0x10000000..0x3efeffff -> 0x10000000
+  MEM 0x8000000000..0xffffffffff -> 0x8000000000
+pci-host-generic 3f000000.pcie: resource collision: [mem 0x00000000-0xffffffff] conflicts with /pl011@9000000 [mem 0x09000000-0x09000fff]
+pci-host-generic: probe of 3f000000.pcie failed with error -16
+
+This happens because res->start assignment in of_pci_range_to_resource()
+truncates the upper part of the address, because res->start is of
+phys_addr_t type, which is 32-bit on non-LPAE kernels.
+
+This patch adds explicit recognition of 64-bit resources, preventing from
+potential problems when e. g. 0x8000001234 would be converted to
+0x00001234.
 
 Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
 ---
- drivers/of/of_pci.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/of/address.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 5751dc5..ea7c2b6 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -223,8 +223,10 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 384574c..9a8f8c3 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -330,6 +330,12 @@ int of_pci_range_to_resource(struct of_pci_range *range,
  		}
- 
- 		err = of_pci_range_to_resource(&range, dev, res);
--		if (err)
--			goto conversion_failed;
-+		if (err) {
-+			kfree(res);
-+			continue;
+ 		res->start = port;
+ 	} else {
++#ifndef CONFIG_PHYS_ADDR_T_64BIT
++		if (upper_32_bits(range->cpu_addr)) {
++			err = -EINVAL;
++			goto invalid_range;
 +		}
- 
- 		if (resource_type(res) == IORESOURCE_IO) {
- 			if (!io_base) {
++#endif
+ 		res->start = range->cpu_addr;
+ 	}
+ 	res->end = res->start + range->size - 1;
 -- 
 2.4.4
