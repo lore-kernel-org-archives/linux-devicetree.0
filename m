@@ -1,69 +1,79 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
-Date: Wed, 7 Oct 2015 11:26:43 +0200
-Message-ID: <5614E553.6060108@osg.samsung.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
- <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
- <5614BADD.1070307@rock-chips.com> <5614DBE2.6080102@osg.samsung.com>
- <5614DFBC.8060105@rock-chips.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
+ LeMaker BananaPi
+Date: Wed, 7 Oct 2015 10:44:13 +0100
+Message-ID: <20151007094413.GC2278@lukather>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
+ <20150818153631.GH2547@lukather>
+ <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
+ <20151005173957.B1BD16C8150E@dd34104.kasserver.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5614DFBC.8060105@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ghzN8eJ9Qlbqn3iT"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3WS2OYAKGQEWT2V2BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151005173957.B1BD16C8150E-RzmsueL7+k6AvxNu/8lEInnhMCiq3JZZ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Cc: khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Yakir,
+--ghzN8eJ9Qlbqn3iT
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 10/07/2015 11:02 AM, Yakir Yang wrote:
-> Hi Javier,
+Hi Timo,
+
+On Mon, Oct 05, 2015 at 07:39:57PM +0200, Timo Sigurdsson wrote:
+> Hi Kevin,
 > 
-> On 10/07/2015 04:46 PM, Javier Martinez Canillas wrote:
->> Hello Yakir,
->>
->> On 10/07/2015 08:25 AM, Yakir Yang wrote:
->>> Hi all,
->>>
->>> Friendly ping.....   :)
->>>
->>>
->>> Best regards,
->>> - Yakir
->>>
->>>
->> Do you have a tree that I can use to test these patches?
+> Kevin Hilman schrieb am 24.09.2015 19:57:
+> > kernelci.org started finding boot faiulres[1] on bananapi linux-next
+> > around next-20150918, but it was only failing in some labs and not
+> > others.  I finally bisected it down to this patch, which landed in
+> > linux-next in the form of 2d665a8a8350 ARM: dts: sunxi: Add regulators
+> > for LeMaker BananaPi.  Reverting that commit on top of next-20150923
+> > gets my bananapi booting again.
+> > 
+> > Note it's kind of an interesting boot failure.  The kernel boots fully
+> > to a shell, but panics after running a few commands.  In particular
+> > 'dmesg -n1' seems to trigger it usually[2].
+> > 
+> > Kevin
+> > 
+> > [1]
+> > http://kernelci.org/boot/sun7i-a20-bananapi/job/next/kernel/next-20150923/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5602504359b514be146c326f
+> > [2]
+> > http://storage.kernelci.org/next/next-20150923/arm-multi_v7_defconfig/lab-khilman/boot-sun7i-a20-bananapi.html
 > 
-> Wow, thanks a lot, I do have a tree on github [https://github.com/yakir-Yang/linux/tree/analogix_dp],
-> crossing my finger, wish things works......    ;)
->
+> following up on my last email: I'm back from my vacation and I tried to
+> reproduce your problem, but my board doesn't seem to be affected, so I
+> cannot trigger it.
 
-I tried your analogix_dp branch on an Exynos5800 Peach Pi Chromebook
-but the machine didn't boot. Unfortunately I need to do some soldering
-to have a serial console on this board so don't have a kernel boot log.
+weird.
 
-I'll let you know if I can get more info about this issue.
-
-Also, there is Kconfig recursive dependency that you may want to fix:
-
-$ make exynos_defconfig
-drivers/video/fbdev/Kconfig:5:error: recursive dependency detected!
-drivers/video/fbdev/Kconfig:5: symbol FB is selected by DRM_KMS_FB_HELPER
-drivers/gpu/drm/Kconfig:34: symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
-drivers/gpu/drm/Kconfig:28: symbol DRM_KMS_HELPER is selected by DRM_ANALOGIX_DP
-drivers/gpu/drm/bridge/analogix/Kconfig:1: symbol DRM_ANALOGIX_DP is selected by DRM_EXYNOS_DP
-drivers/gpu/drm/exynos/Kconfig:57: symbol DRM_EXYNOS_DP depends on DRM_EXYNOS_FIMD
-drivers/gpu/drm/exynos/Kconfig:19: symbol DRM_EXYNOS_FIMD depends on FB_S3C
-drivers/video/fbdev/Kconfig:2023: symbol FB_S3C depends on FB
- 
-> Thanks,
-> - Yakir
+> I still think that the lower voltages may be the cause of your problem
+> with that specific board, so could you please test the attached patch on
+> top of my patch that you first experienced the problem with? Please let 
+> us know whether this solves your issue or whether we need to dig deeper.
 > 
+> Has anybody else been able to reproduce Kevin's issue?
 
-Best regards,
+I've talked to Kevin yesterday about that issue, and he's been away
+from his boards for quite some time too, so we'll have to wait a bit
+to solve that issue.
+
+Maxime
+
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--ghzN8eJ9Qlbqn3iT--
