@@ -1,55 +1,49 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] ARM: sunxi: Add Reduced Serial Bus support
-Date: Wed, 7 Oct 2015 11:00:01 +0100
-Message-ID: <20151007100001.GD2278@lukather>
-References: <1443700673-24312-1-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Wed, 7 Oct 2015 11:00:17 +0100
+Message-ID: <20151007100017.GB12635@sirena.org.uk>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AkbCVLjbJ9qUtAXD"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIW22OYAKGQEGV3632A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="I3Hu03FJZWOiEBEs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443700673-24312-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
---AkbCVLjbJ9qUtAXD
-Content-Type: text/plain; charset=UTF-8
+
+--I3Hu03FJZWOiEBEs
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Oct 01, 2015 at 07:57:46PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
-> 
-> This is my fifth attempt at adding support for Allwinner's Reduced
-> Serial Bus (RSB), which is used to communicate with PMICs and other
-> peripherals on their newer SoCs, such as the A23/A33/A80.
-> 
-> RSB is a simplified two wire interface using push-pull outputs,
-> supporting multiple slaves, address and data parity checks, and
-> clock speeds up to 20 MHz. The bus only supports simple register
-> read/writes, with possible register sizes of 8/16/32 bits. Access
-> sizes not matching the slave device register sizes result in NACKs
-> or errors. 32 bit registers in devices have yet to be seen.
-> 
-> v4 and later adds a platform driver for the RSB controller under
-> drivers/soc/sunxi, which adds a custom driver type and bus type
-> for slave drivers to use. Custom regmap support is also merged
-> into the controller driver. Currently the driver only exports 2
-> symbols: sunxi_rsb_driver_register() & __devm_regmap_init_sunxi_rsb().
+On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
+> Add additional bindings to allow configuration of the system specific
+> microphone detection settings.
 
-Applied, thanks!
-Maxime
+This all seems pretty much fine to me - the things it is controlling are
+fairly specific to the way the former Wolfson devices do, they only
+really make sense with a fairly particular algorithm which isn't widely
+implemented.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---AkbCVLjbJ9qUtAXD--
+--I3Hu03FJZWOiEBEs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWFO0xAAoJECTWi3JdVIfQdf4H/RIjOPGlzDHwAZGh+dAkkkOI
+iUHARaL5kPP3baFSs8v0WHJ5fCbb4hi8vpIWIBdW7idYz0+G7lr+FeUBSB/i0DJ7
+z3ZiDM5tWt/Ypaq2eRNisK6yxiXEt1miVCjmysskiWgYNZqLMZe8xzKH09pEndQ4
+W0Q4NUXsqBnRwbICGoW7Ekdml5LUUsSjhe8A688yDLlXok4i2D2eK9TvklPRZgvf
+AOGXR2La1JjgKTD1UHRisc4cXq4CNpXYBhQIf8htR3GjIfHIHLuig1wNoI+HKCnz
+uSGZXbAQWOOFYbgOmjp+gLHu914OPDYpPovFZg8DTrnhMnn38vUDgrhs+l6M9WI=
+=FWNl
+-----END PGP SIGNATURE-----
+
+--I3Hu03FJZWOiEBEs--
