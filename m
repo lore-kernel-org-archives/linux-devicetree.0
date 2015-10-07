@@ -1,38 +1,89 @@
-From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: keystone: Fix up missing quotes
-Date: Wed, 7 Oct 2015 10:46:25 -0700
-Message-ID: <56155A71.2030005@oracle.com>
-References: <1444237456-28020-1-git-send-email-nm@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
+ LeMaker BananaPi
+Date: Wed, 7 Oct 2015 18:49:04 +0100
+Message-ID: <20151007174904.GH2278@lukather>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
+ <20150818153631.GH2547@lukather>
+ <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
+ <20151005173957.B1BD16C8150E@dd34104.kasserver.com>
+ <7hzizu924y.fsf@deeprootsystems.com>
+ <20151007154918.D6F856C800D4@dd34104.kasserver.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444237456-28020-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0OWHXb1mYLuhj1Ox"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBENW2WYAKGQETB7ZHWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151007154918.D6F856C800D4-RzmsueL7+k6AvxNu/8lEInnhMCiq3JZZ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Cc: khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/7/15 10:04 AM, Nishanth Menon wrote:
-> Add missing commits for the suggest compatible flags in dt binding.
->
-> Fixes: 8841cbf666d6 ("Documentation: dt: keystone: provide SoC specific compatible flags")
-> Reported-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
->
-> This could be squashed since the original patch was not merged yet..
-> Apologies on the miss. (based on next-20151006)
->
-I don't want to disturbs those tags now. Once the pulls get into the
-queue, I will check if this can be applied on top of that, o.w
-will queue that up later.
+--0OWHXb1mYLuhj1Ox
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thanks !!
+Hi Timo,
 
-Regards,
-Santosh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Oct 07, 2015 at 05:49:18PM +0200, Timo Sigurdsson wrote:
+> Hi Kevin,
+> Hi Maxime,
+> 
+> Kevin Hilman schrieb am 07.10.2015 16:36:
+> 
+> > "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org> writes:
+> >> I still think that the lower voltages may be the cause of your problem
+> >> with that specific board, so could you please test the attached patch on
+> >> top of my patch that you first experienced the problem with? Please let 
+> >> us know whether this solves your issue or whether we need to dig deeper.
+> > 
+> > Thanks for the patch.  Looks like it's the OPPs.
+> > 
+> > I went back to next-20150923 and verified it still fails.  Then, I
+> > applied your patch and saw that it boots just fine.
+> 
+> Good. Then we can easily fix this, I guess.
+> 
+> @Maxime: How should we handle this? In its current form, the patch applies
+> only to the BananaPi dts by overriding the inherited opp from the SoC dtsi.
+> In an earlier discussion, it was said that this can be done, even though it
+> might not be the most elegant approach. But then again, I think it
+> shouldn't be necessary to change the opp in the sun7i-a20.dtsi for all A20
+> boards since this is - to my knowledge - the first and only report that an
+> A20 board has stability issues at the lower voltages (although not too many
+> boards use voltage scaling yet).
+
+If you count only the number of boards, indeed, but if you count the
+number of devices actually used in the field, we cover already a
+significant portion of them.
+
+> So, would you prefer to keep this as a patch for BananaPi only, or
+> change the dtsi for all A20 devices instead?
+
+Yeah, we probably can keep that for bananapi only at the moment, and
+try to generalize that afterwards.
+
+> In case we keep it as it is, what is the correct commit to point to as
+> "Fixes commit ..."? I'd say it fixes the initial opp commit for A20, since
+> that's where these voltages were defined. But then again, if we don't
+> change the dtsi, should I point to my regulator patch instead?
+
+I don't think it fixes anything at this point. We droped your commit
+that was using the A20 OPPs, so in the history so far we don't have
+anything to fix, just enable cpufreq again.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--0OWHXb1mYLuhj1Ox--
