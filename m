@@ -1,65 +1,115 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH v3 4/4] ARM: dts: Enable EC vboot context support on Peach
- boards
-Date: Thu, 08 Oct 2015 07:31:05 +0900
-Message-ID: <56159D29.3090801@kernel.org>
-References: <1442842703-5309-1-git-send-email-emilio.lopez@collabora.co.uk> <1442842703-5309-5-git-send-email-emilio.lopez@collabora.co.uk>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v4 1/5] PCI: Add pci_bus_fixup_irqs().
+Date: Wed, 7 Oct 2015 18:08:47 -0500
+Message-ID: <20151007230847.GG27633@localhost>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+ <1443811443-18878-2-git-send-email-ddaney.cavm@gmail.com>
+ <20151007194426.GF27633@localhost>
+ <56157BC8.3070406@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1442842703-5309-5-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio.lopez@collabora.co.uk>
-Cc: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56157BC8.3070406@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>, Matthew Minter <matt@masarand.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/15 22:38, Emilio L=C3=B3pez wrote:
-> The Peach boards use the EC to store the vboot context information,
-> so add the corresponding properties on the EC node to indicate so.
->=20
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Acked-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
-> ---
->=20
-> Changes from v1:
->  - none
->=20
-> Changes from v2:
->  - collect tags from Krzysztof & Javier
->=20
->  arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
->  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
->  2 files changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/bo=
-ot/dts/exynos5420-peach-pit.dts
-> index 8f4d76c..ac02fb4 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -935,6 +935,7 @@
->  		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
->  		reg =3D <0>;
->  		spi-max-frequency =3D <3125000>;
-> +		google,has-vbc-nvram;
-> =20
->  		controller-data {
->  			samsung,spi-feedback-delay =3D <1>;
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boo=
-t/dts/exynos5800-peach-pi.dts
-> index 7d5b386..b60dec0 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -898,6 +898,7 @@
->  		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
->  		reg =3D <0>;
->  		spi-max-frequency =3D <3125000>;
-> +		google,has-vbc-nvram;
-> =20
->  		controller-data {
->  			samsung,spi-feedback-delay =3D <1>;
+[+cc Matthew]
 
-Applied, thanks.
+On Wed, Oct 07, 2015 at 01:08:40PM -0700, David Daney wrote:
+> On 10/07/2015 12:44 PM, Bjorn Helgaas wrote:
+> >Hi David,
+> >
+> >On Fri, Oct 02, 2015 at 11:43:59AM -0700, David Daney wrote:
+> >>From: David Daney <david.daney@cavium.com>
+> >>
+> >>pci_bus_fixup_irqs() works like pci_fixup_irqs(), except it only does
+> >>the fixups for devices on the specified bus.
+> >>
+> >>Follow-on patch will use the new function.
+> >>
+> >>Signed-off-by: David Daney <david.daney@cavium.com>
+> >>---
+> >>No change from v2.
+> >>
+> >>  drivers/pci/setup-irq.c | 30 ++++++++++++++++++++++++++++++
+> >>  include/linux/pci.h     |  4 ++++
+> >>  2 files changed, 34 insertions(+)
+> >>
+> >>diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+> >>index 95c225b..189ad17 100644
+> >>--- a/drivers/pci/setup-irq.c
+> >>+++ b/drivers/pci/setup-irq.c
+> >>@@ -66,3 +66,33 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+> >>  		pdev_fixup_irq(dev, swizzle, map_irq);
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(pci_fixup_irqs);
+> >>+
+> >>+struct pci_bus_fixup_cb_info {
+> >>+	u8 (*swizzle)(struct pci_dev *, u8 *);
+> >>+	int (*map_irq)(const struct pci_dev *, u8, u8);
+> >>+};
+> >>+
+> >>+static int pci_bus_fixup_irq_cb(struct pci_dev *dev, void *arg)
+> >>+{
+> >>+	struct pci_bus_fixup_cb_info *info = arg;
+> >>+
+> >>+	pdev_fixup_irq(dev, info->swizzle, info->map_irq);
+> >>+	return 0;
+> >>+}
+> >>+
+> >>+/*
+> >>+ * Fixup the irqs only for devices on the given bus using supplied
+> >>+ * swizzle and map_irq function pointers
+> >>+ */
+> >>+void pci_bus_fixup_irqs(struct pci_bus *bus,
+> >>+			u8 (*swizzle)(struct pci_dev *, u8 *),
+> >>+			int (*map_irq)(const struct pci_dev *, u8, u8))
+> >>+{
+> >>+	struct pci_bus_fixup_cb_info info;
+> >>+
+> >>+	info.swizzle = swizzle;
+> >>+	info.map_irq = map_irq;
+> >>+	pci_walk_bus(bus, pci_bus_fixup_irq_cb, &info);
+> >
+> >I don't like the existing pci_fixup_irqs(), so by transitivity, I
+> >don't like pci_bus_fixup_irqs() either.
+> 
+> We are in agreement with respect to this point.
+> 
+> > The problem is that in both
+> >cases this is a one-time pass over the tree, so we don't handle
+> >hot-added devices correctly.
+> >
+> >I think we need to get rid of pci_fixup_irqs() and somehow integrate
+> >it into the pci_device_add() path, where it would be done once for
+> >every device we enumerate.
+> 
+> I also agree with this point.
+> 
+> > If we did that, I don't think you would
+> >need to add pci_bus_fixup_irqs(), would you?
+> 
+> Nope.
+> 
+> However, such a change is essentially untestable by me.  So, I
+> didn't attempt it.   pci_fixup_irqs() is used by alpha, arm, m68k,
+> mips, sh, sparc, tile, unicore32 and other things as well.  If the
+> core pci_device_add() code were to suddenly start doing the fixup,
+> there would be the potential to break all these things I cannot
+> test.
 
-- Kukjin
+Yep, that's certainly a risk.  I can't test all those arches either,
+but I think it's a risk worth taking because the end result is more
+maintainable.
+
+Matthew Minter did some really nice work on this last year, but it got
+stalled somehow.  I wonder if we can resurrect it?  It seems like it
+was pretty close to being ready.  Here's a pointer to the last posting
+I saw:
+
+http://lkml.kernel.org/r/1412222866-21068-1-git-send-email-matt@masarand.com
+
+Bjorn
