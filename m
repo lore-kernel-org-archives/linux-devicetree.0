@@ -1,249 +1,69 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v2 2/3] soc: mediatek: Fix random hang up issue while kernel init
-Date: Wed, 7 Oct 2015 17:14:40 +0800
-Message-ID: <1444209281-25536-3-git-send-email-jamesjj.liao@mediatek.com>
-References: <1444209281-25536-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
+Date: Wed, 7 Oct 2015 11:26:43 +0200
+Message-ID: <5614E553.6060108@osg.samsung.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
+ <5614BADD.1070307@rock-chips.com> <5614DBE2.6080102@osg.samsung.com>
+ <5614DFBC.8060105@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444209281-25536-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5614DFBC.8060105@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In kernel late init, it turns off all unused clocks, which
-needs to access subsystem registers such as VENC and VENC_LT.
+Hello Yakir,
 
-Accessing MT8173 VENC registers needs two top clocks, mm_sel and
-venc_sel. Accessing VENC_LT registers needs mm_sel and venclt_sel.
-So we need to keep these clocks on before accessing their registers.
+On 10/07/2015 11:02 AM, Yakir Yang wrote:
+> Hi Javier,
+> 
+> On 10/07/2015 04:46 PM, Javier Martinez Canillas wrote:
+>> Hello Yakir,
+>>
+>> On 10/07/2015 08:25 AM, Yakir Yang wrote:
+>>> Hi all,
+>>>
+>>> Friendly ping.....   :)
+>>>
+>>>
+>>> Best regards,
+>>> - Yakir
+>>>
+>>>
+>> Do you have a tree that I can use to test these patches?
+> 
+> Wow, thanks a lot, I do have a tree on github [https://github.com/yakir-Yang/linux/tree/analogix_dp],
+> crossing my finger, wish things works......    ;)
+>
 
-This patch keeps venc_sel / venclt_sel clock on when
-VENC / VENC_LT's power is on, to prevent system hang up while
-accessing its registeres.
+I tried your analogix_dp branch on an Exynos5800 Peach Pi Chromebook
+but the machine didn't boot. Unfortunately I need to do some soldering
+to have a serial console on this board so don't have a kernel boot log.
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
----
- drivers/soc/mediatek/mtk-scpsys.c | 67 +++++++++++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 23 deletions(-)
+I'll let you know if I can get more info about this issue.
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 164a7d8..06032ba 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -54,12 +54,16 @@
- #define PWR_STATUS_USB			BIT(25)
+Also, there is Kconfig recursive dependency that you may want to fix:
+
+$ make exynos_defconfig
+drivers/video/fbdev/Kconfig:5:error: recursive dependency detected!
+drivers/video/fbdev/Kconfig:5: symbol FB is selected by DRM_KMS_FB_HELPER
+drivers/gpu/drm/Kconfig:34: symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
+drivers/gpu/drm/Kconfig:28: symbol DRM_KMS_HELPER is selected by DRM_ANALOGIX_DP
+drivers/gpu/drm/bridge/analogix/Kconfig:1: symbol DRM_ANALOGIX_DP is selected by DRM_EXYNOS_DP
+drivers/gpu/drm/exynos/Kconfig:57: symbol DRM_EXYNOS_DP depends on DRM_EXYNOS_FIMD
+drivers/gpu/drm/exynos/Kconfig:19: symbol DRM_EXYNOS_FIMD depends on FB_S3C
+drivers/video/fbdev/Kconfig:2023: symbol FB_S3C depends on FB
  
- enum clk_id {
-+	MT8173_CLK_NONE,
- 	MT8173_CLK_MM,
- 	MT8173_CLK_MFG,
--	MT8173_CLK_NONE,
--	MT8173_CLK_MAX = MT8173_CLK_NONE,
-+	MT8173_CLK_VENC,
-+	MT8173_CLK_VENC_LT,
-+	MT8173_CLK_MAX,
- };
- 
-+#define MAX_CLKS	2
-+
- struct scp_domain_data {
- 	const char *name;
- 	u32 sta_mask;
-@@ -67,7 +71,7 @@ struct scp_domain_data {
- 	u32 sram_pdn_bits;
- 	u32 sram_pdn_ack_bits;
- 	u32 bus_prot_mask;
--	enum clk_id clk_id;
-+	enum clk_id clk_id[MAX_CLKS];
- };
- 
- static const struct scp_domain_data scp_domain_data[] __initconst = {
-@@ -77,7 +81,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_VDE_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(12, 12),
--		.clk_id = MT8173_CLK_MM,
-+		.clk_id = {MT8173_CLK_MM},
- 	},
- 	[MT8173_POWER_DOMAIN_VENC] = {
- 		.name = "venc",
-@@ -85,7 +89,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_VEN_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(15, 12),
--		.clk_id = MT8173_CLK_MM,
-+		.clk_id = {MT8173_CLK_MM, MT8173_CLK_VENC},
- 	},
- 	[MT8173_POWER_DOMAIN_ISP] = {
- 		.name = "isp",
-@@ -93,7 +97,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_ISP_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(13, 12),
--		.clk_id = MT8173_CLK_MM,
-+		.clk_id = {MT8173_CLK_MM},
- 	},
- 	[MT8173_POWER_DOMAIN_MM] = {
- 		.name = "mm",
-@@ -101,7 +105,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_DIS_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(12, 12),
--		.clk_id = MT8173_CLK_MM,
-+		.clk_id = {MT8173_CLK_MM},
- 		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
- 			MT8173_TOP_AXI_PROT_EN_MM_M1,
- 	},
-@@ -111,7 +115,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_VEN2_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(15, 12),
--		.clk_id = MT8173_CLK_MM,
-+		.clk_id = {MT8173_CLK_MM, MT8173_CLK_VENC_LT},
- 	},
- 	[MT8173_POWER_DOMAIN_AUDIO] = {
- 		.name = "audio",
-@@ -119,7 +123,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_AUDIO_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(15, 12),
--		.clk_id = MT8173_CLK_NONE,
-+		.clk_id = {MT8173_CLK_NONE},
- 	},
- 	[MT8173_POWER_DOMAIN_USB] = {
- 		.name = "usb",
-@@ -127,7 +131,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_USB_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(15, 12),
--		.clk_id = MT8173_CLK_NONE,
-+		.clk_id = {MT8173_CLK_NONE},
- 	},
- 	[MT8173_POWER_DOMAIN_MFG_ASYNC] = {
- 		.name = "mfg_async",
-@@ -135,7 +139,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_MFG_ASYNC_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = 0,
--		.clk_id = MT8173_CLK_MFG,
-+		.clk_id = {MT8173_CLK_MFG},
- 	},
- 	[MT8173_POWER_DOMAIN_MFG_2D] = {
- 		.name = "mfg_2d",
-@@ -143,7 +147,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_MFG_2D_PWR_CON,
- 		.sram_pdn_bits = GENMASK(11, 8),
- 		.sram_pdn_ack_bits = GENMASK(13, 12),
--		.clk_id = MT8173_CLK_NONE,
-+		.clk_id = {MT8173_CLK_NONE},
- 	},
- 	[MT8173_POWER_DOMAIN_MFG] = {
- 		.name = "mfg",
-@@ -151,7 +155,7 @@ static const struct scp_domain_data scp_domain_data[] __initconst = {
- 		.ctl_offs = SPM_MFG_PWR_CON,
- 		.sram_pdn_bits = GENMASK(13, 8),
- 		.sram_pdn_ack_bits = GENMASK(21, 16),
--		.clk_id = MT8173_CLK_NONE,
-+		.clk_id = {MT8173_CLK_NONE},
- 		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
- 			MT8173_TOP_AXI_PROT_EN_MFG_M0 |
- 			MT8173_TOP_AXI_PROT_EN_MFG_M1 |
-@@ -166,7 +170,7 @@ struct scp;
- struct scp_domain {
- 	struct generic_pm_domain genpd;
- 	struct scp *scp;
--	struct clk *clk;
-+	struct clk *clk[MAX_CLKS];
- 	u32 sta_mask;
- 	void __iomem *ctl_addr;
- 	u32 sram_pdn_bits;
-@@ -212,11 +216,16 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	u32 sram_pdn_ack = scpd->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret;
-+	int i;
-+
-+	for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++) {
-+		ret = clk_prepare_enable(scpd->clk[i]);
-+		if (ret) {
-+			for (--i; i >= 0; i--)
-+				clk_disable_unprepare(scpd->clk[i]);
- 
--	if (scpd->clk) {
--		ret = clk_prepare_enable(scpd->clk);
--		if (ret)
- 			goto err_clk;
-+		}
- 	}
- 
- 	val = readl(ctl_addr);
-@@ -282,7 +291,10 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 	return 0;
- 
- err_pwr_ack:
--	clk_disable_unprepare(scpd->clk);
-+	for (i = MAX_CLKS - 1; i >= 0; i--) {
-+		if (scpd->clk[i])
-+			clk_disable_unprepare(scpd->clk[i]);
-+	}
- err_clk:
- 	dev_err(scp->dev, "Failed to power on domain %s\n", genpd->name);
- 
-@@ -299,6 +311,7 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 	u32 pdn_ack = scpd->sram_pdn_ack_bits;
- 	u32 val;
- 	int ret;
-+	int i;
- 
- 	if (scpd->bus_prot_mask) {
- 		ret = mtk_infracfg_set_bus_protection(scp->infracfg,
-@@ -360,8 +373,8 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 			expired = true;
- 	}
- 
--	if (scpd->clk)
--		clk_disable_unprepare(scpd->clk);
-+	for (i = 0; i < MAX_CLKS && scpd->clk[i]; i++)
-+		clk_disable_unprepare(scpd->clk[i]);
- 
- 	return 0;
- 
-@@ -375,7 +388,7 @@ static int __init scpsys_probe(struct platform_device *pdev)
- {
- 	struct genpd_onecell_data *pd_data;
- 	struct resource *res;
--	int i, ret;
-+	int i, j, ret;
- 	struct scp *scp;
- 	struct clk *clk[MT8173_CLK_MAX];
- 
-@@ -405,6 +418,14 @@ static int __init scpsys_probe(struct platform_device *pdev)
- 	if (IS_ERR(clk[MT8173_CLK_MFG]))
- 		return PTR_ERR(clk[MT8173_CLK_MFG]);
- 
-+	clk[MT8173_CLK_VENC] = devm_clk_get(&pdev->dev, "venc");
-+	if (IS_ERR(clk[MT8173_CLK_VENC]))
-+		return PTR_ERR(clk[MT8173_CLK_VENC]);
-+
-+	clk[MT8173_CLK_VENC_LT] = devm_clk_get(&pdev->dev, "venc_lt");
-+	if (IS_ERR(clk[MT8173_CLK_VENC_LT]))
-+		return PTR_ERR(clk[MT8173_CLK_VENC_LT]);
-+
- 	scp->infracfg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
- 			"infracfg");
- 	if (IS_ERR(scp->infracfg)) {
-@@ -428,8 +449,8 @@ static int __init scpsys_probe(struct platform_device *pdev)
- 		scpd->sram_pdn_bits = data->sram_pdn_bits;
- 		scpd->sram_pdn_ack_bits = data->sram_pdn_ack_bits;
- 		scpd->bus_prot_mask = data->bus_prot_mask;
--		if (data->clk_id != MT8173_CLK_NONE)
--			scpd->clk = clk[data->clk_id];
-+		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++)
-+			scpd->clk[j] = clk[data->clk_id[j]];
- 
- 		genpd->name = data->name;
- 		genpd->power_off = scpsys_power_off;
+> Thanks,
+> - Yakir
+> 
+
+Best regards,
 -- 
-1.9.1
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
