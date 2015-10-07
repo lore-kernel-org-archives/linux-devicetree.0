@@ -1,19 +1,15 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
- LeMaker BananaPi
-Date: Wed, 7 Oct 2015 10:44:13 +0100
-Message-ID: <20151007094413.GC2278@lukather>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
- <20150818153631.GH2547@lukather>
- <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
- <20151005173957.B1BD16C8150E@dd34104.kasserver.com>
+Subject: Re: [PATCH v5 0/5] ARM: sunxi: Add Reduced Serial Bus support
+Date: Wed, 7 Oct 2015 11:00:01 +0100
+Message-ID: <20151007100001.GD2278@lukather>
+References: <1443700673-24312-1-git-send-email-wens@csie.org>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ghzN8eJ9Qlbqn3iT"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3WS2OYAKGQEWT2V2BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="AkbCVLjbJ9qUtAXD"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIW22OYAKGQEGV3632A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151005173957.B1BD16C8150E-RzmsueL7+k6AvxNu/8lEInnhMCiq3JZZ@public.gmane.org>
+In-Reply-To: <1443700673-24312-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -21,59 +17,39 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Cc: khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---ghzN8eJ9Qlbqn3iT
+--AkbCVLjbJ9qUtAXD
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi Timo,
-
-On Mon, Oct 05, 2015 at 07:39:57PM +0200, Timo Sigurdsson wrote:
-> Hi Kevin,
+On Thu, Oct 01, 2015 at 07:57:46PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
 > 
-> Kevin Hilman schrieb am 24.09.2015 19:57:
-> > kernelci.org started finding boot faiulres[1] on bananapi linux-next
-> > around next-20150918, but it was only failing in some labs and not
-> > others.  I finally bisected it down to this patch, which landed in
-> > linux-next in the form of 2d665a8a8350 ARM: dts: sunxi: Add regulators
-> > for LeMaker BananaPi.  Reverting that commit on top of next-20150923
-> > gets my bananapi booting again.
-> > 
-> > Note it's kind of an interesting boot failure.  The kernel boots fully
-> > to a shell, but panics after running a few commands.  In particular
-> > 'dmesg -n1' seems to trigger it usually[2].
-> > 
-> > Kevin
-> > 
-> > [1]
-> > http://kernelci.org/boot/sun7i-a20-bananapi/job/next/kernel/next-20150923/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5602504359b514be146c326f
-> > [2]
-> > http://storage.kernelci.org/next/next-20150923/arm-multi_v7_defconfig/lab-khilman/boot-sun7i-a20-bananapi.html
+> This is my fifth attempt at adding support for Allwinner's Reduced
+> Serial Bus (RSB), which is used to communicate with PMICs and other
+> peripherals on their newer SoCs, such as the A23/A33/A80.
 > 
-> following up on my last email: I'm back from my vacation and I tried to
-> reproduce your problem, but my board doesn't seem to be affected, so I
-> cannot trigger it.
-
-weird.
-
-> I still think that the lower voltages may be the cause of your problem
-> with that specific board, so could you please test the attached patch on
-> top of my patch that you first experienced the problem with? Please let 
-> us know whether this solves your issue or whether we need to dig deeper.
+> RSB is a simplified two wire interface using push-pull outputs,
+> supporting multiple slaves, address and data parity checks, and
+> clock speeds up to 20 MHz. The bus only supports simple register
+> read/writes, with possible register sizes of 8/16/32 bits. Access
+> sizes not matching the slave device register sizes result in NACKs
+> or errors. 32 bit registers in devices have yet to be seen.
 > 
-> Has anybody else been able to reproduce Kevin's issue?
+> v4 and later adds a platform driver for the RSB controller under
+> drivers/soc/sunxi, which adds a custom driver type and bus type
+> for slave drivers to use. Custom regmap support is also merged
+> into the controller driver. Currently the driver only exports 2
+> symbols: sunxi_rsb_driver_register() & __devm_regmap_init_sunxi_rsb().
 
-I've talked to Kevin yesterday about that issue, and he's been away
-from his boards for quite some time too, so we'll have to wait a bit
-to solve that issue.
-
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---ghzN8eJ9Qlbqn3iT--
+--AkbCVLjbJ9qUtAXD--
