@@ -1,87 +1,57 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ASoC: da7213: Add bindings documentation for codec driver
-Date: Wed, 7 Oct 2015 11:22:04 -0500
-Message-ID: <CAL_JsqL0R0jVSm6w0V=F5c1Odw3RKATjcq96QaUcA99JJmD2Xw@mail.gmail.com>
-References: <cover.1444223905.git.Adam.Thomson.Opensource@diasemi.com> <bfc7c5e61d8c398bc4cfa56a7908032dc3bdf82f.1444223905.git.Adam.Thomson.Opensource@diasemi.com>
+From: dwalker@fifo99.com
+Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
+Date: Wed, 7 Oct 2015 09:27:55 -0700
+Message-ID: <20151007162755.GA23283@fifo99.com>
+References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
+ <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bfc7c5e61d8c398bc4cfa56a7908032dc3bdf82f.1444223905.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Daniel Walker <danielwa@cisco.com>, xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 7, 2015 at 8:27 AM, Adam Thomson
-<Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org> wrote:
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/da7213.txt | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/da7213.txt
->
-> diff --git a/Documentation/devicetree/bindings/sound/da7213.txt b/Documentation/devicetree/bindings/sound/da7213.txt
-> new file mode 100644
-> index 0000000..7280e82
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/da7213.txt
-> @@ -0,0 +1,41 @@
-> +Dialog Semiconductor DA7213 Audio Codec bindings
-> +
-> +======
-> +
-> +Required properties:
-> +- compatible : Should be "dlg,da7213"
-> +- reg: Specifies the I2C slave address
-> +
-> +Optional properties:
-> +- clocks : phandle and clock specifier for codec MCLK.
-> +- clock-names : Clock name string for 'clocks' attribute, should be "mclk".
-> +
-> +- dlg,micbias1-lvl : Voltage (mV) for Mic Bias 1
-> +       [<1600>, <2200>, <2500>, <3000>]
-> +- dlg,micbias2-lvl : Voltage (mV) for Mic Bias 2
-> +       [<1600>, <2200>, <2500>, <3000>]
+On Tue, Oct 06, 2015 at 12:14:43PM -0500, Rob Herring wrote:
+> On Tue, Oct 6, 2015 at 10:47 AM, Daniel Walker <danielwa@cisco.com> wrote:
+> > It looks like there's some seepage of cmdline stuff into
+> > the generic device tree code. This conflicts with the
+> > generic cmdline implementation so I remove it in the case
+> > when that's enabled.
+> 
+> Nice series in general. I've had passing desire to do this every time
+> I run into the command line code.
+> 
+> The DT handling of the command line is generic across architectures.
+> The current design is working around that the kernel command line code
+> is not that way. I think we can take this a bit further by making the
+> generic DT code add the command line string directly rather than
+> relying on the arch to do that. Then we can remove all command line
+> handling from the arch code. I would also look at whether we can make
+> boot_command_line static rather than directly accessed. We might have
+> to leave it public for now, but could treat it as static for generic
+> cmdline case.
+> 
 
-Please append the units (-microvolt).
+Sorry I didn't respond sooner. I was waiting to see if there were more replies.
 
-> +- dlg,dmic-data-sel : DMIC channel select based on clock edge.
-> +       ["lrise_rfall", "lfall_rrise"]
-> +- dlg,dmic-samplephase : When to sample audio from DMIC.
-> +       ["on_clkedge", "between_clkedge"]
+One of my colleague suggested something similar, I was reluctant to change anything
+prior to sending it out so I could get more feedback on the direction.
 
-How about boolean for these two.
+So your suggesting this patch be something like,
 
-> +- dlg,dmic-clkrate : DMIC clock frequency (MHz).
-> +       [<1500000>, <3000000>]
+#ifdef CONFIG_GENERIC_CMDLINE
+// call generic cmdline functions
+#else
+// keep what's there currently
+#endif
 
-So 1.5GHz or 3GHz?
+Then remove the arch specific generic cmdline changes in the architecture code for the DT path.. 
+Most of them have two places where they add in the command line. One from the device tree, and
+another place that's from the bootloader. For example , ARM has the device tree call, then another
+for atags. I don't think these device tree changes would allow us to remove the atags version, also
+the boot_command_line wouldn't be able to be static.
 
-Add units (-hz).
-
-> +
-> +======
-> +
-> +Example:
-> +
-> +       codec_i2c: da7213@1a {
-> +               compatible = "dlg,da7213";
-> +               reg = <0x1a>;
-> +
-> +               clocks = <&clks 201>;
-> +               clock-names = "mclk";
-> +
-> +               dlg,micbias1-lvl = <2500>;
-> +               dlg,micbias2-lvl = <2500>;
-> +
-> +               dlg,dmic-data-sel = "lrise_rfall";
-> +               dlg,dmic-samplephase = "between_clkedge";
-> +               dlg,dmic-clkrate = <3000000>;
-> +       };
-> --
-> 1.9.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Daniel
