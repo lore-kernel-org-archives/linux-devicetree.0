@@ -1,34 +1,43 @@
 From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH 0/2] PCI: of: Fix handling 64-bit PCI resources on non-LPAE
- kernels
-Date: Wed, 07 Oct 2015 13:49:19 +0300
-Message-ID: <cover.1444214119.git.p.fedin@samsung.com>
+Subject: [PATCH 2/2] PCI: of: Ignore resources with failed translation
+Date: Wed, 07 Oct 2015 13:49:21 +0300
+Message-ID: <4d98be5a58845f8ee0ffdbefb519486986f36bf5.1444214119.git.p.fedin@samsung.com>
+References: <cover.1444214119.git.p.fedin@samsung.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <cover.1444214119.git.p.fedin@samsung.com>
+In-reply-to: <cover.1444214119.git.p.fedin@samsung.com>
+References: <cover.1444214119.git.p.fedin@samsung.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Peter Maydell <peter.maydell@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The initial aim of this series is to fix long-standing problem with generic
-PCI host controller, triggered by ARM "virt" machine in the recent qemu.
-Since v2.4.50 qemu adds support for the second, large PCI MMIO window,
-which resides in 64-bit address space. This series addresses problems,
-which are triggered on non-LPAE kernels by this configuration.
+This patch allows PCI host controller to function even if part of resources
+is unusable for some reason. An example is non-LPAE kernel on a machine
+which has some 64-bit resources. Unusable resources will be just skipped
+instead of a complete failure.
 
-These patches do not depend on each other and can be applied individually.
-The first adds missing recognition of 64-bit resources (which is actually
-a bug). The second one changes the code to ignore unaccessible resources
-instead of completely bailing out. Since it touches generic of_pci code,
-the fix is expected to be applied to all drivers which use
-of_pci_get_host_bridge_resources().
+Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
+---
+ drivers/of/of_pci.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Pavel Fedin (2):
-  PCI: of: Add 64-bit address recognition without LPAE support
-  PCI: of: Ignore resources with failed translation
-
- drivers/of/address.c | 6 ++++++
- drivers/of/of_pci.c  | 6 ++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 5751dc5..ea7c2b6 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -223,8 +223,10 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 		}
+ 
+ 		err = of_pci_range_to_resource(&range, dev, res);
+-		if (err)
+-			goto conversion_failed;
++		if (err) {
++			kfree(res);
++			continue;
++		}
+ 
+ 		if (resource_type(res) == IORESOURCE_IO) {
+ 			if (!io_base) {
 -- 
 2.4.4
