@@ -1,30 +1,58 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v2 0/3] ASoC: da7213: Add DT support for codec
-Date: Wed, 7 Oct 2015 14:30:51 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D460879F@SW-EX-MBX01.diasemi.com>
-References: <cover.1444223905.git.Adam.Thomson.Opensource@diasemi.com>
- <20151007141039.GL12635@sirena.org.uk>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v5 3/3] PCI: st: Provide support for the sti PCIe controller
+Date: Wed, 7 Oct 2015 16:32:16 +0200
+Message-ID: <CAG374jAnKQCerh3nBX9WsmwP4g6uPLKPSZ2EhhwPa-i89RsyZQ@mail.gmail.com>
+References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1444118168-13086-4-git-send-email-gabriel.fernandez@linaro.org> <5139149.TmJY1YjqAU@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151007141039.GL12635-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5139149.TmJY1YjqAU@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "kernel@stlinux.com" <kernel@stlinux.com>, Viresh Kumar <viresh.kumar@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sachin Kamat <sachin.kamat@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Phil Edworthy <phil.edworthy@renesas.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Muralidharan Karicheri <m-karicheri2@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>T
 List-Id: devicetree@vger.kernel.org
 
-T24gT2N0b2JlciAwNywgMjAxNSAxNToxMSwgTWFyayBCcm93biB3cm90ZToNCg0KPiA+IEFkYW0g
-VGhvbXNvbiAoMyk6DQo+ID4gICBBU29DOiBkYTcyMTM6IEFkZCBEVCBzdXBwb3J0IHRvIGNvZGVj
-IGRyaXZlcg0KPiA+ICAgQVNvQzogZGE3MjEzOiBBZGQgc3VwcG9ydCB0byBoYW5kbGUgbWNsayBk
-YXRhIHByb3ZpZGVkIHRvIGRyaXZlcg0KPiA+ICAgQVNvQzogZGE3MjEzOiBBZGQgYmluZGluZ3Mg
-ZG9jdW1lbnRhdGlvbiBmb3IgY29kZWMgZHJpdmVyDQo+IA0KPiBQbGVhc2UgcmVtZW1iZXIgdG8g
-c2VuZCB0aGUgRFQgYmluZGluZyBiZWZvcmUgdGhlIGNvZGUgYXMgaXMgbm9ybWFsLA0KPiB0aGlz
-IGhlbHBzIHJldmlldyB0aGUgY29kZSBhcyB3ZSBrbm93IGluIGFkdmFuY2Ugd2hhdCB0aGUgY29k
-ZSBpcw0KPiBzdXBwb3NlZCB0byBkby4NCg0KT2ssIHVuZGVyc3Rvb2QuIFdpbGwgbWFrZSBzdXJl
-IGluIHRoZSBmdXR1cmUgSSBvcmRlciB0aGVtIHRoaXMgd2F5LiBUaGFua3MuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 6 October 2015 at 23:01, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 06 October 2015 09:56:08 Gabriel Fernandez wrote:
+>> +
+>> +/*
+>> + * On ARM platforms, we actually get a bus error returned when the PCIe IP
+>> + * returns a UR or CRS instead of an OK.
+>> + */
+>> +static int st_pcie_abort_handler(unsigned long addr, unsigned int fsr,
+>> +                                struct pt_regs *regs)
+>> +{
+>> +       return 0;
+>> +}
+>>
+>
+> I'm not sure if we discussed this already for this driver. Usually
+> you should have a register in the PCI host that you can check to see
+> what caused the abort.
+>
+> Try to make this as narrow as possible so you return nonzero for
+> any abort except the one you actually try to prevent.
+>
+>         Arnd
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+Hi Arnd,
+
+Yes we already discussed about that:
+http://www.spinics.net/lists/arm-kernel/msg393705.html
+
+We can probably improve the abort handling once the patch below will be merged
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/366215.html
+
+As imx6 does the same, does it sound reasonable to keep this approach
+of the st driver and start discussing about generic way to handle
+abort for DW pci driver ?
+
+Best regards
+
+Gabriel
