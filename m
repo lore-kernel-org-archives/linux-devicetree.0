@@ -1,225 +1,243 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v2] firmware: qcom: scm: Convert to platform driver
-Date: Wed,  7 Oct 2015 00:42:28 -0500
-Message-ID: <1444196548-1360-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Clark <robdclark@gmail.com>, Andy Gross <agross@codeaurora.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
+Date: Wed, 07 Oct 2015 14:25:33 +0800
+Message-ID: <5614BADD.1070307@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch creates a platform driver for the SCM so that we can adequately
-manage resources.  This removes clients having to carry the necessary
-clocks to use the SCM resources.
+Hi all,
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- .../devicetree/bindings/firmware/qcom,scm.txt      |   25 ++++
- drivers/firmware/qcom_scm.c                        |  135 ++++++++++++++++++--
- 2 files changed, 152 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+Friendly ping.....   :)
 
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-new file mode 100644
-index 0000000..debcd32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -0,0 +1,25 @@
-+QCOM Secure Channel Manager (SCM)
-+
-+Qualcomm processors include an interface to communicate to the secure firmware.
-+This interface allows for clients to request different types of actions.  These
-+can include CPU power up/down, HDCP requests, loading of firmware, and other
-+assorted actions.
-+
-+Required properties:
-+- compatible: must contain "qcom,scm"
-+- clocks: Should contain the core, iface, and bus clocks.
-+- clock-names: Must contain "core" for the core clock, "iface" for the interface
-+  clock and "bus" for the bus clock.
-+
-+Example:
-+
-+	firmware {
-+		compatible = "simple-bus";
-+
-+		scm {
-+			compatible = "qcom,scm";
-+			clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
-+			clock-names = "core", "bus", "iface";
-+		};
-+	};
-+
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 45c008d..7c4ec48 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -10,19 +10,57 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-- * 02110-1301, USA.
-  */
--
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
- #include <linux/types.h>
- #include <linux/qcom_scm.h>
-+#include <linux/of.h>
-+#include <linux/clk.h>
- 
- #include "qcom_scm.h"
- 
-+struct qcom_scm {
-+	struct clk *core_clk;
-+	struct clk *iface_clk;
-+	struct clk *bus_clk;
-+};
-+
-+static struct qcom_scm *__scm;
-+
-+static int qcom_scm_clk_enable(void)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(__scm->core_clk);
-+	if (ret)
-+		goto bail;
-+	ret = clk_prepare_enable(__scm->iface_clk);
-+	if (ret)
-+		goto disable_core;
-+	ret = clk_prepare_enable(__scm->bus_clk);
-+	if (ret)
-+		goto disable_iface;
-+
-+	return 0;
-+
-+disable_iface:
-+	clk_disable_unprepare(__scm->iface_clk);
-+disable_core:
-+	clk_disable_unprepare(__scm->core_clk);
-+bail:
-+	return ret;
-+}
-+
-+static void qcom_scm_clk_disable(void)
-+{
-+	clk_disable_unprepare(__scm->core_clk);
-+	clk_disable_unprepare(__scm->iface_clk);
-+	clk_disable_unprepare(__scm->bus_clk);
-+}
-+
- /**
-  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-  * @entry: Entry point function for the cpus
-@@ -72,11 +110,17 @@ EXPORT_SYMBOL(qcom_scm_cpu_power_down);
-  */
- bool qcom_scm_hdcp_available(void)
- {
--	int ret;
-+	int ret = qcom_scm_clk_enable();
-+
-+	if (ret)
-+		goto clk_err;
- 
- 	ret = __qcom_scm_is_call_available(QCOM_SCM_SVC_HDCP,
--		QCOM_SCM_CMD_HDCP);
-+						QCOM_SCM_CMD_HDCP);
- 
-+	qcom_scm_clk_disable();
-+
-+clk_err:
- 	return (ret > 0) ? true : false;
- }
- EXPORT_SYMBOL(qcom_scm_hdcp_available);
-@@ -91,6 +135,81 @@ EXPORT_SYMBOL(qcom_scm_hdcp_available);
-  */
- int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
- {
--	return __qcom_scm_hdcp_req(req, req_cnt, resp);
-+	int ret = qcom_scm_clk_enable();
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = __qcom_scm_hdcp_req(req, req_cnt, resp);
-+	qcom_scm_clk_disable();
-+	return ret;
- }
- EXPORT_SYMBOL(qcom_scm_hdcp_req);
-+
-+/**
-+ * qcom_scm_is_available() - Checks if SCM is available
-+ */
-+bool qcom_scm_is_available(void)
-+{
-+	return !!__scm;
-+}
-+EXPORT_SYMBOL(qcom_scm_is_available);
-+
-+static int qcom_scm_probe(struct platform_device *pdev)
-+{
-+	struct qcom_scm *scm;
-+	long rate;
-+	int ret;
-+
-+	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
-+	if (!scm)
-+		return -ENOMEM;
-+
-+	scm->core_clk = devm_clk_get(&pdev->dev, "core");
-+	if (IS_ERR(scm->core_clk)) {
-+		if (PTR_ERR(scm->core_clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to acquire core clk\n");
-+		return PTR_ERR(scm->core_clk);
-+	}
-+
-+	scm->iface_clk = devm_clk_get(&pdev->dev, "iface");
-+	if (IS_ERR(scm->iface_clk)) {
-+		if (PTR_ERR(scm->iface_clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to acquire iface clk\n");
-+		return PTR_ERR(scm->iface_clk);
-+	}
-+
-+	scm->bus_clk = devm_clk_get(&pdev->dev, "bus");
-+	if (IS_ERR(scm->bus_clk)) {
-+		if (PTR_ERR(scm->bus_clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to acquire bus clk\n");
-+		return PTR_ERR(scm->bus_clk);
-+	}
-+
-+	/* vote for max clk rate for highest performance */
-+	rate = clk_round_rate(scm->core_clk, INT_MAX);
-+	ret = clk_set_rate(scm->core_clk, rate);
-+	if (ret)
-+		return ret;
-+
-+	__scm = scm;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id qcom_scm_dt_match[] = {
-+	{ .compatible = "qcom,scm",},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
-+
-+static struct platform_driver qcom_scm_driver = {
-+	.driver = {
-+		.name	= "qcom_scm",
-+		.of_match_table = qcom_scm_dt_match,
-+	},
-+	.probe = qcom_scm_probe,
-+};
-+
-+builtin_platform_driver(qcom_scm_driver);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+
+Best regards,
+- Yakir
+
+
+On 09/22/2015 03:20 PM, Yakir Yang wrote:
+> Hi all,
+>
+>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
+> share the same IP, so a lot of parts can be re-used. I split the common
+> code into bridge directory, then rk3288 and exynos only need to keep
+> some platform code. Cause I can't find the exact IP name of exynos dp
+> controller, so I decide to name dp core driver with "analogix" which I
+> find in rk3288 eDP TRM :)
+>
+> This time I create this version on linux-next branch (tag is next-20150918),
+> and also applied this version to Heiko github eDP branch to verify the function.
+> (https://github.com/mmind/linux-rockchip/tree/tmp/edp-with-veyron)
+> Glad to say my chromebook "cnm,n116bgeea2" eDP panel just lighted rightly on
+> Heiko branch. And after back port this series to chromeos-3.14 tree, my rk3288
+> SDK board still can light my 2K DisplayPort monitor. So this time would be okay
+> on mainline kernel and chromeos-3.14 tree. ;)
+>
+> Due to no Exynos board in my side, so I haven't verified the eDP function on
+> samsung platform, I only ensure that there are no obvious compiled error. Any
+> help would be greatly appreciated. :)
+>
+> Thanks,
+> - Yakir
+>
+> Changes in v5:
+> - Correct the check condition of gpio_is_valid when driver try to get
+>    the "hpd-gpios" DT propery. (Heiko)
+> - Move the platform attach callback in the front of core driver bridge
+>    attch function. Cause once platform failed at attach, core driver should
+>    still failed, so no need to init connector before platform attached (Krzysztof)
+> - Keep code style no changes with the previous exynos_dp_code.c in this
+>    patch, and update commit message about the new export symbol (Krzysztof)
+> - Gather the device type patch (v4 11/16) into this one. (Krzysztof)
+> - leave out the connector registration to analogix platform driver. (Thierry)
+> - Resequence this patch after analogix_dp driver have been split
+>    from exynos_dp code, and rephrase reasonable commit message, and
+>    remove some controversial style (Krzysztof)
+>      -		analogix_dp_write_byte_to_dpcd(
+>      - 				dp, DP_TEST_RESPONSE,
+>      +		analogix_dp_write_byte_to_dpcd(dp,
+>      +				DP_TEST_RESPONSE,
+> 				DP_TEST_EDID_CHECKSUM_WRITE);
+> - Switch video timing type to "u32", so driver could use "of_property_read_u32"
+>    to get the backword timing values. Krzysztof suggest me that driver could use
+>    the "of_property_read_bool" to get backword timing values, but that interfacs
+>    would modify the original drm_display_mode timing directly (whether those
+>    properties exists or not).
+> - Correct the misspell in commit message. (Krzysztof)
+> - Remove the empty line at the end of document, and correct the endpoint
+>    numbers in the example DT node, and remove the regulator iomux setting
+>    in driver code while using the pinctl in devicetree instead. (Heiko)
+> - Add device type declared, cause the previous "platform device type
+>    support (v4 11/16)" already merge into (v5 02/14).
+> - Implement connector registration code. (Thierry)
+> - Split binding doc's from driver changes. (Rob)
+> - Add eDP hotplug pinctrl property. (Heiko)
+> - Remove "reg" DT property, cause driver could poweron/poweroff phy via
+>    the exist "grf" syscon already. And rename the example DT node from
+>    "edp_phy: phy@ff770274" to "edp_phy: edp-phy" directly. (Heiko)
+> - Add deivce_node at the front of driver, update phy_ops type from "static
+>    struct" to "static const struct". And correct the input paramters of
+>    devm_phy_create() interfaces. (Heiko)
+> - Split binding doc's from driver changes. (Rob)
+> - Update the rockchip,grf explain in document, and correct the clock required
+>    elemets in document. (Rob & Heiko)
+> - Fix compiled error (Heiko)
+> - Using the connector display info message to configure eDP driver input
+>    video mode, but hard code CRTC video output mode to RGBaaa.
+>
+> Changes in v4:
+> - Update "analogix,hpd-gpios" to "hpd-gpios" DT propery. (Rob)
+> - Rename "analogix_dp-exynos.c" file name to "exynos_dp.c" (Jingoo)
+> - Create a separate folder for analogix code in bridge/ (Archit)
+> - Update commit message more readable. (Jingoo)
+> - Adjust the order from 05 to 04
+> - Provide backword compatibility with samsung. (Krzysztof)
+> - Split all DTS changes, and provide backward compatibility. Mark old
+>    properties as deprecated but still support them. (Krzysztof)
+> - Update "analogix,hpd-gpio" to "hpd-gpios" prop name. (Rob)
+> - Deprecated some properties which could parsed from Edid/Mode/DPCD. (Thierry)
+>      "analogix,color-space" & "analogix,color-depth"   &
+>      "analogix,link-rate"   & "analogix,lane-count"    &
+>      "analogix,ycbcr-coeff" & "analogix,dynamic-range" &
+>      "vsync-active-high"    & "hsync-active-high"      & "interlaces"
+> - Separate all DTS changes to a separate patch. (Krzysztof)
+> - Remove some deprecated DT properties in rockchip dp document.
+> - Add commit message, and remove the redundant rockchip_dp_phy_init()
+>    function, move those code to probe() method. And remove driver .owner
+>    number. (Kishon)
+> - Seprate the link-rate and lane-count limit out with the device_type
+>    flag. (Thierry)
+> - Take Jingoo suggest, add commit messages.
+> - Call drm_panel_prepare() in .get_modes function, ensure panel should
+>    power on before driver try to read edid message.
+>
+> Changes in v3:
+> - Move exynos's video_timing code to analogix_dp-exynos platform driver,
+>    add get_modes method to struct analogix_dp_plat_data. (Thierry)
+> - Rename some "samsung*" dts propery to "analogix*". (Heiko)
+> - The link_rate and lane_count shouldn't config to the DT property value
+>    directly, but we can take those as hardware limite. For example, RK3288
+>    only support 4 physical lanes of 2.7/1.62 Gbps/lane, so DT property would
+>    like "link-rate = 0x0a" "lane-count = 4". (Thierry)
+> - Dynamic parse video timing info from struct drm_display_mode and
+>    struct drm_display_info. (Thierry)
+> - Add devicetree binding documents. (Heiko)
+> - Remove sync pol & colorimetry properies from the new analogix dp driver
+>    devicetree binding. (Thierry)
+> - Update the exist exynos dtsi file with the latest DP DT properies.
+> - Leave "sclk_edp_24m" to rockchip dp phy driver which name to "24m",
+>    and leave "sclk_edp" to analogix dp core driver which name to "dp",
+>    and leave "pclk_edp" to rockchip dp platform driver which name to
+>    "pclk". (Thierry & Heiko)
+> - Add devicetree binding document. (Heiko)
+> - Remove "rockchip,panel" DT property, take use of remote point to get panel
+>    node. (Heiko)
+> - Add the new function point dp_platdata->get_modes() init.
+> - Suggest, add rockchip dp phy driver, collect the phy clocks and
+>    power control. (Heiko)
+> - Add "analogix,need-force-hpd" to indicate whether driver need foce
+>    hpd when hpd detect failed.
+> - move dp hpd detect to connector detect function.
+> - Add edid modes parse support
+>
+> Changes in v2:
+> - Keep author name list no changed (Jingoo)
+> - Remove new copyright (Jingoo)
+> - Fix compiled failed due to analogix_dp_device misspell
+> - Improved commit message more readable, and avoid using some
+>    uncommon style like bellow: (Joe Preches)
+>      -  retval = exynos_dp_read_bytes_from_i2c(...
+>    				  ...);
+>      +  retval =
+>      +  exynos_dp_read_bytes_from_i2c(......);
+> - Get panel node with remote-endpoint method, and create devicetree binding
+>    for driver. (Heiko)
+> - Remove the clock enable/disbale with "sclk_edp" & "sclk_edp_24m",
+>    leave those clock to rockchip dp phy driver.
+> - Fix compile failed dut to phy_pd_addr variable misspell error
+>
+> Mark Yao (1):
+>    drm: rockchip: vop: add bpc and color mode setting
+>
+> Yakir Yang (16):
+>    drm: exynos: dp: convert to drm bridge mode
+>    drm: bridge: analogix/dp: split exynos dp driver to bridge directory
+>    drm: bridge: analogix/dp: fix some obvious code style
+>    drm: bridge: analogix/dp: remove duplicate configuration of link rate
+>      and link count
+>    drm: bridge: analogix/dp: dynamic parse sync_pol & interlace &
+>      dynamic_range
+>    Documentation: drm/bridge: add document for analogix_dp
+>    ARM: dts: exynos/dp: remove some properties that deprecated by
+>      analogix_dp driver
+>    drm: rockchip: dp: add rockchip platform dp driver
+>    Documentation: drm/bridge: add document for analogix_dp
+>    phy: Add driver for rockchip Display Port PHY
+>    Documentation: phy: add document for rockchip dp phy
+>    drm: bridge: analogix/dp: add some rk3288 special registers setting
+>    drm: bridge: analogix/dp: add max link rate and lane count limit for
+>      RK3288
+>    drm: bridge: analogix/dp: try force hpd after plug in lookup failed
+>    drm: bridge: analogix/dp: move hpd detect to connector detect function
+>    drm: bridge: analogix/dp: add edid modes parse in get_modes method
+>
+>   .../devicetree/bindings/drm/bridge/analogix_dp.txt |   52 +
+>   .../devicetree/bindings/phy/rockchip-dp-phy.txt    |   22 +
+>   .../bindings/video/analogix_dp-rockchip.txt        |   91 ++
+>   .../devicetree/bindings/video/exynos_dp.txt        |   64 +-
+>   arch/arm/boot/dts/exynos5250-arndale.dts           |    2 -
+>   arch/arm/boot/dts/exynos5250-smdk5250.dts          |    2 -
+>   arch/arm/boot/dts/exynos5250-snow.dts              |    4 +-
+>   arch/arm/boot/dts/exynos5250-spring.dts            |    4 +-
+>   arch/arm/boot/dts/exynos5420-peach-pit.dts         |    4 +-
+>   arch/arm/boot/dts/exynos5420-smdk5420.dts          |    2 -
+>   arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 +-
+>   drivers/gpu/drm/bridge/Kconfig                     |    2 +
+>   drivers/gpu/drm/bridge/Makefile                    |    1 +
+>   drivers/gpu/drm/bridge/analogix/Kconfig            |    4 +
+>   drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 1372 +++++++++++++++++++
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  286 ++++
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  | 1294 ++++++++++++++++++
+>   .../analogix/analogix_dp_reg.h}                    |  270 ++--
+>   drivers/gpu/drm/exynos/Kconfig                     |    3 +-
+>   drivers/gpu/drm/exynos/Makefile                    |    2 +-
+>   drivers/gpu/drm/exynos/exynos_dp.c                 |  366 +++++
+>   drivers/gpu/drm/exynos/exynos_dp_core.c            | 1427 --------------------
+>   drivers/gpu/drm/exynos/exynos_dp_core.h            |  281 ----
+>   drivers/gpu/drm/exynos/exynos_dp_reg.c             | 1263 -----------------
+>   drivers/gpu/drm/rockchip/Kconfig                   |    9 +
+>   drivers/gpu/drm/rockchip/Makefile                  |    1 +
+>   drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    |  457 +++++++
+>   drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |    2 +-
+>   drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |    2 +-
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   32 +-
+>   drivers/phy/Kconfig                                |    7 +
+>   drivers/phy/Makefile                               |    1 +
+>   drivers/phy/phy-rockchip-dp.c                      |  151 +++
+>   include/drm/bridge/analogix_dp.h                   |   42 +
+>   35 files changed, 4360 insertions(+), 3167 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
+>   create mode 100644 Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
+>   create mode 100644 Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
+>   create mode 100644 drivers/gpu/drm/bridge/analogix/Kconfig
+>   create mode 100644 drivers/gpu/drm/bridge/analogix/Makefile
+>   create mode 100644 drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>   create mode 100644 drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+>   create mode 100644 drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
+>   rename drivers/gpu/drm/{exynos/exynos_dp_reg.h => bridge/analogix/analogix_dp_reg.h} (62%)
+>   create mode 100644 drivers/gpu/drm/exynos/exynos_dp.c
+>   delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_core.c
+>   delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_core.h
+>   delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_reg.c
+>   create mode 100644 drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>   create mode 100644 drivers/phy/phy-rockchip-dp.c
+>   create mode 100644 include/drm/bridge/analogix_dp.h
+>
