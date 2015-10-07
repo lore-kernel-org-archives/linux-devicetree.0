@@ -1,110 +1,34 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] PCI: Add pci_bus_fixup_irqs().
-Date: Wed, 7 Oct 2015 13:08:40 -0700
-Message-ID: <56157BC8.3070406@caviumnetworks.com>
-References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com> <1443811443-18878-2-git-send-email-ddaney.cavm@gmail.com> <20151007194426.GF27633@localhost>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Subject: [PATCH 1/3] of: Add United Radiant Technology Corporation vendor
+ prefix
+Date: Wed, 07 Oct 2015 22:59:53 +0200
+Message-ID: <561587C9.2000207@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151007194426.GF27633@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2015 12:44 PM, Bjorn Helgaas wrote:
-> Hi David,
->
-> On Fri, Oct 02, 2015 at 11:43:59AM -0700, David Daney wrote:
->> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> pci_bus_fixup_irqs() works like pci_fixup_irqs(), except it only does
->> the fixups for devices on the specified bus.
->>
->> Follow-on patch will use the new function.
->>
->> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> ---
->> No change from v2.
->>
->>   drivers/pci/setup-irq.c | 30 ++++++++++++++++++++++++++++++
->>   include/linux/pci.h     |  4 ++++
->>   2 files changed, 34 insertions(+)
->>
->> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
->> index 95c225b..189ad17 100644
->> --- a/drivers/pci/setup-irq.c
->> +++ b/drivers/pci/setup-irq.c
->> @@ -66,3 +66,33 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
->>   		pdev_fixup_irq(dev, swizzle, map_irq);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_fixup_irqs);
->> +
->> +struct pci_bus_fixup_cb_info {
->> +	u8 (*swizzle)(struct pci_dev *, u8 *);
->> +	int (*map_irq)(const struct pci_dev *, u8, u8);
->> +};
->> +
->> +static int pci_bus_fixup_irq_cb(struct pci_dev *dev, void *arg)
->> +{
->> +	struct pci_bus_fixup_cb_info *info = arg;
->> +
->> +	pdev_fixup_irq(dev, info->swizzle, info->map_irq);
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Fixup the irqs only for devices on the given bus using supplied
->> + * swizzle and map_irq function pointers
->> + */
->> +void pci_bus_fixup_irqs(struct pci_bus *bus,
->> +			u8 (*swizzle)(struct pci_dev *, u8 *),
->> +			int (*map_irq)(const struct pci_dev *, u8, u8))
->> +{
->> +	struct pci_bus_fixup_cb_info info;
->> +
->> +	info.swizzle = swizzle;
->> +	info.map_irq = map_irq;
->> +	pci_walk_bus(bus, pci_bus_fixup_irq_cb, &info);
->
-> I don't like the existing pci_fixup_irqs(), so by transitivity, I
-> don't like pci_bus_fixup_irqs() either.
+This adds vendor prefix for United Radiant Technology Corporation,
+a provider of liquid crystal display technologies.
 
-We are in agreement with respect to this point.
+Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-
->  The problem is that in both
-> cases this is a one-time pass over the tree, so we don't handle
-> hot-added devices correctly.
->
-> I think we need to get rid of pci_fixup_irqs() and somehow integrate
-> it into the pci_device_add() path, where it would be done once for
-> every device we enumerate.
-
-I also agree with this point.
-
->  If we did that, I don't think you would
-> need to add pci_bus_fixup_irqs(), would you?
-
-Nope.
-
-However, such a change is essentially untestable by me.  So, I didn't 
-attempt it.   pci_fixup_irqs() is used by alpha, arm, m68k, mips, sh, 
-sparc, tile, unicore32 and other things as well.  If the core 
-pci_device_add() code were to suddenly start doing the fixup, there 
-would be the potential to break all these things I cannot test.
-
-The new pci_bus_fixup_irqs() is really an optimization so that if we 
-have multiple buses created by pci-host-generic.c, that we only iterate 
-over each device once.  I believe that pci-host-generic.c would still 
-operate without these patches 1/5 and 2/5, and could test that if you 
-are OK with the remaining three patches.  Or we could merge all 5 and 
-live a while longer with the ugliness that is already there.
-
-David Daney
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 82d2ac9..01e3cee 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -223,6 +223,7 @@ toshiba	Toshiba Corporation
+ toumaz	Toumaz
+ tplink	TP-LINK Technologies Co., Ltd.
+ truly	Truly Semiconductors Limited
++urt	United Radiant Technology Corporation
+ usi	Universal Scientific Industrial Co., Ltd.
+ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
