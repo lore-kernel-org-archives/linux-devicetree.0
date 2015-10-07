@@ -1,63 +1,48 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: add label for uart0
-Date: Wed, 7 Oct 2015 08:47:15 +0200
-Message-ID: <5614BFF3.9010708@i2se.com>
-References: <1443810675-25558-1-git-send-email-stefan.wahren@i2se.com>
- <87oagbhdfb.fsf@eliezer.anholt.net> <561482CE.2020804@wwwdotorg.org>
+From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] drivers: clk: st: PLL rate change implementation
+ for DVFS
+Date: Wed, 7 Oct 2015 09:47:50 +0200
+Message-ID: <CAG374jA9W=u7Cq1tNSu1oWuQD68UM768UwckKU6V9+okGUUx8w@mail.gmail.com>
+References: <1444032393-13433-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1444032393-13433-3-git-send-email-gabriel.fernandez@linaro.org> <20151006180617.GE12338@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561482CE.2020804-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20151006180617.GE12338-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 07.10.2015 um 04:26 schrieb Stephen Warren:
-> On 10/06/2015 03:53 PM, Eric Anholt wrote:
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
->>
->>> This patch adds a label for uart0 to allow changing of uart0
->>> pins.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->> This patch seems innocuous, but could you clarify for me how
->> exactly you change the uart0 pins, and why one would do that?
-> I /assume/ this is so that some other DT file (that includes the
-> edited file) can add some pinctrl-related properties to this DT node,
-> using syntax such as:
+Hi Stephen,
+
+No there is no reason. I will fix it.
+
+Thanks for review.
+
+Best regards
+
+Gabriel
+
+On 6 October 2015 at 20:06, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 10/05, Gabriel Fernandez wrote:
+>> @@ -452,7 +651,7 @@ static const struct clk_ops st_pll1200c32_ops = {
+>>  static struct clk * __init clkgen_pll_register(const char *parent_name,
+>>                               struct clkgen_pll_data  *pll_data,
+>>                               void __iomem *reg,
+>> -                             const char *clk_name)
+>> +                             const char *clk_name, spinlock_t *lock)
 >
-> &uart0 {
->     new content;
-> };
+> Is there a reason we pass lock here but never use it in this
+> function?
 >
-> If so, the patch,
-> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-
-Your assumption is correct. In case the UART should be used on a custom
-board with Raspberry Pi Compute Module and a microcontroller this change
-is necessary to reference the UART:
-
-&gpio {
-  // ...
-
-  uart0_pins: uart0_pins {
-    brcm,pins = <36 37>;
-    brcm,function = <BCM2835_FSEL_ALT2>;
-  };
-}
-
-&uart0 {
-  pinctrl-names = "default";
-  pinctrl-0 = <&uart0_pins>;
-  status = "okay";
-};
-
-Thanks
-
-Stefan
-
+>>  {
+>>       struct clkgen_pll *pll;
+>>       struct clk *clk;
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
