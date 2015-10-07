@@ -1,84 +1,173 @@
-From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
- LeMaker BananaPi
-Date: Wed,  7 Oct 2015 19:58:40 +0200 (CEST)
-Message-ID: <20151007175840.A70656C800D4@dd34104.kasserver.com>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de> <20150818153631.GH2547@lukather> <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com> <20151005173957.B1BD16C8150E@dd34104.kasserver.com> <7hzizu924y.fsf@deeprootsystems.com> <20151007154918.D6F856C800D4@dd34104.kasserver.com><20151007174904.GH2278@lukather>
-Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
+Date: Wed, 7 Oct 2015 13:36:38 -0500
+Message-ID: <CAL_JsqJXNDcAPf7ijgFiorHrR93W_KctMQAY27=YyXHe8RDuAA@mail.gmail.com>
+References: <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
+ <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
+ <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
+ <561452D9.90605@labbott.name> <f486f9f4f23c697f72e5ddcf49e38c9b@mail.ncrmnt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSJLSE35MGBBUN22WYAKGQEYFGDYGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151007174904.GH2278@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f486f9f4f23c697f72e5ddcf49e38c9b-IcawJbj+vY1vZ+LtbKW8tg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+Cc: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>, Laura Abbott <labbott-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Gall <tom.gall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Feng Tang <feng.tang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, a.makarov-Y45fg4mVyCyHXe+LvDLADg@public.gmane.org, a.bogdanova-Y45fg4mVyCyHXe+LvDLADg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Wed, Oct 7, 2015 at 5:36 AM, Andrew <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org> wrote:
+> On 2015-10-07 02:01, Laura Abbott wrote:
+>>
+>> On 10/6/15 3:35 PM, Rob Herring wrote:
+>>>
+>>> On Tue, Oct 6, 2015 at 3:47 PM, Laura Abbott <labbott-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+>>>>
+>>>>
+>>>> This adds a base set of devicetree bindings for the Ion memory
+>>>> manager. This supports setting up the generic set of heaps and
+>>>> their properties.
+>>>>
+>>>> Signed-off-by: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+>>>> Signed-off-by: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>   drivers/staging/android/ion/devicetree.txt | 53
+>>>> ++++++++++++++++++++++++++++++
+>>>
+>>>
+>>> I have no issue with this going in here, but I do have lots of issues
+>>> with this binding.
+>>>
+>>>>   1 file changed, 53 insertions(+)
+>>>>   create mode 100644 drivers/staging/android/ion/devicetree.txt
+>>>>
+>>>> diff --git a/drivers/staging/android/ion/devicetree.txt
+>>>> b/drivers/staging/android/ion/devicetree.txt
+>>>> new file mode 100644
+>>>> index 0000000..4a0c941
+>>>> --- /dev/null
+>>>> +++ b/drivers/staging/android/ion/devicetree.txt
+>>>> @@ -0,0 +1,53 @@
+>>>> +Ion Memory Manager
+>>>> +
+>>>> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
+>>>> +Ion allows for different types of allocation via an abstraction called
+>>>> +a 'heap'. A heap represents a specific type of memory. Each heap has
+>>>> +a different type. There can be multiple instances of the same heap
+>>>> +type.
+>>>> +
+>>>> +Required properties for Ion
+>>>> +
+>>>> +- compatible: "linux,ion"
+>>>> +
+>>>> +All child nodes of a linux,ion node are interpreted as heaps
+>>>> +
+>>>> +required properties for heaps
+>>>> +
+>>>> +- linux,ion-heap-id: The Ion heap id used for allocation selection
+>>>> +- linux,ion-heap-type: Ion heap type defined in ion.h
+>>>> +- linux,ion-heap-name: Human readble name of the heap
+>>>> +
+>>>> +
+>>>> +Optional properties
+>>>> +- memory-region: A phandle to a memory region. Required for DMA heap
+>>>> type
+>>>> +(see reserved-memory.txt for details on the reservation)
+>>>> +- linux,ion-heap-align: Alignment for the heap.
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +       ion {
+>>>> +               compatbile = "linux,ion";
+>>>> +               #address-cells = <1>;
+>>>> +               #size-cells = <0>;
+>>>> +
+>>>> +               ion-system-heap {
+>>>> +                       linux,ion-heap-id = <0>;
+>>>> +                       linux,ion-heap-type = <ION_SYSTEM_HEAP_TYPE>;
+>>>> +                       linux,ion-heap-name = "system";
+>>>
+>>>
+>>> How does this vary across platforms? Is all of this being pushed down
+>>> to DT, because there is no coordination of this at the kernel ABI
+>>> level across platforms. In other words, why can't heap 0 be hardcoded
+>>> as system heap in the driver. It seems to me any 1 of these 3
+>>> properties could be used to derive the other 2.
+>>>
+>>
+>> Right now there is no guarantee heap IDs will be the same across
+>> platforms. The heap IDs are currently part of the userspace ABI
+>> as well since userspace clients must pass in a mask of the heap
+>> IDs to allocate from. If we assume all existing clients could change,
+>> heaps such as the system heap could be mandated to have the same
+>> heap ID but we'd still run into problems if you have multiple
+>> heaps of the same type (e.g. multiple carveouts)
 
-Maxime Ripard schrieb am 07.10.2015 19:49:
+Vendors largely ignore the kernel-userspace ABI and anything in
+staging is not a ABI. So arguments about what the ABI is currently is
+pointless IMO.
 
-> Hi Timo,
-> 
-> On Wed, Oct 07, 2015 at 05:49:18PM +0200, Timo Sigurdsson wrote:
->> Hi Kevin,
->> Hi Maxime,
->> 
->> Kevin Hilman schrieb am 07.10.2015 16:36:
->> 
->> > "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org> writes:
->> >> I still think that the lower voltages may be the cause of your problem
->> >> with that specific board, so could you please test the attached patch on
->> >> top of my patch that you first experienced the problem with? Please let 
->> >> us know whether this solves your issue or whether we need to dig deeper.
->> > 
->> > Thanks for the patch.  Looks like it's the OPPs.
->> > 
->> > I went back to next-20150923 and verified it still fails.  Then, I
->> > applied your patch and saw that it boots just fine.
->> 
->> Good. Then we can easily fix this, I guess.
->> 
->> @Maxime: How should we handle this? In its current form, the patch applies
->> only to the BananaPi dts by overriding the inherited opp from the SoC dtsi.
->> In an earlier discussion, it was said that this can be done, even though it
->> might not be the most elegant approach. But then again, I think it
->> shouldn't be necessary to change the opp in the sun7i-a20.dtsi for all A20
->> boards since this is - to my knowledge - the first and only report that an
->> A20 board has stability issues at the lower voltages (although not too many
->> boards use voltage scaling yet).
-> 
-> If you count only the number of boards, indeed, but if you count the
-> number of devices actually used in the field, we cover already a
-> significant portion of them.
-> 
->> So, would you prefer to keep this as a patch for BananaPi only, or
->> change the dtsi for all A20 devices instead?
-> 
-> Yeah, we probably can keep that for bananapi only at the moment, and
-> try to generalize that afterwards.
+Pushing an inconsistent kernel ABI to DT is not the answer.
 
-Ok.
+>
+> I don't really like the idea of enforcing any IDs here. As of now
+> heap ids are generally something VERY platform-specific
+> (or even product-specific). Personally I'd prefer something like this
+> for userspace apps:
+>
+> int id1 = ion_get_heap_id("camera");
+> if (id1 < 0) {
+>       fprintf(stderr, "Invalid heap id");
+>       exit(1);
+> }
+>
+> int id2 = ion_get_heap_id("backup-heap");
+> if (id2 < 0) {
+>       fprintf(stderr, "Invalid heap id");
+>       exit(1);
+> }
 
-> 
->> In case we keep it as it is, what is the correct commit to point to as
->> "Fixes commit ..."? I'd say it fixes the initial opp commit for A20, since
->> that's where these voltages were defined. But then again, if we don't
->> change the dtsi, should I point to my regulator patch instead?
-> 
-> I don't think it fixes anything at this point. We droped your commit
-> that was using the A20 OPPs, so in the history so far we don't have
-> anything to fix, just enable cpufreq again.
+We've learned that creating number spaces like this are bad (irqs,
+gpios, /dev nodes). We should move away from that. Why should
+userspace care about IDs or what the IDs are? An ID is just encoding
+certain implicit requirements. So are the strings here. Users should
+express what capabilities, restrictions, etc. they have, and then the
+kernel can find the best heap.
 
-Ok. I'll send a third version of the regulator patch then with the
-updated opp included.
+> ...
+>
+> int ret = ion_alloc(fd, 0x100, 0x4,
+>               (id1 | id2),
+>               0, &handle);
+>
+>
+> What concerns kernel stuff, things are simpler - we may just pass the heap
+> to use
+> by a reference in devicetree node for that driver. Something like that:
+>
+> ...
+>                ion-decoder-region : region_ddr {
+>                        linux,ion-heap-id = <1>;
+>                        linux,ion-heap-type = <ION_DMA_HEAP_TYPE>;
+>                        linux,ion-heap-name = "decoder_mem"
+>                        memory-region = <&camera_region>;
+>                 };
+> ...
+>                 video_decoder@80180000 {
+>                         compatible = "acme,h266dec";
+>                         reg = <0x80180000 0x20000>,
+>                         reg-names = "registers";
+>                         interrupts = <12>;
+>                         interrupt-parent = <&vic1>;
+>                         ion-heaps-for-buffers = <&ion-decoder-region>
 
-Thanks,
+This is how memory-region is supposed to work. I don't see why we need
+an additional level of indirection.
 
-Timo
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
