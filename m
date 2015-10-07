@@ -1,57 +1,54 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH 1/2] PCI: of: Add 64-bit address recognition without LPAE
- support
-Date: Wed, 07 Oct 2015 13:49:20 +0300
-Message-ID: <d222dd1e4d8ed59e25248091e90e53b662e007c5.1444214119.git.p.fedin@samsung.com>
-References: <cover.1444214119.git.p.fedin@samsung.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <cover.1444214119.git.p.fedin@samsung.com>
-In-reply-to: <cover.1444214119.git.p.fedin@samsung.com>
-References: <cover.1444214119.git.p.fedin@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Peter Maydell <peter.maydell@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
+Date: Wed, 7 Oct 2015 14:02:11 +0300
+Message-ID: <5614FBB3.5060806@cogentembedded.com>
+References: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
+ <20151007033957.GA30650@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151007033957.GA30650@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-If non-LPAE kernel is booted up on a machine with 64-bit PCI resources,
-PCI controller probe fails with:
+Hello.
 
-PCI host bridge /pcie@10000000 ranges:
-   IO 0x3eff0000..0x3effffff -> 0x00000000
-  MEM 0x10000000..0x3efeffff -> 0x10000000
-  MEM 0x8000000000..0xffffffffff -> 0x8000000000
-pci-host-generic 3f000000.pcie: resource collision: [mem 0x00000000-0xffffffff] conflicts with /pl011@9000000 [mem 0x09000000-0x09000fff]
-pci-host-generic: probe of 3f000000.pcie failed with error -16
+On 10/7/2015 6:39 AM, Simon Horman wrote:
 
-This happens because res->start assignment in of_pci_range_to_resource()
-truncates the upper part of the address, because res->start is of
-phys_addr_t type, which is 32-bit on non-LPAE kernels.
+>> Define the Porter board dependent part of the SDHI0/2 device nodes along with
+>> the  necessary  voltage regulators (note that the Vcc regulators are dummy --
+>> they are required but don't actually exist on the board). Also, GPIOs have to
+>> be used for the CD and WP signals due to the SDHI driver constraints...
+>>
+>> This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
+>> add SDHI0/2 DT support) as there  are no differences between those boards in
+>> this respect.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
+>> Horman's 'renesas.git' repo.
+>
+> Thanks I have queued this up after addressing some issues
+> in the changelog that checkpatch complained about:
+>
+> * text > 75 characters wide
+> * Missing '"' around name of patch referred to
+>
+> Its looking like there is already quite a log shared between
 
-This patch adds explicit recognition of 64-bit resources, preventing from
-potential problems when e. g. 0x8000001234 would be converted to
-0x00001234.
+    Lot?
 
-Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
----
- drivers/of/address.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> r8a7791-porter.dts and r8a7791-henninger.dts. Do you have any
+> thoughts on consolidating or sharing common elements between
+> them somehow?
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 384574c..9a8f8c3 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -330,6 +330,12 @@ int of_pci_range_to_resource(struct of_pci_range *range,
- 		}
- 		res->start = port;
- 	} else {
-+#ifndef CONFIG_PHYS_ADDR_T_64BIT
-+		if (upper_32_bits(range->cpu_addr)) {
-+			err = -EINVAL;
-+			goto invalid_range;
-+		}
-+#endif
- 		res->start = range->cpu_addr;
- 	}
- 	res->end = res->start + range->size - 1;
--- 
-2.4.4
+    I'm still planning to remove the Henninger's .dts for good. It was never 
+sold and so had no users outside Renesas (and Cogent Embedded), I was told.
+
+MBR, Sergei
+
