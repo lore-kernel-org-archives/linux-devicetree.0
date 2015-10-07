@@ -1,45 +1,56 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Wed, 7 Oct 2015 13:26:42 +0100
-Message-ID: <20151007122642.GH17172@x1>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151007100017.GB12635@sirena.org.uk>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v5 1/3] ARM: STi: Kconfig update for PCIe support
+Date: Wed, 7 Oct 2015 14:51:06 +0200
+Message-ID: <CAG374jCugYayr7r+3jMH-EcqJPEOOqAzCztUSiuurW0edKnXfw@mail.gmail.com>
+References: <1444118168-13086-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1444118168-13086-2-git-send-email-gabriel.fernandez@linaro.org> <20151006190121.GV21513@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151007100017.GB12635-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151006190121.GV21513@n2100.arm.linux.org.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edwort>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 07 Oct 2015, Mark Brown wrote:
+Hi Russell
 
-> On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
-> > Add additional bindings to allow configuration of the system specif=
-ic
-> > microphone detection settings.
->=20
-> This all seems pretty much fine to me - the things it is controlling =
-are
-> fairly specific to the way the former Wolfson devices do, they only
-> really make sense with a fairly particular algorithm which isn't wide=
-ly
-> implemented.
+no problem, i will fix it
 
-Is that an Ack?
+Thanks for review.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR
+
+Gabriel
+
+On 6 October 2015 at 21:01, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Tue, Oct 06, 2015 at 09:56:06AM +0200, Gabriel Fernandez wrote:
+>> Update Kconfig:
+>> - MIGHT_HAVE_PCI
+>> - PCI_DOMAINS
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>>  arch/arm/mach-sti/Kconfig | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+>> index 125865d..5f99e93 100644
+>> --- a/arch/arm/mach-sti/Kconfig
+>> +++ b/arch/arm/mach-sti/Kconfig
+>> @@ -9,6 +9,8 @@ menuconfig ARCH_STI
+>>       select ARCH_HAS_RESET_CONTROLLER
+>>       select HAVE_ARM_SCU if SMP
+>>       select ARCH_REQUIRE_GPIOLIB
+>> +     select PCI_DOMAINS if PCI
+>> +     select MIGHT_HAVE_PCI
+>>       select ARM_ERRATA_754322
+>>       select ARM_ERRATA_764369 if SMP
+>>       select ARM_ERRATA_775420
+>
+> Please, alphabetical ordering for select statements.
+>
+> --
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
