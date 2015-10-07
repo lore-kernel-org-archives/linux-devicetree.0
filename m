@@ -1,46 +1,32 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH] Documentation: dt: keystone: Fix up missing quotes
-Date: Wed, 7 Oct 2015 12:04:16 -0500
-Message-ID: <1444237456-28020-1-git-send-email-nm@ti.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v11 0/4] FPGA Manager Framework
+Date: Wed, 7 Oct 2015 18:09:36 +0100
+Message-ID: <20151007170936.GA9426@kroah.com>
+References: <1444232189-5762-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Suman Anna <s-anna@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444232189-5762-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, Moritz Fischer <moritz.fischer@ettus.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, Petr Cvek <petr.cvek@tul.cz>, delicious.quinoa@gmail.com, dinguyen
 List-Id: devicetree@vger.kernel.org
 
-Add missing commits for the suggest compatible flags in dt binding.
+On Wed, Oct 07, 2015 at 04:36:25PM +0100, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Hi Greg,
+> 
+> I'm resending v11
+> 
+> The changes requested for v12 are minor.  We can fix them upstream in
+> some small patches.  Thanks for everybody's support and help in reviewing
+> these.
 
-Fixes: 8841cbf666d6 ("Documentation: dt: keystone: provide SoC specific compatible flags")
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+Looks great, thanks for working so hard on this over the past year(s),
+nice job everyone.  I've queued this up in my tree now.
 
-This could be squashed since the original patch was not merged yet..
-Apologies on the miss. (based on next-20151006)
+thanks,
 
- Documentation/devicetree/bindings/arm/keystone/keystone.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-index 800d2d02e27b..3090a8a008c0 100644
---- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-+++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-@@ -17,11 +17,11 @@ SoC families:
- SoCs:
- 
- - Keystone 2 Hawking/Kepler
--   compatible = ti,k2hk", "ti,keystone"
-+   compatible = "ti,k2hk", "ti,keystone"
- - Keystone 2 Lamarr
--   compatible = ti,k2l", "ti,keystone"
-+   compatible = "ti,k2l", "ti,keystone"
- - Keystone 2 Edison
--   compatible = ti,k2e", "ti,keystone"
-+   compatible = "ti,k2e", "ti,keystone"
- 
- Boards:
- -  Keystone 2 Hawking/Kepler EVM
--- 
-2.1.4
+greg k-h
