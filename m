@@ -1,71 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] pwm: fix Broadcom BCM7038 PWM driver
-Date: Tue, 06 Oct 2015 17:51:30 -0700
-Message-ID: <56146C92.7090606@gmail.com>
-References: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com> <20151005151415.GE27759@ulmo> <6796852.Ynn1zMqb4r@wuerfel>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v4] clk: bcm2835: Add support for programming the audio domain clocks.
+Date: Tue, 06 Oct 2015 18:24:44 -0700
+Message-ID: <87bncbo4gz.fsf@eliezer.anholt.net>
+References: <1443815696-11528-1-git-send-email-eric@anholt.net> <56143AC9.60506@lategoodbye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <6796852.Ynn1zMqb4r@wuerfel>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, ariel@vanguardiasur.com.ar
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <56143AC9.60506@lategoodbye.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefan Wahren <info@lategoodbye.de>, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/15 12:59, Arnd Bergmann wrote:
-> The newly added pwm-brcmstb driver fails to build if CONFIG_PM_SLEEP
-> is enabled:
-> 
-> drivers/pwm/pwm-brcmstb.c: In function 'brcmstb_pwm_suspend':
-> drivers/pwm/pwm-brcmstb.c:309:42: error: 'dev' undeclared (first use in this function)
->   struct brcmstb_pwm *p = dev_get_drvdata(dev);
-> 
-> This changes the name of the function argument to match its user.
+--=-=-=
+Content-Type: text/plain
 
-Thanks, maybe, to avoid similar issues in the future, we should start
-removing the ifdef CONFIG_PM_SLEEP and instead annotate such functions
-with __maybe_unused. I wonder if we could magically make that happen
-with a coccinelle script that looks for SIMPLE_DEV_PM_OPS to know which
-functions to annotate... humm.
+Stefan Wahren <info@lategoodbye.de> writes:
 
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> On Monday 05 October 2015 17:14:15 Thierry Reding wrote:
->> On Mon, Sep 14, 2015 at 04:47:04PM -0700, Florian Fainelli wrote:
->>> Florian Fainelli (2):
->>>   Documentation: dt: add Broadcom BCM7038 PWM controller binding
->>>   pwm: Add Broadcom BCM7038 PWM controller support
+> Hi Eric,
+>
+> Am 02.10.2015 um 21:54 schrieb Eric Anholt:
+>> This adds support for enabling, disabling, and setting the rate of the
+>> audio domain clocks.  It will be necessary for setting the pixel clock
+>> for HDMI in the VC4 driver and let us write a cpufreq driver.  It will
+>> also improve compatibility with user changes to the firmware's
+>> config.txt, since our previous fixed clocks are unaware of it.
 >>
->> I've applied both of these patches with a couple of stylistic changes.
-> 
-> As in the pwm-berlin driver, one of the fixups was broken.
-> 
-> diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
-> index 083e3ef5b8e5..423ce087cd9c 100644
-> --- a/drivers/pwm/pwm-brcmstb.c
-> +++ b/drivers/pwm/pwm-brcmstb.c
-> @@ -304,7 +304,7 @@ static int brcmstb_pwm_remove(struct platform_device *pdev)
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> -static int brcmstb_pwm_suspend(struct device *d)
-> +static int brcmstb_pwm_suspend(struct device *dev)
->  {
->  	struct brcmstb_pwm *p = dev_get_drvdata(dev);
->  
-> @@ -313,7 +313,7 @@ static int brcmstb_pwm_suspend(struct device *d)
->  	return 0;
->  }
->  
-> -static int brcmstb_pwm_resume(struct device *d)
-> +static int brcmstb_pwm_resume(struct device *dev)
->  {
->  	struct brcmstb_pwm *p = dev_get_drvdata(dev);
->  
-> 
+>> The firmware also has support for configuring the clocks through the
+>> mailbox channel, but the pixel clock setup by the firmware doesn't
+>> work, and it's Raspberry Pi specific anyway.  The only conflicts we
+>> should have with the firmware would be if we made firmware calls that
+>> result in clock management (like opening firmware V3D or ISP access,
+>> which we don't support in upstream), or on hardware over-thermal or
+>> under-voltage (when the firmware would rewrite PLLB to take the ARM
+>> out of overclock).  If that happens, our cached .recalc_rate() results
+>> would be incorrect, but that's no worse than our current state where
+>> we used fixed clocks.
+>>
+>> The existing fixed clocks in the code are left in place to provide
+>> backwards compatibility with old device tree files.
+>
+> only a few nits.
 
+I think I've done all of these now, sending out v5.
 
--- 
-Florian
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWFHRcAAoJELXWKTbR/J7omdUQAJLhe4jma2B2Adg05rHi6OgF
+aXfzBN8AK+rDKf2Cv14nmejuBZrg2oNu+DCaOfic0ewl8OtrB4QDAdbHqAlXisUH
+W5dTqKxHN2K9Gxx8A3OJFKzoJCjfXmuD0W3eIdJQDZ7sDh7eOrhiPbWYjl33hg7A
+yE7CnminSRbm1n/vwZgYvLmNNtue6j5zV0E+g6p8+lkjX4ggHPub0tgjJQBAnkGa
+0FgqaNjsQuJyK/ghS1FUWDIRCWrCyx71cDe3dAnJRgbTEIIRojTEdv4xzBNf6PT/
+76xxTOnf55RVi+ePxbR6gFgxyxHgkz5sQXHYDoKbiTdykiGpTDsuF3qrFqTlZ9xh
+aaTiQrQrTtGx+/PSjuNWQhR1ua8HD794yKifQToi80l9XGwL9RZ5T107uwiKFUaf
+7xbdMO10B/TDI99ZFDXeyZ+jeFR9UrOKR/0C2gCzlImLDlhz1uNVM2Qbn4pNruBA
+OaWuNlbRXG7uD2D2VnPMXDarbSPqAKiCMJWv79DTkMoExzQCMyeFf8E6Mp7wA1mS
+gSS88OPZkLfT2zHnlwbeoFAftVH7DZYjuM1TTkGn5GjcrOzSKHDxBnVcV1xFWeUD
+FbP6I3fHeXIQi5syP4NRjyPMQWnFF/H5GISrgvzTqTJ2ZBu5f+Omw9CSYIeqjNia
++VKpmDG2ru08HZv4kbkr
+=Dkgw
+-----END PGP SIGNATURE-----
+--=-=-=--
