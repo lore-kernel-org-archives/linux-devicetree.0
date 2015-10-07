@@ -1,97 +1,70 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 15/18] powerpc/book3e-64/kexec: Enable SMP release
-Date: Tue, 6 Oct 2015 22:48:19 -0500
-Message-ID: <1444189702-17241-16-git-send-email-scottwood@freescale.com>
-References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
+From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: sun4i: USB DRC and
+ voltage-scaling for pcDuino1/2
+Date: Wed, 7 Oct 2015 07:06:52 +0300
+Message-ID: <20151007070652.3ff06358@i7>
+References: <1443985128-23137-1-git-send-email-siarhei.siamashka@gmail.com>
+	<20151005123848.GL2696@lukather>
+Reply-To: siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444189702-17241-1-git-send-email-scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Tiejun Chen <tiejun.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH4DA7NUEBBBX5U2KYAKGQERQCVXDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151005123848.GL2696@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SMP release mechanism for FSL book3e is different from when booting
-with normal hardware.  In theory we could simulate the normal spin
-table mechanism, but not at the addresses U-Boot put in the device tree
--- so there'd need to be even more communication between the kernel and
-kexec to set that up.  Instead, kexec-tools will set a boolean property
-linux,booted-from-kexec in the /chosen node.
+On Mon, 5 Oct 2015 14:38:48 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v2: Use a device tree property instead of a flag in the kernel image
+> Hi,
+> 
+> On Sun, Oct 04, 2015 at 09:58:45PM +0300, Siarhei Siamashka wrote:
+> > Hello,
+> > 
+> > This brings LinkSprite pcDuino1/2 boards up to date with the latest
+> > kernel features. And the first patch in this set is a bugfix for the
+> > PH3/PH6 pins misuse.
+> > 
+> > There is currently a single dts file for pcDuino1 and pcDuino2 boards.
+> > They obviously had been designed to be compatible with each other, but
+> > have some minor differences, as can be seen when comparing schematics:
+> >     https://s3.amazonaws.com/pcduino/Hardware/PC+Duino_V01-20130128.pdf
+> >     https://s3.amazonaws.com/pcduino/Hardware/v2/pcDuino_v2_sch.pdf
+> 
+> Usually, the way we handle this is simply by including just the other
+> DT that will only hold those differences.
+> 
+> What are those differences exactly ?
 
-This depends on the kexec-tools patch v2 "ppc64: Add a flag to tell the
-kernel it's booting from kexec":
-http://patchwork.ozlabs.org/patch/527050/
----
- Documentation/devicetree/bindings/chosen.txt |  8 ++++++++
- arch/powerpc/kernel/setup_64.c               | 17 ++++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
+For the exact differences, one might look into the pdf schematics
+files (that's why I have provided links). But a short summary is
+the following:
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index ed838f4..6ae9d82 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -44,3 +44,11 @@ Implementation note: Linux will look for the property "linux,stdout-path" or
- on PowerPC "stdout" if "stdout-path" is not found.  However, the
- "linux,stdout-path" and "stdout" properties are deprecated. New platforms
- should only use the "stdout-path" property.
-+
-+linux,booted-from-kexec
-+-----------------------
-+
-+This property is set (currently only on PowerPC, and only needed on
-+book3e) by some versions of kexec-tools to tell the new kernel that it
-+is being booted by kexec, as the booting environment may differ (e.g.
-+a different secondary CPU release mechanism)
-diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-index 505ec2c..5c03a6a 100644
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -340,11 +340,26 @@ void early_setup_secondary(void)
- #endif /* CONFIG_SMP */
- 
- #if defined(CONFIG_SMP) || defined(CONFIG_KEXEC)
-+static bool use_spinloop(void)
-+{
-+	if (!IS_ENABLED(CONFIG_PPC_BOOK3E))
-+		return true;
-+
-+	/*
-+	 * When book3e boots from kexec, the ePAPR spin table does
-+	 * not get used.
-+	 */
-+	return of_property_read_bool(of_chosen, "linux,booted-from-kexec");
-+}
-+
- void smp_release_cpus(void)
- {
- 	unsigned long *ptr;
- 	int i;
- 
-+	if (!use_spinloop())
-+		return;
-+
- 	DBG(" -> smp_release_cpus()\n");
- 
- 	/* All secondary cpus are spinning on a common spinloop, release them
-@@ -524,7 +539,7 @@ void __init setup_system(void)
- 	 * Freescale Book3e parts spin in a loop provided by firmware,
- 	 * so smp_release_cpus() does nothing for them
- 	 */
--#if defined(CONFIG_SMP) && !defined(CONFIG_PPC_FSL_BOOK3E)
-+#if defined(CONFIG_SMP)
- 	/* Release secondary cpus out of their spinloops at 0x60 now that
- 	 * we can map physical -> logical CPU ids
- 	 */
+* pcDuino1 has two USB host receptacles, but pcDuino2 has one USB host
+  receptacle and a USB WIFI chip.
+* There is this difference with the USB_EN pin (PD2), which controls
+  a USB power switch in pcDuino2. There is no USB power switch in
+  pcDuino1 and the PD2 pin is apparently only connected to a test
+  point on the PCB.
+* The SZQ resistor is different, which might mean different DDR3
+  tracks routing.
+* The Ethernet transceiver is different (RTL8201CP in pcDuino1 and
+  IP101A_LF in pcDuino2).
+* An extra LED is connected to the WIFI chip, but can't be accessed
+  in any other way.
+
+Other than the PD2 pin, nothing else seems to be really relevant
+to the dts file. And even the PD2 pin is pulled-up in pcDuino2,
+making the USB host port powered by default just like in pcDuino1.
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Siarhei Siamashka
