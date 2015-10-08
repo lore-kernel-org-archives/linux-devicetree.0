@@ -1,34 +1,81 @@
-From: "Thomas" <topmag1-9Onoh4P/yGk@public.gmane.org>
-Subject: About your Strong magnets requirement
-Date: Thu, 8 Oct 2015 12:38:47 +0800
-Message-ID: <201510081238474774578@a.wifi0514.com>
-Reply-To: topmag1-9Onoh4P/yGk@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFT 0/3] usb: usb3503: Fix probing on Arndale board (missing phy)
+Date: Thu, 08 Oct 2015 15:02:38 +0900
+Message-ID: <561606FE.2090007@samsung.com>
+References: <1444177807-15524-1-git-send-email-k.kozlowski@samsung.com>
+ <56152BB2.4020202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="GB2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <56152BB2.4020202@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Chen <peter.chen@freescale.com>, Ben Gamari <ben@smart-cactus.org>, Wolfram Sang <wsa@the-dreams.de>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, riku.voipio@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciwNCiANCkdvb2QgZGF5Lg0KIA0KTWF5IEkgaGF2ZSB5b3VyICBhdHRlbnRpb24/V2UgYXJl
-IGEgcHJvZmVzc2lvbmFsIG1hbnVmYWN0dXJlciZleHBvcnRlciBvZiBtYWduZXQgYW5kIG1hZ25l
-dGljICBwcm9kdWN0cyBsb2NhdGVkIGluIFNoZW56aGVuIENoaW5hLHdpdGggdHdvIHByb2R1Y3Rp
-b24gbGluZSAgdGhlIGFubnVhbCAgY2FwYWNpdHkgZXhjZWVkcyAxLDAwMCB0b25zLg0KIA0KVGhh
-bmtzIHRvIHNraWxsZWQgIHdvcmtlcnMgYW5kIGVuZ2luZWVycyxzb21lIG9mIHRoZW0gaGF2aW5n
-IG1vcmUgdGhhbiAxNSB5ZWFycyBleHBlcmllbmNlIGluICBtYWduZXQgaW5kdXN0cnksd2UgYXJl
-IGFibGUgdG8gcHJvdmlkZSB5b3UgZ29vZCBxdWFsaXR5IG1hZ25ldHMgYW5kICBwcm9mZXNzaW9u
-YWxpc20gY29uc3VsdGFuY3kuDQogDQpFc3BlY2lhbGx5IHdlIGFyZSAgY29tcGV0aXRpdmUgaW4g
-c2VyaWVzIE4zNS1ONTAsSCxTSCxVSCBzZXJpZXMgIGV0Yy4uLHRoYXQgYXJlIHdpZGVseSB1c2Vk
-IGluIG1vdG9ycyxzZW5zb3JzLHNwZWFrZXJzLGdlbmVyYXRvcnMsd2luZCB0dXJiaW5lcyBhbmQg
-b3RoZXIgZWxlY3RyaWMgb3IgaW5kdXN0cmlhbCBkZXZpY2VzLg0KIA0KSWYgd2UgY291bGQgYmUg
-b2YgYW55ICBmdXJ0aGVyIGFzc2lzdGFuY2UscGxzIGRvbid0IGhlc2l0YXRlIHRvIGNvbnRhY3Qg
-dXMgZGlyZWN0bHksdGhhbmsgIHlvdS4NCg0KQmVzdHMgUmVnYXJkcw0KDQpUaG9tYXMgLS0tIFNh
-bGVzIEVuZ2luZWVyICANCk1vYmlsZTogMDA4Ni0xNTg4OTcwNjgzNw0KQWRkcmVzczogRGFsYW5n
-IHN0cmVldCxMb25naHVhIGRpc3RyaWN0LCBTaGVuemhlbixQUkMgDQpUZWw6ODYtNzU1LTI5MDE5
-ODcxIA0KRS1tYWlsOiB0b3BtYWcxQDE2My5jb20=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 07.10.2015 23:26, Marek Szyprowski wrote:
+> Hello,
+> 
+> On 2015-10-07 02:30, Krzysztof Kozlowski wrote:
+>> Introduction
+>> ============
+>> This patchset tries to fix probing of usb3503 on Arndale board
+>> if the Samsung PHY driver is probed later (or built as a module).
+>>
+>> *The patchset was not tested on Arndale board.*
+>> I don't have that board. Please test it and say if the usb3503
+>> deferred probe
+>> works fine and the issue is solved.
+>>
+>> The patchset was tested on Odroid U3 board (which is different!)
+>> in a simulated environment. It is not sufficient testing.
+>>
+>>
+>> Difference
+>> ==========
+>> The usb3503 device driver can be used as a I2C device (on Odroid U3)
+>> or as a platform device connected through phy (on Arndale). In the second
+>> case the necessary phy reference has to be obtained and enabled.
+>>
+>> For some details please look also at thread [0][1].
+>>
+>> [0]
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348524.html
+>>
+>> [1]
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348875.html
+>>
+>>
+
+> 
+> I'm not sure that this is the correct approach. usb3503 chip is simply
+> connected
+> to Exynos USB2 phy, so it visible on the USB bus. The real driver that
+> controls USB2
+> PHY is Exynos EHCI driver and USB3503 should not mess around it.
+
+The ehci node (usb@12110000) has one port configured and it takes one
+PHY reference (phy of id 1 - USB host). I can't see driver taking
+reference to HSIC0 or HSIC1 phys... Since I cannot diagnose the error I
+don't know what is really expected here.
+
+> 
+> In my opinion all that is needed in case of Arndale board is forcing
+> reset of
+> usb3503 chip after successful EHCI and USB2 PHY initialization (for some
+> reason
+> initialization of usb3503 chip must be done after usb host initialization).
+> However I have no idea which driver should trigger this reset. Right now
+> I didn't
+> find any good solution for additional control for devices which are on
+> autoprobed
+> bus like usb.
+
+The reset is done at the end of usb3503's probe. The question "why
+usb3503 has to be initialized after EHCI and USB PHY" is still valid...
+
+Anyway thanks for feedback! I really appreciate it.
+
+Best regards,
+Krzysztof
