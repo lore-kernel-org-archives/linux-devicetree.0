@@ -1,82 +1,87 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
-Date: Thu, 8 Oct 2015 10:05:26 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0F77D6@irsmsx105.ger.corp.intel.com>
-References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
- <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
- <20151004194632.GA27633@xo-6d-61-c0.localdomain>
- <1F3AC3675D538145B1661F571FE1805F2F0EE716@irsmsx105.ger.corp.intel.com>
- <20151005205752.GA10479@xo-6d-61-c0.localdomain>
+From: Songjun Wu <songjun.wu@atmel.com>
+Subject: [RESEND PATCH v3 2/2] ASoC: atmel-classd: DT binding for Class D audio amplifier driver
+Date: Thu, 8 Oct 2015 18:13:32 +0800
+Message-ID: <1444299212-4328-3-git-send-email-songjun.wu@atmel.com>
+References: <1444299212-4328-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20151005205752.GA10479@xo-6d-61-c0.localdomain>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444299212-4328-1-git-send-email-songjun.wu@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, broonie@kernel.org, nicolas.ferre@atmel.com
+Cc: Songjun Wu <songjun.wu@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+DT binding documentation for this new ASoC driver.
 
+Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+---
 
-> -----Original Message-----
-> From: Pavel Machek [mailto:pavel@ucw.cz]
-> Sent: 05 October, 2015 23:58
-> To: Tirdea, Irina
-> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
-> 
-> Hi!
-> 
+Changes in v3: None
+Changes in v2:
+- Delete the device node "Sound" in dts.
 
-Hi!
+ .../devicetree/bindings/sound/atmel-classd.txt     |   52 ++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-classd.txt
 
-> > > Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
-> > >
-> > > On Mon 2015-09-07 17:36:15, Irina Tirdea wrote:
-> > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > > ---
-> > > >  drivers/input/touchscreen/goodix.c | 12 ++++++------
-> > > >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > >
-> > > Don't.
-> > >
-> > > Yes, we sometimes sort includes... to avoid patch rejects.
-> > >
-> > > This is guaranteed to cause rejects.
-> > >
-> > > If we do sort them, we use "longest-first" usually.
-> > >
-> >
-> > When using random order, I've been told by reviewers that my ordering
-> > is wrong [1], but I could not figure out what the "right" ordering is in order to apply.
-> > I did not find any mention of how to sort includes in  Documentation/CodingStyle,
-> > but I've seen patches in the kernel that fix random ordering by sorting them
-> > alphabetically [2].
-> 
-> Ok, I have seen this more often:
-> 
-> https://lkml.org/lkml/2009/3/28/99
-> 
-
-I see. I wasn't aware of the inverse Xmas tree ordering.
-
-> > However, I do not feel strongly about this so I can drop this patch.
-> 
-> Well, its really nit picking.
-> 
-
-I was thinking of dropping it since there does not seem to be a consensus on how
-to order the includes (or even if we should order them).  In this case, I guess it's
-up to Dmitry.
-I'll use the inverse Xmas tree ordering in next patch set and see if that works for him.
-
-Thanks,
-Irina
-
-> 										Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+diff --git a/Documentation/devicetree/bindings/sound/atmel-classd.txt b/Documentation/devicetree/bindings/sound/atmel-classd.txt
+new file mode 100644
+index 0000000..0018451
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/atmel-classd.txt
+@@ -0,0 +1,52 @@
++* Atmel ClassD driver under ALSA SoC architecture
++
++Required properties:
++- compatible
++	Should be "atmel,sama5d2-classd".
++- reg
++	Should contain ClassD registers location and length.
++- interrupts
++	Should contain the IRQ line for the ClassD.
++- dmas
++	One DMA specifiers as described in atmel-dma.txt and dma.txt files.
++- dma-names
++	Must be "tx".
++- clock-names
++	Tuple listing input clock names.
++	Required elements: "pclk", "gclk" and "aclk".
++- clocks
++	Please refer to clock-bindings.txt.
++
++Optional properties:
++- pinctrl-names, pinctrl-0
++	Please refer to pinctrl-bindings.txt.
++- atmel,model
++	The user-visible name of this sound complex.
++	The default value is "CLASSD".
++- atmel,pwm-type
++	PWM modulation type, "single" or "diff".
++	The default value is "single".
++- atmel,non-overlap-time
++	Set non-overlapping time, the unit is nanosecond(ns).
++	There are four values,
++	<5>, <10>, <15>, <20>, the default value is <10>.
++	Non-overlapping will be disabled if not specified.
++
++Example:
++classd: classd@fc048000 {
++		compatible = "atmel,sama5d2-classd";
++		reg = <0xfc048000 0x100>;
++		interrupts = <59 IRQ_TYPE_LEVEL_HIGH 7>;
++		dmas = <&dma0
++			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
++			| AT91_XDMAC_DT_PERID(47))>;
++		dma-names = "tx";
++		clocks = <&classd_clk>, <&classd_gclk>, <&audio_pll_pmc>;
++		clock-names = "pclk", "gclk", "aclk";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_classd_default>;
++		atmel,model = "classd @ SAMA5D2-Xplained";
++		atmel,pwm-type = "diff";
++		atmel,non-overlap-time = <10>;
++};
+-- 
+1.7.9.5
