@@ -1,79 +1,103 @@
-From: =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [cross-post] QEMU fw_cfg DMA interface
-Date: Thu,  8 Oct 2015 17:02:03 +0200
-Message-ID: <1444316523-21711-1-git-send-email-markmb@redhat.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v4 4/5] PCI: generic: Correct, and avoid overflow, in
+ bus_max calculation.
+Date: Thu, 8 Oct 2015 10:02:43 -0500
+Message-ID: <20151008150243.GC3885@localhost>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+ <1443811443-18878-5-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, seabios-VcxPKcuBGKdAfugRpC6u6w@public.gmane.org
-Cc: Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Laszlo <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443811443-18878-5-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Implementation of the FW CFG DMA interface.
+[+cc Arnd]
 
-When running a Linux guest on top of QEMU, using the -kernel option and with
-fw_cfg DMA Linux boot support, this is the timing improvement for x86:
+And this one?
 
-Original QEMU and SeaBIOS
-QEMU startup time: .080
-BIOS startup time: .060
-Kernel setup time: .586
-Total time: .726
-
-QEMU and SeaBIOS with this patch series and fw_cfg DMA Linux boot support
-QEMU startup time: .080
-BIOS startup time: .039
-Kernel setup time: .005
-Total time: .126
-
-QEMU startup time is the time between the start and the first kvm_entry.
-BIOS startup time is the time between the first kvm_entry and the start of
-function do_boot, in SeaBIOS.
-Kernel setup time is the time between the start of the function do_boot in
-SeaBIOS and the jump to the Linux kernel.
-
-As you can see, both the BIOS (because of ACPI tables and other configurations)
-and the Linux kernel boot (because of the copy to memory) are greatly
-improved with this new interface.
-
-Also, this new interface is an addon to the old interface. Both interfaces
-are compatible and interchangeable.
-
-Changes from v1:
- - Take into account order of fields in the FWCfgDmaAccess structure
- - Check and change endianness of FWCfgDmaAccess fields
- - Change order of fields in the FWCfgDmaAccess structure
- - Add FW_CFG_DMA_CTL_SKIP feature for control field
- - Split FW_CFG_SIZE in QEMU
- - Make FW_CFG_ID a bitmap of features
- - Add 64 bit address support for the transfer. Trigger when writing the low
-   address, and address is 0 by default and at the end of each transfer.
- - Align ports and addresses.
- - Preserve old fw_cfg_comb_valid behaviour in QEMU
- - Update documentation to reflect all these changes
-
-Changes from v2:
- - Make IOports fw_cfg DMA region a different IO region.
- - Reuse everything for MMIO and IOport DMA regions
- - Make transfer status only based on control field
- - Use DMA helpers instead of direct map/unmap
- - Change ARM fw_cfg DMA address space
- - Change Linux boot process to match linuxboot.S
- - Add select capabilities in the FWCfgDmaAccess struct
- - Update documentation to reflect all these changes
-
-Changes from v3:
- - Set properly fw_cfg DMA fields in ARM
- - Set fw_cfg DMA boot process properly (by Laszlo Ersek)
- - Add signature to fw_cfg DMA address field (by Kevin O'Connor)
- - Minor nitpicks
-
-Changes from v4:
- - Remove Linux fw_cfg boot from this series (will be sent separately)
- - Minor nitpicks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Oct 02, 2015 at 11:44:02AM -0700, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> There are two problems with the bus_max calculation:
+> 
+> 1) The u8 data type can overflow for large config space windows.
+> 
+> 2) The calculation is incorrect for a bus range that doesn't start at
+>    zero.
+> 
+> Since the configuration space is relative to bus zero, make bus_max
+> just be the size of the config window scaled by bus_shift.  Then clamp
+> it to a maximum of 255, per PCI.  Use a data type of int to avoid
+> overflow problems.
+> 
+> Update host-generic-pci.txt to clarify the semantics of the "reg"
+> property with respect to non-zero starting bus numbers.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+> Change from V3: Add to explanation of "reg" property in
+> host-generic-pci.txt.  Add error message if "reg" property is too big.
+> 
+>  Documentation/devicetree/bindings/pci/host-generic-pci.txt |  6 +++++-
+>  drivers/pci/host/pci-host-generic.c                        | 12 +++++++++---
+>  2 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> index cf3e205..42303bb 100644
+> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> @@ -34,7 +34,11 @@ Properties of the host controller node:
+>  - #size-cells    : Must be 2.
+>  
+>  - reg            : The Configuration Space base address and size, as accessed
+> -                   from the parent bus.
+> +                   from the parent bus.  The base address corresponds to
+> +                   bus zero, even though the "bus-range" property may specify
+> +                   a different starting bus number.  The driver must only map
+> +                   or access the portion of the Configuration Space that
+> +                   corresponds to the "bus-range"
+>  
+>  
+>  Properties of the /chosen node:
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index 216ded5..5cce837 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -164,7 +164,7 @@ out_release_res:
+>  static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  {
+>  	int err;
+> -	u8 bus_max;
+> +	int bus_max;
+>  	resource_size_t busn;
+>  	struct resource *bus_range;
+>  	struct device *dev = pci->host.dev.parent;
+> @@ -177,8 +177,14 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	}
+>  
+>  	/* Limit the bus-range to fit within reg */
+> -	bus_max = pci->cfg.bus_range->start +
+> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
+> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
+> +	if (bus_max > 255) {
+> +		dev_err(dev,
+> +			"\"reg\" size corresponds to bus %d, truncating to 255\n",
+> +			bus_max);
+> +		bus_max = 255;
+> +	}
+> +
+>  	pci->cfg.bus_range->end = min_t(resource_size_t,
+>  					pci->cfg.bus_range->end, bus_max);
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
