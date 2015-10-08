@@ -1,53 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 05/13] arm64: enable building of all dtbs
-Date: Thu,  8 Oct 2015 12:53:39 -0500
-Message-ID: <1444326827-3565-6-git-send-email-robh@kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 06/13] h8300: enable building of all dtbs
+Date: Thu,  8 Oct 2015 12:53:40 -0500
+Message-ID: <1444326827-3565-7-git-send-email-robh@kernel.org>
 References: <1444326827-3565-1-git-send-email-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444326827-3565-1-git-send-email-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Olof Johansson <olof@lixom.net>, arm@kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444326827-3565-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Enable building all dtb files when CONFIG_OF_ALL_DTBS is enabled. The dtbs
 are not really dependent on a platform being enabled or any other kernel
 config, so for testing coverage it is convenient to build all of the dtbs.
-This builds all dts files in the tree, not just targets listed. This
-is simpler for arm64 which has a bunch of sub-dirs.
+This builds all dts files in the tree, not just targets listed.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Cc: uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org
 ---
- arch/arm64/boot/dts/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/h8300/boot/dts/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index d9f8833..b01ec43 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -14,3 +14,9 @@ dts-dirs += sprd
- dts-dirs += xilinx
+diff --git a/arch/h8300/boot/dts/Makefile b/arch/h8300/boot/dts/Makefile
+index 0abaf1a..6c08467 100644
+--- a/arch/h8300/boot/dts/Makefile
++++ b/arch/h8300/boot/dts/Makefile
+@@ -8,5 +8,8 @@ dtb-$(CONFIG_H8300H_SIM) := h8300h_sim.dtb
+ dtb-$(CONFIG_H8S_SIM) := h8s_sim.dtb
+ dtb-$(CONFIG_H8S_EDOSK2674) := edosk2674.dtb
  
- subdir-y	:= $(dts-dirs)
-+
 +dtstree		:= $(srctree)/$(src)
++dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
 +
-+dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(foreach d,$(dts-dirs), $(wildcard $(dtstree)/$(d)/*.dts)))
-+
-+always		:= $(dtb-y)
+ always	    := $(dtb-y)
+ clean-files := *.dtb.S *.dtb
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
