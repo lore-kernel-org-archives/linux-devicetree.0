@@ -1,170 +1,174 @@
-From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
-Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
-Date: Wed, 07 Oct 2015 18:43:32 -0700
-Message-ID: <5615CA44.6080601@labbott.name>
-References: <1444164433-9107-1-git-send-email-labbott@fedoraproject.org> <1444164433-9107-2-git-send-email-labbott@fedoraproject.org> <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com> <561452D9.90605@labbott.name> <f486f9f4f23c697f72e5ddcf49e38c9b@mail.ncrmnt.org> <CAL_JsqJXNDcAPf7ijgFiorHrR93W_KctMQAY27=YyXHe8RDuAA@mail.gmail.com>
+From: Matthew Minter <matt@masarand.com>
+Subject: Re: [PATCH v4 1/5] PCI: Add pci_bus_fixup_irqs().
+Date: Thu, 08 Oct 2015 03:07:34 +0100
+Message-ID: <1906663.FAJXtJhtPt@shredder>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+ <56157BC8.3070406@caviumnetworks.com> <20151007230847.GG27633@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJXNDcAPf7ijgFiorHrR93W_KctMQAY27=YyXHe8RDuAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Gall <tom.gall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Feng Tang <feng.tang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, a.makarov-Y45fg4mVyCyHXe+LvDLADg@public.gmane.org, a.bogdanova-Y45fg4mVyCyHXe+LvDLADg@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151007230847.GG27633@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, David Daney <david.daney@cavium.com>, Will Deacon <will.deacon@arm.com>, David Daney <ddaney@caviumnetworks.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/7/15 11:36 AM, Rob Herring wrote:
-> On Wed, Oct 7, 2015 at 5:36 AM, Andrew <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org> wrote:
->> On 2015-10-07 02:01, Laura Abbott wrote:
->>>
->>> On 10/6/15 3:35 PM, Rob Herring wrote:
->>>>
->>>> On Tue, Oct 6, 2015 at 3:47 PM, Laura Abbott <labbott-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
->>>> wrote:
->>>>>
->>>>> From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
->>>>>
->>>>>
->>>>> This adds a base set of devicetree bindings for the Ion memory
->>>>> manager. This supports setting up the generic set of heaps and
->>>>> their properties.
->>>>>
->>>>> Signed-off-by: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
->>>>> Signed-off-by: Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
->>>>> ---
->>>>>    drivers/staging/android/ion/devicetree.txt | 53
->>>>> ++++++++++++++++++++++++++++++
->>>>
->>>>
->>>> I have no issue with this going in here, but I do have lots of issues
->>>> with this binding.
->>>>
->>>>>    1 file changed, 53 insertions(+)
->>>>>    create mode 100644 drivers/staging/android/ion/devicetree.txt
->>>>>
->>>>> diff --git a/drivers/staging/android/ion/devicetree.txt
->>>>> b/drivers/staging/android/ion/devicetree.txt
->>>>> new file mode 100644
->>>>> index 0000000..4a0c941
->>>>> --- /dev/null
->>>>> +++ b/drivers/staging/android/ion/devicetree.txt
->>>>> @@ -0,0 +1,53 @@
->>>>> +Ion Memory Manager
->>>>> +
->>>>> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
->>>>> +Ion allows for different types of allocation via an abstraction called
->>>>> +a 'heap'. A heap represents a specific type of memory. Each heap has
->>>>> +a different type. There can be multiple instances of the same heap
->>>>> +type.
->>>>> +
->>>>> +Required properties for Ion
->>>>> +
->>>>> +- compatible: "linux,ion"
->>>>> +
->>>>> +All child nodes of a linux,ion node are interpreted as heaps
->>>>> +
->>>>> +required properties for heaps
->>>>> +
->>>>> +- linux,ion-heap-id: The Ion heap id used for allocation selection
->>>>> +- linux,ion-heap-type: Ion heap type defined in ion.h
->>>>> +- linux,ion-heap-name: Human readble name of the heap
->>>>> +
->>>>> +
->>>>> +Optional properties
->>>>> +- memory-region: A phandle to a memory region. Required for DMA heap
->>>>> type
->>>>> +(see reserved-memory.txt for details on the reservation)
->>>>> +- linux,ion-heap-align: Alignment for the heap.
->>>>> +
->>>>> +Example:
->>>>> +
->>>>> +       ion {
->>>>> +               compatbile = "linux,ion";
->>>>> +               #address-cells = <1>;
->>>>> +               #size-cells = <0>;
->>>>> +
->>>>> +               ion-system-heap {
->>>>> +                       linux,ion-heap-id = <0>;
->>>>> +                       linux,ion-heap-type = <ION_SYSTEM_HEAP_TYPE>;
->>>>> +                       linux,ion-heap-name = "system";
->>>>
->>>>
->>>> How does this vary across platforms? Is all of this being pushed down
->>>> to DT, because there is no coordination of this at the kernel ABI
->>>> level across platforms. In other words, why can't heap 0 be hardcoded
->>>> as system heap in the driver. It seems to me any 1 of these 3
->>>> properties could be used to derive the other 2.
->>>>
->>>
->>> Right now there is no guarantee heap IDs will be the same across
->>> platforms. The heap IDs are currently part of the userspace ABI
->>> as well since userspace clients must pass in a mask of the heap
->>> IDs to allocate from. If we assume all existing clients could change,
->>> heaps such as the system heap could be mandated to have the same
->>> heap ID but we'd still run into problems if you have multiple
->>> heaps of the same type (e.g. multiple carveouts)
->
-> Vendors largely ignore the kernel-userspace ABI and anything in
-> staging is not a ABI. So arguments about what the ABI is currently is
-> pointless IMO.
->
-> Pushing an inconsistent kernel ABI to DT is not the answer.
->
+On Wednesday 07 October 2015 18:08:47 Bjorn Helgaas wrote:
+> [+cc Matthew]
+> 
+> On Wed, Oct 07, 2015 at 01:08:40PM -0700, David Daney wrote:
+> > On 10/07/2015 12:44 PM, Bjorn Helgaas wrote:
+> > >Hi David,
+> > >
+> > >On Fri, Oct 02, 2015 at 11:43:59AM -0700, David Daney wrote:
+> > >>From: David Daney <david.daney@cavium.com>
+> > >>
+> > >>pci_bus_fixup_irqs() works like pci_fixup_irqs(), except it only does
+> > >>the fixups for devices on the specified bus.
+> > >>
+> > >>Follow-on patch will use the new function.
+> > >>
+> > >>Signed-off-by: David Daney <david.daney@cavium.com>
+> > >>---
+> > >>No change from v2.
+> > >>
+> > >>  drivers/pci/setup-irq.c | 30 ++++++++++++++++++++++++++++++
+> > >>  include/linux/pci.h     |  4 ++++
+> > >>  2 files changed, 34 insertions(+)
+> > >>
+> > >>diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+> > >>index 95c225b..189ad17 100644
+> > >>--- a/drivers/pci/setup-irq.c
+> > >>+++ b/drivers/pci/setup-irq.c
+> > >>@@ -66,3 +66,33 @@ void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *,
+> > >>u8 *),> >>
+> > >>  		pdev_fixup_irq(dev, swizzle, map_irq);
+> > >>  
+> > >>  }
+> > >>  EXPORT_SYMBOL_GPL(pci_fixup_irqs);
+> > >>
+> > >>+
+> > >>+struct pci_bus_fixup_cb_info {
+> > >>+	u8 (*swizzle)(struct pci_dev *, u8 *);
+> > >>+	int (*map_irq)(const struct pci_dev *, u8, u8);
+> > >>+};
+> > >>+
+> > >>+static int pci_bus_fixup_irq_cb(struct pci_dev *dev, void *arg)
+> > >>+{
+> > >>+	struct pci_bus_fixup_cb_info *info = arg;
+> > >>+
+> > >>+	pdev_fixup_irq(dev, info->swizzle, info->map_irq);
+> > >>+	return 0;
+> > >>+}
+> > >>+
+> > >>+/*
+> > >>+ * Fixup the irqs only for devices on the given bus using supplied
+> > >>+ * swizzle and map_irq function pointers
+> > >>+ */
+> > >>+void pci_bus_fixup_irqs(struct pci_bus *bus,
+> > >>+			u8 (*swizzle)(struct pci_dev *, u8 *),
+> > >>+			int (*map_irq)(const struct pci_dev *, u8, u8))
+> > >>+{
+> > >>+	struct pci_bus_fixup_cb_info info;
+> > >>+
+> > >>+	info.swizzle = swizzle;
+> > >>+	info.map_irq = map_irq;
+> > >>+	pci_walk_bus(bus, pci_bus_fixup_irq_cb, &info);
+> > >
+> > >I don't like the existing pci_fixup_irqs(), so by transitivity, I
+> > >don't like pci_bus_fixup_irqs() either.
+> > 
+> > We are in agreement with respect to this point.
+> > 
+> > > The problem is that in both
+> > >
+> > >cases this is a one-time pass over the tree, so we don't handle
+> > >hot-added devices correctly.
+> > >
+> > >I think we need to get rid of pci_fixup_irqs() and somehow integrate
+> > >it into the pci_device_add() path, where it would be done once for
+> > >every device we enumerate.
+> > 
+> > I also agree with this point.
+> > 
+> > > If we did that, I don't think you would
+> > >
+> > >need to add pci_bus_fixup_irqs(), would you?
+> > 
+> > Nope.
+> > 
+> > However, such a change is essentially untestable by me.  So, I
+> > didn't attempt it.   pci_fixup_irqs() is used by alpha, arm, m68k,
+> > mips, sh, sparc, tile, unicore32 and other things as well.  If the
+> > core pci_device_add() code were to suddenly start doing the fixup,
+> > there would be the potential to break all these things I cannot
+> > test.
+> 
+> Yep, that's certainly a risk.  I can't test all those arches either,
+> but I think it's a risk worth taking because the end result is more
+> maintainable.
+> 
+> Matthew Minter did some really nice work on this last year, but it got
+> stalled somehow.  I wonder if we can resurrect it?  It seems like it
+> was pretty close to being ready.  Here's a pointer to the last posting
+> I saw:
+> 
+> http://lkml.kernel.org/r/1412222866-21068-1-git-send-email-matt@masarand.com
+> 
+> Bjorn
 
-I'm not sure I agree it's inconsistent because it varies across
-platforms. IRQs vary across platforms (yes I know something something
-hardware description). Vendors really should be caring about ABIs
-and it's kind of a chicken and egg problem about when staging
-driver ABIs should be considered stable. Perhaps it should be
-"Pushing bad kernel ABIs to DT is not the answer" which is a
-fair objection to Ion.
+Thanks for adding me into the loop,
 
->>
->> I don't really like the idea of enforcing any IDs here. As of now
->> heap ids are generally something VERY platform-specific
->> (or even product-specific). Personally I'd prefer something like this
->> for userspace apps:
->>
->> int id1 = ion_get_heap_id("camera");
->> if (id1 < 0) {
->>        fprintf(stderr, "Invalid heap id");
->>        exit(1);
->> }
->>
->> int id2 = ion_get_heap_id("backup-heap");
->> if (id2 < 0) {
->>        fprintf(stderr, "Invalid heap id");
->>        exit(1);
->> }
->
-> We've learned that creating number spaces like this are bad (irqs,
-> gpios, /dev nodes). We should move away from that. Why should
-> userspace care about IDs or what the IDs are? An ID is just encoding
-> certain implicit requirements. So are the strings here. Users should
-> express what capabilities, restrictions, etc. they have, and then the
-> kernel can find the best heap.
->
+Yes, I had been working on this last year, and got a patchset that was tested 
+on arm, x86 (and amd64), and slightly tested on powerpc. However I was not 
+able to test other architectures as they were not available in the software 
+lab I work in but should in theory work on all arches the kernel runs on.
 
-I'd argue that the heap IDs are expressing capabilities and
-restrictions. A heap ID for camera could be contiguous on
-one system and discontiguous on another based on the system.
-The user only gives the ID, not the type so it's ultimately
-up to the kernel to decide what that heap ID means on a particular
-system. Ion allows or'ing of heap IDs together and the kernel
-selects them currently based on priority. What's your idea for
-expressing the capabilities without resorting IDs?
+I can say that that patchset is being used by several projects out of tree 
+currently but unfortunately due to a shift in priorities in the lab I was 
+working for I lost access to the resources to develop and test the patch 
+easily.
 
-I'm going to give some more thought to this but I think I
-might look into just having each heap be a compatible
-string. This might fit in better with something that
-belongs in devicetree: each heap is describing a platform
-capability (discontiguous memory, CMA, carved out, releases
-bees etc.). Anything outside of a compatible string can
-probably be pulled back into the kernel.
+I have done some additional work personally on it but so far have not got 
+anything that I am happy to submit for inclusion in tree. (due to a number of 
+issues in structure and  a complication relating to weak functions where 
+multiple variations of the same arch exist.
 
-Thanks,
-Laura
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You can see in thread that is linked above 
+(http://lkml.kernel.org/r/1412222866-21068-1-git-send-email-matt@masarand.com)
+some feedback on the issues that need to be solved.
+
+I also expect that the patchset needs to be pulled forward to a newer kernel 
+as I have been working in a frozen tree without rebasing to reduce test 
+complexity.
+
+I would be happy to put some time this weekend if possible into reviewing the 
+state of this and seeing if I can at least put together a version running on a 
+recent kernel. I can also go over the issues again which were proving 
+problematic and see if any of them are easy to fix.
+
+However I can only work on this in my own time for now and on my own boxes 
+(which are all x86 and amd64) so the amount I can do will be limited. However 
+any assistance in fixing the issues would be appreciated, I will try and throw 
+up a git repo somewhere this weekend with the latest patches if anyone is able 
+to take a look.
+
+In the mean time, the biggest issues with the current iteration and the full 
+thread are here:
+
+http://comments.gmane.org/gmane.linux.kernel.pci/35756
+
+I will get a repo somewhere online for browsing soon but cannot quite yet as I 
+need to clean up the repo a little first.
+
+Kind regards to all,
+Matthew Minter
