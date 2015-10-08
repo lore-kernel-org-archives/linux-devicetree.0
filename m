@@ -1,63 +1,190 @@
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-	<noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] Documentation: leds: update DT bindings for leds-bcm6328
-Date: Thu,  8 Oct 2015 12:35:55 +0200
-Message-ID: <1444300555-13988-5-git-send-email-noltari@gmail.com>
-References: <1444300555-13988-1-git-send-email-noltari@gmail.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v2 1/6] pinctrl: berlin: regmap as an extra argument of
+ berlin_pinctrl_probe()
+Date: Thu, 8 Oct 2015 18:32:42 +0800
+Message-ID: <20151008183242.7bcaff30@xhacker>
+References: <1442829860-4647-1-git-send-email-jszhang@marvell.com>
+	<1442829860-4647-2-git-send-email-jszhang@marvell.com>
+	<20151002130456.GC3162@kwain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444300555-13988-1-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151002130456.GC3162@kwain>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds latest DT bindings for leds-bcm6328 init register
-configuration.
+Hi Antoine,
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/leds/leds-bcm6328.txt | 10 +++++++++=
-+
- 1 file changed, 10 insertions(+)
+On Fri, 2 Oct 2015 15:04:56 +0200
+Antoine Tenart <antoine.tenart@free-electrons.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-bcm6328.txt b/=
-Documentation/devicetree/bindings/leds/leds-bcm6328.txt
-index f9e36ad..3f48c1e 100644
---- a/Documentation/devicetree/bindings/leds/leds-bcm6328.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-bcm6328.txt
-@@ -29,6 +29,14 @@ Required properties:
- Optional properties:
-   - brcm,serial-leds : Boolean, enables Serial LEDs.
-     Default : false
-+  - brcm,serial-mux : Boolean, enables Serial LEDs multiplexing.
-+    Default : false
-+  - brcm,serial-clk-low : Boolean, makes clock signal active low.
-+    Default : false
-+  - brcm,serial-dat-low : Boolean, makes data signal active low.
-+    Default : false
-+  - brcm,serial-shift-inv : Boolean, inverts Serial LEDs shift directi=
-on.
-+    Default : false
-=20
- Each LED is represented as a sub-node of the brcm,bcm6328-leds device.
-=20
-@@ -110,6 +118,8 @@ Scenario 2 : BCM63268 with Serial/GPHY0 LEDs
- 		#size-cells =3D <0>;
- 		reg =3D <0x10001900 0x24>;
- 		brcm,serial-leds;
-+		brcm,serial-dat-low;
-+		brcm,serial-shift-inv;
-=20
- 		gphy0_spd0@0 {
- 			reg =3D <0>;
---=20
-1.9.1
+> Hi Jisheng,
+> 
+> Thanks for providing this!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just back from vocation. Thanks for the review feedbacks
+
+> 
+> On Mon, Sep 21, 2015 at 06:04:15PM +0800, Jisheng Zhang wrote:
+> > Let berlin_pinctrl_probe() accepts an extra argument: regmap, this is to
+> > prepare for the next berlin4ct support, where we won't use simple-mfd
+> > any more.
+> 
+> Just a question here: why don't we have instead one
+> berlin_pinctrl_probe() and one berlin_pinctrl_probe_regmap(), both
+> calling a static probe function in berlin.c, to avoid duplicating code?
+
+It's better! Will take this solution in v3
+
+> 
+> Antoine
+> 
+> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> > ---
+> >  drivers/pinctrl/berlin/berlin-bg2.c   | 10 +++++++++-
+> >  drivers/pinctrl/berlin/berlin-bg2cd.c | 10 +++++++++-
+> >  drivers/pinctrl/berlin/berlin-bg2q.c  | 10 +++++++++-
+> >  drivers/pinctrl/berlin/berlin.c       |  9 +--------
+> >  drivers/pinctrl/berlin/berlin.h       |  1 +
+> >  5 files changed, 29 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/pinctrl/berlin/berlin-bg2.c b/drivers/pinctrl/berlin/berlin-bg2.c
+> > index 274c553..4aede2e 100644
+> > --- a/drivers/pinctrl/berlin/berlin-bg2.c
+> > +++ b/drivers/pinctrl/berlin/berlin-bg2.c
+> > @@ -10,6 +10,7 @@
+> >   * warranty of any kind, whether express or implied.
+> >   */
+> >  
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> > @@ -233,8 +234,15 @@ static int berlin2_pinctrl_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct of_device_id *match =
+> >  		of_match_device(berlin2_pinctrl_match, &pdev->dev);
+> > +	struct device *dev = &pdev->dev;
+> > +	struct device_node *parent_np = of_get_parent(dev->of_node);
+> > +	struct regmap *regmap = syscon_node_to_regmap(parent_np);
+> >  
+> > -	return berlin_pinctrl_probe(pdev, match->data);
+> > +	of_node_put(parent_np);
+> > +	if (IS_ERR(regmap))
+> > +		return PTR_ERR(regmap);
+> > +
+> > +	return berlin_pinctrl_probe(pdev, regmap, match->data);
+> >  }
+> >  
+> >  static struct platform_driver berlin2_pinctrl_driver = {
+> > diff --git a/drivers/pinctrl/berlin/berlin-bg2cd.c b/drivers/pinctrl/berlin/berlin-bg2cd.c
+> > index 0cb793a..6378dd8 100644
+> > --- a/drivers/pinctrl/berlin/berlin-bg2cd.c
+> > +++ b/drivers/pinctrl/berlin/berlin-bg2cd.c
+> > @@ -10,6 +10,7 @@
+> >   * warranty of any kind, whether express or implied.
+> >   */
+> >  
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> > @@ -176,8 +177,15 @@ static int berlin2cd_pinctrl_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct of_device_id *match =
+> >  		of_match_device(berlin2cd_pinctrl_match, &pdev->dev);
+> > +	struct device *dev = &pdev->dev;
+> > +	struct device_node *parent_np = of_get_parent(dev->of_node);
+> > +	struct regmap *regmap = syscon_node_to_regmap(parent_np);
+> >  
+> > -	return berlin_pinctrl_probe(pdev, match->data);
+> > +	of_node_put(parent_np);
+> > +	if (IS_ERR(regmap))
+> > +		return PTR_ERR(regmap);
+> > +
+> > +	return berlin_pinctrl_probe(pdev, regmap, match->data);
+> >  }
+> >  
+> >  static struct platform_driver berlin2cd_pinctrl_driver = {
+> > diff --git a/drivers/pinctrl/berlin/berlin-bg2q.c b/drivers/pinctrl/berlin/berlin-bg2q.c
+> > index a466054..907bdf0 100644
+> > --- a/drivers/pinctrl/berlin/berlin-bg2q.c
+> > +++ b/drivers/pinctrl/berlin/berlin-bg2q.c
+> > @@ -10,6 +10,7 @@
+> >   * warranty of any kind, whether express or implied.
+> >   */
+> >  
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> > @@ -395,8 +396,15 @@ static int berlin2q_pinctrl_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct of_device_id *match =
+> >  		of_match_device(berlin2q_pinctrl_match, &pdev->dev);
+> > +	struct device *dev = &pdev->dev;
+> > +	struct device_node *parent_np = of_get_parent(dev->of_node);
+> > +	struct regmap *regmap = syscon_node_to_regmap(parent_np);
+> >  
+> > -	return berlin_pinctrl_probe(pdev, match->data);
+> > +	of_node_put(parent_np);
+> > +	if (IS_ERR(regmap))
+> > +		return PTR_ERR(regmap);
+> > +
+> > +	return berlin_pinctrl_probe(pdev, regmap, match->data);
+> >  }
+> >  
+> >  static struct platform_driver berlin2q_pinctrl_driver = {
+> > diff --git a/drivers/pinctrl/berlin/berlin.c b/drivers/pinctrl/berlin/berlin.c
+> > index f495806..0557bbe 100644
+> > --- a/drivers/pinctrl/berlin/berlin.c
+> > +++ b/drivers/pinctrl/berlin/berlin.c
+> > @@ -11,7 +11,6 @@
+> >   */
+> >  
+> >  #include <linux/io.h>
+> > -#include <linux/mfd/syscon.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_address.h>
+> > @@ -293,19 +292,13 @@ static struct pinctrl_desc berlin_pctrl_desc = {
+> >  };
+> >  
+> >  int berlin_pinctrl_probe(struct platform_device *pdev,
+> > +			 struct regmap *regmap,
+> >  			 const struct berlin_pinctrl_desc *desc)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > -	struct device_node *parent_np = of_get_parent(dev->of_node);
+> >  	struct berlin_pinctrl *pctrl;
+> > -	struct regmap *regmap;
+> >  	int ret;
+> >  
+> > -	regmap = syscon_node_to_regmap(parent_np);
+> > -	of_node_put(parent_np);
+> > -	if (IS_ERR(regmap))
+> > -		return PTR_ERR(regmap);
+> > -
+> >  	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
+> >  	if (!pctrl)
+> >  		return -ENOMEM;
+> > diff --git a/drivers/pinctrl/berlin/berlin.h b/drivers/pinctrl/berlin/berlin.h
+> > index e1aa841..bf5781a 100644
+> > --- a/drivers/pinctrl/berlin/berlin.h
+> > +++ b/drivers/pinctrl/berlin/berlin.h
+> > @@ -56,6 +56,7 @@ struct berlin_pinctrl_function {
+> >  #define BERLIN_PINCTRL_FUNCTION_UNKNOWN		{}
+> >  
+> >  int berlin_pinctrl_probe(struct platform_device *pdev,
+> > +			 struct regmap *regmap,
+> >  			 const struct berlin_pinctrl_desc *desc);
+> >  
+> >  #endif /* __PINCTRL_BERLIN_H */
+> > -- 
+> > 2.5.3
+> > 
+> 
+
