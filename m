@@ -1,86 +1,131 @@
-From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v9 4/5] xhci: mediatek: support MTK xHCI host controller
-Date: Thu, 08 Oct 2015 16:05:00 +0300
-Message-ID: <561669FC.3030600@linux.intel.com>
-References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com> <1443495698-32233-5-git-send-email-chunfeng.yun@mediatek.com> <560D1CA9.1050009@linaro.org> <1444305958.26198.14.camel@mhfsdcap03> <5616616D.3080205@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
+Date: Thu, 08 Oct 2015 15:01:16 +0200
+Message-ID: <5064355.NeXHGugtYj@wuerfel>
+References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com> <8618206.7jshXjkP9U@wuerfel> <1F3AC3675D538145B1661F571FE1805F2F0F9A50@irsmsx105.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5616616D.3080205-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F0F9A50-pww93C2UFcwu0RiL9chJVbfspsVTdybXVpNB7YpNyf8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08.10.2015 15:28, Daniel Thompson wrote:
-> On 08/10/15 13:05, chunfeng yun wrote:
->> Hi,
->> On Thu, 2015-10-01 at 12:44 +0100, Daniel Thompson wrote:
->>> On 29/09/15 04:01, Chunfeng Yun wrote:
->>>> There some vendor quirks for MTK xhci host controller:
->>>> 1. It defines some extra SW scheduling parameters for HW
->>>>     to minimize the scheduling effort for synchronous and
->>>>     interrupt endpoints. The parameters are put into reseved
->>>>     DWs of slot context and endpoint context.
->>>> 2. Its IMODI unit for Interrupter Moderation register is
->>>>     8 times as much as that defined in xHCI spec.
->>>> 3. Its TDS in  Normal TRB defines a number of packets that
->>>>     remains to be transferred for a TD after processing all
->>>>     Max packets in all previous TRBs.
->>>>
->>>> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>
->>> I've done some basic soak tests, both with a directly attached USB3 HDD
->>> and, given the extra code to manage isochronous xfer, also with a hub,
->>> disc and two audio interfaces.
->>>
->>> Tested-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>>
->>>> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
->>>> index 57f40a1..243f696 100644
->>>> --- a/drivers/usb/host/xhci-ring.c
->>>> +++ b/drivers/usb/host/xhci-ring.c
->>>> @@ -68,6 +68,7 @@
->>>>    #include <linux/slab.h>
->>>>    #include "xhci.h"
->>>>    #include "xhci-trace.h"
->>>> +#include "xhci-mtk.h"
->>>>
->>>>    /*
->>>>     * Returns zero if the TRB isn't in this segment, otherwise it returns the DMA
->>>> @@ -3044,18 +3045,27 @@ static u32 xhci_td_remainder(struct xhci_hcd *xhci, int transferred,
->>>>                      struct urb *urb, unsigned int num_trbs_left)
->>>>    {
->>>>        u32 maxp, total_packet_count;
->>>> +    u32 skip_current_trb = 0;
->>>
->>> A bit of a nitpick but why do we need skip_current_trb? Testing
->>> (xhci->quirks & XHCI_MTK_HOST) twice would make what the code does, and
->>> why, more obvious.
->>>
->> I am not sure which way it is better, so add variable of
->> skip_current_trb to reduce test times.
->
-> I can't imagine either approach impacts performance. However introducing skip_current_trb makes the flow of the branches harder to follow.
->
-> The first branch was a version check and can remain so; we only need to do something special with the quirks because the MTK controller is 0.97 but with a few bits added:
->
->      /* MTK xHCI is mostly 0.97 but contains some features from 1.0 */
->      if (xhci->hci_version < 0x100 && !(xhci->quirks & XHCI_MTK_HOST))
->          return ...
->
-> Setting trb_buff_len to zero is accommodating a quirk and this is clearer when we have:
->
->      /* for MTK xHCI, TD size doesn't include this TRB */
->      if (xhci->quirks & XHCI_MTK_HOST)
->          trb_buff_len = 0;
+On Thursday 08 October 2015 12:18:37 Tirdea, Irina wrote:
+> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > Sent: 08 October, 2015 13:54
+> > To: Tirdea, Irina
+> > Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Purdila, Octavian; linux-
+> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
+> > 
+> > On Thursday 08 October 2015 13:19:28 Irina Tirdea wrote:
+> > > After power on, it is recommended that the driver resets the device.
+> > > The reset procedure timing is described in the datasheet and is used
+> > > at device init (before writing device configuration) and
+> > > for power management. It is a sequence of setting the interrupt
+> > > and reset pins high/low at specific timing intervals. This procedure
+> > > also includes setting the slave address to the one specified in the
+> > > ACPI/device tree.
+> > >
+> > > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > > driver gt9xx.c for Android (publicly available in Android kernel
+> > > trees for various devices).
+> > >
+> > > For reset the driver needs to control the interrupt and
+> > > reset gpio pins (configured through ACPI/device tree). For devices
+> > > that do not have the gpio pins declared, the functionality depending
+> > > on these pins will not be available, but the device can still be used
+> > > with basic functionality.
+> > >
+> > > For both device tree and ACPI, the interrupt gpio pin configuration is
+> > > read from the "irq-gpio" property and the reset pin configuration is
+> > > read from the "reset-gpio" property. For ACPI 5.1, named properties
+> > > can be specified using the _DSD section. If there is no _DSD section
+> > > in the ACPI table, the driver will fall back to using indexed gpio
+> > > pins declared in the _CRS section.
+> > 
+> > Would it help to use a plain "gpios" property here to always look
+> > up the lines by index?
+> > 
+> 
+> The problem with ACPI indexed gpios is that platforms declare the
+> pins in random order. In this case we have some platforms that declare
+> the interrupt pin first and others that declare the reset pin first.
+> There is no way to differentiate between them so the only way to support
+> these platforms is to pick a default and list all exceptions in the driver.
+> My previous implementation did that with indexed gpios and dmi quirks. [1]
+> 
+> This can be solved by using named gpios, which are available starting with ACPI 5.1.
+> In this way we know exactly which is the interrupt pin and which is the reset pin
+> and we do not need to add any additional exceptions to the driver.
+> However, we still need to support the platforms that are already out there so
+> we fall back to indexed gpios.
+> 
+> [1] https://lkml.org/lkml/2015/9/15/609
 
-Both will work, but I'd prefer this solution as well.
+Right.
 
--Mathias
+> > > +/*
+> > > + * Some platforms specify the gpio pins for interrupt and reset properly
+> > > + * in ACPI, but cannot use the interrupt pin as output due to their specific
+> > > + * HW configuration.
+> > > + */
+> > > +static const struct dmi_system_id goodix_no_gpio_pins_support[] = {
+> > > +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+> > > +	{
+> > > +		.ident = "Onda v975w",
+> > > +		.matches = {
+> > > +			DMI_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
+> > > +			DMI_MATCH(DMI_PRODUCT_UUID,
+> > > +				  "03000200-0400-0500-0006-000700080009"),
+> > > +			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+> > > +			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+> > > +		}
+> > > +	},
+> > 
+> > I think lists like this in drivers should be avoided if at all possible,
+> > it just leads to other people adding their platform in the lists as
+> > opposed to fixing their boot loaders.
+> > 
+> > Can you find another way to detect at runtime whether it works, and
+> > print a warning if it doesn't?
+> 
+> I agree with you on this, but unfortunately I have not found a better way to do it.
+> 
+> The main problem comes from the interrupt pin. This device uses the interrupt pin
+> as output, which some platforms do not support (either due to the HW configuration
+> or due to flagging it wrong in BIOS) [2] [3]. There is no error returned, just a warning
+> in dmesg.
+> 
+> [2] https://lkml.org/lkml/2015/9/28/851
+> [3] https://lkml.org/lkml/2015/9/30/607
 
+Would it be possible to combine those two and require future firmware to
+use the named gpios if they want the proper reset, but fall back to not
+doing it if they use an anonymous list of GPIOs?
+
+> > > +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
+> > > +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
+> > > +	if (error)
+> > > +		return error;
+> > 
+> > If the "interrupt" gpio is used as an output, maybe it has the wrong
+> > name? Is that the name from the goodix datasheet (that would be ok)
+> > or something you picked?
+> > 
+> 
+> This is from the goodix datasheet [4]. The pin that is used for receiving interrupts
+> is also used as output (for reset and suspend procedures).
+> 
+> [4] https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKNlktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing
+> 
+
+Ok.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
