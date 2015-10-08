@@ -1,56 +1,113 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v8 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Thu, 8 Oct 2015 10:47:44 +0100
-Message-ID: <20151008094744.GD32532@n2100.arm.linux.org.uk>
-References: <1444297394-3122-1-git-send-email-lftan@altera.com>
- <1444297394-3122-4-git-send-email-lftan@altera.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFT 0/3] usb: usb3503: Fix probing on Arndale board (missing phy)
+Date: Thu, 08 Oct 2015 11:58:12 +0200
+Message-ID: <56163E34.8040706@samsung.com>
+References: <1444177807-15524-1-git-send-email-k.kozlowski@samsung.com>
+ <56152BB2.4020202@samsung.com> <561606FE.2090007@samsung.com>
+ <56160BFD.4050702@samsung.com> <561638ED.1060503@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444297394-3122-4-git-send-email-lftan@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <561638ED.1060503-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ben Gamari <ben-OfdNVJEh3GKkIYD+M5K+dQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 08, 2015 at 05:43:11PM +0800, Ley Foon Tan wrote:
-> +static int altera_pcie_cfg_write(struct pci_bus *bus, unsigned int devfn,
-> +				 int where, int size, u32 value)
-> +{
-> +	struct altera_pcie *pcie = bus->sysdata;
-> +	u32 data32;
-> +	u32 shift = 8 * (where & 3);
-> +	int ret;
-> +
-> +	if (!altera_pcie_valid_config(pcie, bus, PCI_SLOT(devfn)))
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	/* write partial */
-> +	if (size != sizeof(u32)) {
-> +		ret = tlp_cfg_dword_read(pcie, bus->number, devfn,
-> +					 where & ~DWORD_MASK, &data32);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	switch (size) {
-> +	case 1:
-> +		data32 = (data32 & ~(0xff << shift)) |
-> +				((value & 0xff) << shift);
-> +		break;
-> +	case 2:
-> +		data32 = (data32 & ~(0xffff << shift)) |
-> +				((value & 0xffff) << shift);
-> +		break;
-> +	default:
-> +		data32 = value;
+Hello,
 
-Can you generate proper 1, 2 and 4 byte configuration accesses?  That
-is much preferred over the above read-modify-write, as there are
-registers in PCI and PCIe that are read/write-1-to-clear.  The above
-has the effect of inadvertently clearing those RW1C bits.
+On 2015-10-08 11:35, Javier Martinez Canillas wrote:
+> Hello,
+>
+> On 10/08/2015 08:23 AM, Marek Szyprowski wrote:
+>> Hello,
+>>
+>> On 2015-10-08 08:02, Krzysztof Kozlowski wrote:
+>>> On 07.10.2015 23:26, Marek Szyprowski wrote:
+>>>> Hello,
+>>>>
+>>>> On 2015-10-07 02:30, Krzysztof Kozlowski wrote:
+>>>>> Introduction
+>>>>> ============
+>>>>> This patchset tries to fix probing of usb3503 on Arndale board
+>>>>> if the Samsung PHY driver is probed later (or built as a module).
+>>>>>
+>>>>> *The patchset was not tested on Arndale board.*
+>>>>> I don't have that board. Please test it and say if the usb3503
+>>>>> deferred probe
+>>>>> works fine and the issue is solved.
+>>>>>
+>>>>> The patchset was tested on Odroid U3 board (which is different!)
+>>>>> in a simulated environment. It is not sufficient testing.
+>>>>>
+>>>>>
+>>>>> Difference
+>>>>> ==========
+>>>>> The usb3503 device driver can be used as a I2C device (on Odroid U3)
+>>>>> or as a platform device connected through phy (on Arndale). In the second
+>>>>> case the necessary phy reference has to be obtained and enabled.
+>>>>>
+>>>>> For some details please look also at thread [0][1].
+>>>>>
+>>>>> [0]
+>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348524.html
+>>>>>
+>>>>> [1]
+>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348875.html
+>>>>>
+>>>>>
+>>>> I'm not sure that this is the correct approach. usb3503 chip is simply
+>>>> connected
+>>>> to Exynos USB2 phy, so it visible on the USB bus. The real driver that
+>>>> controls USB2
+>>>> PHY is Exynos EHCI driver and USB3503 should not mess around it.
+>>> The ehci node (usb@12110000) has one port configured and it takes one
+>>> PHY reference (phy of id 1 - USB host). I can't see driver taking
+>>> reference to HSIC0 or HSIC1 phys... Since I cannot diagnose the error I
+>>> don't know what is really expected here.
+>> It looks that EHCI in Exynos 5250 and 5420 still use old phy bindings. For
+>> the reference, see Exynos4 dts and exynos4412-odroidu3.dts to check how to enable
+>> more than one USB port (Odroid U3 has both HSIC ports enabled).
+>>
+>>>> In my opinion all that is needed in case of Arndale board is forcing
+>>>> reset of
+>>>> usb3503 chip after successful EHCI and USB2 PHY initialization (for some
+>>>> reason
+>>>> initialization of usb3503 chip must be done after usb host initialization).
+>>>> However I have no idea which driver should trigger this reset. Right now
+>>>> I didn't
+>>>> find any good solution for additional control for devices which are on
+>>>> autoprobed
+>>>> bus like usb.
+>>> The reset is done at the end of usb3503's probe. The question "why
+>>> usb3503 has to be initialized after EHCI and USB PHY" is still valid...
+>> I remember that I saw some code to reset HSIC device after phy power on in case
+>> of HSIC-connected modem chip, so maybe this is somehow common for HSIC chips
+>> (which are some special case of 'embedded usb').
+>>
+> I also don't have an Arndale board and haven't followed the thread to closely
+> but I just wanted to mention that the ChromiumOS 3.8 tree has a workaround to
+> reset the HSIC phys:
+>
+> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/81685c447954a29d1098268776582457258dd98f%5E%21/
+>
+> and later a "supports-hsicphy-reset" DT property was added to force the reset
+> per board instead of unconditionally:
+>
+> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/a4d1c1a223ffa1ed38a4257d0378ca70c6667be0%5E%21/
 
+I didn't check this approach, but for me it looks that the problem is caused
+by the lack of resetting the chip connected to hsic phy not the lack of
+resetting the phy itself. However this is pure speculation and one should
+check it with the real hardware.
+
+Best regards
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
