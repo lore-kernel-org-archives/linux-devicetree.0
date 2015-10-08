@@ -1,63 +1,40 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH] dmaengine: xgene-dma: Disable memcpy operation due to
- performance drop
-Date: Thu, 8 Oct 2015 14:27:07 +0530
-Message-ID: <CAFd313x5cS=WX2iAKuQnE3UEEEj_MyCPdRosJtS4V9ZCEiSK=g@mail.gmail.com>
-References: <1444292716-1877-1-git-send-email-rsahu@apm.com>
-	<57007053.YYaOe8h6ng@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57007053.YYaOe8h6ng@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v2] dmaengine: xgene-dma: Disable memcpy operation due to performance drop
+Date: Thu,  8 Oct 2015 14:36:57 +0530
+Message-ID: <1444295217-3099-1-git-send-email-rsahu@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 2:23 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 08 October 2015 13:55:16 Rameshwar Prasad Sahu wrote:
->> The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
->> computations. But the bandwidth of the entire DMA engine is shared
->> among all channels. This patch re-configures operations availability
->> such that one can achieve maximum performance for XOR and PQ
->> computation by removing the memory offload operations.
->>
->> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
->> ---
->>  drivers/dma/xgene-dma.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
->> index 8d57b1b..2998fcb 100644
->> --- a/drivers/dma/xgene-dma.c
->> +++ b/drivers/dma/xgene-dma.c
->> @@ -154,6 +154,7 @@
->>  #define XGENE_DMA_MAX_XOR_SRC          5
->>  #define XGENE_DMA_16K_BUFFER_LEN_CODE  0x0
->>  #define XGENE_DMA_INVALID_LEN_CODE     0x7800000000000000ULL
->> +#undef XGENE_DMA_MEMCPY_ENABLE
->>
->>  /* X-Gene DMA descriptor error codes */
->>  #define ERR_DESC_AXI                   0x01
->> @@ -1707,7 +1708,9 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
->>         dma_cap_zero(dma_dev->cap_mask);
->>
->>         /* Set DMA device capability */
->> +#ifdef XGENE_DMA_MEMCPY_ENABLE
->>         dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
->> +#endif
->>         dma_cap_set(DMA_SG, dma_dev->cap_mask);
->>
->>         /* Basically here, the X-Gene SoC DMA engine channel 0 supports XOR
->
-> I don't see what the #ifdef gains you here when the setting is
-> hardcoded. Why not just remove that DMA_MEMCPY capability completely
-> if you don't want to use it?
+The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
+computations. But the bandwidth of the entire DMA engine is shared
+among all channels. This patch re-configures operations availability
+such that one can achieve maximum performance for XOR and PQ
+computation by removing the memory offload operations.
 
-Okay Arnd,
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+---
+ drivers/dma/xgene-dma.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index 8d57b1b..cd38022 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -1707,7 +1707,6 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
+ 	dma_cap_zero(dma_dev->cap_mask);
+
+ 	/* Set DMA device capability */
+-	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
+ 	dma_cap_set(DMA_SG, dma_dev->cap_mask);
+
+ 	/* Basically here, the X-Gene SoC DMA engine channel 0 supports XOR
+--
+1.8.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
