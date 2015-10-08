@@ -1,62 +1,86 @@
-From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [RESEND PATCH v3 0/2] ASoC: atmel-classd: add driver for Atmel CLASSD
-Date: Thu, 8 Oct 2015 18:13:30 +0800
-Message-ID: <1444299212-4328-1-git-send-email-songjun.wu@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 0/9] Goodix touchscreen enhancements
+Date: Thu,  8 Oct 2015 13:19:26 +0300
+Message-ID: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Audio Class D Amplifier driver includes two parts.
-1) Driver code to implement the Audio Class D Amplifier function.
-2) Device tree binding document, it describes how to add the Audio
-   Class D Amplifier in device tree.
+Add several enhancements to the Goodix touchscreen driver.
+
+Bastien, the functionality from this patches should be now skipped
+for your devices (Onda v975w, WinBook TW100 and WinBook TW700).
+
+Aleksei, I have removed your Tested-by tag since I have done some
+non-trivial changes to the "reset device at init" patch.
+
+Thanks,
+Irina
+
+Changes in v7:
+ - add dmi quirk to skip gpio pins setup and functionality that
+depends on them for Onda v975w, WinBook TW100 and WinBook TW700.
+ - add support for named gpio pins
+ - rework the runtime pm patch to fix a couple of issues
+ - sort includes using inverse Xmas tree ordering
+
+Changes in v6:
+ - skip runtime power manangent calls in open/close if the device
+ACPI/DT configuration does not declare interrupt and reset gpio pins.
+ - reset the device before starting i2c communication
+ - add Bastien's ack to the first 2 patches
+
+Changes in v5:
+ - add some more style cleanup (reorder includes, use error instead
+of ret for return values)
+ - add runtime power management patch
+
+Changes in v4:
+ - use dmi quirk to determine the order of irq and reset pins
+ - use actual config length depending on device
+ - add sysfs interface to dump config
+ - initialize esd timeout from ACPI/DT propery
 
 Changes in v3:
-- Remove '.owner' field in variable 'atmel_classd_driver',
-  since the core will do it.
-- Correct 'IS_ERR(dd->aclk)' to 'IS_ERR(dd->gclk)',
-  when geting the clock 'dd->gclk'.
+ - dropped the first 3 patches that got merged
+ - handle -EPROBE_DEFER and -ENOENT for gpio pins
+ - skip functionality depending on the gpio pins if the pins are not
+properly initialized from ACPI/DT (reset, write config, power management,
+ESD)
+ - dropped #ifdef CONFIG_PM_SLEEP and annotated with __maybe_unused instead
+ - use sysfs property to set ESD timeout instead of ACPI/DT property
+ - use request_firmware_nowait to read configuration firmware and use defaults
+if firmware is not found
+ - use ACPI IDs to determine the order of the GPIO pins in the ACPI tables
+(interrupt pin first or reset pin first)
 
 Changes in v2:
-- Change the "Mono", "Swap" and "Deemphasis" controls to
-  "Mono Switch", "Swap Switch" and "Deemphasis Switch".
-- Merge "EQ Bass", "EQ Medium" and "EQ Treble" controls
-  into one "EQ" control.
-- Change the "single-ended" and "differential" to
-  "Single ended", "Differential".
-- Merge separate left and right controls into one single
-  stereo control.
-- Add a warning if the user trys to specify an invalid
-  value in function "atmel_classd_codec_probe".
-- Use the "dev_get_regmap()" in function
-  "atmel_classd_codec_get_remap".
-- Check for errors when invoking the "clk_prepare_enable".
-- Remove the "dev_info" in function "atmel_classd_probe".
-- Add some code to create a sound card in function
-  "atmel_classd_probe".
-- Remove the DT node "Sound" and the related code.
-- Delete the device node "Sound" in dts.
+ - use request_firmware instead of ACPI/DT property for config
+ - dropped "input: goodix: add ACPI IDs for GT911 and GT9271" patch
+ - add ACPI DSDT excerpt in commit message where necessary
+ - add comments for suspend/resume sleep values
+ - dropped the checkpatch fixes that did not make sense
+ - added Bastien's ack to the first patch
 
-Songjun Wu (2):
-  ASoC: atmel-classd: add the Audio Class D Amplifier
-  ASoC: atmel-classd: DT binding for Class D audio amplifier driver
+Irina Tirdea (9):
+  Input: goodix - use actual config length for each device type
+  Input: goodix - reset device at init
+  Input: goodix - write configuration data to device
+  Input: goodix - add power management support
+  Input: goodix - use goodix_i2c_write_u8 instead of i2c_master_send
+  Input: goodix - add support for ESD
+  Input: goodix - add sysfs interface to dump config
+  Input: goodix - add runtime power management support
+  Input: goodix - sort includes using inverse Xmas tree order
 
- .../devicetree/bindings/sound/atmel-classd.txt     |   52 ++
- sound/soc/atmel/Kconfig                            |    9 +
- sound/soc/atmel/Makefile                           |    2 +
- sound/soc/atmel/atmel-classd.c                     |  679 ++++++++++++++++++++
- sound/soc/atmel/atmel-classd.h                     |  120 ++++
- 5 files changed, 862 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/atmel-classd.txt
- create mode 100644 sound/soc/atmel/atmel-classd.c
- create mode 100644 sound/soc/atmel/atmel-classd.h
+ .../bindings/input/touchscreen/goodix.txt          |  11 +
+ drivers/input/touchscreen/goodix.c                 | 830 +++++++++++++++++++--
+ 2 files changed, 796 insertions(+), 45 deletions(-)
 
 -- 
-1.7.9.5
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
