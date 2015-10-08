@@ -1,62 +1,107 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: [PATCH v4 7/8] ARM: dts: rockchip: Add SPDIF optical out on Radxa Rock2 Square
-Date: Thu,  8 Oct 2015 15:31:18 +0200
-Message-ID: <1444311079-2892-8-git-send-email-sjoerd.simons@collabora.co.uk>
-References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Hongtao Wu <wuht06@gmail.com>
+Subject: Re: [RFC PATCH v3 1/3] mmc: sprd: Add MMC host driver for Spreadtrum SoC
+Date: Thu, 8 Oct 2015 21:37:04 +0800
+Message-ID: <CAG_R4_X3kQj5xSA5KLyu75aqusPNXj0H4Xqx+m+5Sg5cZ15bBg@mail.gmail.com>
+References: <1439571353-30165-1-git-send-email-wuht06@gmail.com>
+	<1439571353-30165-2-git-send-email-wuht06@gmail.com>
+	<CAPDyKFp=XH+Vo_diRyhrMuB+v1rmTmxo3Lid3Wc-u1ohqNisKw@mail.gmail.com>
+	<CAG_R4_VTXCV4NVMOwv-9F56-_pVsK0hU4go79ZhV3OFxwcF0mA@mail.gmail.com>
+	<CAPDyKFo3xp3wU3XW3kMV7Xz7DFgkxts3CArthYY7-CyWk8cjXw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo3xp3wU3XW3kMV7Xz7DFgkxts3CArthYY7-CyWk8cjXw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Lin <shawn.lin@rock-chips.com>, "Orson.Zhai@spreadtrum.com" <Orson.Zhai@spreadtrum.com>, "Chunyan.Zhang@spreadtrum.com" <Chunyan.Zhang@spreadtrum.com>, "Jason.Wu@spreadtrum.com" <Jason.Wu@spreadtrum.com>, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Enable the SPDIF optical output on Radxa Rock2 square boards
+On Tue, Oct 6, 2015 at 5:18 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> +Russell
+>
+> On 28 September 2015 at 09:18, Hongtao Wu <wuht06@gmail.com> wrote:
+>>>>
+>>
+>> On Thu, Sep 10, 2015 at 9:28 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>
+>>> On 14 August 2015 at 18:55, Hongtao Wu <wuht06@gmail.com> wrote:
+>>> > the Spreadtrum MMC host driver is used to supply EMMC, SD, and
+>>> > SDIO types of memory cards
+>>>
+>>> Perhaps some more information about the controller. Are there any
+>>> specific features it support or doesn't support!?
+>>
+>> Thanks for kindly reply.
+>> Yes, spreadtrum MMC host controllers have some specific features as follows:
+>> (1) We don't have controls for sampling clock tuning and re-tuning, we take
+>>       place of them with three registers as follows:
+>>        (a) CLK_WR_DL(Offset 080h): Data write clock delay line.
+>>        (b) CLK_RD_POS_DL(Offset 0x84h): Posedge data read clock delay line.
+>>        (c) CLK_RD_NEG_DL(Offset 088h): Negedge data read clock delay line.
+>>
+>> (2) We don't have Power Control Register(Offset 029h), all our controller's
+>> power
+>>       come from PMIC, rather than directly from CPU.
+>>
+>> (3) We don't have bit[6](Card Insertion), bit[7] (Card Removal), bit[8]
+>> (Card Interrupt)
+>> and bit[12:9] in Normal Interrupt Status Register(Offset 030h). Because the
+>> detect
+>> gpio pin doesn't connect to the register of our host controller. So we can't
+>> operate bit[18:16](Card Detect Pin Level, Card State stable and Card
+>> Inserted)
+>> in Present State Register(Offset 024h).
+>
+> Thanks for clarifying!
+>
+> You have some differences towards the "standard" sdhci variant, but
+> that doesn't mean you should go off and implement a new driver from
+> scratch, instead you should create a new sdhci variant and re-use code
+> from the generic sdhci driver.
+>
+> The current problem with such approach, is that the sdhci driver isn't
+> designed as a library but instead a driver consisting of too many
+> quirks and callbacks. While you start to adopt your driver towards
+> sdhci, you will need to add yet another bunch of new quirks and
+> callbacks to suite your hw.
+>
+> Now, as the number of callbacks and quirks continues to increase I
+> will sooner or later give up maintaining it, as each line of code will
+> depend on a quirk. So, we need to start turning sdhci into a library
+> *right now*! Russell King, has pointed out this several times as well,
+> but unfortunate I haven't yet seen anyone willing to help out in this
+> field.
+>
+> I would of course be very happy if you would like to have a look at
+> that, but I realize it's a difficult task, So, unless you are happy
+> with taking on such a challenge, I suggest you go for an intermediate
+> step, which thus means convert your driver to a sdhci variant driver
+> and add the quirks/callbacks you need to suite your hw.
+>
+> [...]
+>
+> Kind regards
+> Uffe
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
----
+Thanks for kindly suggestion!
+I think it's a good idea to turn sdhci into a library. But for me it's
+too difficult to
+take on such a challenge. However, I will try my best to support you to do
+it.
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+As you suggested, I will consider converting our eMMC host driver to a
+sdhci variant driver. However, our controller has some features, which
+differentiate it from standard sd host controller. For example, our controller
+doesn't have such functions as follows: tuning or re-tuning, Power Control
+Register, PIO or ADMA transfer mode, UHS-II and so on. So, if we use sdchi
+variant driver right now, I think it has a litter redundancy.
 
- arch/arm/boot/dts/rk3288-rock2-square.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Now our sdio team are discussing improving  our eMMC host controller, we are
+making it more standardized. But you know, changing a IP block is a long
+process. Maybe it will take us about one or two years. So what do you think
+if we use ourself eMMC host driver right now, and convert it when our new host
+controller is ready.
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index bce50cd..1756d04 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -49,6 +49,20 @@
- 		stdout-path = "serial2:115200n8";
- 	};
- 
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "SPDIF";
-+		simple-audio-card,dai-link@1 {  /* S/PDIF - S/PDIF */
-+			cpu { sound-dai = <&spdif>; };
-+			codec { sound-dai = <&spdif_out>; };
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+	};
-+
- 	vcc_usb_host: vcc-host-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -136,6 +150,10 @@
- 	};
- };
- 
-+&spdif {
-+	status = "okay";
-+};
-+
- &uart2 {
- 	status = "okay";
- };
--- 
-2.6.1
+thanks.
+
+Hongtao.
