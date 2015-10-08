@@ -1,37 +1,31 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: Document the STM32 DMA bindings
-Date: Thu, 08 Oct 2015 22:40:19 +0200
-Message-ID: <11583587.xphxbMQ7TN@wuerfel>
-References: <1444317612-818-1-git-send-email-cedric.madianga@gmail.com> <15651913.U8kb3JZ9vO@wuerfel> <CAOAejn0x68GaEEfTZbsi5VSJt+Um-bV2Mcmc2pxUwh5QjD=ZYw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] PCI: generic: Fix address window calculation for non-zero starting bus.
+Date: Thu, 08 Oct 2015 23:09:16 +0200
+Message-ID: <5232073.r65S9X2O3H@wuerfel>
+References: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOAejn0x68GaEEfTZbsi5VSJt+Um-bV2Mcmc2pxUwh5QjD=ZYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 October 2015 22:25:50 M'boumba Cedric Madianga wrote:
-> >
-> > How do you know which channels are available for memory-to-memory
-> > transfers?
-> For memory-to-memory transfer we don't need any channel/request combination.
-> We look for any available channel in the channel list to execute our transfer.
-> So, as often as possible, we expect that a peripheral release his
-> channel after transfering data.
-> In that way, we always should have at least one channel available for
-> that kind of transfer.
+On Thursday 08 October 2015 12:54:16 David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> Make the offset from the beginning of the "reg" property be from the
+> starting bus number, rather than zero.  Hoist the invariant size
+> calculation out of the mapping for loop.
+> 
+> Update host-generic-pci.txt to clarify the semantics of the "reg"
+> property with respect to non-zero starting bus numbers.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 > 
 
-Ah, got it. So the use of virtual channels in this driver makes MEM2MEM
-transfers work, but is otherwise not required.
+Thanks a lot!
 
-Thanks for the clarification.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
