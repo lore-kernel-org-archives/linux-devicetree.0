@@ -1,51 +1,92 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v7 0/9] Goodix touchscreen enhancements
-Date: Thu, 8 Oct 2015 12:19:41 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0F9A5F@irsmsx105.ger.corp.intel.com>
-References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
- <5148493.XbtXJjEe71@wuerfel>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v9 4/5] xhci: mediatek: support MTK xHCI host controller
+Date: Thu, 8 Oct 2015 13:28:29 +0100
+Message-ID: <5616616D.3080205@linaro.org>
+References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1443495698-32233-5-git-send-email-chunfeng.yun@mediatek.com>
+ <560D1CA9.1050009@linaro.org> <1444305958.26198.14.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5148493.XbtXJjEe71@wuerfel>
-Content-Language: en-US
+In-Reply-To: <1444305958.26198.14.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: chunfeng yun <chunfeng.yun@mediatek.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/10/15 13:05, chunfeng yun wrote:
+> Hi,
+> On Thu, 2015-10-01 at 12:44 +0100, Daniel Thompson wrote:
+>> On 29/09/15 04:01, Chunfeng Yun wrote:
+>>> There some vendor quirks for MTK xhci host controller:
+>>> 1. It defines some extra SW scheduling parameters for HW
+>>>     to minimize the scheduling effort for synchronous and
+>>>     interrupt endpoints. The parameters are put into reseved
+>>>     DWs of slot context and endpoint context.
+>>> 2. Its IMODI unit for Interrupter Moderation register is
+>>>     8 times as much as that defined in xHCI spec.
+>>> 3. Its TDS in  Normal TRB defines a number of packets that
+>>>     remains to be transferred for a TD after processing all
+>>>     Max packets in all previous TRBs.
+>>>
+>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>>
+>> I've done some basic soak tests, both with a directly attached USB3 HDD
+>> and, given the extra code to manage isochronous xfer, also with a hub,
+>> disc and two audio interfaces.
+>>
+>> Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
+>>
+>>
+>>> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+>>> index 57f40a1..243f696 100644
+>>> --- a/drivers/usb/host/xhci-ring.c
+>>> +++ b/drivers/usb/host/xhci-ring.c
+>>> @@ -68,6 +68,7 @@
+>>>    #include <linux/slab.h>
+>>>    #include "xhci.h"
+>>>    #include "xhci-trace.h"
+>>> +#include "xhci-mtk.h"
+>>>
+>>>    /*
+>>>     * Returns zero if the TRB isn't in this segment, otherwise it returns the DMA
+>>> @@ -3044,18 +3045,27 @@ static u32 xhci_td_remainder(struct xhci_hcd *xhci, int transferred,
+>>>    			      struct urb *urb, unsigned int num_trbs_left)
+>>>    {
+>>>    	u32 maxp, total_packet_count;
+>>> +	u32 skip_current_trb = 0;
+>>
+>> A bit of a nitpick but why do we need skip_current_trb? Testing
+>> (xhci->quirks & XHCI_MTK_HOST) twice would make what the code does, and
+>> why, more obvious.
+>>
+> I am not sure which way it is better, so add variable of
+> skip_current_trb to reduce test times.
+
+I can't imagine either approach impacts performance. However introducing 
+skip_current_trb makes the flow of the branches harder to follow.
+
+The first branch was a version check and can remain so; we only need to 
+do something special with the quirks because the MTK controller is 0.97 
+but with a few bits added:
+
+     /* MTK xHCI is mostly 0.97 but contains some features from 1.0 */
+     if (xhci->hci_version < 0x100 && !(xhci->quirks & XHCI_MTK_HOST))
+	    return ...
+
+Setting trb_buff_len to zero is accommodating a quirk and this is 
+clearer when we have:
+
+     /* for MTK xHCI, TD size doesn't include this TRB */
+     if (xhci->quirks & XHCI_MTK_HOST)
+	    trb_buff_len = 0;
 
 
-> -----Original Message-----
-> From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of Arnd Bergmann
-> Sent: 08 October, 2015 14:10
-> To: Tirdea, Irina
-> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v7 0/9] Goodix touchscreen enhancements
-> 
-> On Thursday 08 October 2015 13:19:26 Irina Tirdea wrote:
-> > Add several enhancements to the Goodix touchscreen driver.
-> >
-> > Bastien, the functionality from this patches should be now skipped
-> > for your devices (Onda v975w, WinBook TW100 and WinBook TW700).
-> >
-> > Aleksei, I have removed your Tested-by tag since I have done some
-> > non-trivial changes to the "reset device at init" patch.
-> >
-> >
-> 
-> I've read over all 9 patches now, most of them look good, but I
-> commented on the one that I have concerns about.
-> 
+>> Anyhow with that looked at, and the caveat that I'm not much of USB
+>> expert, you're welcome to add my Reviewed-by: to v10.
+>>
+>
+> Thanks a lot
 
-Thanks for the review, Arnd!
-
-Irina
-
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No worries.
