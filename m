@@ -1,28 +1,49 @@
-From: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] dmaengine: st_fdma:  Add STMicroelectronics FDMA
- driver header file
-Date: Thu, 8 Oct 2015 15:43:59 +0000
-Message-ID: <1444118413.3579.46.camel@intel.com>
-References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
-	 <1441980871-24475-4-git-send-email-peter.griffin@linaro.org>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v4 0/5] PCI: generic: Misc. bug fixes/enhancements
+Date: Thu, 8 Oct 2015 08:44:15 -0700
+Message-ID: <56168F4F.7030000@caviumnetworks.com>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com> <20151008152811.GD3885@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441980871-24475-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Content-ID: <BEA0552BAF82494F8C9B37ADC56DA908-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patrice.chotard-qxv4g6HH51o@public.gmane.org" <patrice.chotard-qxv4g6HH51o@public.gmane.org>, "maxime.coquelin-qxv4g6HH51o@public.gmane.org" <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, "srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ludovic.barre-qxv4g6HH51o@public.gmane.org" <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151008152811.GD3885@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE1LTA5LTExIGF0IDE1OjE0ICswMTAwLCBQZXRlciBHcmlmZmluIHdyb3RlOg0K
-DQo+ICsjZGVmaW5lIEZETUFfSURfT0ZTVAkJMHgwMDAwMA0KPiArI2RlZmluZSBGRE1BX1ZFUl9P
-RlNUCQkweDAwMDA0DQo+ID4gKw0KPiArI2RlZmluZSBGRE1BX0VOX09GU1QJCTB4MDAwMDgNCg0K
-V2h5IGNhbnQgdGhlc2UgYmUgQklUKCkgdG8gbWFpbnRhaW4gY29uc2lzdGVuY3k/DQoNCi0tIA0K
-flZpbm9kDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 10/08/2015 08:28 AM, Bjorn Helgaas wrote:
+> On Fri, Oct 02, 2015 at 11:43:58AM -0700, David Daney wrote:
+>> From: David Daney <david.daney@cavium.com>
+[...]
+>>
+>> David Daney (5):
+>>    PCI: Add pci_bus_fixup_irqs().
+>>    PCI: generic: Only fixup irqs for bus we are creating.
+>
+> I'm hoping we won't need the above if we can resurrect Matthew's
+> patches.
+
+I will test some things with this today.
+
+
+>
+>>    PCI: generic: Quit clobbering our pci_ops.
+>
+> Applied to pci/host-generic for v4.4 with Arnd's Reviewed-by and minor
+> changelog tweaks (as below).
+>
+>>    PCI: generic: Correct, and avoid overflow, in bus_max calculation.
+>
+> Seems not settled yet.
+>
+>>    PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
+>
+> Also applied to pci/host-generic, thanks!
+>
+
+Many thanks for getting those two in,
+
+
+David Daney
