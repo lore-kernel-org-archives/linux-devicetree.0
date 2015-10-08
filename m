@@ -1,86 +1,62 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] PCI: generic: Fix address window calculation for non-zero
- starting bus.
-Date: Thu, 8 Oct 2015 17:05:07 -0500
-Message-ID: <CAL_JsqKobjdCOHiQLEStp4Q12e9=3dLZUgq+TuTkmoFVtAz5xw@mail.gmail.com>
-References: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, David Daney <david.daney@cavium.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/4] MSI, of, irqchip/gicv3-its: Handle "msi-map" properties.
+Date: Thu,  8 Oct 2015 15:10:46 -0700
+Message-ID: <1444342250-6196-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 2:54 PM, David Daney <ddaney.cavm@gmail.com> wrote:
-> From: David Daney <david.daney@cavium.com>
->
-> Make the offset from the beginning of the "reg" property be from the
-> starting bus number, rather than zero.  Hoist the invariant size
-> calculation out of the mapping for loop.
->
-> Update host-generic-pci.txt to clarify the semantics of the "reg"
-> property with respect to non-zero starting bus numbers.
->
-> Signed-off-by: David Daney <david.daney@cavium.com>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+The first patch from Mark Rutland adds the OF device tree binding
+description, which explains what we are attempting to do here.  For
+MSI messages on GICv3 systems there is some side-band data that
+accompanies the message, this data is specified in the OF device tree
+"msi-map" property of the PCI host driver.
 
-> ---
-> This is a replacement for:
->
-> https://lkml.org/lkml/2015/10/2/653
->
-> Since that patch is getting too much push-back, this is the only other
-> option for fixing the driver to be internally consistent in its
-> treatment of the offset from "reg" to the first bus in the "bus-range"
-> property.
->
->  Documentation/devicetree/bindings/pci/host-generic-pci.txt | 5 +++--
->  drivers/pci/host/pci-host-generic.c                        | 4 ++--
->  2 files changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> index cf3e205..3f1d3fc 100644
-> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> @@ -34,8 +34,9 @@ Properties of the host controller node:
->  - #size-cells    : Must be 2.
->
->  - reg            : The Configuration Space base address and size, as accessed
-> -                   from the parent bus.
-> -
-> +                   from the parent bus.  The base address corresponds to
-> +                   the first bus in the "bus-range" property.  If no
-> +                   "bus-range" is specified, this will be bus 0 (the default).
->
->  Properties of the /chosen node:
->
-> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-> index fe9a81b..bb93346 100644
-> --- a/drivers/pci/host/pci-host-generic.c
-> +++ b/drivers/pci/host/pci-host-generic.c
-> @@ -169,6 +169,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->         struct resource *bus_range;
->         struct device *dev = pci->host.dev.parent;
->         struct device_node *np = dev->of_node;
-> +       u32 sz = 1 << pci->cfg.ops->bus_shift;
->
->         err = of_address_to_resource(np, 0, &pci->cfg.res);
->         if (err) {
-> @@ -196,10 +197,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->         bus_range = pci->cfg.bus_range;
->         for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
->                 u32 idx = busn - bus_range->start;
-> -               u32 sz = 1 << pci->cfg.ops->bus_shift;
->
->                 pci->cfg.win[idx] = devm_ioremap(dev,
-> -                                                pci->cfg.res.start + busn * sz,
-> +                                                pci->cfg.res.start + idx * sz,
->                                                  sz);
->                 if (!pci->cfg.win[idx])
->                         return -ENOMEM;
-> --
-> 1.9.1
->
+The second patch adds a parser to get the required information out of
+the device tree.
+
+The third patch creates the pci_msi_domain_get_msi_rid() function to
+make it more convenient to generate the proper PCI/MSI requester id.
+
+The final patch converts gicv3-its to use the new infrastructure.
+
+Changes from v1: Factor out the device tree access code to a separate
+function in drivers/of/irq.c
+
+Changes from v2: Added the pci_msi_domain_get_msi_rid() patch to
+generalize the support a bit more.
+
+Changes from v3: Added Acked-by to 2/4.  Simplified and improved
+pci_msi_domain_get_msi_rid() as suggested by Marc Zyngier in 3/4.  1/4
+and 4/4 unchanged.
+
+Changes from v4: Added Reviewed-by to 3/4 and 4/4
+
+David Daney (3):
+  of/irq: Add new function of_msi_map_rid()
+  PCI/MSI:  Add helper function pci_msi_domain_get_msi_rid().
+  irqchip/gic-v3-its:  Add handling of PCI requester id.
+
+Mark Rutland (1):
+  Docs: dt: Add PCI MSI map bindings
+
+ Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v3-its-pci-msi.c          |   4 +-
+ drivers/of/irq.c                                  |  84 +++++++++
+ drivers/pci/msi.c                                 |  30 +++
+ include/linux/msi.h                               |   1 +
+ include/linux/of_irq.h                            |   7 +
+ 6 files changed, 343 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
