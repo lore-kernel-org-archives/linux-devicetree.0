@@ -1,47 +1,27 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 4/8] regulator: Hi655x: Add support for Hi655x regulator
-Date: Thu, 8 Oct 2015 09:47:57 +0200
-Message-ID: <CABxcv=kRJPxJiOvqsX_cSJzbew0-_-4Y_q_bQioOdknLbKkZ1A@mail.gmail.com>
-References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
-	<1443611111-3196-5-git-send-email-w.f@huawei.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND][PATCH v3 0/2] ARM: dts: add Okaya LCD display for
+ Nitrogen and Sabrelite
+Date: Thu, 8 Oct 2015 15:55:37 +0800
+Message-ID: <20151008075537.GD22673@tiger>
+References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1443618320-12708-1-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443611111-3196-5-git-send-email-w.f@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fei Wang <w.f@huawei.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kevin Hilman <khilman@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, bintian.wang@huawei.com, xuyiping@hisilicon.com, guodong.xu@linaro.org, puck.chen@hisilicon.com, xuwei5@hisilicon.com, william.wfei@gmail.com, z.liuxinliang@hisilicon.com, kong.kongxinwei@hisilicon.com, zhongkaihua@huawei.com, haojian.zhuang@linaro
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443618320-12708-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Fei Wang,
+On Wed, Sep 30, 2015 at 03:05:18PM +0200, Gary Bisson wrote:
+> Gary Bisson (2):
+>   ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD panel
+>   ARM: dts: imx6qdl-sabrelite: add Okaya LCD panel
 
-On Wed, Sep 30, 2015 at 1:05 PM, Fei Wang <w.f@huawei.com> wrote:
-> Add Hi655x regulator driver.
->
-> Signed-off-by: Fei Wang <w.f@huawei.com>
-> ---
-
-[snip]
-
->
-> +config REGULATOR_HI655X
-> +        tristate "Hisilicon HI655X PMIC regulators support"
-
-The Kconfig symbol is tree state which means it can be built as a module...
-
-> +
-> +static const struct of_device_id of_hi655x_regulator_match_tbl[] = {
-> +       {
-> +               .compatible = "hisilicon,hi655x-regulator-pmic",
-> +               .data = &hi655x_regulator_pmic,
-> +       },
-> +       { /* end */ }
-> +};
-
-...but the OF module alias information is not built into the module so
-module autoloading won't work.
-
-Please add a MODULE_DEVICE_TABLE(of, of_hi655x_regulator_match_tbl) here.
-
-Best regards,
-Javier
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
