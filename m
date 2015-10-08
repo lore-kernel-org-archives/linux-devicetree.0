@@ -1,45 +1,106 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] dmaengine: xgene-dma: Disable memcpy operation due to performance drop
-Date: Thu,  8 Oct 2015 13:55:16 +0530
-Message-ID: <1444292716-1877-1-git-send-email-rsahu@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/3] of: add URT UMSH-8596MD-xT panel DT bindings
+Date: Thu, 8 Oct 2015 10:27:59 +0200
+Message-ID: <20151008082759.GD3820@ulmo>
+References: <56158803.9000300@maciej.szmigiero.name>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1148540510=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <56158803.9000300@maciej.szmigiero.name>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
-computations. But the bandwidth of the entire DMA engine is shared
-among all channels. This patch re-configures operations availability
-such that one can achieve maximum performance for XOR and PQ
-computation by removing the memory offload operations.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/dma/xgene-dma.c | 3 +++
- 1 file changed, 3 insertions(+)
+--===============1148540510==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qrgsu6vtpU/OV/zm"
+Content-Disposition: inline
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index 8d57b1b..2998fcb 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -154,6 +154,7 @@
- #define XGENE_DMA_MAX_XOR_SRC		5
- #define XGENE_DMA_16K_BUFFER_LEN_CODE	0x0
- #define XGENE_DMA_INVALID_LEN_CODE	0x7800000000000000ULL
-+#undef XGENE_DMA_MEMCPY_ENABLE
 
- /* X-Gene DMA descriptor error codes */
- #define ERR_DESC_AXI			0x01
-@@ -1707,7 +1708,9 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
- 	dma_cap_zero(dma_dev->cap_mask);
+--Qrgsu6vtpU/OV/zm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- 	/* Set DMA device capability */
-+#ifdef XGENE_DMA_MEMCPY_ENABLE
- 	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-+#endif
- 	dma_cap_set(DMA_SG, dma_dev->cap_mask);
+On Wed, Oct 07, 2015 at 11:00:51PM +0200, Maciej S. Szmigiero wrote:
+> This patch adds DT bindings for United Radiant Technology
+> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels.
+>=20
+> Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
+> ---
+>  Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt | 12 +++++++=
++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/urt,umsh-8596=
+md.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt =
+b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+> new file mode 100644
+> index 0000000..57c5fa4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+> @@ -0,0 +1,12 @@
+> +United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
+> +
+> +Supported are LVDS versions (-11T, -19T) and parallel ones
+> +(-T, -1T, -7T, -20T).
+> +
+> +Required properties:
+> +- compatible: should be one of:
+> +  "urt,umsh-8596md-t", "urt,umsh-8596md-1t", "urt,umsh-8596md-7t",
+> +  "urt,umsh-8596md-11t", "urt,umsh-8596md-19t" or "urt,umsh-8596md-20t".
 
- 	/* Basically here, the X-Gene SoC DMA engine channel 0 supports XOR
---
-1.8.2.1
+I'd probably list each of these on a single line for slightly more
+clarity, but no need to respin because of that.
+
+Rob, I remember there was some discussion a while back on whether or not
+there should be a standard way of describing lists of compatible values,
+do you know if anything was ever concluded on that topic?
+
+Thierry
+
+--Qrgsu6vtpU/OV/zm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWFikOAAoJEN0jrNd/PrOhpWQQALmujsUPw+atpRZF3Uuz/qVS
+HfDNZTm45U+lJy5Bq9yLz7GX1DUHvYAGZDjckNl/FT/14ST0UoCURSMSGABcmH9h
+JpdrQrojnlA432TCjg9/nDnYELpyDo+WUhDMrPglIiwuvMK5L0OF/wqveDNymQdh
+GSOISCz0RtEpMc4AhJlDA4iH5nvq0OkKwHVVweGpsNXYJ78OioJ/vj1mvpLnbQA8
+awjsVBQ/bUD7mcYaL8L/iNbDKrV22L4ppfP9vrv77PfeYQ8qOzt7xMgADb9D29J1
+lPmK349P0kFvxqkxJCYA6D7A1i0YqHEP+l3/eCqkPQ5nsUWJPgn33djSoQPtZ+WE
+mEV34zcwEZUl1VnE5EXIpRJTqDCf1u/AJY8pVmsC0jXLcB/A4m+ITWOcx5DdGXkX
+zmuAIKkPWkHwBI7CHlNh8nlDLWvSxDuLMcwDdKFn4cws1aY/YUnMK0IlYcAU82e/
+jhYcG/KH+M09VoW3EARAn6pcXshNnLPNbShS0o/3aOtX7CT4E4x6NccmNg1YTB/X
+QOTzRx8SrCZxXNgjkBrXIKDrSQSDB4p4R/fqqfJgEyu1pstS6Kp40dmwo7iRpcTR
+K7O5WUffBzGp8XuZjmY/AC30qzhsUqyfbts7lyMcpBUz5ooHjlSboUGOTPGRLgOv
+4tOLRwn8ZilIOGFXhoJF
+=bMHM
+-----END PGP SIGNATURE-----
+
+--Qrgsu6vtpU/OV/zm--
+
+--===============1148540510==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1148540510==--
