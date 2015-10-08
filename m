@@ -1,37 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/13] arm64: enable building of all dtbs
-Date: Thu, 8 Oct 2015 13:54:05 -0500
-Message-ID: <CAL_JsqLrRc==SPbs6a1irkGA0rFYdJfUg-wWV8yq7MjGtRC58g@mail.gmail.com>
-References: <1444326827-3565-1-git-send-email-robh@kernel.org>
- <1444326827-3565-6-git-send-email-robh@kernel.org> <CAMuHMdVDdNOp5z_TjwBVUDqZuZ0NZNAu7cJ6stsZqqXOBsY_tw@mail.gmail.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
+Date: Thu, 08 Oct 2015 21:15:00 +0200
+Message-ID: <87lhbd9npn.fsf@belgarion.home>
+References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
+	<CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
+	<87y4ffaj3m.fsf@belgarion.home>
+	<CAL_JsqLatWZa1mYL1v83ryJntyLtHDfSfr0gXkvPXJrpCE=qcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVDdNOp5z_TjwBVUDqZuZ0NZNAu7cJ6stsZqqXOBsY_tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLatWZa1mYL1v83ryJntyLtHDfSfr0gXkvPXJrpCE=qcg@mail.gmail.com>
+	(Rob Herring's message of "Thu, 8 Oct 2015 08:30:36 -0500")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 1:15 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> On Thu, Oct 8, 2015 at 7:53 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> Enable building all dtb files when CONFIG_OF_ALL_DTBS is enabled. The dtbs
->> are not really dependent on a platform being enabled or any other kernel
->> config, so for testing coverage it is convenient to build all of the dtbs.
->> This builds all dts files in the tree, not just targets listed. This
->> is simpler for arm64 which has a bunch of sub-dirs.
+Rob Herring <robh@kernel.org> writes:
+
+>> The pxafb driver acts today on the subset of registers which are the same across
+>> all pxaXXX variants. This is what made me think only one compatible property was
+>> required.
+>>
+>> If I'm wrong, I could add "marvell,pxa3xx-lcdc", is that what you think I should
+>> do ?
 >
-> This doesn't look simpler than the arm(32) version?
+> I would prefer specific compatibles (e.g. marvell,pxa270-lcdc) in
+> addition to a generic one. You never know when a specific chip will
+> have some quirk even though "the IP is the same".
+Okay.
 
-I discussed this with Olof in the last version. In the ARM version, I
-could have done just one line "dtb-$(CONFIG_OF_ALL_DTBS) += $(dtb-)"
-to add all the disabled dtbs. On arm64, I would have to do that for
-each sub-dir Makefile as well as make sure any new sub-dirs have this
-line. In the end, I also prefer to build everything in the tree and
-not rely on the dtbs to be explicitly listed.
+>> And then, when a board maintainer will create a devicetree description, he will
+>> write something like :
+>>       compatible = "toshiba,ltm0305a776";
+>>       compatible = "marvell,pxa2xx-panel";
+>
+> Drop this compatible.
+>
+>>       lcd-type = "color-tft";
+>>       ...
+>>
+>> If that's the case, I wonder how to "enforce" that a panel used with
+>> marvell,pxa2xx-lcdc (through the of_graph 'port' node) be compatible with
+>> marvell,pxa2xx-panel ?
+>
+> I'm not sure what you mean. Putting the panel into the dts ensures
+> that. The FB driver may check for toshiba,ltm0305a776 or a list of
+> panels. However, a DRM driver would probably not check that.
+>
+> Rob
+What I mean is that the LDLC controller _must_ be programmmed with the correct
+panel type, ie. one register of the LDLC should be set according to this type.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The type is a hardware property of the panel, and yet it is absolutely mandatory
+to have it set in the panel.
+
+What I mean is : what is the good way to enforce that this property is set
+somewhere in the devicetree description ? Philipp adviced for it to be transfered
+to the ldlc description (ie. marvell,pxa2xx-ldlc), while I was thinking of
+having it in a panel description.
+
+Cheers.
+
+-- 
+Robert
