@@ -1,88 +1,86 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: porter: add VIN0/ADV7180 DT support
-Date: Fri, 09 Oct 2015 00:45:49 +0300
-Message-ID: <2169211.txWv7mmrno@wasted.cogentembedded.com>
-References: <1750082.WpWf34HsI6@wasted.cogentembedded.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] PCI: generic: Fix address window calculation for non-zero
+ starting bus.
+Date: Thu, 8 Oct 2015 17:05:07 -0500
+Message-ID: <CAL_JsqKobjdCOHiQLEStp4Q12e9=3dLZUgq+TuTkmoFVtAz5xw@mail.gmail.com>
+References: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1750082.WpWf34HsI6@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the  Porter board dependent part of the VIN0 device node.
-Add the device node for Analog Devices  ADV7180 video decoder to I2C2 bus.
-Add the necessary subnodes to interconnect VIN0 and ADV7180 devices.
+On Thu, Oct 8, 2015 at 2:54 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+> From: David Daney <david.daney@cavium.com>
+>
+> Make the offset from the beginning of the "reg" property be from the
+> starting bus number, rather than zero.  Hoist the invariant size
+> calculation out of the mapping for loop.
+>
+> Update host-generic-pci.txt to clarify the semantics of the "reg"
+> property with respect to non-zero starting bus numbers.
+>
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-This patch is  analogous to the commit 8d62f4f75320 ("ARM: shmobile:
-henninger: add VIN0/ADV7180 DT support") as there are no differences
-between the boards in this respect.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-This patch is against 'renesas-devel-20151008-v4.3-rc4' tag of Simon Horman's
-'renesas.git' repo plus the Porter I2C2 support patch just posted.
-
- arch/arm/boot/dts/r8a7791-porter.dts |   35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -114,6 +114,11 @@
- 		renesas,groups = "i2c2";
- 		renesas,function = "i2c2";
- 	};
-+
-+	vin0_pins: vin0 {
-+		renesas,groups = "vin0_data8", "vin0_clk";
-+		renesas,function = "vin0";
-+	};
- };
- 
- &scif0 {
-@@ -166,8 +171,38 @@
- 
- 	status = "okay";
- 	clock-frequency = <400000>;
-+
-+	composite-in@20 {
-+		compatible = "adi,adv7180";
-+		reg = <0x20>;
-+		remote = <&vin0>;
-+
-+		port {
-+			adv7180: endpoint {
-+				bus-width = <8>;
-+				remote-endpoint = <&vin0ep>;
-+			};
-+		};
-+	};
- };
- 
- &sata0 {
- 	status = "okay";
- };
-+
-+/* composite video input */
-+&vin0 {
-+	status = "ok";
-+	pinctrl-0 = <&vin0_pins>;
-+	pinctrl-names = "default";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vin0ep: endpoint {
-+			remote-endpoint = <&adv7180>;
-+			bus-width = <8>;
-+		};
-+	};
-+};
-
+> ---
+> This is a replacement for:
+>
+> https://lkml.org/lkml/2015/10/2/653
+>
+> Since that patch is getting too much push-back, this is the only other
+> option for fixing the driver to be internally consistent in its
+> treatment of the offset from "reg" to the first bus in the "bus-range"
+> property.
+>
+>  Documentation/devicetree/bindings/pci/host-generic-pci.txt | 5 +++--
+>  drivers/pci/host/pci-host-generic.c                        | 4 ++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> index cf3e205..3f1d3fc 100644
+> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> @@ -34,8 +34,9 @@ Properties of the host controller node:
+>  - #size-cells    : Must be 2.
+>
+>  - reg            : The Configuration Space base address and size, as accessed
+> -                   from the parent bus.
+> -
+> +                   from the parent bus.  The base address corresponds to
+> +                   the first bus in the "bus-range" property.  If no
+> +                   "bus-range" is specified, this will be bus 0 (the default).
+>
+>  Properties of the /chosen node:
+>
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index fe9a81b..bb93346 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -169,6 +169,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>         struct resource *bus_range;
+>         struct device *dev = pci->host.dev.parent;
+>         struct device_node *np = dev->of_node;
+> +       u32 sz = 1 << pci->cfg.ops->bus_shift;
+>
+>         err = of_address_to_resource(np, 0, &pci->cfg.res);
+>         if (err) {
+> @@ -196,10 +197,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>         bus_range = pci->cfg.bus_range;
+>         for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
+>                 u32 idx = busn - bus_range->start;
+> -               u32 sz = 1 << pci->cfg.ops->bus_shift;
+>
+>                 pci->cfg.win[idx] = devm_ioremap(dev,
+> -                                                pci->cfg.res.start + busn * sz,
+> +                                                pci->cfg.res.start + idx * sz,
+>                                                  sz);
+>                 if (!pci->cfg.win[idx])
+>                         return -ENOMEM;
+> --
+> 1.9.1
+>
