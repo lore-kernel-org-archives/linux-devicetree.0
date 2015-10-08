@@ -1,63 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
-Date: Thu, 8 Oct 2015 20:08:31 +0900
-Message-ID: <20151008110831.GC4961@verge.net.au>
-References: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
- <20151007033957.GA30650@verge.net.au>
- <5614FBB3.5060806@cogentembedded.com>
- <20151008021247.GD8756@verge.net.au>
- <56164B48.6050300@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 0/9] Goodix touchscreen enhancements
+Date: Thu, 08 Oct 2015 13:09:32 +0200
+Message-ID: <5148493.XbtXJjEe71@wuerfel>
+References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56164B48.6050300@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 08, 2015 at 01:54:00PM +0300, Sergei Shtylyov wrote:
-> Hello.
+On Thursday 08 October 2015 13:19:26 Irina Tirdea wrote:
+> Add several enhancements to the Goodix touchscreen driver.
 > 
-> On 10/8/2015 5:12 AM, Simon Horman wrote:
+> Bastien, the functionality from this patches should be now skipped
+> for your devices (Onda v975w, WinBook TW100 and WinBook TW700).
 > 
-> >>>>Define the Porter board dependent part of the SDHI0/2 device nodes along with
-> >>>>the  necessary  voltage regulators (note that the Vcc regulators are dummy --
-> >>>>they are required but don't actually exist on the board). Also, GPIOs have to
-> >>>>be used for the CD and WP signals due to the SDHI driver constraints...
-> >>>>
-> >>>>This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
-> >>>>add SDHI0/2 DT support) as there  are no differences between those boards in
-> >>>>this respect.
-> >>>>
-> >>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >>>>
-> >>>>---
-> >>>>This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
-> >>>>Horman's 'renesas.git' repo.
-> >>>
-> >>>Thanks I have queued this up after addressing some issues
-> >>>in the changelog that checkpatch complained about:
-> >>>
-> >>>* text > 75 characters wide
-> >>>* Missing '"' around name of patch referred to
-> >>>
-> >>>Its looking like there is already quite a log shared between
-> >>
-> >>    Lot?
-> >>
-> >>>r8a7791-porter.dts and r8a7791-henninger.dts. Do you have any
-> >>>thoughts on consolidating or sharing common elements between
-> >>>them somehow?
-> >>
-> >>    I'm still planning to remove the Henninger's .dts for good. It was never
-> >>sold and so had no users outside Renesas (and Cogent Embedded), I was told.
-> >
-> >Thanks, that sounds like a good plan to me.
-> >Do you have any thoughts on when?
+> Aleksei, I have removed your Tested-by tag since I have done some
+> non-trivial changes to the "reset device at init" patch.
 > 
->    Well, I was going to reach the feature parity between these 2 boards,
-> i.e. to support all devices on Porter that are supported on Henninger...
+> 
 
-THanks, that sounds like an entirely reasonable plan to me.
+I've read over all 9 patches now, most of them look good, but I
+commented on the one that I have concerns about.
+
+	Arnd
