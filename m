@@ -1,94 +1,154 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 1/3] mmc: sprd: Add MMC host driver for Spreadtrum SoC
-Date: Thu, 8 Oct 2015 15:54:42 +0200
-Message-ID: <CAPDyKFp2o=RAnizGrWgt080kYqWkBabh6NsCR11q3SPVCfaBAw@mail.gmail.com>
-References: <1439571353-30165-1-git-send-email-wuht06@gmail.com>
-	<1439571353-30165-2-git-send-email-wuht06@gmail.com>
-	<CAPDyKFp=XH+Vo_diRyhrMuB+v1rmTmxo3Lid3Wc-u1ohqNisKw@mail.gmail.com>
-	<CAG_R4_VTXCV4NVMOwv-9F56-_pVsK0hU4go79ZhV3OFxwcF0mA@mail.gmail.com>
-	<CAPDyKFo3xp3wU3XW3kMV7Xz7DFgkxts3CArthYY7-CyWk8cjXw@mail.gmail.com>
-	<CAG_R4_X3kQj5xSA5KLyu75aqusPNXj0H4Xqx+m+5Sg5cZ15bBg@mail.gmail.com>
+From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v7 2/9] Input: goodix - reset device at init
+Date: Thu, 8 Oct 2015 14:14:00 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0F9AF4@irsmsx105.ger.corp.intel.com>
+References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
+ <8618206.7jshXjkP9U@wuerfel>
+ <1F3AC3675D538145B1661F571FE1805F2F0F9A50@irsmsx105.ger.corp.intel.com>
+ <5064355.NeXHGugtYj@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAG_R4_X3kQj5xSA5KLyu75aqusPNXj0H4Xqx+m+5Sg5cZ15bBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5064355.NeXHGugtYj@wuerfel>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongtao Wu <wuht06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "Orson.Zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <Orson.Zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "Chunyan.Zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <Chunyan.Zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "Jason.Wu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <Jason.Wu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
 
->> Thanks for clarifying!
->>
->> You have some differences towards the "standard" sdhci variant, but
->> that doesn't mean you should go off and implement a new driver from
->> scratch, instead you should create a new sdhci variant and re-use code
->> from the generic sdhci driver.
->>
->> The current problem with such approach, is that the sdhci driver isn't
->> designed as a library but instead a driver consisting of too many
->> quirks and callbacks. While you start to adopt your driver towards
->> sdhci, you will need to add yet another bunch of new quirks and
->> callbacks to suite your hw.
->>
->> Now, as the number of callbacks and quirks continues to increase I
->> will sooner or later give up maintaining it, as each line of code will
->> depend on a quirk. So, we need to start turning sdhci into a library
->> *right now*! Russell King, has pointed out this several times as well,
->> but unfortunate I haven't yet seen anyone willing to help out in this
->> field.
->>
->> I would of course be very happy if you would like to have a look at
->> that, but I realize it's a difficult task, So, unless you are happy
->> with taking on such a challenge, I suggest you go for an intermediate
->> step, which thus means convert your driver to a sdhci variant driver
->> and add the quirks/callbacks you need to suite your hw.
->>
->> [...]
->>
->> Kind regards
->> Uffe
->
-> Thanks for kindly suggestion!
-> I think it's a good idea to turn sdhci into a library. But for me it's
-> too difficult to
-> take on such a challenge. However, I will try my best to support you to do
-> it.
 
-Yes, I totally understand and thanks for your support.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> Sent: 08 October, 2015 16:01
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Purdila, Octavian; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
+> 
+> On Thursday 08 October 2015 12:18:37 Tirdea, Irina wrote:
+> > > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > > Sent: 08 October, 2015 13:54
+> > > To: Tirdea, Irina
+> > > Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Purdila, Octavian; linux-
+> > > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
+> > >
+> > > On Thursday 08 October 2015 13:19:28 Irina Tirdea wrote:
+> > > > After power on, it is recommended that the driver resets the device.
+> > > > The reset procedure timing is described in the datasheet and is used
+> > > > at device init (before writing device configuration) and
+> > > > for power management. It is a sequence of setting the interrupt
+> > > > and reset pins high/low at specific timing intervals. This procedure
+> > > > also includes setting the slave address to the one specified in the
+> > > > ACPI/device tree.
+> > > >
+> > > > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > > > driver gt9xx.c for Android (publicly available in Android kernel
+> > > > trees for various devices).
+> > > >
+> > > > For reset the driver needs to control the interrupt and
+> > > > reset gpio pins (configured through ACPI/device tree). For devices
+> > > > that do not have the gpio pins declared, the functionality depending
+> > > > on these pins will not be available, but the device can still be used
+> > > > with basic functionality.
+> > > >
+> > > > For both device tree and ACPI, the interrupt gpio pin configuration is
+> > > > read from the "irq-gpio" property and the reset pin configuration is
+> > > > read from the "reset-gpio" property. For ACPI 5.1, named properties
+> > > > can be specified using the _DSD section. If there is no _DSD section
+> > > > in the ACPI table, the driver will fall back to using indexed gpio
+> > > > pins declared in the _CRS section.
+> > >
+> > > Would it help to use a plain "gpios" property here to always look
+> > > up the lines by index?
+> > >
+> >
+> > The problem with ACPI indexed gpios is that platforms declare the
+> > pins in random order. In this case we have some platforms that declare
+> > the interrupt pin first and others that declare the reset pin first.
+> > There is no way to differentiate between them so the only way to support
+> > these platforms is to pick a default and list all exceptions in the driver.
+> > My previous implementation did that with indexed gpios and dmi quirks. [1]
+> >
+> > This can be solved by using named gpios, which are available starting with ACPI 5.1.
+> > In this way we know exactly which is the interrupt pin and which is the reset pin
+> > and we do not need to add any additional exceptions to the driver.
+> > However, we still need to support the platforms that are already out there so
+> > we fall back to indexed gpios.
+> >
+> > [1] https://lkml.org/lkml/2015/9/15/609
+> 
+> Right.
+> 
+> > > > +/*
+> > > > + * Some platforms specify the gpio pins for interrupt and reset properly
+> > > > + * in ACPI, but cannot use the interrupt pin as output due to their specific
+> > > > + * HW configuration.
+> > > > + */
+> > > > +static const struct dmi_system_id goodix_no_gpio_pins_support[] = {
+> > > > +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+> > > > +	{
+> > > > +		.ident = "Onda v975w",
+> > > > +		.matches = {
+> > > > +			DMI_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
+> > > > +			DMI_MATCH(DMI_PRODUCT_UUID,
+> > > > +				  "03000200-0400-0500-0006-000700080009"),
+> > > > +			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+> > > > +			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+> > > > +		}
+> > > > +	},
+> > >
+> > > I think lists like this in drivers should be avoided if at all possible,
+> > > it just leads to other people adding their platform in the lists as
+> > > opposed to fixing their boot loaders.
+> > >
+> > > Can you find another way to detect at runtime whether it works, and
+> > > print a warning if it doesn't?
+> >
+> > I agree with you on this, but unfortunately I have not found a better way to do it.
+> >
+> > The main problem comes from the interrupt pin. This device uses the interrupt pin
+> > as output, which some platforms do not support (either due to the HW configuration
+> > or due to flagging it wrong in BIOS) [2] [3]. There is no error returned, just a warning
+> > in dmesg.
+> >
+> > [2] https://lkml.org/lkml/2015/9/28/851
+> > [3] https://lkml.org/lkml/2015/9/30/607
+> 
+> Would it be possible to combine those two and require future firmware to
+> use the named gpios if they want the proper reset, but fall back to not
+> doing it if they use an anonymous list of GPIOs?
+> 
 
->
-> As you suggested, I will consider converting our eMMC host driver to a
-> sdhci variant driver. However, our controller has some features, which
-> differentiate it from standard sd host controller. For example, our controller
-> doesn't have such functions as follows: tuning or re-tuning, Power Control
-> Register, PIO or ADMA transfer mode, UHS-II and so on. So, if we use sdchi
-> variant driver right now, I think it has a litter redundancy.
+Yes, that would work.
+I will send a new version that includes this change.
 
-I realize that, but I would very much appreciate if you give it try -
-I think it should be doable.
+Thanks,
+Irina
 
-Of course, you will need to change the "sdhci core" to suite your
-needs and normally people do that via adding callbacks and quirks.
-Perhaps you can keep my request in mind of turning sdhci into a
-library and thus limit the number of added quirks and callbacks...
-
->
-> Now our sdio team are discussing improving  our eMMC host controller, we are
-> making it more standardized. But you know, changing a IP block is a long
-> process. Maybe it will take us about one or two years. So what do you think
-> if we use ourself eMMC host driver right now, and convert it when our new host
-> controller is ready.
->
-
-Well, that won't help the current HW so I would encourage you to do
-the "sdhci variant" work anyway. Likely it will also benefit you when
-you try to upstream the next variant of the driver to cope with your
-new HW.
-
-Kind regards
-Uffe
+> > > > +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
+> > > > +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
+> > > > +	if (error)
+> > > > +		return error;
+> > >
+> > > If the "interrupt" gpio is used as an output, maybe it has the wrong
+> > > name? Is that the name from the goodix datasheet (that would be ok)
+> > > or something you picked?
+> > >
+> >
+> > This is from the goodix datasheet [4]. The pin that is used for receiving interrupts
+> > is also used as output (for reset and suspend procedures).
+> >
+> > [4]
+> https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKNlktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&
+> usp=sharing
+> >
+> 
+> Ok.
+> 
+> 	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
