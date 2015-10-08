@@ -1,51 +1,36 @@
-From: wangfei <w.f@huawei.com>
-Subject: Re: [PATCH 1/8] dt-bindings: pmic: Document Hi655x pmic driver
-Date: Thu, 8 Oct 2015 14:33:06 +0800
-Message-ID: <56160E22.3010703@huawei.com>
-References: <1443611111-3196-1-git-send-email-w.f@huawei.com> <1443611111-3196-2-git-send-email-w.f@huawei.com> <20150930173921.GJ15635@sirena.org.uk>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3][v4] Documentation: dt: dwc3: Add
+ snps,quirk-frame-length-adjustment property
+Date: Thu, 8 Oct 2015 14:47:21 +0800
+Message-ID: <20151008064721.GB22673@tiger>
+References: <1441341894-17327-1-git-send-email-nikhil.badola@freescale.com>
+ <SN1PR0301MB1629AAEC687AF3E058BB701DF35A0@SN1PR0301MB1629.namprd03.prod.outlook.com>
+ <BN1PR0301MB0675A3534647A872F433E689E9430@BN1PR0301MB0675.namprd03.prod.outlook.com>
+ <20151002195929.GH5552@saruman.tx.rr.com>
+ <CY1PR0301MB068352F2D504B1CC93FA3C8AE9480@CY1PR0301MB0683.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150930173921.GJ15635@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <CY1PR0301MB068352F2D504B1CC93FA3C8AE9480@CY1PR0301MB0683.namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, khilman@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, bintian.wang@huawei.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, puck.chen@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, william.wfei@gmail.com, zhongkaihua@huawei.com
+To: RAJESH BHAGAT <rajesh.bhagat@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/10/1 1:39, Mark Brown wrote:
-> On Wed, Sep 30, 2015 at 07:05:04PM +0800, Fei Wang wrote:
+On Mon, Oct 05, 2015 at 05:37:02AM +0000, RAJESH BHAGAT wrote:
+> Hi Shawn,
 > 
->> +Hisilicon hi655x Power Management Integrated Circuit (PMIC)
->> +
->> +hi655x consists of a large and varied group of sub-devices:
->> +
->> +Device			 Supply Names	 Description
->> +------			 ------------	 -----------
->> +hi655x-powerkey		:		: Powerkey
->> +hi655x-regulator-pmic	:		: Regulators
->> +hi655x-usbvbus		:		: USB plug detection
->> +hi655x-pmu-rtc		:		: RTC
->> +hi655x-coul		:		: Coulomb
+> Regarding below patch, Felipe has suggested to talk to you:
 > 
-> ...counter?
+> > [PATCH 3/3][v4] arm: dts: ls1021a: Add quirk for Erratum A009116
 > 
-> There's no documentation of the bindings for any of the above devices or
-> how things are structured, you need to provide binding documentation
-> which is understandable standalone.  None of the properties are
-> documented, nor is the set of regulators supported or how this is
-> structured.
+> talk to you ARM-SoC maintainer.
+> 
+> https://lkml.org/lkml/2015/9/4/7
+> 
+> Please provide your comments. Inform me in case, if a resend is required.
 
-OK,i will add them.
-> 
->> +                coul: coul@1 {
->> +                        compatible = "hisilicon,hi655x-coul";
->> +                        interrupt-parent = <&pmic>;
->> +                        interrupts = <24 0>, <25 0>, <26 0>, <27 0>;
->> +                        interrupt-names = "cl_int_i", "cl_out_i", "cl_in_i", "vbat_int_i";
->> +                        battery_product_index = <0>;
-> 
-> For example, the "battery_product_index" property here is undocumented.
+If it can go independently through arm-soc tree, please resend it to me.
 
-now on hikey, we only enable hi655x-regulator-pmic function, and regulator is child node of pmic.do i need to document regulator dt-binding in this file or create a new regulator dt-binding file?
-> 
+Shawn
