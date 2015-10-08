@@ -1,35 +1,72 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v13 1/2] ARM: dts: vf610twr: add NAND flash controller
- peripherial
-Date: Thu, 8 Oct 2015 16:33:40 +0800
-Message-ID: <20151008083340.GA22946@tiger>
-References: <1444262316-30588-1-git-send-email-stefan@agner.ch>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 2/6] ARM: dts: sun7i: Enable USB DRC on
+ Bananapi
+Date: Thu, 8 Oct 2015 09:37:39 +0100
+Message-ID: <56162B53.8020800@redhat.com>
+References: <1442928966-6418-1-git-send-email-hdegoede@redhat.com>
+ <1442928966-6418-2-git-send-email-hdegoede@redhat.com>
+ <20150929080453.GN7104@lukather> <560A4B3D.4040007@redhat.com>
+ <20151001083242.GB7104@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444262316-30588-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, bpringlemeir@gmail.com, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, sebastian@breakpoint.cc, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, computersforpeace@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151001083242.GB7104@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 07, 2015 at 04:58:35PM -0700, Stefan Agner wrote:
-> This adds the NAND flash controller (NFC) peripherial. The driver
-> supports the SLC NAND chips found on Freescale's Vybrid Tower System
-> Module. The Micron NAND chip on the module needs 4-bit ECC per 512
-> byte page. Use 24-bit ECC per 2k page, which is supported by the
-> driver.
-> 
-> Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
-> Reviewed-by: Brian Norris <computersforpeace@gmail.com>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+Hi,
 
-Applied both, thanks.
+On 10/01/2015 09:32 AM, Maxime Ripard wrote:
+> Hi,
+>
+> On Tue, Sep 29, 2015 at 10:26:37AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 29-09-15 10:04, Maxime Ripard wrote:
+>>> On Tue, Sep 22, 2015 at 03:36:01PM +0200, Hans de Goede wrote:
+>>>> Enable the otg/drc usb controller on the Bananapi.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Applied all the other patches but this one.
+>>
+>> Thanks, seems you did not push this to your git.kernel.org repo though ?
+>
+> I think I did, but maybe not at the time you sent the mail.
+>
+>>> Since we dropped the patch adding the regulators support on the
+>>> Bananapi until we figure out why the board crash, it doesn't compile
+>>> anymore.
+>>
+>> How about me doing a v2 of the regulators patch which removes the
+>>
+>> &cpu0 {
+>>          cpu-supply = <&reg_dcdc2>;
+>> };
+>>
+>> So that we do not get cpu voltage scaling, then the regulator
+>> changes should be a NOP, everything should just keep the u-boot
+>> set voltages, and we can enable oth support.
+>>
+>> And then when we've figured out a safe way to enable cpu voltage
+>> scaling we can do so with a follow up patch ?
+>>
+>> Is that a plan ? If so say yes and I'll do a v2 of these patches :)
+>
+> Yep, it sounds like a good plan :)
 
-Stefan,
+With the new v3 of the regulators patch with the corrected opp-s which
+was just send this should no longer be necessary, can you apply the
+original "ARM: dts: sun7i: Enable USB DRC on Bananapi" after applying
+v3 of the regulators patch please ?
 
-In the future, please use my new email address which has been updated to
-MAINTAINERS for a couple of release cycles.
+Regards,
 
-Shawn
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
