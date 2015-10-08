@@ -1,74 +1,51 @@
-From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [PATCH v7 7/9] Input: goodix - add sysfs interface to dump config
-Date: Thu,  8 Oct 2015 13:19:33 +0300
-Message-ID: <1444299575-17417-8-git-send-email-irina.tirdea@intel.com>
-References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH 1/1] ASoC: da7213: Correct units description of
+	dmic-clkrate
+Date: Thu, 8 Oct 2015 11:21:54 +0100
+Message-ID: <dbcafb5ad02a756d93458e3262cf1d1eab8f607e.1444299436.git.Adam.Thomson.Opensource@diasemi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Goodix devices have a configuration information register area that
-specify various parameters for the device. The configuration information
-has a specific format described in the Goodix datasheet. It includes X/Y
-resolution, maximum supported touch points, interrupt flags, various
-sesitivity factors and settings for advanced features (like gesture
-recognition).
+Description previously stated MHz whereas the resolution is in Hz.
+This has now has been updated to align with reality.
 
-Export a sysfs interface that would allow reading the configuration
-information. The default device configuration can be used as a starting
-point for creating a valid configuration firmware used by the device at
-init time to update its configuration.
-
-This sysfs interface will be exported only if the gpio pins are properly
-initialized from ACPI/DT.
-
-Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 ---
- drivers/input/touchscreen/goodix.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index b94f0c6..4376990 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -543,12 +543,35 @@ static ssize_t goodix_esd_timeout_store(struct device *dev,
- 	return count;
- }
+This patch is based on changes introduced under patch:
+
+'ASoC: da7213: Add bindings documentation for codec driver'
+(Commit a97d4e93a9bc556d0b3c2efb7695eb4c79938de7, kernel/git/broonie/sound.git)
+
+ Documentation/devicetree/bindings/sound/da7213.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/da7213.txt b/Documentation/devicetree/bindings/sound/da7213.txt
+index 7280e82..5890280 100644
+--- a/Documentation/devicetree/bindings/sound/da7213.txt
++++ b/Documentation/devicetree/bindings/sound/da7213.txt
+@@ -18,7 +18,7 @@ Optional properties:
+ 	["lrise_rfall", "lfall_rrise"]
+ - dlg,dmic-samplephase : When to sample audio from DMIC.
+ 	["on_clkedge", "between_clkedge"]
+-- dlg,dmic-clkrate : DMIC clock frequency (MHz).
++- dlg,dmic-clkrate : DMIC clock frequency (Hz).
+ 	[<1500000>, <3000000>]
  
-+static ssize_t goodix_dump_config_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct goodix_ts_data *ts = dev_get_drvdata(dev);
-+	u8 config[GOODIX_CONFIG_MAX_LENGTH];
-+	int error, count = 0, i;
-+
-+	error = goodix_i2c_read(ts->client, GOODIX_REG_CONFIG_DATA,
-+				config, ts->cfg_len);
-+	if (error) {
-+		dev_warn(&ts->client->dev,
-+			 "Error reading config (%d)\n",  error);
-+		return error;
-+	}
-+
-+	for (i = 0; i < ts->cfg_len; i++)
-+		count += scnprintf(buf + count, PAGE_SIZE - count, "%02x ",
-+				   config[i]);
-+	return count;
-+}
-+
- /* ESD timeout in ms. Default disabled (0). Recommended 2000 ms. */
- static DEVICE_ATTR(esd_timeout, S_IRUGO | S_IWUSR, goodix_esd_timeout_show,
- 		   goodix_esd_timeout_store);
-+static DEVICE_ATTR(dump_config, S_IRUGO, goodix_dump_config_show, NULL);
- 
- static struct attribute *goodix_attrs[] = {
- 	&dev_attr_esd_timeout.attr,
-+	&dev_attr_dump_config.attr,
- 	NULL
- };
- 
+ ======
 -- 
-1.9.1
+1.9.3
