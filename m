@@ -1,72 +1,106 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 1/5] PCI: Add pci_bus_fixup_irqs().
-Date: Thu, 8 Oct 2015 10:18:43 +0100
-Message-ID: <20151008091843.GA31644@red-moon>
-References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
- <56157BC8.3070406@caviumnetworks.com>
- <20151007230847.GG27633@localhost> <1906663.FAJXtJhtPt@shredder>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] devicetree: add binding for generic mmio clocksource
+Date: Thu, 08 Oct 2015 10:24:57 +0100
+Message-ID: <yw1xmvvtk906.fsf@unicorn.mansr.com>
+References: <1444232234-2133-1-git-send-email-mans@mansr.com>
+	<20151007154727.GC28981@leverpostej>
+	<yw1xvbaik4mn.fsf@unicorn.mansr.com>
+	<CAL_JsqJDZKTB8xowVdGK=9=4omp_wHdwqYP_Ln3-QdknjAwxSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1906663.FAJXtJhtPt@shredder>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthew Minter <matt@masarand.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, David Daney <david.daney@cavium.com>, Will Deacon <will.deacon@arm.com>, David Daney <ddaney@caviumnetworks.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJDZKTB8xowVdGK=9=4omp_wHdwqYP_Ln3-QdknjAwxSg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Rob Herring's message of "Wed, 7 Oct 2015 14:40:53 -0500")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthew,
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-On Thu, Oct 08, 2015 at 03:07:34AM +0100, Matthew Minter wrote:
-> On Wednesday 07 October 2015 18:08:47 Bjorn Helgaas wrote:
+> On Wed, Oct 7, 2015 at 11:47 AM, M=E5ns Rullg=E5rd <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> w=
+rote:
+>> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+>>
+>>> On Wed, Oct 07, 2015 at 04:37:13PM +0100, Mans Rullgard wrote:
+>>>> This adds a DT binding for a generic mmio clocksource as implement=
+ed
+>>>> by clocksource_mmio_init().
+>>>>
+>>>> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>> Changed in v2:
+>>>> - added sched_clock support
+>>>> ---
+>>>>  .../devicetree/bindings/timer/clocksource-mmio.txt | 28 +++++++++=
++++++++++++++
+>>>>  1 file changed, 28 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/timer/clocks=
+ource-mmio.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/timer/clocksource-m=
+mio.txt b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
+>>>> new file mode 100644
+>>>> index 0000000..cfb3601
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
+>>>> @@ -0,0 +1,28 @@
+>>>> +Generic MMIO clocksource
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- compatible: should be "clocksource-mmio"
+>
+> I'm doubtful this matches any h/w. This would assume there is no othe=
+r
+> control like enabling, reset, clock dividers, etc.
 
-[...]
+I know it matches real hardware.
 
-> Yes, I had been working on this last year, and got a patchset that was tested 
-> on arm, x86 (and amd64), and slightly tested on powerpc. However I was not 
-> able to test other architectures as they were not available in the software 
-> lab I work in but should in theory work on all arches the kernel runs on.
-> 
-> I can say that that patchset is being used by several projects out of tree 
-> currently but unfortunately due to a shift in priorities in the lab I was 
-> working for I lost access to the resources to develop and test the patch 
-> easily.
-> 
-> I have done some additional work personally on it but so far have not got 
-> anything that I am happy to submit for inclusion in tree. (due to a number of 
-> issues in structure and  a complication relating to weak functions where 
-> multiple variations of the same arch exist.
-> 
-> You can see in thread that is linked above 
-> (http://lkml.kernel.org/r/1412222866-21068-1-git-send-email-matt@masarand.com)
-> some feedback on the issues that need to be solved.
-> 
-> I also expect that the patchset needs to be pulled forward to a newer kernel 
-> as I have been working in a frozen tree without rebasing to reduce test 
-> complexity.
-> 
-> I would be happy to put some time this weekend if possible into reviewing the 
-> state of this and seeing if I can at least put together a version running on a 
-> recent kernel. I can also go over the issues again which were proving 
-> problematic and see if any of them are easy to fix.
-> 
-> However I can only work on this in my own time for now and on my own boxes 
-> (which are all x86 and amd64) so the amount I can do will be limited. 
+> Who is your user of this?
 
-I was not aware of your patchset but I am happy to see that code since it
-is definitely the right approach and I am willing to help you test it on
-arm with the HW I have (probably it will also help remove some code
-from arm64 too), let me know when you have a branch ready to test and
-if you need any help in rebasing the set.
+Various Sigma Designs chips have such counters.  I figured others might
+as well, and it seemed silly to tie such generic functionality to a
+specific chip family.
 
-Thanks,
-Lorenzo
+>> I had a bad feeling about this.  How would you suggest determining a
+>> suitable value from actual hardware parameters?
+>
+> I wouldn't. I think there is general agreement that rating is broken.
+
+So hardcoding something like 300 would be OK?
+
+>>>> +- linux,sched-clock: boolean, register clocksource as sched_clock
+>>>
+>>> Likewise, this property doesn't belong in the DT for the same reaso=
+ns as
+>>> clocksource-rating.
+>>
+>> What would be a proper way to select a sched_clock source?  I realis=
+e
+>> it's a Linux-specific thing and DT is supposed to be generic, but th=
+e
+>> information must be provided somehow.
+>
+> The kernel already has some logic to do this. Most number of bits
+> followed by highest frequency will be the winning sched_clock. You
+> might also want to look at things like always on or not.
+
+The problem is that sched_clock_register() doesn't take a pointer to be
+passed back to the read_sched_clock callback like most interfaces of
+this type do.  This means the callback must use global variables set up
+before the register call, but at that time there's no way of knowing
+which one will be used.  If there were a way of getting a pointer to th=
+e
+callback, it would be a simple matter of registering all instances and
+letting the kernel choose which to use.
+
+--=20
+M=E5ns Rullg=E5rd
+mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
