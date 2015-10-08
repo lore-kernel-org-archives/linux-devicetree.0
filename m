@@ -1,56 +1,379 @@
 From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v8 6/6] MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
-Date: Thu, 8 Oct 2015 17:43:14 +0800
-Message-ID: <1444297394-3122-7-git-send-email-lftan@altera.com>
+Subject: [PATCH v8 4/6] pci: altera: Add Altera PCIe MSI driver
+Date: Thu, 8 Oct 2015 17:43:12 +0800
+Message-ID: <1444297394-3122-5-git-send-email-lftan@altera.com>
 References: <1444297394-3122-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1444297394-3122-1-git-send-email-lftan@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, lftan.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Ley Foon Tan <lftan@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
----
- MAINTAINERS | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+This patch adds Altera PCIe MSI driver. This soft IP supports configurable
+number of vectors, which is a dts parameter.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f6685f..482de0b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7943,6 +7943,14 @@ F:	include/linux/pci*
- F:	arch/x86/pci/
- F:	arch/x86/kernel/quirks.c
+Signed-off-by: Ley Foon Tan <lftan@altera.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+---
+ drivers/pci/host/Kconfig           |   8 +
+ drivers/pci/host/Makefile          |   1 +
+ drivers/pci/host/pcie-altera-msi.c | 310 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 319 insertions(+)
+ create mode 100644 drivers/pci/host/pcie-altera-msi.c
+
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index 08f2543..0500bb3 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -152,4 +152,12 @@ config PCIE_ALTERA
+ 	  Say Y here if you want to enable PCIe controller support for Altera
+ 	  SoCFPGA family of SoCs.
  
-+PCI DRIVER FOR ALTERA PCIE IP
-+M:	Ley Foon Tan <lftan@altera.com>
-+L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/altera-pcie.txt
-+F:	drivers/pci/host/pcie-altera.c
++config PCIE_ALTERA_MSI
++	bool "Altera PCIe MSI feature"
++	depends on PCI_MSI
++	select PCI_MSI_IRQ_DOMAIN
++	help
++	  Say Y here if you want PCIe MSI support for the Altera SocFPGA SoC.
++	  This MSI driver supports Altera MSI to GIC controller IP.
 +
- PCI DRIVER FOR ARM VERSATILE PLATFORM
- M:	Rob Herring <robh@kernel.org>
- L:	linux-pci@vger.kernel.org
-@@ -8044,6 +8052,14 @@ L:	linux-pci@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/host/*spear*
- 
-+PCI MSI DRIVER FOR ALTERA MSI IP
-+M:	Ley Foon Tan <lftan@altera.com>
-+L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-+F:	drivers/pci/host/pcie-altera-msi.c
+ endmenu
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 6954f76..6c4913d 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -18,3 +18,4 @@ obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
+ obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
+ obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
+ obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
++obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
+diff --git a/drivers/pci/host/pcie-altera-msi.c b/drivers/pci/host/pcie-altera-msi.c
+new file mode 100644
+index 0000000..37a358e
+--- /dev/null
++++ b/drivers/pci/host/pcie-altera-msi.c
+@@ -0,0 +1,310 @@
++/*
++ * Copyright Altera Corporation (C) 2013-2015. All rights reserved
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/interrupt.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/module.h>
++#include <linux/msi.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_pci.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
 +
- PCI MSI DRIVER FOR APPLIEDMICRO XGENE
- M:	Duc Dang <dhdang@apm.com>
- L:	linux-pci@vger.kernel.org
++#define MSI_STATUS		0x0
++#define MSI_ERROR		0x4
++#define MSI_INTMASK		0x8
++
++#define MAX_MSI_VECTORS		32
++struct altera_msi {
++	DECLARE_BITMAP(used, MAX_MSI_VECTORS);
++	struct mutex		lock;	/* proctect used variable */
++	struct platform_device	*pdev;
++	struct irq_domain		*msi_domain;
++	struct irq_domain		*inner_domain;
++	void __iomem		*csr_base;
++	void __iomem		*vector_base;
++	phys_addr_t		vector_phy;
++	u32			num_of_vectors;
++	int			irq;
++};
++
++static inline void msi_writel(struct altera_msi *msi, u32 value, u32 reg)
++{
++	writel_relaxed(value, msi->csr_base + reg);
++}
++
++static inline u32 msi_readl(struct altera_msi *msi, u32 reg)
++{
++	return readl_relaxed(msi->csr_base + reg);
++}
++
++static void altera_msi_isr(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct altera_msi *msi;
++	unsigned long status;
++	u32 num_of_vectors;
++	u32 bit;
++	u32 virq;
++
++	chained_irq_enter(chip, desc);
++	msi = irq_desc_get_handler_data(desc);
++	num_of_vectors = msi->num_of_vectors;
++
++	while ((status = msi_readl(msi, MSI_STATUS)) != 0) {
++		for_each_set_bit(bit, &status, msi->num_of_vectors) {
++			/* Dummy read from vector to clear the interrupt */
++			readl_relaxed(msi->vector_base + (bit * sizeof(u32)));
++
++			virq = irq_find_mapping(msi->inner_domain, bit);
++			if (virq)
++				generic_handle_irq(virq);
++			else
++				dev_err(&msi->pdev->dev, "unexpected MSI\n");
++		}
++	}
++
++	chained_irq_exit(chip, desc);
++}
++
++static struct irq_chip altera_msi_irq_chip = {
++	.name = "Altera PCIe MSI",
++	.irq_mask = pci_msi_mask_irq,
++	.irq_unmask = pci_msi_unmask_irq,
++};
++
++static struct msi_domain_info altera_msi_domain_info = {
++	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
++		     MSI_FLAG_PCI_MSIX),
++	.chip	= &altera_msi_irq_chip,
++};
++
++static void altera_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
++{
++	struct altera_msi *msi = irq_data_get_irq_chip_data(data);
++	phys_addr_t addr = msi->vector_phy + (data->hwirq * sizeof(u32));
++
++	msg->address_lo = lower_32_bits(addr);
++	msg->address_hi = upper_32_bits(addr);
++	msg->data = data->hwirq;
++
++	dev_dbg(&msi->pdev->dev, "msi#%d address_hi 0x%x address_lo 0x%x\n",
++		(int)data->hwirq, msg->address_hi, msg->address_lo);
++}
++
++static int altera_msi_set_affinity(struct irq_data *irq_data,
++				   const struct cpumask *mask, bool force)
++{
++	 return -EINVAL;
++}
++
++static struct irq_chip altera_msi_bottom_irq_chip = {
++	.name			= "Altera MSI",
++	.irq_compose_msi_msg	= altera_compose_msi_msg,
++	.irq_set_affinity	= altera_msi_set_affinity,
++};
++
++static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				   unsigned int nr_irqs, void *args)
++{
++	struct altera_msi *msi = domain->host_data;
++	unsigned long bit;
++	u32 mask;
++
++	WARN_ON(nr_irqs != 1);
++	mutex_lock(&msi->lock);
++
++	bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
++	if (bit >= msi->num_of_vectors)
++		return -ENOSPC;
++
++	set_bit(bit, msi->used);
++
++	mutex_unlock(&msi->lock);
++
++	irq_domain_set_info(domain, virq, bit, &altera_msi_bottom_irq_chip,
++			    domain->host_data, handle_simple_irq,
++			    NULL, NULL);
++
++	mask = msi_readl(msi, MSI_INTMASK);
++	mask |= 1 << bit;
++	msi_writel(msi, mask, MSI_INTMASK);
++
++	return 0;
++}
++
++static void altera_irq_domain_free(struct irq_domain *domain,
++				   unsigned int virq, unsigned int nr_irqs)
++{
++	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
++	struct altera_msi *msi = irq_data_get_irq_chip_data(d);
++	u32 mask;
++
++	mutex_lock(&msi->lock);
++
++	if (!test_bit(d->hwirq, msi->used)) {
++		dev_err(&msi->pdev->dev, "trying to free unused MSI#%lu\n",
++			d->hwirq);
++	} else {
++		__clear_bit(d->hwirq, msi->used);
++		mask = msi_readl(msi, MSI_INTMASK);
++		mask &= ~(1 << d->hwirq);
++		msi_writel(msi, mask, MSI_INTMASK);
++	}
++
++	mutex_unlock(&msi->lock);
++}
++
++static const struct irq_domain_ops msi_domain_ops = {
++	.alloc	= altera_irq_domain_alloc,
++	.free	= altera_irq_domain_free,
++};
++
++static int altera_allocate_domains(struct altera_msi *msi)
++{
++	msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
++					     &msi_domain_ops, msi);
++	if (!msi->inner_domain) {
++		dev_err(&msi->pdev->dev, "failed to create IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	msi->msi_domain = pci_msi_create_irq_domain(msi->pdev->dev.of_node,
++				&altera_msi_domain_info, msi->inner_domain);
++	if (!msi->msi_domain) {
++		dev_err(&msi->pdev->dev, "failed to create MSI domain\n");
++		irq_domain_remove(msi->inner_domain);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void altera_free_domains(struct altera_msi *msi)
++{
++	irq_domain_remove(msi->msi_domain);
++	irq_domain_remove(msi->inner_domain);
++}
++
++static int altera_msi_remove(struct platform_device *pdev)
++{
++	struct altera_msi *msi = platform_get_drvdata(pdev);
++
++	msi_writel(msi, 0, MSI_INTMASK);
++	irq_set_chained_handler(msi->irq, NULL);
++	irq_set_handler_data(msi->irq, NULL);
++
++	altera_free_domains(msi);
++
++	platform_set_drvdata(pdev, NULL);
++	return 0;
++}
++
++static int altera_msi_probe(struct platform_device *pdev)
++{
++	struct altera_msi *msi;
++	struct device_node *np = pdev->dev.of_node;
++	struct resource *res;
++	int ret;
++
++	msi = devm_kzalloc(&pdev->dev, sizeof(struct altera_msi),
++			   GFP_KERNEL);
++	if (!msi)
++		return -ENOMEM;
++
++	mutex_init(&msi->lock);
++	msi->pdev = pdev;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
++	if (!res) {
++		dev_err(&pdev->dev,
++			"no csr memory resource defined\n");
++		return -ENODEV;
++	}
++
++	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(msi->csr_base)) {
++		dev_err(&pdev->dev, "failed to map csr memory\n");
++		return PTR_ERR(msi->csr_base);
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "vector_slave");
++	if (!res) {
++		dev_err(&pdev->dev,
++			"no vector_slave memory resource defined\n");
++		return -ENODEV;
++	}
++
++	msi->vector_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(msi->vector_base)) {
++		dev_err(&pdev->dev, "failed to map vector_slave memory\n");
++		return PTR_ERR(msi->vector_base);
++	}
++
++	msi->vector_phy = res->start;
++
++	if (of_property_read_u32(np, "num-vectors", &msi->num_of_vectors)) {
++		dev_err(&pdev->dev, "failed to parse the number of vectors\n");
++		return -EINVAL;
++	}
++
++	ret = altera_allocate_domains(msi);
++	if (ret)
++		return ret;
++
++	msi->irq = platform_get_irq(pdev, 0);
++	if (msi->irq <= 0) {
++		dev_err(&pdev->dev, "failed to map IRQ: %d\n", msi->irq);
++		ret = -ENODEV;
++		goto err;
++	}
++
++	irq_set_chained_handler_and_data(msi->irq, altera_msi_isr, msi);
++	platform_set_drvdata(pdev, msi);
++
++	return 0;
++
++err:
++	altera_msi_remove(pdev);
++	return ret;
++}
++
++static const struct of_device_id altera_msi_of_match[] = {
++	{ .compatible = "altr,msi-1.0", NULL },
++	{ },
++};
++
++static struct platform_driver altera_msi_driver = {
++	.driver = {
++		.name = "altera-msi",
++		.of_match_table = altera_msi_of_match,
++	},
++	.probe = altera_msi_probe,
++	.remove = altera_msi_remove,
++};
++
++static int __init altera_msi_init(void)
++{
++	return platform_driver_register(&altera_msi_driver);
++}
++
++subsys_initcall(altera_msi_init);
++
++MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
++MODULE_DESCRIPTION("Altera PCIe MSI support");
++MODULE_LICENSE("GPL v2");
 -- 
 1.8.2.1
-
