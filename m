@@ -1,59 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 02/13] arc: use common make variables for dtb builds
-Date: Thu,  8 Oct 2015 12:53:36 -0500
-Message-ID: <1444326827-3565-3-git-send-email-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 05/13] arm64: enable building of all dtbs
+Date: Thu,  8 Oct 2015 12:53:39 -0500
+Message-ID: <1444326827-3565-6-git-send-email-robh@kernel.org>
 References: <1444326827-3565-1-git-send-email-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444326827-3565-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1444326827-3565-1-git-send-email-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Olof Johansson <olof@lixom.net>, arm@kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use dtb-y and always make variables to build dtbs instead of explicit
-dtbs rule. This is in preparation to support building all dtbs.
+Enable building all dtb files when CONFIG_OF_ALL_DTBS is enabled. The dtbs
+are not really dependent on a platform being enabled or any other kernel
+config, so for testing coverage it is convenient to build all of the dtbs.
+This builds all dts files in the tree, not just targets listed. This
+is simpler for arm64 which has a bunch of sub-dirs.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/arc/Makefile          | 2 +-
- arch/arc/boot/dts/Makefile | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-index 8a27a48..cf0cf34 100644
---- a/arch/arc/Makefile
-+++ b/arch/arc/Makefile
-@@ -121,7 +121,7 @@ $(boot_targets): vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index d9f8833..b01ec43 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -14,3 +14,9 @@ dts-dirs += sprd
+ dts-dirs += xilinx
  
- dtbs: scripts
--	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs
-+	$(Q)$(MAKE) $(build)=$(boot)/dts
- 
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
-diff --git a/arch/arc/boot/dts/Makefile b/arch/arc/boot/dts/Makefile
-index b0e3f19..e8e46f9 100644
---- a/arch/arc/boot/dts/Makefile
-+++ b/arch/arc/boot/dts/Makefile
-@@ -6,10 +6,10 @@ ifneq ($(CONFIG_ARC_BUILTIN_DTB_NAME),"")
- endif
- 
- obj-y   += $(builtindtb-y).dtb.o
--targets += $(builtindtb-y).dtb
-+dtb-y := $(builtindtb-y).dtb
- 
- .SECONDARY: $(obj)/$(builtindtb-y).dtb.S
- 
--dtbs:  $(addprefix  $(obj)/, $(builtindtb-y).dtb)
- 
-+always := $(dtb-y)
- clean-files := *.dtb  *.dtb.S
+ subdir-y	:= $(dts-dirs)
++
++dtstree		:= $(srctree)/$(src)
++
++dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(foreach d,$(dts-dirs), $(wildcard $(dtstree)/$(d)/*.dts)))
++
++always		:= $(dtb-y)
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
