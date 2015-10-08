@@ -1,36 +1,66 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3][v4] Documentation: dt: dwc3: Add
- snps,quirk-frame-length-adjustment property
-Date: Thu, 8 Oct 2015 14:47:21 +0800
-Message-ID: <20151008064721.GB22673@tiger>
-References: <1441341894-17327-1-git-send-email-nikhil.badola@freescale.com>
- <SN1PR0301MB1629AAEC687AF3E058BB701DF35A0@SN1PR0301MB1629.namprd03.prod.outlook.com>
- <BN1PR0301MB0675A3534647A872F433E689E9430@BN1PR0301MB0675.namprd03.prod.outlook.com>
- <20151002195929.GH5552@saruman.tx.rr.com>
- <CY1PR0301MB068352F2D504B1CC93FA3C8AE9480@CY1PR0301MB0683.namprd03.prod.outlook.com>
+From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
+Date: Thu, 8 Oct 2015 08:49:58 +0200
+Message-ID: <CA+gwMccn6DjE6khY6RMdgvz9xw4Gs2kLj26SJhxoj1B2te8Yjw@mail.gmail.com>
+References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
+	<CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
+	<87y4ffaj3m.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CY1PR0301MB068352F2D504B1CC93FA3C8AE9480@CY1PR0301MB0683.namprd03.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: RAJESH BHAGAT <rajesh.bhagat@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87y4ffaj3m.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 05, 2015 at 05:37:02AM +0000, RAJESH BHAGAT wrote:
-> Hi Shawn,
-> 
-> Regarding below patch, Felipe has suggested to talk to you:
-> 
-> > [PATCH 3/3][v4] arm: dts: ls1021a: Add quirk for Erratum A009116
-> 
-> talk to you ARM-SoC maintainer.
-> 
-> https://lkml.org/lkml/2015/9/4/7
-> 
-> Please provide your comments. Inform me in case, if a resend is required.
+On Tue, Oct 6, 2015 at 9:32 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>>> +       "marvell,pxa2xx-lcdc",
+>>
+>> No differences in h/w for any of the chips?
+> All pxa25x, pxa27x and pxa3xx are compatible.
+> AFAIK, pxa3xx has an IP with additional registers. But :
+>  - these (this) register(s) is not necessary for the display controller to work
+>    (it's more a control to shift red/green/blue values, and energy management)
+>  - all the registers in pxa2{5,7}x are the same in pxa3xx
 
-If it can go independently through arm-soc tree, please resend it to me.
+So the pxa3xx is pxa2xx compatible. The pxa3xx device tree should
+contain compatible = "marvell,pxa3xx-lcdc", "marvell,pxa2xx-lcdc";
 
-Shawn
+That way we can just ignore the pxa3xx compatible value until the need
+arises to do something different with the additional registers, and if
+that happens we already have it in the device trees.
+
+>> If lcd-type is smart-panel, then this node would not make sense.
+> Ah I see, so this could be optional maybe ?
+>
+> Actually when I'll move the panel definition to bindings/display/panel, is this
+> what I should do :
+>  - create a file marvell,pxa2xx-panel
+>  - input all these properties into this file
+>
+> And then, when a board maintainer will create a devicetree description, he will
+> write something like :
+>       compatible = "toshiba,ltm0305a776";
+>       compatible = "marvell,pxa2xx-panel";
+>       lcd-type = "color-tft";
+>       ...
+>
+> If that's the case, I wonder how to "enforce" that a panel used with
+> marvell,pxa2xx-lcdc (through the of_graph 'port' node) be compatible with
+> marvell,pxa2xx-panel ?
+
+I think we should move to use drm simple-panel as soon as possible,
+but until this information can be derived from the compatible string,
+it should maybe stay contained to the lcdc node. At least I don't
+think adding a marvell panel compatible is a solution. Maybe this
+could be generalized and added as an optional property to the
+simple-panel bindings.
+
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
