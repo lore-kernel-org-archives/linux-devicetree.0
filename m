@@ -1,90 +1,127 @@
-From: chunfeng yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v9 4/5] xhci: mediatek: support MTK xHCI host controller
-Date: Thu, 8 Oct 2015 22:42:16 +0800
-Message-ID: <1444315336.26198.18.camel@mhfsdcap03>
-References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1443495698-32233-5-git-send-email-chunfeng.yun@mediatek.com>
-	 <560D1CA9.1050009@linaro.org> <1444305958.26198.14.camel@mhfsdcap03>
-	 <5616616D.3080205@linaro.org> <561669FC.3030600@linux.intel.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] PCI: generic: Quit clobbering our pci_ops.
+Date: Thu, 8 Oct 2015 10:02:16 -0500
+Message-ID: <20151008150215.GB3885@localhost>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+ <1443811443-18878-4-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561669FC.3030600@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443811443-18878-4-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Thu, 2015-10-08 at 16:05 +0300, Mathias Nyman wrote:
-> On 08.10.2015 15:28, Daniel Thompson wrote:
-> > On 08/10/15 13:05, chunfeng yun wrote:
-> >> Hi,
-> >> On Thu, 2015-10-01 at 12:44 +0100, Daniel Thompson wrote:
-> >>> On 29/09/15 04:01, Chunfeng Yun wrote:
-> >>>> There some vendor quirks for MTK xhci host controller:
-> >>>> 1. It defines some extra SW scheduling parameters for HW
-> >>>>     to minimize the scheduling effort for synchronous and
-> >>>>     interrupt endpoints. The parameters are put into reseved
-> >>>>     DWs of slot context and endpoint context.
-> >>>> 2. Its IMODI unit for Interrupter Moderation register is
-> >>>>     8 times as much as that defined in xHCI spec.
-> >>>> 3. Its TDS in  Normal TRB defines a number of packets that
-> >>>>     remains to be transferred for a TD after processing all
-> >>>>     Max packets in all previous TRBs.
-> >>>>
-> >>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> >>>
-> >>> I've done some basic soak tests, both with a directly attached USB3 HDD
-> >>> and, given the extra code to manage isochronous xfer, also with a hub,
-> >>> disc and two audio interfaces.
-> >>>
-> >>> Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> >>>
-> >>>
-> >>>> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-> >>>> index 57f40a1..243f696 100644
-> >>>> --- a/drivers/usb/host/xhci-ring.c
-> >>>> +++ b/drivers/usb/host/xhci-ring.c
-> >>>> @@ -68,6 +68,7 @@
-> >>>>    #include <linux/slab.h>
-> >>>>    #include "xhci.h"
-> >>>>    #include "xhci-trace.h"
-> >>>> +#include "xhci-mtk.h"
-> >>>>
-> >>>>    /*
-> >>>>     * Returns zero if the TRB isn't in this segment, otherwise it returns the DMA
-> >>>> @@ -3044,18 +3045,27 @@ static u32 xhci_td_remainder(struct xhci_hcd *xhci, int transferred,
-> >>>>                      struct urb *urb, unsigned int num_trbs_left)
-> >>>>    {
-> >>>>        u32 maxp, total_packet_count;
-> >>>> +    u32 skip_current_trb = 0;
-> >>>
-> >>> A bit of a nitpick but why do we need skip_current_trb? Testing
-> >>> (xhci->quirks & XHCI_MTK_HOST) twice would make what the code does, and
-> >>> why, more obvious.
-> >>>
-> >> I am not sure which way it is better, so add variable of
-> >> skip_current_trb to reduce test times.
-> >
-> > I can't imagine either approach impacts performance. However introducing skip_current_trb makes the flow of the branches harder to follow.
-> >
-> > The first branch was a version check and can remain so; we only need to do something special with the quirks because the MTK controller is 0.97 but with a few bits added:
-> >
-> >      /* MTK xHCI is mostly 0.97 but contains some features from 1.0 */
-> >      if (xhci->hci_version < 0x100 && !(xhci->quirks & XHCI_MTK_HOST))
-> >          return ...
-> >
-> > Setting trb_buff_len to zero is accommodating a quirk and this is clearer when we have:
-> >
-> >      /* for MTK xHCI, TD size doesn't include this TRB */
-> >      if (xhci->quirks & XHCI_MTK_HOST)
-> >          trb_buff_len = 0;
-> 
-> Both will work, but I'd prefer this solution as well.
-> 
-Thanks for your suggestion as well
+[+cc Arnd]
 
-> -Mathias
+Arnd, you had comments on the previous version.  What do you think of
+this one?
+
+On Fri, Oct 02, 2015 at 11:44:01AM -0700, David Daney wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 > 
+> The pci-host-generic driver keeps a global struct pci_ops which it
+> then patches with the .map_bus method appropriate for the bus device.
+> A problem arises when the driver is used for two different types of
+> bus devices, the .map_bus method for the last device probed clobbers
+> the method for all previous devices.  The result, only the last bus
+> device probed has the proper .map_bus, and the others fail.
+> 
+> Move the struct pci_ops into the bus specific structure, and
+> initialize a pointer to it when the bus device is probed.
+> 
+> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+> Change from v3: Use pointer to ops rather than make a copy.
+> 
+>  drivers/pci/host/pci-host-generic.c | 27 +++++++++++++++------------
+>  1 file changed, 15 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index 9e9f1c3..216ded5 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -27,7 +27,7 @@
+>  
+>  struct gen_pci_cfg_bus_ops {
+>  	u32 bus_shift;
+> -	void __iomem *(*map_bus)(struct pci_bus *, unsigned int, int);
+> +	struct pci_ops ops;
+>  };
+>  
+>  struct gen_pci_cfg_windows {
+> @@ -35,7 +35,7 @@ struct gen_pci_cfg_windows {
+>  	struct resource				*bus_range;
+>  	void __iomem				**win;
+>  
+> -	const struct gen_pci_cfg_bus_ops	*ops;
+> +	struct gen_pci_cfg_bus_ops		*ops;
+>  };
+>  
+>  /*
+> @@ -65,7 +65,11 @@ static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
+>  
+>  static struct gen_pci_cfg_bus_ops gen_pci_cfg_cam_bus_ops = {
+>  	.bus_shift	= 16,
+> -	.map_bus	= gen_pci_map_cfg_bus_cam,
+> +	.ops		= {
+> +		.map_bus	= gen_pci_map_cfg_bus_cam,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+>  };
+>  
+>  static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
+> @@ -80,12 +84,11 @@ static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
+>  
+>  static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
+>  	.bus_shift	= 20,
+> -	.map_bus	= gen_pci_map_cfg_bus_ecam,
+> -};
+> -
+> -static struct pci_ops gen_pci_ops = {
+> -	.read	= pci_generic_config_read,
+> -	.write	= pci_generic_config_write,
+> +	.ops		= {
+> +		.map_bus	= gen_pci_map_cfg_bus_ecam,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+>  };
+>  
+>  static const struct of_device_id gen_pci_of_match[] = {
+> @@ -234,8 +237,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	of_id = of_match_node(gen_pci_of_match, np);
+> -	pci->cfg.ops = of_id->data;
+> -	gen_pci_ops.map_bus = pci->cfg.ops->map_bus;
+> +	pci->cfg.ops = (struct gen_pci_cfg_bus_ops *)of_id->data;
+>  	pci->host.dev.parent = dev;
+>  	INIT_LIST_HEAD(&pci->host.windows);
+>  	INIT_LIST_HEAD(&pci->resources);
+> @@ -256,7 +258,8 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  	if (!pci_has_flag(PCI_PROBE_ONLY))
+>  		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+>  
+> -	bus = pci_scan_root_bus(dev, 0, &gen_pci_ops, pci, &pci->resources);
+> +	bus = pci_scan_root_bus(dev, 0,
+> +				&pci->cfg.ops->ops, pci, &pci->resources);
+>  	if (!bus) {
+>  		dev_err(dev, "Scanning rootbus failed");
+>  		return -ENODEV;
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
