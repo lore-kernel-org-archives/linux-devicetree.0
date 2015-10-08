@@ -1,106 +1,56 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: add binding for generic mmio clocksource
-Date: Thu, 08 Oct 2015 10:24:57 +0100
-Message-ID: <yw1xmvvtk906.fsf@unicorn.mansr.com>
-References: <1444232234-2133-1-git-send-email-mans@mansr.com>
-	<20151007154727.GC28981@leverpostej>
-	<yw1xvbaik4mn.fsf@unicorn.mansr.com>
-	<CAL_JsqJDZKTB8xowVdGK=9=4omp_wHdwqYP_Ln3-QdknjAwxSg@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Thu, 8 Oct 2015 14:57:09 +0530
+Message-ID: <20151008092709.GC18898@linux>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+ <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+ <55F72C97.2030306@kernel.org>
+ <20150915024747.GI32551@linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJDZKTB8xowVdGK=9=4omp_wHdwqYP_Ln3-QdknjAwxSg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Rob Herring's message of "Wed, 7 Oct 2015 14:40:53 -0500")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150915024747.GI32551@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Rob,
 
-> On Wed, Oct 7, 2015 at 11:47 AM, M=E5ns Rullg=E5rd <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> w=
-rote:
->> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
->>
->>> On Wed, Oct 07, 2015 at 04:37:13PM +0100, Mans Rullgard wrote:
->>>> This adds a DT binding for a generic mmio clocksource as implement=
-ed
->>>> by clocksource_mmio_init().
->>>>
->>>> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>> Changed in v2:
->>>> - added sched_clock support
->>>> ---
->>>>  .../devicetree/bindings/timer/clocksource-mmio.txt | 28 +++++++++=
-+++++++++++++
->>>>  1 file changed, 28 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/timer/clocks=
-ource-mmio.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/timer/clocksource-m=
-mio.txt b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
->>>> new file mode 100644
->>>> index 0000000..cfb3601
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/timer/clocksource-mmio.txt
->>>> @@ -0,0 +1,28 @@
->>>> +Generic MMIO clocksource
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible: should be "clocksource-mmio"
->
-> I'm doubtful this matches any h/w. This would assume there is no othe=
-r
-> control like enabling, reset, clock dividers, etc.
+On 15-09-15, 08:17, Viresh Kumar wrote:
+> On 14-09-15, 15:22, Rob Herring wrote:
+> > What if we have a 2nd device and supply rail? For example, what if the
+> > L2$ has a separate rail from the cores but is linked to the OPPs.
+> 
+> Right, so that is the case with the Mediatek SoC as well, AFAIR. How
+> do we plan to treat L2 devices? For example, in the mediatek cpufreq
+> driver, they change L2's supplies together with CPUs.
+> 
+> One way to get that done, with such very closely bound devices is to
+> add two regulators:
+> 
+> cpu-supply = ...;
+> l2-supply = ...;
+> 
+> And then a property in OPP table:
+> 
+> supply-name = "cpu", "l2";
+> 
+> And maybe fix the order in which the supplies which be updated, based
+> on the order in which entries are present in the above property.
+> 
+> Any other way you suggest for doing that ?
+> 
+> > Remind me of when do we have multiple regulators for a cpu?
+> 
+> I haven't seen that yet, but its more like what I explained above.
+> i.e. one for the CPU and other one for the L2 cache.
+> 
+> But, these bindings do apply for other devices as well, where it
+> should be very much possible.
 
-I know it matches real hardware.
+Not sure if you still have any objections to this patch?
 
-> Who is your user of this?
-
-Various Sigma Designs chips have such counters.  I figured others might
-as well, and it seemed silly to tie such generic functionality to a
-specific chip family.
-
->> I had a bad feeling about this.  How would you suggest determining a
->> suitable value from actual hardware parameters?
->
-> I wouldn't. I think there is general agreement that rating is broken.
-
-So hardcoding something like 300 would be OK?
-
->>>> +- linux,sched-clock: boolean, register clocksource as sched_clock
->>>
->>> Likewise, this property doesn't belong in the DT for the same reaso=
-ns as
->>> clocksource-rating.
->>
->> What would be a proper way to select a sched_clock source?  I realis=
-e
->> it's a Linux-specific thing and DT is supposed to be generic, but th=
-e
->> information must be provided somehow.
->
-> The kernel already has some logic to do this. Most number of bits
-> followed by highest frequency will be the winning sched_clock. You
-> might also want to look at things like always on or not.
-
-The problem is that sched_clock_register() doesn't take a pointer to be
-passed back to the read_sched_clock callback like most interfaces of
-this type do.  This means the callback must use global variables set up
-before the register call, but at that time there's no way of knowing
-which one will be used.  If there were a way of getting a pointer to th=
-e
-callback, it would be a simple matter of registering all instances and
-letting the kernel choose which to use.
-
---=20
-M=E5ns Rullg=E5rd
-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
