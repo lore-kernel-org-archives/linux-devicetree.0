@@ -1,66 +1,47 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Thu, 08 Oct 2015 21:15:00 +0200
-Message-ID: <87lhbd9npn.fsf@belgarion.home>
-References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
-	<CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
-	<87y4ffaj3m.fsf@belgarion.home>
-	<CAL_JsqLatWZa1mYL1v83ryJntyLtHDfSfr0gXkvPXJrpCE=qcg@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: Document the STM32 DMA bindings
+Date: Thu, 08 Oct 2015 21:26:07 +0200
+Message-ID: <15651913.U8kb3JZ9vO@wuerfel>
+References: <1444317612-818-1-git-send-email-cedric.madianga@gmail.com> <13614799.2Hi64P0fJ2@wuerfel> <CAOAejn0y+6uFbho3iv37xh6=zKevnp_6MxOEw4e9Oc4U2x_csQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLatWZa1mYL1v83ryJntyLtHDfSfr0gXkvPXJrpCE=qcg@mail.gmail.com>
-	(Rob Herring's message of "Thu, 8 Oct 2015 08:30:36 -0500")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOAejn0y+6uFbho3iv37xh6=zKevnp_6MxOEw4e9Oc4U2x_csQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
-
->> The pxafb driver acts today on the subset of registers which are the same across
->> all pxaXXX variants. This is what made me think only one compatible property was
->> required.
->>
->> If I'm wrong, I could add "marvell,pxa3xx-lcdc", is that what you think I should
->> do ?
+On Thursday 08 October 2015 18:01:23 M'boumba Cedric Madianga wrote:
+> Hi Arnd,
+> 
+> 2015-10-08 17:43 GMT+02:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > On Thursday 08 October 2015 17:20:09 M'boumba Cedric Madianga wrote:
+> >> +Each dmas request consists of 5 cells:
+> >> +1. A phandle pointing to the STM32 DMA controller
+> >> +2. The channel id
+> >> +3. The request line number
+> >> +4. A 32bit mask specifying the DMA channel configuration
+> >>
+> >
+> > It's fairly unusual to encode the channel id here, rather than
+> > letting the driver pick one. Is that actually required here?
 >
-> I would prefer specific compatibles (e.g. marvell,pxa270-lcdc) in
-> addition to a generic one. You never know when a specific chip will
-> have some quirk even though "the IP is the same".
-Okay.
+> Yes it is required as in STM32 platform the channel/request DMA
+> mapping is done by hardware lines.
+> So, if one client wants to use DMA, he has to choose the correct
+> channel/request values according to the DMA mapping of his STM32
+> platform.
+ 
+Interesting. So you have seven channels ans seven request lines,
+with a random but fixed mapping between them?
 
->> And then, when a board maintainer will create a devicetree description, he will
->> write something like :
->>       compatible = "toshiba,ltm0305a776";
->>       compatible = "marvell,pxa2xx-panel";
->
-> Drop this compatible.
->
->>       lcd-type = "color-tft";
->>       ...
->>
->> If that's the case, I wonder how to "enforce" that a panel used with
->> marvell,pxa2xx-lcdc (through the of_graph 'port' node) be compatible with
->> marvell,pxa2xx-panel ?
->
-> I'm not sure what you mean. Putting the panel into the dts ensures
-> that. The FB driver may check for toshiba,ltm0305a776 or a list of
-> panels. However, a DRM driver would probably not check that.
->
-> Rob
-What I mean is that the LDLC controller _must_ be programmmed with the correct
-panel type, ie. one register of the LDLC should be set according to this type.
+How do you know which channels are available for memory-to-memory
+transfers?
 
-The type is a hardware property of the panel, and yet it is absolutely mandatory
-to have it set in the panel.
-
-What I mean is : what is the good way to enforce that this property is set
-somewhere in the devicetree description ? Philipp adviced for it to be transfered
-to the ldlc description (ie. marvell,pxa2xx-ldlc), while I was thinking of
-having it in a panel description.
-
-Cheers.
-
--- 
-Robert
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
