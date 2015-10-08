@@ -1,88 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v3 2/2] drm: panel: simple: add QiaoDian qd43003c0-40
-Date: Thu,  8 Oct 2015 17:42:41 +0200
-Message-ID: <1444318961-31103-2-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1444318961-31103-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
+Date: Thu, 8 Oct 2015 17:50:15 +0200
+Message-ID: <20151008155015.GC11776@xo-6d-61-c0.localdomain>
+References: <1439303153-12171-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444318961-31103-1-git-send-email-alexandre.belloni@free-electrons.com>
+Content-Disposition: inline
+In-Reply-To: <1439303153-12171-1-git-send-email-sjg@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Josh Wu <josh.wu@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+To: Simon Glass <sjg@chromium.org>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Josh Wu <josh.wu@atmel.com>
+Hi!
 
-The QiaoDian Xianshi QD43003C0-40 is a 4"3 TFT LCD panel.
+> This updates the device tree from the kernel version to something suitable
+> for U-Boot:
+> 
+> - Add stdout-path alias for console
+> - Mark the /soc node to be available pre-relocation so that the early
+> serial console works (we need the 'ranges' property to be available)
+> 
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> ---
+> 
+>  arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> @@ -16,6 +17,7 @@
+>  		#size-cells = <1>;
+>  		ranges = <0x7e000000 0x20000000 0x02000000>;
+>  		dma-ranges = <0x40000000 0x00000000 0x20000000>;
+> +		u-boot,dm-pre-reloc;
+>
 
-Timings from the OTA5180A document, ver 0.9, section
-10.1.1:
-  http://www.orientdisplay.com/pdf/OTA5180A.pdf
+Given low ammount of memory available for SPL, such stuff is going to be neccessary.
 
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- .../bindings/panel/qiaodian,qd43003c0-40.txt       |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt
+Should it have more generic name... "critical-for-early-boot" ?
 
-diff --git a/Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt b/Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt
-new file mode 100644
-index 000000000000..0fbdab89ac3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt
-@@ -0,0 +1,7 @@
-+QiaoDian XianShi Corporation 4"3 TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "qiaodian,qd43003c0-40"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index f97b73ec4713..c93ffa615005 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1027,6 +1027,30 @@ static const struct panel_desc ortustech_com43h4m85ulc = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- };
- 
-+static const struct drm_display_mode qd43003c0_40_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 8,
-+	.hsync_end = 480 + 8 + 4,
-+	.htotal = 480 + 8 + 4 + 39,
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 4,
-+	.vsync_end = 272 + 4 + 10,
-+	.vtotal = 272 + 4 + 10 + 2,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc qd43003c0_40 = {
-+	.modes = &qd43003c0_40_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 95,
-+		.height = 53,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+};
-+
- static const struct drm_display_mode samsung_ltn101nt05_mode = {
- 	.clock = 54030,
- 	.hdisplay = 1024,
-@@ -1182,6 +1206,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "ortustech,com43h4m85ulc",
- 		.data = &ortustech_com43h4m85ulc,
- 	}, {
-+		.compatible = "qiaodian,qd43003c0-40",
-+		.data = &qd43003c0_40,
-+	}, {
- 		.compatible = "samsung,ltn101nt05",
- 		.data = &samsung_ltn101nt05,
- 	}, {
--- 
-2.1.4
+Best regards,
+									Pavel
