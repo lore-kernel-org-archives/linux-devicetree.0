@@ -1,44 +1,32 @@
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: Re: [PATCH] ARM: dts: exynos4412-odroid: unify voltage regulator
- style
-Date: Thu, 8 Oct 2015 12:25:30 +0200
-Message-ID: <5616449A.6030508@math.uni-bielefeld.de>
-References: <1442858340-4584-1-git-send-email-tjakobi@math.uni-bielefeld.de>
- <1442858340-4584-2-git-send-email-tjakobi@math.uni-bielefeld.de>
- <561458C3.8030806@math.uni-bielefeld.de> <5615BF94.5080406@samsung.com>
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
+	<noltari@gmail.com>
+Subject: [PATCH 0/4] leds-bcm6328: several fixes and improvements
+Date: Thu,  8 Oct 2015 12:35:51 +0200
+Message-ID: <1444300555-13988-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5615BF94.5080406@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, j.anaszewski@samsung.com, jogo@openwrt.org, cernekee@gmail.com, f.fainelli@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Krzysztof Kozlowski wrote:
-> On 07.10.2015 08:26, Tobias Jakobi wrote:
->> Gentle ping!
-> 
-> Both patches are now in Kukjin's tree.
-Thanks Krzysztof for the heads up!
+These patches improve leds-bcm6328 by adding invalid LED printing (like=
+ it's done in leds-bcm6358), simplifying default-state handling (once a=
+gain like it's done in leds-bcm6358), and adding more init configuratio=
+n options.
 
-With best wishes,
-Tobias
+=C3=81lvaro Fern=C3=A1ndez Rojas (4):
+  leds-bcm6328: print invalid LED
+  leds-bcm6328: simplify and improve default-state handling
+  leds-bcm6328: add more init configuration options
+  Documentation: leds: update DT bindings for leds-bcm6328
 
+ .../devicetree/bindings/leds/leds-bcm6328.txt      | 10 ++++++
+ drivers/leds/leds-bcm6328.c                        | 41 ++++++++++++++=
+++------
+ 2 files changed, 40 insertions(+), 11 deletions(-)
 
-> Best regards,
-> Krzysztof
-> 
->>
->> - Tobias
->>
->> Tobias Jakobi wrote:
->>> Use 'ldoN_reg: LDON' syntax and drop the deprecated
->>> 'regulator-compatible' property.
->>>
->>> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->>> ---
->>>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 6 ++----
->>>  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
+--=20
+1.9.1
