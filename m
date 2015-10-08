@@ -1,88 +1,45 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 3/3] drm: panel-simple: implement URT UMSH-8596MD-xT
- panel support
-Date: Thu, 8 Oct 2015 10:24:44 +0200
-Message-ID: <20151008082444.GC3820@ulmo>
-References: <5615885C.5050505@maciej.szmigiero.name>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1049829019=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5615885C.5050505@maciej.szmigiero.name>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH] dmaengine: xgene-dma: Disable memcpy operation due to performance drop
+Date: Thu,  8 Oct 2015 13:55:16 +0530
+Message-ID: <1444292716-1877-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
+computations. But the bandwidth of the entire DMA engine is shared
+among all channels. This patch re-configures operations availability
+such that one can achieve maximum performance for XOR and PQ
+computation by removing the memory offload operations.
 
---===============1049829019==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
-Content-Disposition: inline
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
+ drivers/dma/xgene-dma.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index 8d57b1b..2998fcb 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -154,6 +154,7 @@
+ #define XGENE_DMA_MAX_XOR_SRC		5
+ #define XGENE_DMA_16K_BUFFER_LEN_CODE	0x0
+ #define XGENE_DMA_INVALID_LEN_CODE	0x7800000000000000ULL
++#undef XGENE_DMA_MEMCPY_ENABLE
 
---RIYY1s2vRbPFwWeW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ /* X-Gene DMA descriptor error codes */
+ #define ERR_DESC_AXI			0x01
+@@ -1707,7 +1708,9 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
+ 	dma_cap_zero(dma_dev->cap_mask);
 
-On Wed, Oct 07, 2015 at 11:02:20PM +0200, Maciej S. Szmigiero wrote:
-> This patch implements support for United Radiant Technology
-> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels in DRM panel-simple
-> driver.
->=20
-> Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
-> ---
-> This replaces "drm: panel-simple: add URT UMSH-8596MD-xT panel support"
-> submission.
->=20
->  drivers/gpu/drm/panel/panel-simple.c | 54 ++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 54 insertions(+)
+ 	/* Set DMA device capability */
++#ifdef XGENE_DMA_MEMCPY_ENABLE
+ 	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
++#endif
+ 	dma_cap_set(DMA_SG, dma_dev->cap_mask);
 
-Looks good to me. I'll wait for Rob or anyone else to ack the vendor
-prefix before merging this.
-
-Thierry
-
---RIYY1s2vRbPFwWeW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWFihMAAoJEN0jrNd/PrOhGyoQAKYukisUbaj/RlD5tFb2AYPY
-p/yFMUykEPJjg41xpWa2ACnbQ2Cnj6Pm0RxsgTqvYWR7bHvtgDcV5H3CxsLSN9W2
-jgVePP6/4outF9u7RKd6aIiah8U9LOB29BVhomaxir0cKndPCcf5w8hi2K0I1S3p
-UYihUKIdfZo6Y5RUwnkZZryd9b2lIsQ23u84MPk/B3rbhCedpuQKwy7pVCPmpGUY
-cLw4j3+MTlTO9e2ppVMueLSLJZ8C/zxACvwuLoyeu3OhfalZR9xq6V1ke6YQu2BN
-9KwIX++eRtOtZdUiVIpow4IVI9ndXiBmMc/S6M1c+w6oGEz9OGaDbhpOEGzJqj3x
-3eAwqS4a4XEUJYHCh+rq6FqTVgcv17JnfhF58fi3JNk8qdE/9LUB93JHjBomLJ0E
-ZKMRNAqscF6mAelZ+QgFZAzxZqYuuftWnd7ghT07DVnXz7nb0tUftc/b7osKNP1d
-qZIKKFET26QsRqg5GlbZtZBXG36SYvb2N4yKisPrvXMK/VlWHZJ2KMWYaNRhM+ca
-ougD1845/8V/GH9z+g7e5v++10+QFsnCoYvDeamaErdcqRy7Z76hv2uVLhDW+jlX
-s46G62zAX+W/Ykk7A4GRvBZeYaIsCuYPiwF76u7cN4DzTnh/G9q/laPLJQTGHk/p
-7GaHsIWrfstRp5bT01dC
-=qeSG
------END PGP SIGNATURE-----
-
---RIYY1s2vRbPFwWeW--
-
---===============1049829019==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1049829019==--
+ 	/* Basically here, the X-Gene SoC DMA engine channel 0 supports XOR
+--
+1.8.2.1
