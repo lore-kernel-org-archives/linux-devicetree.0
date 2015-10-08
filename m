@@ -1,535 +1,190 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx Zynq 7000
-Date: Fri,  9 Oct 2015 00:45:07 +0200
-Message-ID: <1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: michal.simek@xilinx.com
-Cc: soren.brinkmann@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>
+From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5] QEMU fw_cfg DMA interface documentation
+Date: Fri, 9 Oct 2015 01:38:09 +0200
+Message-ID: <5616FE61.3010002@redhat.com>
+References: <1444316523-21711-1-git-send-email-markmb@redhat.com>
+ <1444316621-21863-1-git-send-email-markmb@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444316621-21863-1-git-send-email-markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Marc_Mar=c3=ad?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds FPGA Manager support for the Xilinx Zynq chip.
-The code heavily borrows from the xdevcfg driver in Xilinx'
-vendor tree.
+On 10/08/15 17:03, Marc Mar=C3=AD wrote:
+> Add fw_cfg DMA interface specfication in the fw_cfg documentation.
+>=20
+> Signed-off-by: Marc Mar=C3=AD <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fw-cfg.txt | 52 ++++++++++++++=
++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Docum=
+entation/devicetree/bindings/arm/fw-cfg.txt
+> index 953fb64..0633aad 100644
+> --- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> +++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> @@ -38,6 +38,9 @@ The presence of the registers can be verified by se=
+lecting the "signature" blob
+>  with key 0x0000, and reading four bytes from the data register. The =
+returned
+>  signature is "QEMU".
+> =20
+> +If the DMA interface is available, then reading the DMA Address Regi=
+ster
+> +returns 0x51454d5520434647 ("QEMU CFG" in big-endian format).
+> +
 
-Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
----
- drivers/fpga/Kconfig     |   5 +
- drivers/fpga/Makefile    |   1 +
- drivers/fpga/zynq-fpga.c | 478 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 484 insertions(+)
- create mode 100644 drivers/fpga/zynq-fpga.c
+marking this for a later argument: (*)
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index dfc1f1e..c9b9fdf 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -19,6 +19,11 @@ config FPGA_MGR_SOCFPGA
- 	help
- 	  FPGA manager driver support for Altera SOCFPGA.
- 
-+config FPGA_MGR_ZYNQ_FPGA
-+	tristate "Xilinx Zynq FPGA"
-+	help
-+	  FPGA manager driver support for Xilinx Zynq FPGAs.
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index ba6c5c5..8d83fc6 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -7,3 +7,4 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
- 
- # FPGA Manager Drivers
- obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
-+obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
-diff --git a/drivers/fpga/zynq-fpga.c b/drivers/fpga/zynq-fpga.c
-new file mode 100644
-index 0000000..7d0d703
---- /dev/null
-+++ b/drivers/fpga/zynq-fpga.c
-@@ -0,0 +1,478 @@
-+/*
-+ * Copyright (c) 2011-2015 Xilinx Inc.
-+ * Copyright (c) 2015, National Instruments Corp.
-+ *
-+ * FPGA Manager Driver for Xilinx Zynq, heavily based on xdevcfg driver
-+ * in their vendor tree.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/string.h>
-+
-+/* Offsets into SLCR regmap */
-+#define SLCR_FPGA_RST_CTRL_OFFSET	0x240 /* FPGA Software Reset Control */
-+#define SLCR_LVL_SHFTR_EN_OFFSET	0x900 /* Level Shifters Enable */
-+
-+/* Constant Definitions */
-+#define CTRL_OFFSET		0x00 /* Control Register */
-+#define LOCK_OFFSET		0x04 /* Lock Register */
-+#define INT_STS_OFFSET		0x0c /* Interrupt Status Register */
-+#define INT_MASK_OFFSET		0x10 /* Interrupt Mask Register */
-+#define STATUS_OFFSET		0x14 /* Status Register */
-+#define DMA_SRC_ADDR_OFFSET	0x18 /* DMA Source Address Register */
-+#define DMA_DEST_ADDR_OFFSET	0x1c /* DMA Destination Address Reg */
-+#define DMA_SRC_LEN_OFFSET	0x20 /* DMA Source Transfer Length */
-+#define DMA_DEST_LEN_OFFSET	0x24 /* DMA Destination Transfer */
-+#define UNLOCK_OFFSET		0x34 /* Unlock Register */
-+#define MCTRL_OFFSET		0x80 /* Misc. Control Register */
-+
-+/* Control Register Bit definitions */
-+#define CTRL_PCFG_PROG_B_MASK	BIT(30) /* Program signal to reset FPGA */
-+#define CTRL_PCAP_PR_MASK	BIT(27) /* Enable PCAP for PR */
-+#define CTRL_PCAP_MODE_MASK	BIT(26) /* Enable PCAP */
-+
-+/* Miscellaneous Control Register bit definitions */
-+#define MCTRL_PCAP_LPBK_MASK	BIT(4) /* Internal PCAP loopback */
-+
-+/* Status register bit definitions */
-+#define STATUS_PCFG_INIT_MASK	BIT(4) /* FPGA init status */
-+
-+/* Interrupt Status/Mask Register Bit definitions */
-+#define IXR_DMA_DONE_MASK	BIT(13) /* DMA command done */
-+#define IXR_D_P_DONE_MASK	BIT(12) /* DMA and PCAP cmd done */
-+#define IXR_PCFG_DONE_MASK	BIT(2)  /* FPGA programmed */
-+#define IXR_ERROR_FLAGS_MASK	0x00F0F860
-+#define IXR_ALL_MASK		0xF8F7F87F
-+
-+/* Miscellaneous constant values */
-+#define DMA_INVALID_ADDRESS	GENMASK(31, 0)  /* Invalid DMA address */
-+#define UNLOCK_MASK		0x757bdf0d /* Used to unlock the device */
-+
-+/* Masks for controlling stuff in SLCR */
-+#define LVL_SHFTR_DISABLE_ALL_MASK	0x0 /* Disable all Level shifters */
-+#define LVL_SHFTR_ENABLE_PS_TO_PL	0xa /* Enable all Level shifters */
-+#define LVL_SHFTR_ENABLE_PL_TO_PS	0xf /* Enable all Level shifters */
-+#define FPGA_RST_ALL_MASK		0xf /* Enable global resets */
-+#define FPGA_RST_NONE_MASK		0x0 /* Disable global resets */
-+
-+struct zynq_fpga_priv {
-+	struct device *dev;
-+	int irq;
-+	struct clk *clk;
-+
-+	void __iomem *io_base;
-+	struct regmap *slcr;
-+
-+	/* this protects the error flag */
-+	spinlock_t lock;
-+	bool error;
-+
-+	struct completion dma_done;
-+};
-+
-+static inline void zynq_fpga_write(struct zynq_fpga_priv *priv, u32 offset,
-+				   u32 val)
-+{
-+	writel(val, priv->io_base + offset);
-+}
-+
-+static inline u32 zynq_fpga_read(const struct zynq_fpga_priv *priv,
-+				 u32 offset)
-+{
-+	return readl(priv->io_base + offset);
-+}
-+
-+#define zynq_fpga_poll_timeout(priv, addr, val, cond, sleep_us, timeout_us) \
-+	readl_poll_timeout(priv->io_base + addr, val, cond, sleep_us, \
-+			   timeout_us)
-+
-+static void zynq_fpga_mask_irqs(struct zynq_fpga_priv *priv)
-+{
-+	u32 intr_mask;
-+
-+	intr_mask = zynq_fpga_read(priv, INT_MASK_OFFSET);
-+	zynq_fpga_write(priv, INT_MASK_OFFSET,
-+			intr_mask | IXR_DMA_DONE_MASK | IXR_ERROR_FLAGS_MASK);
-+}
-+
-+static void zynq_fpga_unmask_irqs(struct zynq_fpga_priv *priv)
-+{
-+	u32 intr_mask;
-+
-+	intr_mask = zynq_fpga_read(priv, INT_MASK_OFFSET);
-+	zynq_fpga_write(priv, INT_MASK_OFFSET,
-+			intr_mask
-+			& ~(IXR_D_P_DONE_MASK | IXR_ERROR_FLAGS_MASK));
-+}
-+
-+static irqreturn_t zynq_fpga_isr(int irq, void *data)
-+{
-+	u32 intr_status;
-+	struct zynq_fpga_priv *priv = data;
-+
-+	spin_lock(&priv->lock);
-+	intr_status = zynq_fpga_read(priv, INT_STS_OFFSET);
-+
-+	if (!intr_status) {
-+		spin_unlock(&priv->lock);
-+		return IRQ_NONE;
-+	}
-+
-+	zynq_fpga_write(priv, INT_STS_OFFSET, intr_status);
-+
-+	if ((intr_status & IXR_D_P_DONE_MASK) == IXR_D_P_DONE_MASK)
-+		complete(&priv->dma_done);
-+
-+	if ((intr_status & IXR_ERROR_FLAGS_MASK) ==
-+			IXR_ERROR_FLAGS_MASK) {
-+		priv->error = true;
-+		dev_err(priv->dev, "%s dma error\n", __func__);
-+	}
-+	spin_unlock(&priv->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int zynq_fpga_ops_write_init(struct fpga_manager *mgr, u32 flags,
-+				    const char *buf, size_t count)
-+{
-+	struct zynq_fpga_priv *priv;
-+	u32 ctrl, status;
-+	int err;
-+
-+	priv = mgr->priv;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	/* only reset if we're not doing partial reconfig */
-+	if (!(flags & FPGA_MGR_PARTIAL_RECONFIG)) {
-+		/* assert AXI interface resets */
-+		regmap_write(priv->slcr, SLCR_FPGA_RST_CTRL_OFFSET,
-+			     FPGA_RST_ALL_MASK);
-+
-+		/* disable level shifters */
-+		regmap_write(priv->slcr, SLCR_LVL_SHFTR_EN_OFFSET,
-+			     LVL_SHFTR_DISABLE_ALL_MASK);
-+		/* enable output level shifters */
-+		regmap_write(priv->slcr, SLCR_LVL_SHFTR_EN_OFFSET,
-+			     LVL_SHFTR_ENABLE_PS_TO_PL);
-+
-+		/* create a rising edge on PCFG_INIT. PCFG_INIT follows
-+		 * PCFG_PROG_B, so we need to poll it after setting PCFG_PROG_B
-+		 * to make sure the rising edge actually happens
-+		 */
-+		ctrl = zynq_fpga_read(priv, CTRL_OFFSET);
-+		ctrl |= CTRL_PCFG_PROG_B_MASK;
-+
-+		zynq_fpga_write(priv, CTRL_OFFSET, ctrl);
-+
-+		zynq_fpga_poll_timeout(priv, STATUS_OFFSET, status, status &
-+				       STATUS_PCFG_INIT_MASK, 20, 0);
-+
-+		ctrl = zynq_fpga_read(priv, CTRL_OFFSET);
-+		ctrl &= ~CTRL_PCFG_PROG_B_MASK;
-+
-+		zynq_fpga_write(priv, CTRL_OFFSET, ctrl);
-+
-+		zynq_fpga_poll_timeout(priv, STATUS_OFFSET, status, !(status &
-+				       STATUS_PCFG_INIT_MASK), 20, 0);
-+
-+		ctrl = zynq_fpga_read(priv, CTRL_OFFSET);
-+		ctrl |= CTRL_PCFG_PROG_B_MASK;
-+
-+		zynq_fpga_write(priv, CTRL_OFFSET, ctrl);
-+
-+		zynq_fpga_poll_timeout(priv, STATUS_OFFSET, status, status &
-+				       STATUS_PCFG_INIT_MASK, 20, 0);
-+	}
-+
-+	clk_disable(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int zynq_fpga_ops_write(struct fpga_manager *mgr,
-+			       const char *buf, size_t count)
-+{
-+	struct zynq_fpga_priv *priv;
-+	int err;
-+	char *kbuf;
-+	size_t i, in_count;
-+	dma_addr_t dma_addr;
-+	u32 transfer_length = 0;
-+	bool endian_swap = false;
-+
-+	in_count = count;
-+	priv = mgr->priv;
-+
-+	kbuf = dma_alloc_coherent(priv->dev, count, &dma_addr, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	memcpy(kbuf, buf, count);
-+
-+	/* look for the sync word */
-+	for (i = 0; i < count - 4; i++) {
-+		if (memcmp(kbuf + i, "\x66\x55\x99\xAA", 4) == 0) {
-+			dev_dbg(priv->dev, "Found normal sync word\n");
-+			endian_swap = false;
-+			break;
-+		}
-+		if (memcmp(kbuf + i, "\xAA\x99\x55\x66", 4) == 0) {
-+			dev_dbg(priv->dev, "Found swapped sync word\n");
-+			endian_swap = true;
-+			break;
-+		}
-+	}
-+
-+	/* remove the header, align the data on word boundary */
-+	if (i != count - 4) {
-+		count -= i;
-+		memmove(kbuf, kbuf + i, count);
-+	}
-+
-+	/* fixup endianness of the data */
-+	if (endian_swap) {
-+		for (i = 0; i < count; i += 4) {
-+			u32 *p = (u32 *)&kbuf[i];
-+			*p = swab32(*p);
-+		}
-+	}
-+
-+	/* enable clock */
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		goto out_free;
-+
-+	zynq_fpga_write(priv, INT_STS_OFFSET, IXR_ALL_MASK);
-+
-+	/* enable DMA and error IRQs */
-+	zynq_fpga_unmask_irqs(priv);
-+
-+	priv->error = false;
-+
-+	/* the +1 in the src addr is used to hold off on DMA_DONE IRQ */
-+	/* until both AXI and PCAP are done */
-+	if (count < PAGE_SIZE)
-+		zynq_fpga_write(priv, DMA_SRC_ADDR_OFFSET, (u32)(dma_addr + 1));
-+	else
-+		zynq_fpga_write(priv, DMA_SRC_ADDR_OFFSET, (u32)(dma_addr));
-+
-+	zynq_fpga_write(priv, DMA_DEST_ADDR_OFFSET, (u32)DMA_INVALID_ADDRESS);
-+
-+	/* convert #bytes to #words */
-+	transfer_length = (count + 3) / 4;
-+
-+	zynq_fpga_write(priv, DMA_SRC_LEN_OFFSET, transfer_length);
-+	zynq_fpga_write(priv, DMA_DEST_LEN_OFFSET, 0);
-+
-+	wait_for_completion_interruptible(&priv->dma_done);
-+	if (priv->error) {
-+		dev_err(priv->dev, "Error configuring FPGA.\n");
-+		err = -EFAULT;
-+	}
-+
-+	/* disable DMA and error IRQs */
-+	zynq_fpga_mask_irqs(priv);
-+
-+	clk_disable(priv->clk);
-+
-+out_free:
-+	dma_free_coherent(priv->dev, in_count, kbuf, dma_addr);
-+
-+	return err;
-+}
-+
-+static int zynq_fpga_ops_write_complete(struct fpga_manager *mgr, u32 flags)
-+{
-+	struct zynq_fpga_priv *priv = mgr->priv;
-+	int err;
-+	u32 intr_status;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	err = zynq_fpga_poll_timeout(priv, INT_STS_OFFSET, intr_status,
-+				     intr_status & IXR_PCFG_DONE_MASK, 20,
-+				     10000);
-+	clk_disable(priv->clk);
-+
-+	if (err)
-+		return err;
-+
-+	/* only in not partial reconfiguration do we need to deassert reset */
-+	if (!(flags & FPGA_MGR_PARTIAL_RECONFIG)) {
-+		/* enable all level shifters */
-+		regmap_write(priv->slcr, SLCR_LVL_SHFTR_EN_OFFSET,
-+			     LVL_SHFTR_ENABLE_PL_TO_PS);
-+
-+		/* deassert AXI interface resets */
-+		regmap_write(priv->slcr, SLCR_FPGA_RST_CTRL_OFFSET,
-+			     FPGA_RST_NONE_MASK);
-+	}
-+
-+	return 0;
-+}
-+
-+static enum fpga_mgr_states zynq_fpga_ops_state(struct fpga_manager *mgr)
-+{
-+	int err;
-+	u32 intr_status;
-+	struct zynq_fpga_priv *priv;
-+
-+	priv = mgr->priv;
-+
-+	err = clk_enable(priv->clk);
-+	if (err)
-+		return FPGA_MGR_STATE_UNKNOWN;
-+
-+	intr_status = zynq_fpga_read(priv, INT_STS_OFFSET);
-+	clk_disable(priv->clk);
-+
-+	if (intr_status & IXR_PCFG_DONE_MASK)
-+		return FPGA_MGR_STATE_OPERATING;
-+
-+	return FPGA_MGR_STATE_UNKNOWN;
-+}
-+
-+static const struct fpga_manager_ops zynq_fpga_ops = {
-+	.state = zynq_fpga_ops_state,
-+	.write_init = zynq_fpga_ops_write_init,
-+	.write = zynq_fpga_ops_write,
-+	.write_complete = zynq_fpga_ops_write_complete,
-+};
-+
-+static int zynq_fpga_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct zynq_fpga_priv *priv;
-+	struct resource *res;
-+	u32 ctrl_reg;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+	priv->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->io_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->io_base))
-+		return PTR_ERR(priv->io_base);
-+
-+	priv->slcr = syscon_regmap_lookup_by_phandle(dev->of_node,
-+		"syscon");
-+	if (IS_ERR(priv->slcr)) {
-+		dev_err(dev, "unable to get zynq-slcr regmap");
-+		return PTR_ERR(priv->slcr);
-+	}
-+
-+	init_completion(&priv->dma_done);
-+
-+	priv->irq = platform_get_irq(pdev, 0);
-+	if (priv->irq < 0) {
-+		dev_err(dev, "No IRQ available");
-+		return priv->irq;
-+	}
-+
-+	ret = devm_request_irq(dev, priv->irq, zynq_fpga_isr, 0,
-+			       dev_name(dev), priv);
-+	if (IS_ERR_VALUE(ret))
-+		return ret;
-+
-+	priv->clk = devm_clk_get(dev, "ref_clk");
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(dev, "input clock not found\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "unable to enable clock\n");
-+		return ret;
-+	}
-+
-+	/* unlock the device */
-+	zynq_fpga_write(priv, UNLOCK_OFFSET, UNLOCK_MASK);
-+
-+	/* set configuration register with following options:
-+	* - reset FPGA
-+	* - enable PCAP interface for partial reconfig
-+	* - set throughput for maximum speed
-+	* - set CPU in user mode
-+	*/
-+	ctrl_reg = zynq_fpga_read(priv, CTRL_OFFSET);
-+	zynq_fpga_write(priv, CTRL_OFFSET, (CTRL_PCFG_PROG_B_MASK |
-+		CTRL_PCAP_PR_MASK | CTRL_PCAP_MODE_MASK | ctrl_reg));
-+
-+	/* ensure internal PCAP loopback is disabled */
-+	ctrl_reg = zynq_fpga_read(priv, MCTRL_OFFSET);
-+	zynq_fpga_write(priv, MCTRL_OFFSET, (~MCTRL_PCAP_LPBK_MASK & ctrl_reg));
-+
-+	ret = fpga_mgr_register(dev, "Xilinx Zynq FPGA Manager",
-+				&zynq_fpga_ops, priv);
-+	if (ret) {
-+		dev_err(dev, "unable to register FPGA manager");
-+		clk_disable_unprepare(priv->clk);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int zynq_fpga_remove(struct platform_device *pdev)
-+{
-+	fpga_mgr_unregister(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zynq_fpga_of_match[] = {
-+	{ .compatible = "xlnx,zynq-devcfg-1.0", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, zynq_fpga_of_match);
-+
-+static struct platform_driver zynq_fpga_driver = {
-+	.probe = zynq_fpga_probe,
-+	.remove = zynq_fpga_remove,
-+	.driver = {
-+		.name = "zynq_fpga_manager",
-+		.of_match_table = of_match_ptr(zynq_fpga_of_match),
-+	},
-+};
-+
-+module_platform_driver(zynq_fpga_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
-+MODULE_AUTHOR("Michal Simek <michal.simek@xilinx.com>");
-+MODULE_DESCRIPTION("Xilinx Zynq FPGA Manager");
-+MODULE_ALIAS("fpga:zynq");
--- 
-2.6.1
+>  The outermost protocol (involving the write / read sequences of the =
+control and
+>  data registers) is expected to be versioned, and/or described by fea=
+ture bits.
+>  The interface revision / feature bitmap can be retrieved with key 0x=
+0001. The
+> @@ -45,6 +48,51 @@ blob to be read from the data register has size 4,=
+ and it is to be interpreted
+>  as a uint32_t value in little endian byte order. The current value
+>  (corresponding to the above outer protocol) is zero.
+> =20
+> +If bit 1 of the feature bitmap is set, the DMA interface is present.=
+ This
+> +can be used through the 64-bit wide address register.
+> +
+> +The address register is in big-endian format. The value for the regi=
+ster is 0
+> +at startup and after an operation. A write to the lower half trigger=
+s an
+> +operation. This means, that operations with 32-bit addresses can be =
+triggered
+> +with just one write, whereas operations with 64-bit addresses can be=
+ triggered
+> +with one 64-bit write or two 32-bit writes, starting with the higher=
+ part.
+
+Please sync this language with the "least significant half" / "most
+significant half" wording that I requested after your QEMU
+
+  [PATCH v4 2/7] fw_cfg DMA interface documentation
+
+and that you implemented in your present QEMU
+
+  [PATCH v5 2/6] fw_cfg DMA interface documentation
+
+> +
+> +In this register, the physical address of a FWCfgDmaAccess structure=
+ in RAM
+> +should be written. This is the format of the FWCfgDmaAccess structur=
+e:
+> +
+> +typedef struct FWCfgDmaAccess {
+> +    uint32_t control;
+> +    uint32_t length;
+> +    uint64_t address;
+> +} FWCfgDmaAccess;
+> +
+> +The fields of the structure are in big endian mode, and the field at=
+ the lowest
+> +address is the "control" field.
+> +
+> +The "control" field has the following bits:
+> + - Bit 0: Error
+> + - Bit 1: Read
+> + - Bit 2: Skip
+> + - Bit 3: Select. The upper 16 bits are the selected index.
+> +
+> +When an operation is triggered, if the "control" field has bit 3 set=
+, the
+> +upper 16 bits are interpreted as an index of a firmware configuratio=
+n item.
+> +This has the same effect as writing the selector register.
+> +
+> +If the "control" field has bit 1 set, a read operation will be perfo=
+rmed.
+> +"length" bytes for the current selector and offset will be copied in=
+to the
+> +physical RAM address specified by the "address" field.
+> +
+> +If the "control" field has bit 2 set (and not bit 1), a skip operati=
+on will be
+> +performed. The offset for the current selector will be advanced "len=
+gth" bytes.
+> +
+> +To check the result, read the "control" field:
+> +   error bit set        ->  something went wrong.
+> +   all bits cleared     ->  transfer finished successfully.
+> +   otherwise            ->  transfer still in progress (doesn't happ=
+en
+> +                            today due to implementation not being as=
+ync,
+> +                            but may in the future).
+> +
+>  The guest kernel is not expected to use these registers (although it=
+ is
+>  certainly allowed to); the device tree bindings are documented here =
+because
+>  this is where device tree bindings reside in general.
+
+I guess this is all coming verbatim from the QEMU spec. I think that's
+okay, it doesn't speak about selector values etc, only about transport.
+I think it's okay (and consistent with the current text) to have all th=
+e
+details here.
+
+> @@ -56,6 +104,8 @@ Required properties:
+>  - reg: the MMIO region used by the device.
+>    * Bytes 0x0 to 0x7 cover the data register.
+>    * Bytes 0x8 to 0x9 cover the selector register.
+> +  * With DMA interface enabled: Bytes 0x10 to 0x17 cover the DMA add=
+ress
+> +    register.
+>    * Further registers may be appended to the region in case of futur=
+e interface
+>      revisions / feature bits.
+> =20
+> @@ -66,7 +116,7 @@ Example:
+>  	#address-cells =3D <0x2>;
+> =20
+>  	fw-cfg@9020000 {
+> +		reg =3D <0x0 0x9020000 0x0 0x18>;
+>  		compatible =3D "qemu,fw-cfg-mmio";
+> -		reg =3D <0x0 0x9020000 0x0 0xa>;
+>  	};
+>  };
+>=20
+
+Please make this a bit more precise. As already mentioned by Peter (in
+another part of the discussion), you can't read the DMA address registe=
+r
+until you know that it exists. Therefore the part I marked with (*)
+above is only usable in the ioport-mapped, x86 case for feature
+detection. On ARM, what we key off of primarily is the *size* of the
+register block, and only if the DMA address register fits in there, can
+we read the feature bitmap (for double-checking), and/or read a
+signature from the DMA address register.
+
+Therefore, I think the example device tree snippet is okay, but the hun=
+k
+above it should sound like:
+
+    * Bytes 0x10 to 0x17, if they exist in the region -- and the
+      feature bitmap confirms the presence of the DMA interface --
+      cover the DMA address register.
+
+The AAVMF client code does just this. (I.e., checks the size of the
+region first, then reads the feature bitmap *without* DMA, then perform=
+s
+further reads with DMA.)
+
+Thanks
+Laszlo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
