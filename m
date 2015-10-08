@@ -1,51 +1,35 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
- LeMaker BananaPi
-Date: Thu, 8 Oct 2015 09:32:40 +0100
-Message-ID: <56162A28.8000104@redhat.com>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
- <20150818153631.GH2547@lukather>
- <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
- <20151005173957.B1BD16C8150E@dd34104.kasserver.com>
- <7hzizu924y.fsf@deeprootsystems.com>
- <20151007154918.D6F856C800D4@dd34104.kasserver.com>
- <jwvegh6d60k.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v13 1/2] ARM: dts: vf610twr: add NAND flash controller
+ peripherial
+Date: Thu, 8 Oct 2015 16:33:40 +0800
+Message-ID: <20151008083340.GA22946@tiger>
+References: <1444262316-30588-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBLOU3CYAKGQEQWAURAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <jwvegh6d60k.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444262316-30588-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, mark.rutland@arm.com, boris.brezillon@free-electrons.com, aaron@tastycactus.com, marb@ixxat.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, bpringlemeir@gmail.com, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, sebastian@breakpoint.cc, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, computersforpeace@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, Bill Pringlemeir <bpringlemeir@nbsps.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Oct 07, 2015 at 04:58:35PM -0700, Stefan Agner wrote:
+> This adds the NAND flash controller (NFC) peripherial. The driver
+> supports the SLC NAND chips found on Freescale's Vybrid Tower System
+> Module. The Micron NAND chip on the module needs 4-bit ECC per 512
+> byte page. Use 24-bit ECC per 2k page, which is supported by the
+> driver.
+> 
+> Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
+> Reviewed-by: Brian Norris <computersforpeace@gmail.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-On 10/07/2015 05:01 PM, Stefan Monnier wrote:
->> @Maxime: How should we handle this? In its current form, the patch applies
->> only to the BananaPi dts by overriding the inherited opp from the SoC dtsi.
->> In an earlier discussion, it was said that this can be done, even though it
->> might not be the most elegant approach. But then again, I think it
->> shouldn't be necessary to change the opp in the sun7i-a20.dtsi for all A20
->> boards since this is - to my knowledge - the first and only report that an
->> A20 board has stability issues at the lower voltages (although not too many
->> boards use voltage scaling yet).
->
-> IIUC this setting doesn't affect signals external to the A20, so it
-> seems like it should be board-agnostic.
+Applied both, thanks.
 
-This setting configures the voltage at the pmic output pin, not at the SoC
-power-input pins. And how much of the voltage actually makes it from the pmic
-to the SoC definitely is board-specific. So we are going to need board-specific
-opp-s in some cases (like this one for example).
+Stefan,
 
-Regards,
+In the future, please use my new email address which has been updated to
+MAINTAINERS for a couple of release cycles.
 
-Hans
+Shawn
