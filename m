@@ -1,129 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Thu, 8 Oct 2015 08:30:36 -0500
-Message-ID: <CAL_JsqLatWZa1mYL1v83ryJntyLtHDfSfr0gXkvPXJrpCE=qcg@mail.gmail.com>
-References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
- <CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com> <87y4ffaj3m.fsf@belgarion.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v4 4/8] ARM: dts: rockchip: Add SPDIF optical out on Radxa Rock
+Date: Thu,  8 Oct 2015 15:31:15 +0200
+Message-ID: <1444311079-2892-5-git-send-email-sjoerd.simons@collabora.co.uk>
+References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87y4ffaj3m.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
+In-Reply-To: <1444311079-2892-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 6, 2015 at 2:32 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->
->> On Sun, Oct 4, 2015 at 5:31 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
->>> Add documentation for the PXA frambuffer devicetree binding.
->>
->> Strictly speaking this is a binding for PXA display controller, not a
->> Linux FB driver. There are lots of "framebuffer" and "DRM" bindings
->> which I'm trying to curb.
-> Yes, that's very true. That deserves a new commit message and a new file name
-> (marvell,pxa2xx-lcd).
->>>  .../devicetree/bindings/video/marvell,pxafb.txt    | 80 ++++++++++++++++++++++
->>
->> Please put in bindings/display/ as I'm consolidating all the display
->> related bindings there[1].
-> Of course, for v3.
->
->>> +++ b/Documentation/devicetree/bindings/video/marvell,pxafb.txt
->>> @@ -0,0 +1,80 @@
->>> +PXA LCDC Framebuffer
->>> +--------------------
->>> +
->>> +Required properties:
->>> + - compatible :
->>> +       "marvell,pxa2xx-lcdc",
->>
->> No differences in h/w for any of the chips?
-> All pxa25x, pxa27x and pxa3xx are compatible.
-> AFAIK, pxa3xx has an IP with additional registers. But :
->  - these (this) register(s) is not necessary for the display controller to work
->    (it's more a control to shift red/green/blue values, and energy management)
->  - all the registers in pxa2{5,7}x are the same in pxa3xx
->
-> The pxafb driver acts today on the subset of registers which are the same across
-> all pxaXXX variants. This is what made me think only one compatible property was
-> required.
->
-> If I'm wrong, I could add "marvell,pxa3xx-lcdc", is that what you think I should
-> do ?
+This enables the SPDIF optical audio output on the Radxa Rock
 
-I would prefer specific compatibles (e.g. marvell,pxa270-lcdc) in
-addition to a generic one. You never know when a specific chip will
-have some quirk even though "the IP is the same".
+Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
->>
->>> + - reg : Should contain 1 register ranges(address and length).
->>> +        Can contain an additional register range(address and length)
->>> +        for fixed framebuffer memory. Useful for dedicated memories.
->>
->> This is memory that can't be used for anything else? We already have
->> reserved-memory for this if it is just RAM. There's also a binding for
->> on-chip SRAM which should probably be used if the memory is usable for
->> other things.
-> That is a wrong copy paste I made. I was more thinking of having only 1 register
-> range, and no video memory reservation ...
->
->>> +PXA LCDC Display
->>
->> This should not be specific to PXA, but for this panel. This should be
->> in bindings/display/panel/.
-> Sure, for v3.
->
->>> +----------------
->>> +Required properties (as per of_videomode_helper):
->>> + - lcd-type: either "mono-stn", "mono-dstn", "color-stn", "color-dstn",
->>> +                   "color-tft", "smart-panel"
->>> +
->>> +Optional properties (as per of_videomode_helper):
->>> + - power-supply: power supply regulator to the LCD to power it on or off
->>> +                (see regulator.txt)
->>> + - backlight: backlight control (see backlight.txt)
->>> +
->>> +Required nodes:
->>> + - port: connection to the LCD controller
->>> + - display-timings: panel timings (see display-timing.txt)
->>
->> If lcd-type is smart-panel, then this node would not make sense.
-> Ah I see, so this could be optional maybe ?
+---
 
-Right.
+Changes in v4: None
+Changes in v3:
+- Resent patches to a more complete list of maintainers.
 
->
-> Actually when I'll move the panel definition to bindings/display/panel, is this
-> what I should do :
->  - create a file marvell,pxa2xx-panel
->  - input all these properties into this file
+Changes in v2: None
 
-Yes, but the file should be called toshiba,ltm0305a776.txt. It is
-irrelevant to the binding that it is pared with pxa2xx. In theory, I
-could attach this panel to any SOC.
+ arch/arm/boot/dts/rk3188-radxarock.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
->
-> And then, when a board maintainer will create a devicetree description, he will
-> write something like :
->       compatible = "toshiba,ltm0305a776";
->       compatible = "marvell,pxa2xx-panel";
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index d2180e5..797f83dd 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -90,6 +90,21 @@
+ 		};
+ 	};
+ 
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "SPDIF";
++
++		simple-audio-card,dai-link@1 {  /* S/PDIF - S/PDIF */
++			cpu { sound-dai = <&spdif>; };
++			codec { sound-dai = <&spdif_out>; };
++		};
++	};
++
++	spdif_out: spdif-out {
++		compatible = "linux,spdif-dit";
++		#sound-dai-cells = <0>;
++	};
++
+ 	ir_recv: gpio-ir-receiver {
+ 		compatible = "gpio-ir-receiver";
+ 		gpios = <&gpio0 10 1>;
+@@ -343,6 +358,10 @@
+ 	};
+ };
+ 
++&spdif {
++	status = "okay";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+-- 
+2.6.1
 
-Drop this compatible.
-
->       lcd-type = "color-tft";
->       ...
->
-> If that's the case, I wonder how to "enforce" that a panel used with
-> marvell,pxa2xx-lcdc (through the of_graph 'port' node) be compatible with
-> marvell,pxa2xx-panel ?
-
-I'm not sure what you mean. Putting the panel into the dts ensures
-that. The FB driver may check for toshiba,ltm0305a776 or a list of
-panels. However, a DRM driver would probably not check that.
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
