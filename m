@@ -1,72 +1,61 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 2/6] ARM: dts: sun7i: Enable USB DRC on
- Bananapi
-Date: Thu, 8 Oct 2015 09:37:39 +0100
-Message-ID: <56162B53.8020800@redhat.com>
-References: <1442928966-6418-1-git-send-email-hdegoede@redhat.com>
- <1442928966-6418-2-git-send-email-hdegoede@redhat.com>
- <20150929080453.GN7104@lukather> <560A4B3D.4040007@redhat.com>
- <20151001083242.GB7104@lukather>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: Re: [PATCH v2 3/3] ASoC: da7213: Add bindings
+ documentation for codec driver
+Date: Thu, 8 Oct 2015 08:42:23 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D4609A3A@SW-EX-MBX01.diasemi.com>
+References: <cover.1444223905.git.Adam.Thomson.Opensource@diasemi.com>
+ <bfc7c5e61d8c398bc4cfa56a7908032dc3bdf82f.1444223905.git.Adam.Thomson.Opensource@diasemi.com>
+ <CAL_JsqL0R0jVSm6w0V=F5c1Odw3RKATjcq96QaUcA99JJmD2Xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151001083242.GB7104@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAL_JsqL0R0jVSm6w0V=F5c1Odw3RKATjcq96QaUcA99JJmD2Xw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robherring2@gmail.com>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On October 07, 2015 17:22, Rob Herring wrote:
 
-On 10/01/2015 09:32 AM, Maxime Ripard wrote:
-> Hi,
->
-> On Tue, Sep 29, 2015 at 10:26:37AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 29-09-15 10:04, Maxime Ripard wrote:
->>> On Tue, Sep 22, 2015 at 03:36:01PM +0200, Hans de Goede wrote:
->>>> Enable the otg/drc usb controller on the Bananapi.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>
->>> Applied all the other patches but this one.
->>
->> Thanks, seems you did not push this to your git.kernel.org repo though ?
->
-> I think I did, but maybe not at the time you sent the mail.
->
->>> Since we dropped the patch adding the regulators support on the
->>> Bananapi until we figure out why the board crash, it doesn't compile
->>> anymore.
->>
->> How about me doing a v2 of the regulators patch which removes the
->>
->> &cpu0 {
->>          cpu-supply = <&reg_dcdc2>;
->> };
->>
->> So that we do not get cpu voltage scaling, then the regulator
->> changes should be a NOP, everything should just keep the u-boot
->> set voltages, and we can enable oth support.
->>
->> And then when we've figured out a safe way to enable cpu voltage
->> scaling we can do so with a follow up patch ?
->>
->> Is that a plan ? If so say yes and I'll do a v2 of these patches :)
->
-> Yep, it sounds like a good plan :)
+> > +- dlg,micbias1-lvl : Voltage (mV) for Mic Bias 1
+> > +       [<1600>, <2200>, <2500>, <3000>]
+> > +- dlg,micbias2-lvl : Voltage (mV) for Mic Bias 2
+> > +       [<1600>, <2200>, <2500>, <3000>]
+> 
+> Please append the units (-microvolt).
 
-With the new v3 of the regulators patch with the corrected opp-s which
-was just send this should no longer be necessary, can you apply the
-original "ARM: dts: sun7i: Enable USB DRC on Bananapi" after applying
-v3 of the regulators patch please ?
+Given that a user needs to read the bindings document to understand what is
+available, and what they're for, this seems a little unnecessary. 
 
-Regards,
+> 
+> > +- dlg,dmic-data-sel : DMIC channel select based on clock edge.
+> > +       ["lrise_rfall", "lfall_rrise"]
+> > +- dlg,dmic-samplephase : When to sample audio from DMIC.
+> > +       ["on_clkedge", "between_clkedge"]
+> 
+> How about boolean for these two.
 
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Wanted these to be explicit, hence not choosing boolean. Would prefer to keep
+them as is.
+
+> 
+> > +- dlg,dmic-clkrate : DMIC clock frequency (MHz).
+> > +       [<1500000>, <3000000>]
+> 
+> So 1.5GHz or 3GHz?
+> 
+> Add units (-hz).
+
+Agreed, the description of MHz is misleading so will update to Hz. Thanks.
+Again though, I don't see what the suffix gives you, and would prefer to leave
+the binding as is.
