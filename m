@@ -1,68 +1,82 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH v8 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Thu, 8 Oct 2015 18:03:24 +0800
-Message-ID: <CAFiDJ58oMa6rgQe_STCiWRpdL+P22BN1=Nin_+QnLXC9RGiSzQ@mail.gmail.com>
-References: <1444297394-3122-1-git-send-email-lftan@altera.com>
- <1444297394-3122-4-git-send-email-lftan@altera.com>
- <20151008094744.GD32532@n2100.arm.linux.org.uk>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
+Date: Thu, 8 Oct 2015 10:05:26 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0F77D6@irsmsx105.ger.corp.intel.com>
+References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
+ <1441636583-14188-2-git-send-email-irina.tirdea@intel.com>
+ <20151004194632.GA27633@xo-6d-61-c0.localdomain>
+ <1F3AC3675D538145B1661F571FE1805F2F0EE716@irsmsx105.ger.corp.intel.com>
+ <20151005205752.GA10479@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151008094744.GD32532@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151005205752.GA10479@xo-6d-61-c0.localdomain>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 5:47 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
->
-> On Thu, Oct 08, 2015 at 05:43:11PM +0800, Ley Foon Tan wrote:
-> > +static int altera_pcie_cfg_write(struct pci_bus *bus, unsigned int devfn,
-> > +                              int where, int size, u32 value)
-> > +{
-> > +     struct altera_pcie *pcie = bus->sysdata;
-> > +     u32 data32;
-> > +     u32 shift = 8 * (where & 3);
-> > +     int ret;
-> > +
-> > +     if (!altera_pcie_valid_config(pcie, bus, PCI_SLOT(devfn)))
-> > +             return PCIBIOS_DEVICE_NOT_FOUND;
-> > +
-> > +     /* write partial */
-> > +     if (size != sizeof(u32)) {
-> > +             ret = tlp_cfg_dword_read(pcie, bus->number, devfn,
-> > +                                      where & ~DWORD_MASK, &data32);
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> > +
-> > +     switch (size) {
-> > +     case 1:
-> > +             data32 = (data32 & ~(0xff << shift)) |
-> > +                             ((value & 0xff) << shift);
-> > +             break;
-> > +     case 2:
-> > +             data32 = (data32 & ~(0xffff << shift)) |
-> > +                             ((value & 0xffff) << shift);
-> > +             break;
-> > +     default:
-> > +             data32 = value;
->
-> Can you generate proper 1, 2 and 4 byte configuration accesses?  That
-> is much preferred over the above read-modify-write, as there are
-> registers in PCI and PCIe that are read/write-1-to-clear.  The above
-> has the effect of inadvertently clearing those RW1C bits.
-No, hardware can only access 4-byte aligned address.
 
-Regards
-Ley Foon
+
+> -----Original Message-----
+> From: Pavel Machek [mailto:pavel@ucw.cz]
+> Sent: 05 October, 2015 23:58
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
+> 
+> Hi!
+> 
+
+Hi!
+
+> > > Subject: Re: [PATCH v5 1/9] Input: goodix - sort includes alphabetically
+> > >
+> > > On Mon 2015-09-07 17:36:15, Irina Tirdea wrote:
+> > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > > > ---
+> > > >  drivers/input/touchscreen/goodix.c | 12 ++++++------
+> > > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > >
+> > > Don't.
+> > >
+> > > Yes, we sometimes sort includes... to avoid patch rejects.
+> > >
+> > > This is guaranteed to cause rejects.
+> > >
+> > > If we do sort them, we use "longest-first" usually.
+> > >
+> >
+> > When using random order, I've been told by reviewers that my ordering
+> > is wrong [1], but I could not figure out what the "right" ordering is in order to apply.
+> > I did not find any mention of how to sort includes in  Documentation/CodingStyle,
+> > but I've seen patches in the kernel that fix random ordering by sorting them
+> > alphabetically [2].
+> 
+> Ok, I have seen this more often:
+> 
+> https://lkml.org/lkml/2009/3/28/99
+> 
+
+I see. I wasn't aware of the inverse Xmas tree ordering.
+
+> > However, I do not feel strongly about this so I can drop this patch.
+> 
+> Well, its really nit picking.
+> 
+
+I was thinking of dropping it since there does not seem to be a consensus on how
+to order the includes (or even if we should order them).  In this case, I guess it's
+up to Dmitry.
+I'll use the inverse Xmas tree ordering in next patch set and see if that works for him.
+
+Thanks,
+Irina
+
+> 										Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
