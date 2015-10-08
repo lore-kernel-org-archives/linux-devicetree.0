@@ -1,106 +1,61 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [RFT 0/3] usb: usb3503: Fix probing on Arndale board (missing
- phy)
-Date: Thu, 8 Oct 2015 11:35:41 +0200
-Message-ID: <561638ED.1060503@osg.samsung.com>
-References: <1444177807-15524-1-git-send-email-k.kozlowski@samsung.com>
- <56152BB2.4020202@samsung.com> <561606FE.2090007@samsung.com>
- <56160BFD.4050702@samsung.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: [PATCH v8 0/6] Altera PCIe host controller driver with MSI support
+Date: Thu, 8 Oct 2015 17:43:08 +0800
+Message-ID: <1444297394-3122-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <56160BFD.4050702@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Chen <peter.chen@freescale.com>, Ben Gamari <ben@smart-cactus.org>, Wolfram Sang <wsa@the-dreams.de>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, riku.voipio@linaro.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This is the 8th version of patch set to add support for Altera PCIe host
+controller with MSI feature on Altera FPGA device families. This patchset
+mainly resolve comments from Rob Herring and Marc Zyngier in v7 and minor fix.
 
-On 10/08/2015 08:23 AM, Marek Szyprowski wrote:
-> Hello,
-> 
-> On 2015-10-08 08:02, Krzysztof Kozlowski wrote:
->> On 07.10.2015 23:26, Marek Szyprowski wrote:
->>> Hello,
->>>
->>> On 2015-10-07 02:30, Krzysztof Kozlowski wrote:
->>>> Introduction
->>>> ============
->>>> This patchset tries to fix probing of usb3503 on Arndale board
->>>> if the Samsung PHY driver is probed later (or built as a module).
->>>>
->>>> *The patchset was not tested on Arndale board.*
->>>> I don't have that board. Please test it and say if the usb3503
->>>> deferred probe
->>>> works fine and the issue is solved.
->>>>
->>>> The patchset was tested on Odroid U3 board (which is different!)
->>>> in a simulated environment. It is not sufficient testing.
->>>>
->>>>
->>>> Difference
->>>> ==========
->>>> The usb3503 device driver can be used as a I2C device (on Odroid U3)
->>>> or as a platform device connected through phy (on Arndale). In the second
->>>> case the necessary phy reference has to be obtained and enabled.
->>>>
->>>> For some details please look also at thread [0][1].
->>>>
->>>> [0]
->>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348524.html
->>>>
->>>> [1]
->>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348875.html
->>>>
->>>>
->>> I'm not sure that this is the correct approach. usb3503 chip is simply
->>> connected
->>> to Exynos USB2 phy, so it visible on the USB bus. The real driver that
->>> controls USB2
->>> PHY is Exynos EHCI driver and USB3503 should not mess around it.
->> The ehci node (usb@12110000) has one port configured and it takes one
->> PHY reference (phy of id 1 - USB host). I can't see driver taking
->> reference to HSIC0 or HSIC1 phys... Since I cannot diagnose the error I
->> don't know what is really expected here.
-> 
-> It looks that EHCI in Exynos 5250 and 5420 still use old phy bindings. For
-> the reference, see Exynos4 dts and exynos4412-odroidu3.dts to check how to enable
-> more than one USB port (Odroid U3 has both HSIC ports enabled).
-> 
->>
->>> In my opinion all that is needed in case of Arndale board is forcing
->>> reset of
->>> usb3503 chip after successful EHCI and USB2 PHY initialization (for some
->>> reason
->>> initialization of usb3503 chip must be done after usb host initialization).
->>> However I have no idea which driver should trigger this reset. Right now
->>> I didn't
->>> find any good solution for additional control for devices which are on
->>> autoprobed
->>> bus like usb.
->> The reset is done at the end of usb3503's probe. The question "why
->> usb3503 has to be initialized after EHCI and USB PHY" is still valid...
-> 
-> I remember that I saw some code to reset HSIC device after phy power on in case
-> of HSIC-connected modem chip, so maybe this is somehow common for HSIC chips
-> (which are some special case of 'embedded usb').
->
+This patchset is based on v4.3-rc3.
 
-I also don't have an Arndale board and haven't followed the thread to closely
-but I just wanted to mention that the ChromiumOS 3.8 tree has a workaround to
-reset the HSIC phys:
+v7->v8 changes:
+- pcie-altera/Documentation: change to support one case of reg-names.
+- Documentation: remove <1> for msi-controller.
+- pci: remove depends on ARCH_SOCFPGA and NIOS2 in Kconfig
+- pci: change PCIE_ALTERA to bool in Kconfig. It requires pci fixups to work correctly,
+       so it needs to be builtin module.
 
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/81685c447954a29d1098268776582457258dd98f%5E%21/
+History:
+-------
+[v1]: https://lkml.org/lkml/2015/7/28/395
+[v2]: https://lkml.org/lkml/2015/7/31/267
+[v3]: http://www.kernelhub.org/?msg=811940&p=2
+[v4]: https://lkml.org/lkml/2015/8/17/141
+[v5]: https://lkml.org/lkml/2015/8/25/238
+[v6]: https://lkml.org/lkml/2015/9/1/177
+[v7]: https://lkml.org/lkml/2015/9/20/193
 
-and later a "supports-hsicphy-reset" DT property was added to force the reset
-per board instead of unconditionally:
+Ley Foon Tan (6):
+  arm: add msi.h to Kbuild
+  pci: add Altera PCI vendor ID
+  pci:host: Add Altera PCIe host controller driver
+  pci: altera: Add Altera PCIe MSI driver
+  Documentation: dt-bindings: pci: altera pcie device tree binding
+  MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
 
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/a4d1c1a223ffa1ed38a4257d0378ca70c6667be0%5E%21/
+ .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
+ .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+ MAINTAINERS                                        |  16 +
+ arch/arm/include/asm/Kbuild                        |   1 +
+ drivers/pci/host/Kconfig                           |  15 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pcie-altera-msi.c                 | 310 +++++++++++
+ drivers/pci/host/pcie-altera.c                     | 588 +++++++++++++++++++++
+ include/linux/pci_ids.h                            |   2 +
+ 9 files changed, 1011 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-altera-msi.c
+ create mode 100644 drivers/pci/host/pcie-altera.c
 
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+1.8.2.1
+
