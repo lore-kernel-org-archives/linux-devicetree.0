@@ -1,51 +1,43 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH 1/1] ASoC: da7213: Correct units description of
-	dmic-clkrate
-Date: Thu, 8 Oct 2015 11:21:54 +0100
-Message-ID: <dbcafb5ad02a756d93458e3262cf1d1eab8f607e.1444299436.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v7 5/9] Input: goodix - use goodix_i2c_write_u8 instead of i2c_master_send
+Date: Thu,  8 Oct 2015 13:19:31 +0300
+Message-ID: <1444299575-17417-6-git-send-email-irina.tirdea@intel.com>
+References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Description previously stated MHz whereas the resolution is in Hz.
-This has now has been updated to align with reality.
+Use goodix_i2c_write_u8 instead of i2c_master_send to simplify code.
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
 ---
+ drivers/input/touchscreen/goodix.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-This patch is based on changes introduced under patch:
-
-'ASoC: da7213: Add bindings documentation for codec driver'
-(Commit a97d4e93a9bc556d0b3c2efb7695eb4c79938de7, kernel/git/broonie/sound.git)
-
- Documentation/devicetree/bindings/sound/da7213.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/da7213.txt b/Documentation/devicetree/bindings/sound/da7213.txt
-index 7280e82..5890280 100644
---- a/Documentation/devicetree/bindings/sound/da7213.txt
-+++ b/Documentation/devicetree/bindings/sound/da7213.txt
-@@ -18,7 +18,7 @@ Optional properties:
- 	["lrise_rfall", "lfall_rrise"]
- - dlg,dmic-samplephase : When to sample audio from DMIC.
- 	["on_clkedge", "between_clkedge"]
--- dlg,dmic-clkrate : DMIC clock frequency (MHz).
-+- dlg,dmic-clkrate : DMIC clock frequency (Hz).
- 	[<1500000>, <3000000>]
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 3e502a6..8fbd397 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -309,16 +309,11 @@ static void goodix_process_events(struct goodix_ts_data *ts)
+  */
+ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
+ {
+-	static const u8 end_cmd[] = {
+-		GOODIX_READ_COOR_ADDR >> 8,
+-		GOODIX_READ_COOR_ADDR & 0xff,
+-		0
+-	};
+ 	struct goodix_ts_data *ts = dev_id;
  
- ======
+ 	goodix_process_events(ts);
+ 
+-	if (i2c_master_send(ts->client, end_cmd, sizeof(end_cmd)) < 0)
++	if (goodix_i2c_write_u8(ts->client, GOODIX_READ_COOR_ADDR, 0) < 0)
+ 		dev_err(&ts->client->dev, "I2C write end_cmd error\n");
+ 
+ 	return IRQ_HANDLED;
 -- 
-1.9.3
+1.9.1
