@@ -1,106 +1,51 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/3] of: add URT UMSH-8596MD-xT panel DT bindings
-Date: Thu, 8 Oct 2015 10:27:59 +0200
-Message-ID: <20151008082759.GD3820@ulmo>
-References: <56158803.9000300@maciej.szmigiero.name>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
+ LeMaker BananaPi
+Date: Thu, 8 Oct 2015 09:32:40 +0100
+Message-ID: <56162A28.8000104@redhat.com>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
+ <20150818153631.GH2547@lukather>
+ <CAMAWPa-Q7o+Ys2FjhLZt6Nwq=Ja6TTdWFDZFTCYLkoLGjpLpxw@mail.gmail.com>
+ <20151005173957.B1BD16C8150E@dd34104.kasserver.com>
+ <7hzizu924y.fsf@deeprootsystems.com>
+ <20151007154918.D6F856C800D4@dd34104.kasserver.com>
+ <jwvegh6d60k.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1148540510=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56158803.9000300@maciej.szmigiero.name>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBLOU3CYAKGQEQWAURAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <jwvegh6d60k.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============1148540510==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Qrgsu6vtpU/OV/zm"
-Content-Disposition: inline
+On 10/07/2015 05:01 PM, Stefan Monnier wrote:
+>> @Maxime: How should we handle this? In its current form, the patch applies
+>> only to the BananaPi dts by overriding the inherited opp from the SoC dtsi.
+>> In an earlier discussion, it was said that this can be done, even though it
+>> might not be the most elegant approach. But then again, I think it
+>> shouldn't be necessary to change the opp in the sun7i-a20.dtsi for all A20
+>> boards since this is - to my knowledge - the first and only report that an
+>> A20 board has stability issues at the lower voltages (although not too many
+>> boards use voltage scaling yet).
+>
+> IIUC this setting doesn't affect signals external to the A20, so it
+> seems like it should be board-agnostic.
 
+This setting configures the voltage at the pmic output pin, not at the SoC
+power-input pins. And how much of the voltage actually makes it from the pmic
+to the SoC definitely is board-specific. So we are going to need board-specific
+opp-s in some cases (like this one for example).
 
---Qrgsu6vtpU/OV/zm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
 
-On Wed, Oct 07, 2015 at 11:00:51PM +0200, Maciej S. Szmigiero wrote:
-> This patch adds DT bindings for United Radiant Technology
-> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels.
->=20
-> Signed-off-by: Maciej Szmigiero <mail@maciej.szmigiero.name>
-> ---
->  Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt | 12 +++++++=
-+++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/urt,umsh-8596=
-md.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt =
-b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
-> new file mode 100644
-> index 0000000..57c5fa4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
-> @@ -0,0 +1,12 @@
-> +United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
-> +
-> +Supported are LVDS versions (-11T, -19T) and parallel ones
-> +(-T, -1T, -7T, -20T).
-> +
-> +Required properties:
-> +- compatible: should be one of:
-> +  "urt,umsh-8596md-t", "urt,umsh-8596md-1t", "urt,umsh-8596md-7t",
-> +  "urt,umsh-8596md-11t", "urt,umsh-8596md-19t" or "urt,umsh-8596md-20t".
-
-I'd probably list each of these on a single line for slightly more
-clarity, but no need to respin because of that.
-
-Rob, I remember there was some discussion a while back on whether or not
-there should be a standard way of describing lists of compatible values,
-do you know if anything was ever concluded on that topic?
-
-Thierry
-
---Qrgsu6vtpU/OV/zm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWFikOAAoJEN0jrNd/PrOhpWQQALmujsUPw+atpRZF3Uuz/qVS
-HfDNZTm45U+lJy5Bq9yLz7GX1DUHvYAGZDjckNl/FT/14ST0UoCURSMSGABcmH9h
-JpdrQrojnlA432TCjg9/nDnYELpyDo+WUhDMrPglIiwuvMK5L0OF/wqveDNymQdh
-GSOISCz0RtEpMc4AhJlDA4iH5nvq0OkKwHVVweGpsNXYJ78OioJ/vj1mvpLnbQA8
-awjsVBQ/bUD7mcYaL8L/iNbDKrV22L4ppfP9vrv77PfeYQ8qOzt7xMgADb9D29J1
-lPmK349P0kFvxqkxJCYA6D7A1i0YqHEP+l3/eCqkPQ5nsUWJPgn33djSoQPtZ+WE
-mEV34zcwEZUl1VnE5EXIpRJTqDCf1u/AJY8pVmsC0jXLcB/A4m+ITWOcx5DdGXkX
-zmuAIKkPWkHwBI7CHlNh8nlDLWvSxDuLMcwDdKFn4cws1aY/YUnMK0IlYcAU82e/
-jhYcG/KH+M09VoW3EARAn6pcXshNnLPNbShS0o/3aOtX7CT4E4x6NccmNg1YTB/X
-QOTzRx8SrCZxXNgjkBrXIKDrSQSDB4p4R/fqqfJgEyu1pstS6Kp40dmwo7iRpcTR
-K7O5WUffBzGp8XuZjmY/AC30qzhsUqyfbts7lyMcpBUz5ooHjlSboUGOTPGRLgOv
-4tOLRwn8ZilIOGFXhoJF
-=bMHM
------END PGP SIGNATURE-----
-
---Qrgsu6vtpU/OV/zm--
-
---===============1148540510==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1148540510==--
+Hans
