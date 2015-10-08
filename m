@@ -1,81 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
-Date: Thu, 08 Oct 2015 12:54:05 +0200
-Message-ID: <8618206.7jshXjkP9U@wuerfel>
-References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com> <1444299575-17417-3-git-send-email-irina.tirdea@intel.com>
+From: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 2/5] Documentation: add the binding file for Freescale imx7d ADC driver
+Date: Thu, 8 Oct 2015 18:59:05 +0800
+Message-ID: <1444301948-21721-2-git-send-email-haibo.chen@freescale.com>
+References: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444299575-17417-3-git-send-email-irina.tirdea@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444301948-21721-1-git-send-email-haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 October 2015 13:19:28 Irina Tirdea wrote:
-> After power on, it is recommended that the driver resets the device.
-> The reset procedure timing is described in the datasheet and is used
-> at device init (before writing device configuration) and
-> for power management. It is a sequence of setting the interrupt
-> and reset pins high/low at specific timing intervals. This procedure
-> also includes setting the slave address to the one specified in the
-> ACPI/device tree.
-> 
-> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
-> driver gt9xx.c for Android (publicly available in Android kernel
-> trees for various devices).
-> 
-> For reset the driver needs to control the interrupt and
-> reset gpio pins (configured through ACPI/device tree). For devices
-> that do not have the gpio pins declared, the functionality depending
-> on these pins will not be available, but the device can still be used
-> with basic functionality.
-> 
-> For both device tree and ACPI, the interrupt gpio pin configuration is
-> read from the "irq-gpio" property and the reset pin configuration is
-> read from the "reset-gpio" property. For ACPI 5.1, named properties
-> can be specified using the _DSD section. If there is no _DSD section
-> in the ACPI table, the driver will fall back to using indexed gpio
-> pins declared in the _CRS section.
+The patch adds the binding file for Freescale imx7d ADC driver.
 
-Would it help to use a plain "gpios" property here to always look
-up the lines by index?
+Signed-off-by: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/iio/adc/imx7d-adc.txt      | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
 
-> +/*
-> + * Some platforms specify the gpio pins for interrupt and reset properly
-> + * in ACPI, but cannot use the interrupt pin as output due to their specific
-> + * HW configuration.
-> + */
-> +static const struct dmi_system_id goodix_no_gpio_pins_support[] = {
-> +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
-> +	{
-> +		.ident = "Onda v975w",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_UUID,
-> +				  "03000200-0400-0500-0006-000700080009"),
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
-> +		}
-> +	},
-
-I think lists like this in drivers should be avoided if at all possible,
-it just leads to other people adding their platform in the lists as
-opposed to fixing their boot loaders.
-
-Can you find another way to detect at runtime whether it works, and
-print a warning if it doesn't? If there is no way to detect that kind
-of device, we should probably have another property that the driver
-can read to determine this, so we can avoid adding each system here.
-
-> +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
-> +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
-> +	if (error)
-> +		return error;
-
-If the "interrupt" gpio is used as an output, maybe it has the wrong
-name? Is that the name from the goodix datasheet (that would be ok)
-or something you picked?
-
-	Arnd
+diff --git a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+new file mode 100644
+index 0000000..6b21fd27
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+@@ -0,0 +1,26 @@
++Freescale imx7d ADC bindings
++
++The devicetree bingdings are for the nwe ADC driver written for
++imx7d SoC.
++
++Required properties:
++- compatible: Should be "fsl,imx7d-adc"
++- reg: Offset and length of the register set for the ADC device
++- interrupts: The interrupt number for the ADC device
++- clocks: The root clock of the ADC controller
++- clock-names: Must contain "adc", matching entry in the clocks property
++- vref-supply: The regulator supply ADC reference voltage
++
++Optional properties:
++- num-channels: the number of channels used
++
++Example:
++adc1: adc@30610000 {
++	compatible = "fsl,imx7d-adc";
++	reg = <0x30610000 0x10000>;
++	interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks IMX7D_ADC_ROOT_CLK>;
++	clock-names = "adc";
++	num-channels = <4>;
++	vref-supply = <&reg_vcc_3v3_mcu>;
++};
+-- 
+1.9.1
