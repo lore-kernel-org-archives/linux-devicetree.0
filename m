@@ -1,103 +1,136 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 4/5] PCI: generic: Correct, and avoid overflow, in
- bus_max calculation.
-Date: Thu, 8 Oct 2015 10:02:43 -0500
-Message-ID: <20151008150243.GC3885@localhost>
-References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
- <1443811443-18878-5-git-send-email-ddaney.cavm@gmail.com>
+From: =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb@redhat.com>
+Subject: [PATCH v5] QEMU fw_cfg DMA interface documentation
+Date: Thu,  8 Oct 2015 17:03:41 +0200
+Message-ID: <1444316621-21863-1-git-send-email-markmb@redhat.com>
+References: <1444316523-21711-1-git-send-email-markmb@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443811443-18878-5-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, David Daney <david.daney@cavium.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444316523-21711-1-git-send-email-markmb@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Drew <drjones@redhat.com>, Stefan Hajnoczi <stefanha@gmail.com>, Kevin O'Connor <kevin@koconnor.net>, Gerd Hoffmann <kraxel@redhat.com>, Laszlo <lersek@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Arnd]
+Add fw_cfg DMA interface specfication in the fw_cfg documentation.
 
-And this one?
+Signed-off-by: Marc Mar=C3=AD <markmb@redhat.com>
+---
+ Documentation/devicetree/bindings/arm/fw-cfg.txt | 52 ++++++++++++++++=
++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-On Fri, Oct 02, 2015 at 11:44:02AM -0700, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> There are two problems with the bus_max calculation:
-> 
-> 1) The u8 data type can overflow for large config space windows.
-> 
-> 2) The calculation is incorrect for a bus range that doesn't start at
->    zero.
-> 
-> Since the configuration space is relative to bus zero, make bus_max
-> just be the size of the config window scaled by bus_shift.  Then clamp
-> it to a maximum of 255, per PCI.  Use a data type of int to avoid
-> overflow problems.
-> 
-> Update host-generic-pci.txt to clarify the semantics of the "reg"
-> property with respect to non-zero starting bus numbers.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
-> Change from V3: Add to explanation of "reg" property in
-> host-generic-pci.txt.  Add error message if "reg" property is too big.
-> 
->  Documentation/devicetree/bindings/pci/host-generic-pci.txt |  6 +++++-
->  drivers/pci/host/pci-host-generic.c                        | 12 +++++++++---
->  2 files changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> index cf3e205..42303bb 100644
-> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> @@ -34,7 +34,11 @@ Properties of the host controller node:
->  - #size-cells    : Must be 2.
->  
->  - reg            : The Configuration Space base address and size, as accessed
-> -                   from the parent bus.
-> +                   from the parent bus.  The base address corresponds to
-> +                   bus zero, even though the "bus-range" property may specify
-> +                   a different starting bus number.  The driver must only map
-> +                   or access the portion of the Configuration Space that
-> +                   corresponds to the "bus-range"
->  
->  
->  Properties of the /chosen node:
-> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-> index 216ded5..5cce837 100644
-> --- a/drivers/pci/host/pci-host-generic.c
-> +++ b/drivers/pci/host/pci-host-generic.c
-> @@ -164,7 +164,7 @@ out_release_res:
->  static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->  {
->  	int err;
-> -	u8 bus_max;
-> +	int bus_max;
->  	resource_size_t busn;
->  	struct resource *bus_range;
->  	struct device *dev = pci->host.dev.parent;
-> @@ -177,8 +177,14 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
->  	}
->  
->  	/* Limit the bus-range to fit within reg */
-> -	bus_max = pci->cfg.bus_range->start +
-> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
-> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
-> +	if (bus_max > 255) {
-> +		dev_err(dev,
-> +			"\"reg\" size corresponds to bus %d, truncating to 255\n",
-> +			bus_max);
-> +		bus_max = 255;
-> +	}
-> +
->  	pci->cfg.bus_range->end = min_t(resource_size_t,
->  					pci->cfg.bus_range->end, bus_max);
->  
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documen=
+tation/devicetree/bindings/arm/fw-cfg.txt
+index 953fb64..0633aad 100644
+--- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
++++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+@@ -38,6 +38,9 @@ The presence of the registers can be verified by sele=
+cting the "signature" blob
+ with key 0x0000, and reading four bytes from the data register. The re=
+turned
+ signature is "QEMU".
+=20
++If the DMA interface is available, then reading the DMA Address Regist=
+er
++returns 0x51454d5520434647 ("QEMU CFG" in big-endian format).
++
+ The outermost protocol (involving the write / read sequences of the co=
+ntrol and
+ data registers) is expected to be versioned, and/or described by featu=
+re bits.
+ The interface revision / feature bitmap can be retrieved with key 0x00=
+01. The
+@@ -45,6 +48,51 @@ blob to be read from the data register has size 4, a=
+nd it is to be interpreted
+ as a uint32_t value in little endian byte order. The current value
+ (corresponding to the above outer protocol) is zero.
+=20
++If bit 1 of the feature bitmap is set, the DMA interface is present. T=
+his
++can be used through the 64-bit wide address register.
++
++The address register is in big-endian format. The value for the regist=
+er is 0
++at startup and after an operation. A write to the lower half triggers =
+an
++operation. This means, that operations with 32-bit addresses can be tr=
+iggered
++with just one write, whereas operations with 64-bit addresses can be t=
+riggered
++with one 64-bit write or two 32-bit writes, starting with the higher p=
+art.
++
++In this register, the physical address of a FWCfgDmaAccess structure i=
+n RAM
++should be written. This is the format of the FWCfgDmaAccess structure:
++
++typedef struct FWCfgDmaAccess {
++    uint32_t control;
++    uint32_t length;
++    uint64_t address;
++} FWCfgDmaAccess;
++
++The fields of the structure are in big endian mode, and the field at t=
+he lowest
++address is the "control" field.
++
++The "control" field has the following bits:
++ - Bit 0: Error
++ - Bit 1: Read
++ - Bit 2: Skip
++ - Bit 3: Select. The upper 16 bits are the selected index.
++
++When an operation is triggered, if the "control" field has bit 3 set, =
+the
++upper 16 bits are interpreted as an index of a firmware configuration =
+item.
++This has the same effect as writing the selector register.
++
++If the "control" field has bit 1 set, a read operation will be perform=
+ed.
++"length" bytes for the current selector and offset will be copied into=
+ the
++physical RAM address specified by the "address" field.
++
++If the "control" field has bit 2 set (and not bit 1), a skip operation=
+ will be
++performed. The offset for the current selector will be advanced "lengt=
+h" bytes.
++
++To check the result, read the "control" field:
++   error bit set        ->  something went wrong.
++   all bits cleared     ->  transfer finished successfully.
++   otherwise            ->  transfer still in progress (doesn't happen
++                            today due to implementation not being asyn=
+c,
++                            but may in the future).
++
+ The guest kernel is not expected to use these registers (although it i=
+s
+ certainly allowed to); the device tree bindings are documented here be=
+cause
+ this is where device tree bindings reside in general.
+@@ -56,6 +104,8 @@ Required properties:
+ - reg: the MMIO region used by the device.
+   * Bytes 0x0 to 0x7 cover the data register.
+   * Bytes 0x8 to 0x9 cover the selector register.
++  * With DMA interface enabled: Bytes 0x10 to 0x17 cover the DMA addre=
+ss
++    register.
+   * Further registers may be appended to the region in case of future =
+interface
+     revisions / feature bits.
+=20
+@@ -66,7 +116,7 @@ Example:
+ 	#address-cells =3D <0x2>;
+=20
+ 	fw-cfg@9020000 {
++		reg =3D <0x0 0x9020000 0x0 0x18>;
+ 		compatible =3D "qemu,fw-cfg-mmio";
+-		reg =3D <0x0 0x9020000 0x0 0xa>;
+ 	};
+ };
+--=20
+2.4.3
