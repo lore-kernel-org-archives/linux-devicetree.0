@@ -1,61 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
-Date: Thu, 8 Oct 2015 13:54:00 +0300
-Message-ID: <56164B48.6050300@cogentembedded.com>
-References: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
- <20151007033957.GA30650@verge.net.au> <5614FBB3.5060806@cogentembedded.com>
- <20151008021247.GD8756@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
+Date: Thu, 08 Oct 2015 12:54:05 +0200
+Message-ID: <8618206.7jshXjkP9U@wuerfel>
+References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com> <1444299575-17417-3-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151008021247.GD8756@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444299575-17417-3-git-send-email-irina.tirdea@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thursday 08 October 2015 13:19:28 Irina Tirdea wrote:
+> After power on, it is recommended that the driver resets the device.
+> The reset procedure timing is described in the datasheet and is used
+> at device init (before writing device configuration) and
+> for power management. It is a sequence of setting the interrupt
+> and reset pins high/low at specific timing intervals. This procedure
+> also includes setting the slave address to the one specified in the
+> ACPI/device tree.
+> 
+> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> driver gt9xx.c for Android (publicly available in Android kernel
+> trees for various devices).
+> 
+> For reset the driver needs to control the interrupt and
+> reset gpio pins (configured through ACPI/device tree). For devices
+> that do not have the gpio pins declared, the functionality depending
+> on these pins will not be available, but the device can still be used
+> with basic functionality.
+> 
+> For both device tree and ACPI, the interrupt gpio pin configuration is
+> read from the "irq-gpio" property and the reset pin configuration is
+> read from the "reset-gpio" property. For ACPI 5.1, named properties
+> can be specified using the _DSD section. If there is no _DSD section
+> in the ACPI table, the driver will fall back to using indexed gpio
+> pins declared in the _CRS section.
 
-On 10/8/2015 5:12 AM, Simon Horman wrote:
+Would it help to use a plain "gpios" property here to always look
+up the lines by index?
 
->>>> Define the Porter board dependent part of the SDHI0/2 device nodes along with
->>>> the  necessary  voltage regulators (note that the Vcc regulators are dummy --
->>>> they are required but don't actually exist on the board). Also, GPIOs have to
->>>> be used for the CD and WP signals due to the SDHI driver constraints...
->>>>
->>>> This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
->>>> add SDHI0/2 DT support) as there  are no differences between those boards in
->>>> this respect.
->>>>
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>
->>>> ---
->>>> This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
->>>> Horman's 'renesas.git' repo.
->>>
->>> Thanks I have queued this up after addressing some issues
->>> in the changelog that checkpatch complained about:
->>>
->>> * text > 75 characters wide
->>> * Missing '"' around name of patch referred to
->>>
->>> Its looking like there is already quite a log shared between
->>
->>     Lot?
->>
->>> r8a7791-porter.dts and r8a7791-henninger.dts. Do you have any
->>> thoughts on consolidating or sharing common elements between
->>> them somehow?
->>
->>     I'm still planning to remove the Henninger's .dts for good. It was never
->> sold and so had no users outside Renesas (and Cogent Embedded), I was told.
->
-> Thanks, that sounds like a good plan to me.
-> Do you have any thoughts on when?
+> +/*
+> + * Some platforms specify the gpio pins for interrupt and reset properly
+> + * in ACPI, but cannot use the interrupt pin as output due to their specific
+> + * HW configuration.
+> + */
+> +static const struct dmi_system_id goodix_no_gpio_pins_support[] = {
+> +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+> +	{
+> +		.ident = "Onda v975w",
+> +		.matches = {
+> +			DMI_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_UUID,
+> +				  "03000200-0400-0500-0006-000700080009"),
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+> +		}
+> +	},
 
-    Well, I was going to reach the feature parity between these 2 boards, i.e. 
-to support all devices on Porter that are supported on Henninger...
+I think lists like this in drivers should be avoided if at all possible,
+it just leads to other people adding their platform in the lists as
+opposed to fixing their boot loaders.
 
-MBR, Sergei
+Can you find another way to detect at runtime whether it works, and
+print a warning if it doesn't? If there is no way to detect that kind
+of device, we should probably have another property that the driver
+can read to determine this, so we can avoid adding each system here.
 
+> +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
+> +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
+> +	if (error)
+> +		return error;
+
+If the "interrupt" gpio is used as an output, maybe it has the wrong
+name? Is that the name from the goodix datasheet (that would be ok)
+or something you picked?
+
+	Arnd
