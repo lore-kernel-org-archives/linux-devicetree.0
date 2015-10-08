@@ -1,102 +1,72 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: add binding for generic mmio clocksource
-Date: Thu, 08 Oct 2015 10:15:39 +0100
-Message-ID: <yw1xr3l5k9fo.fsf@unicorn.mansr.com>
-References: <1444232234-2133-1-git-send-email-mans@mansr.com>
-	<20151007154727.GC28981@leverpostej>
-	<yw1xvbaik4mn.fsf@unicorn.mansr.com>
-	<20151007170358.GA32702@leverpostej>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 1/5] PCI: Add pci_bus_fixup_irqs().
+Date: Thu, 8 Oct 2015 10:18:43 +0100
+Message-ID: <20151008091843.GA31644@red-moon>
+References: <1443811443-18878-1-git-send-email-ddaney.cavm@gmail.com>
+ <56157BC8.3070406@caviumnetworks.com>
+ <20151007230847.GG27633@localhost> <1906663.FAJXtJhtPt@shredder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151007170358.GA32702@leverpostej> (Mark Rutland's message of
-	"Wed, 7 Oct 2015 18:03:58 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1906663.FAJXtJhtPt@shredder>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthew Minter <matt@masarand.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, David Daney <david.daney@cavium.com>, Will Deacon <will.deacon@arm.com>, David Daney <ddaney@caviumnetworks.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+Hi Matthew,
 
->> >> +- clocks: phandle to the source clock
->> >
->> > Is the frequency expected to be exactly the source clock frequency=
-? I
->> > imagine it's possible for there to be a divisor.
->>=20
->> There could of course be, though there isn't in the hardware I'm dea=
-ling
->> with.  Is specifying it here preferable using a fixed-factor-clock?
->
-> I'm not actually sure; I guess it would be ok to do so.
->
-> For now we should just explicitly state that the clocksource is assum=
-ed
-> to tick at the rate of the clock.
+On Thu, Oct 08, 2015 at 03:07:34AM +0100, Matthew Minter wrote:
+> On Wednesday 07 October 2015 18:08:47 Bjorn Helgaas wrote:
 
-OK, I'll come up with a clearer wording.
+[...]
 
->> > We can add properties for that later, but we should be explcit as =
-to
->> > what we currently expect the relationship between the clock and th=
-e
->> > clocksource to be.
->> >
->> >> +- clocksource-bits: number of valid bits
->> >> +- clocksource-rating: rating of the clocksource
->> >
->> > NAK. This has no meaning w.r.t. the hardware. This should not be i=
-n the
->> > DT. If there are criteria that bias this (e.g. frequency, latency)=
-, they
->> > should either be described in the DT or determined dynamically.
->>=20
->> I had a bad feeling about this.  How would you suggest determining a
->> suitable value from actual hardware parameters?
->
-> I don't have a good answer to that given the rating is semi-arbitrary=
-,
-> but that's also the reason I don't want to see it in the DT.
->
-> Can we not just choose a fixed number in the driver for now? Likely
-> something lower than the architected timers (400 currently).
+> Yes, I had been working on this last year, and got a patchset that was tested 
+> on arm, x86 (and amd64), and slightly tested on powerpc. However I was not 
+> able to test other architectures as they were not available in the software 
+> lab I work in but should in theory work on all arches the kernel runs on.
+> 
+> I can say that that patchset is being used by several projects out of tree 
+> currently but unfortunately due to a shift in priorities in the lab I was 
+> working for I lost access to the resources to develop and test the patch 
+> easily.
+> 
+> I have done some additional work personally on it but so far have not got 
+> anything that I am happy to submit for inclusion in tree. (due to a number of 
+> issues in structure and  a complication relating to weak functions where 
+> multiple variations of the same arch exist.
+> 
+> You can see in thread that is linked above 
+> (http://lkml.kernel.org/r/1412222866-21068-1-git-send-email-matt@masarand.com)
+> some feedback on the issues that need to be solved.
+> 
+> I also expect that the patchset needs to be pulled forward to a newer kernel 
+> as I have been working in a frozen tree without rebasing to reduce test 
+> complexity.
+> 
+> I would be happy to put some time this weekend if possible into reviewing the 
+> state of this and seeing if I can at least put together a version running on a 
+> recent kernel. I can also go over the issues again which were proving 
+> problematic and see if any of them are easy to fix.
+> 
+> However I can only work on this in my own time for now and on my own boxes 
+> (which are all x86 and amd64) so the amount I can do will be limited. 
 
-=46ine with me.
+I was not aware of your patchset but I am happy to see that code since it
+is definitely the right approach and I am willing to help you test it on
+arm with the HW I have (probably it will also help remove some code
+from arm64 too), let me know when you have a branch ready to test and
+if you need any help in rebasing the set.
 
->> >> +- linux,sched-clock: boolean, register clocksource as sched_cloc=
-k
->> >
->> > Likewise, this property doesn't belong in the DT for the same reas=
-ons as
->> > clocksource-rating.
->>=20
->> What would be a proper way to select a sched_clock source?  I realis=
-e
->> it's a Linux-specific thing and DT is supposed to be generic, but th=
-e
->> information must be provided somehow.
->
-> I think that any source above a certain rate and below a certain
-> latency, which does not lose state, should be registered (and the bes=
-t
-> gets chosen dynamically).
->
-> Come to think of it, what's the expected behaviour of this source w.r=
-=2Et.
-> power management? I expect that the kernel needs to leave the clock
-> enabled at all times for this to possibly work.
-
-The platform I'm dealing with has a 32-bit register counting cycles of
-the external clock input which never stops.  It also has a few counters
-with a configurable clock source, and those might indeed stop so should
-probably not be used for this.
-
---=20
-M=E5ns Rullg=E5rd
-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Lorenzo
