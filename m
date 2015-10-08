@@ -1,87 +1,64 @@
-From: Songjun Wu <songjun.wu@atmel.com>
-Subject: [RESEND PATCH v3 2/2] ASoC: atmel-classd: DT binding for Class D audio amplifier driver
-Date: Thu, 8 Oct 2015 18:13:32 +0800
-Message-ID: <1444299212-4328-3-git-send-email-songjun.wu@atmel.com>
-References: <1444299212-4328-1-git-send-email-songjun.wu@atmel.com>
+From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [RESEND PATCH v3 0/2] ASoC: atmel-classd: add driver for Atmel CLASSD
+Date: Thu, 8 Oct 2015 18:13:30 +0800
+Message-ID: <1444299212-4328-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444299212-4328-1-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, broonie@kernel.org, nicolas.ferre@atmel.com
-Cc: Songjun Wu <songjun.wu@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT binding documentation for this new ASoC driver.
+The Audio Class D Amplifier driver includes two parts.
+1) Driver code to implement the Audio Class D Amplifier function.
+2) Device tree binding document, it describes how to add the Audio
+   Class D Amplifier in device tree.
 
-Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
----
+Changes in v3:
+- Remove '.owner' field in variable 'atmel_classd_driver',
+  since the core will do it.
+- Correct 'IS_ERR(dd->aclk)' to 'IS_ERR(dd->gclk)',
+  when geting the clock 'dd->gclk'.
 
-Changes in v3: None
 Changes in v2:
+- Change the "Mono", "Swap" and "Deemphasis" controls to
+  "Mono Switch", "Swap Switch" and "Deemphasis Switch".
+- Merge "EQ Bass", "EQ Medium" and "EQ Treble" controls
+  into one "EQ" control.
+- Change the "single-ended" and "differential" to
+  "Single ended", "Differential".
+- Merge separate left and right controls into one single
+  stereo control.
+- Add a warning if the user trys to specify an invalid
+  value in function "atmel_classd_codec_probe".
+- Use the "dev_get_regmap()" in function
+  "atmel_classd_codec_get_remap".
+- Check for errors when invoking the "clk_prepare_enable".
+- Remove the "dev_info" in function "atmel_classd_probe".
+- Add some code to create a sound card in function
+  "atmel_classd_probe".
+- Remove the DT node "Sound" and the related code.
 - Delete the device node "Sound" in dts.
 
- .../devicetree/bindings/sound/atmel-classd.txt     |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/atmel-classd.txt
+Songjun Wu (2):
+  ASoC: atmel-classd: add the Audio Class D Amplifier
+  ASoC: atmel-classd: DT binding for Class D audio amplifier driver
 
-diff --git a/Documentation/devicetree/bindings/sound/atmel-classd.txt b/Documentation/devicetree/bindings/sound/atmel-classd.txt
-new file mode 100644
-index 0000000..0018451
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/atmel-classd.txt
-@@ -0,0 +1,52 @@
-+* Atmel ClassD driver under ALSA SoC architecture
-+
-+Required properties:
-+- compatible
-+	Should be "atmel,sama5d2-classd".
-+- reg
-+	Should contain ClassD registers location and length.
-+- interrupts
-+	Should contain the IRQ line for the ClassD.
-+- dmas
-+	One DMA specifiers as described in atmel-dma.txt and dma.txt files.
-+- dma-names
-+	Must be "tx".
-+- clock-names
-+	Tuple listing input clock names.
-+	Required elements: "pclk", "gclk" and "aclk".
-+- clocks
-+	Please refer to clock-bindings.txt.
-+
-+Optional properties:
-+- pinctrl-names, pinctrl-0
-+	Please refer to pinctrl-bindings.txt.
-+- atmel,model
-+	The user-visible name of this sound complex.
-+	The default value is "CLASSD".
-+- atmel,pwm-type
-+	PWM modulation type, "single" or "diff".
-+	The default value is "single".
-+- atmel,non-overlap-time
-+	Set non-overlapping time, the unit is nanosecond(ns).
-+	There are four values,
-+	<5>, <10>, <15>, <20>, the default value is <10>.
-+	Non-overlapping will be disabled if not specified.
-+
-+Example:
-+classd: classd@fc048000 {
-+		compatible = "atmel,sama5d2-classd";
-+		reg = <0xfc048000 0x100>;
-+		interrupts = <59 IRQ_TYPE_LEVEL_HIGH 7>;
-+		dmas = <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(47))>;
-+		dma-names = "tx";
-+		clocks = <&classd_clk>, <&classd_gclk>, <&audio_pll_pmc>;
-+		clock-names = "pclk", "gclk", "aclk";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_classd_default>;
-+		atmel,model = "classd @ SAMA5D2-Xplained";
-+		atmel,pwm-type = "diff";
-+		atmel,non-overlap-time = <10>;
-+};
+ .../devicetree/bindings/sound/atmel-classd.txt     |   52 ++
+ sound/soc/atmel/Kconfig                            |    9 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/atmel-classd.c                     |  679 ++++++++++++++++++++
+ sound/soc/atmel/atmel-classd.h                     |  120 ++++
+ 5 files changed, 862 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-classd.txt
+ create mode 100644 sound/soc/atmel/atmel-classd.c
+ create mode 100644 sound/soc/atmel/atmel-classd.h
+
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
