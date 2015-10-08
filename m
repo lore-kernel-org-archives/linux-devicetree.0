@@ -1,56 +1,106 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Thu, 8 Oct 2015 14:57:09 +0530
-Message-ID: <20151008092709.GC18898@linux>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
- <20150915024747.GI32551@linux>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [RFT 0/3] usb: usb3503: Fix probing on Arndale board (missing
+ phy)
+Date: Thu, 8 Oct 2015 11:35:41 +0200
+Message-ID: <561638ED.1060503@osg.samsung.com>
+References: <1444177807-15524-1-git-send-email-k.kozlowski@samsung.com>
+ <56152BB2.4020202@samsung.com> <561606FE.2090007@samsung.com>
+ <56160BFD.4050702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150915024747.GI32551@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56160BFD.4050702@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Chen <peter.chen@freescale.com>, Ben Gamari <ben@smart-cactus.org>, Wolfram Sang <wsa@the-dreams.de>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, riku.voipio@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+Hello,
 
-On 15-09-15, 08:17, Viresh Kumar wrote:
-> On 14-09-15, 15:22, Rob Herring wrote:
-> > What if we have a 2nd device and supply rail? For example, what if the
-> > L2$ has a separate rail from the cores but is linked to the OPPs.
+On 10/08/2015 08:23 AM, Marek Szyprowski wrote:
+> Hello,
 > 
-> Right, so that is the case with the Mediatek SoC as well, AFAIR. How
-> do we plan to treat L2 devices? For example, in the mediatek cpufreq
-> driver, they change L2's supplies together with CPUs.
+> On 2015-10-08 08:02, Krzysztof Kozlowski wrote:
+>> On 07.10.2015 23:26, Marek Szyprowski wrote:
+>>> Hello,
+>>>
+>>> On 2015-10-07 02:30, Krzysztof Kozlowski wrote:
+>>>> Introduction
+>>>> ============
+>>>> This patchset tries to fix probing of usb3503 on Arndale board
+>>>> if the Samsung PHY driver is probed later (or built as a module).
+>>>>
+>>>> *The patchset was not tested on Arndale board.*
+>>>> I don't have that board. Please test it and say if the usb3503
+>>>> deferred probe
+>>>> works fine and the issue is solved.
+>>>>
+>>>> The patchset was tested on Odroid U3 board (which is different!)
+>>>> in a simulated environment. It is not sufficient testing.
+>>>>
+>>>>
+>>>> Difference
+>>>> ==========
+>>>> The usb3503 device driver can be used as a I2C device (on Odroid U3)
+>>>> or as a platform device connected through phy (on Arndale). In the second
+>>>> case the necessary phy reference has to be obtained and enabled.
+>>>>
+>>>> For some details please look also at thread [0][1].
+>>>>
+>>>> [0]
+>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348524.html
+>>>>
+>>>> [1]
+>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348875.html
+>>>>
+>>>>
+>>> I'm not sure that this is the correct approach. usb3503 chip is simply
+>>> connected
+>>> to Exynos USB2 phy, so it visible on the USB bus. The real driver that
+>>> controls USB2
+>>> PHY is Exynos EHCI driver and USB3503 should not mess around it.
+>> The ehci node (usb@12110000) has one port configured and it takes one
+>> PHY reference (phy of id 1 - USB host). I can't see driver taking
+>> reference to HSIC0 or HSIC1 phys... Since I cannot diagnose the error I
+>> don't know what is really expected here.
 > 
-> One way to get that done, with such very closely bound devices is to
-> add two regulators:
+> It looks that EHCI in Exynos 5250 and 5420 still use old phy bindings. For
+> the reference, see Exynos4 dts and exynos4412-odroidu3.dts to check how to enable
+> more than one USB port (Odroid U3 has both HSIC ports enabled).
 > 
-> cpu-supply = ...;
-> l2-supply = ...;
+>>
+>>> In my opinion all that is needed in case of Arndale board is forcing
+>>> reset of
+>>> usb3503 chip after successful EHCI and USB2 PHY initialization (for some
+>>> reason
+>>> initialization of usb3503 chip must be done after usb host initialization).
+>>> However I have no idea which driver should trigger this reset. Right now
+>>> I didn't
+>>> find any good solution for additional control for devices which are on
+>>> autoprobed
+>>> bus like usb.
+>> The reset is done at the end of usb3503's probe. The question "why
+>> usb3503 has to be initialized after EHCI and USB PHY" is still valid...
 > 
-> And then a property in OPP table:
-> 
-> supply-name = "cpu", "l2";
-> 
-> And maybe fix the order in which the supplies which be updated, based
-> on the order in which entries are present in the above property.
-> 
-> Any other way you suggest for doing that ?
-> 
-> > Remind me of when do we have multiple regulators for a cpu?
-> 
-> I haven't seen that yet, but its more like what I explained above.
-> i.e. one for the CPU and other one for the L2 cache.
-> 
-> But, these bindings do apply for other devices as well, where it
-> should be very much possible.
+> I remember that I saw some code to reset HSIC device after phy power on in case
+> of HSIC-connected modem chip, so maybe this is somehow common for HSIC chips
+> (which are some special case of 'embedded usb').
+>
 
-Not sure if you still have any objections to this patch?
+I also don't have an Arndale board and haven't followed the thread to closely
+but I just wanted to mention that the ChromiumOS 3.8 tree has a workaround to
+reset the HSIC phys:
 
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/81685c447954a29d1098268776582457258dd98f%5E%21/
+
+and later a "supports-hsicphy-reset" DT property was added to force the reset
+per board instead of unconditionally:
+
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/a4d1c1a223ffa1ed38a4257d0378ca70c6667be0%5E%21/
+
+Best regards,
 -- 
-viresh
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
