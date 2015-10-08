@@ -1,57 +1,37 @@
 From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH v2 1/2] PCI: of: Add 64-bit address recognition without LPAE
- support
-Date: Thu, 08 Oct 2015 10:24:25 +0300
-Message-ID: <858110a5c4fb0b2094417cc8429560bdaae81c66.1444288748.git.p.fedin@samsung.com>
-References: <cover.1444288748.git.p.fedin@samsung.com>
+Subject: [PATCH v2 0/2] PCI: of: Fix handling 64-bit PCI resources on non-LPAE
+ kernels
+Date: Thu, 08 Oct 2015 10:24:24 +0300
+Message-ID: <cover.1444288748.git.p.fedin@samsung.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <cover.1444288748.git.p.fedin@samsung.com>
-In-reply-to: <cover.1444288748.git.p.fedin@samsung.com>
-References: <cover.1444288748.git.p.fedin@samsung.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-If non-LPAE kernel is booted up on a machine with 64-bit PCI resources,
-PCI controller probe fails with:
+The initial aim of this series is to fix long-standing problem with generic
+PCI host controller, triggered by ARM "virt" machine in the recent qemu.
+Since v2.4.50 qemu adds support for the second, large PCI MMIO window,
+which resides in 64-bit address space. This series addresses problems,
+which are triggered on non-LPAE kernels by this configuration.
 
-PCI host bridge /pcie@10000000 ranges:
-   IO 0x3eff0000..0x3effffff -> 0x00000000
-  MEM 0x10000000..0x3efeffff -> 0x10000000
-  MEM 0x8000000000..0xffffffffff -> 0x8000000000
-pci-host-generic 3f000000.pcie: resource collision: [mem 0x00000000-0xffffffff] conflicts with /pl011@9000000 [mem 0x09000000-0x09000fff]
-pci-host-generic: probe of 3f000000.pcie failed with error -16
+These patches do not depend on each other and can be applied individually.
+The first adds missing recognition of 64-bit resources (which is actually
+a bug). The second one changes the code to ignore unaccessible resources
+instead of completely bailing out. Since it touches generic of_pci code,
+the fix is expected to be applied to all drivers which use
+of_pci_get_host_bridge_resources().
 
-This happens because res->start assignment in of_pci_range_to_resource()
-truncates the upper part of the address, because res->start is of
-phys_addr_t type, which is 32-bit on non-LPAE kernels.
+v1 => v2:
+- Dropped #ifndef, use sizeof(resource_size_t) instead
 
-This patch adds explicit recognition of 64-bit resources, preventing from
-potential problems when e. g. 0x8000001234 would be converted to
-0x00001234.
+Pavel Fedin (2):
+  PCI: of: Add 64-bit address recognition without LPAE support
+  PCI: of: Ignore resources with failed translation
 
-Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
----
  drivers/of/address.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/of/of_pci.c  | 6 ++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 384574c..cd53fe4 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -330,6 +330,12 @@ int of_pci_range_to_resource(struct of_pci_range *range,
- 		}
- 		res->start = port;
- 	} else {
-+		if ((sizeof(resource_size_t) < 8) &&
-+		    upper_32_bits(range->cpu_addr)) {
-+			err = -EINVAL;
-+			goto invalid_range;
-+		}
-+
- 		res->start = range->cpu_addr;
- 	}
- 	res->end = res->start + range->size - 1;
 -- 
 2.4.4
