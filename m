@@ -1,36 +1,65 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos4412-odroid: unify voltage regulator style
-Date: Thu, 08 Oct 2015 09:57:56 +0900
-Message-ID: <5615BF94.5080406@samsung.com>
-References: <1442858340-4584-1-git-send-email-tjakobi@math.uni-bielefeld.de>
- <1442858340-4584-2-git-send-email-tjakobi@math.uni-bielefeld.de>
- <561458C3.8030806@math.uni-bielefeld.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: of: Add 64-bit address recognition without LPAE support
+Date: Wed, 7 Oct 2015 20:42:34 -0500
+Message-ID: <CAL_JsqKV2FpzHQs9OaYoHP66ir9jXvf91bxDFKeoNiRtho_GGA@mail.gmail.com>
+References: <cover.1444214119.git.p.fedin@samsung.com> <d222dd1e4d8ed59e25248091e90e53b662e007c5.1444214119.git.p.fedin@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <561458C3.8030806@math.uni-bielefeld.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <d222dd1e4d8ed59e25248091e90e53b662e007c5.1444214119.git.p.fedin@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pavel Fedin <p.fedin@samsung.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Peter Maydell <peter.maydell@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07.10.2015 08:26, Tobias Jakobi wrote:
-> Gentle ping!
+On Wed, Oct 7, 2015 at 5:49 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
+> If non-LPAE kernel is booted up on a machine with 64-bit PCI resources,
+> PCI controller probe fails with:
+>
+> PCI host bridge /pcie@10000000 ranges:
+>    IO 0x3eff0000..0x3effffff -> 0x00000000
+>   MEM 0x10000000..0x3efeffff -> 0x10000000
+>   MEM 0x8000000000..0xffffffffff -> 0x8000000000
+> pci-host-generic 3f000000.pcie: resource collision: [mem 0x00000000-0xffffffff] conflicts with /pl011@9000000 [mem 0x09000000-0x09000fff]
+> pci-host-generic: probe of 3f000000.pcie failed with error -16
+>
+> This happens because res->start assignment in of_pci_range_to_resource()
+> truncates the upper part of the address, because res->start is of
+> phys_addr_t type, which is 32-bit on non-LPAE kernels.
+>
+> This patch adds explicit recognition of 64-bit resources, preventing from
+> potential problems when e. g. 0x8000001234 would be converted to
+> 0x00001234.
+>
+> Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
+> ---
+>  drivers/of/address.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 384574c..9a8f8c3 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -330,6 +330,12 @@ int of_pci_range_to_resource(struct of_pci_range *range,
+>                 }
+>                 res->start = port;
+>         } else {
+> +#ifndef CONFIG_PHYS_ADDR_T_64BIT
+> +               if (upper_32_bits(range->cpu_addr)) {
 
-Both patches are now in Kukjin's tree.
+Drop the ifdef:
 
-Best regards,
-Krzysztof
+if ((sizeof(phys_addr_t) > 4) && upper_32_bits(range->cpu_addr)) {
 
-> 
-> - Tobias
-> 
-> Tobias Jakobi wrote:
->> Use 'ldoN_reg: LDON' syntax and drop the deprecated
->> 'regulator-compatible' property.
->>
->> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->> ---
->>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 6 ++----
->>  1 file changed, 2 insertions(+), 4 deletions(-)
+Seems fine otherwise.
+
+> +                       err = -EINVAL;
+> +                       goto invalid_range;
+> +               }
+> +#endif
+>                 res->start = range->cpu_addr;
+>         }
+>         res->end = res->start + range->size - 1;
+> --
+> 2.4.4
+>
