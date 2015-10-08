@@ -1,205 +1,138 @@
-From: Olliver Schinagl <oliver+list@schinagl.nl>
-Subject: Re: [linux-sunxi] [PATCH v2 1/2] mmc: Add support for marking hpi
- as broken through devicetree
-Date: Thu, 08 Oct 2015 14:13:13 +0200
-Message-ID: <56165DD9.2000008@schinagl.nl>
-References: <1427901984-26469-1-git-send-email-hdegoede@redhat.com> <5614DB4E.8040807@schinagl.nl> <56162CAE.6000105@redhat.com>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v7 2/9] Input: goodix - reset device at init
+Date: Thu, 8 Oct 2015 12:18:37 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0F9A50@irsmsx105.ger.corp.intel.com>
+References: <1444299575-17417-1-git-send-email-irina.tirdea@intel.com>
+ <1444299575-17417-3-git-send-email-irina.tirdea@intel.com>
+ <8618206.7jshXjkP9U@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <56162CAE.6000105@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: hdegoede@redhat.com, linux-sunxi@googlegroups.com, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <8618206.7jshXjkP9U@wuerfel>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Hans,
 
 
-On 08-10-15 10:43, Hans de Goede wrote:
-> Hi,
->
-> On 10/07/2015 09:43 AM, Olliver Schinagl wrote:
->> Hey Hans,
->>
->> On 01-04-15 17:26, Hans de Goede wrote:
->>> The eMMC on a tablet I've will stop working / communicating as soon as
->>> the kernel executes:
->>>
->>>         mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->>>                   EXT_CSD_HPI_MGMT, 1,
->>>                   card->ext_csd.generic_cmd6_time);
->>>
->>> There seems to be no way to reliable identify eMMC-s which have a 
->>> broken
->>> hpi implementation, but at least for eMMC's which are soldered onto 
->>> a board
->>> we can work around this by specifying that hpi is broken in devicetree.
->> We've been talking about this a little off-list, and I was just 
->> triggered again by this so I'm following up on it again.
->>
->> The same issue bit me in the ass on a Micron 'industrial' grade eMMC 
->> (MTFC4GACAANA) and luckily you found this back then to help me.
->>
->> As we discussed, this may very well be a limitation of the mmc 
->> controller, rather then the MMC chip. While we only have a sample 
->> size of 2 on 2 different socs (with likely the same mmc IP) (A13/A20) 
->> I found in the JEDEC spec in the appendix on changes from 4.4 to 4.41:
->> Introduce of High Priority Interrupt mechanism, HPI background and 
->> one of possible solutions.
->>
->> Which leaves me to believe, that HPI was added to eMMC in version 
->> 4.41 and was not available before. Both the A13 and A20 user manuals 
->> state that the MMC controller in these socs is only version 4.3.
->>
->> Obviously I know far to little as to what does and what does not work 
->> with an MMC-host, since it's just a simple data-bus, but I would not 
->> be surprised if these things are somewhere somewhat related, so 
->> hopefully someone on this list can give their opinion on this.
->>
->> I already checked the core/mmc.c where the version is read from the 
->> mmc controller to see if we can trigger on this based on version, 
->> however it seems only the major version number is stored here [0]?
->>
->> So in my opinion, it is quite likely that this setting be moved up to 
->> the mmc-core level, for the SoC, rather then the card itself?
->
-> Yes I was talking to Tsvetan from Olimex and he says they have seen 
-> the problem with yet
-> another emmc, so this indeed seems to be a sunxi SoC specific problem, 
-> and we just need to
-> disable hpi on all sunxi SoC's.
->
-> Do you have time to look into doing a kernel patch for this ?
->
-> I'm thinking adding a host-cap called MMC_CAP_BROKEN_HPI and adding
-> support for that to drivers/mmc/core/host.c: mmc_of_parse() and
-> extending the current card check for broken-hpi to also check
-> host->caps
->
-> And then we need to decide whether to just hard set that cap
-> in drivers/mmc/host/sunxi_mmc.c or if we are going to add it
-> to our dtsi files. I think we should probably just hard-code
-> it in drivers/mmc/host/sunxi_mmc.c.
-Yeah I'll see if I can look into that.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: 08 October, 2015 13:54
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v7 2/9] Input: goodix - reset device at init
+> 
+> On Thursday 08 October 2015 13:19:28 Irina Tirdea wrote:
+> > After power on, it is recommended that the driver resets the device.
+> > The reset procedure timing is described in the datasheet and is used
+> > at device init (before writing device configuration) and
+> > for power management. It is a sequence of setting the interrupt
+> > and reset pins high/low at specific timing intervals. This procedure
+> > also includes setting the slave address to the one specified in the
+> > ACPI/device tree.
+> >
+> > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > driver gt9xx.c for Android (publicly available in Android kernel
+> > trees for various devices).
+> >
+> > For reset the driver needs to control the interrupt and
+> > reset gpio pins (configured through ACPI/device tree). For devices
+> > that do not have the gpio pins declared, the functionality depending
+> > on these pins will not be available, but the device can still be used
+> > with basic functionality.
+> >
+> > For both device tree and ACPI, the interrupt gpio pin configuration is
+> > read from the "irq-gpio" property and the reset pin configuration is
+> > read from the "reset-gpio" property. For ACPI 5.1, named properties
+> > can be specified using the _DSD section. If there is no _DSD section
+> > in the ACPI table, the driver will fall back to using indexed gpio
+> > pins declared in the _CRS section.
+> 
+> Would it help to use a plain "gpios" property here to always look
+> up the lines by index?
+> 
 
-I was also looking if we really cannot detect older MMC versions, and I 
-think we can somewhat. I haven't figured out the details yet though.
+The problem with ACPI indexed gpios is that platforms declare the
+pins in random order. In this case we have some platforms that declare
+the interrupt pin first and others that declare the reset pin first.
+There is no way to differentiate between them so the only way to support
+these platforms is to pick a default and list all exceptions in the driver.
+My previous implementation did that with indexed gpios and dmi quirks. [1]
 
-The EXT_CSD_REV field does yield a version number matching the various 4 
-sub-versions, so for now I'm thinking of simply disabeling HPI for 
-anything before 4.41 (unless maybe overriden). Since before 4.41 it 
-shouldn't have been supported. Maybe add an override that allows use of 
-HPI? but then we have the whole backwards compatibility thing.
+This can be solved by using named gpios, which are available starting with ACPI 5.1.
+In this way we know exactly which is the interrupt pin and which is the reset pin
+and we do not need to add any additional exceptions to the driver.
+However, we still need to support the platforms that are already out there so
+we fall back to indexed gpios.
 
-[0] http://lxr.free-electrons.com/source/drivers/mmc/core/mmc.c#L368
->
-> Regards,
->
-> Hans
->
->
->
->
->
->
->>
->> [0] http://lxr.free-electrons.com/source/drivers/mmc/core/mmc.c#L148
->>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>> Changes in v2:
->>> -Fix of_node leakage
->>> ---
->>>   Documentation/devicetree/bindings/mmc/mmc-card.txt | 31 
->>> ++++++++++++++++++++++
->>>   drivers/mmc/core/mmc.c                             | 10 ++++++-
->>>   2 files changed, 40 insertions(+), 1 deletion(-)
->>>   create mode 100644 Documentation/devicetree/bindings/mmc/mmc-card.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-card.txt 
->>> b/Documentation/devicetree/bindings/mmc/mmc-card.txt
->>> new file mode 100644
->>> index 0000000..a70fcd6
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mmc/mmc-card.txt
->>> @@ -0,0 +1,31 @@
->>> +mmc-card / eMMC bindings
->>> +------------------------
->>> +
->>> +This documents describes the devicetree bindings for a mmc-host 
->>> controller
->>> +child node describing a mmc-card / an eMMC, see "Use of Function 
->>> subnodes"
->>> +in mmc.txt
->>> +
->>> +Required properties:
->>> +-compatible : Must be "mmc-card"
->>> +-reg        : Must be <0>
->>> +
->>> +Optional properties:
->>> +-broken-hpi : Use this to indicate that the mmc-card has a broken hpi
->>> +              implementation, and that hpi should not be used
->>> +
->>> +Example:
->>> +
->>> +&mmc2 {
->>> +    pinctrl-names = "default";
->>> +    pinctrl-0 = <&mmc2_pins_a>;
->>> +    vmmc-supply = <&reg_vcc3v3>;
->>> +    bus-width = <8>;
->>> +    non-removable;
->>> +    status = "okay";
->>> +
->>> +    mmccard: mmccard@0 {
->>> +        reg = <0>;
->>> +        compatible = "mmc-card";
->>> +        broken-hpi;
->>> +    };
->>> +};
->>> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
->>> index 1d41e85..c84131e 100644
->>> --- a/drivers/mmc/core/mmc.c
->>> +++ b/drivers/mmc/core/mmc.c
->>> @@ -11,6 +11,7 @@
->>>    */
->>>   #include <linux/err.h>
->>> +#include <linux/of.h>
->>>   #include <linux/slab.h>
->>>   #include <linux/stat.h>
->>>   #include <linux/pm_runtime.h>
->>> @@ -336,6 +337,8 @@ static int mmc_decode_ext_csd(struct mmc_card 
->>> *card, u8 *ext_csd)
->>>   {
->>>       int err = 0, idx;
->>>       unsigned int part_size;
->>> +    struct device_node *np;
->>> +    bool broken_hpi = false;
->>>       /* Version is coded in the CSD_STRUCTURE byte in the EXT_CSD 
->>> register */
->>>       card->ext_csd.raw_ext_csd_structure = ext_csd[EXT_CSD_STRUCTURE];
->>> @@ -349,6 +352,11 @@ static int mmc_decode_ext_csd(struct mmc_card 
->>> *card, u8 *ext_csd)
->>>           }
->>>       }
->>> +    np = mmc_of_find_child_device(card->host, 0);
->>> +    if (np && of_device_is_compatible(np, "mmc-card"))
->>> +        broken_hpi = of_property_read_bool(np, "broken-hpi");
->>> +    of_node_put(np);
->>> +
->>>       /*
->>>        * The EXT_CSD format is meant to be forward compatible. As long
->>>        * as CSD_STRUCTURE does not change, all values for EXT_CSD_REV
->>> @@ -494,7 +502,7 @@ static int mmc_decode_ext_csd(struct mmc_card 
->>> *card, u8 *ext_csd)
->>>           }
->>>           /* check whether the eMMC card supports HPI */
->>> -        if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1) {
->>> +        if (!broken_hpi && (ext_csd[EXT_CSD_HPI_FEATURES] & 0x1)) {
->>>               card->ext_csd.hpi = 1;
->>>               if (ext_csd[EXT_CSD_HPI_FEATURES] & 0x2)
->>>                   card->ext_csd.hpi_cmd = MMC_STOP_TRANSMISSION;
->>
->
+[1] https://lkml.org/lkml/2015/9/15/609
 
+> > +/*
+> > + * Some platforms specify the gpio pins for interrupt and reset properly
+> > + * in ACPI, but cannot use the interrupt pin as output due to their specific
+> > + * HW configuration.
+> > + */
+> > +static const struct dmi_system_id goodix_no_gpio_pins_support[] = {
+> > +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+> > +	{
+> > +		.ident = "Onda v975w",
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
+> > +			DMI_MATCH(DMI_PRODUCT_UUID,
+> > +				  "03000200-0400-0500-0006-000700080009"),
+> > +			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+> > +			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+> > +		}
+> > +	},
+> 
+> I think lists like this in drivers should be avoided if at all possible,
+> it just leads to other people adding their platform in the lists as
+> opposed to fixing their boot loaders.
+> 
+> Can you find another way to detect at runtime whether it works, and
+> print a warning if it doesn't?
+
+I agree with you on this, but unfortunately I have not found a better way to do it.
+
+The main problem comes from the interrupt pin. This device uses the interrupt pin
+as output, which some platforms do not support (either due to the HW configuration
+or due to flagging it wrong in BIOS) [2] [3]. There is no error returned, just a warning
+in dmesg.
+
+[2] https://lkml.org/lkml/2015/9/28/851
+[3] https://lkml.org/lkml/2015/9/30/607
+
+> If there is no way to detect that kind
+> of device, we should probably have another property that the driver
+> can read to determine this, so we can avoid adding each system here.
+> 
+
+If one or both gpio pins are not declared in ACPI/DT or if gpio initialization fails,
+the driver will work without the functionality that depends on them. 
+
+However, this will not work for platforms that are already out and for which we cannot
+modify the ACPI table (like Onda v975w, WinBook TW100 and WinBook TW700).
+
+> > +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
+> > +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
+> > +	if (error)
+> > +		return error;
+> 
+> If the "interrupt" gpio is used as an output, maybe it has the wrong
+> name? Is that the name from the goodix datasheet (that would be ok)
+> or something you picked?
+> 
+
+This is from the goodix datasheet [4]. The pin that is used for receiving interrupts
+is also used as output (for reset and suspend procedures).
+
+[4] https://drive.google.com/folderview?id=0BxCVOQS3ZymGfmJyY2RKbE5XbVlKNlktVTlwV0lxNEdxd2dzeWZER094cmJPVnMxN1F0Yzg&usp=sharing
+
+Thanks,
+Irina
+
+> 	Arnd
