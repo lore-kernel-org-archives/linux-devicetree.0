@@ -1,53 +1,63 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH 5/5] ARM: dts: imx7d-sdb: add ADC support
-Date: Thu, 8 Oct 2015 18:59:08 +0800
-Message-ID: <1444301948-21721-5-git-send-email-haibo.chen@freescale.com>
-References: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: porter: add SDHI0/2 DT support
+Date: Thu, 8 Oct 2015 20:08:31 +0900
+Message-ID: <20151008110831.GC4961@verge.net.au>
+References: <2228837.DO5U5OvRSi@wasted.cogentembedded.com>
+ <20151007033957.GA30650@verge.net.au>
+ <5614FBB3.5060806@cogentembedded.com>
+ <20151008021247.GD8756@verge.net.au>
+ <56164B48.6050300@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, mturquette@baylibre.com, sboyd@codeaurora.org, jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56164B48.6050300@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add ADC support for imx7d-sdb board.
+On Thu, Oct 08, 2015 at 01:54:00PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 10/8/2015 5:12 AM, Simon Horman wrote:
+> 
+> >>>>Define the Porter board dependent part of the SDHI0/2 device nodes along with
+> >>>>the  necessary  voltage regulators (note that the Vcc regulators are dummy --
+> >>>>they are required but don't actually exist on the board). Also, GPIOs have to
+> >>>>be used for the CD and WP signals due to the SDHI driver constraints...
+> >>>>
+> >>>>This patch is analogous to the commit 1299df03d719 (ARM: shmobile: henninger:
+> >>>>add SDHI0/2 DT support) as there  are no differences between those boards in
+> >>>>this respect.
+> >>>>
+> >>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >>>>
+> >>>>---
+> >>>>This patch is against the 'renesas-devel-20151006-v4.3-rc4' tag of Simon
+> >>>>Horman's 'renesas.git' repo.
+> >>>
+> >>>Thanks I have queued this up after addressing some issues
+> >>>in the changelog that checkpatch complained about:
+> >>>
+> >>>* text > 75 characters wide
+> >>>* Missing '"' around name of patch referred to
+> >>>
+> >>>Its looking like there is already quite a log shared between
+> >>
+> >>    Lot?
+> >>
+> >>>r8a7791-porter.dts and r8a7791-henninger.dts. Do you have any
+> >>>thoughts on consolidating or sharing common elements between
+> >>>them somehow?
+> >>
+> >>    I'm still planning to remove the Henninger's .dts for good. It was never
+> >>sold and so had no users outside Renesas (and Cogent Embedded), I was told.
+> >
+> >Thanks, that sounds like a good plan to me.
+> >Do you have any thoughts on when?
+> 
+>    Well, I was going to reach the feature parity between these 2 boards,
+> i.e. to support all devices on Porter that are supported on Henninger...
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
----
- arch/arm/boot/dts/imx7d-sdb.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 432aaf5..b2c4536 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -97,6 +97,16 @@
- 	};
- };
- 
-+&adc1 {
-+	vref-supply = <&reg_vref_1v8>;
-+	status = "okay";
-+};
-+
-+&adc2 {
-+	vref-supply = <&reg_vref_1v8>;
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	arm-supply = <&sw1a_reg>;
- };
--- 
-1.9.1
+THanks, that sounds like an entirely reasonable plan to me.
