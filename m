@@ -1,60 +1,45 @@
-From: Edward Cragg <edward.cragg@codethink.co.uk>
-Subject: [PATCH 1/1] ARM: meson: Add status LED for Odroid-C1
-Date: Fri,  9 Oct 2015 15:37:10 +0100
-Message-ID: <1444401430-4396-2-git-send-email-edward.cragg@codethink.co.uk>
-References: <1444401430-4396-1-git-send-email-edward.cragg@codethink.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444401430-4396-1-git-send-email-edward.cragg@codethink.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] arm64, numa, dt: adding dt based numa support
+ using dt node property arm, associativity
+Date: Fri, 9 Oct 2015 16:18:50 +0100
+Message-ID: <20151009151850.GX17192@e104818-lin.cambridge.arm.com>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1439570374-4079-4-git-send-email-gkulkarni@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1439570374-4079-4-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the blue status LED to the Hardkernel Odroid C1 board DTS.
-This is the only programmable LED on the board.
+On Fri, Aug 14, 2015 at 10:09:33PM +0530, Ganapatrao Kulkarni wrote:
+> Adding dt node pasring for numa topology using property arm,associativity.
+> arm,associativity property can be used to map memory, cpu and
+> io devices to numa node.
+> 
+> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig            |   6 +
+>  arch/arm64/include/asm/numa.h |   7 +
+>  arch/arm64/kernel/Makefile    |   1 +
+>  arch/arm64/kernel/dt_numa.c   | 316 ++++++++++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/smp.c       |   1 +
+>  arch/arm64/mm/numa.c          |  13 ++
 
-Signed-off-by: Edward Cragg <edward.cragg@codethink.co.uk>
----
- arch/arm/boot/dts/meson8b-odroidc1.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Since a lot of code here is very similar to powerpc, any chance of
+making it common, especially if we try to use the same bindings (maybe
+with a different prefix ("arm," vs "ibm,")? See
+https://members.openpowerfoundation.org/document/dl/469.
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index a8e2911..3b03523 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -1,6 +1,8 @@
- /*
-  * Copyright 2015 Endless Mobile, Inc.
-  * Author: Carlo Caione <carlo@endlessm.com>
-+ * Copyright 2015 Codethink Ltd.
-+ * Author: Edward Cragg <edward.cragg@codethink.co.uk>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -46,6 +48,7 @@
- 
- /dts-v1/;
- #include "meson8b.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Hardkernel ODROID-C1";
-@@ -58,6 +61,16 @@
- 	memory {
- 		reg = <0x40000000 0x40000000>;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		blue {
-+			label = "c1:blue:alive";
-+			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &uart_AO {
+Also, since this series is from August, any chance to post another and
+incorporate the feedback provided so far?
+
 -- 
-2.5.0
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
