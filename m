@@ -1,36 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL PCIe Host Controller
-Date: Fri, 09 Oct 2015 10:18:21 +0200
-Message-ID: <5676910.8cxuyuvhpA@wuerfel>
-References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com> <8520D5D51A55D047800579B09414719801690CD0@XAP-PVEXMBX01.xlnx.xilinx.com> <56177669.2000302@arm.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v4 3/6] arm64: berlin: add the pinctrl dependency for Marvell Berlin SoCs
+Date: Fri, 9 Oct 2015 16:17:06 +0800
+Message-ID: <1444378629-3057-4-git-send-email-jszhang@marvell.com>
+References: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <56177669.2000302@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 09 October 2015 09:10:17 Marc Zyngier wrote:
-> > Please let me know whether we require a separate msi file as
-> > suggested in your previous comments to separate MSI controller and
-> > PCIE controller in two files, if we don't have separate node. If we
-> > do not need a separate node do we need to embed MSI controller child
-> > node  in PCIe controller node itself, and what properties does this
-> > child node will require other than 'interrupts'.
-> 
-> If you want to keep them in the same file, please at least have two
-> separate patches. These are two different functions, and they should be
-> reviewed separately.
-> 
-> It will help everyone to understand your code, and speed up the
-> reviewing process.
+This is to add the pinctrl dependency for Marvell Berlin SoCs.
 
-Agreed. Also, the part we really want is to have the PCI controller
-code decoupled enough from the MSI code that it will not require
-further changes once Xilinx comes out with a chip that has a modern
-GIC in it and the same PCIe host.
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-	Arnd
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index c6e2c75..3d17ee2 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -9,6 +9,7 @@ config ARCH_BERLIN
+ 	bool "Marvell Berlin SoC Family"
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select DW_APB_ICTL
++	select PINCTRL
+ 	help
+ 	  This enables support for Marvell Berlin SoC Family
+ 
+-- 
+2.6.1
+
