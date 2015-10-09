@@ -1,62 +1,94 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 0/2] DRA72/DRA74: Add 2 lane support
-Date: Sat, 10 Oct 2015 04:48:19 +0530
-Message-ID: <56184B3B.1050807@ti.com>
-References: <1443445058-643-1-git-send-email-kishon@ti.com>
- <20151009225056.GD16112@localhost> <56184AE7.6060808@ti.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: generic: Fix address window calculation for
+ non-zero starting bus.
+Date: Fri, 9 Oct 2015 18:21:10 -0500
+Message-ID: <20151009232110.GF16112@localhost>
+References: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <56184AE7.6060808@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1444334056-4870-1-git-send-email-ddaney.cavm@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 08, 2015 at 12:54:16PM -0700, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> Make the offset from the beginning of the "reg" property be from the
+> starting bus number, rather than zero.  Hoist the invariant size
+> calculation out of the mapping for loop.
+> 
+> Update host-generic-pci.txt to clarify the semantics of the "reg"
+> property with respect to non-zero starting bus numbers.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-On Saturday 10 October 2015 04:46 AM, Kishon Vijay Abraham I wrote:
-> Hi Bjorn,
-> 
-> On Saturday 10 October 2015 04:20 AM, Bjorn Helgaas wrote:
->> [+cc Arnd, Rob]
->>
->> On Mon, Sep 28, 2015 at 06:27:36PM +0530, Kishon Vijay Abraham I wrote:
->>> Add driver modifications in pci-dra7xx to get x2 mode working in
->>> DRA72 and DRA74. Certain modifications is needed in PHY driver also
->>> which I'll send as a separate series.
->>>
->>> Kishon Vijay Abraham I (2):
->>>   pci: host: pci-dra7xx: use "num-lanes" property to find phy count
->>>   pci: host: pci-dra7xx: Enable x2 mode support
->>
->> Applied to pci/host-dra7xx for v4.4, thanks!
->>
->> I adjusted the subject line capitalization & format to match the history.
->>
->> Arnd, Rob, any comments on the DT updates or the "num-lanes" vs number of
->> strings in "phy-names" changes?
-> 
-> I sent it as RFC since I didn't have the board to test 2 lane mode with
-> $patch. And just now I got a board to test x2 and I found a problem with
-> the 2nd patch.
-> 
-> .b1co_mode_sel_mask = GENMASK(2, 3), in the patch should be replaced with
-> .b1co_mode_sel_mask = GENMASK(3, 2).
-> 
-> I'll resend the patch fixing the above.
+Applied to pci/host-generic for v4.4 with Reviewed-by and Acked-by from
+Arnd and Rob, thanks David!
 
-I'll resend after a couple of days to fix any comments from Arnd or Rob.
+Bjorn
 
-Thanks
-Kishon
-
+> ---
+> This is a replacement for:
 > 
-> Thanks
-> Kishon
+> https://lkml.org/lkml/2015/10/2/653
+> 
+> Since that patch is getting too much push-back, this is the only other
+> option for fixing the driver to be internally consistent in its
+> treatment of the offset from "reg" to the first bus in the "bus-range"
+> property.
+> 
+>  Documentation/devicetree/bindings/pci/host-generic-pci.txt | 5 +++--
+>  drivers/pci/host/pci-host-generic.c                        | 4 ++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> index cf3e205..3f1d3fc 100644
+> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+> @@ -34,8 +34,9 @@ Properties of the host controller node:
+>  - #size-cells    : Must be 2.
+>  
+>  - reg            : The Configuration Space base address and size, as accessed
+> -                   from the parent bus.
+> -
+> +                   from the parent bus.  The base address corresponds to
+> +                   the first bus in the "bus-range" property.  If no
+> +                   "bus-range" is specified, this will be bus 0 (the default).
+>  
+>  Properties of the /chosen node:
+>  
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index fe9a81b..bb93346 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -169,6 +169,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	struct resource *bus_range;
+>  	struct device *dev = pci->host.dev.parent;
+>  	struct device_node *np = dev->of_node;
+> +	u32 sz = 1 << pci->cfg.ops->bus_shift;
+>  
+>  	err = of_address_to_resource(np, 0, &pci->cfg.res);
+>  	if (err) {
+> @@ -196,10 +197,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	bus_range = pci->cfg.bus_range;
+>  	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
+>  		u32 idx = busn - bus_range->start;
+> -		u32 sz = 1 << pci->cfg.ops->bus_shift;
+>  
+>  		pci->cfg.win[idx] = devm_ioremap(dev,
+> -						 pci->cfg.res.start + busn * sz,
+> +						 pci->cfg.res.start + idx * sz,
+>  						 sz);
+>  		if (!pci->cfg.win[idx])
+>  			return -ENOMEM;
+> -- 
+> 1.9.1
+> 
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-pci" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
