@@ -1,61 +1,80 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Fri, 9 Oct 2015 13:47:35 +0000
-Message-ID: <8520D5D51A55D047800579B09414719801690DEC@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com>
- <5613F310.6060305@arm.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: [PATCH 0/3] input: Simplifying the rotary encoder devicetree binding
+Date: Fri,  9 Oct 2015 10:46:53 -0300
+Message-ID: <1444398416-3073-1-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5613F310.6060305@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <zonque@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ariel@vanguardiasur.com.ar, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-> Hi Bharat,
->> > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> >
-> > +/* SSPL ERROR */
-> > +#define SLVERR					0x02
-> > +#define DECERR					0x03
-> > +
-> > +struct nwl_msi {			/* struct nwl_msi - MSI information
-> */
-> > +	struct msi_controller chip;	/* chip: MSI controller */
-> 
-> We're moving away from msi_controller altogether, as the kernel now has all
-> the necessary infrastructure to do this properly.
-> 
-> Please convert this driver to msi domains (see drivers/pci/host/pci-xgene-
-> msi.c or the gic-v2m driver as examples of how this is being done).
+Hi Dmitry,
 
-As suggested I have gone through the code in pci-gene-msi.c for msi domains, 
-and have gone through IRQ Domain documentation. 
-I mainly observe when we have more than one interrupt controller involved
-between device and cpu we use "Hierarchy IRQ domain" (parent and child msi domains). But in our case we 
-don't have any such Hierarchy and we have single interrupt controller.
-In such case is it necessary to use multiple domains in software which actually isn't case in hardware.
+This patchset is another attempt at supporting rotary encoders
+with stable state on each output states. Previous efforts to
+support this has been done by Sascha Hauer [1] and myself [2].
 
-Thanks 
-Bharat
-> 
-> > +	DECLARE_BITMAP(used, INT_PCI_MSI_NR);	/* used: Declare
-> Bitmap
-> > +						for MSI	*/
-> > +	struct irq_domain *domain;	/* domain: IRQ domain pointer */
-> > +	unsigned long pages;		/* pages: MSI pages */
-> 
-> Overall, I think it would make sense to split the PCIe controller driver and the
-> MSI controller (in separate files as well).
-> 
-> Please keep me posted on the updates.
-> 
-> Thanks,
-> 
-> 	M.
-> --
-> Jazz is not dead. It just smells funny...
+After some discussion we agreed to remove the current ad-hoc
+bindings for each of the rotary-encoders types, and instead
+introduce "one binding to rule them all".
+
+This patchset introduces a new 'steps-per-period' property.
+Such a property can be used to model the three types
+of rotary-encoders.
+
+>From the GPIO output diagram, we can see where these types
+come from, and how the steps-per-period describes each
+of them.
+
+                  _____       _____       _____
+                 |     |     |     |     |     |
+  Channel A  ____|     |_____|     |_____|     |____
+
+                 :  :  :  :  :  :  :  :  :  :  :  :
+            __       _____       _____       _____
+              |     |     |     |     |     |     |
+  Channel B   |_____|     |_____|     |_____|     |__
+
+                 :  :  :  :  :  :  :  :  :  :  :  :
+  Event          a  b  c  d  a  b  c  d  a  b  c  d
+
+                |<-------->|
+                  one step, steps-per-period = 1
+
+                |<-->|
+                  one step, steps-per-period = 2
+
+                |<>|
+                  one step, steps-per-period = 4
+
+The 'half-period' property is marked as deprecated and a
+warning message is issued if it's used, although the driver
+retains its old behavior.
+
+I'm also submitting Ben Gamari's cleanup, with the commit log
+slightly ammended.
+
+Feedback welcome!
+
+[1] http://www.spinics.net/lists/linux-input/msg28701.html
+[2] http://www.spinics.net/lists/linux-input/msg27644.html
+
+Ben Gamari (1):
+  input: rotary-encoder: Use of_property_read_bool
+
+Ezequiel Garcia (2):
+  input: rotary-encoder: Introduce new 'steps-per-period' property
+  input: rotary-encoder: Support 'steps-per-period' DT property
+
+ .../devicetree/bindings/input/rotary-encoder.txt   |  9 +++
+ Documentation/input/rotary-encoder.txt             |  8 +-
+ drivers/input/misc/rotary_encoder.c                | 94 +++++++++++++++++++---
+ include/linux/rotary_encoder.h                     |  2 +-
+ 4 files changed, 101 insertions(+), 12 deletions(-)
+
+-- 
+2.5.2
+
