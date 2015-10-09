@@ -1,71 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] arm64: Juno: Add support for the PCIe host bridge on
- Juno R1
-Date: Fri, 9 Oct 2015 08:54:33 -0500
-Message-ID: <CAL_JsqJsb53VXiUfjGBXK37dBEi1r-PXVohg-c-7_x63R04VMA@mail.gmail.com>
-References: <1444398323-17354-1-git-send-email-Liviu.Dudau@arm.com> <1444398323-17354-4-git-send-email-Liviu.Dudau@arm.com>
+Subject: Re: [PATCH 2/3] input: rotary-encoder: Introduce new
+ 'steps-per-period' property
+Date: Fri, 9 Oct 2015 08:57:11 -0500
+Message-ID: <CAL_Jsq+Ckr3xkKkG=RpfiRS7LZb4YwxL3gdFY7rZprn+sWRRyg@mail.gmail.com>
+References: <1444398416-3073-1-git-send-email-ezequiel@vanguardiasur.com.ar> <1444398416-3073-3-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1444398323-17354-4-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>, linux-pci <linux-pci@vger.kernel.org>, device-tree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1444398416-3073-3-git-send-email-ezequiel@vanguardiasur.com.ar>
+Sender: linux-input-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <zonque@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, ariel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 9, 2015 at 8:45 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> Juno R1 board sports a functional PCIe host bridge that is
-> compliant with the SBSA standard found here[1]. With the right
-> firmware that initialises the XpressRICH3 controller one can
-> use the generic Host Bridge driver to use the PCIe hardware.
+On Fri, Oct 9, 2015 at 8:46 AM, Ezequiel Garcia
+<ezequiel@vanguardiasur.com.ar> wrote:
+> This commit deprecates the 'half-period' property and introduces
+> a new property 'steps-per-period'. This property specifies the
+> number of steps (stable states) produced by the rotary encoder
+> for each GPIO period.
 >
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Such a property is required to accurately describe all kinds of
+> rotary-encoders devices.
 >
-> [1] http://infocenter.arm.com/help/topic/com.arm.doc.den0029a/
+> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Are there any in tree dts's using the deprecated property? If so,
+please update them.
+
+Rob
+
 > ---
->  arch/arm64/boot/dts/arm/juno-r1.dts | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  Documentation/devicetree/bindings/input/rotary-encoder.txt | 9 +++++++++
+>  Documentation/input/rotary-encoder.txt                     | 8 ++++++--
+>  2 files changed, 15 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-> index c627511..a702a6b 100644
-> --- a/arch/arm64/boot/dts/arm/juno-r1.dts
-> +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-> @@ -109,6 +109,26 @@
+> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> index 331549593ed5..5715ad70d28e 100644
+> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> @@ -14,7 +14,16 @@ Optional properties:
+>    device, hence no steps need to be passed.
+>  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
+>    greater than the specified steps or smaller than 0. For absolute axis only.
+> +- rotary-encoder,steps-per-period: Number of steps (stable states) per period.
+> +  The values have the following meaning:
+> +  1: Full-period mode (default)
+> +  2: Half-period mode
+> +  4: Quarter-period mode
+> +
+> +Deprecated properties:
+>  - rotary-encoder,half-period: Makes the driver work on half-period mode.
+> +  This property is deprecated. Instead, a 'steps-per-period ' value should
+> +  be used, such as "rotary-encoder,steps-per-period = <2>".
 >
->         #include "juno-base.dtsi"
+>  See Documentation/input/rotary-encoder.txt for more information.
 >
-> +       pcie-controller@40000000 {
-> +               compatible = "pci-host-ecam-generic";
-
-I think this is the first case of real h/w using this. We should have
-a specific compatible here additionally. Perhaps the firmware did not
-setup something correctly.
-
-> +               device_type = "pci";
-> +               reg = <0 0x40000000 0 0x10000000>;      /* ECAM config space */
-> +               bus-range = <0 255>;
-> +               linux,pci-domain = <0>;
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               dma-coherent;
-> +               ranges = <0x01000000 0x00 0x5f800000 0x00 0x5f800000 0x0 0x00800000
-> +                         0x02000000 0x00 0x50000000 0x00 0x50000000 0x0 0x08000000
-> +                         0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
-> +               #interrupt-cells = <1>;
-> +               interrupt-map-mask = <0 0 0 7>;
-> +               interrupt-map = <0 0 0 1 &gic 0 0 0 136 4
-> +                                0 0 0 2 &gic 0 0 0 137 4
-> +                                0 0 0 3 &gic 0 0 0 138 4
-> +                                0 0 0 4 &gic 0 0 0 139 4>;
-> +               msi-parent = <&v2m_0>;
-> +       };
->  };
+> diff --git a/Documentation/input/rotary-encoder.txt b/Documentation/input/rotary-encoder.txt
+> index 5737e3590adb..00acf88e4064 100644
+> --- a/Documentation/input/rotary-encoder.txt
+> +++ b/Documentation/input/rotary-encoder.txt
+> @@ -9,8 +9,9 @@ peripherals with two wires. The outputs are phase-shifted by 90 degrees
+>  and by triggering on falling and rising edges, the turn direction can
+>  be determined.
 >
->  &memtimer {
+> -Some encoders have both outputs low in stable states, whereas others also have
+> -a stable state with both outputs high (half-period mode).
+> +Some encoders have both outputs low in stable states, others also have
+> +a stable state with both outputs high (half-period mode) and some have
+> +a stable state in all steps (quarter-period mode).
+>
+>  The phase diagram of these two outputs look like this:
+>
+> @@ -32,6 +33,9 @@ The phase diagram of these two outputs look like this:
+>                  |<-->|
+>                   one step (half-period mode)
+>
+> +                |<>|
+> +                 one step (quarter-period mode)
+> +
+>  For more information, please see
+>         https://en.wikipedia.org/wiki/Rotary_encoder
+>
 > --
-> 2.6.0
+> 2.5.2
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
