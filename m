@@ -1,62 +1,85 @@
-From: Shengjiu Wang <shengjiu.wang@freescale.com>
-Subject: Re: [PATCH V2 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
-Date: Fri, 9 Oct 2015 17:15:30 +0800
-Message-ID: <20151009091528.GA25804@shlinux2>
-References: <cover.1442310569.git.shengjiu.wang@freescale.com>
- <113f1cecf1d83c6b96fd23ab9d7a73d1923e0d21.1442310569.git.shengjiu.wang@freescale.com>
- <20150923153340.GK3529@tiger> <20150924054321.GA32196@shlinux2>
- <20150924115737.GM3529@tiger>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] pinctrl: berlin: add the berlin4ct pinctrl
+ driver
+Date: Fri, 9 Oct 2015 17:22:38 +0800
+Message-ID: <20151009172238.68fdd51c@xhacker>
+References: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
+	<1444378629-3057-3-git-send-email-jszhang@marvell.com>
+	<20151009090353.GA2842@kwain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20150924115737.GM3529@tiger>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151009090353.GA2842@kwain>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 24, 2015 at 04:57:37AM -0700, Shawn Guo wrote:
-> On Thu, Sep 24, 2015 at 01:43:24PM +0800, Shengjiu Wang wrote:
-> > On Wed, Sep 23, 2015 at 08:33:41AM -0700, Shawn Guo wrote:
-> > > On Tue, Sep 15, 2015 at 06:01:01PM +0800, Shengjiu Wang wrote:
-> > > > As spdif driver will register SPDIF clock to regmap, regmap will do
-> > > > clk_prepare in init function, so SPDIF clock is prepared in probe, then its
-> > > > root clock (pll clock) is prepared also, which cause the arm can't enter
-> > > > low power mode.
-> > > 
-> > > Can you help me understand why ARM cannot enter low power mode when pll
-> > > clock is prepared?
-> > > 
-> > > Shawn
-> > Hi Shawn
-> > 
-> >    In i.mx clock framework, when pll clk is prepared, it will be powerup. when
-> > enterring low power idle mode, the powerdown bit is checked, when pll is not
-> > powerdown state, chip will not enter low power idle mode.
+Hi Antoine,
+
+On Fri, 9 Oct 2015 11:03:53 +0200
+Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> Hi Jisheng,
 > 
-> So this is not a SPDIF specific problem, and any device driver preparing
-> its clock that is a child of pll clock will run into this problem,
-> right?  If so, we should purchase a more generic solution than such
-> device specific one.
+> On Fri, Oct 09, 2015 at 04:17:05PM +0800, Jisheng Zhang wrote:
+> > diff --git a/drivers/pinctrl/berlin/Kconfig b/drivers/pinctrl/berlin/Kconfig
+> > index b18322b..c13f6d2 100644
+> > --- a/drivers/pinctrl/berlin/Kconfig
+> > +++ b/drivers/pinctrl/berlin/Kconfig
+> > @@ -17,4 +17,9 @@ config PINCTRL_BERLIN_BG2Q
+> >  	bool
+> >  	select PINCTRL_BERLIN
+> >  
+> > +config PINCTRL_BERLIN_BG4CT
+> > +	depends on OF && (ARCH_BERLIN || COMPILE_TEST)
+> > +	bool "Marvell berlin4ct pin controller driver"
+> > +	select PINCTRL_BERLIN
+> > +
+> >  endif
 > 
-> Shawn
-Hi shawn
+> This endif ends the following condition:
+> 
+> 	if ARCH_BERLIN
+> 	[...]
+> 
+> So the "depends on ARCH_BERLIN" here can be dropped. Also the
+> COMPILE_TEST can be moved as it isn't BG4CT specific and all other
+> Berlin pinctrl drivers would benefit from this.
+> 
+> So we would have something like:
+> 
+> 	if (ARCH_BERLIN || COMPILE_TEST)
 
-SPDIF_GCLK is also spdif's clock, it use a same enable bit with SPDIF_ROOT_CLK,
-We didn't separate them in clock tree before.
+Oh yeah! This is better.
 
-I can't find a generic solution. But anyway if there is a solution or not, I
-think we'd better to separate them.
+> 	[...]
+> 	endif
+> 
+> Finally you can move the OF dependency to the PINCTRL_BERLIN config as
+> all Berlin pinctrl drivers depends on it.
 
-best regards
-wang shengjiu
+PINCTRL_BERLIN isn't user visible and it's selected by PINCTRL_BERLIN_BG4CT. So
+we may have the following random config case:
+
+CONFIG_OF=n
+CONFIG_PINCTRL_BERLIN_BG4CT=y
+
+In this case, there will be build errors for we missed OF. So we have to
+make PINCTRL_BERLIN_BG4CT depends on OF. What do you think? Or is there
+better solution?
+
+Thanks for kind review,
+Jisheng
+
+> 
+> Thanks!
+> 
+> Antoine
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
