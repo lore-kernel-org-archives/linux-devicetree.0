@@ -1,69 +1,62 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v4 6/6] arm64: dts: berlin4ct: add default pinmux for
- uart0
-Date: Fri, 9 Oct 2015 11:07:28 +0200
-Message-ID: <20151009090728.GF2842@kwain>
-References: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
- <1444378629-3057-7-git-send-email-jszhang@marvell.com>
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: Re: [PATCH V2 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
+Date: Fri, 9 Oct 2015 17:15:30 +0800
+Message-ID: <20151009091528.GA25804@shlinux2>
+References: <cover.1442310569.git.shengjiu.wang@freescale.com>
+ <113f1cecf1d83c6b96fd23ab9d7a73d1923e0d21.1442310569.git.shengjiu.wang@freescale.com>
+ <20150923153340.GK3529@tiger> <20150924054321.GA32196@shlinux2>
+ <20150924115737.GM3529@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1444378629-3057-7-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20150924115737.GM3529@tiger>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 09, 2015 at 04:17:09PM +0800, Jisheng Zhang wrote:
-> Add urt0 txd and rxd muxing setup in the dtsi because uart0 always us=
-es
-> them to work, no other possibilities.
->=20
-> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+On Thu, Sep 24, 2015 at 04:57:37AM -0700, Shawn Guo wrote:
+> On Thu, Sep 24, 2015 at 01:43:24PM +0800, Shengjiu Wang wrote:
+> > On Wed, Sep 23, 2015 at 08:33:41AM -0700, Shawn Guo wrote:
+> > > On Tue, Sep 15, 2015 at 06:01:01PM +0800, Shengjiu Wang wrote:
+> > > > As spdif driver will register SPDIF clock to regmap, regmap will do
+> > > > clk_prepare in init function, so SPDIF clock is prepared in probe, then its
+> > > > root clock (pll clock) is prepared also, which cause the arm can't enter
+> > > > low power mode.
+> > > 
+> > > Can you help me understand why ARM cannot enter low power mode when pll
+> > > clock is prepared?
+> > > 
+> > > Shawn
+> > Hi Shawn
+> > 
+> >    In i.mx clock framework, when pll clk is prepared, it will be powerup. when
+> > enterring low power idle mode, the powerdown bit is checked, when pll is not
+> > powerdown state, chip will not enter low power idle mode.
+> 
+> So this is not a SPDIF specific problem, and any device driver preparing
+> its clock that is a child of pll clock will run into this problem,
+> right?  If so, we should purchase a more generic solution than such
+> device specific one.
+> 
+> Shawn
+Hi shawn
 
-Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+SPDIF_GCLK is also spdif's clock, it use a same enable bit with SPDIF_ROOT_CLK,
+We didn't separate them in clock tree before.
 
-> ---
->  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/=
-boot/dts/marvell/berlin4ct.dtsi
-> index 8e66355..a4a1876 100644
-> --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> @@ -288,12 +288,19 @@
->  				clocks =3D <&osc>;
->  				reg-shift =3D <2>;
->  				status =3D "disabled";
-> +				pinctrl-0 =3D <&uart0_pmux>;
-> +				pinctrl-names =3D "default";
->  			};
->  		};
-> =20
->  		system_pinctrl: pin-controller@fe2200 {
->  			compatible =3D "marvell,berlin4ct-system-pinctrl";
->  			reg =3D <0xfe2200 0xc>;
-> +
-> +			uart0_pmux: uart0-pmux {
-> +				groups =3D "SM_URT0_TXD", "SM_URT0_RXD";
-> +				function =3D "uart0";
-> +			};
->  		};
->  	};
->  };
-> --=20
-> 2.6.1
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+I can't find a generic solution. But anyway if there is a solution or not, I
+think we'd better to separate them.
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+best regards
+wang shengjiu
