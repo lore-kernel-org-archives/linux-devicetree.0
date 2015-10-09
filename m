@@ -1,7 +1,7 @@
 From: Shawn Guo <shawnguo@kernel.org>
 Subject: Re: [PATCH 3/5] clk: imx7d: add ADC root clock
-Date: Fri, 9 Oct 2015 11:04:06 +0800
-Message-ID: <20151009030406.GF22673@tiger>
+Date: Fri, 9 Oct 2015 11:05:23 +0800
+Message-ID: <20151009030523.GG22673@tiger>
 References: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com>
  <1444301948-21721-3-git-send-email-haibo.chen@freescale.com>
  <20151008183556.GI26883@codeaurora.org>
@@ -26,6 +26,7 @@ On Thu, Oct 08, 2015 at 11:35:56AM -0700, Stephen Boyd wrote:
 > 
 > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Applied on IMX tree.
+To clarify, I applied it on my imx/clk branch, which will be sent to you
+and Mike later.
 
 Shawn
