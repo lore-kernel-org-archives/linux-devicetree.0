@@ -1,70 +1,46 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v8 0/9] Goodix touchscreen enhancements
-Date: Fri, 9 Oct 2015 11:02:01 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0FB74F@irsmsx105.ger.corp.intel.com>
-References: <1444314231-19206-1-git-send-email-irina.tirdea@intel.com>
- <53318623.Pp8rvnEWr4@wuerfel>
+From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] ARM: dts: sun4i: Enable USB DRC and
+ voltage-scaling on pcDuino1/2
+Date: Fri,  9 Oct 2015 14:09:36 +0300
+Message-ID: <1444388979-12072-1-git-send-email-siarhei.siamashka@gmail.com>
+Reply-To: siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53318623.Pp8rvnEWr4@wuerfel>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH4DA7NUEBBB6GA32YAKGQEEPKMKJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
+This is the v2 of the older patches from:
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/374377.html
 
-> -----Original Message-----
-> From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of Arnd Bergmann
-> Sent: 08 October, 2015 17:32
-> To: Tirdea, Irina
-> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v8 0/9] Goodix touchscreen enhancements
-> 
-> On Thursday 08 October 2015 17:23:42 Irina Tirdea wrote:
-> > Add several enhancements to the Goodix touchscreen driver.
-> >
-> > The new functionality is only available for devices that
-> > declare named gpio pins for interrupt and reset in their
-> > ACPI/DT configuration.
-> >
-> > Thanks,
-> > Irina
-> >
-> > Changes in v8:
-> >  - only allow new functionality for devices that declare named
-> > gpios (using _DSD properties in ACPI or named DT properties)
-> >
-> >
-> 
-> Looks much cleaner this way, thanks!
-> 
-> One remaining question: how would you handle the case where
-> the hardware doesn't support configuring the int-gpios line
-> as output but you still want to use the named gpios?
-> 
+Changes since v1:
+- The voltage scaling patch (AXP209 PMU regulators) has been already
+  applied by Maxime, so it is not included in this patch set anymore.
+- A new patch with a separate dts for pcDuino2 has been added,
+  as had been requested during the previous review round.
+- Instead of removing "usb1_vbus-supply" and "usb2_vbus-supply",
+  they now refer to "reg_vcc5v0" (this had been discussed on IRC).
 
-The only reason to use named gpios is to enable the new functionality
-introduced by this patch set (mainly reset and power management).
-You cannot use only one gpio either (e.g. only reset gpio but not the
-interrupt gpio), you need both for this functionality to work.
+Siarhei Siamashka (3):
+  ARM: dts: sun4i: Allow to use the PH6 pin for GPIO on pcDuino1/2
+  ARM: sun4i: dt: Add new LinkSprite pcDuino2 board
+  ARM: dts: sun4i: Enable USB DRC on pcDuino1/2
 
-If the hardware does not support using the interrupt gpio pin as output,
-it should not declare the named int-gpio pin in ACPI. It is true that
-we might later run into platforms that declare the int-gpio pin even if it
-does not actually work (just like we now have the indexed gpio pins).
-I could have added an additional property for this as you first suggested,
-but if we can modify the ACPI to add it, we could simply remove the
-named interrupt pin instead (that does not work anyway).
+ arch/arm/boot/dts/Makefile               |  3 +-
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts  | 29 ++++++++----
+ arch/arm/boot/dts/sun4i-a10-pcduino2.dts | 78 ++++++++++++++++++++++++++++++++
+ 3 files changed, 100 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-pcduino2.dts
 
-> I assume you have that case covered, but I don't see it immediately.
-> 
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.4.9
