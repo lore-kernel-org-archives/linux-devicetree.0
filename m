@@ -1,62 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] video: fbdev: add Marvell PXA framebuffer binding
-Date: Thu, 8 Oct 2015 19:46:15 -0500
-Message-ID: <CAL_JsqLeXtfkh=XYFXFCfDo8=eEiFQUS=aMOk=qz1itLDGQy=g@mail.gmail.com>
-References: <1443954683-13126-1-git-send-email-robert.jarzmik@free.fr>
- <CAL_JsqLy-pK4VpBkj1-wVg85XvPemssM-=Ckx=yDjiXKXbtwtA@mail.gmail.com>
- <87y4ffaj3m.fsf@belgarion.home> <CAL_JsqLatWZa1mYL1v83ryJntyLtHDfSfr0gXkvPXJrpCE=qcg@mail.gmail.com>
- <87lhbd9npn.fsf@belgarion.home>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drm: panel: simple: add QiaoDian qd43003c0-40
+Date: Thu, 8 Oct 2015 19:49:34 -0500
+Message-ID: <CAL_JsqLAgnP-pAgE8xFoNiORco_jxVYVH3VVbJOsnKZ92M+U4g@mail.gmail.com>
+References: <1444318961-31103-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1444318961-31103-2-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87lhbd9npn.fsf@belgarion.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444318961-31103-2-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 2:15 PM, Robert Jarzmik <robert.jarzmik@free.fr> wrote:
-> Rob Herring <robh@kernel.org> writes:
-
->>> And then, when a board maintainer will create a devicetree description, he will
->>> write something like :
->>>       compatible = "toshiba,ltm0305a776";
->>>       compatible = "marvell,pxa2xx-panel";
->>
->> Drop this compatible.
->>
->>>       lcd-type = "color-tft";
->>>       ...
->>>
->>> If that's the case, I wonder how to "enforce" that a panel used with
->>> marvell,pxa2xx-lcdc (through the of_graph 'port' node) be compatible with
->>> marvell,pxa2xx-panel ?
->>
->> I'm not sure what you mean. Putting the panel into the dts ensures
->> that. The FB driver may check for toshiba,ltm0305a776 or a list of
->> panels. However, a DRM driver would probably not check that.
->>
->> Rob
-> What I mean is that the LDLC controller _must_ be programmmed with the correct
-> panel type, ie. one register of the LDLC should be set according to this type.
+On Thu, Oct 8, 2015 at 10:42 AM, Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 >
-> The type is a hardware property of the panel, and yet it is absolutely mandatory
-> to have it set in the panel.
+> The QiaoDian Xianshi QD43003C0-40 is a 4"3 TFT LCD panel.
 >
-> What I mean is : what is the good way to enforce that this property is set
-> somewhere in the devicetree description ? Philipp adviced for it to be transfered
-> to the ldlc description (ie. marvell,pxa2xx-ldlc), while I was thinking of
-> having it in a panel description.
+> Timings from the OTA5180A document, ver 0.9, section
+> 10.1.1:
+>   http://www.orientdisplay.com/pdf/OTA5180A.pdf
+>
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../bindings/panel/qiaodian,qd43003c0-40.txt       |  7 ++++++
 
-Either of those options are fine. Neither should need
-marvell,pxa2xx-panel though. I'd lean towards putting it in the panel,
-but in that case it should be generic for panels which I think it is.
-It should probably be optional with not present meaning color-tft
-(since every other type is practically dead), but you could say
-required on pxa2xx.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The only way to enforce it ATM, is panicking or something if the LCDC
-finds it is not set. That's not any worse that checking for
-marvell,pxa2xx-panel.
+BTW, I'm moving bindings/panel/ to bindings/display/panel/ for 4.4.
+It's fine to leave this, but if you do respin for some reason, can you
+move this there.
 
 Rob
+
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt
+>
+> diff --git a/Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt b/Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt
+> new file mode 100644
+> index 000000000000..0fbdab89ac3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/qiaodian,qd43003c0-40.txt
+> @@ -0,0 +1,7 @@
+> +QiaoDian XianShi Corporation 4"3 TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "qiaodian,qd43003c0-40"
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index f97b73ec4713..c93ffa615005 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -1027,6 +1027,30 @@ static const struct panel_desc ortustech_com43h4m85ulc = {
+>         .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+>  };
+>
+> +static const struct drm_display_mode qd43003c0_40_mode = {
+> +       .clock = 9000,
+> +       .hdisplay = 480,
+> +       .hsync_start = 480 + 8,
+> +       .hsync_end = 480 + 8 + 4,
+> +       .htotal = 480 + 8 + 4 + 39,
+> +       .vdisplay = 272,
+> +       .vsync_start = 272 + 4,
+> +       .vsync_end = 272 + 4 + 10,
+> +       .vtotal = 272 + 4 + 10 + 2,
+> +       .vrefresh = 60,
+> +};
+> +
+> +static const struct panel_desc qd43003c0_40 = {
+> +       .modes = &qd43003c0_40_mode,
+> +       .num_modes = 1,
+> +       .bpc = 8,
+> +       .size = {
+> +               .width = 95,
+> +               .height = 53,
+> +       },
+> +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +};
+> +
+>  static const struct drm_display_mode samsung_ltn101nt05_mode = {
+>         .clock = 54030,
+>         .hdisplay = 1024,
+> @@ -1182,6 +1206,9 @@ static const struct of_device_id platform_of_match[] = {
+>                 .compatible = "ortustech,com43h4m85ulc",
+>                 .data = &ortustech_com43h4m85ulc,
+>         }, {
+> +               .compatible = "qiaodian,qd43003c0-40",
+> +               .data = &qd43003c0_40,
+> +       }, {
+>                 .compatible = "samsung,ltn101nt05",
+>                 .data = &samsung_ltn101nt05,
+>         }, {
+> --
+> 2.1.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
