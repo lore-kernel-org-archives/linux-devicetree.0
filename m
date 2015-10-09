@@ -1,49 +1,46 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [RFC PATCH 0/2] DRA72/DRA74: Add 2 lane support
-Date: Fri, 9 Oct 2015 18:53:28 -0500
-Message-ID: <20151009235328.GB623@localhost>
-References: <1443445058-643-1-git-send-email-kishon@ti.com>
- <20151009225056.GD16112@localhost>
- <56184AE7.6060808@ti.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [RFC PATCH 0/8] clk: qoriq: Move chip-specific knowledge into
+ driver
+Date: Fri, 9 Oct 2015 18:57:44 -0500
+Message-ID: <1444435064.5185.16.camel@freescale.com>
+References: <1434682158-7243-1-git-send-email-scottwood@freescale.com>
+	 <20150811182535.31346.52965@quantum>
+	 <1443745589.5336.185.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56184AE7.6060808@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bhelgaas@google.com, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1443745589.5336.185.camel@freescale.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Tang Yuantian <Yuantian.Tang@freescale.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Liberman Igal-B31950 <Igal.Liberman@freescale.com>, Bucur Madalin-Cristian-B32716 <madalin.bucur@freescale.com>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 10, 2015 at 04:46:55AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Bjorn,
+On Thu, 2015-10-01 at 19:26 -0500, Scott Wood wrote:
+> [Resending to updated e-mail address]
 > 
-> On Saturday 10 October 2015 04:20 AM, Bjorn Helgaas wrote:
-> > [+cc Arnd, Rob]
+> On Tue, 2015-08-11 at 11:25 -0700, Michael Turquette wrote:
+> > Hi Scott,
 > > 
-> > On Mon, Sep 28, 2015 at 06:27:36PM +0530, Kishon Vijay Abraham I wrote:
-> >> Add driver modifications in pci-dra7xx to get x2 mode working in
-> >> DRA72 and DRA74. Certain modifications is needed in PHY driver also
-> >> which I'll send as a separate series.
-> >>
-> >> Kishon Vijay Abraham I (2):
-> >>   pci: host: pci-dra7xx: use "num-lanes" property to find phy count
-> >>   pci: host: pci-dra7xx: Enable x2 mode support
+> > Quoting Scott Wood (2015-06-18 19:49:10)
+> > > The existing device tree bindings are error-prone and inflexible. 
+> > > Correct the mistake by moving the knowledge into the driver, which
+> > > has more flexibility in describing the quirks of each chip.  This leaves
+> > > the device tree to its proper role of identifying a programming 
+> > > interface
+> > > rather than describing its individual registers.
 > > 
-> > Applied to pci/host-dra7xx for v4.4, thanks!
+> > Sorry for not responding to this one sooner. Fell through the cracks.
 > > 
-> > I adjusted the subject line capitalization & format to match the history.
+> > All of the changes to drives/clk/clk-qoriq.c look great to me. I assume
+> > you need to keep all of these patches together and want to the take
+> > through the freescale tree? If so feel free to add,
 > > 
-> > Arnd, Rob, any comments on the DT updates or the "num-lanes" vs number of
-> > strings in "phy-names" changes?
+> > Acked-by: Michael Turquette <mturquette@baylibre.com>
 > 
-> I sent it as RFC since I didn't have the board to test 2 lane mode with
-> $patch. And just now I got a board to test x2 and I found a problem with
-> the 2nd patch.
-> 
-> .b1co_mode_sel_mask = GENMASK(2, 3), in the patch should be replaced with
-> .b1co_mode_sel_mask = GENMASK(3, 2).
-> 
-> I'll resend the patch fixing the above.
+> Is the ack still valid for the v3 patchset?
 
-OK, I dropped these two patches.  Thanks for letting me know.
+ping
+
+-Scott
+
