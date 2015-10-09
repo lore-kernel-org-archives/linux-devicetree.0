@@ -1,8 +1,8 @@
 From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCH 1/2] arm: mvebu: disable unused Armada RTC on ReadyNAS 102,
- 104 and 2120
-Date: Sat, 10 Oct 2015 00:10:24 +0200
-Message-ID: <2e62abb84de02c0495bde9d60a90282deae40967.1444428035.git.arno@natisbad.org>
+Subject: [PATCH 2/2] arm: mvebu: reorder nodes under internal-regs by address
+ in RN2120 .dts file
+Date: Sat, 10 Oct 2015 00:10:39 +0200
+Message-ID: <277de75473af2431849a7494ae65b57dbc9a8309.1444428035.git.arno@natisbad.org>
 References: <cover.1444428035.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,77 +23,122 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, TuxOholic <tuxohol
 List-Id: devicetree@vger.kernel.org
 
 
-By default, armada-370-xp.dtsi file has internal RTC enabled.
-NETGEAR ReadyNAS 102, 104 and 2120 all use an Intersil ISL12057
-I2C RTC chip. The internal RTC not being disabled in the .dts
-files of those devices result in the following useless first
-line during boot:
+This cosmetic patch reorder nodes under internal-regs by increasing
+address order, as epxected.
 
-[    4.500056] rtc-mv d0010300.rtc: internal RTC not ticking
-[    4.505684] i2c /dev entries driver
-[    4.513246] rtc-isl12057 0-0068: rtc core: registered rtc-isl12057 as rtc0
-
-This patch marks Armada internal RTC as disabled in individual .dts
-files of those devices.
-
-Reported-by: TuxOholic <tuxoholic@hotmail.de>
 Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
 ---
- arch/arm/boot/dts/armada-370-netgear-rn102.dts | 6 ++++++
- arch/arm/boot/dts/armada-370-netgear-rn104.dts | 6 ++++++
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 6 ++++++
- 3 files changed, 18 insertions(+)
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 86 +++++++++++++-------------
+ 1 file changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index a31207860f34..5851964196bd 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -82,6 +82,12 @@
- 		};
- 
- 		internal-regs {
-+
-+			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-+			rtc@10300 {
-+				status = "disabled";
-+			};
-+
- 			serial@12000 {
- 				status = "okay";
- 			};
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index 00540f292979..b0b07ba677b9 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -82,6 +82,12 @@
- 		};
- 
- 		internal-regs {
-+
-+			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-+			rtc@10300 {
-+				status = "disabled";
-+			};
-+
- 			serial@12000 {
- 				status = "okay";
- 			};
 diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index 1516fc2627f9..85b2f87c0b8a 100644
+index 85b2f87c0b8a..d72a69d97ba2 100644
 --- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
 +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -88,6 +88,12 @@
- 		};
+@@ -94,54 +94,11 @@
+ 				status = "disabled";
+ 			};
  
- 		internal-regs {
+-			/* Two rear eSATA ports */
+-			sata@a0000 {
+-				nr-ports = <2>;
+-				status = "okay";
+-			};
+-
+-			serial@12000 {
+-				status = "okay";
+-			};
+-
+-			mdio {
+-				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
+-					reg = <1>;
+-				};
+-			};
+-
+-			ethernet@70000 {
+-				status = "okay";
+-				phy = <&phy0>;
+-				phy-mode = "rgmii-id";
+-			};
+-
+-			ethernet@74000 {
+-				status = "okay";
+-				phy = <&phy1>;
+-				phy-mode = "rgmii-id";
+-			};
+-
+-			/* Front USB 2.0 port */
+-			usb@50000 {
+-				status = "okay";
+-			};
+-
+ 			i2c@11000 {
+ 				compatible = "marvell,mv64xxx-i2c";
+ 				clock-frequency = <400000>;
+ 				status = "okay";
+ 
+-				isl12057: isl12057@68 {
+-					compatible = "isil,isl12057";
+-					reg = <0x68>;
+-					isil,irq2-can-wakeup-machine;
+-				};
+-
+ 				/* Controller for rear fan #1 of 3 (Protechnic
+ 				 * MGT4012XB-O20, 8000RPM) near eSATA port */
+ 				g762_fan1: g762@3e {
+@@ -178,6 +135,49 @@
+ 					compatible = "gmt,g751";
+ 					reg = <0x4c>;
+ 				};
 +
-+			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-+			rtc@10300 {
-+				status = "disabled";
++				isl12057: isl12057@68 {
++					compatible = "isil,isl12057";
++					reg = <0x68>;
++					isil,irq2-can-wakeup-machine;
++				};
 +			};
 +
- 			/* Two rear eSATA ports */
- 			sata@a0000 {
- 				nr-ports = <2>;
++			serial@12000 {
++				status = "okay";
++			};
++
++			/* Front USB 2.0 port */
++			usb@50000 {
++				status = "okay";
++			};
++
++			mdio {
++				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++					reg = <0>;
++				};
++
++				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
++					reg = <1>;
++				};
++			};
++
++			ethernet@70000 {
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii-id";
++			};
++
++			ethernet@74000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "rgmii-id";
++			};
++
++			/* Two rear eSATA ports */
++			sata@a0000 {
++				nr-ports = <2>;
++				status = "okay";
+ 			};
+ 
+ 			nand@d0000 {
 -- 
 2.5.3
