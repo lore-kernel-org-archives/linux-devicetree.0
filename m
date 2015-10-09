@@ -1,62 +1,46 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 4/4] arm64: dts: apq8016-sbc: enable spi buses on LS and
- HS
-Date: Fri, 09 Oct 2015 09:42:22 +0100
-Message-ID: <56177DEE.1070405@linaro.org>
-References: <1444303124-32402-1-git-send-email-srinivas.kandagatla@linaro.org> <1444303181-32574-1-git-send-email-srinivas.kandagatla@linaro.org> <5616B303.9030909@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm64: dts: qcom: Add msm8916 I2C nodes.
+Date: Fri, 09 Oct 2015 09:42:51 +0100
+Message-ID: <56177E0B.1050908@linaro.org>
+References: <1444303124-32402-1-git-send-email-srinivas.kandagatla@linaro.org> <1444303168-32490-1-git-send-email-srinivas.kandagatla@linaro.org> <5616B353.9000207@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5616B303.9030909@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org, agross@codeaurora.org
-Cc: jorge.ramirez-ortiz@linaro.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5616B353.9000207-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 08/10/15 19:16, Stephen Boyd wrote:
+On 08/10/15 19:17, Stephen Boyd wrote:
 > On 10/08/2015 04:19 AM, Srinivas Kandagatla wrote:
->> This patch enables spi buses on low speed and high speed expansion
->> connectors on DB410C
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>> index 85f7bee..d49ac37 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>> @@ -233,6 +233,22 @@
+>>   			status = "disabled";
+>>   		};
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
->> index 3581272..d872654 100644
->> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
->> @@ -92,11 +92,21 @@
->>   	status = "okay";
->>   };
->>
->> +&blsp_spi3 {
->> +	/* On High speed expansion */
->> +	status = "okay";
->> +};
->> +
->>   &blsp_i2c4 {
->>   	/* On High speed expansion */
->>   	status = "okay";
->>   };
->>
->> +&blsp_spi5 {
->> +	/* On Low speed expansion */
->> +	status = "okay";
->> +};
->> +
->>   &blsp_i2c6 {
->>   	/* On Low speed expansion */
->>   	status = "okay";
+>> +		/* BLSP1 QUP2 */
 >
-> We've been using absolute nodes to mark device nodes as status = "okay".
-> Can we keep doing that here please?
+> This comment is useless.
 
-Sure, I will re-spin a new version.
+Absolutely.. :-)
+will fix it in next version.
 
 --srini
 >
+>> +		blsp_i2c2: i2c@78b6000 {
+>> +			compatible = "qcom,i2c-qup-v2.2.1";
+>> +			reg = <0x78b6000 0x1000>;
+>> +			interrupts = <GIC_SPI 96 0>;
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
