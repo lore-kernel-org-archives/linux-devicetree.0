@@ -1,87 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: porter: add QSPI DT support
-Date: Fri, 09 Oct 2015 23:51:05 +0300
-Message-ID: <1738678.v21ITp1gYW@wasted.cogentembedded.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v3 2/7] MAINTAINERS: Add myself for the new VC4 (RPi GPU)
+ graphics driver.
+Date: Fri,  9 Oct 2015 14:27:43 -0700
+Message-ID: <1444426068-15817-3-git-send-email-eric@anholt.net>
+References: <1444426068-15817-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1444426068-15817-1-git-send-email-eric@anholt.net>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Define the Porter board dependent part of the QSPI device node.
-Add device nodes  for Spansion  S25FL512S SPI flash and the MTD partitions
-on it.
-
-This patch is  mostly analogous to the commit f59838d44835 (ARM: shmobile:
-henninger: add QSPI DT support) as there  are no differences between the
-boards in this respect.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-This patch is against 'renesas-devel-20151008-v4.3-rc4' tag of Simon Horman's
-'renesas.git' repo plus the Porter I2C2 and VIN0/ADV7180 patches posted earlier.
-
- arch/arm/boot/dts/r8a7791-porter.dts |   38 +++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -110,6 +110,11 @@
- 		renesas,function = "sdhi2";
- 	};
- 
-+	qspi_pins: spi0 {
-+		renesas,groups = "qspi_ctrl", "qspi_data4";
-+		renesas,function = "qspi";
-+	};
-+
- 	i2c2_pins: i2c2 {
- 		renesas,groups = "i2c2";
- 		renesas,function = "i2c2";
-@@ -165,6 +170,39 @@
- 	status = "okay";
- };
- 
-+&qspi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl512s", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		m25p,fast-read;
-+
-+		partition@0 {
-+			label = "loader_prg";
-+			reg = <0x00000000 0x00040000>;
-+			read-only;
-+		};
-+		partition@40000 {
-+			label = "user_prg";
-+			reg = <0x00040000 0x00400000>;
-+			read-only;
-+		};
-+		partition@440000 {
-+			label = "flash_fs";
-+			reg = <0x00440000 0x03bc0000>;
-+		};
-+	};
-+};
-+
- &i2c2 {
- 	pinctrl-0 = <&i2c2_pins>;
- 	pinctrl-names = "default";
-
+U2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KLS0tCgp2MjogTWFy
+ayBpdCBTdXBwb3J0ZWQsIG5vdCBNYWludGFpbmVkLgoKIE1BSU5UQUlORVJTIHwgNiArKysrKysK
+IDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVS
+UyBiL01BSU5UQUlORVJTCmluZGV4IDdiYTdhYjcuLmUzMzFlNDYgMTAwNjQ0Ci0tLSBhL01BSU5U
+QUlORVJTCisrKyBiL01BSU5UQUlORVJTCkBAIC0zNjUzLDYgKzM2NTMsMTIgQEAgUzoJTWFpbnRh
+aW5lZAogRjoJZHJpdmVycy9ncHUvZHJtL3N0aQogRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dwdS9zdCxzdGloNHh4LnR4dAogCitEUk0gRFJJVkVSUyBGT1IgVkM0CitNOglF
+cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgorVDoJZ2l0IGdpdDovL2dpdGh1Yi5jb20vYW5o
+b2x0L2xpbnV4CitTOglTdXBwb3J0ZWQKK0Y6CWRyaXZlcnMvZ3B1L2RybS92YzQvKgorCiBEU0JS
+MTAwIFVTQiBGTSBSQURJTyBEUklWRVIKIE06CUFsZXhleSBLbGltb3YgPGtsaW1vdi5saW51eEBn
+bWFpbC5jb20+CiBMOglsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKLS0gCjIuMS40CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
