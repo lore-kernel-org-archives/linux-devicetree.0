@@ -1,49 +1,56 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v5 1/4] Docs: dt: Add PCI MSI map bindings
-Date: Fri, 9 Oct 2015 09:12:15 -0700
-Message-ID: <5617E75F.2090907@caviumnetworks.com>
-References: <1444342250-6196-1-git-send-email-ddaney.cavm@gmail.com> <1444342250-6196-2-git-send-email-ddaney.cavm@gmail.com> <CAL_JsqK1kB30h=zse1LcaBisjYEGSBhD4FutvtqbUxpSU+2NjA@mail.gmail.com>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Subject: Re: [PATCH v2 1/2] devicetree: add binding for generic mmio clocksource
+Date: Fri, 09 Oct 2015 17:19:40 +0100
+Message-ID: <yw1xy4fchv4z.fsf@unicorn.mansr.com>
+References: <1444232234-2133-1-git-send-email-mans@mansr.com>
+	<20151007154727.GC28981@leverpostej>
+	<yw1xvbaik4mn.fsf@unicorn.mansr.com>
+	<CAL_JsqJDZKTB8xowVdGK=9=4omp_wHdwqYP_Ln3-QdknjAwxSg@mail.gmail.com>
+	<yw1xmvvtk906.fsf@unicorn.mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK1kB30h=zse1LcaBisjYEGSBhD4FutvtqbUxpSU+2NjA@mail.gmail.com>
+In-Reply-To: <yw1xmvvtk906.fsf@unicorn.mansr.com> (=?iso-8859-1?Q?=22M=E5n?=
+ =?iso-8859-1?Q?s_Rullg=E5rd=22's?= message
+	of "Thu, 08 Oct 2015 10:24:57 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2015 06:20 AM, Rob Herring wrote:
-> On Thu, Oct 8, 2015 at 5:10 PM, David Daney <ddaney.cavm@gmail.com> wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> Currently msi-parent is used by a few bindings to describe the
->> relationship between a PCI root complex and a single MSI controller, but
->> this property does not have a generic binding document.
->>
->> Additionally, msi-parent is insufficient to describe more complex
->> relationships between MSI controllers and devices under a root complex,
->> where devices may be able to target multiple MSI controllers, or where
->> MSI controllers use (non-probeable) sideband information to distinguish
->> devices.
->>
->> This patch adds a generic binding for mapping PCI devices to MSI
->> controllers. This document covers msi-parent, and a new msi-map property
->> (specific to PCI*) which may be used to map devices (identified by their
->> Requester ID) to sideband data for each MSI controller that they may
->> target.
->>
->> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: David Daney <david.daney@cavium.com>
+M=E5ns Rullg=E5rd <mans@mansr.com> writes:
+
+> Rob Herring <robherring2@gmail.com> writes:
 >
-> I acked v3. Please add it so I can stop paying attention.
+>> On Wed, Oct 7, 2015 at 11:47 AM, M=E5ns Rullg=E5rd <mans@mansr.com> =
+wrote:
+>>> What would be a proper way to select a sched_clock source?  I reali=
+se
+>>> it's a Linux-specific thing and DT is supposed to be generic, but t=
+he
+>>> information must be provided somehow.
+>>
+>> The kernel already has some logic to do this. Most number of bits
+>> followed by highest frequency will be the winning sched_clock. You
+>> might also want to look at things like always on or not.
 >
+> The problem is that sched_clock_register() doesn't take a pointer to =
+be
+> passed back to the read_sched_clock callback like most interfaces of
+> this type do.  This means the callback must use global variables set =
+up
+> before the register call, but at that time there's no way of knowing
+> which one will be used.  If there were a way of getting a pointer to =
+the
+> callback, it would be a simple matter of registering all instances an=
+d
+> letting the kernel choose which to use.
 
-My apologies for missing that.
+Anyone got a comment on this?  Do I have to send a patch adding this
+before anyone will tell me why it's a bad idea?  (That method almost
+always works.)
 
-The Acked-by is now in my local tree.  Can the MSI maintainer take it as 
-is and add your Acked-by?  If not, I can resend with this added.
-
-Thanks for taking the time to review it,
-David Daney
+--=20
+M=E5ns Rullg=E5rd
+mans@mansr.com
