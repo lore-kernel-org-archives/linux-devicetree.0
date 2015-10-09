@@ -1,57 +1,59 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Fri, 09 Oct 2015 15:18:03 +0100
-Message-ID: <5617CC9B.7070405@arm.com>
-References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com> <5613F310.6060305@arm.com> <8520D5D51A55D047800579B09414719801690DEC@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm64: Juno: Add support for the PCIe host bridge on
+ Juno R1
+Date: Fri, 9 Oct 2015 15:18:14 +0100
+Message-ID: <20151009141814.GR26278@arm.com>
+References: <1444398323-17354-1-git-send-email-Liviu.Dudau@arm.com>
+ <1444398323-17354-4-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqJsb53VXiUfjGBXK37dBEi1r-PXVohg-c-7_x63R04VMA@mail.gmail.com>
+ <20151009141107.GD3394@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B09414719801690DEC@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151009141107.GD3394-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, device-tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/15 14:47, Bharat Kumar Gogada wrote:
->> Hi Bharat,
->>>> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
->>> 
->>> +/* SSPL ERROR */ +#define SLVERR					0x02 +#define DECERR
->>> 0x03 + +struct nwl_msi {			/* struct nwl_msi - MSI information
->> */
->>> +	struct msi_controller chip;	/* chip: MSI controller */
->> 
->> We're moving away from msi_controller altogether, as the kernel now
->> has all the necessary infrastructure to do this properly.
->> 
->> Please convert this driver to msi domains (see
->> drivers/pci/host/pci-xgene- msi.c or the gic-v2m driver as examples
->> of how this is being done).
+On Fri, Oct 09, 2015 at 03:11:07PM +0100, Liviu Dudau wrote:
+> On Fri, Oct 09, 2015 at 08:54:33AM -0500, Rob Herring wrote:
+> > On Fri, Oct 9, 2015 at 8:45 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+> > > Juno R1 board sports a functional PCIe host bridge that is
+> > > compliant with the SBSA standard found here[1]. With the right
+> > > firmware that initialises the XpressRICH3 controller one can
+> > > use the generic Host Bridge driver to use the PCIe hardware.
+> > >
+> > > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> > >
+> > > [1] http://infocenter.arm.com/help/topic/com.arm.doc.den0029a/
+> > > ---
+> > >  arch/arm64/boot/dts/arm/juno-r1.dts | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+> > > index c627511..a702a6b 100644
+> > > --- a/arch/arm64/boot/dts/arm/juno-r1.dts
+> > > +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+> > > @@ -109,6 +109,26 @@
+> > >
+> > >         #include "juno-base.dtsi"
+> > >
+> > > +       pcie-controller@40000000 {
+> > > +               compatible = "pci-host-ecam-generic";
+> > 
+> > I think this is the first case of real h/w using this. We should have
+> > a specific compatible here additionally.
 > 
-> As suggested I have gone through the code in pci-gene-msi.c for msi
-> domains, and have gone through IRQ Domain documentation. I mainly
-> observe when we have more than one interrupt controller involved 
-> between device and cpu we use "Hierarchy IRQ domain" (parent and
-> child msi domains). But in our case we don't have any such Hierarchy
-> and we have single interrupt controller. In such case is it necessary
-> to use multiple domains in software which actually isn't case in
-> hardware.
+> Or maybe I can claim the use of the string on account on being the first
+> on arm64 ;)
 
-This is not optional. The generic MSI domain is stacked on top of the
-one that drives the HW. Which is exactly the XGene case. Your case is
-not different in any way, and the exact same methods apply:
+This is already being used on arm64 with kvmtool, qemu, the ARM fastmodel
+and AMD Seattle.
 
-	MSI -> RandomHW -> Interrupt controller (GIC)
-
-We can argue about it as long as you want, but there is no way we're
-adding more msi_controller madness to the tree. It took us a long time,
-but we now have a generic way to do MSIs in the kernel, and you need to
-use it, not sidestep it.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
