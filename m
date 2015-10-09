@@ -1,85 +1,93 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] pinctrl: berlin: add the berlin4ct pinctrl
- driver
-Date: Fri, 9 Oct 2015 17:22:38 +0800
-Message-ID: <20151009172238.68fdd51c@xhacker>
-References: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
-	<1444378629-3057-3-git-send-email-jszhang@marvell.com>
-	<20151009090353.GA2842@kwain>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v6 0/5] Add DT support for netxbig LEDs
+Date: Fri, 09 Oct 2015 11:43:37 +0200
+Message-ID: <56178C49.4070704@samsung.com>
+References: <1443301358-2131-1-git-send-email-simon.guinot@sequanux.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151009090353.GA2842@kwain>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1443301358-2131-1-git-send-email-simon.guinot@sequanux.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@printk.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh@kernel.org>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Antoine,
+On 09/26/2015 11:02 PM, Simon Guinot wrote:
+> Hello,
+>
+> This patch series adds DT support for the LEDs found on the
+> Kirkwood-based LaCie boards 2Big and 5Big Network v2.
+>
+> Changes for v2:
+> - Check timer mode value retrieved from DT.
+> - In netxbig_leds_get_of_pdata, don't use unsigned long variables to get
+>    timer delay values from DT with function of_property_read_u32_index.
+>    Instead, use a temporary u32 variable. This allows to silence a static
+>    checker warning.
+> - Make timer property optional in the binding documentation. It is now
+>    aligned with the driver code.
+>
+> Changes for v3:
+> - Fix pointer usage with the temporary u32 variable while calling
+>    of_property_read_u32_index.
+>
+> Changes for v4:
+> - In DT binding document netxbig-gpio-ext.txt, detail byte order for
+>    registers and latch mechanism for "enable-gpio".
+> - In leds-netxbig.c, add some error messages.
+> - In leds-netxbig.c, fix some "sizeof" style issues.
+> - In leds-netxbig.c, in netxbig_leds_get_of_pdata(), move the
+>    of_property_read_string() calls after the error-prone checks.
+> - Add some Acked-by.
+>
+> Changes for v5:
+> - Rename DT property "bright-max" into the more common "max-brightness".
+> - Make use of the "max-brightness" DT property. Instead of counting the
+>    data pins of the GPIO extension bus, use "max-brightness" to get the
+>    maximum brightness level.
+> - Add a patch to convert the leds-netxbig driver to the devm_ functions.
+>
+> Changes for v6:
+> - Add a patch to set led_classdev max_brightness in the leds-netxbig
+>    driver.
+> - Decrement the current child node refcount with of_node_put() when an
+>    error happens while iterating with for_each_child_of_node().
+>
+> Thanks,
+>
+> Simon
+>
+> Simon Guinot (5):
+>    leds: netxbig: add device tree binding
+>    ARM: Kirkwood: add LED DT entries for netxbig boards
+>    ARM: mvebu: remove static LED setup for netxbig boards
+>    leds: netxbig: convert to use the devm_ functions
+>    leds: netxbig: set led_classdev max_brightness
+>
+>   .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |  22 ++
+>   .../devicetree/bindings/leds/leds-netxbig.txt      |  92 ++++++
+>   arch/arm/boot/dts/kirkwood-net5big.dts             |  60 ++++
+>   arch/arm/boot/dts/kirkwood-netxbig.dtsi            |  80 +++++
+>   arch/arm/mach-mvebu/Kconfig                        |   7 -
+>   arch/arm/mach-mvebu/Makefile                       |   1 -
+>   arch/arm/mach-mvebu/board.h                        |  21 --
+>   arch/arm/mach-mvebu/kirkwood.c                     |   4 -
+>   arch/arm/mach-mvebu/netxbig.c                      | 191 ------------
+>   drivers/leds/leds-netxbig.c                        | 336 ++++++++++++++++-----
+>   include/dt-bindings/leds/leds-netxbig.h            |  18 ++
+>   .../linux/platform_data/leds-kirkwood-netxbig.h    |   1 +
+>   12 files changed, 531 insertions(+), 302 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-netxbig.txt
+>   delete mode 100644 arch/arm/mach-mvebu/board.h
+>   delete mode 100644 arch/arm/mach-mvebu/netxbig.c
+>   create mode 100644 include/dt-bindings/leds/leds-netxbig.h
+>
 
-On Fri, 9 Oct 2015 11:03:53 +0200
-Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Since no comment regarding DT bindings has appeared for a long time,
+I decided to merge the patch set without DT maintainer's ack, thanks.
 
-> Hi Jisheng,
-> 
-> On Fri, Oct 09, 2015 at 04:17:05PM +0800, Jisheng Zhang wrote:
-> > diff --git a/drivers/pinctrl/berlin/Kconfig b/drivers/pinctrl/berlin/Kconfig
-> > index b18322b..c13f6d2 100644
-> > --- a/drivers/pinctrl/berlin/Kconfig
-> > +++ b/drivers/pinctrl/berlin/Kconfig
-> > @@ -17,4 +17,9 @@ config PINCTRL_BERLIN_BG2Q
-> >  	bool
-> >  	select PINCTRL_BERLIN
-> >  
-> > +config PINCTRL_BERLIN_BG4CT
-> > +	depends on OF && (ARCH_BERLIN || COMPILE_TEST)
-> > +	bool "Marvell berlin4ct pin controller driver"
-> > +	select PINCTRL_BERLIN
-> > +
-> >  endif
-> 
-> This endif ends the following condition:
-> 
-> 	if ARCH_BERLIN
-> 	[...]
-> 
-> So the "depends on ARCH_BERLIN" here can be dropped. Also the
-> COMPILE_TEST can be moved as it isn't BG4CT specific and all other
-> Berlin pinctrl drivers would benefit from this.
-> 
-> So we would have something like:
-> 
-> 	if (ARCH_BERLIN || COMPILE_TEST)
-
-Oh yeah! This is better.
-
-> 	[...]
-> 	endif
-> 
-> Finally you can move the OF dependency to the PINCTRL_BERLIN config as
-> all Berlin pinctrl drivers depends on it.
-
-PINCTRL_BERLIN isn't user visible and it's selected by PINCTRL_BERLIN_BG4CT. So
-we may have the following random config case:
-
-CONFIG_OF=n
-CONFIG_PINCTRL_BERLIN_BG4CT=y
-
-In this case, there will be build errors for we missed OF. So we have to
-make PINCTRL_BERLIN_BG4CT depends on OF. What do you think? Or is there
-better solution?
-
-Thanks for kind review,
-Jisheng
-
-> 
-> Thanks!
-> 
-> Antoine
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
