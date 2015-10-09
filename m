@@ -1,40 +1,37 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v3 4/6] pinctrl: dt-binding: document berlin4ct SoC pinctrl
-Date: Fri, 9 Oct 2015 14:52:00 +0800
-Message-ID: <1444373522-2119-5-git-send-email-jszhang@marvell.com>
-References: <1444373522-2119-1-git-send-email-jszhang@marvell.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 05/10] clk: iproc: Add PLL base write function
+Date: Fri, 9 Oct 2015 00:03:57 -0700
+Message-ID: <20151009070357.GN26883@codeaurora.org>
+References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
+ <1443826665-17570-6-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1444373522-2119-1-git-send-email-jszhang@marvell.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443826665-17570-6-git-send-email-jonmason@broadcom.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Add berlin4ct to existing berlin pinctrl device tree binding.
+On 10/02, Jon Mason wrote:
+> diff --git a/drivers/clk/bcm/clk-iproc-pll.c b/drivers/clk/bcm/clk-iproc-pll.c
+> index e029ab3..a4602aa 100644
+> --- a/drivers/clk/bcm/clk-iproc-pll.c
+> +++ b/drivers/clk/bcm/clk-iproc-pll.c
+> @@ -137,6 +137,18 @@ static int pll_wait_for_lock(struct iproc_pll *pll)
+>  	return -EIO;
+>  }
+>  
+> +static void iproc_pll_write(struct iproc_pll *pll, void __iomem *base,
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
- Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Seems that pll could be const too?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
-index a8bb5e2..f8fa28c 100644
---- a/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
-@@ -20,7 +20,10 @@ Required properties:
- 	"marvell,berlin2cd-soc-pinctrl",
- 	"marvell,berlin2cd-system-pinctrl",
- 	"marvell,berlin2q-soc-pinctrl",
--	"marvell,berlin2q-system-pinctrl"
-+	"marvell,berlin2q-system-pinctrl",
-+	"marvell,berlin4ct-avio-pinctrl",
-+	"marvell,berlin4ct-soc-pinctrl",
-+	"marvell,berlin4ct-system-pinctrl"
- 
- Required subnode-properties:
- - groups: a list of strings describing the group names.
+> +			    u32 offset, u32 val)
+> +{
+> +	const struct iproc_pll_ctrl *ctrl = pll->ctrl;
+> +
+
 -- 
-2.6.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
