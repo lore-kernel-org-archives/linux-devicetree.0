@@ -1,53 +1,61 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH 0/4] arm64: Juno: Add support for PCIe on R1 board
-Date: Fri,  9 Oct 2015 14:45:19 +0100
-Message-ID: <1444398323-17354-1-git-send-email-Liviu.Dudau@arm.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Fri, 9 Oct 2015 13:47:35 +0000
+Message-ID: <8520D5D51A55D047800579B09414719801690DEC@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com>
+ <5613F310.6060305@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5613F310.6060305@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Juno R1 board has a working PCIe host bridge that can be enabled and
-configured by the firmware and made use of by Linux. For UEFI, the
-Linaro releases contain firmware that configure the XpressRICH3 host
-bridge correctly. For U-Boot based setups, one needs the patchset
-posted here[1].
+> Hi Bharat,
+>> > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> >
+> > +/* SSPL ERROR */
+> > +#define SLVERR					0x02
+> > +#define DECERR					0x03
+> > +
+> > +struct nwl_msi {			/* struct nwl_msi - MSI information
+> */
+> > +	struct msi_controller chip;	/* chip: MSI controller */
+> 
+> We're moving away from msi_controller altogether, as the kernel now has all
+> the necessary infrastructure to do this properly.
+> 
+> Please convert this driver to msi domains (see drivers/pci/host/pci-xgene-
+> msi.c or the gic-v2m driver as examples of how this is being done).
 
-This patchset adds a quirk for setting the correct class to the host
-bridge device and the device tree changes that enable PCIe on Juno R1.
-We also update the defconfig to enable the generic PCI host bridge driver.
+As suggested I have gone through the code in pci-gene-msi.c for msi domains, 
+and have gone through IRQ Domain documentation. 
+I mainly observe when we have more than one interrupt controller involved
+between device and cpu we use "Hierarchy IRQ domain" (parent and child msi domains). But in our case we 
+don't have any such Hierarchy and we have single interrupt controller.
+In such case is it necessary to use multiple domains in software which actually isn't case in hardware.
 
-Best regards,
-Liviu
-
-1. http://lists.denx.de/pipermail/u-boot/2015-October/229669.html
-
-
-Andrew Murray (1):
-  pci: Add PLDA's XpressRICH3 PCIe host bridge PCI ID
-
-Liviu Dudau (3):
-  PCI: Add quirk for PLDA's XpressRICH3 host bridge class.
-  arm64: Juno: Add support for the PCIe host bridge on Juno R1
-  arm64: defconfig: Enable PCI generic host bridge by default
-
- arch/arm64/boot/dts/arm/juno-r1.dts | 20 ++++++++++++++++++++
- arch/arm64/configs/defconfig        |  1 +
- drivers/pci/quirks.c                | 10 ++++++++++
- include/linux/pci_ids.h             |  3 +++
- 4 files changed, 34 insertions(+)
-
--- 
-2.6.0
+Thanks 
+Bharat
+> 
+> > +	DECLARE_BITMAP(used, INT_PCI_MSI_NR);	/* used: Declare
+> Bitmap
+> > +						for MSI	*/
+> > +	struct irq_domain *domain;	/* domain: IRQ domain pointer */
+> > +	unsigned long pages;		/* pages: MSI pages */
+> 
+> Overall, I think it would make sense to split the PCIe controller driver and the
+> MSI controller (in separate files as well).
+> 
+> Please keep me posted on the updates.
+> 
+> Thanks,
+> 
+> 	M.
+> --
+> Jazz is not dead. It just smells funny...
