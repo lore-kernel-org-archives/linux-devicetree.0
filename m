@@ -1,110 +1,70 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/9] Goodix touchscreen enhancements
-Date: Fri, 9 Oct 2015 19:10:38 +0300
-Message-ID: <20151009191038.cb91cd52202f7c29e2fdbc24@gmail.com>
-References: <1444314231-19206-1-git-send-email-irina.tirdea@intel.com>
+From: Josh Cartwright <joshc@ni.com>
+Subject: Re: [PATCH 1/3] doc: dt: fpga: Added Documentation for Xilinx Zynq
+ FPGA manager.
+Date: Fri, 9 Oct 2015 11:04:23 -0500
+Message-ID: <20151009160423.GL10631@jcartwri.amer.corp.natinst.com>
+References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
+ <1444344307-22509-2-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444314231-19206-1-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="y96v7rNg6HAoELs5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444344307-22509-2-git-send-email-moritz.fischer@ettus.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: michal.simek@xilinx.com, soren.brinkmann@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  8 Oct 2015 17:23:42 +0300
-Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
 
-> Add several enhancements to the Goodix touchscreen driver.
-> 
-> The new functionality is only available for devices that
-> declare named gpio pins for interrupt and reset in their
-> ACPI/DT configuration.
-> 
+--y96v7rNg6HAoELs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I tested this patchset on ARM tablet Wexler TAB7200 with GT911 touchscreen 
-controller. All works fine, so you can add
+On Fri, Oct 09, 2015 at 12:45:05AM +0200, Moritz Fischer wrote:
+> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+> ---
+>  .../bindings/fpga/xilinx-zynq-fpga-mgr.txt         | 26 ++++++++++++++++=
+++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-zynq-fp=
+ga-mgr.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.=
+txt b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
+> new file mode 100644
+> index 0000000..82ffda8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
+> @@ -0,0 +1,26 @@
+> +Xilinx Zynq FPGA Manager
+> +
+> +Required properties:
+> +- compatible:		should contain "xlnx,zynq-devcfg-1.0"
+> +- reg:			base address and size for memory mapped io
+> +- interrupt parent:	interrupt source phandle
 
-Tested-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+I think you mean 'interrupt-parent', with the hyphen.
 
->
-> Thanks,
-> Irina
-> 
-> Changes in v8:
->  - only allow new functionality for devices that declare named
-> gpios (using _DSD properties in ACPI or named DT properties)
-> 
-> Changes in v7:
->  - add dmi quirk to skip gpio pins setup and functionality that
-> depends on them for Onda v975w, WinBook TW100 and WinBook TW700.
->  - add support for named gpio pins
->  - rework the runtime pm patch to fix a couple of issues
->  - sort includes using inverse Xmas tree ordering
-> 
-> Changes in v6:
->  - skip runtime power manangent calls in open/close if the device
-> ACPI/DT configuration does not declare interrupt and reset gpio pins.
->  - reset the device before starting i2c communication
->  - add Bastien's ack to the first 2 patches
-> 
-> Changes in v5:
->  - add some more style cleanup (reorder includes, use error instead
-> of ret for return values)
->  - add runtime power management patch
-> 
-> Changes in v4:
->  - use dmi quirk to determine the order of irq and reset pins
->  - use actual config length depending on device
->  - add sysfs interface to dump config
->  - initialize esd timeout from ACPI/DT properly
-> 
-> Changes in v3:
->  - dropped the first 3 patches that got merged
->  - handle -EPROBE_DEFER and -ENOENT for gpio pins
->  - skip functionality depending on the gpio pins if the pins are not
-> properly initialized from ACPI/DT (reset, write config, power management,
-> ESD)
->  - dropped #ifdef CONFIG_PM_SLEEP and annotated with __maybe_unused instead
->  - use sysfs property to set ESD timeout instead of ACPI/DT property
->  - use request_firmware_nowait to read configuration firmware and use
-> defaults if firmware is not found
->  - use ACPI IDs to determine the order of the GPIO pins in the ACPI tables
-> (interrupt pin first or reset pin first)
-> 
-> Changes in v2:
->  - use request_firmware instead of ACPI/DT property for config
->  - dropped "input: goodix: add ACPI IDs for GT911 and GT9271" patch
->  - add ACPI DSDT excerpt in commit message where necessary
->  - add comments for suspend/resume sleep values
->  - dropped the checkpatch fixes that did not make sense
->  - added Bastien's ack to the first patch
-> 
-> Irina Tirdea (9):
->   Input: goodix - use actual config length for each device type
->   Input: goodix - reset device at init
->   Input: goodix - write configuration data to device
->   Input: goodix - add power management support
->   Input: goodix - use goodix_i2c_write_u8 instead of i2c_master_send
->   Input: goodix - add support for ESD
->   Input: goodix - add sysfs interface to dump config
->   Input: goodix - add runtime power management support
->   Input: goodix - sort includes using inverse Xmas tree order
-> 
->  .../bindings/input/touchscreen/goodix.txt          |  11 +
->  drivers/input/touchscreen/goodix.c                 | 766 +++++++++++++++++++--
->  2 files changed, 732 insertions(+), 45 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
+Actually, this isn't really a 'required' property of this node, as it
+could be specified in a parent node.
 
+  Josh
 
--- 
-Thanks and regards,
-Aleksei Mamlin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--y96v7rNg6HAoELs5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABCAAGBQJWF+WEAAoJEKp7ZBKwQFArKuAIAJeM0WXBLGoNHdE4Zez6hBMi
+KtYrf3KknYwcL/UVcEGWEKAEJ0KmsJvJQP3JpXil2vYL+i37NDqJOhH1LrwrlT9H
+sv4yBD8cZQE4SP2cNU22pa4UwsmCS+F1N6BbrIAi9IZVmwMc3Udbp1AdFU5yIbLt
+N+Zj707BFNKR3FxHIpYrsssBwbkezcG6Qz5uem9exE6ILWmBIWHju1lslUpNyR6v
+8YExYKqBim1o5fxhTEvpAPCk1YrcFTyzHbiCfsziRVopbB9cVEmYQy3nAjD6ZTyD
+oaIsaiRMNDG2M/XlhKBb2qKSJqsAqUvQ8VjKNr3WrI7l1fIDDAPu1E/OSXqrGik=
+=m7Gr
+-----END PGP SIGNATURE-----
+
+--y96v7rNg6HAoELs5--
