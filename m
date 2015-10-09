@@ -1,104 +1,57 @@
-From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: sun4i: Enable USB DRC on pcDuino1/2
-Date: Fri,  9 Oct 2015 14:09:39 +0300
-Message-ID: <1444388979-12072-4-git-send-email-siarhei.siamashka@gmail.com>
-References: <1444388979-12072-1-git-send-email-siarhei.siamashka@gmail.com>
-Reply-To: siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: Re: [PATCH v4 5/8] clk: rockchip: Allow the RK3288 SPDIF clocks to
+ change their parent
+Date: Fri, 09 Oct 2015 13:35:55 +0200
+Message-ID: <1444390555.9895.271.camel@collabora.co.uk>
+References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
+	 <1444311079-2892-6-git-send-email-sjoerd.simons@collabora.co.uk>
+	 <11755202.f1LLWMlYi0@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH4DA7NUEBBB7OA32YAKGQEDQ44HCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1444388979-12072-1-git-send-email-siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11755202.f1LLWMlYi0@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the otg/drc usb controller on the pcDuino1/2 board. Note
-that the pcDuino1 FEX file from the vendor contains the following
-information in the [usbc0] section:
-    usb_id_gpio = port:PH04<0><1><default><default>
-    usb_det_vbus_gpio = port:PH05<0><0><default><default>
-    usb_drv_vbus_gpio = port:PB09<1><0><default><0>
-While the pcDuino2 FEX has:
-    usb_id_gpio = port:PH04<0><1><default><default>
-    usb_det_vbus_gpio = port:PH05<0><0><default><default>
-    usb_drv_vbus_gpio = port:PD02<1><0><default><0>
+Hey Heiko,
 
-The ID pin is indeed PH4. The PD2 pin can be used to switch power
-on/off for the USB Type A receptacle on pcDuino2, but it has nothing
-to do with the MicroUSB OTG receptacle. The VBUS pin of the MicroUSB
-receptacle is always connected to 5V according to the schematics
-(both pcDuino1 and pcDuino2) and confirmed by doing some tests on
-pcDuino2. The PH5 pin is just one of the pins on the J8 expansion
-header and has nothing to do with USB OTG. The PB9 pin is pulled
-up and connected to the N_VBUSEN pin of AXP209 PMIC, while the
-VBUS pin of AXP209 only has a capacitor between it and the
-ground (this pin is not used for anything else).
+On Thu, 2015-10-08 at 17:10 +0200, Heiko Stuebner wrote:
+> Am Donnerstag, 8. Oktober 2015, 15:31:16 schrieb Sjoerd Simons:
+> > The clock branches leading to sclk_spdif and sclk_spdif_8ch on
+> > RK3288
+> > SoCs only feed those clocks, allow those clocks to change their
+> > parents
+> > all the way up the hierarchy.
+> > 
+> > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> 
+> Just as comment, if I'm seeing that right, this patch needs "clk:
+> rockchip: 
+> handle mux dependency of fractional dividers" and friends [0] to
+> apply and 
+> also actually handle the fractional dividers correctly.
+> 
+> For the clock change itself:
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-To sum it up. Only the ID pin (PH4) has a real use. And 5V voltage
-is always served to the MicroUSB OTG receptacle no matter what is
-the state of the PB9/PD2 pins.
+Oh sorry yes, i completely forgot to at that as note on this patch
+(series). These are on top of your series as those are required to make
+things actually work as expected. 
 
-This patch has been tested on pcDuino2 to work fine in a host role
-with a USB keyboard connected via an OTG cable. It also works fine
-in a device role (cdc_ether) with a regular Micro-B cable connected
-to a desktop PC.
+Which reminds me, i was wondering how to best move that forward. Could
+you pick this one up to include it in the next round of your series?
+(Otherwise i'm happy to rebase it once you do a v2)
 
-Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-pcduino.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> 
+> Heiko
+> 
+> [0] http://lists.infradead.org/pipermail/linux-rockchip/2015-August/0
+> 03930.html
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-index 0b45d27..39034aa 100644
---- a/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-@@ -164,6 +164,10 @@
- 	status = "okay";
- };
- 
-+&otg_sram {
-+	status = "okay";
-+};
-+
- &pio {
- 	led_pins_pcduino: led_pins@0 {
- 		allwinner,pins = "PH15", "PH16";
-@@ -178,6 +182,13 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
-+
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
- };
- 
- #include "axp209.dtsi"
-@@ -213,7 +224,15 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
- 	usb1_vbus-supply = <&reg_vcc5v0>; /* USB1 VBUS is always on */
- 	usb2_vbus-supply = <&reg_vcc5v0>; /* USB2 VBUS is always on */
- 	status = "okay";
+
 -- 
-2.4.9
+Sjoerd Simons
+Collabora Ltd.
