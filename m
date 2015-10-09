@@ -1,56 +1,33 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH v2 1/2] devicetree: add binding for generic mmio clocksource
-Date: Fri, 09 Oct 2015 17:19:40 +0100
-Message-ID: <yw1xy4fchv4z.fsf@unicorn.mansr.com>
-References: <1444232234-2133-1-git-send-email-mans@mansr.com>
-	<20151007154727.GC28981@leverpostej>
-	<yw1xvbaik4mn.fsf@unicorn.mansr.com>
-	<CAL_JsqJDZKTB8xowVdGK=9=4omp_wHdwqYP_Ln3-QdknjAwxSg@mail.gmail.com>
-	<yw1xmvvtk906.fsf@unicorn.mansr.com>
+From: Khalid Aziz <khalid.aziz@oracle.com>
+Subject: Re: [PATCH v7 10/60] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit
+ resource
+Date: Fri, 09 Oct 2015 10:20:25 -0600
+Message-ID: <1444407625.17726.9.camel@oracle.com>
+References: <1444340359-8011-1-git-send-email-yinghai@kernel.org>
+	 <1444340359-8011-11-git-send-email-yinghai@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <yw1xmvvtk906.fsf@unicorn.mansr.com> (=?iso-8859-1?Q?=22M=E5n?=
- =?iso-8859-1?Q?s_Rullg=E5rd=22's?= message
-	of "Thu, 08 Oct 2015 10:24:57 +0100")
+In-Reply-To: <1444340359-8011-11-git-send-email-yinghai@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wei Yang <weiyang@linux.vnet.ibm.com>, TJ <linux@iam.tj>, Yijing Wang <wangyijing@huawei.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-M=E5ns Rullg=E5rd <mans@mansr.com> writes:
+On Thu, 2015-10-08 at 14:38 -0700, Yinghai Lu wrote:
+> For device resource PREF bit setting under bridge 64-bit pref resource,
+> we need to make sure only set PREF for 64bit resource, so set
+> IORESOUCE_MEM_64 for 64bit resource during OF device resource flags
+> parsing.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
+> Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
 
-> Rob Herring <robherring2@gmail.com> writes:
->
->> On Wed, Oct 7, 2015 at 11:47 AM, M=E5ns Rullg=E5rd <mans@mansr.com> =
-wrote:
->>> What would be a proper way to select a sched_clock source?  I reali=
-se
->>> it's a Linux-specific thing and DT is supposed to be generic, but t=
-he
->>> information must be provided somehow.
->>
->> The kernel already has some logic to do this. Most number of bits
->> followed by highest frequency will be the winning sched_clock. You
->> might also want to look at things like always on or not.
->
-> The problem is that sched_clock_register() doesn't take a pointer to =
-be
-> passed back to the read_sched_clock callback like most interfaces of
-> this type do.  This means the callback must use global variables set =
-up
-> before the register call, but at that time there's no way of knowing
-> which one will be used.  If there were a way of getting a pointer to =
-the
-> callback, it would be a simple matter of registering all instances an=
-d
-> letting the kernel choose which to use.
+Tested on sparc platforms
 
-Anyone got a comment on this?  Do I have to send a patch adding this
-before anyone will tell me why it's a bad idea?  (That method almost
-always works.)
-
---=20
-M=E5ns Rullg=E5rd
-mans@mansr.com
+Tested-by: Khalid Aziz <khalid.aziz@oracle.com> 
