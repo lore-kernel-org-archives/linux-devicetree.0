@@ -1,52 +1,31 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Fri, 9 Oct 2015 02:53:54 +0000
-Message-ID: <8520D5D51A55D047800579B09414719801690C4F@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1444146289-28940-1-git-send-email-bharatku@xilinx.com>
- <5613F310.6060305@arm.com>
- <8520D5D51A55D047800579B0941471980169063F@XAP-PVEXMBX01.xlnx.xilinx.com>
- <5613F9C8.9020000@arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 3/5] clk: imx7d: add ADC root clock
+Date: Fri, 9 Oct 2015 11:04:06 +0800
+Message-ID: <20151009030406.GF22673@tiger>
+References: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com>
+ <1444301948-21721-3-git-send-email-haibo.chen@freescale.com>
+ <20151008183556.GI26883@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5613F9C8.9020000@arm.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151008183556.GI26883@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Haibo Chen <haibo.chen@freescale.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kernel@pengutronix.de, mturquette@baylibre.com, jic23@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/15 17:27, Bharat Kumar Gogada wrote:
-> Subject: Re: [PATCH v3] PCI: Xilinx-NWL-PCIe: Added support for Xilinx 
-> NWL PCIe Host Controller
-
-[...]
-
->> +struct nwl_msi {			/* struct nwl_msi - MSI information */
->> +	struct msi_controller chip;	/* chip: MSI controller */
+On Thu, Oct 08, 2015 at 11:35:56AM -0700, Stephen Boyd wrote:
+> On 10/08, Haibo Chen wrote:
+> > Add ADC root clock support in imx7d clock tree.
+> > 
+> > Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
+> > ---
 > 
->> We're moving away from msi_controller altogether, as the kernel now 
->> has all the necessary infrastructure to do this properly.
+> I see no cover letter indicating how you want this merged, so:
 > 
-> Our current GIC version does not have separate msi controller (we are 
-> not using GICv2m or GICv3), so is it necessary to have separate msi 
-> controller node ? Please give me clarity on this.
+> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
-This has nothing to do with the version of the GIC you are using (XGene doesn't have GICv2m or v3 either). This is about reducing code duplication and having something that we can maintain. See also
-https://lkml.org/lkml/2015/9/20/193 for yet another example.
+Applied on IMX tree.
 
-I still plan to kill msi_controller, and I'd like to avoid more dependencies with it. MSI domains are the way to do it.
-
-Since we don't have separate MSI controller, and our PCIe controller is handling MSI, is it necessary to create a separate MSI controller node because we don't have any 'reg' space. 
-Please let me know whether we require a separate msi file as suggested in your previous comments to separate MSI controller and PCIE controller in two files, if we don't have separate node. 
-If we do not need a separate node do we need to embed MSI controller child node  in PCIe controller node itself, and what properties does this child node will require other than 'interrupts'.
-
-Bharat
-
-Thanks,
-
-	M.
---
-Jazz is not dead. It just smells funny...
+Shawn
