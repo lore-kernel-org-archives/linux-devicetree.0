@@ -1,38 +1,48 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 3/5] of: Add vendor prefix for PLDA.
-Date: Fri,  9 Oct 2015 17:57:27 +0100
-Message-ID: <1444409849-5685-4-git-send-email-Liviu.Dudau@arm.com>
-References: <1444409849-5685-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444409849-5685-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, device-tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v2 0/5] arm64: Juno: Add support for PCIe on R1 board
+Date: Fri,  9 Oct 2015 17:57:24 +0100
+Message-ID: <1444409849-5685-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>
+Cc: linux-pci <linux-pci@vger.kernel.org>, device-tree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Use "plda" as vendor prefix for PLDA.
+Changes in v2 vs v1:
+ - Add plda as OF vendor prefix
+ - Add more specific compatible values to the Juno R1 DT
+ 
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Juno R1 board has a working PCIe host bridge that can be enabled and
+configured by the firmware and made use of by Linux. For UEFI, the
+Linaro releases contain firmware that configure the XpressRICH3 host
+bridge correctly. For U-Boot based setups, one needs the patchset
+posted here[1].
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 82d2ac9..57653eb 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -168,6 +168,7 @@ pericom	Pericom Technology Inc.
- phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
- plathome	Plat'Home Co., Ltd.
-+plda	PLDA
- pixcir  PIXCIR MICROELECTRONICS Co., Ltd
- powervr	PowerVR (deprecated, use img)
- qca	Qualcomm Atheros, Inc.
+This patchset adds a quirk for setting the correct class to the host
+bridge device and the device tree changes that enable PCIe on Juno R1.
+We also update the defconfig to enable the generic PCI host bridge driver.
+
+Best regards,
+Liviu
+
+1. http://lists.denx.de/pipermail/u-boot/2015-October/229669.html
+
+Andrew Murray (1):
+  pci: Add PLDA's XpressRICH3 PCIe host bridge PCI ID
+
+Liviu Dudau (4):
+  PCI: Add quirk for PLDA's XpressRICH3 host bridge class.
+  of: Add vendor prefix for PLDA.
+  arm64: Juno: Add support for the PCIe host bridge on Juno R1
+  arm64: defconfig: Enable PCI generic host bridge by default
+
+ .../devicetree/bindings/vendor-prefixes.txt          |  1 +
+ arch/arm64/boot/dts/arm/juno-r1.dts                  | 20 ++++++++++++++++++++
+ arch/arm64/configs/defconfig                         |  1 +
+ drivers/pci/quirks.c                                 | 10 ++++++++++
+ include/linux/pci_ids.h                              |  3 +++
+ 5 files changed, 35 insertions(+)
+
 -- 
 2.6.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
