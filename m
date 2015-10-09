@@ -1,45 +1,66 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v5 4/7] arm64: berlin: add the pinctrl dependency for Marvell
- Berlin SoCs
-Date: Fri, 9 Oct 2015 19:56:47 +0800
-Message-ID: <1444391810-5045-5-git-send-email-jszhang@marvell.com>
-References: <1444391810-5045-1-git-send-email-jszhang@marvell.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/5] Documentation: add the binding file for Freescale
+ imx7d ADC driver
+Date: Fri, 9 Oct 2015 07:59:15 -0500
+Message-ID: <CAL_JsqLpZ9+3L8=3QQt6VhYn=jAkO6kw4C4eHxjGmGwL4O3_vg@mail.gmail.com>
+References: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com> <1444301948-21721-2-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444391810-5045-1-git-send-email-jszhang@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>, linux-gpio@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1444301948-21721-2-git-send-email-haibo.chen@freescale.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Haibo Chen <haibo.chen@freescale.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, shawnguo@kernel.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is to add the pinctrl dependency for Marvell Berlin SoCs.
+On Thu, Oct 8, 2015 at 5:59 AM, Haibo Chen <haibo.chen@freescale.com> wrote:
+> The patch adds the binding file for Freescale imx7d ADC driver.
+>
+> Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index c6e2c75..3d17ee2 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -9,6 +9,7 @@ config ARCH_BERLIN
- 	bool "Marvell Berlin SoC Family"
- 	select ARCH_REQUIRE_GPIOLIB
- 	select DW_APB_ICTL
-+	select PINCTRL
- 	help
- 	  This enables support for Marvell Berlin SoC Family
- 
--- 
-2.6.1
+> ---
+>  .../devicetree/bindings/iio/adc/imx7d-adc.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+> new file mode 100644
+> index 0000000..6b21fd27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+> @@ -0,0 +1,26 @@
+> +Freescale imx7d ADC bindings
+> +
+> +The devicetree bingdings are for the nwe ADC driver written for
+> +imx7d SoC.
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx7d-adc"
+> +- reg: Offset and length of the register set for the ADC device
+> +- interrupts: The interrupt number for the ADC device
+> +- clocks: The root clock of the ADC controller
+> +- clock-names: Must contain "adc", matching entry in the clocks property
+> +- vref-supply: The regulator supply ADC reference voltage
+> +
+> +Optional properties:
+> +- num-channels: the number of channels used
+> +
+> +Example:
+> +adc1: adc@30610000 {
+> +       compatible = "fsl,imx7d-adc";
+> +       reg = <0x30610000 0x10000>;
+> +       interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&clks IMX7D_ADC_ROOT_CLK>;
+> +       clock-names = "adc";
+> +       num-channels = <4>;
+> +       vref-supply = <&reg_vcc_3v3_mcu>;
+> +};
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
