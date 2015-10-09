@@ -1,66 +1,279 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] Documentation: add the binding file for Freescale
- imx7d ADC driver
-Date: Fri, 9 Oct 2015 07:59:15 -0500
-Message-ID: <CAL_JsqLpZ9+3L8=3QQt6VhYn=jAkO6kw4C4eHxjGmGwL4O3_vg@mail.gmail.com>
-References: <1444301948-21721-1-git-send-email-haibo.chen@freescale.com> <1444301948-21721-2-git-send-email-haibo.chen@freescale.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] Docs: dt: Add PCI MSI map bindings
+Date: Fri, 9 Oct 2015 08:20:10 -0500
+Message-ID: <CAL_JsqK1kB30h=zse1LcaBisjYEGSBhD4FutvtqbUxpSU+2NjA@mail.gmail.com>
+References: <1444342250-6196-1-git-send-email-ddaney.cavm@gmail.com> <1444342250-6196-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1444301948-21721-2-git-send-email-haibo.chen@freescale.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Haibo Chen <haibo.chen@freescale.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, shawnguo@kernel.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444342250-6196-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 5:59 AM, Haibo Chen <haibo.chen@freescale.com> wrote:
-> The patch adds the binding file for Freescale imx7d ADC driver.
+On Thu, Oct 8, 2015 at 5:10 PM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 >
-> Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
+> Currently msi-parent is used by a few bindings to describe the
+> relationship between a PCI root complex and a single MSI controller, but
+> this property does not have a generic binding document.
+>
+> Additionally, msi-parent is insufficient to describe more complex
+> relationships between MSI controllers and devices under a root complex,
+> where devices may be able to target multiple MSI controllers, or where
+> MSI controllers use (non-probeable) sideband information to distinguish
+> devices.
+>
+> This patch adds a generic binding for mapping PCI devices to MSI
+> controllers. This document covers msi-parent, and a new msi-map property
+> (specific to PCI*) which may be used to map devices (identified by their
+> Requester ID) to sideband data for each MSI controller that they may
+> target.
+>
+> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+I acked v3. Please add it so I can stop paying attention.
+
+Rob
 
 > ---
->  .../devicetree/bindings/iio/adc/imx7d-adc.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+>  Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+>  1 file changed, 220 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
 > new file mode 100644
-> index 0000000..6b21fd27
+> index 0000000..9b3cc81
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
-> @@ -0,0 +1,26 @@
-> +Freescale imx7d ADC bindings
+> +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> @@ -0,0 +1,220 @@
+> +This document describes the generic device tree binding for describing the
+> +relationship between PCI devices and MSI controllers.
 > +
-> +The devicetree bingdings are for the nwe ADC driver written for
-> +imx7d SoC.
+> +Each PCI device under a root complex is uniquely identified by its Requester ID
+> +(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+> +Function number.
 > +
-> +Required properties:
-> +- compatible: Should be "fsl,imx7d-adc"
-> +- reg: Offset and length of the register set for the ADC device
-> +- interrupts: The interrupt number for the ADC device
-> +- clocks: The root clock of the ADC controller
-> +- clock-names: Must contain "adc", matching entry in the clocks property
-> +- vref-supply: The regulator supply ADC reference voltage
+> +For the purpose of this document, when treated as a numeric value, a RID is
+> +formatted such that:
 > +
-> +Optional properties:
-> +- num-channels: the number of channels used
+> +* Bits [15:8] are the Bus number.
+> +* Bits [7:3] are the Device number.
+> +* Bits [2:0] are the Function number.
+> +* Any other bits required for padding must be zero.
 > +
-> +Example:
-> +adc1: adc@30610000 {
-> +       compatible = "fsl,imx7d-adc";
-> +       reg = <0x30610000 0x10000>;
-> +       interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +       clocks = <&clks IMX7D_ADC_ROOT_CLK>;
-> +       clock-names = "adc";
-> +       num-channels = <4>;
-> +       vref-supply = <&reg_vcc_3v3_mcu>;
+> +MSIs may be distinguished in part through the use of sideband data accompanying
+> +writes. In the case of PCI devices, this sideband data may be derived from the
+> +Requester ID. A mechanism is required to associate a device with both the MSI
+> +controllers it can address, and the sideband data that will be associated with
+> +its writes to those controllers.
+> +
+> +For generic MSI bindings, see
+> +Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+> +
+> +
+> +PCI root complex
+> +================
+> +
+> +Optional properties
+> +-------------------
+> +
+> +- msi-map: Maps a Requester ID to an MSI controller and associated
+> +  msi-specifier data. The property is an arbitrary number of tuples of
+> +  (rid-base,msi-controller,msi-base,length), where:
+> +
+> +  * rid-base is a single cell describing the first RID matched by the entry.
+> +
+> +  * msi-controller is a single phandle to an MSI controller
+> +
+> +  * msi-base is an msi-specifier describing the msi-specifier produced for the
+> +    first RID matched by the entry.
+> +
+> +  * length is a single cell describing how many consecutive RIDs are matched
+> +    following the rid-base.
+> +
+> +  Any RID r in the interval [rid-base, rid-base + length) is associated with
+> +  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
+> +
+> +- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
+> +  to an msi-specifier per the msi-map property.
+> +
+> +- msi-parent: Describes the MSI parent of the root complex itself. Where
+> +  the root complex and MSI controller do not pass sideband data with MSI
+> +  writes, this property may be used to describe the MSI controller(s)
+> +  used by PCI devices under the root complex, if defined as such in the
+> +  binding for the root complex.
+> +
+> +
+> +Example (1)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, identity-mapped.
+> +                */
+> +               msi-map = <0x0 &msi_a 0x0 0x10000>,
+> +       };
+> +};
+> +
+> +
+> +Example (2)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, masked to only the device and function bits.
+> +                */
+> +               msi-map = <0x0 &msi_a 0x0 0x100>,
+> +               msi-map-mask = <0xff>
+> +       };
+> +};
+> +
+> +
+> +Example (3)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, but the high bit of the bus number is
+> +                * ignored.
+> +                */
+> +               msi-map = <0x0000 &msi 0x0000 0x8000>,
+> +                         <0x8000 &msi 0x0000 0x8000>;
+> +       };
+> +};
+> +
+> +
+> +Example (4)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@f {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to the MSI controller is
+> +                * the RID, but the high bit of the bus number is
+> +                * negated.
+> +                */
+> +               msi-map = <0x0000 &msi 0x8000 0x8000>,
+> +                         <0x8000 &msi 0x0000 0x8000>;
+> +       };
+> +};
+> +
+> +
+> +Example (5)
+> +===========
+> +
+> +/ {
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       msi_a: msi-controller@a {
+> +               reg = <0xa 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       msi_b: msi-controller@b {
+> +               reg = <0xb 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       msi_c: msi-controller@c {
+> +               reg = <0xc 0x1>;
+> +               compatible = "vendor,some-controller";
+> +               msi-controller;
+> +               #msi-cells = <1>;
+> +       };
+> +
+> +       pci: pci@c {
+> +               reg = <0xf 0x1>;
+> +               compatible = "vendor,pcie-root-complex";
+> +               device_type = "pci";
+> +
+> +               /*
+> +                * The sideband data provided to MSI controller a is the
+> +                * RID, but the high bit of the bus number is negated.
+> +                * The sideband data provided to MSI controller b is the
+> +                * RID, identity-mapped.
+> +                * MSI controller c is not addressable.
+> +                */
+> +               msi-map = <0x0000 &msi_a 0x8000 0x08000>,
+> +                         <0x8000 &msi_a 0x0000 0x08000>,
+> +                         <0x0000 &msi_b 0x0000 0x10000>;
+> +       };
 > +};
 > --
 > 1.9.1
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
