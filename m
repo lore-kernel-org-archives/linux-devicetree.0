@@ -1,73 +1,139 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 8/8] ARM: multi_v7_defconfig: Add rockchip audio
- support
-Date: Fri, 9 Oct 2015 08:27:00 +0100
-Message-ID: <20151009072700.GN17172@x1>
-References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <1444311079-2892-9-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 04/10] ARM: dts: enable clock support for BCM5301X
+Date: Fri, 9 Oct 2015 00:35:40 -0700
+Message-ID: <20151009073540.GO26883@codeaurora.org>
+References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
+ <1443826665-17570-5-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444311079-2892-9-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof@l>
+In-Reply-To: <1443826665-17570-5-git-send-email-jonmason@broadcom.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Thanks an awful lot of people you've spammed there.
-
-Are you sure they all care about your Rockchip changes?
-
-Hint: I'm sure that they don't.
-
-Please be careful and only send patches to relevant people.
-
-> Enable support for audio device found on rockchip boards.
->=20
-> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+On 10/02, Jon Mason wrote:
+> Replace current device tree dummy clocks with real clock support for
+> Broadcom Northstar SoCs.
+> 
+> Signed-off-by: Jon Mason <jonmason@broadcom.com>
 > ---
->=20
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
->=20
->  arch/arm/configs/multi_v7_defconfig | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/m=
-ulti_v7_defconfig
-> index 03deb7f..febce7e 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -478,6 +478,10 @@ CONFIG_SND_USB_AUDIO=3Dy
->  CONFIG_SND_SOC=3Dm
->  CONFIG_SND_ATMEL_SOC=3Dm
->  CONFIG_SND_ATMEL_SOC_WM8904=3Dm
-> +CONFIG_SND_SOC_ROCKCHIP=3Dm
-> +CONFIG_SND_SOC_ROCKCHIP_SPDIF=3Dm
-> +CONFIG_SND_SOC_ROCKCHIP_MAX98090=3Dm
-> +CONFIG_SND_SOC_ROCKCHIP_RT5645=3Dm
->  CONFIG_SND_SOC_SH4_FSI=3Dm
->  CONFIG_SND_SOC_RCAR=3Dm
->  CONFIG_SND_SOC_RSRC_CARD=3Dm
-> @@ -489,6 +493,7 @@ CONFIG_SND_SOC_TEGRA_TRIMSLICE=3Dm
->  CONFIG_SND_SOC_TEGRA_ALC5632=3Dm
->  CONFIG_SND_SOC_TEGRA_MAX98090=3Dm
->  CONFIG_SND_SOC_AK4642=3Dm
-> +CONFIG_SND_SOC_SPDIF=3Dm
->  CONFIG_SND_SOC_WM8978=3Dm
->  CONFIG_USB=3Dy
->  CONFIG_USB_XHCI_HCD=3Dy
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd rather not take any dts changes through clk tree.
+
+>  arch/arm/boot/dts/bcm5301x.dtsi | 67 ++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 60 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+> index 6f50f67..f717859 100644
+> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+> @@ -55,14 +56,14 @@
+>  			compatible = "arm,cortex-a9-global-timer";
+>  			reg = <0x0200 0x100>;
+>  			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&clk_periph>;
+> +			clocks = <&periph_clk>;
+>  		};
+>  
+>  		local-timer@0600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+>  			reg = <0x0600 0x100>;
+>  			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&clk_periph>;
+> +			clocks = <&periph_clk>;
+>  		};
+>  
+>  		gic: interrupt-controller@1000 {
+> @@ -94,14 +95,66 @@
+>  
+>  	clocks {
+
+I'd expect this to only contain nodes that don't have a reg
+property. Clock providers that have a reg property would go into
+some soc node or bus. Perhaps that's the chipcommonA node, or
+axi?
+
+>  		#address-cells = <1>;
+> -		#size-cells = <0>;
+> +		#size-cells = <1>;
+> +		ranges;
+>  
+> -		/* As long as we do not have a real clock driver us this
+> -		 * fixed clock */
+> -		clk_periph: periph {
+> +		osc: oscillator {
+> +			#clock-cells = <0>;
+>  			compatible = "fixed-clock";
+> +			clock-frequency = <25000000>;
+> +		};
+> +
+> +		lcpll0: lcpll0@1800c100 {
+> +			#clock-cells = <1>;
+> +			compatible = "brcm,nsp-lcpll0";
+> +			reg = <0x1800c100 0x14>;
+> +			clocks = <&osc>;
+> +			clock-output-names = "lcpll0", "pcie_phy", "sdio",
+> +					     "ddr_phy";
+> +		};
+> +
+> +		genpll: genpll@1800c140 {
+> +			#clock-cells = <1>;
+> +			compatible = "brcm,nsp-genpll";
+> +			reg = <0x1800c140 0x24>;
+> +			clocks = <&osc>;
+> +			clock-output-names = "genpll", "phy", "ethernetclk",
+> +					     "usbclk", "iprocfast", "sata1",
+> +					     "sata2";
+> +		};
+> +
+> +		iprocmed: iprocmed {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+> +			clock-div = <2>;
+> +			clock-mult = <1>;
+> +			clock-output-names = "iprocmed";
+> +		};
+> +
+> +		iprocslow: iprocslow {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+> +			clock-div = <4>;
+> +			clock-mult = <1>;
+> +			clock-output-names = "iprocslow";
+> +		};
+> +
+> +
+> +		a9pll: arm_clk@19000000 {
+> +			#clock-cells = <0>;
+> +			compatible = "brcm,nsp-armpll";
+> +			clocks = <&osc>;
+> +			reg = <0x19000000 0x1000>;
+> +		};
+> +
+> +		periph_clk: periph_clk {
+>  			#clock-cells = <0>;
+> -			clock-frequency = <400000000>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&a9pll>;
+> +			clock-div = <2>;
+> +			clock-mult = <1>;
+>  		};
+>  	};
+>  
+
+We're trying to move away from putting individual clocks into DT
+like this. Is there some sort of clock controller that's at
+0x1800c000, but we're just not exposing all the clocks in there?
+See this thread for more information on why we'd like to avoid
+this sort of design:
+
+http://lkml.kernel.org/r/<20150416192014.19585.9663@quantum>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
