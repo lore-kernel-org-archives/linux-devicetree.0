@@ -1,144 +1,34 @@
-From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCH 2/2] arm: mvebu: reorder nodes under internal-regs by address
- in RN2120 .dts file
-Date: Sat, 10 Oct 2015 00:10:39 +0200
-Message-ID: <277de75473af2431849a7494ae65b57dbc9a8309.1444428035.git.arno@natisbad.org>
-References: <cover.1444428035.git.arno@natisbad.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [RFC PATCH 0/2] DRA72/DRA74: Add 2 lane support
+Date: Fri, 9 Oct 2015 17:50:56 -0500
+Message-ID: <20151009225056.GD16112@localhost>
+References: <1443445058-643-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1444428035.git.arno@natisbad.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, TuxOholic <tuxoholic@hotmail.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443445058-643-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bhelgaas@google.com, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+[+cc Arnd, Rob]
 
-This cosmetic patch reorder nodes under internal-regs by increasing
-address order, as epxected.
+On Mon, Sep 28, 2015 at 06:27:36PM +0530, Kishon Vijay Abraham I wrote:
+> Add driver modifications in pci-dra7xx to get x2 mode working in
+> DRA72 and DRA74. Certain modifications is needed in PHY driver also
+> which I'll send as a separate series.
+> 
+> Kishon Vijay Abraham I (2):
+>   pci: host: pci-dra7xx: use "num-lanes" property to find phy count
+>   pci: host: pci-dra7xx: Enable x2 mode support
 
-Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
----
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 86 +++++++++++++-------------
- 1 file changed, 43 insertions(+), 43 deletions(-)
+Applied to pci/host-dra7xx for v4.4, thanks!
 
-diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index 85b2f87c0b8a..d72a69d97ba2 100644
---- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-+++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -94,54 +94,11 @@
- 				status = "disabled";
- 			};
- 
--			/* Two rear eSATA ports */
--			sata@a0000 {
--				nr-ports = <2>;
--				status = "okay";
--			};
--
--			serial@12000 {
--				status = "okay";
--			};
--
--			mdio {
--				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
--					reg = <0>;
--				};
--
--				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
--					reg = <1>;
--				};
--			};
--
--			ethernet@70000 {
--				status = "okay";
--				phy = <&phy0>;
--				phy-mode = "rgmii-id";
--			};
--
--			ethernet@74000 {
--				status = "okay";
--				phy = <&phy1>;
--				phy-mode = "rgmii-id";
--			};
--
--			/* Front USB 2.0 port */
--			usb@50000 {
--				status = "okay";
--			};
--
- 			i2c@11000 {
- 				compatible = "marvell,mv64xxx-i2c";
- 				clock-frequency = <400000>;
- 				status = "okay";
- 
--				isl12057: isl12057@68 {
--					compatible = "isil,isl12057";
--					reg = <0x68>;
--					isil,irq2-can-wakeup-machine;
--				};
--
- 				/* Controller for rear fan #1 of 3 (Protechnic
- 				 * MGT4012XB-O20, 8000RPM) near eSATA port */
- 				g762_fan1: g762@3e {
-@@ -178,6 +135,49 @@
- 					compatible = "gmt,g751";
- 					reg = <0x4c>;
- 				};
-+
-+				isl12057: isl12057@68 {
-+					compatible = "isil,isl12057";
-+					reg = <0x68>;
-+					isil,irq2-can-wakeup-machine;
-+				};
-+			};
-+
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			/* Front USB 2.0 port */
-+			usb@50000 {
-+				status = "okay";
-+			};
-+
-+			mdio {
-+				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
-+					reg = <0>;
-+				};
-+
-+				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
-+					reg = <1>;
-+				};
-+			};
-+
-+			ethernet@70000 {
-+				status = "okay";
-+				phy = <&phy0>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			ethernet@74000 {
-+				status = "okay";
-+				phy = <&phy1>;
-+				phy-mode = "rgmii-id";
-+			};
-+
-+			/* Two rear eSATA ports */
-+			sata@a0000 {
-+				nr-ports = <2>;
-+				status = "okay";
- 			};
- 
- 			nand@d0000 {
--- 
-2.5.3
+I adjusted the subject line capitalization & format to match the history.
+
+Arnd, Rob, any comments on the DT updates or the "num-lanes" vs number of
+strings in "phy-names" changes?
+
+Bjorn
