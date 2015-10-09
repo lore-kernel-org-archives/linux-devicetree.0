@@ -1,63 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 0/9] Goodix touchscreen enhancements
-Date: Fri, 09 Oct 2015 13:54:50 +0200
-Message-ID: <5056173.1qyR0F9zS3@wuerfel>
-References: <1444314231-19206-1-git-send-email-irina.tirdea@intel.com> <53318623.Pp8rvnEWr4@wuerfel> <1F3AC3675D538145B1661F571FE1805F2F0FB74F@irsmsx105.ger.corp.intel.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 2/7] pinctrl: berlin: Make berlin pinctrl driver visible if COMPILE_TEST=y
+Date: Fri, 9 Oct 2015 19:56:45 +0800
+Message-ID: <1444391810-5045-3-git-send-email-jszhang@marvell.com>
+References: <1444391810-5045-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F0FB74F@irsmsx105.ger.corp.intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444391810-5045-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 09 October 2015 11:02:01 Tirdea, Irina wrote:
-> > -----Original Message-----
-> > From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of Arnd Bergmann
-> > Sent: 08 October, 2015 17:32
-> > To: Tirdea, Irina
-> > Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
-> > kernel@vger.kernel.org; devicetree@vger.kernel.org
-> > Subject: Re: [PATCH v8 0/9] Goodix touchscreen enhancements
-> > 
-> > On Thursday 08 October 2015 17:23:42 Irina Tirdea wrote:
-> > > Add several enhancements to the Goodix touchscreen driver.
-> > >
-> > > The new functionality is only available for devices that
-> > > declare named gpio pins for interrupt and reset in their
-> > > ACPI/DT configuration.
-> > >
-> > > Thanks,
-> > > Irina
-> > >
-> > > Changes in v8:
-> > >  - only allow new functionality for devices that declare named
-> > > gpios (using _DSD properties in ACPI or named DT properties)
-> > >
-> > >
-> > 
-> > Looks much cleaner this way, thanks!
-> > 
-> > One remaining question: how would you handle the case where
-> > the hardware doesn't support configuring the int-gpios line
-> > as output but you still want to use the named gpios?
-> > 
-> 
-> The only reason to use named gpios is to enable the new functionality
-> introduced by this patch set (mainly reset and power management).
-> You cannot use only one gpio either (e.g. only reset gpio but not the
-> interrupt gpio), you need both for this functionality to work.
-> 
-> If the hardware does not support using the interrupt gpio pin as output,
-> it should not declare the named int-gpio pin in ACPI. It is true that
-> we might later run into platforms that declare the int-gpio pin even if it
-> does not actually work (just like we now have the indexed gpio pins).
-> I could have added an additional property for this as you first suggested,
-> but if we can modify the ACPI to add it, we could simply remove the
-> named interrupt pin instead (that does not work anyway).
+It is good to allow berlin pinctrl driver to build with COMPILE_TEST, so
+make the it menu visible when compile-testing.
 
-Ok, got it. Thanks,
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/pinctrl/berlin/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Arnd
+diff --git a/drivers/pinctrl/berlin/Kconfig b/drivers/pinctrl/berlin/Kconfig
+index b18322b..f7e45c8 100644
+--- a/drivers/pinctrl/berlin/Kconfig
++++ b/drivers/pinctrl/berlin/Kconfig
+@@ -1,4 +1,4 @@
+-if ARCH_BERLIN
++if (ARCH_BERLIN || COMPILE_TEST)
+ 
+ config PINCTRL_BERLIN
+ 	bool
+-- 
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
