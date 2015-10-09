@@ -1,7 +1,8 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v5 6/7] arm64: dts: berlin4ct: add the pinctrl node
-Date: Fri, 9 Oct 2015 19:56:49 +0800
-Message-ID: <1444391810-5045-7-git-send-email-jszhang@marvell.com>
+Subject: [PATCH v5 4/7] arm64: berlin: add the pinctrl dependency for Marvell
+ Berlin SoCs
+Date: Fri, 9 Oct 2015 19:56:47 +0800
+Message-ID: <1444391810-5045-5-git-send-email-jszhang@marvell.com>
 References: <1444391810-5045-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,44 +22,24 @@ To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@fr
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>, linux-gpio@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the avio, soc, sm pinctrl nodes for Marvell berlin4ct SoC.
+This is to add the pinctrl dependency for Marvell Berlin SoCs.
 
 Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-index a3b5f1d..8e66355 100644
---- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-+++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-@@ -225,6 +225,16 @@
- 			};
- 		};
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index c6e2c75..3d17ee2 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -9,6 +9,7 @@ config ARCH_BERLIN
+ 	bool "Marvell Berlin SoC Family"
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select DW_APB_ICTL
++	select PINCTRL
+ 	help
+ 	  This enables support for Marvell Berlin SoC Family
  
-+		soc_pinctrl: pin-controller@ea8000 {
-+			compatible = "marvell,berlin4ct-soc-pinctrl";
-+			reg = <0xea8000 0x14>;
-+		};
-+
-+		avio_pinctrl: pin-controller@ea8400 {
-+			compatible = "marvell,berlin4ct-avio-pinctrl";
-+			reg = <0xea8400 0x8>;
-+		};
-+
- 		apb@fc0000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -280,5 +290,10 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		system_pinctrl: pin-controller@fe2200 {
-+			compatible = "marvell,berlin4ct-system-pinctrl";
-+			reg = <0xfe2200 0xc>;
-+		};
- 	};
- };
 -- 
 2.6.1
