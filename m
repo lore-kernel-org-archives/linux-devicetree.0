@@ -1,67 +1,48 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 00/10] Add mipi dsi support for rk3288
-Date: Sat, 10 Oct 2015 17:55:20 +0800
-Message-ID: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH 01/10] clk: rockchip: Add sclk_mipidsi_24m for mipi dsi
+Date: Sat, 10 Oct 2015 17:55:21 +0800
+Message-ID: <1444470930-17150-2-git-send-email-zyw@rock-chips.com>
+References: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, linux-rockchip@lists.infradead.org
-Cc: Chris Zhong <zyw@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Jeff Chen <cym@rock-chips.com>, Thierry Reding <thierry.reding@gmail.com>, linux-clk@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Huang Lin <hl@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vincent Palatin <vpalatin@chromium.org>, Russell King <linux@arm.linux.org.uk>, Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Liu Ying <Ying.liu@freescale.com>, And
+Cc: Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Jeff Chen <cym@rock-chips.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Kumar Gala <galak@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sonny Rao <sonnyrao@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Huang Lin <hl@rock-chips.com>, Roger Chen <roger.chen@rock-chips.com>, Alexandru M Stan <amstan@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The rk3288 MIPI DSI is a Synopsys DesignWare MIPI DSI host controller
-IP. This series adds support for a Synopsys DesignWare MIPI DSI host
-controller DRM bridge driver and a rockchip MIPI DSI specific DRM
-driver.
+sclk_mipidsi_24m is the gating of mipi dsi phy.
 
-This series also includes a DRM panel driver for BOE TV080WUM-NL0 panel.
-This panel only use the MIPI DSI video mode.
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+---
 
-The MIPI DSI feature is tested on rk3288 evb board, backport them to
-chrome os kernel v3.14, and it can display normally.
+ drivers/clk/rockchip/clk-rk3288.c      | 2 +-
+ include/dt-bindings/clock/rk3288-cru.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-This patchset is base on the patchset from Ying.liu@freescale.com.
-<http://www.spinics.net/lists/dri-devel/msg77181.html>
-
-
-
-Chris Zhong (8):
-  clk: rockchip: Add sclk_mipidsi_24m for mipi dsi
-  drm/rockchip: return a true clock rate to adjusted_mode
-  drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
-  drm: rockchip: Support Synopsys DesignWare MIPI DSI host controller
-  Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
-  ARM: dts: rockchip: add rk3288 mipi_dsi nodes
-  drm/panel: simple: Add support for BOE TV080WUM-NL0
-  ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
-
-Liu Ying (2):
-  drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
-  Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
-    bridge driver
-
- .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt |   76 ++
- .../bindings/video/dw_mipi_dsi_rockchip.txt        |   56 ++
- arch/arm/boot/dts/rk3288-evb.dtsi                  |   20 +-
- arch/arm/boot/dts/rk3288.dtsi                      |   39 +
- drivers/clk/rockchip/clk-rk3288.c                  |    2 +-
- drivers/gpu/drm/bridge/Kconfig                     |   10 +
- drivers/gpu/drm/bridge/Makefile                    |    1 +
- drivers/gpu/drm/bridge/dw_mipi_dsi.c               | 1055 ++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               |   33 +
- drivers/gpu/drm/rockchip/Kconfig                   |   10 +
- drivers/gpu/drm/rockchip/Makefile                  |    1 +
- drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c    |  249 +++++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |    9 +
- include/drm/bridge/dw_mipi_dsi.h                   |   27 +
- include/drm/drm_mipi_dsi.h                         |   14 +
- include/dt-bindings/clock/rk3288-cru.h             |    1 +
- 16 files changed, 1601 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
- create mode 100644 Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
- create mode 100644 drivers/gpu/drm/bridge/dw_mipi_dsi.c
- create mode 100644 drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c
- create mode 100644 include/drm/bridge/dw_mipi_dsi.h
-
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 9040878..c7d7ebf 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -709,7 +709,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	GATE(SCLK_LCDC_PWM1, "sclk_lcdc_pwm1", "xin24m", 0, RK3288_CLKGATE_CON(13), 11, GFLAGS),
+ 	GATE(SCLK_PVTM_CORE, "sclk_pvtm_core", "xin24m", 0, RK3288_CLKGATE_CON(5), 9, GFLAGS),
+ 	GATE(SCLK_PVTM_GPU, "sclk_pvtm_gpu", "xin24m", 0, RK3288_CLKGATE_CON(5), 10, GFLAGS),
+-	GATE(0, "sclk_mipidsi_24m", "xin24m", 0, RK3288_CLKGATE_CON(5), 15, GFLAGS),
++	GATE(SCLK_MIPI_24M, "sclk_mipidsi_24m", "xin24m", 0, RK3288_CLKGATE_CON(5), 15, GFLAGS),
+ 
+ 	/* sclk_gpu gates */
+ 	GATE(ACLK_GPU, "aclk_gpu", "sclk_gpu", 0, RK3288_CLKGATE_CON(18), 0, GFLAGS),
+diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+index c719aac..b07cdd3 100644
+--- a/include/dt-bindings/clock/rk3288-cru.h
++++ b/include/dt-bindings/clock/rk3288-cru.h
+@@ -86,6 +86,7 @@
+ #define SCLK_USBPHY480M_SRC	122
+ #define SCLK_PVTM_CORE		123
+ #define SCLK_PVTM_GPU		124
++#define SCLK_MIPI_24M		125
+ 
+ #define SCLK_MAC		151
+ #define SCLK_MACREF_OUT		152
 -- 
 2.6.1
-
