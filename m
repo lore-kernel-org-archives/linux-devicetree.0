@@ -1,90 +1,69 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 07/10] Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
-Date: Sat, 10 Oct 2015 17:55:27 +0800
-Message-ID: <1444470930-17150-8-git-send-email-zyw@rock-chips.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 10/10] ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
+Date: Sat, 10 Oct 2015 17:55:30 +0800
+Message-ID: <1444470930-17150-11-git-send-email-zyw@rock-chips.com>
 References: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444470930-17150-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org
+Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-add device tree bindings for rk3288 specific Synopsys DW MIPI DSI driver
+This tv080wum-nl0 panel is a mipi panel, it can use in MIPI_TX socket
+of rk3288 evb board.
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+
 ---
 
- .../bindings/video/dw_mipi_dsi_rockchip.txt        | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+ arch/arm/boot/dts/rk3288-evb.dtsi | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
-new file mode 100644
-index 0000000..4dea804
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
-@@ -0,0 +1,56 @@
-+Rockchip specific extensions to the Synopsys Designware MIPI DSI
-+================================
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index f6d2e78..d04878f 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -47,7 +47,7 @@
+ 		reg = <0x0 0x80000000>;
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		brightness-levels = <
+ 			  0   1   2   3   4   5   6   7
+@@ -177,6 +177,21 @@
+ 	status = "okay";
+ };
+ 
++&mipi_dsi {
++	status = "okay";
 +
-+Required properties:
-+- compatible: "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi".
-+- rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
-+- ports: contain a port node with endpoint definitions as defined in [1].
-+  For vopb,set the reg = <0> and set the reg = <1> for vopl.
++	panel {
++		compatible ="boe,tv080wum-nl0";
++		reg = <0>;
 +
-+For more required properties, please refer to [2].
-+
-+[1] Documentation/devicetree/bindings/media/video-interfaces.txt
-+[2] Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
-+
-+Example:
-+	mipi_dsi: mipi@ff960000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0xff960000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
-+		clock-names = "ref", "pclk";
-+		rockchip,grf = <&grf>;
++		enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_en>;
++		backlight = <&backlight>;
 +		status = "okay";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			mipi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mipi_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_mipi>;
-+				};
-+				mipi_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_mipi>;
-+				};
-+			};
-+		};
-+
-+		panel {
-+			compatible ="boe,tv080wum-nl0";
-+			reg = <0>;
-+
-+			enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&lcd_en>;
-+			backlight = <&backlight>;
-+			status = "okay";
-+		};
 +	};
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+@@ -247,6 +262,9 @@
+ 		bl_en: bl-en {
+ 			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
++		lcd_en: lcd-en {
++			rockchip,pins = <7 3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ 
+ 	buttons {
 -- 
 2.6.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
