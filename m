@@ -1,59 +1,81 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v4 2/6] pinctrl: berlin: add the berlin4ct pinctrl driver
-Date: Sun, 11 Oct 2015 00:33:38 +0200
-Message-ID: <20151010223338.GG2842@kwain>
-References: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
- <1444378629-3057-3-git-send-email-jszhang@marvell.com>
- <20151009090353.GA2842@kwain>
- <20151009172238.68fdd51c@xhacker>
+Subject: Re: [PATCH v5 0/7] arm64: berlin: add pinctrl support
+Date: Sun, 11 Oct 2015 00:36:36 +0200
+Message-ID: <20151010223636.GH2842@kwain>
+References: <1444391810-5045-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151009172238.68fdd51c@xhacker>
-Sender: linux-gpio-owner@vger.kernel.org
+In-Reply-To: <1444391810-5045-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jisheng Zhang <jszhang@marvell.com>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Jisheng,
 
-On Fri, Oct 09, 2015 at 05:22:38PM +0800, Jisheng Zhang wrote:
-> On Fri, 9 Oct 2015 11:03:53 +0200
-> Antoine Tenart <antoine.tenart@free-electrons.com> wrote:
-> >=20
-> > Finally you can move the OF dependency to the PINCTRL_BERLIN config=
- as
-> > all Berlin pinctrl drivers depends on it.
->=20
-> PINCTRL_BERLIN isn't user visible and it's selected by PINCTRL_BERLIN=
-_BG4CT. So
-> we may have the following random config case:
->=20
-> CONFIG_OF=3Dn
-> CONFIG_PINCTRL_BERLIN_BG4CT=3Dy
->=20
-> In this case, there will be build errors for we missed OF. So we have=
- to
-> make PINCTRL_BERLIN_BG4CT depends on OF. What do you think? Or is the=
-re
-> better solution?
+Please keep Acked-by tags when you submit a new version of a series.
 
-That's true.
-
-But because other Berlin pinctrl drivers also depends on CONFIG_OF, we
-need to make then depend on it too. This isn't the topic of this series
-so I'll send a separate patch later.
+Thanks,
 
 Antoine
+
+On Fri, Oct 09, 2015 at 07:56:43PM +0800, Jisheng Zhang wrote:
+> This series adds support for Marvell berlin4ct pin-controller, allowi=
+ng
+> to configure the pin muxing from the device tree.
+>=20
+> Since v4:
+>  - drop ARCH_BERLIN dependency for it has been met
+>  - drop COMPILE_TEST dependency but make berlin pinctrl driver visibl=
+e
+>    if COMPILE_TEST=3Dy, and let this change be a seperate commit.
+>=20
+> Since v3:
+>  - fix stupid build error: I missed local changes to berlin-bg4ct.c
+>=20
+> Since v2:
+>  - introduce new berlin_pinctrl_probe_regmap() to avoid duplicated co=
+de
+>  - renaming such as s/urt/uart etc. but keep the group name as URT* t=
+o keep
+>    consistent with HW/ASIC
+>=20
+> Since v1:
+>  - use generic name for pin functions
+>  - a new commit to add pinmux for uart0
+>  - correct pinctrl usage in dts
+>=20
+>=20
+> Jisheng Zhang (7):
+>   pinctrl: berlin: introduce berlin_pinctrl_probe_regmap()
+>   pinctrl: berlin: Make berlin pinctrl driver visible if COMPILE_TEST=
+=3Dy
+>   pinctrl: berlin: add the berlin4ct pinctrl driver
+>   arm64: berlin: add the pinctrl dependency for Marvell Berlin SoCs
+>   pinctrl: dt-binding: document berlin4ct SoC pinctrl
+>   arm64: dts: berlin4ct: add the pinctrl node
+>   arm64: dts: berlin4ct: add default pinmux for uart0
+>=20
+>  .../devicetree/bindings/pinctrl/berlin,pinctrl.txt |   5 +-
+>  arch/arm64/Kconfig.platforms                       |   1 +
+>  arch/arm64/boot/dts/marvell/berlin4ct.dtsi         |  22 +
+>  drivers/pinctrl/berlin/Kconfig                     |   7 +-
+>  drivers/pinctrl/berlin/Makefile                    |   1 +
+>  drivers/pinctrl/berlin/berlin-bg4ct.c              | 503 +++++++++++=
+++++++++++
+>  drivers/pinctrl/berlin/berlin.c                    |  26 +-
+>  drivers/pinctrl/berlin/berlin.h                    |   4 +
+>  8 files changed, 558 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/pinctrl/berlin/berlin-bg4ct.c
+>=20
+> --=20
+> 2.6.1
+>=20
 
 --=20
 Antoine T=E9nart, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
