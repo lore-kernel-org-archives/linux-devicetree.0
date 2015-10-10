@@ -1,54 +1,45 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 08/10] ARM: dts: rockchip: add rk3288 mipi_dsi nodes
-Date: Sat, 10 Oct 2015 17:55:28 +0800
-Message-ID: <1444470930-17150-9-git-send-email-zyw@rock-chips.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 07/10] Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
+Date: Sat, 10 Oct 2015 17:55:27 +0800
+Message-ID: <1444470930-17150-8-git-send-email-zyw@rock-chips.com>
 References: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, linux-rockchip@lists.infradead.org
-Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444470930-17150-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a mipi_dsi node, and also add mipi_dsi endpoints to vopb and vopl
-output port nodes.
+add device tree bindings for rk3288 specific Synopsys DW MIPI DSI driver
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- arch/arm/boot/dts/rk3288.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ .../bindings/video/dw_mipi_dsi_rockchip.txt        | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 1a7cb08..3266d11 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -783,6 +783,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopb>;
- 			};
-+			vopb_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopb>;
-+			};
- 		};
- 	};
- 
-@@ -816,6 +820,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopl>;
- 			};
-+			vopl_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopl>;
-+			};
- 		};
- 	};
- 
-@@ -856,6 +864,37 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+new file mode 100644
+index 0000000..4dea804
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+@@ -0,0 +1,56 @@
++Rockchip specific extensions to the Synopsys Designware MIPI DSI
++================================
++
++Required properties:
++- compatible: "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi".
++- rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
++- ports: contain a port node with endpoint definitions as defined in [1].
++  For vopb,set the reg = <0> and set the reg = <1> for vopl.
++
++For more required properties, please refer to [2].
++
++[1] Documentation/devicetree/bindings/media/video-interfaces.txt
++[2] Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
++
++Example:
 +	mipi_dsi: mipi@ff960000 {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
@@ -58,7 +49,7 @@ index 1a7cb08..3266d11 100644
 +		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
 +		clock-names = "ref", "pclk";
 +		rockchip,grf = <&grf>;
-+		status = "disabled";
++		status = "okay";
 +
 +		ports {
 +			#address-cells = <1>;
@@ -78,10 +69,22 @@ index 1a7cb08..3266d11 100644
 +				};
 +			};
 +		};
-+	};
 +
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
++		panel {
++			compatible ="boe,tv080wum-nl0";
++			reg = <0>;
++
++			enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&lcd_en>;
++			backlight = <&backlight>;
++			status = "okay";
++		};
++	};
 -- 
 2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
