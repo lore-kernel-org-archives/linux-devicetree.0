@@ -1,69 +1,39 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 10/10] ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
-Date: Sat, 10 Oct 2015 17:55:30 +0800
-Message-ID: <1444470930-17150-11-git-send-email-zyw@rock-chips.com>
-References: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, linux-rockchip@lists.infradead.org
-Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V3 0/2] Add SPDIF_GCLK clock in clock tree for imx6
+Date: Sat, 10 Oct 2015 18:15:05 +0800
+Message-ID: <cover.1444471684.git.shengjiu.wang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This tv080wum-nl0 panel is a mipi panel, it can use in MIPI_TX socket
-of rk3288 evb board.
+Add SPDIF_GCLK clock in clock tree
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Shengjiu Wang (2):
+  clk: imx6: Add SPDIF_GCLK clock in clock tree
+  ARM: dts: imx6: change the core clock of spdif
 
----
+Changes in v3:
+- refine the commit logs.
 
- arch/arm/boot/dts/rk3288-evb.dtsi | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl.dtsi            | 12 ++++++------
+ arch/arm/boot/dts/imx6sl.dtsi             | 16 ++++++++++++++++
+ arch/arm/boot/dts/imx6sx.dtsi             |  2 +-
+ drivers/clk/imx/clk-imx6q.c               |  4 +++-
+ drivers/clk/imx/clk-imx6sl.c              |  4 +++-
+ drivers/clk/imx/clk-imx6sx.c              |  1 +
+ include/dt-bindings/clock/imx6qdl-clock.h |  3 ++-
+ include/dt-bindings/clock/imx6sl-clock.h  |  3 ++-
+ include/dt-bindings/clock/imx6sx-clock.h  |  3 ++-
+ 9 files changed, 36 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index f6d2e78..d04878f 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -47,7 +47,7 @@
- 		reg = <0x0 0x80000000>;
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		brightness-levels = <
- 			  0   1   2   3   4   5   6   7
-@@ -177,6 +177,21 @@
- 	status = "okay";
- };
- 
-+&mipi_dsi {
-+	status = "okay";
-+
-+	panel {
-+		compatible ="boe,tv080wum-nl0";
-+		reg = <0>;
-+
-+		enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_en>;
-+		backlight = <&backlight>;
-+		status = "okay";
-+	};
-+};
-+
- &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
-@@ -247,6 +262,9 @@
- 		bl_en: bl-en {
- 			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
-+		lcd_en: lcd-en {
-+			rockchip,pins = <7 3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
- 	};
- 
- 	buttons {
 -- 
-2.6.1
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
