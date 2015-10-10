@@ -1,52 +1,67 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] of/fdt: fix aliases with baudrate in earlycon
-Date: Sat, 10 Oct 2015 01:29:30 -0700
-Message-ID: <1444465770-3103-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org
-Cc: galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 00/10] Add mipi dsi support for rk3288
+Date: Sat, 10 Oct 2015 17:55:20 +0800
+Message-ID: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org
+Cc: Chris Zhong <zyw@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Jeff Chen <cym@rock-chips.com>, Thierry Reding <thierry.reding@gmail.com>, linux-clk@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Huang Lin <hl@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vincent Palatin <vpalatin@chromium.org>, Russell King <linux@arm.linux.org.uk>, Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Liu Ying <Ying.liu@freescale.com>, And
 List-Id: devicetree@vger.kernel.org
 
-Many boards use an alias in the stdout-path specification along
-with console options after a colon (e.g. serial0:115200n8). When
-using earlycon, this specification currently does not work. While
-fdt_path_offset supports alias resolution, it does not remove the
-console options by itself. Use the fdt_path_offset_namelen variant
-and provide the length of the alias to enable aliases with console
-options in the stdout-path.
+The rk3288 MIPI DSI is a Synopsys DesignWare MIPI DSI host controller
+IP. This series adds support for a Synopsys DesignWare MIPI DSI host
+controller DRM bridge driver and a rockchip MIPI DSI specific DRM
+driver.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
-Hi,
+This series also includes a DRM panel driver for BOE TV080WUM-NL0 panel.
+This panel only use the MIPI DSI video mode.
 
-Stumbled upon this while testing 32-bit ARM earlycon support. It
-seems that this once already came up on the list:
-https://lkml.org/lkml/2015/3/13/562
+The MIPI DSI feature is tested on rk3288 evb board, backport them to
+chrome os kernel v3.14, and it can display normally.
 
---
-Stefan
+This patchset is base on the patchset from Ying.liu@freescale.com.
+<http://www.spinics.net/lists/dri-devel/msg77181.html>
 
 
- drivers/of/fdt.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 6e82bc42..9fc3568 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -813,8 +813,11 @@ static int __init early_init_dt_scan_chosen_serial(void)
- 	if (!p || !l)
- 		return -ENOENT;
- 
-+	/* Remove console options if present */
-+	l = strchrnul(p, ':') - p;
-+
- 	/* Get the node specified by stdout-path */
--	offset = fdt_path_offset(fdt, p);
-+	offset = fdt_path_offset_namelen(fdt, p, l);
- 	if (offset < 0)
- 		return -ENODEV;
- 
+Chris Zhong (8):
+  clk: rockchip: Add sclk_mipidsi_24m for mipi dsi
+  drm/rockchip: return a true clock rate to adjusted_mode
+  drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
+  drm: rockchip: Support Synopsys DesignWare MIPI DSI host controller
+  Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
+  ARM: dts: rockchip: add rk3288 mipi_dsi nodes
+  drm/panel: simple: Add support for BOE TV080WUM-NL0
+  ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
+
+Liu Ying (2):
+  drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
+  Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
+    bridge driver
+
+ .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt |   76 ++
+ .../bindings/video/dw_mipi_dsi_rockchip.txt        |   56 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   20 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |   39 +
+ drivers/clk/rockchip/clk-rk3288.c                  |    2 +-
+ drivers/gpu/drm/bridge/Kconfig                     |   10 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/dw_mipi_dsi.c               | 1055 ++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               |   33 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   10 +
+ drivers/gpu/drm/rockchip/Makefile                  |    1 +
+ drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c    |  249 +++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |    9 +
+ include/drm/bridge/dw_mipi_dsi.h                   |   27 +
+ include/drm/drm_mipi_dsi.h                         |   14 +
+ include/dt-bindings/clock/rk3288-cru.h             |    1 +
+ 16 files changed, 1601 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+ create mode 100644 drivers/gpu/drm/bridge/dw_mipi_dsi.c
+ create mode 100644 drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c
+ create mode 100644 include/drm/bridge/dw_mipi_dsi.h
+
 -- 
 2.6.1
+
