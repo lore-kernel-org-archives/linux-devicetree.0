@@ -1,16 +1,12 @@
 From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Correct USB regulators on
+Subject: [PATCH v2] ARM: dts: sun7i: Correct USB regulators on
  pcDuino v3 Nano
-Date: Sat, 10 Oct 2015 13:49:45 +0100
-Message-ID: <y2amvvqga6u.fsf@cartman.at.offog.org>
-References: <1444441679-4802-1-git-send-email-ats@offog.org>
-	<CAGb2v67_dSCL2JP1D5SDaqSF3B4KDMKZUJcZ8QLHgFtcO8Bzug@mail.gmail.com>
+Date: Sat, 10 Oct 2015 13:52:52 +0100
+Message-ID: <1444481572-13617-1-git-send-email-ats@offog.org>
 Reply-To: ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQPXGGUXQGBB4MS4SYAKGQEFRVMAPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v67_dSCL2JP1D5SDaqSF3B4KDMKZUJcZ8QLHgFtcO8Bzug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Chen-Yu Tsai's message of "Sat, 10 Oct 2015 10:17:52 +0800")
+Return-path: <linux-sunxi+bncBCQPXGGUXQGBBM4U4SYAKGQE7HQKATY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,27 +14,69 @@ List-Archive: <http://groups.google.com/group/linux-sunxi
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> writes:
+The LinkSprite pcDuino v3 Nano's two USB host ports are powered by a
+single RT9701GB regulator, which has its enable input tied to the A20's
+PD2 pin, pulled up to 3v3 via a 10k resistor.
 
-> Since Siarhei spotted the issue, maybe add a Reported-by tag where credit
-> is due?
+However, the script.bin that shipped with the device listed PH11 and PH3
+as Vbus control pins for the two USB ports. Neither of these are
+actually connected to anything.
 
-Will do.
+Siarhei Siamashka spotted this problem while reviewing the other
+LinkSprite boards. This patch fixes it by only defining a single
+regulator, controlled by PD2. Testing shows that the USB ports are now
+(correctly) only powered up once the USB PHY driver is loaded.
 
->>  &reg_ahci_5v {
->> +       pinctrl-names = "default";
-[twice]
->
-> This is already in sunxi-common-regulators.dtsi.
-> No need to add it again.
+Reported-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+---
+Changes in v2:
+- Add Reported-by line
+- Remove redundant pinctrl-names entries
+---
+ arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-OK -- fixed. v2 incoming.
-
-Thanks,
-
+diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+index 5361fce..b304778 100644
+--- a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
++++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+@@ -158,7 +158,7 @@
+ 	};
+ 
+ 	usb1_vbus_pin_pcduino3_nano: usb1_vbus_pin@0 {
+-		allwinner,pins = "PH11";
++		allwinner,pins = "PD2";
+ 		allwinner,function = "gpio_out";
+ 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+@@ -171,13 +171,10 @@
+ 	status = "okay";
+ };
+ 
++/* A single regulator (U24) powers both USB host ports. */
+ &reg_usb1_vbus {
+ 	pinctrl-0 = <&usb1_vbus_pin_pcduino3_nano>;
+-	gpio = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
+-	status = "okay";
+-};
+-
+-&reg_usb2_vbus {
++	gpio = <&pio 3 2 GPIO_ACTIVE_HIGH>; /* PD2 */
+ 	status = "okay";
+ };
+ 
+@@ -189,6 +186,6 @@
+ 
+ &usbphy {
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+-	usb2_vbus-supply = <&reg_usb2_vbus>;
++	usb2_vbus-supply = <&reg_usb1_vbus>;
+ 	status = "okay";
+ };
 -- 
-Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>                         <http://offog.org/>
+2.1.4
