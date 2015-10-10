@@ -1,97 +1,59 @@
-From: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun7i: Add regulator configuration
- for pcDuino v3 Nano
-Date: Sat, 10 Oct 2015 21:15:21 +0100
-Message-ID: <1444508121-20233-1-git-send-email-ats@offog.org>
-Reply-To: ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v4 2/6] pinctrl: berlin: add the berlin4ct pinctrl driver
+Date: Sun, 11 Oct 2015 00:33:38 +0200
+Message-ID: <20151010223338.GG2842@kwain>
+References: <1444378629-3057-1-git-send-email-jszhang@marvell.com>
+ <1444378629-3057-3-git-send-email-jszhang@marvell.com>
+ <20151009090353.GA2842@kwain>
+ <20151009172238.68fdd51c@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQPXGGUXQGBBYXD4WYAKGQE2OBX2ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151009172238.68fdd51c@xhacker>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The power configuration on this board is the same as the pcDuino v3.
-This will enable frequency/voltage scaling over the standard A20
-operating points from 144 MHz to 960 MHz.
+Hi Jisheng,
 
-Tested using cpufreq-ljt-stress-test on two pcDuino v3 Nano boards; also
-tested successfully with voltages reduced by 0.025 V.
+On Fri, Oct 09, 2015 at 05:22:38PM +0800, Jisheng Zhang wrote:
+> On Fri, 9 Oct 2015 11:03:53 +0200
+> Antoine Tenart <antoine.tenart@free-electrons.com> wrote:
+> >=20
+> > Finally you can move the OF dependency to the PINCTRL_BERLIN config=
+ as
+> > all Berlin pinctrl drivers depends on it.
+>=20
+> PINCTRL_BERLIN isn't user visible and it's selected by PINCTRL_BERLIN=
+_BG4CT. So
+> we may have the following random config case:
+>=20
+> CONFIG_OF=3Dn
+> CONFIG_PINCTRL_BERLIN_BG4CT=3Dy
+>=20
+> In this case, there will be build errors for we missed OF. So we have=
+ to
+> make PINCTRL_BERLIN_BG4CT depends on OF. What do you think? Or is the=
+re
+> better solution?
 
-Signed-off-by: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts | 35 ++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 4 deletions(-)
+That's true.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-index ee85e07..1757a6a 100644
---- a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-@@ -82,6 +82,10 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -108,13 +112,9 @@
- 	status = "okay";
- 
- 	axp209: pmic@34 {
--		compatible = "x-powers,axp209";
- 		reg = <0x34>;
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--
--		interrupt-controller;
--		#interrupt-cells = <1>;
- 	};
- };
- 
-@@ -182,6 +182,33 @@
- 	status = "okay";
- };
- 
-+#include "axp209.dtsi"
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-pll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
- /* A single regulator (U24) powers both USB host ports. */
- &reg_usb1_vbus {
- 	pinctrl-0 = <&usb1_vbus_pin_pcduino3_nano>;
--- 
-2.1.4
+But because other Berlin pinctrl drivers also depends on CONFIG_OF, we
+need to make then depend on it too. This isn't the topic of this series
+so I'll send a separate patch later.
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
