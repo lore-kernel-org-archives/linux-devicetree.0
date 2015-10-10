@@ -1,39 +1,95 @@
-From: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V3 0/2] Add SPDIF_GCLK clock in clock tree for imx6
-Date: Sat, 10 Oct 2015 18:15:05 +0800
-Message-ID: <cover.1444471684.git.shengjiu.wang@freescale.com>
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: [PATCH V3 2/2] ARM: dts: imx6: change the core clock of spdif
+Date: Sat, 10 Oct 2015 18:15:07 +0800
+Message-ID: <2f2656454f7385b575af298d6350269534460a1b.1444471684.git.shengjiu.wang@freescale.com>
+References: <cover.1444471684.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1444471684.git.shengjiu.wang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, mturquette@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add SPDIF_GCLK clock in clock tree
+The correct core clock of spdif is SPDIF_GCLK, which is added to
+clock tree. So the dts also need to be updated.
 
-Shengjiu Wang (2):
-  clk: imx6: Add SPDIF_GCLK clock in clock tree
-  ARM: dts: imx6: change the core clock of spdif
+Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++++------
+ arch/arm/boot/dts/imx6sl.dtsi  | 16 ++++++++++++++++
+ arch/arm/boot/dts/imx6sx.dtsi  |  2 +-
+ 3 files changed, 23 insertions(+), 7 deletions(-)
 
-Changes in v3:
-- refine the commit logs.
-
- arch/arm/boot/dts/imx6qdl.dtsi            | 12 ++++++------
- arch/arm/boot/dts/imx6sl.dtsi             | 16 ++++++++++++++++
- arch/arm/boot/dts/imx6sx.dtsi             |  2 +-
- drivers/clk/imx/clk-imx6q.c               |  4 +++-
- drivers/clk/imx/clk-imx6sl.c              |  4 +++-
- drivers/clk/imx/clk-imx6sx.c              |  1 +
- include/dt-bindings/clock/imx6qdl-clock.h |  3 ++-
- include/dt-bindings/clock/imx6sl-clock.h  |  3 ++-
- include/dt-bindings/clock/imx6sx-clock.h  |  3 ++-
- 9 files changed, 36 insertions(+), 12 deletions(-)
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index e716e6f..2b6cc8b 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -218,16 +218,16 @@
+ 					dmas = <&sdma 14 18 0>,
+ 					       <&sdma 15 18 0>;
+ 					dma-names = "rx", "tx";
+-					clocks = <&clks IMX6QDL_CLK_SPDIF>, <&clks IMX6QDL_CLK_OSC>,
+-						 <&clks IMX6QDL_CLK_SPDIF>, <&clks IMX6QDL_CLK_DUMMY>,
+-						 <&clks IMX6QDL_CLK_DUMMY>, <&clks IMX6QDL_CLK_DUMMY>,
+-						 <&clks IMX6QDL_CLK_DUMMY>, <&clks IMX6QDL_CLK_DUMMY>,
+-						 <&clks IMX6QDL_CLK_DUMMY>;
++					clocks = <&clks IMX6QDL_CLK_SPDIF_GCLK>, <&clks IMX6QDL_CLK_OSC>,
++						 <&clks IMX6QDL_CLK_SPDIF>, <&clks IMX6QDL_CLK_ASRC>,
++						 <&clks IMX6QDL_CLK_DUMMY>, <&clks IMX6QDL_CLK_ESAI_EXTAL>,
++						 <&clks IMX6QDL_CLK_IPG>, <&clks IMX6QDL_CLK_MLB>,
++						 <&clks IMX6QDL_CLK_DUMMY>, <&clks IMX6QDL_CLK_SPBA>;
+ 					clock-names = "core",  "rxtx0",
+ 						      "rxtx1", "rxtx2",
+ 						      "rxtx3", "rxtx4",
+ 						      "rxtx5", "rxtx6",
+-						      "rxtx7";
++						      "rxtx7", "dma";
+ 					status = "disabled";
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index ebe8670..d8ba99f 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -135,8 +135,24 @@
+ 				ranges;
+ 
+ 				spdif: spdif@02004000 {
++					compatible = "fsl,imx6sl-spdif",
++						"fsl,imx35-spdif";
+ 					reg = <0x02004000 0x4000>;
+ 					interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&sdma 14 18 0>,
++						<&sdma 15 18 0>;
++					dma-names = "rx", "tx";
++					clocks = <&clks IMX6SL_CLK_SPDIF_GCLK>, <&clks IMX6SL_CLK_OSC>,
++						 <&clks IMX6SL_CLK_SPDIF>, <&clks IMX6SL_CLK_DUMMY>,
++						 <&clks IMX6SL_CLK_DUMMY>, <&clks IMX6SL_CLK_DUMMY>,
++						 <&clks IMX6SL_CLK_IPG>, <&clks IMX6SL_CLK_DUMMY>,
++						 <&clks IMX6SL_CLK_DUMMY>, <&clks IMX6SL_CLK_SPBA>;
++					clock-names = "core", "rxtx0",
++						"rxtx1", "rxtx2",
++						"rxtx3", "rxtx4",
++						"rxtx5", "rxtx6",
++						"rxtx7", "dma";
++					status = "disabled";
+ 				};
+ 
+ 				ecspi1: ecspi@02008000 {
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index c94f2ea..167f77b 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -211,7 +211,7 @@
+ 					dmas = <&sdma 14 18 0>,
+ 					       <&sdma 15 18 0>;
+ 					dma-names = "rx", "tx";
+-					clocks = <&clks IMX6SX_CLK_SPDIF>,
++					clocks = <&clks IMX6SX_CLK_SPDIF_GCLK>,
+ 						 <&clks IMX6SX_CLK_OSC>,
+ 						 <&clks IMX6SX_CLK_SPDIF>,
+ 						 <&clks 0>, <&clks 0>, <&clks 0>,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
