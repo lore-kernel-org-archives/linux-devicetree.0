@@ -1,22 +1,38 @@
-From: Vera-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hollin-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kvan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Subject: I Have An Urgent Matter To Discuss With You
-Date: Mon, 12 Oct 2015 03:46:22 +0530
-Message-ID: <TY1PR0201MB104051AB1666F3719158601BB8320__48949.0595450208$1444601816$gmane$org@TY1PR0201MB1040.apcprd02.prod.outlook.com>
-Reply-To: <verahollinkvan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: porter: add I2C2 DT support
+Date: Mon, 12 Oct 2015 08:54:23 +0900
+Message-ID: <20151011235420.GA20025@verge.net.au>
+References: <84974694.25bFZffQKN@wasted.cogentembedded.com>
+ <20151009011336.GB14231@verge.net.au>
+ <5617FF0E.1000300@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5617FF0E.1000300@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-My name is Vera Hollin Kvan,i have an urgent matter to discuss with you please do not ignore this message make sure you reply me urgently with this email: verahollinkvan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+On Fri, Oct 09, 2015 at 08:53:18PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 10/09/2015 04:13 AM, Simon Horman wrote:
+> 
+> >>Define the Porter board dependent part of the I2C2 device node.
+> >>
+> >>This patch is  analogous to the commit 29a647c396a0 ("ARM: shmobile:
+> >>henninger: add I2C2 DT support") as there are no differences between
+> >>the boards in this respect.
+> >>
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> >Thanks Sergei,
+> 
+> >I have queued this up for v4.4.
+> 
+>    Not seeing anything from renesas.git running 'git fetch'. Forgot to push? :-)
 
-
-Mein Name ist Vera Hollin Kvan, ich habe eine dringende Angelegenheit mit Ihnen besprechen Sie bitte nicht, diese Nachricht ignorieren sicherzustellen, dass Sie mir antworten dringend mit dieser E-Mail: verahollinkvan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, sorry about that.
+I've pushed it now.
