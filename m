@@ -1,70 +1,33 @@
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Subject: [PATCH] bcm2835: Add Raspberry Pi thermal sensor to the device tree
-Date: Sun, 11 Oct 2015 21:48:57 +0200
-Message-ID: <1444592937-16320-1-git-send-email-lkundrak@v3.sk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 1/5] mtd: mtdpart: add debug prints to partition
+ parser.
+Date: Sun, 11 Oct 2015 13:00:39 -0700
+Message-ID: <20151011200010.GA3696@localhost>
+References: <cover.1439911625.git.hramrach@gmail.com>
+ <5b636f504e32c9fe83df22694656075f4f45c710.1439911625.git.hramrach@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5b636f504e32c9fe83df22694656075f4f45c710.1439911625.git.hramrach@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Driven via the Raspberry Pi VideoCore 4 firmware interface.
+On Tue, Aug 18, 2015 at 03:34:07PM -0000, Michal Suchanek wrote:
+> The probe of a mtd device can fail when a partition parser returns
+> error. The failure due to partition parsing can be quite mysterious when
+> multiple partitioning schemes are comiled in and any of them can fail
+> the probe.
+> 
+> Add debug prints which show what parsers were tried and what they
+> returned.
+> 
+> Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+> ---
+> v2:
+> 
+>  - reformat debug messages
 
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
----
-Needs the RPi firmware patchset from branch 'rpi-firmware' of 
-https://github.com/anholt/linux
-
- .../bindings/thermal/raspberrypi,bcm2835-thermal.txt        | 13 +++++++++++++
- arch/arm/boot/dts/bcm2835-rpi.dtsi                          |  5 +++++
- 2 files changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/raspberrypi,bcm2835-thermal.txt
-
-diff --git a/Documentation/devicetree/bindings/thermal/raspberrypi,bcm2835-thermal.txt b/Documentation/devicetree/bindings/thermal/raspberrypi,bcm2835-thermal.txt
-new file mode 100644
-index 0000000..f323f35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/raspberrypi,bcm2835-thermal.txt
-@@ -0,0 +1,13 @@
-+Raspberry Pi Broadcom BCM2835 thermal control
-+
-+Required properties:
-+
-+- compatible : should be "raspberrypi,bcm2835-thermal"
-+- firmware : the Raspberry Pi firmware node
-+
-+Example:
-+
-+thermal {
-+	compatible = "raspberrypi,bcm2835-thermal";
-+	firmware = <&firmware>;
-+};
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index ab5474e..727bbf8 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -20,6 +20,11 @@
- 			compatible = "raspberrypi,bcm2835-firmware";
- 			mboxes = <&mailbox>;
- 		};
-+
-+		thermal {
-+			compatible = "raspberrypi,bcm2835-thermal";
-+			firmware = <&firmware>;
-+		};
- 	};
- };
- 
--- 
-2.4.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Looks OK to me. Applied to l2-mtd.git.
