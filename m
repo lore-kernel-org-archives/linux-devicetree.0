@@ -1,62 +1,118 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 5/8] clk: rockchip: Allow the RK3288
-	SPDIF clocks to change their parent
-Date: Sun, 11 Oct 2015 12:43:27 +0200
-Message-ID: <1745884.LUbKvMh2Tj@diego>
-References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <11755202.f1LLWMlYi0@phil> <1444390555.9895.271.camel@collabora.co.uk>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
+Date: Sun, 11 Oct 2015 16:45:14 +0530
+Message-ID: <CAGnW=Bb0pdv7i1N=WqZoQLDUpuGw=Xq=cM5ir2Ow25pUDYtvEA@mail.gmail.com>
+References: <1443012841-13673-1-git-send-email-sbhatta@xilinx.com>
+	<20150924091034.GB27847@shlinux2>
+	<F1B223389110CE49B4CF055ABA2E5D3D78C9BCBF@XAP-PVEXMBX02.xlnx.xilinx.com>
+	<CAL_JsqK-aAY+DAwt0YH-mbBo+a9c7WPrBwJJoy3=FkT6ZX2A5w@mail.gmail.com>
+	<20150930161803.GI32625@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1444390555.9895.271.camel@collabora.co.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Takashi Iwai <tiwai@suse.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150930161803.GI32625-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+On Wed, Sep 30, 2015 at 9:48 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> On Thu, Sep 24, 2015 at 11:18:01AM -0500, Rob Herring wrote:
+>> On Thu, Sep 24, 2015 at 4:26 AM, Subbaraya Sundeep Bhatta
+>> <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>> > Hi Peter,
+>> >
+>> >> -----Original Message-----
+>> >> From: Peter Chen [mailto:peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
+>> >> Sent: Thursday, September 24, 2015 2:41 PM
+>> >> To: Subbaraya Sundeep Bhatta
+>> >> Cc: balbi-l0cyMroinI0@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; kishon-l0cyMroinI0@public.gmane.org;
+>> >> gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+>> >> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Punnaiah Choudary Kalluri; Subbaraya Sundeep Bhatta;
+>> >> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> >> Subject: Re: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
+>> >>
+>> >> On Wed, Sep 23, 2015 at 06:24:01PM +0530, Subbaraya Sundeep Bhatta
+>> >> wrote:
+>> >> > This patch adds binding doc info for generic ULPI PHYs platform
+>> >> > driver.
+>> >> >
+>> >> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> >> > ---
+>> >> >  .../devicetree/bindings/usb/ulpi-platform-phy.txt  |   34
+>> >> ++++++++++++++++++++
+>> >> >  1 files changed, 34 insertions(+), 0 deletions(-)  create mode 100644
+>> >> > Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
+>> >> >
+>> >> > diff --git
+>> >> > a/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
+>> >> > b/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
+>> >> > new file mode 100644
+>> >> > index 0000000..7b8cbb4
+>> >> > --- /dev/null
+>> >> > +++ b/Documentation/devicetree/bindings/usb/ulpi-platform-phy.txt
+>> >> > @@ -0,0 +1,34 @@
+>> >> > +Platform driver for generic ULPI PHYs
+>> >> > +
+>> >> > +Required properties:
+>> >> > +- compatible               : Should be "ulpi-phy"
+>> >> > +- reg                      : Physical base address and size of the USB
+>> >> > +                     controller registers map to which this PHY
+>> >> > +                     is connected.
+>> >> > +- view-port                : Should contain viewport register offset of the
+>> >> > +                     USB controller to which this PHY is connected Optional
+>> >> > +properties:
+>> >> > +- drv-vbus         : required if turning VBUS on/off has to be driven
+>> >> > +                     by writing to PHY. This feature depends on board
+>> >> > +                     design.
+>> >> > +
+>> >> > +Example:
+>> >> > +Below example shows the PHY binding for Chipidea USB controller which
+>> >> > +has ulpi viewport register at 0x0170
+>> >> > +
+>> >> > +           usb_phy0: phy0 {
+>> >> > +                   compatible = "ulpi-phy";
+>> >> > +                   reg = <0xe0002000 0x1000>;
+>> >> > +                   view-port = <0x0170>;
+>> >> > +                   drv-vbus;
+>> >> > +           };
+>> >> > +
+>> >> > +           usb0: usb@e0002000 {
+>> >> > +                        compatible = "chipidea,usb2";
+>> >> > +                        interrupt-parent = <&intc>;
+>> >> > +                        interrupts = <0 21 4>;
+>> >> > +                        reg = <0xe0002000 0x1000>;
+>> >>
+>> >> Although just call devm_ioremap twice for the same register region does not
+>> >> cause any errors, I am not sure if it will has other potential problems. Cc: arm
+>> >> list.
+>> >
+>> > Yes Peter I was also in doubt to call devm_ioremap twice for same register region.
+>> > devm_ioremap_resource complained hence modified to devm_ioremap. Thanks for
+>> > adding arm-list.
+>>
+>> Don't put overlapping resources in the DT. Having 2 drivers accessing
+>> the same registers is not a clean or safe design.
+>
+> thanks, saves me the trouble of saying the same thing.
+>
+> Bottom line, if devm_ioremap_resource() fails, you're wrong. Just fix
+> your driver and move on.
 
-Am Freitag, 9. Oktober 2015, 13:35:55 schrieb Sjoerd Simons:
-> On Thu, 2015-10-08 at 17:10 +0200, Heiko Stuebner wrote:
-> > Am Donnerstag, 8. Oktober 2015, 15:31:16 schrieb Sjoerd Simons:
-> > > The clock branches leading to sclk_spdif and sclk_spdif_8ch on
-> > > RK3288
-> > > SoCs only feed those clocks, allow those clocks to change their
-> > > parents
-> > > all the way up the hierarchy.
-> > > 
-> > > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> > 
-> > Just as comment, if I'm seeing that right, this patch needs "clk:
-> > rockchip:
-> > handle mux dependency of fractional dividers" and friends [0] to
-> > apply and
-> > also actually handle the fractional dividers correctly.
-> > 
-> > For the clock change itself:
-> > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> 
-> Oh sorry yes, i completely forgot to at that as note on this patch
-> (series). These are on top of your series as those are required to make
-> things actually work as expected.
-> 
-> Which reminds me, i was wondering how to best move that forward. Could
-> you pick this one up to include it in the next round of your series?
-> (Otherwise i'm happy to rebase it once you do a v2)
-
-I guess that will depend on how the core series gets handled. Aka if there 
-needs to be a v2 (depending on the clock maintainers) I can pick that up as 
-part of it. Otherwise we'll just need to ping the clock-maintainers separately 
-on this patch if necessary.
+Any suggestions on how to move further?
+Chipidea controller provides ulpi view port register for accessing the
+usb phy registers. Now we want to add new driver for ulpi phy configuration
+and that obviously it need of ulpi view port register access. So, sharing the
+register space between these two drivers is necessary here.
 
 
-Heiko
+Regards,
+Punnaiah
+
+>
+> --
+> balbi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
