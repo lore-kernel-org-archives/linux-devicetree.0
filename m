@@ -1,61 +1,75 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/3] hwrng: stm32 - add support for STM32 HW RNG
-Date: Sun, 11 Oct 2015 20:24:08 +0100
-Message-ID: <CAMTL27EoZRFBk+A5TA-knpmRoaqfyDD=L=+yqEXYX=ntR46xkw@mail.gmail.com>
-References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
-	<1443904519-24012-3-git-send-email-daniel.thompson@linaro.org>
-	<CACRpkdaCBUnFMYMSdjF4bHwQH3zxu2ou7b54E4FzgH9UbNQEHw@mail.gmail.com>
-	<CAMTL27G9j8tR4WKQgj6HbVCTd-5Xx0HYs40Rij91GgT4D8PevA@mail.gmail.com>
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Subject: [PATCH 2/3] ARM: bcm2835: dt: Add Raspberry Pi Model B rev2
+Date: Sun, 11 Oct 2015 21:37:16 +0200
+Message-ID: <1444592237-12433-2-git-send-email-lkundrak@v3.sk>
+References: <1444592237-12433-1-git-send-email-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMTL27G9j8tR4WKQgj6HbVCTd-5Xx0HYs40Rij91GgT4D8PevA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Patch Tracking <patches@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1444592237-12433-1-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
+List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 October 2015 at 10:22, Daniel Thompson <daniel.thompson@linaro.org> wrote:
-> On 4 October 2015 at 11:32, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Sat, Oct 3, 2015 at 10:35 PM, Daniel Thompson
->> <daniel.thompson@linaro.org> wrote:
->> Then this construct:
->>
->>> +static int stm32_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
->>> +{
->> (...)
->>> + /* enable random number generation */
->>> + clk_enable(priv->clk);
->>> + cr = readl(priv->base + RNG_CR);
->>> + writel(cr | RNG_CR_RNGEN, priv->base + RNG_CR);
->> (...)
->>> + /* disable the generator */
->>> + writel(cr, priv->base + RNG_CR);
->>> + clk_disable(priv->clk);
->>
->> This is in the hotpath where megabytes of data may be read out
->> by consecutive reads. I think it's wise to move the clock enable/disable
->> and also the write to cr to enable/disable the block to runtime PM
->> hooks, so that you can e.g. set some hysteresis around the disablement
->> with pm_runtime_set_autosuspend_delay(&dev->dev, 50);
->> pm_runtime_use_autosuspend(&dev->dev);pm_runtime_put_autosuspend().
->> For a primecell check the usage in drivers/mmc/host/mmci.c
->> for a complex usecase or e.g. drivers/hwtracing/coresight/coresight-tpiu.c
->> for a simpler usecase.
->>
->> For the performance hints I guess you can even test whether
->> what I'm saying makes sense or not by reading some megabytes
->> of random and timing it.
->
-> I'll have to benchmark this. clk_enable/disable have pretty simple
-> implementations on STM32 so there might not be much in it.
+This one has an extra P5 header (unpopulated) with I2S.
 
-Well... I was extremely wrong about that!
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile               |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
 
-Switching the driver over to autosuspend yielded a very significant
-performance boost: ~1.1MiB/s to ~1.5MiB/s .
-
-Very pleased with that!
-
-
-Daniel.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 233159d..23d6493 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -58,6 +58,7 @@ dtb-$(CONFIG_ARCH_AXXIA) += \
+ 	axm5516-amarillo.dtb
+ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b.dtb \
++	bcm2835-rpi-b-rev2.dtb \
+ 	bcm2835-rpi-b-plus.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4708-asus-rt-ac56u.dtb \
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+new file mode 100644
+index 0000000..eab8b591
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -0,0 +1,23 @@
++/dts-v1/;
++#include "bcm2835-rpi.dtsi"
++
++/ {
++	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
++	model = "Raspberry Pi Model B rev2";
++
++	leds {
++		act {
++			gpios = <&gpio 16 1>;
++		};
++	};
++};
++
++&gpio {
++	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
++
++	/* I2S interface */
++	i2s_alt2: i2s_alt2 {
++		brcm,pins = <28 29 30 31>;
++		brcm,function = <BCM2835_FSEL_ALT2>;
++	};
++};
+-- 
+2.4.3
