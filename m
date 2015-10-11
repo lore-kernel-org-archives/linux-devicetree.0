@@ -1,156 +1,59 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] mtd: ofpart: update devicetree binding
- specification
-Date: Sun, 11 Oct 2015 13:04:02 -0700
-Message-ID: <20151011200402.GE3696@localhost>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 4/5] mtd: ofpart: document the lock flag.
+Date: Sun, 11 Oct 2015 13:04:12 -0700
+Message-ID: <20151011200412.GF3696@localhost>
 References: <cover.1439911625.git.hramrach@gmail.com>
- <e47db0c8eeaeb11353bcb2f4dcd138e813c3ecd7.1439911625.git.hramrach@gmail.com>
+ <83fbf31ad895446837f8e01f77a1ff7c63d62251.1439911625.git.hramrach@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e47db0c8eeaeb11353bcb2f4dcd138e813c3ecd7.1439911625.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <83fbf31ad895446837f8e01f77a1ff7c63d62251.1439911625.git.hramrach@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi DT maintainers,
-
-It's a bit hypocritical of me, since I've been a slow reviewer as well,
-but... can we get some review on this one? Usually, I'm comfortable
-taking driver DT bindings without your review, but this one is a bit
-more generic and is more far-reaching than the average driver.
-
-I'm not a big fan of this change, and I don't quite understand why the
-bus driver (the SPI bus, which is a level up from the SPI device / MTD
-node) can specify its grandchildren (see spi-samsung.txt). But given the
-constraints, I think Michal's solution is OK. And I do agree that MTD's
-ofpart should be bit more specific.
-
-Anyway, a quick look and an Ack/Nak would be appreciated.
-
-Thanks,
-Brian
-
 On Tue, Aug 18, 2015 at 03:34:08PM -0000, Michal Suchanek wrote:
-> To avoid conflict with other drivers using subnodes of the mtd device
-> create only one ofpart-specific node rather than any number of
-> arbitrary partition subnodes.
-> 
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> The lock flag of ofpart is undocumented. Add to binding doc.
+
+Good catch. There are a lot of small corners of very old code that never
+really got reviewed properly, I expect...
+
+(And the flag looks very odd. Why exactly is it in the partitions?)
+
+And now that I'm looking further...does this flag even *do* anything?
+AFAICT, it doesn't set the master device flags -- only the partition
+flags. But MTD drivers currently never see the partition flags -- they
+only see the master struct mtd_info. I think the only way anyone could
+observe the effect of this flag is to read the MTD flags from sysfs. And
+that's pretty useless.
+
+If my understanding is correct, then I'd rather completely remove the
+code that "handles" this flag, rather than codify it in the docs.
+
+> Signed-off-by: Michal Suchanek <hramrach@gmail.com>
 > ---
-> v3:
-> 
->  - rename DT node ofpart -> partitions
-> ---
->  .../devicetree/bindings/mtd/partition.txt          | 68 +++++++++++++---------
->  1 file changed, 40 insertions(+), 28 deletions(-)
+>  Documentation/devicetree/bindings/mtd/partition.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-> index 8e5557d..8c2aff7 100644
+> index 8c2aff7..7fa9c08 100644
 > --- a/Documentation/devicetree/bindings/mtd/partition.txt
 > +++ b/Documentation/devicetree/bindings/mtd/partition.txt
-> @@ -4,10 +4,16 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
->  on platforms which have strong conventions about which portions of a flash are
->  used for what purposes, but which don't use an on-flash partition table such
->  as RedBoot.
-> +
-> +The partition table should be partitions subnode of the mtd node. Partitions are
-> +defined in subnodes of the partitions node.
-> +
-> +For backwards compatibility partitions as direct subnodes of the mtd device are
-> +supported. This use is discouraged.
->  NOTE: if the sub-node has a compatible string, then it is not a partition.
->  
-> -#address-cells & #size-cells must both be present in the mtd device. There are
-> -two valid values for both:
-> +#address-cells & #size-cells must both be present in the partitions subnode of the
-> +mtd device. There are two valid values for both:
->  <1>: for partitions that require a single 32-bit cell to represent their
->       size/address (aka the value is below 4 GiB)
->  <2>: for partitions that require two 32-bit cells to represent their
-> @@ -28,44 +34,50 @@ Examples:
->  
->  
->  flash@0 {
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> +	partitions {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
->  
-> -	partition@0 {
-> -		label = "u-boot";
-> -		reg = <0x0000000 0x100000>;
-> -		read-only;
-> -	};
-> +		partition@0 {
-> +			label = "u-boot";
-> +			reg = <0x0000000 0x100000>;
-> +			read-only;
-> +		};
->  
-> -	uimage@100000 {
-> -		reg = <0x0100000 0x200000>;
-> +		uimage@100000 {
-> +			reg = <0x0100000 0x200000>;
-> +		};
->  	};
->  };
->  
->  flash@1 {
-> -	#address-cells = <1>;
-> -	#size-cells = <2>;
-> +	partitions {
-> +		#address-cells = <1>;
-> +		#size-cells = <2>;
->  
-> -	/* a 4 GiB partition */
-> -	partition@0 {
-> -		label = "filesystem";
-> -		reg = <0x00000000 0x1 0x00000000>;
-> +		/* a 4 GiB partition */
-> +		partition@0 {
-> +			label = "filesystem";
-> +			reg = <0x00000000 0x1 0x00000000>;
-> +		};
->  	};
->  };
->  
->  flash@2 {
-> -	#address-cells = <2>;
-> -	#size-cells = <2>;
-> +	partitions {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
->  
-> -	/* an 8 GiB partition */
-> -	partition@0 {
-> -		label = "filesystem #1";
-> -		reg = <0x0 0x00000000 0x2 0x00000000>;
-> -	};
-> +		/* an 8 GiB partition */
-> +		partition@0 {
-> +			label = "filesystem #1";
-> +			reg = <0x0 0x00000000 0x2 0x00000000>;
-> +		};
->  
-> -	/* a 4 GiB partition */
-> -	partition@200000000 {
-> -		label = "filesystem #2";
-> -		reg = <0x2 0x00000000 0x1 0x00000000>;
-> +		/* a 4 GiB partition */
-> +		partition@200000000 {
-> +			label = "filesystem #2";
-> +			reg = <0x2 0x00000000 0x1 0x00000000>;
-> +		};
->  	};
->  };
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -29,6 +29,7 @@ Optional properties:
+>    partition should only be mounted read-only. This is usually used for flash
+>    partitions containing early-boot firmware images or data which should not be
+>    clobbered.
+> +- lock : Clear always locked after reset flag
+
+This seems more like a SW description. I've reworded slightly locally.
+
+Is my above analysis sensible? If so, I'll patch this to kill the DT
+parsing code for "lock" entirely. If I'm wrong, then I can push this
+patch. Let me know what you think.
+
+Brian
+
+P.S. IIUC, then most of the 'mask_flags' stuff for partitioned devices
+really does nothing. These flags don't seem to ever be checked. Ugh.
