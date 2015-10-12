@@ -1,89 +1,65 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add SMP bringup support for mt65xx socs
-Date: Mon, 12 Oct 2015 19:30:36 +0200
-Message-ID: <561BEE3C.3030807@gmail.com>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional clock
+Date: Mon, 12 Oct 2015 18:33:52 +0100
+Message-ID: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443799181-50409-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The AM3715 OHCI controller will not function without the EHCI
+unit's 120m fclk being enabled. If all the ports in the system
+are set to OHCI then the 120m_fclk will not get enabled and no
+devices are detected.
 
+Add a new (optional) property to signal the system must enable
+the 120m_fck for OHCI so that if no EHCI ports are signalled
+then the 120m_fclk should be enabled.
 
-On 02/10/15 17:19, Yingjoe Chen wrote:
-> This series add SMP brinup support for MediaTek SoCs. This is v5 and
-> is based on v4.3-rc1.
->
-> There are similar but different SMP bringup up methods on MediaTek
-> mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
-> firmware. Others, like MT6589, doesn't have trustzone, and run kernel
-> directly in secure world.
->
-> Patch 1 enable arch timer support.
-> Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
-> "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
-> and TZ platform.
-> Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
->
-> Changes in v5:
-> - Fix dts error
-> - Add Rob's Ack tag.
->
-> Changes in v4[3]:
-> - rebase to v4.3-rc1
-> - Reserve trustzone bootinfo memory area in device tree.
->
-> Changes in v3:
-> - v3 in [1]
-> - The first 2 patches in v2 are merged in v4.2-rc1.
-> - Patch 3~4 in v2 are moved to another series [2]
-> - platsmp.c changes based on Stephen's suggestion
-> - Change cpu enable-method name to "mediatek,mt6589-smp"
->
-> Changes in v2:
-> - Fix boot issue for THUMB2 kernel.
-> - Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
-> - Change platsmp.c according to Matthias' suggestion
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
->
-> v1:
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
->
-> [1]
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001570.html
->
-> [2]
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
->
-> [3]
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002377.html
->
->
-> Matthias Brugger (1):
->    ARM: mediatek: enable gpt6 on boot up to make arch timer working
->
-> Yingjoe Chen (4):
->    devicetree: bindings: add new SMP enable method Mediatek SoC
->    ARM: mediatek: add smp bringup code
->    ARM: dts: mt8135: enable basic SMP bringup for mt8135
->    ARM: dts: mt8127: enable basic SMP bringup for mt8127
->
->   Documentation/devicetree/bindings/arm/cpus.txt |   2 +
->   arch/arm/boot/dts/mt8127.dtsi                  |  27 +++++
->   arch/arm/boot/dts/mt8135.dtsi                  |  27 +++++
->   arch/arm/mach-mediatek/Makefile                |   3 +
->   arch/arm/mach-mediatek/mediatek.c              |  27 +++++
->   arch/arm/mach-mediatek/platsmp.c               | 141 +++++++++++++++++++++++++
->   6 files changed, 227 insertions(+)
->   create mode 100644 arch/arm/mach-mediatek/platsmp.c
->
+We have found no information about why this is necessary, but
+it is suspected the EHCI controller does not complete the initial
+reset sequence and therefore does not hand control of the USB
+port back.
 
-Applied, thanks.
+Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
+ drivers/mfd/omap-usb-host.c                        | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+index 38d9bb8..fb5fea5 100644
+--- a/Documentation/devicetree/bindings/usb/omap-usb.txt
++++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+@@ -23,6 +23,9 @@ OMAP MUSB GLUE
+ Optional properties:
+  - ctrl-module : phandle of the control module this glue uses to write to
+    mailbox
++ - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
++   using ohci. Needed for AM3517 in OHCI only mode.
++
+ 
+ SOC specific device node entry
+ usb_otg_hs: usb_otg_hs@4a0ab000 {
+diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+index 1d924d1..13880cf 100644
+--- a/drivers/mfd/omap-usb-host.c
++++ b/drivers/mfd/omap-usb-host.c
+@@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+ 				need_logic_fck |= true;
+ 		}
+ 
++		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
++		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
++			need_logic_fck |= true;
++
+ 		if (need_logic_fck) {
+ 			omap->ehci_logic_fck = devm_clk_get(dev,
+ 							    "usbhost_120m_fck");
+-- 
+2.6.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
