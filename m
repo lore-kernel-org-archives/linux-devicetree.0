@@ -1,48 +1,63 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v3 5/5] arm64: defconfig: Enable PCI generic host bridge by
- default
-Date: Mon, 12 Oct 2015 11:07:39 +0100
-Message-ID: <1444644459-2780-6-git-send-email-Liviu.Dudau@arm.com>
-References: <1444644459-2780-1-git-send-email-Liviu.Dudau@arm.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Mon, 12 Oct 2015 19:16:54 +0900
+Message-ID: <561B8896.7040409@samsung.com>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk> <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444644459-2780-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20151012084554.GB8805@ck-lbox>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Now that pci-host-generic can be used under arm64, enable it by
-default so that SBSA compliant systems can use it.
+Hi Charles,
 
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 17:45, Charles Keepax wrote:
+> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+>> On Wed, 07 Oct 2015, Mark Brown wrote:
+>>
+>>> On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
+>>>> Add additional bindings to allow configuration of the system speci=
+fic
+>>>> microphone detection settings.
+>>>
+>>> This all seems pretty much fine to me - the things it is controllin=
+g are
+>>> fairly specific to the way the former Wolfson devices do, they only
+>>> really make sense with a fairly particular algorithm which isn't wi=
+dely
+>>> implemented.
+>>
+>> Is that an Ack?
+>=20
+> I am guessing Mark is slightly hesitant to ack as he probably
+> doesn't want to add reviewing all our jack detection bindings to
+> his already fairly sizable work load and doing so here likely
+> means it will be expected in the future. From talking to people at
+> LinuxCon it looks like it is pretty unlikely the DT maintainers
+> will be acking individual bindings as well, basically they are
+> only really looking at major/framework things and leaving the
+> rest to subsystem maintainers.
+>=20
+> Given that these patches only touch MFD/Extcon and extcon
+> is a subsystem designed to handle things like jack detection
+> isn't it really sufficient that you and Chanwoo have looked this
+> and are happy with it? Otherwise I really don't see anyway to
+> move this forward and would appreciate any suggestions?
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 34d71dd..7c9455a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -49,6 +49,7 @@ CONFIG_ARCH_XGENE=y
- CONFIG_ARCH_ZYNQMP=y
- CONFIG_PCI=y
- CONFIG_PCI_MSI=y
-+CONFIG_PCI_HOST_GENERIC=y
- CONFIG_PCI_XGENE=y
- CONFIG_SMP=y
- CONFIG_PREEMPT=y
--- 
-2.6.0
+I'm positive about your patches. After receiving the ack from MFD maint=
+ainer
+I want to apply this patch-set on extcon git repository.
+
+Also, I reviewed this patch on previous patch[1].
+[1]https://lkml.org/lkml/2015/9/11/81
+
+Thanks,
+Chanwoo Choi
