@@ -1,79 +1,36 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [REPOST PATCH 1/4] ARM: dts: DRA7: Add dsp1_system syscon node
-Date: Mon, 12 Oct 2015 15:55:03 -0700
-Message-ID: <20151012225502.GM23801@atomide.com>
-References: <1443828205-18706-1-git-send-email-s-anna@ti.com>
- <1443828205-18706-2-git-send-email-s-anna@ti.com>
- <20151012214304.GD23801@atomide.com>
- <561C351B.3060307@ti.com>
- <20151012225001.GK23801@atomide.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH] scsi: hisi_sas: hisi_sas_find_dev_phyno() can be static
+Date: Tue, 13 Oct 2015 07:02:47 +0800
+Message-ID: <20151012230247.GA154621@lkp-ib04.intel.com>
+References: <201510130626.V3reAw1w%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151012225001.GK23801-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1444663237-238302-23-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org, linux-kernel-u79uwXL29TZ19SzzRMN9sA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [151012 15:57]:
-> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [151012 15:37]:
-> > Hi Tony,
-> > 
-> > On 10/12/2015 04:43 PM, Tony Lindgren wrote:
-> > > * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [151002 16:27]:
-> > >> The DSP_SYSTEM sub-module is a dedicated system control logic
-> > >> module present within a DRA7 DSP processor sub-system. This
-> > >> module is responsible for power management, clock generation
-> > >> and connection to the device PRCM module.
-> > >>
-> > >> Add a syscon node for this module for the DSP1 processor
-> > >> sub-system. This is added as a syscon node as it is a common
-> > >> configuration module that can be used by the different IOMMU
-> > >> instances and the corresponding remoteproc device.
-> > >>
-> > >> The node is added to the common dra7.dtsi file, as the DSP1
-> > >> processor sub-system is mostly common across all the variants
-> > >> of the DRA7 SoC family.
-> > >>
-> > >> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> > >> ---
-> > >>  arch/arm/boot/dts/dra7.dtsi | 5 +++++
-> > >>  1 file changed, 5 insertions(+)
-> > >>
-> > >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> > >> index e289c706d27d..62055094e8d5 100644
-> > >> --- a/arch/arm/boot/dts/dra7.dtsi
-> > >> +++ b/arch/arm/boot/dts/dra7.dtsi
-> > >> @@ -292,6 +292,11 @@
-> > >>  				#thermal-sensor-cells = <1>;
-> > >>  		};
-> > >>  
-> > >> +		dsp1_system: dsp_system@40d00000 {
-> > >> +			compatible = "syscon";
-> > >> +			reg = <0x40d00000 0x100>;
-> > >> +		};
-> > >> +
-> > >>  		sdma: dma-controller@4a056000 {
-> > >>  			compatible = "ti,omap4430-sdma";
-> > >>  			reg = <0x4a056000 0x1000>;
-> > > 
-> > > Hmm so why would you want to set up a complete device as a syscon
-> > > mapping rather than just doing ioremap on it?
-> > > 
-> > > What drivers will be sharing access to these registers?
-> > 
-> > Two different instances of the MMU for now, both get probed
-> > independently. But there are other registers which a remoteproc driver
-> > will mostly be interested in (like DSP_SYS_STAT for knowing the C66x
-> > idle/active status).
-> 
-> OK makes sense to me then.
 
-And applying these into omap-for-v4.4/dt.
+Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ hisi_sas_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tony
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 12af29c..a01e8c0 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -612,7 +612,7 @@ int hisi_sas_dev_found(struct domain_device *device)
+ 	return hisi_sas_dev_found_notify(device, 1);
+ }
+ 
+-int hisi_sas_find_dev_phyno(struct domain_device *device, int *phyno)
++static int hisi_sas_find_dev_phyno(struct domain_device *device, int *phyno)
+ {
+ 	int i = 0, j = 0, num = 0, n = 0;
+ 	struct sas_ha_struct *sha = device->port->ha;
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
