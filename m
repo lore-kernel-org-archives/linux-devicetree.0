@@ -1,31 +1,37 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] dts: Updated devicetree bindings for Zynq 7000
- platform
-Date: Mon, 12 Oct 2015 09:19:47 -0700
-Message-ID: <20151012161947.GI15287@xsjsorenbubuntu>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
- <1444344307-22509-3-git-send-email-moritz.fischer@ettus.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: Correct property to use for wake up support on rotary encoders
+Date: Mon, 12 Oct 2015 09:29:16 -0700
+Message-ID: <CAKdAkRSAYRr8PqcmzVCmGy89dedo_aybJq-2FhPzF1CFYy0GYg@mail.gmail.com>
+References: <20151012160943.GA10239@gradator.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444344307-22509-3-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151012160943.GA10239@gradator.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Sylvain Rochet <sylvain.rochet@finsecur.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <daniel@caiaq.de>, Johan Hovold <jhovold@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-10-09 at 12:45AM +0200, Moritz Fischer wrote:
-> Added addtional bindings required for FPGA Manager operation
-> of the Xilinx Zynq Devc configuration interface.
->=20
-> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Reviewed-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Hi Sylvain,
 
-	S=C3=B6ren
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Oct 12, 2015 at 9:09 AM, Sylvain Rochet
+<sylvain.rochet@finsecur.com> wrote:
+> Hi,
+>
+> Several month ago I proposed a patch[1][2] to add wake up support to
+> rotary encoders[3].
+>
+> Among all the properties currently used in Linux kernels device trees,
+> we have three recognisable patterns for wake up support:
+>  - driver-name,wakeup
+>  - linux,wakeup
+>  - wakeup-source
+>
+> We don't know which one to use, could you tell which one we should use
+> for GPIO rotary encoders ?
+>
+
+Please use "wakeup-source", we've been trying to standardize on it.
+
+-- 
+Dmitry
