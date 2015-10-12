@@ -1,52 +1,57 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 1/3] doc: dt: fpga: Added Documentation for Xilinx Zynq
- FPGA manager.
-Date: Mon, 12 Oct 2015 11:31:28 +0200
-Message-ID: <561B7DF0.6090601@xilinx.com>
+Subject: Re: [PATCH 2/3] dts: Updated devicetree bindings for Zynq 7000
+ platform
+Date: Mon, 12 Oct 2015 11:32:44 +0200
+Message-ID: <561B7E3C.4060908@xilinx.com>
 References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
- <1444344307-22509-2-git-send-email-moritz.fischer@ettus.com>
- <20151009160423.GL10631@jcartwri.amer.corp.natinst.com>
+ <1444344307-22509-3-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151009160423.GL10631@jcartwri.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>, Moritz Fischer <moritz.fischer@ettus.com>
-Cc: michal.simek@xilinx.com, soren.brinkmann@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1444344307-22509-3-git-send-email-moritz.fischer@ettus.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Moritz Fischer <moritz.fischer@ettus.com>, michal.simek@xilinx.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, atull@opensource.altera.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, dinguyen@opensource.altera.com, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2015 06:04 PM, Josh Cartwright wrote:
-> On Fri, Oct 09, 2015 at 12:45:05AM +0200, Moritz Fischer wrote:
->> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->> ---
->>  .../bindings/fpga/xilinx-zynq-fpga-mgr.txt         | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
->> new file mode 100644
->> index 0000000..82ffda8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
->> @@ -0,0 +1,26 @@
->> +Xilinx Zynq FPGA Manager
->> +
->> +Required properties:
->> +- compatible:		should contain "xlnx,zynq-devcfg-1.0"
->> +- reg:			base address and size for memory mapped io
->> +- interrupt parent:	interrupt source phandle
+On 10/09/2015 12:45 AM, Moritz Fischer wrote:
+> Added addtional bindings required for FPGA Manager operation
+> of the Xilinx Zynq Devc configuration interface.
 > 
-> I think you mean 'interrupt-parent', with the hyphen.
-
-yes.
-
+> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+> ---
+>  arch/arm/boot/dts/zynq-7000.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> Actually, this isn't really a 'required' property of this node, as it
-> could be specified in a parent node.
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index dc0457e..1a5220e 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -294,6 +294,11 @@
+>  		devcfg: devcfg@f8007000 {
+>  			compatible = "xlnx,zynq-devcfg-1.0";
+>  			reg = <0xf8007000 0x100>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <0 8 4>;
+> +			clocks = <&clkc 12>;
+> +			clock-names = "ref_clk";
+> +			syscon = <&slcr>;
+>  		};
+>  
+>  		global_timer: timer@f8f00200 {
+> 
 
-yes. Normally interrupt-parent is not listed as required property in the
-binding doc. Some docs listed it as optional property.
+This patch should go via arm-soc tree. That's why please remove it from
+this patchset.
 
 Thanks,
 Michal
