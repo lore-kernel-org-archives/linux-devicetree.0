@@ -1,91 +1,106 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed support
-Date: Mon, 12 Oct 2015 21:02:29 +0530
-Message-ID: <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-3-git-send-email-linux.amoon@gmail.com> <561B48B7.1040201@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ARM64: dts: vexpress: Use a symlink to
+ vexpress-v2m-rs1.dtsi from arch=arm
+Date: Mon, 12 Oct 2015 16:37:50 +0100
+Message-ID: <20151012153750.GE7452@leverpostej>
+References: <1444046032-31310-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561B48B7.1040201@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444046032-31310-1-git-send-email-ian.campbell@citrix.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, Frank Rowand <frank.rowand@sonymobile.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Mon, Oct 05, 2015 at 12:53:52PM +0100, Ian Campbell wrote:
+> Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+> LogicTile Express 20MG" added a new dts file to arch/arm64 which
+> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> .dtsi supplied by arch/arm.
+> 
+> Unfortunately this causes some issues for the split device tree
+> repository[0], since things get moved around there. In that context
+> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+> 
+> The sharing of the .dtsi is legitimate since the baseboard is the same
+> for various vexpress systems whatever processor they use.
+> 
+> Previously I attempted to resolve this by creating a shared location
+> for such things but we have been unable to come to a consensus on
+> where that should be.
+> 
+> Instead this patch simply replaces the use of ../../ in the dts
+> /include/ with a symlink in arch/arm64/boot/dts/arm pointing to the
+> file arch/arm/boot/dts.
+> 
+> Since the split device tree repo will shortly be required to flatten
+> symlinks for other reasons this will cause the dtsi file to appear in
+> both src/arm and src/arm64 in the split repo, which is an improvement
+> on not building for arm64 now.
+> 
+> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> 
+> Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Kristina Martsenko <kristina.martsenko@arm.com>
+> Cc: Kevin Hilman <khilman@linaro.org>
+> Cc: Frank Rowand <frank.rowand@sonymobile.com>
+> Cc: Olof Johansson <olof@lixom.net>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: arm@kernel.org
+> Cc: linux-kbuild@vger.kernel.org
+> ---
+> For more on flattening symlinks see
+> http://thread.gmane.org/gmane.linux.kernel.input/45646/focus=45742
+> ---
+>  arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts | 2 +-
+>  arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi        | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>  create mode 120000 arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> index 5b1d018..bb3c26d 100644
+> --- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> +++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> @@ -186,6 +186,6 @@
+>  				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+>  				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+>  
+> -		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
+> +		/include/ "vexpress-v2m-rs1.dtsi"
+>  	};
+>  };
+> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+> new file mode 120000
+> index 0000000..68fd0f8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
+> @@ -0,0 +1 @@
+> +../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi
+> \ No newline at end of file
 
-On 12 October 2015 at 11:14, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> On 12.10.2015 00:46, Anand Moon wrote:
->> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
->
-> This description is not entirely correct. The MMC driver already
-> supports these UHS speeds (you did not any code) so you rather enabled
-> it (description of bindings says "is supported").
->
-> You mentioned DDR50 but I don't see respective property below.
->
-> How do you know that these modes are really supported? I don't know. Can
-> you convince me?
+I was under the impression that there was some reason symlinks of this
+fashion were discouraged, but I don't know the details, and I don't have
+strong feelings either way.
 
-Setting this DDR50 capability give me this error. That's the reason to
-drop this capability.
+This solves a problem, and we don't seem to have a better solution. So
+to that end:
 
-Sep 24 09:37:04 odroidxu4 kernel: [    4.138418] mmc_host mmc1: Bus
-speed (slot 0) = 50000000Hz (slot req 50000000Hz, actual 50000000HZ
-div = 0)
-Sep 24 09:37:04 odroidxu4 kernel: [    4.138546] mmc1: new ultra high
-speed DDR50 SDHC card at address aaaa
-Sep 24 09:37:04 odroidxu4 kernel: [    4.141585] mmcblk0: mmc1:aaaa
-SL32G 29.7 GiB
-Sep 24 09:37:04 odroidxu4 kernel: [    4.146477] mmcblk0: error -110
-sending status command, retrying
-Sep 24 09:37:04 odroidxu4 kernel: [    4.146577] mmcblk0: error -115
-sending stop command, original cmd response 0x900, card status 0x900
-Sep 24 09:37:04 odroidxu4 kernel: [    4.146581] mmcblk0: error -84
-transferring data, sector 0, nr 8, cmd response 0x900, card status 0x0
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
->>
->> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>
->> ---
->> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>
->> Changes Fixed the UHS-I bus speed detedtion on cold boot.
->
-> I don't get what is exactly fixed here. What was the error? What is the
-> outcome of this fix? The log below is before or after?
->
-> Best regards,
-> Krzysztof
->
->>
->> [    2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req 100000000Hz, actual 100000000HZ div = 0)
->> [    2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
->> [    2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
->> [    2.461743]  mmcblk0: p1 p2
->
->> ---
->>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->> index 58c06d3..ba4a87b 100644
->> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->> @@ -364,6 +364,10 @@
->>       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
->>       bus-width = <4>;
->>       cap-sd-highspeed;
->> +     sd-uhs-sdr12;
->> +     sd-uhs-sdr25;
->> +     sd-uhs-sdr50;
->> +     sd-uhs-sdr104;
->>  };
->>
->>  &pinctrl_0 {
->>
->
-
--Anand Moon
+Thanks,
+Mark.
