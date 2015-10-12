@@ -1,84 +1,129 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional
- clock
-Date: Mon, 12 Oct 2015 12:19:48 -0700
-Message-ID: <20151012191948.GM23801@atomide.com>
-References: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk>
- <20151012174505.GJ23801@atomide.com>
- <561BF97B.2010501@codethink.co.uk>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH 4/4] soc: ti: qmss: make acc queue support optional in the driver
+Date: Mon, 12 Oct 2015 15:46:51 -0400
+Message-ID: <1444679211-823-5-git-send-email-m-karicheri2@ti.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <561BF97B.2010501-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1444679211-823-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-* Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 11:22]:
-> On 12/10/15 18:45, Tony Lindgren wrote:
-> > * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 10:38]:
-> >> The AM3715 OHCI controller will not function without the EHCI
-> >> unit's 120m fclk being enabled. If all the ports in the system
-> >> are set to OHCI then the 120m_fclk will not get enabled and no
-> >> devices are detected.
-> >>
-> >> Add a new (optional) property to signal the system must enable
-> >> the 120m_fck for OHCI so that if no EHCI ports are signalled
-> >> then the 120m_fclk should be enabled.
-> >>
-> >> We have found no information about why this is necessary, but
-> >> it is suspected the EHCI controller does not complete the initial
-> >> reset sequence and therefore does not hand control of the USB
-> >> port back.
-> >>
-> >> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
-> >>  drivers/mfd/omap-usb-host.c                        | 4 ++++
-> >>  2 files changed, 7 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> >> index 38d9bb8..fb5fea5 100644
-> >> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> >> @@ -23,6 +23,9 @@ OMAP MUSB GLUE
-> >>  Optional properties:
-> >>   - ctrl-module : phandle of the control module this glue uses to write to
-> >>     mailbox
-> >> + - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
-> >> +   using ohci. Needed for AM3517 in OHCI only mode.
-> >> +
-> >>  
-> >>  SOC specific device node entry
-> >>  usb_otg_hs: usb_otg_hs@4a0ab000 {
-> >> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
-> >> index 1d924d1..13880cf 100644
-> >> --- a/drivers/mfd/omap-usb-host.c
-> >> +++ b/drivers/mfd/omap-usb-host.c
-> >> @@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
-> >>  				need_logic_fck |= true;
-> >>  		}
-> >>  
-> >> +		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
-> >> +		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
-> >> +			need_logic_fck |= true;
-> >> +
-> >>  		if (need_logic_fck) {
-> >>  			omap->ehci_logic_fck = devm_clk_get(dev,
-> >>  							    "usbhost_120m_fck");
-> > 
-> > Hmm why not just use the standard device tree clocks property and then do
-> > clk_get_rate() on the clock?
-> 
-> I don't see that helps enabling the clock. The code decideds if
-> no EHCI ports in use that it doesn't need to enable the EHCI fclk.
+acc channels are available only if accumulator PDSP is loaded and
+running in the SoC. As this requires firmware and user may not have
+firmware in the file system, make the accumulator queue support
+available in qmss driver optional. To use accumulator queus user needs
+to add firmware to the file system and boot up kernel.
 
-Right, you need to do clk_prepare_enable() in it first? :)
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ - v2 : new patch added
+ Documentation/arm/keystone/knav-qmss.txt |  6 ++++++
+ drivers/soc/ti/knav_qmss.h               |  2 ++
+ drivers/soc/ti/knav_qmss_acc.c           | 10 ++++++++--
+ drivers/soc/ti/knav_qmss_queue.c         | 20 +++++++++++++++-----
+ 4 files changed, 31 insertions(+), 7 deletions(-)
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
+index da34a5b..fcdb9fd 100644
+--- a/Documentation/arm/keystone/knav-qmss.txt
++++ b/Documentation/arm/keystone/knav-qmss.txt
+@@ -48,3 +48,9 @@ in the file system and boot up the kernel. User would see
+  "firmware file ks2_qmss_pdsp_acc48.bin downloaded for PDSP"
+ 
+ in the boot up log if loading of firmware to PDSP is successful.
++
++Use of accumulated queues requires the firmware image to be present in the
++file system. The driver doesn't acc queues to the supported queue range if
++PDSP is not running in the SoC. The API call fails if there is a queue open
++request to an acc queue and PDSP is not running. So make sure to copy firmware
++to file system before using these queue types.
+diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
+index c31b8d8..6ff936c 100644
+--- a/drivers/soc/ti/knav_qmss.h
++++ b/drivers/soc/ti/knav_qmss.h
+@@ -137,6 +137,8 @@ struct knav_pdsp_info {
+ 	u32 __iomem					*iram;
+ 	u32						id;
+ 	struct list_head				list;
++	bool						loaded;
++	bool						started;
+ };
+ 
+ struct knav_qmgr_info {
+diff --git a/drivers/soc/ti/knav_qmss_acc.c b/drivers/soc/ti/knav_qmss_acc.c
+index b98fe56..d2d48f2 100644
+--- a/drivers/soc/ti/knav_qmss_acc.c
++++ b/drivers/soc/ti/knav_qmss_acc.c
+@@ -486,8 +486,8 @@ struct knav_range_ops knav_acc_range_ops = {
+  * Return 0 on success or error
+  */
+ int knav_init_acc_range(struct knav_device *kdev,
+-				struct device_node *node,
+-				struct knav_range_info *range)
++			struct device_node *node,
++			struct knav_range_info *range)
+ {
+ 	struct knav_acc_channel *acc;
+ 	struct knav_pdsp_info *pdsp;
+@@ -530,6 +530,12 @@ int knav_init_acc_range(struct knav_device *kdev,
+ 		return -EINVAL;
+ 	}
+ 
++	if (!pdsp->started) {
++		dev_err(kdev->dev, "pdsp id %d not started for range %s\n",
++			info->pdsp_id, range->name);
++		return -ENODEV;
++	}
++
+ 	info->pdsp = pdsp;
+ 	channels = range->num_queues;
+ 	if (of_get_property(node, "multi-queue", NULL)) {
+diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+index 06d9de8..f3a0b6a 100644
+--- a/drivers/soc/ti/knav_qmss_queue.c
++++ b/drivers/soc/ti/knav_qmss_queue.c
+@@ -1504,6 +1504,8 @@ static int knav_queue_stop_pdsp(struct knav_device *kdev,
+ 		dev_err(kdev->dev, "timed out on pdsp %s stop\n", pdsp->name);
+ 		return ret;
+ 	}
++	pdsp->loaded = false;
++	pdsp->started = false;
+ 	return 0;
+ }
+ 
+@@ -1592,16 +1594,24 @@ static int knav_queue_start_pdsps(struct knav_device *kdev)
+ 	int ret;
+ 
+ 	knav_queue_stop_pdsps(kdev);
+-	/* now load them all */
++	/* now load them all. We return success even if pdsp
++	 * is not loaded as acc channels are optional on having
++	 * firmware availability in the system. We set the loaded
++	 * and stated flag and when initialize the acc range, check
++	 * it and init the range only if pdsp is started.
++	 */
+ 	for_each_pdsp(kdev, pdsp) {
+ 		ret = knav_queue_load_pdsp(kdev, pdsp);
+-		if (ret < 0)
+-			return ret;
++		if (!ret)
++			pdsp->loaded = true;
+ 	}
+ 
+ 	for_each_pdsp(kdev, pdsp) {
+-		ret = knav_queue_start_pdsp(kdev, pdsp);
+-		WARN_ON(ret);
++		if (pdsp->loaded) {
++			ret = knav_queue_start_pdsp(kdev, pdsp);
++			if (!ret)
++				pdsp->started = true;
++		}
+ 	}
+ 	return 0;
+ }
+-- 
+1.9.1
+
