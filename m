@@ -1,84 +1,63 @@
-From: Damien Horsley <Damien.Horsley@imgtec.com>
-Subject: [PATCH V2 07/10] ASoC: img: Add binding document for
-	SPDIF input controller
-Date: Mon, 12 Oct 2015 13:40:34 +0100
-Message-ID: <1444653637-14711-8-git-send-email-Damien.Horsley@imgtec.com>
-References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, James Hartley <James.Hartley@imgtec.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH V2 1/3] of/irq: move of_msi_configure to the right guard and add a dummy
+Date: Mon, 12 Oct 2015 14:43:22 +0200
+Message-ID: <1444653804-25544-2-git-send-email-jogo@openwrt.org>
+References: <1444653804-25544-1-git-send-email-jogo@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444653804-25544-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
+of_msi_configure is part of of_irq.c, which is compiled in when OF_IRQ
+is enabled, not just OF.
+Also It is unconditionally called from of_platform_device_create_pdata,
+which does not depend on OF_IRQ, just OF_ADDRESS, so we need a dummy
+implementation in case of OF_ADDRESS=y but OF_IRQ=n.
 
-Add binding document for Imagination Technologies SPDIF
-input controller
-
-Signed-off-by: Damien.Horsley <Damien.Horsley@imgtec.com>
+Fixes: c706c239 ("of/platform: Assign MSI domain to platform device")
+Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 ---
- .../devicetree/bindings/sound/img,spdif-in.txt     | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/img,spdif-in.txt
+v1 -> v2:
+ * fix both issues (guard and missing dummy) at once.
 
-diff --git a/Documentation/devicetree/bindings/sound/img,spdif-in.txt b/Documentation/devicetree/bindings/sound/img,spdif-in.txt
-new file mode 100644
-index 0000000..aab9a81
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/img,spdif-in.txt
-@@ -0,0 +1,41 @@
-+Imagination Technologies SPDIF Input Controller
-+
-+Required Properties:
-+
-+  - compatible : Compatible list, must contain "img,spdif-in"
-+
-+  - #sound-dai-cells : Must be equal to 0
-+
-+  - reg : Offset and length of the register set for the device
-+
-+  - dmas: Contains an entry for each entry in dma-names.
-+
-+  - dma-names: Must include the following entry:
-+	"rx"
-+
-+  - clocks : Contains an entry for each entry in clock-names
-+
-+  - clock-names : Includes the following entries:
-+	"sys"	The system clock
-+
-+Optional Properties:
-+
-+  - resets: Should contain a phandle to the spdif in reset signal, if any
-+
-+  - reset-names: Should contain the reset signal name "rst", if a
-+	reset phandle is given
-+
-+  - interrupts : Contains the spdif in interrupt, if present
-+
-+Example:
-+
-+spdif_in: spdif-in@18100E00 {
-+	compatible = "img,spdif-in";
-+	reg = <0x18100E00 0x100>;
-+	interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
-+	dmas = <&mdc 15 0xffffffff 0>;
-+	dma-names = "rx";
-+	clocks = <&cr_periph SYS_CLK_SPDIF_IN>;
-+	clock-names = "sys";
-+	#sound-dai-cells = <0>;
-+};
+ include/linux/of_irq.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 4bcbd58..0088038 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -46,6 +46,7 @@ extern int of_irq_get(struct device_node *dev, int index);
+ extern int of_irq_get_byname(struct device_node *dev, const char *name);
+ extern int of_irq_to_resource_table(struct device_node *dev,
+ 		struct resource *res, int nr_irqs);
++extern void of_msi_configure(struct device *dev, struct device_node *np);
+ #else
+ static inline int of_irq_count(struct device_node *dev)
+ {
+@@ -64,6 +65,9 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+ {
+ 	return 0;
+ }
++static inline void of_msi_configure(struct device *dev, struct device_node *np)
++{
++}
+ #endif
+ 
+ #if defined(CONFIG_OF)
+@@ -74,7 +78,6 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+  */
+ extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+ extern struct device_node *of_irq_find_parent(struct device_node *child);
+-extern void of_msi_configure(struct device *dev, struct device_node *np);
+ 
+ #else /* !CONFIG_OF */
+ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
 -- 
 2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
