@@ -1,127 +1,49 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/3] ARM: dts: use vmmc-supply of emmc/sd for
- exynos5422-odroidxu3
-Date: Mon, 12 Oct 2015 14:49:04 +0900
-Message-ID: <561B49D0.2040305@samsung.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-2-git-send-email-linux.amoon@gmail.com>
- <561B3A3E.3030904@samsung.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH 3/5] ARM: dts: berlin: add axi clock for BG2Q sdhci0 and sdhci1
+Date: Mon, 12 Oct 2015 13:46:34 +0800
+Message-ID: <1444628796-5484-4-git-send-email-jszhang@marvell.com>
+References: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <561B3A3E.3030904@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12.10.2015 13:42, Krzysztof Kozlowski wrote:
-> On 12.10.2015 00:46, Anand Moon wrote:
->> Added support for vmmc/vqmmc-supply for emmc/sd cards.
->> Fixed the min values for regulator ldo13_reg (VDDQ_MMC2).
-> 
-> I can't see the description of a problem which is fixed. If you fix
-> something, then please describe what is wrong.
-> 
->> Added ramp-delay for LDO9(VDD33_USB3_0).
->> Added ramp-delay for LDO13(VDDQ_MMC2).
->> Added ramp-delay for LDO15(ETH_P3V3).
->>
->> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>
->> ---
->> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>
->> Note:
->> Changes need for support of UHS-I highspeed cards.
->> changes for vqmmc-supply for emmc is not supported.
->>
->> [    1.831136] vdd_ldo9: ramp_delay not set
->> [    1.843049] vdd_ldo13: ramp_delay not set
->> [    1.850975] vdd_ldo15: ramp_delay not set
->> [    1.862816] vdd_sd: ramp_delay not set
->> ---
->>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->> index 26decbd..58c06d3 100644
->> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->> @@ -157,6 +157,7 @@
->>  				regulator-min-microvolt = <3000000>;
->>  				regulator-max-microvolt = <3000000>;
->>  				regulator-always-on;
->> +				regulator-ramp-delay = <12000>;
->>  			};
->>  
->>  			ldo10_reg: LDO10 {
->> @@ -182,9 +183,10 @@
->>  
->>  			ldo13_reg: LDO13 {
->>  				regulator-name = "vdd_ldo13";
->> -				regulator-min-microvolt = <2800000>;
->> +				regulator-min-microvolt = <1800000>;
->>  				regulator-max-microvolt = <2800000>;
->>  				regulator-always-on;
->> +				regulator-ramp-delay = <12000>;
->>  			};
->>  
->>  			ldo15_reg: LDO15 {
->> @@ -213,6 +215,7 @@
->>  				regulator-min-microvolt = <2800000>;
->>  				regulator-max-microvolt = <2800000>;
->>  				regulator-always-on;
->> +				regulator-ramp-delay = <12000>;
-> 
-> Where did you get this value from? It looks wrong... My datasheet does
-> not have 12000 uV/uS.
+Add the axi clock for BG2Q's sdhci0 and sdhci1. This would let the axi
+clock be disabled during runtime pm, so saves power a bit.
 
-Anand,
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm/boot/dts/berlin2q.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-We have actually been here:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/351601.html
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 2f12048..a14c9e8 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -102,7 +102,8 @@
+ 		sdhci0: sdhci@ab0000 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0000 0x200>;
+-			clocks = <&chip_clk CLKID_SDIO1XIN>;
++			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
++			clock-names = "core", "axi";
+ 			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
+ 		};
+@@ -110,7 +111,8 @@
+ 		sdhci1: sdhci@ab0800 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0800 0x200>;
+-			clocks = <&chip_clk CLKID_SDIO1XIN>;
++			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
++			clock-names = "core", "axi";
+ 			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
+ 		};
+-- 
+2.6.1
 
-That time you used 8000. I asked the same question - how did you figure
-out the exact value.
-
-Now we have the same question - why 12000?
-
-It is completely fine to make a mistake (I do a lot of them) but please
-try not to make the same mistake again.
-
-BR,
-Krzysztof
-
-> 
->>  			};
->>  
->>  			ldo24_reg: LDO24 {
->> @@ -338,6 +341,7 @@
->>  	samsung,dw-mshc-ddr-timing = <0 2>;
->>  	samsung,dw-mshc-hs400-timing = <0 2>;
->>  	samsung,read-strobe-delay = <90>;
->> +	vmmc-supply = <&ldo3_reg>;
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
->>  	bus-width = <8>;
->> @@ -352,6 +356,8 @@
->>  	samsung,dw-mshc-ciu-div = <3>;
->>  	samsung,dw-mshc-sdr-timing = <0 4>;
->>  	samsung,dw-mshc-ddr-timing = <0 2>;
->> +	vmmc-supply = <&ldo19_reg>;
->> +	vqmmc-supply = <&ldo13_reg>;
-> 
-> It looks wrong. LDO13 is used in one place as VQMMC and in other as
-> VMMC. How did you figure out which regulator supplies which power domain?
-> 
-> Best regards,
-> Krzysztof
-> 
->>  	cd-gpios = <&gpc2 2 GPIO_ACTIVE_HIGH>;
->>  	cd-inverted;
->>  	pinctrl-names = "default";
->>
-> 
-> 
