@@ -1,51 +1,79 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: Fix audio card detection on peach boards
-Date: Mon, 12 Oct 2015 11:18:55 +0200
-Message-ID: <561B7AFF.1080707@samsung.com>
-References: <1444631169-19468-1-git-send-email-alim.akhtar@samsung.com>
- <561B578E.1050308@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] docs: dts: Add documentation for hi6220 SoC ION node
+Date: Mon, 12 Oct 2015 10:31:19 +0100
+Message-ID: <20151012093119.GA20649@leverpostej>
+References: <1444632386-106627-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <561B578E.1050308-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444632386-106627-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, tranmanphong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, tapaswenipathak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/15 08:47, Krzysztof Kozlowski wrote:
->> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> > index 8f4d76c..525a93a 100644
->> > --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> > +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> > @@ -1056,5 +1056,10 @@
->> >  	timeout-sec = <32>;
->> >  };
->> >  
->> > +&pmu_system_controller {
->
-> Please put the node in alphabetical order.
+On Mon, Oct 12, 2015 at 02:46:24PM +0800, Chen Feng wrote:
+> Documentation for hi6220 SoC ION node
 > 
->> > +	assigned-clocks = <&pmu_system_controller 0>;
->> > +	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
->
-> I might be missing something here but isn't the first clock of
-> pmu_system_controller already a CLK_FIN_PLL? So you are reparenting the
-> FIN_PLL to FIN_PLL?
+> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  .../devicetree/bindings/staging/ion/hi6220-ion.txt | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
 
-No, it's not, the first PMU consumer clock is indeed CLK_FIN_PLL,
-but pmu_system_controller is also a clock provider.  The first output
-clock of pmu_system_controller is CLKOUT, it's a composite mux and
-gate clock (registered in drivers/clk/samsung /clk-exynos-clkout.c).
-So  the above dts change is selecting an external oscillator input of
-the CLKOUT mux, i.e. it will route 24 MHz clock signal from the external
-oscillator to the CLKOUT output pin, to which audio CODEC is connected
-on peach-pit AFAICS.
 
--- 
-Regards,
-Sylwester
+We should not be adding platform-specific bindings and/or drivers for
+this.
+
+There's already a proposal for a generic binding [1]. Please work with
+that rather than working on your own.
+
+Mark.
+
+[1] https://lkml.org/lkml/2015/10/6/854
+ 
+> diff --git a/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+> new file mode 100644
+> index 0000000..c59e27c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+> @@ -0,0 +1,31 @@
+> +Hi6220 SoC ION
+> +===================================================================
+> +Required properties:
+> +- compatible : "hisilicon,hi6220-ion"
+> +- list of the ION heaps
+> +	- heap name : maybe heap_sys_user@0
+> +	- heap id   : id should be unique in the system.
+> +	- heap base : base ddr address of the heap,0 means that
+> +	it is dynamic.
+> +	- heap size : memory size and 0 means it is dynamic.
+> +	- heap type : the heap type of the heap, please also
+> +	see the define in ion.h(drivers/staging/android/uapi/ion.h)
+> +-------------------------------------------------------------------
+> +Example:
+> +	hi6220-ion {
+> +		compatible = "hisilicon,hi6220-ion";
+> +		heap_sys_user@0 {
+> +			heap-name = "sys_user";
+> +			heap-id   = <0x0>;
+> +			heap-base = <0x0>;
+> +			heap-size = <0x0>;
+> +			heap-type = "ion_system";
+> +		};
+> +		heap_sys_contig@0 {
+> +			heap-name = "sys_contig";
+> +			heap-id   = <0x1>;
+> +			heap-base = <0x0>;
+> +			heap-size = <0x0>;
+> +			heap-type = "ion_system_contig";
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
