@@ -1,232 +1,66 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
-Date: Mon, 12 Oct 2015 09:48:19 -0700
-Message-ID: <20151012164819.GA4010@dtor-ws>
-References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
- <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/8] dt-bindings: pmic: Document Hi655x pmic driver
+Date: Mon, 12 Oct 2015 17:49:31 +0100
+Message-ID: <20151012164931.GK4238@sirena.org.uk>
+References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
+ <1443611111-3196-2-git-send-email-w.f@huawei.com>
+ <20150930173921.GJ15635@sirena.org.uk>
+ <56160E22.3010703@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nrM5Z5VIJgwP9LWp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <56160E22.3010703@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wangfei <w.f@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, khilman@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, bintian.wang@huawei.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, puck.chen@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, william.wfei@gmail.com, zhongkaihua@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 12, 2015 at 06:24:30PM +0300, Irina Tirdea wrote:
-> After power on, it is recommended that the driver resets the device.
-> The reset procedure timing is described in the datasheet and is used
-> at device init (before writing device configuration) and
-> for power management. It is a sequence of setting the interrupt
-> and reset pins high/low at specific timing intervals. This procedure
-> also includes setting the slave address to the one specified in the
-> ACPI/device tree.
-> 
-> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
-> driver gt9xx.c for Android (publicly available in Android kernel
-> trees for various devices).
-> 
-> For reset the driver needs to control the interrupt and
-> reset gpio pins (configured through ACPI/device tree). For devices
-> that do not have the gpio pins properly declared, the functionality
-> depending on these pins will not be available, but the device can still
-> be used with basic functionality.
-> 
-> For both device tree and ACPI, the interrupt gpio pin configuration is
-> read from the "irq-gpio" property and the reset pin configuration is
-> read from the "reset-gpio" property. For ACPI 5.1, named properties
-> can be specified using the _DSD section. This functionality will not be
-> available for devices that use indexed gpio pins declared in the _CRS
-> section (we need to provide backward compatibility with devices
-> that do not support using the interrupt gpio pin as output).
-> 
-> For ACPI, the pins can be specified using ACPI 5.1:
-> Device (STAC)
-> {
->     Name (_HID, "GDIX1001")
->     ...
-> 
->     Method (_CRS, 0, Serialized)
->     {
->         Name (RBUF, ResourceTemplate ()
->         {
->             I2cSerialBus (0x0014, ControllerInitiated, 0x00061A80,
->                 AddressingMode7Bit, "\\I2C0",
->                 0x00, ResourceConsumer, ,
->                 )
-> 
->             GpioInt (Edge, ActiveHigh, Exclusive, PullNone, 0x0000,
->                 "\\I2C0", 0x00, ResourceConsumer, ,
->                  )
->                  {   // Pin list
->                      0
->                  }
-> 
->             GpioIo (Exclusive, PullDown, 0x0000, 0x0000,
->                 IoRestrictionOutputOnly, "\\I2C0", 0x00,
->                 ResourceConsumer, ,
->                 )
->                 {
->                      1
->                 }
->         })
->         Return (RBUF)
->     }
-> 
->     Name (_DSD,  Package ()
->     {
->         ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package ()
->         {
->             Package (2) {"irq-gpio", Package() {^STAC, 0, 0, 0 }},
->             Package (2) {"reset-gpio", Package() {^STAC, 1, 0, 0 }},
->             ...
->         }
->     }
-> 
-> Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> Acked-by: Bastien Nocera <hadess@hadess.net>
-> Tested-by: Bastien Nocera <hadess@hadess.net>
-> Tested-by: Aleksei Mamlin <mamlinav@gmail.com>
-> ---
->  .../bindings/input/touchscreen/goodix.txt          |   5 +
->  drivers/input/touchscreen/Kconfig                  |   1 +
->  drivers/input/touchscreen/goodix.c                 | 101 +++++++++++++++++++++
->  3 files changed, 107 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index 8ba98ee..7137881 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -12,6 +12,8 @@ Required properties:
->   - reg			: I2C address of the chip. Should be 0x5d or 0x14
->   - interrupt-parent	: Interrupt controller to which the chip is connected
->   - interrupts		: Interrupt to which the chip is connected
-> + - irq-gpio		: GPIO pin used for IRQ
-> + - reset-gpio		: GPIO pin used for reset
->  
->  Example:
->  
-> @@ -23,6 +25,9 @@ Example:
->  			reg = <0x5d>;
->  			interrupt-parent = <&gpio>;
->  			interrupts = <0 0>;
-> +
-> +			irq-gpio = <&gpio1 0 0>;
-> +			reset-gpio = <&gpio1 1 0>;
->  		};
->  
->  		/* ... */
-> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-> index 771d95c..76f5a9d 100644
-> --- a/drivers/input/touchscreen/Kconfig
-> +++ b/drivers/input/touchscreen/Kconfig
-> @@ -324,6 +324,7 @@ config TOUCHSCREEN_FUJITSU
->  config TOUCHSCREEN_GOODIX
->  	tristate "Goodix I2C touchscreen"
->  	depends on I2C
-> +	depends on GPIOLIB
->  	help
->  	  Say Y here if you have the Goodix touchscreen (such as one
->  	  installed in Onda v975w tablets) connected to your
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index 56d0330..87304ac 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -16,6 +16,7 @@
->  
->  #include <linux/kernel.h>
->  #include <linux/dmi.h>
-> +#include <linux/gpio.h>
->  #include <linux/i2c.h>
->  #include <linux/input.h>
->  #include <linux/input/mt.h>
-> @@ -37,8 +38,13 @@ struct goodix_ts_data {
->  	unsigned int int_trigger_type;
->  	bool rotated_screen;
->  	int cfg_len;
-> +	struct gpio_desc *gpiod_int;
-> +	struct gpio_desc *gpiod_rst;
->  };
->  
-> +#define GOODIX_GPIO_INT_NAME		"irq"
-> +#define GOODIX_GPIO_RST_NAME		"reset"
-> +
->  #define GOODIX_MAX_HEIGHT		4096
->  #define GOODIX_MAX_WIDTH		4096
->  #define GOODIX_INT_TRIGGER		1
-> @@ -237,6 +243,88 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int goodix_int_sync(struct goodix_ts_data *ts)
-> +{
-> +	int error;
-> +
-> +	error = gpiod_direction_output(ts->gpiod_int, 0);
-> +	if (error)
-> +		return error;
-> +	msleep(50);				/* T5: 50ms */
-> +
-> +	return gpiod_direction_input(ts->gpiod_int);
-> +}
-> +
-> +/**
-> + * goodix_reset - Reset device during power on
-> + *
-> + * @ts: goodix_ts_data pointer
-> + */
-> +static int goodix_reset(struct goodix_ts_data *ts)
-> +{
-> +	int error;
-> +
-> +	/* begin select I2C slave addr */
-> +	error = gpiod_direction_output(ts->gpiod_rst, 0);
-> +	if (error)
-> +		return error;
-> +	msleep(20);				/* T2: > 10ms */
-> +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
-> +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
-> +	if (error)
-> +		return error;
-> +	usleep_range(100, 2000);		/* T3: > 100us */
-> +	error = gpiod_direction_output(ts->gpiod_rst, 1);
-> +	if (error)
-> +		return error;
-> +	usleep_range(6000, 10000);		/* T4: > 5ms */
-> +	/* end select I2C slave addr */
-> +	error = gpiod_direction_input(ts->gpiod_rst);
-> +	if (error)
-> +		return error;
-> +	return goodix_int_sync(ts);
-> +}
-> +
-> +/**
-> + * goodix_get_gpio_config - Get GPIO config from ACPI/DT
-> + *
-> + * @ts: goodix_ts_data pointer
-> + */
-> +static int goodix_get_gpio_config(struct goodix_ts_data *ts)
-> +{
-> +	int error;
-> +	struct device *dev;
-> +	struct gpio_desc *gpiod;
-> +
-> +	if (!ts->client)
-> +		return -EINVAL;
-> +	dev = &ts->client->dev;
-> +
-> +	/* Get the interrupt GPIO pin number */
-> +	gpiod = devm_gpiod_get(dev, GOODIX_GPIO_INT_NAME, GPIOD_IN);
 
-Why isn't this devm_gpiod_get_optional()? Then you would not need to
-clobber the return value down in goodix_ts_probe().
+--nrM5Z5VIJgwP9LWp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I can fix it up locally.
+On Thu, Oct 08, 2015 at 02:33:06PM +0800, wangfei wrote:
+> On 2015/10/1 1:39, Mark Brown wrote:
+> > On Wed, Sep 30, 2015 at 07:05:04PM +0800, Fei Wang wrote:
 
-Thanks.
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
 
--- 
-Dmitry
+> >> +                coul: coul@1 {
+> >> +                        compatible = "hisilicon,hi655x-coul";
+> >> +                        interrupt-parent = <&pmic>;
+> >> +                        interrupts = <24 0>, <25 0>, <26 0>, <27 0>;
+> >> +                        interrupt-names = "cl_int_i", "cl_out_i", "cl_in_i", "vbat_int_i";
+> >> +                        battery_product_index = <0>;
+
+> > For example, the "battery_product_index" property here is undocumented.
+
+> now on hikey, we only enable hi655x-regulator-pmic function, and
+> regulator is child node of pmic.do i need to document regulator
+> dt-binding in this file or create a new regulator dt-binding file?
+
+Either is possible, though it is common to split the DT documentation
+into per subsystem files for ease of reference and to avoid cross tree
+merge issues.
+
+--nrM5Z5VIJgwP9LWp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWG+SaAAoJECTWi3JdVIfQXFQH/0xssC7qGw4v0YJQ16pzEFru
+dImgv/02ZSaYQvfjlKsWUsMXYtzCOsYSSkaf9g1OF4HOdigOQo/3nobUDd9JKk+x
+5gmn5jgdjLCjbYLpysAuMXY132rM2UPglQuYL7ayGESJmobmp04HwhvLGXfJcbav
+2H7KB/7QP9rHwH/80AmvnKV1MtuyB0Xtjbna3eA57k5tnRW7GDMkeI/CXOoz8vyZ
+qcswrOogK5kshXLQUe8gIx78Q0kjiGIFmWiYU31eyuJIZeMMU0YdiGVq6JLTvj+8
+pKNbC91GlAgLO/cpwX0Ht7QRxlHV7Jo+6ulNiJ6Hqt0LTCJbtYzY2iHvsHTK32k=
+=tBvg
+-----END PGP SIGNATURE-----
+
+--nrM5Z5VIJgwP9LWp--
