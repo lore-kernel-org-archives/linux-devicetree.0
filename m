@@ -1,60 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH] ARM: OF implies OF_FLATTREE
-Date: Mon, 12 Oct 2015 16:06:58 +0200
-Message-ID: <61301019.TKW9ocJ2jm@wuerfel>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2] dmaengine: xgene-dma: Disable memcpy operation due to
+ performance drop
+Date: Mon, 12 Oct 2015 19:53:36 +0530
+Message-ID: <20151012142336.GA27370@localhost>
+References: <1444295217-3099-1-git-send-email-rsahu@apm.com>
+ <20151009161208.GJ3609@vkoul-mobl.iind.intel.com>
+ <CAFd313w3010=LN7rfrxwohM=h-9xWzK6UNtcWxn+eXtx-pNv4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd313w3010=LN7rfrxwohM=h-9xWzK6UNtcWxn+eXtx-pNv4Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rameshwar Sahu <rsahu@apm.com>
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On the ARM architecture, individual platforms select CONFIG_USE_OF if they
-need it, but all device tree code is keyed off CONFIG_OF. When building
-a platform without DT support and manually enabling CONFIG_OF, we now
-get a number of build errors, e.g.
+On Fri, Oct 09, 2015 at 10:08:32PM +0530, Rameshwar Sahu wrote:
+> Hi Vinod,
+> 
+> On Fri, Oct 9, 2015 at 9:42 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> > On Thu, Oct 08, 2015 at 02:36:57PM +0530, Rameshwar Prasad Sahu wrote:
+> >> The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
+> >> computations. But the bandwidth of the entire DMA engine is shared
+> >> among all channels. This patch re-configures operations availability
+> >> such that one can achieve maximum performance for XOR and PQ
+> >> computation by removing the memory offload operations.
+> >>
+> >> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> >> ---
+> >>  drivers/dma/xgene-dma.c | 1 -
+> >>  1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+> >> index 8d57b1b..cd38022 100644
+> >> --- a/drivers/dma/xgene-dma.c
+> >> +++ b/drivers/dma/xgene-dma.c
+> >> @@ -1707,7 +1707,6 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
+> >>       dma_cap_zero(dma_dev->cap_mask);
+> >>
+> >>       /* Set DMA device capability */
+> >> -     dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
+> >>       dma_cap_set(DMA_SG, dma_dev->cap_mask);
+> >
+> > This will not work. Still clients can invoke memcpy operation. You need to
+> > remove the callback
+> 
+> Got it, instead of removing the callback registration can we keep it
+> inside the condition like..
+> 
+> if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask))
+>             dma_dev->device_prep_dma_memcpy = xgene_dma_prep_memcpy;
 
-arch/arm/kernel/devtree.c: In function 'setup_machine_fdt':
-arch/arm/kernel/devtree.c:215:19: error: implicit declaration of function 'early_init_dt_verify' [-Werror=implicit-function-declaration]
+But the code is dead and will not be tested and hence not maintained. I do
+not see a reason to keep dead code in kernel
 
-We could now try to separate the use case of booting from DT vs. the
-case of using the dynamic implementation, but that seems more complicated
-than it can gain us.
-
-This simply changes the ARM Kconfig file to always enable OF_RESERVED_MEM
-and OF_EARLY_FLATTREE when CONFIG_OF is enabled. These options add a little
-extra code when we just want the dynamic OF implementation, but that seems
-like a rather obscure case, and this version solves all CONFIG_OF related
-randconfig regressions.
-
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Fixes: 0166dc11be91 ("of: make CONFIG_OF user selectable")
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index ee104950b30c..da71de8bba4f 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -75,6 +75,8 @@ config ARM
- 	select IRQ_FORCED_THREADING
- 	select MODULES_USE_ELF_REL
- 	select NO_BOOTMEM
-+	select OF_EARLY_FLATTREE if OF
-+	select OF_RESERVED_MEM if OF
- 	select OLD_SIGACTION
- 	select OLD_SIGSUSPEND3
- 	select PERF_USE_VMALLOC
-@@ -1695,8 +1697,6 @@ config USE_OF
- 	bool "Flattened Device Tree support"
- 	select IRQ_DOMAIN
- 	select OF
--	select OF_EARLY_FLATTREE
--	select OF_RESERVED_MEM
- 	help
- 	  Include support for flattened device tree machine descriptions.
- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
