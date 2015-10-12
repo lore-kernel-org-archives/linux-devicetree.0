@@ -1,754 +1,285 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v4 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Mon, 12 Oct 2015 10:06:50 -0500
-Message-ID: <561BCC8A.3090402@ti.com>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-4-git-send-email-afd@ti.com> <20151005092423.GD3243@x1>
- <20151005092718.GE3243@x1>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH 16/25] scsi: hisi_sas: add dev_found and port_formed
+Date: Mon, 12 Oct 2015 23:20:28 +0800
+Message-ID: <1444663237-238302-17-git-send-email-john.garry@huawei.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151005092718.GE3243@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: James.Bottomley@HansenPartnership.com
+Cc: linux-kernel@vger.kernel.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/2015 04:27 AM, Lee Jones wrote:
-> On Mon, 05 Oct 2015, Lee Jones wrote:
->
->> On Thu, 01 Oct 2015, Andrew F. Davis wrote:
->>
->>> This patch adds support for TPS65912 mfd device. It provides
->>> communication through the I2C and SPI interfaces. It contains
->>> the following components:
->>>
->>>   - Regulators
->>>   - GPIO controller
->>>
->>> Signed-off-by: Andrew F. Davis <afd@ti.com>
->>> ---
->>>   drivers/mfd/Kconfig          |  25 ++++
->>>   drivers/mfd/Makefile         |   3 +
->>>   drivers/mfd/tps65912-core.c  | 108 ++++++++++++++
->>>   drivers/mfd/tps65912-i2c.c   |  82 ++++++++++
->>>   drivers/mfd/tps65912-spi.c   |  81 ++++++++++
->>>   include/linux/mfd/tps65912.h | 345 +++++++++++++++++++++++++++++++++++++++++++
->>>   6 files changed, 644 insertions(+)
->>>   create mode 100644 drivers/mfd/tps65912-core.c
->>>   create mode 100644 drivers/mfd/tps65912-i2c.c
->>>   create mode 100644 drivers/mfd/tps65912-spi.c
->>>   create mode 100644 include/linux/mfd/tps65912.h
->>
->> Applied, thanks.
->
-> Whoops, I forgot about the removal patch.
->
-> For this patch:
->    Acked-by: Lee Jones <lee.jones@linaro.org>
->
-> Can you break up the removal patch into subsystems as well?
->
+Add functions to deal with lldd_dev_found and lldd_port_formed.
 
-I can if you would like, but as I responded in the other patch I
-think that will cause problems as the Kconfig symbols in the new
-will allow the old to be compiled and this will break build. All
-the removals may have to be brought in in a single patch, again
-up to you.
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas.h       |  12 ++++
+ drivers/scsi/hisi_sas/hisi_sas_init.c  |   2 +
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 125 +++++++++++++++++++++++++++++++++
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |  41 +++++++++++
+ 4 files changed, 180 insertions(+)
 
->>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>> index 9a8df8e..02b321f 100644
->>> --- a/drivers/mfd/Kconfig
->>> +++ b/drivers/mfd/Kconfig
->>> @@ -1167,6 +1167,31 @@ config MFD_TPS65910
->>>   	  if you say yes here you get support for the TPS65910 series of
->>>   	  Power Management chips.
->>>
->>> +config MFD_TPS65912
->>> +	tristate
->>> +	select REGMAP
->>> +	select REGMAP_IRQ
->>> +
->>> +config MFD_TPS65912_I2C
->>> +	tristate "TI TPS65912 Power Management chip with I2C"
->>> +	select MFD_TPS65912
->>> +	select REGMAP_I2C
->>> +	depends on I2C
->>> +	depends on OF || COMPILE_TEST
->>> +	help
->>> +	  If you say yes here you get support for the TPS65912 series of
->>> +	  PM chips with I2C interface.
->>> +
->>> +config MFD_TPS65912_SPI
->>> +	tristate "TI TPS65912 Power Management chip with SPI"
->>> +	select MFD_TPS65912
->>> +	select REGMAP_SPI
->>> +	depends on SPI_MASTER
->>> +	depends on OF || COMPILE_TEST
->>> +	help
->>> +	  If you say yes here you get support for the TPS65912 series of
->>> +	  PM chips with SPI interface.
->>> +
->>>   config MFD_TPS80031
->>>   	bool "TI TPS80031/TPS80032 Power Management chips"
->>>   	depends on I2C=y
->>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->>> index 004aa76..49c3530 100644
->>> --- a/drivers/mfd/Makefile
->>> +++ b/drivers/mfd/Makefile
->>> @@ -69,6 +69,9 @@ obj-$(CONFIG_TPS6507X)		+= tps6507x.o
->>>   obj-$(CONFIG_MFD_TPS65217)	+= tps65217.o
->>>   obj-$(CONFIG_MFD_TPS65218)	+= tps65218.o
->>>   obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
->>> +obj-$(CONFIG_MFD_TPS65912)	+= tps65912-core.o
->>> +obj-$(CONFIG_MFD_TPS65912_I2C)	+= tps65912-i2c.o
->>> +obj-$(CONFIG_MFD_TPS65912_SPI)  += tps65912-spi.o
->>>   obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
->>>   obj-$(CONFIG_MENELAUS)		+= menelaus.o
->>>
->>> diff --git a/drivers/mfd/tps65912-core.c b/drivers/mfd/tps65912-core.c
->>> new file mode 100644
->>> index 0000000..e787950
->>> --- /dev/null
->>> +++ b/drivers/mfd/tps65912-core.c
->>> @@ -0,0 +1,108 @@
->>> +/*
->>> + * Core functions for TI TPS65912x PMIC
->>> + *
->>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
->>> + *
->>> + * Author: Andrew F. Davis <afd@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->>> + * kind, whether expressed or implied; without even the implied warranty
->>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License version 2 for more details.
->>> + *
->>> + * Based on the TPS65218 driver and the previous TPS65912 driver by
->>> + * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
->>> + */
->>> +
->>> +#include <linux/interrupt.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_device.h>
->>> +
->>> +#include <linux/mfd/tps65912.h>
->>> +
->>> +static const struct regmap_irq tps65912_irqs[] = {
->>> +	/* INT_STS IRQs */
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PWRHOLD_F, 0, TPS65912_INT_STS_PWRHOLD_F),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_VMON, 0, TPS65912_INT_STS_VMON),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PWRON, 0, TPS65912_INT_STS_PWRON),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PWRON_LP, 0, TPS65912_INT_STS_PWRON_LP),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PWRHOLD_R, 0, TPS65912_INT_STS_PWRHOLD_R),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_HOTDIE, 0, TPS65912_INT_STS_HOTDIE),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO1_R, 0, TPS65912_INT_STS_GPIO1_R),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO1_F, 0, TPS65912_INT_STS_GPIO1_F),
->>> +	/* INT_STS2 IRQs */
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO2_R, 1, TPS65912_INT_STS2_GPIO2_R),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO2_F, 1, TPS65912_INT_STS2_GPIO2_F),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO3_R, 1, TPS65912_INT_STS2_GPIO3_R),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO3_F, 1, TPS65912_INT_STS2_GPIO3_F),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO4_R, 1, TPS65912_INT_STS2_GPIO4_R),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO4_F, 1, TPS65912_INT_STS2_GPIO4_F),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO5_R, 1, TPS65912_INT_STS2_GPIO5_R),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO5_F, 1, TPS65912_INT_STS2_GPIO5_F),
->>> +	/* INT_STS3 IRQs */
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC1, 2, TPS65912_INT_STS3_PGOOD_DCDC1),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC2, 2, TPS65912_INT_STS3_PGOOD_DCDC2),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC3, 2, TPS65912_INT_STS3_PGOOD_DCDC3),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC4, 2, TPS65912_INT_STS3_PGOOD_DCDC4),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO1, 2, TPS65912_INT_STS3_PGOOD_LDO1),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO2, 2, TPS65912_INT_STS3_PGOOD_LDO2),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO3, 2, TPS65912_INT_STS3_PGOOD_LDO3),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO4, 2, TPS65912_INT_STS3_PGOOD_LDO4),
->>> +	/* INT_STS4 IRQs */
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO5, 3, TPS65912_INT_STS4_PGOOD_LDO5),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO6, 3, TPS65912_INT_STS4_PGOOD_LDO6),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO7, 3, TPS65912_INT_STS4_PGOOD_LDO7),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO8, 3, TPS65912_INT_STS4_PGOOD_LDO8),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO9, 3, TPS65912_INT_STS4_PGOOD_LDO9),
->>> +	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO10, 3, TPS65912_INT_STS4_PGOOD_LDO10),
->>> +};
->>> +
->>> +static struct regmap_irq_chip tps65912_irq_chip = {
->>> +	.name = "tps65912",
->>> +	.irqs = tps65912_irqs,
->>> +	.num_irqs = ARRAY_SIZE(tps65912_irqs),
->>> +	.num_regs = 4,
->>> +	.irq_reg_stride = 2,
->>> +	.mask_base = TPS65912_INT_MSK,
->>> +	.status_base = TPS65912_INT_STS,
->>> +	.ack_base = TPS65912_INT_STS,
->>> +	.init_ack_masked = true,
->>> +};
->>> +
->>> +int tps65912_device_init(struct tps65912 *tps)
->>> +{
->>> +	int ret;
->>> +
->>> +	ret = regmap_add_irq_chip(tps->regmap, tps->irq, IRQF_ONESHOT, 0,
->>> +				  &tps65912_irq_chip, &tps->irq_data);
->>> +	if (ret < 0)
->>> +		return ret;
->>> +
->>> +	ret = of_platform_populate(tps->dev->of_node, NULL, NULL, tps->dev);
->>> +	if (ret < 0)
->>> +		goto err_irq;
->>> +
->>> +	return 0;
->>> +
->>> +err_irq:
->>> +	regmap_del_irq_chip(tps->irq, tps->irq_data);
->>> +
->>> +	return ret;
->>> +}
->>> +EXPORT_SYMBOL_GPL(tps65912_device_init);
->>> +
->>> +int tps65912_device_exit(struct tps65912 *tps)
->>> +{
->>> +	regmap_del_irq_chip(tps->irq, tps->irq_data);
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(tps65912_device_exit);
->>> +
->>> +MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
->>> +MODULE_DESCRIPTION("TPS65912x MFD Driver");
->>> +MODULE_LICENSE("GPL v2");
->>> diff --git a/drivers/mfd/tps65912-i2c.c b/drivers/mfd/tps65912-i2c.c
->>> new file mode 100644
->>> index 0000000..bdae10b01
->>> --- /dev/null
->>> +++ b/drivers/mfd/tps65912-i2c.c
->>> @@ -0,0 +1,82 @@
->>> +/*
->>> + * I2C access driver for TI TPS65912x PMIC
->>> + *
->>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
->>> + *
->>> + * Author: Andrew F. Davis <afd@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->>> + * kind, whether expressed or implied; without even the implied warranty
->>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License version 2 for more details.
->>> + *
->>> + * Based on the TPS65218 driver and the previous TPS65912 driver by
->>> + * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
->>> + */
->>> +
->>> +#include <linux/i2c.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/regmap.h>
->>> +
->>> +#include <linux/mfd/tps65912.h>
->>> +
->>> +static const struct of_device_id tps65912_i2c_of_match_table[] = {
->>> +	{ .compatible = "ti,tps65912", },
->>> +	{ /* sentinel */ }
->>> +};
->>> +
->>> +static int tps65912_i2c_probe(struct i2c_client *client,
->>> +			      const struct i2c_device_id *ids)
->>> +{
->>> +	struct tps65912 *tps;
->>> +
->>> +	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
->>> +	if (!tps)
->>> +		return -ENOMEM;
->>> +
->>> +	i2c_set_clientdata(client, tps);
->>> +	tps->dev = &client->dev;
->>> +	tps->irq = client->irq;
->>> +
->>> +	tps->regmap = devm_regmap_init_i2c(client, &tps65912_regmap_config);
->>> +	if (IS_ERR(tps->regmap)) {
->>> +		dev_err(tps->dev, "Failed to initialize register map\n");
->>> +		return PTR_ERR(tps->regmap);
->>> +	}
->>> +
->>> +	return tps65912_device_init(tps);
->>> +}
->>> +
->>> +static int tps65912_i2c_remove(struct i2c_client *client)
->>> +{
->>> +	struct tps65912 *tps = i2c_get_clientdata(client);
->>> +
->>> +	return tps65912_device_exit(tps);
->>> +}
->>> +
->>> +static const struct i2c_device_id tps65912_i2c_id_table[] = {
->>> +	{ "tps65912", 0 },
->>> +	{ /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(i2c, tps65912_i2c_id_table);
->>> +
->>> +static struct i2c_driver tps65912_i2c_driver = {
->>> +	.driver		= {
->>> +		.name	= "tps65912",
->>> +		.of_match_table = tps65912_i2c_of_match_table,
->>> +	},
->>> +	.probe		= tps65912_i2c_probe,
->>> +	.remove		= tps65912_i2c_remove,
->>> +	.id_table       = tps65912_i2c_id_table,
->>> +};
->>> +
->>> +module_i2c_driver(tps65912_i2c_driver);
->>> +
->>> +MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
->>> +MODULE_DESCRIPTION("TPS65912x I2C Interface Driver");
->>> +MODULE_LICENSE("GPL v2");
->>> diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
->>> new file mode 100644
->>> index 0000000..24c5c97
->>> --- /dev/null
->>> +++ b/drivers/mfd/tps65912-spi.c
->>> @@ -0,0 +1,81 @@
->>> +/*
->>> + * SPI access driver for TI TPS65912x PMIC
->>> + *
->>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
->>> + *
->>> + * Author: Andrew F. Davis <afd@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->>> + * kind, whether expressed or implied; without even the implied warranty
->>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License version 2 for more details.
->>> + *
->>> + * Based on the TPS65218 driver and the previous TPS65912 driver by
->>> + * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
->>> + */
->>> +
->>> +#include <linux/module.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/spi/spi.h>
->>> +
->>> +#include <linux/mfd/tps65912.h>
->>> +
->>> +static const struct of_device_id tps65912_spi_of_match_table[] = {
->>> +	{ .compatible = "ti,tps65912", },
->>> +	{ /* sentinel */ }
->>> +};
->>> +
->>> +static int tps65912_spi_probe(struct spi_device *spi)
->>> +{
->>> +	struct tps65912 *tps;
->>> +
->>> +	tps = devm_kzalloc(&spi->dev, sizeof(*tps), GFP_KERNEL);
->>> +	if (!tps)
->>> +		return -ENOMEM;
->>> +
->>> +	spi_set_drvdata(spi, tps);
->>> +	tps->dev = &spi->dev;
->>> +	tps->irq = spi->irq;
->>> +
->>> +	tps->regmap = devm_regmap_init_spi(spi, &tps65912_regmap_config);
->>> +	if (IS_ERR(tps->regmap)) {
->>> +		dev_err(tps->dev, "Failed to initialize register map\n");
->>> +		return PTR_ERR(tps->regmap);
->>> +	}
->>> +
->>> +	return tps65912_device_init(tps);
->>> +}
->>> +
->>> +static int tps65912_spi_remove(struct spi_device *client)
->>> +{
->>> +	struct tps65912 *tps = spi_get_drvdata(client);
->>> +
->>> +	return tps65912_device_exit(tps);
->>> +}
->>> +
->>> +static const struct spi_device_id tps65912_spi_id_table[] = {
->>> +	{ "tps65912", 0 },
->>> +	{ /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(spi, tps65912_spi_id_table);
->>> +
->>> +static struct spi_driver tps65912_spi_driver = {
->>> +	.driver		= {
->>> +		.name	= "tps65912",
->>> +		.of_match_table = tps65912_spi_of_match_table,
->>> +	},
->>> +	.probe		= tps65912_spi_probe,
->>> +	.remove		= tps65912_spi_remove,
->>> +	.id_table       = tps65912_spi_id_table,
->>> +};
->>> +
->>> +module_spi_driver(tps65912_spi_driver);
->>> +
->>> +MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
->>> +MODULE_DESCRIPTION("TPS65912x SPI Interface Driver");
->>> +MODULE_LICENSE("GPL v2");
->>> diff --git a/include/linux/mfd/tps65912.h b/include/linux/mfd/tps65912.h
->>> new file mode 100644
->>> index 0000000..8843c0d
->>> --- /dev/null
->>> +++ b/include/linux/mfd/tps65912.h
->>> @@ -0,0 +1,345 @@
->>> +/*
->>> + * TI TPS65912x
->>> + *
->>> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
->>> + *
->>> + * Author: Andrew F. Davis <afd@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->>> + * kind, whether expressed or implied; without even the implied warranty
->>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License version 2 for more details.
->>> + *
->>> + * Based on the TPS65218 driver and the previous TPS65912 driver by
->>> + * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
->>> + */
->>> +
->>> +#ifndef __LINUX_MFD_TPS65912_H
->>> +#define __LINUX_MFD_TPS65912_H
->>> +
->>> +#include <linux/device.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/regulator/driver.h>
->>> +
->>> +/* List of registers for TPS65912 */
->>> +#define TPS65912_DCDC1_CTRL		0x00
->>> +#define TPS65912_DCDC2_CTRL		0x01
->>> +#define TPS65912_DCDC3_CTRL		0x02
->>> +#define TPS65912_DCDC4_CTRL		0x03
->>> +#define TPS65912_DCDC1_OP		0x04
->>> +#define TPS65912_DCDC1_AVS		0x05
->>> +#define TPS65912_DCDC1_LIMIT		0x06
->>> +#define TPS65912_DCDC2_OP		0x07
->>> +#define TPS65912_DCDC2_AVS		0x08
->>> +#define TPS65912_DCDC2_LIMIT		0x09
->>> +#define TPS65912_DCDC3_OP		0x0A
->>> +#define TPS65912_DCDC3_AVS		0x0B
->>> +#define TPS65912_DCDC3_LIMIT		0x0C
->>> +#define TPS65912_DCDC4_OP		0x0D
->>> +#define TPS65912_DCDC4_AVS		0x0E
->>> +#define TPS65912_DCDC4_LIMIT		0x0F
->>> +#define TPS65912_LDO1_OP		0x10
->>> +#define TPS65912_LDO1_AVS		0x11
->>> +#define TPS65912_LDO1_LIMIT		0x12
->>> +#define TPS65912_LDO2_OP		0x13
->>> +#define TPS65912_LDO2_AVS		0x14
->>> +#define TPS65912_LDO2_LIMIT		0x15
->>> +#define TPS65912_LDO3_OP		0x16
->>> +#define TPS65912_LDO3_AVS		0x17
->>> +#define TPS65912_LDO3_LIMIT		0x18
->>> +#define TPS65912_LDO4_OP		0x19
->>> +#define TPS65912_LDO4_AVS		0x1A
->>> +#define TPS65912_LDO4_LIMIT		0x1B
->>> +#define TPS65912_LDO5			0x1C
->>> +#define TPS65912_LDO6			0x1D
->>> +#define TPS65912_LDO7			0x1E
->>> +#define TPS65912_LDO8			0x1F
->>> +#define TPS65912_LDO9			0x20
->>> +#define TPS65912_LDO10			0x21
->>> +#define TPS65912_THRM			0x22
->>> +#define TPS65912_CLK32OUT		0x23
->>> +#define TPS65912_DEVCTRL		0x24
->>> +#define TPS65912_DEVCTRL2		0x25
->>> +#define TPS65912_I2C_SPI_CFG		0x26
->>> +#define TPS65912_KEEP_ON		0x27
->>> +#define TPS65912_KEEP_ON2		0x28
->>> +#define TPS65912_SET_OFF1		0x29
->>> +#define TPS65912_SET_OFF2		0x2A
->>> +#define TPS65912_DEF_VOLT		0x2B
->>> +#define TPS65912_DEF_VOLT_MAPPING	0x2C
->>> +#define TPS65912_DISCHARGE		0x2D
->>> +#define TPS65912_DISCHARGE2		0x2E
->>> +#define TPS65912_EN1_SET1		0x2F
->>> +#define TPS65912_EN1_SET2		0x30
->>> +#define TPS65912_EN2_SET1		0x31
->>> +#define TPS65912_EN2_SET2		0x32
->>> +#define TPS65912_EN3_SET1		0x33
->>> +#define TPS65912_EN3_SET2		0x34
->>> +#define TPS65912_EN4_SET1		0x35
->>> +#define TPS65912_EN4_SET2		0x36
->>> +#define TPS65912_PGOOD			0x37
->>> +#define TPS65912_PGOOD2			0x38
->>> +#define TPS65912_INT_STS		0x39
->>> +#define TPS65912_INT_MSK		0x3A
->>> +#define TPS65912_INT_STS2		0x3B
->>> +#define TPS65912_INT_MSK2		0x3C
->>> +#define TPS65912_INT_STS3		0x3D
->>> +#define TPS65912_INT_MSK3		0x3E
->>> +#define TPS65912_INT_STS4		0x3F
->>> +#define TPS65912_INT_MSK4		0x40
->>> +#define TPS65912_GPIO1			0x41
->>> +#define TPS65912_GPIO2			0x42
->>> +#define TPS65912_GPIO3			0x43
->>> +#define TPS65912_GPIO4			0x44
->>> +#define TPS65912_GPIO5			0x45
->>> +#define TPS65912_VMON			0x46
->>> +#define TPS65912_LEDA_CTRL1		0x47
->>> +#define TPS65912_LEDA_CTRL2		0x48
->>> +#define TPS65912_LEDA_CTRL3		0x49
->>> +#define TPS65912_LEDA_CTRL4		0x4A
->>> +#define TPS65912_LEDA_CTRL5		0x4B
->>> +#define TPS65912_LEDA_CTRL6		0x4C
->>> +#define TPS65912_LEDA_CTRL7		0x4D
->>> +#define TPS65912_LEDA_CTRL8		0x4E
->>> +#define TPS65912_LEDB_CTRL1		0x4F
->>> +#define TPS65912_LEDB_CTRL2		0x50
->>> +#define TPS65912_LEDB_CTRL3		0x51
->>> +#define TPS65912_LEDB_CTRL4		0x52
->>> +#define TPS65912_LEDB_CTRL5		0x53
->>> +#define TPS65912_LEDB_CTRL6		0x54
->>> +#define TPS65912_LEDB_CTRL7		0x55
->>> +#define TPS65912_LEDB_CTRL8		0x56
->>> +#define TPS65912_LEDC_CTRL1		0x57
->>> +#define TPS65912_LEDC_CTRL2		0x58
->>> +#define TPS65912_LEDC_CTRL3		0x59
->>> +#define TPS65912_LEDC_CTRL4		0x5A
->>> +#define TPS65912_LEDC_CTRL5		0x5B
->>> +#define TPS65912_LEDC_CTRL6		0x5C
->>> +#define TPS65912_LEDC_CTRL7		0x5D
->>> +#define TPS65912_LEDC_CTRL8		0x5E
->>> +#define TPS65912_LED_RAMP_UP_TIME	0x5F
->>> +#define TPS65912_LED_RAMP_DOWN_TIME	0x60
->>> +#define TPS65912_LED_SEQ_EN		0x61
->>> +#define TPS65912_LOADSWITCH		0x62
->>> +#define TPS65912_SPARE			0x63
->>> +#define TPS65912_VERNUM			0x64
->>> +#define TPS6591X_MAX_REGISTER		0x64
->>> +
->>> +/* INT_STS Register field definitions */
->>> +#define TPS65912_INT_STS_PWRHOLD_F	BIT(0)
->>> +#define TPS65912_INT_STS_VMON		BIT(1)
->>> +#define TPS65912_INT_STS_PWRON		BIT(2)
->>> +#define TPS65912_INT_STS_PWRON_LP	BIT(3)
->>> +#define TPS65912_INT_STS_PWRHOLD_R	BIT(4)
->>> +#define TPS65912_INT_STS_HOTDIE		BIT(5)
->>> +#define TPS65912_INT_STS_GPIO1_R	BIT(6)
->>> +#define TPS65912_INT_STS_GPIO1_F	BIT(7)
->>> +
->>> +/* INT_STS Register field definitions */
->>> +#define TPS65912_INT_STS2_GPIO2_R	BIT(0)
->>> +#define TPS65912_INT_STS2_GPIO2_F	BIT(1)
->>> +#define TPS65912_INT_STS2_GPIO3_R	BIT(2)
->>> +#define TPS65912_INT_STS2_GPIO3_F	BIT(3)
->>> +#define TPS65912_INT_STS2_GPIO4_R	BIT(4)
->>> +#define TPS65912_INT_STS2_GPIO4_F	BIT(5)
->>> +#define TPS65912_INT_STS2_GPIO5_R	BIT(6)
->>> +#define TPS65912_INT_STS2_GPIO5_F	BIT(7)
->>> +
->>> +/* INT_STS Register field definitions */
->>> +#define TPS65912_INT_STS3_PGOOD_DCDC1	BIT(0)
->>> +#define TPS65912_INT_STS3_PGOOD_DCDC2	BIT(1)
->>> +#define TPS65912_INT_STS3_PGOOD_DCDC3	BIT(2)
->>> +#define TPS65912_INT_STS3_PGOOD_DCDC4	BIT(3)
->>> +#define TPS65912_INT_STS3_PGOOD_LDO1	BIT(4)
->>> +#define TPS65912_INT_STS3_PGOOD_LDO2	BIT(5)
->>> +#define TPS65912_INT_STS3_PGOOD_LDO3	BIT(6)
->>> +#define TPS65912_INT_STS3_PGOOD_LDO4	BIT(7)
->>> +
->>> +/* INT_STS Register field definitions */
->>> +#define TPS65912_INT_STS4_PGOOD_LDO5	BIT(0)
->>> +#define TPS65912_INT_STS4_PGOOD_LDO6	BIT(1)
->>> +#define TPS65912_INT_STS4_PGOOD_LDO7	BIT(2)
->>> +#define TPS65912_INT_STS4_PGOOD_LDO8	BIT(3)
->>> +#define TPS65912_INT_STS4_PGOOD_LDO9	BIT(4)
->>> +#define TPS65912_INT_STS4_PGOOD_LDO10	BIT(5)
->>> +
->>> +/* GPIO 1 and 2 Register field definitions */
->>> +#define GPIO_SLEEP_MASK			0x80
->>> +#define GPIO_SLEEP_SHIFT		7
->>> +#define GPIO_DEB_MASK			0x10
->>> +#define GPIO_DEB_SHIFT			4
->>> +#define GPIO_CFG_MASK			0x04
->>> +#define GPIO_CFG_SHIFT			2
->>> +#define GPIO_STS_MASK			0x02
->>> +#define GPIO_STS_SHIFT			1
->>> +#define GPIO_SET_MASK			0x01
->>> +#define GPIO_SET_SHIFT			0
->>> +
->>> +/* GPIO 3 Register field definitions */
->>> +#define GPIO3_SLEEP_MASK		0x80
->>> +#define GPIO3_SLEEP_SHIFT		7
->>> +#define GPIO3_SEL_MASK			0x40
->>> +#define GPIO3_SEL_SHIFT			6
->>> +#define GPIO3_ODEN_MASK			0x20
->>> +#define GPIO3_ODEN_SHIFT		5
->>> +#define GPIO3_DEB_MASK			0x10
->>> +#define GPIO3_DEB_SHIFT			4
->>> +#define GPIO3_PDEN_MASK			0x08
->>> +#define GPIO3_PDEN_SHIFT		3
->>> +#define GPIO3_CFG_MASK			0x04
->>> +#define GPIO3_CFG_SHIFT			2
->>> +#define GPIO3_STS_MASK			0x02
->>> +#define GPIO3_STS_SHIFT			1
->>> +#define GPIO3_SET_MASK			0x01
->>> +#define GPIO3_SET_SHIFT			0
->>> +
->>> +/* GPIO 4 Register field definitions */
->>> +#define GPIO4_SLEEP_MASK		0x80
->>> +#define GPIO4_SLEEP_SHIFT		7
->>> +#define GPIO4_SEL_MASK			0x40
->>> +#define GPIO4_SEL_SHIFT			6
->>> +#define GPIO4_ODEN_MASK			0x20
->>> +#define GPIO4_ODEN_SHIFT		5
->>> +#define GPIO4_DEB_MASK			0x10
->>> +#define GPIO4_DEB_SHIFT			4
->>> +#define GPIO4_PDEN_MASK			0x08
->>> +#define GPIO4_PDEN_SHIFT		3
->>> +#define GPIO4_CFG_MASK			0x04
->>> +#define GPIO4_CFG_SHIFT			2
->>> +#define GPIO4_STS_MASK			0x02
->>> +#define GPIO4_STS_SHIFT			1
->>> +#define GPIO4_SET_MASK			0x01
->>> +#define GPIO4_SET_SHIFT			0
->>> +
->>> +/* Register THERM  (0x80) register.RegisterDescription */
->>> +#define THERM_THERM_HD_MASK		0x20
->>> +#define THERM_THERM_HD_SHIFT		5
->>> +#define THERM_THERM_TS_MASK		0x10
->>> +#define THERM_THERM_TS_SHIFT		4
->>> +#define THERM_THERM_HDSEL_MASK		0x0C
->>> +#define THERM_THERM_HDSEL_SHIFT		2
->>> +#define THERM_RSVD1_MASK		0x02
->>> +#define THERM_RSVD1_SHIFT		1
->>> +#define THERM_THERM_STATE_MASK		0x01
->>> +#define THERM_THERM_STATE_SHIFT		0
->>> +
->>> +/* Register DCDCCTRL1 register.RegisterDescription */
->>> +#define DCDCCTRL_VCON_ENABLE_MASK	0x80
->>> +#define DCDCCTRL_VCON_ENABLE_SHIFT	7
->>> +#define DCDCCTRL_VCON_RANGE1_MASK	0x40
->>> +#define DCDCCTRL_VCON_RANGE1_SHIFT	6
->>> +#define DCDCCTRL_VCON_RANGE0_MASK	0x20
->>> +#define DCDCCTRL_VCON_RANGE0_SHIFT	5
->>> +#define DCDCCTRL_TSTEP2_MASK		0x10
->>> +#define DCDCCTRL_TSTEP2_SHIFT		4
->>> +#define DCDCCTRL_TSTEP1_MASK		0x08
->>> +#define DCDCCTRL_TSTEP1_SHIFT		3
->>> +#define DCDCCTRL_TSTEP0_MASK		0x04
->>> +#define DCDCCTRL_TSTEP0_SHIFT		2
->>> +#define DCDCCTRL_DCDC1_MODE_MASK	0x02
->>> +#define DCDCCTRL_DCDC1_MODE_SHIFT	1
->>> +
->>> +/* Register DCDCCTRL2 and DCDCCTRL3 register.RegisterDescription */
->>> +#define DCDCCTRL_TSTEP2_MASK		0x10
->>> +#define DCDCCTRL_TSTEP2_SHIFT		4
->>> +#define DCDCCTRL_TSTEP1_MASK		0x08
->>> +#define DCDCCTRL_TSTEP1_SHIFT		3
->>> +#define DCDCCTRL_TSTEP0_MASK		0x04
->>> +#define DCDCCTRL_TSTEP0_SHIFT		2
->>> +#define DCDCCTRL_DCDC_MODE_MASK		0x02
->>> +#define DCDCCTRL_DCDC_MODE_SHIFT	1
->>> +#define DCDCCTRL_RSVD0_MASK		0x01
->>> +#define DCDCCTRL_RSVD0_SHIFT		0
->>> +
->>> +/* Register DCDCCTRL4 register.RegisterDescription */
->>> +#define DCDCCTRL_RAMP_TIME_MASK		0x01
->>> +#define DCDCCTRL_RAMP_TIME_SHIFT	0
->>> +
->>> +/* Register DCDCx_AVS */
->>> +#define DCDC_AVS_ENABLE_MASK		0x80
->>> +#define DCDC_AVS_ENABLE_SHIFT		7
->>> +#define DCDC_AVS_ECO_MASK		0x40
->>> +#define DCDC_AVS_ECO_SHIFT		6
->>> +
->>> +/* Register DCDCx_LIMIT */
->>> +#define DCDC_LIMIT_RANGE_MASK		0xC0
->>> +#define DCDC_LIMIT_RANGE_SHIFT		6
->>> +#define DCDC_LIMIT_MAX_SEL_MASK		0x3F
->>> +#define DCDC_LIMIT_MAX_SEL_SHIFT	0
->>> +
->>> +/* Define the TPS65912 IRQ numbers */
->>> +enum tps65912_irqs {
->>> +	/* INT_STS registers */
->>> +	TPS65912_IRQ_PWRHOLD_F,
->>> +	TPS65912_IRQ_VMON,
->>> +	TPS65912_IRQ_PWRON,
->>> +	TPS65912_IRQ_PWRON_LP,
->>> +	TPS65912_IRQ_PWRHOLD_R,
->>> +	TPS65912_IRQ_HOTDIE,
->>> +	TPS65912_IRQ_GPIO1_R,
->>> +	TPS65912_IRQ_GPIO1_F,
->>> +	/* INT_STS2 registers */
->>> +	TPS65912_IRQ_GPIO2_R,
->>> +	TPS65912_IRQ_GPIO2_F,
->>> +	TPS65912_IRQ_GPIO3_R,
->>> +	TPS65912_IRQ_GPIO3_F,
->>> +	TPS65912_IRQ_GPIO4_R,
->>> +	TPS65912_IRQ_GPIO4_F,
->>> +	TPS65912_IRQ_GPIO5_R,
->>> +	TPS65912_IRQ_GPIO5_F,
->>> +	/* INT_STS3 registers */
->>> +	TPS65912_IRQ_PGOOD_DCDC1,
->>> +	TPS65912_IRQ_PGOOD_DCDC2,
->>> +	TPS65912_IRQ_PGOOD_DCDC3,
->>> +	TPS65912_IRQ_PGOOD_DCDC4,
->>> +	TPS65912_IRQ_PGOOD_LDO1,
->>> +	TPS65912_IRQ_PGOOD_LDO2,
->>> +	TPS65912_IRQ_PGOOD_LDO3,
->>> +	TPS65912_IRQ_PGOOD_LDO4,
->>> +	/* INT_STS4 registers */
->>> +	TPS65912_IRQ_PGOOD_LDO5,
->>> +	TPS65912_IRQ_PGOOD_LDO6,
->>> +	TPS65912_IRQ_PGOOD_LDO7,
->>> +	TPS65912_IRQ_PGOOD_LDO8,
->>> +	TPS65912_IRQ_PGOOD_LDO9,
->>> +	TPS65912_IRQ_PGOOD_LDO10,
->>> +};
->>> +
->>> +/*
->>> + * struct tps65912 - state holder for the tps65912 driver
->>> + *
->>> + * Device data may be used to access the TPS65912 chip
->>> + */
->>> +struct tps65912 {
->>> +	struct device *dev;
->>> +	struct regmap *regmap;
->>> +
->>> +	/* IRQ Data */
->>> +	int irq;
->>> +	struct regmap_irq_chip_data *irq_data;
->>> +};
->>> +
->>> +static const struct regmap_range tps65912_yes_ranges[] = {
->>> +	regmap_reg_range(TPS65912_INT_STS, TPS65912_GPIO5),
->>> +};
->>> +
->>> +static const struct regmap_access_table tps65912_volatile_table = {
->>> +	.yes_ranges = tps65912_yes_ranges,
->>> +	.n_yes_ranges = ARRAY_SIZE(tps65912_yes_ranges),
->>> +};
->>> +
->>> +static const struct regmap_config tps65912_regmap_config = {
->>> +	.reg_bits = 8,
->>> +	.val_bits = 8,
->>> +	.cache_type = REGCACHE_RBTREE,
->>> +	.volatile_table = &tps65912_volatile_table,
->>> +};
->>> +
->>> +int tps65912_device_init(struct tps65912 *tps);
->>> +int tps65912_device_exit(struct tps65912 *tps);
->>> +
->>> +#endif /*  __LINUX_MFD_TPS65912_H */
->>
->
-
+diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+index 976964f..3516d6f 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas.h
++++ b/drivers/scsi/hisi_sas/hisi_sas.h
+@@ -47,6 +47,12 @@ enum dev_status {
+ 	HISI_SAS_DEV_EH,
+ };
+ 
++enum hisi_sas_dev_type {
++	HISI_SAS_DEV_TYPE_STP = 0,
++	HISI_SAS_DEV_TYPE_SSP,
++	HISI_SAS_DEV_TYPE_SATA,
++};
++
+ struct hisi_sas_phy {
+ 	struct hisi_hba	*hisi_hba;
+ 	struct hisi_sas_port	*port;
+@@ -345,12 +351,16 @@ union hisi_sas_command_table {
+ 
+ void hisi_sas_slot_index_init(struct hisi_hba *hisi_hba);
+ void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int i);
++int hisi_sas_dev_found(struct domain_device *dev);
+ int hisi_sas_queue_command(struct sas_task *task, gfp_t gfp_flags);
++void hisi_sas_port_formed(struct asd_sas_phy *sas_phy);
+ void hisi_sas_wq_process(struct work_struct *work);
+ void hisi_sas_slot_task_free(struct hisi_hba *hisi_hba, struct sas_task *task,
+ 			struct hisi_sas_slot *slot);
+ 
+ /* hw specific functions */
++extern void hisi_sas_setup_itct_v1_hw(struct hisi_hba *hisi_hba,
++				      struct hisi_sas_device *device);
+ extern void start_delivery_v1_hw(struct hisi_hba *hisi_hba);
+ extern int get_free_slot_v1_hw(struct hisi_hba *hisi_hba, int *q, int *s);
+ extern int prep_ssp_v1_hw(struct hisi_hba *hisi_hba,
+@@ -361,4 +371,6 @@ extern int interrupt_openall_v1_hw(struct hisi_hba *hisi_hba);
+ extern int hw_init_v1_hw(struct hisi_hba *hisi_hba);
+ extern int phys_init_v1_hw(struct hisi_hba *hisi_hba);
+ extern void sl_notify_v1_hw(struct hisi_hba *hisi_hba, int phy_no);
++extern void setup_itct_v1_hw(struct hisi_hba *hisi_hba,
++			     struct hisi_sas_device *device);
+ #endif
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/hisi_sas/hisi_sas_init.c
+index c681b21..703527b 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_init.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+@@ -33,7 +33,9 @@ static struct scsi_host_template hisi_sas_sht = {
+ };
+ 
+ static struct sas_domain_function_template hisi_sas_transport_ops = {
++	.lldd_dev_found		= hisi_sas_dev_found,
+ 	.lldd_execute_task	= hisi_sas_queue_command,
++	.lldd_port_formed	= hisi_sas_port_formed,
+ };
+ 
+ static int hisi_sas_alloc(struct hisi_hba *hisi_hba, struct Scsi_Host *shost)
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 74084c2..44cb9085 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -11,6 +11,9 @@
+ 
+ #include "hisi_sas.h"
+ 
++#define DEV_IS_EXPANDER(type) \
++	((type == SAS_EDGE_EXPANDER_DEVICE) || \
++	(type == SAS_FANOUT_EXPANDER_DEVICE))
+ 
+ #define DEV_IS_GONE(dev) \
+ 	((!dev) || (dev->dev_type == SAS_PHY_UNUSED))
+@@ -352,6 +355,79 @@ void hisi_sas_bytes_dmaed(struct hisi_hba *hisi_hba, int phy_no)
+ 	sas_ha->notify_port_event(sas_phy, PORTE_BYTES_DMAED);
+ }
+ 
++struct hisi_sas_device *hisi_sas_alloc_dev(struct hisi_hba *hisi_hba)
++{
++	int dev_id;
++	struct device *dev = &hisi_hba->pdev->dev;
++
++	for (dev_id = 0; dev_id < HISI_SAS_MAX_DEVICES; dev_id++) {
++		if (hisi_hba->devices[dev_id].dev_type == SAS_PHY_UNUSED) {
++			hisi_hba->devices[dev_id].device_id = dev_id;
++			return &hisi_hba->devices[dev_id];
++		}
++	}
++
++	dev_err(dev, "alloc dev: max support %d devices - could not alloc\n",
++		HISI_SAS_MAX_DEVICES);
++
++	return NULL;
++}
++
++int hisi_sas_dev_found_notify(struct domain_device *device, int lock)
++{
++	unsigned long flags = 0;
++	int res = 0;
++	struct hisi_hba *hisi_hba = dev_to_hisi_hba(device);
++	struct domain_device *parent_dev = device->parent;
++	struct hisi_sas_device *sas_dev;
++	struct device *dev = &hisi_hba->pdev->dev;
++
++	if (lock)
++		spin_lock_irqsave(&hisi_hba->lock, flags);
++
++	sas_dev = hisi_sas_alloc_dev(hisi_hba);
++	if (!sas_dev) {
++		res = -EINVAL;
++		goto found_out;
++	}
++
++	device->lldd_dev = sas_dev;
++	sas_dev->dev_status = HISI_SAS_DEV_NORMAL;
++	sas_dev->dev_type = device->dev_type;
++	sas_dev->hisi_hba = hisi_hba;
++	sas_dev->sas_device = device;
++	setup_itct_v1_hw(hisi_hba, sas_dev);
++
++	if (parent_dev && DEV_IS_EXPANDER(parent_dev->dev_type)) {
++		int phy_no;
++		u8 phy_num = parent_dev->ex_dev.num_phys;
++		struct ex_phy *phy;
++
++		for (phy_no = 0; phy_no < phy_num; phy_no++) {
++			phy = &parent_dev->ex_dev.ex_phy[phy_no];
++			if (SAS_ADDR(phy->attached_sas_addr) ==
++				SAS_ADDR(device->sas_addr)) {
++				sas_dev->attached_phy = phy_no;
++				break;
++			}
++		}
++
++		if (phy_no == phy_num) {
++			dev_info(dev,
++				 "dev found: no attached "
++				 "dev:%016llx at ex:%016llx\n",
++				 SAS_ADDR(device->sas_addr),
++				SAS_ADDR(parent_dev->sas_addr));
++			res = -EINVAL;
++		}
++	}
++
++found_out:
++	if (lock)
++		spin_unlock_irqrestore(&hisi_hba->lock, flags);
++	return res;
++}
++
+ 
+ static void hisi_sas_phyup_work(struct hisi_hba *hisi_hba,
+ 				      int phy_no)
+@@ -400,7 +476,56 @@ void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int phy_no)
+ 	sas_phy->lldd_phy = phy;
+ }
+ 
++void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy, int lock)
++{
++	struct sas_ha_struct *sas_ha = sas_phy->ha;
++	struct hisi_hba *hisi_hba = NULL;
++	int i = 0;
++	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
++	struct asd_sas_port *sas_port = sas_phy->port;
++	struct hisi_sas_port *port;
++	unsigned long flags = 0;
++
++	if (!sas_port)
++		return;
++
++	while (sas_ha->sas_phy[i]) {
++		if (sas_ha->sas_phy[i] == sas_phy) {
++			hisi_hba = (struct hisi_hba *)sas_ha->lldd_ha;
++			port = &hisi_hba->port[i];
++			break;
++		}
++		i++;
++	}
++
++	if (hisi_hba == NULL) {
++		pr_err("%s: could not find hba\n", __func__);
++		return;
++	}
++
++	if (lock)
++		spin_lock_irqsave(&hisi_hba->lock, flags);
++	port->port_attached = 1;
++	port->id = phy->port_id;
++	phy->port = port;
++	sas_port->lldd_port = port;
++
++	if (lock)
++		spin_unlock_irqrestore(&hisi_hba->lock, flags);
++}
++
++
++int hisi_sas_dev_found(struct domain_device *device)
++{
++	return hisi_sas_dev_found_notify(device, 1);
++}
++
+ int hisi_sas_queue_command(struct sas_task *task, gfp_t gfp_flags)
+ {
+ 	return hisi_sas_task_exec(task, gfp_flags, NULL, 0, NULL);
+ }
++
++void hisi_sas_port_formed(struct asd_sas_phy *sas_phy)
++{
++	hisi_sas_port_notify_formed(sas_phy, 1);
++}
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 4cb0e1b..e8b9dc3 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -493,6 +493,47 @@ static void init_id_frame_v1_hw(struct hisi_hba *hisi_hba)
+ 		config_id_frame_v1_hw(hisi_hba, i);
+ }
+ 
++void setup_itct_v1_hw(struct hisi_hba *hisi_hba,
++		      struct hisi_sas_device *sas_dev)
++{
++	struct domain_device *device = sas_dev->sas_device;
++	struct device *dev = &hisi_hba->pdev->dev;
++	u64 qw0, device_id = sas_dev->device_id;
++	struct hisi_sas_itct *itct = &hisi_hba->itct[device_id];
++
++	memset(itct, 0, sizeof(*itct));
++
++	/* qw0 */
++	qw0 = 0;
++	switch (sas_dev->dev_type) {
++	case SAS_END_DEVICE:
++	case SAS_EDGE_EXPANDER_DEVICE:
++	case SAS_FANOUT_EXPANDER_DEVICE:
++		qw0 = HISI_SAS_DEV_TYPE_SSP << ITCT_HDR_DEV_TYPE_OFF;
++		break;
++	default:
++		dev_warn(dev, "setup itct: unsupported dev type (%d)\n",
++			 sas_dev->dev_type);
++	}
++
++	qw0 |= ((1 << ITCT_HDR_VALID_OFF) |
++		(1 << ITCT_HDR_AWT_CONTROL_OFF) |
++		(device->max_linkrate << ITCT_HDR_MAX_CONN_RATE_OFF) |
++		(1 << ITCT_HDR_VALID_LINK_NUM_OFF) |
++		(device->port->id << ITCT_HDR_PORT_ID_OFF));
++	itct->qw0 = cpu_to_le64(qw0);
++
++	/* qw1 */
++	memcpy(&itct->sas_addr, device->sas_addr, SAS_ADDR_SIZE);
++	itct->sas_addr = __swab64(itct->sas_addr);
++
++	/* qw2 */
++	itct->qw2 = cpu_to_le64((500 < ITCT_HDR_IT_NEXUS_LOSS_TL_OFF) |
++				(0xff00 < ITCT_HDR_BUS_INACTIVE_TL_OFF) |
++				(0xff00 < ITCT_HDR_MAX_CONN_TL_OFF) |
++				(0xff00 < ITCT_HDR_REJ_OPEN_TL_OFF));
++}
++
+ static int reset_hw_v1_hw(struct hisi_hba *hisi_hba)
+ {
+ 	int i;
 -- 
-Andrew F. Davis
+1.9.1
+
