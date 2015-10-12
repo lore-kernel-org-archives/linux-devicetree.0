@@ -1,149 +1,40 @@
-From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv2 2/3] iio: ad5064: Explicitly configure whether to use external supply
-Date: Mon, 12 Oct 2015 13:50:33 +0200
-Message-ID: <1444650634-12025-2-git-send-email-paul.cercueil@analog.com>
-References: <1444650634-12025-1-git-send-email-paul.cercueil@analog.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Mon, 12 Oct 2015 14:03:04 +0200
+Message-ID: <7064179.1W3LTfFPxP@wuerfel>
+References: <1444297394-3122-1-git-send-email-lftan@altera.com> <CAFiDJ58oMa6rgQe_STCiWRpdL+P22BN1=Nin_+QnLXC9RGiSzQ@mail.gmail.com> <20151009231540.GE16112@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444650634-12025-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151009231540.GE16112@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ley Foon Tan <lftan@altera.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Previously the driver would revert to internal supply if the
-external supply couldn't be found. This had multiple problems:
-- it caused silently ignored errors when a regulator was intended
-  to be supplied, but was not specified correctly.
-- if CONFIG_REGULATOR is disabled, regulator_get() will always
-  return a dummy regulator, which caused a device to always use
-  the external vref mode, even though there is none.
+On Friday 09 October 2015 18:15:40 Bjorn Helgaas wrote:
+> 
+> I don't know if this should be a kernel taint, a simple warning in
+> dmesg, or what.  I guess the tainting mechanism is probably too
+> general-purpose for this, and add_taint() doesn't give any dmesg
+> indication.  We wouldn't see the taint unless the problem actually
+> caused an oops or panic.  In this case, I think I want a clue in dmesg
+> so we have a chance of seeing it even if there is no oops.  So
+> probably something like a dev_warn("non-compliant config accesses")
+> would work.
+> 
+> You really should double-check with the hardware guys, because it's
+> pretty obvious that the PCI spec requires 1- and 2-byte config
+> accesses to work correctly.  For example, if you read/modify/write to
+> update PCI_COMMAND, you will inadvertently clear the RW1C bits in
+> PCI_STATUS.
 
-This patch addresses the issue by adding a platform data structure,
-containing a boolean field use_external_ref. If the platform data
-structure is present and if that boolean is set, the external vref
-is used; otherwise the internal vref is used.
+Would it help to require a DT property here that flags the device
+as having a broken config space?
 
-In the case where devicetree is used, and if regulators are listed
-as external references in the device tree, we assume that the
-external reference should be used.
+Then we could implement both in the driver, and only use the
+RMW based implementation if the firmware describes the device
+as "altera,broken-pci-config-space".
 
-In the case where an external vref is wanted but regulator_get()
-fails, the driver no longer reverts to using the internal vref,
-but returns an error instead.
-
-Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
----
- drivers/iio/dac/ad5064.c             | 36 +++++++++++++++++++++++++++---------
- include/linux/platform_data/ad5064.h | 21 +++++++++++++++++++++
- 2 files changed, 48 insertions(+), 9 deletions(-)
- create mode 100644 include/linux/platform_data/ad5064.h
-
- v2: Fix uninitialized 'ext_vref' variable
-
-diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
-index c067e68..e77631d 100644
---- a/drivers/iio/dac/ad5064.c
-+++ b/drivers/iio/dac/ad5064.c
-@@ -2,7 +2,7 @@
-  * AD5024, AD5025, AD5044, AD5045, AD5064, AD5064-1, AD5065, AD5628, AD5629R,
-  * AD5648, AD5666, AD5668, AD5669R Digital to analog converters driver
-  *
-- * Copyright 2011 Analog Devices Inc.
-+ * Copyright 2011, 2015 Analog Devices Inc.
-  *
-  * Licensed under the GPL-2.
-  */
-@@ -21,6 +21,8 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- 
-+#include <linux/platform_data/ad5064.h>
-+
- #define AD5064_MAX_DAC_CHANNELS			8
- #define AD5064_MAX_VREFS			4
- 
-@@ -446,6 +448,7 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
- 	unsigned int midscale;
- 	unsigned int i;
- 	int ret;
-+	bool ext_vref = true;
- 
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
- 	if (indio_dev == NULL)
-@@ -461,11 +464,30 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
- 	for (i = 0; i < ad5064_num_vref(st); ++i)
- 		st->vref_reg[i].supply = ad5064_vref_name(st, i);
- 
--	ret = devm_regulator_bulk_get(dev, ad5064_num_vref(st),
--		st->vref_reg);
--	if (ret) {
--		if (!st->chip_info->internal_vref)
-+	if (dev->of_node) {
-+		for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
-+			ext_vref = of_property_read_bool(dev->of_node,
-+					ad5064_vref_name(st, i));
-+	} else {
-+		struct ad5064_platform_data *pdata = dev->platform_data;
-+
-+		ext_vref = pdata && pdata->use_external_ref;
-+	}
-+
-+	if (ext_vref) {
-+		ret = devm_regulator_bulk_get(dev, ad5064_num_vref(st),
-+					st->vref_reg);
-+		if (ret)
- 			return ret;
-+		ret = regulator_bulk_enable(ad5064_num_vref(st), st->vref_reg);
-+		if (ret)
-+			return ret;
-+	} else {
-+		if (!st->chip_info->internal_vref) {
-+			dev_err(dev, "No vref available\n");
-+			return -ENXIO;
-+		}
-+
- 		st->use_internal_vref = true;
- 		ret = ad5064_write(st, AD5064_CMD_CONFIG, 0,
- 			AD5064_CONFIG_INT_VREF_ENABLE, 0);
-@@ -474,10 +496,6 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
- 				ret);
- 			return ret;
- 		}
--	} else {
--		ret = regulator_bulk_enable(ad5064_num_vref(st), st->vref_reg);
--		if (ret)
--			return ret;
- 	}
- 
- 	indio_dev->dev.parent = dev;
-diff --git a/include/linux/platform_data/ad5064.h b/include/linux/platform_data/ad5064.h
-new file mode 100644
-index 0000000..69bb5fe
---- /dev/null
-+++ b/include/linux/platform_data/ad5064.h
-@@ -0,0 +1,21 @@
-+/*
-+ * Analog Devices AD5064 DAC driver
-+ *
-+ * Copyright 2015 Analog Devices Inc.
-+ *
-+ * Licensed under the GPL-2.
-+ */
-+
-+#ifndef __IIO_ADC_AD5064_H__
-+#define __IIO_ADC_AD5064_H__
-+
-+/**
-+ * struct ad5064_platform_data - AD5064 platform data
-+ * @use_external_ref: If set to true use an external voltage reference connected
-+ * to the VREF pin, otherwise use the internal reference derived from Vdd.
-+ */
-+struct ad5064_platform_data {
-+	bool use_external_ref;
-+};
-+
-+#endif
--- 
-2.5.3
+	Arnd
