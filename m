@@ -1,107 +1,148 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm: mvebu: disable unused Armada RTC on ReadyNAS
- 102, 104 and 2120
-Date: Mon, 12 Oct 2015 16:21:12 +0200
-Message-ID: <20151012142112.GA30801@lunn.ch>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/2] arm: mvebu: reorder nodes under internal-regs by
+ address in RN2120 .dts file
+Date: Mon, 12 Oct 2015 16:23:24 +0200
+Message-ID: <20151012142324.GB30801@lunn.ch>
 References: <cover.1444428035.git.arno@natisbad.org>
- <2e62abb84de02c0495bde9d60a90282deae40967.1444428035.git.arno@natisbad.org>
+ <277de75473af2431849a7494ae65b57dbc9a8309.1444428035.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2e62abb84de02c0495bde9d60a90282deae40967.1444428035.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, TuxOholic <tuxoholic-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
+In-Reply-To: <277de75473af2431849a7494ae65b57dbc9a8309.1444428035.git.arno@natisbad.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, TuxOholic <tuxoholic@hotmail.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 10, 2015 at 12:10:24AM +0200, Arnaud Ebalard wrote:
+On Sat, Oct 10, 2015 at 12:10:39AM +0200, Arnaud Ebalard wrote:
 > 
-> By default, armada-370-xp.dtsi file has internal RTC enabled.
-> NETGEAR ReadyNAS 102, 104 and 2120 all use an Intersil ISL12057
-> I2C RTC chip. The internal RTC not being disabled in the .dts
-> files of those devices result in the following useless first
-> line during boot:
+> This cosmetic patch reorder nodes under internal-regs by increasing
+> address order, as epxected.
+
+expected.
+
+Gregory, can you fix that as you commit?
+
+Acked-by: Andrew Lunn <andrew@lunn.ch>
+
+	  Andrew
+
 > 
-> [    4.500056] rtc-mv d0010300.rtc: internal RTC not ticking
-> [    4.505684] i2c /dev entries driver
-> [    4.513246] rtc-isl12057 0-0068: rtc core: registered rtc-isl12057 as rtc0
-> 
-> This patch marks Armada internal RTC as disabled in individual .dts
-> files of those devices.
-> 
-> Reported-by: TuxOholic <tuxoholic-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-
-Thanks Arnaud
-
-       Andrew
-
-
+> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
 > ---
->  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 6 ++++++
->  arch/arm/boot/dts/armada-370-netgear-rn104.dts | 6 ++++++
->  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 6 ++++++
->  3 files changed, 18 insertions(+)
+>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 86 +++++++++++++-------------
+>  1 file changed, 43 insertions(+), 43 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-> index a31207860f34..5851964196bd 100644
-> --- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-> +++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-> @@ -82,6 +82,12 @@
->  		};
->  
->  		internal-regs {
-> +
-> +			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-> +			rtc@10300 {
-> +				status = "disabled";
-> +			};
-> +
->  			serial@12000 {
->  				status = "okay";
->  			};
-> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-> index 00540f292979..b0b07ba677b9 100644
-> --- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-> +++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-> @@ -82,6 +82,12 @@
->  		};
->  
->  		internal-regs {
-> +
-> +			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-> +			rtc@10300 {
-> +				status = "disabled";
-> +			};
-> +
->  			serial@12000 {
->  				status = "okay";
->  			};
 > diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> index 1516fc2627f9..85b2f87c0b8a 100644
+> index 85b2f87c0b8a..d72a69d97ba2 100644
 > --- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
 > +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> @@ -88,6 +88,12 @@
->  		};
+> @@ -94,54 +94,11 @@
+>  				status = "disabled";
+>  			};
 >  
->  		internal-regs {
+> -			/* Two rear eSATA ports */
+> -			sata@a0000 {
+> -				nr-ports = <2>;
+> -				status = "okay";
+> -			};
+> -
+> -			serial@12000 {
+> -				status = "okay";
+> -			};
+> -
+> -			mdio {
+> -				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+> -					reg = <0>;
+> -				};
+> -
+> -				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
+> -					reg = <1>;
+> -				};
+> -			};
+> -
+> -			ethernet@70000 {
+> -				status = "okay";
+> -				phy = <&phy0>;
+> -				phy-mode = "rgmii-id";
+> -			};
+> -
+> -			ethernet@74000 {
+> -				status = "okay";
+> -				phy = <&phy1>;
+> -				phy-mode = "rgmii-id";
+> -			};
+> -
+> -			/* Front USB 2.0 port */
+> -			usb@50000 {
+> -				status = "okay";
+> -			};
+> -
+>  			i2c@11000 {
+>  				compatible = "marvell,mv64xxx-i2c";
+>  				clock-frequency = <400000>;
+>  				status = "okay";
+>  
+> -				isl12057: isl12057@68 {
+> -					compatible = "isil,isl12057";
+> -					reg = <0x68>;
+> -					isil,irq2-can-wakeup-machine;
+> -				};
+> -
+>  				/* Controller for rear fan #1 of 3 (Protechnic
+>  				 * MGT4012XB-O20, 8000RPM) near eSATA port */
+>  				g762_fan1: g762@3e {
+> @@ -178,6 +135,49 @@
+>  					compatible = "gmt,g751";
+>  					reg = <0x4c>;
+>  				};
 > +
-> +			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-> +			rtc@10300 {
-> +				status = "disabled";
+> +				isl12057: isl12057@68 {
+> +					compatible = "isil,isl12057";
+> +					reg = <0x68>;
+> +					isil,irq2-can-wakeup-machine;
+> +				};
 > +			};
 > +
->  			/* Two rear eSATA ports */
->  			sata@a0000 {
->  				nr-ports = <2>;
+> +			serial@12000 {
+> +				status = "okay";
+> +			};
+> +
+> +			/* Front USB 2.0 port */
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			mdio {
+> +				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+> +					reg = <0>;
+> +				};
+> +
+> +				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
+> +					reg = <1>;
+> +				};
+> +			};
+> +
+> +			ethernet@70000 {
+> +				status = "okay";
+> +				phy = <&phy0>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			ethernet@74000 {
+> +				status = "okay";
+> +				phy = <&phy1>;
+> +				phy-mode = "rgmii-id";
+> +			};
+> +
+> +			/* Two rear eSATA ports */
+> +			sata@a0000 {
+> +				nr-ports = <2>;
+> +				status = "okay";
+>  			};
+>  
+>  			nand@d0000 {
 > -- 
 > 2.5.3
 > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
