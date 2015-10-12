@@ -1,92 +1,48 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] Documentation: ad5064: Added devicetree bindings
- documentation
-Date: Mon, 12 Oct 2015 16:18:57 +0100
-Message-ID: <20151012151857.GC7452@leverpostej>
-References: <1444650634-12025-1-git-send-email-paul.cercueil@analog.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 04/25] scsi: hisi_sas: add scsi host registration
+Date: Mon, 12 Oct 2015 17:21:34 +0200
+Message-ID: <5053179.dHmgEztyeB@wuerfel>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-5-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444650634-12025-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444663237-238302-5-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: James.Bottomley-JuX6DAaQMKPCXq6kfMZ53/egYHeGw8Jk@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 12, 2015 at 01:50:32PM +0200, Paul Cercueil wrote:
-> Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/dac/ad5064.txt         | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5064.txt
-> 
->  v2: No change in this patch
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5064.txt b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
-> new file mode 100644
-> index 0000000..fa2d328
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
-> @@ -0,0 +1,48 @@
-> +Analog Devices AD5064 DAC device driver
+On Monday 12 October 2015 23:20:16 John Garry wrote:
 > +
-> +Required properties:
-> +	- compatible: Must be one of:
-> +		* "adi,ad5024"
-> +		* "adi,ad5025"
-> +		* "adi,ad5044"
-> +		* "adi,ad5045"
-> +		* "adi,ad5064"
-> +		* "adi,ad5064-1"
-> +		* "adi,ad5065"
-> +		* "adi,ad5628-1"
-> +		* "adi,ad5628-2"
-> +		* "adi,ad5648-1"
-> +		* "adi,ad5648-2"
-> +		* "adi,ad5666-1"
-> +		* "adi,ad5666-2"
-> +		* "adi,ad5668-1"
-> +		* "adi,ad5668-2"
-> +		* "adi,ad5668-3"
-> +	- reg: SPI chip select number for the device
-> +	- spi-max-frequency: Max SPI frequency to use (< 30000000)
-> +	- vrefA-supply, vrefB-supply: phandles to external reference voltage
-> +	  supplies for channels 0 and 1 respectively.
-> +	  This property must be present for ad5024, ad5025, ad5044, ad5045,
-> +	  ad5064, ad5065.
-> +	- vrefC-supply, vrefD-supply: phandles to external reference voltage
-> +	  supplies for channels 2 and 3 respectively.
-> +	  This property must be present for ad5024, ad5044, ad5064.
-
-Nit: please don't use CamelCase property names. just have vref-a-supply
-and so on.
-
+> +       shost = scsi_host_alloc(&hisi_sas_sht, sizeof(void *));
+> +       if (!shost)
+> +               return -ENOMEM;
 > +
-> +Optional properties:
-> +	- vref-supply: phandle to the external reference voltage supply.
-> +	  This should only be set if there is an external reference voltage
-> +	  connected to the vref or vref[A-D] pins.
+> +       hisi_hba = hisi_sas_hba_alloc(pdev, shost, np);
+> +       if (!hisi_hba) {
+> +               rc = -ENOMEM;
+> +               goto err_out_ha;
+> +       }
 
-I don't understand. Surely the latter case means you're describing the
-same supply twice (as it should already be in vref*-supply)?
+You can collapse the allocations into one and just pass sizeof(*hisi_hba)
+instead of sizeof(void *) above.
 
-What vref pins does the HW actually have?
 
-> +	  If the property is not set, the internal reference voltage supply
-> +	  is used if present.
-> +	  This property can be used with ad5064-1, ad5628-1, ad5628-2, ad5648-1,
-> +	  ad5648-2, ad5666-1, ad5666-2, ad5668-1, ad5668-2, ad5668-3.
+> +       sha = SHOST_TO_SAS_HA(shost) = &hisi_hba->sha;
+> +       platform_set_drvdata(pdev, sha);
 > +
-> +Example:
+> +       phy_nr = port_nr = HISI_SAS_MAX_PHYS;
 > +
-> +		ad5668-2@4 {
-> +			compatible = "adi,ad5668-2";
-> +			reg = <4>;
-> +			spi-max-frequency = <10000000>;
-> +			adi,use-external-reference;
+> +       arr_phy = devm_kcalloc(dev, phy_nr, sizeof(void *), GFP_KERNEL);
+> +       arr_port = devm_kcalloc(dev, port_nr, sizeof(void *), GFP_KERNEL);
+> +       if (!arr_phy || !arr_port)
+> +               return -ENOMEM;
 
-This is undocumented (and unused by the driver?).
+And since these are fixed-size arrays, they can be moved in there as well.
 
-Thanks,
-Mark.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
