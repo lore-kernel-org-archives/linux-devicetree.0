@@ -1,47 +1,64 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 4/5] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio
- clk
-Date: Mon, 12 Oct 2015 13:46:35 +0800
-Message-ID: <1444628796-5484-5-git-send-email-jszhang@marvell.com>
-References: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ulf.hansson@linaro.org, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH] arm: dts: Fix audio card detection on peach boards
+Date: Mon, 12 Oct 2015 11:56:09 +0530
+Message-ID: <1444631169-19468-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, k.kozlowski@samsung.com, kgene@kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since we have added the necessary axi clk properties in dts, we can
-remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
+Since the merge of 2fad972 ("ARM: dts: Add mclk entry for Peach boards"),
+sound card detection is broken on peach boards and gives below errors:
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+[    3.630457] max98090 7-0010: MAX98091 REVID=0x51
+[    3.634233] max98090 7-0010: use default 2.8v micbias
+[    3.640985] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
+[    3.645307] max98090 7-0010: Invalid master clock frequency
+[    3.650824] snow-audio sound: ASoC: Peach-Pi-I2S-MAX98091 late_probe() failed: -22
+[    3.658914] snow-audio sound: snd_soc_register_card failed (-22)
+[    3.664366] snow-audio: probe of sound failed with error -22
+
+This patch adds missing assigned-clocks and assigned-clock-parents for
+pmu_system_controller node which is used as "mclk" for audio codec.
+
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Fixes: 2fad972 ("ARM: dts: Add mclk entry for Peach boards")
+Cc: <stable@vger.kernel.org>
 ---
- drivers/clk/berlin/bg2q.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |    5 +++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  |    5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
-index 221f40c..243f421 100644
---- a/drivers/clk/berlin/bg2q.c
-+++ b/drivers/clk/berlin/bg2q.c
-@@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
- 	{ "usb2",	"perif",	13 },
- 	{ "usb3",	"perif",	14 },
- 	{ "pbridge",	"perif",	15, CLK_IGNORE_UNUSED },
--	{ "sdio",	"perif",	16, CLK_IGNORE_UNUSED },
-+	{ "sdio",	"perif",	16 },
- 	{ "nfc",	"perif",	18 },
- 	{ "pcie",	"perif",	22 },
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 8f4d76c..525a93a 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -1056,5 +1056,10 @@
+ 	timeout-sec = <32>;
  };
+ 
++&pmu_system_controller {
++	assigned-clocks = <&pmu_system_controller 0>;
++	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
++};
++
+ #include "cros-ec-keyboard.dtsi"
+ #include "cros-adc-thermistors.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 7d5b386..411de8f 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -1019,5 +1019,10 @@
+ 	timeout-sec = <32>;
+ };
+ 
++&pmu_system_controller {
++	assigned-clocks = <&pmu_system_controller 0>;
++	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
++};
++
+ #include "cros-ec-keyboard.dtsi"
+ #include "cros-adc-thermistors.dtsi"
 -- 
-2.6.1
+1.7.10.4
