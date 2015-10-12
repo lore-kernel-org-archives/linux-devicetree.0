@@ -1,106 +1,72 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM64: dts: vexpress: Use a symlink to
- vexpress-v2m-rs1.dtsi from arch=arm
-Date: Mon, 12 Oct 2015 16:37:50 +0100
-Message-ID: <20151012153750.GE7452@leverpostej>
-References: <1444046032-31310-1-git-send-email-ian.campbell@citrix.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 9/9] Input: goodix - sort includes using inverse Xmas
+ tree order
+Date: Mon, 12 Oct 2015 16:39:16 +0100
+Message-ID: <20151012153916.GF7452@leverpostej>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+ <1444663477-30062-10-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444046032-31310-1-git-send-email-ian.campbell@citrix.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Ian Campbell <ian.campbell@citrix.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, Frank Rowand <frank.rowand@sonymobile.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, linux-kbuild@vger.kernel.org
+In-Reply-To: <1444663477-30062-10-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 05, 2015 at 12:53:52PM +0100, Ian Campbell wrote:
-> Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
-> LogicTile Express 20MG" added a new dts file to arch/arm64 which
-> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-> .dtsi supplied by arch/arm.
-> 
-> Unfortunately this causes some issues for the split device tree
-> repository[0], since things get moved around there. In that context
-> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
-> 
-> The sharing of the .dtsi is legitimate since the baseboard is the same
-> for various vexpress systems whatever processor they use.
-> 
-> Previously I attempted to resolve this by creating a shared location
-> for such things but we have been unable to come to a consensus on
-> where that should be.
-> 
-> Instead this patch simply replaces the use of ../../ in the dts
-> /include/ with a symlink in arch/arm64/boot/dts/arm pointing to the
-> file arch/arm/boot/dts.
-> 
-> Since the split device tree repo will shortly be required to flatten
-> symlinks for other reasons this will cause the dtsi file to appear in
-> both src/arm and src/arm64 in the split repo, which is an improvement
-> on not building for arm64 now.
-> 
-> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
-> 
-> Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Kristina Martsenko <kristina.martsenko@arm.com>
-> Cc: Kevin Hilman <khilman@linaro.org>
-> Cc: Frank Rowand <frank.rowand@sonymobile.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: arm@kernel.org
-> Cc: linux-kbuild@vger.kernel.org
-> ---
-> For more on flattening symlinks see
-> http://thread.gmane.org/gmane.linux.kernel.input/45646/focus=45742
-> ---
->  arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts | 2 +-
->  arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi        | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
->  create mode 120000 arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-> index 5b1d018..bb3c26d 100644
-> --- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-> +++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-> @@ -186,6 +186,6 @@
->  				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
->  				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
-> +		/include/ "vexpress-v2m-rs1.dtsi"
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
-> new file mode 120000
-> index 0000000..68fd0f8
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/arm/vexpress-v2m-rs1.dtsi
-> @@ -0,0 +1 @@
-> +../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi
-> \ No newline at end of file
+Why?
 
-I was under the impression that there was some reason symlinks of this
-fashion were discouraged, but I don't know the details, and I don't have
-strong feelings either way.
-
-This solves a problem, and we don't seem to have a better solution. So
-to that end:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
 Mark.
+
+On Mon, Oct 12, 2015 at 06:24:37PM +0300, Irina Tirdea wrote:
+> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Tested-by: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+> Tested-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/goodix.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index b958b37..22bfc4b 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -14,21 +14,22 @@
+>   * Software Foundation; version 2 of the License.
+>   */
+>  
+> -#include <linux/kernel.h>
+> -#include <linux/dmi.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/firmware.h>
+> -#include <linux/gpio.h>
+> -#include <linux/i2c.h>
+> -#include <linux/input.h>
+>  #include <linux/input/mt.h>
+> +#include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/delay.h>
+> -#include <linux/irq.h>
+> -#include <linux/interrupt.h>
+> -#include <linux/slab.h>
+> +#include <linux/input.h>
+>  #include <linux/acpi.h>
+> +#include <linux/gpio.h>
+> +#include <linux/slab.h>
+> +#include <linux/dmi.h>
+> +#include <linux/i2c.h>
+> +#include <linux/irq.h>
+>  #include <linux/of.h>
+> -#include <linux/pm_runtime.h>
+> +
+>  #include <asm/unaligned.h>
+>  
+>  struct goodix_ts_data {
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
