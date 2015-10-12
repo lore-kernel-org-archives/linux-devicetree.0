@@ -1,199 +1,67 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH 00/37] ARM: dts: Fix fixed regulators enable GPIO polarity
-Date: Tue, 13 Oct 2015 00:12:29 +0300
-Message-ID: <1444684386-17094-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] mtd: brcmnand: Fix pointer type-cast in
+ brcmnand_write()
+Date: Mon, 12 Oct 2015 14:20:15 -0700
+Message-ID: <20151012212015.GO107187@google.com>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+ <1443808606-21203-2-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443808606-21203-2-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Oct 02, 2015 at 11:26:42PM +0530, Anup Patel wrote:
+> We should always type-cast pointer to "long" or "unsigned long"
+> because size of pointer is same as machine word size. This will
+> avoid pointer type-cast issues on both 32bit and 64bit systems.
+> 
+> This patch fixes pointer type-cast issue in brcmnand_write()
+> as-per above info.
+> 
+> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/mtd/nand/brcmnand/brcmnand.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+> index fddb795..4cba03d 100644
+> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> @@ -1544,9 +1544,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
+>  
+>  	dev_dbg(ctrl->dev, "write %llx <- %p\n", (unsigned long long)addr, buf);
+>  
+> -	if (unlikely((u32)buf & 0x03)) {
+> +	if (unlikely((unsigned long)buf & 0x03)) {
+>  		dev_warn(ctrl->dev, "unaligned buffer: %p\n", buf);
+> -		buf = (u32 *)((u32)buf & ~0x03);
+> +		buf = (u32 *)((unsigned long)buf & ~0x03);
+>  	}
 
-While working on regulators, GPIOs and DT I noticed that many of our DT source
-files incorrectly describe fixed regulators. The common error patterns are
+Hmm, this block isn't really good. We should probably work to remove
+this. Not sure why I left that in, actually. At a minimum, it'd probably
+good to make this noisier, so if we see this in practice, we can work to
+fix those cases.
 
-- Usage of the undefined (and never parsed) enable-active-low property
-- Usage of the enable-active-high property without specifying an enable GPIO
-- Typos in the enabl GPIO property name (gpios instead of gpio)
-- Mismatch between the enable-active-high property (or the lack thereof) and
-  the enable GPIO flags
+But anyway, the patch is good (though 'uintptr_t' might be slightly
+better), so pushed to l2-mtd.git.
 
-This patch series fixes those issues in all the DT sources after locating the
-errors using the following script.
+Brian
 
-------------------------------------------------------------------------------
-#!/bin/sh
-
-echo $1
-cat $1 | awk '
-BEGIN {
-	open_drain = 0;
-	active_high = 0;
-	gpio = 0;
-	flags = 0;
-}
-
-match($0, /([a-zA-Z0-9@_-]*) {/, ary) {
-	name = ary[1];
-}
-
-/compatible.*"regulator-fixed"/ {
-	found = 1;
-}
-
-/enable-active-high/ {
-	active_high = 1;
-}
-
-/gpio-open-drain/ {
-	open_drain = 1;
-}
-
-match($0, /gpio += <.* ([^ ]*)>/, ary) {
-	gpio = 1;
-	flags = ary[1];
-	if (flags == 0)
-		flags = "GPIO_ACTIVE_HIGH";
-}
-
-/}/ {
-	if (found) {
-		if (gpio) {
-			print "\t" name ": active high " active_high " " flags " open drain " open_drain;
-			if ((active_high && flags == "GPIO_ACTIVE_LOW") ||
-			    (!active_high && flags == "GPIO_ACTIVE_HIGH"))
-				print "WARNING: enable-active-high and flags do not match"
-		} else {
-			if (active_high)
-				print "WARNING: active high without GPIO"
-			if (open_drain)
-				print "WARNING: open drain without GPIO"
-		}
-	}
-
-	gpio = 0;
-	found = 0;
-	active_high = 0;
-	open_drain = 0;
-	flags = 0;
-}
-'
-------------------------------------------------------------------------------
-
-All patches except for the ones touching omap3-beagle-xm and omap3-overo-base
-are untested as I lack test hardware.
-
-As there's no dependency between the patches touching different source files
-the appropriate maintainers could take their share of the patches in their
-tree. Alternatively I could send a single pull request after collecting all
-acks but that might be more complex.
-
-Cc: devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Benoit Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-
-Laurent Pinchart (37):
-  ARM: dts: am437x-gp-evm: Remove unneeded regulator property
-  ARM: dts: am43xx-epos-evm: Remove unneeded regulator property
-  ARM: mvebu: Armada 388 GP: Remove unneeded regulator property
-  ARM: imx6sx-sdb: Fix typo in regulator enable GPIO property
-  ARM: dts: s5pv210-aquila: Fix typo in regulator enable GPIO property
-  ARM: dts: s5pv210-goni: Fix typo in regulator enable GPIO property
-  ARM: dts: omap3-evm: Remove invalid enable-active-low regulator
-    property
-  ARM: dts: omap3-sb-t35: Remove invalid enable-active-low regulator
-    property
-  ARM: dts: omap3-tao3530: Remove invalid enable-active-low regulator
-    property
-  ARM: dts: imx6qdl-tx6: Fix regulator enable GPIO polarity
-  ARM: dts: dove-cm-a510: Fix regulator enable GPIO polarity
-  ARM: dts: dove-sbc-a510: Fix regulator enable GPIO polarity
-  ARM: dts: exynos5250-arndale: Fix regulator enable GPIO polarity
-  ARM: dts: imx23-evk: Fix regulator enable GPIO polarity
-  ARM: dts: imx23-stmp378x_devb: Fix regulator enable GPIO polarity
-  ARM: dts: imx25-pdk: Fix regulator enable GPIO polarity
-  ARM: dts: imx28-cfa10036: Fix regulator enable GPIO polarity
-  ARM: dts: imx28-evk: Fix regulator enable GPIO polarity
-  ARM: dts: imx28-m28cu3: Fix regulator enable GPIO polarity
-  ARM: dts: imx28-m28evk: Fix regulator enable GPIO polarity
-  ARM: dts: imx28-sps1: Fix regulator enable GPIO polarity
-  ARM: dts: imx28-tx28: Fix regulator enable GPIO polarity
-  ARM: dts: imx53-m53evk: Fix regulator enable GPIO polarity
-  ARM: dts: imx53-mba53: Fix regulator enable GPIO polarity
-  ARM: dts: imx53-tx53: Fix regulator enable GPIO polarity
-  ARM: dts: imx6q-dmo-edmqmx6: Fix regulator enable GPIO polarity
-  ARM: dts: kirkwood-blackarmor-nas220: Fix regulator enable GPIO
-    polarity
-  ARM: dts: omap4-duovero: Fix regulator enable GPIO polarity
-  ARM: dts: kirkwood-nsa3x0-common: Fix regulator enable GPIO polarity
-  ARM: dts: omap3-beagle-xm: Fix regulator enable GPIO polarity
-  ARM: dts: omap3-beagle: Fix regulator enable GPIO polarity
-  ARM: dts: omap3-overo-base: Fix regulator enable GPIO polarity
-  ARM: dts: omap3-tao3530: Fix regulator enable GPIO polarity
-  ARM: dts: tegra20-harmony: Fix regulator enable GPIO polarity
-  ARM: dts: tegra20-iris-512: Fix regulator enable GPIO polarity
-  ARM: dts: tegra20-seaboard: Fix regulator enable GPIO polarity
-  ARM: dts: tegra20-ventana: Fix regulator enable GPIO polarity
-
- arch/arm/boot/dts/am437x-gp-evm.dts              | 1 -
- arch/arm/boot/dts/am43x-epos-evm.dts             | 1 -
- arch/arm/boot/dts/armada-388-gp.dts              | 2 --
- arch/arm/boot/dts/dove-cm-a510.dtsi              | 2 +-
- arch/arm/boot/dts/dove-sbc-a510.dts              | 4 ++--
- arch/arm/boot/dts/exynos5250-arndale.dts         | 2 +-
- arch/arm/boot/dts/imx23-evk.dts                  | 3 ++-
- arch/arm/boot/dts/imx23-stmp378x_devb.dts        | 3 ++-
- arch/arm/boot/dts/imx25-pdk.dts                  | 2 +-
- arch/arm/boot/dts/imx28-cfa10036.dts             | 2 +-
- arch/arm/boot/dts/imx28-evk.dts                  | 4 ++--
- arch/arm/boot/dts/imx28-m28cu3.dts               | 4 ++--
- arch/arm/boot/dts/imx28-m28evk.dts               | 6 +++---
- arch/arm/boot/dts/imx28-sps1.dts                 | 2 +-
- arch/arm/boot/dts/imx28-tx28.dts                 | 2 +-
- arch/arm/boot/dts/imx53-m53evk.dts               | 2 +-
- arch/arm/boot/dts/imx53-mba53.dts                | 2 +-
- arch/arm/boot/dts/imx53-tx53.dtsi                | 2 +-
- arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts          | 2 +-
- arch/arm/boot/dts/imx6qdl-tx6.dtsi               | 3 +--
- arch/arm/boot/dts/imx6sx-sdb.dtsi                | 2 +-
- arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts | 4 ++--
- arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi    | 2 +-
- arch/arm/boot/dts/omap3-beagle-xm.dts            | 2 +-
- arch/arm/boot/dts/omap3-beagle.dts               | 2 +-
- arch/arm/boot/dts/omap3-evm-common.dtsi          | 1 -
- arch/arm/boot/dts/omap3-overo-base.dtsi          | 4 ++--
- arch/arm/boot/dts/omap3-sb-t35.dtsi              | 1 -
- arch/arm/boot/dts/omap3-tao3530.dtsi             | 3 +--
- arch/arm/boot/dts/omap4-duovero.dtsi             | 2 +-
- arch/arm/boot/dts/s5pv210-aquila.dts             | 2 +-
- arch/arm/boot/dts/s5pv210-goni.dts               | 4 ++--
- arch/arm/boot/dts/tegra20-harmony.dts            | 2 +-
- arch/arm/boot/dts/tegra20-iris-512.dts           | 2 +-
- arch/arm/boot/dts/tegra20-seaboard.dts           | 2 +-
- arch/arm/boot/dts/tegra20-ventana.dts            | 2 +-
- 36 files changed, 41 insertions(+), 47 deletions(-)
-
--- 
-Regards,
-
-Laurent Pinchart
+>  
+>  	brcmnand_wp(mtd, 0);
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
