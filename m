@@ -1,77 +1,76 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v3 0/3] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
-Date: Mon, 12 Oct 2015 13:37:40 +0200
-Message-ID: <1444649863-17796-1-git-send-email-geert+renesas@glider.be>
+From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv2 1/3] Documentation: ad5064: Added devicetree bindings documentation
+Date: Mon, 12 Oct 2015 13:50:32 +0200
+Message-ID: <1444650634-12025-1-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Mike, Stephen, et al.,
+Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/iio/dac/ad5064.txt         | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5064.txt
 
-As discussed at ELCE last week, here's my RFC introducing a new unified
-binding for the Renesas CPG (Clock Pulse Generator) and MSSR (Module
-Standby and Software Reset) blocks.  These bindings are supposed to be
-more in-line with current CCF best practices, and allow expansion to
-cover the module reset functionality in the future.  They are intended
-to be used initially for the new R-Car Gen3 SoCs (r8a7795), but we may
-decide to migrate older SoCs somewhen in the future.
+ v2: No change in this patch
 
-  - The first patch is an RFC introducing the new bindings.
-  - Patches 2 and 3 are Proof-of-Concepts of the CPG Core Clock
-    Definitions for the already supported R-Car M2-W (r8a7791) SoC, and
-    for the new R-Car H3 (r8a7795) SoC.
-
-The idea is to get the bindings (for r8a7795) accepted in v4.4, so we
-can continue developing and prepare final support for r8a7795 in v4.5.
-
-I will post preliminary code and DT patches for both r8a7791 (POC) and
-r8a7795 (mandatory) as soon as possible.
-
-Thanks for your comments!
-
-References:
-  - v2+ =E2=89=88 [PATCH v8 00/05] Renesas R-Car Gen3 CPG support V8"
-    (http://www.spinics.net/lists/linux-clk/msg03288.html)
-  - v2 =3D "[PATCH/RFC v2 0/4] Renesas CPG/MSTP DT Binding Proposal"
-    (http://www.spinics.net/lists/linux-clk/msg03132.html)
-  - v1 =3D "Renesas CPG/MSTP DT Binding Proposal"
-    (http://www.spinics.net/lists/linux-clk/msg01189.html)
-
-Geert Uytterhoeven (3):
-  [RFC] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
-  [POC] clk: shmobile: Add r8a7791 CPG Core Clock Definitions
-  [POC] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
-
- .../devicetree/bindings/clock/renesas,cpg-mssr.txt | 71 ++++++++++++++=
-++++++++
- include/dt-bindings/clock/r8a7791-cpg-mssr.h       | 22 +++++++
- include/dt-bindings/clock/r8a7795-cpg-mssr.h       | 17 ++++++
- include/dt-bindings/clock/renesas-cpg-mssr.h       | 15 +++++
- 4 files changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg=
--mssr.txt
- create mode 100644 include/dt-bindings/clock/r8a7791-cpg-mssr.h
- create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
- create mode 100644 include/dt-bindings/clock/renesas-cpg-mssr.h
-
---=20
-1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-							    -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/iio/dac/ad5064.txt b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
+new file mode 100644
+index 0000000..fa2d328
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
+@@ -0,0 +1,48 @@
++Analog Devices AD5064 DAC device driver
++
++Required properties:
++	- compatible: Must be one of:
++		* "adi,ad5024"
++		* "adi,ad5025"
++		* "adi,ad5044"
++		* "adi,ad5045"
++		* "adi,ad5064"
++		* "adi,ad5064-1"
++		* "adi,ad5065"
++		* "adi,ad5628-1"
++		* "adi,ad5628-2"
++		* "adi,ad5648-1"
++		* "adi,ad5648-2"
++		* "adi,ad5666-1"
++		* "adi,ad5666-2"
++		* "adi,ad5668-1"
++		* "adi,ad5668-2"
++		* "adi,ad5668-3"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: Max SPI frequency to use (< 30000000)
++	- vrefA-supply, vrefB-supply: phandles to external reference voltage
++	  supplies for channels 0 and 1 respectively.
++	  This property must be present for ad5024, ad5025, ad5044, ad5045,
++	  ad5064, ad5065.
++	- vrefC-supply, vrefD-supply: phandles to external reference voltage
++	  supplies for channels 2 and 3 respectively.
++	  This property must be present for ad5024, ad5044, ad5064.
++
++Optional properties:
++	- vref-supply: phandle to the external reference voltage supply.
++	  This should only be set if there is an external reference voltage
++	  connected to the vref or vref[A-D] pins.
++	  If the property is not set, the internal reference voltage supply
++	  is used if present.
++	  This property can be used with ad5064-1, ad5628-1, ad5628-2, ad5648-1,
++	  ad5648-2, ad5666-1, ad5666-2, ad5668-1, ad5668-2, ad5668-3.
++
++Example:
++
++		ad5668-2@4 {
++			compatible = "adi,ad5668-2";
++			reg = <4>;
++			spi-max-frequency = <10000000>;
++			adi,use-external-reference;
++			vref-supply = <&vref_supply>;
++		};
+-- 
+2.5.3
