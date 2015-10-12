@@ -1,72 +1,50 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] PCI: Add quirk for PLDA's XpressRICH3 host bridge
- class.
-Date: Mon, 12 Oct 2015 09:57:35 +0100
-Message-ID: <20151012085735.GJ3394@e106497-lin.cambridge.arm.com>
-References: <1444409849-5685-1-git-send-email-Liviu.Dudau@arm.com>
- <1444409849-5685-3-git-send-email-Liviu.Dudau@arm.com>
- <7335872.olmykfZgj7@wuerfel>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation
+ for mic detection
+Date: Mon, 12 Oct 2015 09:45:54 +0100
+Message-ID: <20151012084554.GB8805@ck-lbox>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7335872.olmykfZgj7@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, device-tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151007122642.GH17172@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 09, 2015 at 08:32:07PM +0200, Arnd Bergmann wrote:
-> On Friday 09 October 2015 17:57:26 Liviu Dudau wrote:
-> > +/*
-> > + * The PLDA's XpressRICH3 doesn't describe itself as a bridge. Thi=
-s is required
-> > + * for correct/normal enumeration.
-> > + */
-> > +static void xr3pci_quirk_class(struct pci_dev *pdev)
-> > +{
-> > +       pdev->class =3D PCI_CLASS_BRIDGE_PCI << 8;
-> > +}
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLDA, PCI_DEVICE_ID_XR3PCI, =
-xr3pci_quirk_class);
-> >=20
->=20
-> Are you sure that this device ID is only used for the host bridge, no=
-t
-> for related devices in endpoint mode?
+On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+> On Wed, 07 Oct 2015, Mark Brown wrote:
+> 
+> > On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
+> > > Add additional bindings to allow configuration of the system specific
+> > > microphone detection settings.
+> > 
+> > This all seems pretty much fine to me - the things it is controlling are
+> > fairly specific to the way the former Wolfson devices do, they only
+> > really make sense with a fairly particular algorithm which isn't widely
+> > implemented.
+> 
+> Is that an Ack?
 
-I would hope so. The device ID has been assigned to ARM's implementatio=
-n by PLDA,
-it would be logical not to be reused for anyone else's.
+I am guessing Mark is slightly hesitant to ack as he probably
+doesn't want to add reviewing all our jack detection bindings to
+his already fairly sizable work load and doing so here likely
+means it will be expected in the future. From talking to people at
+LinuxCon it looks like it is pretty unlikely the DT maintainers
+will be acking individual bindings as well, basically they are
+only really looking at major/framework things and leaving the
+rest to subsystem maintainers.
 
->=20
-> While we don't support PCIe endpoint drivers at the moment, it might
-> happen at some point and then things break when someone tries to
-> plug a machine with this ID into a Linux host.
+Given that these patches only touch MFD/Extcon and extcon
+is a subsystem designed to handle things like jack detection
+isn't it really sufficient that you and Chanwoo have looked this
+and are happy with it? Otherwise I really don't see anyway to
+move this forward and would appreciate any suggestions?
 
-I'm asking for confirmation inside ARM that the IDs are uniquely alloca=
-ted to Juno
-and will come back when I'll get confirmation.
-
-Best regards,
-Liviu
-
->=20
-> 	Arnd
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Charles
