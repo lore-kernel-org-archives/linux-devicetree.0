@@ -1,82 +1,81 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [REPOST PATCH 1/4] ARM: dts: DRA7: Add dsp1_system syscon node
-Date: Mon, 12 Oct 2015 15:50:02 -0700
-Message-ID: <20151012225001.GK23801@atomide.com>
-References: <1443828205-18706-1-git-send-email-s-anna@ti.com>
-	<1443828205-18706-2-git-send-email-s-anna@ti.com>
-	<20151012214304.GD23801@atomide.com> <561C351B.3060307@ti.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 18/25] scsi: hisi_sas: add dev_gone and port_deformed
+Date: Tue, 13 Oct 2015 06:49:58 +0800
+Message-ID: <201510130647.HK3md76n%fengguang.wu@intel.com>
+References: <1444663237-238302-19-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <561C351B.3060307-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1444663237-238302-19-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org, linux-kernel-u79uwXL29TZ19SzzRMN9sA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [151012 15:37]:
-> Hi Tony,
-> 
-> On 10/12/2015 04:43 PM, Tony Lindgren wrote:
-> > * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [151002 16:27]:
-> >> The DSP_SYSTEM sub-module is a dedicated system control logic
-> >> module present within a DRA7 DSP processor sub-system. This
-> >> module is responsible for power management, clock generation
-> >> and connection to the device PRCM module.
-> >>
-> >> Add a syscon node for this module for the DSP1 processor
-> >> sub-system. This is added as a syscon node as it is a common
-> >> configuration module that can be used by the different IOMMU
-> >> instances and the corresponding remoteproc device.
-> >>
-> >> The node is added to the common dra7.dtsi file, as the DSP1
-> >> processor sub-system is mostly common across all the variants
-> >> of the DRA7 SoC family.
-> >>
-> >> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/dra7.dtsi | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> >> index e289c706d27d..62055094e8d5 100644
-> >> --- a/arch/arm/boot/dts/dra7.dtsi
-> >> +++ b/arch/arm/boot/dts/dra7.dtsi
-> >> @@ -292,6 +292,11 @@
-> >>  				#thermal-sensor-cells = <1>;
-> >>  		};
-> >>  
-> >> +		dsp1_system: dsp_system@40d00000 {
-> >> +			compatible = "syscon";
-> >> +			reg = <0x40d00000 0x100>;
-> >> +		};
-> >> +
-> >>  		sdma: dma-controller@4a056000 {
-> >>  			compatible = "ti,omap4430-sdma";
-> >>  			reg = <0x4a056000 0x1000>;
-> > 
-> > Hmm so why would you want to set up a complete device as a syscon
-> > mapping rather than just doing ioremap on it?
-> > 
-> > What drivers will be sharing access to these registers?
-> 
-> Two different instances of the MMU for now, both get probed
-> independently. But there are other registers which a remoteproc driver
-> will mostly be interested in (like DSP_SYS_STAT for knowing the C66x
-> idle/active status).
+Hi John,
 
-OK makes sense to me then.
+[auto build test WARNING on scsi/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
 
-Thanks,
+url:    https://github.com/0day-ci/linux/commits/John-Garry/HiSilicon-SAS-driver/20151012-231929
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-Tony
+
+sparse warnings: (new ones prefixed by >>)
+
+   drivers/scsi/hisi_sas/hisi_sas_main.c:321:6: sparse: symbol 'hisi_sas_bytes_dmaed' was not declared. Should it be static?
+   drivers/scsi/hisi_sas/hisi_sas_main.c:358:24: sparse: symbol 'hisi_sas_alloc_dev' was not declared. Should it be static?
+   drivers/scsi/hisi_sas/hisi_sas_main.c:376:5: sparse: symbol 'hisi_sas_dev_found_notify' was not declared. Should it be static?
+   drivers/scsi/hisi_sas/hisi_sas_main.c:479:6: sparse: symbol 'hisi_sas_port_notify_formed' was not declared. Should it be static?
+>> drivers/scsi/hisi_sas/hisi_sas_main.c:517:6: sparse: symbol 'hisi_sas_do_release_task' was not declared. Should it be static?
+   drivers/scsi/hisi_sas/hisi_sas_main.c:428:9: sparse: context imbalance in 'hisi_sas_dev_found_notify' - different lock contexts for basic block
+   drivers/scsi/hisi_sas/hisi_sas_main.c:479:6: sparse: context imbalance in 'hisi_sas_port_notify_formed' - different lock contexts for basic block
+--
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: incorrect type in argument 1 (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26:    expected unsigned long long [unsigned] [usertype] val
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26:    got restricted __le64 [usertype] sas_addr
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:26: sparse: cast from restricted __le64
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:24: sparse: incorrect type in assignment (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:24:    expected restricted __le64 [usertype] sas_addr
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:528:24:    got unsigned long long
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:553:15: sparse: cast from restricted __le64
+>> drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:553:13: sparse: incorrect type in assignment (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:553:13:    expected unsigned int [unsigned] [usertype] qw0
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:553:13:    got restricted __le64 [usertype] <noident>
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:761:6: sparse: symbol 'enable_phy_v1_hw' was not declared. Should it be static?
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1042:36: sparse: cast from restricted __le32
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1042:36: sparse: incorrect type in initializer (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1042:36:    expected unsigned int [unsigned] [usertype] dma_err_type
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1042:36:    got restricted __le32 [usertype] <noident>
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1050:33: sparse: cast from restricted __le32
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1050:33: sparse: incorrect type in initializer (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1050:33:    expected unsigned int [unsigned] [usertype] trans_tx_fail_type
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1050:33:    got restricted __le32 [usertype] <noident>
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1052:33: sparse: cast from restricted __le32
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1052:33: sparse: incorrect type in initializer (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1052:33:    expected unsigned int [unsigned] [usertype] trans_rx_fail_type
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1052:33:    got restricted __le32 [usertype] <noident>
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1456:34: sparse: cast from restricted __le32
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1456:32: sparse: incorrect type in assignment (different base types)
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1456:32:    expected unsigned int [unsigned] [usertype] cmplt_hdr_data
+   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c:1456:32:    got restricted __le32 [usertype] <noident>
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
