@@ -1,45 +1,35 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 2/5] PCI: Add quirk for PLDA's XpressRICH3 host bridge class.
-Date: Mon, 12 Oct 2015 11:07:36 +0100
-Message-ID: <1444644459-2780-3-git-send-email-Liviu.Dudau@arm.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v3 1/5] pci: Add PLDA's XpressRICH3 PCIe host bridge PCI ID
+Date: Mon, 12 Oct 2015 11:07:35 +0100
+Message-ID: <1444644459-2780-2-git-send-email-Liviu.Dudau@arm.com>
 References: <1444644459-2780-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444644459-2780-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, device-tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444644459-2780-1-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>
+Cc: linux-pci <linux-pci@vger.kernel.org>, device-tree <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Andrew Murray <Andrew.Murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The XpressRICH3 host bridge at power up has an unassigned class on
-some of ARM Ltd boards, add a quirk to correct that.
+From: Andrew Murray <Andrew.Murray@arm.com>
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 ---
- drivers/pci/quirks.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/linux/pci_ids.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b03373f..ae24bb4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4149,3 +4149,13 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
- 	}
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index d9ba49c..1542b2b 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1319,6 +1319,9 @@
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP79_SMBUS     0x0AA2
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP89_SATA	    0x0D85
+ 
++#define PCI_VENDOR_ID_PLDA		0x1556
++#define PCI_DEVICE_ID_XR3PCI		0x1100
 +
-+/*
-+ * The PLDA's XpressRICH3 doesn't describe itself as a bridge. This is required
-+ * for correct/normal enumeration.
-+ */
-+static void xr3pci_quirk_class(struct pci_dev *pdev)
-+{
-+	pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLDA, PCI_DEVICE_ID_XR3PCI, xr3pci_quirk_class);
+ #define PCI_VENDOR_ID_IMS		0x10e0
+ #define PCI_DEVICE_ID_IMS_TT128		0x9128
+ #define PCI_DEVICE_ID_IMS_TT3D		0x9135
 -- 
 2.6.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
