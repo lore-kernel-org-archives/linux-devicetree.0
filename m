@@ -1,34 +1,73 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 13/25] scsi: hisi_sas: add path from phyup irq to SAS
- framework
-Date: Tue, 13 Oct 2015 06:03:43 +0800
-Message-ID: <201510130540.gVjgsIWc%fengguang.wu@intel.com>
-References: <1444663237-238302-14-git-send-email-john.garry@huawei.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: dra7: Add dt node for the sycon pcie
+Date: Tue, 13 Oct 2015 03:35:07 +0530
+Message-ID: <561C2E93.3020809@ti.com>
+References: <1442323985-29939-1-git-send-email-kishon@ti.com>
+ <1442323985-29939-2-git-send-email-kishon@ti.com>
+ <20151012212149.GZ23801@atomide.com> <561C2A1B.3000201@ti.com>
+ <20151012220322.GF23801@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444663237-238302-14-git-send-email-john.garry@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-Cc: kbuild-all@01.org, James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de, John Garry <john.garry@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151012220322.GF23801@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nsekhar@ti.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+Hi,
 
-[auto build test WARNING on scsi/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+On Tuesday 13 October 2015 03:33 AM, Tony Lindgren wrote:
+> * Kishon Vijay Abraham I <kishon@ti.com> [151012 14:50]:
+>> Hi Tony,
+>>
+>> On Tuesday 13 October 2015 02:51 AM, Tony Lindgren wrote:
+>>> * Kishon Vijay Abraham I <kishon@ti.com> [150915 06:37]:
+>>>> Add new device tree node for the control module register space where
+>>>> PCIe registers are present.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/dra7.dtsi |    5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>>>> index 5d65db9..0769b5d 100644
+>>>> --- a/arch/arm/boot/dts/dra7.dtsi
+>>>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>>>> @@ -154,6 +154,11 @@
+>>>>  					compatible = "syscon";
+>>>>  					reg = <0x1c04 0x0020>;
+>>>>  				};
+>>>> +
+>>>> +				scm_conf_pcie: tisyscon@1c24 {
+>>>> +					compatible = "syscon";
+>>>> +					reg = <0x1c24 0x0024>;
+>>>> +				};
+>>>>  			};
+>>>>  
+>>>>  			cm_core_aon: cm_core_aon@5000 {
+>>>
+>>>
+>>> Why don't you just extend the existing scm_conf1 area? This is not all pcie
+>>> specific for scm_conf_pcie, at least for PLLEN_CONTROL, RMII_CLK_SETTING
+>>> and MUXSEL_32K_CLKIN.
+>>
+>> scm_conf_pcie has only PCIe registers (it starts at 0x4A003C24).
+>> PLLEN_CONTROL and others are at 0x4A003C14 as per
+>> DRA75x_DRA74x_SR1.1_NDA_TRM_vW.
+> 
+> Oh sorry I guess I was looking at a wrong address then.
+> 
+>> Since PCIe itself has a bunch of registers for itself, thought of
+>> creating a separate dt node. But I can extend scm_conf1 area.
+> 
+> Why not just ioremap them then? Do these need to be shared with
+> some other driver?
 
-url:    https://github.com/0day-ci/linux/commits/John-Garry/HiSilicon-SAS-driver/20151012-231929
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+yeah, some are used by PCIe controller driver and some are used by PCIe
+PHY driver.
 
-
-sparse warnings: (new ones prefixed by >>)
-
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Thanks
+Kishon
