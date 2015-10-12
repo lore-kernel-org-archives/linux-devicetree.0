@@ -1,53 +1,75 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2] arm: dts: Fix audio card detection on peach boards
-Date: Tue, 13 Oct 2015 08:49:27 +0900
-Message-ID: <CAJKOXPf8ZoHsP16fEWaRDMxd_7HRjzupOWOgp8ng2RjsL_BBuA@mail.gmail.com>
-References: <1444653438-6532-1-git-send-email-alim.akhtar@samsung.com>
-	<561BAFE0.5070205@samsung.com>
-	<561C0589.7010103@kernel.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v3] ARM: dts: twl4030: Add iio properties for bci subnode
+Date: Tue, 13 Oct 2015 01:53:43 +0200
+Message-ID: <20151012235343.GA7755@earth>
+References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
+ <1443212447-5841-3-git-send-email-marek@goldelico.com>
+ <20150926172936.GD22315@earth>
+ <CAAfyv36nZ3c-yw7QQHwBWk3GwY31rV3Uq2n0dz5hppn5JFhEcA@mail.gmail.com>
+ <20151012213827.GC23801@atomide.com>
+ <20151012222009.GH23801@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <561C0589.7010103@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dianders@chromium.org, stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151012222009.GH23801@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Belisko Marek <marek.belisko@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, Neil Brown <neilb@suse.de>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, LKML <linux-kernel@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-10-13 4:10 GMT+09:00 Kukjin Kim <kgene@kernel.org>:
-> On 10/12/15 22:04, Krzysztof Kozlowski wrote:
->> W dniu 12.10.2015 o 21:37, Alim Akhtar pisze:
->>> Since commit 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards"),
->>> sound card detection is broken on peach boards and gives below errors:
->>>
->>> [    3.630457] max98090 7-0010: MAX98091 REVID=0x51
->>> [    3.634233] max98090 7-0010: use default 2.8v micbias
->>> [    3.640985] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
->>> [    3.645307] max98090 7-0010: Invalid master clock frequency
->>> [    3.650824] snow-audio sound: ASoC: Peach-Pi-I2S-MAX98091 late_probe() failed: -22
->>> [    3.658914] snow-audio sound: snd_soc_register_card failed (-22)
->>> [    3.664366] snow-audio: probe of sound failed with error -22
->>>
->>> This patch adds missing assigned-clocks and assigned-clock-parents for
->>> pmu_system_controller node which is used as "mclk" for audio codec.
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> Fixes: 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards")
->>> Cc: <stable@vger.kernel.org>
->>> ---
->>> Changes since v1:
->>> Addressed Krzysztof's review comments.
->>
->> Looks good, thanks!
->>
->> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>
-> Applied, thanks.
 
-I see you pulled that one and of_node_put() fix into fixes. Thanks!
-Can you apply also Sudip's fix for thermal (acked by Lukasz)? I have
-it my try but since you applied these two already it does not have
-sense any more.
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hi,
+
+On Mon, Oct 12, 2015 at 03:20:10PM -0700, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [151012 14:43]:
+> > * Belisko Marek <marek.belisko@gmail.com> [150926 13:02]:
+> > > Tony sorry I forgot to add you to the recipients for this patchset.
+> > > Can you please queue this patch. Many thanks.
+> >=20
+> > OK applying into omap-for-v4.4/dt thanks.
+>=20
+> Actually dropping this one, it makes build fail as we don't
+> have twl4030_madc yet.
+>=20
+> Maybe please send a separate set of dts patches for me.
+
+mh that's strange, twl4030-madc is there since a long time. But
+checking the patch, it seems Marek got the phandle wrong:
+
+$ grep -B1 "ti,twl4030-madc" arch/arm/boot/dts/twl4030.dtsi
+	twl_madc: madc {
+		compatible =3D "ti,twl4030-madc";
+
+Once that is fixed, the patch should have no dependencies.
+
+-- Sebastian
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWHEf/AAoJENju1/PIO/qaj6MQAJaqWfUiWCix7/p30B+WT6Qk
+q5fFzmut5dtOlRi5nwnzeBvxf5bXe1ovT6AvH+wHlHYxlnjzN01cmD1UTNjN6zY6
+jZK28/zUejqDn8gIx+G/2zr7Bvxsk5soVdgV38ItRO4LrYUdhqQjIAJ34YV4QfpV
+lzISa0IuohzQZmPGz7rTYASzz2Cfak/2ybFrlJCXUIxWp8a7U8ZTBXfH1EPKsqTB
+Zfs1wh5phZvTL/bpcGupqJIM85IwT00fhkt0KrI3G5qNCfqvoOwjF65kgzQ5xlca
+jzYdT/oAAIu73dLyOgmS2F12a4EmnAuLV+T1R8xsuv40A2k2e+HGiotpcN0xdUEl
+L7IvJtkKzxXs/xpealulZdLfRSf3OXG11HFI32rsRPocSUjOGAjfeEmbrA860S8k
+BRTI7EVc1Y9C4260mNLIdPvkn8xfygIE07mPDSN6nL5a3A/0pNFX7ZuXGgt7Yr31
+bJYl8chxnAfiOeKmvTmKue7eqoxTmD5BqV9B11yB9hhR1mqUKu9xKOMEhf9rIhJX
+7yq3tOSDD7XV+FyfGDbOZEAJ5NQfITHyuf5zK9blqQ1dt7VhCXGa9xyiiPkzjD02
+R5Xu7vw2M5dQJIvR63XS5BSyVdIWpyxDFl3qhd2oovhZfbAU4AXHtLsX+bZW6ElU
+7utfcgyqRd4aGtx7yVSi
+=uS/w
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
