@@ -1,80 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] docs: dts: Add documentation for hi6220 SoC ION node
-Date: Mon, 12 Oct 2015 10:31:19 +0100
-Message-ID: <20151012093119.GA20649@leverpostej>
-References: <1444632386-106627-1-git-send-email-puck.chen@hisilicon.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 1/3] doc: dt: fpga: Added Documentation for Xilinx Zynq
+ FPGA manager.
+Date: Mon, 12 Oct 2015 11:31:28 +0200
+Message-ID: <561B7DF0.6090601@xilinx.com>
+References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
+ <1444344307-22509-2-git-send-email-moritz.fischer@ettus.com>
+ <20151009160423.GL10631@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444632386-106627-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, tranmanphong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, tapaswenipathak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151009160423.GL10631@jcartwri.amer.corp.natinst.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@ni.com>, Moritz Fischer <moritz.fischer@ettus.com>
+Cc: michal.simek@xilinx.com, soren.brinkmann@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 12, 2015 at 02:46:24PM +0800, Chen Feng wrote:
-> Documentation for hi6220 SoC ION node
+On 10/09/2015 06:04 PM, Josh Cartwright wrote:
+> On Fri, Oct 09, 2015 at 12:45:05AM +0200, Moritz Fischer wrote:
+>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> ---
+>>  .../bindings/fpga/xilinx-zynq-fpga-mgr.txt         | 26 ++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
+>> new file mode 100644
+>> index 0000000..82ffda8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
+>> @@ -0,0 +1,26 @@
+>> +Xilinx Zynq FPGA Manager
+>> +
+>> +Required properties:
+>> +- compatible:		should contain "xlnx,zynq-devcfg-1.0"
+>> +- reg:			base address and size for memory mapped io
+>> +- interrupt parent:	interrupt source phandle
 > 
-> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  .../devicetree/bindings/staging/ion/hi6220-ion.txt | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+> I think you mean 'interrupt-parent', with the hyphen.
 
+yes.
 
-We should not be adding platform-specific bindings and/or drivers for
-this.
-
-There's already a proposal for a generic binding [1]. Please work with
-that rather than working on your own.
-
-Mark.
-
-[1] https://lkml.org/lkml/2015/10/6/854
- 
-> diff --git a/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
-> new file mode 100644
-> index 0000000..c59e27c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
-> @@ -0,0 +1,31 @@
-> +Hi6220 SoC ION
-> +===================================================================
-> +Required properties:
-> +- compatible : "hisilicon,hi6220-ion"
-> +- list of the ION heaps
-> +	- heap name : maybe heap_sys_user@0
-> +	- heap id   : id should be unique in the system.
-> +	- heap base : base ddr address of the heap,0 means that
-> +	it is dynamic.
-> +	- heap size : memory size and 0 means it is dynamic.
-> +	- heap type : the heap type of the heap, please also
-> +	see the define in ion.h(drivers/staging/android/uapi/ion.h)
-> +-------------------------------------------------------------------
-> +Example:
-> +	hi6220-ion {
-> +		compatible = "hisilicon,hi6220-ion";
-> +		heap_sys_user@0 {
-> +			heap-name = "sys_user";
-> +			heap-id   = <0x0>;
-> +			heap-base = <0x0>;
-> +			heap-size = <0x0>;
-> +			heap-type = "ion_system";
-> +		};
-> +		heap_sys_contig@0 {
-> +			heap-name = "sys_contig";
-> +			heap-id   = <0x1>;
-> +			heap-base = <0x0>;
-> +			heap-size = <0x0>;
-> +			heap-type = "ion_system_contig";
-> +		};
-> +	};
-> -- 
-> 1.9.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Actually, this isn't really a 'required' property of this node, as it
+> could be specified in a parent node.
+
+yes. Normally interrupt-parent is not listed as required property in the
+binding doc. Some docs listed it as optional property.
+
+Thanks,
+Michal
