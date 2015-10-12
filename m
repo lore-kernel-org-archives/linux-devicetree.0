@@ -1,110 +1,68 @@
-From: Josh Cartwright <joshc@eso.teric.us>
-Subject: Re: [PATCH 3/5] mtd: brcmnand: Optional DT flag to reset IPROC NAND
- controller
-Date: Mon, 12 Oct 2015 16:54:59 -0500
-Message-ID: <20151012215459.GA8843@kryptos>
-References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
- <1443808606-21203-4-git-send-email-anup.patel@broadcom.com>
- <20151004214943.GA28904@localhost>
- <39063E8F96E11742B35A201CC5D095B7AD54C1@SJEXCHMB10.corp.ad.broadcom.com>
- <20151006134119.GB26818@localhost> <56144A62.70300@broadcom.com>
- <5614574C.2060701@gmail.com>
- <39063E8F96E11742B35A201CC5D095B7AD8ADD@SJEXCHMB10.corp.ad.broadcom.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: dra7: Add dt node for the sycon pcie
+Date: Mon, 12 Oct 2015 15:03:23 -0700
+Message-ID: <20151012220322.GF23801@atomide.com>
+References: <1442323985-29939-1-git-send-email-kishon@ti.com>
+ <1442323985-29939-2-git-send-email-kishon@ti.com>
+ <20151012212149.GZ23801@atomide.com>
+ <561C2A1B.3000201@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7182616588964547138=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <39063E8F96E11742B35A201CC5D095B7AD8ADD@SJEXCHMB10.corp.ad.broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Rafal Milecki <zajec5@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sandeep Tripathy <tripathy@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Pramod Kumar <pramodku@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@li
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <561C2A1B.3000201@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nsekhar@ti.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
+* Kishon Vijay Abraham I <kishon@ti.com> [151012 14:50]:
+> Hi Tony,
+> 
+> On Tuesday 13 October 2015 02:51 AM, Tony Lindgren wrote:
+> > * Kishon Vijay Abraham I <kishon@ti.com> [150915 06:37]:
+> >> Add new device tree node for the control module register space where
+> >> PCIe registers are present.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  arch/arm/boot/dts/dra7.dtsi |    5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> >> index 5d65db9..0769b5d 100644
+> >> --- a/arch/arm/boot/dts/dra7.dtsi
+> >> +++ b/arch/arm/boot/dts/dra7.dtsi
+> >> @@ -154,6 +154,11 @@
+> >>  					compatible = "syscon";
+> >>  					reg = <0x1c04 0x0020>;
+> >>  				};
+> >> +
+> >> +				scm_conf_pcie: tisyscon@1c24 {
+> >> +					compatible = "syscon";
+> >> +					reg = <0x1c24 0x0024>;
+> >> +				};
+> >>  			};
+> >>  
+> >>  			cm_core_aon: cm_core_aon@5000 {
+> > 
+> > 
+> > Why don't you just extend the existing scm_conf1 area? This is not all pcie
+> > specific for scm_conf_pcie, at least for PLLEN_CONTROL, RMII_CLK_SETTING
+> > and MUXSEL_32K_CLKIN.
+> 
+> scm_conf_pcie has only PCIe registers (it starts at 0x4A003C24).
+> PLLEN_CONTROL and others are at 0x4A003C14 as per
+> DRA75x_DRA74x_SR1.1_NDA_TRM_vW.
 
---===============7182616588964547138==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
+Oh sorry I guess I was looking at a wrong address then.
 
+> Since PCIe itself has a bunch of registers for itself, thought of
+> creating a separate dt node. But I can extend scm_conf1 area.
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why not just ioremap them then? Do these need to be shared with
+some other driver?
 
-On Wed, Oct 07, 2015 at 03:33:50AM +0000, Anup Patel wrote:
-> From: Florian Fainelli [mailto:f.fainelli@gmail.com]
-> > On 06/10/15 15:25, Scott Branden wrote:
-[..]
-> > Then instead of adding a "reset flag" to Device Tree, another approach =
-could be
-> > to put the desired or currently configured exhaustive list of NAND timi=
-ngs in
-> > Device Tree, and based on that you could have this:
-> >=20
-> > - the NAND controller driver finds that these timings match the current
-> > configuration, you are good to go
-> >=20
-> > - the NAND controller drivers finds a difference in how current timings=
- are
-> > configured vs. desired timings, and issues a controller reset, prior to=
- applying
-> > new timing configuration
->
-> To add to this ...
->
-> The mechanism to reset is BRCM NAND controller is SOC specific so the
-> SoC independent BRCM NAND driver (i.e. brcmnand.c) does not know how
-> to reset the NAND controller.
->
-> For iProc SoC family, the NAND controller reset is through IDM register
-> space which is only iomap'ed by iproc_nand.c.
->
-> We might end-up having one more SoC specific callback which will be
-> Provided by iproc_nand.c to brcmnand.c.
+Regards,
 
-Not that I'm familiar with these SoCs, but I did want to chime in and
-make sure you are aware of the existing reset_controller_dev
-abstraction, which is intended to solve exactly this problem.  Including
-a reset_control_get_optional() that might fit your use case.  See
-include/linux/reset{,-controller}.h.
-
-  Josh
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAABCAAGBQJWHCwvAAoJEFQ/W/ipfAAc9NAH/2XHlcu00g8MIiknJJtCA4i+
-7L7nfIzqwdVLYO/3Uwe5YKepGh9OOD0mqRvbsBv7WKFebTyR0Jsk6UKzBxsie2xb
-vzoOe1pIBLwSVbYyn74tBOtQ2l9BC8DcpD9wv05hWE1qfqJAyJcUL0sXseqEl5Bc
-d7ObzRQJKmgV4PxQUaYXSNrvzmwKku1/XJvxvjxEVH043DWf4vA59Wz81eGzTikm
-barwW0LnwMSQK09ovVANVc9b3m0TuE9/nduKD6KDXECGOoWrkaqMAji5Pt7A+HgI
-fM6tObngr3NqryzG7tN5R4ER1ivr1EQq5CllUE8DA41GSoPPdwIvDLxncZQPttg=
-=4nbR
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
-
-
---===============7182616588964547138==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7182616588964547138==--
+Tony
