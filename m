@@ -1,128 +1,70 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed support
-Date: Mon, 12 Oct 2015 16:53:57 +0530
-Message-ID: <CANAwSgSS3Tv_CfX3s1f6VxZre86c66Eg=AdTkwQr6xtPF5WOfA@mail.gmail.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-3-git-send-email-linux.amoon@gmail.com> <561B48B7.1040201@samsung.com>
- <CANAwSgSk0yHGvnoVoTk9MnUqjyEw1+yzH=C-1s_wxVkpGRHCEg@mail.gmail.com> <561B90B1.1090100@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561B90B1.1090100@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v3] video: fbdev: add Marvell PXA LCD controller binding
+Date: Mon, 12 Oct 2015 13:30:23 +0200
+Message-ID: <1444649423-25369-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon Chung
+Add documentation for the PXA LCD controller devicetree binding.
 
-On 12 October 2015 at 16:21, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> On 10/12/2015 07:46 PM, Anand Moon wrote:
->> Hi Krzysztof,
->>
->> On 12 October 2015 at 11:14, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->>> On 12.10.2015 00:46, Anand Moon wrote:
->>>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
->>>
->>> This description is not entirely correct. The MMC driver already
->>> supports these UHS speeds (you did not any code) so you rather enabled
->>> it (description of bindings says "is supported").
->>>
->>> You mentioned DDR50 but I don't see respective property below.
->> Looks like I missed it, I will add this in the next patch,
->>>
->>> How do you know that these modes are really supported? I don't know. Can
->>> you convince me?
->>>
->>
->>>>
->>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>
->>>> ---
->>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>>>
->>>> Changes Fixed the UHS-I bus speed detedtion on cold boot.
->>>
->>> I don't get what is exactly fixed here. What was the error? What is the
->>> outcome of this fix? The log below is before or after?
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>>>
->>>> [    2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req 100000000Hz, actual 100000000HZ div = 0)
->>>> [    2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
->>>> [    2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
->>>> [    2.461743]  mmcblk0: p1 p2
->>>
->>>> ---
->>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> index 58c06d3..ba4a87b 100644
->>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> @@ -364,6 +364,10 @@
->>>>       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
->>>>       bus-width = <4>;
->>>>       cap-sd-highspeed;
->>>> +     sd-uhs-sdr12;
->>>> +     sd-uhs-sdr25;
->>>> +     sd-uhs-sdr50;
->>>> +     sd-uhs-sdr104;
->>>>  };
->>>>
->>>>  &pinctrl_0 {
->>>>
->>>
->>
->> Changes were made to support Sandisk Ultra UHS-I class 10 card support.
->> OdroidXU3/XU4 board would not boot up using this card.
->>
->> Depending on the capability of the UHS-I card, the speed of the card
->> is selected.
->> I have just added the enhance capability feature to support them.
->>
->> On warm boot: i.e reboot of the board.
->> [    4.649073] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
->> req 50000000Hz, actual 50000000HZ div = 0)
->> [    4.657555] mmc1: new high speed SDHC card at address aaaa
->> [    4.663787] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
->> [    4.669206]  mmcblk0: p1 p2
->>
->> On cold boot:: ie: power on the board.
->>
->> [    4.630237] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot
->> req 100000000Hz, actual 100000000HZ div = 0)
->> [    4.639820] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
->> [    4.646266] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
->> [    4.650293] IRQ56 no longer affine to CPU7
->> [    4.650581] CPU7: shutdown
->> [    4.658293]  mmcblk0: p1 p2
->>
->> Note: Their is need to reset the PMIC
->> S2MPS11_REG_L13CTRL/S2MPS11_REG_L19CTRL registers
->>          to support this feature consistently on every reboot.
->
-> I don't understand...why needs to reset?
-> I know it needs to switch the voltage, doesn't it?
->
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+Since v1: Philipp's review on the whole binding
+Since v2: moved to display/, Philipp's and Rob's review
+      	  dropped panel description, should be a simple panel with a
+	  lcd-type optional node that could be added to simple-panel.
+---
+ .../bindings/display/marvell,pxa2xx-lcdc.txt       | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt
 
-I was referring to this code.
+diff --git a/Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt b/Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt
+new file mode 100644
+index 000000000000..309c47f25b87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt
+@@ -0,0 +1,34 @@
++PXA LCD Controller
++------------------
++
++Required properties:
++ - compatible : one of these
++	"marvell,pxa2xx-lcdc",
++	"marvell,pxa270-lcdc",
++	"marvell,pxa300-lcdc"
++ - reg : should contain 1 register range (address and length).
++ - interrupts : framebuffer controller interrupt.
++ - clocks: phandle to input clocks
++
++Required nodes:
++ - port: connection to the LCD panel (see video-interfaces.txt)
++	 This node must have its properties bus-width and remote-endpoint set.
++	 If the panel is not a TFT color panel, then a "lcd-type" property in
++	 the panel should specify the panel type.
++	 This panel node should be in the board dts.
++
++Example:
++	lcd-controller@40500000 {
++		compatible = "marvell,pxa2xx-lcdc";
++		reg = <0x44000000 0x10000>;
++		interrupts = <17>;
++		clocks = <&clks CLK_LCD>;
++		status = "okay";
++
++		port {
++			lcdc_out: endpoint {
++				remote-endpoint = <&panel_in>;
++				bus-width = <16>;
++			};
++		};
++	};
+-- 
+2.1.4
 
-https://github.com/hardkernel/linux/blob/odroidxu3-3.10.y/drivers/regulator/s2mps11.c#L451
-
-I am not sure if this need to fixed in u-boot of hardkernel or
-shutdown function.
-
--Anand Moon
-
-> Best Regards,
-> Jaehoon Chung
->
->>
->> -Anand Moon
->>
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
