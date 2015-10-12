@@ -1,55 +1,77 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/POC v3 2/3] clk: shmobile: Add r8a7791 CPG Core Clock Definitions
-Date: Mon, 12 Oct 2015 13:37:42 +0200
-Message-ID: <1444649863-17796-3-git-send-email-geert+renesas@glider.be>
-References: <1444649863-17796-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 0/3] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
+Date: Mon, 12 Oct 2015 13:37:40 +0200
+Message-ID: <1444649863-17796-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1444649863-17796-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add the R-Car M2-W CPG Core Clocks that are currently needed by the DTS.
-More will be added when needed.
+	Hi Mike, Stephen, et al.,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This is a Proof-of-Concept. Final definitions and values may be
-different.
+As discussed at ELCE last week, here's my RFC introducing a new unified
+binding for the Renesas CPG (Clock Pulse Generator) and MSSR (Module
+Standby and Software Reset) blocks.  These bindings are supposed to be
+more in-line with current CCF best practices, and allow expansion to
+cover the module reset functionality in the future.  They are intended
+to be used initially for the new R-Car Gen3 SoCs (r8a7795), but we may
+decide to migrate older SoCs somewhen in the future.
 
- include/dt-bindings/clock/r8a7791-cpg-mssr.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+  - The first patch is an RFC introducing the new bindings.
+  - Patches 2 and 3 are Proof-of-Concepts of the CPG Core Clock
+    Definitions for the already supported R-Car M2-W (r8a7791) SoC, and
+    for the new R-Car H3 (r8a7795) SoC.
+
+The idea is to get the bindings (for r8a7795) accepted in v4.4, so we
+can continue developing and prepare final support for r8a7795 in v4.5.
+
+I will post preliminary code and DT patches for both r8a7791 (POC) and
+r8a7795 (mandatory) as soon as possible.
+
+Thanks for your comments!
+
+References:
+  - v2+ =E2=89=88 [PATCH v8 00/05] Renesas R-Car Gen3 CPG support V8"
+    (http://www.spinics.net/lists/linux-clk/msg03288.html)
+  - v2 =3D "[PATCH/RFC v2 0/4] Renesas CPG/MSTP DT Binding Proposal"
+    (http://www.spinics.net/lists/linux-clk/msg03132.html)
+  - v1 =3D "Renesas CPG/MSTP DT Binding Proposal"
+    (http://www.spinics.net/lists/linux-clk/msg01189.html)
+
+Geert Uytterhoeven (3):
+  [RFC] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
+  [POC] clk: shmobile: Add r8a7791 CPG Core Clock Definitions
+  [POC] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt | 71 ++++++++++++++=
+++++++++
+ include/dt-bindings/clock/r8a7791-cpg-mssr.h       | 22 +++++++
+ include/dt-bindings/clock/r8a7795-cpg-mssr.h       | 17 ++++++
+ include/dt-bindings/clock/renesas-cpg-mssr.h       | 15 +++++
+ 4 files changed, 125 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg=
+-mssr.txt
  create mode 100644 include/dt-bindings/clock/r8a7791-cpg-mssr.h
+ create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
+ create mode 100644 include/dt-bindings/clock/renesas-cpg-mssr.h
 
-diff --git a/include/dt-bindings/clock/r8a7791-cpg-mssr.h b/include/dt-bindings/clock/r8a7791-cpg-mssr.h
-new file mode 100644
-index 0000000000000000..a68093bc77f846fa
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a7791-cpg-mssr.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright 2013 Ideas On Board SPRL
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_R8A7791_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A7791_CPG_MSSR_H__
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/* r8a7791 CPG Core Clocks */
-+#define R8A7791_CLK_Z			0
-+#define R8A7791_CLK_M2			1
-+#define R8A7791_CLK_ADSP		2
-+#define R8A7791_CLK_SD0			3
-+#define R8A7791_CLK_RCAN		4
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7791_CPG_MSSR_H__ */
--- 
+--=20
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+							    -- Linus Torvalds
