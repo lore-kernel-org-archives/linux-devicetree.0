@@ -1,75 +1,118 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: twl4030: Add iio properties for bci subnode
-Date: Tue, 13 Oct 2015 01:53:43 +0200
-Message-ID: <20151012235343.GA7755@earth>
-References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
- <1443212447-5841-3-git-send-email-marek@goldelico.com>
- <20150926172936.GD22315@earth>
- <CAAfyv36nZ3c-yw7QQHwBWk3GwY31rV3Uq2n0dz5hppn5JFhEcA@mail.gmail.com>
- <20151012213827.GC23801@atomide.com>
- <20151012222009.GH23801@atomide.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151012222009.GH23801@atomide.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Belisko Marek <marek.belisko@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, Neil Brown <neilb@suse.de>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, LKML <linux-kernel@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/5] arm: dts: lpc32xx: add labels to all defined peripheral nodes
+Date: Tue, 13 Oct 2015 02:54:03 +0300
+Message-ID: <1444694045-22000-4-git-send-email-vz@mleia.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444694045-22000-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+To simplify writing of dts files for all lpc32xx.dtsi users who adjust
+device node properties, add labels to all defined peripheral device
+nodes in lpc32xx.dtsi.
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/lpc32xx.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Hi,
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 3ef804c..dcb52cb 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -49,7 +49,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		dma@31000000 {
++		dma: dma@31000000 {
+ 			compatible = "arm,pl080", "arm,primecell";
+ 			reg = <0x31000000 0x1000>;
+ 			interrupts = <0x1c 0>;
+@@ -58,21 +58,21 @@
+ 		/*
+ 		 * Enable either ohci or usbd (gadget)!
+ 		 */
+-		ohci@31020000 {
++		ohci: ohci@31020000 {
+ 			compatible = "nxp,ohci-nxp", "usb-ohci";
+ 			reg = <0x31020000 0x300>;
+ 			interrupts = <0x3b 0>;
+ 			status = "disabled";
+ 		};
+ 
+-		usbd@31020000 {
++		usbd: usbd@31020000 {
+ 			compatible = "nxp,lpc3220-udc";
+ 			reg = <0x31020000 0x300>;
+ 			interrupts = <0x3d 0>, <0x3e 0>, <0x3c 0>, <0x3a 0>;
+ 			status = "disabled";
+ 		};
+ 
+-		clcd@31040000 {
++		clcd: clcd@31040000 {
+ 			compatible = "arm,pl110", "arm,primecell";
+ 			reg = <0x31040000 0x1000>;
+ 			interrupts = <0x0e 0>;
+@@ -118,7 +118,7 @@
+ 				reg = <0x20094000 0x1000>;
+ 			};
+ 
+-			sd@20098000 {
++			sd: sd@20098000 {
+ 				compatible = "arm,pl18x", "arm,primecell";
+ 				reg = <0x20098000 0x1000>;
+ 				interrupts = <0x0f 0>, <0x0d 0>;
+@@ -243,7 +243,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			rtc@40024000 {
++			rtc: rtc@40024000 {
+ 				compatible = "nxp,lpc3220-rtc";
+ 				reg = <0x40024000 0x1000>;
+ 				interrupts = <0x34 0>;
+@@ -256,7 +256,7 @@
+ 				#gpio-cells = <3>; /* bank, pin, flags */
+ 			};
+ 
+-			watchdog@4003C000 {
++			watchdog: watchdog@4003C000 {
+ 				compatible = "nxp,pnx4008-wdt";
+ 				reg = <0x4003C000 0x1000>;
+ 			};
+@@ -268,21 +268,21 @@
+ 			 * them
+ 			 */
+ 
+-			adc@40048000 {
++			adc: adc@40048000 {
+ 				compatible = "nxp,lpc3220-adc";
+ 				reg = <0x40048000 0x1000>;
+ 				interrupts = <0x27 0>;
+ 				status = "disabled";
+ 			};
+ 
+-			tsc@40048000 {
++			tsc: tsc@40048000 {
+ 				compatible = "nxp,lpc3220-tsc";
+ 				reg = <0x40048000 0x1000>;
+ 				interrupts = <0x27 0>;
+ 				status = "disabled";
+ 			};
+ 
+-			key@40050000 {
++			key: key@40050000 {
+ 				compatible = "nxp,lpc3220-key";
+ 				reg = <0x40050000 0x1000>;
+ 				interrupts = <54 0>;
+-- 
+2.1.4
 
-On Mon, Oct 12, 2015 at 03:20:10PM -0700, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [151012 14:43]:
-> > * Belisko Marek <marek.belisko@gmail.com> [150926 13:02]:
-> > > Tony sorry I forgot to add you to the recipients for this patchset.
-> > > Can you please queue this patch. Many thanks.
-> >=20
-> > OK applying into omap-for-v4.4/dt thanks.
->=20
-> Actually dropping this one, it makes build fail as we don't
-> have twl4030_madc yet.
->=20
-> Maybe please send a separate set of dts patches for me.
-
-mh that's strange, twl4030-madc is there since a long time. But
-checking the patch, it seems Marek got the phandle wrong:
-
-$ grep -B1 "ti,twl4030-madc" arch/arm/boot/dts/twl4030.dtsi
-	twl_madc: madc {
-		compatible =3D "ti,twl4030-madc";
-
-Once that is fixed, the patch should have no dependencies.
-
--- Sebastian
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWHEf/AAoJENju1/PIO/qaj6MQAJaqWfUiWCix7/p30B+WT6Qk
-q5fFzmut5dtOlRi5nwnzeBvxf5bXe1ovT6AvH+wHlHYxlnjzN01cmD1UTNjN6zY6
-jZK28/zUejqDn8gIx+G/2zr7Bvxsk5soVdgV38ItRO4LrYUdhqQjIAJ34YV4QfpV
-lzISa0IuohzQZmPGz7rTYASzz2Cfak/2ybFrlJCXUIxWp8a7U8ZTBXfH1EPKsqTB
-Zfs1wh5phZvTL/bpcGupqJIM85IwT00fhkt0KrI3G5qNCfqvoOwjF65kgzQ5xlca
-jzYdT/oAAIu73dLyOgmS2F12a4EmnAuLV+T1R8xsuv40A2k2e+HGiotpcN0xdUEl
-L7IvJtkKzxXs/xpealulZdLfRSf3OXG11HFI32rsRPocSUjOGAjfeEmbrA860S8k
-BRTI7EVc1Y9C4260mNLIdPvkn8xfygIE07mPDSN6nL5a3A/0pNFX7ZuXGgt7Yr31
-bJYl8chxnAfiOeKmvTmKue7eqoxTmD5BqV9B11yB9hhR1mqUKu9xKOMEhf9rIhJX
-7yq3tOSDD7XV+FyfGDbOZEAJ5NQfITHyuf5zK9blqQ1dt7VhCXGa9xyiiPkzjD02
-R5Xu7vw2M5dQJIvR63XS5BSyVdIWpyxDFl3qhd2oovhZfbAU4AXHtLsX+bZW6ElU
-7utfcgyqRd4aGtx7yVSi
-=uS/w
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
