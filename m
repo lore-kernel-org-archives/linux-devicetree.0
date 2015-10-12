@@ -1,34 +1,67 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH RFC V2 2/3] Input: goodix - use "inverted_[xy]" flags
- instead of "rotated_screen"
-Date: Mon, 12 Oct 2015 15:10:41 +0200
-Message-ID: <1444655441.28661.86.camel@hadess.net>
-References: <1444413352-24529-1-git-send-email-merker@debian.org>
-	 <1444413352-24529-3-git-send-email-merker@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1444413352-24529-3-git-send-email-merker@debian.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Karsten Merker <merker@debian.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Irina Tirdea <irina.tirdea@intel.com>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH v2 1/3] leds: rt5033: Add DT binding for RT5033
+Date: Mon, 12 Oct 2015 22:12:56 +0900
+Message-ID: <1444655578-19806-2-git-send-email-ingi2.kim@samsung.com>
+References: <1444655578-19806-1-git-send-email-ingi2.kim@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1444655578-19806-1-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, j.anaszewski@samsung.com
+Cc: inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-10-09 at 19:55 +0200, Karsten Merker wrote:
-> The goodix touchscreen driver uses a "rotated_screen" flag for
-> systems on which the touchscreen is mounted rotated by 180
-> degrees with respect to the display.=C2=A0=C2=A0With the addition of
-> support for the dt properties "touchscreen-inverted-x" and
-> "touchscreen-inverted-y", a separate "rotated_screen" flag
-> is not necessary any more. This patch replaces it by setting
-> the inverted_x and inverted_y flags instead.
->=20
-> Signed-off-by: Karsten Merker <merker@debian.org>
+This patch adds the device tree bindings for RT5033 flash LEDs.
 
-Acked-by: Bastien Nocera <hadess@hadess.net>
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/leds/leds-rt5033.txt       | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-rt5033.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-rt5033.txt b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
+new file mode 100644
+index 0000000..2ef7bdc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
+@@ -0,0 +1,38 @@
++* Richtek Technology Corporation - RT5033 Flash LED Driver
++
++The RT5033 Flash LED Circuit is designed for one or two LEDs driving
++for torch and strobe applications, it provides an I2C software command
++to trigger the torch and strobe operation.
++
++Required properties:
++- compatible : Must be "richtek,rt5033-led".
++
++A discrete LED element connected to the device must be represented by a child
++node - see Documentation/devicetree/bindings/leds/common.txt.
++
++Required properties of the LED child node:
++  See Documentation/devicetree/bindings/leds/common.txt
++- led-max-microamp : Minimum Threshold for Timer protection
++  is defined internally (Maximum 200mA).
++- flash-max-microamp : Flash LED maximum current
++- flash-max-timeout-us : Flash LED maximum timeout
++
++Optional properties of the LED child node:
++- label : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++rt5033 {
++	compatible = "richtek,rt5033";
++
++	led {
++		compatible = "richtek,rt5033-led";
++
++		flash-led {
++			label = "rt5033-flash";
++			led-max-microamp = <200000>;
++			flash-max-microamp = <800000>;
++			flash-max-timeout-us = <1216000>;
++		};
++	};
++}
+-- 
+2.0.5
