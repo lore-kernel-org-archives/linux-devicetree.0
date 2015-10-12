@@ -1,59 +1,56 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/3] doc: dt: fpga: Added Documentation for Xilinx Zynq
- FPGA manager.
-Date: Mon, 12 Oct 2015 09:33:41 -0700
-Message-ID: <20151012163341.GK15287@xsjsorenbubuntu>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
- <1444344307-22509-2-git-send-email-moritz.fischer@ettus.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 0/3] add GPT timer support for mt8173
+Date: Mon, 12 Oct 2015 18:35:07 +0200
+Message-ID: <561BE13B.5090202@gmail.com>
+References: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444344307-22509-2-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, erin.lo@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-10-09 at 12:45AM +0200, Moritz Fischer wrote:
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
-> ---
->  .../bindings/fpga/xilinx-zynq-fpga-mgr.txt         | 26 ++++++++++++=
-++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-zyn=
-q-fpga-mgr.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-=
-mgr.txt b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.t=
-xt
-> new file mode 100644
-> index 0000000..82ffda8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
-> @@ -0,0 +1,26 @@
-> +Xilinx Zynq FPGA Manager
-> +
-> +Required properties:
-> +- compatible:		should contain "xlnx,zynq-devcfg-1.0"
-> +- reg:			base address and size for memory mapped io
-> +- interrupt parent:	interrupt source phandle
-> +- interrupts:		interrupt for the FPGA manager device
-> +- clocks:		phandle for clocks required operation
-> +- syscon:		phandle for access to SLCR registers
-> +
-> +Optional properties:
-> +- clock-names:		names for clocks
 
-Is it optional? Currently, there is only one clock input, so a match
-without specifying a clock name should work making this optional. But i=
-n
-your implementation, you do specify a clock name in devm_clk_get(). I'm
-not entirely sure, but that call might fail if it doesn't find the
-corresponding clock-names property.
-I think, either we should make this required and list the required
-entries here. Or the implementation probably needs to drop the clock
-name when looking up its input clock.
 
-	S=C3=B6ren
+On 02/10/15 17:05, Yingjoe Chen wrote:
+> This is based on v4.3-rc1 + clockevents-4.4[1] and James's mediatek-clk
+> tree[2].
+>
+> Changes compare to previous version[3]:
+> - Add more MediaTek SoC to mtk-timer binding
+> - Update commit message to better describe the purpose.
+>
+> Changes compare to v2[4]:
+> - the first two mtk_timer related changes are removed because they are
+> replaced/accepted in clockevents tree.
+> - Remove 'add 13mhz clock for MT8173' because it is accepted in
+> mediatek-clk tree.
+> - Kconfig.platforms path change.
+>
+> [1]
+> https://git.linaro.org/people/daniel.lezcano/linux.git clockevents/4.4
+> [2]
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-August/002069.html
+> [3]
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-September/002301.html
+> [4]
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
+>
+>
+> Daniel Kurtz (1):
+>    arm64: dts: mt8173: add timer node
+>
+> Yingjoe Chen (2):
+>    dt-bindings: add more MediaTek SoC to mtk-timer binding
+>    arm64: mediatek: enable MTK_TIMER
+>
+>   Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 8 +++++---
+>   arch/arm64/Kconfig.platforms                                   | 1 +
+>   arch/arm64/boot/dts/mediatek/mt8173.dtsi                       | 9 +++++++++
+>   3 files changed, 15 insertions(+), 3 deletions(-)
+>
+
+Applied, thanks.
