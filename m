@@ -1,138 +1,88 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed
- support
-Date: Mon, 12 Oct 2015 21:42:25 +0900
-Message-ID: <561BAAB1.4020203@samsung.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-3-git-send-email-linux.amoon@gmail.com>
- <561B48B7.1040201@samsung.com>
- <CANAwSgSk0yHGvnoVoTk9MnUqjyEw1+yzH=C-1s_wxVkpGRHCEg@mail.gmail.com>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [PATCH V2 01/10] ASoC: img: Add binding document for
+	I2S input controller
+Date: Mon, 12 Oct 2015 13:40:28 +0100
+Message-ID: <1444653637-14711-2-git-send-email-Damien.Horsley@imgtec.com>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgSk0yHGvnoVoTk9MnUqjyEw1+yzH=C-1s_wxVkpGRHCEg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: k.kozlowski.k@gmail.com, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, James Hartley <James.Hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 12.10.2015 o 19:46, Anand Moon pisze:
-> Hi Krzysztof,
-> 
-> On 12 October 2015 at 11:14, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
->> On 12.10.2015 00:46, Anand Moon wrote:
->>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
->>
->> This description is not entirely correct. The MMC driver already
->> supports these UHS speeds (you did not any code) so you rather enabled
->> it (description of bindings says "is supported").
->>
->> You mentioned DDR50 but I don't see respective property below.
-> Looks like I missed it, I will add this in the next patch,
->>
->> How do you know that these modes are really supported? I don't know. Can
->> you convince me?
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
-That part was not answered...
+Add a binding document for Imagination Technologies I2S input
+controller
 
->>
-> 
->>>
->>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>
->>> ---
->>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>>
->>> Changes Fixed the UHS-I bus speed detedtion on cold boot.
->>
->> I don't get what is exactly fixed here. What was the error? What is the
->> outcome of this fix? The log below is before or after?
->>
->> Best regards,
->> Krzysztof
->>
->>>
->>> [    2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req 100000000Hz, actual 100000000HZ div = 0)
->>> [    2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
->>> [    2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
->>> [    2.461743]  mmcblk0: p1 p2
->>
->>> ---
->>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> index 58c06d3..ba4a87b 100644
->>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> @@ -364,6 +364,10 @@
->>>       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
->>>       bus-width = <4>;
->>>       cap-sd-highspeed;
->>> +     sd-uhs-sdr12;
->>> +     sd-uhs-sdr25;
->>> +     sd-uhs-sdr50;
->>> +     sd-uhs-sdr104;
->>>  };
->>>
->>>  &pinctrl_0 {
->>>
->>
-> 
-> Changes were made to support Sandisk Ultra UHS-I class 10 card support.
-> OdroidXU3/XU4 board would not boot up using this card.
-> 
-> Depending on the capability of the UHS-I card, the speed of the card
-> is selected.
-> I have just added the enhance capability feature to support them.
+Signed-off-by: Damien.Horsley <Damien.Horsley@imgtec.com>
+---
+ .../devicetree/bindings/sound/img,i2s-in.txt       | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,i2s-in.txt
 
-So without these capabilities mentioned microSD card cannot be used? So
-I have a UHS-I card, that one exactly:
-http://www.samsung.com/us/support/owners/product/MB-MP32D/APC
-
-It works:
-[    2.628365] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req
-50000000Hz, actual 50000000HZ div = 0)
-[    2.693296] mmc1: new high speed SDHC card at address 0001
-[    2.703867] mmcblk0: mmc1:0001 00000 29.8 GiB
-[    2.708406]  mmcblk0: p1 p2
-
-This is just HS mode.
-
-In the same time isn't UHS-I backward compatible? Your report seems
-surprising.
-
-Best regards,
-Krzysztof
-
-> 
-> On warm boot: i.e reboot of the board.
-> [    4.649073] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
-> req 50000000Hz, actual 50000000HZ div = 0)
-> [    4.657555] mmc1: new high speed SDHC card at address aaaa
-> [    4.663787] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
-> [    4.669206]  mmcblk0: p1 p2
-> 
-> On cold boot:: ie: power on the board.
-> 
-> [    4.630237] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot
-> req 100000000Hz, actual 100000000HZ div = 0)
-> [    4.639820] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
-> [    4.646266] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
-> [    4.650293] IRQ56 no longer affine to CPU7
-> [    4.650581] CPU7: shutdown
-> [    4.658293]  mmcblk0: p1 p2
-> 
-> Note: Their is need to reset the PMIC
-> S2MPS11_REG_L13CTRL/S2MPS11_REG_L19CTRL registers
->          to support this feature consistently on every reboot.
-> 
-> -Anand Moon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+diff --git a/Documentation/devicetree/bindings/sound/img,i2s-in.txt b/Documentation/devicetree/bindings/sound/img,i2s-in.txt
+new file mode 100644
+index 0000000..a9e3c86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/img,i2s-in.txt
+@@ -0,0 +1,45 @@
++Imagination Technologies I2S Input Controller
++
++Required Properties:
++
++  - compatible : Compatible list, must contain "img,i2s-in"
++
++  - #sound-dai-cells : Must be equal to 0
++
++  - reg : Offset and length of the register set for the device
++
++  - clocks : Contains an entry for each entry in clock-names
++
++  - clock-names : Must include the following entry:
++	"sys"	The system clock
++
++  - dmas: Contains an entry for each entry in dma-names.
++
++  - dma-names: Must include the following entry:
++	"rx"	Single DMA channel used by all active I2S channels
++
++  - img,i2s-channels : Number of I2S channels instantiated in the I2S in block
++
++Optional Properties:
++
++  - interrupts : Contains the I2S in interrupts. Depending on
++	the configuration, there may be no interrupts, one interrupt,
++	or an interrupt per I2S channel
++
++  - resets: Contains a phandle to the I2S in reset signal
++
++  - reset-names: Contains the reset signal name "rst"
++
++Example:
++
++i2s_in: i2s-in@18100800 {
++	compatible = "img,i2s-in";
++	reg = <0x18100800 0x200>;
++	interrupts = <GIC_SHARED 7 IRQ_TYPE_LEVEL_HIGH>;
++	dmas = <&mdc 30 0xffffffff 0>;
++	dma-names = "rx";
++	clocks = <&cr_periph SYS_CLK_I2S_IN>;
++	clock-names = "sys";
++	img,i2s-channels = <6>;
++	#sound-dai-cells = <0>;
++};
+-- 
+2.1.4
