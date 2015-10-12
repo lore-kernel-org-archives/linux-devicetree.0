@@ -1,85 +1,147 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [Resend: PATCH v2 1/4] Documentation: dt: soc: move driver description to a separate document
-Date: Mon, 12 Oct 2015 15:54:59 -0400
-Message-ID: <1444679700-11451-1-git-send-email-m-karicheri2@ti.com>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] dmaengine: Add STM32 DMA driver
+Date: Mon, 12 Oct 2015 22:09:53 +0200
+Message-ID: <561C1391.2000802@gmail.com>
+References: <1444317612-818-1-git-send-email-cedric.madianga@gmail.com>
+ <1444317612-818-3-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444317612-818-3-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently the DT bindings have details about the driver as well. This
-patch moves this to a separate document for knav qmss driver so that
-driver detail update can be done as needed without polluting the DT
-bindings description.
+Hi Cedric,
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- Documentation/arm/keystone/knav-qmss.txt           | 24 ++++++++++++++++++++++
- .../bindings/soc/ti/keystone-navigator-qmss.txt    | 20 ++++--------------
- 2 files changed, 28 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/arm/keystone/knav-qmss.txt
+On 10/08/2015 05:20 PM, M'boumba Cedric Madianga wrote:
+> This patch adds support for the STM32 DMA controller.
+>
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   drivers/dma/Kconfig     |   12 +
+>   drivers/dma/Makefile    |    1 +
+>   drivers/dma/stm32-dma.c | 1193 +++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 1206 insertions(+)
+>   create mode 100644 drivers/dma/stm32-dma.c
+>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 5c931d4..4c6b37b 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -431,6 +431,18 @@ config STE_DMA40
+>   	help
+>   	  Support for ST-Ericsson DMA40 controller
+>
+> +config STM32_DMA
+> +	tristate "STMicroelectronics STM32 dma support"
+s/dma/DMA/ ?
 
-diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
-new file mode 100644
-index 0000000..79946d1
---- /dev/null
-+++ b/Documentation/arm/keystone/knav-qmss.txt
-@@ -0,0 +1,24 @@
-+* Texas Instruments Keystone Navigator Queue Management SubSystem driver
-+
-+Driver source code path
-+  drivers/soc/ti/knav_qmss.c
-+  drivers/soc/ti/knav_qmss_acc.c
-+
-+The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
-+the main hardware sub system which forms the backbone of the Keystone
-+multi-core Navigator. QMSS consist of queue managers, packed-data structure
-+processors(PDSP), linking RAM, descriptor pools and infrastructure
-+Packet DMA.
-+The Queue Manager is a hardware module that is responsible for accelerating
-+management of the packet queues. Packets are queued/de-queued by writing or
-+reading descriptor address to a particular memory mapped location. The PDSPs
-+perform QMSS related functions like accumulation, QoS, or event management.
-+Linking RAM registers are used to link the descriptors which are stored in
-+descriptor RAM. Descriptor RAM is configurable as internal or external memory.
-+The QMSS driver manages the PDSP setups, linking RAM regions,
-+queue pool management (allocation, push, pop and notify) and descriptor
-+pool management.
-+
-+knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
-+allocate descriptor pools, map the descriptors, push/pop to queues etc. For
-+details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
-diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-index d8e8cdb..2cecea1 100644
---- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-+++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-@@ -1,20 +1,8 @@
--* Texas Instruments Keystone Navigator Queue Management SubSystem driver
--
--The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
--the main hardware sub system which forms the backbone of the Keystone
--multi-core Navigator. QMSS consist of queue managers, packed-data structure
--processors(PDSP), linking RAM, descriptor pools and infrastructure
--Packet DMA.
--The Queue Manager is a hardware module that is responsible for accelerating
--management of the packet queues. Packets are queued/de-queued by writing or
--reading descriptor address to a particular memory mapped location. The PDSPs
--perform QMSS related functions like accumulation, QoS, or event management.
--Linking RAM registers are used to link the descriptors which are stored in
--descriptor RAM. Descriptor RAM is configurable as internal or external memory.
--The QMSS driver manages the PDSP setups, linking RAM regions,
--queue pool management (allocation, push, pop and notify) and descriptor
--pool management.
-+* Texas Instruments Keystone Navigator (knav) Queue Management SubSystem driver
-+  DT bindings
- 
-+For details of the driver, please refer to
-+Documentation/arm/keystone/knav-qmss.txt
- 
- Required properties:
- - compatible	: Must be "ti,keystone-navigator-qmss";
--- 
-1.9.1
+> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+> new file mode 100644
+> index 0000000..9814ca5
+> --- /dev/null
+> +++ b/drivers/dma/stm32-dma.c
+> @@ -0,0 +1,1193 @@
 
+> +#define STM32_DMA_LISR			0x0000 /* DMA Low Int Status Reg */
+> +#define STM32_DMA_HISR			0x0004 /* DMA High Int Status Reg */
+> +#define STM32_DMA_LIFCR			0x0008 /* DMA Low Int Flag Clear Reg */
+> +#define STM32_DMA_HIFCR			0x000C /* DMA High Int Flag Clear Reg */
+We usually use lower case for numerical values.
+
+> +static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
+> +				    enum dma_transfer_direction direction,
+> +				    enum dma_slave_buswidth *buswidth)
+> +{
+> +	enum dma_slave_buswidth src_addr_width, dst_addr_width;
+> +	u32 src_bus_width, dst_bus_width, src_burst_size, dst_burst_size;
+> +	u32 src_maxburst, dst_maxburst;
+> +	dma_addr_t src_addr, dst_addr;
+> +
+> +	src_addr_width = chan->dma_sconfig.src_addr_width;
+> +	dst_addr_width = chan->dma_sconfig.dst_addr_width;
+> +	src_maxburst = chan->dma_sconfig.src_maxburst;
+> +	dst_maxburst = chan->dma_sconfig.dst_maxburst;
+> +	src_addr = chan->dma_sconfig.src_addr;
+> +	dst_addr = chan->dma_sconfig.dst_addr;
+> +
+> +	switch (direction) {
+> +	case DMA_MEM_TO_DEV:
+> +		dst_bus_width = stm32_get_dma_width(chan, dst_addr_width);
+> +		if (dst_bus_width < 0)
+> +			return -EINVAL;
+dst_bus_width is a u32, so cannot be negative.
+Also, you should propagate de error returned by stm32_get_dma_width().
+
+The comment also applies below:
+> +		dst_burst_size = stm32_get_dma_burst(chan, dst_maxburst);
+> +		if (dst_burst_size < 0)
+> +			return -EINVAL;
+> +		if (!src_addr_width)
+> +			src_addr_width = dst_addr_width;
+> +		src_bus_width = stm32_get_dma_width(chan, src_addr_width);
+> +		if (src_bus_width < 0)
+> +			return -EINVAL;
+> +		src_burst_size = stm32_get_dma_burst(chan, src_maxburst);
+> +		if (src_burst_size < 0)
+> +			return -EINVAL;
+> +
+> +		chan->chan_reg.dma_scr |= (chan->chan_reg.dma_scr &
+> +			~(STM32_DMA_SCR_DIR_MASK | STM32_DMA_SCR_PSIZE_MASK |
+> +			STM32_DMA_SCR_MSIZE_MASK | STM32_DMA_SCR_PBURST_MASK |
+> +			STM32_DMA_SCR_MBURST_MASK)) |
+> +			STM32_DMA_SCR_DIR(STM32_DMA_MEM_TO_DEV) |
+> +			STM32_DMA_SCR_PSIZE(dst_bus_width) |
+> +			STM32_DMA_SCR_MSIZE(src_bus_width) |
+> +			STM32_DMA_SCR_PBURST(dst_burst_size) |
+> +			STM32_DMA_SCR_MBURST(src_burst_size);
+> +
+> +		chan->chan_reg.dma_spar = chan->dma_sconfig.dst_addr;
+> +		*buswidth = dst_addr_width;
+> +		return 0;
+> +
+> +	case DMA_DEV_TO_MEM:
+> +		src_bus_width = stm32_get_dma_width(chan, src_addr_width);
+> +		if (src_bus_width < 0)
+> +			return -EINVAL;
+> +		src_burst_size = stm32_get_dma_burst(chan, src_maxburst);
+> +		if (src_burst_size < 0)
+> +			return -EINVAL;
+> +		if (!dst_addr_width)
+> +			dst_addr_width = src_addr_width;
+> +		dst_bus_width = stm32_get_dma_width(chan, dst_addr_width);
+> +		if (dst_bus_width < 0)
+> +			return -EINVAL;
+> +		dst_burst_size = stm32_get_dma_burst(chan, dst_maxburst);
+> +		if (dst_burst_size < 0)
+> +			return -EINVAL;
+> +
+> +		chan->chan_reg.dma_scr |= (chan->chan_reg.dma_scr &
+> +			~(STM32_DMA_SCR_DIR_MASK | STM32_DMA_SCR_PSIZE_MASK |
+> +			STM32_DMA_SCR_MSIZE_MASK | STM32_DMA_SCR_PBURST_MASK |
+> +			STM32_DMA_SCR_MBURST_MASK)) |
+> +			STM32_DMA_SCR_DIR(STM32_DMA_DEV_TO_MEM) |
+> +			STM32_DMA_SCR_PSIZE(src_bus_width) |
+> +			STM32_DMA_SCR_MSIZE(dst_bus_width) |
+> +			STM32_DMA_SCR_PBURST(src_burst_size) |
+> +			STM32_DMA_SCR_MBURST(dst_burst_size);
+> +		chan->chan_reg.dma_spar = chan->dma_sconfig.src_addr;
+> +		*buswidth = chan->dma_sconfig.src_addr_width;
+> +		return 0;
+> +
+> +	default:
+> +		dev_err(chan2dev(chan), "Dma direction is not supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+
+Thanks,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
