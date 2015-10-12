@@ -1,93 +1,104 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2 12/13] powerpc: enable building of all dtbs
-Date: Mon, 12 Oct 2015 21:26:21 +1100
-Message-ID: <1444645581.31951.2.camel@ellerman.id.au>
-References: <1444326827-3565-1-git-send-email-robh@kernel.org>
-	 <1444326827-3565-13-git-send-email-robh@kernel.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed support
+Date: Mon, 12 Oct 2015 16:16:08 +0530
+Message-ID: <CANAwSgSk0yHGvnoVoTk9MnUqjyEw1+yzH=C-1s_wxVkpGRHCEg@mail.gmail.com>
+References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
+ <1444578364-1384-3-git-send-email-linux.amoon@gmail.com> <561B48B7.1040201@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444326827-3565-13-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <561B48B7.1040201@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-10-08 at 12:53 -0500, Rob Herring wrote:
-> Enable building all dtb files when CONFIG_OF_ALL_DTBS is enabled. The dtbs
-> are not really dependent on a platform being enabled or any other kernel
-> config, so for testing coverage it is convenient to build all of the dtbs.
-> This builds all dts files in the tree, not just targets listed.
-> 
-> Supporting this requires adding 'dtbs' make target which was not yet
-> supported on powerpc.
+Hi Krzysztof,
 
-I'm not entirely clear why we want this? It just means we can test build all
-the dts regardless of what kernel config we are building?
+On 12 October 2015 at 11:14, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On 12.10.2015 00:46, Anand Moon wrote:
+>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
+>
+> This description is not entirely correct. The MMC driver already
+> supports these UHS speeds (you did not any code) so you rather enabled
+> it (description of bindings says "is supported").
+>
+> You mentioned DDR50 but I don't see respective property below.
+Looks like I missed it, I will add this in the next patch,
+>
+> How do you know that these modes are really supported? I don't know. Can
+> you convince me?
+>
 
-Have you tested the powerpc build with this applied or do you want me to?
+>>
+>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>
+>> ---
+>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
+>>
+>> Changes Fixed the UHS-I bus speed detedtion on cold boot.
+>
+> I don't get what is exactly fixed here. What was the error? What is the
+> outcome of this fix? The log below is before or after?
+>
+> Best regards,
+> Krzysztof
+>
+>>
+>> [    2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req 100000000Hz, actual 100000000HZ div = 0)
+>> [    2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
+>> [    2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+>> [    2.461743]  mmcblk0: p1 p2
+>
+>> ---
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> index 58c06d3..ba4a87b 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> @@ -364,6 +364,10 @@
+>>       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+>>       bus-width = <4>;
+>>       cap-sd-highspeed;
+>> +     sd-uhs-sdr12;
+>> +     sd-uhs-sdr25;
+>> +     sd-uhs-sdr50;
+>> +     sd-uhs-sdr104;
+>>  };
+>>
+>>  &pinctrl_0 {
+>>
+>
 
-> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-> index b9b4af2..0ec35ff 100644
-> --- a/arch/powerpc/Makefile
-> +++ b/arch/powerpc/Makefile
-> @@ -273,6 +273,11 @@ bootwrapper_install:
->  %.dtb: scripts
->  	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
->  
-> +PHONY += dtbs
-> +
-> +dtbs: prepare scripts
-> +	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot)/dts
+Changes were made to support Sandisk Ultra UHS-I class 10 card support.
+OdroidXU3/XU4 board would not boot up using this card.
 
-The ARCH should be powerpc, I guess you just copied the one above.
+Depending on the capability of the UHS-I card, the speed of the card
+is selected.
+I have just added the enhance capability feature to support them.
 
-> diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-> index 4eec430..381df1a 100644
-> --- a/arch/powerpc/boot/Makefile
-> +++ b/arch/powerpc/boot/Makefile
-> @@ -402,7 +402,7 @@ zInstall: $(CONFIGURE) $(addprefix $(obj)/, $(image-y))
->  clean-files += $(image-) $(initrd-) cuImage.* dtbImage.* treeImage.* \
->  	zImage zImage.initrd zImage.chrp zImage.coff zImage.holly \
->  	zImage.miboot zImage.pmac zImage.pseries \
-> -	zImage.maple simpleImage.* otheros.bld *.dtb
-> +	zImage.maple simpleImage.* otheros.bld
+On warm boot: i.e reboot of the board.
+[    4.649073] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+req 50000000Hz, actual 50000000HZ div = 0)
+[    4.657555] mmc1: new high speed SDHC card at address aaaa
+[    4.663787] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+[    4.669206]  mmcblk0: p1 p2
 
-This looks like we used to clean *.dtb in the current dir but now we don't? But
-I'm probably just not understanding how clean-files works.
+On cold boot:: ie: power on the board.
 
-> @@ -410,6 +410,9 @@ clean-kernel += $(addsuffix .gz,$(clean-kernel))
->  # If not absolute clean-files are relative to $(obj).
->  clean-files += $(addprefix $(objtree)/, $(clean-kernel))
->  
-> +# Let clean descend into subdirs
-> +subdir- := dts
-> +
->  WRAPPER_OBJDIR := /usr/lib/kernel-wrapper
->  WRAPPER_DTSDIR := /usr/lib/kernel-wrapper/dts
->  WRAPPER_BINDIR := /usr/sbin
-> diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
-> new file mode 100644
-> index 0000000..f121775
-> --- /dev/null
-> +++ b/arch/powerpc/boot/dts/Makefile
-> @@ -0,0 +1,5 @@
-> +dtstree		:= $(srctree)/$(src)
-> +dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
-> +
-> +always		:= $(dtb-y)
+[    4.630237] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot
+req 100000000Hz, actual 100000000HZ div = 0)
+[    4.639820] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
+[    4.646266] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+[    4.650293] IRQ56 no longer affine to CPU7
+[    4.650581] CPU7: shutdown
+[    4.658293]  mmcblk0: p1 p2
 
-How/is that different from just doing the more normal:
+Note: Their is need to reset the PMIC
+S2MPS11_REG_L13CTRL/S2MPS11_REG_L19CTRL registers
+         to support this feature consistently on every reboot.
 
-obj-$(CONFIG_OF_ALL_DTBS) := ...
-
-?
-
-cheers
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Anand Moon
