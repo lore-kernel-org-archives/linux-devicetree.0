@@ -1,52 +1,45 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: hisilicon: DT: Drop console= and earlyprintk bootargs
- parameter
-Date: Mon, 12 Oct 2015 09:11:04 +0100
-Message-ID: <561B6B18.1010906@hisilicon.com>
-References: <5617E6FC.6090304@hisilicon.com> <9558245.SAyWiXU6Yf@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9558245.SAyWiXU6Yf@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yanhaifeng <yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [PATCH 0/3] hwrng: stm32 - add support for STM32 HW RNG
+Date: Mon, 12 Oct 2015 09:21:27 +0100
+Message-ID: <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
+References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset introduces a driver for the STM32 hardware random number
+generator.
+
+v2:
+
+ * Moved binding docs from .../hwrng/ to .../rng/ and renamed to match
+   convention in new directory (Rob Herring).
+ * Adopted runtime PM and auto-suspend instead of managing the clocks
+   from the read function (Linus Walleij). Increased bandwidth by ~30%.
+ * Simplified error detection in main read loop (Linus Walleij, Maxime
+   Coquelin).
+ * Only WARN_ONCE() when hardware failure mechanisms trigger (Maxime
+   Coquelin).
+ * Simplify end of probe function after cocci warning (Fengguang Wu).
+ * Switch to devm_hwrng_register.
 
 
-On 10/9/2015 7:26 PM, Arnd Bergmann wrote:
-> On Friday 09 October 2015 17:10:36 Wei Xu wrote:
->> Replace console with stdout-path so that we don't have to put the
->> console on the kernel command line.
->>
->> Remove earlyprintk to allow the kernel to boot on a system even
->> if DEBUG_LL is configured for another system.
->>
->> Signed-off-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> Tested-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
+Daniel Thompson (3):
+  dt-bindings: Document the STM32 HW RNG bindings
+  hwrng: stm32 - add support for STM32 HW RNG
+  ARM: dts: stm32f429: Adopt STM32 RNG driver
 
-Hi Arnd,
-
-> 
-> Looks good to me. Do you want us to apply the patch directly, or
-> do you plan to send a pull request?
-
-Thanks!
-I will send a pull request today.
-
-Best Regards,
-Wei
-
-> 
-> 	Arnd
-> 
-> .
-> 
+ .../devicetree/bindings/rng/st,stm32-rng.txt       |  21 +++
+ arch/arm/boot/dts/stm32f429.dtsi                   |   7 +
+ drivers/char/hw_random/Kconfig                     |  12 ++
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/stm32-rng.c                 | 202 +++++++++++++++++++++
+ 5 files changed, 243 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/st,stm32-rng.txt
+ create mode 100644 drivers/char/hw_random/stm32-rng.c
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.4.3
