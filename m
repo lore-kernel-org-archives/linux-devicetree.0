@@ -1,7 +1,7 @@
 From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH V2 1/3] of/irq: move of_msi_configure to the right guard and add a dummy
-Date: Mon, 12 Oct 2015 14:43:22 +0200
-Message-ID: <1444653804-25544-2-git-send-email-jogo@openwrt.org>
+Subject: [PATCH V2 2/3] of/irq: make of_irq_find_parent static
+Date: Mon, 12 Oct 2015 14:43:23 +0200
+Message-ID: <1444653804-25544-3-git-send-email-jogo@openwrt.org>
 References: <1444653804-25544-1-git-send-email-jogo@openwrt.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1444653804-25544-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
@@ -10,51 +10,56 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-of_msi_configure is part of of_irq.c, which is compiled in when OF_IRQ
-is enabled, not just OF.
-Also It is unconditionally called from of_platform_device_create_pdata,
-which does not depend on OF_IRQ, just OF_ADDRESS, so we need a dummy
-implementation in case of OF_ADDRESS=y but OF_IRQ=n.
+of_irq_find_parent has no users outside of of_irq.c, so it does not make
+sense to expose it in of_irq.h. Therefore remove the prototype and dummy
+implmeentation and make the function static instead.
 
-Fixes: c706c239 ("of/platform: Assign MSI domain to platform device")
 Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 ---
 v1 -> v2:
- * fix both issues (guard and missing dummy) at once.
+ * just drop the prototype and the dummy and make it static 
 
- include/linux/of_irq.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/of/irq.c       | 2 +-
+ include/linux/of_irq.h | 6 ------
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 55317fa..0c7f4cb 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -53,7 +53,7 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
+  * Returns a pointer to the interrupt parent node, or NULL if the interrupt
+  * parent could not be determined.
+  */
+-struct device_node *of_irq_find_parent(struct device_node *child)
++static struct device_node *of_irq_find_parent(struct device_node *child)
+ {
+ 	struct device_node *p;
+ 	const __be32 *parp;
 diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 4bcbd58..0088038 100644
+index 0088038..a58e2e5 100644
 --- a/include/linux/of_irq.h
 +++ b/include/linux/of_irq.h
-@@ -46,6 +46,7 @@ extern int of_irq_get(struct device_node *dev, int index);
- extern int of_irq_get_byname(struct device_node *dev, const char *name);
- extern int of_irq_to_resource_table(struct device_node *dev,
- 		struct resource *res, int nr_irqs);
-+extern void of_msi_configure(struct device *dev, struct device_node *np);
- #else
- static inline int of_irq_count(struct device_node *dev)
- {
-@@ -64,6 +65,9 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
- {
- 	return 0;
- }
-+static inline void of_msi_configure(struct device *dev, struct device_node *np)
-+{
-+}
- #endif
- 
- #if defined(CONFIG_OF)
-@@ -74,7 +78,6 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+@@ -77,7 +77,6 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
+  * so declare it here regardless of the CONFIG_OF_IRQ setting.
   */
  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
- extern struct device_node *of_irq_find_parent(struct device_node *child);
--extern void of_msi_configure(struct device *dev, struct device_node *np);
+-extern struct device_node *of_irq_find_parent(struct device_node *child);
  
  #else /* !CONFIG_OF */
  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+@@ -85,11 +84,6 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+ {
+ 	return 0;
+ }
+-
+-static inline void *of_irq_find_parent(struct device_node *child)
+-{
+-	return NULL;
+-}
+ #endif /* !CONFIG_OF */
+ 
+ #endif /* __OF_IRQ_H */
 -- 
 2.1.4
 --
