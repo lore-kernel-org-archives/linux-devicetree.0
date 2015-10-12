@@ -1,40 +1,71 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Mon, 12 Oct 2015 14:03:04 +0200
-Message-ID: <7064179.1W3LTfFPxP@wuerfel>
-References: <1444297394-3122-1-git-send-email-lftan@altera.com> <CAFiDJ58oMa6rgQe_STCiWRpdL+P22BN1=Nin_+QnLXC9RGiSzQ@mail.gmail.com> <20151009231540.GE16112@localhost>
+From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv2 3/3] iio: ad5064: Always use external vref if there is no internal vref
+Date: Mon, 12 Oct 2015 13:50:34 +0200
+Message-ID: <1444650634-12025-3-git-send-email-paul.cercueil@analog.com>
+References: <1444650634-12025-1-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151009231540.GE16112@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ley Foon Tan <lftan@altera.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444650634-12025-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 09 October 2015 18:15:40 Bjorn Helgaas wrote:
-> 
-> I don't know if this should be a kernel taint, a simple warning in
-> dmesg, or what.  I guess the tainting mechanism is probably too
-> general-purpose for this, and add_taint() doesn't give any dmesg
-> indication.  We wouldn't see the taint unless the problem actually
-> caused an oops or panic.  In this case, I think I want a clue in dmesg
-> so we have a chance of seeing it even if there is no oops.  So
-> probably something like a dev_warn("non-compliant config accesses")
-> would work.
-> 
-> You really should double-check with the hardware guys, because it's
-> pretty obvious that the PCI spec requires 1- and 2-byte config
-> accesses to work correctly.  For example, if you read/modify/write to
-> update PCI_COMMAND, you will inadvertently clear the RW1C bits in
-> PCI_STATUS.
+If the device does not have an internal reference, there is no
+other choice but to use the external reference. In that case,
+it does not make much sense to have to specify it.
 
-Would it help to require a DT property here that flags the device
-as having a broken config space?
+This patch ensures that the external reference is used if the
+device does not feature an internal reference.
 
-Then we could implement both in the driver, and only use the
-RMW based implementation if the firmware describes the device
-as "altera,broken-pci-config-space".
+Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/dac/ad5064.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-	Arnd
+ v2: No change in this patch
+
+diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
+index e77631d..18674e5 100644
+--- a/drivers/iio/dac/ad5064.c
++++ b/drivers/iio/dac/ad5064.c
+@@ -464,14 +464,16 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 	for (i = 0; i < ad5064_num_vref(st); ++i)
+ 		st->vref_reg[i].supply = ad5064_vref_name(st, i);
+ 
+-	if (dev->of_node) {
+-		for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
+-			ext_vref = of_property_read_bool(dev->of_node,
+-					ad5064_vref_name(st, i));
+-	} else {
+-		struct ad5064_platform_data *pdata = dev->platform_data;
+-
+-		ext_vref = pdata && pdata->use_external_ref;
++	if (st->chip_info->internal_vref) {
++		if (dev->of_node) {
++			for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
++				ext_vref = of_property_read_bool(dev->of_node,
++						ad5064_vref_name(st, i));
++		} else {
++			struct ad5064_platform_data *pdata = dev->platform_data;
++
++			ext_vref = pdata && pdata->use_external_ref;
++		}
+ 	}
+ 
+ 	if (ext_vref) {
+@@ -483,11 +485,6 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
+ 		if (ret)
+ 			return ret;
+ 	} else {
+-		if (!st->chip_info->internal_vref) {
+-			dev_err(dev, "No vref available\n");
+-			return -ENXIO;
+-		}
+-
+ 		st->use_internal_vref = true;
+ 		ret = ad5064_write(st, AD5064_CMD_CONFIG, 0,
+ 			AD5064_CONFIG_INT_VREF_ENABLE, 0);
+-- 
+2.5.3
