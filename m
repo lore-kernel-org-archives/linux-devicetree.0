@@ -1,143 +1,104 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/3] ARM: dts: use vmmc-supply of emmc/sd for
- exynos5422-odroidxu3
-Date: Mon, 12 Oct 2015 21:13:38 +0900
-Message-ID: <561BA3F2.5010403@samsung.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-2-git-send-email-linux.amoon@gmail.com>
- <561B3A3E.3030904@samsung.com> <561B49D0.2040305@samsung.com>
- <CANAwSgT=O-AVhQv4TO8ZukK15Ya++Kos_ZEjiFZWiDwNXub0mQ@mail.gmail.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
+ Zynq 7000
+Date: Mon, 12 Oct 2015 14:22:36 +0200
+Message-ID: <561BA60C.6010106@topic.nl>
+References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
+ <1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
+ <20151009163336.GM10631@jcartwri.amer.corp.natinst.com>
+ <CAAtXAHea7GZDLez5kYas2PFQ-=KmS_on8WxFDCuvVb4Nh05a_w@mail.gmail.com>
+ <561B9687.1070103@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgT=O-AVhQv4TO8ZukK15Ya++Kos_ZEjiFZWiDwNXub0mQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: k.kozlowski.k@gmail.com, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <561B9687.1070103@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, Alan Tull <atull@opensource.altera.com>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 12.10.2015 o 20:08, Anand Moon pisze:
-> Hi Krzysztof,
-> 
-> On 12 October 2015 at 11:19, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
->> On 12.10.2015 13:42, Krzysztof Kozlowski wrote:
->>> On 12.10.2015 00:46, Anand Moon wrote:
->>>> Added support for vmmc/vqmmc-supply for emmc/sd cards.
->>>> Fixed the min values for regulator ldo13_reg (VDDQ_MMC2).
->>>
->>> I can't see the description of a problem which is fixed. If you fix
->>> something, then please describe what is wrong.
->>>
->>>> Added ramp-delay for LDO9(VDD33_USB3_0).
->>>> Added ramp-delay for LDO13(VDDQ_MMC2).
->>>> Added ramp-delay for LDO15(ETH_P3V3).
->>>>
->>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>
->>>> ---
->>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>>>
->>>> Note:
->>>> Changes need for support of UHS-I highspeed cards.
->>>> changes for vqmmc-supply for emmc is not supported.
->>>>
->>>> [    1.831136] vdd_ldo9: ramp_delay not set
->>>> [    1.843049] vdd_ldo13: ramp_delay not set
->>>> [    1.850975] vdd_ldo15: ramp_delay not set
->>>> [    1.862816] vdd_sd: ramp_delay not set
->>>> ---
->>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 8 +++++++-
->>>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> index 26decbd..58c06d3 100644
->>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> @@ -157,6 +157,7 @@
->>>>                              regulator-min-microvolt = <3000000>;
->>>>                              regulator-max-microvolt = <3000000>;
->>>>                              regulator-always-on;
->>>> +                            regulator-ramp-delay = <12000>;
->>>>                      };
->>>>
->>>>                      ldo10_reg: LDO10 {
->>>> @@ -182,9 +183,10 @@
->>>>
->>>>                      ldo13_reg: LDO13 {
->>>>                              regulator-name = "vdd_ldo13";
->>>> -                            regulator-min-microvolt = <2800000>;
->>>> +                            regulator-min-microvolt = <1800000>;
->>>>                              regulator-max-microvolt = <2800000>;
->>>>                              regulator-always-on;
->>>> +                            regulator-ramp-delay = <12000>;
->>>>                      };
->>>>
->>>>                      ldo15_reg: LDO15 {
->>>> @@ -213,6 +215,7 @@
->>>>                              regulator-min-microvolt = <2800000>;
->>>>                              regulator-max-microvolt = <2800000>;
->>>>                              regulator-always-on;
->>>> +                            regulator-ramp-delay = <12000>;
->>>
->>> Where did you get this value from? It looks wrong... My datasheet does
->>> not have 12000 uV/uS.
->>
-> 
->> Anand,
->>
->> We have actually been here:
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/351601.html
->>
->> That time you used 8000. I asked the same question - how did you figure
->> out the exact value.
->>
->> Now we have the same question - why 12000?
->>
->> It is completely fine to make a mistake (I do a lot of them) but please
->> try not to make the same mistake again.
->>
->> BR,
->> Krzysztof
-> 
-> I will focus more in the future to clamp down my mistakes to minimal.
-> 
->>
->>>
->>>>                      };
->>>>
->>>>                      ldo24_reg: LDO24 {
->>>> @@ -338,6 +341,7 @@
->>>>      samsung,dw-mshc-ddr-timing = <0 2>;
->>>>      samsung,dw-mshc-hs400-timing = <0 2>;
->>>>      samsung,read-strobe-delay = <90>;
->>>> +    vmmc-supply = <&ldo3_reg>;
->>>>      pinctrl-names = "default";
->>>>      pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
->>>>      bus-width = <8>;
->>>> @@ -352,6 +356,8 @@
->>>>      samsung,dw-mshc-ciu-div = <3>;
->>>>      samsung,dw-mshc-sdr-timing = <0 4>;
->>>>      samsung,dw-mshc-ddr-timing = <0 2>;
->>>> +    vmmc-supply = <&ldo19_reg>;
->>>> +    vqmmc-supply = <&ldo13_reg>;
->>>
->>> It looks wrong. LDO13 is used in one place as VQMMC and in other as
->>> VMMC. How did you figure out which regulator supplies which power domain?
->>>
-> 
-> I refer Schematics diagram to XU4_MAIN_REV0.1.pdf
-> 
-> From the PWR_PMCI_S2MPS11_LDO_CTRL document it LDO13 point to VDDQ_MMC2.
-> 
-
-Aaa right, by mistake I thought that you put LDO13 here and in the node
-before, but there is LDO3, not 13. You did this correctly.
-
-But I have two other questions:
-1. Maybe these regulators now should not be always-enabled?
-2. Why changing minimum voltage of LDO13 to 1.8V? The schematics says 2.8V.
-
-Best regards,
-Krzysztof
+77u/T24gMTItMTAtMTUgMTM6MTYsIE1pY2hhbCBTaW1layB3cm90ZToKPgo+Pj4+ICtzdGF0aWMg
+aW50IHp5bnFfZnBnYV9vcHNfd3JpdGUoc3RydWN0IGZwZ2FfbWFuYWdlciAqbWdyLAo+Pj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgY2hhciAqYnVmLCBzaXplX3QgY291bnQp
+Cj4+Pj4gK3sKPj4+PiArICAgICBzdHJ1Y3QgenlucV9mcGdhX3ByaXYgKnByaXY7Cj4+Pj4gKyAg
+ICAgaW50IGVycjsKPj4+PiArICAgICBjaGFyICprYnVmOwo+Pj4+ICsgICAgIHNpemVfdCBpLCBp
+bl9jb3VudDsKPj4+PiArICAgICBkbWFfYWRkcl90IGRtYV9hZGRyOwo+Pj4+ICsgICAgIHUzMiB0
+cmFuc2Zlcl9sZW5ndGggPSAwOwo+Pj4+ICsgICAgIGJvb2wgZW5kaWFuX3N3YXAgPSBmYWxzZTsK
+Pj4+PiArCj4+Pj4gKyAgICAgaW5fY291bnQgPSBjb3VudDsKPj4+PiArICAgICBwcml2ID0gbWdy
+LT5wcml2Owo+Pj4+ICsKPj4+PiArICAgICBrYnVmID0gZG1hX2FsbG9jX2NvaGVyZW50KHByaXYt
+PmRldiwgY291bnQsICZkbWFfYWRkciwgR0ZQX0tFUk5FTCk7Cj4+Pj4gKyAgICAgaWYgKCFrYnVm
+KQo+Pj4+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+Pj4gKwo+Pj4+ICsgICAgIG1l
+bWNweShrYnVmLCBidWYsIGNvdW50KTsKPj4+PiArCj4+Pj4gKyAgICAgLyogbG9vayBmb3IgdGhl
+IHN5bmMgd29yZCAqLwo+Pj4+ICsgICAgIGZvciAoaSA9IDA7IGkgPCBjb3VudCAtIDQ7IGkrKykg
+ewo+Pj4+ICsgICAgICAgICAgICAgaWYgKG1lbWNtcChrYnVmICsgaSwgIlx4NjZceDU1XHg5OVx4
+QUEiLCA0KSA9PSAwKSB7Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcocHJpdi0+
+ZGV2LCAiRm91bmQgbm9ybWFsIHN5bmMgd29yZFxuIik7Cj4+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgIGVuZGlhbl9zd2FwID0gZmFsc2U7Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGJyZWFr
+Owo+Pj4+ICsgICAgICAgICAgICAgfQo+Cj4gVGhpcyBpcyBiaW4gZm9ybWF0Cj4KPj4+PiArICAg
+ICAgICAgICAgIGlmIChtZW1jbXAoa2J1ZiArIGksICJceEFBXHg5OVx4NTVceDY2IiwgNCkgPT0g
+MCkgewo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBkZXZfZGJnKHByaXYtPmRldiwgIkZvdW5k
+IHN3YXBwZWQgc3luYyB3b3JkXG4iKTsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgZW5kaWFu
+X3N3YXAgPSB0cnVlOwo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBicmVhazsKPj4+PiArICAg
+ICAgICAgICAgIH0KPgo+IFRoaXMgaXMgYml0IGZvcm1hdCBmcm9tIGhlYWRlcgo+Cj4+Pj4gKyAg
+ICAgfQo+Pj4KPj4+IEhvdyBtdWNoIGNvbnRyb2wgZG8gd2UgaGF2ZSBvdmVyIG1hbmRhdGluZyB0
+aGUgZm9ybWF0IG9mIGZpcm13YXJlIGF0Cj4+PiB0aGlzIHBvaW50PyAgSXQnZCBiZSBzd2VsbCBp
+ZiB3ZSBjb3VsZCBqdXN0IG1hbmRhdGUgYSBzcGVjaWZpYwo+Pj4gZW5kaWFubmVzcywgYW5kIGxl
+YXZlIHRoaXMgbXVuZ2luZyB0byB1c2VybW9kZS4KPj4KPj4gVGhhdCdzIGEgZ29vZCBxdWVzdGlv
+bi4gUGVyc29uYWxseSBJIGRvIG9ubHkgY2FyZSBhYm91dCBvbmUgb2YgYm90aCwKPj4gYnV0IHRo
+YXQncyBqdXN0IGJlY2F1c2UgSSBnZXQgdG8gZGVjaWRlIGZvciBteSB0YXJnZXRzLi4uCj4+IE9w
+aW5pb25zIGZyb20gdGhlIFhpbGlueCBndXlzPwo+Cj4gRG9uJ3Qga25vdyBmdWxsIGhpc3Rvcnkg
+YWJvdXQgdGhpcyBidXQgaW4gcGFzdCBiaXRzdHJlYW0gaW4gQklUIGZvcm1hdAo+IHdhcyB1c2Vk
+LiBXaGljaCBpcyBoZWFkZXIgKHBhcnRpYWxseSBkZWNvZGluZyBpbiB1LWJvb3QgZm9yIGV4YW1w
+bGUpCj4gd2l0aCBkYXRhLgo+IE9uIHp5bnEgbmF0aXZlIGZvcm1hdCBpcyBCSU4gd2hpY2ggaXMg
+Zm9ybWF0IHdpdGhvdXQgaGVhZGVyIGFuZCBkYXRhIGlzCj4gc3dhcHBlZC4KPiBUaGlzIGNvZGUg
+anVzdCBkZXRlY3RzIHdoaWNoIGZvcm1hdCBpcyB1c2VkLiBJZiBCSVQsIGhlYWRlciBpcyBza2lw
+cGVkCj4gYW5kIGRhdGEgaXMgc3dhcHBlZCB0byBCSU4gZm9ybWF0Lgo+Cj4gQmFjayB0byBvcmln
+aW4gcXVlc3Rpb24gaWYgdGhpcyBpcyBzb21ldGhpbmcgd2hhdCBjYW4gYmUgaGFuZGxlZCBmcm9t
+Cj4gdXNlciBzcGFjZS4gQW5kIGFuc3dlciBpcyAtIHllcyBpdCBjYW4gYmUgaGFuZGxlZCB0aGVy
+ZS4KPiBCdXQgYmFzZWQgb24gbXkgZXhwZXJpZW5jZSBpdCBpcyB2ZXJ5IHVzZWZ1bCB0byBiZSBh
+YmxlIHRvIGhhbmRsZSBCSVQKPiBiZWNhdXNlIGl0IGlzIGJ1aWx0IGJ5IHRvb2xzIGJ5IGRlZmF1
+bHQuCj4gQWxzbyB3aXRoIEJJTiBmb3JtYXQgeW91IGFyZSBsb29zaW5nIHJlY29yZCB3aGF0IHRo
+aXMgZGF0YSBiaXRzdHJlYW0KPiB0YXJnZXRzLiBIZWFkZXIgaW4gQklUIGdpdmVzIHlvdSBhdCBs
+ZWFzdCBzb21lIGlkZWFzLgoKUGVvcGxlIHNob3VsZCBzdG9wIHVzaW5nICJjYXQiIHRvIHByb2dy
+YW0gdGhlIEZQR0EgYW5kIHVzZSBhIHVzZXJzcGFjZSB0b29sIAppbnN0ZWFkLiBJJ3ZlIGFscmVh
+ZHkgcmVsZWFzZWQgc3VjaCB0b29scyB1bmRlciBHUEwsIHNvIGFueW9uZSBjYW4gcGljayB1cCBv
+biAKaXQgYW5kIGV4dGVuZCBpdCBhcyByZXF1aXJlZC4KClRoZSBoZWFkZXIgZm9yIHRoZSAiYml0
+IiBmb3JtYXQgaXMgY29tcGxldGVseSBpZ25vcmVkICh5b3UgY2FuJ3QgZXZlbiB1c2UgaXQgCnRv
+IGRldGVybWluZSBpZiB0aGUgYml0c3RyZWFtIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgY3VycmVu
+dCBkZXZpY2UpIHNvIAp0aGVyZSdzIG5vIHBvaW50IGluIGNhcnJ5aW5nIGl0IGFyb3VuZC4gT24g
+dGhlIHp5bnEsIGRvaW5nIHRoZSAic3dhcCIgaW4gCnVzZXJzcGFjZSB3YXMgbWVhc3VyYWJseSBm
+YXN0ZXIgdGhhbiBoYXZpbmcgdGhlIGRyaXZlciBoYW5kbGUgaXQsIGFuZCB0aGF0IHdhcyAKZXZl
+biB3aXRob3V0IHVzaW5nIE5FT04gaW5zdHJ1Y3Rpb25zIGZvciBieXRlIHN3YXBwaW5nLgoKSSBh
+ZG1pdCB0aGF0IGJlaW5nIGFibGUgdG8gZG8gImNhdCBzdGF0aWMuYml0ID4gL2Rldi94ZGV2Y2Zn
+IiBoYXMgaGFkIGl0cyAKdXNlcy4gQnV0IGl0J3Mgbm90IHNvbWV0aGluZyB0aGF0IGJlbG9uZ3Mg
+aW4gbWFpbmxpbmUgTGludXguCgpQcm9iYWJseSBvbmUgb2YgdGhlIGtleSByZWFzb25zIHRoYXQg
+dGhlICJiaXQiIGZvcm1hdCBpcyBzdGlsbCBwb3B1bGFyIGlzIHRoYXQgCmdldHRpbmcgdGhlIFZp
+dmFkbyB0b29scyB0byBjcmVhdGUgYSBwcm9wZXIgImJpbiIgdGhhdCB3aWxsIGFjdHVhbGx5IHdv
+cmsgb24gCnRoZSBaeW5xIGlzIGFib3V0IGFzIGVhc3kgYXMgbmFpbGluZyBqZWxseSB0byBhIHRy
+ZWUuIFdlJ3ZlIGJlZW4gdXNpbmcgYSAKc2ltcGxlIFB5dGhvbiBzY3JpcHQgdG8gZG8gdGhlIGJp
+dC0+YmluIGNvbnZlcnNpb24gZm9yIHRoYXQgcmVhc29uLgoKVXNpbmcgdGhlICJiaW4iIGZvcm1h
+dCBpbiB0aGUgZHJpdmVyIGtlZXBzIGl0IHNpbXBsZSBhbmQgc2luZ3VsYXIuIFVzZXJzcGFjZSAK
+dG9vbHMgY2FuIGFkZCB3aGF0ZXZlciB3cmFwcGVycyBhbmQgaGVhZGVycyB0aGV5IGZlZWwgYXBw
+cm9wcmlhdGUgdG8gaXQsIHRoZXNlIApjaGVja3MgZG9uJ3QgYmVsb25nIGluIHRoZSBkcml2ZXIg
+c2luY2UgdGhleSB3aWxsIGJlIGFwcGxpY2F0aW9uIHNwZWNpZmljLiBGb3IgCmV4YW1wbGUsIHNv
+bWUgdXNlcnMgd291bGQgd2FudCB0byB2ZXJpZnkgdGhhdCBhIHBhcnRpYWwgYml0c3RyZWFtIGFj
+dHVhbGx5IAptYXRjaGVzIHRoZSBzdGF0aWMgcGFydCB0aGF0J3MgY3VycmVudGx5IGluIHRoZSBG
+UEdBLgoKTWlrZS4KCgpLaW5kIHJlZ2FyZHMsCgpNaWtlIExvb2lqbWFucwpTeXN0ZW0gRXhwZXJ0
+CgpUT1BJQyBFbWJlZGRlZCBQcm9kdWN0cwpFaW5kaG92ZW5zZXdlZyAzMi1DLCBOTC01NjgzIEtI
+IEJlc3QKUG9zdGJ1cyA0NDAsIE5MLTU2ODAgQUsgQmVzdApUZWxlZm9vbjogKzMxICgwKSA0OTkg
+MzMgNjkgNzkKVGVsZWZheDogKzMxICgwKSA0OTkgMzMgNjkgNzAKRS1tYWlsOiBtaWtlLmxvb2lq
+bWFuc0B0b3BpY3Byb2R1Y3RzLmNvbQpXZWJzaXRlOiB3d3cudG9waWNwcm9kdWN0cy5jb20KClBs
+ZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5nIHRoaXMgZS1tYWls
+CgoKCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
