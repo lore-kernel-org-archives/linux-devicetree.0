@@ -1,152 +1,44 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 2/2] arm: mvebu: reorder nodes under internal-regs by address in RN2120 .dts file
-Date: Mon, 12 Oct 2015 18:27:00 +0200
-Message-ID: <87a8rokq7f.fsf@free-electrons.com>
-References: <cover.1444428035.git.arno@natisbad.org>
-	<277de75473af2431849a7494ae65b57dbc9a8309.1444428035.git.arno@natisbad.org>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 9/9] Input: goodix - sort includes using inverse Xmas
+ tree order
+Date: Mon, 12 Oct 2015 09:30:32 -0700
+Message-ID: <CAKdAkRQNZVJXxjDqsm_5AY-Qk2+gREjS-6g=L3cFFF84epWCPg@mail.gmail.com>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+	<1444663477-30062-10-git-send-email-irina.tirdea@intel.com>
+	<20151012153916.GF7452@leverpostej>
+	<1444664437.24103.1.camel@hadess.net>
+	<20151012155132.GG7452@leverpostej>
+	<1444665210.24103.2.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <277de75473af2431849a7494ae65b57dbc9a8309.1444428035.git.arno@natisbad.org>
-	(Arnaud Ebalard's message of "Sat, 10 Oct 2015 00:10:39 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, TuxOholic <tuxoholic@hotmail.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444665210.24103.2.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud,
- 
- On sam., oct. 10 2015, Arnaud Ebalard <arno@natisbad.org> wrote:
-
-> This cosmetic patch reorder nodes under internal-regs by increasing
-> address order, as epxected.
+On Mon, Oct 12, 2015 at 8:53 AM, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org> wrote:
+> On Mon, 2015-10-12 at 16:51 +0100, Mark Rutland wrote:
+>> On Mon, Oct 12, 2015 at 05:40:37PM +0200, Bastien Nocera wrote:
+>> > On Mon, 2015-10-12 at 16:39 +0100, Mark Rutland wrote:
+>> > > Why?
+>> >
+>> > It was already discussed in the thread for a previous version,
+>> > please
+>> > refer to that.
+>>
+>> Fine, but surely that should be in the commit message, to prevent
+>> others
+>> like myself repeatedly asking the same question?
 >
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+> Fair point. Irina?
 
-Applied on mvebu/dt with Andrew acked-by
-
-Thanks,
-
-Gregory
-> ---
->  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 86 +++++++++++++-------------
->  1 file changed, 43 insertions(+), 43 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> index 85b2f87c0b8a..d72a69d97ba2 100644
-> --- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-> @@ -94,54 +94,11 @@
->  				status = "disabled";
->  			};
->  
-> -			/* Two rear eSATA ports */
-> -			sata@a0000 {
-> -				nr-ports = <2>;
-> -				status = "okay";
-> -			};
-> -
-> -			serial@12000 {
-> -				status = "okay";
-> -			};
-> -
-> -			mdio {
-> -				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
-> -					reg = <0>;
-> -				};
-> -
-> -				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
-> -					reg = <1>;
-> -				};
-> -			};
-> -
-> -			ethernet@70000 {
-> -				status = "okay";
-> -				phy = <&phy0>;
-> -				phy-mode = "rgmii-id";
-> -			};
-> -
-> -			ethernet@74000 {
-> -				status = "okay";
-> -				phy = <&phy1>;
-> -				phy-mode = "rgmii-id";
-> -			};
-> -
-> -			/* Front USB 2.0 port */
-> -			usb@50000 {
-> -				status = "okay";
-> -			};
-> -
->  			i2c@11000 {
->  				compatible = "marvell,mv64xxx-i2c";
->  				clock-frequency = <400000>;
->  				status = "okay";
->  
-> -				isl12057: isl12057@68 {
-> -					compatible = "isil,isl12057";
-> -					reg = <0x68>;
-> -					isil,irq2-can-wakeup-machine;
-> -				};
-> -
->  				/* Controller for rear fan #1 of 3 (Protechnic
->  				 * MGT4012XB-O20, 8000RPM) near eSATA port */
->  				g762_fan1: g762@3e {
-> @@ -178,6 +135,49 @@
->  					compatible = "gmt,g751";
->  					reg = <0x4c>;
->  				};
-> +
-> +				isl12057: isl12057@68 {
-> +					compatible = "isil,isl12057";
-> +					reg = <0x68>;
-> +					isil,irq2-can-wakeup-machine;
-> +				};
-> +			};
-> +
-> +			serial@12000 {
-> +				status = "okay";
-> +			};
-> +
-> +			/* Front USB 2.0 port */
-> +			usb@50000 {
-> +				status = "okay";
-> +			};
-> +
-> +			mdio {
-> +				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
-> +					reg = <0>;
-> +				};
-> +
-> +				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			ethernet@70000 {
-> +				status = "okay";
-> +				phy = <&phy0>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			ethernet@74000 {
-> +				status = "okay";
-> +				phy = <&phy1>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			/* Two rear eSATA ports */
-> +			sata@a0000 {
-> +				nr-ports = <2>;
-> +				status = "okay";
->  			};
->  
->  			nand@d0000 {
-> -- 
-> 2.5.3
->
+No, let's just leave poor includes alone.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
