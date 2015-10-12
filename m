@@ -1,87 +1,81 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: Re: [PATCH 04/10] ARM: dts: enable clock support for BCM5301X
-Date: Mon, 12 Oct 2015 13:57:06 -0400
-Message-ID: <20151012175706.GF20867@broadcom.com>
-References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
- <1443826665-17570-5-git-send-email-jonmason@broadcom.com>
- <20151009073540.GO26883@codeaurora.org>
- <20151009182728.GD17527@broadcom.com>
- <20151010001408.GX26883@codeaurora.org>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional
+ clock
+Date: Mon, 12 Oct 2015 19:18:35 +0100
+Message-ID: <561BF97B.2010501@codethink.co.uk>
+References: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk> <20151012174505.GJ23801@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151010001408.GX26883@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151012174505.GJ23801-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 09, 2015 at 05:14:08PM -0700, Stephen Boyd wrote:
-> On 10/09, Jon Mason wrote:
-> > On Fri, Oct 09, 2015 at 12:35:40AM -0700, Stephen Boyd wrote:
-> > > On 10/02, Jon Mason wrote:
-> > > 
-> > > >  arch/arm/boot/dts/bcm5301x.dtsi | 67 ++++++++++++++++++++++++++++++++++++-----
-> > > >  1 file changed, 60 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> > > > index 6f50f67..f717859 100644
-> > > > --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> > > > +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> > > > @@ -55,14 +56,14 @@
-> > > >  			compatible = "arm,cortex-a9-global-timer";
-> > > >  			reg = <0x0200 0x100>;
-> > > >  			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> > > > -			clocks = <&clk_periph>;
-> > > > +			clocks = <&periph_clk>;
-> > > >  		};
-> > > >  
-> > > >  		local-timer@0600 {
-> > > >  			compatible = "arm,cortex-a9-twd-timer";
-> > > >  			reg = <0x0600 0x100>;
-> > > >  			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> > > > -			clocks = <&clk_periph>;
-> > > > +			clocks = <&periph_clk>;
-> > > >  		};
-> > > >  
-> > > >  		gic: interrupt-controller@1000 {
-> > > > @@ -94,14 +95,66 @@
-> > > >  
-> > > >  	clocks {
-> > > 
-> > > I'd expect this to only contain nodes that don't have a reg
-> > > property. Clock providers that have a reg property would go into
-> > > some soc node or bus. Perhaps that's the chipcommonA node, or
-> > > axi?
-> > 
-> > This might get a little ugly, as some of the clocks are in the
-> > 0x18000000 and others are in 0x19000000.  I would think it better to
-> > have them all in one place (as that is more readable).  Do you preferr
-> > I split the pieces up into their respective DT nodes?
+On 12/10/15 18:45, Tony Lindgren wrote:
+> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 10:38]:
+>> The AM3715 OHCI controller will not function without the EHCI
+>> unit's 120m fclk being enabled. If all the ports in the system
+>> are set to OHCI then the 120m_fclk will not get enabled and no
+>> devices are detected.
+>>
+>> Add a new (optional) property to signal the system must enable
+>> the 120m_fck for OHCI so that if no EHCI ports are signalled
+>> then the 120m_fclk should be enabled.
+>>
+>> We have found no information about why this is necessary, but
+>> it is suspected the EHCI controller does not complete the initial
+>> reset sequence and therefore does not hand control of the USB
+>> port back.
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
+>>  drivers/mfd/omap-usb-host.c                        | 4 ++++
+>>  2 files changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> index 38d9bb8..fb5fea5 100644
+>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> @@ -23,6 +23,9 @@ OMAP MUSB GLUE
+>>  Optional properties:
+>>   - ctrl-module : phandle of the control module this glue uses to write to
+>>     mailbox
+>> + - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
+>> +   using ohci. Needed for AM3517 in OHCI only mode.
+>> +
+>>  
+>>  SOC specific device node entry
+>>  usb_otg_hs: usb_otg_hs@4a0ab000 {
+>> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+>> index 1d924d1..13880cf 100644
+>> --- a/drivers/mfd/omap-usb-host.c
+>> +++ b/drivers/mfd/omap-usb-host.c
+>> @@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+>>  				need_logic_fck |= true;
+>>  		}
+>>  
+>> +		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
+>> +		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
+>> +			need_logic_fck |= true;
+>> +
+>>  		if (need_logic_fck) {
+>>  			omap->ehci_logic_fck = devm_clk_get(dev,
+>>  							    "usbhost_120m_fck");
 > 
-> Are there two clock controllers? Sorry I don't understand the
-> architecture here very well. Nodes with reg properties in the
-> same range should be near each other. We don't group all i2c
-> controllers into the same node because they're logically i2c
-> controllers. We express the hierarchy of devices with container
-> nodes. The clocks node is only useful for board-level clocks, not
-> things that are inside the SoC.
+> Hmm why not just use the standard device tree clocks property and then do
+> clk_get_rate() on the clock?
 
-3 clock sources: a9pll, lcpll, and genpll. The first one resides in
-the IP block living at the 0x19000000 address range, while the latter
-two live in the 0x18000000 address range.
+I don't see that helps enabling the clock. The code decideds if
+no EHCI ports in use that it doesn't need to enable the EHCI fclk.
 
-I'll split up the clocks amongst the respective entries, per your
-suggestion.
-
-Thanks,
-Jon 
-
-
-
-
-> 
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
