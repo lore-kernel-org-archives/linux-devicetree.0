@@ -1,29 +1,93 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH 2/5] mtd: nand: Allow MTD_NAND_BRCMNAND to be selected
- for ARM64
-Date: Mon, 12 Oct 2015 14:20:38 -0700
-Message-ID: <20151012212038.GP107187@google.com>
-References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
- <1443808606-21203-3-git-send-email-anup.patel@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443808606-21203-3-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH 2/2] gpiolib: Add and use OF_GPIO_SINGLE_ENDED flag
+Date: Tue, 13 Oct 2015 00:20:21 +0300
+Message-ID: <1444684821-17389-3-git-send-email-laurent.pinchart@ideasonboard.com>
+References: <1444684821-17389-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1444684821-17389-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 02, 2015 at 11:26:43PM +0530, Anup Patel wrote:
-> The BRCM NAND driver can be re-used for Broadcom ARM64 SoCs hence
-> this patch updates Kconfig to allow selection of MTD_NAND_BRCMNAND
-> for ARM64.
-> 
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Pramod KUMAR <pramodku@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+The flag matches the DT GPIO_SINGLE_ENDED flag and allows drivers to
+parse and use the DT flag to handle single-ended (open-drain or
+open-source) GPIOs.
 
-Pushed to l2-mtd.git
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/gpio/gpiolib.c  | 20 ++++++++++++++++++--
+ include/linux/of_gpio.h |  1 +
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index de93fc0a380f..53aa9c80604d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1709,6 +1709,13 @@ static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 	if (of_flags & OF_GPIO_ACTIVE_LOW)
+ 		*flags |= GPIO_ACTIVE_LOW;
+ 
++	if (of_flags & OF_GPIO_SINGLE_ENDED) {
++		if (of_flags & OF_GPIO_ACTIVE_LOW)
++			*flags |= GPIO_OPEN_DRAIN;
++		else
++			*flags |= GPIO_OPEN_SOURCE;
++	}
++
+ 	return desc;
+ }
+ 
+@@ -2062,6 +2069,7 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ {
+ 	struct gpio_desc *desc = ERR_PTR(-ENODEV);
+ 	bool active_low = false;
++	bool single_ended = false;
+ 	int ret;
+ 
+ 	if (!fwnode)
+@@ -2072,8 +2080,10 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 
+ 		desc = of_get_named_gpiod_flags(to_of_node(fwnode), propname, 0,
+ 						&flags);
+-		if (!IS_ERR(desc))
++		if (!IS_ERR(desc)) {
+ 			active_low = flags & OF_GPIO_ACTIVE_LOW;
++			single_ended = flags & OF_GPIO_SINGLE_ENDED;
++		}
+ 	} else if (is_acpi_node(fwnode)) {
+ 		struct acpi_gpio_info info;
+ 
+@@ -2086,10 +2096,16 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+ 	if (IS_ERR(desc))
+ 		return desc;
+ 
+-	/* Only value flag can be set from both DT and ACPI is active_low */
+ 	if (active_low)
+ 		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+ 
++	if (single_ended) {
++		if (active_low)
++			set_bit(FLAG_OPEN_DRAIN, &desc->flags);
++		else
++			set_bit(FLAG_OPEN_SOURCE, &desc->flags);
++	}
++
+ 	ret = gpiod_request(desc, NULL);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index 69dbe312b11b..e8d662a1b6d1 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -29,6 +29,7 @@ struct device_node;
+  */
+ enum of_gpio_flags {
+ 	OF_GPIO_ACTIVE_LOW = 0x1,
++	OF_GPIO_SINGLE_ENDED = 0x2,
+ };
+ 
+ #ifdef CONFIG_OF_GPIO
+-- 
+2.4.9
+
