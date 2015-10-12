@@ -1,191 +1,43 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
- Zynq 7000
-Date: Mon, 12 Oct 2015 04:22:43 +0200
-Message-ID: <CAAtXAHc97N4jnvz=op81AcQ=9pKgPdRJ-1TngYkM+1fWVTG8bg@mail.gmail.com>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
-	<1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
-	<alpine.DEB.2.10.1510091903240.2257@atull-730U3E-740U3E>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] MAINTAINERS: add Mediatek usb3 phy driver
+Date: Mon, 12 Oct 2015 10:41:57 +0800
+Message-ID: <1444617717-13706-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.10.1510091903240.2257@atull-730U3E-740U3E>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Add Mediatek usb3 phy driver to maintainer entry.
 
-thanks for your feedback!
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Fri, Oct 9, 2015 at 8:09 PM, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> On Thu, 8 Oct 2015, Moritz Fischer wrote:
->
->> --- /dev/null
->> +++ b/drivers/fpga/zynq-fpga.c
->> @@ -0,0 +1,478 @@
->> +/*
->> + * Copyright (c) 2011-2015 Xilinx Inc.
->> + * Copyright (c) 2015, National Instruments Corp.
->> + *
->> + * FPGA Manager Driver for Xilinx Zynq, heavily based on xdevcfg driver
->> + * in their vendor tree.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; version 2 of the License.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/completion.h>
->> +#include <linux/delay.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/fpga/fpga-mgr.h>
->> +#include <linux/io.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/module.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/pm.h>
->> +#include <linux/regmap.h>
->> +#include <linux/string.h>
->
-> Hi Moritz,
->
-> That was fast!  I just have a couple of very minor comments...
->
-> Please alphabetize the #includes.
->
->> +
->> +/* Offsets into SLCR regmap */
->> +#define SLCR_FPGA_RST_CTRL_OFFSET    0x240 /* FPGA Software Reset Control */
->> +#define SLCR_LVL_SHFTR_EN_OFFSET     0x900 /* Level Shifters Enable */
->> +
->> +/* Constant Definitions */
->> +#define CTRL_OFFSET          0x00 /* Control Register */
->> +#define LOCK_OFFSET          0x04 /* Lock Register */
->> +#define INT_STS_OFFSET               0x0c /* Interrupt Status Register */
->> +#define INT_MASK_OFFSET              0x10 /* Interrupt Mask Register */
->> +#define STATUS_OFFSET                0x14 /* Status Register */
->> +#define DMA_SRC_ADDR_OFFSET  0x18 /* DMA Source Address Register */
->> +#define DMA_DEST_ADDR_OFFSET 0x1c /* DMA Destination Address Reg */
->> +#define DMA_SRC_LEN_OFFSET   0x20 /* DMA Source Transfer Length */
->> +#define DMA_DEST_LEN_OFFSET  0x24 /* DMA Destination Transfer */
->> +#define UNLOCK_OFFSET                0x34 /* Unlock Register */
->> +#define MCTRL_OFFSET         0x80 /* Misc. Control Register */
->
-> Please fix up the indenting.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7ba7ab7..be0055c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1291,6 +1291,13 @@ F:	arch/arm/mach-mediatek/
+ N:	mtk
+ K:	mediatek
+ 
++ARM/Mediatek USB3 PHY DRIVER
++M:	Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
++L:	linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
++S:	Maintained
++F:	drivers/phy/phy-mt65xx-usb3.c
++
+ ARM/MICREL KS8695 ARCHITECTURE
+ M:	Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+-- 
+1.8.1.1.dirty
 
-Will do.
->
->> +
->> +/* Control Register Bit definitions */
->> +#define CTRL_PCFG_PROG_B_MASK        BIT(30) /* Program signal to reset FPGA */
->> +#define CTRL_PCAP_PR_MASK    BIT(27) /* Enable PCAP for PR */
->> +#define CTRL_PCAP_MODE_MASK  BIT(26) /* Enable PCAP */
->> +
->> +/* Miscellaneous Control Register bit definitions */
->> +#define MCTRL_PCAP_LPBK_MASK BIT(4) /* Internal PCAP loopback */
->> +
->> +/* Status register bit definitions */
->> +#define STATUS_PCFG_INIT_MASK        BIT(4) /* FPGA init status */
->> +
->> +/* Interrupt Status/Mask Register Bit definitions */
->> +#define IXR_DMA_DONE_MASK    BIT(13) /* DMA command done */
->> +#define IXR_D_P_DONE_MASK    BIT(12) /* DMA and PCAP cmd done */
->> +#define IXR_PCFG_DONE_MASK   BIT(2)  /* FPGA programmed */
->> +#define IXR_ERROR_FLAGS_MASK 0x00F0F860
->> +#define IXR_ALL_MASK         0xF8F7F87F
->> +
->> +/* Miscellaneous constant values */
->> +#define DMA_INVALID_ADDRESS  GENMASK(31, 0)  /* Invalid DMA address */
->> +#define UNLOCK_MASK          0x757bdf0d /* Used to unlock the device */
->> +
->> +/* Masks for controlling stuff in SLCR */
->> +#define LVL_SHFTR_DISABLE_ALL_MASK   0x0 /* Disable all Level shifters */
->> +#define LVL_SHFTR_ENABLE_PS_TO_PL    0xa /* Enable all Level shifters */
->> +#define LVL_SHFTR_ENABLE_PL_TO_PS    0xf /* Enable all Level shifters */
->> +#define FPGA_RST_ALL_MASK            0xf /* Enable global resets */
->> +#define FPGA_RST_NONE_MASK           0x0 /* Disable global resets */
->> +
->
->> +static int zynq_fpga_ops_write_init(struct fpga_manager *mgr, u32 flags,
->> +                                 const char *buf, size_t count)
->> +{
->> +     struct zynq_fpga_priv *priv;
->> +     u32 ctrl, status;
->> +     int err;
->> +
->> +     priv = mgr->priv;
->> +
->> +     err = clk_enable(priv->clk);
->> +     if (err)
->> +             return err;
->
-> You might not even need to enable/disable the clock if not doing PR.
-
-Yeah, you're probably right.
->
->> +
->> +     /* only reset if we're not doing partial reconfig */
->> +     if (!(flags & FPGA_MGR_PARTIAL_RECONFIG)) {
->> +             /* assert AXI interface resets */
->> +             regmap_write(priv->slcr, SLCR_FPGA_RST_CTRL_OFFSET,
->> +                          FPGA_RST_ALL_MASK);
->> +
->> +             /* disable level shifters */
->> +             regmap_write(priv->slcr, SLCR_LVL_SHFTR_EN_OFFSET,
->> +                          LVL_SHFTR_DISABLE_ALL_MASK);
->> +             /* enable output level shifters */
->> +             regmap_write(priv->slcr, SLCR_LVL_SHFTR_EN_OFFSET,
->> +                          LVL_SHFTR_ENABLE_PS_TO_PL);
->> +
->> +             /* create a rising edge on PCFG_INIT. PCFG_INIT follows
->> +              * PCFG_PROG_B, so we need to poll it after setting PCFG_PROG_B
->> +              * to make sure the rising edge actually happens
->> +              */
->> +             ctrl = zynq_fpga_read(priv, CTRL_OFFSET);
->> +             ctrl |= CTRL_PCFG_PROG_B_MASK;
->> +
->> +             zynq_fpga_write(priv, CTRL_OFFSET, ctrl);
->> +
->> +             zynq_fpga_poll_timeout(priv, STATUS_OFFSET, status, status &
->> +                                    STATUS_PCFG_INIT_MASK, 20, 0);
->> +
->> +             ctrl = zynq_fpga_read(priv, CTRL_OFFSET);
->> +             ctrl &= ~CTRL_PCFG_PROG_B_MASK;
->> +
->> +             zynq_fpga_write(priv, CTRL_OFFSET, ctrl);
->> +
->> +             zynq_fpga_poll_timeout(priv, STATUS_OFFSET, status, !(status &
->> +                                    STATUS_PCFG_INIT_MASK), 20, 0);
->> +
->> +             ctrl = zynq_fpga_read(priv, CTRL_OFFSET);
->> +             ctrl |= CTRL_PCFG_PROG_B_MASK;
->> +
->> +             zynq_fpga_write(priv, CTRL_OFFSET, ctrl);
->> +
->> +             zynq_fpga_poll_timeout(priv, STATUS_OFFSET, status, status &
->> +                                    STATUS_PCFG_INIT_MASK, 20, 0);
->> +     }
->> +
->> +     clk_disable(priv->clk);
->> +
->> +     return 0;
->> +}
->> +
-
-Cheers & enjoy your vacation
-
-Moritz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
