@@ -1,51 +1,82 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] scsi: hisi_sas: hisi_sas_alloc_dev() can be static
-Date: Tue, 13 Oct 2015 06:35:11 +0800
-Message-ID: <20151012223511.GA35800@lkp-ib04.intel.com>
-References: <201510130610.OHuS0tt3%fengguang.wu@intel.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [REPOST PATCH 1/4] ARM: dts: DRA7: Add dsp1_system syscon node
+Date: Mon, 12 Oct 2015 15:50:02 -0700
+Message-ID: <20151012225001.GK23801@atomide.com>
+References: <1443828205-18706-1-git-send-email-s-anna@ti.com>
+	<1443828205-18706-2-git-send-email-s-anna@ti.com>
+	<20151012214304.GD23801@atomide.com> <561C351B.3060307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444663237-238302-17-git-send-email-john.garry@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-Cc: kbuild-all@01.org, James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de, John Garry <john.garry@huawei.com>
+In-Reply-To: <561C351B.3060307-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [151012 15:37]:
+> Hi Tony,
+> 
+> On 10/12/2015 04:43 PM, Tony Lindgren wrote:
+> > * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [151002 16:27]:
+> >> The DSP_SYSTEM sub-module is a dedicated system control logic
+> >> module present within a DRA7 DSP processor sub-system. This
+> >> module is responsible for power management, clock generation
+> >> and connection to the device PRCM module.
+> >>
+> >> Add a syscon node for this module for the DSP1 processor
+> >> sub-system. This is added as a syscon node as it is a common
+> >> configuration module that can be used by the different IOMMU
+> >> instances and the corresponding remoteproc device.
+> >>
+> >> The node is added to the common dra7.dtsi file, as the DSP1
+> >> processor sub-system is mostly common across all the variants
+> >> of the DRA7 SoC family.
+> >>
+> >> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/dra7.dtsi | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> >> index e289c706d27d..62055094e8d5 100644
+> >> --- a/arch/arm/boot/dts/dra7.dtsi
+> >> +++ b/arch/arm/boot/dts/dra7.dtsi
+> >> @@ -292,6 +292,11 @@
+> >>  				#thermal-sensor-cells = <1>;
+> >>  		};
+> >>  
+> >> +		dsp1_system: dsp_system@40d00000 {
+> >> +			compatible = "syscon";
+> >> +			reg = <0x40d00000 0x100>;
+> >> +		};
+> >> +
+> >>  		sdma: dma-controller@4a056000 {
+> >>  			compatible = "ti,omap4430-sdma";
+> >>  			reg = <0x4a056000 0x1000>;
+> > 
+> > Hmm so why would you want to set up a complete device as a syscon
+> > mapping rather than just doing ioremap on it?
+> > 
+> > What drivers will be sharing access to these registers?
+> 
+> Two different instances of the MMU for now, both get probed
+> independently. But there are other registers which a remoteproc driver
+> will mostly be interested in (like DSP_SYS_STAT for knowing the C66x
+> idle/active status).
 
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
----
- hisi_sas_main.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+OK makes sense to me then.
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 44cb9085..f7ee97a 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -355,7 +355,7 @@ void hisi_sas_bytes_dmaed(struct hisi_hba *hisi_hba, int phy_no)
- 	sas_ha->notify_port_event(sas_phy, PORTE_BYTES_DMAED);
- }
- 
--struct hisi_sas_device *hisi_sas_alloc_dev(struct hisi_hba *hisi_hba)
-+static struct hisi_sas_device *hisi_sas_alloc_dev(struct hisi_hba *hisi_hba)
- {
- 	int dev_id;
- 	struct device *dev = &hisi_hba->pdev->dev;
-@@ -373,7 +373,7 @@ struct hisi_sas_device *hisi_sas_alloc_dev(struct hisi_hba *hisi_hba)
- 	return NULL;
- }
- 
--int hisi_sas_dev_found_notify(struct domain_device *device, int lock)
-+static int hisi_sas_dev_found_notify(struct domain_device *device, int lock)
- {
- 	unsigned long flags = 0;
- 	int res = 0;
-@@ -476,7 +476,7 @@ void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int phy_no)
- 	sas_phy->lldd_phy = phy;
- }
- 
--void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy, int lock)
-+static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy, int lock)
- {
- 	struct sas_ha_struct *sas_ha = sas_phy->ha;
- 	struct hisi_hba *hisi_hba = NULL;
+Thanks,
+
+Tony
