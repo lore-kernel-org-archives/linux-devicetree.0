@@ -1,104 +1,54 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
- Zynq 7000
-Date: Mon, 12 Oct 2015 14:22:36 +0200
-Message-ID: <561BA60C.6010106@topic.nl>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
- <1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
- <20151009163336.GM10631@jcartwri.amer.corp.natinst.com>
- <CAAtXAHea7GZDLez5kYas2PFQ-=KmS_on8WxFDCuvVb4Nh05a_w@mail.gmail.com>
- <561B9687.1070103@xilinx.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH] arm: dts: Fix audio card detection on peach boards
+Date: Mon, 12 Oct 2015 17:44:27 +0530
+Message-ID: <561BA423.6050009@samsung.com>
+References: <1444631169-19468-1-git-send-email-alim.akhtar@samsung.com>
+ <561B578E.1050308@samsung.com> <561B7AFF.1080707@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <561B9687.1070103@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, Alan Tull <atull@opensource.altera.com>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-reply-to: <561B7AFF.1080707@samsung.com>
+Sender: stable-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-77u/T24gMTItMTAtMTUgMTM6MTYsIE1pY2hhbCBTaW1layB3cm90ZToKPgo+Pj4+ICtzdGF0aWMg
-aW50IHp5bnFfZnBnYV9vcHNfd3JpdGUoc3RydWN0IGZwZ2FfbWFuYWdlciAqbWdyLAo+Pj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgY2hhciAqYnVmLCBzaXplX3QgY291bnQp
-Cj4+Pj4gK3sKPj4+PiArICAgICBzdHJ1Y3QgenlucV9mcGdhX3ByaXYgKnByaXY7Cj4+Pj4gKyAg
-ICAgaW50IGVycjsKPj4+PiArICAgICBjaGFyICprYnVmOwo+Pj4+ICsgICAgIHNpemVfdCBpLCBp
-bl9jb3VudDsKPj4+PiArICAgICBkbWFfYWRkcl90IGRtYV9hZGRyOwo+Pj4+ICsgICAgIHUzMiB0
-cmFuc2Zlcl9sZW5ndGggPSAwOwo+Pj4+ICsgICAgIGJvb2wgZW5kaWFuX3N3YXAgPSBmYWxzZTsK
-Pj4+PiArCj4+Pj4gKyAgICAgaW5fY291bnQgPSBjb3VudDsKPj4+PiArICAgICBwcml2ID0gbWdy
-LT5wcml2Owo+Pj4+ICsKPj4+PiArICAgICBrYnVmID0gZG1hX2FsbG9jX2NvaGVyZW50KHByaXYt
-PmRldiwgY291bnQsICZkbWFfYWRkciwgR0ZQX0tFUk5FTCk7Cj4+Pj4gKyAgICAgaWYgKCFrYnVm
-KQo+Pj4+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+Pj4gKwo+Pj4+ICsgICAgIG1l
-bWNweShrYnVmLCBidWYsIGNvdW50KTsKPj4+PiArCj4+Pj4gKyAgICAgLyogbG9vayBmb3IgdGhl
-IHN5bmMgd29yZCAqLwo+Pj4+ICsgICAgIGZvciAoaSA9IDA7IGkgPCBjb3VudCAtIDQ7IGkrKykg
-ewo+Pj4+ICsgICAgICAgICAgICAgaWYgKG1lbWNtcChrYnVmICsgaSwgIlx4NjZceDU1XHg5OVx4
-QUEiLCA0KSA9PSAwKSB7Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcocHJpdi0+
-ZGV2LCAiRm91bmQgbm9ybWFsIHN5bmMgd29yZFxuIik7Cj4+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgIGVuZGlhbl9zd2FwID0gZmFsc2U7Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGJyZWFr
-Owo+Pj4+ICsgICAgICAgICAgICAgfQo+Cj4gVGhpcyBpcyBiaW4gZm9ybWF0Cj4KPj4+PiArICAg
-ICAgICAgICAgIGlmIChtZW1jbXAoa2J1ZiArIGksICJceEFBXHg5OVx4NTVceDY2IiwgNCkgPT0g
-MCkgewo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBkZXZfZGJnKHByaXYtPmRldiwgIkZvdW5k
-IHN3YXBwZWQgc3luYyB3b3JkXG4iKTsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgZW5kaWFu
-X3N3YXAgPSB0cnVlOwo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBicmVhazsKPj4+PiArICAg
-ICAgICAgICAgIH0KPgo+IFRoaXMgaXMgYml0IGZvcm1hdCBmcm9tIGhlYWRlcgo+Cj4+Pj4gKyAg
-ICAgfQo+Pj4KPj4+IEhvdyBtdWNoIGNvbnRyb2wgZG8gd2UgaGF2ZSBvdmVyIG1hbmRhdGluZyB0
-aGUgZm9ybWF0IG9mIGZpcm13YXJlIGF0Cj4+PiB0aGlzIHBvaW50PyAgSXQnZCBiZSBzd2VsbCBp
-ZiB3ZSBjb3VsZCBqdXN0IG1hbmRhdGUgYSBzcGVjaWZpYwo+Pj4gZW5kaWFubmVzcywgYW5kIGxl
-YXZlIHRoaXMgbXVuZ2luZyB0byB1c2VybW9kZS4KPj4KPj4gVGhhdCdzIGEgZ29vZCBxdWVzdGlv
-bi4gUGVyc29uYWxseSBJIGRvIG9ubHkgY2FyZSBhYm91dCBvbmUgb2YgYm90aCwKPj4gYnV0IHRo
-YXQncyBqdXN0IGJlY2F1c2UgSSBnZXQgdG8gZGVjaWRlIGZvciBteSB0YXJnZXRzLi4uCj4+IE9w
-aW5pb25zIGZyb20gdGhlIFhpbGlueCBndXlzPwo+Cj4gRG9uJ3Qga25vdyBmdWxsIGhpc3Rvcnkg
-YWJvdXQgdGhpcyBidXQgaW4gcGFzdCBiaXRzdHJlYW0gaW4gQklUIGZvcm1hdAo+IHdhcyB1c2Vk
-LiBXaGljaCBpcyBoZWFkZXIgKHBhcnRpYWxseSBkZWNvZGluZyBpbiB1LWJvb3QgZm9yIGV4YW1w
-bGUpCj4gd2l0aCBkYXRhLgo+IE9uIHp5bnEgbmF0aXZlIGZvcm1hdCBpcyBCSU4gd2hpY2ggaXMg
-Zm9ybWF0IHdpdGhvdXQgaGVhZGVyIGFuZCBkYXRhIGlzCj4gc3dhcHBlZC4KPiBUaGlzIGNvZGUg
-anVzdCBkZXRlY3RzIHdoaWNoIGZvcm1hdCBpcyB1c2VkLiBJZiBCSVQsIGhlYWRlciBpcyBza2lw
-cGVkCj4gYW5kIGRhdGEgaXMgc3dhcHBlZCB0byBCSU4gZm9ybWF0Lgo+Cj4gQmFjayB0byBvcmln
-aW4gcXVlc3Rpb24gaWYgdGhpcyBpcyBzb21ldGhpbmcgd2hhdCBjYW4gYmUgaGFuZGxlZCBmcm9t
-Cj4gdXNlciBzcGFjZS4gQW5kIGFuc3dlciBpcyAtIHllcyBpdCBjYW4gYmUgaGFuZGxlZCB0aGVy
-ZS4KPiBCdXQgYmFzZWQgb24gbXkgZXhwZXJpZW5jZSBpdCBpcyB2ZXJ5IHVzZWZ1bCB0byBiZSBh
-YmxlIHRvIGhhbmRsZSBCSVQKPiBiZWNhdXNlIGl0IGlzIGJ1aWx0IGJ5IHRvb2xzIGJ5IGRlZmF1
-bHQuCj4gQWxzbyB3aXRoIEJJTiBmb3JtYXQgeW91IGFyZSBsb29zaW5nIHJlY29yZCB3aGF0IHRo
-aXMgZGF0YSBiaXRzdHJlYW0KPiB0YXJnZXRzLiBIZWFkZXIgaW4gQklUIGdpdmVzIHlvdSBhdCBs
-ZWFzdCBzb21lIGlkZWFzLgoKUGVvcGxlIHNob3VsZCBzdG9wIHVzaW5nICJjYXQiIHRvIHByb2dy
-YW0gdGhlIEZQR0EgYW5kIHVzZSBhIHVzZXJzcGFjZSB0b29sIAppbnN0ZWFkLiBJJ3ZlIGFscmVh
-ZHkgcmVsZWFzZWQgc3VjaCB0b29scyB1bmRlciBHUEwsIHNvIGFueW9uZSBjYW4gcGljayB1cCBv
-biAKaXQgYW5kIGV4dGVuZCBpdCBhcyByZXF1aXJlZC4KClRoZSBoZWFkZXIgZm9yIHRoZSAiYml0
-IiBmb3JtYXQgaXMgY29tcGxldGVseSBpZ25vcmVkICh5b3UgY2FuJ3QgZXZlbiB1c2UgaXQgCnRv
-IGRldGVybWluZSBpZiB0aGUgYml0c3RyZWFtIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgY3VycmVu
-dCBkZXZpY2UpIHNvIAp0aGVyZSdzIG5vIHBvaW50IGluIGNhcnJ5aW5nIGl0IGFyb3VuZC4gT24g
-dGhlIHp5bnEsIGRvaW5nIHRoZSAic3dhcCIgaW4gCnVzZXJzcGFjZSB3YXMgbWVhc3VyYWJseSBm
-YXN0ZXIgdGhhbiBoYXZpbmcgdGhlIGRyaXZlciBoYW5kbGUgaXQsIGFuZCB0aGF0IHdhcyAKZXZl
-biB3aXRob3V0IHVzaW5nIE5FT04gaW5zdHJ1Y3Rpb25zIGZvciBieXRlIHN3YXBwaW5nLgoKSSBh
-ZG1pdCB0aGF0IGJlaW5nIGFibGUgdG8gZG8gImNhdCBzdGF0aWMuYml0ID4gL2Rldi94ZGV2Y2Zn
-IiBoYXMgaGFkIGl0cyAKdXNlcy4gQnV0IGl0J3Mgbm90IHNvbWV0aGluZyB0aGF0IGJlbG9uZ3Mg
-aW4gbWFpbmxpbmUgTGludXguCgpQcm9iYWJseSBvbmUgb2YgdGhlIGtleSByZWFzb25zIHRoYXQg
-dGhlICJiaXQiIGZvcm1hdCBpcyBzdGlsbCBwb3B1bGFyIGlzIHRoYXQgCmdldHRpbmcgdGhlIFZp
-dmFkbyB0b29scyB0byBjcmVhdGUgYSBwcm9wZXIgImJpbiIgdGhhdCB3aWxsIGFjdHVhbGx5IHdv
-cmsgb24gCnRoZSBaeW5xIGlzIGFib3V0IGFzIGVhc3kgYXMgbmFpbGluZyBqZWxseSB0byBhIHRy
-ZWUuIFdlJ3ZlIGJlZW4gdXNpbmcgYSAKc2ltcGxlIFB5dGhvbiBzY3JpcHQgdG8gZG8gdGhlIGJp
-dC0+YmluIGNvbnZlcnNpb24gZm9yIHRoYXQgcmVhc29uLgoKVXNpbmcgdGhlICJiaW4iIGZvcm1h
-dCBpbiB0aGUgZHJpdmVyIGtlZXBzIGl0IHNpbXBsZSBhbmQgc2luZ3VsYXIuIFVzZXJzcGFjZSAK
-dG9vbHMgY2FuIGFkZCB3aGF0ZXZlciB3cmFwcGVycyBhbmQgaGVhZGVycyB0aGV5IGZlZWwgYXBw
-cm9wcmlhdGUgdG8gaXQsIHRoZXNlIApjaGVja3MgZG9uJ3QgYmVsb25nIGluIHRoZSBkcml2ZXIg
-c2luY2UgdGhleSB3aWxsIGJlIGFwcGxpY2F0aW9uIHNwZWNpZmljLiBGb3IgCmV4YW1wbGUsIHNv
-bWUgdXNlcnMgd291bGQgd2FudCB0byB2ZXJpZnkgdGhhdCBhIHBhcnRpYWwgYml0c3RyZWFtIGFj
-dHVhbGx5IAptYXRjaGVzIHRoZSBzdGF0aWMgcGFydCB0aGF0J3MgY3VycmVudGx5IGluIHRoZSBG
-UEdBLgoKTWlrZS4KCgpLaW5kIHJlZ2FyZHMsCgpNaWtlIExvb2lqbWFucwpTeXN0ZW0gRXhwZXJ0
-CgpUT1BJQyBFbWJlZGRlZCBQcm9kdWN0cwpFaW5kaG92ZW5zZXdlZyAzMi1DLCBOTC01NjgzIEtI
-IEJlc3QKUG9zdGJ1cyA0NDAsIE5MLTU2ODAgQUsgQmVzdApUZWxlZm9vbjogKzMxICgwKSA0OTkg
-MzMgNjkgNzkKVGVsZWZheDogKzMxICgwKSA0OTkgMzMgNjkgNzAKRS1tYWlsOiBtaWtlLmxvb2lq
-bWFuc0B0b3BpY3Byb2R1Y3RzLmNvbQpXZWJzaXRlOiB3d3cudG9waWNwcm9kdWN0cy5jb20KClBs
-ZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5nIHRoaXMgZS1tYWls
-CgoKCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+Hi Sylwester,
+
+On 10/12/2015 02:48 PM, Sylwester Nawrocki wrote:
+> On 12/10/15 08:47, Krzysztof Kozlowski wrote:
+>>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> index 8f4d76c..525a93a 100644
+>>>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> @@ -1056,5 +1056,10 @@
+>>>>   	timeout-sec = <32>;
+>>>>   };
+>>>>
+>>>> +&pmu_system_controller {
+>>
+>> Please put the node in alphabetical order.
+>>
+>>>> +	assigned-clocks = <&pmu_system_controller 0>;
+>>>> +	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
+>>
+>> I might be missing something here but isn't the first clock of
+>> pmu_system_controller already a CLK_FIN_PLL? So you are reparenting the
+>> FIN_PLL to FIN_PLL?
+>
+> No, it's not, the first PMU consumer clock is indeed CLK_FIN_PLL,
+> but pmu_system_controller is also a clock provider.  The first output
+> clock of pmu_system_controller is CLKOUT, it's a composite mux and
+> gate clock (registered in drivers/clk/samsung /clk-exynos-clkout.c).
+> So  the above dts change is selecting an external oscillator input of
+> the CLKOUT mux, i.e. it will route 24 MHz clock signal from the external
+> oscillator to the CLKOUT output pin, to which audio CODEC is connected
+> on peach-pit AFAICS.
+>
+Thanks for your explanation, indeed master clock of codec is
+connected to XCLKOUT on peach boards.
+Will send v2 addressing Kezysztof's other comments.
+
+Regards,
+Alim
