@@ -1,33 +1,24 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] scsi: hisi_sas: hisi_sas_do_release_task() can be static
-Date: Tue, 13 Oct 2015 06:49:58 +0800
-Message-ID: <20151012224958.GA216198@lkp-ib04.intel.com>
-References: <201510130647.HK3md76n%fengguang.wu@intel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Use defined GPIO constants in flags cell for
+ OMAP2+ boards
+Date: Mon, 12 Oct 2015 15:52:55 -0700
+Message-ID: <20151012225255.GL23801@atomide.com>
+References: <1444122219-30419-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444663237-238302-19-git-send-email-john.garry@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-Cc: kbuild-all@01.org, James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de, John Garry <john.garry@huawei.com>
+In-Reply-To: <1444122219-30419-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+* Javier Martinez Canillas <javier@osg.samsung.com> [151006 02:08]:
+> Many OMAP2+ DTS are not using the defined constants to express
+> the GPIO polarity. Replace these so the DTS are easier to read.
 
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
----
- hisi_sas_main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 36ef8cd..38f581f 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -514,7 +514,7 @@ void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy, int lock)
- 		spin_unlock_irqrestore(&hisi_hba->lock, flags);
- }
- 
--void hisi_sas_do_release_task(struct hisi_hba *hisi_hba,
-+static void hisi_sas_do_release_task(struct hisi_hba *hisi_hba,
- 		int phy_no, struct domain_device *device)
- {
- 	struct hisi_sas_phy *phy;
+Applying this into omap-for-v4.4/dt thanks.
+
+Tony
