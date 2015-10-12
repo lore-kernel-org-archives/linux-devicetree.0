@@ -1,73 +1,93 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Mon, 12 Oct 2015 19:25:42 +0900
-Message-ID: <561B8AA6.50503@samsung.com>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151007100017.GB12635@sirena.org.uk> <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox> <561B8896.7040409@samsung.com>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v2 12/13] powerpc: enable building of all dtbs
+Date: Mon, 12 Oct 2015 21:26:21 +1100
+Message-ID: <1444645581.31951.2.camel@ellerman.id.au>
+References: <1444326827-3565-1-git-send-email-robh@kernel.org>
+	 <1444326827-3565-13-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <561B8896.7040409@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444326827-3565-13-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 19:16, Chanwoo Choi wrote:
-> Hi Charles,
->=20
-> On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 17:45, Charles Keepax wrote:
->> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
->>> On Wed, 07 Oct 2015, Mark Brown wrote:
->>>
->>>> On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
->>>>> Add additional bindings to allow configuration of the system spec=
-ific
->>>>> microphone detection settings.
->>>>
->>>> This all seems pretty much fine to me - the things it is controlli=
-ng are
->>>> fairly specific to the way the former Wolfson devices do, they onl=
-y
->>>> really make sense with a fairly particular algorithm which isn't w=
-idely
->>>> implemented.
->>>
->>> Is that an Ack?
->>
->> I am guessing Mark is slightly hesitant to ack as he probably
->> doesn't want to add reviewing all our jack detection bindings to
->> his already fairly sizable work load and doing so here likely
->> means it will be expected in the future. From talking to people at
->> LinuxCon it looks like it is pretty unlikely the DT maintainers
->> will be acking individual bindings as well, basically they are
->> only really looking at major/framework things and leaving the
->> rest to subsystem maintainers.
->>
->> Given that these patches only touch MFD/Extcon and extcon
->> is a subsystem designed to handle things like jack detection
->> isn't it really sufficient that you and Chanwoo have looked this
->> and are happy with it? Otherwise I really don't see anyway to
->> move this forward and would appreciate any suggestions?
->=20
-> I'm positive about your patches. After receiving the ack from MFD mai=
-ntainer
-> I want to apply this patch-set on extcon git repository.
->=20
-> Also, I reviewed this patch on previous patch[1].
-> [1]https://lkml.org/lkml/2015/9/11/81
+On Thu, 2015-10-08 at 12:53 -0500, Rob Herring wrote:
+> Enable building all dtb files when CONFIG_OF_ALL_DTBS is enabled. The dtbs
+> are not really dependent on a platform being enabled or any other kernel
+> config, so for testing coverage it is convenient to build all of the dtbs.
+> This builds all dts files in the tree, not just targets listed.
+> 
+> Supporting this requires adding 'dtbs' make target which was not yet
+> supported on powerpc.
 
-As you said, this patch touch MFD and EXTCON subsystem.
-If you get the Ack or agreement from MFD maintainer,
-I'm willing to apply it on extcon git.
+I'm not entirely clear why we want this? It just means we can test build all
+the dts regardless of what kernel config we are building?
 
-Also, If this patch dont receive the additional ack message
-unitl the end of this week, I'll merge patch1-3 on extcon-next branch
-for Linux 4.4.
+Have you tested the powerpc build with this applied or do you want me to?
 
-Thanks,
-Chanwoo Choi
+> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+> index b9b4af2..0ec35ff 100644
+> --- a/arch/powerpc/Makefile
+> +++ b/arch/powerpc/Makefile
+> @@ -273,6 +273,11 @@ bootwrapper_install:
+>  %.dtb: scripts
+>  	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
+>  
+> +PHONY += dtbs
+> +
+> +dtbs: prepare scripts
+> +	$(Q)$(MAKE) ARCH=ppc64 $(build)=$(boot)/dts
+
+The ARCH should be powerpc, I guess you just copied the one above.
+
+> diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+> index 4eec430..381df1a 100644
+> --- a/arch/powerpc/boot/Makefile
+> +++ b/arch/powerpc/boot/Makefile
+> @@ -402,7 +402,7 @@ zInstall: $(CONFIGURE) $(addprefix $(obj)/, $(image-y))
+>  clean-files += $(image-) $(initrd-) cuImage.* dtbImage.* treeImage.* \
+>  	zImage zImage.initrd zImage.chrp zImage.coff zImage.holly \
+>  	zImage.miboot zImage.pmac zImage.pseries \
+> -	zImage.maple simpleImage.* otheros.bld *.dtb
+> +	zImage.maple simpleImage.* otheros.bld
+
+This looks like we used to clean *.dtb in the current dir but now we don't? But
+I'm probably just not understanding how clean-files works.
+
+> @@ -410,6 +410,9 @@ clean-kernel += $(addsuffix .gz,$(clean-kernel))
+>  # If not absolute clean-files are relative to $(obj).
+>  clean-files += $(addprefix $(objtree)/, $(clean-kernel))
+>  
+> +# Let clean descend into subdirs
+> +subdir- := dts
+> +
+>  WRAPPER_OBJDIR := /usr/lib/kernel-wrapper
+>  WRAPPER_DTSDIR := /usr/lib/kernel-wrapper/dts
+>  WRAPPER_BINDIR := /usr/sbin
+> diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
+> new file mode 100644
+> index 0000000..f121775
+> --- /dev/null
+> +++ b/arch/powerpc/boot/dts/Makefile
+> @@ -0,0 +1,5 @@
+> +dtstree		:= $(srctree)/$(src)
+> +dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
+> +
+> +always		:= $(dtb-y)
+
+How/is that different from just doing the more normal:
+
+obj-$(CONFIG_OF_ALL_DTBS) := ...
+
+?
+
+cheers
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
