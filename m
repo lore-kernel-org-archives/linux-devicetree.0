@@ -1,36 +1,29 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH 0/2] gpiolib: Improve open-drain and open-source GPIO support
-Date: Tue, 13 Oct 2015 00:20:19 +0300
-Message-ID: <1444684821-17389-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 2/5] mtd: nand: Allow MTD_NAND_BRCMNAND to be selected
+ for ARM64
+Date: Mon, 12 Oct 2015 14:20:38 -0700
+Message-ID: <20151012212038.GP107187@google.com>
+References: <1443808606-21203-1-git-send-email-anup.patel@broadcom.com>
+ <1443808606-21203-3-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1443808606-21203-3-git-send-email-anup.patel@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Woodhouse <dwmw2@infradead.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Oct 02, 2015 at 11:26:43PM +0530, Anup Patel wrote:
+> The BRCM NAND driver can be re-used for Broadcom ARM64 SoCs hence
+> this patch updates Kconfig to allow selection of MTD_NAND_BRCMNAND
+> for ARM64.
+> 
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Pramod KUMAR <pramodku@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 
-These two patches try to improve open-drain and open-source (collectively
-referred to as single-ended) GPIO support in the gpiolib core.
-
-The first patch splits GPIO flag parsing and GPIO configuration into two
-operation to allow gpiochip drivers to reject GPIO requests with flags that
-don't match the device capabilities.
-
-The second patch builds on top of "[PATCH v2] gpio: add DT bindings for
-existing consumer flags" (http://marc.info/?l=linux-gpio&m=144378527414721&w=2)
-to enable usage of the single-ended flag.
-
-Laurent Pinchart (2):
-  gpiolib: Split GPIO flags parsing and GPIO configuration
-  gpiolib: Add and use OF_GPIO_SINGLE_ENDED flag
-
- drivers/gpio/gpiolib-legacy.c |  8 ++---
- drivers/gpio/gpiolib.c        | 70 ++++++++++++++++++++++++++++++++-----------
- include/linux/of_gpio.h       |  1 +
- 3 files changed, 58 insertions(+), 21 deletions(-)
-
--- 
-Regards,
-
-Laurent Pinchart
+Pushed to l2-mtd.git
