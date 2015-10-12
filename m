@@ -1,59 +1,33 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] dt-bindings: simplefb: Support a list of
- regulator supply properties
-Date: Mon, 12 Oct 2015 18:10:18 +0100
-Message-ID: <20151012171018.GB3659@leverpostej>
-References: <1444669458-5588-1-git-send-email-wens@csie.org>
- <1444669458-5588-2-git-send-email-wens@csie.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] scsi: hisi_sas: hisi_sas_ioremap() can be static
+Date: Tue, 13 Oct 2015 01:18:20 +0800
+Message-ID: <20151012171820.GA185915@lkp-ib04.intel.com>
+References: <201510130106.fyp9Dh3e%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444669458-5588-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1444663237-238302-8-git-send-email-john.garry@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+Cc: kbuild-all@01.org, James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 01:04:17AM +0800, Chen-Yu Tsai wrote:
-> The physical display tied to the framebuffer may have regulators
-> providing power to it, such as power for LCDs or interface conversion
-> chips.
-> 
-> The number of regulators in use may vary, but the regulator supply
-> binding can not be a list. Work around this by adding a "num-supplies"
-> property to communicate the number of supplies, and a list of 0 ~ N
-> "vinN-supply" properties for the actual regulator supply.
 
-This is getting more complicated by the minute...
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+ hisi_sas_init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/simple-framebuffer.txt       | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> index 4474ef6e0b95..0cc43e1be8b5 100644
-> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> @@ -47,10 +47,14 @@ Required properties:
->    - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
->  
->  Optional properties:
-> -- clocks : List of clocks used by the framebuffer. Clocks listed here
-> -           are expected to already be configured correctly. The OS must
-> -           ensure these clocks are not modified or disabled while the
-> -           simple framebuffer remains active.
-> +- clocks : List of clocks used by the framebuffer.
-> +- num-supplies : The number of regulators used by the framebuffer.
-> +- vinN-supply : The N-th (from 0) regulator used by the framebuffer.
-
-I don't see why you need num-supplies. Why not just try probing
-vin${N}-supply until such a property isn't present in the DT?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/hisi_sas/hisi_sas_init.c
+index 8f1e856..066c339 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_init.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+@@ -195,7 +195,7 @@ static void hisi_sas_free(struct hisi_hba *hisi_hba)
+ 				  hisi_hba->sata_breakpoint_dma);
+ }
+ 
+-int hisi_sas_ioremap(struct hisi_hba *hisi_hba)
++static int hisi_sas_ioremap(struct hisi_hba *hisi_hba)
+ {
+ 	struct platform_device *pdev = hisi_hba->pdev;
+ 	struct device *dev = &pdev->dev;
