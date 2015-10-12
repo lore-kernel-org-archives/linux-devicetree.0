@@ -1,70 +1,50 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v3] video: fbdev: add Marvell PXA LCD controller binding
-Date: Mon, 12 Oct 2015 13:30:23 +0200
-Message-ID: <1444649423-25369-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/POC v3 3/3] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+Date: Mon, 12 Oct 2015 13:37:43 +0200
+Message-ID: <1444649863-17796-4-git-send-email-geert+renesas@glider.be>
+References: <1444649863-17796-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444649863-17796-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the PXA LCD controller devicetree binding.
+Add the R-Car H3 CPG Core Clocks that are currently needed by the DTS.
+More will be added when needed.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Since v1: Philipp's review on the whole binding
-Since v2: moved to display/, Philipp's and Rob's review
-      	  dropped panel description, should be a simple panel with a
-	  lcd-type optional node that could be added to simple-panel.
----
- .../bindings/display/marvell,pxa2xx-lcdc.txt       | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt
+This is a Proof-of-Concept. Final definitions and values may be
+different.
 
-diff --git a/Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt b/Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt
+ include/dt-bindings/clock/r8a7795-cpg-mssr.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
+
+diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
 new file mode 100644
-index 000000000000..309c47f25b87
+index 0000000000000000..c277eb2f48df22ec
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/marvell,pxa2xx-lcdc.txt
-@@ -0,0 +1,34 @@
-+PXA LCD Controller
-+------------------
++++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+@@ -0,0 +1,17 @@
++/*
++ * Copyright (C) 2015 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
 +
-+Required properties:
-+ - compatible : one of these
-+	"marvell,pxa2xx-lcdc",
-+	"marvell,pxa270-lcdc",
-+	"marvell,pxa300-lcdc"
-+ - reg : should contain 1 register range (address and length).
-+ - interrupts : framebuffer controller interrupt.
-+ - clocks: phandle to input clocks
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
 +
-+Required nodes:
-+ - port: connection to the LCD panel (see video-interfaces.txt)
-+	 This node must have its properties bus-width and remote-endpoint set.
-+	 If the panel is not a TFT color panel, then a "lcd-type" property in
-+	 the panel should specify the panel type.
-+	 This panel node should be in the board dts.
++/* r8a7795 CPG Core Clocks */
++#define R8A7795_CLK_S0D4		0
 +
-+Example:
-+	lcd-controller@40500000 {
-+		compatible = "marvell,pxa2xx-lcdc";
-+		reg = <0x44000000 0x10000>;
-+		interrupts = <17>;
-+		clocks = <&clks CLK_LCD>;
-+		status = "okay";
-+
-+		port {
-+			lcdc_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+				bus-width = <16>;
-+			};
-+		};
-+	};
++#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
 -- 
-2.1.4
+1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
