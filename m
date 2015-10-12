@@ -1,53 +1,72 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] mfd: arizona: Update DT binding document for
- jack detection invert
-Date: Mon, 12 Oct 2015 09:15:26 +0100
-Message-ID: <20151012081526.GA8805@ck-lbox>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1443803363-3251-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151005100105.GJ3243@x1>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] PCI: Add quirk for PLDA's XpressRICH3 host bridge
+ class.
+Date: Mon, 12 Oct 2015 09:57:35 +0100
+Message-ID: <20151012085735.GJ3394@e106497-lin.cambridge.arm.com>
+References: <1444409849-5685-1-git-send-email-Liviu.Dudau@arm.com>
+ <1444409849-5685-3-git-send-email-Liviu.Dudau@arm.com>
+ <7335872.olmykfZgj7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151005100105.GJ3243@x1>
+In-Reply-To: <7335872.olmykfZgj7@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, device-tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 05, 2015 at 11:01:05AM +0100, Lee Jones wrote:
-> On Fri, 02 Oct 2015, Charles Keepax wrote:
-> 
-> > Add additional binding for inverting the polarity of the detection on
-> > the jack detection pins.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/arizona.txt |    2 ++
-> >  1 files changed, 2 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > index b98a11b..ef59696 100644
-> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > @@ -73,6 +73,8 @@ Optional properties:
-> >      If this node is not mentioned or if the value is unknown, then
-> >      headphone detection mode is set to HPDETL.
-> >  
-> > +  - wlf,jd-invert : Invert the polarity of the jack detection switch
-> > +
-> 
-> There are other jack detection properties in the bindings docs.
-> 
-> Please generify.
+On Fri, Oct 09, 2015 at 08:32:07PM +0200, Arnd Bergmann wrote:
+> On Friday 09 October 2015 17:57:26 Liviu Dudau wrote:
+> > +/*
+> > + * The PLDA's XpressRICH3 doesn't describe itself as a bridge. Thi=
+s is required
+> > + * for correct/normal enumeration.
+> > + */
+> > +static void xr3pci_quirk_class(struct pci_dev *pdev)
+> > +{
+> > +       pdev->class =3D PCI_CLASS_BRIDGE_PCI << 8;
+> > +}
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PLDA, PCI_DEVICE_ID_XR3PCI, =
+xr3pci_quirk_class);
+> >=20
+>=20
+> Are you sure that this device ID is only used for the host bridge, no=
+t
+> for related devices in endpoint mode?
 
-Apologies but not sure I follow what you want me to do here? Do
-you just want me to drop the wlf, prefix on this one?
+I would hope so. The device ID has been assigned to ARM's implementatio=
+n by PLDA,
+it would be logical not to be reused for anyone else's.
 
-Thanks,
-Charles
+>=20
+> While we don't support PCIe endpoint drivers at the moment, it might
+> happen at some point and then things break when someone tries to
+> plug a machine with this ID into a Linux host.
+
+I'm asking for confirmation inside ARM that the IDs are uniquely alloca=
+ted to Juno
+and will come back when I'll get confirmation.
+
+Best regards,
+Liviu
+
+>=20
+> 	Arnd
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
