@@ -1,47 +1,37 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 22/25] scsi: hisi_sas: add tmf methods
-Date: Tue, 13 Oct 2015 07:02:47 +0800
-Message-ID: <201510130626.V3reAw1w%fengguang.wu@intel.com>
-References: <1444663237-238302-23-git-send-email-john.garry@huawei.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] Fix mmc/sd card detect gpio dt definition
+Date: Mon, 12 Oct 2015 16:48:31 -0700
+Message-ID: <20151012234831.GT23801@atomide.com>
+References: <1444640832-7396-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444663237-238302-23-git-send-email-john.garry@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-Cc: kbuild-all@01.org, James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de, John Garry <john.garry@huawei.com>
+In-Reply-To: <1444640832-7396-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+* Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> [151012 02:12]:
+> The mmc/sd card detect gpio definition in DT is not defined as
+> per hardware design, the card detect gpio is an active low
+> signal.
+> 
+> As per MMC/SD device tree binding documentation, the card detect
+> signal should be an active low signal and when ever a hardware is
+> designed with an active high card detect gpio then "cd-inverted"
+> dt parameter should be used to detect the actual status for the
+> card.
+> 
+> This was not captured till now because gpio is used as interrupt
+> source and mmc_rescan task is scheduled. The value of the gpio
+> is not used to determine card presence.
 
-[auto build test WARNING on scsi/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+OK applying into omap-for-v4.4/dt thanks.
 
-url:    https://github.com/0day-ci/linux/commits/John-Garry/HiSilicon-SAS-driver/20151012-231929
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
-   drivers/scsi/hisi_sas/hisi_sas_main.c:341:6: sparse: symbol 'hisi_sas_bytes_dmaed' was not declared. Should it be static?
-   drivers/scsi/hisi_sas/hisi_sas_main.c:378:24: sparse: symbol 'hisi_sas_alloc_dev' was not declared. Should it be static?
-   drivers/scsi/hisi_sas/hisi_sas_main.c:396:5: sparse: symbol 'hisi_sas_dev_found_notify' was not declared. Should it be static?
-   drivers/scsi/hisi_sas/hisi_sas_main.c:523:6: sparse: symbol 'hisi_sas_port_notify_formed' was not declared. Should it be static?
-   drivers/scsi/hisi_sas/hisi_sas_main.c:561:6: sparse: symbol 'hisi_sas_do_release_task' was not declared. Should it be static?
->> drivers/scsi/hisi_sas/hisi_sas_main.c:615:5: sparse: symbol 'hisi_sas_find_dev_phyno' was not declared. Should it be static?
->> drivers/scsi/hisi_sas/hisi_sas_main.c:852:52: sparse: incorrect type in assignment (different base types)
-   drivers/scsi/hisi_sas/hisi_sas_main.c:852:52:    expected unsigned short [unsigned] [assigned] [usertype] tag_of_task_to_be_managed
-   drivers/scsi/hisi_sas/hisi_sas_main.c:852:52:    got restricted __le16 [usertype] <noident>
-   drivers/scsi/hisi_sas/hisi_sas_main.c:1000:52: sparse: incorrect type in assignment (different base types)
-   drivers/scsi/hisi_sas/hisi_sas_main.c:1000:52:    expected unsigned short [unsigned] [assigned] [usertype] tag_of_task_to_be_managed
-   drivers/scsi/hisi_sas/hisi_sas_main.c:1000:52:    got restricted __le16 [usertype] <noident>
-   drivers/scsi/hisi_sas/hisi_sas_main.c:448:9: sparse: context imbalance in 'hisi_sas_dev_found_notify' - different lock contexts for basic block
-   drivers/scsi/hisi_sas/hisi_sas_main.c:523:6: sparse: context imbalance in 'hisi_sas_port_notify_formed' - different lock contexts for basic block
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
