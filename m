@@ -1,66 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: pmic: Document Hi655x pmic driver
-Date: Mon, 12 Oct 2015 17:49:31 +0100
-Message-ID: <20151012164931.GK4238@sirena.org.uk>
-References: <1443611111-3196-1-git-send-email-w.f@huawei.com>
- <1443611111-3196-2-git-send-email-w.f@huawei.com>
- <20150930173921.GJ15635@sirena.org.uk>
- <56160E22.3010703@huawei.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nrM5Z5VIJgwP9LWp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56160E22.3010703@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wangfei <w.f@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, khilman@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, bintian.wang@huawei.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, guodong.xu@linaro.org, jorge.ramirez-ortiz@linaro.org, puck.chen@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, william.wfei@gmail.com, zhongkaihua@huawei.com
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH RFC 0/2] simplefb: Add regulator handling support
+Date: Tue, 13 Oct 2015 01:04:16 +0800
+Message-ID: <1444669458-5588-1-git-send-email-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi everyone,
 
---nrM5Z5VIJgwP9LWp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This series adds regulator claiming and enabling support for simplefb.
 
-On Thu, Oct 08, 2015 at 02:33:06PM +0800, wangfei wrote:
-> On 2015/10/1 1:39, Mark Brown wrote:
-> > On Wed, Sep 30, 2015 at 07:05:04PM +0800, Fei Wang wrote:
+Sometimes the simplefb display output path consits of external conversion
+chips and/or LCD drivers and backlights. These devices normally have
+GPIOs to turn them on and/or bring them out of reset, and regulators
+supplying power to them.
 
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
+While the kernel does not touch unclaimed GPIOs, the regulator core
+happily disables unused regulators. Thus we need simplefb to claim
+and enable the regulators used throughout the display pipeline.
 
-> >> +                coul: coul@1 {
-> >> +                        compatible = "hisilicon,hi655x-coul";
-> >> +                        interrupt-parent = <&pmic>;
-> >> +                        interrupts = <24 0>, <25 0>, <26 0>, <27 0>;
-> >> +                        interrupt-names = "cl_int_i", "cl_out_i", "cl_in_i", "vbat_int_i";
-> >> +                        battery_product_index = <0>;
+Now the DT bindings don't support a list of regulators directly, so
+I'm working around it by having a "num-supplies" property to specify
+the number of supply properties to check, and name the actual supplies
+as "vinN-supply".
 
-> > For example, the "battery_product_index" property here is undocumented.
+Hans, Maxime, AXP223 support for the A23/A33 Q8 tablets will need this
+to keep the LCD on. The Primo81 needs this as well.
 
-> now on hikey, we only enable hi655x-regulator-pmic function, and
-> regulator is child node of pmic.do i need to document regulator
-> dt-binding in this file or create a new regulator dt-binding file?
 
-Either is possible, though it is common to split the DT documentation
-into per subsystem files for ease of reference and to avoid cross tree
-merge issues.
+Patch 1 adds the regulator properties to the DT binding.
 
---nrM5Z5VIJgwP9LWp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Patch 2 adds code to the simplefb driver to claim and enable regulators.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWG+SaAAoJECTWi3JdVIfQXFQH/0xssC7qGw4v0YJQ16pzEFru
-dImgv/02ZSaYQvfjlKsWUsMXYtzCOsYSSkaf9g1OF4HOdigOQo/3nobUDd9JKk+x
-5gmn5jgdjLCjbYLpysAuMXY132rM2UPglQuYL7ayGESJmobmp04HwhvLGXfJcbav
-2H7KB/7QP9rHwH/80AmvnKV1MtuyB0Xtjbna3eA57k5tnRW7GDMkeI/CXOoz8vyZ
-qcswrOogK5kshXLQUe8gIx78Q0kjiGIFmWiYU31eyuJIZeMMU0YdiGVq6JLTvj+8
-pKNbC91GlAgLO/cpwX0Ht7QRxlHV7Jo+6ulNiJ6Hqt0LTCJbtYzY2iHvsHTK32k=
-=tBvg
------END PGP SIGNATURE-----
+Regards
+ChenYu
 
---nrM5Z5VIJgwP9LWp--
+
+Chen-Yu Tsai (2):
+  dt-bindings: simplefb: Support a list of regulator supply properties
+  simplefb: Claim and enable regulators
+
+ .../bindings/video/simple-framebuffer.txt          |  14 ++-
+ drivers/video/fbdev/simplefb.c                     | 102 ++++++++++++++++++++-
+ 2 files changed, 111 insertions(+), 5 deletions(-)
+
+-- 
+2.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
