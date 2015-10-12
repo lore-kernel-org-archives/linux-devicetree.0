@@ -1,104 +1,143 @@
-From: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: Fix audio card detection on peach boards
-Date: Mon, 12 Oct 2015 17:48:20 +0530
-Message-ID: <561BA50C.6020602@samsung.com>
-References: <1444631169-19468-1-git-send-email-alim.akhtar@samsung.com>
- <561B578E.1050308@samsung.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
+ Zynq 7000
+Date: Mon, 12 Oct 2015 14:38:31 +0200
+Message-ID: <561BA9C7.6070003@xilinx.com>
+References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
+ <1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
+ <20151009163336.GM10631@jcartwri.amer.corp.natinst.com>
+ <CAAtXAHea7GZDLez5kYas2PFQ-=KmS_on8WxFDCuvVb4Nh05a_w@mail.gmail.com>
+ <561B9687.1070103@xilinx.com> <561BA60C.6010106@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <561B578E.1050308-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <561BA60C.6010106-Oq418RWZeHk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Kezysztof
-Thanks for your review.
+Hi Mike,
 
-On 10/12/2015 12:17 PM, Krzysztof Kozlowski wrote:
-> On 12.10.2015 15:26, Alim Akhtar wrote:
->> Since the merge of 2fad972 ("ARM: dts: Add mclk entry for Peach boards"),
->
-> Please switch to longer SHA abbreviation:
-> $ git config core.abbrev 12
->
-ok, will do thanks
->> sound card detection is broken on peach boards and gives below errors:
+On 10/12/2015 02:22 PM, Mike Looijmans wrote:
+> On 12-10-15 13:16, Michal Simek wrote:
 >>
->> [    3.630457] max98090 7-0010: MAX98091 REVID=0x51
->> [    3.634233] max98090 7-0010: use default 2.8v micbias
->> [    3.640985] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
->> [    3.645307] max98090 7-0010: Invalid master clock frequency
->> [    3.650824] snow-audio sound: ASoC: Peach-Pi-I2S-MAX98091 late_probe() failed: -22
->> [    3.658914] snow-audio sound: snd_soc_register_card failed (-22)
->> [    3.664366] snow-audio: probe of sound failed with error -22
+>>>>> +static int zynq_fpga_ops_write(struct fpga_manager *mgr,
+>>>>> +                            const char *buf, size_t count)
+>>>>> +{
+>>>>> +     struct zynq_fpga_priv *priv;
+>>>>> +     int err;
+>>>>> +     char *kbuf;
+>>>>> +     size_t i, in_count;
+>>>>> +     dma_addr_t dma_addr;
+>>>>> +     u32 transfer_length = 0;
+>>>>> +     bool endian_swap = false;
+>>>>> +
+>>>>> +     in_count = count;
+>>>>> +     priv = mgr->priv;
+>>>>> +
+>>>>> +     kbuf = dma_alloc_coherent(priv->dev, count, &dma_addr,
+>>>>> GFP_KERNEL);
+>>>>> +     if (!kbuf)
+>>>>> +             return -ENOMEM;
+>>>>> +
+>>>>> +     memcpy(kbuf, buf, count);
+>>>>> +
+>>>>> +     /* look for the sync word */
+>>>>> +     for (i = 0; i < count - 4; i++) {
+>>>>> +             if (memcmp(kbuf + i, "\x66\x55\x99\xAA", 4) == 0) {
+>>>>> +                     dev_dbg(priv->dev, "Found normal sync word\n");
+>>>>> +                     endian_swap = false;
+>>>>> +                     break;
+>>>>> +             }
 >>
->> This patch adds missing assigned-clocks and assigned-clock-parents for
->> pmu_system_controller node which is used as "mclk" for audio codec.
+>> This is bin format
 >>
->> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Fixes: 2fad972 ("ARM: dts: Add mclk entry for Peach boards")
->> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/exynos5420-peach-pit.dts |    5 +++++
->>   arch/arm/boot/dts/exynos5800-peach-pi.dts  |    5 +++++
->>   2 files changed, 10 insertions(+)
+>>>>> +             if (memcmp(kbuf + i, "\xAA\x99\x55\x66", 4) == 0) {
+>>>>> +                     dev_dbg(priv->dev, "Found swapped sync word\n");
+>>>>> +                     endian_swap = true;
+>>>>> +                     break;
+>>>>> +             }
 >>
->> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> index 8f4d76c..525a93a 100644
->> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> @@ -1056,5 +1056,10 @@
->>   	timeout-sec = <32>;
->>   };
+>> This is bit format from header
 >>
->> +&pmu_system_controller {
->
-> Please put the node in alphabetical order.
->
-ok
->> +	assigned-clocks = <&pmu_system_controller 0>;
->> +	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
->
-> I might be missing something here but isn't the first clock of
-> pmu_system_controller already a CLK_FIN_PLL? So you are reparenting the
-> FIN_PLL to FIN_PLL?
->
-> In the same time there is doubled space character after '='.
->
-will remove
+>>>>> +     }
+>>>>
+>>>> How much control do we have over mandating the format of firmware at
+>>>> this point?  It'd be swell if we could just mandate a specific
+>>>> endianness, and leave this munging to usermode.
+>>>
+>>> That's a good question. Personally I do only care about one of both,
+>>> but that's just because I get to decide for my targets...
+>>> Opinions from the Xilinx guys?
+>>
+>> Don't know full history about this but in past bitstream in BIT format
+>> was used. Which is header (partially decoding in u-boot for example)
+>> with data.
+>> On zynq native format is BIN which is format without header and data is
+>> swapped.
+>> This code just detects which format is used. If BIT, header is skipped
+>> and data is swapped to BIN format.
+>>
+>> Back to origin question if this is something what can be handled from
+>> user space. And answer is - yes it can be handled there.
+>> But based on my experience it is very useful to be able to handle BIT
+>> because it is built by tools by default.
+>> Also with BIN format you are loosing record what this data bitstream
+>> targets. Header in BIT gives you at least some ideas.
+> 
+> People should stop using "cat" to program the FPGA and use a userspace
+> tool instead. I've already released such tools under GPL, so anyone can
+> pick up on it and extend it as required.
 
->> +};
->> +
->>   #include "cros-ec-keyboard.dtsi"
->>   #include "cros-adc-thermistors.dtsi"
->> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> index 7d5b386..411de8f 100644
->> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> @@ -1019,5 +1019,10 @@
->>   	timeout-sec = <32>;
->>   };
->>
->> +&pmu_system_controller {
->> +	assigned-clocks = <&pmu_system_controller 0>;
->> +	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
->
-> Ditto.
->
-> Best regards,
-> Krzysztof
->
->
->> +};
->> +
->>   #include "cros-ec-keyboard.dtsi"
->>   #include "cros-adc-thermistors.dtsi"
->>
->
->
+Link?
+
+This is fpga manager based driver where "cat" won't be used.
+
+> 
+> The header for the "bit" format is completely ignored (you can't even
+> use it to determine if the bitstream is compatible with the current
+> device) so there's no point in carrying it around. 
+
+up2you what you want to do with it. If you work with different boards
+with different FPGAs it is at least helpful to know if X.bit target this
+or that board. Unfortunately I am not aware about any public document
+which describe what there is written.
+
+> On the zynq, doing
+> the "swap" in userspace was measurably faster than having the driver
+> handle it, and that was even without using NEON instructions for byte
+> swapping.
+> 
+> I admit that being able to do "cat static.bit > /dev/xdevcfg" has had
+> its uses. But it's not something that belongs in mainline Linux.
+
+It is about comfort but I have really not a problem that driver will
+handle just BIN format.
+
+> Probably one of the key reasons that the "bit" format is still popular
+> is that getting the Vivado tools to create a proper "bin" that will
+> actually work on the Zynq is about as easy as nailing jelly to a tree.
+> We've been using a simple Python script to do the bit->bin conversion
+> for that reason.
+
+In vivado it is one tcl cmd. But truth is that I don't really get why
+BIN is not generated by default.
+
+> Using the "bin" format in the driver keeps it simple and singular.
+> Userspace tools can add whatever wrappers and headers they feel
+> appropriate to it, these checks don't belong in the driver since they
+> will be application specific. For example, some users would want to
+> verify that a partial bitstream actually matches the static part that's
+> currently in the FPGA.
+
+agree.
+
+Thanks,
+Michal
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
