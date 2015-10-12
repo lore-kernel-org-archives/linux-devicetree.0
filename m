@@ -1,144 +1,92 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
- Zynq 7000
-Date: Mon, 12 Oct 2015 14:38:31 +0200
-Message-ID: <561BA9C7.6070003@xilinx.com>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
- <1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
- <20151009163336.GM10631@jcartwri.amer.corp.natinst.com>
- <CAAtXAHea7GZDLez5kYas2PFQ-=KmS_on8WxFDCuvVb4Nh05a_w@mail.gmail.com>
- <561B9687.1070103@xilinx.com> <561BA60C.6010106@topic.nl>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [PATCH V2 03/10] ASoC: img: Add binding document for
+	I2S output controller
+Date: Mon, 12 Oct 2015 13:40:30 +0100
+Message-ID: <1444653637-14711-4-git-send-email-Damien.Horsley@imgtec.com>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561BA60C.6010106-Oq418RWZeHk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, James Hartley <James.Hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
-On 10/12/2015 02:22 PM, Mike Looijmans wrote:
-> On 12-10-15 13:16, Michal Simek wrote:
->>
->>>>> +static int zynq_fpga_ops_write(struct fpga_manager *mgr,
->>>>> +                            const char *buf, size_t count)
->>>>> +{
->>>>> +     struct zynq_fpga_priv *priv;
->>>>> +     int err;
->>>>> +     char *kbuf;
->>>>> +     size_t i, in_count;
->>>>> +     dma_addr_t dma_addr;
->>>>> +     u32 transfer_length = 0;
->>>>> +     bool endian_swap = false;
->>>>> +
->>>>> +     in_count = count;
->>>>> +     priv = mgr->priv;
->>>>> +
->>>>> +     kbuf = dma_alloc_coherent(priv->dev, count, &dma_addr,
->>>>> GFP_KERNEL);
->>>>> +     if (!kbuf)
->>>>> +             return -ENOMEM;
->>>>> +
->>>>> +     memcpy(kbuf, buf, count);
->>>>> +
->>>>> +     /* look for the sync word */
->>>>> +     for (i = 0; i < count - 4; i++) {
->>>>> +             if (memcmp(kbuf + i, "\x66\x55\x99\xAA", 4) == 0) {
->>>>> +                     dev_dbg(priv->dev, "Found normal sync word\n");
->>>>> +                     endian_swap = false;
->>>>> +                     break;
->>>>> +             }
->>
->> This is bin format
->>
->>>>> +             if (memcmp(kbuf + i, "\xAA\x99\x55\x66", 4) == 0) {
->>>>> +                     dev_dbg(priv->dev, "Found swapped sync word\n");
->>>>> +                     endian_swap = true;
->>>>> +                     break;
->>>>> +             }
->>
->> This is bit format from header
->>
->>>>> +     }
->>>>
->>>> How much control do we have over mandating the format of firmware at
->>>> this point?  It'd be swell if we could just mandate a specific
->>>> endianness, and leave this munging to usermode.
->>>
->>> That's a good question. Personally I do only care about one of both,
->>> but that's just because I get to decide for my targets...
->>> Opinions from the Xilinx guys?
->>
->> Don't know full history about this but in past bitstream in BIT format
->> was used. Which is header (partially decoding in u-boot for example)
->> with data.
->> On zynq native format is BIN which is format without header and data is
->> swapped.
->> This code just detects which format is used. If BIT, header is skipped
->> and data is swapped to BIN format.
->>
->> Back to origin question if this is something what can be handled from
->> user space. And answer is - yes it can be handled there.
->> But based on my experience it is very useful to be able to handle BIT
->> because it is built by tools by default.
->> Also with BIN format you are loosing record what this data bitstream
->> targets. Header in BIT gives you at least some ideas.
-> 
-> People should stop using "cat" to program the FPGA and use a userspace
-> tool instead. I've already released such tools under GPL, so anyone can
-> pick up on it and extend it as required.
+Add binding document for Imagination Technologies I2S output
+controller
 
-Link?
+Signed-off-by: Damien.Horsley <Damien.Horsley@imgtec.com>
+---
+ .../devicetree/bindings/sound/img,i2s-out.txt      | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,i2s-out.txt
 
-This is fpga manager based driver where "cat" won't be used.
-
-> 
-> The header for the "bit" format is completely ignored (you can't even
-> use it to determine if the bitstream is compatible with the current
-> device) so there's no point in carrying it around. 
-
-up2you what you want to do with it. If you work with different boards
-with different FPGAs it is at least helpful to know if X.bit target this
-or that board. Unfortunately I am not aware about any public document
-which describe what there is written.
-
-> On the zynq, doing
-> the "swap" in userspace was measurably faster than having the driver
-> handle it, and that was even without using NEON instructions for byte
-> swapping.
-> 
-> I admit that being able to do "cat static.bit > /dev/xdevcfg" has had
-> its uses. But it's not something that belongs in mainline Linux.
-
-It is about comfort but I have really not a problem that driver will
-handle just BIN format.
-
-> Probably one of the key reasons that the "bit" format is still popular
-> is that getting the Vivado tools to create a proper "bin" that will
-> actually work on the Zynq is about as easy as nailing jelly to a tree.
-> We've been using a simple Python script to do the bit->bin conversion
-> for that reason.
-
-In vivado it is one tcl cmd. But truth is that I don't really get why
-BIN is not generated by default.
-
-> Using the "bin" format in the driver keeps it simple and singular.
-> Userspace tools can add whatever wrappers and headers they feel
-> appropriate to it, these checks don't belong in the driver since they
-> will be application specific. For example, some users would want to
-> verify that a partial bitstream actually matches the static part that's
-> currently in the FPGA.
-
-agree.
-
-Thanks,
-Michal
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/img,i2s-out.txt b/Documentation/devicetree/bindings/sound/img,i2s-out.txt
+new file mode 100644
+index 0000000..dc110ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/img,i2s-out.txt
+@@ -0,0 +1,49 @@
++Imagination Technologies I2S Output Controller
++
++Required Properties:
++
++  - compatible : Compatible list, must contain "img,i2s-out"
++
++  - #sound-dai-cells : Must be equal to 0
++
++  - reg : Offset and length of the register set for the device
++
++  - clocks : Contains an entry for each entry in clock-names
++
++  - clock-names : Must include the following entries:
++	"sys"	The system clock
++	"ref"	The reference clock
++
++  - dmas: Contains an entry for each entry in dma-names.
++
++  - dma-names: Must include the following entry:
++	"tx"	Single DMA channel used by all active I2S channels
++
++  - img,i2s-channels : Number of I2S channels instantiated in the I2S out block
++
++  - resets: Contains a phandle to the I2S out reset signal
++
++  - reset-names: Contains the reset signal name "rst"
++
++Optional Properties:
++
++  - interrupts : Contains the I2S out interrupts. Depending on
++	the configuration, there may be no interrupts, one interrupt,
++	or an interrupt per I2S channel
++
++Example:
++
++i2s_out: i2s-out@18100A00 {
++	compatible = "img,i2s-out";
++	reg = <0x18100A00 0x200>;
++	interrupts = <GIC_SHARED 13 IRQ_TYPE_LEVEL_HIGH>;
++	dmas = <&mdc 23 0xffffffff 0>;
++	dma-names = "tx";
++	clocks = <&cr_periph SYS_CLK_I2S_OUT>,
++		 <&clk_core CLK_I2S>;
++	clock-names = "sys", "ref";
++	img,i2s-channels = <6>;
++	resets = <&pistachio_reset PISTACHIO_RESET_I2S_OUT>;
++	reset-names = "rst";
++	#sound-dai-cells = <0>;
++};
+-- 
+2.1.4
