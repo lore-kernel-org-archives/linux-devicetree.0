@@ -1,73 +1,32 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: meson: Add status LED for Odroid-C1
-Date: Mon, 12 Oct 2015 21:15:42 +0200
-Message-ID: <CAOQ7t2b050HE10hdPprWwnpbCkx5b4APxexwtsSWtJ7zcX_exw@mail.gmail.com>
-References: <1444401430-4396-1-git-send-email-edward.cragg@codethink.co.uk>
-	<1444401430-4396-2-git-send-email-edward.cragg@codethink.co.uk>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: Document the STM32 DMA bindings
+Date: Mon, 12 Oct 2015 21:16:05 +0200
+Message-ID: <561C06F5.1090205@gmail.com>
+References: <1444317612-818-1-git-send-email-cedric.madianga@gmail.com>
+ <1444317612-818-2-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444401430-4396-2-git-send-email-edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Edward Cragg <edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444317612-818-2-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 9, 2015 at 4:37 PM, Edward Cragg
-<edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> Add the blue status LED to the Hardkernel Odroid C1 board DTS.
-> This is the only programmable LED on the board.
+Hi Cedric,
+
+On 10/08/2015 05:20 PM, M'boumba Cedric Madianga wrote:
+> This patch adds documentation of device tree bindings for the STM32 dma
+> controller.
 >
-> Signed-off-by: Edward Cragg <edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 > ---
->  arch/arm/boot/dts/meson8b-odroidc1.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>   .../devicetree/bindings/dma/stm32-dma.txt          | 98 ++++++++++++++++++++++
+>   1 file changed, 98 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
 >
-> diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> index a8e2911..3b03523 100644
-> --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-> +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> @@ -1,6 +1,8 @@
->  /*
->   * Copyright 2015 Endless Mobile, Inc.
->   * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> + * Copyright 2015 Codethink Ltd.
-> + * Author: Edward Cragg <edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 
-Usually we do not add a copyright line for each small addition to the DTS.
+Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
->   *
->   * This file is dual-licensed: you can use it either under the terms
->   * of the GPL or the X11 license, at your option. Note that this dual
-> @@ -46,6 +48,7 @@
->
->  /dts-v1/;
->  #include "meson8b.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
->
->  / {
->         model = "Hardkernel ODROID-C1";
-> @@ -58,6 +61,16 @@
->         memory {
->                 reg = <0x40000000 0x40000000>;
->         };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +               blue {
-> +                       label = "c1:blue:alive";
-> +                       gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
-> +                       linux,default-trigger = "heartbeat";
-> +                       default-state = "off";
-> +               };
-> +       };
->  };
-
-otherwise Acked-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Maxime
