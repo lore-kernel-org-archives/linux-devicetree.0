@@ -1,71 +1,143 @@
-From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv2 3/3] iio: ad5064: Always use external vref if there is no internal vref
-Date: Mon, 12 Oct 2015 13:50:34 +0200
-Message-ID: <1444650634-12025-3-git-send-email-paul.cercueil@analog.com>
-References: <1444650634-12025-1-git-send-email-paul.cercueil@analog.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 2/3] ARM: dts: use vmmc-supply of emmc/sd for
+ exynos5422-odroidxu3
+Date: Mon, 12 Oct 2015 21:13:38 +0900
+Message-ID: <561BA3F2.5010403@samsung.com>
+References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
+ <1444578364-1384-2-git-send-email-linux.amoon@gmail.com>
+ <561B3A3E.3030904@samsung.com> <561B49D0.2040305@samsung.com>
+ <CANAwSgT=O-AVhQv4TO8ZukK15Ya++Kos_ZEjiFZWiDwNXub0mQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444650634-12025-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgT=O-AVhQv4TO8ZukK15Ya++Kos_ZEjiFZWiDwNXub0mQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: k.kozlowski.k@gmail.com, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If the device does not have an internal reference, there is no
-other choice but to use the external reference. In that case,
-it does not make much sense to have to specify it.
+W dniu 12.10.2015 o 20:08, Anand Moon pisze:
+> Hi Krzysztof,
+> 
+> On 12 October 2015 at 11:19, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+>> On 12.10.2015 13:42, Krzysztof Kozlowski wrote:
+>>> On 12.10.2015 00:46, Anand Moon wrote:
+>>>> Added support for vmmc/vqmmc-supply for emmc/sd cards.
+>>>> Fixed the min values for regulator ldo13_reg (VDDQ_MMC2).
+>>>
+>>> I can't see the description of a problem which is fixed. If you fix
+>>> something, then please describe what is wrong.
+>>>
+>>>> Added ramp-delay for LDO9(VDD33_USB3_0).
+>>>> Added ramp-delay for LDO13(VDDQ_MMC2).
+>>>> Added ramp-delay for LDO15(ETH_P3V3).
+>>>>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>>
+>>>> ---
+>>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
+>>>>
+>>>> Note:
+>>>> Changes need for support of UHS-I highspeed cards.
+>>>> changes for vqmmc-supply for emmc is not supported.
+>>>>
+>>>> [    1.831136] vdd_ldo9: ramp_delay not set
+>>>> [    1.843049] vdd_ldo13: ramp_delay not set
+>>>> [    1.850975] vdd_ldo15: ramp_delay not set
+>>>> [    1.862816] vdd_sd: ramp_delay not set
+>>>> ---
+>>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 8 +++++++-
+>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>>> index 26decbd..58c06d3 100644
+>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>>> @@ -157,6 +157,7 @@
+>>>>                              regulator-min-microvolt = <3000000>;
+>>>>                              regulator-max-microvolt = <3000000>;
+>>>>                              regulator-always-on;
+>>>> +                            regulator-ramp-delay = <12000>;
+>>>>                      };
+>>>>
+>>>>                      ldo10_reg: LDO10 {
+>>>> @@ -182,9 +183,10 @@
+>>>>
+>>>>                      ldo13_reg: LDO13 {
+>>>>                              regulator-name = "vdd_ldo13";
+>>>> -                            regulator-min-microvolt = <2800000>;
+>>>> +                            regulator-min-microvolt = <1800000>;
+>>>>                              regulator-max-microvolt = <2800000>;
+>>>>                              regulator-always-on;
+>>>> +                            regulator-ramp-delay = <12000>;
+>>>>                      };
+>>>>
+>>>>                      ldo15_reg: LDO15 {
+>>>> @@ -213,6 +215,7 @@
+>>>>                              regulator-min-microvolt = <2800000>;
+>>>>                              regulator-max-microvolt = <2800000>;
+>>>>                              regulator-always-on;
+>>>> +                            regulator-ramp-delay = <12000>;
+>>>
+>>> Where did you get this value from? It looks wrong... My datasheet does
+>>> not have 12000 uV/uS.
+>>
+> 
+>> Anand,
+>>
+>> We have actually been here:
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/351601.html
+>>
+>> That time you used 8000. I asked the same question - how did you figure
+>> out the exact value.
+>>
+>> Now we have the same question - why 12000?
+>>
+>> It is completely fine to make a mistake (I do a lot of them) but please
+>> try not to make the same mistake again.
+>>
+>> BR,
+>> Krzysztof
+> 
+> I will focus more in the future to clamp down my mistakes to minimal.
+> 
+>>
+>>>
+>>>>                      };
+>>>>
+>>>>                      ldo24_reg: LDO24 {
+>>>> @@ -338,6 +341,7 @@
+>>>>      samsung,dw-mshc-ddr-timing = <0 2>;
+>>>>      samsung,dw-mshc-hs400-timing = <0 2>;
+>>>>      samsung,read-strobe-delay = <90>;
+>>>> +    vmmc-supply = <&ldo3_reg>;
+>>>>      pinctrl-names = "default";
+>>>>      pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
+>>>>      bus-width = <8>;
+>>>> @@ -352,6 +356,8 @@
+>>>>      samsung,dw-mshc-ciu-div = <3>;
+>>>>      samsung,dw-mshc-sdr-timing = <0 4>;
+>>>>      samsung,dw-mshc-ddr-timing = <0 2>;
+>>>> +    vmmc-supply = <&ldo19_reg>;
+>>>> +    vqmmc-supply = <&ldo13_reg>;
+>>>
+>>> It looks wrong. LDO13 is used in one place as VQMMC and in other as
+>>> VMMC. How did you figure out which regulator supplies which power domain?
+>>>
+> 
+> I refer Schematics diagram to XU4_MAIN_REV0.1.pdf
+> 
+> From the PWR_PMCI_S2MPS11_LDO_CTRL document it LDO13 point to VDDQ_MMC2.
+> 
 
-This patch ensures that the external reference is used if the
-device does not feature an internal reference.
+Aaa right, by mistake I thought that you put LDO13 here and in the node
+before, but there is LDO3, not 13. You did this correctly.
 
-Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
----
- drivers/iio/dac/ad5064.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+But I have two other questions:
+1. Maybe these regulators now should not be always-enabled?
+2. Why changing minimum voltage of LDO13 to 1.8V? The schematics says 2.8V.
 
- v2: No change in this patch
-
-diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
-index e77631d..18674e5 100644
---- a/drivers/iio/dac/ad5064.c
-+++ b/drivers/iio/dac/ad5064.c
-@@ -464,14 +464,16 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
- 	for (i = 0; i < ad5064_num_vref(st); ++i)
- 		st->vref_reg[i].supply = ad5064_vref_name(st, i);
- 
--	if (dev->of_node) {
--		for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
--			ext_vref = of_property_read_bool(dev->of_node,
--					ad5064_vref_name(st, i));
--	} else {
--		struct ad5064_platform_data *pdata = dev->platform_data;
--
--		ext_vref = pdata && pdata->use_external_ref;
-+	if (st->chip_info->internal_vref) {
-+		if (dev->of_node) {
-+			for (i = 0; ext_vref && i < ad5064_num_vref(st); ++i)
-+				ext_vref = of_property_read_bool(dev->of_node,
-+						ad5064_vref_name(st, i));
-+		} else {
-+			struct ad5064_platform_data *pdata = dev->platform_data;
-+
-+			ext_vref = pdata && pdata->use_external_ref;
-+		}
- 	}
- 
- 	if (ext_vref) {
-@@ -483,11 +485,6 @@ static int ad5064_probe(struct device *dev, enum ad5064_type type,
- 		if (ret)
- 			return ret;
- 	} else {
--		if (!st->chip_info->internal_vref) {
--			dev_err(dev, "No vref available\n");
--			return -ENXIO;
--		}
--
- 		st->use_internal_vref = true;
- 		ret = ad5064_write(st, AD5064_CMD_CONFIG, 0,
- 			AD5064_CONFIG_INT_VREF_ENABLE, 0);
--- 
-2.5.3
+Best regards,
+Krzysztof
