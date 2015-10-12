@@ -1,64 +1,53 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [PATCH 1/3] dt-bindings: Document the STM32 HW RNG bindings
-Date: Mon, 12 Oct 2015 09:21:28 +0100
-Message-ID: <1444638090-22886-2-git-send-email-daniel.thompson@linaro.org>
-References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
- <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] mfd: arizona: Update DT binding document for
+ jack detection invert
+Date: Mon, 12 Oct 2015 09:15:26 +0100
+Message-ID: <20151012081526.GA8805@ck-lbox>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151005100105.GJ3243@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, patches@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151005100105.GJ3243@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the STM32 hardware
-random number generator.
+On Mon, Oct 05, 2015 at 11:01:05AM +0100, Lee Jones wrote:
+> On Fri, 02 Oct 2015, Charles Keepax wrote:
+> 
+> > Add additional binding for inverting the polarity of the detection on
+> > the jack detection pins.
+> > 
+> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/arizona.txt |    2 ++
+> >  1 files changed, 2 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > index b98a11b..ef59696 100644
+> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > @@ -73,6 +73,8 @@ Optional properties:
+> >      If this node is not mentioned or if the value is unknown, then
+> >      headphone detection mode is set to HPDETL.
+> >  
+> > +  - wlf,jd-invert : Invert the polarity of the jack detection switch
+> > +
+> 
+> There are other jack detection properties in the bindings docs.
+> 
+> Please generify.
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Acked-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/rng/st,stm32-rng.txt        | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/st,stm32-rng.txt
+Apologies but not sure I follow what you want me to do here? Do
+you just want me to drop the wlf, prefix on this one?
 
-diff --git a/Documentation/devicetree/bindings/rng/st,stm32-rng.txt b/Documentation/devicetree/bindings/rng/st,stm32-rng.txt
-new file mode 100644
-index 000000000000..47f04176f93b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/st,stm32-rng.txt
-@@ -0,0 +1,21 @@
-+STMicroelectronics STM32 HW RNG
-+===============================
-+
-+The STM32 hardware random number generator is a simple fixed purpose IP and
-+is fully separated from other crypto functions.
-+
-+Required properties:
-+
-+- compatible : Should be "st,stm32-rng"
-+- reg : Should be register base and length as documented in the datasheet
-+- interrupts : The designated IRQ line for the RNG
-+- clocks : The clock needed to enable the RNG
-+
-+Example:
-+
-+	rng: rng@50060800 {
-+		compatible = "st,stm32-rng";
-+		reg = <0x50060800 0x400>;
-+		interrupts = <80>;
-+		clocks = <&rcc 0 38>;
-+	};
--- 
-2.4.3
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
