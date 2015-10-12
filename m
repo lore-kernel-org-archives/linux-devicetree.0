@@ -1,76 +1,53 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional
- clock
-Date: Mon, 12 Oct 2015 10:45:05 -0700
-Message-ID: <20151012174505.GJ23801@atomide.com>
-References: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 05/10] clk: iproc: Add PLL base write function
+Date: Mon, 12 Oct 2015 13:48:53 -0400
+Message-ID: <20151012174853.GD20867@broadcom.com>
+References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
+ <1443826665-17570-6-git-send-email-jonmason@broadcom.com>
+ <20151010002106.GZ26883@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444671232-10253-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+In-Reply-To: <20151010002106.GZ26883-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 10:38]:
-> The AM3715 OHCI controller will not function without the EHCI
-> unit's 120m fclk being enabled. If all the ports in the system
-> are set to OHCI then the 120m_fclk will not get enabled and no
-> devices are detected.
+On Fri, Oct 09, 2015 at 05:21:06PM -0700, Stephen Boyd wrote:
+> On 10/02, Jon Mason wrote:
+> > diff --git a/drivers/clk/bcm/clk-iproc-pll.c b/drivers/clk/bcm/clk-iproc-pll.c
+> > index e029ab3..a4602aa 100644
+> > --- a/drivers/clk/bcm/clk-iproc-pll.c
+> > +++ b/drivers/clk/bcm/clk-iproc-pll.c
+> > @@ -137,6 +137,18 @@ static int pll_wait_for_lock(struct iproc_pll *pll)
+> >  	return -EIO;
+> >  }
+> >  
+> > +static void iproc_pll_write(struct iproc_pll *pll, void __iomem *base,
+> > +			    u32 offset, u32 val)
+> > +{
+> > +	const struct iproc_pll_ctrl *ctrl = pll->ctrl;
+> > +
+> > +	writel(val, base + offset);
+> > +
+> > +	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK &&
+> > +		     base == pll->pll_base))
+> > +		val = readl(base + offset);
 > 
-> Add a new (optional) property to signal the system must enable
-> the 120m_fck for OHCI so that if no EHCI ports are signalled
-> then the 120m_fclk should be enabled.
-> 
-> We have found no information about why this is necessary, but
-> it is suspected the EHCI controller does not complete the initial
-> reset sequence and therefore does not hand control of the USB
-> port back.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
->  drivers/mfd/omap-usb-host.c                        | 4 ++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> index 38d9bb8..fb5fea5 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -23,6 +23,9 @@ OMAP MUSB GLUE
->  Optional properties:
->   - ctrl-module : phandle of the control module this glue uses to write to
->     mailbox
-> + - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
-> +   using ohci. Needed for AM3517 in OHCI only mode.
-> +
->  
->  SOC specific device node entry
->  usb_otg_hs: usb_otg_hs@4a0ab000 {
-> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
-> index 1d924d1..13880cf 100644
-> --- a/drivers/mfd/omap-usb-host.c
-> +++ b/drivers/mfd/omap-usb-host.c
-> @@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
->  				need_logic_fck |= true;
->  		}
->  
-> +		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
-> +		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
-> +			need_logic_fck |= true;
-> +
->  		if (need_logic_fck) {
->  			omap->ehci_logic_fck = devm_clk_get(dev,
->  							    "usbhost_120m_fck");
+> Is there any point to assign val here?
 
-Hmm why not just use the standard device tree clocks property and then do
-clk_get_rate() on the clock?
+It is a flush.  The val assignment could be excluded (and thus made
+const) if so desired.
 
-Regards,
+Thanks,
+Jon
 
-Tony
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
