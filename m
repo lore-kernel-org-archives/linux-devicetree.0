@@ -1,88 +1,51 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/3] ARM: DTS: am43xx: fix cd-gpios definition as per hardware design and dt binding docs
-Date: Mon, 12 Oct 2015 14:37:11 +0530
-Message-ID: <1444640832-7396-3-git-send-email-mugunthanvnm@ti.com>
-References: <1444640832-7396-1-git-send-email-mugunthanvnm@ti.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: Fix audio card detection on peach boards
+Date: Mon, 12 Oct 2015 11:18:55 +0200
+Message-ID: <561B7AFF.1080707@samsung.com>
+References: <1444631169-19468-1-git-send-email-alim.akhtar@samsung.com>
+ <561B578E.1050308@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444640832-7396-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-reply-to: <561B578E.1050308-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As per mmc device tree binding documentation card detect gpio has
-to be active low signal. When a hardware is designed with active
-high card detect, gpio polarity has to be changed with
-cd-inverted dt property.
+On 12/10/15 08:47, Krzysztof Kozlowski wrote:
+>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> > index 8f4d76c..525a93a 100644
+>> > --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> > +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> > @@ -1056,5 +1056,10 @@
+>> >  	timeout-sec = <32>;
+>> >  };
+>> >  
+>> > +&pmu_system_controller {
+>
+> Please put the node in alphabetical order.
+> 
+>> > +	assigned-clocks = <&pmu_system_controller 0>;
+>> > +	assigned-clock-parents =  <&clock CLK_FIN_PLL>;
+>
+> I might be missing something here but isn't the first clock of
+> pmu_system_controller already a CLK_FIN_PLL? So you are reparenting the
+> FIN_PLL to FIN_PLL?
 
-In AM43xx the card detect gpio is designed as active low gpio.
-So correcting the dt card detect gpio definition.
+No, it's not, the first PMU consumer clock is indeed CLK_FIN_PLL,
+but pmu_system_controller is also a clock provider.  The first output
+clock of pmu_system_controller is CLKOUT, it's a composite mux and
+gate clock (registered in drivers/clk/samsung /clk-exynos-clkout.c).
+So  the above dts change is selecting an external oscillator input of
+the CLKOUT mux, i.e. it will route 24 MHz clock signal from the external
+oscillator to the CLKOUT output pin, to which audio CODEC is connected
+on peach-pit AFAICS.
 
-Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am437x-idk-evm.dts | 2 +-
- arch/arm/boot/dts/am437x-sk-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 22038f2..81de3a1 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -689,7 +689,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- };
- 
- /* eMMC sits on mmc2 */
-diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
-index af25801..337fb91 100644
---- a/arch/arm/boot/dts/am437x-idk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-idk-evm.dts
-@@ -325,7 +325,7 @@
- 	pinctrl-1 = <&mmc1_pins_sleep>;
- 	vmmc-supply = <&v3_3d>;
- 	bus-width = <4>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- };
- 
- &qspi {
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 7da7c2d..1582fdb 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -563,7 +563,7 @@
- 
- 	vmmc-supply = <&dcdc4>;
- 	bus-width = <4>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- };
- 
- &usb2_phy1 {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 86c2dfb..47954ed 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -376,7 +376,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- };
- 
- &mac {
 -- 
-2.6.1.133.gf5b6079
-
+Regards,
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
