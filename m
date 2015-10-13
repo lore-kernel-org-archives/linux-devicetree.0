@@ -1,65 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
-Date: Tue, 13 Oct 2015 17:00:49 +0200
-Message-ID: <11677087.JbqAo0FWJE@wuerfel>
-References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <6336414.HvfCQcuT3Y@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E16242C92@lhreml503-mbs>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2][UPDATE] ARM: dts: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Tue, 13 Oct 2015 20:38:41 +0530
+Message-ID: <20151013150841.GZ5386@linux>
+References: <1444743164-17735-2-git-send-email-sudeep.holla@arm.com>
+ <1444747133-22671-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E16242C92@lhreml503-mbs>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444747133-22671-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 October 2015 14:49:07 Gabriele Paoloni wrote:
-> > On Monday 12 October 2015 16:35:45 Bjorn Helgaas wrote:
-> > >
-> > > > +{
-> > > > +     u64 addr;
-> > > > +     struct device_node *msi_node;
-> > > > +     struct resource res;
-> > > > +     struct device_node *np = pp->dev->of_node;
-> > > > +     struct hisi_pcie *pcie = to_hisi_pcie(pp);
-> > > > +
-> > > > +     msi_node = of_parse_phandle(np, "msi-parent", 0);
-> > > > +     if (!msi_node) {
-> > > > +             dev_err(pp->dev, "failed to find msi-parent\n");
-> > > > +             return -EINVAL;
-> > > > +     }
-> > > > +     of_address_to_resource(msi_node, 0, &res);
-> > >
-> > > Does this use the "msi-parent" node in the same way as other drivers
-> > > do?  I'm sure there must be other places where we extract struct
-> > > resource information from an "msi-parent" node, but I don't see them.
-> > >
-> > > I'm trying to verify that this isn't some kind of incompatible
-> > > extension of the "msi-parent" property.  I cc'd Arnd and Rob (DT
-> > > experts).
-> > 
-> > This is not ok, what this does is that it relies on a particular
-> > implementation of the MSI controller and directly accesses its
-> > registers.
+On 13-10-15, 15:38, Sudeep Holla wrote:
+> Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
+> "gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
+> source.
 > 
-> Hi Arnd, thanks for reviewing.
+> Few dts files assign value "1" to gpio-key,wakeup and in one instance a
+> value "0" is assigned probably assuming it won't be enabled as a wakeup
+> source. Since the presence of the boolean property indicates it is
+> enabled, value of "0" have no value.
 > 
-> What we do is to retrieve the msi-parent physical address and we store it
-> in our internal PCIe register locations...
-
-Ah, thanks for the clarification, I missed that part.
-
-> So we do not operate directly on the msi controller registers...
+> This patch replaces the legacy "gpio-key,wakeup" with the unified
+> "wakeup-source" property which inturn fixes the above mentioned issue.
 > 
-> So I wonder if the current implementation is Ok to retrieve the
-> msi-parent address....
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/spear1310-evb.dts         | 2 +-
+>  arch/arm/boot/dts/spear1340-evb.dts         | 2 +-
+>  arch/arm/boot/dts/spear320-hmi.dts          | 4 ++--
 
-Not sure. Why do you do this? Normally the PCI host does not know
-or care about the address of the MSI controller, because the messages
-are just passed up to the parent bus as DMA transfers.
+Reviewed-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I don't think what you do here is safe because the 'reg' property
-of the MSI controller might point to the address that is used for
-the message directly.
-
-	Arnd
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
