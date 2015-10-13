@@ -1,34 +1,58 @@
-From: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] dmaengine: st_fdma: Add fdma suspend and resume
- callbacks.
-Date: Tue, 13 Oct 2015 11:33:45 +0000
-Message-ID: <1444736023.2926.5.camel@intel.com>
-References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
-	 <1441980871-24475-7-git-send-email-peter.griffin@linaro.org>
-	 <20151007112346.GC4810@vkoul-mobl.iind.intel.com>
-	 <20151013111953.GD30342@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: berlin: fix typo in chosen property
+Date: Tue, 13 Oct 2015 13:35:48 +0200
+Message-ID: <20151013113547.GA20884@kwain>
+References: <1444734729-4818-1-git-send-email-michael.opdenacker@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151013111953.GD30342@griffinp-ThinkPad-X1-Carbon-2nd>
-Content-Language: en-US
-Content-ID: <C2151A72A85EA645B6ADE570C4B3999A-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ludovic.barre-qxv4g6HH51o@public.gmane.org" <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "maxime.coquelin-qxv4g6HH51o@public.gmane.org" <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patrice.chotard-qxv4g6HH51o@public.gmane.org" <patrice.chotard-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444734729-4818-1-git-send-email-michael.opdenacker@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, antoine.tenart@free-electrons.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTEwLTEzIGF0IDEyOjE5ICswMTAwLCBQZXRlciBHcmlmZmluIHdyb3RlOg0K
-PiBIaSBWaW5vZCwNCj4gDQo+IE9uIFdlZCwgMDcgT2N0IDIwMTUsIFZpbm9kIEtvdWwgd3JvdGU6
-DQo+IA0KPiA+IE9uIEZyaSwgU2VwIDExLCAyMDE1IGF0IDAzOjE0OjI4UE0gKzAxMDAsIFBldGVy
-IEdyaWZmaW4gd3JvdGU6DQo+ID4gPiArI2RlZmluZSBTVF9GRE1BX1BNCSgmc3RfZmRtYV9wbSkN
-Cj4gPiA+ICsjZWxzZQ0KPiA+ID4gKyNkZWZpbmUgU1RfRkRNQV9QTQlOVUxMDQo+ID4gPiArI2Vu
-ZGlmDQo+ID4gUGxzIHVzZSBQTSBoZWxwZXJzIHlvdSBkb250IG5lZWQgdG8gZG8gdGhpcw0KPiA+
-IA0KPiBDb3VsZCB5b3UgcG9pbnQgbWUgYXQgdGhlIFBNIGhlbHBlcnMgeW91IGFyZSByZWZlcnJp
-bmcgdG8/DQoNClNlZSBTRVRfUlVOVElNRV9QTV9PUFMgYW5kIGZyaWVuZHMsIGRlZmluZWQgaW4g
-cG0uaA0KDQotLSANCn5WaW5vZA0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Tue, Oct 13, 2015 at 01:12:09PM +0200, Michael Opdenacker wrote:
+> This fixes a trivial typo in the name of the "chosen" device tree pro=
+perty
+> for the Marvell BG2-Q DMP board.
+>=20
+> Signed-off-by: Michael Opdenacker <michael.opdenacker@free-electrons.=
+com>
+
+Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+
+Thanks!
+
+Antoine
+
+> ---
+>  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/bo=
+ot/dts/berlin2q-marvell-dmp.dts
+> index 4a749e5b3b44..caeeb345c335 100644
+> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> @@ -48,7 +48,7 @@
+>  		reg =3D <0x00000000 0x80000000>;
+>  	};
+> =20
+> -	choosen {
+> +	chosen {
+>  		bootargs =3D "console=3DttyS0,115200 earlyprintk";
+>  	};
+> =20
+> --=20
+> 2.1.4
+>=20
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
