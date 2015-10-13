@@ -1,81 +1,56 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] iio: mma8452: support either of the available interrupt
- pins
-Date: Tue, 13 Oct 2015 17:33:26 +0100
-Message-ID: <20151013163326.GE24353@leverpostej>
-References: <1444751908-18242-1-git-send-email-martink@posteo.de>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 0/4] soc: ti: knav_qmss: enable accumulator queue support
+Date: Tue, 13 Oct 2015 12:42:08 -0400
+Message-ID: <561D3460.5090109@ti.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com> <561D0D95.1040401@ti.com> <561D2AE0.6090406@oracle.com> <561D2DE9.4080809@ti.com> <561D2F9B.7000006@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444751908-18242-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <561D2F9B.7000006@oracle.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: santosh shilimkar <santosh.shilimkar@oracle.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 05:58:28PM +0200, Martin Kepplinger wrote:
-> This change is important in order for everyone to be easily able to use the
-> driver for one of the supported accelerometer chips!
-> 
-> Until now, the driver blindly assumed that the INT1 interrupt line is wired
-> on a user's board. But these devices have 2 interrupt lines and can route
-> their different interrupt sources to one of them. Since only their motion
-> detection interrupt source is implemented as IIO events, users just use
-> either one of the pins.
-> 
-> client->irq is not changed because only one interrupt line is supported.
-> The user is warned if she describes both interrupt pins in the dts.
+On 10/13/2015 12:21 PM, santosh shilimkar wrote:
+> On 10/13/2015 9:14 AM, Murali Karicheri wrote:
+>> Santosh,
+>>
+>> On 10/13/2015 12:01 PM, santosh shilimkar wrote:
+>>> On 10/13/2015 6:56 AM, Murali Karicheri wrote:
+>>>> On 10/12/2015 03:46 PM, Murali Karicheri wrote:
+>>>>> This patch series enable accumulator queue support for K2 SoCs.
+>>>
+>>>> Santosh, Arnd,
+>>>>
+>>>> Could you please review and let me know if there is any comment. If
+>>>> looks good, could you please merge to v4.4 next branch?
+>>>>
+>>> Please report the series updating the comments from Arnd. Also split
+>>> the series into drivers and dts updates.
+> s/report/repost
+>
+>>
+>> The cover letter already summarize this as a comment against v1 even
+>> though it didn't mention Arnd's name. Is it usual to describe the
+>> reviewers name in the change log? I thought we just describe the comment
+>> addressed, not who has commented. Not??
+>>
+> I didn't mean report. sorry. Just repost the series including ack tag.
+>
+>> About splitting the series, it was done so since both is being pulled by
+>> you. If needed, I can do the split. Let me know.
+>>
+> DTS and driver changes goes to different topics so split it, please.
+Ok. No issues. I will be posting this right away.
 
-If the hardware has both wired up, the DT should describe both.
+Murali
+>
+> Regards,
+> Santosh
+>
 
-The fact that a kernel might only use one is irrelevant to the binding.
 
-You need to handle the case that both are wired up.
-
-[...]
-
-> +  - interrupt-names: should contain "INT1" or "INT2", the accelerometer's
-> +		     interrupt line in use.
-
-This "or" should be "and/or".
-
-[...]
-
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 1eccc2d..dbfd0b4 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -29,6 +29,7 @@
->  #include <linux/iio/events.h>
->  #include <linux/delay.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->  
->  #define MMA8452_STATUS				0x00
->  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-> @@ -1130,13 +1131,26 @@ static int mma8452_probe(struct i2c_client *client,
->  					   MMA8452_INT_FF_MT;
->  		int enabled_interrupts = MMA8452_INT_TRANS |
->  					 MMA8452_INT_FF_MT;
-> +		int irq1, irq2;
->  
-> -		/* Assume wired to INT1 pin */
-> -		ret = i2c_smbus_write_byte_data(client,
-> -						MMA8452_CTRL_REG5,
-> -						supported_interrupts);
-> -		if (ret < 0)
-> -			return ret;
-> +		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
-> +		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
-> +
-> +		if (irq1 > 0 && irq2 > 0)
-> +			dev_warn(&client->dev,
-> +				 "only one interrupt line supported\n");
-
-	dev_info(&client->dev, "INT1 and INT2 present.");
-
-This is a  valid case, and does not require a warning.
-
-Thanks,
-Mark.
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
