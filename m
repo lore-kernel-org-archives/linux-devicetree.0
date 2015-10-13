@@ -1,58 +1,40 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 27/27] ARM: dts: omap3: Fix gpmc and NAND nodes
-Date: Mon, 12 Oct 2015 17:43:35 -0700
-Message-ID: <20151013004335.GU23801@atomide.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <1442588029-13769-28-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/4] arm64: Hi6220: enable CPU idle states
+Date: Tue, 13 Oct 2015 08:58:12 +0800
+Message-ID: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442588029-13769-28-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150918 08:00]:
-> Add compatible id, GPMC register resource and interrupt
-> resource to NAND controller nodes.
-> 
-> The GPMC driver now implements gpiochip and irqchip so
-> enable gpio-controller and interrupt-controller properties.
-> 
-> With this the interrupt parent of NAND node changes so fix it
-> accordingly.
-...
-> --- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-> +++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-> @@ -35,11 +35,14 @@
->  };
->  
->  &gpmc {
-> -	ranges = <0 0 0x00000000 0x1000000>;	/* CS0: 16MB for NAND */
-> +	ranges = <0 0 0x08000000 0x1000000>;	/* CS0: 16MB for NAND */
->  
->  	nand@0,0 {
-> -		linux,mtd-name = "micron,mt29f4g16abbda3w";
-> +		compatible = "ti,omap2-nand";
->  		reg = <0 0 4>; /* CS0, offset 0, IO size 4 */
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <20>;
-> +		linux,mtd-name = "micron,mt29f4g16abbda3w";
->  		nand-bus-width = <16>;
->  		ti,nand-ecc-opt = "bch8";
->  		gpmc,sync-clk-ps = <0>;
+This patch series is to enable CPU idle states for Hi6220.
 
-At least torpedo breaks for NFSroot as NAND now overlaps with
-Ethernet.. What's the policy you have for moving the addresses
-around?
+Hi6220 uses PSCIv0.2 compliance interface, so directly use ARM's generic
+CPUIdle driver. Patch 1 is to reserve memory regions so make sure MCU can
+work well to handle power controlling; Patch 2/3 enable sp804 timer as
+broadcast timer during idle states; Patch 4 registers CPU power down state
+and cluster power down state.
 
-There may be other similar cases to check too.
+Changes from v1:
+* According to Sudeep's review, fix binding for idle-states
+* According to Rob's review, due timers share same clock source with apb
+  clock, so just only pass one clock phandle
 
-Regards,
 
-Tony
+Leo Yan (4):
+  arm64: dts: Reserve memory regions for hi6220
+  arm64: Kconfig: select sp804 timer for ARCH_HISI
+  arm64: dts: add sp804 timer node for Hi6220
+  arm64: dts: enable idle states for Hi6220
+
+ arch/arm64/Kconfig.platforms                   |  1 +
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 40 ++++++++++++++++++++++++++
+ 3 files changed, 53 insertions(+), 4 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
