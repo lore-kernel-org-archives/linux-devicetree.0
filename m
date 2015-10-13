@@ -1,43 +1,136 @@
-From: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH] DT: ARM: pxa: Remove incorrect binding from documentation
-Date: Tue, 13 Oct 2015 16:44:06 +0300
-Message-ID: <1444743846-25873-1-git-send-email-jarkko.nikula@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
+Date: Tue, 13 Oct 2015 21:50:08 +0800
+Message-ID: <561D0C10.4060002@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1442906428-2609-1-git-send-email-ykk@rock-chips.com> <5614BADD.1070307@rock-chips.com> <5614DBE2.6080102@osg.samsung.com> <5614DFBC.8060105@rock-chips.com> <5614E553.6060108@osg.samsung.com> <5614FC6B.4080702@rock-chips.com> <56150128.2070309@osg.samsung.com> <5615BB93.9020008@rock-chips.com> <56192135.2080608@rock-chips.com> <561CCD09.6020801@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <561CCD09.6020801@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove "mrvl,lpss-ssp" property from documentation because LPSS SSP type is
-for certain Intel platforms. I believe commit a6e56c28a178
-("ARM: pxa: ssp: add DT bindings") added it by accident by copying all
-enum pxa_ssp_type types from include/linux/pxa2xx_ssp.h.
+Hi Javierm
 
-Please note this was removed from arch/arm/plat-pxa/ssp.c by the
-commit b692cb83b14d ("ARM: pxa: ssp: Fix build error by removing originally
-incorrect DT binding").
+On 10/13/2015 05:21 PM, Javier Martinez Canillas wrote:
+> Hello Yakir,
+>
+> Sorry for the delay but I was on holidays.
+>
+> On 10/10/2015 04:31 PM, Yakir Yang wrote:
+>> Hi Javier,
+> [snip]
+>
+>>>>> Maybe you can email me the method the run mainline kernel on Peach
+>>>>> Pit, so I can debug the analogix_dp driver at the same time, that would
+>>>>> be great.
+>>>> I wrote a little blog post explaining how to run mainline on these boards:
+>>>>
+>>>> http://blogs.s-osg.org/install-linux-mainline-kernel-distro-exynos-chromebooks/
+>>>>
+>>>> That explains the simplest setup though so if you need a different one
+>>>> (i.e: chain loading a non verified u-boot) or if you have any questions,
+>>>> feel free to contact me in private and I can help you with the setup.
+>>>>
+>>> Ah, thanks, gonna to step-by-step.
+>> Thanks for your great material, although I meet some problems in the step-by-step
+>> process, and failed at this way to setup mainline kernel environment on Exynos chromebooks.
+>>
+>> But i do find another way to install mainline kernel to Exynos Chromebook:
+>> 1. Install any ChromeOS image into a USB media device (like dd tools)
+>> 2. "enable_dev_usb_boot" on Exynos chromebooks which would allowed boot from USB.
+>> 3. Flash the mainline kernel into the KERNEL-A and KERNEL-B partitions on host PC.
+>> 4. Insert USB device into Exynos chromebooks, and press CTRL+U, boot into USB OS.
+> Yes, as I mentioned in the blog, there are many options. In fact I also boot from
+> a uSD instead of the eMMC since is easier for me to flash from the host machine
+> and chain load a non-verified u-boot so I can boot non signed kernels.
+>
+> But thought that the most common use case would be to install it in the KERN-C and
+> ROOT-C partitions in the eMMC. Anyways, I'm glad that you got it working.
 
-Signed-off-by: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt | 1 -
- 1 file changed, 1 deletion(-)
+:-P
 
-diff --git a/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt b/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
-index 669b8140dd79..d10cc06c0c37 100644
---- a/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
-+++ b/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
-@@ -10,7 +10,6 @@ Required properties:
- 				mvrl,pxa168-ssp
- 				mrvl,pxa910-ssp
- 				mrvl,ce4100-ssp
--				mrvl,lpss-ssp
- 
- 	- reg:		The memory base
- 	- dmas:		Two dma phandles, one for rx, one for tx
--- 
-2.6.1
+>> And it's better to enable pstore function on mainline kernel, so we can analysis the last log when
+>> the mainline kernel crashed. After enable PSTORE_RAM in .config, we still need add ramoops node
+> Interesting, I knew about pstore but I never used it with the Exynos Chromebooks.
+>
+>> into file, like:
+>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> @@ -750,6 +750,15 @@
+>>                  iommu = <&sysmmu_gsc3>;
+>>          };
+>>
+>> +       ramoops: ramoops {
+>> +               compatible = "ramoops";
+>> +               name = "ramoops";
+>> +               reg = <0x41f00000 0x100000>;
+>> +               record-size = <0x20000>;
+>> +               dump-oops;
+>> +               status = "okay";
+>> +       };
+>> +
+> Are you using mainline? There isn't a "ramoops" compatible string documented
+> in the upstream DT bindings, platform_match() would match by driver name as
+> a fallback but I don't see code in fs/pstore/ram.c that parses the properties
+> in your device node. I wonder how this works for you or did I missunderstand?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Aha, I lost some things that I back port the pstore/ram.c from chrome
+v3.14 tree which driver would parsed the "ramoops" compatible.
+
+And those "ramoops" device node should be structured by bootloader in
+chromeos, so we won't see anything about "ramoops" in DT binding. Due
+to I can't upgraded the loader of Peach Pit, so I chose to structure that
+device manually. (detailed properties just `cat 
+/proc/device-tree/ramoops/*`)
+
+>
+>>          hdmi: hdmi {
+>>                  compatible = "samsung,exynos4212-hdmi";
+>>                  reg = <0x14530000 0x70000>;
+>>
+>>
+>> Aha, I have tested this series on two Exynos Chromebooks that I borrowed(Snow and Peach Pit)
+>> with previously method (actually I believed it's a common method without broken the original
+>> ChromeOS image).
+>>
+>> And I do find the crash place that make you failed at this series, here is the diff changes:
+>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>> index 5f8fc11..bcbc009 100644
+>> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>> @@ -1169,6 +1169,7 @@ static int analogix_dp_create_bridge(struct drm_device *drm_dev,
+>>
+>>          dp->bridge = bridge;
+>>
+>> +       dp->encoder->bridge = bridge;
+>>          bridge->driver_private = dp;
+>>          bridge->encoder = dp->encoder;
+>>          bridge->funcs = &analogix_dp_bridge_funcs;
+>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> @@ -151,7 +151,7 @@
+>>          samsung,color-depth = <1>;
+>>          samsung,link-rate = <0x06>;
+>>          samsung,lane-count = <2>;
+>> -       hpd-gpio = <&gpx2 6 0>;
+>> +       hpd-gpios = <&gpx2 6 0>;
+>>
+>>          ports {
+>>                  port@0 {
+>>
+>>
+>> Anyway I'm going to send the v6 series, thanks for your good idea.
+>>
+> Great, I'll try to test your latest series on my Peach Pi today.
+
+Thanks
+
+- Yakir
+>
+>> - Yakir
+>>
+> Best regards,
