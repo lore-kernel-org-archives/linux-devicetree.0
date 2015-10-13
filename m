@@ -1,49 +1,35 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH] ARM: socfpga: dts: add fpga manager
-Date: Tue, 13 Oct 2015 13:28:20 -0500
-Message-ID: <1444760900-1373-1-git-send-email-atull@opensource.altera.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 09/10] clk: ns2: add clock support for Broadcom Northstar
+ 2 SoC
+Date: Tue, 13 Oct 2015 11:39:30 -0700
+Message-ID: <561D4FE2.4020805@codeaurora.org>
+References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
+ <1443826665-17570-10-git-send-email-jonmason@broadcom.com>
+ <20151010003352.GA26883@codeaurora.org> <20151012181929.GG20867@broadcom.com>
+ <561D36A6.2080309@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dinguyen@opensource.altera.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Tull <atull@opensource.altera.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <561D36A6.2080309@broadcom.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
+On 10/13/2015 09:51 AM, Scott Branden wrote:
+>
+> Is that really necessary at all  I think something like this work
+> instead?
+>
+> -obj-$(CONFIG_ARCH_BCM)            += bcm/
+> +obj-y        += bcm/
+>
+>
 
-Add FPGA manager to device tree for SoCFPGA.
+Yes that's fine too, as long as we don't add any obj-y inside bcm/Makefile
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
- arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 314e589..e37ba11 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -834,5 +834,12 @@
- 			compatible = "altr,sys-mgr", "syscon";
- 			reg = <0xffd08000 0x4000>;
- 		};
-+
-+		hps_0_fpgamgr: fpgamgr@0xff706000 {
-+			compatible = "altr,socfpga-fpga-mgr";
-+			reg = <0xFF706000 0x1000
-+			       0xFFB90000 0x1000>;
-+			interrupts = <0 175 4>;
-+		};
- 	};
- };
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
