@@ -1,190 +1,113 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
-Date: Tue, 13 Oct 2015 18:51:24 +0300
-Message-ID: <561D287C.9010400@mleia.com>
-References: <1444694045-22000-1-git-send-email-vz@mleia.com> <1444694045-22000-3-git-send-email-vz@mleia.com> <7277011.vmOGiecsKn@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7277011.vmOGiecsKn@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] iio: mma8452: support either of the available interrupt pins
+Date: Tue, 13 Oct 2015 17:58:28 +0200
+Message-ID: <1444751908-18242-1-git-send-email-martink@posteo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+This change is important in order for everyone to be easily able to use the
+driver for one of the supported accelerometer chips!
 
-On 13.10.2015 15:44, Arnd Bergmann wrote:
-> On Tuesday 13 October 2015 02:54:02 Vladimir Zapolskiy wrote:
->> The change corrects invalid custom translations to 1:1 translations,
->> otherwise during initialization there are too many failed attempts to
->> translate addresses from subnodes, which anyway result in fallback 1:1
->> translations, also it is found that due to this problem proper usage
->> of ranges property in subnodes (e.g. for defining flash partitions)
->> can not be done.
->>
->> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
->>
-> 
+Until now, the driver blindly assumed that the INT1 interrupt line is wired
+on a user's board. But these devices have 2 interrupt lines and can route
+their different interrupt sources to one of them. Since only their motion
+detection interrupt source is implemented as IIO events, users just use
+either one of the pins.
 
-adding Joachim to Cc list as the author of PL172 memory controller
-driver and related DT bindings, may be he has something to add.
+client->irq is not changed because only one interrupt line is supported.
+The user is warned if she describes both interrupt pins in the dts.
 
-> I don't get it. What kind of errors do you see? The existing
-> version looks cleaner than the new one, as it only translates
-> the MMIO areas that are actually used.
-> 
+If possibly in the future more interrupt sources might be available,
+additional DT properties will be added.
 
-The problem is found when I add PL175 device node to lpc32xx.dtsi and
-expand the node in my board file. The external memory controller manages
-up to 4 memory devices, which by means of the controller are mapped into
-physical memory starting from address 0xe0000000.
+Of course, this also falls back to assuming INT1, so for existing users
+nothing will break. The new functionality is described in the bindings doc.
 
-Below are my declarations, similar to one found in lpc18xx.dtsi.
+Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+---
+this applies to the current -next. thanks in advance for your review!
 
-lpc32xx.dtsi change common for all LPC32xx boards:
 
-emc: emc@31080000 {
-	compatible = "arm,pl175", "arm,primecell";
-	reg = <0x31080000 0x1000>;
-	clocks = <&scf LPC32XX_CLK_DDRAM>;
-	clock-names = "mpmcclk";
+ .../devicetree/bindings/iio/accel/mma8452.txt      |  6 +++++
+ drivers/iio/accel/mma8452.c                        | 26 +++++++++++++++++-----
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-	#address-cells = <1>;
-	#size-cells = <1>;
-	ranges = <0 0xe0000000 0x01000000>,
-		 <1 0xe1000000 0x01000000>,
-		 <2 0xe2000000 0x01000000>,
-		 <3 0xe3000000 0x01000000>;
-	status = "disabled";
-};
-
-myboard.dts declaration:
-
-&emc {
-	status = "okay";
-
-	cs@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges;
-
-		mpmc,cs = <0>;
-		mpmc,memory-width = <16>;
-		mpmc,byte-lane-low;
-
-		mpmc,write-enable-delay = <0>;
-		mpmc,output-enable-delay = <0>;
-		mpmc,read-access-delay = <55>;
-		mpmc,page-mode-read-delay = <55>;
-		mpmc,write-access-delay = <22>;
-		mpmc,turn-round-delay = <8>;
-
-		nor@0 {
-			#address-cells = <1>;
-			#size-cells = <1>;
-
-			compatible = "spansion,s29gl032a", "cfi-flash";
-			reg = <0 0x00400000>;
-			bank-width = <2>;
-		};
-	};
-};
-
-The problem with non-empty ranges is that NOR device is not mapped to
-0xe0000000, because da > (cp + s):
-
-	OF: ** translation for device /ahb/emc@31080000/cs@0/nor@0 **
-	OF: bus is default (na=1, ns=1) on /ahb/emc@31080000/cs@0
-	OF: translating address: 00000000
-	OF: parent bus is default (na=1, ns=1) on /ahb/emc@31080000
-	OF: empty ranges; 1:1 translation
-	OF: parent translation for: 00000000
-	OF: with offset: 0
-	OF: one level translation: 00000000
-	OF: parent bus is default (na=1, ns=1) on /ahb
-	OF: walking ranges...
-	OF: default map, cp=0, s=1000000, da=0
-	OF: parent translation for: e0000000
-	OF: with offset: 0
-	OF: one level translation: e0000000
-	OF: parent bus is default (na=1, ns=1) on /
-	OF: walking ranges...
-	OF: default map, cp=20000000, s=30000000, da=e0000000
-	OF: not found !
-
-This proposed 2/5 change fixes the problem for me:
-
-	OF: ** translation for device /ahb/emc@31080000/cs@0/nor@0 **
-	OF: bus is default (na=1, ns=1) on /ahb/emc@31080000/cs@0
-	OF: translating address: 00000000
-	OF: parent bus is default (na=1, ns=1) on /ahb/emc@31080000
-	OF: empty ranges; 1:1 translation
-	OF: parent translation for: 00000000
-	OF: with offset: 0
-	OF: one level translation: 00000000
-	OF: parent bus is default (na=1, ns=1) on /ahb
-	OF: walking ranges...
-	OF: default map, cp=0, s=1000000, da=0
-	OF: parent translation for: e0000000
-	OF: with offset: 0
-	OF: one level translation: e0000000
-	OF: parent bus is default (na=1, ns=1) on /
-	OF: empty ranges; 1:1 translation
-	OF: parent translation for: 00000000
-	OF: with offset: e0000000
-	OF: one level translation: e0000000
-	OF: reached root node
-	e0000000.nor: Found 1 x16 devices at 0x0 in 16-bit bank. Manufacturer
-ID 0x000001 Chip ID 0x001a00
-
-Also note that the change does not break any other translations,
-moreover boot time delay is slightly faster.
-
-Original address translation for a device:
-
-[    0.259969] OF: ** translation for device /ahb/fab/watchdog@4003C000 **
-[    0.260050] OF: bus is default (na=1, ns=1) on /ahb/fab
-[    0.260084] OF: translating address: 4003c000
-[    0.260156] OF: parent bus is default (na=1, ns=1) on /ahb
-[    0.260196] OF: walking ranges...
-[    0.260248] OF: default map, cp=20000000, s=30000000, da=4003c000
-[    0.260282] OF: parent translation for: 20000000
-[    0.260333] OF: with offset: 2003c000
-[    0.260364] OF: one level translation: 4003c000
-[    0.260431] OF: parent bus is default (na=1, ns=1) on /
-[    0.260468] OF: walking ranges...
-[    0.260518] OF: default map, cp=20000000, s=30000000, da=4003c000
-[    0.260550] OF: parent translation for: 20000000
-[    0.260600] OF: with offset: 2003c000
-[    0.260630] OF: one level translation: 4003c000
-[    0.260676] OF: reached root node
-
-With this proposed change applied address translation looks simpler:
-
-[    0.253194] OF: ** translation for device /ahb/fab/watchdog@4003C000 **
-[    0.253281] OF: bus is default (na=1, ns=1) on /ahb/fab
-[    0.253314] OF: translating address: 4003c000
-[    0.253386] OF: parent bus is default (na=1, ns=1) on /ahb
-[    0.253426] OF: empty ranges; 1:1 translation
-[    0.253457] OF: parent translation for: 00000000
-[    0.253506] OF: with offset: 4003c000
-[    0.253537] OF: one level translation: 4003c000
-[    0.253601] OF: parent bus is default (na=1, ns=1) on /
-[    0.253639] OF: empty ranges; 1:1 translation
-[    0.253669] OF: parent translation for: 00000000
-[    0.253717] OF: with offset: 4003c000
-[    0.253747] OF: one level translation: 4003c000
-[    0.253793] OF: reached root node
-
-Support of EMC device node will be added to lpc32xx.dtsi, when this kind
-of problem is fixed.
-
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+index e3c3746..6e42c23 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -7,13 +7,18 @@ Required properties:
+     * "fsl,mma8453"
+     * "fsl,mma8652"
+     * "fsl,mma8653"
++
+   - reg: the I2C address of the chip
+ 
+ Optional properties:
+ 
+   - interrupt-parent: should be the phandle for the interrupt controller
++
+   - interrupts: interrupt mapping for GPIO IRQ
+ 
++  - interrupt-names: should contain "INT1" or "INT2", the accelerometer's
++		     interrupt line in use.
++
+ Example:
+ 
+ 	mma8453fc@1d {
+@@ -21,4 +26,5 @@ Example:
+ 		reg = <0x1d>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <5 0>;
++		interrupt-names = "INT2";
+ 	};
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 1eccc2d..dbfd0b4 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -29,6 +29,7 @@
+ #include <linux/iio/events.h>
+ #include <linux/delay.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
+ 
+ #define MMA8452_STATUS				0x00
+ #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+@@ -1130,13 +1131,26 @@ static int mma8452_probe(struct i2c_client *client,
+ 					   MMA8452_INT_FF_MT;
+ 		int enabled_interrupts = MMA8452_INT_TRANS |
+ 					 MMA8452_INT_FF_MT;
++		int irq1, irq2;
+ 
+-		/* Assume wired to INT1 pin */
+-		ret = i2c_smbus_write_byte_data(client,
+-						MMA8452_CTRL_REG5,
+-						supported_interrupts);
+-		if (ret < 0)
+-			return ret;
++		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
++		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
++
++		if (irq1 > 0 && irq2 > 0)
++			dev_warn(&client->dev,
++				 "only one interrupt line supported\n");
++
++		/* if INT2 is found, use it. Otherwise INT1 */
++		if (!(irq2 > 0 && irq1 < 0)) {
++			ret = i2c_smbus_write_byte_data(client,
++							MMA8452_CTRL_REG5,
++							supported_interrupts);
++			if (ret < 0)
++				return ret;
++			dev_info(&client->dev, "using interrupt line INT1\n");
++		} else {
++			dev_info(&client->dev, "using interrupt line INT2\n");
++		}
+ 
+ 		ret = i2c_smbus_write_byte_data(client,
+ 						MMA8452_CTRL_REG4,
+-- 
+2.1.4
