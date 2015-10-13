@@ -1,56 +1,149 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
-Date: Tue, 13 Oct 2015 09:21:03 -0500
-Message-ID: <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
-References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com> <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Document the STM32 DMA bindings
+Date: Tue, 13 Oct 2015 15:22:40 +0100
+Message-ID: <20151013142240.GC24353@leverpostej>
+References: <1444744848-720-1-git-send-email-cedric.madianga@gmail.com>
+ <1444744848-720-2-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444744848-720-2-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 30, 2015 at 4:32 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> Add DT binding for led-backlight.
-
-Please use get_maintainers.pl.
-
->
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: devicetree@vger.kernel.org
+On Tue, Oct 13, 2015 at 04:00:45PM +0200, M'boumba Cedric Madianga wrote:
+> This patch adds documentation of device tree bindings for the STM32 dma
+> controller.
+> 
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 > ---
->  .../bindings/video/backlight/led-backlight.txt     | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->
-> diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
+>  .../devicetree/bindings/dma/stm32-dma.txt          | 98 ++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
 > new file mode 100644
-> index 000000000000..d4621d7414bc
+> index 0000000..9ce0d49
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
-> @@ -0,0 +1,30 @@
-> +led-backlight bindings
+> +++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+> @@ -0,0 +1,98 @@
+> +* STMicroelectronics STM32 DMA controller
+> +
+> +The STM32 DMA is a general-purpose direct memory access controller capable of
+> +supporting 8 independent DMA channels. Each channel can have up to 8 requests.
 > +
 > +Required properties:
-> +  - compatible: "led-backlight"
-> +  - leds: phandle to a led OF node [0]
+> +- compatible: Should be "st,stm32-dma"
+> +- reg: Should contain DMA registers location and length. This should include
+> +  all of the per-channel registers.
+> +- interrupts: Should contain all of the per-channel DMA interrupts.
 
-Why do we need 2 levels of LED nodes?
+Please specify the order they must be in.
 
-> +  - brightness-levels: Array of distinct LED brightness levels. These
-> +      are in the range from 0 to 255, passed to the LED class driver.
-> +  - default-brightness-level: the default brightness level (index into the
-> +      array defined by the "brightness-levels" property)
+> +- clocks: Should contain the input clock of the DMA instance.
+> +- #dma-cells : Must be <4>. See DMA client paragraph for more details.
 > +
 > +Optional properties:
-> +  - power-supply: regulator for supply voltage
-> +  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-> +                  and disables the backlight (see GPIO binding[1])
+> +- resets: Reference to a reset controller asserting the DMA controller
+> +- st,mem2mem: boolean; if defined, it indicates that the controller supports
+> +  memory-to-memory transfer
+> +
+> +Example:
+> +
+> +	dma2: dma-controller@40026400 {
+> +		compatible = "st,stm32-dma";
+> +		reg = <0x40026400 0x400>;
+> +		interrupts = <56>,
+> +			     <57>,
+> +			     <58>,
+> +			     <59>,
+> +			     <60>,
+> +			     <68>,
+> +			     <69>,
+> +			     <70>;
+> +		clocks = <&clk_hclk>;
+> +		#dma-cells = <4>;
+> +		st,mem2mem;
+> +		resets = <&rcc 150>;
+> +	};
+> +
+> +* DMA client
+> +
+> +Required properties:
+> +- dmas: Comma separated list of dma channel requests
+> +- dma-names: Names of the aforementioned requested channels
+> +
+> +Each dmas request consists of 5 cells:
+> +1. A phandle pointing to the STM32 DMA controller
+> +2. The channel id
+> +3. The request line number
+> +4. A 32bit mask specifying the DMA channel configuration
+> + -bit 1: Direct Mode Error Interrupt
+> +	0x0: disabled
+> +	0x1: enabled
+> + -bit 2: Transfer Error Interrupt
+> +	0x0: disabled
+> +	0x1: enabled
+> + -bit 3: Half Transfer Mode Error Interrupt
+> +	0x0: disabled
+> +	0x1: enabled
+> + -bit 4: Transfer Complete Interrupt
+> +	0x0: disabled
+> +	0x1: enabled
 
-Why are all of these not part of the LED node pointed to by leds?
+Why should this be in the DT?
 
-Describe the h/w, not what you want for a driver.
+Surely the driver should be in charge of deciding when to use these?
 
-Rob
+> + -bit 9: Peripheral Increment Address
+> +	0x0: no address increment between transfers
+> +	0x1: increment address between transfers
+> + -bit 10: Memory Increment Address
+> +	0x0: no address increment between transfers
+> +	0x1: increment address between transfers
+
+These don't seem like they belong either. Surely this would depend on
+the request made, rather than being a fixed property?
+
+> + -bit 15: Peripheral Increment Offset Size
+> +	0x0: offset size is linked to the peripheral bus width
+> +	0x1: offset size is fixed to 4 (32-bit alignment)
+
+This sounds like it might belong in the DT.
+
+> + -bit 16-17: Priority level
+> +	0x0: low
+> +	0x1: medium
+> +	0x2: high
+> +	0x3: very high
+
+What do we do elsewhere in terms of describing prioritisation? It feels
+like it would be a dynamic property of the system.
+
+> +5. A 32bit mask specifying the DMA FIFO configuration
+> + -bit 0-1: Fifo threshold
+> +	0x0: 1/4 full FIFO
+> +	0x1: 1/2 full FIFO
+> +	0x2: 3/4 full FIFO
+> +	0x3:full FIFO
+
+What does this mean?
+
+> + -bit 2: Direct mode
+> +	0x0: enabled
+> +	0x1: disabled
+
+What does this mean?
+
+> + -bit 7: FIFO Error Interrupt
+> +	0x0: disabled
+> +	0x1: enabled
+
+As with the other interrupt configuration, this does not look like it
+belongs in the DT.
+
+Thanks,
+Mark.
