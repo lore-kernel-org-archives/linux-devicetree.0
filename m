@@ -1,150 +1,81 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed support
-Date: Tue, 13 Oct 2015 21:57:23 +0530
-Message-ID: <CANAwSgRBzFqHB98wSQnQu-ggGqRT2H6wC415wULXVhPg0uw_3A@mail.gmail.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-3-git-send-email-linux.amoon@gmail.com> <561B48B7.1040201@samsung.com>
- <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com>
- <561C4CEE.3050905@samsung.com> <CANAwSgRJ+5O-x61K9E_AxTZWQy3jJrKF5MiLtWRdUU29CCfa-Q@mail.gmail.com>
- <561C7DF1.6000609@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] iio: mma8452: support either of the available interrupt
+ pins
+Date: Tue, 13 Oct 2015 17:33:26 +0100
+Message-ID: <20151013163326.GE24353@leverpostej>
+References: <1444751908-18242-1-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561C7DF1.6000609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444751908-18242-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, Oct 13, 2015 at 05:58:28PM +0200, Martin Kepplinger wrote:
+> This change is important in order for everyone to be easily able to use the
+> driver for one of the supported accelerometer chips!
+> 
+> Until now, the driver blindly assumed that the INT1 interrupt line is wired
+> on a user's board. But these devices have 2 interrupt lines and can route
+> their different interrupt sources to one of them. Since only their motion
+> detection interrupt source is implemented as IIO events, users just use
+> either one of the pins.
+> 
+> client->irq is not changed because only one interrupt line is supported.
+> The user is warned if she describes both interrupt pins in the dts.
 
-On 13 October 2015 at 09:13, Krzysztof Kozlowski
-<k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On 13.10.2015 12:08, Anand Moon wrote:
-> > Hi Krzysztof,
-> >
-> > On 13 October 2015 at 05:44, Krzysztof Kozlowski
-> > <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> >> On 13.10.2015 00:32, Anand Moon wrote:
-> >>> Hi Krzysztof,
-> >>>
-> >>> On 12 October 2015 at 11:14, Krzysztof Kozlowski
-> >>> <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> >>>> On 12.10.2015 00:46, Anand Moon wrote:
-> >>>>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
-> >>>>
-> >>>> This description is not entirely correct. The MMC driver already
-> >>>> supports these UHS speeds (you did not any code) so you rather enabled
-> >>>> it (description of bindings says "is supported").
-> >>>>
-> >>>> You mentioned DDR50 but I don't see respective property below.
-> >>>>
-> >>>> How do you know that these modes are really supported? I don't know. Can
-> >>>> you convince me?
-> >>>
-> >>> Setting this DDR50 capability give me this error. That's the reason to
-> >>> drop this capability.
-> >>
-> >> But you mentioned it in commit message! "Added support for UHS-I ...
-> >> (DDR50)"
-> >>
-> >> In the same time dropping DDR50 is not an sufficient proof that "SDR50
-> >> and SDR104 are really supported".
-> >>
-> >
-> > These changes are related to the microSD card capabilities.
-> > So SDR50 have better frequency over DDR50. On the same Sandisk card.
-> >
-> > When the card select the capability for DDR50
-> > ---------------------------------------------------
-> > [    4.001477] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
-> > req 50000000Hz, actual 50000000HZ div = 0)
-> > [    4.001604] mmc1: new ultra high speed DDR50 SDHC card at address aaaa
-> > [    4.004505] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
-> > [    4.009179] mmcblk0: error -110 sending status command, retrying
-> > [    4.009271] mmcblk0: error -115 sending stop command, original cmd
-> > response 0x900, card status 0x900
-> > [    4.009275] mmcblk0: error -84 transferring data, sector 0, nr 8,
-> > cmd response 0x900, card status 0x0
-> > [    4.025563] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
-> > req 400000Hz, actual 396825HZ div = 63)
-> > [    4.067770] Console: switching to colour frame buffer device 274x77
-> > [    4.098782] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
-> > req 50000000Hz, actual 50000000HZ div = 0)
-> > [    4.099692] mmc1: tried to reset card
-> > [    4.101332]  mmcblk0: p1 p2
-> >
-> >
-> > When the card select the capability for SDR50
-> > ---------------------------------------------------------------------------------
-> > [ 2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req
-> > 100000000Hz, actual 100000000HZ div = 0)
-> > [ 2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
-> > [ 2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
-> > [ 2.461743] mmcblk0: p1 p2
-> >
-> > Which will relate to better read/write speed.
->
-> Which is not an answer to my question. To none of my previous questions.
->
+If the hardware has both wired up, the DT should describe both.
 
-Basically UHS-I capability  (sd-uhs-sdr12, sd-uhs-sdr25, sd-uhs-sdr50,
-sd-uhs-sdr104) help tune speed supported for mmc
+The fact that a kernel might only use one is irrelevant to the binding.
 
-I have tired to compare the speed on high speed UHS-I vs ultra high
-speed UHS-I using izone utility.
+You need to handle the case that both are wired up.
 
-[    2.572469] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
-req 50000000Hz, actual 50000000HZ div = 0)
-[    2.572609] mmc1: new high speed SDHC card at address aaaa
+[...]
 
-      Command line used: ./iozone -L64 -S32 -azecwI -+n -r4k -r64k
--r128k -s10M -i0 -i1 -i2 -f datafile -Rb out.xls
-        Output is in kBytes/sec
-        Time Resolution = 0.000001 seconds.
-        Processor cache size set to 32 kBytes.
-        Processor cache line size set to 64 bytes.
-        File stride size set to 17 * record size.
-                                                              random
- random     bkwd    record    stride
-              kB  reclen    write  rewrite    read    reread    read
-  write     read   rewrite      read   fwrite frewrite    fread
-freread
-           10240       4     1631        0     6556        0     5538      982
-           10240      64     8828        0    18897        0    17994      303
-           10240     128     6269        0    20670        0    20128     1096
----------------------------------------------------------------------------------------------------------
-[    2.613761] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot
-req 100000000Hz, actual 100000000HZ div = 0)
-[    2.623573] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
+> +  - interrupt-names: should contain "INT1" or "INT2", the accelerometer's
+> +		     interrupt line in use.
 
-        Command line used: ./iozone -L64 -S32 -azecwI -+n -r4k -r64k
--r128k -s10M -i0 -i1 -i2 -f datafile -Rb out.xls
-        Output is in kBytes/sec
-        Time Resolution = 0.000001 seconds.
-        Processor cache size set to 32 kBytes.
-        Processor cache line size set to 64 bytes.
-        File stride size set to 17 * record size.
-                                                              random
- random     bkwd    record    stride
-              kB  reclen    write  rewrite    read    reread    read
-  write     read   rewrite      read   fwrite frewrite    fread
-freread
-           10240       4     1809        0     7507        0     5233      859
-           10240      64    11622        0    31250        0    28072      516
-           10240     128     4320        0    34417        0    32509     1148
+This "or" should be "and/or".
 
-My observation is that their slight increase in read/write operation.
+[...]
 
-Hope I have tried to answer you query. If I am wrong please let me know.
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 1eccc2d..dbfd0b4 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/iio/events.h>
+>  #include <linux/delay.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -1130,13 +1131,26 @@ static int mma8452_probe(struct i2c_client *client,
+>  					   MMA8452_INT_FF_MT;
+>  		int enabled_interrupts = MMA8452_INT_TRANS |
+>  					 MMA8452_INT_FF_MT;
+> +		int irq1, irq2;
+>  
+> -		/* Assume wired to INT1 pin */
+> -		ret = i2c_smbus_write_byte_data(client,
+> -						MMA8452_CTRL_REG5,
+> -						supported_interrupts);
+> -		if (ret < 0)
+> -			return ret;
+> +		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
+> +		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
+> +
+> +		if (irq1 > 0 && irq2 > 0)
+> +			dev_warn(&client->dev,
+> +				 "only one interrupt line supported\n");
 
--Anand Moon
+	dev_info(&client->dev, "INT1 and INT2 present.");
 
->
-> Best regards,
-> Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is a  valid case, and does not require a warning.
+
+Thanks,
+Mark.
