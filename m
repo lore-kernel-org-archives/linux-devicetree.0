@@ -1,52 +1,127 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
-Date: Tue, 13 Oct 2015 13:12:12 +0200
-Message-ID: <6336414.HvfCQcuT3Y@wuerfel>
-References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <1444445957-239522-5-git-send-email-wangzhou1@hisilicon.com> <20151012213545.GA17479@localhost>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ DT binding documentation
+Date: Tue, 13 Oct 2015 12:18:32 +0100
+Message-ID: <20151013111832.GC30342@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+ <1842713.tkjrhSVazj@wuerfel>
+ <20150929134215.GA21591@griffinp-ThinkPad-X1-Carbon-2nd>
+ <2737791.qJkUc2COQb@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151012213545.GA17479@localhost>
+Content-Disposition: inline
+In-Reply-To: <2737791.qJkUc2COQb@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 October 2015 16:35:45 Bjorn Helgaas wrote:
-> 
-> > +{
-> > +     u64 addr;
-> > +     struct device_node *msi_node;
-> > +     struct resource res;
-> > +     struct device_node *np = pp->dev->of_node;
-> > +     struct hisi_pcie *pcie = to_hisi_pcie(pp);
-> > +
-> > +     msi_node = of_parse_phandle(np, "msi-parent", 0);
-> > +     if (!msi_node) {
-> > +             dev_err(pp->dev, "failed to find msi-parent\n");
-> > +             return -EINVAL;
-> > +     }
-> > +     of_address_to_resource(msi_node, 0, &res);
-> 
-> Does this use the "msi-parent" node in the same way as other drivers
-> do?  I'm sure there must be other places where we extract struct
-> resource information from an "msi-parent" node, but I don't see them.
-> 
-> I'm trying to verify that this isn't some kind of incompatible
-> extension of the "msi-parent" property.  I cc'd Arnd and Rob (DT
-> experts).
+Hi Arnd,
 
-This is not ok, what this does is that it relies on a particular
-implementation of the MSI controller and directly accesses its
-registers.
+On Tue, 29 Sep 2015, Arnd Bergmann wrote:
 
-Instead, it should reference only the msi irq domain and let the
-driver for the MSI controller access the registers. Otherwise this
-code has to be rewritten once the same PCI host code appears in
-a machine that has a real GICv2m or GICv3.
+> On Tuesday 29 September 2015 14:42:15 Peter Griffin wrote:
+> > On Tue, 29 Sep 2015, Arnd Bergmann wrote:
+> > > On Tuesday 29 September 2015 13:11:55 Peter Griffin wrote:
+> > > > Does it? I didn't think it did.
+> > > > 
+> > > > Using the instance number as a DT property defers the decision over what firmware to
+> > > > load to the driver, which can choose whatever firmware name it wishes.
+> > > > 
+> > > > e.g. in v4.3 it could load xyz.elf, in v4.4 it could choose abc.elf. The DT will remain
+> > > > unchanged, but the use of that fdma instance has changed.
+> > > > 
+> > > > We currently only have one firmware for each instance with the "use" compiled into it.
+> > > > If in the future we had two firmwares with different "uses" for the same instance some extra
+> > > > logic would be required in the driver to make a decision on which firmware to load.
+> > > 
+> > > Ok, I probably need some more background about what the firmware on this
+> > > device does, and what it could do with a different firmware. Could you
+> > > elaborate?
+> > 
+> > So the fdma hw is a dma engine based around a xp70 slim core. It supports: -
+> > * block memory move between 2 system locations
+> > * paced transfer from system memory to paced peripheral
+> > * paced transfer from a paced peripheral to system memory
+> > 
+> > I believe each firmware for each instance supports those 3 things.
+> 
+> Ok
+> 
+> > However the xp70 also has some ancilary HW to facilitate Start Code Detection.
+> > It is this feature which I believe would require a different firmware if we wanted to make
+> > use of it. Looking at the functional spec each xp70 also
+> > has 16 gp output signals which we could also control from the firmware. Whether
+> > these are actually connected to anything useful inside the SoC I don't know.
+> 
+> I still don't understand what Start Code Detection is here.
 
-	Arnd
+I believe the "Start Code Detection" feature is referring to the 4 byte start code
+found in packetized elementary stream (PES). So it is a A/V optimisation for the
+DMA controller.
+
+> 
+> > > > > and you correctly describe the problem with
+> > > > > using the compatible string for the firmware name if the driver for the FDMA
+> > > > > does not actually care what firmware is being used here.
+> > > > > 
+> > > > > Whatever code makes the decision as to how the FDMA is used should also
+> > > > > decide on the name of the firmware file.
+> > > > 
+> > > > The code which makes this decision currently is the st_fdma.c driver. However it does
+> > > > need to know which fdma controller it is operating on to make this decision correctly.
+> > > > 
+> > > > Apart from passing the fdma instance number in DT, how else can we determine which
+> > > > controller we are?
+> > > > 
+> > > > I guess we could infer it by having a table in the driver containing the base addresses
+> > > > of the controllers for a given SoC, and match that against what DT passes us in the
+> > > > reg property. But that seems ugly, and is encoding the same information in two
+> > > > different places.
+> > > > 
+> > > > I'm open to suggestions if there is a better way to do this.
+> > > 
+> > > Using the address would be the same thing, that doesn't change the
+> > > fundamental logic. Can you explain why it matters which instance
+> > > a firmware is used on for this driver?
+> > 
+> > The reason we care, is that each instance has its own firmware file.
+> > 
+> > I just did a hexdump on the 3 different firmwares and compared them. Although the majority
+> > of the binary is the same, there are various bytes which change at several different offsets
+> > in the firmware file depending on the instance.
+> > 
+> > I don't have a xp70 toolchain or know enough about the cpu architecture to analyze what exactly
+> > the firmware is doing at these locations.
+> 
+> This sounds like we should indeed treat them as different things: We don't
+> know what the difference is, but we know that each of them needs a different
+> firmware, and presumably if you get a new SoC variant, it will in turn
+> need three new ones.
+
+Yes I believe so.
+
+> 
+> In this case, I'd say using the compatible string to identify them is best,
+> using whatever the SoC documentation uses to describe them. You can use the
+> of_device_id data fields to look up the firmware name then.
+
+Ok, I  will implement like this in the next version.
+
+> 
+> If the output signals end up being connected to something we want to
+> control through the firmware, that also makes sense for a new compatible
+> string, as the driver needs to know about the feature in order to
+> communicate with the firmware, and the DT needs to be able to describe
+> the pins (e.g. by making the node act as a GPIO controller) in a way that
+> requires a different string, too.
+
+Yes I agree, thanks for your review and comments :)
+
+regards,
+
+Peter.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
