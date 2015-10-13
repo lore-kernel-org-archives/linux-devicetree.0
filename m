@@ -1,146 +1,80 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Tue, 13 Oct 2015 17:47:31 +0100
-Message-ID: <20151013164730.GF24353@leverpostej>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
- <20150828123228.GE31748@leverpostej>
- <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com>
- <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com>
- <20150930105331.GA10066@leverpostej>
- <CAFpQJXVegqortRLK+g7_9p82KMYwq0hg8n3_9bJqjGHsJvngaA@mail.gmail.com>
- <1443661547.2828.40.camel@kernel.crashing.org>
- <CAFpQJXXKcwks0iZN+3B=U0-9uYKFpAXcZE90GCHN9WyM45Hdpw@mail.gmail.com>
- <CAFpQJXUPWZxOWeJQnkw8E_voDoqhphH8iR-fr0xo0m3+FiL4sA@mail.gmail.com>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH 09/10] clk: ns2: add clock support for Broadcom Northstar
+ 2 SoC
+Date: Tue, 13 Oct 2015 09:51:50 -0700
+Message-ID: <561D36A6.2080309@broadcom.com>
+References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
+ <1443826665-17570-10-git-send-email-jonmason@broadcom.com>
+ <20151010003352.GA26883@codeaurora.org> <20151012181929.GG20867@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFpQJXUPWZxOWeJQnkw8E_voDoqhphH8iR-fr0xo0m3+FiL4sA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd@ar
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151012181929.GG20867@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-> > Hi Mark,
-> >
-> > i am thinking, if we could not address(or becomes complex)  these topologies
-> > using associativity,
-> > we should think of an alternate binding which suits existing and upcoming
-> > arm64 platforms.
-> > can we think of below numa binding which is inline with ACPI and will
-> > address all sort of topologies!
-> >
-> > i am proposing as below,
-> >
-> > 1. introduce "proximity" node property. this property will be
-> > present in dt nodes like memory, cpu, bus and devices(like associativity
-> > property) and
-> > will tell which numa node(proximity domain) this dt node belongs to.
-> >
-> > examples:
-> >                cpu@000 {
-> >                         device_type = "cpu";
-> >                         compatible = "cavium,thunder", "arm,armv8";
-> >                         reg = <0x0 0x000>;
-> >                         enable-method = "psci";
-> >                         proximity = <0>;
-> >                 };
-> >                cpu@001 {
-> >                         device_type = "cpu";
-> >                         compatible = "cavium,thunder", "arm,armv8";
-> >                         reg = <0x0 0x001>;
-> >                         enable-method = "psci";
-> >                         proximity = <1>;
-> >                 };
-> >
-> >        memory@00000000 {
-> >                 device_type = "memory";
-> >                 reg = <0x0 0x01400000 0x3 0xFEC00000>;
-> >                 proximity =<0>;
-> >
-> >         };
-> >
-> >         memory@10000000000 {
-> >                 device_type = "memory";
-> >                 reg = <0x100 0x00400000 0x3 0xFFC00000>;
-> >                 proximity =<1>;
-> >         };
-> >
-> > pcie0@0x8480,00000000 {
-> >                 compatible = "cavium,thunder-pcie";
-> >                 device_type = "pci";
-> >                 msi-parent = <&its>;
-> >                 bus-range = <0 255>;
-> >                 #size-cells = <2>;
-> >                 #address-cells = <3>;
-> >                 #stream-id-cells = <1>;
-> >                 reg = <0x8480 0x00000000 0 0x10000000>;  /*Configuration
-> > space */
-> >                 ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000
-> > 0x70 0x00000000>, /* mem ranges */
-> >                          <0x03000000 0x8300 0x00000000 0x8300 0x00000000
-> > 0x500 0x00000000>;
-> >                proximity =<0>;
-> >         };
-> >
-> >
-> > 2. Introduce new dt node "proximity-map" which will capture the NxN numa
-> > node distance matrix.
-> >
-> > for example,  4 nodes connected in mesh/ring structure as,
-> > A(0) <connected to> B(1) <connected to> C(2) <connected to> D(3) <connected
-> > to> A(1)
-> >
-> > relative distance would be,
-> >       A -> B = 20
-> >       B -> C  = 20
-> >       C -> D = 20
-> >       D -> A = 20
-> >       A -> C = 40
-> >       B -> D = 40
-> >
-> > and dt presentation for this distance matrix is :
-> >
-> >        proximity-map {
-> >              node-count = <4>;
-> >              distance-matrix = <0 0  10>,
-> >                                 <0 1  20>,
-> >                                 <0 2  40>,
-> >                                 <0 3  20>,
-> >                                 <1 0  20>,
-> >                                 <1 1  10>,
-> >                                 <1 2  20>,
-> >                                 <1 3  40>,
-> >                                 <2 0  40>,
-> >                                 <2 1  20>,
-> >                                 <2 2  10>,
-> >                                 <2 3  20>,
-> >                                 <3 0  20>,
-> >                                 <3 1  40>,
-> >                                 <3 2  20>,
-> >                                 <3 3  10>;
-> >           }
-> >
-> > the entries like < 0 0 > < 1 1>  < 2 2> < 3 3> can be optional and code can
-> > put default value(local distance).
-> > the entries like <1 0> can be optional if <0 1> and <1 0> are of same
-> > distance.
-> is this binding looks ok?
+Hi Jon,
 
-This looks roughly requivalent to the ACPI SLIT, which means it's as
-powerful, which allays my previous concerns.
+Comment below.
 
-> i can implement this and submit in next version of patchset.
+On 15-10-12 11:19 AM, Jon Mason wrote:
+> On Fri, Oct 09, 2015 at 05:33:52PM -0700, Stephen Boyd wrote:
+>> On 10/02, Jon Mason wrote:
+>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>>> index 23800a1..2790f21 100644
+>>> --- a/arch/arm64/Kconfig.platforms
+>>> +++ b/arch/arm64/Kconfig.platforms
+>>> @@ -2,6 +2,7 @@ menu "Platform selection"
+>>>
+>>>   config ARCH_BCM_IPROC
+>>>   	bool "Broadcom iProc SoC Family"
+>>> +	select COMMON_CLK_IPROC
+>>
+>> Given that this is a visible option, I'd expect the defconfig to
+>> enable this.
+>
+> After looking at this again, it is completely unnecessary.  Removed.
+>
+>>
+>>>   	help
+>>>   	  This enables support for Broadcom iProc based SoCs
+>>>
+>>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>>> index d08b3e5..ea81eaa 100644
+>>> --- a/drivers/clk/Makefile
+>>> +++ b/drivers/clk/Makefile
+>>> @@ -47,7 +47,8 @@ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
+>>>   obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
+>>>   obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+>>>   obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
+>>> -obj-$(CONFIG_ARCH_BCM)			+= bcm/
+>>> +obj-$(CONFIG_CLK_BCM_KONA)		+= bcm/
+>>> +obj-$(CONFIG_COMMON_CLK_IPROC)		+= bcm/
+>>
+>> Also, perhaps we need some sort of Kconfig thing for overall bcm
+>> clock drivers, so that we don't have duplicate Makefile rules.
+>>
+>> 	config COMMON_CLK_BCM
+>> 		bool "Support for Broadcom clocks"
+>
+> Will do.
 
-Please put together (plaintext) patches.
+Is that really necessary at all  I think something like this work instead?
 
-Then we have a sensible baseline that we can work from; it's somewhat
-difficult for others to join the disacussion here as-is.
+-obj-$(CONFIG_ARCH_BCM)			+= bcm/
++obj-y		+= bcm/
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+>
+> Thanks,
+> Jon
+>
+>
+>>
+>> --
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
