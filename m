@@ -1,60 +1,71 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/25] scsi: hisi_sas: add ioremap for device HW
-Date: Tue, 13 Oct 2015 17:47:02 +0800
-Message-ID: <561CD316.6040406@linaro.org>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-8-git-send-email-john.garry@huawei.com> <5285087.C8umupFr76@wuerfel>
+From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv2 1/2] Documentation: ad5592r: Added devicetree bindings documentation
+Date: Tue, 13 Oct 2015 11:37:59 +0200
+Message-ID: <1444729080-9937-1-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5285087.C8umupFr76@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: James.Bottomley-JuX6DAaQMKPCXq6kfMZ53/egYHeGw8Jk@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Antonio Fiol <antonio-ZGO+nOAM/nI@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/iio/dac/ad5592r.txt        | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5592r.txt
 
+ v2: Fix indentation issue
 
-On 10/12/2015 11:21 PM, Arnd Bergmann wrote:
-> On Monday 12 October 2015 23:20:19 John Garry wrote:
->> +int hisi_sas_ioremap(struct hisi_hba *hisi_hba)
->> +{
->> +       struct platform_device *pdev = hisi_hba->pdev;
->> +       struct device *dev = &pdev->dev;
->> +       struct resource *res;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       hisi_hba->regs = devm_ioremap(dev,
->> +                                     res->start,
->> +                                     resource_size(res));
->> +       if (!hisi_hba->regs)
->> +               return -ENOMEM;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +       hisi_hba->ctrl_regs = devm_ioremap(dev,
->> +                                          res->start,
->> +                                          resource_size(res));
->> +       if (!hisi_hba->ctrl_regs)
->> +               return -ENOMEM;
->> +
->> +       return 0;
->> +}
->>
->>   static const struct of_device_id sas_of_match[] = {
->>
->
-> Better use devm_ioremap_resource() here, which registers the resource so they
-> are checked for conflicts and listed in /proc/iomem.
->
-
-Yes, hisi_hba->regs can use devm_ioremap_resource.
-
-However ctrl_regs have to use devm_ioremap, since the address are 
-sharing among different nodes, unfortunately, and devm_ioremap_resource 
-will fail.
-
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/dac/ad5592r.txt b/Documentation/devicetree/bindings/iio/dac/ad5592r.txt
+new file mode 100644
+index 0000000..12b8d0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/ad5592r.txt
+@@ -0,0 +1,43 @@
++Analog Devices AD5592R/AD5593R DAC/ADC device driver
++
++Required properties for the AD5592R:
++	- compatible: Must be "adi,ad5592r"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: Max SPI frequency to use (< 30000000)
++	- spi-cpol: The AD5592R requires inverse clock polarity (CPOL) mode
++
++Required properties for the AD5593R:
++	- compatible: Must be "adi,ad5593r"
++	- reg: I2C address of the device
++
++Required properties for all supported chips:
++	- channel-modes: An array of eight 8-bit values (one per channel)
++	  describing the mode of each channel. Macros specifying the valid values
++	  can be found in <dt-bindings/iio/adi,ad5592r.h>.
++	  The following values are currently supported:
++		* CH_MODE_UNUSED (the pin is pulled down)
++		* CH_MODE_DAC
++		* CH_MODE_ADC
++		* CH_MODE_GPIO_TRISTATE
++
++Example:
++
++	#include <dt-bindings/iio/adi,ad5592r.h>
++
++	ad5592r@0 {
++		compatible = "adi,ad5592r";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpol;
++
++		channel-modes = /bits/ 8 <
++			CH_MODE_DAC
++			CH_MODE_ADC
++			CH_MODE_ADC
++			CH_MODE_UNUSED
++			CH_MODE_UNUSED
++			CH_MODE_UNUSED
++			CH_MODE_UNUSED
++			CH_MODE_UNUSED
++		>;
++	};
+-- 
+2.6.1
