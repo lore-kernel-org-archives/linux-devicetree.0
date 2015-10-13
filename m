@@ -1,60 +1,60 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [RFC PATCH] phy: exynos-ufs: exynos_ufs_phy_calibrate() can be
- static
-Date: Tue, 13 Oct 2015 17:08:58 +0530
-Message-ID: <561CED52.9010806@samsung.com>
-References: <201510011920.tppZbk0e%fengguang.wu@intel.com>
- <20151001110430.GA12682@athens>
+From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] dmaengine: Add STM32 DMA driver
+Date: Tue, 13 Oct 2015 13:50:11 +0200
+Message-ID: <CAOAejn18=RGt2VF+KbTrykWKg1pO=tfiJBx+Wak=XLGTb9oq0Q@mail.gmail.com>
+References: <1444317612-818-1-git-send-email-cedric.madianga@gmail.com>
+	<1444317612-818-3-git-send-email-cedric.madianga@gmail.com>
+	<561C1391.2000802@gmail.com>
+	<CAOAejn2rX2f7YM-JYeJv98JbPwg1Uir_30abVg1XSTKNjUHVSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20151001110430.GA12682@athens>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOAejn2rX2f7YM-JYeJv98JbPwg1Uir_30abVg1XSTKNjUHVSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-HI
-How I am support to handle this patch? Should I just fix these warnings 
-in my patch or I just add this as a separate patch on the top of the series?
+ Hi Maxime,
 
+2015-10-13 13:25 GMT+02:00 M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
 
-On 10/01/2015 04:34 PM, kbuild test robot wrote:
+>>> +static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
+>>> +                                   enum dma_transfer_direction direction,
+>>> +                                   enum dma_slave_buswidth *buswidth)
+>>> +{
+>>> +       enum dma_slave_buswidth src_addr_width, dst_addr_width;
+>>> +       u32 src_bus_width, dst_bus_width, src_burst_size, dst_burst_size;
+>>> +       u32 src_maxburst, dst_maxburst;
+>>> +       dma_addr_t src_addr, dst_addr;
+>>> +
+>>> +       src_addr_width = chan->dma_sconfig.src_addr_width;
+>>> +       dst_addr_width = chan->dma_sconfig.dst_addr_width;
+>>> +       src_maxburst = chan->dma_sconfig.src_maxburst;
+>>> +       dst_maxburst = chan->dma_sconfig.dst_maxburst;
+>>> +       src_addr = chan->dma_sconfig.src_addr;
+>>> +       dst_addr = chan->dma_sconfig.dst_addr;
+>>> +
+>>> +       switch (direction) {
+>>> +       case DMA_MEM_TO_DEV:
+>>> +               dst_bus_width = stm32_get_dma_width(chan, dst_addr_width);
+>>> +               if (dst_bus_width < 0)
+>>> +                       return -EINVAL;
+>>
+>> dst_bus_width is a u32, so cannot be negative.
+>> Also, you should propagate de error returned by stm32_get_dma_width().
+
+> Good point. Thanks.
+> I am going to replace u32 by int in the v2.
+> It will be done in v2.
 >
-> Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
-> ---
->   phy-exynos-ufs.c |    6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/phy/phy-exynos-ufs.c b/drivers/phy/phy-exynos-ufs.c
-> index 343fcaf..835ee78 100644
-> --- a/drivers/phy/phy-exynos-ufs.c
-> +++ b/drivers/phy/phy-exynos-ufs.c
-> @@ -66,7 +66,7 @@ static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
->   	return false;
->   }
->
-> -int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag tag, u8 pwr)
-> +static int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag tag, u8 pwr)
->   {
->   	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
->   	struct exynos_ufs_phy_cfg **cfgs = ufs_phy->cfg;
-> @@ -93,14 +93,14 @@ out:
->   	return 0;
->   }
->
-> -void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
-> +static void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
->   {
->   	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
->
->   	ufs_phy->lane_cnt = lane_cnt;
->   }
->
-> -int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
-> +static int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
->   {
->   	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
->   	const unsigned int timeout_us = 100000;
->
+Finally, I prefer to return a default value from stm32_get_dma_width()
+and stm32_get_dma_burst().
+In that way, I will always be able to configure DMA transfer parameters.
+
+BR,
+Cedric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
