@@ -1,53 +1,59 @@
-From: Fengguang Wu <lkp@intel.com>
-Subject: Re: [lkp] [PATCH 13/25] scsi: hisi_sas: add path from phyup irq to
- SAS framework
-Date: Tue, 13 Oct 2015 08:40:30 +0800
-Message-ID: <20151013004030.GA7230@wfg-t540p.sh.intel.com>
-References: <1444663237-238302-14-git-send-email-john.garry@huawei.com>
- <201510130540.gVjgsIWc%fengguang.wu@intel.com>
- <CAGRGNgVq_cKkWOC9hXH7kdkLw24atXB3+vqQMwpiLj63=oaS-Q@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 27/27] ARM: dts: omap3: Fix gpmc and NAND nodes
+Date: Mon, 12 Oct 2015 17:43:35 -0700
+Message-ID: <20151013004335.GU23801@atomide.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <1442588029-13769-28-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGRGNgVq_cKkWOC9hXH7kdkLw24atXB3+vqQMwpiLj63=oaS-Q@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Julian Calaby <julian.calaby@gmail.com>
-Cc: kbuild-all@01.org, John Garry <john.garry@huawei.com>, Jej B <James.Bottomley@hansenpartnership.com>, linux-kernel@vger.kernel.com, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi <linux-scsi@vger.kernel.org>, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, Hannes Reinecke <hare@suse.de>
+In-Reply-To: <1442588029-13769-28-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Julian,
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150918 08:00]:
+> Add compatible id, GPMC register resource and interrupt
+> resource to NAND controller nodes.
+> 
+> The GPMC driver now implements gpiochip and irqchip so
+> enable gpio-controller and interrupt-controller properties.
+> 
+> With this the interrupt parent of NAND node changes so fix it
+> accordingly.
+...
+> --- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+> +++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+> @@ -35,11 +35,14 @@
+>  };
+>  
+>  &gpmc {
+> -	ranges = <0 0 0x00000000 0x1000000>;	/* CS0: 16MB for NAND */
+> +	ranges = <0 0 0x08000000 0x1000000>;	/* CS0: 16MB for NAND */
+>  
+>  	nand@0,0 {
+> -		linux,mtd-name = "micron,mt29f4g16abbda3w";
+> +		compatible = "ti,omap2-nand";
+>  		reg = <0 0 4>; /* CS0, offset 0, IO size 4 */
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <20>;
+> +		linux,mtd-name = "micron,mt29f4g16abbda3w";
+>  		nand-bus-width = <16>;
+>  		ti,nand-ecc-opt = "bch8";
+>  		gpmc,sync-clk-ps = <0>;
 
-Oops, this is awkward.. I'll check it, thank you for the reminder!
+At least torpedo breaks for NFSroot as NAND now overlaps with
+Ethernet.. What's the policy you have for moving the addresses
+around?
 
-Thanks,
-Fengguang
+There may be other similar cases to check too.
 
-On Tue, Oct 13, 2015 at 11:27:05AM +1100, Julian Calaby wrote:
-> Hi kbuild test robot people,
-> 
-> On Tue, Oct 13, 2015 at 9:03 AM, kbuild test robot <lkp@intel.com> wrote:
-> > Hi John,
-> >
-> > [auto build test WARNING on scsi/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/John-Garry/HiSilicon-SAS-driver/20151012-231929
-> > reproduce:
-> >         # apt-get install sparse
-> >         make ARCH=x86_64 allmodconfig
-> >         make C=1 CF=-D__CHECK_ENDIAN__
-> >
-> >
-> > sparse warnings: (new ones prefixed by >>)
-> 
-> Your script seems to have lost the actual warnings here.
-> 
-> > Please review and possibly fold the followup patch.
-> 
-> Thanks,
-> 
-> -- 
-> Julian Calaby
-> 
-> Email: julian.calaby@gmail.com
-> Profile: http://www.google.com/profiles/julian.calaby/
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
