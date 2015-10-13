@@ -1,74 +1,118 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH] ARM: socfpga: dts: add fpga manager
-Date: Tue, 13 Oct 2015 14:18:22 -0500
-Message-ID: <alpine.DEB.2.02.1510131412500.3527@linux-builds1>
-References: <1444760900-1373-1-git-send-email-atull@opensource.altera.com> <20151013185750.GB17155@pengutronix.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] net: phy: smsc: disable energy detect mode
+Date: Tue, 13 Oct 2015 12:26:00 -0700
+Message-ID: <561D5AC8.7040801@gmail.com>
+References: <1444713189-23063-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151013185750.GB17155@pengutronix.de>
+In-Reply-To: <1444713189-23063-1-git-send-email-hs@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: atull@opensource.altera.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Heiko Schocher <hs@denx.de>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Georg.Soffel@bosch-si.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Oct 2015, Steffen Trumtrar wrote:
-
-> Hi Alan!
+On 12/10/15 22:13, Heiko Schocher wrote:
+> On some boards the energy enable detect mode leads in
+> trouble with some switches, so make the enabling of
+> this mode configurable through DT.
 > 
-> On Tue, Oct 13, 2015 at 01:28:20PM -0500, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > Add FPGA manager to device tree for SoCFPGA.
-> > 
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > ---
-> >  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > index 314e589..e37ba11 100644
-> > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > @@ -834,5 +834,12 @@
-> >  			compatible = "altr,sys-mgr", "syscon";
-> >  			reg = <0xffd08000 0x4000>;
-> >  		};
-> > +
-> > +		hps_0_fpgamgr: fpgamgr@0xff706000 {
-> > +			compatible = "altr,socfpga-fpga-mgr";
-> > +			reg = <0xFF706000 0x1000
-> > +			       0xFFB90000 0x1000>;
-> > +			interrupts = <0 175 4>;
-> > +		};
-> >  	};
-> >  };
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> ---
 > 
-> Please keep the format in line with the rest of the file:
-> Hexvalues are lowercase and no 0x after the "fpgamgr@".
-> I'd say "And please put the node in its proper position
-> according to its address", but I see just now, that the
-> dtsi is all messed up right now anyway :-(
+>  .../devicetree/bindings/net/smsc-lan87xx.txt       | 19 +++++++++++++++++
+>  drivers/net/phy/smsc.c                             | 24 +++++++++++++++++-----
+>  2 files changed, 38 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/smsc-lan87xx.txt b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+> new file mode 100644
+> index 0000000..39aa1dc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+> @@ -0,0 +1,19 @@
+> +SMSC LAN87xx Ethernet PHY
+> +
+> +Some boards require special tuning values. Configure them
+> +through an Ethernet OF device node.
+> +
+> +Optional properties:
+> +
+> +- disable-energy-detect:
+> +  If set, do not enable energy detect mode for the SMSC phy.
+> +  default: enable energy detect mode
+
+Although energy detection is something that is implemented by many PHYs,
+I am not sure a generic property is suitable here, I would prefix that
+with the SMSC vendor prefix here to make it clear this only applies to
+this PHY.
+
+Would not you want to make it a reverse property here though, something
+like this:
+
+smsc,energy-detect: boolean, when present indicates the PHY reliably
+supports energy detection
+
+
+> +
+> +Examples:
+> +
+> +	/* Attach to an Ethernet device with autodetected PHY */
+> +	&cpsw_emac0 {
+> +		phy_id = <&davinci_mdio>, <0>;
+> +		phy-mode = "mii";
+> +		disable-energy-detect;
+> +	};
+> diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
+> index 70b0895..f90fbf3 100644
+> --- a/drivers/net/phy/smsc.c
+> +++ b/drivers/net/phy/smsc.c
+> @@ -43,16 +43,30 @@ static int smsc_phy_ack_interrupt(struct phy_device *phydev)
+>  
+>  static int smsc_phy_config_init(struct phy_device *phydev)
+>  {
+> +#ifdef CONFIG_OF
+> +	int len;
+> +	struct device *dev = &phydev->dev;
+> +	struct device_node *of_node = dev->of_node;
+
+That does not need to be ifdefd out, at best annontate with __maybe_unused?
+
+> +#endif
+>  	int rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+> +	int enable_energy = 1;
+>  
+>  	if (rc < 0)
+>  		return rc;
+>  
+> -	/* Enable energy detect mode for this SMSC Transceivers */
+> -	rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
+> -		       rc | MII_LAN83C185_EDPWRDOWN);
+> -	if (rc < 0)
+> -		return rc;
+> +#ifdef CONFIG_OF
+> +	if (!of_node && dev->parent->of_node)
+> +		of_node = dev->parent->of_node;
+
+That looks strange, why would the property be placed at the parent level
+when this is a PHY device tree node property?
+
+> +	if (of_find_property(of_node, "disable-energy-detect", &len))
+> +		enable_energy = 0;
+> +#endif
+> +	if (enable_energy) {
+> +		/* Enable energy detect mode for this SMSC Transceivers */
+> +		rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
+> +			       rc | MII_LAN83C185_EDPWRDOWN);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+>  
+>  	return smsc_phy_ack_interrupt(phydev);
+>  }
 > 
 
-How so? Patches are welcomed!
 
-Please fix the "fpgamgr@" and lower case the hex values. But I would prefer the
-nodes to be in alphabetical order.
-
-Also, you need to document the "altr,socfpga-fpga-mgr".
-
-Thanks,
-Dinh
-> Regards,
-> Steffen
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
-
-BR,
-Dinh
+-- 
+Florian
