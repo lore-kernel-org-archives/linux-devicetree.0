@@ -1,47 +1,186 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH v2] ARM: socfpga: dts: add fpga manager
-Date: Tue, 13 Oct 2015 16:16:19 -0500
-Message-ID: <alpine.DEB.2.02.1510131615350.4441@linux-builds1>
-References: <1444765139-2040-1-git-send-email-atull@opensource.altera.com> <alpine.DEB.2.02.1510131450480.4441@linux-builds1> <20151013203344.GE17155@pengutronix.de>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [RFC 2/5] ARM: dts: enable clock support for Broadcom NSP
+Date: Tue, 13 Oct 2015 17:22:24 -0400
+Message-ID: <1444771347-11382-3-git-send-email-jonmason@broadcom.com>
+References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151013203344.GE17155@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Alan Tull <atull@opensource.altera.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Oct 2015, Steffen Trumtrar wrote:
+Replace current device tree dummy clocks with real clock support for
+Broadcom Northstar Plus SoC
 
-> On Tue, Oct 13, 2015 at 02:51:28PM -0500, Dinh Nguyen wrote:
-> > On Tue, 13 Oct 2015, atull@opensource.altera.com wrote:
-> > 
-> > > From: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > Add FPGA manager to device tree for SoCFPGA.
-> > > 
-> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > > ---
-> > > v2: Remove 0x after @
-> > >     No caps in hex numbers
-> > >     renamed hps_0_fpgamgr to fpgamgr0
-> > >     move node to be in alpha order by node name
-> > > ---
-> > >  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > 
-> > Applied!
-> 
-> What about the
-> 
-> "Also, you need to document the "altr,socfpga-fpga-mgr"."
-> 
-> you mentioned in v1 ???
->
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi | 93 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 72 insertions(+), 21 deletions(-)
 
-It was my oversight. It has already been documented. 
-
-BR,
-Dinh
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 58aca27..768ee24 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -32,6 +32,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/bcm-nsp.h>
+ 
+ #include "skeleton.dtsi"
+ 
+@@ -42,7 +43,7 @@
+ 
+ 	mpcore {
+ 		compatible = "simple-bus";
+-		ranges = <0x00000000 0x19020000 0x00003000>;
++		ranges = <0x00000000 0x19000000 0x00023000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+@@ -58,27 +59,34 @@
+ 			};
+ 		};
+ 
+-		L2: l2-cache {
+-			compatible = "arm,pl310-cache";
+-			reg = <0x2000 0x1000>;
+-			cache-unified;
+-			cache-level = <2>;
++		a9pll: arm_clk@0000 {
++			#clock-cells = <0>;
++			compatible = "brcm,nsp-armpll";
++			clocks = <&osc>;
++			reg = <0x0000 0x1000>;
++		};
++
++		timer@20200 {
++			compatible = "arm,cortex-a9-global-timer";
++			reg = <0x20200 0x100>;
++			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&periph_clk>;
+ 		};
+ 
+-		gic: interrupt-controller@19021000 {
++		gic: interrupt-controller@21000 {
+ 			compatible = "arm,cortex-a9-gic";
+ 			#interrupt-cells = <3>;
+ 			#address-cells = <0>;
+ 			interrupt-controller;
+-			reg = <0x1000 0x1000>,
+-			      <0x0100 0x100>;
++			reg = <0x21000 0x1000>,
++			      <0x20100 0x100>;
+ 		};
+ 
+-		timer@19020200 {
+-			compatible = "arm,cortex-a9-global-timer";
+-			reg = <0x0200 0x100>;
+-			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&periph_clk>;
++		L2: l2-cache {
++			compatible = "arm,pl310-cache";
++			reg = <0x22000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
+ 		};
+ 	};
+ 
+@@ -87,33 +95,76 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		periph_clk: periph_clk {
++		osc: oscillator {
++			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
++			clock-frequency = <25000000>;
++		};
++
++		iprocmed: iprocmed {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		iprocslow: iprocslow {
+ 			#clock-cells = <0>;
+-			clock-frequency = <500000000>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
++			clock-div = <4>;
++			clock-mult = <1>;
++		};
++
++		periph_clk: periph_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&a9pll>;
++			clock-div = <2>;
++			clock-mult = <1>;
+ 		};
+ 	};
+ 
+ 	axi {
+ 		compatible = "simple-bus";
+-		ranges = <0x00000000 0x18000000 0x00001000>;
++		ranges = <0x00000000 0x18000000 0x0003f164>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		uart0: serial@18000300 {
++		uart0: serial@00300 {
+ 			compatible = "ns16550a";
+-			reg = <0x0300 0x100>;
++			reg = <0x00300 0x100>;
+ 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-frequency = <62499840>;
+ 			status = "disabled";
+ 		};
+ 
+-		uart1: serial@18000400 {
++		uart1: serial@00400 {
+ 			compatible = "ns16550a";
+-			reg = <0x0400 0x100>;
++			reg = <0x00400 0x100>;
+ 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-frequency = <62499840>;
+ 			status = "disabled";
+ 		};
++
++		lcpll0: lcpll0@3f100 {
++			#clock-cells = <1>;
++			compatible = "brcm,nsp-lcpll0";
++			reg = <0x3f100 0x14>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll0", "pcie_phy", "sdio",
++					     "ddr_phy";
++		};
++
++		genpll: genpll@3f140 {
++			#clock-cells = <1>;
++			compatible = "brcm,nsp-genpll";
++			reg = <0x3f140 0x24>;
++			clocks = <&osc>;
++			clock-output-names = "genpll", "phy", "ethernetclk",
++					     "usbclk", "iprocfast", "sata1",
++					     "sata2";
++		};
+ 	};
+ };
+-- 
+1.9.1
