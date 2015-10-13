@@ -1,113 +1,204 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional
- clock
-Date: Tue, 13 Oct 2015 09:50:06 +0100
-Message-ID: <561CC5BE.8040708@codethink.co.uk>
-References: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk> <20151012174505.GJ23801@atomide.com> <561BF97B.2010501@codethink.co.uk> <20151012191948.GM23801@atomide.com> <561CBF7F.7020705@codethink.co.uk> <561CC4C7.8020408@ti.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 3/3] leds: rt5033: Add RT5033 Flash led device driver
+Date: Tue, 13 Oct 2015 10:53:18 +0200
+Message-ID: <561CC67E.6050107@samsung.com>
+References: <1444655578-19806-1-git-send-email-ingi2.kim@samsung.com>
+ <1444655578-19806-4-git-send-email-ingi2.kim@samsung.com>
+ <561BCD71.9020001@samsung.com> <561C7354.9080504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561CC4C7.8020408-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <561C7354.9080504@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/10/15 09:45, Roger Quadros wrote:
-> Ben,
-> 
-> On 13/10/15 11:23, Ben Dooks wrote:
->> On 12/10/15 20:19, Tony Lindgren wrote:
->>> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 11:22]:
->>>> On 12/10/15 18:45, Tony Lindgren wrote:
->>>>> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 10:38]:
->>>>>> The AM3715 OHCI controller will not function without the EHCI
->>>>>> unit's 120m fclk being enabled. If all the ports in the system
->>>>>> are set to OHCI then the 120m_fclk will not get enabled and no
->>>>>> devices are detected.
->>>>>>
->>>>>> Add a new (optional) property to signal the system must enable
->>>>>> the 120m_fck for OHCI so that if no EHCI ports are signalled
->>>>>> then the 120m_fclk should be enabled.
->>>>>>
->>>>>> We have found no information about why this is necessary, but
->>>>>> it is suspected the EHCI controller does not complete the initial
->>>>>> reset sequence and therefore does not hand control of the USB
->>>>>> port back.
->>>>>>
->>>>>> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
->>>>>>  drivers/mfd/omap-usb-host.c                        | 4 ++++
->>>>>>  2 files changed, 7 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
->>>>>> index 38d9bb8..fb5fea5 100644
->>>>>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
->>>>>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
->>>>>> @@ -23,6 +23,9 @@ OMAP MUSB GLUE
->>>>>>  Optional properties:
->>>>>>   - ctrl-module : phandle of the control module this glue uses to write to
->>>>>>     mailbox
->>>>>> + - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
->>>>>> +   using ohci. Needed for AM3517 in OHCI only mode.
->>>>>> +
->>>>>>  
->>>>>>  SOC specific device node entry
->>>>>>  usb_otg_hs: usb_otg_hs@4a0ab000 {
->>>>>> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
->>>>>> index 1d924d1..13880cf 100644
->>>>>> --- a/drivers/mfd/omap-usb-host.c
->>>>>> +++ b/drivers/mfd/omap-usb-host.c
->>>>>> @@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
->>>>>>  				need_logic_fck |= true;
->>>>>>  		}
->>>>>>  
->>>>>> +		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
->>>>>> +		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
->>>>>> +			need_logic_fck |= true;
->>>>>> +
->>>>>>  		if (need_logic_fck) {
->>>>>>  			omap->ehci_logic_fck = devm_clk_get(dev,
->>>>>>  							    "usbhost_120m_fck");
->>>>>
->>>>> Hmm why not just use the standard device tree clocks property and then do
->>>>> clk_get_rate() on the clock?
->>>>
->>>> I don't see that helps enabling the clock. The code decideds if
->>>> no EHCI ports in use that it doesn't need to enable the EHCI fclk.
+Hi Ingi,
+
+On 10/13/2015 04:58 AM, Ingi Kim wrote:
+> Hi Jacek,
+>
+> Thanks for your kind comments
+> I also append reply below
+>
+> On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 00:10, Jacek Anaszewski wrot=
+e:
+>> Hi Ingi,
+>>
+>> Thanks for the update. Few comments below.
+>>
+>> On 10/12/2015 03:12 PM, Ingi Kim wrote:
+>>> This patch adds device driver of Richtek RT5033 PMIC.
+>>> The driver supports a current regulated output to drive
+>>> white LEDs for camera flash.
 >>>
->>> Right, you need to do clk_prepare_enable() in it first? :)
+>>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+>>> ---
+>>>    drivers/leds/Kconfig               |   8 ++
+>>>    drivers/leds/Makefile              |   1 +
+>>>    drivers/leds/leds-rt5033.c         | 223 +++++++++++++++++++++++=
+++++++++++++++
+>>>    include/linux/mfd/rt5033-private.h |  49 ++++++++
+>>>    include/linux/mfd/rt5033.h         |  22 +++-
+>>>    5 files changed, 301 insertions(+), 2 deletions(-)
+>>>    create mode 100644 drivers/leds/leds-rt5033.c
+>>>
+>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>> index 42990f2..29613e3 100644
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -345,6 +345,14 @@ config LEDS_PCA963X
+>>>          LED driver chip accessed via the I2C bus. Supported
+>>>          devices include PCA9633 and PCA9634
+>>>
+>>> +config LEDS_RT5033
+>>> +    tristate "LED support for RT5033 PMIC"
+>>> +    depends on LEDS_CLASS_FLASH && OF
+>>> +    depends on MFD_RT5033
+>>> +    help
+>>> +      This option enables support for on-chip LED driver on
+>>> +      RT5033 PMIC.
+>>> +
+>>>    config LEDS_WM831X_STATUS
+>>>        tristate "LED support for status LEDs on WM831x PMICs"
+>>>        depends on LEDS_CLASS
+>>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>>> index b503f92..bcc4d93 100644
+>>> --- a/drivers/leds/Makefile
+>>> +++ b/drivers/leds/Makefile
+>>> @@ -23,6 +23,7 @@ obj-$(CONFIG_LEDS_COBALT_QUBE)        +=3D leds-c=
+obalt-qube.o
+>>>    obj-$(CONFIG_LEDS_COBALT_RAQ)        +=3D leds-cobalt-raq.o
+>>>    obj-$(CONFIG_LEDS_SUNFIRE)        +=3D leds-sunfire.o
+>>>    obj-$(CONFIG_LEDS_PCA9532)        +=3D leds-pca9532.o
+>>> +obj-$(CONFIG_LEDS_RT5033)        +=3D leds-rt5033.o
+>>>    obj-$(CONFIG_LEDS_GPIO_REGISTER)    +=3D leds-gpio-register.o
+>>>    obj-$(CONFIG_LEDS_GPIO)            +=3D leds-gpio.o
+>>>    obj-$(CONFIG_LEDS_LP3944)        +=3D leds-lp3944.o
+>>> diff --git a/drivers/leds/leds-rt5033.c b/drivers/leds/leds-rt5033.=
+c
+>>> new file mode 100644
+>>> index 0000000..b470c94
+>>> --- /dev/null
+>>> +++ b/drivers/leds/leds-rt5033.c
+>>> @@ -0,0 +1,223 @@
+>>> +/*
+>>> + * led driver for RT5033
+>>> + *
+>>> + * Copyright (C) 2015 Samsung Electronics, Co., Ltd.
+>>> + * Ingi Kim <ingi2.kim@samsung.com>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or m=
+odify
+>>> + * it under the terms of the GNU General Public License version 2 =
+as
+>>> + * published by the Free Software Foundation.
+>>> + *
+>>> + */
+>>> +
+>>> +#include <linux/mfd/rt5033.h>
+>>> +#include <linux/mfd/rt5033-private.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/platform_device.h>
+>>> +
+>>> +#define RT5033_LED_FLASH_TIMEOUT_MIN        64000
+>>> +#define RT5033_LED_FLASH_TIMEOUT_STEPS        32000
+>>> +#define RT5033_LED_TORCH_CURRENT_LEVEL_MAX    16
+>>> +
+>>> +/* Macro for getting offset of flash timeout */
+>>> +#define GET_TIMEOUT_OFFSET(tm, step)    ((tm) / (step) - 2)
+>>> +
+>>> +static struct rt5033_led *flcdev_to_led(
+>>> +                struct led_classdev_flash *fled_cdev)
+>>> +{
+>>> +    return container_of(fled_cdev, struct rt5033_led, fled_cdev);
+>>> +}
+>>> +
+>>> +static int rt5033_led_brightness_set(struct led_classdev *led_cdev=
+,
+>>> +                     enum led_brightness brightness)
+>>> +{
+>>> +    struct led_classdev_flash *fled_cdev =3D lcdev_to_flcdev(led_c=
+dev);
+>>> +    struct rt5033_led *led =3D flcdev_to_led(fled_cdev);
 >>
->> No, if that was the case the driver would never work for the EHCI case.
+>> I assume that you don't use mutex here deliberately?
 >>
->> The issue is:
->>
->> 1) All ports on the system are set to OHCI
->> 2) The omap-usb-host.c does not touch usbhost_120m_fck if no EHCI ports
->> 3) The OHCI fails to detect any devices due to point 2.
->>
-> 
-> Instead of your existing approach why not just modify the preceeding
-> if condition that sets need_logic_fck to suit the OHCI case.
-> 
-> That way you don't need to add a new DT binding.
-> 
-> The old assumption was that 120m_fck logic clock is only needed for
-> EHCI mode but it looks like OHCI mode needs it as well.
-> 
-> You should also rename omap->ehci_logic_fck to omap->hci_logic_fck
-> as it is no longer ehci specific.
+>
+> Actually I'm not sure why flash driver uses mutex.
 
-Thanks, will go and have a look at the manual later as didn't see two
-separate 120m clocks when looking.
+Which flash driver do you have on mind?
 
+> In consideration of blocking competition, however, I'd be better to u=
+se it
+>
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+>>> +
+>>> +static int rt5033_led_flash_strobe_set(struct led_classdev_flash *=
+fled_cdev,
+>>> +                       bool state)
+>>> +{
+>>> +    struct rt5033_led *led =3D flcdev_to_led(fled_cdev);
+>>> +    u32 flash_tm_reg;
+>>
+>> I think that you need a mutex here and in rt5033_led_flash_strobe_se=
+t. Otherwise following is possible:
+>>
+>> Process 1:
+>>      rt5033_led_flash_strobe_set(led_cdev, 1);
+>>
+>>      regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION1,
+>>              RT5033_FLED_FUNC1_MASK, RT5033_FLED_RESET);
+>>      fled_cdev->led_cdev.brightness =3D LED_OFF;
+>>
+>> Process 2:
+>>      led_set_brightness(led_cdev, 1);
+>>
+>>      fled_cdev->led_cdev.brightness =3D 1;
+>>
+>>      rt5033_led_brightness_set(led_cdev, LED_FULL);
+>>
+>>      regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION1,
+>>              RT5033_FLED_FUNC1_MASK, RT5033_FLED_PINCTRL);
+>>      regmap_update_bits(led->regmap,    RT5033_REG_FLED_CTRL1,
+>>              RT5033_FLED_CTRL1_MASK,
+>>              (brightness - 1) << 4);
+>>      regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION2,
+>>              RT5033_FLED_CTRL2_MASK, RT5033_FLED_ENFLED);
+>>
+>> Process 1:
+>>      regmap_update_bits(led->regmap,    RT5033_REG_FLED_STROBE_CTRL2=
+,
+>>          RT5033_FLED_STRBCTRL2_MASK, flash_tm_reg);
+>>      regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION1,
+>>          RT5033_FLED_FUNC1_MASK, RT5033_FLED_STRB_SEL
+>>          | RT5033_FLED_PINCTRL);
+>>      regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION2,
+>>          RT5033_FLED_FUNC2_MASK, RT5033_FLED_ENFLED
+>>
+>> In a result LED class device will report brightness value 1,
+>> whereas it would be inconsistent with hardware state, since
+>> flash strobe turns torch mode off.
+>>
+>>
+>
+> Thanks for your explanation in detail,
+> I was worried about cases of using shared resource for flash led.
+> because I thought flash led would be called just from camera or direc=
+tly itself.
+> I should consider using mutex
+
+You don't provide support for v4l2-flash-led-class and you don't
+implement external_strobe_set op. Only if the op is implemented a v4l2
+device can switch the strobe source from software to external,
+which allows strobing the flash directly by camera sensor or ISP,
+but without software interaction.
+
+--=20
+Best Regards,
+Jacek Anaszewski
