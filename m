@@ -1,131 +1,132 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Tue, 13 Oct 2015 22:59:40 +0900
-Message-ID: <561D0E4C.4010205@samsung.com>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151007100017.GB12635@sirena.org.uk> <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox> <20151012134309.GE1542@sirena.org.uk>
- <20151013080218.GV17172@x1> <20151013121450.GD8805@ck-lbox>
- <20151013135053.GB32409@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20151013135053.GB32409@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+From: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/4] dt-bindings: Document the STM32 DMA bindings
+Date: Tue, 13 Oct 2015 16:00:45 +0200
+Message-ID: <1444744848-720-2-git-send-email-cedric.madianga@gmail.com>
+References: <1444744848-720-1-git-send-email-cedric.madianga@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444744848-720-1-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+This patch adds documentation of device tree bindings for the STM32 dma
+controller.
 
-On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 22:50, Lee Jones wrote:
-> On Tue, 13 Oct 2015, Charles Keepax wrote:
->=20
->> On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
->>> On Mon, 12 Oct 2015, Mark Brown wrote:
->>>
->>>> On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrote:
->>>>> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
->>>>>> On Wed, 07 Oct 2015, Mark Brown wrote:
->>>>
->>>>>>> This all seems pretty much fine to me - the things it is contro=
-lling are
->>>>>>> fairly specific to the way the former Wolfson devices do, they =
-only
->>>>>>> really make sense with a fairly particular algorithm which isn'=
-t widely
->>>>>>> implemented.
->>>>
->>>>>> Is that an Ack?
->>>>
->>>>> I am guessing Mark is slightly hesitant to ack as he probably
->>>>> doesn't want to add reviewing all our jack detection bindings to
->>>>> his already fairly sizable work load and doing so here likely
->>>>> means it will be expected in the future. From talking to people a=
-t
->>>
->>> Providing Acks should not (and has not to my knowledge) be a bindin=
-g
->>> contract to continue providing Acks.  However, should more bindings=
- be
->>> submitted which appear as though they are related to a particular
->>> maintainer, then sure, you'll be asked for your expert eye again.
->>
->> Its not a binding contract to continue providing them but we are
->> making that a condition of merging any patches, which means I
->> will need to chase Mark for Acks, as it seems the DT maintainers
->> won't have any interest in reviewing/acking these.
->=20
-> I've already made it a condition, as I refuse to blindly accept
-> unknown bindings.  Taking a sea of bindings I have no knowledge of
-> would be a bad-thing(tm).  If these were GPIO bindings, I'd be asking
-> Linus for help, likewise if they were I2C, I'd be asking Wolfram.
->=20
->>>> Pretty much (plus generally being busy at ELC-E last week) - if th=
-ere's
->>>> specific questions that's one thing but if it's just general reque=
-sts to
->>>> look at bindings then it seems like the relevant subsystem maintai=
-ners
->>>
->>> This is exactly my point.  I am not the 'relevant subsystem
->>> maintainer' for these properties and subsequently know nothing of
->>> microphone detection, headsets, bias', etc.  These look like Audio
->>> related properties to me (the uninitiated), which is why you were
->>> asked.
->>
->> It would be sensible I guess to define whether I should be
->> including audio people on jack detection patches even if they
->> don't touch audio subsystems. I was treating jack detection
->> as an extcon thing and thus assuming that the extcon maintainer
->> would be sufficient, but perhaps that is an incorrect assumption.
->=20
-> Now I know that jack detection is an Extcon thing and Extcon Ack will
-> do just nicely.  However, that begs the question; if they are an
-> Extcon thing, why aren't they in the Extcon binding document?
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/dma/stm32-dma.txt          | 98 ++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
 
-As I knew, the arizona-extcon is one device of the MFD devices=20
-for WMxxxx series in the driver/mfd/arizona-core.c. So, If arizona-extc=
-on
-driver needs the some property for dt support, some property should be
-included in MFD device tree node. There is no separate device tree node=
- for
-arizona-extcon driver.
+diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+new file mode 100644
+index 0000000..9ce0d49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+@@ -0,0 +1,98 @@
++* STMicroelectronics STM32 DMA controller
++
++The STM32 DMA is a general-purpose direct memory access controller capable of
++supporting 8 independent DMA channels. Each channel can have up to 8 requests.
++
++Required properties:
++- compatible: Should be "st,stm32-dma"
++- reg: Should contain DMA registers location and length. This should include
++  all of the per-channel registers.
++- interrupts: Should contain all of the per-channel DMA interrupts.
++- clocks: Should contain the input clock of the DMA instance.
++- #dma-cells : Must be <4>. See DMA client paragraph for more details.
++
++Optional properties:
++- resets: Reference to a reset controller asserting the DMA controller
++- st,mem2mem: boolean; if defined, it indicates that the controller supports
++  memory-to-memory transfer
++
++Example:
++
++	dma2: dma-controller@40026400 {
++		compatible = "st,stm32-dma";
++		reg = <0x40026400 0x400>;
++		interrupts = <56>,
++			     <57>,
++			     <58>,
++			     <59>,
++			     <60>,
++			     <68>,
++			     <69>,
++			     <70>;
++		clocks = <&clk_hclk>;
++		#dma-cells = <4>;
++		st,mem2mem;
++		resets = <&rcc 150>;
++	};
++
++* DMA client
++
++Required properties:
++- dmas: Comma separated list of dma channel requests
++- dma-names: Names of the aforementioned requested channels
++
++Each dmas request consists of 5 cells:
++1. A phandle pointing to the STM32 DMA controller
++2. The channel id
++3. The request line number
++4. A 32bit mask specifying the DMA channel configuration
++ -bit 1: Direct Mode Error Interrupt
++	0x0: disabled
++	0x1: enabled
++ -bit 2: Transfer Error Interrupt
++	0x0: disabled
++	0x1: enabled
++ -bit 3: Half Transfer Mode Error Interrupt
++	0x0: disabled
++	0x1: enabled
++ -bit 4: Transfer Complete Interrupt
++	0x0: disabled
++	0x1: enabled
++ -bit 9: Peripheral Increment Address
++	0x0: no address increment between transfers
++	0x1: increment address between transfers
++ -bit 10: Memory Increment Address
++	0x0: no address increment between transfers
++	0x1: increment address between transfers
++ -bit 15: Peripheral Increment Offset Size
++	0x0: offset size is linked to the peripheral bus width
++	0x1: offset size is fixed to 4 (32-bit alignment)
++ -bit 16-17: Priority level
++	0x0: low
++	0x1: medium
++	0x2: high
++	0x3: very high
++5. A 32bit mask specifying the DMA FIFO configuration
++ -bit 0-1: Fifo threshold
++	0x0: 1/4 full FIFO
++	0x1: 1/2 full FIFO
++	0x2: 3/4 full FIFO
++	0x3:full FIFO
++ -bit 2: Direct mode
++	0x0: enabled
++	0x1: disabled
++ -bit 7: FIFO Error Interrupt
++	0x0: disabled
++	0x1: enabled
++
++Example:
++
++	usart1: serial@40011000 {
++		compatible = "st,stm32-usart", "st,stm32-uart";
++		reg = <0x40011000 0x400>;
++		interrupts = <37>;
++		clocks = <&clk_pclk2>;
++		dmas = <&dma2 2 4 0x20610 0x3>,
++		       <&dma2 7 5 0x20610 0x3>;
++		dma-names = "rx", "tx";
++	};
+-- 
+1.9.1
 
-Thanks,
-Chanwoo Choi
-
->=20
->>>> should have the confidence to review straightfoward device propert=
-ies
->>>> like this.
->>>
->>> I don't think these bindings are particularly straightforward.  The
->>> contain many terms which I'm unfamiliar with, and again, to me (the
->>> uninitiated) this looks like way too many bindings just to see if a=
-n
->>> audio jack is plugged in or not.
->>
->> I also wish our designers would make less complex hardware sigh.
->>
->> Apologies I didn't mean to cause any offense here, I am just
->> getting a bit concerned about how I can get any DT support for
->> jack detection upstreamed. I am more than happy to fix up any
->> comments anyone has or answer any questions about what things
->> are or why they are required.
->=20
-> Hopefully there won't be too many more bindings to come?
->=20
-> My issue is that as they are not MFD related, I need some advice from
-> my colleagues to whom they are related to.
->=20
->> The jack detection on these chips is fairly complex and there are
->> going to be plenty more patches before we have full support for
->> it in DT. So I think it would be good for everyone if we can
->> agree some process for how to handle this type of patch.
->=20
-> Put them in the subsystem where they pertain to -- job done.
->=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
