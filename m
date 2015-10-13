@@ -1,109 +1,74 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional
- clock
-Date: Tue, 13 Oct 2015 11:45:59 +0300
-Message-ID: <561CC4C7.8020408@ti.com>
-References: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk>
- <20151012174505.GJ23801@atomide.com> <561BF97B.2010501@codethink.co.uk>
- <20151012191948.GM23801@atomide.com> <561CBF7F.7020705@codethink.co.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] mfd: sec-core: Dump PMIC revision to find out the
+ HW
+Date: Tue, 13 Oct 2015 09:47:29 +0100
+Message-ID: <20151013084729.GF32409@x1>
+References: <1444178681-16188-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561CBF7F.7020705-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444178681-16188-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Ben,
+On Wed, 07 Oct 2015, Krzysztof Kozlowski wrote:
 
-On 13/10/15 11:23, Ben Dooks wrote:
-> On 12/10/15 20:19, Tony Lindgren wrote:
->> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 11:22]:
->>> On 12/10/15 18:45, Tony Lindgren wrote:
->>>> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 10:38]:
->>>>> The AM3715 OHCI controller will not function without the EHCI
->>>>> unit's 120m fclk being enabled. If all the ports in the system
->>>>> are set to OHCI then the 120m_fclk will not get enabled and no
->>>>> devices are detected.
->>>>>
->>>>> Add a new (optional) property to signal the system must enable
->>>>> the 120m_fck for OHCI so that if no EHCI ports are signalled
->>>>> then the 120m_fclk should be enabled.
->>>>>
->>>>> We have found no information about why this is necessary, but
->>>>> it is suspected the EHCI controller does not complete the initial
->>>>> reset sequence and therefore does not hand control of the USB
->>>>> port back.
->>>>>
->>>>> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
->>>>>  drivers/mfd/omap-usb-host.c                        | 4 ++++
->>>>>  2 files changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
->>>>> index 38d9bb8..fb5fea5 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
->>>>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
->>>>> @@ -23,6 +23,9 @@ OMAP MUSB GLUE
->>>>>  Optional properties:
->>>>>   - ctrl-module : phandle of the control module this glue uses to write to
->>>>>     mailbox
->>>>> + - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
->>>>> +   using ohci. Needed for AM3517 in OHCI only mode.
->>>>> +
->>>>>  
->>>>>  SOC specific device node entry
->>>>>  usb_otg_hs: usb_otg_hs@4a0ab000 {
->>>>> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
->>>>> index 1d924d1..13880cf 100644
->>>>> --- a/drivers/mfd/omap-usb-host.c
->>>>> +++ b/drivers/mfd/omap-usb-host.c
->>>>> @@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
->>>>>  				need_logic_fck |= true;
->>>>>  		}
->>>>>  
->>>>> +		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
->>>>> +		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
->>>>> +			need_logic_fck |= true;
->>>>> +
->>>>>  		if (need_logic_fck) {
->>>>>  			omap->ehci_logic_fck = devm_clk_get(dev,
->>>>>  							    "usbhost_120m_fck");
->>>>
->>>> Hmm why not just use the standard device tree clocks property and then do
->>>> clk_get_rate() on the clock?
->>>
->>> I don't see that helps enabling the clock. The code decideds if
->>> no EHCI ports in use that it doesn't need to enable the EHCI fclk.
->>
->> Right, you need to do clk_prepare_enable() in it first? :)
-> 
-> No, if that was the case the driver would never work for the EHCI case.
-> 
-> The issue is:
-> 
-> 1) All ports on the system are set to OHCI
-> 2) The omap-usb-host.c does not touch usbhost_120m_fck if no EHCI ports
-> 3) The OHCI fails to detect any devices due to point 2.
-> 
+> There are different revisions of the same chipset. For example S2MPS1=
+3 has
+> more than 2 revisions. They differ slightly in regulator constraints.
+> Print the revision number to easily find which PMIC is used on the bo=
+ard.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>=20
+> ---
+>=20
+> Changs since v1:
+> None.
+> ---
+>  drivers/mfd/sec-core.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-Instead of your existing approach why not just modify the preceeding
-if condition that sets need_logic_fck to suit the OHCI case.
+=46or my own reference:
+  Acked-by: Lee Jones <lee.jones@linaro.org>
 
-That way you don't need to add a new DT binding.
+> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
+> index 2d1137a7a0ee..589e5efc2d7f 100644
+> --- a/drivers/mfd/sec-core.c
+> +++ b/drivers/mfd/sec-core.c
+> @@ -253,6 +253,15 @@ static const struct regmap_config s5m8767_regmap=
+_config =3D {
+>  	.cache_type =3D REGCACHE_FLAT,
+>  };
+> =20
+> +static void sec_pmic_dump_rev(struct sec_pmic_dev *sec_pmic)
+> +{
+> +	unsigned int val;
+> +
+> +	/* For each device type, the REG_ID is always the first register */
+> +	if (!regmap_read(sec_pmic->regmap_pmic, S2MPS11_REG_ID, &val))
+> +		dev_dbg(sec_pmic->dev, "Revision: 0x%x\n", val);
+> +}
+> +
+>  #ifdef CONFIG_OF
+>  /*
+>   * Only the common platform data elements for s5m8767 are parsed her=
+e from the
+> @@ -425,6 +434,7 @@ static int sec_pmic_probe(struct i2c_client *i2c,
+>  		goto err_mfd;
+> =20
+>  	device_init_wakeup(sec_pmic->dev, sec_pmic->wakeup);
+> +	sec_pmic_dump_rev(sec_pmic);
+> =20
+>  	return ret;
+> =20
 
-The old assumption was that 120m_fck logic clock is only needed for
-EHCI mode but it looks like OHCI mode needs it as well.
-
-You should also rename omap->ehci_logic_fck to omap->hci_logic_fck
-as it is no longer ehci specific.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
