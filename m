@@ -1,115 +1,83 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH 1/4] Documentation: dt: soc: move driver description to
- a separate document
-Date: Tue, 13 Oct 2015 11:44:21 -0400
-Message-ID: <561D26D5.7060405@ti.com>
-References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com> <1444679211-823-2-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation
+ for mic detection
+Date: Tue, 13 Oct 2015 16:23:31 +0100
+Message-ID: <20151013152331.GL8805@ck-lbox>
+References: <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
+ <20151012134309.GE1542@sirena.org.uk>
+ <20151013080218.GV17172@x1>
+ <20151013121450.GD8805@ck-lbox>
+ <20151013135053.GB32409@x1>
+ <561D0E4C.4010205@samsung.com>
+ <561D10A6.7040504@samsung.com>
+ <20151013141822.GC32409@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20151013141822.GC32409@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2015 10:42 AM, Rob Herring wrote:
-> On Mon, Oct 12, 2015 at 2:46 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
->> Currently the DT bindings have details about the driver as well. This
->> patch moves this to a separate document for knav qmss driver so that
->> driver detail update can be done as needed without polluting the DT
->> bindings description.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> ---
->>   Documentation/arm/keystone/knav-qmss.txt           | 24 ++++++++++++++++++++++
->>   .../bindings/soc/ti/keystone-navigator-qmss.txt    | 20 ++++--------------
->>   2 files changed, 28 insertions(+), 16 deletions(-)
->>   create mode 100644 Documentation/arm/keystone/knav-qmss.txt
->>
->> diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
->> new file mode 100644
->> index 0000000..79946d1
->> --- /dev/null
->> +++ b/Documentation/arm/keystone/knav-qmss.txt
->> @@ -0,0 +1,24 @@
->> +* Texas Instruments Keystone Navigator Queue Management SubSystem driver
->> +
->> +Driver source code path
->> +  drivers/soc/ti/knav_qmss.c
->> +  drivers/soc/ti/knav_qmss_acc.c
->> +
->> +The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
->> +the main hardware sub system which forms the backbone of the Keystone
->> +multi-core Navigator. QMSS consist of queue managers, packed-data structure
->> +processors(PDSP), linking RAM, descriptor pools and infrastructure
->> +Packet DMA.
->> +The Queue Manager is a hardware module that is responsible for accelerating
->> +management of the packet queues. Packets are queued/de-queued by writing or
->> +reading descriptor address to a particular memory mapped location. The PDSPs
->> +perform QMSS related functions like accumulation, QoS, or event management.
->> +Linking RAM registers are used to link the descriptors which are stored in
->> +descriptor RAM. Descriptor RAM is configurable as internal or external memory.
->> +The QMSS driver manages the PDSP setups, linking RAM regions,
->> +queue pool management (allocation, push, pop and notify) and descriptor
->> +pool management.
->> +
->> +knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
->> +allocate descriptor pools, map the descriptors, push/pop to queues etc. For
->> +details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
->> diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
->> index d8e8cdb..2cecea1 100644
->> --- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
->> +++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
->> @@ -1,20 +1,8 @@
->> -* Texas Instruments Keystone Navigator Queue Management SubSystem driver
->> -
->> -The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
->> -the main hardware sub system which forms the backbone of the Keystone
->> -multi-core Navigator. QMSS consist of queue managers, packed-data structure
->> -processors(PDSP), linking RAM, descriptor pools and infrastructure
->> -Packet DMA.
->> -The Queue Manager is a hardware module that is responsible for accelerating
->> -management of the packet queues. Packets are queued/de-queued by writing or
->> -reading descriptor address to a particular memory mapped location. The PDSPs
->> -perform QMSS related functions like accumulation, QoS, or event management.
->> -Linking RAM registers are used to link the descriptors which are stored in
->> -descriptor RAM. Descriptor RAM is configurable as internal or external memory.
->> -The QMSS driver manages the PDSP setups, linking RAM regions,
->> -queue pool management (allocation, push, pop and notify) and descriptor
->> -pool management.
->
-> Only the last sentence seems to be about the driver and is rather
-> obvious (a driver manages the h/w). I would leave all this as-is
-> currently.
->
-> Rob
->
-Rob,
+On Tue, Oct 13, 2015 at 03:18:22PM +0100, Lee Jones wrote:
+> On Tue, 13 Oct 2015, Chanwoo Choi wrote:
+> > On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 22:59, Chanwoo Choi wrote:
+> > > On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 22:50, Lee Jones wrote:
+> > >> On Tue, 13 Oct 2015, Charles Keepax wrote:
+> > >>
+> > >>> On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
+> > >>>> On Mon, 12 Oct 2015, Mark Brown wrote:
+> > >>>>
+> > >>>>> On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrot=
+e:
+> > >>>>>> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+> > >>>>>>> On Wed, 07 Oct 2015, Mark Brown wrote:
+> > >> Now I know that jack detection is an Extcon thing and Extcon Ack=
+ will
+> > >> do just nicely.  However, that begs the question; if they are an
+> > >> Extcon thing, why aren't they in the Extcon binding document?
+> > >=20
+> > > As I knew, the arizona-extcon is one device of the MFD devices=20
+> > > for WMxxxx series in the driver/mfd/arizona-core.c. So, If arizon=
+a-extcon
+> > > driver needs the some property for dt support, some property shou=
+ld be
+> > > included in MFD device tree node. There is no separate device tre=
+e node for
+> > > arizona-extcon driver.
+> >=20
+> > If creating the separate extcon doc for extcon-arizona.c driver, it=
+ is possible
+> > to make the child device tree node which is located at the below of=
+ arizona MFD
+> > device tree node.
+> >=20
+> > I agree about Lee's opinion to make the separate the Extcon doc for=
+ extcon-arizona.c.
+>=20
+> This is how we normally document MFDs.  Extcon doesn't even need to
+> have it's own child-node (it can if you want though -- it's however
+> you want to represent it), you can just put something like this in th=
+e
+> MFD binding doc:
+>=20
+> Optional properties
+> this		: Does this
+> that		: Does that
+>=20
+> Also any child device specific property:
+> 	GPIO    See: ../extcon/arizona.txt
+> 	Extcon  See: ../gpio/arizona.txt
+>=20
+> Etc.  Or words to that effect.  See some other MFDs for examples.
 
-I promise I will fix this in my next opportunity. Also there is similar 
-clean up needed for knav dma DT documentation and Netcp documentations. 
-It is in my TODO list.
+More accident of history than anything else I will send a patch
+to split the binding up into the seperate subsystems shortly.
 
-Thanks.
-
-Murali
->> +* Texas Instruments Keystone Navigator (knav) Queue Management SubSystem driver
->> +  DT bindings
->>
->> +For details of the driver, please refer to
->> +Documentation/arm/keystone/knav-qmss.txt
->>
->>   Required properties:
->>   - compatible   : Must be "ti,keystone-navigator-qmss";
->> --
->> 1.9.1
->>
->
->
-
-
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+Thanks,
+Charles
