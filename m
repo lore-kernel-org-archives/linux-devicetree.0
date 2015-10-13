@@ -1,68 +1,116 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
-Date: Tue, 13 Oct 2015 18:14:25 +0100
-Message-ID: <561D3BF1.8060600@huawei.com>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
- <1444663237-238302-10-git-send-email-john.garry@huawei.com>
- <561CA0CB.5090802@suse.de>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] Documentation: dt: soc: move driver description to
+ a separate document
+Date: Tue, 13 Oct 2015 13:28:33 -0400
+Message-ID: <561D3F41.4080803@ti.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com> <1444679211-823-2-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561CA0CB.5090802-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hannes Reinecke <hare-l3A5Bk7waGM@public.gmane.org>, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/10/2015 07:12, Hannes Reinecke wrote:
-> On 10/12/2015 05:20 PM, John Garry wrote:
->> This SAS ID is chosen as Huawei IEEE id: 001882
+On 10/13/2015 10:42 AM, Rob Herring wrote:
+> On Mon, Oct 12, 2015 at 2:46 PM, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
+>> Currently the DT bindings have details about the driver as well. This
+>> patch moves this to a separate document for knav qmss driver so that
+>> driver detail update can be done as needed without polluting the DT
+>> bindings description.
 >>
->> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 >> ---
->>   drivers/scsi/hisi_sas/hisi_sas_init.c | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
+>>   Documentation/arm/keystone/knav-qmss.txt           | 24 ++++++++++++++++++++++
+>>   .../bindings/soc/ti/keystone-navigator-qmss.txt    | 20 ++++--------------
+>>   2 files changed, 28 insertions(+), 16 deletions(-)
+>>   create mode 100644 Documentation/arm/keystone/knav-qmss.txt
 >>
->> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/hisi_sas/hisi_sas_init.c
->> index 44fc524..c295c39 100644
->> --- a/drivers/scsi/hisi_sas/hisi_sas_init.c
->> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
->> @@ -283,6 +283,19 @@ err_out:
->>   	return NULL;
->>   }
+>> diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
+>> new file mode 100644
+>> index 0000000..79946d1
+>> --- /dev/null
+>> +++ b/Documentation/arm/keystone/knav-qmss.txt
+>> @@ -0,0 +1,24 @@
+>> +* Texas Instruments Keystone Navigator Queue Management SubSystem driver
+>> +
+>> +Driver source code path
+>> +  drivers/soc/ti/knav_qmss.c
+>> +  drivers/soc/ti/knav_qmss_acc.c
+>> +
+>> +The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>> +the main hardware sub system which forms the backbone of the Keystone
+>> +multi-core Navigator. QMSS consist of queue managers, packed-data structure
+>> +processors(PDSP), linking RAM, descriptor pools and infrastructure
+>> +Packet DMA.
+>> +The Queue Manager is a hardware module that is responsible for accelerating
+>> +management of the packet queues. Packets are queued/de-queued by writing or
+>> +reading descriptor address to a particular memory mapped location. The PDSPs
+>> +perform QMSS related functions like accumulation, QoS, or event management.
+>> +Linking RAM registers are used to link the descriptors which are stored in
+>> +descriptor RAM. Descriptor RAM is configurable as internal or external memory.
+>> +The QMSS driver manages the PDSP setups, linking RAM regions,
+>> +queue pool management (allocation, push, pop and notify) and descriptor
+>> +pool management.
+>> +
+>> +knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
+>> +allocate descriptor pools, map the descriptors, push/pop to queues etc. For
+>> +details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
+>> diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>> index d8e8cdb..2cecea1 100644
+>> --- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>> +++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>> @@ -1,20 +1,8 @@
+>> -* Texas Instruments Keystone Navigator Queue Management SubSystem driver
+>> -
+>> -The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>> -the main hardware sub system which forms the backbone of the Keystone
+>> -multi-core Navigator. QMSS consist of queue managers, packed-data structure
+>> -processors(PDSP), linking RAM, descriptor pools and infrastructure
+>> -Packet DMA.
+>> -The Queue Manager is a hardware module that is responsible for accelerating
+>> -management of the packet queues. Packets are queued/de-queued by writing or
+>> -reading descriptor address to a particular memory mapped location. The PDSPs
+>> -perform QMSS related functions like accumulation, QoS, or event management.
+>> -Linking RAM registers are used to link the descriptors which are stored in
+>> -descriptor RAM. Descriptor RAM is configurable as internal or external memory.
+>> -The QMSS driver manages the PDSP setups, linking RAM regions,
+>> -queue pool management (allocation, push, pop and notify) and descriptor
+>> -pool management.
+>
+> Only the last sentence seems to be about the driver and is rather
+> obvious (a driver manages the h/w). I would leave all this as-is
+> currently.
+>
+> Rob
+>
+Rob,
+
+I am taking the liberty to add your Ack based on the above. I can remove 
+it if you disagree.
+
+Murali
+
+>> +* Texas Instruments Keystone Navigator (knav) Queue Management SubSystem driver
+>> +  DT bindings
 >>
->> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
->> +{
->> +	u8 i;
->> +
->> +	/* Huawei IEEE id (001882) */
->> +	for (i = 0; i < hisi_hba->n_phy; i++)
->> +		hisi_hba->phy[i].dev_sas_addr =
->> +			cpu_to_be64(0x5001882016072015ULL);
->> +
-> Ouch. Each phy has the same SAS address?
-> For all boards? Ever?
+>> +For details of the driver, please refer to
+>> +Documentation/arm/keystone/knav-qmss.txt
+>>
+>>   Required properties:
+>>   - compatible   : Must be "ti,keystone-navigator-qmss";
+>> --
+>> 1.9.1
+>>
 >
-> Not sure if that's a good idea, nor even valid.
-> It'll confuse the hell out of any SAS array.
 >
-> Please provide a means of having individual SAS addresses for each HBA.
->
-> Cheers,
->
-> Hannes
->
-Hello,
 
-Are you saying we should be getting the SAS address from fw with 
-sas_request_addr() or the like?
 
-Marvell solution seems to hardcode it.
-
-thanks,
-John
-
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
