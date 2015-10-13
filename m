@@ -1,46 +1,51 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 2/2] ARM: dts: change gpio-key,wakeup property to boolean
-Date: Tue, 13 Oct 2015 15:26:07 +0100
-Message-ID: <561D147F.6090907@arm.com>
-References: <1444743164-17735-1-git-send-email-sudeep.holla@arm.com>
- <1444743164-17735-2-git-send-email-sudeep.holla@arm.com>
- <CAL_JsqKDrvxas-x9QoLEs3yuDtEY+0u5qJZ4ZPiRQX0SrMKY2w@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [Resend: PATCH v2 1/4] Documentation: dt: soc: move driver description to a separate document
+Date: Tue, 13 Oct 2015 16:31:02 +0200
+Message-ID: <5224426.GUQgmoMZFj@wuerfel>
+References: <1444679700-11451-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKDrvxas-x9QoLEs3yuDtEY+0u5qJZ4ZPiRQX0SrMKY2w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, spear-devel <spear-devel@list.st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444679700-11451-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: corbet-T1hC0tSOHrs@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 12 October 2015 15:54:59 Murali Karicheri wrote:
+> Currently the DT bindings have details about the driver as well. This
+> patch moves this to a separate document for knav qmss driver so that
+> driver detail update can be done as needed without polluting the DT
+> bindings description.
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/arm/keystone/knav-qmss.txt           | 24 ++++++++++++++++++++++
+>  .../bindings/soc/ti/keystone-navigator-qmss.txt    | 20 ++++--------------
+>  2 files changed, 28 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/arm/keystone/knav-qmss.txt
+> 
+> diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
+> new file mode 100644
+> index 0000000..79946d1
+> --- /dev/null
+> +++ b/Documentation/arm/keystone/knav-qmss.txt
+>  
+> +For details of the driver, please refer to
+> +Documentation/arm/keystone/knav-qmss.txt
+>  
+>  Required properties:
+>  - compatible   : Must be "ti,keystone-navigator-qmss";
+> 
 
+I'd actually not even put this sentence in: the binding is supposed
+to describe the hardware, not the Linux implementation as you correctly
+describe above, but I'd also try to not reference files that only
+exist in the Linux kernel tree.
 
-On 13/10/15 15:07, Rob Herring wrote:
-> On Tue, Oct 13, 2015 at 8:32 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
->> "gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
->> source.
->>
->> Few dts files assign value "1" to gpio-key,wakeup and in one instance a
->> value "0" is assigned probably assuming it won't be enabled as a wakeup
->> source. Since the presence of the boolean property indicates it is
->> enabled, value of "0" have no value.
->>
->> This patch removes the property where value "0" is assigned and removes
->> the value "1" in most of the other cases.
->
-> Why don't you just change everything to wakeup-source.
->
-
-Agreed, I wanted to do that but was not sure if that's acceptable.
-I will update it, now I know that you are fine with it.
-
-I also plan to find all the variety of bindings we have and fix them
-retaining only those which are handled in the current kernel code as
-legacy support.
-
--- 
-Regards,
-Sudeep
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
