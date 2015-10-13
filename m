@@ -1,49 +1,74 @@
-From: Sylvain Rochet <sylvain.rochet@finsecur.com>
-Subject: [PATCH v5 1/2] Documentation: input: rotary encoder: Add wakeup-source property
-Date: Tue, 13 Oct 2015 21:13:39 +0200
-Message-ID: <1444763620-14652-2-git-send-email-sylvain.rochet@finsecur.com>
-References: <1444763620-14652-1-git-send-email-sylvain.rochet@finsecur.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1444763620-14652-1-git-send-email-sylvain.rochet@finsecur.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, Daniel Mack <daniel@caiaq.de>, Johan Hovold <jhovold@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sylvain Rochet <sylvain.rochet@finsecur.com>, devicetree@vger.kernel.org
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH] ARM: socfpga: dts: add fpga manager
+Date: Tue, 13 Oct 2015 14:18:22 -0500
+Message-ID: <alpine.DEB.2.02.1510131412500.3527@linux-builds1>
+References: <1444760900-1373-1-git-send-email-atull@opensource.altera.com> <20151013185750.GB17155@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151013185750.GB17155@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: atull@opensource.altera.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds property wakeup-source to GPIO rotary encoders.
+On Tue, 13 Oct 2015, Steffen Trumtrar wrote:
 
-Signed-off-by: Sylvain Rochet <sylvain.rochet@finsecur.com>
-Reviewed-by: Johan Hovold <johan@kernel.org>
-Cc: <devicetree@vger.kernel.org>
----
- Documentation/devicetree/bindings/input/rotary-encoder.txt | 1 +
- Documentation/input/rotary-encoder.txt                     | 1 +
- 2 files changed, 2 insertions(+)
+> Hi Alan!
+> 
+> On Tue, Oct 13, 2015 at 01:28:20PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > Add FPGA manager to device tree for SoCFPGA.
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> >  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> > index 314e589..e37ba11 100644
+> > --- a/arch/arm/boot/dts/socfpga.dtsi
+> > +++ b/arch/arm/boot/dts/socfpga.dtsi
+> > @@ -834,5 +834,12 @@
+> >  			compatible = "altr,sys-mgr", "syscon";
+> >  			reg = <0xffd08000 0x4000>;
+> >  		};
+> > +
+> > +		hps_0_fpgamgr: fpgamgr@0xff706000 {
+> > +			compatible = "altr,socfpga-fpga-mgr";
+> > +			reg = <0xFF706000 0x1000
+> > +			       0xFFB90000 0x1000>;
+> > +			interrupts = <0 175 4>;
+> > +		};
+> >  	};
+> >  };
+> 
+> Please keep the format in line with the rest of the file:
+> Hexvalues are lowercase and no 0x after the "fpgamgr@".
+> I'd say "And please put the node in its proper position
+> according to its address", but I see just now, that the
+> dtsi is all messed up right now anyway :-(
+> 
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index 3315495..2c643a3 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -15,6 +15,7 @@ Optional properties:
- - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
-   greater than the specified steps or smaller than 0. For absolute axis only.
- - rotary-encoder,half-period: Makes the driver work on half-period mode.
-+- wakeup-source: Boolean, rotary encoder can wake-up the system.
- 
- See Documentation/input/rotary-encoder.txt for more information.
- 
-diff --git a/Documentation/input/rotary-encoder.txt b/Documentation/input/rotary-encoder.txt
-index 5737e35..bddbee1 100644
---- a/Documentation/input/rotary-encoder.txt
-+++ b/Documentation/input/rotary-encoder.txt
-@@ -109,6 +109,7 @@ static struct rotary_encoder_platform_data my_rotary_encoder_info = {
- 	.inverted_a	= 0,
- 	.inverted_b	= 0,
- 	.half_period	= false,
-+	.wakeup_source	= false,
- };
- 
- static struct platform_device rotary_encoder_device = {
--- 
-2.5.1
+How so? Patches are welcomed!
 
+Please fix the "fpgamgr@" and lower case the hex values. But I would prefer the
+nodes to be in alphabetical order.
+
+Also, you need to document the "altr,socfpga-fpga-mgr".
+
+Thanks,
+Dinh
+> Regards,
+> Steffen
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+
+BR,
+Dinh
