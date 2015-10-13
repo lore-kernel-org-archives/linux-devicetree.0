@@ -1,83 +1,190 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation
- for mic detection
-Date: Tue, 13 Oct 2015 16:23:31 +0100
-Message-ID: <20151013152331.GL8805@ck-lbox>
-References: <20151007100017.GB12635@sirena.org.uk>
- <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox>
- <20151012134309.GE1542@sirena.org.uk>
- <20151013080218.GV17172@x1>
- <20151013121450.GD8805@ck-lbox>
- <20151013135053.GB32409@x1>
- <561D0E4C.4010205@samsung.com>
- <561D10A6.7040504@samsung.com>
- <20151013141822.GC32409@x1>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
+Date: Tue, 13 Oct 2015 18:51:24 +0300
+Message-ID: <561D287C.9010400@mleia.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com> <1444694045-22000-3-git-send-email-vz@mleia.com> <7277011.vmOGiecsKn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151013141822.GC32409@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7277011.vmOGiecsKn@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 03:18:22PM +0100, Lee Jones wrote:
-> On Tue, 13 Oct 2015, Chanwoo Choi wrote:
-> > On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 22:59, Chanwoo Choi wrote:
-> > > On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 22:50, Lee Jones wrote:
-> > >> On Tue, 13 Oct 2015, Charles Keepax wrote:
-> > >>
-> > >>> On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
-> > >>>> On Mon, 12 Oct 2015, Mark Brown wrote:
-> > >>>>
-> > >>>>> On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrot=
-e:
-> > >>>>>> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
-> > >>>>>>> On Wed, 07 Oct 2015, Mark Brown wrote:
-> > >> Now I know that jack detection is an Extcon thing and Extcon Ack=
- will
-> > >> do just nicely.  However, that begs the question; if they are an
-> > >> Extcon thing, why aren't they in the Extcon binding document?
-> > >=20
-> > > As I knew, the arizona-extcon is one device of the MFD devices=20
-> > > for WMxxxx series in the driver/mfd/arizona-core.c. So, If arizon=
-a-extcon
-> > > driver needs the some property for dt support, some property shou=
-ld be
-> > > included in MFD device tree node. There is no separate device tre=
-e node for
-> > > arizona-extcon driver.
-> >=20
-> > If creating the separate extcon doc for extcon-arizona.c driver, it=
- is possible
-> > to make the child device tree node which is located at the below of=
- arizona MFD
-> > device tree node.
-> >=20
-> > I agree about Lee's opinion to make the separate the Extcon doc for=
- extcon-arizona.c.
->=20
-> This is how we normally document MFDs.  Extcon doesn't even need to
-> have it's own child-node (it can if you want though -- it's however
-> you want to represent it), you can just put something like this in th=
-e
-> MFD binding doc:
->=20
-> Optional properties
-> this		: Does this
-> that		: Does that
->=20
-> Also any child device specific property:
-> 	GPIO    See: ../extcon/arizona.txt
-> 	Extcon  See: ../gpio/arizona.txt
->=20
-> Etc.  Or words to that effect.  See some other MFDs for examples.
+Arnd,
 
-More accident of history than anything else I will send a patch
-to split the binding up into the seperate subsystems shortly.
+On 13.10.2015 15:44, Arnd Bergmann wrote:
+> On Tuesday 13 October 2015 02:54:02 Vladimir Zapolskiy wrote:
+>> The change corrects invalid custom translations to 1:1 translations,
+>> otherwise during initialization there are too many failed attempts to
+>> translate addresses from subnodes, which anyway result in fallback 1:1
+>> translations, also it is found that due to this problem proper usage
+>> of ranges property in subnodes (e.g. for defining flash partitions)
+>> can not be done.
+>>
+>> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+>>
+> 
 
-Thanks,
-Charles
+adding Joachim to Cc list as the author of PL172 memory controller
+driver and related DT bindings, may be he has something to add.
+
+> I don't get it. What kind of errors do you see? The existing
+> version looks cleaner than the new one, as it only translates
+> the MMIO areas that are actually used.
+> 
+
+The problem is found when I add PL175 device node to lpc32xx.dtsi and
+expand the node in my board file. The external memory controller manages
+up to 4 memory devices, which by means of the controller are mapped into
+physical memory starting from address 0xe0000000.
+
+Below are my declarations, similar to one found in lpc18xx.dtsi.
+
+lpc32xx.dtsi change common for all LPC32xx boards:
+
+emc: emc@31080000 {
+	compatible = "arm,pl175", "arm,primecell";
+	reg = <0x31080000 0x1000>;
+	clocks = <&scf LPC32XX_CLK_DDRAM>;
+	clock-names = "mpmcclk";
+
+	#address-cells = <1>;
+	#size-cells = <1>;
+	ranges = <0 0xe0000000 0x01000000>,
+		 <1 0xe1000000 0x01000000>,
+		 <2 0xe2000000 0x01000000>,
+		 <3 0xe3000000 0x01000000>;
+	status = "disabled";
+};
+
+myboard.dts declaration:
+
+&emc {
+	status = "okay";
+
+	cs@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		mpmc,cs = <0>;
+		mpmc,memory-width = <16>;
+		mpmc,byte-lane-low;
+
+		mpmc,write-enable-delay = <0>;
+		mpmc,output-enable-delay = <0>;
+		mpmc,read-access-delay = <55>;
+		mpmc,page-mode-read-delay = <55>;
+		mpmc,write-access-delay = <22>;
+		mpmc,turn-round-delay = <8>;
+
+		nor@0 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			compatible = "spansion,s29gl032a", "cfi-flash";
+			reg = <0 0x00400000>;
+			bank-width = <2>;
+		};
+	};
+};
+
+The problem with non-empty ranges is that NOR device is not mapped to
+0xe0000000, because da > (cp + s):
+
+	OF: ** translation for device /ahb/emc@31080000/cs@0/nor@0 **
+	OF: bus is default (na=1, ns=1) on /ahb/emc@31080000/cs@0
+	OF: translating address: 00000000
+	OF: parent bus is default (na=1, ns=1) on /ahb/emc@31080000
+	OF: empty ranges; 1:1 translation
+	OF: parent translation for: 00000000
+	OF: with offset: 0
+	OF: one level translation: 00000000
+	OF: parent bus is default (na=1, ns=1) on /ahb
+	OF: walking ranges...
+	OF: default map, cp=0, s=1000000, da=0
+	OF: parent translation for: e0000000
+	OF: with offset: 0
+	OF: one level translation: e0000000
+	OF: parent bus is default (na=1, ns=1) on /
+	OF: walking ranges...
+	OF: default map, cp=20000000, s=30000000, da=e0000000
+	OF: not found !
+
+This proposed 2/5 change fixes the problem for me:
+
+	OF: ** translation for device /ahb/emc@31080000/cs@0/nor@0 **
+	OF: bus is default (na=1, ns=1) on /ahb/emc@31080000/cs@0
+	OF: translating address: 00000000
+	OF: parent bus is default (na=1, ns=1) on /ahb/emc@31080000
+	OF: empty ranges; 1:1 translation
+	OF: parent translation for: 00000000
+	OF: with offset: 0
+	OF: one level translation: 00000000
+	OF: parent bus is default (na=1, ns=1) on /ahb
+	OF: walking ranges...
+	OF: default map, cp=0, s=1000000, da=0
+	OF: parent translation for: e0000000
+	OF: with offset: 0
+	OF: one level translation: e0000000
+	OF: parent bus is default (na=1, ns=1) on /
+	OF: empty ranges; 1:1 translation
+	OF: parent translation for: 00000000
+	OF: with offset: e0000000
+	OF: one level translation: e0000000
+	OF: reached root node
+	e0000000.nor: Found 1 x16 devices at 0x0 in 16-bit bank. Manufacturer
+ID 0x000001 Chip ID 0x001a00
+
+Also note that the change does not break any other translations,
+moreover boot time delay is slightly faster.
+
+Original address translation for a device:
+
+[    0.259969] OF: ** translation for device /ahb/fab/watchdog@4003C000 **
+[    0.260050] OF: bus is default (na=1, ns=1) on /ahb/fab
+[    0.260084] OF: translating address: 4003c000
+[    0.260156] OF: parent bus is default (na=1, ns=1) on /ahb
+[    0.260196] OF: walking ranges...
+[    0.260248] OF: default map, cp=20000000, s=30000000, da=4003c000
+[    0.260282] OF: parent translation for: 20000000
+[    0.260333] OF: with offset: 2003c000
+[    0.260364] OF: one level translation: 4003c000
+[    0.260431] OF: parent bus is default (na=1, ns=1) on /
+[    0.260468] OF: walking ranges...
+[    0.260518] OF: default map, cp=20000000, s=30000000, da=4003c000
+[    0.260550] OF: parent translation for: 20000000
+[    0.260600] OF: with offset: 2003c000
+[    0.260630] OF: one level translation: 4003c000
+[    0.260676] OF: reached root node
+
+With this proposed change applied address translation looks simpler:
+
+[    0.253194] OF: ** translation for device /ahb/fab/watchdog@4003C000 **
+[    0.253281] OF: bus is default (na=1, ns=1) on /ahb/fab
+[    0.253314] OF: translating address: 4003c000
+[    0.253386] OF: parent bus is default (na=1, ns=1) on /ahb
+[    0.253426] OF: empty ranges; 1:1 translation
+[    0.253457] OF: parent translation for: 00000000
+[    0.253506] OF: with offset: 4003c000
+[    0.253537] OF: one level translation: 4003c000
+[    0.253601] OF: parent bus is default (na=1, ns=1) on /
+[    0.253639] OF: empty ranges; 1:1 translation
+[    0.253669] OF: parent translation for: 00000000
+[    0.253717] OF: with offset: 4003c000
+[    0.253747] OF: one level translation: 4003c000
+[    0.253793] OF: reached root node
+
+Support of EMC device node will be added to lpc32xx.dtsi, when this kind
+of problem is fixed.
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
