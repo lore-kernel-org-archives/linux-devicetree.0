@@ -1,58 +1,95 @@
-From: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
-Date: Tue, 13 Oct 2015 13:07:24 +0300
-Message-ID: <20151013100724.GG1492@lahna.fi.intel.com>
-References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
- <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
- <20151012164819.GA4010@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
- <20151013070824.GA22304@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Tue, 13 Oct 2015 19:11:57 +0900
+Message-ID: <561CD8ED.7030004@samsung.com>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk> <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox> <561B8896.7040409@samsung.com>
+ <561B8AA6.50503@samsung.com> <20151013080350.GW17172@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20151013080350.GW17172@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 08:54:12AM +0000, Tirdea, Irina wrote:
-> > > I did not use devm_gpiod_get_optional() in order to ignore more errors
-> > > than -ENOENT. This is needed because the ACPI gpio core will fall back
-> > > to indexed gpios if named gpios are not found. In the common case of
-> > > having 2 indexed gpio pins declared in the ACPI table, the first
-> > > devm_gpiod_get() will successfully get indexed gpio pin 0 and the
-> > > second devm_gpiod_get() will try to get the same gpio pin 0 and return
-> > > -EBUSY. Considering this, I thought it is better to just ignore all errors in
-> > > order not to break any platforms currently using this driver.
-> > 
-> > This seems like issue with ACPI gpio lookup implementation. If I am
-> > requesting named gpio and it is not present then I definitely do not
-> > need to be returned some random gpio. Doing so breaks all other drivers
-> > that use several names to retrieve GPIOs. We basically can't trust GPIO
-> > API on ACPI systems.
-> > 
-> 
-> I'm not sure there is a way to avoid fall back to indexed gpios when requesting
-> named gpios.
-> Adding Mika to this thread as he might help answer this.
+On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 17:03, Lee Jones wrote:
+> On Mon, 12 Oct 2015, Chanwoo Choi wrote:
+>=20
+>> On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 19:16, Chanwoo Choi wrote:
+>>> Hi Charles,
+>>>
+>>> On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 17:45, Charles Keepax wrot=
+e:
+>>>> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+>>>>> On Wed, 07 Oct 2015, Mark Brown wrote:
+>>>>>
+>>>>>> On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
+>>>>>>> Add additional bindings to allow configuration of the system sp=
+ecific
+>>>>>>> microphone detection settings.
+>>>>>>
+>>>>>> This all seems pretty much fine to me - the things it is control=
+ling are
+>>>>>> fairly specific to the way the former Wolfson devices do, they o=
+nly
+>>>>>> really make sense with a fairly particular algorithm which isn't=
+ widely
+>>>>>> implemented.
+>>>>>
+>>>>> Is that an Ack?
+>>>>
+>>>> I am guessing Mark is slightly hesitant to ack as he probably
+>>>> doesn't want to add reviewing all our jack detection bindings to
+>>>> his already fairly sizable work load and doing so here likely
+>>>> means it will be expected in the future. From talking to people at
+>>>> LinuxCon it looks like it is pretty unlikely the DT maintainers
+>>>> will be acking individual bindings as well, basically they are
+>>>> only really looking at major/framework things and leaving the
+>>>> rest to subsystem maintainers.
+>>>>
+>>>> Given that these patches only touch MFD/Extcon and extcon
+>>>> is a subsystem designed to handle things like jack detection
+>>>> isn't it really sufficient that you and Chanwoo have looked this
+>>>> and are happy with it? Otherwise I really don't see anyway to
+>>>> move this forward and would appreciate any suggestions?
+>>>
+>>> I'm positive about your patches. After receiving the ack from MFD m=
+aintainer
+>>> I want to apply this patch-set on extcon git repository.
+>>>
+>>> Also, I reviewed this patch on previous patch[1].
+>>> [1]https://lkml.org/lkml/2015/9/11/81
+>>
+>> As you said, this patch touch MFD and EXTCON subsystem.
+>> If you get the Ack or agreement from MFD maintainer,
+>> I'm willing to apply it on extcon git.
+>>
+>> Also, If this patch dont receive the additional ack message
+>> unitl the end of this week, I'll merge patch1-3 on extcon-next branc=
+h
+>> for Linux 4.4.
+>=20
+> Absolutely not!
+>=20
+> I should be extremely cross if you 'go over my head' and apply MFD
+> patches without the correct Acks.
+>=20
 
-Before ACPI 5.1 _DSD device properties were introduced all we had was an
-array of GPIOs returned by _CRS ACPI method. Ordering of those GPIOs
-could change from one vendor to another :-(
+Just I mean that if there is any reply or opinion about patch.
+But, You're right. It is misconception of me. We should check them cros=
+s before applying them.
 
-We can (and do) use acpi_dev_add_driver_gpios() to pass correct mappings
-where _DSD is not present based on the device ACPI ID for instance. Not
-all drivers do that, though.
+Thanks,
+Chanwoo Choi
 
-I would like to get rid of the fallback completely at some point. We
-have had already problems with the API because then some ACPI only
-drivers did this:
-
-	reset_gpio = gpiod_get_index(dev, NULL, 0);
-	power_gpio = gpiod_get_index(dev, NULL, 1);
-
-which might not do what is expected on DT systems. That's why
-acpi_dev_add_driver_gpios() was added in the first place IIRC.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
