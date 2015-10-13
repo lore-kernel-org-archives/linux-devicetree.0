@@ -1,40 +1,72 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH v2 0/4] Add support for STM32 DMA
-Date: Tue, 13 Oct 2015 16:00:44 +0200
-Message-ID: <1444744848-720-1-git-send-email-cedric.madianga@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH] phy: exynos-ufs: exynos_ufs_phy_calibrate() can be
+ static
+Date: Tue, 13 Oct 2015 19:32:05 +0530
+Message-ID: <561D0EDD.80804@ti.com>
+References: <201510011920.tppZbk0e%fengguang.wu@intel.com>
+ <20151001110430.GA12682@athens> <561CED52.9010806@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561CED52.9010806@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+To: Alim Akhtar <alim.akhtar@samsung.com>, kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the STM32 DMA controller.
-This controller provides 8 channels dedicated to managing memory access
-request from one or more peripherals.
-Each stream can have up to 8 requests in total.
+Hi,
 
-Changes since v1:
-- remove dmamux boolean as it is not needed
-- replace dma by DMA in Kconfig
-- add default return value in stm32_dma_get_width()
-- add defalut return value in stm32_dma_get_burst()
-- use lower case for constant hexadecimal values
+On Tuesday 13 October 2015 05:08 PM, Alim Akhtar wrote:
+> HI
+> How I am support to handle this patch? Should I just fix these warnings
+> in my patch or I just add this as a separate patch on the top of the
+> series?
 
-M'boumba Cedric Madianga (4):
-  dt-bindings: Document the STM32 DMA bindings
-  dmaengine: Add STM32 DMA driver
-  ARM: dts: Add STM32 DMA support for STM32F429 MCU
-  ARM: configs: Add STM32 DMA support in STM32 defconfig
+This series has not been merged yet. So you can fix this patch.
 
- .../devicetree/bindings/dma/stm32-dma.txt          |   98 ++
- arch/arm/boot/dts/stm32f429.dtsi                   |   31 +
- arch/arm/configs/stm32_defconfig                   |    2 +
- drivers/dma/Kconfig                                |   12 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/stm32-dma.c                            | 1175 ++++++++++++++++++++
- 6 files changed, 1319 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
- create mode 100644 drivers/dma/stm32-dma.c
-
--- 
-1.9.1
+Thanks
+Kishon
+> 
+> 
+> On 10/01/2015 04:34 PM, kbuild test robot wrote:
+>>
+>> Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+>> ---
+>>   phy-exynos-ufs.c |    6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/phy/phy-exynos-ufs.c b/drivers/phy/phy-exynos-ufs.c
+>> index 343fcaf..835ee78 100644
+>> --- a/drivers/phy/phy-exynos-ufs.c
+>> +++ b/drivers/phy/phy-exynos-ufs.c
+>> @@ -66,7 +66,7 @@ static bool match_cfg_to_pwr_mode(u8 desc, u8
+>> required_pwr)
+>>       return false;
+>>   }
+>>
+>> -int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag tag,
+>> u8 pwr)
+>> +static int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag
+>> tag, u8 pwr)
+>>   {
+>>       struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+>>       struct exynos_ufs_phy_cfg **cfgs = ufs_phy->cfg;
+>> @@ -93,14 +93,14 @@ out:
+>>       return 0;
+>>   }
+>>
+>> -void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
+>> +static void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
+>>   {
+>>       struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+>>
+>>       ufs_phy->lane_cnt = lane_cnt;
+>>   }
+>>
+>> -int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
+>> +static int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
+>>   {
+>>       struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+>>       const unsigned int timeout_us = 100000;
+>>
