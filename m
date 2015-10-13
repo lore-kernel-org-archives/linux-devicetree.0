@@ -1,104 +1,60 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: exynos5422-odroidxu3: use cd-gpio method to
- detect sd-card
-Date: Tue, 13 Oct 2015 11:06:11 +0900
-Message-ID: <561C6713.1070508@samsung.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <561B3739.4040701@samsung.com> <561B3A83.6090607@samsung.com>
- <1111856990.2419183.1444661252893.JavaMail.yahoo@mail.yahoo.com>
- <561C4C88.2040004@samsung.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Fix random hang up issue while kernel init
+Date: Tue, 13 Oct 2015 10:21:11 +0800
+Message-ID: <1444702871.31890.4.camel@mtksdaap41>
+References: <1444209281-25536-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <561BE09B.3040702@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <561C4C88.2040004-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <561BE09B.3040702-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anand Moon <moon.linux-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear, Anand.
+Hi Matthias,
 
-
-On 10/13/2015 09:12 AM, Krzysztof Kozlowski wrote:
-> On 12.10.2015 23:47, Anand Moon wrote:
->>>
->>> Anand,
->>>
->>> You essentially reverted here af6ad88acbd6 ("ARM: dts: Mux XMMCnDATA[0]
->>> pad correctly for Exynos5420 boards"). Why? There is no explanation in
->>> the commit message about this.
->>
->> I don't remember to send the patch relevant to this. Hmm...
->> Well, Is this patch really signed-off by me?
->>
->> Best Regards,
->>
->> Jaehoon Chung
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>
->>>
->>
->>
->> Some how I don't receive these mail on my email id.
->>
->> I have picked up these changes from tizen repository for OdroidXU3.
->> I have tested with this changes to detect UHS-I micro cd cards.
->> That's the reason for this email. 
-
-It seems to make manually, right?
-I have checked the tizen repository. 
-
-The below is 
-
---- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-@@ -335,7 +335,9 @@
-        samsung,dw-mshc-sdr-timing = <0 4>;
-        samsung,dw-mshc-ddr-timing = <0 2>;
-        pinctrl-names = "default";
--       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-+       cd-gpios = <&gpc2 2 0>;
-+       cd-inverted;
-+       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4>;
-        bus-width = <4>;
-        cap-sd-highspeed;
- };
-
-
-
-Yours
-
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -352,8 +352,10 @@
- 	samsung,dw-mshc-ciu-div = <3>;
- 	samsung,dw-mshc-sdr-timing = <0 4>;
- 	samsung,dw-mshc-ddr-timing = <0 2>;
-+	cd-gpios = <&gpc2 2 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-
-Did you know what differ? :)
-
-Best Regards,
-Jaehoon Chung
-
+On Mon, 2015-10-12 at 18:32 +0200, Matthias Brugger wrote:
 > 
-> ... and you applied it blindly without looking at actual existing
-> contents and at previous commits.
+> On 07/10/15 11:14, James Liao wrote:
+> > This patch is based on v4.3-rc4, to fix system hanging up issue
+> > while disabling unused clocks.
+> >
+> > There is nothing different in mtk-scpsys.c and mt8173.dtsi from v1 [1].
+> >
+> > Changes since v1:
+> > - Rebase to v4.3-rc4.
+> > - Add a patch to change the corresponding binding document.
+> > - Add a separated patch to change the dtsi.
+> >
+> > [1] https://patchwork.kernel.org/patch/7262411/
+> >
+> > James Liao (3):
+> >    dt-bindings: soc: Add clocks for Mediatek SCPSYS unit
+> >    soc: mediatek: Fix random hang up issue while kernel init
+> >    arm64: dts: mt8173: Add clocks for SCPSYS unit
+> >
+> >   .../devicetree/bindings/soc/mediatek/scpsys.txt    | 10 ++--
+> >   arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  6 +-
+> >   drivers/soc/mediatek/mtk-scpsys.c                  | 67 ++++++++++++++--------
+> >   3 files changed, 54 insertions(+), 29 deletions(-)
+> >
+> > --
+> > 1.9.1
+> >
+> >
 > 
-> That is not how patches from different repositories should be cherry picked.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+> Applied. Does this fix also needs to be applied to earlier kernel versions?
+
+No need, because venc and venc_lt clocks are not controlled by CCF
+before v4.2.
+
+
+Best regards,
+
+James
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
