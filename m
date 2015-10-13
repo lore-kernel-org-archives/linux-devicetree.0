@@ -1,128 +1,63 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH 3/3] fpga manager: Adding FPGA Manager support for Xilinx
- Zynq 7000
-Date: Tue, 13 Oct 2015 07:33:15 +0200
-Message-ID: <561C979B.6040201@topic.nl>
-References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
- <1444344307-22509-4-git-send-email-moritz.fischer@ettus.com>
- <20151009163336.GM10631@jcartwri.amer.corp.natinst.com>
- <CAAtXAHea7GZDLez5kYas2PFQ-=KmS_on8WxFDCuvVb4Nh05a_w@mail.gmail.com>
- <561B9687.1070103@xilinx.com> <561BA60C.6010106@topic.nl>
- <561BA9C7.6070003@xilinx.com>
+From: Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
+Date: Tue, 13 Oct 2015 08:12:27 +0200
+Message-ID: <561CA0CB.5090802@suse.de>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-10-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <561BA9C7.6070003@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, Alan Tull <atull@opensource.altera.com>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1444663237-238302-10-git-send-email-john.garry@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>, James.Bottomley@HansenPartnership.com
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie
 List-Id: devicetree@vger.kernel.org
 
-77u/T24gMTItMTAtMTUgMTQ6MzgsIE1pY2hhbCBTaW1layB3cm90ZToKPiBIaSBNaWtlLAo+Cj4g
-T24gMTAvMTIvMjAxNSAwMjoyMiBQTSwgTWlrZSBMb29pam1hbnMgd3JvdGU6Cj4+IE9uIDEyLTEw
-LTE1IDEzOjE2LCBNaWNoYWwgU2ltZWsgd3JvdGU6Cj4+Pgo+Pj4+Pj4gK3N0YXRpYyBpbnQgenlu
-cV9mcGdhX29wc193cml0ZShzdHJ1Y3QgZnBnYV9tYW5hZ2VyICptZ3IsCj4+Pj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKmJ1Ziwgc2l6ZV90IGNvdW50KQo+Pj4+
-Pj4gK3sKPj4+Pj4+ICsgICAgIHN0cnVjdCB6eW5xX2ZwZ2FfcHJpdiAqcHJpdjsKPj4+Pj4+ICsg
-ICAgIGludCBlcnI7Cj4+Pj4+PiArICAgICBjaGFyICprYnVmOwo+Pj4+Pj4gKyAgICAgc2l6ZV90
-IGksIGluX2NvdW50Owo+Pj4+Pj4gKyAgICAgZG1hX2FkZHJfdCBkbWFfYWRkcjsKPj4+Pj4+ICsg
-ICAgIHUzMiB0cmFuc2Zlcl9sZW5ndGggPSAwOwo+Pj4+Pj4gKyAgICAgYm9vbCBlbmRpYW5fc3dh
-cCA9IGZhbHNlOwo+Pj4+Pj4gKwo+Pj4+Pj4gKyAgICAgaW5fY291bnQgPSBjb3VudDsKPj4+Pj4+
-ICsgICAgIHByaXYgPSBtZ3ItPnByaXY7Cj4+Pj4+PiArCj4+Pj4+PiArICAgICBrYnVmID0gZG1h
-X2FsbG9jX2NvaGVyZW50KHByaXYtPmRldiwgY291bnQsICZkbWFfYWRkciwKPj4+Pj4+IEdGUF9L
-RVJORUwpOwo+Pj4+Pj4gKyAgICAgaWYgKCFrYnVmKQo+Pj4+Pj4gKyAgICAgICAgICAgICByZXR1
-cm4gLUVOT01FTTsKPj4+Pj4+ICsKPj4+Pj4+ICsgICAgIG1lbWNweShrYnVmLCBidWYsIGNvdW50
-KTsKPj4+Pj4+ICsKPj4+Pj4+ICsgICAgIC8qIGxvb2sgZm9yIHRoZSBzeW5jIHdvcmQgKi8KPj4+
-Pj4+ICsgICAgIGZvciAoaSA9IDA7IGkgPCBjb3VudCAtIDQ7IGkrKykgewo+Pj4+Pj4gKyAgICAg
-ICAgICAgICBpZiAobWVtY21wKGtidWYgKyBpLCAiXHg2Nlx4NTVceDk5XHhBQSIsIDQpID09IDAp
-IHsKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBkZXZfZGJnKHByaXYtPmRldiwgIkZvdW5k
-IG5vcm1hbCBzeW5jIHdvcmRcbiIpOwo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGVuZGlh
-bl9zd2FwID0gZmFsc2U7Cj4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4+Pj4+
-PiArICAgICAgICAgICAgIH0KPj4+Cj4+PiBUaGlzIGlzIGJpbiBmb3JtYXQKPj4+Cj4+Pj4+PiAr
-ICAgICAgICAgICAgIGlmIChtZW1jbXAoa2J1ZiArIGksICJceEFBXHg5OVx4NTVceDY2IiwgNCkg
-PT0gMCkgewo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcocHJpdi0+ZGV2LCAi
-Rm91bmQgc3dhcHBlZCBzeW5jIHdvcmRcbiIpOwo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-IGVuZGlhbl9zd2FwID0gdHJ1ZTsKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBicmVhazsK
-Pj4+Pj4+ICsgICAgICAgICAgICAgfQo+Pj4KPj4+IFRoaXMgaXMgYml0IGZvcm1hdCBmcm9tIGhl
-YWRlcgo+Pj4KPj4+Pj4+ICsgICAgIH0KPj4+Pj4KPj4+Pj4gSG93IG11Y2ggY29udHJvbCBkbyB3
-ZSBoYXZlIG92ZXIgbWFuZGF0aW5nIHRoZSBmb3JtYXQgb2YgZmlybXdhcmUgYXQKPj4+Pj4gdGhp
-cyBwb2ludD8gIEl0J2QgYmUgc3dlbGwgaWYgd2UgY291bGQganVzdCBtYW5kYXRlIGEgc3BlY2lm
-aWMKPj4+Pj4gZW5kaWFubmVzcywgYW5kIGxlYXZlIHRoaXMgbXVuZ2luZyB0byB1c2VybW9kZS4K
-Pj4+Pgo+Pj4+IFRoYXQncyBhIGdvb2QgcXVlc3Rpb24uIFBlcnNvbmFsbHkgSSBkbyBvbmx5IGNh
-cmUgYWJvdXQgb25lIG9mIGJvdGgsCj4+Pj4gYnV0IHRoYXQncyBqdXN0IGJlY2F1c2UgSSBnZXQg
-dG8gZGVjaWRlIGZvciBteSB0YXJnZXRzLi4uCj4+Pj4gT3BpbmlvbnMgZnJvbSB0aGUgWGlsaW54
-IGd1eXM/Cj4+Pgo+Pj4gRG9uJ3Qga25vdyBmdWxsIGhpc3RvcnkgYWJvdXQgdGhpcyBidXQgaW4g
-cGFzdCBiaXRzdHJlYW0gaW4gQklUIGZvcm1hdAo+Pj4gd2FzIHVzZWQuIFdoaWNoIGlzIGhlYWRl
-ciAocGFydGlhbGx5IGRlY29kaW5nIGluIHUtYm9vdCBmb3IgZXhhbXBsZSkKPj4+IHdpdGggZGF0
-YS4KPj4+IE9uIHp5bnEgbmF0aXZlIGZvcm1hdCBpcyBCSU4gd2hpY2ggaXMgZm9ybWF0IHdpdGhv
-dXQgaGVhZGVyIGFuZCBkYXRhIGlzCj4+PiBzd2FwcGVkLgo+Pj4gVGhpcyBjb2RlIGp1c3QgZGV0
-ZWN0cyB3aGljaCBmb3JtYXQgaXMgdXNlZC4gSWYgQklULCBoZWFkZXIgaXMgc2tpcHBlZAo+Pj4g
-YW5kIGRhdGEgaXMgc3dhcHBlZCB0byBCSU4gZm9ybWF0Lgo+Pj4KPj4+IEJhY2sgdG8gb3JpZ2lu
-IHF1ZXN0aW9uIGlmIHRoaXMgaXMgc29tZXRoaW5nIHdoYXQgY2FuIGJlIGhhbmRsZWQgZnJvbQo+
-Pj4gdXNlciBzcGFjZS4gQW5kIGFuc3dlciBpcyAtIHllcyBpdCBjYW4gYmUgaGFuZGxlZCB0aGVy
-ZS4KPj4+IEJ1dCBiYXNlZCBvbiBteSBleHBlcmllbmNlIGl0IGlzIHZlcnkgdXNlZnVsIHRvIGJl
-IGFibGUgdG8gaGFuZGxlIEJJVAo+Pj4gYmVjYXVzZSBpdCBpcyBidWlsdCBieSB0b29scyBieSBk
-ZWZhdWx0Lgo+Pj4gQWxzbyB3aXRoIEJJTiBmb3JtYXQgeW91IGFyZSBsb29zaW5nIHJlY29yZCB3
-aGF0IHRoaXMgZGF0YSBiaXRzdHJlYW0KPj4+IHRhcmdldHMuIEhlYWRlciBpbiBCSVQgZ2l2ZXMg
-eW91IGF0IGxlYXN0IHNvbWUgaWRlYXMuCj4+Cj4+IFBlb3BsZSBzaG91bGQgc3RvcCB1c2luZyAi
-Y2F0IiB0byBwcm9ncmFtIHRoZSBGUEdBIGFuZCB1c2UgYSB1c2Vyc3BhY2UKPj4gdG9vbCBpbnN0
-ZWFkLiBJJ3ZlIGFscmVhZHkgcmVsZWFzZWQgc3VjaCB0b29scyB1bmRlciBHUEwsIHNvIGFueW9u
-ZSBjYW4KPj4gcGljayB1cCBvbiBpdCBhbmQgZXh0ZW5kIGl0IGFzIHJlcXVpcmVkLgo+Cj4gTGlu
-az8KCmh0dHBzOi8vZ2l0aHViLmNvbS90b3BpYy1lbWJlZGRlZC1wcm9kdWN0cy9keXBsby11dGls
-cy9ibG9iL21hc3Rlci9keXBsb3Byb2dyYW1tZXIuY3BwCmh0dHBzOi8vZ2l0aHViLmNvbS90b3Bp
-Yy1lbWJlZGRlZC1wcm9kdWN0cy9saWJkeXBsby9ibG9iL21hc3Rlci9oYXJkd2FyZS5jcHAjTDI2
-MQoKV2lsbCBuZWVkIHNvbWUgd29yayB0byBjb21iaW5lIGludG8gYSBzaW5nbGUgdG9vbCB0aG91
-Z2guCgo+IFRoaXMgaXMgZnBnYSBtYW5hZ2VyIGJhc2VkIGRyaXZlciB3aGVyZSAiY2F0IiB3b24n
-dCBiZSB1c2VkLgoKSGF2ZW4ndCBsb29rZWQgaW50byBpdCB5ZXQsIGJ1dCBJIGd1ZXNzIGF0IHNv
-bWUgcG9pbnQgb25lIHdpbGwgaGF2ZSB0byBzdHJlYW0gCnNvbWUgZGF0YSBmcm9tIHVzZXJzcGFj
-ZSBpbnRvIHRoZSBkZXZpY2UsIHJpZ2h0PwoKPj4gVGhlIGhlYWRlciBmb3IgdGhlICJiaXQiIGZv
-cm1hdCBpcyBjb21wbGV0ZWx5IGlnbm9yZWQgKHlvdSBjYW4ndCBldmVuCj4+IHVzZSBpdCB0byBk
-ZXRlcm1pbmUgaWYgdGhlIGJpdHN0cmVhbSBpcyBjb21wYXRpYmxlIHdpdGggdGhlIGN1cnJlbnQK
-Pj4gZGV2aWNlKSBzbyB0aGVyZSdzIG5vIHBvaW50IGluIGNhcnJ5aW5nIGl0IGFyb3VuZC4KPgo+
-IHVwMnlvdSB3aGF0IHlvdSB3YW50IHRvIGRvIHdpdGggaXQuIElmIHlvdSB3b3JrIHdpdGggZGlm
-ZmVyZW50IGJvYXJkcwo+IHdpdGggZGlmZmVyZW50IEZQR0FzIGl0IGlzIGF0IGxlYXN0IGhlbHBm
-dWwgdG8ga25vdyBpZiBYLmJpdCB0YXJnZXQgdGhpcwo+IG9yIHRoYXQgYm9hcmQuIFVuZm9ydHVu
-YXRlbHkgSSBhbSBub3QgYXdhcmUgYWJvdXQgYW55IHB1YmxpYyBkb2N1bWVudAo+IHdoaWNoIGRl
-c2NyaWJlIHdoYXQgdGhlcmUgaXMgd3JpdHRlbi4KPgo+PiBPbiB0aGUgenlucSwgZG9pbmcKPj4g
-dGhlICJzd2FwIiBpbiB1c2Vyc3BhY2Ugd2FzIG1lYXN1cmFibHkgZmFzdGVyIHRoYW4gaGF2aW5n
-IHRoZSBkcml2ZXIKPj4gaGFuZGxlIGl0LCBhbmQgdGhhdCB3YXMgZXZlbiB3aXRob3V0IHVzaW5n
-IE5FT04gaW5zdHJ1Y3Rpb25zIGZvciBieXRlCj4+IHN3YXBwaW5nLgo+Pgo+PiBJIGFkbWl0IHRo
-YXQgYmVpbmcgYWJsZSB0byBkbyAiY2F0IHN0YXRpYy5iaXQgPiAvZGV2L3hkZXZjZmciIGhhcyBo
-YWQKPj4gaXRzIHVzZXMuIEJ1dCBpdCdzIG5vdCBzb21ldGhpbmcgdGhhdCBiZWxvbmdzIGluIG1h
-aW5saW5lIExpbnV4Lgo+Cj4gSXQgaXMgYWJvdXQgY29tZm9ydCBidXQgSSBoYXZlIHJlYWxseSBu
-b3QgYSBwcm9ibGVtIHRoYXQgZHJpdmVyIHdpbGwKPiBoYW5kbGUganVzdCBCSU4gZm9ybWF0Lgo+
-Cj4+IFByb2JhYmx5IG9uZSBvZiB0aGUga2V5IHJlYXNvbnMgdGhhdCB0aGUgImJpdCIgZm9ybWF0
-IGlzIHN0aWxsIHBvcHVsYXIKPj4gaXMgdGhhdCBnZXR0aW5nIHRoZSBWaXZhZG8gdG9vbHMgdG8g
-Y3JlYXRlIGEgcHJvcGVyICJiaW4iIHRoYXQgd2lsbAo+PiBhY3R1YWxseSB3b3JrIG9uIHRoZSBa
-eW5xIGlzIGFib3V0IGFzIGVhc3kgYXMgbmFpbGluZyBqZWxseSB0byBhIHRyZWUuCj4+IFdlJ3Zl
-IGJlZW4gdXNpbmcgYSBzaW1wbGUgUHl0aG9uIHNjcmlwdCB0byBkbyB0aGUgYml0LT5iaW4gY29u
-dmVyc2lvbgo+PiBmb3IgdGhhdCByZWFzb24uCj4KPiBJbiB2aXZhZG8gaXQgaXMgb25lIHRjbCBj
-bWQuIEJ1dCB0cnV0aCBpcyB0aGF0IEkgZG9uJ3QgcmVhbGx5IGdldCB3aHkKPiBCSU4gaXMgbm90
-IGdlbmVyYXRlZCBieSBkZWZhdWx0LgoKSWYgSSByZWNhbGwgY29ycmVjdGx5LCBWaXZhZG8gc3Ry
-aXBzIHRoZSAiYml0IiBoZWFkZXIgYnV0IGRvZXNuJ3Qgc3dhcCB0aGUgCmJ5dGVzLCBzbyB0aGUg
-cmVzdWx0aW5nIGJpbiBmaWxlIHdvbid0IHdvcmsuCgoKPj4gVXNpbmcgdGhlICJiaW4iIGZvcm1h
-dCBpbiB0aGUgZHJpdmVyIGtlZXBzIGl0IHNpbXBsZSBhbmQgc2luZ3VsYXIuCj4+IFVzZXJzcGFj
-ZSB0b29scyBjYW4gYWRkIHdoYXRldmVyIHdyYXBwZXJzIGFuZCBoZWFkZXJzIHRoZXkgZmVlbAo+
-PiBhcHByb3ByaWF0ZSB0byBpdCwgdGhlc2UgY2hlY2tzIGRvbid0IGJlbG9uZyBpbiB0aGUgZHJp
-dmVyIHNpbmNlIHRoZXkKPj4gd2lsbCBiZSBhcHBsaWNhdGlvbiBzcGVjaWZpYy4gRm9yIGV4YW1w
-bGUsIHNvbWUgdXNlcnMgd291bGQgd2FudCB0bwo+PiB2ZXJpZnkgdGhhdCBhIHBhcnRpYWwgYml0
-c3RyZWFtIGFjdHVhbGx5IG1hdGNoZXMgdGhlIHN0YXRpYyBwYXJ0IHRoYXQncwo+PiBjdXJyZW50
-bHkgaW4gdGhlIEZQR0EuCj4KPiBhZ3JlZS4KPgo+IFRoYW5rcywKPiBNaWNoYWwKPgo+CgoKCktp
-bmQgcmVnYXJkcywKCk1pa2UgTG9vaWptYW5zClN5c3RlbSBFeHBlcnQKClRPUElDIEVtYmVkZGVk
-IFByb2R1Y3RzCkVpbmRob3ZlbnNld2VnIDMyLUMsIE5MLTU2ODMgS0ggQmVzdApQb3N0YnVzIDQ0
-MCwgTkwtNTY4MCBBSyBCZXN0ClRlbGVmb29uOiArMzEgKDApIDQ5OSAzMyA2OSA3OQpUZWxlZmF4
-OiArMzEgKDApIDQ5OSAzMyA2OSA3MApFLW1haWw6IG1pa2UubG9vaWptYW5zQHRvcGljcHJvZHVj
-dHMuY29tCldlYnNpdGU6IHd3dy50b3BpY3Byb2R1Y3RzLmNvbQoKUGxlYXNlIGNvbnNpZGVyIHRo
-ZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwKCgoKCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 10/12/2015 05:20 PM, John Garry wrote:
+> This SAS ID is chosen as Huawei IEEE id: 001882
+>=20
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  drivers/scsi/hisi_sas/hisi_sas_init.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/his=
+i_sas/hisi_sas_init.c
+> index 44fc524..c295c39 100644
+> --- a/drivers/scsi/hisi_sas/hisi_sas_init.c
+> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+> @@ -283,6 +283,19 @@ err_out:
+>  	return NULL;
+>  }
+> =20
+> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
+> +{
+> +	u8 i;
+> +
+> +	/* Huawei IEEE id (001882) */
+> +	for (i =3D 0; i < hisi_hba->n_phy; i++)
+> +		hisi_hba->phy[i].dev_sas_addr =3D
+> +			cpu_to_be64(0x5001882016072015ULL);
+> +
+Ouch. Each phy has the same SAS address?
+=46or all boards? Ever?
+
+Not sure if that's a good idea, nor even valid.
+It'll confuse the hell out of any SAS array.
+
+Please provide a means of having individual SAS addresses for each HBA.
+
+Cheers,
+
+Hannes
+--=20
+Dr. Hannes Reinecke		               zSeries & Storage
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg
+GF: F. Imend=F6rffer, J. Smithard, J. Guild, D. Upmanyu, G. Norton
+HRB 21284 (AG N=FCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe linux-scsi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
