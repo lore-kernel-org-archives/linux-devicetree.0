@@ -1,75 +1,57 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 07/25] scsi: hisi_sas: add ioremap for device HW
-Date: Tue, 13 Oct 2015 23:09:24 +0800
-Message-ID: <561D1EA4.2060601@linaro.org>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <5285087.C8umupFr76@wuerfel> <561CD316.6040406@linaro.org> <5074860.NRYCq0Qjjh@wuerfel>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 00/37] ARM: dts: Fix fixed regulators enable GPIO polarity
+Date: Tue, 13 Oct 2015 23:09:32 +0800
+Message-ID: <20151013150932.GD584@tiger>
+References: <1444684386-17094-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <20151013140946.GB584@tiger>
+ <1561402.NmbcA6rYT5@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <5074860.NRYCq0Qjjh@wuerfel>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: John Garry <john.garry@huawei.com>, James.Bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1561402.NmbcA6rYT5@avalon>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 13, 2015 at 05:17:24PM +0300, Laurent Pinchart wrote:
+> Hi Shawn,
+> 
+> On Tuesday 13 October 2015 22:09:46 Shawn Guo wrote:
+> > On Tue, Oct 13, 2015 at 12:12:29AM +0300, Laurent Pinchart wrote:
+> > > Laurent Pinchart (37):
+> > ...
+> > 
+> > >   ARM: imx6sx-sdb: Fix typo in regulator enable GPIO property
+> > 
+> > ...
+> > 
+> > >   ARM: dts: imx6qdl-tx6: Fix regulator enable GPIO polarity
+> > 
+> > ...
+> > 
+> > >   ARM: dts: imx23-evk: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx23-stmp378x_devb: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx25-pdk: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx28-cfa10036: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx28-evk: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx28-m28cu3: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx28-m28evk: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx28-sps1: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx28-tx28: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx53-m53evk: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx53-mba53: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx53-tx53: Fix regulator enable GPIO polarity
+> > >   ARM: dts: imx6q-dmo-edmqmx6: Fix regulator enable GPIO polarity
+> > 
+> > Applied these 15 patches, thanks.
+> 
+> There's ongoing discussions regarding whether this is the right thing to do. 
+> Please see http://www.spinics.net/lists/arm-kernel/msg451724.html. It's thus a 
+> bit early to apply the patches at this point I'm afraid.
 
+Okay, dropped them except the first one which fixes a typo for
+imx6sx-sdb.
 
-On 10/13/2015 08:20 PM, Arnd Bergmann wrote:
-> On Tuesday 13 October 2015 17:47:02 zhangfei wrote:
->> On 10/12/2015 11:21 PM, Arnd Bergmann wrote:
->>> On Monday 12 October 2015 23:20:19 John Garry wrote:
->>>> +int hisi_sas_ioremap(struct hisi_hba *hisi_hba)
->>>> +{
->>>> +       struct platform_device *pdev = hisi_hba->pdev;
->>>> +       struct device *dev = &pdev->dev;
->>>> +       struct resource *res;
->>>> +
->>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +       hisi_hba->regs = devm_ioremap(dev,
->>>> +                                     res->start,
->>>> +                                     resource_size(res));
->>>> +       if (!hisi_hba->regs)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->>>> +       hisi_hba->ctrl_regs = devm_ioremap(dev,
->>>> +                                          res->start,
->>>> +                                          resource_size(res));
->>>> +       if (!hisi_hba->ctrl_regs)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       return 0;
->>>> +}
->>>>
->>>>    static const struct of_device_id sas_of_match[] = {
->>>>
->>>
->>> Better use devm_ioremap_resource() here, which registers the resource so they
->>> are checked for conflicts and listed in /proc/iomem.
->>>
->>
->> Yes, hisi_hba->regs can use devm_ioremap_resource.
->>
->> However ctrl_regs have to use devm_ioremap, since the address are
->> sharing among different nodes, unfortunately, and devm_ioremap_resource
->> will fail.
->
-> This sounds like it should be fixed in the DT binding then, to ensure
-> that the ranges don't overlap.
->
-> Mapping the same register region multiple times is generally considered
-> a bad idea because the drivers that map them often don't have global
-> locks that serialize the access, so it's better to have code in place
-> that ensures that they are distinct.
->
-> What is the purpose of the ctrl_regs region, and why is it shared
-> across multiple devices?
->
-> Are all users of these registers in the same driver?
->
-
-We are considering using syscon for ctrl_regs.
-
-Thanks Arnd.
-
+Shawn
