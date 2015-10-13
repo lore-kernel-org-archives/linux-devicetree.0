@@ -1,44 +1,131 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/2][UPDATE] ARM: dts: replace gpio-key,wakeup with wakeup-source property
-Date: Tue, 13 Oct 2015 19:52:11 +0200
-Message-ID: <1561585.uublXABoq2@diego>
-References: <1444743164-17735-2-git-send-email-sudeep.holla@arm.com> <1444747133-22671-1-git-send-email-sudeep.holla@arm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] Documentation: dt: soc: move driver description to a
+ separate document
+Date: Tue, 13 Oct 2015 13:01:29 -0500
+Message-ID: <CAL_JsqKSb8V0oMg_v=48T8Cg138UtfGgVt5bBOwxvNtDVeEcZA@mail.gmail.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com>
+ <1444679211-823-2-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw@mail.gmail.com>
+ <561D3F41.4080803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444747133-22671-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <561D3F41.4080803@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 13. Oktober 2015, 15:38:53 schrieb Sudeep Holla:
-> Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
-> "gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
-> source.
-> 
-> Few dts files assign value "1" to gpio-key,wakeup and in one instance a
-> value "0" is assigned probably assuming it won't be enabled as a wakeup
-> source. Since the presence of the boolean property indicates it is
-> enabled, value of "0" have no value.
-> 
-> This patch replaces the legacy "gpio-key,wakeup" with the unified
-> "wakeup-source" property which inturn fixes the above mentioned issue.
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  arch/arm/boot/dts/rk3066a-bqcurie2.dts      | 3 +--
->  arch/arm/boot/dts/rk3066a-rayeager.dts      | 2 +-
->  arch/arm/boot/dts/rk3188-radxarock.dts      | 2 +-
->  arch/arm/boot/dts/rk3288-evb.dtsi           | 2 +-
->  arch/arm/boot/dts/rk3288-firefly.dtsi       | 2 +-
->  arch/arm/boot/dts/rk3288-popmetal.dts       | 2 +-
->  arch/arm/boot/dts/rk3288-r89.dts            | 2 +-
-[...]
->  arch/arm64/boot/dts/rockchip/rk3368-r88.dts | 2 +-
+On Tue, Oct 13, 2015 at 12:28 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> On 10/13/2015 10:42 AM, Rob Herring wrote:
+>>
+>> On Mon, Oct 12, 2015 at 2:46 PM, Murali Karicheri <m-karicheri2@ti.com>
+>> wrote:
+>>>
+>>> Currently the DT bindings have details about the driver as well. This
+>>> patch moves this to a separate document for knav qmss driver so that
+>>> driver detail update can be done as needed without polluting the DT
+>>> bindings description.
+>>>
+>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>>> ---
+>>>   Documentation/arm/keystone/knav-qmss.txt           | 24
+>>> ++++++++++++++++++++++
+>>>   .../bindings/soc/ti/keystone-navigator-qmss.txt    | 20
+>>> ++++--------------
+>>>   2 files changed, 28 insertions(+), 16 deletions(-)
+>>>   create mode 100644 Documentation/arm/keystone/knav-qmss.txt
+>>>
+>>> diff --git a/Documentation/arm/keystone/knav-qmss.txt
+>>> b/Documentation/arm/keystone/knav-qmss.txt
+>>> new file mode 100644
+>>> index 0000000..79946d1
+>>> --- /dev/null
+>>> +++ b/Documentation/arm/keystone/knav-qmss.txt
+>>> @@ -0,0 +1,24 @@
+>>> +* Texas Instruments Keystone Navigator Queue Management SubSystem driver
+>>> +
+>>> +Driver source code path
+>>> +  drivers/soc/ti/knav_qmss.c
+>>> +  drivers/soc/ti/knav_qmss_acc.c
+>>> +
+>>> +The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>>> +the main hardware sub system which forms the backbone of the Keystone
+>>> +multi-core Navigator. QMSS consist of queue managers, packed-data
+>>> structure
+>>> +processors(PDSP), linking RAM, descriptor pools and infrastructure
+>>> +Packet DMA.
+>>> +The Queue Manager is a hardware module that is responsible for
+>>> accelerating
+>>> +management of the packet queues. Packets are queued/de-queued by writing
+>>> or
+>>> +reading descriptor address to a particular memory mapped location. The
+>>> PDSPs
+>>> +perform QMSS related functions like accumulation, QoS, or event
+>>> management.
+>>> +Linking RAM registers are used to link the descriptors which are stored
+>>> in
+>>> +descriptor RAM. Descriptor RAM is configurable as internal or external
+>>> memory.
+>>> +The QMSS driver manages the PDSP setups, linking RAM regions,
+>>> +queue pool management (allocation, push, pop and notify) and descriptor
+>>> +pool management.
+>>> +
+>>> +knav qmss driver provides a set of APIs to drivers to open/close qmss
+>>> queues,
+>>> +allocate descriptor pools, map the descriptors, push/pop to queues etc.
+>>> For
+>>> +details of the available APIs, please refers to
+>>> include/linux/soc/ti/knav_qmss.h
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>>> b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>>> index d8e8cdb..2cecea1 100644
+>>> ---
+>>> a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>>> +++
+>>> b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>>> @@ -1,20 +1,8 @@
+>>> -* Texas Instruments Keystone Navigator Queue Management SubSystem driver
+>>> -
+>>> -The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>>> -the main hardware sub system which forms the backbone of the Keystone
+>>> -multi-core Navigator. QMSS consist of queue managers, packed-data
+>>> structure
+>>> -processors(PDSP), linking RAM, descriptor pools and infrastructure
+>>> -Packet DMA.
+>>> -The Queue Manager is a hardware module that is responsible for
+>>> accelerating
+>>> -management of the packet queues. Packets are queued/de-queued by writing
+>>> or
+>>> -reading descriptor address to a particular memory mapped location. The
+>>> PDSPs
+>>> -perform QMSS related functions like accumulation, QoS, or event
+>>> management.
+>>> -Linking RAM registers are used to link the descriptors which are stored
+>>> in
+>>> -descriptor RAM. Descriptor RAM is configurable as internal or external
+>>> memory.
+>>> -The QMSS driver manages the PDSP setups, linking RAM regions,
+>>> -queue pool management (allocation, push, pop and notify) and descriptor
+>>> -pool management.
+>>
+>>
+>> Only the last sentence seems to be about the driver and is rather
+>> obvious (a driver manages the h/w). I would leave all this as-is
+>> currently.
+>>
+>> Rob
+>>
+> Rob,
+>
+> I am taking the liberty to add your Ack based on the above. I can remove it
+> if you disagree.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+No, I don't. I don't agree with moving this out of the binding. This
+mostly sounds like a description of the h/w to me, so I'd like to keep
+it. Most bindings are rather vague in this regard and I'd rather see
+more description than less.
+
+I also agree with Arnd's comment about not pointing to kernel docs.
+
+Rob
