@@ -1,36 +1,32 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 12/25] scsi: hisi_sas: add v1 HW initialisation code
-Date: Tue, 13 Oct 2015 14:47:19 +0200
-Message-ID: <6185166.M64gFmBG3u@wuerfel>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <147982224.OvBbMyp8ci@wuerfel> <561CFCAA.8030003@huawei.com>
+From: "Thomas" <topmag1-9Onoh4P/yGk@public.gmane.org>
+Subject: Re:Magnets and plastic Suplier/manufactory from China
+Date: Tue, 13 Oct 2015 20:48:32 +0800
+Message-ID: <201510132048329611346@a.wifi0514.com>
+Reply-To: topmag1-9Onoh4P/yGk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561CFCAA.8030003@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: James.Bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 October 2015 13:44:26 John Garry wrote:
-> Hello,
-> 
-> Just to be clear, are you saying that you would prefer hisi_sas_probe() 
-> and struct hisi_sas_driver to be relocated to hisi_sas_v1_hw.c?
-
-Correct.
-
-> I wanted to keep hisi_sas_v1_hw.c containing only code which accesses HW.
-> 
-> I could consoldate the calls of hw_init_v1_hw(), interrupt_init_v1_hw(), 
-> interrupt_openall_v1_hw(), and phys_init_v1_hw() to a single function hw 
-> init function call. Then most of the code in the probe function will not 
-> be specific to v1.
-
-This is more about correct layering of the code. Generally we want the
-more specific modules on top to call into the more general code in
-the bottom of the stack. Shared code should know as little as possible
-about the specific implementations it is shared with.
-
-	Arnd
+RGVhciBzaXIsIA0KDQoNCkkgYW0gVGhvbWFzIGZyb20gVG9wbWFnIENvLixMdGQsIENoaW5lc2Ug
+bGVhZGluZyBtYWduZXRpYyBlbmdpbmVlcmluZyBjb21wYW55Lg0KDQpXZSBzcGVjaWFsaXplIGlu
+IE5kRmVCIG1hZ25ldHMgYW5kIHBsYXN0aWMgYXNzZW1ibHkgdGVjaG5vbG9neSwgd2UgZmVhdHVy
+ZXMgYXJlIGFzIGJlbG93LA0KDQoxLCBSaWNoIGV4cGVyaWVuY2UgaW4gcGxhc3RpYyBhbmQgbWFn
+bmV0IGFzc2VtYmx5IG1hbnVmYWN0dXJpbmcuDQoNCjIsIFNvcGhpc3RpY2F0ZWQgZW5naW5lZXIg
+dGVhbSBmb3IgbW9sZCBkZXNpZ24gYW5kIG1hZ25ldGljIGNpcmN1aXQgb3B0aW1pemF0aW9uIGRl
+c2lnbi4NCg0KMywgUHJvdmlkZSBtYWduZXRpYyBjb21wb25lbnRzIHByb2R1Y3RzDQoNCjQsIE5l
+dyB0ZWNobm9sb2d5IGRldmVsb3BtZW50Lg0KDQpJZiB5b3UgaGF2ZSBpbnRlcmVzdCBpbiBpdCwg
+aXQncyBteSBwbGVhc3VyZSB0byBvZmZlciBuZXdzIHRvIHlvdSByZWd1bGFyLg0KDQpUaG9tYXMg
+LS0tIFNhbGVzIEVuZ2luZWVyICANCk1vYmlsZTogMDA4Ni0xNTg4OTcwNjgzNw0KQWRkcmVzczog
+TmV3IFNhbnlvIE1vdG9yIEluZHVzdHJpYWwgUGFyaywgIEhhb3lpIFZpbGxpYWdlLCBTaGFqaW5n
+IFRvd24sIEJhb2FuIERpc3RyaWN0LCBTaGVuemhlbiwgQ2hpbmEgNTE4MTA0DQpUZWw6KDg2KTc1
+NS0yOTAxOTg3MQ0KRmF4Oig4NikgNzU1LTI5NzM1OTg3DQpFbWFpbDogaW5mb0B0b3BtYWd0ZWNo
+LmNvbSZ0b3BtYWcxQDE2My5jb20=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
