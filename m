@@ -1,214 +1,453 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: use vmmc-supply of emmc/sd for exynos5422-odroidxu3
-Date: Tue, 13 Oct 2015 08:15:36 +0530
-Message-ID: <CANAwSgQ80_+AQjo7gi_az1O+2=tjpFu6H3Pcx9K6oL-URzjCwA@mail.gmail.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-2-git-send-email-linux.amoon@gmail.com> <561B3A3E.3030904@samsung.com>
- <561B49D0.2040305@samsung.com> <CANAwSgT=O-AVhQv4TO8ZukK15Ya++Kos_ZEjiFZWiDwNXub0mQ@mail.gmail.com>
- <561BA3F2.5010403@samsung.com> <CANAwSgQ7Tm+hrjYqhVS0Og=NsMK1zJSOM+f7pcjHLzFMNKJkpw@mail.gmail.com>
- <561C4BF9.7070705@samsung.com> <CANAwSgSvd6Ewpg17YBEMR=_tmzhrcEXe5aqNP7XWg3r=Ym-dqA@mail.gmail.com>
- <561C6ED3.4090101@samsung.com>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v2 3/3] leds: rt5033: Add RT5033 Flash led device driver
+Date: Tue, 13 Oct 2015 11:58:28 +0900
+Message-ID: <561C7354.9080504@samsung.com>
+References: <1444655578-19806-1-git-send-email-ingi2.kim@samsung.com>
+ <1444655578-19806-4-git-send-email-ingi2.kim@samsung.com>
+ <561BCD71.9020001@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561C6ED3.4090101-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <561BCD71.9020001@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon Chung,
+Hi Jacek,
 
-On 13 October 2015 at 08:09, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 10/13/2015 11:29 AM, Anand Moon wrote:
->> Hi Krzysztof,
+Thanks for your kind comments
+I also append reply below
+
+On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 00:10, Jacek Anaszewski wrote:
+> Hi Ingi,
+>=20
+> Thanks for the update. Few comments below.
+>=20
+> On 10/12/2015 03:12 PM, Ingi Kim wrote:
+>> This patch adds device driver of Richtek RT5033 PMIC.
+>> The driver supports a current regulated output to drive
+>> white LEDs for camera flash.
 >>
->> On 13 October 2015 at 05:40, Krzysztof Kozlowski
->> <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> On 12.10.2015 23:33, Anand Moon wrote:
->>>> Hi Krzysztof,
->>>>
->>>> On 12 October 2015 at 17:43, Krzysztof Kozlowski
->>>> <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>> W dniu 12.10.2015 o 20:08, Anand Moon pisze:
->>>>>> Hi Krzysztof,
->>>>>>
->>>>>> On 12 October 2015 at 11:19, Krzysztof Kozlowski
->>>>>> <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>>> On 12.10.2015 13:42, Krzysztof Kozlowski wrote:
->>>>>>>> On 12.10.2015 00:46, Anand Moon wrote:
->>>>>>>>> Added support for vmmc/vqmmc-supply for emmc/sd cards.
->>>>>>>>> Fixed the min values for regulator ldo13_reg (VDDQ_MMC2).
->>>>>>>>
->>>>>>>> I can't see the description of a problem which is fixed. If you fix
->>>>>>>> something, then please describe what is wrong.
->>>>>>>>
->>>>>>>>> Added ramp-delay for LDO9(VDD33_USB3_0).
->>>>>>>>> Added ramp-delay for LDO13(VDDQ_MMC2).
->>>>>>>>> Added ramp-delay for LDO15(ETH_P3V3).
->>>>>>>>>
->>>>>>>>> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>>>>
->>>>>>>>> ---
->>>>>>>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>>>>>>>>
->>>>>>>>> Note:
->>>>>>>>> Changes need for support of UHS-I highspeed cards.
->>>>>>>>> changes for vqmmc-supply for emmc is not supported.
->>>>>>>>>
->>>>>>>>> [    1.831136] vdd_ldo9: ramp_delay not set
->>>>>>>>> [    1.843049] vdd_ldo13: ramp_delay not set
->>>>>>>>> [    1.850975] vdd_ldo15: ramp_delay not set
->>>>>>>>> [    1.862816] vdd_sd: ramp_delay not set
->>>>>>>>> ---
->>>>>>>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 8 +++++++-
->>>>>>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>>>>>>> index 26decbd..58c06d3 100644
->>>>>>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>>>>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>>>>>>> @@ -157,6 +157,7 @@
->>>>>>>>>                              regulator-min-microvolt = <3000000>;
->>>>>>>>>                              regulator-max-microvolt = <3000000>;
->>>>>>>>>                              regulator-always-on;
->>>>>>>>> +                            regulator-ramp-delay = <12000>;
->>>>>>>>>                      };
->>>>>>>>>
->>>>>>>>>                      ldo10_reg: LDO10 {
->>>>>>>>> @@ -182,9 +183,10 @@
->>>>>>>>>
->>>>>>>>>                      ldo13_reg: LDO13 {
->>>>>>>>>                              regulator-name = "vdd_ldo13";
->>>>>>>>> -                            regulator-min-microvolt = <2800000>;
->>>>>>>>> +                            regulator-min-microvolt = <1800000>;
->>>>>>>>>                              regulator-max-microvolt = <2800000>;
->>>>>>>>>                              regulator-always-on;
->>>>>>>>> +                            regulator-ramp-delay = <12000>;
->>>>>>>>>                      };
->>>>>>>>>
->>>>>>>>>                      ldo15_reg: LDO15 {
->>>>>>>>> @@ -213,6 +215,7 @@
->>>>>>>>>                              regulator-min-microvolt = <2800000>;
->>>>>>>>>                              regulator-max-microvolt = <2800000>;
->>>>>>>>>                              regulator-always-on;
->>>>>>>>> +                            regulator-ramp-delay = <12000>;
->>>>>>>>
->>>>>>>> Where did you get this value from? It looks wrong... My datasheet does
->>>>>>>> not have 12000 uV/uS.
->>>>>>>
->>>>>>
->>>>>>> Anand,
->>>>>>>
->>>>>>> We have actually been here:
->>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/351601.html
->>>>>>>
->>>>>>> That time you used 8000. I asked the same question - how did you figure
->>>>>>> out the exact value.
->>>>>>>
->>>>>>> Now we have the same question - why 12000?
->>>>>>>
->>>>>>> It is completely fine to make a mistake (I do a lot of them) but please
->>>>>>> try not to make the same mistake again.
->>>>>>>
->>>>>>> BR,
->>>>>>> Krzysztof
->>>>>>
->>>>>> I will focus more in the future to clamp down my mistakes to minimal.
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>>>                      };
->>>>>>>>>
->>>>>>>>>                      ldo24_reg: LDO24 {
->>>>>>>>> @@ -338,6 +341,7 @@
->>>>>>>>>      samsung,dw-mshc-ddr-timing = <0 2>;
->>>>>>>>>      samsung,dw-mshc-hs400-timing = <0 2>;
->>>>>>>>>      samsung,read-strobe-delay = <90>;
->>>>>>>>> +    vmmc-supply = <&ldo3_reg>;
->>>>>>>>>      pinctrl-names = "default";
->>>>>>>>>      pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
->>>>>>>>>      bus-width = <8>;
->>>>>>>>> @@ -352,6 +356,8 @@
->>>>>>>>>      samsung,dw-mshc-ciu-div = <3>;
->>>>>>>>>      samsung,dw-mshc-sdr-timing = <0 4>;
->>>>>>>>>      samsung,dw-mshc-ddr-timing = <0 2>;
->>>>>>>>> +    vmmc-supply = <&ldo19_reg>;
->>>>>>>>> +    vqmmc-supply = <&ldo13_reg>;
->>>>>>>>
->>>>>>>> It looks wrong. LDO13 is used in one place as VQMMC and in other as
->>>>>>>> VMMC. How did you figure out which regulator supplies which power domain?
->>>>>>>>
->>>>>>
->>>>>> I refer Schematics diagram to XU4_MAIN_REV0.1.pdf
->>>>>>
->>>>>> From the PWR_PMCI_S2MPS11_LDO_CTRL document it LDO13 point to VDDQ_MMC2.
->>>>>>
->>>>>
->>>>> Aaa right, by mistake I thought that you put LDO13 here and in the node
->>>>> before, but there is LDO3, not 13. You did this correctly.
->>>>>
->>>>> But I have two other questions:
->>>>> 1. Maybe these regulators now should not be always-enabled?
->>>>
->>>> regulator-always-on         can be removed: I have tested this.
->>>>
->>>>> 2. Why changing minimum voltage of LDO13 to 1.8V? The schematics says 2.8V.
->>>>>
->>>>
->>>> In the schematics diagram to XU4_MAIN_REV0.1.pdf
->>>>
->>>> >From the EXYNOS5422 MMC UFS diagram CH2 range is VDDQ_MMC2 (1.8V/2.8V).
->>>
->>> Okay, so try to setting it to 1.8V (min and max) and see if it works
->>> correctly.
->>>
->>> On the same diagram few lines below:
->>> VDDQ_MMC2: 2.8V 250mA
->>>
+>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+>> ---
+>>   drivers/leds/Kconfig               |   8 ++
+>>   drivers/leds/Makefile              |   1 +
+>>   drivers/leds/leds-rt5033.c         | 223 +++++++++++++++++++++++++=
+++++++++++++
+>>   include/linux/mfd/rt5033-private.h |  49 ++++++++
+>>   include/linux/mfd/rt5033.h         |  22 +++-
+>>   5 files changed, 301 insertions(+), 2 deletions(-)
+>>   create mode 100644 drivers/leds/leds-rt5033.c
 >>
->> You are correct.
->> While working on this issue I tent to encounter make bugs.
->> ---------------------------------------------------------------------------------
->> [    4.713553] random: nonblocking pool is initialized
->> [    4.718423] 14530000.hdmi supply hdmi-en not found, using dummy regulator
->> [    4.726206] exynos-drm exynos-drm: bound 14400000.fimd (ops
->> fimd_component_ops)
->> [    4.732555] exynos-drm exynos-drm: bound 14450000.mixer (ops
->> mixer_component_ops)
->> [    4.740180] exynos-drm exynos-drm: bound 14530000.hdmi (ops
->> hdmi_component_ops)
->> [    4.746936] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
->> [    4.753428] [drm] No driver support for vblank timestamp query.
->> [    4.940794] Console: switching to colour frame buffer device 274x77
->> [    4.995344] exynos-drm exynos-drm: fb0:  frame buffer device
->> [    5.024573] [drm] Initialized exynos 1.0.0 20110530 on minor 0
->> [    5.031164] exynos-dwc3 usb@12000000: no suspend clk specified
->> [    5.054571] usb 2-1: new full-speed USB device number 2 using exynos-ohci
->> [    5.159527] dwmmc_exynos 12220000.mmc: Busy; trying anyway
->> [    5.163705] mmc_host mmc1: Timeout sending command (cmd 0x202000
->> arg 0x0 status 0x0)
->> ---------------------------------------------------------------------------------
->> This is one bug. related to this changes. It stops booting waiting for
->> the mmc1 card.
->
-> It seems that it failed to switch voltage.
->
-> Best Regards,
-> Jaehoon Chung
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 42990f2..29613e3 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -345,6 +345,14 @@ config LEDS_PCA963X
+>>         LED driver chip accessed via the I2C bus. Supported
+>>         devices include PCA9633 and PCA9634
+>>
+>> +config LEDS_RT5033
+>> +    tristate "LED support for RT5033 PMIC"
+>> +    depends on LEDS_CLASS_FLASH && OF
+>> +    depends on MFD_RT5033
+>> +    help
+>> +      This option enables support for on-chip LED driver on
+>> +      RT5033 PMIC.
+>> +
+>>   config LEDS_WM831X_STATUS
+>>       tristate "LED support for status LEDs on WM831x PMICs"
+>>       depends on LEDS_CLASS
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index b503f92..bcc4d93 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -23,6 +23,7 @@ obj-$(CONFIG_LEDS_COBALT_QUBE)        +=3D leds-co=
+balt-qube.o
+>>   obj-$(CONFIG_LEDS_COBALT_RAQ)        +=3D leds-cobalt-raq.o
+>>   obj-$(CONFIG_LEDS_SUNFIRE)        +=3D leds-sunfire.o
+>>   obj-$(CONFIG_LEDS_PCA9532)        +=3D leds-pca9532.o
+>> +obj-$(CONFIG_LEDS_RT5033)        +=3D leds-rt5033.o
+>>   obj-$(CONFIG_LEDS_GPIO_REGISTER)    +=3D leds-gpio-register.o
+>>   obj-$(CONFIG_LEDS_GPIO)            +=3D leds-gpio.o
+>>   obj-$(CONFIG_LEDS_LP3944)        +=3D leds-lp3944.o
+>> diff --git a/drivers/leds/leds-rt5033.c b/drivers/leds/leds-rt5033.c
+>> new file mode 100644
+>> index 0000000..b470c94
+>> --- /dev/null
+>> +++ b/drivers/leds/leds-rt5033.c
+>> @@ -0,0 +1,223 @@
+>> +/*
+>> + * led driver for RT5033
+>> + *
+>> + * Copyright (C) 2015 Samsung Electronics, Co., Ltd.
+>> + * Ingi Kim <ingi2.kim@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify
+>> + * it under the terms of the GNU General Public License version 2 a=
+s
+>> + * published by the Free Software Foundation.
+>> + *
+>> + */
+>> +
+>> +#include <linux/mfd/rt5033.h>
+>> +#include <linux/mfd/rt5033-private.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define RT5033_LED_FLASH_TIMEOUT_MIN        64000
+>> +#define RT5033_LED_FLASH_TIMEOUT_STEPS        32000
+>> +#define RT5033_LED_TORCH_CURRENT_LEVEL_MAX    16
+>> +
+>> +/* Macro for getting offset of flash timeout */
+>> +#define GET_TIMEOUT_OFFSET(tm, step)    ((tm) / (step) - 2)
+>> +
+>> +static struct rt5033_led *flcdev_to_led(
+>> +                struct led_classdev_flash *fled_cdev)
+>> +{
+>> +    return container_of(fled_cdev, struct rt5033_led, fled_cdev);
+>> +}
+>> +
+>> +static int rt5033_led_brightness_set(struct led_classdev *led_cdev,
+>> +                     enum led_brightness brightness)
+>> +{
+>> +    struct led_classdev_flash *fled_cdev =3D lcdev_to_flcdev(led_cd=
+ev);
+>> +    struct rt5033_led *led =3D flcdev_to_led(fled_cdev);
+>=20
+> I assume that you don't use mutex here deliberately?
+>=20
+
+Actually I'm not sure why flash driver uses mutex.
+In consideration of blocking competition, however, I'd be better to use=
+ it
+
+>> +    if (!brightness) {
+>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION2,
+>> +                   RT5033_FLED_CTRL2_MASK, 0x0);
+>> +    } else {
+>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION1,
+>> +                   RT5033_FLED_FUNC1_MASK, RT5033_FLED_PINCTRL);
+>> +        regmap_update_bits(led->regmap,    RT5033_REG_FLED_CTRL1,
+>> +                   RT5033_FLED_CTRL1_MASK,
+>> +                   (brightness - 1) << 4);
+>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION2,
+>> +                   RT5033_FLED_CTRL2_MASK, RT5033_FLED_ENFLED);
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void rt5033_init_flash_timeout(struct rt5033_led *led)
+>> +{
+>> +    struct led_flash_setting *setting;
+>> +
+>> +    setting =3D &led->fled_cdev.timeout;
+>> +    setting->min =3D RT5033_LED_FLASH_TIMEOUT_MIN;
+>> +    setting->max =3D led->data->flash_max_timeout;
+>> +    setting->step =3D RT5033_LED_FLASH_TIMEOUT_STEPS;
+>> +    setting->val =3D led->data->flash_max_timeout;
+>> +}
+>> +
+>> +static int rt5033_led_parse_dt(struct rt5033_led *led, struct devic=
+e *dev)
+>> +{
+>> +    struct device_node *np =3D dev->of_node;
+>> +    struct device_node *child_node;
+>> +    struct rt5033_led_config_data *data;
+>> +    int ret =3D 0;
+>> +
+>> +    if (!np)
+>> +        return -ENXIO;
+>> +
+>> +    data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>> +    if (!data)
+>> +        return -ENOMEM;
+>=20
+> This way data will remain allocated until driver removal, whereas
+> you are using it only in rt5033_init_flash_timeout during driver
+> probing AFAICS. Please define local variable in rt5033_led_probe,
+> pass its pointer to this function and than pass the pointer to
+> rt5033_init_flash_timeout.
+>=20
+
+You're right, I should have moved it to local,
+I'll try to fix it.
+
+
+>> +    child_node =3D of_get_next_available_child(np, NULL);
+>> +    if (!child_node) {
+>> +        dev_err(dev, "DT child node isn't found\n");
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    led->fled_cdev.led_cdev.name =3D
+>> +        of_get_property(child_node, "label", NULL) ? : child_node->=
+name;
+>> +
+>> +    ret =3D of_property_read_u32(child_node, "led-max-microamp",
+>> +                   &data->torch_max_microamp);
+>> +    if (ret) {
+>> +        dev_err(dev, "failed to parse led-max-microamp\n");
+>> +        return ret;
+>> +    }
+>=20
+> data->torch_max_microamp isn't used anywhere, while it should be used
+> for initializing led_cdev->max_brightness.
+>=20
+
+Oh, I see.
+I'll fix it
+
+>> +
+>> +    ret =3D of_property_read_u32(child_node, "flash-max-microamp",
+>> +                   &data->flash_max_microamp);
+>> +    if (ret) {
+>> +        dev_err(dev, "failed to parse flash-max-microamp\n");
+>> +        return ret;
+>> +    }
+>=20
+> data->flash_max_microamp also isn't used anywhere. Does your device
+> support flash brightness setting? If yes then you should implement
+> also flash_brightness_set op. Otherwise this property is redundant.
+>=20
+
+Yes, It support to set flash brightness.
+I should implement it.
+
+>> +    ret =3D of_property_read_u32(child_node, "flash-max-timeout-us"=
+,
+>> +                   &data->flash_max_timeout);
+>> +    if (ret)
+>> +        dev_err(dev, "failed to parse flash-max-timeout-us\n");
+>> +
+>> +    of_node_put(child_node);
+>> +    led->data =3D data;
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +static int rt5033_led_flash_timeout_set(struct led_classdev_flash *=
+fled_cdev,
+>> +                    u32 timeout)
+>> +{
+>> +    return 0;
+>> +}
+>> +
+>> +static int rt5033_led_flash_strobe_set(struct led_classdev_flash *f=
+led_cdev,
+>> +                       bool state)
+>> +{
+>> +    struct rt5033_led *led =3D flcdev_to_led(fled_cdev);
+>> +    u32 flash_tm_reg;
+>=20
+> I think that you need a mutex here and in rt5033_led_flash_strobe_set=
+=2E Otherwise following is possible:
+>=20
+> Process 1:
+>     rt5033_led_flash_strobe_set(led_cdev, 1);
+>=20
+>     regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION1,
+>             RT5033_FLED_FUNC1_MASK, RT5033_FLED_RESET);
+>     fled_cdev->led_cdev.brightness =3D LED_OFF;
+>=20
+> Process 2:
+>     led_set_brightness(led_cdev, 1);
+>=20
+>     fled_cdev->led_cdev.brightness =3D 1;
+>=20
+>     rt5033_led_brightness_set(led_cdev, LED_FULL);
+>=20
+>     regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION1,
+>             RT5033_FLED_FUNC1_MASK, RT5033_FLED_PINCTRL);
+>     regmap_update_bits(led->regmap,    RT5033_REG_FLED_CTRL1,
+>             RT5033_FLED_CTRL1_MASK,
+>             (brightness - 1) << 4);
+>     regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION2,
+>             RT5033_FLED_CTRL2_MASK, RT5033_FLED_ENFLED);
+>=20
+> Process 1:
+>     regmap_update_bits(led->regmap,    RT5033_REG_FLED_STROBE_CTRL2,
+>         RT5033_FLED_STRBCTRL2_MASK, flash_tm_reg);
+>     regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION1,
+>         RT5033_FLED_FUNC1_MASK, RT5033_FLED_STRB_SEL
+>         | RT5033_FLED_PINCTRL);
+>     regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION2,
+>         RT5033_FLED_FUNC2_MASK, RT5033_FLED_ENFLED
+>=20
+> In a result LED class device will report brightness value 1,
+> whereas it would be inconsistent with hardware state, since
+> flash strobe turns torch mode off.
+>=20
+>=20
+
+Thanks for your explanation in detail,
+I was worried about cases of using shared resource for flash led.
+because I thought flash led would be called just from camera or directl=
+y itself.
+I should consider using mutex
+
+>> +
+>> +    regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION1,
+>> +               RT5033_FLED_FUNC1_MASK, RT5033_FLED_RESET);
+>> +    fled_cdev->led_cdev.brightness =3D LED_OFF;
+>> +
+>> +    if (state) {
+>> +        flash_tm_reg =3D GET_TIMEOUT_OFFSET(fled_cdev->timeout.val,
+>> +                          fled_cdev->timeout.step);
+>> +        regmap_update_bits(led->regmap,    RT5033_REG_FLED_STROBE_C=
+TRL2,
+>> +                   RT5033_FLED_STRBCTRL2_MASK, flash_tm_reg);
+>> +        regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION=
+1,
+>> +                   RT5033_FLED_FUNC1_MASK, RT5033_FLED_STRB_SEL
+>> +                   | RT5033_FLED_PINCTRL);
+>> +        regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION=
+2,
+>> +                   RT5033_FLED_FUNC2_MASK, RT5033_FLED_ENFLED
+>> +                   | RT5033_FLED_SREG_STRB);
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct led_flash_ops flash_ops =3D {
+>> +    .strobe_set =3D rt5033_led_flash_strobe_set,
+>> +    .timeout_set =3D rt5033_led_flash_timeout_set,
+>> +};
+>> +
+>> +static int rt5033_led_probe(struct platform_device *pdev)
+>> +{
+>> +    struct rt5033_dev *rt5033 =3D dev_get_drvdata(pdev->dev.parent)=
+;
+>> +    struct rt5033_led *led;
+>> +    struct led_classdev *led_cdev;
+>> +    int ret;
+>> +
+>> +    led =3D devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
+>> +    if (!led)
+>> +        return -ENOMEM;
+>> +
+>> +    platform_set_drvdata(pdev, led);
+>> +    led->dev =3D &pdev->dev;
+>> +    led->regmap =3D rt5033->regmap;
+>> +
+>> +    ret =3D rt5033_led_parse_dt(led, &pdev->dev);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    rt5033_init_flash_timeout(led);
+>> +    led->fled_cdev.ops =3D &flash_ops;
+>> +    led_cdev =3D &led->fled_cdev.led_cdev;
+>> +
+>> +    led_cdev->max_brightness =3D RT5033_LED_TORCH_CURRENT_LEVEL_MAX=
+;
+>=20
+> This should depend on led-max-microamp.
+>=20
+
+Right, I'll fix it
+
+>> +    led_cdev->brightness_set_sync =3D rt5033_led_brightness_set;
+>> +    led_cdev->flags |=3D LED_CORE_SUSPENDRESUME | LED_DEV_CAP_FLASH=
+;
+>=20
+> You need also a work queue since your ops can sleep.
 >
 
-You are correct. This happens when the min/max value for ldo13_reg is 2.8V.
+Ok, I'll try to implement it
+=20
+>> +
+>> +    ret =3D led_classdev_flash_register(&pdev->dev, &led->fled_cdev=
+);
+>> +    if (ret < 0) {
+>> +        dev_err(&pdev->dev, "can't register LED %s\n", led_cdev->na=
+me);
+>> +        return ret;
+>> +    }
+>> +
+>> +    regmap_update_bits(led->regmap,    RT5033_REG_FLED_FUNCTION1,
+>> +               RT5033_FLED_FUNC1_MASK, RT5033_FLED_RESET);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int rt5033_led_remove(struct platform_device *pdev)
+>> +{
+>> +    struct rt5033_led *led =3D platform_get_drvdata(pdev);
+>> +
+>> +    led_classdev_flash_unregister(&led->fled_cdev);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct platform_device_id rt5033_led_id[] =3D {
+>> +    { "rt5033-led", },
+>> +    { /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(platform, rt5033_led_id);
+>> +
+>> +static const struct of_device_id rt5033_led_match[] =3D {
+>> +    { .compatible =3D "richtek,rt5033-led", },
+>> +    { /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, rt5033_led_match);
+>> +
+>> +static struct platform_driver rt5033_led_driver =3D {
+>> +    .driver =3D {
+>> +        .name =3D "rt5033-led",
+>> +        .of_match_table =3D rt5033_led_match,
+>> +    },
+>> +    .probe        =3D rt5033_led_probe,
+>> +    .id_table    =3D rt5033_led_id,
+>> +    .remove        =3D rt5033_led_remove,
+>> +};
+>> +module_platform_driver(rt5033_led_driver);
+>> +
+>> +MODULE_AUTHOR("Ingi Kim <ingi2.kim@samsung.com>");
+>> +MODULE_DESCRIPTION("Richtek RT5033 LED driver");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_ALIAS("platform:rt5033-led");
+>> diff --git a/include/linux/mfd/rt5033-private.h b/include/linux/mfd/=
+rt5033-private.h
+>> index 1b63fc2..c8e99e4 100644
+>> --- a/include/linux/mfd/rt5033-private.h
+>> +++ b/include/linux/mfd/rt5033-private.h
+>> @@ -93,6 +93,55 @@ enum rt5033_reg {
+>>   #define RT5033_RT_CTRL1_UUG_MASK    0x02
+>>   #define RT5033_RT_HZ_MASK        0x01
+>>
 
--Anand Moon
+[..]
+
 >>
->> -Anand Moon
+>> +/* RT5033 Flash led platform data */
+>> +struct rt5033_led_config_data {
+>> +    u32 torch_max_microamp;
+>> +    u32 flash_max_microamp;
+>> +    u32 flash_max_timeout;
+>> +    enum led_brightness max_brightness;
+>> +};
+>> +
+>> +struct rt5033_led {
+>> +    struct device        *dev;
+>> +    struct rt5033_dev    *rt5033;
+>> +    struct regmap        *regmap;
+>> +
+>> +    struct led_classdev_flash fled_cdev;
+>> +    struct rt5033_led_config_data  *data;
+>=20
+> It is not needed to have config data here.
+>=20
+
+Okay, I try to move config data to local.
+
+>> +};
+>> +
+>>   #endif /* __RT5033_H__ */
 >>
->>> Best regards,
->>> Krzysztof
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>=20
