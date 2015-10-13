@@ -1,79 +1,67 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Tue, 13 Oct 2015 09:02:18 +0100
-Message-ID: <20151013080218.GV17172@x1>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151007100017.GB12635@sirena.org.uk>
- <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox>
- <20151012134309.GE1542@sirena.org.uk>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v2 2/3] mfd: rt5033: Add RT5033 Flash led sub device
+Date: Tue, 13 Oct 2015 17:03:51 +0900
+Message-ID: <561CBAE7.1070300@samsung.com>
+References: <1444655578-19806-1-git-send-email-ingi2.kim@samsung.com>
+ <1444655578-19806-3-git-send-email-ingi2.kim@samsung.com>
+ <20151013070610.GO17172@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151012134309.GE1542-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20151013070610.GO17172@x1>
+Sender: linux-leds-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, rpurdie@rpsys.net, j.anaszewski@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Oct 2015, Mark Brown wrote:
+Hi Lee Jones,
 
-> On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrote:
-> > On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
-> > > On Wed, 07 Oct 2015, Mark Brown wrote:
+Okay, I'm try to remove needless part and resend it
+Thanks for the review
+
+Thank you
+
+On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 16:06, Lee Jones wrote:
+> On Mon, 12 Oct 2015, Ingi Kim wrote:
 >=20
-> > > > This all seems pretty much fine to me - the things it is contro=
-lling are
-> > > > fairly specific to the way the former Wolfson devices do, they =
-only
-> > > > really make sense with a fairly particular algorithm which isn'=
-t widely
-> > > > implemented.
+>> This patch adds rt5033-led sub device to support it.
+>>
+>> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+>> ---
+>>  drivers/mfd/rt5033.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
+>> index d60f916..b7f374b 100644
+>> --- a/drivers/mfd/rt5033.c
+>> +++ b/drivers/mfd/rt5033.c
+>> @@ -40,13 +40,17 @@ static const struct regmap_irq_chip rt5033_irq_c=
+hip =3D {
+>>  };
+>> =20
+>>  static const struct mfd_cell rt5033_devs[] =3D {
+>> -	{ .name =3D "rt5033-regulator", },
+>>  	{
+>> +		.name =3D "rt5033-regulator",
+>> +	}, {
 >=20
-> > > Is that an Ack?
+> There's no need for this change.  Please remove it.
 >=20
-> > I am guessing Mark is slightly hesitant to ack as he probably
-> > doesn't want to add reviewing all our jack detection bindings to
-> > his already fairly sizable work load and doing so here likely
-> > means it will be expected in the future. From talking to people at
-
-Providing Acks should not (and has not to my knowledge) be a binding
-contract to continue providing Acks.  However, should more bindings be
-submitted which appear as though they are related to a particular
-maintainer, then sure, you'll be asked for your expert eye again.
-
-> Pretty much (plus generally being busy at ELC-E last week) - if there=
-'s
-> specific questions that's one thing but if it's just general requests=
- to
-> look at bindings then it seems like the relevant subsystem maintainer=
-s
-
-This is exactly my point.  I am not the 'relevant subsystem
-maintainer' for these properties and subsequently know nothing of
-microphone detection, headsets, bias', etc.  These look like Audio
-related properties to me (the uninitiated), which is why you were
-asked.
-
-> should have the confidence to review straightfoward device properties
-> like this.
-
-I don't think these bindings are particularly straightforward.  The
-contain many terms which I'm unfamiliar with, and again, to me (the
-uninitiated) this looks like way too many bindings just to see if an
-audio jack is plugged in or not.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  		.name =3D "rt5033-charger",
+>>  		.of_compatible =3D "richtek,rt5033-charger",
+>>  	}, {
+>>  		.name =3D "rt5033-battery",
+>>  		.of_compatible =3D "richtek,rt5033-battery",
+>> +	}, {
+>> +		.name =3D "rt5033-led",
+>> +		.of_compatible =3D "richtek,rt5033-led",
+>=20
+> For when you resubmit with the hunk above removed:
+>=20
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+>=20
+>>  	},
+>>  };
+>> =20
+>=20
