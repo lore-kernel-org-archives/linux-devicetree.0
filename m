@@ -1,71 +1,47 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [RFC 1/5] clk: iproc: define Broadcom NSP iProc clock binding
-Date: Tue, 13 Oct 2015 17:22:23 -0400
-Message-ID: <1444771347-11382-2-git-send-email-jonmason@broadcom.com>
-References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH v2] ARM: socfpga: dts: add fpga manager
+Date: Tue, 13 Oct 2015 16:16:19 -0500
+Message-ID: <alpine.DEB.2.02.1510131615350.4441@linux-builds1>
+References: <1444765139-2040-1-git-send-email-atull@opensource.altera.com> <alpine.DEB.2.02.1510131450480.4441@linux-builds1> <20151013203344.GE17155@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151013203344.GE17155@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Alan Tull <atull@opensource.altera.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for Broadcom Northstar Plus
-architecture based clock controller
+On Tue, 13 Oct 2015, Steffen Trumtrar wrote:
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- .../bindings/clock/brcm,iproc-clocks.txt           | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+> On Tue, Oct 13, 2015 at 02:51:28PM -0500, Dinh Nguyen wrote:
+> > On Tue, 13 Oct 2015, atull@opensource.altera.com wrote:
+> > 
+> > > From: Alan Tull <atull@opensource.altera.com>
+> > > 
+> > > Add FPGA manager to device tree for SoCFPGA.
+> > > 
+> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > > ---
+> > > v2: Remove 0x after @
+> > >     No caps in hex numbers
+> > >     renamed hps_0_fpgamgr to fpgamgr0
+> > >     move node to be in alpha order by node name
+> > > ---
+> > >  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > 
+> > Applied!
+> 
+> What about the
+> 
+> "Also, you need to document the "altr,socfpga-fpga-mgr"."
+> 
+> you mentioned in v1 ???
+>
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index da8d9bb..b3c3e9d 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -130,3 +130,33 @@ These clock IDs are defined in:
-     ch3_unused mipipll          4       BCM_CYGNUS_MIPIPLL_CH3_UNUSED
-     ch4_unused mipipll          5       BCM_CYGNUS_MIPIPLL_CH4_UNUSED
-     ch5_unused mipipll          6       BCM_CYGNUS_MIPIPLL_CH5_UNUSED
-+
-+Northstar and Northstar Plus
-+------
-+PLL and leaf clock compatible strings for Northstar and Northstar Plus are:
-+ "brcm,nsp-armpll"
-+ "brcm,nsp-genpll"
-+ "brcm,nsp-lcpll0"
-+
-+The following table defines the set of PLL/clock index and ID for Northstar and
-+Northstar Plus.  These clock IDs are defined in:
-+    "include/dt-bindings/clock/bcm-nsp.h"
-+
-+    Clock	Source		Index	ID
-+    ---		-----		-----	---------
-+    crystal	N/A		N/A	N/A
-+
-+    armpll	crystal		N/A	N/A
-+
-+    genpll	crystal		0	BCM_NSP_GENPLL
-+    phy		genpll		1	BCM_NSP_GENPLL_PHY_CLK
-+    ethernetclk	genpll		2	BCM_NSP_GENPLL_ENET_SW_CLK
-+    usbclk	genpll		3	BCM_NSP_GENPLL_USB_PHY_REF_CLK
-+    iprocfast	genpll		4	BCM_NSP_GENPLL_IPROCFAST_CLK
-+    sata1	genpll		5	BCM_NSP_GENPLL_SATA1_CLK
-+    sata2	genpll		6	BCM_NSP_GENPLL_SATA2_CLK
-+
-+    lcpll0	crystal		0	BCM_NSP_LCPLL0
-+    pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
-+    sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
-+    ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
--- 
-1.9.1
+It was my oversight. It has already been documented. 
+
+BR,
+Dinh
