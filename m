@@ -1,35 +1,81 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH] rtc: pcf8563: disable CLKOUT
-Date: Tue, 13 Oct 2015 22:17:03 +0200
-Message-ID: <20151013201703.GA3421@piout.net>
-References: <1444712938-22865-1-git-send-email-hs@denx.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH] ARM: socfpga: dts: add fpga manager
+Date: Tue, 13 Oct 2015 22:20:27 +0200
+Message-ID: <20151013202027.GC17155@pengutronix.de>
+References: <1444760900-1373-1-git-send-email-atull@opensource.altera.com>
+ <20151013185750.GB17155@pengutronix.de>
+ <alpine.DEB.2.02.1510131412500.3527@linux-builds1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444712938-22865-1-git-send-email-hs@denx.de>
+In-Reply-To: <alpine.DEB.2.02.1510131412500.3527@linux-builds1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-kernel@vger.kernel.org, Georg.Soffel@bosch-si.com, rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org
+To: Dinh Nguyen <dinguyen@opensource.altera.com>
+Cc: atull@opensource.altera.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Oct 13, 2015 at 02:18:22PM -0500, Dinh Nguyen wrote:
+> On Tue, 13 Oct 2015, Steffen Trumtrar wrote:
+> 
+> > Hi Alan!
+> > 
+> > On Tue, Oct 13, 2015 at 01:28:20PM -0500, atull@opensource.altera.com wrote:
+> > > From: Alan Tull <atull@opensource.altera.com>
+> > > 
+> > > Add FPGA manager to device tree for SoCFPGA.
+> > > 
+> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > > ---
+> > >  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> > > index 314e589..e37ba11 100644
+> > > --- a/arch/arm/boot/dts/socfpga.dtsi
+> > > +++ b/arch/arm/boot/dts/socfpga.dtsi
+> > > @@ -834,5 +834,12 @@
+> > >  			compatible = "altr,sys-mgr", "syscon";
+> > >  			reg = <0xffd08000 0x4000>;
+> > >  		};
+> > > +
+> > > +		hps_0_fpgamgr: fpgamgr@0xff706000 {
+> > > +			compatible = "altr,socfpga-fpga-mgr";
+> > > +			reg = <0xFF706000 0x1000
+> > > +			       0xFFB90000 0x1000>;
+> > > +			interrupts = <0 175 4>;
+> > > +		};
+> > >  	};
+> > >  };
+> > 
+> > Please keep the format in line with the rest of the file:
+> > Hexvalues are lowercase and no 0x after the "fpgamgr@".
+> > I'd say "And please put the node in its proper position
+> > according to its address", but I see just now, that the
+> > dtsi is all messed up right now anyway :-(
+> > 
+> 
+> How so? Patches are welcomed!
 
-On 13/10/2015 at 07:08:58 +0200, Heiko Schocher wrote :
-> Disable the CLKOUT of the RTC after power-up.
-> After power-up/reset of the RTC, CLKOUT is enabled by default,
-> with CLKOUT enabled the RTC chip has 2-3 times higher power
-> consumption. If you do not need CLKOUT, you can disable the
-> CLKOUT with setting "disable-clkout" property.
+Done :-)
+
+> 
+> Please fix the "fpgamgr@" and lower case the hex values. But I would prefer the
+> nodes to be in alphabetical order.
 > 
 
-I think you can simply unconditionally disable clkout. My preferred way
-of doing what you suggest is probably to register a clock in the CCF. If
-the clock is not used, it will be automatically disabled.
-It will also provide a generic way of setting the clkout frequency (some
-RTC are able to output 32kHZ, 1kHz and 1Hz).
+Ah, that explains it, I guess. I always sorted my patches by address :-)
+The thing is, now all nodes are sorted alphabetically by phandle,
+the clkmgr however seems to be ordered by address.
+
+I prefer address btw because it is a fixed hardware constant. For the
+dts files sorting via phandle is again fixed via the dtsi.
+
+Regards,
+Steffen
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
