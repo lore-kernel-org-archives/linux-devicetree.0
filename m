@@ -1,72 +1,104 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 07/25] scsi: hisi_sas: add ioremap for device HW
-Date: Tue, 13 Oct 2015 14:20:59 +0200
-Message-ID: <5074860.NRYCq0Qjjh@wuerfel>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <5285087.C8umupFr76@wuerfel> <561CD316.6040406@linaro.org>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v7 1/7] ARM: dts: imx: imx7d-sbd remove fixed can2-3v3
+ regulator
+Date: Tue, 13 Oct 2015 14:25:12 +0200
+Message-ID: <561CF828.7050609@pengutronix.de>
+References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
+ <CAA+hA=Tuj6xTvcPB7xFi6jghBJZAMNTkMheR8HBz8-bfBdRn8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561CD316.6040406-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, James.Bottomley-JuX6DAaQMKPCXq6kfMZ53/egYHeGw8Jk@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAA+hA=Tuj6xTvcPB7xFi6jghBJZAMNTkMheR8HBz8-bfBdRn8g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Dong Aisheng <dongas86@gmail.com>, Adrian Alonso <aalonso@freescale.com>
+Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, lznuaa@gmail.com, Shawn Guo <shawn.guo@linaro.org>, shawnguo@kernel.org, Anson.Huang@freescale.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, yibin.gong@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 October 2015 17:47:02 zhangfei wrote:
-> On 10/12/2015 11:21 PM, Arnd Bergmann wrote:
-> > On Monday 12 October 2015 23:20:19 John Garry wrote:
-> >> +int hisi_sas_ioremap(struct hisi_hba *hisi_hba)
-> >> +{
-> >> +       struct platform_device *pdev = hisi_hba->pdev;
-> >> +       struct device *dev = &pdev->dev;
-> >> +       struct resource *res;
-> >> +
-> >> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >> +       hisi_hba->regs = devm_ioremap(dev,
-> >> +                                     res->start,
-> >> +                                     resource_size(res));
-> >> +       if (!hisi_hba->regs)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> >> +       hisi_hba->ctrl_regs = devm_ioremap(dev,
-> >> +                                          res->start,
-> >> +                                          resource_size(res));
-> >> +       if (!hisi_hba->ctrl_regs)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       return 0;
-> >> +}
-> >>
-> >>   static const struct of_device_id sas_of_match[] = {
-> >>
-> >
-> > Better use devm_ioremap_resource() here, which registers the resource so they
-> > are checked for conflicts and listed in /proc/iomem.
-> >
-> 
-> Yes, hisi_hba->regs can use devm_ioremap_resource.
-> 
-> However ctrl_regs have to use devm_ioremap, since the address are 
-> sharing among different nodes, unfortunately, and devm_ioremap_resource 
-> will fail.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This sounds like it should be fixed in the DT binding then, to ensure
-that the ranges don't overlap.
+On 10/13/2015 02:04 PM, Dong Aisheng wrote:
+> On Tue, Sep 29, 2015 at 5:56 AM, Adrian Alonso <aalonso@freescale.com> =
+wrote:
+>> Remove incorrect can2-3v3 fixed regulator, imx7d-sdb doesn't
+>> have a dedicated can2 fixed regulator instead it shares PERI_3V3
+>> fixed regulator (RT8070ZS) which is enabled by default (hardwired)
+>> from pmic pfuze3000 NVCC_3V3 power rail.
+>>
+>> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+>> ---
+>> Changes for V7: New patch in series
+>>
+>=20
+> It is a correct regulator here, but i have to admit that it's a bit con=
+fusing.
+> Here the regulator is an abstract regulator which is actually used to
+> control CAN
+> transceiver STBY signals, it is introduced by below patch:
+> commit b7c4114b07bbacfe0aee1d04ad1ade9e42309620
+> Author: Fabio Estevam <fabio.estevam@freescale.com>
+> Date:   Mon Jun 10 23:12:57 2013 -0300
+>=20
+>     can: flexcan: Use a regulator to control the CAN transceiver
+>=20
+>     Instead of using a GPIO to turn on/off the CAN transceiver, it is b=
+etter to
+>     use a regulator as some systems may use a PMIC to power the CAN tra=
+nsceiver.
+>=20
+>     Acked-by: Shawn Guo <shawn.guo@linaro.org>
+>     Signed-off-by: Fabio Estevam <fabio.estevam@freescale.com>
+>     Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+>=20
+> From the commit messages, it should be likely to control the
+> transceiver external suppy,
+> not control signals, but it does do that unproper work currently.
+>=20
+> Besides the unproperly handling control signals, this solution also can=
+'t handle
+> multiple CAN transceiver control signals ways.
 
-Mapping the same register region multiple times is generally considered
-a bad idea because the drivers that map them often don't have global
-locks that serialize the access, so it's better to have code in place
-that ensures that they are distinct.
+You can chain several transceivers together if you need to control more
+than one GPIO line.
 
-What is the purpose of the ctrl_regs region, and why is it shared
-across multiple devices?
+> I was trying to write a common transceiver driver to handling this issu=
+e.
+> But get interrupted by a few other FSL official works, will resume soon=
+=2E
 
-Are all users of these registers in the same driver?
+Have a look at drivers/phy.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I would suggest keep the regulator first until the new solution got in.=
+
+
+Marc
+
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJWHPgpAAoJEP5prqPJtc/H1wsIAJW8cPHvCd7feuSc+lmLWY/V
+RaXxume6iPtRieWbe8MJAb45Tvf1Xo7TS3U7IQZEDh9ug7iiDSUsE6PkdENiYiS4
+Pe9KhWf0g8s5AlGYoaU5O2PBo8SyOWsMe9Y2fQ2TEMZR7Twgqk9C17cqaQTdJI5C
+GMCesrpH/2yXktuo3TccDz+L/ii+pHVaZMmXDKjM/GIFKd4NC77nibFx9lxl2y45
+E8zEEhkDi8R2x/BQbQ1NR9QWYtjV8h7beMtstmNLv+OaRcSd1PUTVaSLANXY38lo
+xoyQ+lE5pTG/w3U981eCmlxWkgWtygcUDDGtIbwTmsOUx4IqjkimSVmZRV09v2c=
+=MB+r
+-----END PGP SIGNATURE-----
+
+--I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C--
