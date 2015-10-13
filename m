@@ -1,103 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Tue, 13 Oct 2015 08:26:27 -0500
-Message-ID: <CAL_JsqKbAm1=70GaDRg1Z47A9d9FShwpWacMOjr+FE8bZuocVg@mail.gmail.com>
-References: <1444426068-15817-1-git-send-email-eric@anholt.net>
- <1444426068-15817-2-git-send-email-eric@anholt.net>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: add URT UMSH-8596MD-xT panel DT bindings
+Date: Tue, 13 Oct 2015 08:30:17 -0500
+Message-ID: <CAL_JsqKi2UVjQC1uELMPWi_k-_atVov=fr565ngCnGm+xjbC_g@mail.gmail.com>
+References: <56158803.9000300@maciej.szmigiero.name> <20151008082759.GD3820@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1444426068-15817-2-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151008082759.GD3820@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgOSwgMjAxNSBhdCA0OjI3IFBNLCBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQu
-bmV0PiB3cm90ZToKPiBWQzQgaXMgdGhlIEdQVSAoZGlzcGxheSBhbmQgM0QpIHN1YnN5c3RlbSBw
-cmVzZW50IG9uIHRoZSAyODM1IGFuZCBzb21lCj4gb3RoZXIgQnJvYWRjb20gU29Dcy4KPgo+IFRo
-aXMgYmluZGluZyBmb2xsb3dzIHRoZSBtb2RlbCBvZiBtc20sIGlteCwgc3RpLCBhbmQgb3RoZXJz
-LCB3aGVyZQo+IHRoZXJlIGlzIGEgc3Vic3lzdGVtIG5vZGUgZm9yIHRoZSB3aG9sZSBHUFUsIHdp
-dGggbm9kZXMgZm9yIHRoZQoKVGhlIHN1YnN5c3RlbSBub2RlIGlzIGdvbmUgbm93LCByaWdodD8K
-Cj4gaW5kaXZpZHVhbCBIVyBjb21wb25lbnRzIHdpdGhpbiBpdC4KPgo+IFNpZ25lZC1vZmYtYnk6
-IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4gLS0tCj4KPiB2MjogRXh0ZW5kIHRoZSBj
-b21taXQgbWVzc2FnZSwgZml4IHNldmVyYWwgbml0cyBmcm9tIFN0ZXBoZW4gV2FycmVuLgo+IHYz
-OiBSZW5hbWUgdGhlIGNvbXBhdGliaWxpdHkgc3RyaW5ncywgY2xlYW4gdXAgbm9kZSBuYW1lcywg
-ZHJvcCB0aGUKPiAgICAgdW5uZWNlc3NhcnkgbGlzdHMgb2YgY29tcG9uZW50cy4gIFVzZSBjb21w
-YXRpYmlsaXR5IHN0cmluZ3MgZm9yCj4gICAgIGNob29zaW5nIENSVEMgSFZTIGNoYW5uZWwgbnVt
-YmVycy4gIERvY3VtZW50IHRoZSBIRE1JIGNsb2NrIHVzYWdlLgo+Cj4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2dwdS9icmNtLGJjbS12YzQudHh0ICAgICAgIHwgNjQgKysrKysrKysrKysrKysr
-KysrKysrKwoKQ2FuIHlvdSBwdXQgdGhpcyBpbiBiaW5kaW5ncy9kaXNwbGF5LyBpbnN0ZWFkPyBU
-aGluZ3MgYXJlIG1vdmluZyB0aGVyZSBpbiA0LjQuCgoKPiAgMSBmaWxlIGNoYW5nZWQsIDY0IGlu
-c2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvYnJjbSxiY20tdmM0LnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYnJjbSxiY20tdmM0LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYnJjbSxiY20tdmM0LnR4dAo+IG5ldyBmaWxl
-IG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMTc1YmNkZQo+IC0tLSAvZGV2L251bGwKPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50
-eHQKPiBAQCAtMCwwICsxLDY0IEBACj4gK0Jyb2FkY29tIFZDNCBHUFUKPiArCj4gK1RoZSBWQzQg
-ZGV2aWNlIHByZXNlbnQgb24gdGhlIFJhc3BiZXJyeSBQaSBpbmNsdWRlcyBhIGRpc3BsYXkgc3lz
-dGVtCj4gK3dpdGggSERNSSBvdXRwdXQgYW5kIHRoZSBIVlMgc2NhbGVyIGZvciBjb21wb3NpdGlu
-ZyBkaXNwbGF5IHBsYW5lcy4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFZDNDoKPiAr
-LSBjb21wYXRpYmxlOiAgU2hvdWxkIGJlICJicmNtLGJjbTI4MzUtdmM0IgoKcmVnIHByb3BlcnR5
-PyBpbnRlcnJ1cHRzPyBjbG9ja3M/Cgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgUGl4
-ZWwgVmFsdmU6Cj4gKy0gY29tcGF0aWJsZTogIFNob3VsZCBiZSBvbmUgb2YgImJyY20sYmNtMjgz
-NS1waXhlbHZhbHZlMCIsCj4gKyAgICAgICAgICAgICAgICJicmNtLGJjbTI4MzUtcGl4ZWx2YWx2
-ZTEiLCBvciAiYnJjbSxiY20yODM1LXBpeGVsdmFsdmUyIgo+ICstIHJlZzogICAgICAgICBQaHlz
-aWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgUFYncyByZWdpc3RlcnMKPiArLSBp
-bnRlcnJ1cHRzOiAgVGhlIGludGVycnVwdCBudW1iZXIKPiArICAgICAgICAgICAgICAgICBTZWUg
-YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYnJjbSxiY20yODM1LWFybWN0cmwtaWMudHh0
-Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBIVlM6Cj4gKy0gY29tcGF0aWJsZTogIFNo
-b3VsZCBiZSAiYnJjbSxiY20yODM1LWh2cyIKPiArLSByZWc6ICAgICAgICAgUGh5c2ljYWwgYmFz
-ZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIEhWUydzIHJlZ2lzdGVycwo+ICstIGludGVycnVw
-dHM6ICBUaGUgaW50ZXJydXB0IG51bWJlcgo+ICsgICAgICAgICAgICAgICAgIFNlZSBiaW5kaW5n
-cy9pbnRlcnJ1cHQtY29udHJvbGxlci9icmNtLGJjbTI4MzUtYXJtY3RybC1pYy50eHQKPiArCj4g
-K1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIEhETUkKCklzIEhETUkgdGhlIG9ubHkgb3V0cHV0IHBv
-c3NpYmlsaXR5PyBJZiBub3QsIHRoZW4geW91IHNob3VsZCBoYXZlIE9GCmdyYXBoIG5vZGVzIGRl
-c2NyaWJpbmcgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiBIRE1JIGJsb2NrIGFuZCBIVlMgKG9yClBW
-PykuCgo+ICstIGNvbXBhdGlibGU6ICBTaG91bGQgYmUgImJyY20sYmNtMjgzNS1oZG1pIgo+ICst
-IHJlZzogICAgICAgICBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgdHdv
-IHJlZ2lzdGVyIHJhbmdlcwo+ICsgICAgICAgICAgICAgICAgICgiSERNSSIgYW5kICJIRCIsIGlu
-IHRoYXQgb3JkZXIpCj4gKy0gaW50ZXJydXB0czogIFRoZSBpbnRlcnJ1cHQgbnVtYmVycwo+ICsg
-ICAgICAgICAgICAgICAgIFNlZSBiaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9icmNtLGJj
-bTI4MzUtYXJtY3RybC1pYy50eHQKPiArLSBkZGM6ICAgICAgICAgcGhhbmRsZSBvZiB0aGUgSTJD
-IGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmluZwo+ICstIGNsb2NrczogICAgICBh
-KSBoZG1pOiBUaGUgSERNSSBzdGF0ZSBtYWNoaW5lIGNsb2NrCj4gKyAgICAgICAgICAgICAgIGIp
-IHBpeGVsOiBUaGUgcGl4ZWwgY2xvY2suCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBI
-RE1JOgo+ICstIGhwZC1ncGlvOiAgICBUaGUgR1BJTyBwaW4gZm9yIEhETUkgaG90cGx1ZyBkZXRl
-Y3QgKGlmIGl0IGRvZXNuJ3QgYXBwZWFyCgoqLWdwaW8gaXMgZGVwcmVjYXRlZCwgc28gImhwZC1n
-cGlvcyIuCgpSZWFsbHksIEkgdGhpbmsgdGhpcyBhbmQgZGRjIHNob3VsZCBiZSBpbiBoZG1pLWNv
-bm5lY3RvciBiaW5kaW5nIG5vZGUuCldoYXQgaGFzIGJlZW4gZG9uZSBmb3IgYmluZGluZ3Mgc28g
-ZmFyIGlzIGFsbCBvdmVyIHRoZSBtYXAgdGhvdWdoLgoKPiArICAgICAgICAgICAgICAgICBhcyBh
-biBpbnRlcnJ1cHQvc3RhdHVzIGJpdCBpbiB0aGUgSERNSSBjb250cm9sbGVyCj4gKyAgICAgICAg
-ICAgICAgICAgaXRzZWxmKS4gIFNlZSBiaW5kaW5ncy9waW5jdHJsL2JyY20sYmNtMjgzNS1ncGlv
-LnR4dAo+ICsKPiArRXhhbXBsZToKPiArcGl4ZWx2YWx2ZUA3ZTgwNzAwMCB7Cj4gKyAgICAgICBj
-b21wYXRpYmxlID0gImJyY20sYmNtMjgzNS1waXhlbHZhbHZlMiI7Cj4gKyAgICAgICByZWcgPSA8
-MHg3ZTgwNzAwMCAweDEwMD47Cj4gKyAgICAgICBpbnRlcnJ1cHRzID0gPDIgMTA+OyAvKiBwaXhl
-bHZhbHZlICovCj4gK307Cj4gKwo+ICtodnNAN2U0MDAwMDAgewo+ICsgICAgICAgY29tcGF0aWJs
-ZSA9ICJicmNtLGJjbTI4MzUtaHZzIjsKPiArICAgICAgIHJlZyA9IDwweDdlNDAwMDAwIDB4NjAw
-MD47Cj4gKyAgICAgICBpbnRlcnJ1cHRzID0gPDIgMT47Cj4gK307Cj4gKwo+ICtoZG1pOiBoZG1p
-QDdlOTAyMDAwIHsKPiArICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LWhkbWkiOwo+
-ICsgICAgICAgcmVnID0gPDB4N2U5MDIwMDAgMHg2MDA+LAo+ICsgICAgICAgICAgICAgPDB4N2U4
-MDgwMDAgMHgxMDA+Owo+ICsgICAgICAgaW50ZXJydXB0cyA9IDwyIDg+LCA8MiA5PjsKPiArICAg
-ICAgIGRkYyA9IDwmaTJjMj47Cj4gKyAgICAgICBocGQtZ3BpbyA9IDwmZ3BpbyA0NiBHUElPX0FD
-VElWRV9ISUdIPjsKPiArICAgICAgIGNsb2NrcyA9IDwmY2xvY2tzIEJDTTI4MzVfUExMSF9QSVg+
-LAo+ICsgICAgICAgICAgICAgICAgPCZjbG9ja3MgQkNNMjgzNV9DTE9DS19IU00+Owo+ICsgICAg
-ICAgY2xvY2stbmFtZXMgPSAicGl4ZWwiLCAiaGRtaSI7Cj4gK307Cj4gKwo+ICt2YzQ6IGdwdUA3
-ZTRjMDAwMCB7Cj4gKyAgICAgICBjb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS12YzQiOwo+ICt9
-Owo+IC0tCj4gMi4xLjQKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Thu, Oct 8, 2015 at 3:27 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Oct 07, 2015 at 11:00:51PM +0200, Maciej S. Szmigiero wrote:
+>> This patch adds DT bindings for United Radiant Technology
+>> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels.
+>>
+>> Signed-off-by: Maciej Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+>> new file mode 100644
+>> index 0000000..57c5fa4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
+>> @@ -0,0 +1,12 @@
+>> +United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
+>> +
+>> +Supported are LVDS versions (-11T, -19T) and parallel ones
+>> +(-T, -1T, -7T, -20T).
+>> +
+>> +Required properties:
+>> +- compatible: should be one of:
+>> +  "urt,umsh-8596md-t", "urt,umsh-8596md-1t", "urt,umsh-8596md-7t",
+>> +  "urt,umsh-8596md-11t", "urt,umsh-8596md-19t" or "urt,umsh-8596md-20t".
+>
+> I'd probably list each of these on a single line for slightly more
+> clarity, but no need to respin because of that.
+>
+> Rob, I remember there was some discussion a while back on whether or not
+> there should be a standard way of describing lists of compatible values,
+> do you know if anything was ever concluded on that topic?
+
+We're working to move the documentation to YAML and describe
+constraints like this with logic expressions, but we haven't settled
+on anything yet. This case will probably be just one string per line.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
