@@ -1,167 +1,95 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 1/2] ARM: dts: fix gpio-keys wakeup-source property
-Date: Tue, 13 Oct 2015 14:32:43 +0100
-Message-ID: <1444743164-17735-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Tue, 13 Oct 2015 14:43:02 +0100
+Message-ID: <20151013134302.GA32409@x1>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151013080800.GY17172@x1>
+ <20151013121530.GE8805@ck-lbox>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151013121530.GE8805@ck-lbox>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The keyboard driver for GPIO buttons(gpio-keys) checks for one of the
-two boolean properties to enable gpio buttons as wakeup source:
-1. "wakeup-source" or
-2. the legacy "gpio-key,wakeup"
+On Tue, 13 Oct 2015, Charles Keepax wrote:
 
-However juno, ste-snowball and emev2-kzm9d dts file have a undetected
-"wakeup" property to indictate the wakeup source.
+> On Tue, Oct 13, 2015 at 09:08:00AM +0100, Lee Jones wrote:
+> > On Fri, 02 Oct 2015, Charles Keepax wrote:
+> >=20
+> > > Add additional bindings to allow configuration of the system spec=
+ific
+> > > microphone detection settings.
+> > >=20
+> > > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxiMEWR6Nv5iY@public.gmane.org=
+m>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/arizona.txt |   21 +++++++=
+++++++++++++++
+> > >  include/dt-bindings/mfd/arizona.h                 |    5 +++++
+> > >  2 files changed, 26 insertions(+), 0 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/=
+Documentation/devicetree/bindings/mfd/arizona.txt
+> > > index a8fee60..b98a11b 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > > @@ -73,6 +73,27 @@ Optional properties:
+> > >      If this node is not mentioned or if the value is unknown, th=
+en
+> > >      headphone detection mode is set to HPDETL.
+> > > =20
+> > > +  - wlf,micd-software-compare : Use a software comparison to det=
+ermine mic
+> > > +    presence
+> > > +  - wlf,micd-detect-debounce : Additional software microphone de=
+tection
+> > > +    debounce specified in milliseconds.
+> > > +  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling =
+the headset
+> > > +    polarity if one exists.
+> > > +  - wlf,micd-bias-start-time : Time allowed for MICBIAS to start=
+up prior to
+> > > +    performing microphone detection, specified as per the ARIZON=
+A_MICD_TIME_XXX
+> > > +    defines.
+> > > +  - wlf,micd-rate : Delay between successive microphone detectio=
+n measurements,
+> > > +    specified as per the ARIZONA_MICD_TIME_XXX defines.
+> > > +  - wlf,micd-dbtime : Microphone detection hardware debounces sp=
+ecified as the
+> > > +    number of measurements to take, valid values being 2 and 4.
+> > > +  - wlf,micd-timeout : Timeout for microphone detection, specifi=
+ed in
+> > > +    milliseconds.
+> > > +  - wlf,micd-force-micbias : Force MICBIAS continuously on durin=
+g microphone
+> > > +    detection.
+> > > +
+> > > +  - wlf,gpsw : Settings for the general purpose switch, set as o=
+ne of the
+> > > +    ARIZONA_GPSW_XXX defines.
+> >=20
+> > Where are all of these bindings to be consumed?
+>=20
+> In the extcon driver it handles all jack detection in the Arizona
+> devices.
 
-This patch fixes it by making use of "wakeup-source" property.
+Okay, perfect.  Please move them to the Extcon doc. :)
 
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- arch/arm/boot/dts/emev2-kzm9d.dts             |  8 ++++----
- arch/arm/boot/dts/ste-snowball.dts            | 10 +++++-----
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 12 ++++++------
- 3 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
-index 955c24ee4a8c..8c24975e8f9d 100644
---- a/arch/arm/boot/dts/emev2-kzm9d.dts
-+++ b/arch/arm/boot/dts/emev2-kzm9d.dts
-@@ -35,28 +35,28 @@
- 
- 		button@1 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-1";
- 			linux,code = <KEY_1>;
- 			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
- 		};
- 		button@2 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-2";
- 			linux,code = <KEY_2>;
- 			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
- 		};
- 		button@3 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-3";
- 			linux,code = <KEY_3>;
- 			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
- 		};
- 		button@4 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-4";
- 			linux,code = <KEY_4>;
- 			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index 32a5ccb14e7e..e80e42163883 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -47,35 +47,35 @@
- 
- 		button@1 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <2>;
- 			label = "userpb";
- 			gpios = <&gpio1 0 0x4>;
- 		};
- 		button@2 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <3>;
- 			label = "extkb1";
- 			gpios = <&gpio4 23 0x4>;
- 		};
- 		button@3 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <4>;
- 			label = "extkb2";
- 			gpios = <&gpio4 24 0x4>;
- 		};
- 		button@4 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <5>;
- 			label = "extkb3";
- 			gpios = <&gpio5 1 0x4>;
- 		};
- 		button@5 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <6>;
- 			label = "extkb4";
- 			gpios = <&gpio5 2 0x4>;
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index 05e461dc6c1f..a15e1fb4d192 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -61,42 +61,42 @@
- 
- 				button@1 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <116>;
- 					label = "POWER";
- 					gpios = <&iofpga_gpio0 0 0x4>;
- 				};
- 				button@2 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <102>;
- 					label = "HOME";
- 					gpios = <&iofpga_gpio0 1 0x4>;
- 				};
- 				button@3 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <152>;
- 					label = "RLOCK";
- 					gpios = <&iofpga_gpio0 2 0x4>;
- 				};
- 				button@4 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <115>;
- 					label = "VOL+";
- 					gpios = <&iofpga_gpio0 3 0x4>;
- 				};
- 				button@5 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <114>;
- 					label = "VOL-";
- 					gpios = <&iofpga_gpio0 4 0x4>;
- 				};
- 				button@6 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <99>;
- 					label = "NMI";
- 					gpios = <&iofpga_gpio0 5 0x4>;
--- 
-1.9.1
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
