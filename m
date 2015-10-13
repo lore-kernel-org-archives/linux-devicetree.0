@@ -1,206 +1,115 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Document the STM32 DMA bindings
-Date: Tue, 13 Oct 2015 17:32:56 +0200
-Message-ID: <CAOAejn1m1shL-ajxBsiEwQABM1HuhuNgMbgn83LUzmvJXGx0_g@mail.gmail.com>
-References: <1444744848-720-1-git-send-email-cedric.madianga@gmail.com>
-	<1444744848-720-2-git-send-email-cedric.madianga@gmail.com>
-	<20151013142240.GC24353@leverpostej>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH 1/4] Documentation: dt: soc: move driver description to
+ a separate document
+Date: Tue, 13 Oct 2015 11:44:21 -0400
+Message-ID: <561D26D5.7060405@ti.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com> <1444679211-823-2-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151013142240.GC24353@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+GZn0X-sxQ=oqRP7fR3bCPk5PN5CjgXzjnOxas_renzw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-2015-10-13 16:22 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Tue, Oct 13, 2015 at 04:00:45PM +0200, M'boumba Cedric Madianga wrote:
->> This patch adds documentation of device tree bindings for the STM32 dma
->> controller.
+On 10/13/2015 10:42 AM, Rob Herring wrote:
+> On Mon, Oct 12, 2015 at 2:46 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+>> Currently the DT bindings have details about the driver as well. This
+>> patch moves this to a separate document for knav qmss driver so that
+>> driver detail update can be done as needed without polluting the DT
+>> bindings description.
 >>
->> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 >> ---
->>  .../devicetree/bindings/dma/stm32-dma.txt          | 98 ++++++++++++++++++++++
->>  1 file changed, 98 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
+>>   Documentation/arm/keystone/knav-qmss.txt           | 24 ++++++++++++++++++++++
+>>   .../bindings/soc/ti/keystone-navigator-qmss.txt    | 20 ++++--------------
+>>   2 files changed, 28 insertions(+), 16 deletions(-)
+>>   create mode 100644 Documentation/arm/keystone/knav-qmss.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+>> diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
 >> new file mode 100644
->> index 0000000..9ce0d49
+>> index 0000000..79946d1
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
->> @@ -0,0 +1,98 @@
->> +* STMicroelectronics STM32 DMA controller
+>> +++ b/Documentation/arm/keystone/knav-qmss.txt
+>> @@ -0,0 +1,24 @@
+>> +* Texas Instruments Keystone Navigator Queue Management SubSystem driver
 >> +
->> +The STM32 DMA is a general-purpose direct memory access controller capable of
->> +supporting 8 independent DMA channels. Each channel can have up to 8 requests.
+>> +Driver source code path
+>> +  drivers/soc/ti/knav_qmss.c
+>> +  drivers/soc/ti/knav_qmss_acc.c
 >> +
->> +Required properties:
->> +- compatible: Should be "st,stm32-dma"
->> +- reg: Should contain DMA registers location and length. This should include
->> +  all of the per-channel registers.
->> +- interrupts: Should contain all of the per-channel DMA interrupts.
->
-> Please specify the order they must be in.
- Ok, I will do it in the next version.
-Thanks
-
->
->> +- clocks: Should contain the input clock of the DMA instance.
->> +- #dma-cells : Must be <4>. See DMA client paragraph for more details.
+>> +The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>> +the main hardware sub system which forms the backbone of the Keystone
+>> +multi-core Navigator. QMSS consist of queue managers, packed-data structure
+>> +processors(PDSP), linking RAM, descriptor pools and infrastructure
+>> +Packet DMA.
+>> +The Queue Manager is a hardware module that is responsible for accelerating
+>> +management of the packet queues. Packets are queued/de-queued by writing or
+>> +reading descriptor address to a particular memory mapped location. The PDSPs
+>> +perform QMSS related functions like accumulation, QoS, or event management.
+>> +Linking RAM registers are used to link the descriptors which are stored in
+>> +descriptor RAM. Descriptor RAM is configurable as internal or external memory.
+>> +The QMSS driver manages the PDSP setups, linking RAM regions,
+>> +queue pool management (allocation, push, pop and notify) and descriptor
+>> +pool management.
 >> +
->> +Optional properties:
->> +- resets: Reference to a reset controller asserting the DMA controller
->> +- st,mem2mem: boolean; if defined, it indicates that the controller supports
->> +  memory-to-memory transfer
->> +
->> +Example:
->> +
->> +     dma2: dma-controller@40026400 {
->> +             compatible = "st,stm32-dma";
->> +             reg = <0x40026400 0x400>;
->> +             interrupts = <56>,
->> +                          <57>,
->> +                          <58>,
->> +                          <59>,
->> +                          <60>,
->> +                          <68>,
->> +                          <69>,
->> +                          <70>;
->> +             clocks = <&clk_hclk>;
->> +             #dma-cells = <4>;
->> +             st,mem2mem;
->> +             resets = <&rcc 150>;
->> +     };
->> +
->> +* DMA client
->> +
->> +Required properties:
->> +- dmas: Comma separated list of dma channel requests
->> +- dma-names: Names of the aforementioned requested channels
->> +
->> +Each dmas request consists of 5 cells:
->> +1. A phandle pointing to the STM32 DMA controller
->> +2. The channel id
->> +3. The request line number
->> +4. A 32bit mask specifying the DMA channel configuration
->> + -bit 1: Direct Mode Error Interrupt
->> +     0x0: disabled
->> +     0x1: enabled
->> + -bit 2: Transfer Error Interrupt
->> +     0x0: disabled
->> +     0x1: enabled
->> + -bit 3: Half Transfer Mode Error Interrupt
->> +     0x0: disabled
->> +     0x1: enabled
->> + -bit 4: Transfer Complete Interrupt
->> +     0x0: disabled
->> +     0x1: enabled
+>> +knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
+>> +allocate descriptor pools, map the descriptors, push/pop to queues etc. For
+>> +details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
+>> diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>> index d8e8cdb..2cecea1 100644
+>> --- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>> +++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+>> @@ -1,20 +1,8 @@
+>> -* Texas Instruments Keystone Navigator Queue Management SubSystem driver
+>> -
+>> -The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>> -the main hardware sub system which forms the backbone of the Keystone
+>> -multi-core Navigator. QMSS consist of queue managers, packed-data structure
+>> -processors(PDSP), linking RAM, descriptor pools and infrastructure
+>> -Packet DMA.
+>> -The Queue Manager is a hardware module that is responsible for accelerating
+>> -management of the packet queues. Packets are queued/de-queued by writing or
+>> -reading descriptor address to a particular memory mapped location. The PDSPs
+>> -perform QMSS related functions like accumulation, QoS, or event management.
+>> -Linking RAM registers are used to link the descriptors which are stored in
+>> -descriptor RAM. Descriptor RAM is configurable as internal or external memory.
+>> -The QMSS driver manages the PDSP setups, linking RAM regions,
+>> -queue pool management (allocation, push, pop and notify) and descriptor
+>> -pool management.
 >
-> Why should this be in the DT?
+> Only the last sentence seems to be about the driver and is rather
+> obvious (a driver manages the h/w). I would leave all this as-is
+> currently.
 >
-> Surely the driver should be in charge of deciding when to use these?
-For interrupt configuration the driver could set default configuration
-and don't let the DMA client set it.
-The goal here is to offer for each DMA client a way to choose his
-level of information when an error occured on DMA bus or when a DMA
-transfer is complete.
-For channel and request ids, these inputs are really mandatory as DMA
-mapping (couple channel/request) is fixed.
-So each DMA peripheral has it own channel/request ids.
+> Rob
+>
+Rob,
 
->
->> + -bit 9: Peripheral Increment Address
->> +     0x0: no address increment between transfers
->> +     0x1: increment address between transfers
->> + -bit 10: Memory Increment Address
->> +     0x0: no address increment between transfers
->> +     0x1: increment address between transfers
->
-> These don't seem like they belong either. Surely this would depend on
-> the request made, rather than being a fixed property?
-It is really specific to the DMA client.
-Many clients transfer DMA from peripheral at fixed register address so
-in this use case PINC=0. (It is the most common case)
-But others clients could do it by incrementing an memory area after
-each transfer and in this case PINC=1.
-I don't have any example in mind for the second use case but as the
-DMA supports it I would like to keep it.
+I promise I will fix this in my next opportunity. Also there is similar 
+clean up needed for knav dma DT documentation and Netcp documentations. 
+It is in my TODO list.
 
->
->> + -bit 15: Peripheral Increment Offset Size
->> +     0x0: offset size is linked to the peripheral bus width
->> +     0x1: offset size is fixed to 4 (32-bit alignment)
->
-> This sounds like it might belong in the DT.
-Agree
+Thanks.
 
+Murali
+>> +* Texas Instruments Keystone Navigator (knav) Queue Management SubSystem driver
+>> +  DT bindings
+>>
+>> +For details of the driver, please refer to
+>> +Documentation/arm/keystone/knav-qmss.txt
+>>
+>>   Required properties:
+>>   - compatible   : Must be "ti,keystone-navigator-qmss";
+>> --
+>> 1.9.1
+>>
 >
->> + -bit 16-17: Priority level
->> +     0x0: low
->> +     0x1: medium
->> +     0x2: high
->> +     0x3: very high
 >
-> What do we do elsewhere in terms of describing prioritisation? It feels
-> like it would be a dynamic property of the system.
-You're right it could be a dynamic property of the system but we don't
-have any way to set it via the dmaengine API.
-So, we decide to set it before requesting a DMA transfer and keep it
-during all peripheral life.
 
->
->> +5. A 32bit mask specifying the DMA FIFO configuration
->> + -bit 0-1: Fifo threshold
->> +     0x0: 1/4 full FIFO
->> +     0x1: 1/2 full FIFO
->> +     0x2: 3/4 full FIFO
->> +     0x3:full FIFO
->
-> What does this mean?
-The STM32 DMA has a 4 words FIFO to temporarily stores data from source.
-The threshold level is used to know at each which FIFO filling rate
-the data stores in the FIFO will be really sent to the destination.
-For example, with FIFO threshold = 1/2 full FIFO, we wait at least 2
-words of data from source before storing it into to the destination.
->
->> + -bit 2: Direct mode
->> +     0x0: enabled
->> +     0x1: disabled
->
-> What does this mean?
-The Direct mode bit is used to choose if you want to use FIFO or not.
-In direct mode (Direct mode = 0), the data coming from source are not
-temporarily stored in the DMA FIFO and are directly stored into the
-destination.
-In FIFO mode ((Direct mode = 1), the data are temporarily stored in
-the DMA FIFO and then in the destination according to the FIFO
-threshold level as explained above.
 
->
->> + -bit 7: FIFO Error Interrupt
->> +     0x0: disabled
->> +     0x1: enabled
->
-> As with the other interrupt configuration, this does not look like it
-> belongs in the DT.
-Again the driver could set default configuration and don't let the DMA
-client set it.
-The goal here is to offer for each DMA client a way to choose his
-level of information when an error occured on DMA bus.
-
->
-> Thanks,
-> Mark.
-
-Thanks for your review and comments.
-
-BR,
-Cedric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
