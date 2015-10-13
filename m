@@ -1,31 +1,49 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v2 0/4] soc: ti: knav_qmss: enable accumulator queue
- support
-Date: Tue, 13 Oct 2015 09:01:36 -0700
-Message-ID: <561D2AE0.6090406@oracle.com>
-References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com>
- <561D0D95.1040401@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 0/4] soc: ti: knav_qmss: enable accumulator queue support
+Date: Tue, 13 Oct 2015 12:14:33 -0400
+Message-ID: <561D2DE9.4080809@ti.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com> <561D0D95.1040401@ti.com> <561D2AE0.6090406@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <561D0D95.1040401@ti.com>
+In-Reply-To: <561D2AE0.6090406@oracle.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
+To: santosh shilimkar <santosh.shilimkar@oracle.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2015 6:56 AM, Murali Karicheri wrote:
-> On 10/12/2015 03:46 PM, Murali Karicheri wrote:
->> This patch series enable accumulator queue support for K2 SoCs.
+Santosh,
 
-> Santosh, Arnd,
+On 10/13/2015 12:01 PM, santosh shilimkar wrote:
+> On 10/13/2015 6:56 AM, Murali Karicheri wrote:
+>> On 10/12/2015 03:46 PM, Murali Karicheri wrote:
+>>> This patch series enable accumulator queue support for K2 SoCs.
 >
-> Could you please review and let me know if there is any comment. If
-> looks good, could you please merge to v4.4 next branch?
+>> Santosh, Arnd,
+>>
+>> Could you please review and let me know if there is any comment. If
+>> looks good, could you please merge to v4.4 next branch?
+>>
+> Please report the series updating the comments from Arnd. Also split
+> the series into drivers and dts updates.
+
+The cover letter already summarize this as a comment against v1 even 
+though it didn't mention Arnd's name. Is it usual to describe the 
+reviewers name in the change log? I thought we just describe the comment 
+addressed, not who has commented. Not??
+
+About splitting the series, it was done so since both is being pulled by 
+you. If needed, I can do the split. Let me know.
+
+Murali
+
 >
-Please report the series updating the comments from Arnd. Also split
-the series into drivers and dts updates.
+> Regards,
+> Santosh
+>
+>
 
-Regards,
-Santosh
 
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
