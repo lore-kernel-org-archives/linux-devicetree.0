@@ -1,41 +1,32 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/4] arm64: Hi6220: enable CPU idle states
-Date: Tue, 13 Oct 2015 08:58:12 +0800
-Message-ID: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 2/4] arm64: Kconfig: select sp804 timer for ARCH_HISI
+Date: Tue, 13 Oct 2015 08:58:14 +0800
+Message-ID: <1444697896-4323-3-git-send-email-leo.yan@linaro.org>
+References: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leo Yan <leo.yan@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series is to enable CPU idle states for Hi6220.
+Select sp804 timer for ARCH_HISI, which is used as broadcast timer.
 
-Hi6220 uses PSCIv0.2 compliance interface, so directly use ARM's generic
-CPUIdle driver. Patch 1 is to reserve memory regions so make sure MCU can
-work well to handle power controlling; Patch 2/3 enable sp804 timer as
-broadcast timer during idle states; Patch 4 registers CPU power down state
-and cluster power down state.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes from v1:
-* According to Sudeep's review, fix binding for idle-states
-* According to Rob's review, due timers share same clock source with apb
-  clock, so just only pass one clock phandle
-
-
-Leo Yan (4):
-  arm64: dts: Reserve memory regions for hi6220
-  arm64: Kconfig: select sp804 timer for ARCH_HISI
-  arm64: dts: add sp804 timer node for Hi6220
-  arm64: dts: enable idle states for Hi6220
-
- arch/arm64/Kconfig.platforms                   |  1 +
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 40 ++++++++++++++++++++++++++
- 3 files changed, 53 insertions(+), 4 deletions(-)
-
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 23800a1..6d730fb 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -35,6 +35,7 @@ config ARCH_FSL_LS2085A
+ 
+ config ARCH_HISI
+ 	bool "Hisilicon SoC Family"
++	select ARM_TIMER_SP804
+ 	help
+ 	  This enables support for Hisilicon ARMv8 SoC family
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
