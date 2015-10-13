@@ -1,146 +1,189 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 3/3] phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection
-Date: Tue, 13 Oct 2015 19:22:06 +0900
-Message-ID: <1444731726-5328-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 2/3] phy: rcar-gen3-usb2: change the mode to OTG on the combined channel
+Date: Tue, 13 Oct 2015 19:22:05 +0900
+Message-ID: <1444731726-5328-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1444731726-5328-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1444731726-5328-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for runtime ID/VBUS pin detection if
-the channel 0 of R-Car gen3 is used. So, we are able to use
-the channel as both host and peripheral.
+To use the channel 0 of R-Car gen3 as periperal mode, This patch changes
+the mode to OTG instead of HOST. Then, this driver needs to set some
+registers to enable host mode and detects ID pin and VBUS pin at
+phy_init() timing.
+
+For now, the channel 0 can be used as host mode only.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
- drivers/phy/phy-rcar-gen3-usb2.c                   | 43 +++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+ drivers/phy/phy-rcar-gen3-usb2.c | 126 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 124 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 589f5c0..b30a98a 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -18,6 +18,7 @@ properties. This is because HSUSB has registers to select USB 2.0 host or
- peripheral at that channel:
- - reg: offset and length of the partial HSUSB register block.
- - reg-names: must be "hsusb".
-+- interrupts: interrupt specifier for the PHY.
- 
- Example (R-Car H3):
- 
-@@ -25,6 +26,7 @@ Example (R-Car H3):
- 		compatible = "renesas,usb2-phy-r8a7795";
- 		reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
- 		reg-names = "usb2_host", "hsusb";
-+		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
- 			 <&mstp7_clks R8A7795_CLK_HSUSB>;
- 	};
 diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
-index 03d7079..40d0005 100644
+index d90dfcf..03d7079 100644
 --- a/drivers/phy/phy-rcar-gen3-usb2.c
 +++ b/drivers/phy/phy-rcar-gen3-usb2.c
-@@ -12,6 +12,7 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -26,14 +27,18 @@
+@@ -25,6 +25,10 @@
+ #define USB2_USBCTR		0x00c
  #define USB2_SPD_RSM_TIMSET	0x10c
  #define USB2_OC_TIMSET		0x110
- #define USB2_COMMCTRL		0x600
-+#define USB2_OBINTSTA		0x604
-+#define USB2_OBINTEN		0x608
- #define USB2_VBCTRL		0x60c
- #define USB2_LINECTRL1		0x610
- #define USB2_ADPCTRL		0x630
++#define USB2_COMMCTRL		0x600
++#define USB2_VBCTRL		0x60c
++#define USB2_LINECTRL1		0x610
++#define USB2_ADPCTRL		0x630
  
  /* INT_ENABLE */
-+#define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
  #define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
- #define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)
--#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_USBH_INTB_EN | \
-+#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_UCOM_INTEN | \
-+					 USB2_INT_ENABLE_USBH_INTB_EN | \
- 					 USB2_INT_ENABLE_USBH_INTA_EN)
+@@ -42,6 +46,24 @@
+ /* OC_TIMSET */
+ #define USB2_OC_TIMSET_INIT		0x000209ab
  
- /* USBCTR */
-@@ -49,6 +54,12 @@
- /* COMMCTRL */
- #define USB2_COMMCTRL_OTG_PERI		BIT(31)	/* 1 = Peripheral mode */
- 
-+/* OBINTSTA and OBINTEN */
-+#define USB2_OBINT_SESSVLDCHG		BIT(12)
-+#define USB2_OBINT_IDDIGCHG		BIT(11)
-+#define USB2_OBINT_BITS			(USB2_OBINT_SESSVLDCHG | \
-+					 USB2_OBINT_IDDIGCHG)
++/* COMMCTRL */
++#define USB2_COMMCTRL_OTG_PERI		BIT(31)	/* 1 = Peripheral mode */
 +
- /* VBCTRL */
- #define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
- 
-@@ -178,6 +189,9 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
- 
- 	tmp = readl(usb2_base + USB2_VBCTRL);
- 	writel(tmp | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
-+	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-+	tmp = readl(usb2_base + USB2_OBINTEN);
-+	writel(tmp | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
- 	tmp = readl(usb2_base + USB2_ADPCTRL);
- 	writel(tmp | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
- 	tmp = readl(usb2_base + USB2_LINECTRL1);
-@@ -289,6 +303,23 @@ static struct phy_ops rcar_gen3_phy_usb2_ops = {
- 	.owner		= THIS_MODULE,
++/* VBCTRL */
++#define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
++
++/* LINECTRL1 */
++#define USB2_LINECTRL1_DPRPD_EN		BIT(19)
++#define USB2_LINECTRL1_DP_RPD		BIT(18)
++#define USB2_LINECTRL1_DMRPD_EN		BIT(17)
++#define USB2_LINECTRL1_DM_RPD		BIT(16)
++
++/* ADPCTRL */
++#define USB2_ADPCTRL_OTGSESSVLD		BIT(20)
++#define USB2_ADPCTRL_IDDIG		BIT(19)
++#define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
++#define USB2_ADPCTRL_DRVVBUS		BIT(4)
++
+ /******* HSUSB registers (original offset is +0x100) *******/
+ #define HSUSB_LPSTS			0x02
+ #define HSUSB_UGCTRL2			0x84
+@@ -68,6 +90,104 @@ struct rcar_gen3_chan {
+ 	spinlock_t lock;
  };
  
-+static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
++static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
 +{
-+	struct rcar_gen3_chan *ch = _ch;
 +	void __iomem *usb2_base = ch->usb2.base;
-+	u32 status = readl(usb2_base + USB2_OBINTSTA);
-+	irqreturn_t ret = IRQ_NONE;
++	u32 tmp = readl(usb2_base + USB2_COMMCTRL);
 +
-+	if (status & USB2_OBINT_BITS) {
-+		dev_dbg(&ch->phy->dev, "%s: %08x\n", __func__, status);
-+		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-+		rcar_gen3_device_recognition(ch);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	return ret;
++	dev_dbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, tmp, host);
++	if (host)
++		tmp &= ~USB2_COMMCTRL_OTG_PERI;
++	else
++		tmp |= USB2_COMMCTRL_OTG_PERI;
++	writel(tmp, usb2_base + USB2_COMMCTRL);
 +}
 +
- static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
- 	{ .compatible = "renesas,usb2-phy-r8a7795" },
- 	{ }
-@@ -323,9 +354,19 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 
- 	/* To avoid error message by devm_ioremap_resource() */
- 	if (res) {
-+		int ret, irq;
++static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
++{
++	void __iomem *usb2_base = ch->usb2.base;
++	u32 tmp = readl(usb2_base + USB2_LINECTRL1);
 +
- 		channel->hsusb.base = devm_ioremap_resource(dev, res);
- 		if (IS_ERR(channel->hsusb.base))
- 			channel->hsusb.base = NULL;
-+		/* call request_irq for OTG */
-+		ret = irq = platform_get_irq(pdev, 0);
-+		if (irq >= 0)
-+			ret = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
-+					       IRQF_SHARED, dev_name(dev),
-+					       channel);
-+		if (ret < 0)
-+			dev_err(dev, "No irq handler (%d)\n", ret);
++	dev_dbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, tmp, dp, dm);
++	tmp &= ~(USB2_LINECTRL1_DP_RPD | USB2_LINECTRL1_DM_RPD);
++	if (dp)
++		tmp |= USB2_LINECTRL1_DP_RPD;
++	if (dm)
++		tmp |= USB2_LINECTRL1_DM_RPD;
++	writel(tmp, usb2_base + USB2_LINECTRL1);
++}
++
++static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
++{
++	void __iomem *usb2_base = ch->usb2.base;
++	u32 tmp = readl(usb2_base + USB2_ADPCTRL);
++
++	dev_dbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, tmp, vbus);
++	if (vbus)
++		tmp |= USB2_ADPCTRL_DRVVBUS;
++	else
++		tmp &= ~USB2_ADPCTRL_DRVVBUS;
++	writel(tmp, usb2_base + USB2_ADPCTRL);
++}
++
++static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
++{
++	rcar_gen3_set_linectrl(ch, 1, 1);
++	rcar_gen3_set_host_mode(ch, 1);
++	rcar_gen3_enable_vbus_ctrl(ch, 1);
++}
++
++static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
++{
++	rcar_gen3_set_linectrl(ch, 0, 1);
++	rcar_gen3_set_host_mode(ch, 0);
++	rcar_gen3_enable_vbus_ctrl(ch, 0);
++}
++
++static bool rcar_gen3_check_vbus(struct rcar_gen3_chan *ch)
++{
++	return !!(readl(ch->usb2.base + USB2_ADPCTRL) &
++		  USB2_ADPCTRL_OTGSESSVLD);
++}
++
++static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
++{
++	return !!(readl(ch->usb2.base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
++}
++
++static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
++{
++	bool is_host = true;
++
++	if (rcar_gen3_check_id(ch)) {
++		/* B-device? */
++		if (rcar_gen3_check_vbus(ch))
++			is_host = false;
++	}
++
++	if (is_host)
++		rcar_gen3_init_for_host(ch);
++	else
++		rcar_gen3_init_for_peri(ch);
++}
++
++static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
++{
++	void __iomem *usb2_base = ch->usb2.base;
++	u32 tmp;
++
++	tmp = readl(usb2_base + USB2_VBCTRL);
++	writel(tmp | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
++	tmp = readl(usb2_base + USB2_ADPCTRL);
++	writel(tmp | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
++	tmp = readl(usb2_base + USB2_LINECTRL1);
++	rcar_gen3_set_linectrl(ch, 0, 0);
++	writel(tmp | USB2_LINECTRL1_DPRPD_EN | USB2_LINECTRL1_DMRPD_EN,
++	       usb2_base + USB2_LINECTRL1);
++
++	rcar_gen3_device_recognition(ch);
++}
++
+ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+@@ -85,11 +205,13 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ 
+ 	/* Initialize HSUSB part */
+ 	if (hsusb_base) {
+-		/* TODO: support "OTG" mode */
+ 		tmp = readl(hsusb_base + HSUSB_UGCTRL2);
+ 		tmp = (tmp & ~HSUSB_UGCTRL2_USB0SEL) |
+-		      HSUSB_UGCTRL2_USB0SEL_HOST;
++		      HSUSB_UGCTRL2_USB0SEL_OTG;
+ 		writel(tmp & HSUSB_UGCTRL2_MASK, hsusb_base + HSUSB_UGCTRL2);
++
++		/* Initialize otg part */
++		rcar_gen3_init_otg(channel);
  	}
  
- 	/* devm_phy_create() will call pm_runtime_enable(dev); */
+ 	spin_unlock_irqrestore(&channel->lock, flags);
 -- 
 1.9.1
-
