@@ -1,61 +1,40 @@
-From: Bayi Cheng <bayi.cheng@mediatek.com>
-Subject: [PATCH v4 1/3] doc: dt: add documentation for Mediatek spi-nor controller
-Date: Tue, 13 Oct 2015 17:39:18 +0800
-Message-ID: <1444729160-26433-2-git-send-email-bayi.cheng@mediatek.com>
-References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 05/25] scsi: hisi_sas: allocate memories and create pools
+Date: Tue, 13 Oct 2015 17:42:19 +0800
+Message-ID: <561CD1FB.1060003@linaro.org>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-6-git-send-email-john.garry@huawei.com> <13409618.ra2GB8eyNb@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, Bayi Cheng <bayi.cheng@mediatek.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <13409618.ra2GB8eyNb@wuerfel>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, John Garry <john.garry@huawei.com>
+Cc: James.Bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for serial flash with
-Mediatek serial flash controller
+Hi, Arnd
 
-Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
----
- .../devicetree/bindings/mtd/mtk-quadspi.txt        | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+On 10/12/2015 11:15 PM, Arnd Bergmann wrote:
+> On Monday 12 October 2015 23:20:17 John Garry wrote:
+>> +       interrupt_count = of_property_count_u32_elems(np, "interrupts");
+>> +       if (interrupt_count < 0)
+>> +               goto err_out;
+>> +
+>> +       if (of_property_read_u32(np, "#interrupt-cells", &interrupt_cells))
+>> +               goto err_out;
+>> +
+>> +       hisi_hba->int_names = devm_kcalloc(&pdev->dev,
+>> +                                          interrupt_count / interrupt_cells,
+>> +                                          HISI_SAS_NAME_LEN,
+>> +                                          GFP_KERNEL);
+>>
+>
+> This computation looks wrong: the "interrupts" property refers to interrupts
+> that are referenced by this node and provided by an interrupt-controller,
+> while the "#interrupt-cells" property refers to interrupts provided by
+> this node. They don't need to have any relation.
+>
+We will use of_irq_count instead.
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-new file mode 100644
-index 0000000..8fff0ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-@@ -0,0 +1,30 @@
-+* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
-+
-+Required properties:
-+- compatible: 	  should be "mediatek,mt8173-nor";
-+- reg: 		  physical base address and length of the controller's register
-+- clocks: 	  the phandle of the clock needed by the nor controller
-+- clock-names: 	  the name of the clocks
-+		  the clocks needed "spi" and "sf". "spi" is used for spi bus,
-+		  and "sf" is used for controller, these are the clocks witch
-+		  hardware needs to enabling nor flash and nor flash controller.
-+		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- #address-cells: should be <1>
-+- #size-cells:	  should be <0>
-+
-+Example:
-+
-+nor_flash: spi@1100d000 {
-+	compatible = "mediatek,mt8173-nor";
-+	reg = <0 0x1100d000 0 0xe0>;
-+	clocks = <&pericfg CLK_PERI_SPI>,
-+		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+	clock-names = "spi", "sf";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	flash@0 {
-+		....
-+	};
-+};
-+
--- 
-1.8.1.1.dirty
+Thanks
