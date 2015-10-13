@@ -1,104 +1,96 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v7 1/7] ARM: dts: imx: imx7d-sbd remove fixed can2-3v3
- regulator
-Date: Tue, 13 Oct 2015 14:25:12 +0200
-Message-ID: <561CF828.7050609@pengutronix.de>
-References: <1443477401-17238-1-git-send-email-aalonso@freescale.com>
- <CAA+hA=Tuj6xTvcPB7xFi6jghBJZAMNTkMheR8HBz8-bfBdRn8g@mail.gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation
+ for mic detection
+Date: Tue, 13 Oct 2015 13:14:50 +0100
+Message-ID: <20151013121450.GD8805@ck-lbox>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
+ <20151012134309.GE1542@sirena.org.uk>
+ <20151013080218.GV17172@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAA+hA=Tuj6xTvcPB7xFi6jghBJZAMNTkMheR8HBz8-bfBdRn8g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>, Adrian Alonso <aalonso@freescale.com>
-Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, lznuaa@gmail.com, Shawn Guo <shawn.guo@linaro.org>, shawnguo@kernel.org, Anson.Huang@freescale.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, yibin.gong@freescale.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151013080218.GV17172@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
+> On Mon, 12 Oct 2015, Mark Brown wrote:
+> 
+> > On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrote:
+> > > On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+> > > > On Wed, 07 Oct 2015, Mark Brown wrote:
+> > 
+> > > > > This all seems pretty much fine to me - the things it is controlling are
+> > > > > fairly specific to the way the former Wolfson devices do, they only
+> > > > > really make sense with a fairly particular algorithm which isn't widely
+> > > > > implemented.
+> > 
+> > > > Is that an Ack?
+> > 
+> > > I am guessing Mark is slightly hesitant to ack as he probably
+> > > doesn't want to add reviewing all our jack detection bindings to
+> > > his already fairly sizable work load and doing so here likely
+> > > means it will be expected in the future. From talking to people at
+> 
+> Providing Acks should not (and has not to my knowledge) be a binding
+> contract to continue providing Acks.  However, should more bindings be
+> submitted which appear as though they are related to a particular
+> maintainer, then sure, you'll be asked for your expert eye again.
 
-On 10/13/2015 02:04 PM, Dong Aisheng wrote:
-> On Tue, Sep 29, 2015 at 5:56 AM, Adrian Alonso <aalonso@freescale.com> =
-wrote:
->> Remove incorrect can2-3v3 fixed regulator, imx7d-sdb doesn't
->> have a dedicated can2 fixed regulator instead it shares PERI_3V3
->> fixed regulator (RT8070ZS) which is enabled by default (hardwired)
->> from pmic pfuze3000 NVCC_3V3 power rail.
->>
->> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
->> ---
->> Changes for V7: New patch in series
->>
->=20
-> It is a correct regulator here, but i have to admit that it's a bit con=
-fusing.
-> Here the regulator is an abstract regulator which is actually used to
-> control CAN
-> transceiver STBY signals, it is introduced by below patch:
-> commit b7c4114b07bbacfe0aee1d04ad1ade9e42309620
-> Author: Fabio Estevam <fabio.estevam@freescale.com>
-> Date:   Mon Jun 10 23:12:57 2013 -0300
->=20
->     can: flexcan: Use a regulator to control the CAN transceiver
->=20
->     Instead of using a GPIO to turn on/off the CAN transceiver, it is b=
-etter to
->     use a regulator as some systems may use a PMIC to power the CAN tra=
-nsceiver.
->=20
->     Acked-by: Shawn Guo <shawn.guo@linaro.org>
->     Signed-off-by: Fabio Estevam <fabio.estevam@freescale.com>
->     Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
->=20
-> From the commit messages, it should be likely to control the
-> transceiver external suppy,
-> not control signals, but it does do that unproper work currently.
->=20
-> Besides the unproperly handling control signals, this solution also can=
-'t handle
-> multiple CAN transceiver control signals ways.
+Its not a binding contract to continue providing them but we are
+making that a condition of merging any patches, which means I
+will need to chase Mark for Acks, as it seems the DT maintainers
+won't have any interest in reviewing/acking these.
 
-You can chain several transceivers together if you need to control more
-than one GPIO line.
+> 
+> > Pretty much (plus generally being busy at ELC-E last week) - if there's
+> > specific questions that's one thing but if it's just general requests to
+> > look at bindings then it seems like the relevant subsystem maintainers
+> 
+> This is exactly my point.  I am not the 'relevant subsystem
+> maintainer' for these properties and subsequently know nothing of
+> microphone detection, headsets, bias', etc.  These look like Audio
+> related properties to me (the uninitiated), which is why you were
+> asked.
 
-> I was trying to write a common transceiver driver to handling this issu=
-e.
-> But get interrupted by a few other FSL official works, will resume soon=
-=2E
+It would be sensible I guess to define whether I should be
+including audio people on jack detection patches even if they
+don't touch audio subsystems. I was treating jack detection
+as an extcon thing and thus assuming that the extcon maintainer
+would be sufficient, but perhaps that is an incorrect assumption.
 
-Have a look at drivers/phy.
+> 
+> > should have the confidence to review straightfoward device properties
+> > like this.
+> 
+> I don't think these bindings are particularly straightforward.  The
+> contain many terms which I'm unfamiliar with, and again, to me (the
+> uninitiated) this looks like way too many bindings just to see if an
+> audio jack is plugged in or not.
 
-> I would suggest keep the regulator first until the new solution got in.=
+I also wish our designers would make less complex hardware sigh.
 
+Apologies I didn't mean to cause any offense here, I am just
+getting a bit concerned about how I can get any DT support for
+jack detection upstreamed. I am more than happy to fix up any
+comments anyone has or answer any questions about what things
+are or why they are required.
 
-Marc
+The jack detection on these chips is fairly complex and there are
+going to be plenty more patches before we have full support for
+it in DT. So I think it would be good for everyone if we can
+agree some process for how to handle this type of patch.
 
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBCgAGBQJWHPgpAAoJEP5prqPJtc/H1wsIAJW8cPHvCd7feuSc+lmLWY/V
-RaXxume6iPtRieWbe8MJAb45Tvf1Xo7TS3U7IQZEDh9ug7iiDSUsE6PkdENiYiS4
-Pe9KhWf0g8s5AlGYoaU5O2PBo8SyOWsMe9Y2fQ2TEMZR7Twgqk9C17cqaQTdJI5C
-GMCesrpH/2yXktuo3TccDz+L/ii+pHVaZMmXDKjM/GIFKd4NC77nibFx9lxl2y45
-E8zEEhkDi8R2x/BQbQ1NR9QWYtjV8h7beMtstmNLv+OaRcSd1PUTVaSLANXY38lo
-xoyQ+lE5pTG/w3U981eCmlxWkgWtygcUDDGtIbwTmsOUx4IqjkimSVmZRV09v2c=
-=MB+r
------END PGP SIGNATURE-----
-
---I6HsxU4LGLx9je0dJlpsriDPhG3NhJh2C--
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
