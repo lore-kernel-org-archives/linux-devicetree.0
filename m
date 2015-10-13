@@ -1,45 +1,98 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 00/37] ARM: dts: Fix fixed regulators enable GPIO polarity
-Date: Tue, 13 Oct 2015 08:19:29 +0200
-Message-ID: <20151013061929.GX7858@pengutronix.de>
-References: <1444684386-17094-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] docs: dts: Add documentation for hi6220 SoC ION node
+Date: Tue, 13 Oct 2015 14:26:16 +0800
+Message-ID: <561CA408.5060202@hisilicon.com>
+References: <1444632386-106627-1-git-send-email-puck.chen@hisilicon.com>
+ <20151012093119.GA20649@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444684386-17094-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <20151012093119.GA20649@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, tranmanphong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, tapaswenipathak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 12:12:29AM +0300, Laurent Pinchart wrote:
-> Hello,
+
+
+On 2015/10/12 17:31, Mark Rutland wrote:
+> On Mon, Oct 12, 2015 at 02:46:24PM +0800, Chen Feng wrote:
+>> Documentation for hi6220 SoC ION node
+>>
+>> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> Signed-off-by: Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/staging/ion/hi6220-ion.txt | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
 > 
-> While working on regulators, GPIOs and DT I noticed that many of our DT source
-> files incorrectly describe fixed regulators. The common error patterns are
 > 
-> - Usage of the undefined (and never parsed) enable-active-low property
-> - Usage of the enable-active-high property without specifying an enable GPIO
-> - Typos in the enabl GPIO property name (gpios instead of gpio)
-> - Mismatch between the enable-active-high property (or the lack thereof) and
->   the enable GPIO flags
+> We should not be adding platform-specific bindings and/or drivers for
+> this.
 > 
-> This patch series fixes those issues in all the DT sources after locating the
-> errors using the following script.
+> There's already a proposal for a generic binding [1]. Please work with
+> that rather than working on your own.
+> 
+> Mark.
+> 
+> [1] https://lkml.org/lkml/2015/10/6/854
 
-Nice. For the i.MX boards:
+Mark, I checked the patch in https://lkml.org/lkml/2015/10/6/854.
 
-Reviewed-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+It's a generic binding document for devicetree of ion.
 
-Sascha
+Should I just drop this document patch?
 
+Is the patch 2,3 for hisilicon ion ok for upstream?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Please give me more help. Thanks very much.
+
+>  
+>> diff --git a/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+>> new file mode 100644
+>> index 0000000..c59e27c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+>> @@ -0,0 +1,31 @@
+>> +Hi6220 SoC ION
+>> +===================================================================
+>> +Required properties:
+>> +- compatible : "hisilicon,hi6220-ion"
+>> +- list of the ION heaps
+>> +	- heap name : maybe heap_sys_user@0
+>> +	- heap id   : id should be unique in the system.
+>> +	- heap base : base ddr address of the heap,0 means that
+>> +	it is dynamic.
+>> +	- heap size : memory size and 0 means it is dynamic.
+>> +	- heap type : the heap type of the heap, please also
+>> +	see the define in ion.h(drivers/staging/android/uapi/ion.h)
+>> +-------------------------------------------------------------------
+>> +Example:
+>> +	hi6220-ion {
+>> +		compatible = "hisilicon,hi6220-ion";
+>> +		heap_sys_user@0 {
+>> +			heap-name = "sys_user";
+>> +			heap-id   = <0x0>;
+>> +			heap-base = <0x0>;
+>> +			heap-size = <0x0>;
+>> +			heap-type = "ion_system";
+>> +		};
+>> +		heap_sys_contig@0 {
+>> +			heap-name = "sys_contig";
+>> +			heap-id   = <0x1>;
+>> +			heap-base = <0x0>;
+>> +			heap-size = <0x0>;
+>> +			heap-type = "ion_system_contig";
+>> +		};
+>> +	};
+>> -- 
+>> 1.9.1
+>>
+> 
+> .
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
