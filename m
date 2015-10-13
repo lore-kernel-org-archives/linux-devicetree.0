@@ -1,39 +1,101 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 3/4] arm64: dts: add sp804 timer node for Hi6220
-Date: Tue, 13 Oct 2015 08:58:15 +0800
-Message-ID: <1444697896-4323-4-git-send-email-leo.yan@linaro.org>
-References: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Leo Yan <leo.yan@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v2] mmc: core: Allow specifying current consumption
+Date: Mon, 12 Oct 2015 18:00:32 -0700
+Message-ID: <1444698032-9051-1-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1435725525-4367-1-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1435725525-4367-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add sp804 timer for hi6220, so it can be used as broadcast timer.
+This allows us to specify expected current consumption of the vmmc and
+vqmmc regulators. This is needed to bring the supplying regulators out
+of their low-power-mode while accessing the mmc.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 3f03380..cdd4125 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -167,5 +167,14 @@
- 			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+The sd specification states that if the host can provide more than 150mA this
+should be indicated in the "XPC value in the argument of ACMD41" for SDXC
+cards. Should this be tied in with the added property as well?
+
+Changes since v1:
+- Property name and description updated to clarify intention
+
+ Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+ drivers/mmc/core/core.c                       | 6 ++++++
+ drivers/mmc/core/host.c                       | 4 ++++
+ include/linux/mmc/host.h                      | 2 ++
+ 4 files changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 0384fc3f64e8..7514083a9f55 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -47,6 +47,8 @@ Optional properties:
+ - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+ - dsr: Value the card's (optional) Driver Stage Register (DSR) should be
+   programmed with. Valid range: [0 .. 0xffff].
++- vmmc-active-current: current required from the vmmc regulator, in uA
++- vqmmc-active-current: current required from the vqmmc regulator, in uA
+ 
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 23fa221ce803..603f40136306 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1469,12 +1469,18 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
+ 			mmc->ocr_avail = ret;
+ 		else
+ 			dev_warn(dev, "Failed getting OCR mask: %d\n", ret);
 +
-+		dual_timer0: dual_timer@f8008000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x0 0xf8008000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ao_ctrl 27>;
-+			clock-names = "apb_pclk";
-+		};
- 	};
++		if (mmc->supply.vmmc_current)
++			regulator_set_load(mmc->supply.vmmc, mmc->supply.vmmc_current);
+ 	}
+ 
+ 	if (IS_ERR(mmc->supply.vqmmc)) {
+ 		if (PTR_ERR(mmc->supply.vqmmc) == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
+ 		dev_info(dev, "No vqmmc regulator found\n");
++	} else {
++		if (mmc->supply.vqmmc_current)
++			regulator_set_load(mmc->supply.vqmmc, mmc->supply.vqmmc_current);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 970e6906930b..ede508d63fb5 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -235,6 +235,10 @@ int mmc_of_parse(struct mmc_host *host)
+ 			host->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
+ 	}
+ 
++	/* Parse regulator load requests */
++	of_property_read_u32(np, "vmmc-active-current", &host->supply.vmmc_current);
++	of_property_read_u32(np, "vqmmc-active-current", &host->supply.vqmmc_current);
++
+ 	/* Parse Write Protection */
+ 	ro_cap_invert = of_property_read_bool(np, "wp-inverted");
+ 
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 8673ffe3d86e..640d8dbb8559 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -197,6 +197,8 @@ struct mmc_pwrseq;
+ struct mmc_supply {
+ 	struct regulator *vmmc;		/* Card power supply */
+ 	struct regulator *vqmmc;	/* Optional Vccq supply */
++	u32 vmmc_current;		/* Requested current for vmmc */
++	u32 vqmmc_current;		/* Requested current for vqmmc */
  };
+ 
+ struct mmc_host {
 -- 
-1.9.1
+2.4.2
+
