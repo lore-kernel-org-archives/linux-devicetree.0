@@ -1,49 +1,50 @@
 From: Bayi Cheng <bayi.cheng@mediatek.com>
-Subject: [PATCH v4 3/3] arm64: dts: mt8173: Add nor flash node
-Date: Tue, 13 Oct 2015 17:39:20 +0800
-Message-ID: <1444729160-26433-4-git-send-email-bayi.cheng@mediatek.com>
-References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
+Subject: [PATCH v4 0/3] Mediatek SPI-NOR flash driver
+Date: Tue, 13 Oct 2015 17:39:17 +0800
+Message-ID: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, Bayi Cheng <bayi.cheng@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add Mediatek nor flash node
+This series is based on v4.3-rc1 and l2-mtd.git
+(git://git.infradead.org/l2-mtd.git)
 
-Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Change in v4:
+1: delete the parament "write_enable" for mt8173_nor_write_reg
+2: fix the build warning for calling mt8173_nor_write_single_byte
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index d18ee42..385c2e4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -365,6 +365,21 @@
- 			status = "disabled";
- 		};
- 
-+		nor_flash: spi@1100d000 {
-+			compatible = "mediatek,mt8173-nor";
-+			reg = <0 0x1100d000 0 0xe0>;
-+			clocks = <&pericfg CLK_PERI_SPI>,
-+				 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+			clock-names = "spi", "sf";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			flash@0 {
-+				compatible = "jedec,spi-nor";
-+				reg = <0>;
-+			};
-+		};
-+
- 		i2c3: i2c3@11010000 {
- 			compatible = "mediatek,mt8173-i2c";
- 			reg = <0 0x11010000 0 0x70>,
--- 
+Change in v3:
+1: use switch() to replace some if-else statement
+2: use shifts to replace endianness statement
+3: delete some unused macros
+4: use auto-increment mechanism for single write
+5: write address added to 32bytes
+
+Change in v2:
+1. Rebase to 4.3-rc1
+2. propagate error code
+3. delete mux clock and axi clock in dts file
+4. descripts more exactly for binding file
+5. change file names from mtk-nor.c to mtk_quadspi.c
+6. delete some functions witch were used once time
+
+Bayi Cheng (3):
+  doc: dt: add documentation for Mediatek spi-nor controller
+  mtd: mtk-nor: mtk serial flash controller driver
+  arm64: dts: mt8173: Add nor flash node
+
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |  30 ++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  15 +
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/mtk-quadspi.c                  | 486 +++++++++++++++++++++
+ 5 files changed, 539 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+ create mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+
+--
 1.8.1.1.dirty
