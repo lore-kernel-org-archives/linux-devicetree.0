@@ -1,51 +1,105 @@
-From: Arun Parameswaran <arunp@broadcom.com>
-Subject: [PATCH 1/1] net: phy: bcm-phy-lib: Fix module license issue
-Date: Tue, 13 Oct 2015 13:40:12 -0700
-Message-ID: <1444768812-31476-2-git-send-email-arunp@broadcom.com>
-References: <1444768812-31476-1-git-send-email-arunp@broadcom.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] docs: dts: Add documentation for hi6220 SoC ION node
+Date: Tue, 13 Oct 2015 15:42:12 -0500
+Message-ID: <CAL_JsqJ=B_r2Cown=PEb4t8kkQLJMCvnx-x8sVv2k8UQAXOk3A@mail.gmail.com>
+References: <1444632386-106627-1-git-send-email-puck.chen@hisilicon.com>
+ <20151012093119.GA20649@leverpostej> <561CA408.5060202@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1444768812-31476-1-git-send-email-arunp@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arunp@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561CA408.5060202-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, tranmanphong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, tapaswenipathak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, shilin pan <peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The 'bcm-phy-lib.c', added as a part of the commit
-"net: phy: Add Broadcom phy library for common interfaces"
-was missing the module license. This was causing an issue
-when the library is built as a module; "module license
-'unspecified' taints kernel".
+On Tue, Oct 13, 2015 at 1:26 AM, chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+>
+>
+> On 2015/10/12 17:31, Mark Rutland wrote:
+>> On Mon, Oct 12, 2015 at 02:46:24PM +0800, Chen Feng wrote:
+>>> Documentation for hi6220 SoC ION node
+>>>
+>>> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>>> Signed-off-by: Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/staging/ion/hi6220-ion.txt | 31 ++++++++++++++++++++++
+>>>  1 file changed, 31 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+>>
+>>
+>> We should not be adding platform-specific bindings and/or drivers for
+>> this.
+>>
+>> There's already a proposal for a generic binding [1]. Please work with
+>> that rather than working on your own.
+>>
+>> Mark.
+>>
+>> [1] https://lkml.org/lkml/2015/10/6/854
+>
+> Mark, I checked the patch in https://lkml.org/lkml/2015/10/6/854.
+>
+> It's a generic binding document for devicetree of ion.
+>
+> Should I just drop this document patch?
+>
+> Is the patch 2,3 for hisilicon ion ok for upstream?
+>
+> Please give me more help. Thanks very much.
 
-This patch fixes the issue by adding the module license,
-author and description to the bcm-phy-lib.c file.
+Well, first we need to accept the documentation patch before this. I'm
+expecting at least some changes to the doc first.
 
-Fixes: a1cba5613edf5 ("net: phy: Add Broadcom phy library for common
-interfaces")
-Signed-off-by: Arun Parameswaran <arunp@broadcom.com>
----
- drivers/net/phy/bcm-phy-lib.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Rob
 
-diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
-index 13e161e..ddb377e 100644
---- a/drivers/net/phy/bcm-phy-lib.c
-+++ b/drivers/net/phy/bcm-phy-lib.c
-@@ -15,6 +15,7 @@
- #include <linux/brcmphy.h>
- #include <linux/export.h>
- #include <linux/mdio.h>
-+#include <linux/module.h>
- #include <linux/phy.h>
- 
- #define MII_BCM_CHANNEL_WIDTH     0x2000
-@@ -207,3 +208,6 @@ int bcm_phy_enable_eee(struct phy_device *phydev)
- }
- EXPORT_SYMBOL_GPL(bcm_phy_enable_eee);
- 
-+MODULE_DESCRIPTION("Broadcom PHY Library");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Broadcom Corporation");
--- 
-2.6.1
+>
+>>
+>>> diff --git a/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+>>> new file mode 100644
+>>> index 0000000..c59e27c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
+>>> @@ -0,0 +1,31 @@
+>>> +Hi6220 SoC ION
+>>> +===================================================================
+>>> +Required properties:
+>>> +- compatible : "hisilicon,hi6220-ion"
+>>> +- list of the ION heaps
+>>> +    - heap name : maybe heap_sys_user@0
+>>> +    - heap id   : id should be unique in the system.
+>>> +    - heap base : base ddr address of the heap,0 means that
+>>> +    it is dynamic.
+>>> +    - heap size : memory size and 0 means it is dynamic.
+>>> +    - heap type : the heap type of the heap, please also
+>>> +    see the define in ion.h(drivers/staging/android/uapi/ion.h)
+>>> +-------------------------------------------------------------------
+>>> +Example:
+>>> +    hi6220-ion {
+>>> +            compatible = "hisilicon,hi6220-ion";
+>>> +            heap_sys_user@0 {
+>>> +                    heap-name = "sys_user";
+>>> +                    heap-id   = <0x0>;
+>>> +                    heap-base = <0x0>;
+>>> +                    heap-size = <0x0>;
+>>> +                    heap-type = "ion_system";
+>>> +            };
+>>> +            heap_sys_contig@0 {
+>>> +                    heap-name = "sys_contig";
+>>> +                    heap-id   = <0x1>;
+>>> +                    heap-base = <0x0>;
+>>> +                    heap-size = <0x0>;
+>>> +                    heap-type = "ion_system_contig";
+>>> +            };
+>>> +    };
+>>> --
+>>> 1.9.1
+>>>
+>>
+>> .
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
