@@ -1,136 +1,130 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
-Date: Tue, 13 Oct 2015 21:50:08 +0800
-Message-ID: <561D0C10.4060002@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1442906428-2609-1-git-send-email-ykk@rock-chips.com> <5614BADD.1070307@rock-chips.com> <5614DBE2.6080102@osg.samsung.com> <5614DFBC.8060105@rock-chips.com> <5614E553.6060108@osg.samsung.com> <5614FC6B.4080702@rock-chips.com> <56150128.2070309@osg.samsung.com> <5615BB93.9020008@rock-chips.com> <56192135.2080608@rock-chips.com> <561CCD09.6020801@osg.samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Tue, 13 Oct 2015 14:50:53 +0100
+Message-ID: <20151013135053.GB32409@x1>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
+ <20151012134309.GE1542@sirena.org.uk>
+ <20151013080218.GV17172@x1>
+ <20151013121450.GD8805@ck-lbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <561CCD09.6020801@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Thierry Reding <treding@nvidia.com>, joe@perches.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151013121450.GD8805@ck-lbox>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javierm
+On Tue, 13 Oct 2015, Charles Keepax wrote:
 
-On 10/13/2015 05:21 PM, Javier Martinez Canillas wrote:
-> Hello Yakir,
->
-> Sorry for the delay but I was on holidays.
->
-> On 10/10/2015 04:31 PM, Yakir Yang wrote:
->> Hi Javier,
-> [snip]
->
->>>>> Maybe you can email me the method the run mainline kernel on Peach
->>>>> Pit, so I can debug the analogix_dp driver at the same time, that would
->>>>> be great.
->>>> I wrote a little blog post explaining how to run mainline on these boards:
->>>>
->>>> http://blogs.s-osg.org/install-linux-mainline-kernel-distro-exynos-chromebooks/
->>>>
->>>> That explains the simplest setup though so if you need a different one
->>>> (i.e: chain loading a non verified u-boot) or if you have any questions,
->>>> feel free to contact me in private and I can help you with the setup.
->>>>
->>> Ah, thanks, gonna to step-by-step.
->> Thanks for your great material, although I meet some problems in the step-by-step
->> process, and failed at this way to setup mainline kernel environment on Exynos chromebooks.
->>
->> But i do find another way to install mainline kernel to Exynos Chromebook:
->> 1. Install any ChromeOS image into a USB media device (like dd tools)
->> 2. "enable_dev_usb_boot" on Exynos chromebooks which would allowed boot from USB.
->> 3. Flash the mainline kernel into the KERNEL-A and KERNEL-B partitions on host PC.
->> 4. Insert USB device into Exynos chromebooks, and press CTRL+U, boot into USB OS.
-> Yes, as I mentioned in the blog, there are many options. In fact I also boot from
-> a uSD instead of the eMMC since is easier for me to flash from the host machine
-> and chain load a non-verified u-boot so I can boot non signed kernels.
->
-> But thought that the most common use case would be to install it in the KERN-C and
-> ROOT-C partitions in the eMMC. Anyways, I'm glad that you got it working.
+> On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
+> > On Mon, 12 Oct 2015, Mark Brown wrote:
+> >=20
+> > > On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrote:
+> > > > On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+> > > > > On Wed, 07 Oct 2015, Mark Brown wrote:
+> > >=20
+> > > > > > This all seems pretty much fine to me - the things it is co=
+ntrolling are
+> > > > > > fairly specific to the way the former Wolfson devices do, t=
+hey only
+> > > > > > really make sense with a fairly particular algorithm which =
+isn't widely
+> > > > > > implemented.
+> > >=20
+> > > > > Is that an Ack?
+> > >=20
+> > > > I am guessing Mark is slightly hesitant to ack as he probably
+> > > > doesn't want to add reviewing all our jack detection bindings t=
+o
+> > > > his already fairly sizable work load and doing so here likely
+> > > > means it will be expected in the future. From talking to people=
+ at
+> >=20
+> > Providing Acks should not (and has not to my knowledge) be a bindin=
+g
+> > contract to continue providing Acks.  However, should more bindings=
+ be
+> > submitted which appear as though they are related to a particular
+> > maintainer, then sure, you'll be asked for your expert eye again.
+>=20
+> Its not a binding contract to continue providing them but we are
+> making that a condition of merging any patches, which means I
+> will need to chase Mark for Acks, as it seems the DT maintainers
+> won't have any interest in reviewing/acking these.
 
-:-P
+I've already made it a condition, as I refuse to blindly accept
+unknown bindings.  Taking a sea of bindings I have no knowledge of
+would be a bad-thing(tm).  If these were GPIO bindings, I'd be asking
+Linus for help, likewise if they were I2C, I'd be asking Wolfram.
 
->> And it's better to enable pstore function on mainline kernel, so we can analysis the last log when
->> the mainline kernel crashed. After enable PSTORE_RAM in .config, we still need add ramoops node
-> Interesting, I knew about pstore but I never used it with the Exynos Chromebooks.
->
->> into file, like:
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -750,6 +750,15 @@
->>                  iommu = <&sysmmu_gsc3>;
->>          };
->>
->> +       ramoops: ramoops {
->> +               compatible = "ramoops";
->> +               name = "ramoops";
->> +               reg = <0x41f00000 0x100000>;
->> +               record-size = <0x20000>;
->> +               dump-oops;
->> +               status = "okay";
->> +       };
->> +
-> Are you using mainline? There isn't a "ramoops" compatible string documented
-> in the upstream DT bindings, platform_match() would match by driver name as
-> a fallback but I don't see code in fs/pstore/ram.c that parses the properties
-> in your device node. I wonder how this works for you or did I missunderstand?
+> > > Pretty much (plus generally being busy at ELC-E last week) - if t=
+here's
+> > > specific questions that's one thing but if it's just general requ=
+ests to
+> > > look at bindings then it seems like the relevant subsystem mainta=
+iners
+> >=20
+> > This is exactly my point.  I am not the 'relevant subsystem
+> > maintainer' for these properties and subsequently know nothing of
+> > microphone detection, headsets, bias', etc.  These look like Audio
+> > related properties to me (the uninitiated), which is why you were
+> > asked.
+>=20
+> It would be sensible I guess to define whether I should be
+> including audio people on jack detection patches even if they
+> don't touch audio subsystems. I was treating jack detection
+> as an extcon thing and thus assuming that the extcon maintainer
+> would be sufficient, but perhaps that is an incorrect assumption.
 
-Aha, I lost some things that I back port the pstore/ram.c from chrome
-v3.14 tree which driver would parsed the "ramoops" compatible.
+Now I know that jack detection is an Extcon thing and Extcon Ack will
+do just nicely.  However, that begs the question; if they are an
+Extcon thing, why aren't they in the Extcon binding document?
 
-And those "ramoops" device node should be structured by bootloader in
-chromeos, so we won't see anything about "ramoops" in DT binding. Due
-to I can't upgraded the loader of Peach Pit, so I chose to structure that
-device manually. (detailed properties just `cat 
-/proc/device-tree/ramoops/*`)
+> > > should have the confidence to review straightfoward device proper=
+ties
+> > > like this.
+> >=20
+> > I don't think these bindings are particularly straightforward.  The
+> > contain many terms which I'm unfamiliar with, and again, to me (the
+> > uninitiated) this looks like way too many bindings just to see if a=
+n
+> > audio jack is plugged in or not.
+>=20
+> I also wish our designers would make less complex hardware sigh.
+>=20
+> Apologies I didn't mean to cause any offense here, I am just
+> getting a bit concerned about how I can get any DT support for
+> jack detection upstreamed. I am more than happy to fix up any
+> comments anyone has or answer any questions about what things
+> are or why they are required.
 
->
->>          hdmi: hdmi {
->>                  compatible = "samsung,exynos4212-hdmi";
->>                  reg = <0x14530000 0x70000>;
->>
->>
->> Aha, I have tested this series on two Exynos Chromebooks that I borrowed(Snow and Peach Pit)
->> with previously method (actually I believed it's a common method without broken the original
->> ChromeOS image).
->>
->> And I do find the crash place that make you failed at this series, here is the diff changes:
->> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->> index 5f8fc11..bcbc009 100644
->> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->> @@ -1169,6 +1169,7 @@ static int analogix_dp_create_bridge(struct drm_device *drm_dev,
->>
->>          dp->bridge = bridge;
->>
->> +       dp->encoder->bridge = bridge;
->>          bridge->driver_private = dp;
->>          bridge->encoder = dp->encoder;
->>          bridge->funcs = &analogix_dp_bridge_funcs;
->> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> @@ -151,7 +151,7 @@
->>          samsung,color-depth = <1>;
->>          samsung,link-rate = <0x06>;
->>          samsung,lane-count = <2>;
->> -       hpd-gpio = <&gpx2 6 0>;
->> +       hpd-gpios = <&gpx2 6 0>;
->>
->>          ports {
->>                  port@0 {
->>
->>
->> Anyway I'm going to send the v6 series, thanks for your good idea.
->>
-> Great, I'll try to test your latest series on my Peach Pi today.
+Hopefully there won't be too many more bindings to come?
 
-Thanks
+My issue is that as they are not MFD related, I need some advice from
+my colleagues to whom they are related to.
 
-- Yakir
->
->> - Yakir
->>
-> Best regards,
+> The jack detection on these chips is fairly complex and there are
+> going to be plenty more patches before we have full support for
+> it in DT. So I think it would be good for everyone if we can
+> agree some process for how to handle this type of patch.
+
+Put them in the subsystem where they pertain to -- job done.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
