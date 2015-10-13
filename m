@@ -1,58 +1,56 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] DT: ARM: pxa: Remove incorrect binding from documentation
-Date: Tue, 13 Oct 2015 13:46:54 -0500
-Message-ID: <CAL_Jsq++KpzwCi+7kHTEYhDJb4HkxG=s88f0oe+17ADv2GnGQQ@mail.gmail.com>
-References: <1444743846-25873-1-git-send-email-jarkko.nikula@linux.intel.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] drm: sti: fix typos in stih4xx binding
+Date: Tue, 13 Oct 2015 13:47:18 -0500
+Message-ID: <CAL_JsqJRwBqUU0aKFK=VZ0m35t-rnNJceYav93CCnuqbLugRnQ@mail.gmail.com>
+References: <1444737099-20046-1-git-send-email-michael.opdenacker@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444743846-25873-1-git-send-email-jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444737099-20046-1-git-send-email-michael.opdenacker@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, vincent.abriou@st.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 8:44 AM, Jarkko Nikula
-<jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Remove "mrvl,lpss-ssp" property from documentation because LPSS SSP type is
-> for certain Intel platforms. I believe commit a6e56c28a178
-> ("ARM: pxa: ssp: add DT bindings") added it by accident by copying all
-> enum pxa_ssp_type types from include/linux/pxa2xx_ssp.h.
+On Tue, Oct 13, 2015 at 6:51 AM, Michael Opdenacker
+<michael.opdenacker@free-electrons.com> wrote:
+> Fix typos in the st,stih4xx binding, in particular replacing
+> "pinctrl-name" by "pinctrl-names".
 >
-> Please note this was removed from arch/arm/plat-pxa/ssp.c by the
-> commit b692cb83b14d ("ARM: pxa: ssp: Fix build error by removing originally
-> incorrect DT binding").
+> Fix minor typos in the descriptions too.
 >
-> Signed-off-by: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Michael Opdenacker <michael.opdenacker@free-electrons.com>
 
 Applied, thanks.
 
 Rob
 
 > ---
->  Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt | 1 -
->  1 file changed, 1 deletion(-)
+>  Documentation/devicetree/bindings/gpu/st,stih4xx.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt b/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
-> index 669b8140dd79..d10cc06c0c37 100644
-> --- a/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
-> +++ b/Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
-> @@ -10,7 +10,6 @@ Required properties:
->                                 mvrl,pxa168-ssp
->                                 mrvl,pxa910-ssp
->                                 mrvl,ce4100-ssp
-> -                               mrvl,lpss-ssp
+> diff --git a/Documentation/devicetree/bindings/gpu/st,stih4xx.txt b/Documentation/devicetree/bindings/gpu/st,stih4xx.txt
+> index a36dfce0032e..a352ed30cd70 100644
+> --- a/Documentation/devicetree/bindings/gpu/st,stih4xx.txt
+> +++ b/Documentation/devicetree/bindings/gpu/st,stih4xx.txt
+> @@ -61,7 +61,7 @@ STMicroelectronics stih4xx platforms
+>    - reg-names: names of the mapped memory regions listed in regs property in
+>      the same order.
+>    - interrupts : HDMI interrupt number to the CPU.
+> -  - interrupt-names: name of the interrupts listed in interrupts property in
+> +  - interrupt-names: names of the interrupts listed in interrupts property in
+>      the same order
+>    - clocks: from common clock binding: handle hardware IP needed clocks, the
+>      number of clocks may depend of the SoC type.
+> @@ -95,7 +95,7 @@ sti-dvo:
+>    - clock-names: names of the clocks listed in clocks property in the same
+>      order.
+>    - pinctrl-0: pin control handle
+> -  - pinctrl-name: names of the pin control to use
+> +  - pinctrl-names: names of the pin control states to use
+>    - sti,panel: phandle of the panel connected to the DVO output
 >
->         - reg:          The memory base
->         - dmas:         Two dma phandles, one for rx, one for tx
+>  sti-hqvdp:
 > --
-> 2.6.1
+> 2.1.4
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
