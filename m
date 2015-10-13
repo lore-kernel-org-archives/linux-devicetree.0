@@ -1,47 +1,41 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed
- support
-Date: Tue, 13 Oct 2015 09:14:38 +0900
-Message-ID: <561C4CEE.3050905@samsung.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-3-git-send-email-linux.amoon@gmail.com>
- <561B48B7.1040201@samsung.com>
- <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com>
+From: Julian Calaby <julian.calaby@gmail.com>
+Subject: Re: [PATCH 13/25] scsi: hisi_sas: add path from phyup irq to SAS framework
+Date: Tue, 13 Oct 2015 11:27:05 +1100
+Message-ID: <CAGRGNgVq_cKkWOC9hXH7kdkLw24atXB3+vqQMwpiLj63=oaS-Q@mail.gmail.com>
+References: <1444663237-238302-14-git-send-email-john.garry@huawei.com> <201510130540.gVjgsIWc%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <201510130540.gVjgsIWc%fengguang.wu@intel.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>, kbuild-all@01.org
+Cc: John Garry <john.garry@huawei.com>, Jej B <James.Bottomley@hansenpartnership.com>, linux-kernel@vger.kernel.com, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi <linux-scsi@vger.kernel.org>, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, Hannes Reinecke <hare@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On 13.10.2015 00:32, Anand Moon wrote:
-> Hi Krzysztof,
-> 
-> On 12 October 2015 at 11:14, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
->> On 12.10.2015 00:46, Anand Moon wrote:
->>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
->>
->> This description is not entirely correct. The MMC driver already
->> supports these UHS speeds (you did not any code) so you rather enabled
->> it (description of bindings says "is supported").
->>
->> You mentioned DDR50 but I don't see respective property below.
->>
->> How do you know that these modes are really supported? I don't know. Can
->> you convince me?
-> 
-> Setting this DDR50 capability give me this error. That's the reason to
-> drop this capability.
+Hi kbuild test robot people,
 
-But you mentioned it in commit message! "Added support for UHS-I ...
-(DDR50)"
+On Tue, Oct 13, 2015 at 9:03 AM, kbuild test robot <lkp@intel.com> wrote:
+> Hi John,
+>
+> [auto build test WARNING on scsi/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+>
+> url:    https://github.com/0day-ci/linux/commits/John-Garry/HiSilicon-SAS-driver/20151012-231929
+> reproduce:
+>         # apt-get install sparse
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF=-D__CHECK_ENDIAN__
+>
+>
+> sparse warnings: (new ones prefixed by >>)
 
-In the same time dropping DDR50 is not an sufficient proof that "SDR50
-and SDR104 are really supported".
+Your script seems to have lost the actual warnings here.
 
-Best regards,
-Krzysztof
+> Please review and possibly fold the followup patch.
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
