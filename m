@@ -1,118 +1,66 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] net: phy: smsc: disable energy detect mode
-Date: Tue, 13 Oct 2015 12:26:00 -0700
-Message-ID: <561D5AC8.7040801@gmail.com>
-References: <1444713189-23063-1-git-send-email-hs@denx.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
+Date: Tue, 13 Oct 2015 21:36:09 +0200
+Message-ID: <5493797.P10V9v7QAu@wuerfel>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com> <7277011.vmOGiecsKn@wuerfel> <561D287C.9010400@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444713189-23063-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Georg.Soffel@bosch-si.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561D287C.9010400-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/15 22:13, Heiko Schocher wrote:
-> On some boards the energy enable detect mode leads in
-> trouble with some switches, so make the enabling of
-> this mode configurable through DT.
+On Tuesday 13 October 2015 18:51:24 Vladimir Zapolskiy wrote:
+> On 13.10.2015 15:44, Arnd Bergmann wrote:
+> > I don't get it. What kind of errors do you see? The existing
+> > version looks cleaner than the new one, as it only translates
+> > the MMIO areas that are actually used.
+> > 
 > 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> ---
+> The problem is found when I add PL175 device node to lpc32xx.dtsi and
+> expand the node in my board file. The external memory controller manages
+> up to 4 memory devices, which by means of the controller are mapped into
+> physical memory starting from address 0xe0000000.
 > 
->  .../devicetree/bindings/net/smsc-lan87xx.txt       | 19 +++++++++++++++++
->  drivers/net/phy/smsc.c                             | 24 +++++++++++++++++-----
->  2 files changed, 38 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+> Below are my declarations, similar to one found in lpc18xx.dtsi.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/smsc-lan87xx.txt b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
-> new file mode 100644
-> index 0000000..39aa1dc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
-> @@ -0,0 +1,19 @@
-> +SMSC LAN87xx Ethernet PHY
-> +
-> +Some boards require special tuning values. Configure them
-> +through an Ethernet OF device node.
-> +
-> +Optional properties:
-> +
-> +- disable-energy-detect:
-> +  If set, do not enable energy detect mode for the SMSC phy.
-> +  default: enable energy detect mode
-
-Although energy detection is something that is implemented by many PHYs,
-I am not sure a generic property is suitable here, I would prefix that
-with the SMSC vendor prefix here to make it clear this only applies to
-this PHY.
-
-Would not you want to make it a reverse property here though, something
-like this:
-
-smsc,energy-detect: boolean, when present indicates the PHY reliably
-supports energy detection
-
-
-> +
-> +Examples:
-> +
-> +	/* Attach to an Ethernet device with autodetected PHY */
-> +	&cpsw_emac0 {
-> +		phy_id = <&davinci_mdio>, <0>;
-> +		phy-mode = "mii";
-> +		disable-energy-detect;
-> +	};
-> diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
-> index 70b0895..f90fbf3 100644
-> --- a/drivers/net/phy/smsc.c
-> +++ b/drivers/net/phy/smsc.c
-> @@ -43,16 +43,30 @@ static int smsc_phy_ack_interrupt(struct phy_device *phydev)
->  
->  static int smsc_phy_config_init(struct phy_device *phydev)
->  {
-> +#ifdef CONFIG_OF
-> +	int len;
-> +	struct device *dev = &phydev->dev;
-> +	struct device_node *of_node = dev->of_node;
-
-That does not need to be ifdefd out, at best annontate with __maybe_unused?
-
-> +#endif
->  	int rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
-> +	int enable_energy = 1;
->  
->  	if (rc < 0)
->  		return rc;
->  
-> -	/* Enable energy detect mode for this SMSC Transceivers */
-> -	rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
-> -		       rc | MII_LAN83C185_EDPWRDOWN);
-> -	if (rc < 0)
-> -		return rc;
-> +#ifdef CONFIG_OF
-> +	if (!of_node && dev->parent->of_node)
-> +		of_node = dev->parent->of_node;
-
-That looks strange, why would the property be placed at the parent level
-when this is a PHY device tree node property?
-
-> +	if (of_find_property(of_node, "disable-energy-detect", &len))
-> +		enable_energy = 0;
-> +#endif
-> +	if (enable_energy) {
-> +		/* Enable energy detect mode for this SMSC Transceivers */
-> +		rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
-> +			       rc | MII_LAN83C185_EDPWRDOWN);
-> +		if (rc < 0)
-> +			return rc;
-> +	}
->  
->  	return smsc_phy_ack_interrupt(phydev);
->  }
+> lpc32xx.dtsi change common for all LPC32xx boards:
+> 
+> emc: emc@31080000 {
+> 	compatible = "arm,pl175", "arm,primecell";
+> 	reg = <0x31080000 0x1000>;
+> 	clocks = <&scf LPC32XX_CLK_DDRAM>;
+> 	clock-names = "mpmcclk";
+> 
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	ranges = <0 0xe0000000 0x01000000>,
+> 		 <1 0xe1000000 0x01000000>,
+> 		 <2 0xe2000000 0x01000000>,
+> 		 <3 0xe3000000 0x01000000>;
+> 	status = "disabled";
+> };
 > 
 
+Ok, got it.
 
--- 
-Florian
+> Support of EMC device node will be added to lpc32xx.dtsi, when this kind
+> of problem is fixed.
+
+As I see it, the problem is that you now have ranges that are not
+for devices inside of the device but that are external. As the
+memory-controller node needs both its own registers and the translation
+for the external ones, we unfortunately can't just put it in the root
+node, which would avoid the issue.
+
+Instead, I would suggest adding a range for the 0xe0000000 area.
+
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
