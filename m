@@ -1,50 +1,78 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: of: Ignore resources with failed translation
-Date: Tue, 13 Oct 2015 15:10:57 -0500
-Message-ID: <CAL_JsqJd3MisGEEahkx=46AiTBgLah42tL3ozzvkPiLtwCTG+Q@mail.gmail.com>
-References: <cover.1444288748.git.p.fedin@samsung.com> <3604931244806840dd12ff9663671b52d2acd951.1444288748.git.p.fedin@samsung.com>
+From: "Kwok, WingMan" <w-kwok2@ti.com>
+Subject: RE: [PATCH 3/3] ARM: keystone: dts: add PCI serdes driver bindings
+Date: Tue, 13 Oct 2015 20:12:18 +0000
+Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E042289A5@DFLE11.ent.ti.com>
+References: <1444759464-32299-1-git-send-email-w-kwok2@ti.com>
+ <1444759464-32299-4-git-send-email-w-kwok2@ti.com> <561D4C2A.1060704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <3604931244806840dd12ff9663671b52d2acd951.1444288748.git.p.fedin@samsung.com>
+In-Reply-To: <561D4C2A.1060704@ti.com>
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+To: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 2:24 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
-> This patch allows PCI host controller to function even if part of resources
-> is unusable for some reason. An example is non-LPAE kernel on a machine
-> which has some 64-bit resources. Unusable resources will be just skipped
-> instead of a complete failure.
->
-> Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
-
-Applied, thanks.
-
-Rob
-
-> ---
->  drivers/of/of_pci.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 5751dc5..ea7c2b6 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -223,8 +223,10 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->                 }
->
->                 err = of_pci_range_to_resource(&range, dev, res);
-> -               if (err)
-> -                       goto conversion_failed;
-> +               if (err) {
-> +                       kfree(res);
-> +                       continue;
-> +               }
->
->                 if (resource_type(res) == IORESOURCE_IO) {
->                         if (!io_base) {
-> --
-> 2.4.4
->
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2FyaWNoZXJpLCBNdXJh
+bGlkaGFyYW4NCj4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxMywgMjAxNSAyOjI0IFBNDQo+IFRv
+OiBLd29rLCBXaW5nTWFuOyByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsN
+Cj4gbWFyay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBn
+YWxha0Bjb2RlYXVyb3JhLm9yZzsNCj4gS0lTSE9OIFZJSkFZIEFCUkFIQU07IFF1YWRyb3MsIFJv
+Z2VyOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiBzc2FudG9zaEBrZXJuZWwub3JnOyBsaW51eEBh
+cm0ubGludXgub3JnLnVrOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJt
+LQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMv
+M10gQVJNOiBrZXlzdG9uZTogZHRzOiBhZGQgUENJIHNlcmRlcyBkcml2ZXIgYmluZGluZ3MNCj4g
+DQo+IE9uIDEwLzEzLzIwMTUgMDI6MDQgUE0sIFdpbmdNYW4gS3dvayB3cm90ZToNCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBXaW5nTWFuIEt3b2sgPHcta3dvazJAdGkuY29tPg0KPiA+IC0tLQ0KPiA+ICAg
+YXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kgICAgICB8ICAgMjQgKysrKysrKysrKysrKysrKysr
+KysrKysrDQo+ID4gICBhcmNoL2FybS9ib290L2R0cy9rZXlzdG9uZS5kdHNpIHwgICAyNSArKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ID4gICAyIGZpbGVzIGNoYW5nZWQsIDQ5IGluc2VydGlv
+bnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9rMmUuZHRzaSBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2syZS5kdHNpDQo+ID4gaW5kZXggNjc1ZmI4ZS4uMWJhNDdkOCAx
+MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9rMmUuZHRzaQ0KPiA+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2syZS5kdHNpDQo+ID4gQEAgLTg2LDYgKzg2LDE4IEBADQo+ID4gICAJ
+CQlncGlvLHN5c2Nvbi1kZXYgPSA8JmRldmN0cmwgMHgyNDA+Ow0KPiA+ICAgCQl9Ow0KPiA+DQo+
+ID4gKwkJcGNpZTFfcGh5OiBwY2llcGh5QDIzMjYwMDAgew0KPiA+ICsJCQkjcGh5LWNlbGxzID0g
+PDA+Ow0KPiA+ICsJCQljb21wYXRpYmxlID0gInRpLGtleXN0b25lLXNlcmRlcy1wY2llIjsNCj4g
+PiArCQkJcmVnID0gPDB4MDIzMjYwMDAgMHg0MDAwPjsNCj4gPiArCQkJcmVnLW5hbWVzID0gInJl
+Z19zZXJkZXMiOw0KPiA+ICsJCQlyZWZjbGsta2h6ID0gPDEwMDAwMD47DQo+ID4gKwkJCWxpbmst
+cmF0ZS1rYnBzID0gPDUwMDAwMDA+Ow0KPiA+ICsJCQlwaHktdHlwZSA9ICJwY2llIjsNCj4gPiAr
+CQkJbWF4LWxhbmVzID0gPDI+Ow0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJ
+CX07DQo+ID4gKw0KPiA+ICAgCQlwY2llMTogcGNpZUAyMTAyMDAwMCB7DQo+ID4gICAJCQljb21w
+YXRpYmxlID0gInRpLGtleXN0b25lLXBjaWUiLCJzbnBzLGR3LXBjaWUiOw0KPiA+ICAgCQkJY2xv
+Y2tzID0gPCZjbGtwY2llMT47DQo+ID4gQEAgLTEzMCw2ICsxNDIsMTggQEANCj4gPiAgIAkJCQkJ
+PEdJQ19TUEkgMzc1IElSUV9UWVBFX0VER0VfUklTSU5HPiwNCj4gPiAgIAkJCQkJPEdJQ19TUEkg
+Mzc2IElSUV9UWVBFX0VER0VfUklTSU5HPjsNCj4gPiAgIAkJCX07DQo+ID4gKw0KPiA+ICsJCQkv
+KiBQQ0lFIHBoeSAqLw0KPiA+ICsJCQlzZXJkZXNlcyB7DQo+ID4gKwkJCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsNCj4gPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsJCQkJc2VyZGVzQDAg
+ew0KPiA+ICsJCQkJCXJlZyA9IDwwPjsNCj4gPiArCQkJCQlwaHlzID0gPCZwY2llMV9waHk+Ow0K
+PiA+ICsJCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwkJCQl9Ow0KPiA+ICsJCQl9Ow0K
+PiA+ICsNCj4gPiAgIAkJfTsNCj4gPg0KPiA+ICAgCQltZGlvOiBtZGlvQDI0MjAwZjAwIHsNCj4g
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2tleXN0b25lLmR0c2kNCj4gPiBpbmRleCA3MjgxNmQ2Li41MzEyMzE5IDEw
+MDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLmR0c2kNCj4gPiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9rZXlzdG9uZS5kdHNpDQo+ID4gQEAgLTI3NSw2ICsyNzUsMTkg
+QEANCj4gPiAgIAkJCXRpLHN5c2Nvbi1kZXYgPSA8JmRldmN0cmwgMHgyYTA+Ow0KPiA+ICAgCQl9
+Ow0KPiA+DQo+ID4gKwkJcGNpZTBfcGh5OiBwY2llcGh5QDIzMjAwMDAgew0KPiA+ICsJCQkjcGh5
+LWNlbGxzID0gPDA+Ow0KPiA+ICsJCQljb21wYXRpYmxlID0gInRpLGtleXN0b25lLXNlcmRlcy1w
+Y2llIjsNCj4gPiArCQkJcmVnID0gPDB4MDIzMjAwMDAgMHg0MDAwPjsNCj4gPiArCQkJcmVnLW5h
+bWVzID0gInJlZ19zZXJkZXMiOw0KPiA+ICsJCQlyZWZjbGsta2h6ID0gPDEwMDAwMD47DQo+ID4g
+KwkJCWxpbmstcmF0ZS1rYnBzID0gPDUwMDAwMDA+Ow0KPiA+ICsJCQlpbml0LWZpcm13YXJlCT0g
+ImsyX3BjaWVfc2VyZGVzX2luaXQuZnciOw0KPiA+ICsJCQlwaHktdHlwZSA9ICJwY2llIjsNCj4g
+PiArCQkJbWF4LWxhbmVzID0gPDI+Ow0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+
+ICsJCX07DQo+ID4gKw0KPiA+ICAgCQlwY2llMDogcGNpZUAyMTgwMDAwMCB7DQo+ID4gICAJCQlj
+b21wYXRpYmxlID0gInRpLGtleXN0b25lLXBjaWUiLCAic25wcyxkdy1wY2llIjsNCj4gPiAgIAkJ
+CWNsb2NrcyA9IDwmY2xrcGNpZT47DQo+ID4gQEAgLTMxOSw2ICszMzIsMTggQEANCj4gPiAgIAkJ
+CQkJPEdJQ19TUEkgMjggSVJRX1RZUEVfRURHRV9SSVNJTkc+LA0KPiA+ICAgCQkJCQk8R0lDX1NQ
+SSAyOSBJUlFfVFlQRV9FREdFX1JJU0lORz47DQo+ID4gICAJCQl9Ow0KPiA+ICsNCj4gPiArCQkJ
+LyogUENJRSBwaHkgKi8NCj4gPiArCQkJc2VyZGVzZXMgew0KPiA+ICsJCQkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47DQo+ID4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArCQkJCXNlcmRlc0Aw
+IHsNCj4gPiArCQkJCQlyZWcgPSA8MD47DQo+ID4gKwkJCQkJcGh5cyA9IDwmcGNpZTBfcGh5PjsN
+Cj4gPiArCQkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsN
+Cj4gPiArDQo+ID4gICAJCX07DQo+ID4gICAJfTsNCj4gPiAgIH07DQo+ID4NCj4gV2luZ21hbiwN
+Cj4gDQo+IFRoaXMgc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2ggYW5kIHJlbW92ZSB0aGUgc2Fu
+ZSBmcm9tIERyaXZlciBwYXRjaC4NCj4gaS5lLiBzZW5kIDEvMyBhbmUgMi8zIGluIG9uZSBzZXJp
+ZXMgYW5kIDMvMyBhcyBhIHNlcGFyYXRlIHBhdGNoLg0KPiANCg0Kd2lsbCBkby4NCg0KVGhhbmtz
+LA0Kd2luZ01hbg0K
