@@ -1,79 +1,161 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
-Date: Wed, 14 Oct 2015 02:13:49 +0300
-Message-ID: <561D902D.7020503@mleia.com>
-References: <1444694045-22000-1-git-send-email-vz@mleia.com> <7277011.vmOGiecsKn@wuerfel> <561D287C.9010400@mleia.com> <5493797.P10V9v7QAu@wuerfel>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed
+ support
+Date: Wed, 14 Oct 2015 08:59:10 +0900
+Message-ID: <561D9ACE.6050103@samsung.com>
+References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
+ <1444578364-1384-3-git-send-email-linux.amoon@gmail.com>
+ <561B48B7.1040201@samsung.com>
+ <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com>
+ <561C4CEE.3050905@samsung.com>
+ <CANAwSgRJ+5O-x61K9E_AxTZWQy3jJrKF5MiLtWRdUU29CCfa-Q@mail.gmail.com>
+ <561C7DF1.6000609@samsung.com>
+ <CANAwSgRBzFqHB98wSQnQu-ggGqRT2H6wC415wULXVhPg0uw_3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5493797.P10V9v7QAu@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CANAwSgRBzFqHB98wSQnQu-ggGqRT2H6wC415wULXVhPg0uw_3A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
-
-On 13.10.2015 22:36, Arnd Bergmann wrote:
-> On Tuesday 13 October 2015 18:51:24 Vladimir Zapolskiy wrote:
->> On 13.10.2015 15:44, Arnd Bergmann wrote:
->>> I don't get it. What kind of errors do you see? The existing
->>> version looks cleaner than the new one, as it only translates
->>> the MMIO areas that are actually used.
+On 14.10.2015 01:27, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> On 13 October 2015 at 09:13, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+>>
+>> On 13.10.2015 12:08, Anand Moon wrote:
+>>> Hi Krzysztof,
 >>>
+>>> On 13 October 2015 at 05:44, Krzysztof Kozlowski
+>>> <k.kozlowski@samsung.com> wrote:
+>>>> On 13.10.2015 00:32, Anand Moon wrote:
+>>>>> Hi Krzysztof,
+>>>>>
+>>>>> On 12 October 2015 at 11:14, Krzysztof Kozlowski
+>>>>> <k.kozlowski@samsung.com> wrote:
+>>>>>> On 12.10.2015 00:46, Anand Moon wrote:
+>>>>>>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
+>>>>>>
+>>>>>> This description is not entirely correct. The MMC driver already
+>>>>>> supports these UHS speeds (you did not any code) so you rather enabled
+>>>>>> it (description of bindings says "is supported").
+>>>>>>
+>>>>>> You mentioned DDR50 but I don't see respective property below.
+>>>>>>
+>>>>>> How do you know that these modes are really supported? I don't know. Can
+>>>>>> you convince me?
+>>>>>
+>>>>> Setting this DDR50 capability give me this error. That's the reason to
+>>>>> drop this capability.
+>>>>
+>>>> But you mentioned it in commit message! "Added support for UHS-I ...
+>>>> (DDR50)"
+>>>>
+>>>> In the same time dropping DDR50 is not an sufficient proof that "SDR50
+>>>> and SDR104 are really supported".
+>>>>
+>>>
+>>> These changes are related to the microSD card capabilities.
+>>> So SDR50 have better frequency over DDR50. On the same Sandisk card.
+>>>
+>>> When the card select the capability for DDR50
+>>> ---------------------------------------------------
+>>> [    4.001477] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+>>> req 50000000Hz, actual 50000000HZ div = 0)
+>>> [    4.001604] mmc1: new ultra high speed DDR50 SDHC card at address aaaa
+>>> [    4.004505] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+>>> [    4.009179] mmcblk0: error -110 sending status command, retrying
+>>> [    4.009271] mmcblk0: error -115 sending stop command, original cmd
+>>> response 0x900, card status 0x900
+>>> [    4.009275] mmcblk0: error -84 transferring data, sector 0, nr 8,
+>>> cmd response 0x900, card status 0x0
+>>> [    4.025563] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+>>> req 400000Hz, actual 396825HZ div = 63)
+>>> [    4.067770] Console: switching to colour frame buffer device 274x77
+>>> [    4.098782] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+>>> req 50000000Hz, actual 50000000HZ div = 0)
+>>> [    4.099692] mmc1: tried to reset card
+>>> [    4.101332]  mmcblk0: p1 p2
+>>>
+>>>
+>>> When the card select the capability for SDR50
+>>> ---------------------------------------------------------------------------------
+>>> [ 2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req
+>>> 100000000Hz, actual 100000000HZ div = 0)
+>>> [ 2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
+>>> [ 2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+>>> [ 2.461743] mmcblk0: p1 p2
+>>>
+>>> Which will relate to better read/write speed.
 >>
->> The problem is found when I add PL175 device node to lpc32xx.dtsi and
->> expand the node in my board file. The external memory controller manages
->> up to 4 memory devices, which by means of the controller are mapped into
->> physical memory starting from address 0xe0000000.
->>
->> Below are my declarations, similar to one found in lpc18xx.dtsi.
->>
->> lpc32xx.dtsi change common for all LPC32xx boards:
->>
->> emc: emc@31080000 {
->> 	compatible = "arm,pl175", "arm,primecell";
->> 	reg = <0x31080000 0x1000>;
->> 	clocks = <&scf LPC32XX_CLK_DDRAM>;
->> 	clock-names = "mpmcclk";
->>
->> 	#address-cells = <1>;
->> 	#size-cells = <1>;
->> 	ranges = <0 0xe0000000 0x01000000>,
->> 		 <1 0xe1000000 0x01000000>,
->> 		 <2 0xe2000000 0x01000000>,
->> 		 <3 0xe3000000 0x01000000>;
->> 	status = "disabled";
->> };
+>> Which is not an answer to my question. To none of my previous questions.
 >>
 > 
-> Ok, got it.
+> Basically UHS-I capability  (sd-uhs-sdr12, sd-uhs-sdr25, sd-uhs-sdr50,
+> sd-uhs-sdr104) help tune speed supported for mmc
 > 
->> Support of EMC device node will be added to lpc32xx.dtsi, when this kind
->> of problem is fixed.
+> I have tired to compare the speed on high speed UHS-I vs ultra high
+> speed UHS-I using izone utility.
 > 
-> As I see it, the problem is that you now have ranges that are not
-> for devices inside of the device but that are external. As the
-> memory-controller node needs both its own registers and the translation
-> for the external ones, we unfortunately can't just put it in the root
-> node, which would avoid the issue.
+> [    2.572469] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+> req 50000000Hz, actual 50000000HZ div = 0)
+> [    2.572609] mmc1: new high speed SDHC card at address aaaa
 > 
-> Instead, I would suggest adding a range for the 0xe0000000 area.
+>       Command line used: ./iozone -L64 -S32 -azecwI -+n -r4k -r64k
+> -r128k -s10M -i0 -i1 -i2 -f datafile -Rb out.xls
+>         Output is in kBytes/sec
+>         Time Resolution = 0.000001 seconds.
+>         Processor cache size set to 32 kBytes.
+>         Processor cache line size set to 64 bytes.
+>         File stride size set to 17 * record size.
+>                                                               random
+>  random     bkwd    record    stride
+>               kB  reclen    write  rewrite    read    reread    read
+>   write     read   rewrite      read   fwrite frewrite    fread
+> freread
+>            10240       4     1631        0     6556        0     5538      982
+>            10240      64     8828        0    18897        0    17994      303
+>            10240     128     6269        0    20670        0    20128     1096
+> ---------------------------------------------------------------------------------------------------------
+> [    2.613761] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot
+> req 100000000Hz, actual 100000000HZ div = 0)
+> [    2.623573] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
+> 
+>         Command line used: ./iozone -L64 -S32 -azecwI -+n -r4k -r64k
+> -r128k -s10M -i0 -i1 -i2 -f datafile -Rb out.xls
+>         Output is in kBytes/sec
+>         Time Resolution = 0.000001 seconds.
+>         Processor cache size set to 32 kBytes.
+>         Processor cache line size set to 64 bytes.
+>         File stride size set to 17 * record size.
+>                                                               random
+>  random     bkwd    record    stride
+>               kB  reclen    write  rewrite    read    reread    read
+>   write     read   rewrite      read   fwrite frewrite    fread
+> freread
+>            10240       4     1809        0     7507        0     5233      859
+>            10240      64    11622        0    31250        0    28072      516
+>            10240     128     4320        0    34417        0    32509     1148
+> 
+> My observation is that their slight increase in read/write operation.
+> 
+> Hope I have tried to answer you query. If I am wrong please let me know.
 
-Ok, practically it should work for my purposes, but the change must be
-done along with added EMC device node description.
+Nope, that did not answer my query. You gave some performance benchmarks
+but my question was not about the speed of anything. The question is
+(once again):
+How do you know that these modes are really supported?
 
-I'm not so confident that it is correct to add description of static
-memory banks to ahb node though, please give me a short confirmation,
-then I'll send a change for inclusion of EMC description -- the one
-above excluding clocks and clock-names properties, work on CCF is in
-progress.
+You are marking the *host* as supporting these modes. Please provide
+information that host supports them *really*, not by experimenting "oh,
+it seems to work now, maybe it will work always".
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Usually vendors, if their products implement some kind of
+specification/protocol, they mark the products as "compatible with XYZ" etc.
+
+Best regards,
+Krzysztof
