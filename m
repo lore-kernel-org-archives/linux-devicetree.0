@@ -1,57 +1,42 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v3 12/13] scsi: ufs-exynos: add UFS host support for Exynos
- SoCs
-Date: Tue, 13 Oct 2015 17:15:39 +0530
-Message-ID: <561CEEE3.7060401@samsung.com>
-References: <1443686970-28104-1-git-send-email-alim.akhtar@samsung.com>
- <2228323.jdbqnSKW75@wuerfel> <561CE8CB.9010102@samsung.com>
- <6499659.hVBcEphJIR@wuerfel>
+From: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: msm8974: fix typo in "disabled" property
+Date: Tue, 13 Oct 2015 13:57:39 +0200
+Message-ID: <561CF1B3.2010405@free-electrons.com>
+References: <1444735998-18479-1-git-send-email-michael.opdenacker@free-electrons.com>
+ <5733924.HXWPKe3hJM@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <6499659.hVBcEphJIR@wuerfel>
+In-Reply-To: <5733924.HXWPKe3hJM@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
-
-On 10/13/2015 05:08 PM, Arnd Bergmann wrote:
-> On Tuesday 13 October 2015 16:49:39 Alim Akhtar wrote:
->>>> diff --git a/drivers/scsi/ufs/ufs-exynos.h b/drivers/scsi/ufs/ufs-exynos.h
->>>> new file mode 100644
->>>> index 0000000..58aa714
->>>> --- /dev/null
->>>> +++ b/drivers/scsi/ufs/ufs-exynos.h
->>>> @@ -0,0 +1,463 @@
->>>> +/*
->>>> + * UFS Host Controller driver for Exynos specific extensions
->>>> + *
->>>> + * Copyright (C) 2014-2015 Samsung Electronics Co., Ltd.
->>>> + *
->>>> + * This program is free software; you can redistribute it and/or modify
->>>> + * it under the terms of the GNU General Public License as published by
->>>> + * the Free Software Foundation; either version 2 of the License, or
->>>> + * (at your option) any later version.
->>>> + */
->>>> +
->>>> +#ifndef _UFS_EXYNOS_H_
->>>> +#define _UFS_EXYNOS_H_
->>>
->>> You have a lot of things in this header that are only used in one of the
->>> .c files, so just move them there and make the header as small as possible.
->>>
->> hmm..these are mostly the registers defines, will removes the one which
->> are not being used as of now.
->> Do you think I should sill move them to .c file?
+On 10/13/2015 01:41 PM, Arnd Bergmann wrote:
+> On Tuesday 13 October 2015 13:33:18 Michael Opdenacker wrote:
+>> Replace "disable" by "disabled" in the Qualcomm MSM8974 dtsi
 >>
->
-> Yes. No need to remove the unused register definitions, just don't put
-> them into a separate header if they are only used in one place.
->
-Ok will do that in v4.
-Thanks.
-> 	Arnd
->
+>> Signed-off-by: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+>> ---
+>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> The patch looks good, but I think you are missing some people on
+> Cc. Please send this to all the qcom maintainers. I suspect you
+> only have Kumar on Cc because he is listed as maintainer for dts
+> files in general, but platforms specific ones should go through
+> the platform maintainer trees.
+
+This sounds good. Thanks for the advise and for the quick review. I'm
+resending right away...
+
+Michael.
+
+-- 
+Michael Opdenacker, CEO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
++33 484 258 098
