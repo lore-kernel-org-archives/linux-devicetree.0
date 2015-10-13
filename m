@@ -1,66 +1,68 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: OF implies OF_FLATTREE
-Date: Tue, 13 Oct 2015 12:08:55 -0500
-Message-ID: <CAL_JsqK5Yym9BbUQuGxAZkDyAmaQCPriKZQQwjR1fY7ypNoQpA@mail.gmail.com>
-References: <61301019.TKW9ocJ2jm@wuerfel>
+From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
+Date: Tue, 13 Oct 2015 18:14:25 +0100
+Message-ID: <561D3BF1.8060600@huawei.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
+ <1444663237-238302-10-git-send-email-john.garry@huawei.com>
+ <561CA0CB.5090802@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <61301019.TKW9ocJ2jm@wuerfel>
+In-Reply-To: <561CA0CB.5090802-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Hannes Reinecke <hare-l3A5Bk7waGM@public.gmane.org>, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 12, 2015 at 9:06 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On the ARM architecture, individual platforms select CONFIG_USE_OF if they
-> need it, but all device tree code is keyed off CONFIG_OF. When building
-> a platform without DT support and manually enabling CONFIG_OF, we now
-> get a number of build errors, e.g.
+On 13/10/2015 07:12, Hannes Reinecke wrote:
+> On 10/12/2015 05:20 PM, John Garry wrote:
+>> This SAS ID is chosen as Huawei IEEE id: 001882
+>>
+>> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   drivers/scsi/hisi_sas/hisi_sas_init.c | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>> index 44fc524..c295c39 100644
+>> --- a/drivers/scsi/hisi_sas/hisi_sas_init.c
+>> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>> @@ -283,6 +283,19 @@ err_out:
+>>   	return NULL;
+>>   }
+>>
+>> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
+>> +{
+>> +	u8 i;
+>> +
+>> +	/* Huawei IEEE id (001882) */
+>> +	for (i = 0; i < hisi_hba->n_phy; i++)
+>> +		hisi_hba->phy[i].dev_sas_addr =
+>> +			cpu_to_be64(0x5001882016072015ULL);
+>> +
+> Ouch. Each phy has the same SAS address?
+> For all boards? Ever?
 >
-> arch/arm/kernel/devtree.c: In function 'setup_machine_fdt':
-> arch/arm/kernel/devtree.c:215:19: error: implicit declaration of function 'early_init_dt_verify' [-Werror=implicit-function-declaration]
+> Not sure if that's a good idea, nor even valid.
+> It'll confuse the hell out of any SAS array.
 >
-> We could now try to separate the use case of booting from DT vs. the
-> case of using the dynamic implementation, but that seems more complicated
-> than it can gain us.
+> Please provide a means of having individual SAS addresses for each HBA.
+>
+> Cheers,
+>
+> Hannes
+>
+Hello,
 
-Agreed. It will only/mostly save init section code at that.
+Are you saying we should be getting the SAS address from fw with 
+sas_request_addr() or the like?
 
-> This simply changes the ARM Kconfig file to always enable OF_RESERVED_MEM
-> and OF_EARLY_FLATTREE when CONFIG_OF is enabled. These options add a little
-> extra code when we just want the dynamic OF implementation, but that seems
-> like a rather obscure case, and this version solves all CONFIG_OF related
-> randconfig regressions.
->
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Fixes: 0166dc11be91 ("of: make CONFIG_OF user selectable")
+Marvell solution seems to hardcode it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+thanks,
+John
 
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index ee104950b30c..da71de8bba4f 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -75,6 +75,8 @@ config ARM
->         select IRQ_FORCED_THREADING
->         select MODULES_USE_ELF_REL
->         select NO_BOOTMEM
-> +       select OF_EARLY_FLATTREE if OF
-> +       select OF_RESERVED_MEM if OF
->         select OLD_SIGACTION
->         select OLD_SIGSUSPEND3
->         select PERF_USE_VMALLOC
-> @@ -1695,8 +1697,6 @@ config USE_OF
->         bool "Flattened Device Tree support"
->         select IRQ_DOMAIN
->         select OF
-> -       select OF_EARLY_FLATTREE
-> -       select OF_RESERVED_MEM
->         help
->           Include support for flattened device tree machine descriptions.
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
