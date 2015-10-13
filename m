@@ -1,35 +1,64 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH] ARM: dts: twl4030: Add iio properties for bci subnode
-Date: Tue, 13 Oct 2015 22:08:51 +0200
-Message-ID: <1444766931-25362-1-git-send-email-marek@goldelico.com>
-References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443212447-5841-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
-Cc: neilb@suse.de, hns@goldelico.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marek Belisko <marek@goldelico.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] PCI: of: Add 64-bit address recognition without
+ LPAE support
+Date: Tue, 13 Oct 2015 15:10:41 -0500
+Message-ID: <CAL_JsqL92xLHxhKuDYGkJ_aYbuV5RxiGAX8JZj0jfO8RxP0=NQ@mail.gmail.com>
+References: <cover.1444288748.git.p.fedin@samsung.com> <858110a5c4fb0b2094417cc8429560bdaae81c66.1444288748.git.p.fedin@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <858110a5c4fb0b2094417cc8429560bdaae81c66.1444288748.git.p.fedin@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pavel Fedin <p.fedin@samsung.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Added new iio properties which are required for twl4030-charger driver and
-allow to use twl4030-madc indirectly.
+On Thu, Oct 8, 2015 at 2:24 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
+> If non-LPAE kernel is booted up on a machine with 64-bit PCI resources,
+> PCI controller probe fails with:
+>
+> PCI host bridge /pcie@10000000 ranges:
+>    IO 0x3eff0000..0x3effffff -> 0x00000000
+>   MEM 0x10000000..0x3efeffff -> 0x10000000
+>   MEM 0x8000000000..0xffffffffff -> 0x8000000000
+> pci-host-generic 3f000000.pcie: resource collision: [mem 0x00000000-0xffffffff] conflicts with /pl011@9000000 [mem 0x09000000-0x09000fff]
+> pci-host-generic: probe of 3f000000.pcie failed with error -16
+>
+> This happens because res->start assignment in of_pci_range_to_resource()
+> truncates the upper part of the address, because res->start is of
+> phys_addr_t type, which is 32-bit on non-LPAE kernels.
+>
+> This patch adds explicit recognition of 64-bit resources, preventing from
+> potential problems when e. g. 0x8000001234 would be converted to
+> 0x00001234.
+>
+> Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- arch/arm/boot/dts/twl4030.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Applied, thanks.
 
-diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
-index 36ae916..c8197f2 100644
---- a/arch/arm/boot/dts/twl4030.dtsi
-+++ b/arch/arm/boot/dts/twl4030.dtsi
-@@ -22,6 +22,8 @@
- 	charger: bci {
- 		compatible = "ti,twl4030-bci";
- 		interrupts = <9>, <2>;
-+		io-channels = <&twl_madc 11>;
-+		io-channel-name = "vac";
- 		bci3v1-supply = <&vusb3v1>;
- 	};
- 
--- 
-1.9.1
+Rob
+
+> ---
+>  drivers/of/address.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 384574c..cd53fe4 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -330,6 +330,12 @@ int of_pci_range_to_resource(struct of_pci_range *range,
+>                 }
+>                 res->start = port;
+>         } else {
+> +               if ((sizeof(resource_size_t) < 8) &&
+> +                   upper_32_bits(range->cpu_addr)) {
+> +                       err = -EINVAL;
+> +                       goto invalid_range;
+> +               }
+> +
+>                 res->start = range->cpu_addr;
+>         }
+>         res->end = res->start + range->size - 1;
+> --
+> 2.4.4
+>
