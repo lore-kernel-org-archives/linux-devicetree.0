@@ -1,37 +1,259 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/4] soc: ti: add firmware file name as part of the driver
-Date: Tue, 13 Oct 2015 16:32:43 +0200
-Message-ID: <5984319.ffuyRPpBNk@wuerfel>
-References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com> <1444679211-823-3-git-send-email-m-karicheri2@ti.com>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
+Date: Tue, 13 Oct 2015 15:34:49 +0100
+Message-ID: <561D1689.90703@linaro.org>
+References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
+ <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444679211-823-3-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444745127-1105-3-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 October 2015 15:46:49 Murali Karicheri wrote:
-> Currently firmware file name is included in the DTS. This is not scalable
-> as user has to change the DTS if they need upgrade to a new firmware.
-> Instead, add the firmware file name in the driver itself. As long as there
-> is no API change, new firmware upgrade is easy and require no driver
-> change. User is expected to copy the firmware image to the file system
-> and add a sym link to the new firmware for doing an upgrade. Driver add
-> a array of firmware file names to search for the available firmware blobs.
-> This scheme also prepare the driver for future changes to API if ever
-> happens. In such case it is assumed that driver needs to change to
-> accommodate the new firmware and new firmware file name will get added to
-> the array.
-> 
-> Also update the DT document to remove the firmware attribute and add
-> description about firmware in the driver documentation.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> 
+On 13/10/15 15:05, M'boumba Cedric Madianga wrote:
+> This patch adds support for the STM32 DMA controller.
+>
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   drivers/dma/Kconfig     |   12 +
+>   drivers/dma/Makefile    |    1 +
+>   drivers/dma/stm32-dma.c | 1175 +++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 1188 insertions(+)
+>   create mode 100644 drivers/dma/stm32-dma.c
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+> new file mode 100644
+> index 0000000..031bab7
+> --- /dev/null
+> +++ b/drivers/dma/stm32-dma.c
 
-Looks good.
+> +enum stm32_dma_width {
+> +	STM32_DMA_BYTE,
+> +	STM32_DMA_HALF_WORD,
+> +	STM32_DMA_WORD,
+> +};
+> +
+> +enum stm32_dma_burst_size {
+> +	STM32_DMA_BURST_SINGLE,
+> +	STM32_DMA_BURST_INCR4,
+> +	STM32_DMA_BURST_INCR8,
+> +	STM32_DMA_BURST_INCR16,
+> +};
+> +
+> +enum stm32_dma_channel_id {
+> +	STM32_DMA_CHANNEL0,
+> +	STM32_DMA_CHANNEL1,
+> +	STM32_DMA_CHANNEL2,
+> +	STM32_DMA_CHANNEL3,
+> +	STM32_DMA_CHANNEL4,
+> +	STM32_DMA_CHANNEL5,
+> +	STM32_DMA_CHANNEL6,
+> +	STM32_DMA_CHANNEL7,
+> +};
+
+Why have (unused) enumerations to map numeric symbols to their own 
+natural values? Using normal integers would be better.
+
+
+> +enum stm32_dma_request_id {
+> +	STM32_DMA_REQUEST0,
+> +	STM32_DMA_REQUEST1,
+> +	STM32_DMA_REQUEST2,
+> +	STM32_DMA_REQUEST3,
+> +	STM32_DMA_REQUEST4,
+> +	STM32_DMA_REQUEST5,
+> +	STM32_DMA_REQUEST6,
+> +	STM32_DMA_REQUEST7,
+> +};
+
+Ditto.
+
+
+> +static void stm32_dma_dump_reg(struct stm32_dma_chan *chan)
+> +{
+> +	struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
+> +
+> +	dev_dbg(chan2dev(chan), "SCR:   0x%08x\n",
+> +		stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id)));
+> +	dev_dbg(chan2dev(chan), "NDTR:  0x%08x\n",
+> +		stm32_dma_read(dmadev, STM32_DMA_SNDTR(chan->id)));
+> +	dev_dbg(chan2dev(chan), "SPAR:  0x%08x\n",
+> +		stm32_dma_read(dmadev, STM32_DMA_SPAR(chan->id)));
+> +	dev_dbg(chan2dev(chan), "SM0AR: 0x%08x\n",
+> +		stm32_dma_read(dmadev, STM32_DMA_SM0AR(chan->id)));
+> +	dev_dbg(chan2dev(chan), "SM1AR: 0x%08x\n",
+> +		stm32_dma_read(dmadev, STM32_DMA_SM1AR(chan->id)));
+> +	dev_dbg(chan2dev(chan), "SFCR:  0x%08x\n",
+> +		stm32_dma_read(dmadev, STM32_DMA_SFCR(chan->id)));
+> +}
+
+Even at dev_dbg() this looks like log spam. This debug info gets issued 
+every time we set up a transfer!
+
+
+> +static int stm32_dma_alloc_chan_resources(struct dma_chan *c)
+> +{
+> +	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
+> +	struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
+> +	int ret;
+> +
+> +	chan->config_init = false;
+> +	ret = clk_prepare_enable(dmadev->clk);
+> +	if (ret < 0) {
+> +		dev_err(chan2dev(chan), "clk_prepare_enable failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = stm32_dma_disable_chan(chan);
+> +
+> +	return ret;
+> +}
+
+The error path here looks like it will leak clock references.
+
+
+> +static int stm32_dma_probe(struct platform_device *pdev)
+> +{
+> +	struct stm32_dma_chan *chan;
+> +	struct stm32_dma_device *dmadev;
+> +	struct dma_device *dd;
+> +	const struct of_device_id *match;
+> +	unsigned int i;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	match = of_match_device(stm32_dma_of_match, &pdev->dev);
+> +	if (!match) {
+> +		dev_err(&pdev->dev, "Error: No device match found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev), GFP_KERNEL);
+> +	if (!dmadev)
+> +		return -ENOMEM;
+> +
+> +	dd = &dmadev->ddev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(dmadev->base))
+> +		return PTR_ERR(dmadev->base);
+> +
+> +	dmadev->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(dmadev->clk)) {
+> +		dev_err(&pdev->dev, "Error: Missing controller clock\n");
+> +		return PTR_ERR(dmadev->clk);
+> +	}
+> +
+> +	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
+> +						"st,mem2mem");
+> +
+> +	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
+> +	if (!IS_ERR(dmadev->rst)) {
+> +		reset_control_assert(dmadev->rst);
+> +		udelay(2);
+> +		reset_control_deassert(dmadev->rst);
+> +	}
+> +
+> +	dma_cap_set(DMA_SLAVE, dd->cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, dd->cap_mask);
+> +	dma_cap_set(DMA_CYCLIC, dd->cap_mask);
+> +	dd->device_alloc_chan_resources = stm32_dma_alloc_chan_resources;
+> +	dd->device_free_chan_resources = stm32_dma_free_chan_resources;
+> +	dd->device_tx_status = stm32_dma_tx_status;
+> +	dd->device_issue_pending = stm32_dma_issue_pending;
+> +	dd->device_prep_slave_sg = stm32_dma_prep_slave_sg;
+> +	dd->device_prep_dma_cyclic = stm32_dma_prep_dma_cyclic;
+> +	dd->device_config = stm32_dma_slave_config;
+> +	dd->device_terminate_all = stm32_dma_terminate_all;
+> +	dd->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +		BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+> +	dd->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +		BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+> +	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> +	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> +	dd->dev = &pdev->dev;
+> +	INIT_LIST_HEAD(&dd->channels);
+> +
+> +	if (dmadev->mem2mem) {
+> +		dma_cap_set(DMA_MEMCPY, dd->cap_mask);
+> +		dd->device_prep_dma_memcpy = stm32_dma_prep_dma_memcpy;
+> +		dd->directions |= BIT(DMA_MEM_TO_MEM);
+> +	}
+> +
+> +	for (i = 0; i < STM32_DMA_MAX_CHANNELS; i++) {
+> +		chan = &dmadev->chan[i];
+> +		chan->id = i;
+> +		chan->vchan.desc_free = stm32_dma_desc_free;
+> +		vchan_init(&chan->vchan, dd);
+> +	}
+> +
+> +	ret = dma_async_device_register(dd);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < STM32_DMA_MAX_CHANNELS; i++) {
+> +		chan = &dmadev->chan[i];
+> +		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+> +		if (!res) {
+> +			ret = -EINVAL;
+> +			dev_err(&pdev->dev, "No irq resource for chan %d\n", i);
+> +			goto err_unregister;
+> +		}
+> +		chan->irq = res->start;
+> +		ret = devm_request_irq(&pdev->dev, chan->irq,
+> +				       stm32_dma_chan_irq, 0,
+> +				       dev_name(chan2dev(chan)), chan);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"request_irq failed with err %d channel %d\n",
+> +				ret, i);
+> +			goto err_unregister;
+> +		}
+> +	}
+> +
+> +	ret = of_dma_controller_register(pdev->dev.of_node,
+> +					 stm32_dma_of_xlate, dmadev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"STM32 DMA DMA OF registration failed %d\n", ret);
+> +		goto err_unregister;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, dmadev);
+> +
+> +	dev_info(&pdev->dev, "STM32 DMA driver registered\n");
+> +
+> +	return 0;
+> +
+> +err_unregister:
+> +	dma_async_device_unregister(dd);
+> +
+> +	return ret;
+> +}
+> +
+> +static int stm32_dma_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
+> +
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +
+> +	dma_async_device_unregister(&dmadev->ddev);
+> +
+> +	clk_disable_unprepare(dmadev->clk);
+
+What is the purpose of disabling/unpreparing the clock here? 
+stm32_dma_alloc_chan_resources() and stm32_dma_free_chan_resources() 
+should pair up and the clock should already be stopped.
+
+
+Daniel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
