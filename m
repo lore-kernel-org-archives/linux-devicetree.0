@@ -1,57 +1,205 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] of: add URT UMSH-8596MD-xT panel DT bindings
-Date: Tue, 13 Oct 2015 08:30:17 -0500
-Message-ID: <CAL_JsqKi2UVjQC1uELMPWi_k-_atVov=fr565ngCnGm+xjbC_g@mail.gmail.com>
-References: <56158803.9000300@maciej.szmigiero.name> <20151008082759.GD3820@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151008082759.GD3820@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 2/2] ARM: dts: change gpio-key,wakeup property to boolean
+Date: Tue, 13 Oct 2015 14:32:44 +0100
+Message-ID: <1444743164-17735-2-git-send-email-sudeep.holla@arm.com>
+References: <1444743164-17735-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444743164-17735-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, spear-devel@list.st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 8, 2015 at 3:27 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Oct 07, 2015 at 11:00:51PM +0200, Maciej S. Szmigiero wrote:
->> This patch adds DT bindings for United Radiant Technology
->> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels.
->>
->> Signed-off-by: Maciej Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
->>
->> diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
->> new file mode 100644
->> index 0000000..57c5fa4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
->> @@ -0,0 +1,12 @@
->> +United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
->> +
->> +Supported are LVDS versions (-11T, -19T) and parallel ones
->> +(-T, -1T, -7T, -20T).
->> +
->> +Required properties:
->> +- compatible: should be one of:
->> +  "urt,umsh-8596md-t", "urt,umsh-8596md-1t", "urt,umsh-8596md-7t",
->> +  "urt,umsh-8596md-11t", "urt,umsh-8596md-19t" or "urt,umsh-8596md-20t".
->
-> I'd probably list each of these on a single line for slightly more
-> clarity, but no need to respin because of that.
->
-> Rob, I remember there was some discussion a while back on whether or not
-> there should be a standard way of describing lists of compatible values,
-> do you know if anything was ever concluded on that topic?
+Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
+"gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
+source.
 
-We're working to move the documentation to YAML and describe
-constraints like this with logic expressions, but we haven't settled
-on anything yet. This case will probably be just one string per line.
+Few dts files assign value "1" to gpio-key,wakeup and in one instance a
+value "0" is assigned probably assuming it won't be enabled as a wakeup
+source. Since the presence of the boolean property indicates it is
+enabled, value of "0" have no value.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch removes the property where value "0" is assigned and removes
+the value "1" in most of the other cases.
+
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: spear-devel@list.st.com
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts      | 3 +--
+ arch/arm/boot/dts/rk3066a-rayeager.dts      | 2 +-
+ arch/arm/boot/dts/rk3188-radxarock.dts      | 2 +-
+ arch/arm/boot/dts/rk3288-evb.dtsi           | 2 +-
+ arch/arm/boot/dts/rk3288-firefly.dtsi       | 2 +-
+ arch/arm/boot/dts/rk3288-popmetal.dts       | 2 +-
+ arch/arm/boot/dts/rk3288-r89.dts            | 2 +-
+ arch/arm/boot/dts/spear1310-evb.dts         | 2 +-
+ arch/arm/boot/dts/spear1340-evb.dts         | 2 +-
+ arch/arm/boot/dts/spear320-hmi.dts          | 4 ++--
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts | 2 +-
+ 11 files changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+index c0273755431a..71a15772cda6 100644
+--- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
++++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+@@ -74,7 +74,7 @@
+ 			linux,code = <116>;
+ 			label = "GPIO Key Power";
+ 			linux,input-type = <1>;
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			debounce-interval = <100>;
+ 		};
+ 		button@1 {
+@@ -82,7 +82,6 @@
+ 			linux,code = <104>;
+ 			label = "GPIO Key Vol-";
+ 			linux,input-type = <1>;
+-			gpio-key,wakeup = <0>;
+ 			debounce-interval = <100>;
+ 		};
+ 		/* VOL+ comes somehow thru the ADC */
+diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
+index e36383c701dc..72bf52a04506 100644
+--- a/arch/arm/boot/dts/rk3066a-rayeager.dts
++++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
+@@ -65,7 +65,7 @@
+ 		#size-cells = <0>;
+ 
+ 		button@0 {
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			gpios = <&gpio6 2 GPIO_ACTIVE_LOW>;
+ 			label = "GPIO Power";
+ 			linux,code = <116>;
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index d2180e5d2b05..ba6b174777e7 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -63,7 +63,7 @@
+ 			linux,code = <116>;
+ 			label = "GPIO Key Power";
+ 			linux,input-type = <1>;
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			debounce-interval = <100>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index f6d2e7894b05..ab013155f04f 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -103,7 +103,7 @@
+ 			linux,code = <116>;
+ 			label = "GPIO Key Power";
+ 			linux,input-type = <1>;
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			debounce-interval = <100>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index 20fa0ef0b96b..4fa2dedd0c7a 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -67,7 +67,7 @@
+ 		#size-cells = <0>;
+ 
+ 		button@0 {
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+ 			label = "GPIO Power";
+ 			linux,code = <116>;
+diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
+index f82b956ebf17..9b7f389c38e5 100644
+--- a/arch/arm/boot/dts/rk3288-popmetal.dts
++++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+@@ -74,7 +74,7 @@
+ 			linux,code = <116>;
+ 			label = "GPIO Key Power";
+ 			linux,input-type = <1>;
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			debounce-interval = <100>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
+index 14b9fc73c8a4..2ee425523f5c 100644
+--- a/arch/arm/boot/dts/rk3288-r89.dts
++++ b/arch/arm/boot/dts/rk3288-r89.dts
+@@ -73,7 +73,7 @@
+ 			linux,code = <116>;
+ 			label = "GPIO Key Power";
+ 			linux,input-type = <1>;
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			debounce-interval = <100>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
+index e48857249ce7..6673d74ab0c0 100644
+--- a/arch/arm/boot/dts/spear1310-evb.dts
++++ b/arch/arm/boot/dts/spear1310-evb.dts
+@@ -161,7 +161,7 @@
+ 				linux,code = <0x100>;
+ 				gpios = <&gpio0 7 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				gpio-key,wakeup;
+ 			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/spear1340-evb.dts b/arch/arm/boot/dts/spear1340-evb.dts
+index c611f5606dfe..9071344fa47c 100644
+--- a/arch/arm/boot/dts/spear1340-evb.dts
++++ b/arch/arm/boot/dts/spear1340-evb.dts
+@@ -223,7 +223,7 @@
+ 				linux,code = <0x100>;
+ 				gpios = <&gpio1 1 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				gpio-key,wakeup;
+ 			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
+index 0aa6fef5ce22..3c5b28c0fce4 100644
+--- a/arch/arm/boot/dts/spear320-hmi.dts
++++ b/arch/arm/boot/dts/spear320-hmi.dts
+@@ -141,7 +141,7 @@
+ 				linux,code = <0x100>;
+ 				gpios = <&stmpegpio 3 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				gpio-key,wakeup;
+ 			};
+ 
+ 			button@2 {
+@@ -149,7 +149,7 @@
+ 				linux,code = <0x200>;
+ 				gpios = <&stmpegpio 2 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				gpio-key,wakeup;
+ 			};
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+index 401a81231eb9..58a2829d9ea7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -71,7 +71,7 @@
+ 		pinctrl-0 = <&pwr_key>;
+ 
+ 		button@0 {
+-			gpio-key,wakeup = <1>;
++			gpio-key,wakeup;
+ 			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
+ 			label = "GPIO Power";
+ 			linux,code = <116>;
+-- 
+1.9.1
