@@ -1,44 +1,35 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH v2] ARM: socfpga: dts: add fpga manager
-Date: Tue, 13 Oct 2015 14:51:28 -0500
-Message-ID: <alpine.DEB.2.02.1510131450480.4441@linux-builds1>
-References: <1444765139-2040-1-git-send-email-atull@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444765139-2040-1-git-send-email-atull@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH] ARM: dts: twl4030: Add iio properties for bci subnode
+Date: Tue, 13 Oct 2015 22:08:51 +0200
+Message-ID: <1444766931-25362-1-git-send-email-marek@goldelico.com>
+References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443212447-5841-1-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
+Cc: neilb@suse.de, hns@goldelico.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Oct 2015, atull@opensource.altera.com wrote:
+Added new iio properties which are required for twl4030-charger driver and
+allow to use twl4030-madc indirectly.
 
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> Add FPGA manager to device tree for SoCFPGA.
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> ---
-> v2: Remove 0x after @
->     No caps in hex numbers
->     renamed hps_0_fpgamgr to fpgamgr0
->     move node to be in alpha order by node name
-> ---
->  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+Signed-off-by: Marek Belisko <marek@goldelico.com>
+---
+ arch/arm/boot/dts/twl4030.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied!
-
-Thanks,
-Dinh
+diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
+index 36ae916..c8197f2 100644
+--- a/arch/arm/boot/dts/twl4030.dtsi
++++ b/arch/arm/boot/dts/twl4030.dtsi
+@@ -22,6 +22,8 @@
+ 	charger: bci {
+ 		compatible = "ti,twl4030-bci";
+ 		interrupts = <9>, <2>;
++		io-channels = <&twl_madc 11>;
++		io-channel-name = "vac";
+ 		bci3v1-supply = <&vusb3v1>;
+ 	};
+ 
+-- 
+1.9.1
