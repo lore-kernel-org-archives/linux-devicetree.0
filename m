@@ -1,57 +1,106 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 2/5] mtd: nand: omap2: Start dma request before enabling prefetch
-Date: Mon, 12 Oct 2015 20:38:55 -0500
-Message-ID: <1444700338-27582-3-git-send-email-fcooper@ti.com>
-References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444700338-27582-1-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, rogerq@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: exynos5422-odroidxu3: use cd-gpio method to
+ detect sd-card
+Date: Tue, 13 Oct 2015 11:06:11 +0900
+Message-ID: <561C6713.1070508@samsung.com>
+References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
+ <561B3739.4040701@samsung.com> <561B3A83.6090607@samsung.com>
+ <1111856990.2419183.1444661252893.JavaMail.yahoo@mail.yahoo.com>
+ <561C4C88.2040004@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <561C4C88.2040004-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anand Moon <moon.linux-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The prefetch engine sends a dma request once a FIFO threshold has
-been met. No other requests are received until the previous request
-is handled.
+Dear, Anand.
 
-Starting an edma transfer (dma_async_issue_pending) results in any
-previous event for the dma channel to be cleared. Therefore, starting
-the prefetch engine before initiating the dma transfer may result in
-the prefetch triggering a dma request but instead of it being handled
-it can end up being cleared. This will result in a hang since the code
-will continue to wait for the dma request to complete.
 
-By initiating the dma request before enabling the prefetch engine this
-race condition is avoided and no dma request are missed/cleared.
+On 10/13/2015 09:12 AM, Krzysztof Kozlowski wrote:
+> On 12.10.2015 23:47, Anand Moon wrote:
+>>>
+>>> Anand,
+>>>
+>>> You essentially reverted here af6ad88acbd6 ("ARM: dts: Mux XMMCnDATA[0]
+>>> pad correctly for Exynos5420 boards"). Why? There is no explanation in
+>>> the commit message about this.
+>>
+>> I don't remember to send the patch relevant to this. Hmm...
+>> Well, Is this patch really signed-off by me?
+>>
+>> Best Regards,
+>>
+>> Jaehoon Chung
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>
+>>>
+>>
+>>
+>> Some how I don't receive these mail on my email id.
+>>
+>> I have picked up these changes from tizen repository for OdroidXU3.
+>> I have tested with this changes to detect UHS-I micro cd cards.
+>> That's the reason for this email. 
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- drivers/mtd/nand/omap2.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+It seems to make manually, right?
+I have checked the tizen repository. 
 
-diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-index 957c32f..94d11de 100644
---- a/drivers/mtd/nand/omap2.c
-+++ b/drivers/mtd/nand/omap2.c
-@@ -509,6 +509,9 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
- 	tx->callback_param = &info->comp;
- 	dmaengine_submit(tx);
- 
-+	init_completion(&info->comp);
-+	dma_async_issue_pending(info->dma);
-+
- 	/*  configure and start prefetch transfer */
- 	ret = omap_prefetch_enable(info->gpmc_cs,
- 		PREFETCH_FIFOTHRESHOLD_MAX, 0x1, len, is_write, info);
-@@ -516,9 +519,6 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
- 		/* PFPW engine is busy, use cpu copy method */
- 		goto out_copy_unmap;
- 
--	init_completion(&info->comp);
--	dma_async_issue_pending(info->dma);
--
- 	/* setup and start DMA using dma_addr */
- 	wait_for_completion(&info->comp);
- 	tim = 0;
--- 
-2.6.1
+The below is 
+
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+@@ -335,7 +335,9 @@
+        samsung,dw-mshc-sdr-timing = <0 4>;
+        samsung,dw-mshc-ddr-timing = <0 2>;
+        pinctrl-names = "default";
+-       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
++       cd-gpios = <&gpc2 2 0>;
++       cd-inverted;
++       pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4>;
+        bus-width = <4>;
+        cap-sd-highspeed;
+ };
+
+
+
+Yours
+
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -352,8 +352,10 @@
+ 	samsung,dw-mshc-ciu-div = <3>;
+ 	samsung,dw-mshc-sdr-timing = <0 4>;
+ 	samsung,dw-mshc-ddr-timing = <0 2>;
++	cd-gpios = <&gpc2 2 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
++	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+
+Did you know what differ? :)
+
+Best Regards,
+Jaehoon Chung
+
+> 
+> ... and you applied it blindly without looking at actual existing
+> contents and at previous commits.
+> 
+> That is not how patches from different repositories should be cherry picked.
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
