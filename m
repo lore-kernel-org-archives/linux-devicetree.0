@@ -1,57 +1,86 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 00/37] ARM: dts: Fix fixed regulators enable GPIO polarity
-Date: Tue, 13 Oct 2015 23:09:32 +0800
-Message-ID: <20151013150932.GD584@tiger>
-References: <1444684386-17094-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <20151013140946.GB584@tiger>
- <1561402.NmbcA6rYT5@avalon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Tue, 13 Oct 2015 16:12:52 +0100
+Message-ID: <20151013151252.GH14956@sirena.org.uk>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
+ <20151012134309.GE1542@sirena.org.uk>
+ <20151013080218.GV17172@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lrvsYIebpInmECXG"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561402.NmbcA6rYT5@avalon>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20151013080218.GV17172@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 05:17:24PM +0300, Laurent Pinchart wrote:
-> Hi Shawn,
-> 
-> On Tuesday 13 October 2015 22:09:46 Shawn Guo wrote:
-> > On Tue, Oct 13, 2015 at 12:12:29AM +0300, Laurent Pinchart wrote:
-> > > Laurent Pinchart (37):
-> > ...
-> > 
-> > >   ARM: imx6sx-sdb: Fix typo in regulator enable GPIO property
-> > 
-> > ...
-> > 
-> > >   ARM: dts: imx6qdl-tx6: Fix regulator enable GPIO polarity
-> > 
-> > ...
-> > 
-> > >   ARM: dts: imx23-evk: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx23-stmp378x_devb: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx25-pdk: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx28-cfa10036: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx28-evk: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx28-m28cu3: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx28-m28evk: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx28-sps1: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx28-tx28: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx53-m53evk: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx53-mba53: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx53-tx53: Fix regulator enable GPIO polarity
-> > >   ARM: dts: imx6q-dmo-edmqmx6: Fix regulator enable GPIO polarity
-> > 
-> > Applied these 15 patches, thanks.
-> 
-> There's ongoing discussions regarding whether this is the right thing to do. 
-> Please see http://www.spinics.net/lists/arm-kernel/msg451724.html. It's thus a 
-> bit early to apply the patches at this point I'm afraid.
 
-Okay, dropped them except the first one which fixes a typo for
-imx6sx-sdb.
+--lrvsYIebpInmECXG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Shawn
+On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
+> On Mon, 12 Oct 2015, Mark Brown wrote:
+> > On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrote:
+
+> > > I am guessing Mark is slightly hesitant to ack as he probably
+> > > doesn't want to add reviewing all our jack detection bindings to
+> > > his already fairly sizable work load and doing so here likely
+> > > means it will be expected in the future. From talking to people at
+
+> Providing Acks should not (and has not to my knowledge) be a binding
+> contract to continue providing Acks.  However, should more bindings be
+> submitted which appear as though they are related to a particular
+> maintainer, then sure, you'll be asked for your expert eye again.
+
+It's a bit concerning when it seems like my review is becoming a blocker
+for something and I don't understand why.
+
+> > Pretty much (plus generally being busy at ELC-E last week) - if there's
+> > specific questions that's one thing but if it's just general requests to
+> > look at bindings then it seems like the relevant subsystem maintainers
+
+> This is exactly my point.  I am not the 'relevant subsystem
+> maintainer' for these properties and subsequently know nothing of
+> microphone detection, headsets, bias', etc.  These look like Audio
+> related properties to me (the uninitiated), which is why you were
+> asked.
+
+They're extcon things (and there are accompanying driver changes to the
+extcon driver parsing them).
+
+> > should have the confidence to review straightfoward device properties
+> > like this.
+
+> I don't think these bindings are particularly straightforward.  The
+> contain many terms which I'm unfamiliar with, and again, to me (the
+> uninitiated) this looks like way too many bindings just to see if an
+> audio jack is plugged in or not.
+
+When your power budget is in the low double digit microamps and you're
+trying to respond promptly and reliably to rapidly changing and variable
+physical inputs it gets complicated.
+
+--lrvsYIebpInmECXG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWHR9zAAoJECTWi3JdVIfQLMMH/1QA8kn4M1b+kYlGr2ypFfma
+tbYbN6oP7JHJSxlaKe3ueWem3gGKDQdnS3l/2WIGp2H0DPm4emMkyyvRJHj8iQYU
+4SOZjsjkBeQubbXhEN2QdGDQ0Hsc0rqbFiCjoLS3rmWVO+Kvqpkvthkdg6MgKrnw
+jEi7WI8OW5l6otiZUR7eSsmhPK4niY3rxhiapWKcFefDyhQWmAgibWQA+DZ0b170
+KjWUA2zT8gZ8CZHWBoYLG7KJDdJl+xD6Nr55GRh1mTKq/BfoNilrlQ9b2p113UoN
+OD9LOFGfjXtyZN3NUVI+JDPhKzZbcKw8m+3XO250+hES+RabYy//WYw/Nh3HznM=
+=9c3y
+-----END PGP SIGNATURE-----
+
+--lrvsYIebpInmECXG--
