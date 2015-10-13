@@ -1,233 +1,86 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2] extcon: gpio: Add the support for Device tree bindings
-Date: Tue, 13 Oct 2015 12:03:06 +0900
-Message-ID: <561C746A.1040004@samsung.com>
-References: <1444028299-11755-1-git-send-email-cw00.choi@samsung.com>
- <20151005111359.GF19064@leverpostej>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed support
+Date: Tue, 13 Oct 2015 08:38:50 +0530
+Message-ID: <CANAwSgRJ+5O-x61K9E_AxTZWQy3jJrKF5MiLtWRdUU29CCfa-Q@mail.gmail.com>
+References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
+ <1444578364-1384-3-git-send-email-linux.amoon@gmail.com> <561B48B7.1040201@samsung.com>
+ <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com> <561C4CEE.3050905@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20151005111359.GF19064@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <561C4CEE.3050905@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Krzysztof,
 
-On 2015=EB=85=84 10=EC=9B=94 05=EC=9D=BC 20:13, Mark Rutland wrote:
-> On Mon, Oct 05, 2015 at 03:58:19PM +0900, Chanwoo Choi wrote:
->> This patch adds the support for Device tree bindings of extcon-gpio =
-driver.
->> The extcon-gpio device tree node must include the both 'extcon-id' a=
-nd
->> 'extcon-gpio' property.
+On 13 October 2015 at 05:44, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On 13.10.2015 00:32, Anand Moon wrote:
+>> Hi Krzysztof,
 >>
->> For exmaple:
->> 	usb_cable: extcon-gpio-0 {
->> 		compatible =3D "extcon-gpio";
->> 		extcon-id =3D <EXTCON_USB>;
->> 		extcon-gpio =3D <&gpio6 1 GPIO_ACTIVE_HIGH>;
->> 	}
+>> On 12 October 2015 at 11:14, Krzysztof Kozlowski
+>> <k.kozlowski@samsung.com> wrote:
+>>> On 12.10.2015 00:46, Anand Moon wrote:
+>>>> Added support for UHS-I bus speed 50MB/s (SDR50, DDR50) 104MB/s (SDR104)
+>>>
+>>> This description is not entirely correct. The MMC driver already
+>>> supports these UHS speeds (you did not any code) so you rather enabled
+>>> it (description of bindings says "is supported").
+>>>
+>>> You mentioned DDR50 but I don't see respective property below.
+>>>
+>>> How do you know that these modes are really supported? I don't know. Can
+>>> you convince me?
 >>
->> 	ta_cable: extcon-gpio-1 {
->> 		compatible =3D "extcon-gpio";
->> 		extcon-id =3D <EXTCON_CHG_USB_DCP>;
->> 		extcon-gpio =3D <&gpio3 2 GPIO_ACTIVE_LOW>;
->> 		debounce-ms =3D <50>;	/* 50 millisecond */
->> 		wakeup-source;
->> 	}
->>
->> 	&dwc3_usb {
->> 		extcon =3D <&usb_cable>;
->> 	};
->>
->> 	&charger {
->> 		extcon =3D <&ta_cable>;
->> 	};
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->> Changes from v1:
->> - Create the include/dt-bindings/extcon/extcon.h including the ident=
-ification
->>   of external connector. These definitions are used in dts file.
->> - Fix error if CONFIG_OF is disabled.
->>
->>  .../devicetree/bindings/extcon/extcon-gpio.txt     |  38 +++++++
->>  drivers/extcon/extcon-gpio.c                       | 110 ++++++++++=
-++++++-----
->>  include/dt-bindings/extcon/extcon.h                |  44 +++++++++
->>  include/linux/extcon/extcon-gpio.h                 |   6 +-
->>  4 files changed, 173 insertions(+), 25 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-=
-gpio.txt
->>  create mode 100644 include/dt-bindings/extcon/extcon.h
->>
->> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.tx=
-t b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
->> new file mode 100644
->> index 000000000000..70c36f729963
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
->> @@ -0,0 +1,38 @@
->> +GPIO Extcon device
->> +
->> +This is a virtual device used to generate specific external connect=
-or
->> +from the GPIO pin connected to a GPIO pin.
->> +
->> +Required properties:
->> +- compatible: Must be "extcon-gpio".
->> +- extcon-id: unique id for specific external connector.
->> +	     See include/dt-bindings/extcon/extcon.h.
->=20
-> This property is either misnamed and badly described, or it is
-> pointless (the node is sufficient to form a unique ID which can be
-> referenced by phandle).
->=20
-> What is this used for exactly?
+>> Setting this DDR50 capability give me this error. That's the reason to
+>> drop this capability.
+>
+> But you mentioned it in commit message! "Added support for UHS-I ...
+> (DDR50)"
+>
+> In the same time dropping DDR50 is not an sufficient proof that "SDR50
+> and SDR104 are really supported".
+>
 
-OK, I'll modify the description of 'extcon-id' property as following:
+These changes are related to the microSD card capabilities.
+So SDR50 have better frequency over DDR50. On the same Sandisk card.
 
-- extcon-id: The extcon support the various type of external connector =
-to check
-  whether connector is attached or detached. The each external connecto=
-r has
-  the unique number to identify it. So this property includes the uniqu=
-e number
-  which indicates the specific external connector. When external connec=
-tor is
-  attached or detached, GPIO pin detect the changed state. See include/
-  dt-bindings/extcon/extcon.h which defines the unique number for suppo=
-rted
-  external connector from extcon framework.
+When the card select the capability for DDR50
+---------------------------------------------------
+[    4.001477] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+req 50000000Hz, actual 50000000HZ div = 0)
+[    4.001604] mmc1: new ultra high speed DDR50 SDHC card at address aaaa
+[    4.004505] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+[    4.009179] mmcblk0: error -110 sending status command, retrying
+[    4.009271] mmcblk0: error -115 sending stop command, original cmd
+response 0x900, card status 0x900
+[    4.009275] mmcblk0: error -84 transferring data, sector 0, nr 8,
+cmd response 0x900, card status 0x0
+[    4.025563] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+req 400000Hz, actual 396825HZ div = 63)
+[    4.067770] Console: switching to colour frame buffer device 274x77
+[    4.098782] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+req 50000000Hz, actual 50000000HZ div = 0)
+[    4.099692] mmc1: tried to reset card
+[    4.101332]  mmcblk0: p1 p2
 
->=20
->> +- extcon-gpio: GPIO pin to detect the external connector. See gpio =
-binding.
->> +
->> +Optional properties:
->> +- debounce-ms: the debounce dealy for GPIO pin in millisecond.
->> +- wakeup-source: Boolean, extcon can wake-up the system.
->> +
->> +Example: Examples of extcon-gpio node as listed below:
->> +
->> +	usb_cable: extcon-gpio-0 {
->> +		compatible =3D "extcon-gpio";
->> +		extcon-id =3D <EXTCON_USB>;
->> +		extcon-gpio =3D <&gpio6 1 GPIO_ACTIVE_HIGH>;
->> +	}
->> +
->> +	ta_cable: extcon-gpio-1 {
->> +		compatible =3D "extcon-gpio";
->> +		extcon-id =3D <EXTCON_CHG_USB_DCP>;
->> +		extcon-gpio =3D <&gpio3 2 GPIO_ACTIVE_LOW>;
->> +		debounce-ms =3D <50>;	/* 50 millisecond */
->> +		wakeup-source;
->> +	}
->> +
->> +	&dwc3_usb {
->> +		extcon =3D <&usb_cable>;
->> +	};
->> +
->> +	&charger {
->> +		extcon =3D <&ta_cable>;
->> +	};
->> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gp=
-io.c
->> index 279ff8f6637d..7f3e24aae0c4 100644
->> --- a/drivers/extcon/extcon-gpio.c
->> +++ b/drivers/extcon/extcon-gpio.c
->> @@ -1,8 +1,8 @@
->>  /*
->>   * extcon_gpio.c - Single-state GPIO extcon driver based on extcon =
-class
->>   *
->> - * Copyright (C) 2008 Google, Inc.
->> - * Author: Mike Lockwood <lockwood@android.com>
->> + * Copyright (C) 2015 Chanwoo Choi <cw00.choi@samsung.com>, Samsung=
- Electronics
->> + * Copyright (C) 2008 Mike Lockwood <lockwood@android.com>, Google,=
- Inc.
->>   *
->>   * Modified by MyungJoo Ham <myungjoo.ham@samsung.com> to support e=
-xtcon
->>   * (originally switch class is supported)
->> @@ -26,12 +26,14 @@
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/property.h>
->>  #include <linux/slab.h>
->>  #include <linux/workqueue.h>
->> =20
->>  struct gpio_extcon_data {
->>  	struct extcon_dev *edev;
->>  	int irq;
->> +	bool irq_wakeup;
->>  	struct delayed_work work;
->>  	unsigned long debounce_jiffies;
->> =20
->> @@ -61,19 +63,50 @@ static irqreturn_t gpio_irq_handler(int irq, voi=
-d *dev_id)
->>  	return IRQ_HANDLED;
->>  }
->> =20
->> -static int gpio_extcon_init(struct device *dev, struct gpio_extcon_=
-data *data)
->> +static int gpio_extcon_parse_of(struct device *dev,
->> +				struct gpio_extcon_data *data)
->>  {
->> -	struct gpio_extcon_pdata *pdata =3D data->pdata;
->> +	struct gpio_extcon_pdata *pdata;
->>  	int ret;
->> =20
->> -	ret =3D devm_gpio_request_one(dev, pdata->gpio, GPIOF_DIR_IN,
->> -				dev_name(dev));
->> +	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->> +	if (!pdata)
->> +		return -ENOMEM;
->> +
->> +	ret =3D device_property_read_u32(dev, "extcon-id", &pdata->extcon_=
-id);
->> +	if (ret < 0)
->> +		return -EINVAL;
->=20
-> No sanity checking of the value?
 
-When checking the validation of value,
-I should check both the unique number and name.
-But, the name of external connector is only accessed
-in the extcon core driver(drivers/extcon/extcon.c)
+When the card select the capability for SDR50
+---------------------------------------------------------------------------------
+[ 2.439806] mmc_host mmc1: Bus speed (slot 0) = 100000000Hz (slot req
+100000000Hz, actual 100000000HZ div = 0)
+[ 2.449729] mmc1: new ultra high speed SDR50 SDHC card at address aaaa
+[ 2.455984] mmcblk0: mmc1:aaaa SL32G 29.7 GiB
+[ 2.461743] mmcblk0: p1 p2
 
-So, I'll implement the sanity checking on extcon core
-when calling the extcon_dev_allocate(*supported_cable).
+Which will relate to better read/write speed.
 
->=20
-> Why device_property rather than of_property?
+-Anand Moon
 
-There is no special reason. When using the device_property_*(),
-It is well-working without any problem.
 
->> +
->> +	data->id_gpiod =3D devm_gpiod_get(dev, "extcon", GPIOD_IN);
->>  	if (ret < 0)
->>  		return ret;
->> =20
->> -	data->id_gpiod =3D gpio_to_desc(pdata->gpio);
->> -	if (!data->id_gpiod)
->> -		return -EINVAL;
->> +	data->irq_wakeup =3D device_property_read_bool(dev, "wakeup-source=
-");
->> +
->> +	device_property_read_u32(dev, "debounce-ms", &pdata->debounce);
->=20
-> Likewise, surely there's an upper bound above?
-
-The unit of debounce-ms is millisecond. It is not determined limit valu=
-e for just time.
-
-Thanks,
-Chanwoo Choi
+> Best regards,
+> Krzysztof
+>
