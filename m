@@ -1,147 +1,119 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v3 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Tue, 13 Oct 2015 11:17:43 -0700
-Message-ID: <87lhb63a60.fsf@eliezer.anholt.net>
-References: <1444426068-15817-1-git-send-email-eric@anholt.net>
- <1444426068-15817-2-git-send-email-eric@anholt.net>
- <CAL_JsqKbAm1=70GaDRg1Z47A9d9FShwpWacMOjr+FE8bZuocVg@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH 3/3] ARM: keystone: dts: add PCI serdes driver bindings
+Date: Tue, 13 Oct 2015 14:23:38 -0400
+Message-ID: <561D4C2A.1060704@ti.com>
+References: <1444759464-32299-1-git-send-email-w-kwok2@ti.com> <1444759464-32299-4-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1431428996=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKbAm1=70GaDRg1Z47A9d9FShwpWacMOjr+FE8bZuocVg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1444759464-32299-4-git-send-email-w-kwok2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1431428996==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Rob Herring <robh@kernel.org> writes:
-
-> On Fri, Oct 9, 2015 at 4:27 PM, Eric Anholt <eric@anholt.net> wrote:
->> ---
->>
->> v2: Extend the commit message, fix several nits from Stephen Warren.
->> v3: Rename the compatibility strings, clean up node names, drop the
->>     unnecessary lists of components.  Use compatibility strings for
->>     choosing CRTC HVS channel numbers.  Document the HDMI clock usage.
->>
->>  .../devicetree/bindings/gpu/brcm,bcm-vc4.txt       | 64 ++++++++++++++++++++++
+On 10/13/2015 02:04 PM, WingMan Kwok wrote:
+> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+> ---
+>   arch/arm/boot/dts/k2e.dtsi      |   24 ++++++++++++++++++++++++
+>   arch/arm/boot/dts/keystone.dtsi |   25 +++++++++++++++++++++++++
+>   2 files changed, 49 insertions(+)
 >
-> Can you put this in bindings/display/ instead? Things are moving there in 4.4.
-
-Sure.
-
->>  1 file changed, 64 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
->> new file mode 100644
->> index 0000000..175bcde
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
->> @@ -0,0 +1,64 @@
->> +Broadcom VC4 GPU
->> +
->> +The VC4 device present on the Raspberry Pi includes a display system
->> +with HDMI output and the HVS scaler for compositing display planes.
->> +
->> +Required properties for VC4:
->> +- compatible:  Should be "brcm,bcm2835-vc4"
+> diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
+> index 675fb8e..1ba47d8 100644
+> --- a/arch/arm/boot/dts/k2e.dtsi
+> +++ b/arch/arm/boot/dts/k2e.dtsi
+> @@ -86,6 +86,18 @@
+>   			gpio,syscon-dev = <&devctrl 0x240>;
+>   		};
 >
-> reg property? interrupts? clocks?
-
-This is the subsystem node.  It has no other properties currently.
-
->> +Required properties for Pixel Valve:
->> +- compatible:  Should be one of "brcm,bcm2835-pixelvalve0",
->> +               "brcm,bcm2835-pixelvalve1", or "brcm,bcm2835-pixelvalve2"
->> +- reg:         Physical base address and length of the PV's registers
->> +- interrupts:  The interrupt number
->> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
->> +
->> +Required properties for HVS:
->> +- compatible:  Should be "brcm,bcm2835-hvs"
->> +- reg:         Physical base address and length of the HVS's registers
->> +- interrupts:  The interrupt number
->> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
->> +
->> +Required properties for HDMI
+> +		pcie1_phy: pciephy@2326000 {
+> +			#phy-cells = <0>;
+> +			compatible = "ti,keystone-serdes-pcie";
+> +			reg = <0x02326000 0x4000>;
+> +			reg-names = "reg_serdes";
+> +			refclk-khz = <100000>;
+> +			link-rate-kbps = <5000000>;
+> +			phy-type = "pcie";
+> +			max-lanes = <2>;
+> +			status = "disabled";
+> +		};
+> +
+>   		pcie1: pcie@21020000 {
+>   			compatible = "ti,keystone-pcie","snps,dw-pcie";
+>   			clocks = <&clkpcie1>;
+> @@ -130,6 +142,18 @@
+>   					<GIC_SPI 375 IRQ_TYPE_EDGE_RISING>,
+>   					<GIC_SPI 376 IRQ_TYPE_EDGE_RISING>;
+>   			};
+> +
+> +			/* PCIE phy */
+> +			serdeses {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				serdes@0 {
+> +					reg = <0>;
+> +					phys = <&pcie1_phy>;
+> +					status = "disabled";
+> +				};
+> +			};
+> +
+>   		};
 >
-> Is HDMI the only output possibility? If not, then you should have OF
-> graph nodes describing the connection between HDMI block and HVS (or
-> PV?).
-
-I'm using compatible strings for the different instances of the module:
-brcm,bcm2835-pixelvalve0/1/2.  This lets the connections get wired up
-cleanly and understandably within the driver.  I spent a long time
-trying to come up with an OF graph-based implementation, and I
-eventually gave up.
-
->> +- compatible:  Should be "brcm,bcm2835-hdmi"
->> +- reg:         Physical base address and length of the two register ranges
->> +                 ("HDMI" and "HD", in that order)
->> +- interrupts:  The interrupt numbers
->> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
->> +- ddc:         phandle of the I2C controller used for DDC EDID probing
->> +- clocks:      a) hdmi: The HDMI state machine clock
->> +               b) pixel: The pixel clock.
->> +
->> +Optional properties for HDMI:
->> +- hpd-gpio:    The GPIO pin for HDMI hotplug detect (if it doesn't appear
+>   		mdio: mdio@24200f00 {
+> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+> index 72816d6..5312319 100644
+> --- a/arch/arm/boot/dts/keystone.dtsi
+> +++ b/arch/arm/boot/dts/keystone.dtsi
+> @@ -275,6 +275,19 @@
+>   			ti,syscon-dev = <&devctrl 0x2a0>;
+>   		};
 >
-> *-gpio is deprecated, so "hpd-gpios".
+> +		pcie0_phy: pciephy@2320000 {
+> +			#phy-cells = <0>;
+> +			compatible = "ti,keystone-serdes-pcie";
+> +			reg = <0x02320000 0x4000>;
+> +			reg-names = "reg_serdes";
+> +			refclk-khz = <100000>;
+> +			link-rate-kbps = <5000000>;
+> +			init-firmware	= "k2_pcie_serdes_init.fw";
+> +			phy-type = "pcie";
+> +			max-lanes = <2>;
+> +			status = "disabled";
+> +		};
+> +
+>   		pcie0: pcie@21800000 {
+>   			compatible = "ti,keystone-pcie", "snps,dw-pcie";
+>   			clocks = <&clkpcie>;
+> @@ -319,6 +332,18 @@
+>   					<GIC_SPI 28 IRQ_TYPE_EDGE_RISING>,
+>   					<GIC_SPI 29 IRQ_TYPE_EDGE_RISING>;
+>   			};
+> +
+> +			/* PCIE phy */
+> +			serdeses {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				serdes@0 {
+> +					reg = <0>;
+> +					phys = <&pcie0_phy>;
+> +					status = "disabled";
+> +				};
+> +			};
+> +
+>   		};
+>   	};
+>   };
 >
-> Really, I think this and ddc should be in hdmi-connector binding node.
-> What has been done for bindings so far is all over the map though.
+Wingman,
 
-You say hpd-gpios is deprectated, but that I should use the
-hdmi-connector binding that uses hpd-gpios.  Which one is it?  If
-hpd-gpios deprecated, what is supposed to be used instead?
+This should be a separate patch and remove the sane from Driver patch. 
+i.e. send 1/3 ane 2/3 in one series and 3/3 as a separate patch.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Murali
 
-iQIcBAEBCgAGBQJWHUrIAAoJELXWKTbR/J7o2uQP/0S64jmJBgB8YuAmmQb9YbPd
-/AMS2pe7l1/eKSvCpBBwciEREa9WGW1OucbwoQLuxckMwzdWOkSD1k4597uewvOC
-zqQAVQoIggcH5gy9ooAjRIcoC05Gfkns8vrW4qGAuybzbrfrxcZvLMMjSc2Y8bWx
-I3Cx+7k71ppOD8pUKPnzYyHhbXgr1iN722fS62XFkQo2UEl3aAV46crgqnG/Ey+x
-bIPEoND3s9SlBlYdUNH6E8kPAW2iMwYJehJ39DrHMMgZNfqyHzMdrf1g+BslP9Z7
-PI8qhnz5w0u0wMzXQ45TVwn4nVy49dfMhMELo08wHHMOWsLIomskficdRMQ1Pboz
-U5HPJwCWB7PhhYRV7C2bhmfBxsXhpwxW1j+Kdi5kYmbTyu0baZe/q+yw2OtChNhl
-P467Ry9h6ujUvJHs6azX7DXgzXfD3/SqHA2bFpn/uAI3KS/bKLY4bZGQCeLn0RmH
-Al5vcKaNCGl2WnOqYA5cfDxWYifhS+1QUME9ckrDNAdAWK8GWZdmDrICgv6CHBFa
-3W+LvWDCBQkazqeasO91QLrZM9PGgLhbOTvKnZXnOkfY62E2qHgSg9+ljYjd7mER
-HBXzAqOSg9VNZGxhL4qss5SZWoxyxlTatBOKeBcujvXNIT0+GhASd5rlRu4ewwT0
-6Kcp4hs+RlgHTXmjdBiX
-=CcWj
------END PGP SIGNATURE-----
---=-=-=--
-
---===============1431428996==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1431428996==--
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
