@@ -1,61 +1,52 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Add new boards to bcm4708 DT bindings
-Date: Tue, 13 Oct 2015 17:40:51 -0400
-Message-ID: <20151013214051.GN12512@broadcom.com>
-References: <1443824564-17291-1-git-send-email-jonmason@broadcom.com>
- <1443824564-17291-2-git-send-email-jonmason@broadcom.com>
- <561923BC.5040906@hauke-m.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 0/8] Add SPDIF support for rockchip
+Date: Tue, 13 Oct 2015 23:51:27 +0200
+Message-ID: <2124073.EESlsqi0cG@diego>
+References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <561923BC.5040906-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier@osg.samsung.com>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-rockchip@lists.infradead.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-clk@vger.kernel.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 10, 2015 at 04:42:04PM +0200, Hauke Mehrtens wrote:
-> On 10/03/2015 12:22 AM, Jon Mason wrote:
-> > Add the 4708, 4709, and 953012k SVKs to the the documentation for the
-> > Broadcom Northstar device tree bindings.
-> > 
-> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> > index 6b0f49f..bdf4c06 100644
-> > --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> > +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+Am Donnerstag, 8. Oktober 2015, 15:31:11 schrieb Sjoerd Simons:
+> This patchset adds support for the Rockchip SPDIF transceiver as present
+> on RK3066, RK3188 and RK3288 boards and enables it on a Radxa rock pro.
+> Tested on a Radxa Rock Pro board and Radxa Rock 2 Square board.
 > 
-> What should be documented in this file? This is more a question to the
-> guys more familiar with arm in Linux. Currently the Linux kernel only
-> supports brcm,bcm4708 and all goes back to that one.
+> Quite a few changes since v3 (mostly based on review comment). One
+> important addition is proper RK3288 SoC support; While according to the
+> documentation it has 2 SPDIF "solutions" with the default being the old
+> one, this variation doesn't actually work.. So support has been added
+> to switch to the new SPDIF solution on RK3288.
 
-I was under the impression that all boards should be added to these
-files.  We have been doing so for Cygnus and NSP.
+[...]
 
-Thanks,
-Jon
+> Sjoerd Simons (8):
+>   ASoC: dt-bindings: add rockchip tranceiver bindings
+>   ASoC: rockchip: Add rockchip SPDIF transceiver driver
+>   ARM: dts: rockchip: Add SPDIF transceiver for RK3188
+>   ARM: dts: rockchip: Add SPDIF optical out on Radxa Rock
+>   clk: rockchip: Allow the RK3288 SPDIF clocks to change their parent
+>   ARM: dts: rockchip: Add SPDIF transceiver for RK3288
+>   ARM: dts: rockchip: Add SPDIF optical out on Radxa Rock2 Square
+>   ARM: multi_v7_defconfig: Add rockchip audio support
 
-> 
-> > @@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
-> >  
-> >  Required root node property:
-> >  
-> > +bcm94709
-> >  compatible = "brcm,bcm4708";
-> > +
-> > +bcm94709
-> > +compatible = "brcm,bcm4709", "brcm,bcm4708";
-> > +
-> > +bcm953012k
-> > +compatible = "brcm,bcm5301k", "brcm,bcm4708";
-> > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+After Mark took the two ASoC-specific patches, I've now picked up the 4 dts 
+patches, after removing the #address- and #size-cells lines from them.
+
+Sjoerd, are you sending a followup patch to Mark to also drop them from the 
+binding doc?
+
+Hopefully the clock patch will also find its way into the clock tree, together 
+with the base series for the frac dividers.
+
+And I guess we'll need to prod the armsoc-guys to take the defconfig change 
+too :-)
+
+
+Heiko
