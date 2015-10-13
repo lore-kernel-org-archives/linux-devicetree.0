@@ -1,67 +1,88 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
-Subject: Re: [PATCH v2 2/3] mfd: rt5033: Add RT5033 Flash led sub device
-Date: Tue, 13 Oct 2015 17:03:51 +0900
-Message-ID: <561CBAE7.1070300@samsung.com>
-References: <1444655578-19806-1-git-send-email-ingi2.kim@samsung.com>
- <1444655578-19806-3-git-send-email-ingi2.kim@samsung.com>
- <20151013070610.GO17172@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Tue, 13 Oct 2015 09:03:50 +0100
+Message-ID: <20151013080350.GW17172@x1>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
+ <561B8896.7040409@samsung.com>
+ <561B8AA6.50503@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20151013070610.GO17172@x1>
-Sender: linux-leds-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, rpurdie@rpsys.net, j.anaszewski@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <561B8AA6.50503@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee Jones,
+On Mon, 12 Oct 2015, Chanwoo Choi wrote:
 
-Okay, I'm try to remove needless part and resend it
-Thanks for the review
+> On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 19:16, Chanwoo Choi wrote:
+> > Hi Charles,
+> >=20
+> > On 2015=EB=85=84 10=EC=9B=94 12=EC=9D=BC 17:45, Charles Keepax wrot=
+e:
+> >> On Wed, Oct 07, 2015 at 01:26:42PM +0100, Lee Jones wrote:
+> >>> On Wed, 07 Oct 2015, Mark Brown wrote:
+> >>>
+> >>>> On Fri, Oct 02, 2015 at 05:29:22PM +0100, Charles Keepax wrote:
+> >>>>> Add additional bindings to allow configuration of the system sp=
+ecific
+> >>>>> microphone detection settings.
+> >>>>
+> >>>> This all seems pretty much fine to me - the things it is control=
+ling are
+> >>>> fairly specific to the way the former Wolfson devices do, they o=
+nly
+> >>>> really make sense with a fairly particular algorithm which isn't=
+ widely
+> >>>> implemented.
+> >>>
+> >>> Is that an Ack?
+> >>
+> >> I am guessing Mark is slightly hesitant to ack as he probably
+> >> doesn't want to add reviewing all our jack detection bindings to
+> >> his already fairly sizable work load and doing so here likely
+> >> means it will be expected in the future. From talking to people at
+> >> LinuxCon it looks like it is pretty unlikely the DT maintainers
+> >> will be acking individual bindings as well, basically they are
+> >> only really looking at major/framework things and leaving the
+> >> rest to subsystem maintainers.
+> >>
+> >> Given that these patches only touch MFD/Extcon and extcon
+> >> is a subsystem designed to handle things like jack detection
+> >> isn't it really sufficient that you and Chanwoo have looked this
+> >> and are happy with it? Otherwise I really don't see anyway to
+> >> move this forward and would appreciate any suggestions?
+> >=20
+> > I'm positive about your patches. After receiving the ack from MFD m=
+aintainer
+> > I want to apply this patch-set on extcon git repository.
+> >=20
+> > Also, I reviewed this patch on previous patch[1].
+> > [1]https://lkml.org/lkml/2015/9/11/81
+>=20
+> As you said, this patch touch MFD and EXTCON subsystem.
+> If you get the Ack or agreement from MFD maintainer,
+> I'm willing to apply it on extcon git.
+>=20
+> Also, If this patch dont receive the additional ack message
+> unitl the end of this week, I'll merge patch1-3 on extcon-next branch
+> for Linux 4.4.
 
-Thank you
+Absolutely not!
 
-On 2015=EB=85=84 10=EC=9B=94 13=EC=9D=BC 16:06, Lee Jones wrote:
-> On Mon, 12 Oct 2015, Ingi Kim wrote:
->=20
->> This patch adds rt5033-led sub device to support it.
->>
->> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
->> ---
->>  drivers/mfd/rt5033.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
->> index d60f916..b7f374b 100644
->> --- a/drivers/mfd/rt5033.c
->> +++ b/drivers/mfd/rt5033.c
->> @@ -40,13 +40,17 @@ static const struct regmap_irq_chip rt5033_irq_c=
-hip =3D {
->>  };
->> =20
->>  static const struct mfd_cell rt5033_devs[] =3D {
->> -	{ .name =3D "rt5033-regulator", },
->>  	{
->> +		.name =3D "rt5033-regulator",
->> +	}, {
->=20
-> There's no need for this change.  Please remove it.
->=20
->>  		.name =3D "rt5033-charger",
->>  		.of_compatible =3D "richtek,rt5033-charger",
->>  	}, {
->>  		.name =3D "rt5033-battery",
->>  		.of_compatible =3D "richtek,rt5033-battery",
->> +	}, {
->> +		.name =3D "rt5033-led",
->> +		.of_compatible =3D "richtek,rt5033-led",
->=20
-> For when you resubmit with the hunk above removed:
->=20
-> Acked-by: Lee Jones <lee.jones@linaro.org>
->=20
->>  	},
->>  };
->> =20
->=20
+I should be extremely cross if you 'go over my head' and apply MFD
+patches without the correct Acks.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
