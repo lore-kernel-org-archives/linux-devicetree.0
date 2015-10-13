@@ -1,81 +1,85 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH] ARM: socfpga: dts: add fpga manager
-Date: Tue, 13 Oct 2015 22:20:27 +0200
-Message-ID: <20151013202027.GC17155@pengutronix.de>
-References: <1444760900-1373-1-git-send-email-atull@opensource.altera.com>
- <20151013185750.GB17155@pengutronix.de>
- <alpine.DEB.2.02.1510131412500.3527@linux-builds1>
+From: Daniel Walker <danielwa@cisco.com>
+Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
+Date: Tue, 13 Oct 2015 13:13:55 -0700
+Message-ID: <561D6603.4060006@cisco.com>
+References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
+ <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
+ <20151007162755.GA23283@fifo99.com>
+ <CAL_JsqJwFeDGJ0cTYwikX7DAvR7SK=CL6Qxyp9oKFWeFMgZNiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1510131412500.3527@linux-builds1>
+In-Reply-To: <CAL_JsqJwFeDGJ0cTYwikX7DAvR7SK=CL6Qxyp9oKFWeFMgZNiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>
-Cc: atull@opensource.altera.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, dwalker@fifo99.com
+Cc: xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 02:18:22PM -0500, Dinh Nguyen wrote:
-> On Tue, 13 Oct 2015, Steffen Trumtrar wrote:
-> 
-> > Hi Alan!
-> > 
-> > On Tue, Oct 13, 2015 at 01:28:20PM -0500, atull@opensource.altera.com wrote:
-> > > From: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > Add FPGA manager to device tree for SoCFPGA.
-> > > 
-> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > > ---
-> > >  arch/arm/boot/dts/socfpga.dtsi | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > > index 314e589..e37ba11 100644
-> > > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > > @@ -834,5 +834,12 @@
-> > >  			compatible = "altr,sys-mgr", "syscon";
-> > >  			reg = <0xffd08000 0x4000>;
-> > >  		};
-> > > +
-> > > +		hps_0_fpgamgr: fpgamgr@0xff706000 {
-> > > +			compatible = "altr,socfpga-fpga-mgr";
-> > > +			reg = <0xFF706000 0x1000
-> > > +			       0xFFB90000 0x1000>;
-> > > +			interrupts = <0 175 4>;
-> > > +		};
-> > >  	};
-> > >  };
-> > 
-> > Please keep the format in line with the rest of the file:
-> > Hexvalues are lowercase and no 0x after the "fpgamgr@".
-> > I'd say "And please put the node in its proper position
-> > according to its address", but I see just now, that the
-> > dtsi is all messed up right now anyway :-(
-> > 
-> 
-> How so? Patches are welcomed!
+On 10/07/2015 02:48 PM, Rob Herring wrote:
+> On Wed, Oct 7, 2015 at 11:27 AM,  <dwalker@fifo99.com> wrote:
+>> On Tue, Oct 06, 2015 at 12:14:43PM -0500, Rob Herring wrote:
+>>> On Tue, Oct 6, 2015 at 10:47 AM, Daniel Walker <danielwa@cisco.com> wrote:
+>>>> It looks like there's some seepage of cmdline stuff into
+>>>> the generic device tree code. This conflicts with the
+>>>> generic cmdline implementation so I remove it in the case
+>>>> when that's enabled.
+>>> Nice series in general. I've had passing desire to do this every time
+>>> I run into the command line code.
+>>>
+>>> The DT handling of the command line is generic across architectures.
+>>> The current design is working around that the kernel command line code
+>>> is not that way. I think we can take this a bit further by making the
+>>> generic DT code add the command line string directly rather than
+>>> relying on the arch to do that. Then we can remove all command line
+>>> handling from the arch code. I would also look at whether we can make
+>>> boot_command_line static rather than directly accessed. We might have
+>>> to leave it public for now, but could treat it as static for generic
+>>> cmdline case.
+>>>
+>> Sorry I didn't respond sooner. I was waiting to see if there were more replies.
+>>
+>> One of my colleague suggested something similar, I was reluctant to change anything
+>> prior to sending it out so I could get more feedback on the direction.
+>>
+>> So your suggesting this patch be something like,
+>>
+>> #ifdef CONFIG_GENERIC_CMDLINE
+>> // call generic cmdline functions
+>> #else
+>> // keep what's there currently
+>> #endif
+> I think so yes, but I'd hope that the else case is empty. You've
+> converted the hard arches already. I'd guess the rest using DT would
+> be easy to convert as they either don't use DT for command line at all
+> or always use it.
 
-Done :-)
+So I was thinking about doing a simplification like this,
+    932 int __init early_init_dt_scan_chosen(unsigned long node, const 
+char *uname,
+    933                                      int depth, void *data)
+    934 {
+    ...
+    945
+    946         /* Retrieve command line */
+    947         p = of_get_flat_dt_prop(node, "bootargs", &l);
+    948         /*
+    949          * The builtin command line will be added here, or can 
+override
+    950          * the DT bootargs.
+    951          */
+    952         cmdline_add_builtin(data, p, COMMAND_LINE_SIZE);
 
-> 
-> Please fix the "fpgamgr@" and lower case the hex values. But I would prefer the
-> nodes to be in alphabetical order.
-> 
+The cmdline code would copy "p" over, or not if it's NULL. Then it would 
+either do the builtin command line override, or not. The thing that is 
+bothering me is that you have a length check in there "if (p != NULL && 
+l > 0)" , is there a situation when "p" is not NULL, but "l" is 0 ?
 
-Ah, that explains it, I guess. I always sorted my patches by address :-)
-The thing is, now all nodes are sorted alphabetically by phandle,
-the clkmgr however seems to be ordered by address.
+I could also do this,
+cmdline_add_builtin(data, (l > 0) ? p : NULL, COMMAND_LINE_SIZE);
 
-I prefer address btw because it is a fixed hardware constant. For the
-dts files sorting via phandle is again fixed via the dtsi.
+but the strlcpy you have also only copies over "l" bytes, so there would 
+have to be a situation when the string is not NULL terminated or someone 
+only wants a section of it ?
 
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Daniel
