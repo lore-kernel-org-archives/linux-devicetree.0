@@ -1,80 +1,309 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [RFC 4/5] clk: iproc: define Broadcom NS2 iProc clock binding
-Date: Tue, 13 Oct 2015 17:22:26 -0400
-Message-ID: <1444771347-11382-5-git-send-email-jonmason@broadcom.com>
-References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: bcm5301x: Add BCM SVK DT files
+Date: Tue, 13 Oct 2015 17:38:18 -0400
+Message-ID: <20151013213818.GM12512@broadcom.com>
+References: <1443824564-17291-1-git-send-email-jonmason@broadcom.com>
+ <56192304.1050500@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56192304.1050500-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for Broadcom Northstar 2 architecture
-based clock controller
+On Sat, Oct 10, 2015 at 04:39:00PM +0200, Hauke Mehrtens wrote:
+> On 10/03/2015 12:22 AM, Jon Mason wrote:
+> > Add device tree files for Broadcom Northstar based SVKs.  Since the
+> > bcm5301x.dtsi already exists, all that is necessary is the dts files to
+> > enable the UARTs (and specify the RAM size for the 4708/9).  With these
+> > files, the SVKs are able to boot to shell.
+> > 
+> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/Makefile       |  5 +++-
+> >  arch/arm/boot/dts/bcm94708.dts   | 52 +++++++++++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/bcm94709.dts   | 52 +++++++++++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/bcm953012k.dts | 59 ++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 167 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/arm/boot/dts/bcm94708.dts
+> >  create mode 100644 arch/arm/boot/dts/bcm94709.dts
+> >  create mode 100644 arch/arm/boot/dts/bcm953012k.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 233159d..96a1b58 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -72,7 +72,10 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+> >  	bcm47081-buffalo-wzr-900dhp.dtb \
+> >  	bcm4709-asus-rt-ac87u.dtb \
+> >  	bcm4709-buffalo-wxr-1900dhp.dtb \
+> > -	bcm4709-netgear-r8000.dtb
+> > +	bcm4709-netgear-r8000.dtb \
+> > +	bcm94708.dtb \
+> > +	bcm94709.dtb \
+> > +	bcm953012k.dtb
+> >  dtb-$(CONFIG_ARCH_BCM_63XX) += \
+> >  	bcm963138dvt.dtb
+> >  dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+> > diff --git a/arch/arm/boot/dts/bcm94708.dts b/arch/arm/boot/dts/bcm94708.dts
+> > new file mode 100644
+> > index 0000000..57a74c6
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm94708.dts
+> 
+> Currently the files are named beginning with the chip name something
+> like this should fit better the other naming schema:
+> arch/arm/boot/dts/bcm4708-brcm-bcm94708.dts
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- .../bindings/clock/brcm,iproc-clocks.txt           | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Sorry, I was following the namign schema that we've been using on
+other Broadcom SVKs in the Linux device tree directory.  For example,
+arch/arm/boot/dts/bcm911360_entphn.dts
+arch/arm/boot/dts/bcm911360k.dts
+arch/arm/boot/dts/bcm958300k.dts
+arch/arm/boot/dts/bcm958305k.dts
+arch/arm/boot/dts/bcm958625k.dts
+arch/arm/boot/dts/bcm963138dvt.dts
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index b3c3e9d..ede65a5 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -160,3 +160,51 @@ Northstar Plus.  These clock IDs are defined in:
-     pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
-     sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
-     ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
-+
-+Northstar 2
-+-----------
-+PLL and leaf clock compatible strings for Northstar 2 are:
-+    "brcm,ns2-genpll-scr"
-+    "brcm,ns2-genpll-sw"
-+    "brcm,ns2-lcpll-ddr"
-+    "brcm,ns2-lcpll-ports"
-+
-+The following table defines the set of PLL/clock index and ID for Northstar 2.
-+These clock IDs are defined in:
-+    "include/dt-bindings/clock/bcm-ns2.h"
-+
-+    Clock	Source		Index	ID
-+    ---		-----		-----	---------
-+    crystal	N/A		N/A	N/A
-+
-+    genpll_scr	crystal		0	BCM_NS2_GENPLL_SCR
-+    scr		genpll_scr	1	BCM_NS2_GENPLL_SCR_SCR_CLK
-+    fs		genpll_scr	2	BCM_NS2_GENPLL_SCR_FS_CLK
-+    audio_ref	genpll_scr	3	BCM_NS2_GENPLL_SCR_AUDIO_CLK
-+    ch3_unused	genpll_scr	4	BCM_NS2_GENPLL_SCR_CH3_UNUSED
-+    ch4_unused	genpll_scr	5	BCM_NS2_GENPLL_SCR_CH4_UNUSED
-+    ch5_unused	genpll_scr	6	BCM_NS2_GENPLL_SCR_CH5_UNUSED
-+
-+    genpll_sw	crystal		0	BCM_NS2_GENPLL_SW
-+    rpe		genpll_sw	1	BCM_NS2_GENPLL_SW_RPE_CLK
-+    250		genpll_sw	2	BCM_NS2_GENPLL_SW_250_CLK
-+    nic		genpll_sw	3	BCM_NS2_GENPLL_SW_NIC_CLK
-+    chimp	genpll_sw	4	BCM_NS2_GENPLL_SW_CHIMP_CLK
-+    port	genpll_sw	5	BCM_NS2_GENPLL_SW_PORT_CLK
-+    sdio	genpll_sw	6	BCM_NS2_GENPLL_SW_SDIO_CLK
-+
-+    lcpll_ddr	crystal		0	BCM_NS2_LCPLL_DDR
-+    pcie_sata_usb lcpll_ddr	1	BCM_NS2_LCPLL_DDR_PCIE_SATA_USB_CLK
-+    ddr		lcpll_ddr	2	BCM_NS2_LCPLL_DDR_DDR_CLK
-+    ch2_unused	lcpll_ddr	3	BCM_NS2_LCPLL_DDR_CH2_UNUSED
-+    ch3_unused	lcpll_ddr	4	BCM_NS2_LCPLL_DDR_CH3_UNUSED
-+    ch4_unused	lcpll_ddr	5	BCM_NS2_LCPLL_DDR_CH4_UNUSED
-+    ch5_unused	lcpll_ddr	6	BCM_NS2_LCPLL_DDR_CH5_UNUSED
-+
-+    lcpll_ports	crystal		0	BCM_NS2_LCPLL_PORTS
-+    wan		lcpll_ports	1	BCM_NS2_LCPLL_PORTS_WAN_CLK
-+    rgmii	lcpll_ports	2	BCM_NS2_LCPLL_PORTS_RGMII_CLK
-+    ch2_unused	lcpll_ports	3	BCM_NS2_LCPLL_PORTS_CH2_UNUSED
-+    ch3_unused	lcpll_ports	4	BCM_NS2_LCPLL_PORTS_CH3_UNUSED
-+    ch4_unused	lcpll_ports	5	BCM_NS2_LCPLL_PORTS_CH4_UNUSED
-+    ch5_unused	lcpll_ports	6	BCM_NS2_LCPLL_PORTS_CH5_UNUSED
--- 
-1.9.1
+Also, this is the name we have been using internally.  So, it will
+making migrating to newer kernels much easier.
+
+> 
+> > @@ -0,0 +1,52 @@
+> > +/*
+> > + *  BSD LICENSE
+> > + *
+> > + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> > + *
+> > + *  Redistribution and use in source and binary forms, with or without
+> > + *  modification, are permitted provided that the following conditions
+> > + *  are met:
+> > + *
+> > + *    * Redistributions of source code must retain the above copyright
+> > + *      notice, this list of conditions and the following disclaimer.
+> > + *    * Redistributions in binary form must reproduce the above copyright
+> > + *      notice, this list of conditions and the following disclaimer in
+> > + *      the documentation and/or other materials provided with the
+> > + *      distribution.
+> > + *    * Neither the name of Broadcom Corporation nor the names of its
+> > + *      contributors may be used to endorse or promote products derived
+> > + *      from this software without specific prior written permission.
+> > + *
+> > + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> > + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> > + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> > + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> > + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> > + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> > + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> > + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> > + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> > + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "bcm5301x.dtsi"
+> > +
+> > +/ {
+> > +	model = "NorthStar SVK (BCM94708)";
+> > +	compatible = "brcm,bcm4708";
+> 
+> The compatible string should also contain this exactly board like this:
+> compatible = "brcm,bcm94708", "brcm,bcm4708";
+
+Ok 
+
+> 
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +	};
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,115200 mem=128M";
+> 
+> Instead of using mem=128M you should add an extra node like this:
+> 
+> 	memory {
+> 		reg = <0x00000000 0x08000000>;
+> 	};
+> 
+> Does this board only has 128M of RAM? currently we restrict all of them
+> to that, but I just want to know.
+
+The 4708/9 SVKs have 128M, but the 53012 has 256M.
+
+> 
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm/boot/dts/bcm94709.dts b/arch/arm/boot/dts/bcm94709.dts
+> > new file mode 100644
+> > index 0000000..bf4b6e1
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm94709.dts
+> > @@ -0,0 +1,52 @@
+> > +/*
+> > + *  BSD LICENSE
+> > + *
+> > + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> > + *
+> > + *  Redistribution and use in source and binary forms, with or without
+> > + *  modification, are permitted provided that the following conditions
+> > + *  are met:
+> > + *
+> > + *    * Redistributions of source code must retain the above copyright
+> > + *      notice, this list of conditions and the following disclaimer.
+> > + *    * Redistributions in binary form must reproduce the above copyright
+> > + *      notice, this list of conditions and the following disclaimer in
+> > + *      the documentation and/or other materials provided with the
+> > + *      distribution.
+> > + *    * Neither the name of Broadcom Corporation nor the names of its
+> > + *      contributors may be used to endorse or promote products derived
+> > + *      from this software without specific prior written permission.
+> > + *
+> > + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> > + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> > + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> > + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> > + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> > + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> > + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> > + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> > + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> > + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "bcm5301x.dtsi"
+> > +
+> > +/ {
+> > +	model = "NorthStar SVK (BCM94709)";
+> > +	compatible = "brcm,bcm4709", "brcm,bcm4708";
+> Better this:
+> compatible = "brcm,bcm94709", "brcm,bcm4709", "brcm,bcm4708";
+
+It seems to me that this who 4708 base is kind of a misnomer.  They
+really are "Northstar".  Would it not be more accurate to change it to
+be
+compatible = "brcm,bcm4709", "brcm,ns";
+?
+
+> 
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +	};
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,115200 mem=128M";
+> same as above.
+
+Ok
+ 
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm/boot/dts/bcm953012k.dts b/arch/arm/boot/dts/bcm953012k.dts
+> > new file mode 100644
+> > index 0000000..1726ba0
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm953012k.dts
+> > @@ -0,0 +1,59 @@
+> > +/*
+> > + *  BSD LICENSE
+> > + *
+> > + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> > + *
+> > + *  Redistribution and use in source and binary forms, with or without
+> > + *  modification, are permitted provided that the following conditions
+> > + *  are met:
+> > + *
+> > + *    * Redistributions of source code must retain the above copyright
+> > + *      notice, this list of conditions and the following disclaimer.
+> > + *    * Redistributions in binary form must reproduce the above copyright
+> > + *      notice, this list of conditions and the following disclaimer in
+> > + *      the documentation and/or other materials provided with the
+> > + *      distribution.
+> > + *    * Neither the name of Broadcom Corporation nor the names of its
+> > + *      contributors may be used to endorse or promote products derived
+> > + *      from this software without specific prior written permission.
+> > + *
+> > + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> > + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> > + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> > + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> > + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> > + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> > + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> > + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> > + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> > + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "bcm5301x.dtsi"
+> > +
+> > +/ {
+> > +	model = "NorthStar SVK (BCM953012K)";
+> > +	compatible = "brcm,bcm5301k", "brcm,bcm4708";
+> 
+> same as other file.
+> 
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +		serial1 = &uart1;
+> > +	};
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,115200";
+> 
+> Why is no memory size given here at all?
+
+I'll add the 256M.
+
+> 
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	clock-frequency = <62499840>;
+> 
+> Just out of curiosity on what does this clock frequency depend? I saw
+> your patch adding a real clock driver which should make this obsolete.
+ 
+Better to add this now, as the device tree part might be out of sync
+for a time.  Also, is it not better to make the UARTs a static clock
+and not dependent on the clk driver?
+
+Thanks,
+Jon
+
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart1 {
+> > +	clock-frequency = <62499840>;
+> > +	status = "okay";
+> > +};
+> > 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
