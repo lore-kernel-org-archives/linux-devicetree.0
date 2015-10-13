@@ -1,41 +1,65 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v9 9/9] Input: goodix - sort includes using inverse Xmas
- tree order
-Date: Tue, 13 Oct 2015 06:42:53 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0FE45A@irsmsx105.ger.corp.intel.com>
-References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
-	<1444663477-30062-10-git-send-email-irina.tirdea@intel.com>
-	<20151012153916.GF7452@leverpostej>	<1444664437.24103.1.camel@hadess.net>
-	<20151012155132.GG7452@leverpostej>	<1444665210.24103.2.camel@hadess.net>
- <CAKdAkRQNZVJXxjDqsm_5AY-Qk2+gREjS-6g=L3cFFF84epWCPg@mail.gmail.com>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: twl4030: Add iio properties for bci subnode
+Date: Tue, 13 Oct 2015 08:43:07 +0200
+Message-ID: <CAAfyv37SFd+fq_=x9oO0KBzgcFDpyJZXCZ_QEQkFPzwTf+r9Cg@mail.gmail.com>
+References: <1443212447-5841-1-git-send-email-marek@goldelico.com>
+	<1443212447-5841-3-git-send-email-marek@goldelico.com>
+	<20150926172936.GD22315@earth>
+	<CAAfyv36nZ3c-yw7QQHwBWk3GwY31rV3Uq2n0dz5hppn5JFhEcA@mail.gmail.com>
+	<20151012213827.GC23801@atomide.com>
+	<20151012222009.GH23801@atomide.com>
+	<20151012235343.GA7755@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAKdAkRQNZVJXxjDqsm_5AY-Qk2+gREjS-6g=L3cFFF84epWCPg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "Purdila, Octavian" <octavian.purdila@intel.com>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151012235343.GA7755@earth>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, Neil Brown <neilb@suse.de>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, LKML <linux-kernel@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRG1pdHJ5IFRvcm9raG92
-IFttYWlsdG86ZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbV0NCj4gU2VudDogMTIgT2N0b2Jlciwg
-MjAxNSAxOTozMQ0KPiBUbzogQmFzdGllbiBOb2NlcmENCj4gQ2M6IE1hcmsgUnV0bGFuZDsgVGly
-ZGVhLCBJcmluYTsgQWxla3NlaSBNYW1saW47IEthcnN0ZW4gTWVya2VyOyBsaW51eC1pbnB1dEB2
-Z2VyLmtlcm5lbC5vcmc7IFB1cmRpbGEsIE9jdGF2aWFuOyBsa21sOw0KPiBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY5IDkvOV0gSW5wdXQ6IGdvb2Rp
-eCAtIHNvcnQgaW5jbHVkZXMgdXNpbmcgaW52ZXJzZSBYbWFzIHRyZWUgb3JkZXINCj4gDQo+IE9u
-IE1vbiwgT2N0IDEyLCAyMDE1IGF0IDg6NTMgQU0sIEJhc3RpZW4gTm9jZXJhIDxoYWRlc3NAaGFk
-ZXNzLm5ldD4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE1LTEwLTEyIGF0IDE2OjUxICswMTAwLCBN
-YXJrIFJ1dGxhbmQgd3JvdGU6DQo+ID4+IE9uIE1vbiwgT2N0IDEyLCAyMDE1IGF0IDA1OjQwOjM3
-UE0gKzAyMDAsIEJhc3RpZW4gTm9jZXJhIHdyb3RlOg0KPiA+PiA+IE9uIE1vbiwgMjAxNS0xMC0x
-MiBhdCAxNjozOSArMDEwMCwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPiA+PiA+ID4gV2h5Pw0KPiA+
-PiA+DQo+ID4+ID4gSXQgd2FzIGFscmVhZHkgZGlzY3Vzc2VkIGluIHRoZSB0aHJlYWQgZm9yIGEg
-cHJldmlvdXMgdmVyc2lvbiwNCj4gPj4gPiBwbGVhc2UNCj4gPj4gPiByZWZlciB0byB0aGF0Lg0K
-PiA+Pg0KPiA+PiBGaW5lLCBidXQgc3VyZWx5IHRoYXQgc2hvdWxkIGJlIGluIHRoZSBjb21taXQg
-bWVzc2FnZSwgdG8gcHJldmVudA0KPiA+PiBvdGhlcnMNCj4gPj4gbGlrZSBteXNlbGYgcmVwZWF0
-ZWRseSBhc2tpbmcgdGhlIHNhbWUgcXVlc3Rpb24/DQo+ID4NCj4gPiBGYWlyIHBvaW50LiBJcmlu
-YT8NCj4gDQo+IE5vLCBsZXQncyBqdXN0IGxlYXZlIHBvb3IgaW5jbHVkZXMgYWxvbmUuDQo+IA0K
-DQpPSywgd2lsbCBkcm9wIHRoaXMgOikNCg0KVGhhbmtzLA0KSXJpbmENCg0KPiAtLQ0KPiBEbWl0
-cnkNCg==
+Hi,
+
+On Tue, Oct 13, 2015 at 1:53 AM, Sebastian Reichel <sre@kernel.org> wrote:
+> Hi,
+>
+> On Mon, Oct 12, 2015 at 03:20:10PM -0700, Tony Lindgren wrote:
+>> * Tony Lindgren <tony@atomide.com> [151012 14:43]:
+>> > * Belisko Marek <marek.belisko@gmail.com> [150926 13:02]:
+>> > > Tony sorry I forgot to add you to the recipients for this patchset.
+>> > > Can you please queue this patch. Many thanks.
+>> >
+>> > OK applying into omap-for-v4.4/dt thanks.
+>>
+>> Actually dropping this one, it makes build fail as we don't
+>> have twl4030_madc yet.
+>>
+>> Maybe please send a separate set of dts patches for me.
+>
+> mh that's strange, twl4030-madc is there since a long time. But
+> checking the patch, it seems Marek got the phandle wrong:
+OK, thanks for letting me know. I'll send update soon. Thanks.
+>
+> $ grep -B1 "ti,twl4030-madc" arch/arm/boot/dts/twl4030.dtsi
+>         twl_madc: madc {
+>                 compatible = "ti,twl4030-madc";
+>
+> Once that is fixed, the patch should have no dependencies.
+>
+> -- Sebastian
+
+BR,
+
+marek
+
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
