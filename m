@@ -1,47 +1,75 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2][UPDATE] ARM: dts: replace gpio-key,wakeup with
- wakeup-source property
-Date: Tue, 13 Oct 2015 20:38:41 +0530
-Message-ID: <20151013150841.GZ5386@linux>
-References: <1444743164-17735-2-git-send-email-sudeep.holla@arm.com>
- <1444747133-22671-1-git-send-email-sudeep.holla@arm.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 07/25] scsi: hisi_sas: add ioremap for device HW
+Date: Tue, 13 Oct 2015 23:09:24 +0800
+Message-ID: <561D1EA4.2060601@linaro.org>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <5285087.C8umupFr76@wuerfel> <561CD316.6040406@linaro.org> <5074860.NRYCq0Qjjh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444747133-22671-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <5074860.NRYCq0Qjjh@wuerfel>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: John Garry <john.garry@huawei.com>, James.Bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de
 List-Id: devicetree@vger.kernel.org
 
-On 13-10-15, 15:38, Sudeep Holla wrote:
-> Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
-> "gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
-> source.
-> 
-> Few dts files assign value "1" to gpio-key,wakeup and in one instance a
-> value "0" is assigned probably assuming it won't be enabled as a wakeup
-> source. Since the presence of the boolean property indicates it is
-> enabled, value of "0" have no value.
-> 
-> This patch replaces the legacy "gpio-key,wakeup" with the unified
-> "wakeup-source" property which inturn fixes the above mentioned issue.
-> 
-> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/spear1310-evb.dts         | 2 +-
->  arch/arm/boot/dts/spear1340-evb.dts         | 2 +-
->  arch/arm/boot/dts/spear320-hmi.dts          | 4 ++--
 
-Reviewed-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 10/13/2015 08:20 PM, Arnd Bergmann wrote:
+> On Tuesday 13 October 2015 17:47:02 zhangfei wrote:
+>> On 10/12/2015 11:21 PM, Arnd Bergmann wrote:
+>>> On Monday 12 October 2015 23:20:19 John Garry wrote:
+>>>> +int hisi_sas_ioremap(struct hisi_hba *hisi_hba)
+>>>> +{
+>>>> +       struct platform_device *pdev = hisi_hba->pdev;
+>>>> +       struct device *dev = &pdev->dev;
+>>>> +       struct resource *res;
+>>>> +
+>>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +       hisi_hba->regs = devm_ioremap(dev,
+>>>> +                                     res->start,
+>>>> +                                     resource_size(res));
+>>>> +       if (!hisi_hba->regs)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>>> +       hisi_hba->ctrl_regs = devm_ioremap(dev,
+>>>> +                                          res->start,
+>>>> +                                          resource_size(res));
+>>>> +       if (!hisi_hba->ctrl_regs)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       return 0;
+>>>> +}
+>>>>
+>>>>    static const struct of_device_id sas_of_match[] = {
+>>>>
+>>>
+>>> Better use devm_ioremap_resource() here, which registers the resource so they
+>>> are checked for conflicts and listed in /proc/iomem.
+>>>
+>>
+>> Yes, hisi_hba->regs can use devm_ioremap_resource.
+>>
+>> However ctrl_regs have to use devm_ioremap, since the address are
+>> sharing among different nodes, unfortunately, and devm_ioremap_resource
+>> will fail.
+>
+> This sounds like it should be fixed in the DT binding then, to ensure
+> that the ranges don't overlap.
+>
+> Mapping the same register region multiple times is generally considered
+> a bad idea because the drivers that map them often don't have global
+> locks that serialize the access, so it's better to have code in place
+> that ensures that they are distinct.
+>
+> What is the purpose of the ctrl_regs region, and why is it shared
+> across multiple devices?
+>
+> Are all users of these registers in the same driver?
+>
+
+We are considering using syscon for ctrl_regs.
+
+Thanks Arnd.
+
