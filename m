@@ -1,46 +1,129 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add regulator
- configuration for pcDuino v3 Nano
-Date: Tue, 13 Oct 2015 20:44:22 +0200
-Message-ID: <20151013184422.GP2278@lukather>
-References: <1444508121-20233-1-git-send-email-ats@offog.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v3 3/3] soc: ti: qmss: make acc queue support optional in the driver
+Date: Tue, 13 Oct 2015 14:45:43 -0400
+Message-ID: <1444761943-726-4-git-send-email-m-karicheri2@ti.com>
+References: <1444761943-726-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Tdr039sUWCyRuLRO"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCFC6WYAKGQEDASTLTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444508121-20233-1-git-send-email-ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444761943-726-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
---Tdr039sUWCyRuLRO
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+acc channels are available only if accumulator PDSP is loaded and
+running in the SoC. As this requires firmware and user may not have
+firmware in the file system, make the accumulator queue support
+available in qmss driver optional. To use accumulator queus user needs
+to add firmware to the file system and boot up kernel.
 
-On Sat, Oct 10, 2015 at 09:15:21PM +0100, Adam Sampson wrote:
-> The power configuration on this board is the same as the pcDuino v3.
-> This will enable frequency/voltage scaling over the standard A20
-> operating points from 144 MHz to 960 MHz.
-> 
-> Tested using cpufreq-ljt-stress-test on two pcDuino v3 Nano boards; also
-> tested successfully with voltages reduced by 0.025 V.
-> 
-> Signed-off-by: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ v3: no change from v2
+ v2: new patch
+ Documentation/arm/keystone/knav-qmss.txt |  6 ++++++
+ drivers/soc/ti/knav_qmss.h               |  2 ++
+ drivers/soc/ti/knav_qmss_acc.c           | 10 ++++++++--
+ drivers/soc/ti/knav_qmss_queue.c         | 20 +++++++++++++++-----
+ 4 files changed, 31 insertions(+), 7 deletions(-)
 
-Applied, thanks!
-Maxime
-
+diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
+index da34a5b..fcdb9fd 100644
+--- a/Documentation/arm/keystone/knav-qmss.txt
++++ b/Documentation/arm/keystone/knav-qmss.txt
+@@ -48,3 +48,9 @@ in the file system and boot up the kernel. User would see
+  "firmware file ks2_qmss_pdsp_acc48.bin downloaded for PDSP"
+ 
+ in the boot up log if loading of firmware to PDSP is successful.
++
++Use of accumulated queues requires the firmware image to be present in the
++file system. The driver doesn't acc queues to the supported queue range if
++PDSP is not running in the SoC. The API call fails if there is a queue open
++request to an acc queue and PDSP is not running. So make sure to copy firmware
++to file system before using these queue types.
+diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
+index c31b8d8..6ff936c 100644
+--- a/drivers/soc/ti/knav_qmss.h
++++ b/drivers/soc/ti/knav_qmss.h
+@@ -137,6 +137,8 @@ struct knav_pdsp_info {
+ 	u32 __iomem					*iram;
+ 	u32						id;
+ 	struct list_head				list;
++	bool						loaded;
++	bool						started;
+ };
+ 
+ struct knav_qmgr_info {
+diff --git a/drivers/soc/ti/knav_qmss_acc.c b/drivers/soc/ti/knav_qmss_acc.c
+index b98fe56..d2d48f2 100644
+--- a/drivers/soc/ti/knav_qmss_acc.c
++++ b/drivers/soc/ti/knav_qmss_acc.c
+@@ -486,8 +486,8 @@ struct knav_range_ops knav_acc_range_ops = {
+  * Return 0 on success or error
+  */
+ int knav_init_acc_range(struct knav_device *kdev,
+-				struct device_node *node,
+-				struct knav_range_info *range)
++			struct device_node *node,
++			struct knav_range_info *range)
+ {
+ 	struct knav_acc_channel *acc;
+ 	struct knav_pdsp_info *pdsp;
+@@ -530,6 +530,12 @@ int knav_init_acc_range(struct knav_device *kdev,
+ 		return -EINVAL;
+ 	}
+ 
++	if (!pdsp->started) {
++		dev_err(kdev->dev, "pdsp id %d not started for range %s\n",
++			info->pdsp_id, range->name);
++		return -ENODEV;
++	}
++
+ 	info->pdsp = pdsp;
+ 	channels = range->num_queues;
+ 	if (of_get_property(node, "multi-queue", NULL)) {
+diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+index 06d9de8..f3a0b6a 100644
+--- a/drivers/soc/ti/knav_qmss_queue.c
++++ b/drivers/soc/ti/knav_qmss_queue.c
+@@ -1504,6 +1504,8 @@ static int knav_queue_stop_pdsp(struct knav_device *kdev,
+ 		dev_err(kdev->dev, "timed out on pdsp %s stop\n", pdsp->name);
+ 		return ret;
+ 	}
++	pdsp->loaded = false;
++	pdsp->started = false;
+ 	return 0;
+ }
+ 
+@@ -1592,16 +1594,24 @@ static int knav_queue_start_pdsps(struct knav_device *kdev)
+ 	int ret;
+ 
+ 	knav_queue_stop_pdsps(kdev);
+-	/* now load them all */
++	/* now load them all. We return success even if pdsp
++	 * is not loaded as acc channels are optional on having
++	 * firmware availability in the system. We set the loaded
++	 * and stated flag and when initialize the acc range, check
++	 * it and init the range only if pdsp is started.
++	 */
+ 	for_each_pdsp(kdev, pdsp) {
+ 		ret = knav_queue_load_pdsp(kdev, pdsp);
+-		if (ret < 0)
+-			return ret;
++		if (!ret)
++			pdsp->loaded = true;
+ 	}
+ 
+ 	for_each_pdsp(kdev, pdsp) {
+-		ret = knav_queue_start_pdsp(kdev, pdsp);
+-		WARN_ON(ret);
++		if (pdsp->loaded) {
++			ret = knav_queue_start_pdsp(kdev, pdsp);
++			if (!ret)
++				pdsp->started = true;
++		}
+ 	}
+ 	return 0;
+ }
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Tdr039sUWCyRuLRO--
+1.9.1
