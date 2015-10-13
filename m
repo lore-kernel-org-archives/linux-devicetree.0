@@ -1,80 +1,62 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 09/10] clk: ns2: add clock support for Broadcom Northstar
- 2 SoC
-Date: Tue, 13 Oct 2015 09:51:50 -0700
-Message-ID: <561D36A6.2080309@broadcom.com>
-References: <1443826665-17570-1-git-send-email-jonmason@broadcom.com>
- <1443826665-17570-10-git-send-email-jonmason@broadcom.com>
- <20151010003352.GA26883@codeaurora.org> <20151012181929.GG20867@broadcom.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Add new boards to bcm4708 DT bindings
+Date: Tue, 13 Oct 2015 09:58:15 -0700
+Message-ID: <561D3827.1000406@broadcom.com>
+References: <1443824564-17291-1-git-send-email-jonmason@broadcom.com>
+ <1443824564-17291-2-git-send-email-jonmason@broadcom.com>
+ <561923BC.5040906@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151012181929.GG20867@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jonmason@broadcom.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561923BC.5040906-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Jon,
 
-Comment below.
+One question below.
 
-On 15-10-12 11:19 AM, Jon Mason wrote:
-> On Fri, Oct 09, 2015 at 05:33:52PM -0700, Stephen Boyd wrote:
->> On 10/02, Jon Mason wrote:
->>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>> index 23800a1..2790f21 100644
->>> --- a/arch/arm64/Kconfig.platforms
->>> +++ b/arch/arm64/Kconfig.platforms
->>> @@ -2,6 +2,7 @@ menu "Platform selection"
->>>
->>>   config ARCH_BCM_IPROC
->>>   	bool "Broadcom iProc SoC Family"
->>> +	select COMMON_CLK_IPROC
+On 15-10-10 07:42 AM, Hauke Mehrtens wrote:
+> On 10/03/2015 12:22 AM, Jon Mason wrote:
+>> Add the 4708, 4709, and 953012k SVKs to the the documentation for the
+>> Broadcom Northstar device tree bindings.
 >>
->> Given that this is a visible option, I'd expect the defconfig to
->> enable this.
->
-> After looking at this again, it is completely unnecessary.  Removed.
->
+>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
+>>   1 file changed, 7 insertions(+)
 >>
->>>   	help
->>>   	  This enables support for Broadcom iProc based SoCs
->>>
->>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->>> index d08b3e5..ea81eaa 100644
->>> --- a/drivers/clk/Makefile
->>> +++ b/drivers/clk/Makefile
->>> @@ -47,7 +47,8 @@ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
->>>   obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
->>>   obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
->>>   obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
->>> -obj-$(CONFIG_ARCH_BCM)			+= bcm/
->>> +obj-$(CONFIG_CLK_BCM_KONA)		+= bcm/
->>> +obj-$(CONFIG_COMMON_CLK_IPROC)		+= bcm/
+>> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+>> index 6b0f49f..bdf4c06 100644
+>> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+>
+> What should be documented in this file? This is more a question to the
+> guys more familiar with arm in Linux. Currently the Linux kernel only
+> supports brcm,bcm4708 and all goes back to that one.
+>
+>> @@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
 >>
->> Also, perhaps we need some sort of Kconfig thing for overall bcm
->> clock drivers, so that we don't have duplicate Makefile rules.
+>>   Required root node property:
 >>
->> 	config COMMON_CLK_BCM
->> 		bool "Support for Broadcom clocks"
->
-> Will do.
+>> +bcm94709
+>>   compatible = "brcm,bcm4708";
+>> +
+>> +bcm94709
+>> +compatible = "brcm,bcm4709", "brcm,bcm4708";
+>> +
+>> +bcm953012k
+>> +compatible = "brcm,bcm5301k", "brcm,bcm4708";
 
-Is that really necessary at all  I think something like this work instead?
-
--obj-$(CONFIG_ARCH_BCM)			+= bcm/
-+obj-y		+= bcm/
-
-
-
->
-> Thanks,
-> Jon
->
->
+Why are you adding a "k" on the string here?  bcm5301k is not an SoC 
+part number?
 >>
->> --
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->> a Linux Foundation Collaborative Project
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
