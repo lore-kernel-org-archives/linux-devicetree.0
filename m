@@ -1,115 +1,109 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
-Date: Tue, 13 Oct 2015 09:42:48 +0100
-Message-ID: <20151013084248.GA32409@x1>
-References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
- <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] mfd: omap-usb-host: AM3715 OHCI needs 120m functional
+ clock
+Date: Tue, 13 Oct 2015 11:45:59 +0300
+Message-ID: <561CC4C7.8020408@ti.com>
+References: <1444671232-10253-1-git-send-email-ben.dooks@codethink.co.uk>
+ <20151012174505.GJ23801@atomide.com> <561BF97B.2010501@codethink.co.uk>
+ <20151012191948.GM23801@atomide.com> <561CBF7F.7020705@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-leds@vger.kernel.org, linux-fbdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561CBF7F.7020705-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Sep 2015, Tomi Valkeinen wrote:
+Ben,
 
-> Add DT binding for led-backlight.
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../bindings/video/backlight/led-backlight.txt     | 30 ++++++++++++=
-++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight=
-/led-backlight.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/video/backlight/led-ba=
-cklight.txt b/Documentation/devicetree/bindings/video/backlight/led-bac=
-klight.txt
-> new file mode 100644
-> index 000000000000..d4621d7414bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/led-backlight=
-=2Etxt
-> @@ -0,0 +1,30 @@
-> +led-backlight bindings
+On 13/10/15 11:23, Ben Dooks wrote:
+> On 12/10/15 20:19, Tony Lindgren wrote:
+>> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 11:22]:
+>>> On 12/10/15 18:45, Tony Lindgren wrote:
+>>>> * Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> [151012 10:38]:
+>>>>> The AM3715 OHCI controller will not function without the EHCI
+>>>>> unit's 120m fclk being enabled. If all the ports in the system
+>>>>> are set to OHCI then the 120m_fclk will not get enabled and no
+>>>>> devices are detected.
+>>>>>
+>>>>> Add a new (optional) property to signal the system must enable
+>>>>> the 120m_fck for OHCI so that if no EHCI ports are signalled
+>>>>> then the 120m_fclk should be enabled.
+>>>>>
+>>>>> We have found no information about why this is necessary, but
+>>>>> it is suspected the EHCI controller does not complete the initial
+>>>>> reset sequence and therefore does not hand control of the USB
+>>>>> port back.
+>>>>>
+>>>>> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 3 +++
+>>>>>  drivers/mfd/omap-usb-host.c                        | 4 ++++
+>>>>>  2 files changed, 7 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>>> index 38d9bb8..fb5fea5 100644
+>>>>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>>> @@ -23,6 +23,9 @@ OMAP MUSB GLUE
+>>>>>  Optional properties:
+>>>>>   - ctrl-module : phandle of the control module this glue uses to write to
+>>>>>     mailbox
+>>>>> + - ti,ohci-needs-120m-fck : bool, enable the 120m ehci clock even if just
+>>>>> +   using ohci. Needed for AM3517 in OHCI only mode.
+>>>>> +
+>>>>>  
+>>>>>  SOC specific device node entry
+>>>>>  usb_otg_hs: usb_otg_hs@4a0ab000 {
+>>>>> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+>>>>> index 1d924d1..13880cf 100644
+>>>>> --- a/drivers/mfd/omap-usb-host.c
+>>>>> +++ b/drivers/mfd/omap-usb-host.c
+>>>>> @@ -680,6 +680,10 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+>>>>>  				need_logic_fck |= true;
+>>>>>  		}
+>>>>>  
+>>>>> +		/* The AM3517 requries the 120m-fck active to allow the OHCI to work */
+>>>>> +		if (of_property_read_bool(dev->of_node, "ti,ohci-needs-120m-fck"))
+>>>>> +			need_logic_fck |= true;
+>>>>> +
+>>>>>  		if (need_logic_fck) {
+>>>>>  			omap->ehci_logic_fck = devm_clk_get(dev,
+>>>>>  							    "usbhost_120m_fck");
+>>>>
+>>>> Hmm why not just use the standard device tree clocks property and then do
+>>>> clk_get_rate() on the clock?
+>>>
+>>> I don't see that helps enabling the clock. The code decideds if
+>>> no EHCI ports in use that it doesn't need to enable the EHCI fclk.
+>>
+>> Right, you need to do clk_prepare_enable() in it first? :)
+> 
+> No, if that was the case the driver would never work for the EHCI case.
+> 
+> The issue is:
+> 
+> 1) All ports on the system are set to OHCI
+> 2) The omap-usb-host.c does not touch usbhost_120m_fck if no EHCI ports
+> 3) The OHCI fails to detect any devices due to point 2.
+> 
 
-Make this look like a heading, rather than just another binding.
+Instead of your existing approach why not just modify the preceeding
+if condition that sets need_logic_fck to suit the OHCI case.
 
-I would expect to see "LED Backlight Bindings" or similar.
+That way you don't need to add a new DT binding.
 
-> +Required properties:
-> +  - compatible: "led-backlight"
-> +  - leds: phandle to a led OF node [0]
+The old assumption was that 120m_fck logic clock is only needed for
+EHCI mode but it looks like OHCI mode needs it as well.
 
-s/phandle/Phandle/
+You should also rename omap->ehci_logic_fck to omap->hci_logic_fck
+as it is no longer ehci specific.
 
-s/led/LED/
-
-s/[0]/(See: ../leds/common.txt)
-
-> +  - brightness-levels: Array of distinct LED brightness levels. Thes=
-e
-> +      are in the range from 0 to 255, passed to the LED class driver=
-=2E
-> +  - default-brightness-level: the default brightness level (index in=
-to the
-
-s/the/The/
-
-> +      array defined by the "brightness-levels" property)
-
-Tab this out, so:
-
-- compatible			: "led-backlight"
-- leds				: phandle to a led OF node [0]
-- brightness-levels		: Array of distinct LED brightness levels. These
-				  are in the range from 0 to 255, passed to the LED class driver.
-- default-brightness-level	: the default brightness level (index into t=
-he
-				  array defined by the "brightness-levels" property)
-
-Etc.
-
-> +Optional properties:
-> +  - power-supply: regulator for supply voltage
-
-s/regulator/Regulator/
-
-> +  - enable-gpios: contains a single GPIO specifier for the GPIO whic=
-h enables
-
-s/contains/Contains/
-
-> +                  and disables the backlight (see GPIO binding[1])
-
-s/[1]/(See: ../gpio/gpio.txt)
-
-> +[0]: Documentation/devicetree/bindings/leds/common.txt
-> +[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-
-Remove these.
-
-> +Example:
-> +
-> +	backlight {
-> +		compatible =3D "led-backlight";
-> +		leds =3D <&backlight_led>;
-> +
-> +		brightness-levels =3D <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level =3D <6>;
-> +
-> +		power-supply =3D <&vdd_bl_reg>;
-> +		enable-gpios =3D <&gpio 58 0>;
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
