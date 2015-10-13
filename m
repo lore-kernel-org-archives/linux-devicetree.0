@@ -1,71 +1,59 @@
-From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv2 1/2] Documentation: ad5592r: Added devicetree bindings documentation
-Date: Tue, 13 Oct 2015 11:37:59 +0200
-Message-ID: <1444729080-9937-1-git-send-email-paul.cercueil@analog.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/5] arm: dts: lpc32xx: remove unneeded cell settings
+ from cpus
+Date: Tue, 13 Oct 2015 13:03:05 +0300
+Message-ID: <561CD6D9.1020102@mleia.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com>	<1444694045-22000-5-git-send-email-vz@mleia.com> <CAGhQ9VwBcUxZr7A57feuUNs0OcNpHn4wwmGommVg6e-B0=tsBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Antonio Fiol <antonio-ZGO+nOAM/nI@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9VwBcUxZr7A57feuUNs0OcNpHn4wwmGommVg6e-B0=tsBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/iio/dac/ad5592r.txt        | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5592r.txt
+Hi Joachim,
 
- v2: Fix indentation issue
+On 13.10.2015 11:18, Joachim Eastwood wrote:
+> Hi Vladimir,
+> 
+> On 13 October 2015 at 01:54, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
+>> There is no addressable devices under cpus device node, remove noisy
+>> address and size cells properties.
+>>
+>> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/lpc32xx.dtsi | 3 ---
+>>  1 file changed, 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+>> index dcb52cb..929458d 100644
+>> --- a/arch/arm/boot/dts/lpc32xx.dtsi
+>> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
+>> @@ -18,9 +18,6 @@
+>>         interrupt-parent = <&mic>;
+>>
+>>         cpus {
+>> -               #address-cells = <0>;
+>> -               #size-cells = <0>;
+>> -
+> 
+> According to Documentation/devicetree/bindings/arm/cpus.txt these
+> properties are required.
+> 
+> Take a look at Example 3 in the doc for it should look like on a ARM
+> 926EJ-S uniprocessor 32-bit system.
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5592r.txt b/Documentation/devicetree/bindings/iio/dac/ad5592r.txt
-new file mode 100644
-index 0000000..12b8d0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5592r.txt
-@@ -0,0 +1,43 @@
-+Analog Devices AD5592R/AD5593R DAC/ADC device driver
-+
-+Required properties for the AD5592R:
-+	- compatible: Must be "adi,ad5592r"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use (< 30000000)
-+	- spi-cpol: The AD5592R requires inverse clock polarity (CPOL) mode
-+
-+Required properties for the AD5593R:
-+	- compatible: Must be "adi,ad5593r"
-+	- reg: I2C address of the device
-+
-+Required properties for all supported chips:
-+	- channel-modes: An array of eight 8-bit values (one per channel)
-+	  describing the mode of each channel. Macros specifying the valid values
-+	  can be found in <dt-bindings/iio/adi,ad5592r.h>.
-+	  The following values are currently supported:
-+		* CH_MODE_UNUSED (the pin is pulled down)
-+		* CH_MODE_DAC
-+		* CH_MODE_ADC
-+		* CH_MODE_GPIO_TRISTATE
-+
-+Example:
-+
-+	#include <dt-bindings/iio/adi,ad5592r.h>
-+
-+	ad5592r@0 {
-+		compatible = "adi,ad5592r";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+
-+		channel-modes = /bits/ 8 <
-+			CH_MODE_DAC
-+			CH_MODE_ADC
-+			CH_MODE_ADC
-+			CH_MODE_UNUSED
-+			CH_MODE_UNUSED
-+			CH_MODE_UNUSED
-+			CH_MODE_UNUSED
-+			CH_MODE_UNUSED
-+		>;
-+	};
--- 
-2.6.1
+thank you for review and pointing the fact out, then according to
+documentation #address-cells must be set to 1 plus reg property in cpu
+node is missing, I'll send a fix as patch v2 4/5.
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
