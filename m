@@ -1,502 +1,262 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon
- SoC Hip05
-Date: Tue, 13 Oct 2015 14:33:19 +0800
-Message-ID: <561CA5AF.2080300@hisilicon.com>
-References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <1444445957-239522-5-git-send-email-wangzhou1@hisilicon.com> <20151012213545.GA17479@localhost>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v9 2/9] Input: goodix - reset device at init
+Date: Tue, 13 Oct 2015 06:38:23 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+ <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
+ <20151012164819.GA4010@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151012213545.GA17479@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151012164819.GA4010@dtor-ws>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/10/13 5:35, Bjorn Helgaas wrote:
-> [+cc Arnd, Rob]
+
+
+> -----Original Message-----
+> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+> Sent: 12 October, 2015 19:48
+> To: Tirdea, Irina
+> Cc: Bastien Nocera; Aleksei Mamlin; Karsten Merker; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
 > 
-> Hi Zhou,
+> On Mon, Oct 12, 2015 at 06:24:30PM +0300, Irina Tirdea wrote:
+> > After power on, it is recommended that the driver resets the device.
+> > The reset procedure timing is described in the datasheet and is used
+> > at device init (before writing device configuration) and
+> > for power management. It is a sequence of setting the interrupt
+> > and reset pins high/low at specific timing intervals. This procedure
+> > also includes setting the slave address to the one specified in the
+> > ACPI/device tree.
+> >
+> > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > driver gt9xx.c for Android (publicly available in Android kernel
+> > trees for various devices).
+> >
+> > For reset the driver needs to control the interrupt and
+> > reset gpio pins (configured through ACPI/device tree). For devices
+> > that do not have the gpio pins properly declared, the functionality
+> > depending on these pins will not be available, but the device can still
+> > be used with basic functionality.
+> >
+> > For both device tree and ACPI, the interrupt gpio pin configuration is
+> > read from the "irq-gpio" property and the reset pin configuration is
+> > read from the "reset-gpio" property. For ACPI 5.1, named properties
+> > can be specified using the _DSD section. This functionality will not be
+> > available for devices that use indexed gpio pins declared in the _CRS
+> > section (we need to provide backward compatibility with devices
+> > that do not support using the interrupt gpio pin as output).
+> >
+> > For ACPI, the pins can be specified using ACPI 5.1:
+> > Device (STAC)
+> > {
+> >     Name (_HID, "GDIX1001")
+> >     ...
+> >
+> >     Method (_CRS, 0, Serialized)
+> >     {
+> >         Name (RBUF, ResourceTemplate ()
+> >         {
+> >             I2cSerialBus (0x0014, ControllerInitiated, 0x00061A80,
+> >                 AddressingMode7Bit, "\\I2C0",
+> >                 0x00, ResourceConsumer, ,
+> >                 )
+> >
+> >             GpioInt (Edge, ActiveHigh, Exclusive, PullNone, 0x0000,
+> >                 "\\I2C0", 0x00, ResourceConsumer, ,
+> >                  )
+> >                  {   // Pin list
+> >                      0
+> >                  }
+> >
+> >             GpioIo (Exclusive, PullDown, 0x0000, 0x0000,
+> >                 IoRestrictionOutputOnly, "\\I2C0", 0x00,
+> >                 ResourceConsumer, ,
+> >                 )
+> >                 {
+> >                      1
+> >                 }
+> >         })
+> >         Return (RBUF)
+> >     }
+> >
+> >     Name (_DSD,  Package ()
+> >     {
+> >         ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> >         Package ()
+> >         {
+> >             Package (2) {"irq-gpio", Package() {^STAC, 0, 0, 0 }},
+> >             Package (2) {"reset-gpio", Package() {^STAC, 1, 0, 0 }},
+> >             ...
+> >         }
+> >     }
+> >
+> > Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > Acked-by: Bastien Nocera <hadess@hadess.net>
+> > Tested-by: Bastien Nocera <hadess@hadess.net>
+> > Tested-by: Aleksei Mamlin <mamlinav@gmail.com>
+> > ---
+> >  .../bindings/input/touchscreen/goodix.txt          |   5 +
+> >  drivers/input/touchscreen/Kconfig                  |   1 +
+> >  drivers/input/touchscreen/goodix.c                 | 101 +++++++++++++++++++++
+> >  3 files changed, 107 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > index 8ba98ee..7137881 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > @@ -12,6 +12,8 @@ Required properties:
+> >   - reg			: I2C address of the chip. Should be 0x5d or 0x14
+> >   - interrupt-parent	: Interrupt controller to which the chip is connected
+> >   - interrupts		: Interrupt to which the chip is connected
+> > + - irq-gpio		: GPIO pin used for IRQ
+> > + - reset-gpio		: GPIO pin used for reset
+> >
+> >  Example:
+> >
+> > @@ -23,6 +25,9 @@ Example:
+> >  			reg = <0x5d>;
+> >  			interrupt-parent = <&gpio>;
+> >  			interrupts = <0 0>;
+> > +
+> > +			irq-gpio = <&gpio1 0 0>;
+> > +			reset-gpio = <&gpio1 1 0>;
+> >  		};
+> >
+> >  		/* ... */
+> > diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+> > index 771d95c..76f5a9d 100644
+> > --- a/drivers/input/touchscreen/Kconfig
+> > +++ b/drivers/input/touchscreen/Kconfig
+> > @@ -324,6 +324,7 @@ config TOUCHSCREEN_FUJITSU
+> >  config TOUCHSCREEN_GOODIX
+> >  	tristate "Goodix I2C touchscreen"
+> >  	depends on I2C
+> > +	depends on GPIOLIB
+> >  	help
+> >  	  Say Y here if you have the Goodix touchscreen (such as one
+> >  	  installed in Onda v975w tablets) connected to your
+> > diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> > index 56d0330..87304ac 100644
+> > --- a/drivers/input/touchscreen/goodix.c
+> > +++ b/drivers/input/touchscreen/goodix.c
+> > @@ -16,6 +16,7 @@
+> >
+> >  #include <linux/kernel.h>
+> >  #include <linux/dmi.h>
+> > +#include <linux/gpio.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/input.h>
+> >  #include <linux/input/mt.h>
+> > @@ -37,8 +38,13 @@ struct goodix_ts_data {
+> >  	unsigned int int_trigger_type;
+> >  	bool rotated_screen;
+> >  	int cfg_len;
+> > +	struct gpio_desc *gpiod_int;
+> > +	struct gpio_desc *gpiod_rst;
+> >  };
+> >
+> > +#define GOODIX_GPIO_INT_NAME		"irq"
+> > +#define GOODIX_GPIO_RST_NAME		"reset"
+> > +
+> >  #define GOODIX_MAX_HEIGHT		4096
+> >  #define GOODIX_MAX_WIDTH		4096
+> >  #define GOODIX_INT_TRIGGER		1
+> > @@ -237,6 +243,88 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
+> >  	return IRQ_HANDLED;
+> >  }
+> >
+> > +static int goodix_int_sync(struct goodix_ts_data *ts)
+> > +{
+> > +	int error;
+> > +
+> > +	error = gpiod_direction_output(ts->gpiod_int, 0);
+> > +	if (error)
+> > +		return error;
+> > +	msleep(50);				/* T5: 50ms */
+> > +
+> > +	return gpiod_direction_input(ts->gpiod_int);
+> > +}
+> > +
+> > +/**
+> > + * goodix_reset - Reset device during power on
+> > + *
+> > + * @ts: goodix_ts_data pointer
+> > + */
+> > +static int goodix_reset(struct goodix_ts_data *ts)
+> > +{
+> > +	int error;
+> > +
+> > +	/* begin select I2C slave addr */
+> > +	error = gpiod_direction_output(ts->gpiod_rst, 0);
+> > +	if (error)
+> > +		return error;
+> > +	msleep(20);				/* T2: > 10ms */
+> > +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
+> > +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
+> > +	if (error)
+> > +		return error;
+> > +	usleep_range(100, 2000);		/* T3: > 100us */
+> > +	error = gpiod_direction_output(ts->gpiod_rst, 1);
+> > +	if (error)
+> > +		return error;
+> > +	usleep_range(6000, 10000);		/* T4: > 5ms */
+> > +	/* end select I2C slave addr */
+> > +	error = gpiod_direction_input(ts->gpiod_rst);
+> > +	if (error)
+> > +		return error;
+> > +	return goodix_int_sync(ts);
+> > +}
+> > +
+> > +/**
+> > + * goodix_get_gpio_config - Get GPIO config from ACPI/DT
+> > + *
+> > + * @ts: goodix_ts_data pointer
+> > + */
+> > +static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+> > +{
+> > +	int error;
+> > +	struct device *dev;
+> > +	struct gpio_desc *gpiod;
+> > +
+> > +	if (!ts->client)
+> > +		return -EINVAL;
+> > +	dev = &ts->client->dev;
+> > +
+> > +	/* Get the interrupt GPIO pin number */
+> > +	gpiod = devm_gpiod_get(dev, GOODIX_GPIO_INT_NAME, GPIOD_IN);
 > 
-> I have a few minor comments and two questions: one about the fact
-> all the config accesses are 32 bits, and another about the use of the
-> "msi-parent" node.
-> 
-> On Sat, Oct 10, 2015 at 10:59:15AM +0800, Zhou Wang wrote:
->> This patch adds PCIe host support for HiSilicon SoC Hip05.
->>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> Signed-off-by: liudongdong <liudongdong3@huawei.com>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->> Signed-off-by: qiuzhenfa <qiuzhenfa@hisilicon.com>
-> 
-> This is a pretty long Signed-off-by chain.  If each of these people
-> created part of this patch, that's fine.  I'm just checking whether
-> that's the case, or whether some of these should be Reviewed-by,
-> Suggested-by, etc., per Documentation/SubmittingPatches.
->
-
-Hi Bjorn,
-
-Thanks for reminding this. I had merged patches from those colleagues,
-so just add Signed-off-by from them.
-
->> ---
->>  drivers/pci/host/Kconfig     |   8 ++
->>  drivers/pci/host/Makefile    |   1 +
->>  drivers/pci/host/pcie-hisi.c | 320 +++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 329 insertions(+)
->>  create mode 100644 drivers/pci/host/pcie-hisi.c
->>
->> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
->> index d5e58ba..ae873be 100644
->> --- a/drivers/pci/host/Kconfig
->> +++ b/drivers/pci/host/Kconfig
->> @@ -145,4 +145,12 @@ config PCIE_IPROC_BCMA
->>  	  Say Y here if you want to use the Broadcom iProc PCIe controller
->>  	  through the BCMA bus interface
->>  
->> +config PCI_HISI
->> +	depends on OF && ARM64
->> +	bool "HiSilicon SoC HIP05 PCIe controller"
->> +	select PCIEPORTBUS
->> +	select PCIE_DW
->> +	help
->> +	  Say Y here if you want PCIe controller support on HiSilicon HIP05 SoC
->> +
->>  endmenu
->> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
->> index 140d66f..ea1dbf2 100644
->> --- a/drivers/pci/host/Makefile
->> +++ b/drivers/pci/host/Makefile
->> @@ -17,3 +17,4 @@ obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
->>  obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
->>  obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
->>  obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
->> +obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
->> diff --git a/drivers/pci/host/pcie-hisi.c b/drivers/pci/host/pcie-hisi.c
->> new file mode 100644
->> index 0000000..26aa0d9
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-hisi.c
->> @@ -0,0 +1,320 @@
->> +/*
->> + * PCIe host controller driver for HiSilicon Hip05 SoC
->> + *
->> + * Copyright (C) 2015 HiSilicon Co., Ltd. http://www.hisilicon.com
->> + *
->> + * Author: Zhou Wang <wangzhou1@hisilicon.com>
->> + *         Dacai Zhu <zhudacai@hisilicon.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +#include <linux/interrupt.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/module.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#include "pcie-designware.h"
->> +
->> +#define PCIE_SUBCTRL_MODE_REG                           0x2800
->> +#define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
->> +#define PCIE_SLV_DBI_MODE                               0x0
->> +#define PCIE_SLV_SYSCTRL_MODE                           0x1
->> +#define PCIE_SLV_CONTENT_MODE                           0x2
->> +#define PCIE_SLV_MSI_ASID                               0x10
->> +#define PCIE_LTSSM_LINKUP_STATE                         0x11
->> +#define PCIE_LTSSM_STATE_MASK                           0x3F
->> +#define PCIE_MSI_ASID_ENABLE                            (0x1 << 12)
->> +#define PCIE_MSI_ASID_VALUE                             (0x1 << 16)
->> +#define PCIE_MSI_TRANS_ENABLE                           (0x1 << 12)
->> +#define PCIE_MSI_TRANS_REG                              0x1c8
->> +#define PCIE_MSI_LOW_ADDRESS                            0x1b4
->> +#define PCIE_MSI_HIGH_ADDRESS                           0x1c4
->> +#define PCIE_GITS_TRANSLATER                            0x10040
-> 
-> "TRANSLATOR" is the more common spelling.  But if you're matching
-> hardware documentation, you should follow that.
->
-
-This is a copy from linux/include/linux/irqchip/arm-gic-v3.h:
-#define GITS_TRANSLATER 0X10040
-It indicates the offset of ITS's GITS_TRANSLATER register.
-
->> +#define PCIE_SYS_CTRL20_REG                             0x20
->> +#define PCIE_RD_TAB_SEL                                 BIT(31)
->> +#define PCIE_RD_TAB_EN                                  BIT(30)
->> +
->> +#define to_hisi_pcie(x)	container_of(x, struct hisi_pcie, pp)
->> +
->> +struct hisi_pcie {
->> +	struct regmap *subctrl;
->> +	void __iomem *reg_base;
->> +	u32 port_id;
->> +	struct pcie_port pp;
->> +};
->> +
->> +static inline void hisi_pcie_apb_writel(struct hisi_pcie *pcie,
->> +					u32 val, u32 reg)
->> +{
->> +	writel(val, pcie->reg_base + reg);
->> +}
->> +
->> +static inline u32 hisi_pcie_apb_readl(struct hisi_pcie *pcie, u32 reg)
->> +{
->> +	return readl(pcie->reg_base + reg);
->> +}
->> +
->> +/*
->> + * Change mode to indicate the same reg_base to base of PCIe host configure
->> + * registers, base of RC configure space or base of vmid/asid context table
-> 
-> It's fine to use lower-case in the C code, but in English text, it
-> reads a little better to capitalize acronyms like VMID, ASID, APB, AR,
-> AW, etc.  
->
-
-Thanks for reminding this, will modify this next version.
-
->> + */
->> +static void hisi_pcie_change_apb_mode(struct hisi_pcie *pcie, u32 mode)
->> +{
->> +	u32 val;
->> +	u32 bit_mask;
->> +	u32 bit_shift;
->> +	u32 port_id = pcie->port_id;
->> +	u32 reg = PCIE_SUBCTRL_MODE_REG + 0x100 * port_id;
->> +
->> +	if ((port_id == 1) || (port_id == 2)) {
->> +		bit_mask = 0xc;
->> +		bit_shift = 0x2;
->> +	} else {
->> +		bit_mask = 0x6;
->> +		bit_shift = 0x1;
->> +	}
->> +
->> +	regmap_update_bits(pcie->subctrl, reg, bit_mask, mode << bit_shift);
->> +}
->> +
->> +/* Configure vmid/asid table in PCIe host */
->> +static void hisi_pcie_config_context(struct hisi_pcie *pcie)
->> +{
->> +	int i;
->> +	u32 val;
->> +
->> +	/* enable to clean vmid and asid tables though apb bus */
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
->> +
->> +	val = hisi_pcie_apb_readl(pcie, PCIE_SYS_CTRL20_REG);
->> +	/* enable ar channel */
->> +	val |= PCIE_RD_TAB_SEL | PCIE_RD_TAB_EN;
->> +	hisi_pcie_apb_writel(pcie, val, PCIE_SYS_CTRL20_REG);
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
->> +
->> +	/*
->> +	 * init vmid and asid tables for all PCIe devices as 0
-> 
-> s/as 0/to 0./
->
-
-Thanks.
-
->> +	 * vmid table: 0 ~ 0x3ff, asid table: 0x400 ~ 0x7ff
->> +	 */
->> +	for (i = 0; i < 0x800; i++)
->> +		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
->> +
->> +	/* enable aw channel */
->> +	val &= (~PCIE_RD_TAB_SEL);
->> +	val |= PCIE_RD_TAB_EN;
->> +	hisi_pcie_apb_writel(pcie, val, PCIE_SYS_CTRL20_REG);
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_CONTENT_MODE);
->> +
->> +	for (i = 0; i < 0x800; i++)
->> +		hisi_pcie_apb_writel(pcie, 0x0, i * 4);
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
->> +
->> +	val = hisi_pcie_apb_readl(pcie, PCIE_SYS_CTRL20_REG);
->> +	/* disable ar channel */
->> +	val |= PCIE_RD_TAB_SEL;
->> +	val &= (~PCIE_RD_TAB_EN);
->> +	hisi_pcie_apb_writel(pcie, val, PCIE_SYS_CTRL20_REG);
->> +	/* disable aw channel */
->> +	val &= ((~PCIE_RD_TAB_SEL) & (~PCIE_RD_TAB_EN));
->> +	hisi_pcie_apb_writel(pcie, val, PCIE_SYS_CTRL20_REG);
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
->> +}
->> +
->> +static int hisi_pcie_link_up(struct pcie_port *pp)
->> +{
->> +	u32 val;
->> +	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
->> +
->> +	regmap_read(hisi_pcie->subctrl, PCIE_SUBCTRL_SYS_STATE4_REG +
->> +		    0x100 * hisi_pcie->port_id, &val);
->> +
->> +	return ((val & PCIE_LTSSM_STATE_MASK) == PCIE_LTSSM_LINKUP_STATE);
->> +}
->> +
->> +static
->> +int hisi_pcie_msi_host_init(struct pcie_port *pp, struct msi_controller *chip)
-> 
-> "static int hisi_..." as in other cases (wrap before "struct
-> msi_controller" instead of before "int hisi_pcie_msi_host_init").
->
-
-Thanks, will do like this.
-
->> +{
->> +	u64 addr;
->> +	struct device_node *msi_node;
->> +	struct resource res;
->> +	struct device_node *np = pp->dev->of_node;
->> +	struct hisi_pcie *pcie = to_hisi_pcie(pp);
->> +
->> +	msi_node = of_parse_phandle(np, "msi-parent", 0);
->> +	if (!msi_node) {
->> +		dev_err(pp->dev, "failed to find msi-parent\n");
->> +		return -EINVAL;
->> +	}
->> +	of_address_to_resource(msi_node, 0, &res);
-> 
-> Does this use the "msi-parent" node in the same way as other drivers
-> do?  I'm sure there must be other places where we extract struct
-> resource information from an "msi-parent" node, but I don't see them.
-> 
-> I'm trying to verify that this isn't some kind of incompatible
-> extension of the "msi-parent" property.  I cc'd Arnd and Rob (DT
-> experts).
->
-
-Here I just want to get the address of related ITS' GITS_TRANSLATER register,
-HiSilicon Hip05 PCIe controller need know this address to send MSI interrupt.
-I think other drivers need not to do this.
-
-struct resource above is for ITS base address which is extracted in GIC ITS
-driver also: drivers/irqchip/irq-gic-v3-its.c
-
->> +	addr = res.start + PCIE_GITS_TRANSLATER;
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_SYSCTRL_MODE);
->> +
->> +	hisi_pcie_apb_writel(pcie, addr & 0xffffffff, PCIE_MSI_LOW_ADDRESS);
->> +	hisi_pcie_apb_writel(pcie, addr >> 32, PCIE_MSI_HIGH_ADDRESS);
->> +	hisi_pcie_apb_writel(pcie, PCIE_MSI_ASID_ENABLE | PCIE_MSI_ASID_VALUE,
->> +			     PCIE_SLV_MSI_ASID);
->> +	hisi_pcie_apb_writel(pcie, PCIE_MSI_TRANS_ENABLE, PCIE_MSI_TRANS_REG);
->> +
->> +	hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
->> +
->> +	return 0;
->> +}
->> +
->> +static int hisi_pcie_cfg_write(struct pcie_port *pp, int where, int  size,
->> +				u32 val)
->> +{
->> +	u32 reg_val;
->> +	u32 reg;
->> +	struct hisi_pcie *pcie = to_hisi_pcie(pp);
->> +	void *walker = &reg_val;
->> +
->> +	walker += (where & 0x3);
->> +	reg = where & ~0x3;
->> +	if (size == 4)
->> +		hisi_pcie_apb_writel(pcie, val, reg);
->> +	else if (size == 2) {
->> +		reg_val = hisi_pcie_apb_readl(pcie, reg);
->> +		*(u16 __force *) walker = val;
->> +		hisi_pcie_apb_writel(pcie, reg_val, reg);
->> +	} else if (size == 1) {
->> +		reg_val = hisi_pcie_apb_readl(pcie, reg);
->> +		*(u8 __force *) walker = val;
->> +		hisi_pcie_apb_writel(pcie, reg_val, reg);
-> 
-> This has the read/modify/write problem pointed out by Russell King:
-> http://lkml.kernel.org/r/E1Zenfg-0004d5-Dg@rmk-PC.arm.linux.org.uk
-> 
-> Is the HiSilicon hardware limited to 32-bit config accesses?  If so,
-> that seems like a hardware implementation defect, and this needs at
-> least a comment in the code.  When we figure out a good mechanism,
-> we'll want to taint or warn about this hardware limitation somehow.
->
-
-For config accesses of PCIe host, Hip05 PCIe only support 32-bit access
-that is why we need a private callback here.
-
-I will add a comment here in next version.
-
->> +	} else
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +	return PCIBIOS_SUCCESSFUL;
->> +}
->> +
->> +static int hisi_pcie_cfg_read(struct pcie_port *pp, int where, int size,
->> +			      u32 *val)
->> +{
->> +	u32 reg;
->> +	u32 reg_val;
->> +	struct hisi_pcie *pcie = to_hisi_pcie(pp);
->> +	void *walker = &reg_val;
->> +
->> +	walker += (where & 0x3);
->> +	reg = where & ~0x3;
->> +	reg_val = hisi_pcie_apb_readl(pcie, reg);
->> +
->> +	if (size == 1)
->> +		*val = *(u8 __force *) walker;
->> +	else if (size == 2)
->> +		*val = *(u16 __force *) walker;
->> +	else if (size != 4)
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +	return PCIBIOS_SUCCESSFUL;
->> +}
->> +
->> +static struct pcie_host_ops hisi_pcie_host_ops = {
->> +	.link_up = hisi_pcie_link_up,
->> +	.msi_host_init = hisi_pcie_msi_host_init,
->> +	.wr_own_conf = hisi_pcie_cfg_write,
->> +	.rd_own_conf = hisi_pcie_cfg_read,
-> 
-> Under the rule of "do it the same way unless there's a reason to be
-> different," please put the hisi_pcie_cfg_read() definition before the
-> hisi_pcie_cfg_write() definition, and change the order of these
-> function pointers similarly.  That matches the order in the struct
-> pcie_host_ops definition and in other drivers.
+> Why isn't this devm_gpiod_get_optional()? Then you would not need to
+> clobber the return value down in goodix_ts_probe().
 > 
 
-Thanks for pointing this, will do like this.
+I did not use devm_gpiod_get_optional() in order to ignore more errors
+than -ENOENT. This is needed because the ACPI gpio core will fall back
+to indexed gpios if named gpios are not found. In the common case of
+having 2 indexed gpio pins declared in the ACPI table, the first
+devm_gpiod_get() will successfully get indexed gpio pin 0 and the
+second devm_gpiod_get() will try to get the same gpio pin 0 and return
+-EBUSY. Considering this, I thought it is better to just ignore all errors in
+order not to break any platforms currently using this driver.
 
->> +};
->> +
->> +static int __init hisi_add_pcie_port(struct pcie_port *pp,
->> +				     struct platform_device *pdev)
->> +{
->> +	int ret;
->> +	u32 port_id;
->> +	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
->> +
->> +	if (of_property_read_u32(pdev->dev.of_node, "port-id", &port_id)) {
->> +		dev_err(&pdev->dev, "failed to read port-id\n");
->> +		return -EINVAL;
->> +	}
->> +	if (port_id > 3) {
->> +		dev_err(&pdev->dev, "Invalid port-id: %d\n", port_id);
->> +		return -EINVAL;
->> +	}
->> +	hisi_pcie->port_id = port_id;
->> +
->> +	pp->ops = &hisi_pcie_host_ops;
->> +
->> +	hisi_pcie_config_context(hisi_pcie);
->> +
->> +	ret = dw_pcie_host_init(pp);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "failed to initialize host\n");
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int __init hisi_pcie_probe(struct platform_device *pdev)
->> +{
->> +	struct hisi_pcie *hisi_pcie;
->> +	struct pcie_port *pp;
->> +	struct resource *reg;
->> +	int ret;
->> +
->> +	hisi_pcie = devm_kzalloc(&pdev->dev, sizeof(*hisi_pcie), GFP_KERNEL);
->> +	if (!hisi_pcie)
->> +		return -ENOMEM;
->> +
->> +	pp = &hisi_pcie->pp;
->> +	pp->dev = &pdev->dev;
->> +
->> +	hisi_pcie->subctrl =
->> +	syscon_regmap_lookup_by_compatible("hisilicon,pcie-sas-subctrl");
+> I can fix it up locally.
 > 
-> Indent a tab here.
 
-OK, will do like this.
+Sure, you can replace devm_gpiod_get with devm_gpiod_get_optional,
+but the error handling code should remain the same.
 
+Thanks,
+Irina
+
+> Thanks.
 > 
->> +	if (IS_ERR(hisi_pcie->subctrl)) {
->> +		dev_err(pp->dev, "cannot get subctrl base\n");
->> +		return PTR_ERR(hisi_pcie->subctrl);
->> +	}
->> +
->> +	reg = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
->> +	hisi_pcie->reg_base = devm_ioremap_resource(&pdev->dev, reg);
->> +	if (IS_ERR(hisi_pcie->reg_base)) {
->> +		dev_err(pp->dev, "cannot get rc_dbi base\n");
->> +		return PTR_ERR(hisi_pcie->reg_base);
->> +	}
->> +
->> +	hisi_pcie->pp.dbi_base = hisi_pcie->reg_base;
->> +
->> +	ret = hisi_add_pcie_port(pp, pdev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	platform_set_drvdata(pdev, hisi_pcie);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id hisi_pcie_of_match[] = {
->> +	{.compatible = "hisilicon,hip05-pcie",},
->> +	{},
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, hisi_pcie_of_match);
->> +
->> +static struct platform_driver hisi_pcie_driver = {
->> +	.driver = {
->> +		   .name = "hisi-pcie",
->> +		   .of_match_table = hisi_pcie_of_match,
->> +	},
->> +};
->> +
->> +static int __init hisi_pcie_init(void)
->> +{
->> +	return platform_driver_probe(&hisi_pcie_driver, hisi_pcie_probe);
->> +}
->> +subsys_initcall(hisi_pcie_init);
-> 
-> Can you use module_platform_driver() or module_platform_driver_probe()
-> here instead of the subsys_initcall()?  No, I don't really know what
-> the difference between module_platform_driver() and
-> module_platform_driver_probe() is, sorry :)
-
-In fact, I used module_platform_driver_probe in previous version, but
-A PCIe VGA card of HiSilicon will use Hip05 PCIe host, so we modified
-module_platform_driver_probe to subsys_initcall which will be called
-before module_platform_driver_probe.
-
-We will upstream the driver of above PCIe VGA card soon.
-
-Many thanks for your reviewing,
-Zhou
-
-> 
-> Bjorn
-> 
-> .
-> 
+> --
+> Dmitry
