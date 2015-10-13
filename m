@@ -1,72 +1,24 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH] phy: exynos-ufs: exynos_ufs_phy_calibrate() can be
- static
-Date: Tue, 13 Oct 2015 19:32:05 +0530
-Message-ID: <561D0EDD.80804@ti.com>
-References: <201510011920.tppZbk0e%fengguang.wu@intel.com>
- <20151001110430.GA12682@athens> <561CED52.9010806@samsung.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6: phyFLEX: fix typo in "pinctrl-names"
+Date: Tue, 13 Oct 2015 22:03:01 +0800
+Message-ID: <20151013140301.GA584@tiger>
+References: <1444736635-19893-1-git-send-email-michael.opdenacker@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561CED52.9010806@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <1444736635-19893-1-git-send-email-michael.opdenacker@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
+To: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 13 October 2015 05:08 PM, Alim Akhtar wrote:
-> HI
-> How I am support to handle this patch? Should I just fix these warnings
-> in my patch or I just add this as a separate patch on the top of the
-> series?
-
-This series has not been merged yet. So you can fix this patch.
-
-Thanks
-Kishon
+On Tue, Oct 13, 2015 at 01:43:55PM +0200, Michael Opdenacker wrote:
+> Fix a typo, replacing "pinctrl-name" by "pinctrl-names"
+> in the Phytec phyFLEX-i.MX6 Quad dtsi.
 > 
+> Also fix a typo in the board name
 > 
-> On 10/01/2015 04:34 PM, kbuild test robot wrote:
->>
->> Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
->> ---
->>   phy-exynos-ufs.c |    6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/phy/phy-exynos-ufs.c b/drivers/phy/phy-exynos-ufs.c
->> index 343fcaf..835ee78 100644
->> --- a/drivers/phy/phy-exynos-ufs.c
->> +++ b/drivers/phy/phy-exynos-ufs.c
->> @@ -66,7 +66,7 @@ static bool match_cfg_to_pwr_mode(u8 desc, u8
->> required_pwr)
->>       return false;
->>   }
->>
->> -int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag tag,
->> u8 pwr)
->> +static int exynos_ufs_phy_calibrate(struct phy *phy, enum phy_cfg_tag
->> tag, u8 pwr)
->>   {
->>       struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
->>       struct exynos_ufs_phy_cfg **cfgs = ufs_phy->cfg;
->> @@ -93,14 +93,14 @@ out:
->>       return 0;
->>   }
->>
->> -void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
->> +static void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
->>   {
->>       struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
->>
->>       ufs_phy->lane_cnt = lane_cnt;
->>   }
->>
->> -int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
->> +static int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
->>   {
->>       struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
->>       const unsigned int timeout_us = 100000;
->>
+> Signed-off-by: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+
+Applied, thanks.
