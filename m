@@ -1,24 +1,40 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6: phyFLEX: fix typo in "pinctrl-names"
-Date: Tue, 13 Oct 2015 22:03:01 +0800
-Message-ID: <20151013140301.GA584@tiger>
-References: <1444736635-19893-1-git-send-email-michael.opdenacker@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH v2 0/4] Add support for STM32 DMA
+Date: Tue, 13 Oct 2015 16:05:23 +0200
+Message-ID: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444736635-19893-1-git-send-email-michael.opdenacker@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Opdenacker <michael.opdenacker@free-electrons.com>
-Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 01:43:55PM +0200, Michael Opdenacker wrote:
-> Fix a typo, replacing "pinctrl-name" by "pinctrl-names"
-> in the Phytec phyFLEX-i.MX6 Quad dtsi.
-> 
-> Also fix a typo in the board name
-> 
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@free-electrons.com>
+This patchset adds support for the STM32 DMA controller.
+This controller provides 8 channels dedicated to managing memory access
+request from one or more peripherals.
+Each stream can have up to 8 requests in total.
 
-Applied, thanks.
+Changes since v1:
+- remove dmamux boolean as it is not needed
+- replace dma by DMA in Kconfig
+- add default return value in stm32_dma_get_width()
+- add defalut return value in stm32_dma_get_burst()
+- use lower case for constant hexadecimal values
+
+M'boumba Cedric Madianga (4):
+  dt-bindings: Document the STM32 DMA bindings
+  dmaengine: Add STM32 DMA driver
+  ARM: dts: Add STM32 DMA support for STM32F429 MCU
+  ARM: configs: Add STM32 DMA support in STM32 defconfig
+
+ .../devicetree/bindings/dma/stm32-dma.txt          |   98 ++
+ arch/arm/boot/dts/stm32f429.dtsi                   |   31 +
+ arch/arm/configs/stm32_defconfig                   |    2 +
+ drivers/dma/Kconfig                                |   12 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/stm32-dma.c                            | 1175 ++++++++++++++++++++
+ 6 files changed, 1319 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
+ create mode 100644 drivers/dma/stm32-dma.c
+
+-- 
+1.9.1
