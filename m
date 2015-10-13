@@ -1,1277 +1,191 @@
-Return-Path: <hns@goldelico.com>
-Content-Type: text/plain; charset=windows-1252
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Subject: Re: [PATCH 1/3] iio:adc: add iio driver for Palmas (twl6035/7) gpadc
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <56080960.8020405@kernel.org>
-Date: Sun, 4 Oct 2015 18:04:40 +0200
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <95BEC150-7B77-48BF-B11D-929090A1CC11@goldelico.com>
-References: <1437657169.3419965.331206849.51D66A2E@webmail.messagingengine.com> <cover.1443012491.git.hns@goldelico.com> <F03BBE76-3F7D-4995-810E-6E2E98FC156C@goldelico.com> <56080960.8020405@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Marek Belisko <marek@goldelico.com>, Pradeep Goudagunta <pgoudagunta@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, gg@slimlogic.co.uk, jic23@jic23.retrosnub.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-iio@vger.kernel.org, notaz@openpandora.org
+MIME-Version: 1.0
+In-Reply-To: <1444679211-823-3-git-send-email-m-karicheri2@ti.com>
+References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com>
+	<1444679211-823-3-git-send-email-m-karicheri2@ti.com>
+Date: Tue, 13 Oct 2015 09:38:16 -0500
+Message-ID: <CAL_JsqL0TNL-EghS1Yjq+D9rk14Nx=EyLwXK8duoUA4B+yRYDQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] soc: ti: add firmware file name as part of the driver
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-ID: <devicetree@vger.kernel.org>
 
 
-Am 27.09.2015 um 17:21 schrieb Jonathan Cameron <jic23@kernel.org>:
 
-> On 23/09/15 13:48, H. Nikolaus Schaller wrote:
->> This driver code was found as:
->>=20
->> =
-https://android.googlesource.com/kernel/tegra/+/aaabb2e045f31e5a970109ffda=
-ae900dd403d17e/drivers/staging/iio/adc
->>=20
->> Fixed various compilation issues and test this driver on omap5 evm.
->>=20
->> Signed-off-by: Pradeep Goudagunta <pgoudagunta@nvidia.com>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> Various bits inline.
-
-Thanks again!
-
-Worked into V2 (coming right after this mail).
-Comments below, where/why we have not exactly followed your feedback.
-
-BR,
-Nikolaus
-
->=20
-> Jonathan
->> ---
->> drivers/iio/adc/Kconfig        |   9 +
->> drivers/iio/adc/Makefile       |   1 +
->> drivers/iio/adc/palmas_gpadc.c | 797 =
-+++++++++++++++++++++++++++++++++++++++++
->> include/linux/mfd/palmas.h     |  59 ++-
->> 4 files changed, 862 insertions(+), 4 deletions(-)
->> create mode 100644 drivers/iio/adc/palmas_gpadc.c
->>=20
->> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> index eb0cd89..f6df9db 100644
->> --- a/drivers/iio/adc/Kconfig
->> +++ b/drivers/iio/adc/Kconfig
->> @@ -242,6 +242,15 @@ config NAU7802
->> 	  To compile this driver as a module, choose M here: the
->> 	  module will be called nau7802.
->>=20
->> +config PALMAS_GPADC
->> +	tristate "TI Palmas General Purpose ADC"
->> +	depends on MFD_PALMAS
->> +	help
->> +	  Palmas series pmic chip by texas Instruments (twl6035/6037)
->> +	  is used in smartphones and tablets and supports a 16 channel
->> +	  general purpose ADC. Add iio driver to read different channel
->> +	  of the GPADCs.
->> +
->> config QCOM_SPMI_IADC
->> 	tristate "Qualcomm SPMI PMIC current ADC"
->> 	depends on SPMI
->> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->> index a096210..716f112 100644
->> --- a/drivers/iio/adc/Makefile
->> +++ b/drivers/iio/adc/Makefile
->> @@ -26,6 +26,7 @@ obj-$(CONFIG_MCP320X) +=3D mcp320x.o
->> obj-$(CONFIG_MCP3422) +=3D mcp3422.o
->> obj-$(CONFIG_MEN_Z188_ADC) +=3D men_z188_adc.o
->> obj-$(CONFIG_NAU7802) +=3D nau7802.o
->> +obj-$(CONFIG_PALMAS_GPADC) +=3D palmas_gpadc.o
->> obj-$(CONFIG_QCOM_SPMI_IADC) +=3D qcom-spmi-iadc.o
->> obj-$(CONFIG_QCOM_SPMI_VADC) +=3D qcom-spmi-vadc.o
->> obj-$(CONFIG_ROCKCHIP_SARADC) +=3D rockchip_saradc.o
->> diff --git a/drivers/iio/adc/palmas_gpadc.c =
-b/drivers/iio/adc/palmas_gpadc.c
->> new file mode 100644
->> index 0000000..17abb28
->> --- /dev/null
->> +++ b/drivers/iio/adc/palmas_gpadc.c
->> @@ -0,0 +1,797 @@
->> +/*
->> + * palmas-adc.c -- TI PALMAS GPADC.
->> + *
->> + * Copyright (c) 2013, NVIDIA Corporation. All rights reserved.
->> + *
->> + * Author: Pradeep Goudagunta <pgoudagunta@nvidia.com>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + */
->> +#include <linux/module.h>
->> +#include <linux/err.h>
->> +#include <linux/irq.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <linux/delay.h>
->> +#include <linux/i2c.h>
->> +#include <linux/pm.h>
->> +#include <linux/mfd/palmas.h>
->> +#include <linux/completion.h>
->> +#include <linux/iio/iio.h>
->> +#include <linux/iio/machine.h>
->> +#include <linux/iio/driver.h>
->> +
->> +#define MOD_NAME "palmas-gpadc"
->> +#define ADC_CONVERSION_TIMEOUT	(msecs_to_jiffies(5000))
->> +#define TO_BE_CALCULATED 0
->> +
->> +struct palmas_gpadc_info {
->> +/* calibration codes and regs */
-> Full docs on this would be appreciated.
-Is mostly defined in the Palmas data sheet but I have added some =
-comments.
->> +	int x1;
->> +	int x2;
->> +	int v1;
->> +	int v2;
->> +	u8 trim1_reg;
->> +	u8 trim2_reg;
->> +	int gain;
->> +	int offset;
->> +	int gain_error;
->> +	bool is_correct_code;
->> +};
->> +
->> +#define PALMAS_ADC_INFO(_chan, _x1, _x2, _v1, _v2, _t1, _t2, =
-_is_correct_code)\
->> +[PALMAS_ADC_CH_##_chan] =3D {						=
-\
->> +		.x1 =3D _x1,						=
-\
->> +		.x2 =3D _x2,						=
-\
->> +		.v1 =3D _v1,						=
-\
->> +		.v2 =3D _v2,						=
-\
->> +		.gain =3D TO_BE_CALCULATED,				=
-\
->> +		.offset =3D TO_BE_CALCULATED,				=
-\
->> +		.gain_error =3D TO_BE_CALCULATED,				=
-\
->> +		.trim1_reg =3D PALMAS_GPADC_TRIM##_t1,			=
-\
->> +		.trim2_reg =3D PALMAS_GPADC_TRIM##_t2,			=
-\
->> +		.is_correct_code =3D _is_correct_code			=
-\
->> +	}
->> +
->> +static struct palmas_gpadc_info palmas_gpadc_info[] =3D {
->> +	PALMAS_ADC_INFO(IN0, 2064, 3112, 630, 950, 1, 2, false),
->> +	PALMAS_ADC_INFO(IN1, 2064, 3112, 630, 950, 1, 2, false),
->> +	PALMAS_ADC_INFO(IN2, 2064, 3112, 1260, 1900, 3, 4, false),
->> +	PALMAS_ADC_INFO(IN3, 2064, 3112, 630, 950, 1, 2, false),
->> +	PALMAS_ADC_INFO(IN4, 2064, 3112, 630, 950, 1, 2, false),
->> +	PALMAS_ADC_INFO(IN5, 2064, 3112, 630, 950, 1, 2, false),
->> +	PALMAS_ADC_INFO(IN6, 2064, 3112, 2520, 3800, 5, 6, false),
->> +	PALMAS_ADC_INFO(IN7, 2064, 3112, 2520, 3800, 7, 8, false),
->> +	PALMAS_ADC_INFO(IN8, 2064, 3112, 3150, 4750, 9, 10, false),
->> +	PALMAS_ADC_INFO(IN9, 2064, 3112, 5670, 8550, 11, 12, false),
->> +	PALMAS_ADC_INFO(IN10, 2064, 3112, 3465, 5225, 13, 14, false),
->> +	PALMAS_ADC_INFO(IN11, 0, 0, 0, 0, INVALID, INVALID, true),
->> +	PALMAS_ADC_INFO(IN12, 0, 0, 0, 0, INVALID, INVALID, true),
->> +	PALMAS_ADC_INFO(IN13, 0, 0, 0, 0, INVALID, INVALID, true),
->> +	PALMAS_ADC_INFO(IN14, 2064, 3112, 3645, 5225, 15, 16, false),
->> +	PALMAS_ADC_INFO(IN15, 0, 0, 0, 0, INVALID, INVALID, true),
->> +};
->> +
->> +struct palmas_gpadc {
->> +	struct device			*dev;
->> +	struct palmas			*palmas;
-> As there are some non obvious elements in here (such as the next two)
-> kernel-doc for the whole stucture would be good.
-
-I don't know what all of them are doing, so I have only added the next =
-two and some more.
-
->=20
->> +	u8				ch0_current;
->> +	u8				ch3_current;
-
-If I understand them correctly, they just store 2 bits each written into =
-the
-current source registers. The value is only calculated in the probe =
-function
-and internal to the driver. The bit pattern required is defined by the =
-data sheet.
-
-All TWL4030/TWL603x have such current sources. In the DT, just uA are =
-specified
-and this is to temporarily store the bit pattern until it is sent to the =
-chip. So it is quite
-a deep driver internal, but should be obvious to everyone who has the =
-data sheet.
-
->> +	bool				extended_delay;
->> +	int				irq;
->> +	int				irq_auto_0;
->> +	int				irq_auto_1;
->> +	struct palmas_gpadc_info	*adc_info;
->> +	struct completion		conv_completion;
->> +	struct palmas_adc_wakeup_property wakeup1_data;
->> +	struct palmas_adc_wakeup_property wakeup2_data;
->> +	bool				wakeup1_enable;
->> +	bool				wakeup2_enable;
->> +	int				auto_conversion_period;
->> +};
->> +
->> +/*
->> + * GPADC lock issue in AUTO mode.
->> + * Impact: In AUTO mode, GPADC conversion can be locked after =
-disabling AUTO
->> + *	   mode feature.
->> + * Details:
->> + *	When the AUTO mode is the only conversion mode enabled, if the =
-AUTO
->> + *	mode feature is disabled with bit GPADC_AUTO_CTRL.  =
-AUTO_CONV1_EN =3D 0
->> + *	or bit GPADC_AUTO_CTRL.  AUTO_CONV0_EN =3D 0 during a =
-conversion, the
->> + *	conversion mechanism can be seen as locked meaning that all =
-following
->> + *	conversion will give 0 as a result.  Bit =
-GPADC_STATUS.GPADC_AVAILABLE
->> + *	will stay at 0 meaning that GPADC is busy.  An RT conversion can =
-unlock
->> + *	the GPADC.
->> + *
->> + * Workaround(s):
->> + *	To avoid the lock mechanism, the workaround to follow before any =
-stop
->> + *	conversion request is:
->> + *	Force the GPADC state machine to be ON by using the GPADC_CTRL1.
->> + *		GPADC_FORCE bit =3D 1
->> + *	Shutdown the GPADC AUTO conversion using
->> + *		GPADC_AUTO_CTRL.SHUTDOWN_CONV[01] =3D 0.
->> + *	After 100us, force the GPADC state machine to be OFF by using =
-the
->> + *		GPADC_CTRL1.  GPADC_FORCE bit =3D 0
->> + */
->> +static int palmas_disable_auto_conversion(struct palmas_gpadc *adc)
->> +{
->> +	int ret;
->> +
->> +	ret =3D palmas_update_bits(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_CTRL1,
->> +			PALMAS_GPADC_CTRL1_GPADC_FORCE,
->> +			PALMAS_GPADC_CTRL1_GPADC_FORCE);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "GPADC_CTRL1 update failed: %d\n", =
-ret);
->> +		return ret;
->> +	}
->> +
->> +	ret =3D palmas_update_bits(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_AUTO_CTRL,
->> +			PALMAS_GPADC_AUTO_CTRL_SHUTDOWN_CONV1 |
->> +			PALMAS_GPADC_AUTO_CTRL_SHUTDOWN_CONV0,
->> +			0);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "AUTO_CTRL update failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	udelay(100);
->> +
->> +	ret =3D palmas_update_bits(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_CTRL1,
->> +			PALMAS_GPADC_CTRL1_GPADC_FORCE, 0);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "GPADC_CTRL1 update failed: %d\n", =
-ret);
->> +		return ret;
->> +	}
-> return ret and drop the return above.  Coccicheck will moan at you =
-about
-> this.
->> +	return 0;
->> +}
->> +
->> +static irqreturn_t palmas_gpadc_irq(int irq, void *data)
->> +{
->> +	struct palmas_gpadc *adc =3D data;
->> +
->> +	complete(&adc->conv_completion);
-> blank line.
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static irqreturn_t palmas_gpadc_irq_auto(int irq, void *data)
->> +{
->> +	struct palmas_gpadc *adc =3D data;
->> +
->> +	dev_info(adc->dev, "Threshold interrupt %d occurs\n", irq);
-> Could indicate this to userspace... other than through the logs.
-
-Since I am not the original author and don't know how to present that to =
-user space,
-I would leave this open for future improvements.
-
->=20
->> +	palmas_disable_auto_conversion(adc);
-> blank line generally before all function returns..
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int palmas_gpadc_start_mask_interrupt(struct palmas_gpadc =
-*adc, int mask)
->=20
-> mask is boolean.  Make it explicitly so for readability.
->=20
->> +{
->> +	int ret;
->> +
->> +	if (!mask)
->> +		ret =3D palmas_update_bits(adc->palmas, =
-PALMAS_INTERRUPT_BASE,
->> +					PALMAS_INT3_MASK,
->> +					PALMAS_INT3_MASK_GPADC_EOC_SW, =
-0);
->> +	else
->> +		ret =3D palmas_update_bits(adc->palmas, =
-PALMAS_INTERRUPT_BASE,
->> +					PALMAS_INT3_MASK,
->> +					PALMAS_INT3_MASK_GPADC_EOC_SW,
->> +					PALMAS_INT3_MASK_GPADC_EOC_SW);
->> +	if (ret < 0)
->> +		dev_err(adc->dev, "GPADC INT MASK update failed: %d\n", =
-ret);
->> +
->> +	return ret;
->> +}
->> +
->> +static int palmas_gpadc_enable(struct palmas_gpadc *adc, int =
-adc_chan,
->> +			       int enable)
->> +{
->> +	unsigned int mask, val;
->> +	int ret;
->> +
->> +	if (enable) {
->> +		val =3D (adc->extended_delay
->> +			<< PALMAS_GPADC_RT_CTRL_EXTEND_DELAY_SHIFT);
->> +		ret =3D palmas_update_bits(adc->palmas, =
-PALMAS_GPADC_BASE,
->> +					PALMAS_GPADC_RT_CTRL,
->> +					=
-PALMAS_GPADC_RT_CTRL_EXTEND_DELAY, val);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev, "RT_CTRL update failed: %d\n", =
-ret);
->> +			return ret;
->> +		}
->> +
->> +		mask =3D (PALMAS_GPADC_CTRL1_CURRENT_SRC_CH0_MASK |
->> +			PALMAS_GPADC_CTRL1_CURRENT_SRC_CH3_MASK |
->> +			PALMAS_GPADC_CTRL1_GPADC_FORCE);
->> +		val =3D (adc->ch0_current
->> +			<< PALMAS_GPADC_CTRL1_CURRENT_SRC_CH0_SHIFT);
->> +		val |=3D (adc->ch3_current
->> +			<< PALMAS_GPADC_CTRL1_CURRENT_SRC_CH3_SHIFT);
->> +		val |=3D PALMAS_GPADC_CTRL1_GPADC_FORCE;
->> +		ret =3D palmas_update_bits(adc->palmas, =
-PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_CTRL1, mask, val);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev,
->> +				"Failed to update current setting: =
-%d\n", ret);
->> +			return ret;
->> +		}
->> +
->> +		mask =3D (PALMAS_GPADC_SW_SELECT_SW_CONV0_SEL_MASK |
->> +			PALMAS_GPADC_SW_SELECT_SW_CONV_EN);
->> +		val =3D (adc_chan | PALMAS_GPADC_SW_SELECT_SW_CONV_EN);
->> +		ret =3D palmas_update_bits(adc->palmas, =
-PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_SW_SELECT, mask, val);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev, "SW_SELECT update failed: =
-%d\n", ret);
->> +			return ret;
->> +		}
->> +	} else {
->> +		ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_SW_SELECT, 0);
->> +		if (ret < 0)
->> +			dev_err(adc->dev, "SW_SELECT write failed: =
-%d\n", ret);
->> +
->> +		ret =3D palmas_update_bits(adc->palmas, =
-PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_CTRL1,
->> +				PALMAS_GPADC_CTRL1_GPADC_FORCE, 0);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev, "CTRL1 update failed: %d\n", =
-ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int palmas_gpadc_read_prepare(struct palmas_gpadc *adc, int =
-adc_chan)
->> +{
->> +	int ret;
->> +
->> +	ret =3D palmas_gpadc_enable(adc, adc_chan, true);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return palmas_gpadc_start_mask_interrupt(adc, 0);
->> +}
->> +
->> +static void palmas_gpadc_read_done(struct palmas_gpadc *adc, int =
-adc_chan)
->> +{
->> +	palmas_gpadc_start_mask_interrupt(adc, 1);
->> +	palmas_gpadc_enable(adc, adc_chan, false);
->> +}
->> +
->> +static int palmas_gpadc_calibrate(struct palmas_gpadc *adc, int =
-adc_chan)
->> +{
->> +	int k;
->> +	int d1;
->> +	int d2;
->> +	int ret;
->> +	int gain;
->> +	int x1 =3D  adc->adc_info[adc_chan].x1;
->> +	int x2 =3D  adc->adc_info[adc_chan].x2;
->> +	int v1 =3D adc->adc_info[adc_chan].v1;
->> +	int v2 =3D adc->adc_info[adc_chan].v2;
->> +
->> +	ret =3D palmas_read(adc->palmas, PALMAS_TRIM_GPADC_BASE,
->> +				adc->adc_info[adc_chan].trim1_reg, &d1);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "TRIM read failed: %d\n", ret);
->> +		goto scrub;
->> +	}
->> +
->> +	ret =3D palmas_read(adc->palmas, PALMAS_TRIM_GPADC_BASE,
->> +				adc->adc_info[adc_chan].trim2_reg, &d2);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "TRIM read failed: %d\n", ret);
->> +		goto scrub;
->> +	}
->> +
->> +	/*Gain error Calculation*/
->> +	k =3D (1000 + (1000 * (d2 - d1)) / (x2 - x1));
->> +
->> +	/*Gain Calculation*/
->> +	gain =3D ((v2 - v1) * 1000) / (x2 - x1);
->> +
->> +	adc->adc_info[adc_chan].gain_error =3D k;
->> +	adc->adc_info[adc_chan].gain =3D gain;
->> +	/*offset Calculation*/
->> +	adc->adc_info[adc_chan].offset =3D (d1 * 1000) - ((k - 1000) * =
-x1);
->> +
->> +scrub:
->> +	return ret;
->> +}
->> +
->> +static int palmas_gpadc_start_conversion(struct palmas_gpadc *adc, =
-int adc_chan)
->> +{
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	init_completion(&adc->conv_completion);
->> +	ret =3D palmas_update_bits(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_SW_SELECT,
->> +				PALMAS_GPADC_SW_SELECT_SW_START_CONV0,
->> +				PALMAS_GPADC_SW_SELECT_SW_START_CONV0);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "ADC_SW_START write failed: %d\n", =
-ret);
->> +		return ret;
->> +	}
->> +
->> +	ret =3D wait_for_completion_timeout(&adc->conv_completion,
->> +				ADC_CONVERSION_TIMEOUT);
->> +	if (ret =3D=3D 0) {
->> +		dev_err(adc->dev, "ADC conversion not completed\n");
->> +		ret =3D -ETIMEDOUT;
->> +		return ret;
-> return -ETIMEDOUT;   Might be worth you setting up to do sparse, =
-smatch and
-> coccicheck runs on the code as they'll pick up on a lot of issues like =
-this.
->=20
->> +	}
->> +
->> +	ret =3D palmas_bulk_read(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_SW_CONV0_LSB, &val, 2);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "ADCDATA read failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret =3D (val & 0xFFF);
-> nitpick : blank line here.
->> +	return ret;
->> +}
->> +
->> +static int palmas_gpadc_get_calibrated_code(struct palmas_gpadc =
-*adc,
->> +						int adc_chan, int val)
->> +{
->> +	if (((val*1000) - adc->adc_info[adc_chan].offset) < 0) {
->> +		dev_err(adc->dev, "No Input Connected\n");
->> +		return 0;
->> +	}
-> Interesting, but should this not be caught for raw channel reads as =
-well?
-
-It appears that this function is only called for calibrated values.
-
-The condition appears to detect that the ADC has reported a value =
-smaller than
-the calibration allows.
-
-This indicates to be some error condition (maybe a floating ADC input?). =
-But
-I don't know enough of the Palmas details to judge this. So I have only =
-moved
-it behind the (optional) calibration calculation and detect if either =
-would report
-negative values. So it essentially clamps voltage reports at 0V.
-
->> +
-> Umm. what is is_correct_code? Should be documented somewhere
-
-have renamed it to is_uncalibrated which means that there is no register
-on the chip to read out calibration data for that channel.
-
->> +	if (!(adc->adc_info[adc_chan].is_correct_code))
->> +		val  =3D ((val*1000) - adc->adc_info[adc_chan].offset) /
->> +					=
-adc->adc_info[adc_chan].gain_error;
->> +
->> +	val =3D (val * adc->adc_info[adc_chan].gain) / 1000;
->> +	return val;
->> +}
->> +
->> +static int palmas_gpadc_read_raw(struct iio_dev *indio_dev,
->> +	struct iio_chan_spec const *chan, int *val, int *val2, long =
-mask)
->> +{
->> +	struct  palmas_gpadc *adc =3D iio_priv(indio_dev);
->> +	int adc_chan =3D chan->channel;
->> +	int ret =3D 0;
->> +
->> +	if (adc_chan > PALMAS_ADC_CH_MAX)
->> =3D given I think your channels are 0 indexed?
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&indio_dev->mlock);
->> +
->> +	switch (mask) {
->> +	case IIO_CHAN_INFO_RAW:
->> +	case IIO_CHAN_INFO_PROCESSED:
-> I'd be tempted to split the two code paths here as that will be =
-slightly
-> easier to read (if longer).
-
-IMHO would duplicate code (not sure if gcc can detect). Therefore I have =
-left it as is.
-
->=20
-> I'm also highly suspicious of any driver that does processed output
-> and has a return type of IIO_VAL_INT.  Are you processed values in the
-> units documented in Documentation/ABI/testing/sysfs-bus-iio?
-
-"Units after application of scale and offset are millivolts."
-
-The driver reports millivolts on OMAP5 uEVM, e.g. VBUS =3D 5013 (mV).
-
-> They could be, but I would like a comment saying that.
->=20
->> +		ret =3D palmas_gpadc_read_prepare(adc, adc_chan);
->> +		if (ret < 0)
->> +			goto out;
->> +
->> +		ret =3D palmas_gpadc_start_conversion(adc, adc_chan);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev,
->> +			"ADC start coversion failed\n");
->> +			goto out;
->> +		}
->> +
->> +		if (mask =3D=3D IIO_CHAN_INFO_PROCESSED)
->> +			ret =3D palmas_gpadc_get_calibrated_code(
->> +							adc, adc_chan, =
-ret);
->> +
->> +		*val =3D ret;
->> +
->> +		ret =3D IIO_VAL_INT;
->> +		goto out;
->> +	}
->> +
->> +	mutex_unlock(&indio_dev->mlock);
->> +	return ret;
->> +
->> +out:
->> +	palmas_gpadc_read_done(adc, adc_chan);
->> +	mutex_unlock(&indio_dev->mlock);
->> +	return ret;
->> +}
->> +
->> +static const struct iio_info palmas_gpadc_iio_info =3D {
->> +	.read_raw =3D palmas_gpadc_read_raw,
->> +	.driver_module =3D THIS_MODULE,
->> +};
->> +
->> +#define PALMAS_ADC_CHAN_IIO(chan, _type)			\
->> +{									=
-\
->> +	.datasheet_name =3D PALMAS_DATASHEET_NAME(chan),			=
-\
->> +	.type =3D _type,							=
-\
-> Right now they are all voltage channels, why have that specifiable in =
-this
-> macro?
-
-There are two channels that are or can be temperature values. Presented =
-as
-voltages across an NTC/Diode. Since the NTC is outside the Palmas chip =
-the
-conversion into temperature is left to user-space. The type value is in =
-preparation
-for this and I have changed it to IIO_TEMPERATURE.
-
->> +	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |			=
-\
->> +			BIT(IIO_CHAN_INFO_PROCESSED),			=
-\
-> Hmm. This is very very rarely justified.  Either the driver has
-> nice linear relationship between the raw value and the processed one, =
-in which
-> case you should be providing *_RAW, *_OFFSET and *_SCALE and leaving =
-the maths
-> to userspace (or the in kernel wrappers), or they are non linear in =
-which case
-> only the processed value is of interest and the raw one not directly =
-so.
-> (the only exception to this is light sensors where the processed =
-channel
-> is often a computed channel from several input _raw readings).
-
-If I understand the driver correctty (I am not the original author), the =
-calibration
-is indeed linear, but translating the calibration data into *_RAW, =
-*_OFFSET and *_SCALE
-is different from how Texas suggests to do the calculation (maybe =
-avoiding rounding
-and truncation errors).
-
-Well, we could simply remove the _RAW values - but IMHO it is sometimes =
-good
-to be able to see what is going on. They can still be ignored by the =
-consumer.
-
->=20
->> +	.indexed =3D 1,							=
-\
->> +	.channel =3D PALMAS_ADC_CH_##chan,				=
-\
-> Given this maps back to the value of chan, just put that in as a =
-number
-> and loose the enum.  Channel is used in the naming so it doesn't
-> make sense to obscure that behind an enum anyway.
-
-Well, enum constants allow to check against typos and that it matches =
-the
-channel numbers defined in the header.=20
-
-So PALMAS_ADC_CHAN_IIO(IN24, ...) would make gcc warn while.
-PALMAS_ADC_CHAN_IIO(24, ...) would fail in operation.
-
-Of course we have no typo, because it is already checked to compile :)
-
-So I understand by which good C coding practise it was probably =
-introduced
-and am undecided if it is good to keep or not.
-
->> +}
->> +
->> +static const struct iio_chan_spec palmas_gpadc_iio_channel[] =3D {
->> +	PALMAS_ADC_CHAN_IIO(IN0, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN1, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN2, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN3, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN4, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN5, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN6, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN7, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN8, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN9, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN10, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN11, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN12, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN13, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN14, IIO_VOLTAGE),
->> +	PALMAS_ADC_CHAN_IIO(IN15, IIO_VOLTAGE),
->> +};
->> +
->> +static int palmas_gpadc_probe(struct platform_device *pdev)
->> +{
->> +	struct palmas_gpadc *adc;
->> +	struct palmas_platform_data *pdata;
->> +	struct palmas_gpadc_platform_data *adc_pdata;
->> +	struct iio_dev *iodev;
->> +	int ret, i;
->> +
->> +	pdata =3D dev_get_platdata(pdev->dev.parent);
->> +	if (!pdata || !pdata->gpadc_pdata) {
->> +		dev_err(&pdev->dev, "No platform data\n");
->> +		return -ENODEV;
->> +	}
->> +	adc_pdata =3D pdata->gpadc_pdata;
->> +
->> +	iodev =3D iio_device_alloc(sizeof(*adc));
->> +	if (!iodev) {
->> +		dev_err(&pdev->dev, "iio_device_alloc failed\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	if (adc_pdata->iio_maps) {
->> +		ret =3D iio_map_array_register(iodev, =
-adc_pdata->iio_maps);
->> +		if (ret < 0) {
->> +			dev_err(&pdev->dev, "iio_map_array_register =
-failed\n");
->> +			goto out;
->> +		}
->> +	}
->> +
->> +	adc =3D iio_priv(iodev);
->> +	adc->dev =3D &pdev->dev;
->> +	adc->palmas =3D dev_get_drvdata(pdev->dev.parent);
->> +	adc->adc_info =3D palmas_gpadc_info;
->> +	init_completion(&adc->conv_completion);
->> +	dev_set_drvdata(&pdev->dev, iodev);
->> +
->> +	adc->auto_conversion_period =3D =
-adc_pdata->auto_conversion_period_ms;
->> +	adc->irq =3D palmas_irq_get_virq(adc->palmas, =
-PALMAS_GPADC_EOC_SW_IRQ);
->> +	ret =3D request_threaded_irq(adc->irq, NULL,
->> +		palmas_gpadc_irq,
->> +		IRQF_ONESHOT | IRQF_EARLY_RESUME, dev_name(adc->dev),
->> +		adc);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev,
->> +			"request irq %d failed: %dn", adc->irq, ret);
->> +		goto out_unregister_map;
->> +	}
->> +
->> +	if (adc_pdata->adc_wakeup1_data) {
->> +		memcpy(&adc->wakeup1_data, adc_pdata->adc_wakeup1_data,
->> +			sizeof(adc->wakeup1_data));
->> +		adc->wakeup1_enable =3D true;
->> +		adc->irq_auto_0 =3D  platform_get_irq(pdev, 1);
->> +		ret =3D request_threaded_irq(adc->irq_auto_0, NULL,
->> +				palmas_gpadc_irq_auto,
->> +				IRQF_ONESHOT | IRQF_EARLY_RESUME,
->> +				"palmas-adc-auto-0", adc);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev, "request auto0 irq %d failed: =
-%dn",
->> +				adc->irq_auto_0, ret);
->> +			goto out_irq_free;
->> +		}
->> +	}
->> +
->> +	if (adc_pdata->adc_wakeup2_data) {
->> +		memcpy(&adc->wakeup2_data, adc_pdata->adc_wakeup2_data,
->> +				sizeof(adc->wakeup2_data));
->> +		adc->wakeup2_enable =3D true;
->> +		adc->irq_auto_1 =3D  platform_get_irq(pdev, 2);
->> +		ret =3D request_threaded_irq(adc->irq_auto_1, NULL,
->> +				palmas_gpadc_irq_auto,
->> +				IRQF_ONESHOT | IRQF_EARLY_RESUME,
->> +				"palmas-adc-auto-1", adc);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev, "request auto1 irq %d failed: =
-%dn",
->> +				adc->irq_auto_1, ret);
->> +			goto out_irq_auto0_free;
->> +		}
->> +	}
->> +
-> I've requested kernel-doc above for ch0_current, but if that doesn't
-> make it clear what matic is going on here then some comments here
-> would be good.
-
-I think the best location to make that clear is the DT bindings where =
-you
-can set the values (in microamperes and not encoded values).
-
-Basically you specify in the adc_pdata the uA you want and this function
-does a quantization to perpare 2 bits that can be written into the =
-control
-registers later on.
-
->> +	if (adc_pdata->ch0_current =3D=3D 0)
->> +		adc->ch0_current =3D PALMAS_ADC_CH0_CURRENT_SRC_0;
->> +	else if (adc_pdata->ch0_current <=3D 5)
->> +		adc->ch0_current =3D PALMAS_ADC_CH0_CURRENT_SRC_5;
->> +	else if (adc_pdata->ch0_current <=3D 15)
->> +		adc->ch0_current =3D PALMAS_ADC_CH0_CURRENT_SRC_15;
->> +	else
->> +		adc->ch0_current =3D PALMAS_ADC_CH0_CURRENT_SRC_20;
->> +
->> +	if (adc_pdata->ch3_current =3D=3D 0)
->> +		adc->ch3_current =3D PALMAS_ADC_CH3_CURRENT_SRC_0;
->> +	else if (adc_pdata->ch3_current <=3D 10)
->> +		adc->ch3_current =3D PALMAS_ADC_CH3_CURRENT_SRC_10;
->> +	else if (adc_pdata->ch3_current <=3D 400)
->> +		adc->ch3_current =3D PALMAS_ADC_CH3_CURRENT_SRC_400;
->> +	else
->> +		adc->ch3_current =3D PALMAS_ADC_CH3_CURRENT_SRC_800;
->> +
->> +	adc->extended_delay =3D adc_pdata->extended_delay;
->> +
->> +	iodev->name =3D MOD_NAME;
->> +	iodev->dev.parent =3D &pdev->dev;
->> +	iodev->info =3D &palmas_gpadc_iio_info;
->> +	iodev->modes =3D INDIO_DIRECT_MODE;
->> +	iodev->channels =3D palmas_gpadc_iio_channel;
->> +	iodev->num_channels =3D ARRAY_SIZE(palmas_gpadc_iio_channel);
->> +
->> +	ret =3D iio_device_register(iodev);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "iio_device_register() failed: %d\n", =
-ret);
->> +		goto out_irq_auto1_free;
->> +	}
->> +
->> +	device_set_wakeup_capable(&pdev->dev, 1);
->> +	for (i =3D 0; i < PALMAS_ADC_CH_MAX; i++) {
->> +		if (!(adc->adc_info[i].is_correct_code))
->> +			palmas_gpadc_calibrate(adc, i);
->> +	}
->> +
->> +	if (adc->wakeup1_enable || adc->wakeup2_enable)
->> +		device_wakeup_enable(&pdev->dev);
-> There is no match for this in the remove... Should there be one?
-> (not an interface I know anything about!)
-
-Same for me and I have no idea how to test. But it looks reasonable to =
-call
-device_wakeup_disable(). Therefore I have added.
-
->> +
->> +	return 0;
->> +
->> +out_irq_auto1_free:
->> +	if (adc_pdata->adc_wakeup2_data)
->> +		free_irq(adc->irq_auto_1, adc);
->> +out_irq_auto0_free:
->> +	if (adc_pdata->adc_wakeup1_data)
->> +		free_irq(adc->irq_auto_0, adc);
->> +out_irq_free:
->> +	free_irq(adc->irq, adc);
->> +out_unregister_map:
->> +	if (adc_pdata->iio_maps)
->> +		iio_map_array_unregister(iodev);
->> +out:
->> +	iio_device_free(iodev);
->> +	return ret;
->> +}
->> +
->> +static int palmas_gpadc_remove(struct platform_device *pdev)
->> +{
->> +	struct iio_dev *iodev =3D dev_to_iio_dev(&pdev->dev);
->> +	struct palmas_gpadc *adc =3D iio_priv(iodev);
->> +	struct palmas_platform_data *pdata =3D =
-dev_get_platdata(pdev->dev.parent);
->> +
->> +	if (pdata->gpadc_pdata->iio_maps)
->> +		iio_map_array_unregister(iodev);
->> +	iio_device_unregister(iodev);
->> +	free_irq(adc->irq, adc);
->> +	if (adc->wakeup1_enable)
->> +		free_irq(adc->irq_auto_0, adc);
->> +	if (adc->wakeup2_enable)
->> +		free_irq(adc->irq_auto_1, adc);
->> +	iio_device_free(iodev);
-> Could use demv_iio_device_alloc and not need the free here or on error =
-path.
-> Given location of irq frees you could do devm allocations of them as =
-well
-> which would cut out a fair bit of code without reordering anything.
-
-has also been proposed by Peter Meerwald and has been reworked.
-
->=20
-> nit: blank line here.
->> +	return 0;
->> +}
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int palmas_adc_wakeup_configure(struct palmas_gpadc *adc)
->> +{
->> +	int adc_period, conv;
->> +	int i;
->> +	int ch0 =3D 0, ch1 =3D 0;
->> +	int thres;
->> +	int ret;
->> +
->> +	adc_period =3D adc->auto_conversion_period;
->> +	for (i =3D 0; i < 16; ++i) {
-> spacing around the /
->> +		if (((1000 * (1 << i))/32) < adc_period)
->> +			continue;
->> +	}
->> +	if (i > 0)
->> +		i--;
->> +	adc_period =3D i;
->> +	ret =3D palmas_update_bits(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_AUTO_CTRL,
->> +			PALMAS_GPADC_AUTO_CTRL_COUNTER_CONV_MASK,
->> +			adc_period);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "AUTO_CTRL write failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	conv =3D 0;
->> +	if (adc->wakeup1_enable) {
->> +		int is_high;
->> +
->> +		ch0 =3D adc->wakeup1_data.adc_channel_number;
->> +		conv |=3D PALMAS_GPADC_AUTO_CTRL_AUTO_CONV0_EN;
->> +		if (adc->wakeup1_data.adc_high_threshold > 0) {
->> +			thres =3D adc->wakeup1_data.adc_high_threshold;
->> +			is_high =3D 0;
->> +		} else {
->> +			thres =3D adc->wakeup1_data.adc_low_threshold;
->> +			is_high =3D BIT(7);
-> BIT(7) is a bit random, so I'd suggest defining an appropriate macro
-> for it this register field.
-
-There is indeed a proper macro in palmas.h
-
->=20
->> +		}
->> +
->> +		ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_THRES_CONV0_LSB, thres & =
-0xFF);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev,
->> +				"THRES_CONV0_LSB write failed: %d\n", =
-ret);
->> +			return ret;
->> +		}
->> +
->> +		ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_THRES_CONV0_MSB,
->> +				((thres >> 8) & 0xF) | is_high);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev,
->> +				"THRES_CONV0_MSB write failed: %d\n", =
-ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (adc->wakeup2_enable) {
->> +		int is_high;
->> +
->> +		ch1 =3D adc->wakeup2_data.adc_channel_number;
->> +		conv |=3D PALMAS_GPADC_AUTO_CTRL_AUTO_CONV1_EN;
->> +		if (adc->wakeup2_data.adc_high_threshold > 0) {
->> +			thres =3D adc->wakeup2_data.adc_high_threshold;
->> +			is_high =3D 0;
->> +		} else {
->> +			thres =3D adc->wakeup2_data.adc_low_threshold;
->> +			is_high =3D BIT(7);
->> +		}
->> +
->> +		ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_THRES_CONV1_LSB, thres & =
-0xFF);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev,
->> +				"THRES_CONV1_LSB write failed: %d\n", =
-ret);
->> +			return ret;
->> +		}
->> +
->> +		ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +				PALMAS_GPADC_THRES_CONV1_MSB,
->> +				((thres >> 8) & 0xF) | is_high);
->> +		if (ret < 0) {
->> +			dev_err(adc->dev,
->> +				"THRES_CONV1_MSB write failed: %d\n", =
-ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_AUTO_SELECT, (ch1 << 4) | ch0);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "AUTO_SELECT write failed: %d\n", =
-ret);
->> +		return ret;
->> +	}
->> +
->> +	ret =3D palmas_update_bits(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_AUTO_CTRL,
->> +			PALMAS_GPADC_AUTO_CTRL_AUTO_CONV1_EN |
->> +			PALMAS_GPADC_AUTO_CTRL_AUTO_CONV0_EN, conv);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "AUTO_CTRL write failed: %d\n", ret);
->> +		return ret;
->> +	}
-> nitpick. Blank line here please.
->> +	return 0;
->> +}
->> +
->> +static int palmas_adc_wakeup_reset(struct palmas_gpadc *adc)
->> +{
->> +	int ret;
->> +
->> +	ret =3D palmas_write(adc->palmas, PALMAS_GPADC_BASE,
->> +			PALMAS_GPADC_AUTO_SELECT, 0);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "AUTO_SELECT write failed: %d\n", =
-ret);
->> +		return ret;
->> +	}
->> +
->> +	ret =3D palmas_disable_auto_conversion(adc);
->> +	if (ret < 0) {
->> +		dev_err(adc->dev, "Disable auto conversion failed: =
-%d\n", ret);
->> +		return ret;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static int palmas_gpadc_suspend(struct device *dev)
->> +{
->> +	struct iio_dev *iodev =3D dev_to_iio_dev(dev);
->> +	struct palmas_gpadc *adc =3D iio_priv(iodev);
->> +	int wakeup =3D adc->wakeup1_enable || adc->wakeup2_enable;
->> +	int ret;
->> +
->> +	if (!device_may_wakeup(dev) || !wakeup)
->> +		return 0;
->> +
->> +	ret =3D palmas_adc_wakeup_configure(adc);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (adc->wakeup1_enable)
->> +		enable_irq_wake(adc->irq_auto_0);
->> +
->> +	if (adc->wakeup2_enable)
->> +		enable_irq_wake(adc->irq_auto_1);
-> nitpick. Blank line here please.
->> +	return 0;
->> +}
->> +
->> +static int palmas_gpadc_resume(struct device *dev)
->> +{
->> +	struct iio_dev *iodev =3D dev_to_iio_dev(dev);
->> +	struct palmas_gpadc *adc =3D iio_priv(iodev);
->> +	int wakeup =3D adc->wakeup1_enable || adc->wakeup2_enable;
->> +	int ret;
->> +
->> +	if (!device_may_wakeup(dev) || !wakeup)
->> +		return 0;
->> +
->> +	ret =3D palmas_adc_wakeup_reset(adc);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (adc->wakeup1_enable)
->> +		disable_irq_wake(adc->irq_auto_0);
->> +
->> +	if (adc->wakeup2_enable)
->> +		disable_irq_wake(adc->irq_auto_1);
->> +
->> +	return 0;
->> +};
->> +#endif
->> +
->> +static const struct dev_pm_ops palmas_pm_ops =3D {
->> +	SET_SYSTEM_SLEEP_PM_OPS(palmas_gpadc_suspend,
->> +				palmas_gpadc_resume)
->> +};
->> +
->> +static struct platform_driver palmas_gpadc_driver =3D {
->> +	.probe =3D palmas_gpadc_probe,
->> +	.remove =3D palmas_gpadc_remove,
->> +	.driver =3D {
->> +		.name =3D MOD_NAME,
->> +		.owner =3D THIS_MODULE,
->> +		.pm =3D &palmas_pm_ops,
->> +	},
->> +};
->> +
->> +static int __init palmas_gpadc_init(void)
->> +{
->> +	return platform_driver_register(&palmas_gpadc_driver);
->> +}
->> +module_init(palmas_gpadc_init);
->> +
->> +static void __exit palmas_gpadc_exit(void)
->> +{
->> +	platform_driver_unregister(&palmas_gpadc_driver);
->> +}
->> +module_exit(palmas_gpadc_exit);
->> +
->> +MODULE_DESCRIPTION("palmas GPADC driver");
->> +MODULE_AUTHOR("Pradeep Goudagunta<pgoudagunta@nvidia.com>");
->> +MODULE_ALIAS("platform:palmas-gpadc");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
->> index bb270bd..60acfa2 100644
->> --- a/include/linux/mfd/palmas.h
->> +++ b/include/linux/mfd/palmas.h
->> @@ -133,21 +133,32 @@ struct palmas_pmic_driver_data {
->> 			    struct regulator_config config);
->> };
->>=20
->> +struct palmas_adc_wakeup_property {
->> +	int adc_channel_number;
->> +	int adc_high_threshold;
->> +	int adc_low_threshold;
->> +};
->> +
->> struct palmas_gpadc_platform_data {
->> 	/* Channel 3 current source is only enabled during conversion */
->> 	int ch3_current;
->> -
->> 	/* Channel 0 current source can be used for battery detection.
->> -	 * If used for battery detection this will cause a permanent =
-current
->> +	* If used for battery detection this will cause a permanent =
-current
->> 	 * consumption depending on current level set here.
->> -	 */
->> +		 */
-> Some oddness occured here in patch creation.  Do check your own =
-patches
-> as we all end up with stuff like this from time to time that should
-> be picked up on beofre sending out.  It just adds noise.
->> 	int ch0_current;
->> +	bool extended_delay;
->>=20
->> 	/* default BAT_REMOVAL_DAT setting on device probe */
->> 	int bat_removal;
->>=20
->> 	/* Sets the START_POLARITY bit in the RT_CTRL register */
->> 	int start_polarity;
->> +
->> +	struct iio_map *iio_maps;
->> +	int auto_conversion_period_ms;
->> +	struct palmas_adc_wakeup_property *adc_wakeup1_data;
->> +	struct palmas_adc_wakeup_property *adc_wakeup2_data;
->> };
->>=20
->> struct palmas_reg_init {
->> @@ -403,7 +414,7 @@ struct palmas_gpadc_calibration {
->> 	s32 gain_error;
->> 	s32 offset_error;
->> };
->> -
->> +/*
->> struct palmas_gpadc {
->> 	struct device *dev;
->> 	struct palmas *palmas;
->> @@ -426,6 +437,9 @@ struct palmas_gpadc {
->> 	int conv1_channel;
->> 	int rt_channel;
->> };
->> +*/
-> So there's a commented out bit of code in this patch?  Sort
-> that out before the next version.
-
-We forgot to delete...
-
->=20
->> +
->> +#define PALMAS_DATASHEET_NAME(_name)	=
-"palmas-gpadc-chan-"#_name
->>=20
->> struct palmas_gpadc_result {
->> 	s32 raw_code;
->> @@ -519,6 +533,42 @@ enum palmas_irqs {
->> 	PALMAS_NUM_IRQ,
->> };
->>=20
->> +/* Palma GPADC Channels */
->> +enum {
->> +	PALMAS_ADC_CH_IN0,
->> +	PALMAS_ADC_CH_IN1,
->> +	PALMAS_ADC_CH_IN2,
->> +	PALMAS_ADC_CH_IN3,
->> +	PALMAS_ADC_CH_IN4,
->> +	PALMAS_ADC_CH_IN5,
->> +	PALMAS_ADC_CH_IN6,
->> +	PALMAS_ADC_CH_IN7,
->> +	PALMAS_ADC_CH_IN8,
->> +	PALMAS_ADC_CH_IN9,
->> +	PALMAS_ADC_CH_IN10,
->> +	PALMAS_ADC_CH_IN11,
->> +	PALMAS_ADC_CH_IN12,
->> +	PALMAS_ADC_CH_IN13,
->> +	PALMAS_ADC_CH_IN14,
->> +	PALMAS_ADC_CH_IN15,
-> This does rather feel like an enum that doesn't add anything
-> as the enum values =3D the index given at the end anyway...
-
-As said it adds some (questionable) check by the compiler,
-
->> +	PALMAS_ADC_CH_MAX,
-
-and this constant is indirectly defined.
-
->> +};
->> +
->> +/* Palma GPADC Channel0 Current Source */
->> +enum {
->> +	PALMAS_ADC_CH0_CURRENT_SRC_0,
->> +	PALMAS_ADC_CH0_CURRENT_SRC_5,
->> +	PALMAS_ADC_CH0_CURRENT_SRC_15,
->> +	PALMAS_ADC_CH0_CURRENT_SRC_20,
->> +};
-> Nitpick: new line here.
->> +/* Palma GPADC Channel3 Current Source */
->> +enum {
->> +	PALMAS_ADC_CH3_CURRENT_SRC_0,
->> +	PALMAS_ADC_CH3_CURRENT_SRC_10,
->> +	PALMAS_ADC_CH3_CURRENT_SRC_400,
->> +	PALMAS_ADC_CH3_CURRENT_SRC_800,
->> +};
->> +
->> struct palmas_pmic {
->> 	struct palmas *palmas;
->> 	struct device *dev;
->> @@ -2999,6 +3049,7 @@ enum usb_irq_events {
->> #define PALMAS_GPADC_TRIM14					0x0D
->> #define PALMAS_GPADC_TRIM15					0x0E
->> #define PALMAS_GPADC_TRIM16					0x0F
->> +#define PALMAS_GPADC_TRIMINVALID				-1
->>=20
->> /* TPS659038 regen2_ctrl offset iss different from palmas */
->> #define TPS659038_REGEN2_CTRL					=
-0x12
->>=20
->=20
+On Mon, Oct 12, 2015 at 2:46 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> Currently firmware file name is included in the DTS. This is not scalable
+> as user has to change the DTS if they need upgrade to a new firmware.
+> Instead, add the firmware file name in the driver itself. As long as there
+> is no API change, new firmware upgrade is easy and require no driver
+> change. User is expected to copy the firmware image to the file system
+> and add a sym link to the new firmware for doing an upgrade. Driver add
+> a array of firmware file names to search for the available firmware blobs.
+> This scheme also prepare the driver for future changes to API if ever
+> happens. In such case it is assumed that driver needs to change to
+> accommodate the new firmware and new firmware file name will get added to
+> the array.
+>
+> Also update the DT document to remove the firmware attribute and add
+> description about firmware in the driver documentation.
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>  - v2. Moved firmware file name from DT to driver code.
+>  Documentation/arm/keystone/knav-qmss.txt           | 26 ++++++++++++
+>  .../bindings/soc/ti/keystone-navigator-qmss.txt    |  1 -
+>  drivers/soc/ti/knav_qmss.h                         |  1 -
+>  drivers/soc/ti/knav_qmss_queue.c                   | 47 +++++++++++++---------
+>  4 files changed, 54 insertions(+), 21 deletions(-)
+>
+> diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
+> index 79946d1..da34a5b 100644
+> --- a/Documentation/arm/keystone/knav-qmss.txt
+> +++ b/Documentation/arm/keystone/knav-qmss.txt
+> @@ -22,3 +22,29 @@ pool management.
+>  knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
+>  allocate descriptor pools, map the descriptors, push/pop to queues etc. For
+>  details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
+> +
+> +DT documentation is available at
+> +Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+> +
+> +Accumulator QMSS queues using PDSP firmware
+> +============================================
+> +The QMSS PDSP firmware support accumulator channel that can monitor a single
+> +queue or multiple contiguous queues. drivers/soc/ti/knav_qmss_acc.c is the
+> +driver that interface with the accumulator PDSP. This configures
+> +accumulator channels defined in DTS (example in DT documentation) to monitor
+> +1 or 32 queues per channel. More description on the firmware is available in
+> +CPPI/QMSS Low Level Driver document (docs/CPPI_QMSS_LLD_SDS.pdf) at
+> +       git://git.ti.com/keystone-rtos/qmss-lld.git
+> +
+> +k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin firmware supports upto 48 accumulator
+> +channels. This firmware is available under ti-keystone folder of
+> +firmware.git at
+> +   git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+> +
+> +To use copy the firmware image to lib/firmware folder of the initramfs or
+> +ubifs file system and provide a sym link to k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin
+> +in the file system and boot up the kernel. User would see
+> +
+> + "firmware file ks2_qmss_pdsp_acc48.bin downloaded for PDSP"
+> +
+> +in the boot up log if loading of firmware to PDSP is successful.
+> diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+> index 2cecea1..aac8c36 100644
+> --- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+> +++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+> @@ -209,7 +209,6 @@ qmss: qmss@2a40000 {
+>                 #size-cells = <1>;
+>                 ranges;
+>                 pdsp0@0x2a10000 {
+> -                       firmware = "keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw";
+>                         reg = <0x2a10000 0x1000>,
+>                               <0x2a0f000 0x100>,
+>                               <0x2a0c000 0x3c8>,
+> diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
+> index 51da234..c31b8d8 100644
+> --- a/drivers/soc/ti/knav_qmss.h
+> +++ b/drivers/soc/ti/knav_qmss.h
+> @@ -135,7 +135,6 @@ struct knav_pdsp_info {
+>         };
+>         void __iomem                                    *intd;
+>         u32 __iomem                                     *iram;
+> -       const char                                      *firmware;
+>         u32                                             id;
+>         struct list_head                                list;
+>  };
+> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+> index 6d8646d..06d9de8 100644
+> --- a/drivers/soc/ti/knav_qmss_queue.c
+> +++ b/drivers/soc/ti/knav_qmss_queue.c
+> @@ -68,6 +68,12 @@ static DEFINE_MUTEX(knav_dev_lock);
+>              idx < (kdev)->num_queues_in_use;                   \
+>              idx++, inst = knav_queue_idx_to_inst(kdev, idx))
+>
+> +/* All firmware file names end up here. List the firmware file names below.
+> + * Newest followed by older ones. Search is done from start of the array
+> + * until a firmware file is found.
+> + */
+> +const char *knav_acc_firmwares[] = {"ks2_qmss_pdsp_acc48.bin"};
+> +
+>  /**
+>   * knav_queue_notify: qmss queue notfier call
+>   *
+> @@ -1439,7 +1445,6 @@ static int knav_queue_init_pdsps(struct knav_device *kdev,
+>         struct device *dev = kdev->dev;
+>         struct knav_pdsp_info *pdsp;
+>         struct device_node *child;
+> -       int ret;
+>
+>         for_each_child_of_node(pdsps, child) {
+>                 pdsp = devm_kzalloc(dev, sizeof(*pdsp), GFP_KERNEL);
+> @@ -1448,17 +1453,6 @@ static int knav_queue_init_pdsps(struct knav_device *kdev,
+>                         return -ENOMEM;
+>                 }
+>                 pdsp->name = knav_queue_find_name(child);
+> -               ret = of_property_read_string(child, "firmware",
+> -                                             &pdsp->firmware);
+> -               if (ret < 0 || !pdsp->firmware) {
+> -                       dev_err(dev, "unknown firmware for pdsp %s\n",
+> -                               pdsp->name);
+> -                       devm_kfree(dev, pdsp);
+> -                       continue;
+> -               }
+> -               dev_dbg(dev, "pdsp name %s fw name :%s\n", pdsp->name,
+> -                       pdsp->firmware);
+> -
+>                 pdsp->iram =
+>                         knav_queue_map_reg(kdev, child,
+>                                            KNAV_QUEUE_PDSP_IRAM_REG_INDEX);
+> @@ -1489,9 +1483,9 @@ static int knav_queue_init_pdsps(struct knav_device *kdev,
+>                 }
+>                 of_property_read_u32(child, "id", &pdsp->id);
+>                 list_add_tail(&pdsp->list, &kdev->pdsps);
+> -               dev_dbg(dev, "added pdsp %s: command %p, iram %p, regs %p, intd %p, firmware %s\n",
+> +               dev_dbg(dev, "added pdsp %s: command %p, iram %p, regs %p, intd %p\n",
+>                         pdsp->name, pdsp->command, pdsp->iram, pdsp->regs,
+> -                       pdsp->intd, pdsp->firmware);
+> +                       pdsp->intd);
+>         }
+>         return 0;
+>  }
+> @@ -1518,14 +1512,29 @@ static int knav_queue_load_pdsp(struct knav_device *kdev,
+>  {
+>         int i, ret, fwlen;
+>         const struct firmware *fw;
+> +       bool found = false;
+>         u32 *fwdata;
+>
+> -       ret = request_firmware(&fw, pdsp->firmware, kdev->dev);
+> -       if (ret) {
+> -               dev_err(kdev->dev, "failed to get firmware %s for pdsp %s\n",
+> -                       pdsp->firmware, pdsp->name);
+> -               return ret;
+> +       for (i = 0; i < ARRAY_SIZE(knav_acc_firmwares); i++) {
+> +               if (knav_acc_firmwares[i]) {
+> +                       ret = request_firmware(&fw,
+> +                                              knav_acc_firmwares[i],
+> +                                              kdev->dev);
+> +                       if (!ret) {
+> +                               found = true;
+> +                               break;
+> +                       }
+> +               }
+> +       }
+> +
+> +       if (!found) {
+> +               dev_err(kdev->dev, "failed to get firmware for pdsp\n");
+> +               return -ENODEV;
+>         }
+> +
+> +       dev_info(kdev->dev, "firmware file %s downloaded for PDSP\n",
+> +                knav_acc_firmwares[i]);
+> +
+>         writel_relaxed(pdsp->id + 1, pdsp->command + 0x18);
+>         /* download the firmware */
+>         fwdata = (u32 *)fw->data;
+> --
+> 1.9.1
+>
