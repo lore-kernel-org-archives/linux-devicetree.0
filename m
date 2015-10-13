@@ -1,149 +1,46 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Document the STM32 DMA bindings
-Date: Tue, 13 Oct 2015 15:22:40 +0100
-Message-ID: <20151013142240.GC24353@leverpostej>
-References: <1444744848-720-1-git-send-email-cedric.madianga@gmail.com>
- <1444744848-720-2-git-send-email-cedric.madianga@gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 2/2] ARM: dts: change gpio-key,wakeup property to boolean
+Date: Tue, 13 Oct 2015 15:26:07 +0100
+Message-ID: <561D147F.6090907@arm.com>
+References: <1444743164-17735-1-git-send-email-sudeep.holla@arm.com>
+ <1444743164-17735-2-git-send-email-sudeep.holla@arm.com>
+ <CAL_JsqKDrvxas-x9QoLEs3yuDtEY+0u5qJZ4ZPiRQX0SrMKY2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444744848-720-2-git-send-email-cedric.madianga@gmail.com>
+In-Reply-To: <CAL_JsqKDrvxas-x9QoLEs3yuDtEY+0u5qJZ4ZPiRQX0SrMKY2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, spear-devel <spear-devel@list.st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 04:00:45PM +0200, M'boumba Cedric Madianga wrote:
-> This patch adds documentation of device tree bindings for the STM32 dma
-> controller.
-> 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> ---
->  .../devicetree/bindings/dma/stm32-dma.txt          | 98 ++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> new file mode 100644
-> index 0000000..9ce0d49
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> @@ -0,0 +1,98 @@
-> +* STMicroelectronics STM32 DMA controller
-> +
-> +The STM32 DMA is a general-purpose direct memory access controller capable of
-> +supporting 8 independent DMA channels. Each channel can have up to 8 requests.
-> +
-> +Required properties:
-> +- compatible: Should be "st,stm32-dma"
-> +- reg: Should contain DMA registers location and length. This should include
-> +  all of the per-channel registers.
-> +- interrupts: Should contain all of the per-channel DMA interrupts.
 
-Please specify the order they must be in.
 
-> +- clocks: Should contain the input clock of the DMA instance.
-> +- #dma-cells : Must be <4>. See DMA client paragraph for more details.
-> +
-> +Optional properties:
-> +- resets: Reference to a reset controller asserting the DMA controller
-> +- st,mem2mem: boolean; if defined, it indicates that the controller supports
-> +  memory-to-memory transfer
-> +
-> +Example:
-> +
-> +	dma2: dma-controller@40026400 {
-> +		compatible = "st,stm32-dma";
-> +		reg = <0x40026400 0x400>;
-> +		interrupts = <56>,
-> +			     <57>,
-> +			     <58>,
-> +			     <59>,
-> +			     <60>,
-> +			     <68>,
-> +			     <69>,
-> +			     <70>;
-> +		clocks = <&clk_hclk>;
-> +		#dma-cells = <4>;
-> +		st,mem2mem;
-> +		resets = <&rcc 150>;
-> +	};
-> +
-> +* DMA client
-> +
-> +Required properties:
-> +- dmas: Comma separated list of dma channel requests
-> +- dma-names: Names of the aforementioned requested channels
-> +
-> +Each dmas request consists of 5 cells:
-> +1. A phandle pointing to the STM32 DMA controller
-> +2. The channel id
-> +3. The request line number
-> +4. A 32bit mask specifying the DMA channel configuration
-> + -bit 1: Direct Mode Error Interrupt
-> +	0x0: disabled
-> +	0x1: enabled
-> + -bit 2: Transfer Error Interrupt
-> +	0x0: disabled
-> +	0x1: enabled
-> + -bit 3: Half Transfer Mode Error Interrupt
-> +	0x0: disabled
-> +	0x1: enabled
-> + -bit 4: Transfer Complete Interrupt
-> +	0x0: disabled
-> +	0x1: enabled
+On 13/10/15 15:07, Rob Herring wrote:
+> On Tue, Oct 13, 2015 at 8:32 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
+>> "gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
+>> source.
+>>
+>> Few dts files assign value "1" to gpio-key,wakeup and in one instance a
+>> value "0" is assigned probably assuming it won't be enabled as a wakeup
+>> source. Since the presence of the boolean property indicates it is
+>> enabled, value of "0" have no value.
+>>
+>> This patch removes the property where value "0" is assigned and removes
+>> the value "1" in most of the other cases.
+>
+> Why don't you just change everything to wakeup-source.
+>
 
-Why should this be in the DT?
+Agreed, I wanted to do that but was not sure if that's acceptable.
+I will update it, now I know that you are fine with it.
 
-Surely the driver should be in charge of deciding when to use these?
+I also plan to find all the variety of bindings we have and fix them
+retaining only those which are handled in the current kernel code as
+legacy support.
 
-> + -bit 9: Peripheral Increment Address
-> +	0x0: no address increment between transfers
-> +	0x1: increment address between transfers
-> + -bit 10: Memory Increment Address
-> +	0x0: no address increment between transfers
-> +	0x1: increment address between transfers
-
-These don't seem like they belong either. Surely this would depend on
-the request made, rather than being a fixed property?
-
-> + -bit 15: Peripheral Increment Offset Size
-> +	0x0: offset size is linked to the peripheral bus width
-> +	0x1: offset size is fixed to 4 (32-bit alignment)
-
-This sounds like it might belong in the DT.
-
-> + -bit 16-17: Priority level
-> +	0x0: low
-> +	0x1: medium
-> +	0x2: high
-> +	0x3: very high
-
-What do we do elsewhere in terms of describing prioritisation? It feels
-like it would be a dynamic property of the system.
-
-> +5. A 32bit mask specifying the DMA FIFO configuration
-> + -bit 0-1: Fifo threshold
-> +	0x0: 1/4 full FIFO
-> +	0x1: 1/2 full FIFO
-> +	0x2: 3/4 full FIFO
-> +	0x3:full FIFO
-
-What does this mean?
-
-> + -bit 2: Direct mode
-> +	0x0: enabled
-> +	0x1: disabled
-
-What does this mean?
-
-> + -bit 7: FIFO Error Interrupt
-> +	0x0: disabled
-> +	0x1: enabled
-
-As with the other interrupt configuration, this does not look like it
-belongs in the DT.
-
-Thanks,
-Mark.
+-- 
+Regards,
+Sudeep
