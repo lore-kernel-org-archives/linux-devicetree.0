@@ -1,25 +1,40 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: porter: enable internal PCI and USB PHY
-Date: Tue, 13 Oct 2015 10:01:43 +0900
-Message-ID: <20151013010142.GA4836@verge.net.au>
-References: <3151312.grtDDBsSl8@wasted.cogentembedded.com>
- <4574604.BmF3DtBjpm@wasted.cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: porter: add QSPI DT support
+Date: Tue, 13 Oct 2015 10:04:47 +0900
+Message-ID: <20151013010446.GC4836@verge.net.au>
+References: <1738678.v21ITp1gYW@wasted.cogentembedded.com>
+ <20151012000453.GC20025@verge.net.au>
+ <CAMuHMdWzhasOwUe8dOba_QwpMfwR-3w_obO0aszr0R4XcBa24Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4574604.BmF3DtBjpm@wasted.cogentembedded.com>
+In-Reply-To: <CAMuHMdWzhasOwUe8dOba_QwpMfwR-3w_obO0aszr0R4XcBa24Q@mail.gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 01:12:18AM +0300, Sergei Shtylyov wrote:
-> Enable  internal AHB-PCI bridges for the USB EHCI/OHCI controllers attached
-> to them and also enable  USB PHY device  for the Porter board.  We have to
-> enable  everything in one patch since EHCI/OHCI devices are already linked
-> to the USB PHY device.
+On Mon, Oct 12, 2015 at 08:53:26AM +0200, Geert Uytterhoeven wrote:
+> On Mon, Oct 12, 2015 at 2:04 AM, Simon Horman <horms@verge.net.au> wrote:
+> >> +     flash@0 {
+> >> +             #address-cells = <1>;
+> >> +             #size-cells = <1>;
+> >> +             compatible = "spansion,s25fl512s", "jedec,spi-nor";
+> >
+> > spansion,s25fl512s is used in several dt files but it seems to be
+> > undocumented. Do we have a plan to resolve this?
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+> 
+> - compatible : May include a device-specific string consisting of the
+>                manufacturer and name of the chip. Bear in mind the DT binding
+>                is not Linux-only, but in case of Linux, see the "m25p_ids"
+>                table in drivers/mtd/devices/m25p80.c for the list of supported
+>                chips.
+>                Must also include "jedec,spi-nor" for any SPI NOR flash that can
+>                be identified by the JEDEC READ ID opcode (0x9F).
+> 
+> Hence it's OK.
 
-Thanks, I have queued this up for v4.4.
+Thanks, I guess checkpatch needs to learn about that rule.
