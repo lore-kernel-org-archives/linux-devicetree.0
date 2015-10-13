@@ -1,112 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 2/6] mfd: da9150: Update DT bindings for Fuel-Gauge
- support
-Date: Tue, 13 Oct 2015 10:26:09 +0100
-Message-ID: <20151013092609.GT32409@x1>
-References: <cover.1444225050.git.Adam.Thomson.Opensource@diasemi.com>
- <0fba7f849b31b230970543240bcfa28ff2c17f0e.1444225050.git.Adam.Thomson.Opensource@diasemi.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/1] doc: dt-binding: ci-hdrc-usb2: improve property description
+Date: Tue, 13 Oct 2015 17:25:17 +0800
+Message-ID: <1444728317-4226-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0fba7f849b31b230970543240bcfa28ff2c17f0e.1444225050.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shanw Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 07 Oct 2015, Adam Thomson wrote:
+Improve the description of properties "tx-burst-size-dword"
+and "rx-burst-size-dword".
 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> ---
->=20
-> Changes in v6:
->  - Rebase to v4.3-rc4
->=20
-> Changes in v5:
->  - Rebase to v4.2
->=20
-> Changes in v4:
->  - Update compatible string of fuel-gauge to "da9150-fuel-gauge".
->  - Node name tidy up, relating to maintainer comments on fuel-gauge D=
-T
->    binding doc.
->  - Removed Ack to patch from Lee Jones, as this has now been modified=
- slightly
->    and didn't want to make assumptions of approval.
->=20
-> Changes in v3:
->  - Removal of unwanted new-line.
->  - Flesh out example bindings usage.
->=20
->  Documentation/devicetree/bindings/mfd/da9150.txt | 27 ++++++++++++++=
-++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shanw Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Applied, thanks.
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 27dc705..781296b 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -37,11 +37,15 @@ Optional properties:
+ - tx-burst-size-dword: it is vendor dependent, the tx burst size in dword
+   (4 bytes), This register represents the maximum length of a the burst
+   in 32-bit words while moving data from system memory to the USB
+-  bus, changing this value takes effect only the SBUSCFG.AHBBRST is 0.
++  bus, the value of this property will only take effect if property
++  "ahb-burst-config" is set to 0, if this property is missing the reset
++  default of the hardware implementation will be used.
+ - rx-burst-size-dword: it is vendor dependent, the rx burst size in dword
+   (4 bytes), This register represents the maximum length of a the burst
+   in 32-bit words while moving data from the USB bus to system memory,
+-  changing this value takes effect only the SBUSCFG.AHBBRST is 0.
++  the value of this property will only take effect if property
++  "ahb-burst-config" is set to 0, if this property is missing the reset
++  default of the hardware implementation will be used.
+ - extcon: phandles to external connector devices. First phandle should point to
+   external connector, which provide "USB" cable events, the second should point
+   to external connector device, which provide "USB-HOST" cable events. If one
+-- 
+1.9.1
 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Docum=
-entation/devicetree/bindings/mfd/da9150.txt
-> index d0588ea..970801d 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9150.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9150.txt
-> @@ -6,6 +6,7 @@ Device			 Description
->  ------			 -----------
->  da9150-gpadc		: General Purpose ADC
->  da9150-charger		: Battery Charger
-> +da9150-fg		: Battery Fuel-Gauge
->=20
->  =3D=3D=3D=3D=3D=3D
->=20
-> @@ -22,7 +23,7 @@ Required properties:
->  Sub-devices:
->  - da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150=
--gpadc.txt
->  - da9150-charger: See Documentation/devicetree/bindings/power/da9150=
--charger.txt
-> -
-> +- da9150-fg: See Documentation/devicetree/bindings/power/da9150-fg.t=
-xt
->=20
->  Example:
->=20
-> @@ -34,10 +35,28 @@ Example:
->  		interrupt-controller;
->=20
->  		gpadc: da9150-gpadc {
-> -			...
-> +			compatible =3D "dlg,da9150-gpadc";
-> +			#io-channel-cells =3D <1>;
-> +		};
-> +
-> +		charger {
-> +			compatible =3D "dlg,da9150-charger";
-> +
-> +			io-channels =3D <&gpadc 0>,
-> +				      <&gpadc 2>,
-> +				      <&gpadc 8>,
-> +				      <&gpadc 5>;
-> +			io-channel-names =3D "CHAN_IBUS",
-> +					   "CHAN_VBUS",
-> +					   "CHAN_TJUNC",
-> +					   "CHAN_VBAT";
->  		};
->=20
-> -		da9150-charger {
-> -			...
-> +		fuel-gauge {
-> +			compatible =3D "dlg,da9150-fuel-gauge";
-> +
-> +			dlg,update-interval =3D <10000>;
-> +			dlg,warn-soc-level =3D /bits/ 8 <15>;
-> +			dlg,crit-soc-level =3D /bits/ 8 <5>
->  		};
->  	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
