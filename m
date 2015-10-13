@@ -1,109 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Tue, 13 Oct 2015 16:56:47 -0500
-Message-ID: <CAL_JsqJ3ErrFQxA9pLV7pvG3pCEkPFRfE6sGER5uBeFbmDEnxA@mail.gmail.com>
-References: <1444426068-15817-1-git-send-email-eric@anholt.net>
- <1444426068-15817-2-git-send-email-eric@anholt.net>
- <CAL_JsqKbAm1=70GaDRg1Z47A9d9FShwpWacMOjr+FE8bZuocVg@mail.gmail.com>
- <87lhb63a60.fsf@eliezer.anholt.net>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: Re: [PATCH v2 7/7] clk: ns2: add clock support for Broadcom
+ Northstar 2 SoC
+Date: Tue, 13 Oct 2015 18:04:50 -0400
+Message-ID: <20151013220450.GO12512@broadcom.com>
+References: <1444770485-11210-1-git-send-email-jonmason@broadcom.com>
+ <1444770485-11210-8-git-send-email-jonmason@broadcom.com>
+ <5280890.6npshDUNFZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <87lhb63a60.fsf@eliezer.anholt.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5280890.6npshDUNFZ@wuerfel>
+Sender: linux-clk-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMTMsIDIwMTUgYXQgMToxNyBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JpdGVzOgo+Cj4+
-IE9uIEZyaSwgT2N0IDksIDIwMTUgYXQgNDoyNyBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4+PiAtLS0KPj4+Cj4+PiB2MjogRXh0ZW5kIHRoZSBjb21taXQgbWVzc2Fn
-ZSwgZml4IHNldmVyYWwgbml0cyBmcm9tIFN0ZXBoZW4gV2FycmVuLgo+Pj4gdjM6IFJlbmFtZSB0
-aGUgY29tcGF0aWJpbGl0eSBzdHJpbmdzLCBjbGVhbiB1cCBub2RlIG5hbWVzLCBkcm9wIHRoZQo+
-Pj4gICAgIHVubmVjZXNzYXJ5IGxpc3RzIG9mIGNvbXBvbmVudHMuICBVc2UgY29tcGF0aWJpbGl0
-eSBzdHJpbmdzIGZvcgo+Pj4gICAgIGNob29zaW5nIENSVEMgSFZTIGNoYW5uZWwgbnVtYmVycy4g
-IERvY3VtZW50IHRoZSBIRE1JIGNsb2NrIHVzYWdlLgo+Pj4KPj4+ICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9ncHUvYnJjbSxiY20tdmM0LnR4dCAgICAgICB8IDY0ICsrKysrKysrKysrKysrKysr
-KysrKysKPj4KPj4gQ2FuIHlvdSBwdXQgdGhpcyBpbiBiaW5kaW5ncy9kaXNwbGF5LyBpbnN0ZWFk
-PyBUaGluZ3MgYXJlIG1vdmluZyB0aGVyZSBpbiA0LjQuCj4KPiBTdXJlLgo+Cj4+PiAgMSBmaWxl
-IGNoYW5nZWQsIDY0IGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9icmNtLGJjbS12YzQudHh0Cj4+Pgo+Pj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYnJjbSxi
-Y20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYnJjbSxi
-Y20tdmM0LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLjE3
-NWJjZGUKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvYnJjbSxiY20tdmM0LnR4dAo+Pj4gQEAgLTAsMCArMSw2NCBAQAo+Pj4g
-K0Jyb2FkY29tIFZDNCBHUFUKPj4+ICsKPj4+ICtUaGUgVkM0IGRldmljZSBwcmVzZW50IG9uIHRo
-ZSBSYXNwYmVycnkgUGkgaW5jbHVkZXMgYSBkaXNwbGF5IHN5c3RlbQo+Pj4gK3dpdGggSERNSSBv
-dXRwdXQgYW5kIHRoZSBIVlMgc2NhbGVyIGZvciBjb21wb3NpdGluZyBkaXNwbGF5IHBsYW5lcy4K
-Pj4+ICsKPj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBWQzQ6Cj4+PiArLSBjb21wYXRpYmxl
-OiAgU2hvdWxkIGJlICJicmNtLGJjbTI4MzUtdmM0Igo+Pgo+PiByZWcgcHJvcGVydHk/IGludGVy
-cnVwdHM/IGNsb2Nrcz8KPgo+IFRoaXMgaXMgdGhlIHN1YnN5c3RlbSBub2RlLiAgSXQgaGFzIG5v
-IG90aGVyIHByb3BlcnRpZXMgY3VycmVudGx5LgoKSW4gdGhlIGV4YW1wbGUsIGl0IGxvb2tzIGxp
-a2UgdGhlIGdwdS4gWW91IGFsc28gaGF2ZSBhIHVuaXQgYWRkcmVzcwp3aGljaCBpbXBsaWVzIHlv
-dSBuZWVkIGEgcmVnIHByb3BlcnR5LgoKPj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBQaXhl
-bCBWYWx2ZToKPj4+ICstIGNvbXBhdGlibGU6ICBTaG91bGQgYmUgb25lIG9mICJicmNtLGJjbTI4
-MzUtcGl4ZWx2YWx2ZTAiLAo+Pj4gKyAgICAgICAgICAgICAgICJicmNtLGJjbTI4MzUtcGl4ZWx2
-YWx2ZTEiLCBvciAiYnJjbSxiY20yODM1LXBpeGVsdmFsdmUyIgo+Pj4gKy0gcmVnOiAgICAgICAg
-IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBQVidzIHJlZ2lzdGVycwo+
-Pj4gKy0gaW50ZXJydXB0czogIFRoZSBpbnRlcnJ1cHQgbnVtYmVyCj4+PiArICAgICAgICAgICAg
-ICAgICBTZWUgYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYnJjbSxiY20yODM1LWFybWN0
-cmwtaWMudHh0Cj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgSFZTOgo+Pj4gKy0g
-Y29tcGF0aWJsZTogIFNob3VsZCBiZSAiYnJjbSxiY20yODM1LWh2cyIKPj4+ICstIHJlZzogICAg
-ICAgICBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgSFZTJ3MgcmVnaXN0
-ZXJzCj4+PiArLSBpbnRlcnJ1cHRzOiAgVGhlIGludGVycnVwdCBudW1iZXIKPj4+ICsgICAgICAg
-ICAgICAgICAgIFNlZSBiaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9icmNtLGJjbTI4MzUt
-YXJtY3RybC1pYy50eHQKPj4+ICsKPj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBIRE1JCj4+
-Cj4+IElzIEhETUkgdGhlIG9ubHkgb3V0cHV0IHBvc3NpYmlsaXR5PyBJZiBub3QsIHRoZW4geW91
-IHNob3VsZCBoYXZlIE9GCj4+IGdyYXBoIG5vZGVzIGRlc2NyaWJpbmcgdGhlIGNvbm5lY3Rpb24g
-YmV0d2VlbiBIRE1JIGJsb2NrIGFuZCBIVlMgKG9yCj4+IFBWPykuCj4KPiBJJ20gdXNpbmcgY29t
-cGF0aWJsZSBzdHJpbmdzIGZvciB0aGUgZGlmZmVyZW50IGluc3RhbmNlcyBvZiB0aGUgbW9kdWxl
-Ogo+IGJyY20sYmNtMjgzNS1waXhlbHZhbHZlMC8xLzIuICBUaGlzIGxldHMgdGhlIGNvbm5lY3Rp
-b25zIGdldCB3aXJlZCB1cAo+IGNsZWFubHkgYW5kIHVuZGVyc3RhbmRhYmx5IHdpdGhpbiB0aGUg
-ZHJpdmVyLiAgSSBzcGVudCBhIGxvbmcgdGltZQo+IHRyeWluZyB0byBjb21lIHVwIHdpdGggYW4g
-T0YgZ3JhcGgtYmFzZWQgaW1wbGVtZW50YXRpb24sIGFuZCBJCj4gZXZlbnR1YWxseSBnYXZlIHVw
-LgoKSSBtaXNzZWQgdGhhdCBiZWZvcmUsIGJ1dCBzb3JyeSwgdGhhdCdzIG5vdCBob3cgeW91IHNo
-b3VsZCBiZSB1c2luZwpjb21wYXRpYmxlIHN0cmluZ3MuIFdoYXQgd2FzIHlvdXIgaXNzdWUgd2l0
-aCBPRiBncmFwaD8gSXQgY2FuIGJlCmRpZmZpY3VsdCB0byBwYXJzZS4gSSdkIGxpa2UgdG8gaW1w
-cm92ZSB0aGF0IHdpdGggbW9yZSBjb21tb24gcGFyc2luZwpjb2RlLgoKCj4+PiArLSBjb21wYXRp
-YmxlOiAgU2hvdWxkIGJlICJicmNtLGJjbTI4MzUtaGRtaSIKPj4+ICstIHJlZzogICAgICAgICBQ
-aHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgdHdvIHJlZ2lzdGVyIHJhbmdl
-cwo+Pj4gKyAgICAgICAgICAgICAgICAgKCJIRE1JIiBhbmQgIkhEIiwgaW4gdGhhdCBvcmRlcikK
-Pj4+ICstIGludGVycnVwdHM6ICBUaGUgaW50ZXJydXB0IG51bWJlcnMKPj4+ICsgICAgICAgICAg
-ICAgICAgIFNlZSBiaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9icmNtLGJjbTI4MzUtYXJt
-Y3RybC1pYy50eHQKPj4+ICstIGRkYzogICAgICAgICBwaGFuZGxlIG9mIHRoZSBJMkMgY29udHJv
-bGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4+PiArLSBjbG9ja3M6ICAgICAgYSkgaGRt
-aTogVGhlIEhETUkgc3RhdGUgbWFjaGluZSBjbG9jawo+Pj4gKyAgICAgICAgICAgICAgIGIpIHBp
-eGVsOiBUaGUgcGl4ZWwgY2xvY2suCj4+PiArCj4+PiArT3B0aW9uYWwgcHJvcGVydGllcyBmb3Ig
-SERNSToKPj4+ICstIGhwZC1ncGlvOiAgICBUaGUgR1BJTyBwaW4gZm9yIEhETUkgaG90cGx1ZyBk
-ZXRlY3QgKGlmIGl0IGRvZXNuJ3QgYXBwZWFyCj4+Cj4+ICotZ3BpbyBpcyBkZXByZWNhdGVkLCBz
-byAiaHBkLWdwaW9zIi4KPj4KPj4gUmVhbGx5LCBJIHRoaW5rIHRoaXMgYW5kIGRkYyBzaG91bGQg
-YmUgaW4gaGRtaS1jb25uZWN0b3IgYmluZGluZyBub2RlLgo+PiBXaGF0IGhhcyBiZWVuIGRvbmUg
-Zm9yIGJpbmRpbmdzIHNvIGZhciBpcyBhbGwgb3ZlciB0aGUgbWFwIHRob3VnaC4KPgo+IFlvdSBz
-YXkgaHBkLWdwaW9zIGlzIGRlcHJlY3RhdGVkLCBidXQgdGhhdCBJIHNob3VsZCB1c2UgdGhlCj4g
-aGRtaS1jb25uZWN0b3IgYmluZGluZyB0aGF0IHVzZXMgaHBkLWdwaW9zLiAgV2hpY2ggb25lIGlz
-IGl0PyAgSWYKPiBocGQtZ3Bpb3MgZGVwcmVjYXRlZCwgd2hhdCBpcyBzdXBwb3NlZCB0byBiZSB1
-c2VkIGluc3RlYWQ/CgpObywgSSBzYWlkICJocGQtZ3BpbyIgd2l0aCBubyAicyIgaXMgZGVwcmVj
-YXRlZC4gSW4gb3RoZXIgd29yZHMsCmFsd2F5cyB1c2UgLWdwaW9zIHdoZXRoZXIgaXQgaXMgMSBv
-ciBtb3JlIGdwaW8uCgpUaGUgY29ubmVjdG9yIHBhcnQgaXMgYSBzZXBhcmF0ZSBpc3N1ZSBvZiB0
-aGUgbG9jYXRpb24gb2YgdGhlc2UKcHJvcGVydGllcy4gSWYgeW91IHRoaW5rIGFib3V0IGl0LCB0
-aGUgZ3BpbyBsaW5lIGFuZCBJMkMgYnVzIGhhdmUKbm90aGluZyB0byBkbyB3aXRoIHRoZSBIRE1J
-IG5vZGUuIFRoYXQncyBkaWZmZXJlbnQgdGhhbiBjYXNlcyBvZiBIRE1JCmJyaWRnZXMgd2hpY2gg
-aGF2ZSBhIEhQRCBzaWduYWwgYW5kIGRlZGljYXRlZCBJMkMgY29udHJvbGxlci4gTW9zdApleGFt
-cGxlcyBpbiB0aGUga2VybmVsIGhhdmUgbm90IGZvbGxvd2VkIHRoaXMgYW5kIGRvIGFzIHlvdSBo
-YXZlLiBJCm9ubHkgaGF2ZSBhIGRlc2lyZSB0byBoYXZlIGNvbW1vbiBiaW5kaW5nIGFuZCBjb2Rl
-IHRvIGhhbmRsZQpjb25uZWN0b3JzIGF0IHRoaXMgcG9pbnQsIGJ1dCB0aGF0IGlzIHRoZSBkaXJl
-Y3Rpb24gSSB3YW50IHRvIGdvLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Tue, Oct 13, 2015 at 11:18:53PM +0200, Arnd Bergmann wrote:
+> On Tuesday 13 October 2015 17:08:05 Jon Mason wrote:
+> > @@ -3,6 +3,7 @@ obj-$(CONFIG_CLK_BCM_KONA)      += clk-kona-setup.o
+> >  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm281xx.o
+> >  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm21664.o
+> >  obj-$(CONFIG_COMMON_CLK_IPROC) += clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
+> > +obj-$(CONFIG_COMMON_CLK_IPROC) += clk-ns2.o
+> >  obj-$(CONFIG_ARCH_BCM_CYGNUS)  += clk-cygnus.o
+> >  obj-$(CONFIG_ARCH_BCM_NSP)     += clk-nsp.o
+> >  obj-$(CONFIG_ARCH_BCM_5301X)   += clk-nsp.o
+> 
+> If I understand this right, both CYGNUS and NS2 are IPROC based, but it
+> looks like you now require building the clk-ns2 file for both?
+
+There is no need for the NS2 clk code to be used by anything other
+than NS2.  There is no unique CONFIG_ identifier for NS2 in the code
+that was accepted upstream.  If I can add one for NS2, then I can
+split this off similar to Cygnus or NSP.  If not, then it has to be
+lumped in with all of iProc.  :(
+
+> On a related note, I'm seeing problems when CONFIG_CYGNUS is set but
+> CONFIG_COMMON_CLK_IPROC is disabled, as that currently leads to a link
+> failure.
+
+I can double check, but it should be on by default when Cygnus is
+enabled.  If you send me the error, I'll be happy to fix it.
+
+Thanks,
+Jon
+
+> 
+> 	Arnd
