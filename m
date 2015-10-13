@@ -1,161 +1,254 @@
-From: "Kwok, WingMan" <w-kwok2@ti.com>
-Subject: RE: [PATCH 1/3] phy: keystone: serdes driver for gbe 10gbe and pcie
-Date: Tue, 13 Oct 2015 19:52:38 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E0422898D@DFLE11.ent.ti.com>
-References: <1444759464-32299-1-git-send-email-w-kwok2@ti.com>
- <1444759464-32299-2-git-send-email-w-kwok2@ti.com>
- <20151013183327.GG24353@leverpostej>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v6 0/22] On-demand device probing
+Date: Tue, 13 Oct 2015 21:57:09 +0200
+Message-ID: <CAAObsKDffo935Ae3wEPVAFyqBDR+d6LKmh0ORfmYGnu2DN7YEw@mail.gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <5606E120.3070305@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151013183327.GG24353@leverpostej>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <5606E120.3070305@kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyayBSdXRsYW5kIFtt
-YWlsdG86bWFyay5ydXRsYW5kQGFybS5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIgMTMs
-IDIwMTUgMjozMyBQTQ0KPiBUbzogS3dvaywgV2luZ01hbg0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
-b3JnOyBwYXdlbC5tb2xsQGFybS5jb207DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
-OyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgS0lTSE9OIFZJSkFZDQo+IEFCUkFIQU07IFF1YWRyb3Ms
-IFJvZ2VyOyBLYXJpY2hlcmksIE11cmFsaWRoYXJhbjsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4g
-c3NhbnRvc2hAa2VybmVsLm9yZzsgbGludXhAYXJtLmxpbnV4Lm9yZy51azsNCj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
-PiBwY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIHBoeToga2V5c3RvbmU6IHNlcmRlcyBkcml2
-ZXIgZm9yIGdiZSAxMGdiZQ0KPiBhbmQgcGNpZQ0KPiANCj4gT24gVHVlLCBPY3QgMTMsIDIwMTUg
-YXQgMDI6MDQ6MjJQTSAtMDQwMCwgV2luZ01hbiBLd29rIHdyb3RlOg0KPiA+IE9uIFRJJ3MgS2V5
-c3RvbmUgcGxhdGZvcm1zLCBzZXZlcmFsIHBlcmlwaGVyYWxzIHN1Y2ggYXMgdGhlDQo+ID4gZ2Jl
-IGV0aGVybmV0IHN3aXRjaCwgMTBnYmUgZXRoZXJuZXQgc3dpdGNoIGFuZCBQQ0llIGNvbnRyb2xs
-ZXINCj4gPiByZXF1aXJlIHRoZSB1c2Ugb2YgYSBTZXJEZXMgZm9yIGNvbnZlcnRpbmcgU29DIHBh
-cmFsbGVsIGRhdGEgaW50bw0KPiA+IHNlcmlhbGl6ZWQgZGF0YSB0aGF0IGNhbiBiZSBvdXRwdXQg
-b3ZlciBhIGhpZ2gtc3BlZWQgZWxlY3RyaWNhbA0KPiA+IGludGVyZmFjZSwgYW5kIGFsc28gY29u
-dmVydGluZyBoaWdoLXNwZWVkIHNlcmlhbCBpbnB1dCBkYXRhDQo+ID4gaW50byBwYXJhbGxlbCBk
-YXRhIHRoYXQgY2FuIGJlIHByb2Nlc3NlZCBieSB0aGUgU29DLiAgVGhlDQo+ID4gU2VyRGVzZXMg
-dXNlZCBieSB0aG9zZSBwZXJpcGhlcmFscywgdGhvdWdoIHRoZXkgbWF5IGJlIGRpZmZlcmVudCwN
-Cj4gPiBhcmUgbGFyZ2VseSBzaW1pbGFyIGluIGZ1bmN0aW9uYWxpdHkgYW5kIHNldHVwLg0KPiA+
-DQo+ID4gVGhpcyBwYXRjaCBwcm92aWRlcyBhIFNlckRlcyBwaHkgZHJpdmVyIGltcGxlbWVudGF0
-aW9uIHRoYXQgY2FuIGJlDQo+ID4gdXNlZCBieSB0aGUgYWJvdmUgbWVudGlvbmVkIHBlcmlwaGVy
-YWwgZHJpdmVycyB0byBjb25maWd1cmUgdGhlaXINCj4gPiByZXNwZWN0aXZlIFNlckRlc2VzLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2luZ01hbiBLd29rIDx3LWt3b2syQHRpLmNvbT4NCj4g
-PiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS90aS1waHku
-dHh0IHwgIDI1NiArKysNCj4gPiAgZHJpdmVycy9waHkvS2NvbmZpZyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgICAgOCArDQo+ID4gIGRyaXZlcnMvcGh5L01ha2VmaWxlICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKw0KPiA+ICBkcml2ZXJzL3BoeS9waHkta2V5c3Rv
-bmUtc2VyZGVzLmMgICAgICAgICAgICAgICAgfCAyNDY1DQo+ICsrKysrKysrKysrKysrKysrKysr
-KysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAyNzMwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGh5L3BoeS1rZXlzdG9uZS1zZXJkZXMuYw0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvdGktcGh5
-LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvdGktcGh5LnR4
-dA0KPiA+IGluZGV4IDljZjk0NDYuLjIzMTcxNmUgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS90aS1waHkudHh0DQo+ID4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS90aS1waHkudHh0DQo+ID4gQEAgLTExNSw0
-ICsxMTUsMjYwIEBAIHNhdGFfcGh5OiBwaHlANEEwOTYwMDAgew0KPiA+ICAJY2xvY2stbmFtZXMg
-PSAic3lzY2xrIiwgInJlZmNsayI7DQo+ID4gIAlzeXNjb24tcGxscmVzZXQgPSA8JnNjbV9jb25m
-IDB4M2ZjPjsNCj4gPiAgCSNwaHktY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICtUSSBLZXlzdG9u
-ZSBTZXJEZXMgUEhZDQo+ID4gKz09PT09PT09PT09PT09PT09PT09PT0NCj4gPiArDQo+ID4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKyAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSBvbmUgb2YN
-Cj4gPiArCSogInRpLGtleXN0b25lLXNlcmRlcy1nYmUiDQo+ID4gKwkqICJ0aSxrZXlzdG9uZS1z
-ZXJkZXMteGdiZSINCj4gPiArCSogInRpLGtleXN0b25lLXNlcmRlcy1wY2llIg0KPiA+ICsgLSBy
-ZWc6DQo+ID4gKwkqIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBTZXJEZXMgcmVnaXN0
-ZXIgc2V0DQo+ID4gKyAtIHJlZy1uYW1lczoNCj4gPiArCSogInJlZ19zZXJkZXMiDQo+ID4gKwkJ
-LSBuYW1lIG9mIHRoZSByZWcgU2VyRGVzIHJlZ2lzdGVyIHNldA0KPiANCj4gSnVzdCBkZXNjcmli
-ZSByZWcgaW4gdGVybXMgb2YgcmVnLW5hbWVzLCBhbmQgZG9uJ3QgYm90aGVyIHdpdGggdGhlDQo+
-ICJyZWdfIiBwcmVmaXgsIHdlIGtub3cgdGhpcyBpcyBhIHJlZyBlbnRyeToNCj4gDQo+IC0gcmVn
-OiBhIGxpc3Qgb2YgYWRkcmVzcyBhbmQgbGVuZ3RoIHBhaXJzLCBjb3JyZXNwb25kaW5nIHRvIGVu
-dGlyZXMgaW4NCj4gICByZWctbmFtZXMNCj4gDQo+IC0gcmVnLW5hbWVzOiBzaG91bGQgY29udGFp
-bjoNCj4gICAqICJzZXJkZXMiDQo+IA0KPiA+ICsgLSAjcGh5LWNlbGxzOg0KPiA+ICsJKiBGcm9t
-IHRoZSBnZW5lcmljIHBoeSBiaW5kaW5ncywgbXVzdCBiZSAwOw0KPiA+ICsgLSBtYXgtbGFuZXM6
-DQo+ID4gKwkqIE51bWJlciBvZiBsYW5lcyBpbiBTZXJEZXMuDQo+IA0KPiBXaHkgaXMgdGhpcyBu
-b3QgIm51bS1sYW5lcyI/IFdoeSBkbyB5b3UgZXZlbiBuZWVkIHRoaXM/DQo+IA0KDQp3aWxsIGNo
-YW5nZSB0byAibnVtLWxhbmVzIi4NCg0Kc2VyZGVzIG9uIGRpZmZlcmVudCBwZXJpcGhlcmFscyBo
-YXZlIGRpZmZlcmVudCBudW1iZXIgb2YNCmxhbmVzIGFuZCBlYWNoIGluZGl2aWR1YWwgbGFuZSBj
-YW4gYmUgZW5hYmxlZCBvciBkaXNhYmxlZC4NCg0KPiA+ICsgLSBwaHktdHlwZTogc2hvdWxkIGJl
-IG9uZSBvZg0KPiA+ICsJKiAic2dtaWkiDQo+ID4gKwkqICJ4Z2UiDQo+ID4gKwkqICJwY2llIg0K
-PiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArIC0gc3lzY29uLXBlcmlwaGVy
-YWw6DQo+ID4gKwkqIEhhbmRsZSB0byB0aGUgc3Vic3lzdGVtIHJlZ2lzdGVyIHJlZ2lvbiBvZiB0
-aGUgcGVyaXBoZXJhbA0KPiA+ICsJICBpbnNpZGUgd2hpY2ggdGhlIFNlckRlcyBleGlzdHMuDQo+
-ID4gKyAtIHN5c2Nvbi1saW5rOg0KPiA+ICsJKiBIYW5kbGUgdG8gdGhlIExpbmsgcmVnaXN0ZXIg
-cmVnaW9uIG9mIHRoZSBwZXJpcGhlcmFsIGluc2lkZQ0KPiA+ICsJICB3aGljaCB0aGUgU2VyRGVz
-IGV4aXN0cy4gIEV4YW1wbGU6IGl0IGlzIHRoZSBQQ1NSIHJlZ2lzdGVyDQo+ID4gKwkgIHJlZ2lv
-biBpbiB0aGUgY2FzZSBvZiAxMGdiZS4NCj4gPiArIC0gcmVmY2xrLWtoejoNCj4gPiArCSogUmVm
-ZXJlbmNlIGNsb2NrIHJhdGUgb2YgU2VyRGVzIGluIGtIei4NCj4gDQo+IFN1cmVseSB0aGlzIHNo
-b3VsZCBiZSBhbiBhY3R1YWwgY2xvY2s/DQo+IA0KDQpvaywgdGhpcyBpcyBub3QgYWN0dWFsbHkg
-bmVlZGVkIGFuZCB3aWxsIHJlbW92ZQ0KDQo+ID4gKyAtIGxpbmstcmF0ZS1rYnBzOg0KPiA+ICsJ
-KiBTZXJEZXMgbGluayByYXRlIHRvIGJlIGNvbmZpZ3VyZWQsIGluIGticHMuDQo+IA0KPiBXaHkg
-ZG9lcyB0aGlzIG5lZWQgdG8gYmUgaW4gdGhlIGJpbmRpbmc/IEhvdyBkb2VzIG9uZSBkZXJpdmUg
-dGhlDQo+IGNvcnJlY3QNCj4gdmFsdWU/DQo+IA0KDQphIHNlcmRlcyBjYW4gYmUgY29uZmlndXJl
-ZCBhdCBkaWZmZXJlbnQgbGluayByYXRlcy4gIGZvciBleGFtcGxlLA0KdGhlIDEwZ2JlIHNlcmRl
-cyBjYW4gYmUgY29uZmlndXJlZCBhdCAxLjI1RyBsaW5rIHJhdGUgdG8gc3VwcG9ydA0KMWdiZSBv
-biB0aGUgMTBnYmUgc3dpdGNoLg0KDQo+ID4gKyAtIGNvbnRyb2wtcmF0ZToNCj4gPiArCSogTGFu
-ZSBjb250cm9sIHJhdGUNCj4gPiArCQkwOiBmdWxsIHJhdGUNCj4gPiArCQkxOiBoYWxmIHJhdGUN
-Cj4gPiArCQkyOiBxdWFydGVyIHJhdGUNCj4gDQo+IExpa2V3aXNlIG9uIGJvdGggcG9pbnRzLg0K
-DQp0aGUgc2VyZGVzIGlzIGEgZ2VuZXJpYyBoYXJkd2FyZSBibG9jayB0aGF0IG5lZWRzIHRvIGJl
-IGNvbmZpZ3VyZWQNCndpdGggdGhlIHByb3BlciBsaW5rLXJhdGUgYW5kIGxhbmUgY29udHJvbCBy
-YXRlLg0KDQo+IA0KPiA+ICsgLSByeC1zdGFydDoNCj4gPiArCSogSW5pdGlhbCBsYW5lIHJ4IGVx
-dWFsaXplciBhdHRlbnVhdGlvbiBhbmQgYm9vc3QgY29uZmlndXJhdGlvbnMuDQo+ID4gKwkqIE11
-c3QgYmUgYXJyYXkgb2YgMiBpbnRlZ2Vycy4NCj4gPiArIC0gcngtZm9yY2U6DQo+ID4gKwkqIEZv
-cmNlZCBsYW5lIHJ4IGVxdWFsaXplciBhdHRlbnVhdGlvbiBhbmQgYm9vc3QgY29uZmlndXJhdGlv
-bnMuDQo+ID4gKwkqIE11c3QgYmUgYXJyYXkgb2YgMiBpbnRlZ2Vycy4NCj4gPiArIC0gdHgtY29l
-ZmY6DQo+ID4gKwkqIExhbmUgYzEsIGMyLCBjbSwgYXR0ZW51YXRpb24gYW5kIHJlZ3VsYXRvciBv
-dXRwdXN0IHZvbHRhZ2UNCj4gPiArCSAgY29uZmlndXJhdGlvbnMuDQo+ID4gKwkqIE11c3QgYmUg
-YXJyYXkgb2YgNSBpbnRlZ2Vycy4NCj4gDQo+IHMvb3V0cHVzdC9vdXRwdXQvDQo+IA0KDQpvay4N
-Cg0KPiA+ICsgLSBkZWJ1ZzoNCj4gPiArCSogZW5hYmxlIG1vcmUgZGVidWcgbWVzc2FnZXMuDQo+
-IA0KPiBOQUsuDQo+IA0KPiBUaGlzIGlzIGEgZHJpdmVyIG9wdGlvbiwgYW5kIGJlbG9uZ3Mgb24g
-dGhlIGtlcm5lbCBjb21tYW5kIGxpbmUuIEl0DQo+IGRvZXMNCj4gbm90IGRlc2NyaWJlIHRoZSBo
-YXJkd2FyZSwgYW5kIGRvZXMgbm90IGJlbG9uZyBpbiB0aGUgRFQuDQo+IA0KDQp3aWxsIHJlbW92
-ZS4NCg0KPiA+ICtFeGFtcGxlIGZvciBLZXlzdG9uZSBLMkUgR0JFOg0KPiA+ICstLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICsNCj4gPiArZ2JlX3NlcmRlczA6IGdiZV9zZXJkZXNA
-MjMyYTAwMCB7DQo+ID4gKwkjcGh5LWNlbGxzCQk9IDwwPjsNCj4gPiArCWNvbXBhdGlibGUJCT0g
-InRpLGtleXN0b25lLXNlcmRlcy1nYmUiOw0KPiA+ICsJcmVnCQkJPSA8MHgwMjMyYTAwMCAweDIw
-MDA+Ow0KPiA+ICsJcmVnLW5hbWVzCQk9ICJyZWdfc2VyZGVzIjsNCj4gPiArCXJlZmNsay1raHoJ
-CT0gPDE1NjI1MD47DQo+ID4gKwlsaW5rLXJhdGUta2JwcwkJPSA8MTI1MDAwMD47DQo+ID4gKwlw
-aHktdHlwZQkJPSAic2dtaWkiOw0KPiA+ICsJbWF4LWxhbmVzCQk9IDw0PjsNCj4gPiArCWxhbmUw
-IHsNCj4gPiArCQljb250cm9sLXJhdGUJPSA8Mj47IC8qIHF1YXJ0ICovDQo+ID4gKwkJcngtc3Rh
-cnQJPSA8NyA1PjsNCj4gPiArCQlyeC1mb3JjZQk9IDwxIDE+Ow0KPiA+ICsJCXR4LWNvZWZmCT0g
-PDAgMCAwIDEyIDQ+Ow0KPiA+ICsJCSAgICAgICAvKiBjMSBjMiBjbSBhdHQgdnJlZyAqLw0KPiA+
-ICsJfTsNCj4gPiArCWxhbmUxIHsNCj4gPiArCQljb250cm9sLXJhdGUJPSA8Mj47IC8qIHF1YXJ0
-ICovDQo+ID4gKwkJcngtc3RhcnQJPSA8NyA1PjsNCj4gPiArCQlyeC1mb3JjZQk9IDwxIDE+Ow0K
-PiA+ICsJCXR4LWNvZWZmCT0gPDAgMCAwIDEyIDQ+Ow0KPiA+ICsJCSAgICAgICAvKiBjMSBjMiBj
-bSBhdHQgdnJlZyAqLw0KPiA+ICsJfTsNCj4gDQo+IFRoZSBiaW5kaW5nIGRpZG4ndCBkZXNjcmli
-ZSB0aGUgc3ViLW5vZGVzLCBhbmQgd2hpY2ggcHJvcGVydGllcyBiZWxvbmcNCj4gdG8gdGhlbS4N
-Cj4gDQoNCndpbGwgYWRkIGRlc2NyaXB0aW9ucyBmb3IgbGFuZSBub2Rlcw0KDQo+IERvbid0IHVz
-ZSBtYWdpYyBuYW1lcy4gRGVmaW5lIGEgbmV3IGFkZHJlc3Mgc3BhY2UsIGFuZCB1c2UgcmVnIHRv
-DQo+IGlkZW50aWZ5IGxhbmVzLg0KPiANCg0Kd2lsbCB1cGRhdGUgdG8gdGhlIGZvbGxvd2luZw0K
-DQpsYW5lcyB7DQoJbGFuZUAwIHsNCgkJcmVnID0gPDA+Ow0KCQkuLi4NCgl9Ow0KDQoJbGFuZUAx
-IHsNCgkJcmVnID0gPDE+Ow0KCQkuLi4JDQoJfTsNCn07DQoNCg0KPiA+ICsJaWYgKG9mX2ZpbmRf
-cHJvcGVydHkobnAsICJkaXNhYmxlIiwgTlVMTCkpDQo+ID4gKwkJbGMtPmVuYWJsZSA9IDA7DQo+
-ID4gKwllbHNlDQo+ID4gKwkJbGMtPmVuYWJsZSA9IDE7DQo+IA0KPiBUaGlzIHdhcyBub3QgZGVz
-Y3JpYmVkIGluIHRoZSBiaW5kaW5nLCBhbmQgdXNlcyB0aGUgd3JvbmcgYWNjZXNzb3IuDQo+IFdo
-YXQNCj4gaXMgdGhpcyBmb3I/DQoNCmFmdGVyIHRoZSBhYm92ZSBtZW50aW9uZWQgdXBkYXRlLCB0
-aGlzIHdpbGwgYmVjb21lOiBzdGF0dXMgPSAiZGlzYWJsZWQvb2siLg0KPiANCj4gPiArCWlmIChv
-Zl9maW5kX3Byb3BlcnR5KG5wLCAibG9vcGJhY2siLCBOVUxMKSkNCj4gPiArCQlsYy0+bG9vcGJh
-Y2sgPSAxOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCWxjLT5sb29wYmFjayA9IDA7DQo+IA0KPiBMaWtl
-d2lzZS4NCg0Kd2lsbCBhZGQgZG9jdW1lbnRhdGlvbg0KDQo+IA0KPiA+ICsJaWYgKG9mX3Byb3Bl
-cnR5X3JlYWRfYm9vbChucCwgInN5c2Nvbi1wZXJpcGhlcmFsIikpIHsNCj4gPiArCQlzYy0+cGVy
-aXBoZXJhbF9yZWdtYXAgPQ0KPiA+ICsJCQlzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxl
-KG5wLA0KPiA+ICsJCQkJCQkJInN5c2Nvbi1wZXJpcGhlcmFsIik7DQo+IA0KPiBDYW4ndCB5b3Ug
-YWx3YXlzIGNhbGwgc3lzY29uX3JlZ21hcF9sb29rdXBfYnlfcGhhbmRsZSwgdGhlbiBjaGVjayB0
-aGUNCj4gcmV0dXJuIHZhbHVlIHRvIHNlZSBpZiB0aGUgcHJvcGVydHkgZXhpc3RlZD8NCj4gDQo+
-IFlvdSBjbGVhcmx5IGtub3cgdGhhdCBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wgZXhpc3RzLCB3aHkg
-ZGlkIHlvdSBub3QNCj4gdXNlDQo+IGl0IHRvIHJlYWQgcHJvcGVydGllcyB3aGljaCBhcmUgYm9v
-bGVhbj8NCj4gDQoNCm9rLg0KDQo+ID4gKwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAi
-c3lzY29uLWxpbmsiKSkgew0KPiA+ICsJCXNjLT5wY3NyX3JlZ21hcCA9DQo+ID4gKwkJCXN5c2Nv
-bl9yZWdtYXBfbG9va3VwX2J5X3BoYW5kbGUobnAsICJzeXNjb24tbGluayIpOw0KPiANCj4gTGlr
-ZXdpc2UuDQo+IA0KDQpvay4NCg0KPiA+ICsJc2MtPmRlYnVnID0gb2ZfcHJvcGVydHlfcmVhZF9i
-b29sKG5wLCAiZGVidWciKTsNCj4gDQo+IEFzIHN0YXRlZCBhYm92ZSwgTkFLIGZvciB0aGlzIHBy
-b3BlcnR5Lg0KPiANCiANCndpbGwgcmVtb3ZlLg0KDQo+ID4gKw0KPiA+ICsJaWYgKG9mX2ZpbmRf
-cHJvcGVydHkobnAsICJyeC1mb3JjZS1lbmFibGUiLCBOVUxMKSkNCj4gPiArCQlzYy0+cnhfZm9y
-Y2VfZW5hYmxlID0gMTsNCj4gPiArCWVsc2UJDQo+ID4gKwkJc2MtPnJ4X2ZvcmNlX2VuYWJsZSA9
-IDA7DQo+IA0KPiBOb3QgaW4gdGhlIGJpbmRpbmcsIGFuZCB1c2VzIHRoZSB3cm9uZyBhY2Nlc3Nv
-ci4NCj4gDQoNCm9rLiB3aWxsIHVwZGF0ZSB0aGUgYmluZGluZyBhbmQgY2hhbmdlIG9mX2ZpbmRf
-cHJvcGVydHkgdG8NCm9mX3Byb3BlcnR5X3JlYWRfYm9vbC4NCg0KPiA+ICsNCj4gPiArCWZvciAo
-aSA9IDA7IGkgPCBzYy0+bGFuZXM7IGkrKykgew0KPiA+ICsJCXNwcmludGYoJm5hbWVbNF0sICIl
-ZCIsIGkpOw0KPiA+ICsJCWxwID0gb2ZfZmluZF9ub2RlX2J5X25hbWUobnAsIG5hbWUpOw0KPiA+
-ICsJCWlmIChscCkgew0KPiA+ICsJCQlpZiAoa3NlcmRlc19nZXRfbGFuZV9iaW5kaW5ncyhkZXYs
-IGxwLCAmc2MtPmxhbmVbaV0pKQ0KPiA+ICsJCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwkJfQ0K
-PiA+ICsJfQ0KPiANCj4gQXMgYWJvdmUsIHVzZSByZWcsIG5vdCBtYWdpYyBuYW1lcy4NCg0Kb2su
-DQoNClRoYW5rcywNCldpbmdNYW4NCg==
+On 26 September 2015 at 20:17, Rob Herring <robh@kernel.org> wrote:
+> On 09/21/2015 09:02 AM, Tomeu Vizoso wrote:
+>> Hello,
+>>
+>> I have a problem with the panel on my Tegra Chromebook taking longer
+>> than expected to be ready during boot (St=C3=A9phane Marchesin repor=
+ted what
+>> is basically the same issue in [0]), and have looked into ordered
+>> probing as a better way of solving this than moving nodes around in =
+the
+>> DT or playing with initcall levels and linking order.
+>>
+>> While reading the thread [1] that Alexander Holler started with his
+>> series to make probing order deterministic, it occurred to me that i=
+t
+>> should be possible to achieve the same by probing devices as they ar=
+e
+>> referenced by other devices.
+>>
+>> This basically reuses the information that is already implicit in th=
+e
+>> probe() implementations, saving us from refactoring existing drivers=
+ or
+>> adding information to DTBs.
+>>
+>> During review of v1 of this series Linus Walleij suggested that it
+>> should be the device driver core to make sure that dependencies are
+>> ready before probing a device. I gave this idea a try [2] but Mark B=
+rown
+>> pointed out to the logic duplication between the resource acquisitio=
+n
+>> and dependency discovery code paths (though I think it's fairly mino=
+r).
+>>
+>> To address that code duplication I experimented with Arnd's devm_pro=
+be
+>> [3] concept of having drivers declare their dependencies instead of
+>> acquiring them during probe, and while it worked [4], I don't think =
+we
+>> end up winning anything when compared to just probing devices on-dem=
+and
+>> from resource getters.
+>>
+>> One remaining objection is to the "sprinkling" of calls to
+>> of_device_probe() in the resource getters of each subsystem, but I t=
+hink
+>> it's the right thing to do given that the storage of resources is
+>> currently subsystem-specific.
+>>
+>> We could avoid the above by moving resource storage into the core, b=
+ut I
+>> don't think there's a compelling case for that.
+>>
+>> I have tested this on boards with Tegra, iMX.6, Exynos, Rockchip and
+>> OMAP SoCs, and these patches were enough to eliminate all the deferr=
+ed
+>> probes (except one in PandaBoard because omap_dma_system doesn't hav=
+e a
+>> firmware node as of yet).
+>>
+>> Have submitted a branch [5][6][7] with these patches on top of today=
+'s
+>> linux-next (20150921) to kernelci.org and I don't see any issues tha=
+t
+>> could be caused by them.
+>>
+>> With this series I get the kernel to output to the panel in 0.5s,
+>> instead of 2.8s.
+>
+> I think we're pretty close other than some minor comments. I would li=
+ke
+> to see ack's from Greg and some reviewed-bys from others. The subsyst=
+em
+> changes are minor and there has been plenty of chance to comment, so =
+I
+> don't think acks from all subsystems are needed.
+
+Hi Rob,
+
+I'm not sure we are going to get much more feedback by just waiting or
+resending what has been sent so many times.
+
+Did you have in mind specific people you wanted to see reviewed-bys fro=
+m?
+
+Guess Greg will get to this sometime soon.
+
+Regards,
+
+Tomeu
+
+> Your branch is based on -next. Is there any dependence on something i=
+n
+> -next? I want to get this into -next soon, but need a branch not base=
+d
+> on -next. Please send me a pull request with the collected acks and
+> minor comments I have addressed.
+>
+> Rob
+>
+>>
+>> Regards,
+>>
+>> Tomeu
+>>
+>> [0] http://lists.freedesktop.org/archives/dri-devel/2014-August/0665=
+27.html
+>>
+>> [1] https://lkml.org/lkml/2014/5/12/452
+>>
+>> [2] https://lkml.org/lkml/2015/6/17/305
+>>
+>> [3] http://article.gmane.org/gmane.linux.ports.arm.kernel/277689
+>>
+>> [4] https://lkml.org/lkml/2015/7/21/441a
+>>
+>> [5] https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=3Don-=
+demand-probes-v8
+>>
+>> [6] http://kernelci.org/boot/all/job/collabora/kernel/v4.3-rc2-2587-=
+gf92b0ab33d14/
+>>
+>> [7] http://kernelci.org/boot/all/job/next/kernel/next-20150921
+>>
+>> Changes in v6:
+>> - Drop bus_type.pre_probe and read the periphid in match() instead a=
+s
+>>   suggested by Alan Stern.
+>> - Merge changes to the regulator subsystem's locking so no reference=
+s
+>>   are leaked between commits.
+>>
+>> Changes in v5:
+>> - Set the pointer to struct device also for AMBA devices
+>> - Unset the pointer to struct device when the platform device is abo=
+ut
+>>   to be unregistered
+>> - Increase the reference count of the device before returning from
+>>   of_find_device_by_node()
+>> - Move the assignment to device_node->device for AMBA devices to ano=
+ther
+>>   commit.
+>> - Hold a reference to the struct device while it's in use in
+>>   of_device_probe().
+>> - Use regulator_class' klist of devices instead of regulator_list to
+>>   store and lookup regulator devices.
+>>
+>> Changes in v4:
+>> - Added bus.pre_probe callback so the probes of Primecell devices ca=
+n be
+>>   deferred if their device IDs cannot be yet read because of the clo=
+ck
+>>   driver not having probed when they are registered. Maybe this goes
+>>   overboard and the matching information should be in the DT if ther=
+e is
+>>   one.
+>> - Rename of_platform_probe to of_device_probe
+>> - Use device_node.device instead of device_node.platform_dev
+>> - Add Kconfig DELAY_DEVICE_PROBES to allow disabling delayed probing=
+ in
+>>   machines with initcalls that depend on devices probing at a given =
+time.
+>> - Start processing deferred probes in device_initcall_sync
+>> - Also defer probes of AMBA devices registered from the DT as they c=
+an
+>>   also request resources.
+>>
+>> Changes in v3:
+>> - Set and use device_node.platform_dev instead of reversing the logi=
+c to
+>>   find the platform device that encloses a device node.
+>> - Drop the fwnode API to probe firmware nodes and add OF-only API fo=
+r
+>>   now. I think this same scheme could be used for machines with ACPI=
+,
+>>   but I haven't been able to find one that had to defer its probes b=
+ecause
+>>   of the device probe order.
+>>
+>> Tomeu Vizoso (22):
+>>   driver core: handle -EPROBE_DEFER from bus_type.match()
+>>   ARM: amba: Move reading of periphid to amba_match()
+>>   of/platform: Point to struct device from device node
+>>   of: add function to allow probing a device from a OF node
+>>   gpio: Probe GPIO drivers on demand
+>>   gpio: Probe pinctrl devices on demand
+>>   regulator: core: Remove regulator_list
+>>   regulator: core: Probe regulators on demand
+>>   drm: Probe panels on demand
+>>   drm/tegra: Probe dpaux devices on demand
+>>   i2c: core: Probe i2c adapters and devices on demand
+>>   pwm: Probe PWM chip devices on demand
+>>   backlight: Probe backlight devices on demand
+>>   usb: phy: Probe phy devices on demand
+>>   clk: Probe clk providers on demand
+>>   pinctrl: Probe pinctrl devices on demand
+>>   phy: core: Probe phy providers on demand
+>>   dma: of: Probe DMA controllers on demand
+>>   power-supply: Probe power supplies on demand
+>>   driver core: Allow deferring probes until late init
+>>   driver core: Start processing deferred probes earlier
+>>   of/platform: Defer probes of registered devices
+>>
+>>  drivers/amba/bus.c                  |  88 ++++++------
+>>  drivers/base/Kconfig                |  18 +++
+>>  drivers/base/dd.c                   |  35 ++++-
+>>  drivers/clk/clk.c                   |   3 +
+>>  drivers/dma/of-dma.c                |   3 +
+>>  drivers/gpio/gpiolib-of.c           |   5 +
+>>  drivers/gpu/drm/drm_panel.c         |   3 +
+>>  drivers/gpu/drm/tegra/dpaux.c       |   3 +
+>>  drivers/i2c/i2c-core.c              |   4 +
+>>  drivers/of/device.c                 |  61 +++++++++
+>>  drivers/of/platform.c               |  30 +++--
+>>  drivers/phy/phy-core.c              |   3 +
+>>  drivers/pinctrl/devicetree.c        |   3 +
+>>  drivers/power/power_supply_core.c   |   3 +
+>>  drivers/pwm/core.c                  |   3 +
+>>  drivers/regulator/core.c            | 257 +++++++++++++++++++++++--=
+-----------
+>>  drivers/usb/phy/phy.c               |   3 +
+>>  drivers/video/backlight/backlight.c |   3 +
+>>  include/linux/device.h              |   4 +-
+>>  include/linux/of.h                  |   1 +
+>>  include/linux/of_device.h           |   3 +
+>>  21 files changed, 386 insertions(+), 150 deletions(-)
+>>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
