@@ -1,105 +1,150 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] docs: dts: Add documentation for hi6220 SoC ION node
-Date: Tue, 13 Oct 2015 15:42:12 -0500
-Message-ID: <CAL_JsqJ=B_r2Cown=PEb4t8kkQLJMCvnx-x8sVv2k8UQAXOk3A@mail.gmail.com>
-References: <1444632386-106627-1-git-send-email-puck.chen@hisilicon.com>
- <20151012093119.GA20649@leverpostej> <561CA408.5060202@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561CA408.5060202-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, tranmanphong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, tapaswenipathak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, shilin pan <peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: consolidate interrupt controller bindings
+Date: Tue, 13 Oct 2015 15:56:32 -0500
+Message-ID: <1444769792-14790-1-git-send-email-robh@kernel.org>
+References: <1443737554-10352-1-git-send-email-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443737554-10352-1-git-send-email-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 1:26 AM, chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
->
->
-> On 2015/10/12 17:31, Mark Rutland wrote:
->> On Mon, Oct 12, 2015 at 02:46:24PM +0800, Chen Feng wrote:
->>> Documentation for hi6220 SoC ION node
->>>
->>> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>> Signed-off-by: Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/staging/ion/hi6220-ion.txt | 31 ++++++++++++++++++++++
->>>  1 file changed, 31 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
->>
->>
->> We should not be adding platform-specific bindings and/or drivers for
->> this.
->>
->> There's already a proposal for a generic binding [1]. Please work with
->> that rather than working on your own.
->>
->> Mark.
->>
->> [1] https://lkml.org/lkml/2015/10/6/854
->
-> Mark, I checked the patch in https://lkml.org/lkml/2015/10/6/854.
->
-> It's a generic binding document for devicetree of ion.
->
-> Should I just drop this document patch?
->
-> Is the patch 2,3 for hisilicon ion ok for upstream?
->
-> Please give me more help. Thanks very much.
+Move various interrupt controller bindings into the
+interrupt-controller/ directory.
 
-Well, first we need to accept the documentation patch before this. I'm
-expecting at least some changes to the doc first.
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-mediatek@lists.infradead.org
+---
+One more patch for my DT binding restructuring series[1].
 
 Rob
 
->
->>
->>> diff --git a/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
->>> new file mode 100644
->>> index 0000000..c59e27c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/staging/ion/hi6220-ion.txt
->>> @@ -0,0 +1,31 @@
->>> +Hi6220 SoC ION
->>> +===================================================================
->>> +Required properties:
->>> +- compatible : "hisilicon,hi6220-ion"
->>> +- list of the ION heaps
->>> +    - heap name : maybe heap_sys_user@0
->>> +    - heap id   : id should be unique in the system.
->>> +    - heap base : base ddr address of the heap,0 means that
->>> +    it is dynamic.
->>> +    - heap size : memory size and 0 means it is dynamic.
->>> +    - heap type : the heap type of the heap, please also
->>> +    see the define in ion.h(drivers/staging/android/uapi/ion.h)
->>> +-------------------------------------------------------------------
->>> +Example:
->>> +    hi6220-ion {
->>> +            compatible = "hisilicon,hi6220-ion";
->>> +            heap_sys_user@0 {
->>> +                    heap-name = "sys_user";
->>> +                    heap-id   = <0x0>;
->>> +                    heap-base = <0x0>;
->>> +                    heap-size = <0x0>;
->>> +                    heap-type = "ion_system";
->>> +            };
->>> +            heap_sys_contig@0 {
->>> +                    heap-name = "sys_contig";
->>> +                    heap-id   = <0x1>;
->>> +                    heap-base = <0x0>;
->>> +                    heap-size = <0x0>;
->>> +                    heap-type = "ion_system_contig";
->>> +            };
->>> +    };
->>> --
->>> 1.9.1
->>>
->>
->> .
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://lkml.org/lkml/2015/10/1/906
+
+
+ .../bindings/{arm/gic-v3.txt => interrupt-controller/arm,gic-v3.txt}      | 0
+ .../devicetree/bindings/{arm/gic.txt => interrupt-controller/arm,gic.txt} | 0
+ .../arm,versatile-fpga-irq.txt}                                           | 0
+ .../devicetree/bindings/{arm/vic.txt => interrupt-controller/arm,vic.txt} | 0
+ .../{cris/interrupts.txt => interrupt-controller/axis,crisv32-intc.txt}   | 0
+ .../{metag/meta-intc.txt => interrupt-controller/img,meta-intc.txt}       | 0
+ .../{metag/pdc-intc.txt => interrupt-controller/img,pdc-intc.txt}         | 0
+ .../{x86/interrupt.txt => interrupt-controller/intel,ce4100-ioapic.txt}   | 0
+ .../bindings/{arm/mediatek => interrupt-controller}/mediatek,sysirq.txt   | 0
+ .../bindings/{arm/mrvl/intc.txt => interrupt-controller/mrvl,intc.txt}    | 0
+ .../{arm/lpc32xx-mic.txt => interrupt-controller/nxp,lpc3220-mic.txt}     | 0
+ .../samsung,exynos4210-combiner.txt}                                      | 0
+ .../{arc/interrupts.txt => interrupt-controller/snps,arc700-intc.txt}     | 0
+ .../archs-idu-intc.txt => interrupt-controller/snps,archs-idu-intc.txt}   | 0
+ .../{arc/archs-intc.txt => interrupt-controller/snps,archs-intc.txt}      | 0
+ .../{arm/spear/shirq.txt => interrupt-controller/st,spear3xx-shirq.txt}   | 0
+ .../{c6x/interrupt.txt => interrupt-controller/ti,c64x+megamod-pic.txt}   | 0
+ .../{arm/davinci/cp-intc.txt => interrupt-controller/ti,cp-intc.txt}      | 0
+ .../{arm/omap/intc.txt => interrupt-controller/ti,omap2-intc.txt}         | 0
+ .../bindings/{arm/vt8500 => interrupt-controller}/via,vt8500-intc.txt     | 0
+ 20 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/{arm/gic-v3.txt => interrupt-controller/arm,gic-v3.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/gic.txt => interrupt-controller/arm,gic.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/versatile-fpga-irq.txt => interrupt-controller/arm,versatile-fpga-irq.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/vic.txt => interrupt-controller/arm,vic.txt} (100%)
+ rename Documentation/devicetree/bindings/{cris/interrupts.txt => interrupt-controller/axis,crisv32-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{metag/meta-intc.txt => interrupt-controller/img,meta-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{metag/pdc-intc.txt => interrupt-controller/img,pdc-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{x86/interrupt.txt => interrupt-controller/intel,ce4100-ioapic.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/mediatek => interrupt-controller}/mediatek,sysirq.txt (100%)
+ rename Documentation/devicetree/bindings/{arm/mrvl/intc.txt => interrupt-controller/mrvl,intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/lpc32xx-mic.txt => interrupt-controller/nxp,lpc3220-mic.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/samsung/interrupt-combiner.txt => interrupt-controller/samsung,exynos4210-combiner.txt} (100%)
+ rename Documentation/devicetree/bindings/{arc/interrupts.txt => interrupt-controller/snps,arc700-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{arc/archs-idu-intc.txt => interrupt-controller/snps,archs-idu-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{arc/archs-intc.txt => interrupt-controller/snps,archs-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/spear/shirq.txt => interrupt-controller/st,spear3xx-shirq.txt} (100%)
+ rename Documentation/devicetree/bindings/{c6x/interrupt.txt => interrupt-controller/ti,c64x+megamod-pic.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/davinci/cp-intc.txt => interrupt-controller/ti,cp-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/omap/intc.txt => interrupt-controller/ti,omap2-intc.txt} (100%)
+ rename Documentation/devicetree/bindings/{arm/vt8500 => interrupt-controller}/via,vt8500-intc.txt (100%)
+
+diff --git a/Documentation/devicetree/bindings/arm/gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/gic-v3.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/gic.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+diff --git a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
+diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/vic.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
+diff --git a/Documentation/devicetree/bindings/cris/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/axis,crisv32-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/cris/interrupts.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/axis,crisv32-intc.txt
+diff --git a/Documentation/devicetree/bindings/metag/meta-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/metag/meta-intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
+diff --git a/Documentation/devicetree/bindings/metag/pdc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/img,pdc-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/metag/pdc-intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/img,pdc-intc.txt
+diff --git a/Documentation/devicetree/bindings/x86/interrupt.txt b/Documentation/devicetree/bindings/interrupt-controller/intel,ce4100-ioapic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/x86/interrupt.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/intel,ce4100-ioapic.txt
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/mrvl/intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+diff --git a/Documentation/devicetree/bindings/arm/lpc32xx-mic.txt b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/lpc32xx-mic.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+diff --git a/Documentation/devicetree/bindings/arm/samsung/interrupt-combiner.txt b/Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/samsung/interrupt-combiner.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
+diff --git a/Documentation/devicetree/bindings/arc/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arc/interrupts.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
+diff --git a/Documentation/devicetree/bindings/arc/archs-idu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arc/archs-idu-intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+diff --git a/Documentation/devicetree/bindings/arc/archs-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arc/archs-intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
+diff --git a/Documentation/devicetree/bindings/arm/spear/shirq.txt b/Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/spear/shirq.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
+diff --git a/Documentation/devicetree/bindings/c6x/interrupt.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/c6x/interrupt.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
+diff --git a/Documentation/devicetree/bindings/arm/davinci/cp-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,cp-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/ti,cp-intc.txt
+diff --git a/Documentation/devicetree/bindings/arm/omap/intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,omap2-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/omap/intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/ti,omap2-intc.txt
+diff --git a/Documentation/devicetree/bindings/arm/vt8500/via,vt8500-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/vt8500/via,vt8500-intc.txt
+rename to Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.txt
+-- 
+2.1.4
