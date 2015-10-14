@@ -1,56 +1,71 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] MT8173 IOMMU SUPPORT
-Date: Wed, 14 Oct 2015 14:56:20 +0200
-Message-ID: <20151014125620.GQ27420@8bytes.org>
-References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444357388-30257-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 1/2] iio: adc: mcp320x: Deprecated compatible strings with no vendor prefix
+Date: Wed, 14 Oct 2015 14:54:38 +0200
+Message-ID: <1444827279-23163-2-git-send-email-javier@osg.samsung.com>
+References: <1444827279-23163-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444827279-23163-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Michael Welling <mwelling@ieee.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Andrea Galbusera <gizero@gmail.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, =?UTF-8?q?S=C3=B8ren=20Andersen?= <san@rosetechnology.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 09, 2015 at 10:23:02AM +0800, Yong Wu wrote:
-> Yong Wu (6):
->   dt-bindings: iommu: Add binding for mediatek IOMMU
->   dt-bindings: mediatek: Add smi dts binding
->   iommu: add ARM short descriptor page table allocator
->   memory: mediatek: Add SMI driver
->   iommu/mediatek: Add mt8173 IOMMU driver
->   dts: mt8173: Add iommu/smi nodes for mt8173
-> 
->  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  61 ++
->  .../memory-controllers/mediatek,smi-larb.txt       |  25 +
->  .../bindings/memory-controllers/mediatek,smi.txt   |  24 +
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  81 ++
->  drivers/iommu/Kconfig                              |  33 +
->  drivers/iommu/Makefile                             |   2 +
->  drivers/iommu/io-pgtable-arm-short.c               | 827 +++++++++++++++++++++
->  drivers/iommu/io-pgtable-arm.c                     |   3 -
->  drivers/iommu/io-pgtable.c                         |   3 +
->  drivers/iommu/io-pgtable.h                         |  18 +-
->  drivers/iommu/mtk_iommu.c                          | 767 +++++++++++++++++++
->  drivers/memory/Kconfig                             |   8 +
->  drivers/memory/Makefile                            |   1 +
->  drivers/memory/mtk-smi.c                           | 274 +++++++
->  include/dt-bindings/memory/mt8173-larb-port.h      | 105 +++
->  include/soc/mediatek/smi.h                         |  60 ++
+The Microchip Analog to Digital Converter (ADC) Device Tree binding
+documents compatible strings with no vendor prefix. Since it should
+compatible strings with also a vendor, add these to the binding doc
+and mark the old ones as deprecated.
 
-So this contains not only IOMMU code. Are the patches dependent on each
-other or can the iommu parts be merged independently?
+The driver says that the device is from Microchip Technology which
+is listed in Documentation/devicetree/bindings/vendor-prefixes.txt
+so use the documented prefix.
 
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
+ .../devicetree/bindings/iio/adc/mcp320x.txt        | 30 +++++++++++++++-------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-	Joerg
+diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+index 2a1f3af30155..bcd3ac8e6e0c 100644
+--- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
++++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+@@ -10,16 +10,28 @@ must be specified.
+ Required properties:
+ 	- compatible:  	Must be one of the following, depending on the
+ 			model:
+-				"mcp3001"
+-				"mcp3002"
+-				"mcp3004"
+-				"mcp3008"
+-				"mcp3201"
+-				"mcp3202"
+-				"mcp3204"
+-				"mcp3208"
+-				"mcp3301"
++				"mcp3001" (DEPRECATED)
++				"mcp3002" (DEPRECATED)
++				"mcp3004" (DEPRECATED)
++				"mcp3008" (DEPRECATED)
++				"mcp3201" (DEPRECATED)
++				"mcp3202" (DEPRECATED)
++				"mcp3204" (DEPRECATED)
++				"mcp3208" (DEPRECATED)
++				"mcp3301" (DEPRECATED)
+ 
++				"microchip,mcp3001"
++				"microchip,mcp3002"
++				"microchip,mcp3004"
++				"microchip,mcp3008"
++				"microchip,mcp3201"
++				"microchip,mcp3202"
++				"microchip,mcp3204"
++				"microchip,mcp3208"
++				"microchip,mcp3301"
++
++			NOTE: The use of the compatibles with no vendor prefix
++			is deprecated and only listed because old DT use them.
+ 
+ Examples:
+ spi_controller {
+-- 
+2.4.3
