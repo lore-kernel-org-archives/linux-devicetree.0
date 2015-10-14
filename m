@@ -1,44 +1,77 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 16:28:23 +0100
-Message-ID: <561E7497.1050105@linaro.org>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
- <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
- <561D1689.90703@linaro.org>
- <CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
- <CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
- <561E58AC.80207@linaro.org>
- <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
- <561E658D.1070900@linaro.org>
- <CAOAejn1spB+BCRh9+jJtaKxEmaRc04nveF3rQEbT7kLMH0kOkg@mail.gmail.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: Re: [PATCH 2/2] dt-bindings: Add new boards to bcm4708 DT bindings
+Date: Wed, 14 Oct 2015 11:34:21 -0400
+Message-ID: <20151014153420.GC15160@broadcom.com>
+References: <1443824564-17291-1-git-send-email-jonmason@broadcom.com>
+ <1443824564-17291-2-git-send-email-jonmason@broadcom.com>
+ <561923BC.5040906@hauke-m.de>
+ <20151013214051.GN12512@broadcom.com>
+ <561D87BD.5030405@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOAejn1spB+BCRh9+jJtaKxEmaRc04nveF3rQEbT7kLMH0kOkg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <561D87BD.5030405@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/10/15 16:26, M'boumba Cedric Madianga wrote:
-> 2015-10-14 16:24 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
->>
->> Hmnnn...
->>
->> The dmaengine framework will WARN_ONCE() if an dmaengine is removed whilst
->> it is active and also works hard to ensure dmaengine modules are not removed
->> whilst there are active drivers using the framework.
->>
->> How do we get into this function whilst there is still an active DMA
->> channels?
->
-> For example, when a user try "rmmod stm32-dma" in uart console.
-> It will enter in stm32_dma_remove while there is potentially still active DMA.
+On Tue, Oct 13, 2015 at 03:37:49PM -0700, Florian Fainelli wrote:
+> On 13/10/15 14:40, Jon Mason wrote:
+> > On Sat, Oct 10, 2015 at 04:42:04PM +0200, Hauke Mehrtens wrote:
+> >> On 10/03/2015 12:22 AM, Jon Mason wrote:
+> >>> Add the 4708, 4709, and 953012k SVKs to the the documentation for the
+> >>> Broadcom Northstar device tree bindings.
+> >>>
+> >>> Signed-off-by: Jon Mason <jonmason@broadcom.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
+> >>>  1 file changed, 7 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+> >>> index 6b0f49f..bdf4c06 100644
+> >>> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+> >>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+> >>
+> >> What should be documented in this file? This is more a question to the
+> >> guys more familiar with arm in Linux. Currently the Linux kernel only
+> >> supports brcm,bcm4708 and all goes back to that one.
+> > 
+> > I was under the impression that all boards should be added to these
+> > files.  We have been doing so for Cygnus and NSP.
+> 
+> Tracking exactly which boards are supported by the brcm,bcm4708
+> compatible string might be tedious, I tend to agree with just listing
+> the supported SoCs, and leaving the specific board compatibles to the
+> individual DTS files instead.
 
-Check dmaengine.c for yourself but I think in this case the dmaengine 
-framework will hold references to the module and prevent the remove from 
-taking place.
+Ok, I'll simply add entries for NS and 4709 to this.
 
+Thanks,
+Jon 
 
-Daniel.
+> 
+> > 
+> > Thanks,
+> > Jon
+> > 
+> >>
+> >>> @@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
+> >>>  
+> >>>  Required root node property:
+> >>>  
+> >>> +bcm94709
+> >>>  compatible = "brcm,bcm4708";
+> >>> +
+> >>> +bcm94709
+> >>> +compatible = "brcm,bcm4709", "brcm,bcm4708";
+> >>> +
+> >>> +bcm953012k
+> >>> +compatible = "brcm,bcm5301k", "brcm,bcm4708";
+> >>>
+> >>
+> 
+> 
+> -- 
+> Florian
