@@ -1,48 +1,65 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am437x-gp-evm: Add wakeup interrupt source for pixcir_i2c_ts
-Date: Wed, 14 Oct 2015 11:22:36 +0530
-Message-ID: <1444801956-17817-1-git-send-email-vigneshr@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm64: dts: spi bus dts support multiple devices
+Date: Wed, 14 Oct 2015 07:58:09 +0200
+Message-ID: <20151014055809.GN7858@pengutronix.de>
+References: <1444793015-30359-1-git-send-email-leilk.liu@mediatek.com>
+ <1444793015-30359-6-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444793015-30359-6-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On am437x-gp-evm, pixcir_i2c_ts can wakeup the system from lower power
-state via pinctrl and IO daisy chain using generic wakeirq framework.
-With commit 3fffd1283927 ("i2c: allow specifying separate wakeup
-interrupt in device tree") i2c core allows optional wakeirq to be
-specified via device tree. Add wakeup irq entry to enable pixcir_i2c_ts
-to wake the system from low power state.
+On Wed, Oct 14, 2015 at 11:23:35AM +0800, Leilk Liu wrote:
+> This patch support multiple devices for MT8173.
 
-Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+The subject of this patch and also the above sentence should contain the
+board name this patch is changing so that the reader knows this is about
+a single board, and not arm64 in general.
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 22038f21f228..69e93af7df0d 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -581,8 +581,13 @@
- 
- 		attb-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 
-+		interrupts-extended = <&gpio3 22 GPIO_ACTIVE_HIGH>,
-+				      <&am43xx_pinmux 0x264>;
-+		interrupt-names = "tsc", "wakeup";
-+
- 		touchscreen-size-x = <1024>;
- 		touchscreen-size-y = <600>;
-+		wakeup-source;
- 	};
- 
- 	ov2659@30 {
+Sascha
+
+> 
+> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> index 04b38ed..1c8c407 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> @@ -194,7 +194,7 @@
+>  			pinmux = <MT8173_PIN_69_SPI_CK__FUNC_SPI_CK_0_>,
+>  				<MT8173_PIN_70_SPI_MI__FUNC_SPI_MI_0_>,
+>  				<MT8173_PIN_71_SPI_MO__FUNC_SPI_MO_0_>,
+> -				<MT8173_PIN_72_SPI_CS__FUNC_SPI_CS_0_>;
+> +				<MT8173_PIN_72_SPI_CS__FUNC_GPIO72>;
+>  		};
+>  	};
+>  };
+> @@ -399,6 +399,7 @@
+>  &spi {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&spi_pins_a>;
+> +	cs-gpios = <&pio 72 0>;
+>  	mediatek,pad-select = <0>;
+>  	status = "okay";
+>  };
+> -- 
+> 1.8.1.1.dirty
+> 
+> 
+
 -- 
-2.6.1
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
