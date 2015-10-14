@@ -1,46 +1,105 @@
-From: "mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
-Date: Wed, 14 Oct 2015 16:44:03 +0300
-Message-ID: <20151014134403.GA25691@lahna.fi.intel.com>
-References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
- <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
- <20151012164819.GA4010@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
- <20151013070824.GA22304@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
- <20151013100724.GG1492@lahna.fi.intel.com>
- <20151014062303.GC20406@dtor-ws>
- <20151014111820.GV1492@lahna.fi.intel.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] arm64: dts: mt8173: add MT8173 display PWM driver support
+ node
+Date: Wed, 14 Oct 2015 15:45:00 +0200
+Message-ID: <561E5C5C.2080807@gmail.com>
+References: <1444117243-28391-1-git-send-email-yh.huang@mediatek.com>
+ <561BDA26.5010203@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151014111820.GV1492-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561BDA26.5010203@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: YH Huang <yh.huang@mediatek.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 02:18:20PM +0300, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-> On Tue, Oct 13, 2015 at 11:23:03PM -0700, Dmitry Torokhov wrote:
-> > I understand why one might use acpi_dev_add_driver_gpios() to augment
-> > data in ACPI, however here we have completely different issue: driver
-> > that expects named gpios gets returned gpio that has nothing to do with
-> > what it requested, because gpiolib acpi code always falls back to
-> > unnamed gpio if it does not find named gpio. That can be acceptable if
-> > driver uses the same con_id for all requests to gpiolib, but is not
-> > working when driver supplies different con_ids.
-> 
-> Right, the ACPI fallback ignores con_id completely and uses only the
-> index.
-> 
-> AFAIK there is only one driver using ACPI _CRS index method:
-> sdhci-[acpi|pci].c. If we can convert that to use acpi_dev_add_driver_gpios()
-> to feed names for card detection GPIOs, I think we can remove the
-> fallback alltogether in favor of named GPIOs for ACPI.
 
-Nah, there seems to be several drivers relying on this already :-/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 12/10/15 18:04, Matthias Brugger wrote:
+>
+>
+> On 06/10/15 09:40, YH Huang wrote:
+>> Add display PWM node in mt8173-evb.dts and mt8173.dtsi.
+>>
+>> Signed-off-by: YH Huang <yh.huang@mediatek.com>
+>> ---
+>>   arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   13 +++++++++++++
+>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi    |   22
+>> ++++++++++++++++++++++
+>>   2 files changed, 35 insertions(+)
+>>
+>
+> Applied, thanks.
+
+I reapplied this on v4.4-next/arm64
+
+>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> index 811cb76..1b3fabd 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> @@ -92,6 +92,13 @@
+>>   };
+>>
+>>   &pio {
+>> +    disp_pwm0_pins: disp_pwm0_pins {
+>> +        pins1 {
+>> +            pinmux = <MT8173_PIN_87_DISP_PWM0__FUNC_DISP_PWM0>;
+>> +            output-low;
+>> +        };
+>> +    };
+>> +
+>>       mmc0_pins_default: mmc0default {
+>>           pins_cmd_dat {
+>>               pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+>> @@ -190,6 +197,12 @@
+>>       };
+>>   };
+>>
+>> +&pwm0 {
+>> +    pinctrl-names = "default";
+>> +    pinctrl-0 = <&disp_pwm0_pins>;
+>> +    status = "okay";
+>> +};
+>> +
+>>   &pwrap {
+>>       pmic: mt6397 {
+>>           compatible = "mediatek,mt6397";
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> index 4bce167..fd01134 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> @@ -500,6 +500,28 @@
+>>               clock-names = "source", "hclk";
+>>               status = "disabled";
+>>           };
+>> +
+>> +        pwm0: pwm@1401e000 {
+>> +            compatible = "mediatek,mt8173-disp-pwm",
+>> +                     "mediatek,mt6595-disp-pwm";
+>> +            reg = <0 0x1401e000 0 0x1000>;
+>> +            #pwm-cells = <2>;
+>> +            clocks = <&mmsys CLK_MM_DISP_PWM026M>,
+>> +                 <&mmsys CLK_MM_DISP_PWM0MM>;
+>> +            clock-names = "main", "mm";
+>> +            status = "disabled";
+>> +        };
+>> +
+>> +        pwm1: pwm@1401f000 {
+>> +            compatible = "mediatek,mt8173-disp-pwm",
+>> +                     "mediatek,mt6595-disp-pwm";
+>> +            reg = <0 0x1401f000 0 0x1000>;
+>> +            #pwm-cells = <2>;
+>> +            clocks = <&mmsys CLK_MM_DISP_PWM126M>,
+>> +                 <&mmsys CLK_MM_DISP_PWM1MM>;
+>> +            clock-names = "main", "mm";
+>> +            status = "disabled";
+>> +        };
+>>       };
+>>   };
+>>
+>>
