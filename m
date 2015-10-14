@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/6] mfd: axp20x: Add AXP223 to list of
- supported PMICs in DT bindings
-Date: Thu, 15 Oct 2015 00:32:17 +0800
-Message-ID: <1444840342-9233-2-git-send-email-wens@csie.org>
+Subject: [PATCH 5/6] ARM: dts: sun8i: Add NMI interrupt
+ controller node
+Date: Thu, 15 Oct 2015 00:32:21 +0800
+Message-ID: <1444840342-9233-6-git-send-email-wens@csie.org>
 References: <1444840342-9233-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB2MJ7KYAKGQEMOI34GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3EJ7KYAKGQEAX7MIZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1444840342-9233-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,42 +20,32 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-It is functionally identical to AXP221; only the regulator default
-voltage/status and the external host interface are different.
+The NMI interrupt controller is in charge of the NMI pin exposed by
+the SoC to the PMIC. The PMIC signals interrupts through this.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index a474359dd206..fd39fa54571b 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -5,11 +5,12 @@ axp152 (X-Powers)
- axp202 (X-Powers)
- axp209 (X-Powers)
- axp221 (X-Powers)
-+axp223 (X-Powers)
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 828aaf52c342..a1e3acd325f4 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -579,6 +579,14 @@
+ 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
- Required properties:
- - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
--	      "x-powers,axp221"
--- reg: The I2C slave address for the AXP chip
-+	      "x-powers,axp221", "x-powers,axp223"
-+- reg: The I2C slave address or RSB hardware address for the AXP chip
- - interrupt-parent: The parent interrupt controller
- - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
- - interrupt-controller: The PMIC has its own internal IRQs
-@@ -51,7 +52,7 @@ LDO3		: LDO		: ldo3in-supply
- LDO4		: LDO		: ldo24in-supply	: shared supply
- LDO5		: LDO		: ldo5in-supply
- 
--AXP221 regulators, type, and corresponding input supply names:
-+AXP221/AXP223 regulators, type, and corresponding input supply names:
- 
- Regulator	  Type		  Supply Name		  Notes
- ---------	  ----		  -----------		  -----
++		nmi_intc: interrupt-controller@01f00c0c {
++			compatible = "allwinner,sun6i-a31-sc-nmi";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			reg = <0x01f00c0c 0x38>;
++			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		prcm@01f01400 {
+ 			compatible = "allwinner,sun8i-a23-prcm";
+ 			reg = <0x01f01400 0x200>;
 -- 
 2.6.1
