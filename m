@@ -1,108 +1,67 @@
-From: Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
-Date: Wed, 14 Oct 2015 10:40:33 +0200
-Message-ID: <561E1501.2070507@suse.de>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-10-git-send-email-john.garry@huawei.com> <561CA0CB.5090802@suse.de> <561D3BF1.8060600@huawei.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Add wakeup interrupt source for
+ pixcir_i2c_ts
+Date: Wed, 14 Oct 2015 11:46:19 +0300
+Message-ID: <561E165B.3000907@ti.com>
+References: <1444801956-17817-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <561D3BF1.8060600@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>, James.Bottomley@HansenPartnership.com
-Cc: devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444801956-17817-1-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Gerlach, Dave" <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2015 07:14 PM, John Garry wrote:
-> On 13/10/2015 07:12, Hannes Reinecke wrote:
->> On 10/12/2015 05:20 PM, John Garry wrote:
->>> This SAS ID is chosen as Huawei IEEE id: 001882
->>>
->>> Signed-off-by: John Garry <john.garry@huawei.com>
->>> ---
->>>   drivers/scsi/hisi_sas/hisi_sas_init.c | 15 +++++++++++++++
->>>   1 file changed, 15 insertions(+)
->>>
->>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c
->>> b/drivers/scsi/hisi_sas/hisi_sas_init.c
->>> index 44fc524..c295c39 100644
->>> --- a/drivers/scsi/hisi_sas/hisi_sas_init.c
->>> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
->>> @@ -283,6 +283,19 @@ err_out:
->>>       return NULL;
->>>   }
->>>
->>> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
->>> +{
->>> +    u8 i;
->>> +
->>> +    /* Huawei IEEE id (001882) */
->>> +    for (i =3D 0; i < hisi_hba->n_phy; i++)
->>> +        hisi_hba->phy[i].dev_sas_addr =3D
->>> +            cpu_to_be64(0x5001882016072015ULL);
->>> +
->> Ouch. Each phy has the same SAS address?
->> For all boards? Ever?
->>
->> Not sure if that's a good idea, nor even valid.
->> It'll confuse the hell out of any SAS array.
->>
->> Please provide a means of having individual SAS addresses for each
->> HBA.
->>
->> Cheers,
->>
->> Hannes
->>
-> Hello,
->=20
-> Are you saying we should be getting the SAS address from fw with
-> sas_request_addr() or the like?
->=20
-> Marvell solution seems to hardcode it.
->=20
-Doesn't make it any better, nor even valid.
++Dave
 
-Problem is that using a hardcoded SAS address makes it impossible
-do any resource allocation on a SAS target array.
-The SAS target array is allocating / mapping the LUNs based on the
-SAS address, so if HBAs from different machines coming in with the
-same SAS address the SAS array will assume that all ports belong to
-the same machine, thus allowing access to all of them.
+On 14/10/15 08:52, Vignesh R wrote:
+> On am437x-gp-evm, pixcir_i2c_ts can wakeup the system from lower power
+> state via pinctrl and IO daisy chain using generic wakeirq framework.
+> With commit 3fffd1283927 ("i2c: allow specifying separate wakeup
+> interrupt in device tree") i2c core allows optional wakeirq to be
+> specified via device tree. Add wakeup irq entry to enable pixcir_i2c_ts
+> to wake the system from low power state.
+> 
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am437x-gp-evm.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+> index 22038f21f228..69e93af7df0d 100644
+> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+> @@ -581,8 +581,13 @@
+>  
+>  		attb-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+>  
+> +		interrupts-extended = <&gpio3 22 GPIO_ACTIVE_HIGH>,
+> +				      <&am43xx_pinmux 0x264>;
 
-And don't try to _ever_ connect these HBAs to a SAS switch; that
-will be even more confused.
+How does this work?
 
-So please, if you have a chance _DO_ get the SAS address from fw.
-If the firmware doesn't provide it you really should get in touch
-with the firmware team to get you one.
+interrupts-extended property must have
+1) interrupt parent
+2) interrupt number
+3) interrupt flags
 
-To clarify the situation the SAS spec states:
+Your change doesn't seem to comply with those requirements.
 
-  Device names are worldwide unique names for devices within a
-  transport protocol (see SAM-3).
+> +		interrupt-names = "tsc", "wakeup";
+> +
+>  		touchscreen-size-x = <1024>;
+>  		touchscreen-size-y = <600>;
+> +		wakeup-source;
+>  	};
+>  
+>  	ov2659@30 {
+> 
 
-and:
-  The VENDOR - SPECIFIC IDENTIFIER contains a 36-bit numeric value
-  that is uniquely assigned by the organization associated with the
-  company identifier in the IEEE COMPANY ID field.
-
-So as you are using the Huawei Vendor ID Huawei as a company needs
-to ensure uniqueness of the vendor-specific identifier (ie the last
-36 bits of the SAS address). Which the above patch most patently
-fails to address.
-
-Cheers,
-
-Hannes
---=20
-Dr. Hannes Reinecke		               zSeries & Storage
-hare@suse.de			               +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg
-GF: F. Imend=F6rffer, J. Smithard, J. Guild, D. Upmanyu, G. Norton
-HRB 21284 (AG N=FCrnberg)
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe linux-scsi" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
