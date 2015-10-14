@@ -1,48 +1,55 @@
-From: Daniel Walker <danielwa@cisco.com>
-Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
-Date: Wed, 14 Oct 2015 07:48:02 -0700
-Message-ID: <561E6B22.1030204@cisco.com>
-References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
- <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
- <20151007162755.GA23283@fifo99.com>
- <CAL_JsqJwFeDGJ0cTYwikX7DAvR7SK=CL6Qxyp9oKFWeFMgZNiA@mail.gmail.com>
- <561D6603.4060006@cisco.com>
- <CAL_JsqK5qymGdMaayK61WKPw1-Ws9K+Lxi5w6rO2CEg08Aq60A@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 10/13] dmaengine: ti-dma-crossbar: Add support for
+ crossbar on AM33xx/AM43xx
+Date: Wed, 14 Oct 2015 17:53:40 +0300
+Message-ID: <561E6C74.50502@ti.com>
+References: <1444828344-21378-1-git-send-email-peter.ujfalusi@ti.com>
+ <1444828344-21378-11-git-send-email-peter.ujfalusi@ti.com>
+ <20151014144814.GW27370@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK5qymGdMaayK61WKPw1-Ws9K+Lxi5w6rO2CEg08Aq60A@mail.gmail.com>
+In-Reply-To: <20151014144814.GW27370@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Daniel Walker <dwalker@fifo99.com>, xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: nsekhar@ti.com, linux@arm.linux.org.uk, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, r.schwebel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On 10/14/2015 05:48 PM, Vinod Koul wrote:
+> On Wed, Oct 14, 2015 at 04:12:21PM +0300, Peter Ujfalusi wrote:
+>> The DMA event crossbar on AM33xx/AM43xx is different from the one fo=
+und in
+>> DRA7x family.
+>> Instead of a single event crossbar it has 64 identical mux attached =
+to each
+>> eDMA event line. When the 0 event mux is selected, the default mappe=
+d event
+>> is going to be routed to the corresponding eDMA event line. If diffe=
+rent
+>> mux is selected, then the selected event is going to be routed to th=
+e given
+>> eDMA event.
+>=20
+> Why is crossbar patch in edma series?
 
+The old eDMA binding had xbar support which is not supported by the new
+binding since it does not belong to the eDMA driver at all.
+We have couple of boards where the crossbar is in use so I included the
+crossbar support in this series.
 
-There's one last little wrinkle .. In the current setup the defconfig 
-CONFIG_CMDLINE="" is used as a default in case the device tree has 
-nothing in it. In my changes, there is no identical functionality. The 
-only similar thing I have is the the CONFIG_CMDLINE_APPEND="" . The main 
-difference is that in the current implementation CONFIG_CMDLINE="" 
-doesn't get added at all if there is a device tree bootargs, but with my 
-implementation this line would be added unconditionally. It would 
-represent a subtle change where people would have to add into the DT 
-bootargs something to override what might be in the default command line.
+>> +static void ti_am335x_xbar_free(struct device *dev, void *route_dat=
+a)
+>> +{
+>> +	struct ti_am335x_xbar_data *xbar =3D dev_get_drvdata(dev);
+>> +	struct ti_am335x_xbar_map *map =3D route_data;
+>> +
+>> +	dev_err(dev, "Unmapping XBAR event %u on channel %u\n",
+>> +		map->mux_val, map->dma_line);
+>=20
+> Err ?
 
-For example,
+Aargh, leftover from debugging.
 
-if a config has CONFIG_CMDLINE_APPEND="debug" then they would have to 
-add a "loglevel=7" into the DT bootargs to get back to normal. I 
-wouldn't think people would want "debug" as the default, but oddly 
-enough some of the configs do have this. Some of them also have default 
-ip address setting, nfsroot= settings, and loglevel= settings.
-
-What are your thoughts on this ? I think using the append type default 
-makes more sense because it's actually setting up global defaults. The 
-current complete replacement scheme seems to set the stage for people to 
-make an entirely custom default for a single development machine, which 
-IMO doesn't make sense. However, I'm not sure what the intent is with 
-the current setup.
-
-Daniel
+--=20
+P=E9ter
