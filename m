@@ -1,69 +1,73 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Wed, 14 Oct 2015 11:36:04 +0200
-Message-ID: <5210459.PtmhWaT6RM@wuerfel>
-References: <1444790492-4051-1-git-send-email-lftan@altera.com> <5088538.zEUtS0EC0S@wuerfel> <CAFiDJ59AuXmM8vN9=ry8_UvS-paRN54CdCFw6EUMx9RV2TT3bQ@mail.gmail.com>
+Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon
+ SoC Hip05
+Date: Wed, 14 Oct 2015 11:42:27 +0200
+Message-ID: <5959363.QRL4hSioHL@wuerfel>
+References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com>
+ <7409042.iUdOP6FlU8@wuerfel>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1624367C@lhreml503-mbs>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAFiDJ59AuXmM8vN9=ry8_UvS-paRN54CdCFw6EUMx9RV2TT3bQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1624367C@lhreml503-mbs>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "Wangkefeng (Kevin)" <wangkefeng.wang@huawei.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, qiujiang <qiujiang@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Bjorn Helgaas <helgaas@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "liudongdong (C)" <liudongdong3@huawei.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, thomas.petazzoni@f
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 October 2015 17:28:45 Ley Foon Tan wrote:
-> On Wed, Oct 14, 2015 at 5:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 14 October 2015 16:32:25 Ley Foon Tan wrote:
-> >> On Wed, Oct 14, 2015 at 4:20 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Wednesday 14 October 2015 10:41:29 Ley Foon Tan wrote:
-> >> >> +static int altera_pcie_remove(struct platform_device *pdev)
-> >> >> +{
-> >> >> +     struct altera_pcie *pcie = platform_get_drvdata(pdev);
-> >> >> +
-> >> >> +     altera_pcie_free_irq_domain(pcie);
-> >> >> +     platform_set_drvdata(pdev, NULL);
-> >> >> +     return 0;
-> >> >> +}
-> >> >
-> >> > I just noticed this. Does it actually work to unload the module
-> >> > and tear down all the pci_dev structures in a safe way?
-> >> Good catch. It only can be compiled as builtin-moduley now, so we can
-> >> remove this _remove callback function.
-> >
-> > I think we should change both: make it possible to load the
-> > driver dynamically, and remove the altera_pcie_remove function.
-> This driver depends on the pci fixups to work correctly. But, fixups
-> callback functions in this driver are not being call if the driver is
-> loadable module.
+On Wednesday 14 October 2015 09:31:48 Gabriele Paoloni wrote:
+> > 
+> > > To me it sounds more appropriate to adopt subsys_initcall() for all
+> > the
+> > > PCI Host Bridge controllers rather than having them as loadable
+> > modules...
+> > >
+> > > What is your view?
+> > 
+> > subsys_initcall() sounds odd because it's a driver rather than a
+> > subsystem,
+> > but I realize that most of the other levels don't fit any better.
+> 
+> Yes well I was seeing for example the vgaarb 
+> http://lxr.free-electrons.com/source/drivers/gpu/vga/vgaarb.c#L1357
+> 
+> That in the init is calling pci_get_subsys()
+> 
+> So I was wondering that the PCI devices may not be registered unless
+> we also init the PCI host bridge through subsys_initcall()...
 
-Ah, I see. We should find a better way to deal with this, as we
-are getting an increasing number of host driver specific fixups.
+I think this should work as is: the code first looks for devices
+that are already there and then registers a notifier for devices
+that show up later. This is meant to work for both devices that
+are hotplugged at a later point as well as PCI buses that are
+already there but not yet probed.
 
-Bjorn, do you have any idea here?
+> But then maybe is the vgaarb to be buggy...
 
-Could we perhaps have a helper function that lets us register
-fixups dynamically?
+Possible. It may well be that the code is only tested on x86,
+which always probes its PCI very early.
 
-> The linker script keeps all pci fixup callbacks in pci fixup regions
-> during kernel compile time. So, it needs to be builtin module. Do you
-> know any way we can update those fixup regions?
+> > As I said, it's not really a choice we have to make in the source code,
+> > we can use subsys_initcall together with module_exit(), or we can
+> > create a helper macro that is similar to module_platform_driver()
+> > specifically for PCI that uses a particular initcall level.
+> 
+> Ok got it. But I guess this needs to be thought and applied to all
+> the PCI host bridge controllers...
+> 
+> So maybe for this driver I can use module_platform_driver_probe()
+> and then we can see...
 
-The only method I'm aware of at the moment is move the fixups to
-drivers/pci/quirks.c and enclose them in an #ifdef if you want them
-to not appear in kernels that don't support your SoC.
-
-> > You can prevent the module from being unloaded if you also remove
-> > the module_platform_driver() directive and add a module_init()
-> > without a matching module_exit().
-> >
-> > Please also add a '.suppress_bind_attrs = true,' flag in the driver
-> > struct to prevent manual unbinding.
-> I think we don't need these if it only can work as builtin module.
-
-No, this is orthogonal, you need it either way, as built-in drivers
-can still be unbound by writing to sysfs. Try writing the device name
-to /sys/bus/platform/drivers/altera-pcie/unbind and watch it blow up ;-)
+Sounds good. Let's focus on getting the driver merged first and
+then follow up with a patch to get this right for all PCI hosts.
 
 	Arnd
