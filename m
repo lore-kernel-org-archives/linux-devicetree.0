@@ -1,73 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon
  SoC Hip05
-Date: Wed, 14 Oct 2015 11:42:27 +0200
-Message-ID: <5959363.QRL4hSioHL@wuerfel>
-References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com>
- <7409042.iUdOP6FlU8@wuerfel>
- <EE11001F9E5DDD47B7634E2F8A612F2E1624367C@lhreml503-mbs>
+Date: Wed, 14 Oct 2015 17:44:11 +0800
+Message-ID: <561E23EB.7050504@hisilicon.com>
+References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <11677087.JbqAo0FWJE@wuerfel> <561E1957.5030503@hisilicon.com> <30775300.COZ4nEMWXC@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1624367C@lhreml503-mbs>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: "Wangkefeng (Kevin)" <wangkefeng.wang@huawei.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, qiujiang <qiujiang@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Bjorn Helgaas <helgaas@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "liudongdong (C)" <liudongdong3@huawei.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, thomas.petazzoni@f
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <30775300.COZ4nEMWXC@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devi>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 October 2015 09:31:48 Gabriele Paoloni wrote:
-> > 
-> > > To me it sounds more appropriate to adopt subsys_initcall() for all
-> > the
-> > > PCI Host Bridge controllers rather than having them as loadable
-> > modules...
-> > >
-> > > What is your view?
-> > 
-> > subsys_initcall() sounds odd because it's a driver rather than a
-> > subsystem,
-> > but I realize that most of the other levels don't fit any better.
+On 2015/10/14 17:06, Arnd Bergmann wrote:
+> On Wednesday 14 October 2015 16:59:03 Zhou Wang wrote:
+>>
+>> Hi Arnd,
+>>
+>> In Hip05 PCIe host, it uses GITS_TRANSLATER's address to get TLP package
+>> which contains MSI address and MSI data, and then combine BDF and MSI data
+>> to a 32 bit data which will be writen to GITS_TRANSLATER register of ITS.
+>>
+>> I think maybe this is a defect of our PCIe controller.
 > 
-> Yes well I was seeing for example the vgaarb 
-> http://lxr.free-electrons.com/source/drivers/gpu/vga/vgaarb.c#L1357
+> I'd consider it a bug in the firmware if this is not set up correctly
+> before boot.
 > 
-> That in the init is calling pci_get_subsys()
+>>> I don't think what you do here is safe because the 'reg' property
+>>> of the MSI controller might point to the address that is used for
+>>> the message directly.
+>>
+>> I see your point, however we must get address of GITS_TRANSLATER and
+>> set it to PCIe host. How about adding necessary comments here?
 > 
-> So I was wondering that the PCI devices may not be registered unless
-> we also init the PCI host bridge through subsys_initcall()...
+> This seems to just be static setup that should be done before Linux
+> is even loaded. Any reason you can't do it that way?
+>
 
-I think this should work as is: the code first looks for devices
-that are already there and then registers a notifier for devices
-that show up later. This is meant to work for both devices that
-are hotplugged at a later point as well as PCI buses that are
-already there but not yet probed.
+There are some ITSs in Hip05-D02 platform, in fact, we can use any of them
+as a msi-controller,  which we can configure in dts. I am afraid that
+hard-setting the value in BIOS would lead to restrictions in terms of flexibility,
+as with the current implementation the same BIOS-driver can fit different
+DTS structures.
 
-> But then maybe is the vgaarb to be buggy...
+Regards,
+Zhou
 
-Possible. It may well be that the code is only tested on x86,
-which always probes its PCI very early.
-
-> > As I said, it's not really a choice we have to make in the source code,
-> > we can use subsys_initcall together with module_exit(), or we can
-> > create a helper macro that is similar to module_platform_driver()
-> > specifically for PCI that uses a particular initcall level.
+> 	Arnd
 > 
-> Ok got it. But I guess this needs to be thought and applied to all
-> the PCI host bridge controllers...
+> .
 > 
-> So maybe for this driver I can use module_platform_driver_probe()
-> and then we can see...
 
-Sounds good. Let's focus on getting the driver merged first and
-then follow up with a patch to get this right for all PCI hosts.
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
