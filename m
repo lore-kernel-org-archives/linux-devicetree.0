@@ -1,40 +1,38 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH 1/7] ARM: Kconfig: Introduce MACH_STM32F429 flag
-Date: Wed, 14 Oct 2015 22:07:21 +0200
-Message-ID: <1444853247-31114-2-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] clk: ns2: add clock support for Broadcom Northstar 2 SoC
+Date: Wed, 14 Oct 2015 22:16:45 +0200
+Message-ID: <6398606.WW44dcgQDV@wuerfel>
+References: <1444770485-11210-1-git-send-email-jonmason@broadcom.com> <6427519.eIBEvCNlle@wuerfel> <561EB10B.40502@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561EB10B.40502-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces the MACH_STM32F429 to make possible to only select
-STM32F429 pinctrl driver.
+On Wednesday 14 October 2015 12:46:19 Scott Branden wrote:
+> >
+> > My patch fixes it by always selecting COMMON_CLK_IPROC from
+> > ARCH_BCM_CYGNUS. I wasn't sure whether you want COMMON_CLK_IPROC
+> > to still be user-selectable, so I left that in place. Normally
+> > I'd expect it to be a silent option though, that just gets
+> > implicitly enabled whenever a platform that needs it is built
+> > into the kernel.
+> COMMON_CLK_IPROC can be a silent option and selected as Arnd has done below.
 
-By default, all the MACH_STM32Fxxx flags will be set with STM32 defconfig.
+Ok, please do that then. If you want to apply my patch directly,
+you can remove that last paragraph from the description.
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Acked-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 72ad724..bf94e54 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -988,6 +988,11 @@ config ARCH_STM32
- 	help
- 	  Support for STMicroelectronics STM32 processors.
- 
-+config MACH_STM32F429
-+	bool "STMicrolectronics STM32F429"
-+	depends on ARCH_STM32
-+	default y
-+
- # Definitions to make life easier
- config ARCH_ACORN
- 	bool
--- 
-1.9.1
+Thanks for taking a look!
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
