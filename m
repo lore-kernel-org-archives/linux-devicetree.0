@@ -1,73 +1,138 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v4 3/3] arm64: dts: mt8173: Add nor flash node
-Date: Wed, 14 Oct 2015 19:26:36 +0800
-Message-ID: <CAGS+omDQQ8UDM2pOtU-koz9tfag4SG3Sgf_LrtzsUxeutrTThA@mail.gmail.com>
-References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
- <1444729160-26433-4-git-send-email-bayi.cheng@mediatek.com>
- <561D1642.3070105@cogentembedded.com> <CAGS+omDm=74d6cw7kXwkZ_Jy-faBz7z4-vJQX9ZFVNskQqSS-w@mail.gmail.com>
- <561E36ED.7090103@cogentembedded.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] iio: mma8452: support either of the available
+ interrupt pins
+Date: Wed, 14 Oct 2015 12:28:55 +0100
+Message-ID: <20151014112854.GB32715@leverpostej>
+References: <1444816349-25103-1-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561E36ED.7090103@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Bayi Cheng <bayi.cheng@mediatek.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mtd@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444816349-25103-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sergei,
+On Wed, Oct 14, 2015 at 11:52:29AM +0200, Martin Kepplinger wrote:
+> This change is important in order for everyone to be easily able to use the
+> driver for one of the supported accelerometer chips!
+> 
+> Until now, the driver blindly assumed that the INT1 interrupt line is wired
+> on a user's board. But these devices have 2 interrupt lines and can route
+> their different interrupt sources to one of them. Since only their motion
+> detection interrupt source is implemented as IIO events, users just use
+> either one of the pins.
+> 
+> Of course, this also falls back to assuming INT1, so for existing users
+> nothing will break. The new functionality is described in the bindings doc.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> ---
+> changelog:
+> v2: don't warn but normally handle if both pins are described in dts
+>     thanks Mark Rutland
+> v1: initial post
+> 
+> 
+>  .../devicetree/bindings/iio/accel/mma8452.txt      |  7 +++++++
+>  drivers/iio/accel/mma8452.c                        | 22 ++++++++++++++++------
+>  2 files changed, 23 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> index e3c3746..f06ed87 100644
+> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> @@ -7,13 +7,19 @@ Required properties:
+>      * "fsl,mma8453"
+>      * "fsl,mma8652"
+>      * "fsl,mma8653"
+> +
+>    - reg: the I2C address of the chip
+>  
+>  Optional properties:
+>  
+>    - interrupt-parent: should be the phandle for the interrupt controller
+> +
+>    - interrupts: interrupt mapping for GPIO IRQ
+>  
+> +  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
+> +		     interrupt line in use. If only "INT2" is present, INT2 is
+> +		     used; otherwise INT1.
 
-On Wed, Oct 14, 2015 at 7:05 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
->
-> On 10/14/2015 4:07 AM, Daniel Kurtz wrote:
->
->>>> Add Mediatek nor flash node
->>>>
->>>> Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
->>>> ---
->>>>    arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 +++++++++++++++
->>>>    1 file changed, 15 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>>> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>>> index d18ee42..385c2e4 100644
->>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>>> @@ -365,6 +365,21 @@
->>>>                          status = "disabled";
->>>>                  };
->>>>
->>>> +               nor_flash: spi@1100d000 {
->>>
->>>
->>>     I don't think this is a good label name for a SPI controller.
->>
->>
->> You think "spi" is not a good name for SPI controller?
->> Or you mean the label "nor_flash"?
->
->
->    I think I said clearly: "label". :-)
->
->> Would you prefer:
->>
->>    spi_nor_flash: spi@1100d000
->
->
->    I'd prefer the "_nor_flash" part to be dropped, to be used for the real
-> flash device (if needed) which is a sub-node of this node.
+The last sentence should go, as it's a description of the OS behaviour
+rather than the hardware.
 
-The dedicated nor_flash spi bus cannot just be labeled 'spi', as that
-would conflict with the general purpose 'spi' bus.  Instead, it is
-given a unique label that can be used as a phandle elsewhere (e.g., in
-a board file, to enable the bus).  The name "spi_nor_flash" makes it
-clear that this spi bus is only for use for accessing the nor_flash.
+With that removed, the binding looks fine to me.
 
-Bayi: Actually, this reminds me.  I'd prefer if the bus node was
-disabled by default, and only enabled by boards as required.  So, the
-node should include:
-   status = "disabled";
+> +
+>  Example:
+>  
+>  	mma8453fc@1d {
+> @@ -21,4 +27,5 @@ Example:
+>  		reg = <0x1d>;
+>  		interrupt-parent = <&gpio1>;
+>  		interrupts = <5 0>;
+> +		interrupt-names = "INT2";
+>  	};
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 1eccc2d..4d69c3d 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/iio/events.h>
+>  #include <linux/delay.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -1130,13 +1131,22 @@ static int mma8452_probe(struct i2c_client *client,
+>  					   MMA8452_INT_FF_MT;
+>  		int enabled_interrupts = MMA8452_INT_TRANS |
+>  					 MMA8452_INT_FF_MT;
+> +		int irq1, irq2;
+>  
+> -		/* Assume wired to INT1 pin */
+> -		ret = i2c_smbus_write_byte_data(client,
+> -						MMA8452_CTRL_REG5,
+> -						supported_interrupts);
+> -		if (ret < 0)
+> -			return ret;
+> +		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
+> +		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
+> +
+> +		/* if INT2 is found, use it. Otherwise INT1 */
+> +		if (!(irq2 > 0 && irq1 < 0)) {
+> +			ret = i2c_smbus_write_byte_data(client,
+> +							MMA8452_CTRL_REG5,
+> +							supported_interrupts);
+> +			if (ret < 0)
+> +				return ret;
+> +			dev_info(&client->dev, "using interrupt line INT1\n");
+> +		} else {
+> +			dev_info(&client->dev, "using interrupt line INT2\n");
+> +		}
 
--Dan
+Is this correct? As far as I can see you request client->irq regardless
+(and I assume that's just the first interrupt in the DT).
+
+Does this work for both
+
+	interrupt-names = "IRQ2", "IRQ1";
+	interrupts = <2>, <1>;
+
+or
+	interrupt-names = "IRQ1", "IRQ2";
+	interrupts = <1>, <2>;
+
+?
+
+You might need to override client->irq.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
