@@ -1,82 +1,59 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 1/5] clk: iproc: define Broadcom NSP iProc clock binding
-Date: Wed, 14 Oct 2015 11:40:51 -0400
-Message-ID: <20151014154051.GE15160@broadcom.com>
-References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
- <1444771347-11382-2-git-send-email-jonmason@broadcom.com>
- <561D8300.3040804@broadcom.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
+Date: Wed, 14 Oct 2015 17:41:26 +0200
+Message-ID: <CAOAejn0chZD5mgi8WrW3ow3APUHTJOYP4=G2jCZ_Po4qe9eACw@mail.gmail.com>
+References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
+	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
+	<561D1689.90703@linaro.org>
+	<CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
+	<CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
+	<561E58AC.80207@linaro.org>
+	<CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
+	<561E658D.1070900@linaro.org>
+	<CAOAejn1spB+BCRh9+jJtaKxEmaRc04nveF3rQEbT7kLMH0kOkg@mail.gmail.com>
+	<561E7497.1050105@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <561D8300.3040804-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <561E7497.1050105-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 03:17:36PM -0700, Ray Jui wrote:
-> Shouldn't the device tree binding document go with the other patch
-> series since both the binding document and drivers are merged by Michael
-> or Stephen?
-> 
-> On 10/13/2015 2:22 PM, Jon Mason wrote:
-> > Document the device tree bindings for Broadcom Northstar Plus
-> > architecture based clock controller
-> > 
-> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../bindings/clock/brcm,iproc-clocks.txt           | 30 ++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-> > index da8d9bb..b3c3e9d 100644
-> > --- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-> > +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-> > @@ -130,3 +130,33 @@ These clock IDs are defined in:
-> >      ch3_unused mipipll          4       BCM_CYGNUS_MIPIPLL_CH3_UNUSED
-> >      ch4_unused mipipll          5       BCM_CYGNUS_MIPIPLL_CH4_UNUSED
-> >      ch5_unused mipipll          6       BCM_CYGNUS_MIPIPLL_CH5_UNUSED
-> > +
-> > +Northstar and Northstar Plus
-> > +------
-> > +PLL and leaf clock compatible strings for Northstar and Northstar Plus are:
-> > + "brcm,nsp-armpll"
-> > + "brcm,nsp-genpll"
-> > + "brcm,nsp-lcpll0"
-> 
-> So the current clock driver also supports NS? That will be nice and that
-> indicates all the clock related registers/offsets are exactly the same
-> between NS and NSP?
+2015-10-14 17:28 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 14/10/15 16:26, M'boumba Cedric Madianga wrote:
+>>
+>> 2015-10-14 16:24 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>>>
+>>>
+>>> Hmnnn...
+>>>
+>>> The dmaengine framework will WARN_ONCE() if an dmaengine is removed
+>>> whilst
+>>> it is active and also works hard to ensure dmaengine modules are not
+>>> removed
+>>> whilst there are active drivers using the framework.
+>>>
+>>> How do we get into this function whilst there is still an active DMA
+>>> channels?
+>>
+>>
+>> For example, when a user try "rmmod stm32-dma" in uart console.
+>> It will enter in stm32_dma_remove while there is potentially still active
+>> DMA.
+>
+>
+> Check dmaengine.c for yourself but I think in this case the dmaengine
+> framework will hold references to the module and prevent the remove from
+> taking place.
 
-Yes.  The register offsets are different, but everything else is
-identical.
+Yes I did it.
+As far I understand, the dmaengine framework will print a warning
+message but doesn't stop removing operation if there are some active
+clients.
 
-> 
-> > +
-> > +The following table defines the set of PLL/clock index and ID for Northstar and
-> > +Northstar Plus.  These clock IDs are defined in:
-> > +    "include/dt-bindings/clock/bcm-nsp.h"
-> > +
-> > +    Clock	Source		Index	ID
-> > +    ---		-----		-----	---------
-> > +    crystal	N/A		N/A	N/A
-> > +
-> > +    armpll	crystal		N/A	N/A
-> > +
-> > +    genpll	crystal		0	BCM_NSP_GENPLL
-> > +    phy		genpll		1	BCM_NSP_GENPLL_PHY_CLK
-> > +    ethernetclk	genpll		2	BCM_NSP_GENPLL_ENET_SW_CLK
-> > +    usbclk	genpll		3	BCM_NSP_GENPLL_USB_PHY_REF_CLK
-> > +    iprocfast	genpll		4	BCM_NSP_GENPLL_IPROCFAST_CLK
-> > +    sata1	genpll		5	BCM_NSP_GENPLL_SATA1_CLK
-> > +    sata2	genpll		6	BCM_NSP_GENPLL_SATA2_CLK
-> > +
-> > +    lcpll0	crystal		0	BCM_NSP_LCPLL0
-> > +    pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
-> > +    sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
-> > +    ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
-> > 
+Cedric.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
