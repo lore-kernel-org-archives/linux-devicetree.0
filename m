@@ -1,73 +1,165 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
-Date: Tue, 13 Oct 2015 23:23:03 -0700
-Message-ID: <20151014062303.GC20406@dtor-ws>
-References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
- <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
- <20151012164819.GA4010@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
- <20151013070824.GA22304@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
- <20151013100724.GG1492@lahna.fi.intel.com>
+Subject: Re: [PATCH 3/3] input: rotary-encoder: Support 'steps-per-period' DT
+ property
+Date: Tue, 13 Oct 2015 23:55:18 -0700
+Message-ID: <20151014065518.GG20406@dtor-ws>
+References: <1444398416-3073-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <1444398416-3073-4-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151013100724.GG1492@lahna.fi.intel.com>
+In-Reply-To: <1444398416-3073-4-git-send-email-ezequiel@vanguardiasur.com.ar>
 Sender: linux-input-owner@vger.kernel.org
-To: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-Cc: "Tirdea, Irina" <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ariel@vanguardiasur.com.ar, Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 01:07:24PM +0300, mika.westerberg@linux.intel.com wrote:
-> On Tue, Oct 13, 2015 at 08:54:12AM +0000, Tirdea, Irina wrote:
-> > > > I did not use devm_gpiod_get_optional() in order to ignore more errors
-> > > > than -ENOENT. This is needed because the ACPI gpio core will fall back
-> > > > to indexed gpios if named gpios are not found. In the common case of
-> > > > having 2 indexed gpio pins declared in the ACPI table, the first
-> > > > devm_gpiod_get() will successfully get indexed gpio pin 0 and the
-> > > > second devm_gpiod_get() will try to get the same gpio pin 0 and return
-> > > > -EBUSY. Considering this, I thought it is better to just ignore all errors in
-> > > > order not to break any platforms currently using this driver.
-> > > 
-> > > This seems like issue with ACPI gpio lookup implementation. If I am
-> > > requesting named gpio and it is not present then I definitely do not
-> > > need to be returned some random gpio. Doing so breaks all other drivers
-> > > that use several names to retrieve GPIOs. We basically can't trust GPIO
-> > > API on ACPI systems.
-> > > 
-> > 
-> > I'm not sure there is a way to avoid fall back to indexed gpios when requesting
-> > named gpios.
-> > Adding Mika to this thread as he might help answer this.
-> 
-> Before ACPI 5.1 _DSD device properties were introduced all we had was an
-> array of GPIOs returned by _CRS ACPI method. Ordering of those GPIOs
-> could change from one vendor to another :-(
-> 
-> We can (and do) use acpi_dev_add_driver_gpios() to pass correct mappings
-> where _DSD is not present based on the device ACPI ID for instance. Not
-> all drivers do that, though.
-> 
-> I would like to get rid of the fallback completely at some point. We
-> have had already problems with the API because then some ACPI only
-> drivers did this:
-> 
-> 	reset_gpio = gpiod_get_index(dev, NULL, 0);
-> 	power_gpio = gpiod_get_index(dev, NULL, 1);
-> 
-> which might not do what is expected on DT systems. That's why
-> acpi_dev_add_driver_gpios() was added in the first place IIRC.
+On Fri, Oct 09, 2015 at 10:46:56AM -0300, Ezequiel Garcia wrote:
+> As per the recent devicetree binding changes, this commit adds the
+> support for the new 'steps-per-period' property.
+>=20
+> Legacy properties to specify the rotary behavior, are now deprecated
+> and instead the new 'steps-per-period' is supported. The default beha=
+vior
+> is retained.
+>=20
+> This allows to support rotary-encoder devices with detents wich are c=
+apable
+> of producing a stable event on each step.
+>=20
+> Signed-off-by: Guido Mart=EDnez <guido@vanguardiasur.com.ar>
+> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+> ---
+>  drivers/input/misc/rotary_encoder.c | 87 +++++++++++++++++++++++++++=
+++++++++--
+>  include/linux/rotary_encoder.h      |  2 +-
+>  2 files changed, 84 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc=
+/rotary_encoder.c
+> index 15a4cc670a3f..e021615dd3c0 100644
+> --- a/drivers/input/misc/rotary_encoder.c
+> +++ b/drivers/input/misc/rotary_encoder.c
+> @@ -142,6 +142,55 @@ static irqreturn_t rotary_encoder_half_period_ir=
+q(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+> =20
+> +static irqreturn_t rotary_encoder_quarter_period_irq(int irq, void *=
+dev_id)
+> +{
+> +	struct rotary_encoder *encoder =3D dev_id;
+> +	unsigned char sum;
+> +	int state;
+> +
+> +	state =3D rotary_encoder_get_state(encoder->pdata);
+> +
+> +	/*
+> +	 * We encode the previous and the current state using a byte.
+> +	 * The previous state in the MSB nibble, the current state in the L=
+SB
+> +	 * nibble. Then use a table to decide the direction of the turn.
+> +	 */
+> +	sum =3D (encoder->last_stable << 4) + state;
+> +	switch (sum) {
+> +	case 0x31:
+> +	case 0x10:
+> +	case 0x02:
+> +	case 0x23:
+> +		encoder->dir =3D 0; /* clockwise */
+> +		break;
+> +
+> +	case 0x13:
+> +	case 0x01:
+> +	case 0x20:
+> +	case 0x32:
+> +		encoder->dir =3D 1; /* counter-clockwise */
+> +		break;
+> +
+> +	default:
+> +		/*
+> +		 * Ignore all other values. This covers the case when the
+> +		 * state didn't change (a spurious interrupt) and the
+> +		 * cases where the state changed by two steps, making it
+> +		 * impossible to tell the direction.
+> +		 *
+> +		 * In either case, don't report any event and save the
+> +		 * state for later.
+> +		 */
+> +		goto out;
+> +	}
+> +
+> +	rotary_encoder_report_event(encoder);
+> +
+> +out:
+> +	encoder->last_stable =3D state;
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id rotary_encoder_of_match[] =3D {
+>  	{ .compatible =3D "rotary-encoder", },
+> @@ -176,7 +225,26 @@ static struct rotary_encoder_platform_data *rota=
+ry_encoder_parse_dt(struct devic
+> =20
+>  	pdata->relative_axis =3D of_property_read_bool(np, "rotary-encoder,=
+relative-axis");
+>  	pdata->rollover =3D of_property_read_bool(np, "rotary-encoder,rollo=
+ver");
+> -	pdata->half_period =3D of_property_read_bool(np, "rotary-encoder,ha=
+lf-period");
+> +
+> +	if (!of_get_property(np, "rotary-encoder,steps-per-period", NULL)) =
+{
+> +		/*
+> +		 * Fallback to a one step per period behavior if the
+> +		 * 'steps-per-period' is not set.
+> +		 */
+> +		pdata->steps_per_period =3D 1;
+> +	} else {
+> +		of_property_read_u32(np, "rotary-encoder,steps-per-period",
+> +				     &pdata->steps_per_period);
+> +	}
+> +
+> +	/*
+> +	 * The 'half-period' property has been deprecated, you must use
+> +	 * 'steps-per-period' and set an appropriate value.
+> +	 */
+> +	if (of_get_property(np, "rotary-encoder,half-period", NULL)) {
+> +		pr_warn(FW_WARN "\"rotary-encoder,half-period\" is deprecated\n");
+> +		pdata->steps_per_period =3D 2;
+> +	}
 
-I understand why one might use acpi_dev_add_driver_gpios() to augment
-data in ACPI, however here we have completely different issue: driver
-that expects named gpios gets returned gpio that has nothing to do with
-what it requested, because gpiolib acpi code always falls back to
-unnamed gpio if it does not find named gpio. That can be acceptable if
-driver uses the same con_id for all requests to gpiolib, but is not
-working when driver supplies different con_ids.
+Hmm, I do not think we need to warn about old DTSes if we consider them
+ABI. How about if we parse like this:
+
+	error =3D of_property_read_u32(np, "rotary-encoder,steps-per-period",
+				     &pdata->steps_per_period);
+	if (error) {
+		/*
+		 * The 'half-period' property has been deprecated, you must use
+		 * 'steps-per-period' and set an appropriate value, but we still
+		 * need to parse it to maintain compatibility.
+		 */
+		if (of_property_read_bool(np, "rotary-encoder,half-period")) {
+			pdata->steps_per_period =3D 2;
+		} else {
+			/* Fallback to a one step per period behavior */
+			pdata->steps_per_period =3D 1;
+		}
+	}
+
+
+(no need to resubmit if you are OK with this).
 
 Thanks.
 
--- 
+--=20
 Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
