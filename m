@@ -1,92 +1,72 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
-Date: Wed, 14 Oct 2015 17:07:26 +0300
-Message-ID: <561E619E.9020504@mleia.com>
-References: <1444694045-22000-1-git-send-email-vz@mleia.com> <5493797.P10V9v7QAu@wuerfel> <561D902D.7020503@mleia.com> <7163229.YtgKU9kxxJ@wuerfel>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
+ information from DT
+Date: Wed, 14 Oct 2015 17:11:43 +0300
+Message-ID: <561E629F.5070202@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
+ <561E41EB.3050005@ti.com> <561E5803.5090609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7163229.YtgKU9kxxJ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561E5803.5090609@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Franklin S Cooper Jr." <fcooper@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On 14.10.2015 16:52, Arnd Bergmann wrote:
-> On Wednesday 14 October 2015 02:13:49 Vladimir Zapolskiy wrote:
->> Ok, practically it should work for my purposes, but the change must be
->> done along with added EMC device node description.
+On 14/10/15 16:26, Franklin S Cooper Jr. wrote:
+> 
+> 
+> On 10/14/2015 06:52 AM, Roger Quadros wrote:
+>> Franklin,
 >>
->> I'm not so confident that it is correct to add description of static
->> memory banks to ahb node though, please give me a short confirmation,
+>> On 14/10/15 14:36, Roger Quadros wrote:
+>>> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>>>> Switch from dma_request_channel to allow passing dma channel
+>>>> information from DT rather than hardcoding a value.
+>>>>
+>>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>>> Acked-by: Roger Quadros <rogerq@ti.com>
+>>>
+>>>> ---
+>>>>  drivers/mtd/nand/omap2.c | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>>>> index d0f2620..957c32f 100644
+>>>> --- a/drivers/mtd/nand/omap2.c
+>>>> +++ b/drivers/mtd/nand/omap2.c
+>>>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>>>  		dma_cap_zero(mask);
+>>>>  		dma_cap_set(DMA_SLAVE, mask);
+>>>>  		sig = OMAP24XX_DMA_GPMC;
+>>>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+>>>> +		info->dma = dma_request_slave_channel_compat(mask,
+>>>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
+>>>> +
+>> Just discovered that you are using the parent device node.
+>>
+>> How about moving the dma bindings to the nand node instead and using
+>> pdev->dev here?
+> Roger,
 > 
-> The DT should reflect whichever memory ranges are accessible
-> on the bus. I've looked up the memory map in the data sheet, and
-> I think a reasonable representation would be
-> 
-> /ahb {
-> 	ranges = <0x20000000 0x20000000 0x10000000>, /* AHB port 5 */
-> 		 <0x30000000 0x30000000 0x10000000>, /* AHB port 6 */
-> 		 <0x40000000 0x40000000 0x10000000>, /* AHB port 7 */
-> 		 <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
-> 		 <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
-> 
-> 	apb {
-> 		ranges = <0x20080000 0x20080000 0x00020000>;
-> 	};
-> 
-> };
+> From what I can tell the interrupt number and the dma channel will always be
+> the same no matter what. Doesn't matter if you have multiple nands or a
+> combination of nands and nors. Since that is the case I think it just makes
+> sense to leave it in the gpmc parent node and define it once.
 
-A simpler version of this change in /ahb I successfully tested with EMC
-yesterday:
+Is prefetch/writepost dma used for NOR or any other GPMC peripheral
+or only for NAND?
 
--               ranges = <0x20000000 0x20000000 0x30000000>;
-+               ranges = <0x20000000 0x20000000 0x30000000
-+                         0xe0000000 0xe0000000 0x04000000>;
+Let's also get Tony's inputs on this.
 
-
-> alternatively, each AHB port could be a separate node, with a
-> more direct translation like
-> 
-> /ahb5 {
-> 	ranges = <0 0x20000000 0x10000000>;
-> 
-> 	apb {
-> 		ranges = <0 0x80000 0x20000>;
-> 	};
-> };
-> /ahb6 {
-> 	ranges = <0 0x30000000 0x10000000>,	      /* AHB registers */
-> 		 <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
-> 		 <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
-> 
-> 	memory-controller@1080000 {
-> 		reg = <0x1080000 0x10000>;
-> 	};
-> };
-> ...
-> 
-> Does this make sense?
-
-Yes, I personally would prefer to see the first version as the simplest
-working one, if needed it should be converted to the second one later on.
-
->> then I'll send a change for inclusion of EMC description -- the one
->> above excluding clocks and clock-names properties, work on CCF is in
->> progress.
-> 
-> Ah, very nice! That should get us very close to multiplatform support!
-> I've just tried building lpc32xx without the headers to check for
-> other issues, and ended up with the patch below to get it building.
-> It's clearly wrong, but it highlights a number of issues.
-
-Sure, I'll review the highlighted problems, thanks.
+>>>>  		if (!info->dma) {
+>>>>  			dev_err(&pdev->dev, "DMA engine request failed\n");
+>>>>  			err = -ENXIO;
+>>>>
 
 --
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
