@@ -1,80 +1,153 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Wed, 14 Oct 2015 14:09:20 +0100
-Message-ID: <20151014130920.GW14956@sirena.org.uk>
-References: <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151007100017.GB12635@sirena.org.uk>
- <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox>
- <20151012134309.GE1542@sirena.org.uk>
- <20151013080218.GV17172@x1>
- <20151013151252.GH14956@sirena.org.uk>
- <20151014072812.GE32409@x1>
- <20151014094903.GP14956@sirena.org.uk>
- <20151014123014.GJ32409@x1>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1RhGCd1AsoFHGRHc"
+From: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 06/11] scsi: ufs: add quirk to enable host controller
+ without hce
+Date: Wed, 14 Oct 2015 18:25:46 +0530
+Message-ID: <1444827351-24128-7-git-send-email-alim.akhtar@samsung.com>
+References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151014123014.GJ32409@x1>
+In-reply-to: <1444827351-24128-1-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
---1RhGCd1AsoFHGRHc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Some host controller doesn't support host controller enable via HCE.
 
-On Wed, Oct 14, 2015 at 01:30:14PM +0100, Lee Jones wrote:
-> On Wed, 14 Oct 2015, Mark Brown wrote:
+Signed-off-by: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/scsi/ufs/ufshcd.c |   75 +++++++++++++++++++++++++++++++++++++++++++--
+ drivers/scsi/ufs/ufshcd.h |    5 +++
+ 2 files changed, 78 insertions(+), 2 deletions(-)
 
-> > > Not necessarily _your_ review.  Just someone, other than the
-> > > submitter, who I trust and knows about this stuff.  You just happen=
-=20
-> > > to tick those boxes this time.  Cross pollination and knowledge shari=
-ng
-> > > is one of the characteristics of MLs which I'm particularly proud of.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index ca7483cd899e..e8b96ec65987 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2107,6 +2107,52 @@ static int ufshcd_dme_link_startup(struct ufs_hba *hba)
+ 			"dme-link-startup: error code %d\n", ret);
+ 	return ret;
+ }
++/**
++ * ufshcd_dme_reset - UIC command for DME_RESET
++ * @hba: per adapter instance
++ *
++ * DME_RESET command is issued in order to reset UniPro stack.
++ * This function now deal with cold reset.
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++static int ufshcd_dme_reset(struct ufs_hba *hba)
++{
++	struct uic_command uic_cmd = {0};
++	int ret;
++
++	uic_cmd.command = UIC_CMD_DME_RESET;
++
++	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
++	if (ret)
++		dev_err(hba->dev,
++			"dme-reset: error code %d\n", ret);
++
++	return ret;
++}
++
++/**
++ * ufshcd_dme_enable - UIC command for DME_ENABLE
++ * @hba: per adapter instance
++ *
++ * DME_ENABLE command is issued in order to enable UniPro stack.
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++static int ufshcd_dme_enable(struct ufs_hba *hba)
++{
++	struct uic_command uic_cmd = {0};
++	int ret;
++
++	uic_cmd.command = UIC_CMD_DME_ENABLE;
++
++	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
++	if (ret)
++		dev_err(hba->dev,
++			"dme-reset: error code %d\n", ret);
++
++	return ret;
++}
+ 
+ static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba)
+ {
+@@ -2642,7 +2688,7 @@ out:
+ }
+ 
+ /**
+- * ufshcd_hba_enable - initialize the controller
++ * ufshcd_hba_execute_hce - initialize the controller
+  * @hba: per adapter instance
+  *
+  * The controller resets itself and controller firmware initialization
+@@ -2651,7 +2697,7 @@ out:
+  *
+  * Returns 0 on success, non-zero value on failure
+  */
+-static int ufshcd_hba_enable(struct ufs_hba *hba)
++static int ufshcd_hba_execute_hce(struct ufs_hba *hba)
+ {
+ 	int retry;
+ 
+@@ -2715,6 +2761,31 @@ static int ufshcd_hba_enable(struct ufs_hba *hba)
+ 	return 0;
+ }
+ 
++static int ufshcd_hba_enable(struct ufs_hba *hba)
++{
++	int ret;
++
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_HCE) {
++		ufshcd_set_link_off(hba);
++		ufshcd_vops_hce_enable_notify(hba, PRE_CHANGE);
++
++		/* enable UIC related interrupts */
++		ufshcd_enable_intr(hba, UFSHCD_UIC_MASK);
++		ret = ufshcd_dme_reset(hba);
++		if (!ret) {
++			ret = ufshcd_dme_enable(hba);
++			if (!ret)
++				ufshcd_vops_hce_enable_notify(hba, POST_CHANGE);
++			if (ret)
++				dev_err(hba->dev,
++					"Host controller enable failed with non-hce\n");
++		}
++	} else {
++		ret = ufshcd_hba_execute_hce(hba);
++	}
++
++	return ret;
++}
+ static int ufshcd_disable_tx_lcc(struct ufs_hba *hba, bool peer)
+ {
+ 	int tx_lanes, i, err = 0;
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 4ae32e9316de..500e137bf68a 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -485,6 +485,11 @@ struct ufs_hba {
+ 	 */
+ 	#define UFSHCI_QUIRK_SKIP_RESET_INTR_AGGR		UFS_BIT(8)
+ 
++	/*
++	 * This quirks needs to be enabled if host controller cannot be
++	 * enabled via HCE register.
++	 */
++	#define UFSHCI_QUIRK_BROKEN_HCE				UFS_BIT(9)
+ 	unsigned int quirks;	/* Deviations from standard UFSHCI spec. */
+ 
+ 	wait_queue_head_t tm_wq;
+-- 
+1.7.10.4
 
-> > That was what it read like.
-
-=2E..
-
-> > So, a more specific question would have helped - just a general "any
-> > thoughts" type question isn't very clear.
-
-> To both comments -- this is how I phrased it:
-
-> "I either need an Ack from the DT folks, or at least someone who knows
-> about this stuff.  Mark perhaps."
-
-I'd have expected something that says why you're looking for this -
-something saying what you were unclear on, something more like "It seems
-like there's an awful lot of properties for something that just checks
-if a jack".  From the above (especially with the request for the DT
-people to review) it seems like more just a review because there's DT
-properties.
-
---1RhGCd1AsoFHGRHc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWHlP/AAoJECTWi3JdVIfQSxQH/RRG//u+IYqWa+1cQXCKTH7/
-yyZ+Rr/MlT9IObLMTKQhu+BjVDJDgfe6ZOhSMTEmLIGkSRrS1z+7YWNrkZFfjHGN
-JlDa/H9y7BMwuxEu8Sz8canZdxoPtXV67ihjgUXUzs2bZNnzwQgWMzUG6zzIxGPv
-+zm8mwu6RrhIvsh2GBECR2Ojqja4B/r7+RE+CCazPxE+vnmYAwye3783mUr/207S
-JnFkQvbO/sbo2NR0Z76m9lTEfALVURHrwZ2e65ezSBfB+SvEj3ugLCxL4QqxpwH9
-6QhcW1cHA9DB6gfOfIh+ZsvePvb98z/QPIpOjIbGTYXCCC0pvPFa3uUaafxCR6k=
-=iX/a
------END PGP SIGNATURE-----
-
---1RhGCd1AsoFHGRHc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
