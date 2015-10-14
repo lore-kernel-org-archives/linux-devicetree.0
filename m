@@ -1,43 +1,52 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 10/13] dmaengine: ti-dma-crossbar: Add support for
- crossbar on AM33xx/AM43xx
-Date: Wed, 14 Oct 2015 20:18:14 +0530
-Message-ID: <20151014144814.GW27370@localhost>
-References: <1444828344-21378-1-git-send-email-peter.ujfalusi@ti.com>
- <1444828344-21378-11-git-send-email-peter.ujfalusi@ti.com>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] hwrng: stm32 - add support for STM32 HW RNG
+Date: Wed, 14 Oct 2015 16:46:26 +0200
+Message-ID: <CALszF6Db3mzM6xn2Tf4Bs65mGGY5UZspM3NniEC6eHei0oG1NA@mail.gmail.com>
+References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+	<1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
+	<20151014142822.GF17455@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444828344-21378-11-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20151014142822.GF17455-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 04:12:21PM +0300, Peter Ujfalusi wrote:
-> The DMA event crossbar on AM33xx/AM43xx is different from the one found in
-> DRA7x family.
-> Instead of a single event crossbar it has 64 identical mux attached to each
-> eDMA event line. When the 0 event mux is selected, the default mapped event
-> is going to be routed to the corresponding eDMA event line. If different
-> mux is selected, then the selected event is going to be routed to the given
-> eDMA event.
+Herbert,
 
-Why is crossbar patch in edma series?
+2015-10-14 16:28 GMT+02:00 Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>:
+> On Mon, Oct 12, 2015 at 09:21:27AM +0100, Daniel Thompson wrote:
+>> This patchset introduces a driver for the STM32 hardware random number
+>> generator.
+>>
+>> v2:
+>>
+>>  * Moved binding docs from .../hwrng/ to .../rng/ and renamed to match
+>>    convention in new directory (Rob Herring).
+>>  * Adopted runtime PM and auto-suspend instead of managing the clocks
+>>    from the read function (Linus Walleij). Increased bandwidth by ~30%.
+>>  * Simplified error detection in main read loop (Linus Walleij, Maxime
+>>    Coquelin).
+>>  * Only WARN_ONCE() when hardware failure mechanisms trigger (Maxime
+>>    Coquelin).
+>>  * Simplify end of probe function after cocci warning (Fengguang Wu).
+>>  * Switch to devm_hwrng_register.
+>
+> All applied.  Thanks!
 
-> +static void ti_am335x_xbar_free(struct device *dev, void *route_data)
-> +{
-> +	struct ti_am335x_xbar_data *xbar = dev_get_drvdata(dev);
-> +	struct ti_am335x_xbar_map *map = route_data;
-> +
-> +	dev_err(dev, "Unmapping XBAR event %u on channel %u\n",
-> +		map->mux_val, map->dma_line);
+I see you again have applied the DT patch like for STi three weeks ago.
+The DT patch should go through the arm_soc tree to avoid Linus having
+to handle conflicts resolution.
 
-Err ?
+Can you please remove these two patches from your tree?
+ba25d8b ARM: STi: STiH407: Enable the 2 HW Random Number Generators
+for STiH4{07, 10}
+b47c9fa ARM: dts: stm32f429: Adopt STM32 RNG driver
 
--- 
-~Vinod
+Thanks,
+Maxime
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
