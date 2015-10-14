@@ -1,71 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
-Date: Wed, 14 Oct 2015 12:57:16 -0500
-Message-ID: <CAL_JsqJ97Utif+bZj39pi95qyc1kqdWX9r_cs7HO=y6mERQ5kw@mail.gmail.com>
-References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
- <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
- <20151007162755.GA23283@fifo99.com> <CAL_JsqJwFeDGJ0cTYwikX7DAvR7SK=CL6Qxyp9oKFWeFMgZNiA@mail.gmail.com>
- <561D6603.4060006@cisco.com> <CAL_JsqK5qymGdMaayK61WKPw1-Ws9K+Lxi5w6rO2CEg08Aq60A@mail.gmail.com>
- <561E6B22.1030204@cisco.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: dts: lpc32xx: add device node for the second pwm controller
+Date: Wed, 14 Oct 2015 20:04:44 +0200
+Message-ID: <CAGhQ9Vx9ghfAD0=ntsFL50+iBQDag=HHGb6=X2-AfYPtSb_-yQ@mail.gmail.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com>
+	<1444694045-22000-6-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561E6B22.1030204@cisco.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Walker <danielwa@cisco.com>
-Cc: Rob Herring <robh@kernel.org>, Daniel Walker <dwalker@fifo99.com>, xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444694045-22000-6-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 9:48 AM, Daniel Walker <danielwa@cisco.com> wrote:
+Hi Vladimir,
+
+On 13 October 2015 at 01:54, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
+> LPC32xx SoCs have two independent PWM controllers, they have different
+> clock parents, clock gates and even slightly different controls,
+> each of these two PWM controllers has one output channel. Due to
+> almost similar controls arranged in a row it is incorrectly assumed
+> that there is one PWM controller with two channels, fix this problem
+> in lpc32xx.dtsi, which at the moment prevents separate configuration
+> of different clock parents and gates for both PWM controllers.
 >
+> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/lpc32xx.dtsi | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 >
-> There's one last little wrinkle .. In the current setup the defconfig
-> CONFIG_CMDLINE="" is used as a default in case the device tree has nothing
-> in it. In my changes, there is no identical functionality. The only similar
-> thing I have is the the CONFIG_CMDLINE_APPEND="" . The main difference is
-> that in the current implementation CONFIG_CMDLINE="" doesn't get added at
-> all if there is a device tree bootargs, but with my implementation this line
-> would be added unconditionally. It would represent a subtle change where
-> people would have to add into the DT bootargs something to override what
-> might be in the default command line.
-
-So CMDLINE_EXTEND would be equivalent to your version, but it looks
-like CMDLINE_EXTEND is not used in the DT case. Perhaps you can add
-the option? You already have OVERRIDE which is equivalent to FORCE.
-
-
-> For example,
+> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+> index 929458d..f4d2a0e 100644
+> --- a/arch/arm/boot/dts/lpc32xx.dtsi
+> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
+> @@ -286,9 +286,15 @@
+>                                 status = "disabled";
+>                         };
 >
-> if a config has CONFIG_CMDLINE_APPEND="debug" then they would have to add a
-> "loglevel=7" into the DT bootargs to get back to normal. I wouldn't think
-> people would want "debug" as the default, but oddly enough some of the
-> configs do have this. Some of them also have default ip address setting,
-> nfsroot= settings, and loglevel= settings.
+> -                       pwm: pwm@4005C000 {
+> +                       pwm1: pwm@4005C000 {
+>                                 compatible = "nxp,lpc3220-pwm";
+> -                               reg = <0x4005C000 0x8>;
+> +                               reg = <0x4005C000 0x4>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       pwm2: pwm@4005C004 {
+> +                               compatible = "nxp,lpc3220-pwm";
+> +                               reg = <0x4005C004 0x4>;
+>                                 status = "disabled";
+>                         };
+>                 };
 
-Or they would have to remove the kernel default from their config.
-That might be acceptable. You could have a case where you have 1
-kernel binary and 2 different bootloaders where you expect the
-bootloader's cmdline used in one case and the kernel's in the other.
-Seems unlikely, but it would be an ABI break.
+I am not really against your change, but...
 
-I would not judge people's choices of defaults making sense...
+What's wrong with a binding like the one below?
+pwm: pwm@0x4005c000 {
+    compatible = "nxp,lpc3220-pwm";
+    reg = <0x4005C000 0x8>;
+    clocks =<&clk CLK_PWM1, &clk CLK_PWM2>;
+    clock-names = "pwm1", "pwm2";
+    #pwm-cells = <3>;
+};
 
-> What are your thoughts on this ? I think using the append type default makes
-> more sense because it's actually setting up global defaults. The current
-> complete replacement scheme seems to set the stage for people to make an
-> entirely custom default for a single development machine, which IMO doesn't
-> make sense. However, I'm not sure what the intent is with the current setup.
+With two clocks and where the first pwm-cell would select either PWM1 or PWM2.
 
-People will want a path to support up to the current 3 options (use
-bootloader's cmdline, append bootloader cmdline to default, and force
-kernel default) and you have to assume changing bootloader is not an
-option.
+Seems like the driver only handle one clock, but should be fairly easy to fix.
 
-Rob
+Note: with your DT change you would also need to change the driver
+since it currently sets npwm to 2.
 
->
-> Daniel
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+regards,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
