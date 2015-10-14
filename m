@@ -1,97 +1,67 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Add wakeup interrupt source for
- pixcir_i2c_ts
-Date: Wed, 14 Oct 2015 17:07:40 +0530
-Message-ID: <561E3E84.2000308@ti.com>
-References: <1444801956-17817-1-git-send-email-vigneshr@ti.com>
- <561E165B.3000907@ti.com> <561E1C89.9080508@ti.com> <561E36BB.7000309@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/5] mtd: nand: omap2: Start dma request before enabling
+ prefetch
+Date: Wed, 14 Oct 2015 14:41:15 +0300
+Message-ID: <561E3F5B.6040102@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-3-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561E36BB.7000309-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Gerlach, Dave" <d-gerlach-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444700338-27582-3-git-send-email-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
+On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+> The prefetch engine sends a dma request once a FIFO threshold has
+> been met. No other requests are received until the previous request
+> is handled.
+> 
+> Starting an edma transfer (dma_async_issue_pending) results in any
+> previous event for the dma channel to be cleared. Therefore, starting
+> the prefetch engine before initiating the dma transfer may result in
+> the prefetch triggering a dma request but instead of it being handled
+> it can end up being cleared. This will result in a hang since the code
+> will continue to wait for the dma request to complete.
+> 
+> By initiating the dma request before enabling the prefetch engine this
+> race condition is avoided and no dma request are missed/cleared.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+>  drivers/mtd/nand/omap2.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index 957c32f..94d11de 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -509,6 +509,9 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
+>  	tx->callback_param = &info->comp;
+>  	dmaengine_submit(tx);
+>  
+> +	init_completion(&info->comp);
+> +	dma_async_issue_pending(info->dma);
+> +
+>  	/*  configure and start prefetch transfer */
+>  	ret = omap_prefetch_enable(info->gpmc_cs,
+>  		PREFETCH_FIFOTHRESHOLD_MAX, 0x1, len, is_write, info);
+> @@ -516,9 +519,6 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
+>  		/* PFPW engine is busy, use cpu copy method */
+>  		goto out_copy_unmap;
+>  
+> -	init_completion(&info->comp);
+> -	dma_async_issue_pending(info->dma);
+> -
+>  	/* setup and start DMA using dma_addr */
 
+Is the above comment misplaced after this change?
 
-On 10/14/2015 04:34 PM, Roger Quadros wrote:
-> Vignesh,
-> 
-> On 14/10/15 12:12, Vignesh R wrote:
->>
->>
->> On 10/14/2015 02:16 PM, Roger Quadros wrote:
->>
->>>
->>> On 14/10/15 08:52, Vignesh R wrote:
->>>> On am437x-gp-evm, pixcir_i2c_ts can wakeup the system from lower power
->>>> state via pinctrl and IO daisy chain using generic wakeirq framework.
->>>> With commit 3fffd1283927 ("i2c: allow specifying separate wakeup
->>>> interrupt in device tree") i2c core allows optional wakeirq to be
->>>> specified via device tree. Add wakeup irq entry to enable pixcir_i2c_ts
->>>> to wake the system from low power state.
->>>>
->>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/am437x-gp-evm.dts | 5 +++++
->>>>  1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
->>>> index 22038f21f228..69e93af7df0d 100644
->>>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
->>>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
->>>> @@ -581,8 +581,13 @@
->>>>  
->>>>  		attb-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
->>>>  
->>>> +		interrupts-extended = <&gpio3 22 GPIO_ACTIVE_HIGH>,
->>>> +				      <&am43xx_pinmux 0x264>;
->>>
->>> How does this work?
->>>
->>> interrupts-extended property must have
->>> 1) interrupt parent
->>> 2) interrupt number
->>> 3) interrupt flags
->>>
->>> Your change doesn't seem to comply with those requirements.
->>
->> AFAIU, interrupts-extended has two parts: interrupt parent phandle and
->> interrupt specifier.
->> The number of cells in interrupt specifier is determined by
->> interrupt-cells property of interrupt parent node.
-> 
-> Got it.
-> 
->> In above case, gpio3 has interrupt-cells = 2 hence interrupt specifier
->> has interrupt number and interrupt flag field.
-> 
-> But is GPIO_ACTIVE_HIGH an interrupt flag?
-
-Oops.. I will change it to IRQ_TYPE_NONE as represented in interrupts
-property.
-
-> 
->> But in case am43xx_pinmux node, interrupt-cells is 1 hence has no
->> interrupt flag field.
->>
-> Understood, thanks. Might be worth adding a comment as to what 0x264 means though.
+>  	wait_for_completion(&info->comp);
+>  	tim = 0;
 > 
 
-Will add a one line comment indicating its the offset of gpio3_22
-padconf register from am43xx_pinmux base.
-
-> cheers,
-> -roger
-> 
-
--- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
