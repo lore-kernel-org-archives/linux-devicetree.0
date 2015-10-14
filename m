@@ -1,64 +1,46 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 15:41:58 +0200
-Message-ID: <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
-	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
-	<561D1689.90703@linaro.org>
-	<CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
-	<CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
-	<561E58AC.80207@linaro.org>
+From: "mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
+Date: Wed, 14 Oct 2015 16:44:03 +0300
+Message-ID: <20151014134403.GA25691@lahna.fi.intel.com>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+ <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
+ <20151012164819.GA4010@dtor-ws>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
+ <20151013070824.GA22304@dtor-ws>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
+ <20151013100724.GG1492@lahna.fi.intel.com>
+ <20151014062303.GC20406@dtor-ws>
+ <20151014111820.GV1492@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561E58AC.80207@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151014111820.GV1492-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-10-14 15:29 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
-> On 14/10/15 14:17, M'boumba Cedric Madianga wrote:
->>
->> Hi Daniel,
->>
->>>>> +
->>>>> +static int stm32_dma_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +       struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
->>>>> +
->>>>> +       of_dma_controller_free(pdev->dev.of_node);
->>>>> +
->>>>> +       dma_async_device_unregister(&dmadev->ddev);
->>>>> +
->>>>> +       clk_disable_unprepare(dmadev->clk);
->>>>
->>>>
->>>>
->>>> What is the purpose of disabling/unpreparing the clock here?
->>>> stm32_dma_alloc_chan_resources() and stm32_dma_free_chan_resources()
->>>> should
->>>> pair up and the clock should already be stopped.
->>
->>
->> stm32_dma_remove() could be called during an on-going transfer during
->> module unload.
->> So in that case, it seems that disabling/unpreparing the clock is needed.
->
->
-> Really?
->
-> I think we need to be sure any on-going transfers are stopped.
->
-> There are multiple reasons for this, not least the risk of executing a
-> callback that has been freed, but the one related to my point is that a
-> single clk_disable_unprepare() will remain broken because if you don't know
-> that the transfers have stopped then you don't know how many on-going
-> transfers there are.
+On Wed, Oct 14, 2015 at 02:18:20PM +0300, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+> On Tue, Oct 13, 2015 at 11:23:03PM -0700, Dmitry Torokhov wrote:
+> > I understand why one might use acpi_dev_add_driver_gpios() to augment
+> > data in ACPI, however here we have completely different issue: driver
+> > that expects named gpios gets returned gpio that has nothing to do with
+> > what it requested, because gpiolib acpi code always falls back to
+> > unnamed gpio if it does not find named gpio. That can be acceptable if
+> > driver uses the same con_id for all requests to gpiolib, but is not
+> > working when driver supplies different con_ids.
+> 
+> Right, the ACPI fallback ignores con_id completely and uses only the
+> index.
+> 
+> AFAIK there is only one driver using ACPI _CRS index method:
+> sdhci-[acpi|pci].c. If we can convert that to use acpi_dev_add_driver_gpios()
+> to feed names for card detection GPIOs, I think we can remove the
+> fallback alltogether in favor of named GPIOs for ACPI.
 
-In the next version, I am going to stop the DMA, free all interrupts
-and kill tasklet in stm32_dma_remove.
-In that way, all on-going transfers will be lost as we don't have to
-wait the end of remaining transfer in order to execute this function
-as quickly as possible.
-But even with this improvement, I think I have to disable the clock here.
+Nah, there seems to be several drivers relying on this already :-/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
