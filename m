@@ -1,82 +1,82 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
-Date: Wed, 14 Oct 2015 19:23:09 +0200
-Message-ID: <CAGhQ9VzKrsAYy=xwEZPD80jaTxmqR5MJj7fXeFTK-A2JnJXPqA@mail.gmail.com>
-References: <1444694045-22000-1-git-send-email-vz@mleia.com>
-	<5493797.P10V9v7QAu@wuerfel>
-	<561D902D.7020503@mleia.com>
-	<7163229.YtgKU9kxxJ@wuerfel>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/5] gpio/xilinx: enable for MIPS
+Date: Wed, 14 Oct 2015 19:24:47 +0200
+Message-ID: <561E8FDF.9070500@metafoo.de>
+References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1444827117-10939-3-git-send-email-Zubair.Kakakhel@imgtec.com> <20151014151813.GL15287@xsjsorenbubuntu> <561E7B65.3090704@metafoo.de> <20151014165450.GS15287@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7163229.YtgKU9kxxJ@wuerfel>
+In-Reply-To: <20151014165450.GS15287@xsjsorenbubuntu>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On 14 October 2015 at 15:52, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 14 October 2015 02:13:49 Vladimir Zapolskiy wrote:
->> Ok, practically it should work for my purposes, but the change must be
->> done along with added EMC device node description.
+On 10/14/2015 06:54 PM, S=C3=B6ren Brinkmann wrote:
+> On Wed, 2015-10-14 at 05:57PM +0200, Lars-Peter Clausen wrote:
+>> On 10/14/2015 05:18 PM, S=C3=B6ren Brinkmann wrote:
+>>> On Wed, 2015-10-14 at 01:51PM +0100, Zubair Lutfullah Kakakhel wrot=
+e:
+>>>> MIPSfpga uses the axi gpio controller. Enable the driver for MIPS.
+>>>>
+>>>> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.c=
+om>
+>>>> ---
+>>>>  drivers/gpio/Kconfig | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+>>>> index 8949b3f..58e9afd 100644
+>>>> --- a/drivers/gpio/Kconfig
+>>>> +++ b/drivers/gpio/Kconfig
+>>>> @@ -508,7 +508,7 @@ config GPIO_XGENE_SB
+>>>> =20
+>>>>  config GPIO_XILINX
+>>>>  	tristate "Xilinx GPIO support"
+>>>> -	depends on OF_GPIO && (PPC || MICROBLAZE || ARCH_ZYNQ || X86)
+>>>> +	depends on OF_GPIO && (PPC || MICROBLAZE || ARCH_ZYNQ || X86 || =
+MIPS)
+>>>
+>>> Hmm, in general, this driver is hopefully generic enough that it do=
+esn't
+>>> have any real architecture dependencies. And I suspect, we want to
+>>> enable this driver for ARM64 for ZynqMP soon too. Should we probabl=
+y
+>>> drop these arch dependencies completely? It seems to become quite a=
+ long list.
 >>
->> I'm not so confident that it is correct to add description of static
->> memory banks to ahb node though, please give me a short confirmation,
->
-> The DT should reflect whichever memory ranges are accessible
-> on the bus. I've looked up the memory map in the data sheet, and
-> I think a reasonable representation would be
->
-> /ahb {
->         ranges = <0x20000000 0x20000000 0x10000000>, /* AHB port 5 */
->                  <0x30000000 0x30000000 0x10000000>, /* AHB port 6 */
->                  <0x40000000 0x40000000 0x10000000>, /* AHB port 7 */
->                  <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
->                  <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
->
->         apb {
->                 ranges = <0x20080000 0x20080000 0x00020000>;
->         };
->
-> };
->
-> alternatively, each AHB port could be a separate node, with a
-> more direct translation like
->
-> /ahb5 {
->         ranges = <0 0x20000000 0x10000000>;
->
->         apb {
->                 ranges = <0 0x80000 0x20000>;
->         };
-> };
-> /ahb6 {
->         ranges = <0 0x30000000 0x10000000>,           /* AHB registers */
->                  <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
->                  <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
->
->         memory-controller@1080000 {
->                 reg = <0x1080000 0x10000>;
->         };
-> };
+>> I've been thinking about this a while ago. This is certainly not the=
+ only
+>> driver affected by this problem. But the thing is people always comp=
+lain if
+>> new symbols become visable in Kconfig that don't apply to their plat=
+form.
+>>
+>> Maybe we should introduce a HAS_REPROGRAMABLE_LOGIC (or similar) fea=
+ture
+>> Kconfig symbol and let platforms which have a FPGA select it and let=
+ drivers
+>> for FPGA peripherals depend on it.
+>=20
+> Sounds like a good idea to me. But, does that work for all use-cases.
+> E.g. if you plug some PCIe card with an FPGA into an x86(_64) machine=
+=2E
+> That would allow you to use those drivers, but I'm not sure how that
+> could pull in the new config symbol.
 
-Sorry for hijacking the thread, but I have related question to this.
+Hm, right. We could also make it a user-selectable config symbol. In th=
+at
+case you only need to disable one symbol when you don't have FPGA suppo=
+rt
+rather than one for each driver. Although I'm not quite sure where to p=
+ut
+such a symbol.
 
-What is the advantage of using a hierarchical bus structure in dt?
-I thought the recommendation, at least for new device trees, was to
-keep it flat under a "soc"-node.
+- Lars
 
-If doesn't offer any advantages why not remove instead of adding the
-ranges property which seems to grow a bit complex now?
-Of course removing it would create a lot of churn because of the
-re-indentation but at least the end result would be simpler.
-
-
-regards,
-Joachim Eastwood
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
