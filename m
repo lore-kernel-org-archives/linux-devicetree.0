@@ -1,45 +1,25 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 2/5] gpio/xilinx: enable for MIPS
-Date: Wed, 14 Oct 2015 08:18:13 -0700
-Message-ID: <20151014151813.GL15287@xsjsorenbubuntu>
-References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1444827117-10939-3-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
+Date: Wed, 14 Oct 2015 17:18:12 +0200
+Message-ID: <5841294.bjnFQrbOU2@wuerfel>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <561E1501.2070507@suse.de> <561E6F31.9050804@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444827117-10939-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: ralf@linux-mips.org, robh+dt@kernel.org, linus.walleij@linaro.org, linux-mips@linux-mips.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <561E6F31.9050804@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: Hannes Reinecke <hare@suse.de>, James.Bottomley@hansenpartnership.com, devicetree@vger.kernel.org, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-10-14 at 01:51PM +0100, Zubair Lutfullah Kakakhel wrote:
-> MIPSfpga uses the axi gpio controller. Enable the driver for MIPS.
->=20
-> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> ---
->  drivers/gpio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 8949b3f..58e9afd 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -508,7 +508,7 @@ config GPIO_XGENE_SB
-> =20
->  config GPIO_XILINX
->  	tristate "Xilinx GPIO support"
-> -	depends on OF_GPIO && (PPC || MICROBLAZE || ARCH_ZYNQ || X86)
-> +	depends on OF_GPIO && (PPC || MICROBLAZE || ARCH_ZYNQ || X86 || MIP=
-S)
+On Wednesday 14 October 2015 16:05:21 John Garry wrote:
+> 
+> OK, we can look at adding the ability to read the SAS HBA address from a 
+> FW image or EFI variables.
+> 
 
-Hmm, in general, this driver is hopefully generic enough that it doesn'=
-t
-have any real architecture dependencies. And I suspect, we want to
-enable this driver for ARM64 for ZynqMP soon too. Should we probably
-drop these arch dependencies completely? It seems to become quite a lon=
-g list.
+The easiest way is usually to have a DT property that gets updated
+by the firmware.
 
-	S=C3=B6ren
+	Arnd
