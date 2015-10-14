@@ -1,76 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos5422-odroidxu3: Added UHS-I bus speed
- support
-Date: Wed, 14 Oct 2015 10:52:55 +0900
-Message-ID: <561DB577.8080808@samsung.com>
-References: <1444578364-1384-1-git-send-email-linux.amoon@gmail.com>
- <1444578364-1384-3-git-send-email-linux.amoon@gmail.com>
- <561B48B7.1040201@samsung.com>
- <CANAwSgSLFviT4ZNXTYwxYs2pbrr9ozJmPMauhgRPO0556Rsr_g@mail.gmail.com>
- <561C4CEE.3050905@samsung.com>
- <CANAwSgRJ+5O-x61K9E_AxTZWQy3jJrKF5MiLtWRdUU29CCfa-Q@mail.gmail.com>
- <561C7DF1.6000609@samsung.com>
- <CANAwSgRBzFqHB98wSQnQu-ggGqRT2H6wC415wULXVhPg0uw_3A@mail.gmail.com>
- <561D9ACE.6050103@samsung.com>
- <CAGOxZ51uPkdGmCAs2Tc8_=YvkORJKdivN47vo1ZxkGQ-MY=-oQ@mail.gmail.com>
- <561DACC6.9040209@samsung.com> <561DB290.5070903@samsung.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 0/2] usb: change clock information for chipidea
+Date: Wed, 14 Oct 2015 09:56:26 +0800
+Message-ID: <1444787788-29769-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <561DB290.5070903@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, Alim Akhtar <alim.akhtar@gmail.com>
-Cc: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.10.2015 10:40, Jaehoon Chung wrote:
-> On 10/14/2015 10:15 AM, Krzysztof Kozlowski wrote:
->> On 14.10.2015 10:06, Alim Akhtar wrote:
->>> +Doug
->>> Hello,
->>> AFAIR, dw_mmc host controller does support UHS-I [1], specially SDR50
->>> and SDR104 modes.
->>>
->>> [1]: http://www.spinics.net/lists/linux-mmc/msg28186.html
->>>
->>> What I remember is, one need to set "broken-cd" property also in order
->>> to make it work because of the vqmmc and vmmc connection on board. I
->>> didn't find the link right now, but you can search on the web, there
->>> was a long discussion about handling this.
->>> Have not checked it recently, so not sure if this got broken somehow.
->>>
->>
->> Please, don't top post.
->>
->> I am not a SD/MMC specialist (I do not feel enough confident in its
->> internals) but the datasheet for 5422 does not mention UHS. However it
->> mentions "High Speed DDR Mode with 200 MHz clock rate (HS400)". This
->> does not look like UHS...
-> 
-> You're right. It's not UHS mode. it mentions eMMC's HS400 mode.
-> UHS and HS400 are difference mode.
-> 
-> eMMC mode are supported 
-> 
->> https://www.sdcard.org/developers/overview/bus_speed/
->> This of course is not a definite proof that 5422 does not support UHS. I
->> am just saying that I couldn't find any information that *it does*.
-> 
-> Well, I think you want to know whether it supported or not.
-> Then you can find the information at User manual.
-> In mobile storage part of User manual, it described the overview.
-> Mobile storage host supports these specification:
-> - Secure Digital memory (SD memory version 3.0)
-> - Secure Digital I/O SDIO (SDIO version 3.0)
-> - etc...
-> 
-> SD3.0 is supported UHS-I mode. 
-> If user manual of exynos5422 is mentioned this specification, it should be supported UHS-I mode.
+This patch set changes usb clock information for legacy i.mx platforms.
+At these platforms, they needs three clocks to let controller work.
 
-Thanks! Indeed datasheet mentions that supported SD and SDIO is version
-3.0 (not 3.01... which seems irrelevant because 3.0 introduced UHS-I,
-right?).
+@Fabio, would you please help to test again, I am sorry to let you
+test again.
 
-Best regards,
-Krzysztof
+Changes for v4:
+- Following Rob Herring suggestion, if the platforms can get
+clock using their dev_id, then, they are legacy platforms which
+need three clocks to let controller work. If the dev_id is NULL,
+then it only needs one clock.
+- Only includes bug fix patches in this set, for new changes, will
+through the next-tree.
+
+Changes for v3:
+- Delete property "needs-three-clocks", and using of_device_id->data
+  to differentiate platforms
+- change <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+ to <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v4.1+
+
+Changes for v2:
+- Add imx25 & imx27 dts change
+- Add Fabio's tested-by and Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v3.19+
+- Some typo and commit description
+
+Peter Chen (2):
+  ARM: dts: imx27.dtsi: change the clock information for usb
+  usb: chipidea: imx: refine clock operations to adapt for all platforms
+
+ arch/arm/boot/dts/imx27.dtsi       |  16 +++--
+ drivers/usb/chipidea/ci_hdrc_imx.c | 132 ++++++++++++++++++++++++++++++++-----
+ 2 files changed, 126 insertions(+), 22 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
