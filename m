@@ -1,112 +1,134 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/5] dt-bindings: MIPS: Document xilfpga bindings and boot style
-Date: Wed, 14 Oct 2015 13:51:53 +0100
-Message-ID: <1444827117-10939-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH 3/5] MIPS: dt: xilfpga: Add xilfpga device tree files.
+Date: Wed, 14 Oct 2015 13:51:55 +0100
+Message-ID: <1444827117-10939-4-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444827117-10939-1-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ralf@linux-mips.org, robh+dt@kernel.org, linus.walleij@linaro.org
+Cc: linux-mips@linux-mips.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Zubair.Kakakhel@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-Xilfpga boots only with device-tree. Document the required properties
-and the unique boot style
-
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 ---
- .../devicetree/bindings/mips/img/xilfpga.txt       | 76 ++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/img/xilfpga.txt
+ arch/mips/boot/dts/Makefile                |  1 +
+ arch/mips/boot/dts/xilfpga/Makefile        |  9 ++++++
+ arch/mips/boot/dts/xilfpga/microAptiv.dtsi | 21 +++++++++++++
+ arch/mips/boot/dts/xilfpga/nexys4ddr.dts   | 47 ++++++++++++++++++++++++++++++
+ 4 files changed, 78 insertions(+)
+ create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
+ create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+ create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
 
-diff --git a/Documentation/devicetree/bindings/mips/img/xilfpga.txt b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 778a340..0571ef7 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -6,6 +6,7 @@ dts-dirs	+= mti
+ dts-dirs	+= netlogic
+ dts-dirs	+= qca
+ dts-dirs	+= ralink
++dts-dirs	+= xilfpga
+ 
+ obj-y		:= $(addsuffix /, $(dts-dirs))
+ 
+diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xilfpga/Makefile
 new file mode 100644
-index 0000000..1e7084c
+index 0000000..913a752
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
-@@ -0,0 +1,76 @@
-+Imagination University Program MIPSFpga
-+=======================================
++++ b/arch/mips/boot/dts/xilfpga/Makefile
+@@ -0,0 +1,9 @@
++dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+= nexys4ddr.dtb
 +
-+Under the Imagination University Program, a microAptiv UP core has been released for academic usage.
++obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
 +
-+As we are dealing with a mips core instantiated on an FPGA, specifications are fluid and can be varied in RTL.
++# Force kbuild to make empty built-in.o if necessary
++obj-				+= dummy.o
 +
-+This binding document is provided as baseline guidance for the example project provided by IMG.
++always				:= $(dtb-y)
++clean-files	:= *.dtb *.dtb.S
+diff --git a/arch/mips/boot/dts/xilfpga/microAptiv.dtsi b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+new file mode 100644
+index 0000000..81d518e
+--- /dev/null
++++ b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+@@ -0,0 +1,21 @@
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "img,xilfpga";
 +
-+The example project runs on the Nexys4DDR board by Digilent powered by the ARTIX-7 FPGA by Xilinx.
-+
-+Relevant details about the example project and the Nexys4DDR board:
-+
-+- microAptiv UP core m14Kc
-+- 50MHz clock speed
-+- 128Mbyte DDR RAM	at 0x0000_0000
-+- 8Kbyte RAM		at 0x1000_0000
-+- axi_intc		at 0x1020_0000
-+- axi_uart16550		at 0x1040_0000
-+- axi_gpio		at 0x1060_0000
-+- axi_i2c		at 0x10A0_0000
-+- custom_gpio		at 0x10C0_0000
-+- axi_ethernetlite	at 0x10E0_0000
-+- 8Kbyte BootRAM	at 0x1FC0_0000
-+
-+Required properties:
-+--------------------
-+ - compatible: Must include "img,xilfpga".
-+
-+CPU nodes:
-+----------
-+A "cpus" node is required.  Required properties:
-+ - #address-cells: Must be 1.
-+ - #size-cells: Must be 0.
-+A CPU sub-node is also required for at least CPU 0. Required properties:
-+ - device_type: Must be "cpu".
-+ - compatible: Must be "mips,m14Kc".
-+ - reg: Must be <0>.
-+ - clocks: Must include the CPU clock.  See ../../clock/clock-bindings.txt for
-+   details on clock bindings.
-+ - ext clock handle for fixed-clock received by MIPS core.
-+Example:
 +	cpus {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
++		cpu@0 {
 +			device_type = "cpu";
 +			compatible = "mips,m14Kc";
-+			reg = <0>;
 +			clocks	= <&ext>;
++			reg = <0>;
 +		};
 +	};
 +
 +	ext: ext {
 +		compatible = "fixed-clock";
 +		#clock-cells = <0>;
-+		clock-frequency = <50000000>;
++	};
++};
+diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+new file mode 100644
+index 0000000..e225ae7
+--- /dev/null
++++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+@@ -0,0 +1,47 @@
++/dts-v1/;
++
++#include "microAptiv.dtsi"
++
++/ {
++	compatible = "img,xilfpga";
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x07ffffff>;
 +	};
 +
-+Boot protocol:
-+--------------
++	cpuintc: interrupt-controller@0 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
 +
-+The BootRAM is a writeable "RAM" in FPGA at 0x1FC0_0000. This is for easy reprogrammibility via JTAG.
++	axi_gpio: gpio@10600000 {
++		#gpio-cells = <1>;
++		compatible = "xlnx,xps-gpio-1.00.a";
++		gpio-controller;
++		reg = < 0x10600000 0x10000 >;
++		xlnx,all-inputs = <0x0>;
++		xlnx,dout-default = <0x0>;
++		xlnx,gpio-width = <0x16>;
++		xlnx,interrupt-present = <0x0>;
++		xlnx,is-dual = <0x0>;
++		xlnx,tri-default = <0xffffffff>;
++	} ;
 +
-+The BootRAM inializes the cache and the axi_uart peripheral.
++	axi_uart16550: serial@10400000 {
++		compatible = "ns16550a";
++		reg = <0x10400000 0x10000>;
 +
-+DDR initialiation is already handled by a HW IP block.
++		reg-shift = <2>;
++		reg-offset = <0x1000>;
 +
-+When the example project bitstream is loaded, the cpu_reset button needs to be pressed.
++		clock-frequency = <50000000>;
++		status = "okay";
++	};
++};
 +
-+The bootram initializes the cache and axi_uart. Then outputs MIPSFPGA\n\r on the serial port
-+on the Nexys4DDR board.
-+
-+At this point, the board is ready to load the Linux kernel vmlinux file via JTAG.
-+
++&ext {
++	clock-frequency = <50000000>;
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
