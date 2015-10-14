@@ -1,72 +1,88 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH v4 0/3]
-Date: Wed, 14 Oct 2015 10:17:12 -0400
-Message-ID: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 20/27] ARM: dts: dra7: Fix NAND device nodes.
+Date: Wed, 14 Oct 2015 17:17:55 +0300
+Message-ID: <561E6413.2060607@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <1442588029-13769-21-git-send-email-rogerq@ti.com> <561E59F0.8080906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561E59F0.8080906@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Franklin S Cooper Jr." <fcooper@ti.com>, tony@atomide.com
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series enable accumulator queue support for K2 SoCs. Accumulator
-queues are a type of qmss queue that is monitored by the PDSP firmware and
-accumulated. Host is interrupted by PDSP firmware when packets become
-available in a ring buffer shared between the host and PDSP.
+On 14/10/15 16:34, Franklin S Cooper Jr. wrote:
+> 
+> 
+> On 09/18/2015 09:53 AM, Roger Quadros wrote:
+>> Add compatible id, GPMC register resource and interrupt
+>> resource to NAND controller nodes.
+>>
+>> The GPMC driver now implements gpiochip and irqchip so
+>> enable gpio-controller and interrupt-controller properties.
+>>
+>> With this the interrupt parent of NAND node changes so fix it
+>> accordingly.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  arch/arm/boot/dts/dra7-evm.dts  | 5 ++++-
+>>  arch/arm/boot/dts/dra7.dtsi     | 4 ++++
+>>  arch/arm/boot/dts/dra72-evm.dts | 5 ++++-
+>>  3 files changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+>> index a6c82e5..8a31161 100644
+>> --- a/arch/arm/boot/dts/dra7-evm.dts
+>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+>> @@ -585,9 +585,12 @@
+>>  	status = "okay";
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&nand_flash_x16>;
+>> -	ranges = <0 0 0 0x01000000>;	/* minimum GPMC partition = 16MB */
+>> +	ranges = <0 0 0x08000000 0x01000000>;	/* minimum GPMC partition = 16MB */
+>>  	nand@0,0 {
+>> +		compatible = "ti,omap2-nand";
+>>  		reg = <0 0 4>;		/* device IO registers */
+>> +		interrupt-parent = <&crossbar_mpu>;
+>> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>>  		ti,nand-ecc-opt = "bch8";
+>>  		ti,elm-id = <&elm>;
+>>  		nand-bus-width = <16>;
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index 5d65db9..f0a3616 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -1389,6 +1389,10 @@
+>>  			gpmc,num-waitpins = <2>;
+>>  			#address-cells = <2>;
+>>  			#size-cells = <1>;
+>> +			gpio-controller;
+>> +			#gpio-cells = <2>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>>  			status = "disabled";
+>>  		};
+> Based on the discussion on my patchset I noticed that the nand node defines the
+> interrupt but it is also defined in the parent node. Similar to the dma channel we
+> should conclude where the best place for it to be defined.  But to me it seems at
+> least it should only be defined once.
 
-There was an issue raised when merging the original patch set at
- (1) https://lkml.org/lkml/2015/9/4/681
-	[PATCH v1 1/2] soc: ti: display firmware file name as part of boot log
- (2) https://lkml.org/lkml/2015/9/4/680
-	[PATCH v1 2/2] ARM: dts: keystone: enable accumulator channels
+The interrupt is defined at both places because it is used at both places.
+It is used as a shared interrupt. Wait_pin interrupts are managed by the
+gpmc driver and NAND specific interrupts are managed by the NAND driver.
 
-This series fixes the issues raised against v3. Maintainer, could you please
-apply this series to v4.4 next please at your earliest opportunity.
+If GPMC dma channel is going to be used only by the NAND driver then
+we should define the channel in the NAND node.
 
-Change Log
-==========
-v4
-	- collected Acked-by from Arnd Bergmann against 1/3
-v3
-	- Added Arnd's Acked-by against 2/4
-	- 1/4 modified not to touch the DT documentation per Rob's comment.
-	- Removed DTS update from the series per Santosh. Will send the same
-	  as a separate patch
-v2
-	- Remove the firmware filename from DT and add it to the driver.
-	  Use a name ks2_qmss_pdsp_acc48.bin. The idea is this can be a
-	  soft link pointing to the real firmware file in file system.
+> 
+> This is true for your other patches making similar changes to the dt.
 
-	- Move the description of the driver design from DT document to one
-	  under Documentation/arm/keystone/knav-qmss.txt. Update the this
-	  document with location of acc firmware available under
-	  linux-firmware.git.
+Yes, GPMC IRQ is defined in both GPMC and NAND nodes.
 
-	- Additionally added accumulator queue support optional so that lack
-	  of firmware in the file system will not cause other queue types not
-	  available due to driver probe failure.
-
-Murali Karicheri (3):
-  Documentation: dt: soc: Add description for knav qmss driver
-  soc: ti: add firmware file name as part of the driver
-  soc: ti: qmss: make acc queue support optional in the driver
-
- Documentation/arm/keystone/knav-qmss.txt           | 56 ++++++++++++++++++
- .../bindings/soc/ti/keystone-navigator-qmss.txt    |  1 -
- drivers/soc/ti/knav_qmss.h                         |  3 +-
- drivers/soc/ti/knav_qmss_acc.c                     | 10 +++-
- drivers/soc/ti/knav_qmss_queue.c                   | 67 ++++++++++++++--------
- 5 files changed, 109 insertions(+), 28 deletions(-)
- create mode 100644 Documentation/arm/keystone/knav-qmss.txt
-
--- 
-1.9.1
+--
+cheers,
+-roger
