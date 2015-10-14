@@ -1,126 +1,58 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v9 5/6] Documentation: dt-bindings: pci: altera pcie device
- tree binding
-Date: Wed, 14 Oct 2015 10:41:31 +0800
-Message-ID: <1444790492-4051-6-git-send-email-lftan@altera.com>
-References: <1444790492-4051-1-git-send-email-lftan@altera.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH 2/3] dts: Updated devicetree bindings for Zynq 7000 platform
+Date: Tue, 13 Oct 2015 19:50:56 -0700
+Message-ID: <CAAtXAHfRt-6+Hs=DTUDg1_2vxHo213ut_DWgH8Uq2xMuRp+e_A@mail.gmail.com>
+References: <1444344307-22509-1-git-send-email-moritz.fischer@ettus.com>
+	<1444344307-22509-3-git-send-email-moritz.fischer@ettus.com>
+	<561B7E3C.4060908@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444790492-4051-1-git-send-email-lftan@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, lftan.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Ley Foon Tan <lftan@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561B7E3C.4060908@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, Alan Tull <atull@opensource.altera.com>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for Altera PCIe host controller driver and
-Altera PCIe MSI driver.
+Hi Michal,
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
----
- .../devicetree/bindings/pci/altera-pcie-msi.txt    | 28 +++++++++++++
- .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+On Mon, Oct 12, 2015 at 2:32 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+> On 10/09/2015 12:45 AM, Moritz Fischer wrote:
+>> Added addtional bindings required for FPGA Manager operation
+>> of the Xilinx Zynq Devc configuration interface.
+>>
+>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> ---
+>>  arch/arm/boot/dts/zynq-7000.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+>> index dc0457e..1a5220e 100644
+>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>> @@ -294,6 +294,11 @@
+>>               devcfg: devcfg@f8007000 {
+>>                       compatible = "xlnx,zynq-devcfg-1.0";
+>>                       reg = <0xf8007000 0x100>;
+>> +                     interrupt-parent = <&intc>;
+>> +                     interrupts = <0 8 4>;
+>> +                     clocks = <&clkc 12>;
+>> +                     clock-names = "ref_clk";
+>> +                     syscon = <&slcr>;
+>>               };
+>>
+>>               global_timer: timer@f8f00200 {
+>>
+>
+> This patch should go via arm-soc tree. That's why please remove it from
+> this patchset.
 
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-new file mode 100644
-index 0000000..09cd3bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-@@ -0,0 +1,28 @@
-+* Altera PCIe MSI controller
-+
-+Required properties:
-+- compatible:	should contain "altr,msi-1.0"
-+- reg:		specifies the physical base address of the controller and
-+		the length of the memory mapped region.
-+- reg-names:	must include the following entries:
-+		"csr": CSR registers
-+		"vector_slave": vectors slave port region
-+- interrupt-parent:	interrupt source phandle.
-+- interrupts:	specifies the interrupt source of the parent interrupt
-+		controller. The format of the interrupt specifier depends on the
-+		parent interrupt controller.
-+- num-vectors:	number of vectors, range 1 to 32.
-+- msi-controller:	indicates that this is MSI controller node
-+
-+
-+Example
-+msi0: msi@0xFF200000 {
-+	compatible = "altr,msi-1.0";
-+	reg = <0xFF200000 0x00000010
-+		0xFF200010 0x00000080>;
-+	reg-names = "csr", "vector_slave";
-+	interrupt-parent = <&hps_0_arm_gic_0>;
-+	interrupts = <0 42 4>;
-+	msi-controller;
-+	num-vectors = <32>;
-+};
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-new file mode 100644
-index 0000000..2951a6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-@@ -0,0 +1,49 @@
-+* Altera PCIe controller
-+
-+Required properties:
-+- compatible :	should contain "altr,pcie-root-port-1.0"
-+- reg:		a list of physical base address and length for TXS and CRA.
-+- reg-names:	must include the following entries:
-+		"Txs": TX slave port region
-+		"Cra": Control register access region
-+- interrupt-parent:	interrupt source phandle.
-+- interrupts:	specifies the interrupt source of the parent interrupt controller.
-+		The format of the interrupt specifier depends on the parent interrupt
-+		controller.
-+- device_type:	must be "pci"
-+- #address-cells:	set to <3>
-+- #size-cells:	set to <2>
-+- #interrupt-cells:	set to <1>
-+- ranges:		describes the translation of addresses for root ports and standard
-+		PCI regions.
-+- interrupt-map-mask and interrupt-map: standard PCI properties to define the
-+		mapping of the PCIe interface to interrupt numbers.
-+
-+Optional properties:
-+- msi-parent:	Link to the hardware entity that serves as the MSI controller for this PCIe
-+		controller.
-+- bus-range:	PCI bus numbers covered
-+
-+Example
-+	pcie_0: pcie@0xc00000000 {
-+		compatible = "altr,pcie-root-port-1.0";
-+		reg = <0xc0000000 0x20000000>,
-+			<0xff220000 0x00004000>;
-+		reg-names = "Txs", "Cra";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 40 4>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		bus-range = <0x0 0xFF>;
-+		device_type = "pci";
-+		msi-parent = <&msi_to_gic_gen_0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie_0 1>,
-+			            <0 0 0 2 &pcie_0 2>,
-+			            <0 0 0 3 &pcie_0 3>,
-+			            <0 0 0 4 &pcie_0 4>;
-+		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-+			    0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-+	};
--- 
-1.8.2.1
+Just to clarify, you want this as a separate patch?
+
+>
+> Thanks,
+> Michal
+
+Cheers,
+
+Moritz
