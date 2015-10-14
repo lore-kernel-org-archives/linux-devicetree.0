@@ -1,80 +1,56 @@
 From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 5/5] ARM: OMAP2+: Update gpmc and nand DT binding
- documentation
-Date: Wed, 14 Oct 2015 14:50:23 +0300
-Message-ID: <561E417F.4020304@ti.com>
+Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
+ information from DT
+Date: Wed, 14 Oct 2015 14:52:11 +0300
+Message-ID: <561E41EB.3050005@ti.com>
 References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
- <1444700338-27582-6-git-send-email-fcooper@ti.com>
+ <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444700338-27582-6-git-send-email-fcooper@ti.com>
+In-Reply-To: <561E3E4F.9020302@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On 13/10/15 04:38, Franklin S Cooper Jr wrote:
-> Add additional details to the gpmc and nand documentation to clarify
-> what is needed to enable nand dma prefetch.
+Franklin,
+
+On 14/10/15 14:36, Roger Quadros wrote:
+> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>> Switch from dma_request_channel to allow passing dma channel
+>> information from DT rather than hardcoding a value.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> ---
->  Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt | 7 ++++++-
->  Documentation/devicetree/bindings/mtd/gpmc-nand.txt                | 2 ++
->  2 files changed, 8 insertions(+), 1 deletion(-)
+> Acked-by: Roger Quadros <rogerq@ti.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt b/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
-> index 704be93..b1e2802 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
-> @@ -33,6 +33,10 @@ Required properties:
->  			As this will change in the future, filling correct
->  			values here is a requirement.
->  
-> +GPMC DMA information. Required only when GPMC nand prefetch is enabled.
-> + - dmas			GPMC nand prefetch dma channel
+>> ---
+>>  drivers/mtd/nand/omap2.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>> index d0f2620..957c32f 100644
+>> --- a/drivers/mtd/nand/omap2.c
+>> +++ b/drivers/mtd/nand/omap2.c
+>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>  		dma_cap_zero(mask);
+>>  		dma_cap_set(DMA_SLAVE, mask);
+>>  		sig = OMAP24XX_DMA_GPMC;
+>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+>> +		info->dma = dma_request_slave_channel_compat(mask,
+>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
+>> +
 
-s/nand/NAND
+Just discovered that you are using the parent device node.
 
-> + - dma-names		DMA channel name use as a reference within the Nand driver
+How about moving the dma bindings to the nand node instead and using
+pdev->dev here?
 
-s/Nand/NAND
-
-This is inevitably going to be "rxtx". So why not say that it should be "rxtx"
-
-Should these bindings go in bindings/mtd/gpmc-nand.txt instead?
-
-> +
->  Timing properties for child nodes. All are optional and default to 0.
->  
->   - gpmc,sync-clk-ps:	Minimum clock period for synchronous mode, in picoseconds
-> @@ -119,7 +123,8 @@ Example for an AM33xx board:
->  		ti,hwmods = "gpmc";
->  		reg = <0x50000000 0x2000>;
->  		interrupts = <100>;
-> -
-> +		dmas = <&edma 52>;
-> +		dma-names = "rxtx";
-
-Why not define these in the NAND node instead of gpmc node?
-
->  		gpmc,num-cs = <8>;
->  		gpmc,num-waitpins = <2>;
->  		#address-cells = <2>;
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index 253e6de..4b0c240 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -61,6 +61,8 @@ Example for an AM33xx board:
->  		ti,hwmods = "gpmc";
->  		reg = <0x50000000 0x36c>;
->  		interrupts = <100>;
-> +		dmas = <&edma 52>;
-> +		dma-names = "rxtx";
->  		gpmc,num-cs = <8>;
->  		gpmc,num-waitpins = <2>;
->  		#address-cells = <2>;
+>>  		if (!info->dma) {
+>>  			dev_err(&pdev->dev, "DMA engine request failed\n");
+>>  			err = -ENXIO;
+>>
 > 
 
 cheers,
