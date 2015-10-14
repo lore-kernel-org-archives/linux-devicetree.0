@@ -1,66 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges
- property
-Date: Wed, 14 Oct 2015 22:07:06 +0200
-Message-ID: <19392174.3eZzHlAnnT@wuerfel>
-References: <1444694045-22000-1-git-send-email-vz@mleia.com>
- <7163229.YtgKU9kxxJ@wuerfel>
- <CAGhQ9VzKrsAYy=xwEZPD80jaTxmqR5MJj7fXeFTK-A2JnJXPqA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGhQ9VzKrsAYy=xwEZPD80jaTxmqR5MJj7fXeFTK-A2JnJXPqA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH 5/7] ARM: mach-stm32: Select pinctrl
+Date: Wed, 14 Oct 2015 22:07:25 +0200
+Message-ID: <1444853247-31114-6-git-send-email-mcoquelin.stm32@gmail.com>
+References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 October 2015 19:23:09 Joachim Eastwood wrote:
-> >
-> > /ahb5 {
-> >         ranges = <0 0x20000000 0x10000000>;
-> >
-> >         apb {
-> >                 ranges = <0 0x80000 0x20000>;
-> >         };
-> > };
-> > /ahb6 {
-> >         ranges = <0 0x30000000 0x10000000>,           /* AHB registers */
-> >                  <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
-> >                  <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
-> >
-> >         memory-controller@1080000 {
-> >                 reg = <0x1080000 0x10000>;
-> >         };
-> > };
-> 
-> Sorry for hijacking the thread, but I have related question to this.
-> 
-> What is the advantage of using a hierarchical bus structure in dt?
-> I thought the recommendation, at least for new device trees, was to
-> keep it flat under a "soc"-node.
-> 
-> If doesn't offer any advantages why not remove instead of adding the
-> ranges property which seems to grow a bit complex now?
-> Of course removing it would create a lot of churn because of the
-> re-indentation but at least the end result would be simpler.
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+---
+ arch/arm/Kconfig                          | 1 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-The general recommendation is to have the DT structure resemble
-the hardware as closely as possible. If the chip has a clear
-hierarchy and you know it, then it's best to describe it that way.
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index bf94e54..8b1afd4 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -985,6 +985,7 @@ config ARCH_STM32
+ 	select ARMV7M_SYSTICK
+ 	select CLKSRC_STM32
+ 	select RESET_CONTROLLER
++	select PINCTRL
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
+ 
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32f429.c b/drivers/pinctrl/stm32/pinctrl-stm32f429.c
+index 3535037..f34016b 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32f429.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32f429.c
+@@ -1564,7 +1564,7 @@ static const struct stm32_desc_pin stm32f429_pins[] = {
+ 	),
+ };
+ 
+-struct stm32_pinctrl_match_data stm32f429_match_data = {
++static struct stm32_pinctrl_match_data stm32f429_match_data = {
+ 	.pins = stm32f429_pins,
+ 	.npins = ARRAY_SIZE(stm32f429_pins),
+ };
+-- 
+1.9.1
 
-The reason for having a single 'soc' node in a lot of the modern
-dtsi files is that either it's not documented, or they use AXI
-'buses' that are not really hierarchical but are point-to-point
-connections.
-
-	Arnd
