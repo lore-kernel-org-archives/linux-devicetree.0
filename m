@@ -1,90 +1,92 @@
-From: bayi.cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] arm64: dts: mt8173: Add nor flash node
-Date: Wed, 14 Oct 2015 21:59:29 +0800
-Message-ID: <1444831169.4832.3.camel@mhfsdcap03>
-References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
- <1444729160-26433-4-git-send-email-bayi.cheng@mediatek.com>
- <561D1642.3070105@cogentembedded.com>
- <CAGS+omDm=74d6cw7kXwkZ_Jy-faBz7z4-vJQX9ZFVNskQqSS-w@mail.gmail.com>
- <561E36ED.7090103@cogentembedded.com>
- <CAGS+omDQQ8UDM2pOtU-koz9tfag4SG3Sgf_LrtzsUxeutrTThA@mail.gmail.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
+Date: Wed, 14 Oct 2015 17:07:26 +0300
+Message-ID: <561E619E.9020504@mleia.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com> <5493797.P10V9v7QAu@wuerfel> <561D902D.7020503@mleia.com> <7163229.YtgKU9kxxJ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAGS+omDQQ8UDM2pOtU-koz9tfag4SG3Sgf_LrtzsUxeutrTThA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7163229.YtgKU9kxxJ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-10-14 at 19:26 +0800, Daniel Kurtz wrote:
-> Sergei,
+On 14.10.2015 16:52, Arnd Bergmann wrote:
+> On Wednesday 14 October 2015 02:13:49 Vladimir Zapolskiy wrote:
+>> Ok, practically it should work for my purposes, but the change must be
+>> done along with added EMC device node description.
+>>
+>> I'm not so confident that it is correct to add description of static
+>> memory banks to ahb node though, please give me a short confirmation,
 > 
-> On Wed, Oct 14, 2015 at 7:05 PM, Sergei Shtylyov
-> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> > Hello.
-> >
-> > On 10/14/2015 4:07 AM, Daniel Kurtz wrote:
-> >
-> >>>> Add Mediatek nor flash node
-> >>>>
-> >>>> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>> ---
-> >>>>    arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 +++++++++++++++
-> >>>>    1 file changed, 15 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>>> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>>> index d18ee42..385c2e4 100644
-> >>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>>> @@ -365,6 +365,21 @@
-> >>>>                          status = "disabled";
-> >>>>                  };
-> >>>>
-> >>>> +               nor_flash: spi@1100d000 {
-> >>>
-> >>>
-> >>>     I don't think this is a good label name for a SPI controller.
-> >>
-> >>
-> >> You think "spi" is not a good name for SPI controller?
-> >> Or you mean the label "nor_flash"?
-> >
-> >
-> >    I think I said clearly: "label". :-)
-> >
-> >> Would you prefer:
-> >>
-> >>    spi_nor_flash: spi@1100d000
-> >
-> >
-> >    I'd prefer the "_nor_flash" part to be dropped, to be used for the real
-> > flash device (if needed) which is a sub-node of this node.
+> The DT should reflect whichever memory ranges are accessible
+> on the bus. I've looked up the memory map in the data sheet, and
+> I think a reasonable representation would be
 > 
-> The dedicated nor_flash spi bus cannot just be labeled 'spi', as that
-> would conflict with the general purpose 'spi' bus.  Instead, it is
-> given a unique label that can be used as a phandle elsewhere (e.g., in
-> a board file, to enable the bus).  The name "spi_nor_flash" makes it
-> clear that this spi bus is only for use for accessing the nor_flash.
+> /ahb {
+> 	ranges = <0x20000000 0x20000000 0x10000000>, /* AHB port 5 */
+> 		 <0x30000000 0x30000000 0x10000000>, /* AHB port 6 */
+> 		 <0x40000000 0x40000000 0x10000000>, /* AHB port 7 */
+> 		 <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
+> 		 <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
 > 
-> Bayi: Actually, this reminds me.  I'd prefer if the bus node was
-> disabled by default, and only enabled by boards as required.  So, the
-> node should include:
->    status = "disabled";
+> 	apb {
+> 		ranges = <0x20080000 0x20080000 0x00020000>;
+> 	};
 > 
-> -Dan
+> };
 
-Hi, Dan & Sergei, Thanks for your advice, and I will add "status =
-"disable"" to the node in the next patch.Thanks~
+A simpler version of this change in /ahb I successfully tested with EMC
+yesterday:
 
-Bayi
+-               ranges = <0x20000000 0x20000000 0x30000000>;
++               ranges = <0x20000000 0x20000000 0x30000000
++                         0xe0000000 0xe0000000 0x04000000>;
+
+
+> alternatively, each AHB port could be a separate node, with a
+> more direct translation like
+> 
+> /ahb5 {
+> 	ranges = <0 0x20000000 0x10000000>;
+> 
+> 	apb {
+> 		ranges = <0 0x80000 0x20000>;
+> 	};
+> };
+> /ahb6 {
+> 	ranges = <0 0x30000000 0x10000000>,	      /* AHB registers */
+> 		 <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
+> 		 <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
+> 
+> 	memory-controller@1080000 {
+> 		reg = <0x1080000 0x10000>;
+> 	};
+> };
+> ...
+> 
+> Does this make sense?
+
+Yes, I personally would prefer to see the first version as the simplest
+working one, if needed it should be converted to the second one later on.
+
+>> then I'll send a change for inclusion of EMC description -- the one
+>> above excluding clocks and clock-names properties, work on CCF is in
+>> progress.
+> 
+> Ah, very nice! That should get us very close to multiplatform support!
+> I've just tried building lpc32xx without the headers to check for
+> other issues, and ended up with the patch below to get it building.
+> It's clearly wrong, but it highlights a number of issues.
+
+Sure, I'll review the highlighted problems, thanks.
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
