@@ -1,133 +1,298 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 27/27] ARM: dts: omap3: Fix gpmc and NAND nodes
-Date: Wed, 14 Oct 2015 10:39:13 +0300
-Message-ID: <561E06A1.1020209@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <1442588029-13769-28-git-send-email-rogerq@ti.com>
- <20151013004335.GU23801@atomide.com> <561CA4C3.4@ti.com>
- <20151013151832.GW23801@atomide.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
+Date: Wed, 14 Oct 2015 09:54:26 +0200
+Message-ID: <CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
+References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
+	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
+	<561D1689.90703@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151013151832.GW23801@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561D1689.90703-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Hi Daniel,
 
-On 13/10/15 18:18, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [151012 23:33]:
->> On 13/10/15 03:43, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [150918 08:00]:
->>>> Add compatible id, GPMC register resource and interrupt
->>>> resource to NAND controller nodes.
->>>>
->>>> The GPMC driver now implements gpiochip and irqchip so
->>>> enable gpio-controller and interrupt-controller properties.
->>>>
->>>> With this the interrupt parent of NAND node changes so fix it
->>>> accordingly.
->>> ...
->>>> --- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
->>>> +++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
->>>> @@ -35,11 +35,14 @@
->>>>  };
->>>>  
->>>>  &gpmc {
->>>> -	ranges = <0 0 0x00000000 0x1000000>;	/* CS0: 16MB for NAND */
->>>> +	ranges = <0 0 0x08000000 0x1000000>;	/* CS0: 16MB for NAND */
->>>>  
->>>>  	nand@0,0 {
->>>> -		linux,mtd-name = "micron,mt29f4g16abbda3w";
->>>> +		compatible = "ti,omap2-nand";
->>>>  		reg = <0 0 4>; /* CS0, offset 0, IO size 4 */
->>>> +		interrupt-parent = <&intc>;
->>>> +		interrupts = <20>;
->>>> +		linux,mtd-name = "micron,mt29f4g16abbda3w";
->>>>  		nand-bus-width = <16>;
->>>>  		ti,nand-ecc-opt = "bch8";
->>>>  		gpmc,sync-clk-ps = <0>;
->>>
->>> At least torpedo breaks for NFSroot as NAND now overlaps with
->>> Ethernet.. What's the policy you have for moving the addresses
->>> around?
+2015-10-13 16:34 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 13/10/15 15:05, M'boumba Cedric Madianga wrote:
 >>
->> For OMAP3 I intended to use 0x30000000 for NAND but incorrectly
->> used 0x08000000 for the torpedo.
-> 
-> Might be worth adding some documentation of suggested standardized
-> mappings.. For most of theme we could just add them as 16MB chunks,
-> then reserve some larger area for NOR?
-
-As GPMC peripherals are not plug and play the GPMC map is specific to
-the board and need not necessarily apply to all boards.
-So I don't think we need to have any standardized mappings.
-
-> 
->> Does setting it to 0x30000000 work? If not what is the original
->> NAND address for this board?
-> 
-> The u-boot addresses are probably what were used in the .dts* files.
-> Setting NAND to 0x30000000 is not enough though, looks like there's
-> a bug where the logicpd-torpedo-37xx-devkit.dts ranges is missing
-> the NAND range in logicpd-torpedo-som.dtsi. Something like the
-> patch below seems to make things work again, might be worth
-> checking what ranges make sense to standardize on though. Please
-> feel free to fold it into your patches.
-
-Thanks. I'll post a revised patch.
-
-> 
->>> There may be other similar cases to check too.
+>> This patch adds support for the STM32 DMA controller.
 >>
->> Just checked that all other OMAP3 boards I've set to 0x30000000
->> if they were 0x0.
-> 
-> Do you want to reserve a large chunk for NOR at cs0 or what's
-> the reason for picking 0x30000000 for NAND?
+>> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   drivers/dma/Kconfig     |   12 +
+>>   drivers/dma/Makefile    |    1 +
+>>   drivers/dma/stm32-dma.c | 1175
+>> +++++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 1188 insertions(+)
+>>   create mode 100644 drivers/dma/stm32-dma.c
+>
+>
+>> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+>> new file mode 100644
+>> index 0000000..031bab7
+>> --- /dev/null
+>> +++ b/drivers/dma/stm32-dma.c
+>
+>
+>> +enum stm32_dma_width {
+>> +       STM32_DMA_BYTE,
+>> +       STM32_DMA_HALF_WORD,
+>> +       STM32_DMA_WORD,
+>> +};
+>> +
+>> +enum stm32_dma_burst_size {
+>> +       STM32_DMA_BURST_SINGLE,
+>> +       STM32_DMA_BURST_INCR4,
+>> +       STM32_DMA_BURST_INCR8,
+>> +       STM32_DMA_BURST_INCR16,
+>> +};
+>> +
+>> +enum stm32_dma_channel_id {
+>> +       STM32_DMA_CHANNEL0,
+>> +       STM32_DMA_CHANNEL1,
+>> +       STM32_DMA_CHANNEL2,
+>> +       STM32_DMA_CHANNEL3,
+>> +       STM32_DMA_CHANNEL4,
+>> +       STM32_DMA_CHANNEL5,
+>> +       STM32_DMA_CHANNEL6,
+>> +       STM32_DMA_CHANNEL7,
+>> +};
+>
+>
+> Why have (unused) enumerations to map numeric symbols to their own natural
+> values? Using normal integers would be better.
 
-All of the OMAP3 boards were using 0x30000000. Probably copy paste effect? :)
-What's the point of reserving anything for NOR. If the board doesn't already
-have NOR it never will. Future board having NOR can have its own GPMC map.
-> 
-> I guess NOR can be also on other chipselects.. Not sure we can
-> standardize on any specific partition scheme?
+Good point. I will remove these in the next version.
+Thanks.
 
-Exactly.
+>
+>
+>> +enum stm32_dma_request_id {
+>> +       STM32_DMA_REQUEST0,
+>> +       STM32_DMA_REQUEST1,
+>> +       STM32_DMA_REQUEST2,
+>> +       STM32_DMA_REQUEST3,
+>> +       STM32_DMA_REQUEST4,
+>> +       STM32_DMA_REQUEST5,
+>> +       STM32_DMA_REQUEST6,
+>> +       STM32_DMA_REQUEST7,
+>> +};
+>
+>
+> Ditto.
 
-cheers,
--roger
+As above, I will remove it in the next version. Thanks.
 
-> 
-> Regards,
-> 
-> Tony
-> 
-> 8< --------------------
-> --- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts
-> +++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts
-> @@ -73,7 +73,8 @@
->  };
->  
->  &gpmc {
-> -	ranges = <1 0 0x08000000 0x1000000>;	/* CS1: 16MB for LAN9221 */
-> +	ranges = <0 0 0x30000000 0x1000000	/* CS0: 16MB for NAND */
-> +		  1 0 0x2c000000 0x1000000>;	/* CS1: 16MB for LAN9221 */
->  
->  	ethernet@gpmc {
->  		pinctrl-names = "default";
-> --- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-> +++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-> @@ -35,7 +35,7 @@
->  };
->  
->  &gpmc {
-> -	ranges = <0 0 0x08000000 0x1000000>;	/* CS0: 16MB for NAND */
-> +	ranges = <0 0 0x30000000 0x1000000>;	/* CS0: 16MB for NAND */
->  
->  	nand@0,0 {
->  		compatible = "ti,omap2-nand";
-> 
+>
+>
+>> +static void stm32_dma_dump_reg(struct stm32_dma_chan *chan)
+>> +{
+>> +       struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
+>> +
+>> +       dev_dbg(chan2dev(chan), "SCR:   0x%08x\n",
+>> +               stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id)));
+>> +       dev_dbg(chan2dev(chan), "NDTR:  0x%08x\n",
+>> +               stm32_dma_read(dmadev, STM32_DMA_SNDTR(chan->id)));
+>> +       dev_dbg(chan2dev(chan), "SPAR:  0x%08x\n",
+>> +               stm32_dma_read(dmadev, STM32_DMA_SPAR(chan->id)));
+>> +       dev_dbg(chan2dev(chan), "SM0AR: 0x%08x\n",
+>> +               stm32_dma_read(dmadev, STM32_DMA_SM0AR(chan->id)));
+>> +       dev_dbg(chan2dev(chan), "SM1AR: 0x%08x\n",
+>> +               stm32_dma_read(dmadev, STM32_DMA_SM1AR(chan->id)));
+>> +       dev_dbg(chan2dev(chan), "SFCR:  0x%08x\n",
+>> +               stm32_dma_read(dmadev, STM32_DMA_SFCR(chan->id)));
+>> +}
+>
+>
+> Even at dev_dbg() this looks like log spam. This debug info gets issued
+> every time we set up a transfer!
+
+Yes, this info will be logged after each transfer.
+But it will complete other debug info print when DMADEVICES_DEBUG is set.
+
+>
+>
+>> +static int stm32_dma_alloc_chan_resources(struct dma_chan *c)
+>> +{
+>> +       struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
+>> +       struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
+>> +       int ret;
+>> +
+>> +       chan->config_init = false;
+>> +       ret = clk_prepare_enable(dmadev->clk);
+>> +       if (ret < 0) {
+>> +               dev_err(chan2dev(chan), "clk_prepare_enable failed: %d\n",
+>> ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret = stm32_dma_disable_chan(chan);
+>> +
+>> +       return ret;
+>> +}
+>
+>
+> The error path here looks like it will leak clock references.
+
+Sorry I didn't catch it. What does it mean ?
+
+>
+>
+>
+>> +static int stm32_dma_probe(struct platform_device *pdev)
+>> +{
+>> +       struct stm32_dma_chan *chan;
+>> +       struct stm32_dma_device *dmadev;
+>> +       struct dma_device *dd;
+>> +       const struct of_device_id *match;
+>> +       unsigned int i;
+>> +       struct resource *res;
+>> +       int ret;
+>> +
+>> +       match = of_match_device(stm32_dma_of_match, &pdev->dev);
+>> +       if (!match) {
+>> +               dev_err(&pdev->dev, "Error: No device match found\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev), GFP_KERNEL);
+>> +       if (!dmadev)
+>> +               return -ENOMEM;
+>> +
+>> +       dd = &dmadev->ddev;
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       dmadev->base = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(dmadev->base))
+>> +               return PTR_ERR(dmadev->base);
+>> +
+>> +       dmadev->clk = devm_clk_get(&pdev->dev, NULL);
+>> +       if (IS_ERR(dmadev->clk)) {
+>> +               dev_err(&pdev->dev, "Error: Missing controller clock\n");
+>> +               return PTR_ERR(dmadev->clk);
+>> +       }
+>> +
+>> +       dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
+>> +                                               "st,mem2mem");
+>> +
+>> +       dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
+>> +       if (!IS_ERR(dmadev->rst)) {
+>> +               reset_control_assert(dmadev->rst);
+>> +               udelay(2);
+>> +               reset_control_deassert(dmadev->rst);
+>> +       }
+>> +
+>> +       dma_cap_set(DMA_SLAVE, dd->cap_mask);
+>> +       dma_cap_set(DMA_PRIVATE, dd->cap_mask);
+>> +       dma_cap_set(DMA_CYCLIC, dd->cap_mask);
+>> +       dd->device_alloc_chan_resources = stm32_dma_alloc_chan_resources;
+>> +       dd->device_free_chan_resources = stm32_dma_free_chan_resources;
+>> +       dd->device_tx_status = stm32_dma_tx_status;
+>> +       dd->device_issue_pending = stm32_dma_issue_pending;
+>> +       dd->device_prep_slave_sg = stm32_dma_prep_slave_sg;
+>> +       dd->device_prep_dma_cyclic = stm32_dma_prep_dma_cyclic;
+>> +       dd->device_config = stm32_dma_slave_config;
+>> +       dd->device_terminate_all = stm32_dma_terminate_all;
+>> +       dd->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>> +               BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>> +               BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>> +       dd->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>> +               BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>> +               BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>> +       dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+>> +       dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+>> +       dd->dev = &pdev->dev;
+>> +       INIT_LIST_HEAD(&dd->channels);
+>> +
+>> +       if (dmadev->mem2mem) {
+>> +               dma_cap_set(DMA_MEMCPY, dd->cap_mask);
+>> +               dd->device_prep_dma_memcpy = stm32_dma_prep_dma_memcpy;
+>> +               dd->directions |= BIT(DMA_MEM_TO_MEM);
+>> +       }
+>> +
+>> +       for (i = 0; i < STM32_DMA_MAX_CHANNELS; i++) {
+>> +               chan = &dmadev->chan[i];
+>> +               chan->id = i;
+>> +               chan->vchan.desc_free = stm32_dma_desc_free;
+>> +               vchan_init(&chan->vchan, dd);
+>> +       }
+>> +
+>> +       ret = dma_async_device_register(dd);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       for (i = 0; i < STM32_DMA_MAX_CHANNELS; i++) {
+>> +               chan = &dmadev->chan[i];
+>> +               res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+>> +               if (!res) {
+>> +                       ret = -EINVAL;
+>> +                       dev_err(&pdev->dev, "No irq resource for chan
+>> %d\n", i);
+>> +                       goto err_unregister;
+>> +               }
+>> +               chan->irq = res->start;
+>> +               ret = devm_request_irq(&pdev->dev, chan->irq,
+>> +                                      stm32_dma_chan_irq, 0,
+>> +                                      dev_name(chan2dev(chan)), chan);
+>> +               if (ret) {
+>> +                       dev_err(&pdev->dev,
+>> +                               "request_irq failed with err %d channel
+>> %d\n",
+>> +                               ret, i);
+>> +                       goto err_unregister;
+>> +               }
+>> +       }
+>> +
+>> +       ret = of_dma_controller_register(pdev->dev.of_node,
+>> +                                        stm32_dma_of_xlate, dmadev);
+>> +       if (ret < 0) {
+>> +               dev_err(&pdev->dev,
+>> +                       "STM32 DMA DMA OF registration failed %d\n", ret);
+>> +               goto err_unregister;
+>> +       }
+>> +
+>> +       platform_set_drvdata(pdev, dmadev);
+>> +
+>> +       dev_info(&pdev->dev, "STM32 DMA driver registered\n");
+>> +
+>> +       return 0;
+>> +
+>> +err_unregister:
+>> +       dma_async_device_unregister(dd);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static int stm32_dma_remove(struct platform_device *pdev)
+>> +{
+>> +       struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
+>> +
+>> +       of_dma_controller_free(pdev->dev.of_node);
+>> +
+>> +       dma_async_device_unregister(&dmadev->ddev);
+>> +
+>> +       clk_disable_unprepare(dmadev->clk);
+>
+>
+> What is the purpose of disabling/unpreparing the clock here?
+> stm32_dma_alloc_chan_resources() and stm32_dma_free_chan_resources() should
+> pair up and the clock should already be stopped.
+
+I agree with you. I will remove it in the next version. Thanks
+
+>
+>
+> Daniel.
+
+Thanks for your review.
+
+BR,
+Cedric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
