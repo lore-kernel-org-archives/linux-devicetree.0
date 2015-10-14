@@ -1,96 +1,38 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Wed, 14 Oct 2015 08:28:12 +0100
-Message-ID: <20151014072812.GE32409@x1>
-References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151007100017.GB12635@sirena.org.uk>
- <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox>
- <20151012134309.GE1542@sirena.org.uk>
- <20151013080218.GV17172@x1>
- <20151013151252.GH14956@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] hwrng: stm32 - add support for STM32 HW RNG
+Date: Wed, 14 Oct 2015 09:39:03 +0200
+Message-ID: <CACRpkdZgHv+1w2Toj-JBk6WA+1q-wU7BCuZi2b_QWB2kq3K=Ng@mail.gmail.com>
+References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+	<1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
+	<1444638090-22886-3-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151013151252.GH14956@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1444638090-22886-3-git-send-email-daniel.thompson@linaro.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Patch Tracking <patches@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Oct 2015, Mark Brown wrote:
-> On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
-> > On Mon, 12 Oct 2015, Mark Brown wrote:
-> > > On Mon, Oct 12, 2015 at 09:45:54AM +0100, Charles Keepax wrote:
->=20
-> > > > I am guessing Mark is slightly hesitant to ack as he probably
-> > > > doesn't want to add reviewing all our jack detection bindings t=
-o
-> > > > his already fairly sizable work load and doing so here likely
-> > > > means it will be expected in the future. From talking to people=
- at
->=20
-> > Providing Acks should not (and has not to my knowledge) be a bindin=
-g
-> > contract to continue providing Acks.  However, should more bindings=
- be
-> > submitted which appear as though they are related to a particular
-> > maintainer, then sure, you'll be asked for your expert eye again.
->=20
-> It's a bit concerning when it seems like my review is becoming a bloc=
-ker
-> for something and I don't understand why.
+On Mon, Oct 12, 2015 at 10:21 AM, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
 
-Not necessarily _your_ review.  Just someone, other than the
-submitter, who I trust and knows about this stuff.  You just happen=20
-to tick those boxes this time.  Cross pollination and knowledge sharing
-is one of the characteristics of MLs which I'm particularly proud of.
+> Add support for STMicroelectronics STM32 random number generator.
+>
+> The config value defaults to N, reflecting the fact that STM32 is a
+> very low resource microcontroller platform and unlikely to be targeted
+> by any "grown up" defconfigs.
+>
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-> > > Pretty much (plus generally being busy at ELC-E last week) - if t=
-here's
-> > > specific questions that's one thing but if it's just general requ=
-ests to
-> > > look at bindings then it seems like the relevant subsystem mainta=
-iners
->=20
-> > This is exactly my point.  I am not the 'relevant subsystem
-> > maintainer' for these properties and subsequently know nothing of
-> > microphone detection, headsets, bias', etc.  These look like Audio
-> > related properties to me (the uninitiated), which is why you were
-> > asked.
->=20
-> They're extcon things (and there are accompanying driver changes to t=
-he
-> extcon driver parsing them).
+This is a fine driver, love the performance boost you reported
+and stand corrected on the likeness of the other Nomadik driver.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yes, I'm aware of that now.  Hence the "(uninitiated)" part.
+> +static int stm32_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
 
-> > > should have the confidence to review straightfoward device proper=
-ties
-> > > like this.
->=20
-> > I don't think these bindings are particularly straightforward.  The
-> > contain many terms which I'm unfamiliar with, and again, to me (the
-> > uninitiated) this looks like way too many bindings just to see if a=
-n
-> > audio jack is plugged in or not.
->=20
-> When your power budget is in the low double digit microamps and you'r=
-e
-> trying to respond promptly and reliably to rapidly changing and varia=
-ble
-> physical inputs it gets complicated.
+Now this read() function is so nice that I feel obliged to
+go in and tidy up the Nomadik driver to be as nice.
 
-This is exactly why I asked you.
-
-Thanks for adding structure to my PoV. ;)=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Yours,
+Linus Walleij
