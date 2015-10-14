@@ -1,51 +1,84 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 17:26:04 +0200
-Message-ID: <CAOAejn1spB+BCRh9+jJtaKxEmaRc04nveF3rQEbT7kLMH0kOkg@mail.gmail.com>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
-	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
-	<561D1689.90703@linaro.org>
-	<CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
-	<CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
-	<561E58AC.80207@linaro.org>
-	<CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
-	<561E658D.1070900@linaro.org>
+From: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: adc: mcp320x: Deprecated compatible strings
+ with no vendor prefix
+Date: Wed, 14 Oct 2015 10:27:26 -0500
+Message-ID: <20151014152726.GA29846@deathstar>
+References: <1444827279-23163-1-git-send-email-javier@osg.samsung.com>
+ <1444827279-23163-2-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561E658D.1070900-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444827279-23163-2-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?iso-8859-1?Q?S=F8ren?= Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-10-14 16:24 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+On Wed, Oct 14, 2015 at 02:54:38PM +0200, Javier Martinez Canillas wrote:
+> The Microchip Analog to Digital Converter (ADC) Device Tree binding
+> documents compatible strings with no vendor prefix. Since it should
+> compatible strings with also a vendor, add these to the binding doc
+> and mark the old ones as deprecated.
+> 
+> The driver says that the device is from Microchip Technology which
+> is listed in Documentation/devicetree/bindings/vendor-prefixes.txt
+> so use the documented prefix.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+> 
+>  .../devicetree/bindings/iio/adc/mcp320x.txt        | 30 +++++++++++++++-------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> index 2a1f3af30155..bcd3ac8e6e0c 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> @@ -10,16 +10,28 @@ must be specified.
+>  Required properties:
+>  	- compatible:  	Must be one of the following, depending on the
+>  			model:
+> -				"mcp3001"
+> -				"mcp3002"
+> -				"mcp3004"
+> -				"mcp3008"
+> -				"mcp3201"
+> -				"mcp3202"
+> -				"mcp3204"
+> -				"mcp3208"
+> -				"mcp3301"
+> +				"mcp3001" (DEPRECATED)
+> +				"mcp3002" (DEPRECATED)
+> +				"mcp3004" (DEPRECATED)
+> +				"mcp3008" (DEPRECATED)
+> +				"mcp3201" (DEPRECATED)
+> +				"mcp3202" (DEPRECATED)
+> +				"mcp3204" (DEPRECATED)
+> +				"mcp3208" (DEPRECATED)
+> +				"mcp3301" (DEPRECATED)
+>  
+> +				"microchip,mcp3001"
+> +				"microchip,mcp3002"
+> +				"microchip,mcp3004"
+> +				"microchip,mcp3008"
+> +				"microchip,mcp3201"
+> +				"microchip,mcp3202"
+> +				"microchip,mcp3204"
+> +				"microchip,mcp3208"
+> +				"microchip,mcp3301"
+> +
+> +			NOTE: The use of the compatibles with no vendor prefix
+> +			is deprecated and only listed because old DT use them.
 >
-> Hmnnn...
->
-> The dmaengine framework will WARN_ONCE() if an dmaengine is removed whilst
-> it is active and also works hard to ensure dmaengine modules are not removed
-> whilst there are active drivers using the framework.
->
-> How do we get into this function whilst there is still an active DMA
-> channels?
 
-For example, when a user try "rmmod stm32-dma" in uart console.
-It will enter in stm32_dma_remove while there is potentially still active DMA.
-
->
->
->> But even with this improvement, I think I have to disable the clock here.
->
->
-> As above, I think the dmaengine framework work to protect you from this sort
-> problem. However even if I am wrong about that then unconditionally calling
-> clk_disable_unprepare() can not be used to reliably manage the clocks. You
-> don't know what the counts are!
-
-Ok got it. Thanks for the clarification.
-
-Cedric
+Acked-by: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+  
+>  Examples:
+>  spi_controller {
+> -- 
+> 2.4.3
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
