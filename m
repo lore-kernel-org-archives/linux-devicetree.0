@@ -1,77 +1,55 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 19:44:33 +0530
-Message-ID: <20151014141433.GT27370@localhost>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
- <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
- <20151014111615.GR27370@localhost>
- <CAOAejn3QOzrd952MztVTah4UbpNs1OabwkxhEtp15Mqz0B7LXA@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v4 1/3] Documentation: dt: soc: Add description for knav qmss driver
+Date: Wed, 14 Oct 2015 10:17:13 -0400
+Message-ID: <1444832235-15263-2-git-send-email-m-karicheri2@ti.com>
+References: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn3QOzrd952MztVTah4UbpNs1OabwkxhEtp15Mqz0B7LXA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 03:07:16PM +0200, M'boumba Cedric Madianga wrote:
-> >> +static inline uint32_t stm32_dma_read(struct stm32_dma_device *dmadev, u32 reg)
-> >
-> > this and few other could be made more readable
-> 
-> Ok, I could replace uint32_t by u32. Is it what you expect ?
-> For others, I don't see how I could make it more readable.
-> Could you please give me more details to help me ? Thanks in advance
+Add a documentation for knav qmss driver.
 
-Yes that is one and also aplitting this up so that it fits within 80chars
-while not sacrficing readablity...
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ v4: added Arnd's Acked-by
 
-> >> +     } else if ((status & STM32_DMA_FEI) && (sfcr & STM32_DMA_SFCR_FEIE)) {
-> >> +             dev_err(chan2dev(chan), "DMA error: received FEI event\n");
-> >> +             stm32_dma_irq_clear(chan, STM32_DMA_FEI);
-> >> +             chan->status = DMA_ERROR;
-> >> +             spin_unlock(&chan->vchan.lock);
-> >> +             return IRQ_HANDLED;
-> >
-> > this is repeat of above apart from err print!!
-> 
-> Not only for print as we also need that to define which bit to clear
-> in the IRQ status.
-> In that way we will be sure to handle each interrupt event.
+ Documentation/arm/keystone/knav-qmss.txt | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/arm/keystone/knav-qmss.txt
 
-You can print error type based on status, or print the whole status but
-handle it same for all three cases
-
-> >> +     enum dma_status status;
-> >> +     unsigned long flags;
-> >> +     unsigned int residue;
-> >> +
-> >> +     status = dma_cookie_status(c, cookie, state);
-> >> +     if (status == DMA_COMPLETE)
-> >> +             return status;
-> >> +
-> >> +     if (!state)
-> >> +             return chan->status;
-> > why channel status and not status from dma_cookie_status()?
-> 
-> If status is different than DMA_COMPLETE it seems better to use channel status.
-> Indeed, in that way, we have the possibility to notify that there is a
-> potential error in the bus via DMA_ERROR.
-> But if I return status from dma_cookie_status(), I will always notify
-> DMA_IN_PROGRESS.
-
-No, you are supposed to return the descriptor status and not channel status!
-
+diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
+new file mode 100644
+index 0000000..79946d1
+--- /dev/null
++++ b/Documentation/arm/keystone/knav-qmss.txt
+@@ -0,0 +1,24 @@
++* Texas Instruments Keystone Navigator Queue Management SubSystem driver
++
++Driver source code path
++  drivers/soc/ti/knav_qmss.c
++  drivers/soc/ti/knav_qmss_acc.c
++
++The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
++the main hardware sub system which forms the backbone of the Keystone
++multi-core Navigator. QMSS consist of queue managers, packed-data structure
++processors(PDSP), linking RAM, descriptor pools and infrastructure
++Packet DMA.
++The Queue Manager is a hardware module that is responsible for accelerating
++management of the packet queues. Packets are queued/de-queued by writing or
++reading descriptor address to a particular memory mapped location. The PDSPs
++perform QMSS related functions like accumulation, QoS, or event management.
++Linking RAM registers are used to link the descriptors which are stored in
++descriptor RAM. Descriptor RAM is configurable as internal or external memory.
++The QMSS driver manages the PDSP setups, linking RAM regions,
++queue pool management (allocation, push, pop and notify) and descriptor
++pool management.
++
++knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
++allocate descriptor pools, map the descriptors, push/pop to queues etc. For
++details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
 -- 
-~Vinod
+1.9.1
