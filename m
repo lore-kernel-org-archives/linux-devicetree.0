@@ -1,70 +1,91 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH v2 7/7] clk: ns2: add clock support for Broadcom Northstar
- 2 SoC
-Date: Wed, 14 Oct 2015 12:46:19 -0700
-Message-ID: <561EB10B.40502@broadcom.com>
-References: <1444770485-11210-1-git-send-email-jonmason@broadcom.com>
- <5280890.6npshDUNFZ@wuerfel> <20151013220450.GO12512@broadcom.com>
- <6427519.eIBEvCNlle@wuerfel>
+From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
+ information from DT
+Date: Wed, 14 Oct 2015 15:03:07 -0500
+Message-ID: <561EB4FB.8040709@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
+ <561E41EB.3050005@ti.com> <561E5803.5090609@ti.com> <561E629F.5070202@ti.com>
+ <561E6791.3030404@ti.com> <20151014161813.GC10113@atomide.com>
+ <561E8184.6020206@ti.com> <20151014181337.GF10113@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <6427519.eIBEvCNlle@wuerfel>
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Jon Mason <jonmason@broadcom.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151014181337.GF10113-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15-10-13 03:23 PM, Arnd Bergmann wrote:
-> On Tuesday 13 October 2015 18:04:50 Jon Mason wrote:
->>
->>> On a related note, I'm seeing problems when CONFIG_CYGNUS is set but
->>> CONFIG_COMMON_CLK_IPROC is disabled, as that currently leads to a link
->>> failure.
->>
->> I can double check, but it should be on by default when Cygnus is
->> enabled.  If you send me the error, I'll be happy to fix it.
->
->
-> The problem is not that it's off by default but that it can be
-> disabled, so it breaks some 'make randconfig' builds with this
-> message:
->
-> drivers/built-in.o: In function `cygnus_armpll_init':
-> :(.init.text+0x1d290): undefined reference to `iproc_armpll_setup'
-> drivers/built-in.o: In function `cygnus_genpll_clk_init':
-> :(.init.text+0x1d2c4): undefined reference to `iproc_pll_clk_setup'
-> drivers/built-in.o: In function `cygnus_lcpll0_clk_init':
-> :(.init.text+0x1d304): undefined reference to `iproc_pll_clk_setup'
-> drivers/built-in.o: In function `cygnus_mipipll_clk_init':
-> :(.init.text+0x1d344): undefined reference to `iproc_pll_clk_setup'
-> drivers/built-in.o: In function `cygnus_asiu_init':
-> :(.init.text+0x1d370): undefined reference to `iproc_asiu_setup'
->
-> My patch fixes it by always selecting COMMON_CLK_IPROC from
-> ARCH_BCM_CYGNUS. I wasn't sure whether you want COMMON_CLK_IPROC
-> to still be user-selectable, so I left that in place. Normally
-> I'd expect it to be a silent option though, that just gets
-> implicitly enabled whenever a platform that needs it is built
-> into the kernel.
-COMMON_CLK_IPROC can be a silent option and selected as Arnd has done below.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Scott Branden <sbranden@broadcom.com>
 
->
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 1319c3c14327..35234e563cd8 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -29,6 +29,7 @@ config ARCH_BCM_IPROC
->   config ARCH_BCM_CYGNUS
->   	bool "Broadcom Cygnus Support" if ARCH_MULTI_V7
->   	select ARCH_BCM_IPROC
-> +	select COMMON_CLK_IPROC
->   	help
->   	  Enable support for the Cygnus family,
->   	  which includes the following variants:
->
 
+On 10/14/2015 01:13 PM, Tony Lindgren wrote:
+> * Franklin S Cooper Jr. <fcooper-l0cyMroinI0@public.gmane.org> [151014 09:27]:
+>>
+>> On 10/14/2015 11:18 AM, Tony Lindgren wrote:
+>>> * Franklin S Cooper Jr. <fcooper-l0cyMroinI0@public.gmane.org> [151014 07:37]:
+>>>> On 10/14/2015 09:11 AM, Roger Quadros wrote:
+>>>>> On 14/10/15 16:26, Franklin S Cooper Jr. wrote:
+>>>>>> On 10/14/2015 06:52 AM, Roger Quadros wrote:
+>>>>>>> Franklin,
+>>>>>>>
+>>>>>>> On 14/10/15 14:36, Roger Quadros wrote:
+>>>>>>>> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>>>>>>>>> Switch from dma_request_channel to allow passing dma channel
+>>>>>>>>> information from DT rather than hardcoding a value.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+>>>>>>>> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>>>>>>
+>>>>>>>>> ---
+>>>>>>>>>  drivers/mtd/nand/omap2.c | 4 +++-
+>>>>>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>>>>>>>>> index d0f2620..957c32f 100644
+>>>>>>>>> --- a/drivers/mtd/nand/omap2.c
+>>>>>>>>> +++ b/drivers/mtd/nand/omap2.c
+>>>>>>>>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>>>>>>>>  		dma_cap_zero(mask);
+>>>>>>>>>  		dma_cap_set(DMA_SLAVE, mask);
+>>>>>>>>>  		sig = OMAP24XX_DMA_GPMC;
+>>>>>>>>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+>>>>>>>>> +		info->dma = dma_request_slave_channel_compat(mask,
+>>>>>>>>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
+>>>>>>>>> +
+>>>>>>> Just discovered that you are using the parent device node.
+>>>>>>>
+>>>>>>> How about moving the dma bindings to the nand node instead and using
+>>>>>>> pdev->dev here?
+>>>>>> Roger,
+>>>>>>
+>>>>>> From what I can tell the interrupt number and the dma channel will always be
+>>>>>> the same no matter what. Doesn't matter if you have multiple nands or a
+>>>>>> combination of nands and nors. Since that is the case I think it just makes
+>>>>>> sense to leave it in the gpmc parent node and define it once.
+>>>>> Is prefetch/writepost dma used for NOR or any other GPMC peripheral
+>>>>> or only for NAND?
+>>>> The dma seems tied to the prefetch. From what I can tell the prefetch is only
+>>>> used by nand.
+>>>>> Let's also get Tony's inputs on this.
+>>>> Sure.
+>>> Hmm so what would keep other devices from using the prefetch
+>> Looking at the TRM any references to the prefetch are always with respect to
+>> NAND.
+>>
+>> I also see the below mentioned in the TRM.
+>> Pre-fetch and write posting engine associated with system DMA to get full performance from NAND
+>> device with minimum impact on NOR/SRAM concurrent access.
+> OK up to you guys to figure out if it may be usable in a generic way then :)
+Ok I just got clarification from hw folks. DMA for GPMC can be used for any of the
+various modes. But the prefetch is specific to NAND.
+>
+> Regards,
+>
+> Tony
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
