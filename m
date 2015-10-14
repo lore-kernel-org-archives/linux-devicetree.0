@@ -1,13 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 5/6] ARM: dts: sun8i: Add NMI interrupt
- controller node
-Date: Thu, 15 Oct 2015 00:32:21 +0800
-Message-ID: <1444840342-9233-6-git-send-email-wens@csie.org>
+Subject: [PATCH 4/6] regulator: axp20x: Support new AXP223 PMIC
+Date: Thu, 15 Oct 2015 00:32:20 +0800
+Message-ID: <1444840342-9233-5-git-send-email-wens@csie.org>
 References: <1444840342-9233-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3EJ7KYAKGQEAX7MIZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2MJ7KYAKGQEMOI34GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1444840342-9233-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,32 +19,42 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The NMI interrupt controller is in charge of the NMI pin exposed by
-the SoC to the PMIC. The PMIC signals interrupts through this.
+The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+It is functionally identical to AXP221; only the regulator default
+voltage/status and the external host interface are different.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/regulator/axp20x-regulator.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 828aaf52c342..a1e3acd325f4 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -579,6 +579,14 @@
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 35de22fdb7a0..55cce8125716 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -244,6 +244,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ 		step = 75;
+ 		break;
+ 	case AXP221_ID:
++	case AXP223_ID:
+ 		min = 1800;
+ 		max = 4050;
+ 		def = 3000;
+@@ -322,6 +323,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
+ 		break;
  
-+		nmi_intc: interrupt-controller@01f00c0c {
-+			compatible = "allwinner,sun6i-a31-sc-nmi";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			reg = <0x01f00c0c 0x38>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		prcm@01f01400 {
- 			compatible = "allwinner,sun8i-a23-prcm";
- 			reg = <0x01f01400 0x200>;
+ 	case AXP221_ID:
++	case AXP223_ID:
+ 		if (id < AXP22X_DCDC1 || id > AXP22X_DCDC5)
+ 			return -EINVAL;
+ 
+@@ -360,6 +362,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 		nregulators = AXP20X_REG_ID_MAX;
+ 		break;
+ 	case AXP221_ID:
++	case AXP223_ID:
+ 		regulators = axp22x_regulators;
+ 		nregulators = AXP22X_REG_ID_MAX;
+ 		break;
 -- 
 2.6.1
