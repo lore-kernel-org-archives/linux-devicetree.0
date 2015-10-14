@@ -1,167 +1,86 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: consolidate interrupt controller bindings
-Date: Wed, 14 Oct 2015 14:59:57 +0200
-Message-ID: <561E51CD.8080601@gmail.com>
-References: <1443737554-10352-1-git-send-email-robh@kernel.org>
- <1444769792-14790-1-git-send-email-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1444769792-14790-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v4 00/11] exynos-ufs: add support for Exynos
+Date: Wed, 14 Oct 2015 18:25:40 +0530
+Message-ID: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, alim.akhtar@samsung.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
+This patch-set introduces UFS (Universal Flash Storage) host support
+for Samsung Exynos SoC. Mostly, it consists of UFS PHY and host specific driver.
+And it also contains some quirks handling for Exynos.
 
+NOTE: ** This series has a dependency on [4]. **
 
-On 13/10/15 22:56, Rob Herring wrote:
-> Move various interrupt controller bindings into the
-> interrupt-controller/ directory.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> ---
+-Changes since v3:
+* Fixed compilation warrings as reported by "Kbuild Test Robot"[5].
+* Restructure the driver to make it as a platform driver, rebased on top of [4].
+* Addressed review comments from Arnd Bergmann[5].
+* Other misc changes and improvements.
 
-Singed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+-Changes since v2:
+* Addressed review comments from Kishon[1] and Rob Herring [2]
+* Splited ufs dt binding documetation from ufs driver patch
 
-> One more patch for my DT binding restructuring series[1].
->
-> Rob
->
-> [1] https://lkml.org/lkml/2015/10/1/906
->
->
->   .../bindings/{arm/gic-v3.txt => interrupt-controller/arm,gic-v3.txt}      | 0
->   .../devicetree/bindings/{arm/gic.txt => interrupt-controller/arm,gic.txt} | 0
->   .../arm,versatile-fpga-irq.txt}                                           | 0
->   .../devicetree/bindings/{arm/vic.txt => interrupt-controller/arm,vic.txt} | 0
->   .../{cris/interrupts.txt => interrupt-controller/axis,crisv32-intc.txt}   | 0
->   .../{metag/meta-intc.txt => interrupt-controller/img,meta-intc.txt}       | 0
->   .../{metag/pdc-intc.txt => interrupt-controller/img,pdc-intc.txt}         | 0
->   .../{x86/interrupt.txt => interrupt-controller/intel,ce4100-ioapic.txt}   | 0
->   .../bindings/{arm/mediatek => interrupt-controller}/mediatek,sysirq.txt   | 0
->   .../bindings/{arm/mrvl/intc.txt => interrupt-controller/mrvl,intc.txt}    | 0
->   .../{arm/lpc32xx-mic.txt => interrupt-controller/nxp,lpc3220-mic.txt}     | 0
->   .../samsung,exynos4210-combiner.txt}                                      | 0
->   .../{arc/interrupts.txt => interrupt-controller/snps,arc700-intc.txt}     | 0
->   .../archs-idu-intc.txt => interrupt-controller/snps,archs-idu-intc.txt}   | 0
->   .../{arc/archs-intc.txt => interrupt-controller/snps,archs-intc.txt}      | 0
->   .../{arm/spear/shirq.txt => interrupt-controller/st,spear3xx-shirq.txt}   | 0
->   .../{c6x/interrupt.txt => interrupt-controller/ti,c64x+megamod-pic.txt}   | 0
->   .../{arm/davinci/cp-intc.txt => interrupt-controller/ti,cp-intc.txt}      | 0
->   .../{arm/omap/intc.txt => interrupt-controller/ti,omap2-intc.txt}         | 0
->   .../bindings/{arm/vt8500 => interrupt-controller}/via,vt8500-intc.txt     | 0
->   20 files changed, 0 insertions(+), 0 deletions(-)
->   rename Documentation/devicetree/bindings/{arm/gic-v3.txt => interrupt-controller/arm,gic-v3.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/gic.txt => interrupt-controller/arm,gic.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/versatile-fpga-irq.txt => interrupt-controller/arm,versatile-fpga-irq.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/vic.txt => interrupt-controller/arm,vic.txt} (100%)
->   rename Documentation/devicetree/bindings/{cris/interrupts.txt => interrupt-controller/axis,crisv32-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{metag/meta-intc.txt => interrupt-controller/img,meta-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{metag/pdc-intc.txt => interrupt-controller/img,pdc-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{x86/interrupt.txt => interrupt-controller/intel,ce4100-ioapic.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/mediatek => interrupt-controller}/mediatek,sysirq.txt (100%)
->   rename Documentation/devicetree/bindings/{arm/mrvl/intc.txt => interrupt-controller/mrvl,intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/lpc32xx-mic.txt => interrupt-controller/nxp,lpc3220-mic.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/samsung/interrupt-combiner.txt => interrupt-controller/samsung,exynos4210-combiner.txt} (100%)
->   rename Documentation/devicetree/bindings/{arc/interrupts.txt => interrupt-controller/snps,arc700-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{arc/archs-idu-intc.txt => interrupt-controller/snps,archs-idu-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{arc/archs-intc.txt => interrupt-controller/snps,archs-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/spear/shirq.txt => interrupt-controller/st,spear3xx-shirq.txt} (100%)
->   rename Documentation/devicetree/bindings/{c6x/interrupt.txt => interrupt-controller/ti,c64x+megamod-pic.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/davinci/cp-intc.txt => interrupt-controller/ti,cp-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/omap/intc.txt => interrupt-controller/ti,omap2-intc.txt} (100%)
->   rename Documentation/devicetree/bindings/{arm/vt8500 => interrupt-controller}/via,vt8500-intc.txt (100%)
->
-> diff --git a/Documentation/devicetree/bindings/arm/gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/gic-v3.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/gic.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
-> diff --git a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
-> diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/vic.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
-> diff --git a/Documentation/devicetree/bindings/cris/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/axis,crisv32-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/cris/interrupts.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/axis,crisv32-intc.txt
-> diff --git a/Documentation/devicetree/bindings/metag/meta-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/metag/meta-intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
-> diff --git a/Documentation/devicetree/bindings/metag/pdc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/img,pdc-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/metag/pdc-intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/img,pdc-intc.txt
-> diff --git a/Documentation/devicetree/bindings/x86/interrupt.txt b/Documentation/devicetree/bindings/interrupt-controller/intel,ce4100-ioapic.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/x86/interrupt.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/intel,ce4100-ioapic.txt
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-> diff --git a/Documentation/devicetree/bindings/arm/lpc32xx-mic.txt b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/lpc32xx-mic.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/interrupt-combiner.txt b/Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/samsung/interrupt-combiner.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
-> diff --git a/Documentation/devicetree/bindings/arc/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arc/interrupts.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
-> diff --git a/Documentation/devicetree/bindings/arc/archs-idu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arc/archs-idu-intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
-> diff --git a/Documentation/devicetree/bindings/arc/archs-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arc/archs-intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
-> diff --git a/Documentation/devicetree/bindings/arm/spear/shirq.txt b/Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/spear/shirq.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
-> diff --git a/Documentation/devicetree/bindings/c6x/interrupt.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/c6x/interrupt.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/cp-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,cp-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/davinci/cp-intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/ti,cp-intc.txt
-> diff --git a/Documentation/devicetree/bindings/arm/omap/intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,omap2-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/omap/intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/ti,omap2-intc.txt
-> diff --git a/Documentation/devicetree/bindings/arm/vt8500/via,vt8500-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/vt8500/via,vt8500-intc.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.txt
->
+-Changes since v1:
+* Addressed review comments from Alexey[3] and various review comments from Amit.
+* Updated email id of Seungwon as his samsung id is void now.
+* Added ufs platform data
+
+[1]-> https://lkml.org/lkml/2015/9/18/29
+[2]-> https://lkml.org/lkml/2015/9/21/668
+[3]-> https://lkml.org/lkml/2015/8/23/124
+[4]-> https://lkml.org/lkml/2015/9/2/364
+[5]-> https://lkml.org/lkml/2015/10/1/402
+
+This patch set is tested on exynos7-espresso board.
+
+Alim Akhtar (1):
+  Documentation: samsung-phy: Add dt bindings for UFS
+
+Seungwon Jeon (10):
+  phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
+  scsi: ufs: add quirk to contain unconformable utrd field
+  scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
+  scsi: ufs: add quirk not to allow reset of interrupt aggregation
+  scsi: ufs: add quirk to enable host controller without hce
+  scsi: ufs: add specific callback for nexus type
+  scsi: ufs: add add specific callback for hibern8
+  scsi: ufs: make ufshcd_config_pwr_mode of non-static func
+  Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
+    controller
+  scsi: ufs-exynos: add UFS host support for Exynos SoCs
+
+ .../devicetree/bindings/phy/samsung-phy.txt        |   22 +
+ .../devicetree/bindings/ufs/ufs-exynos.txt         |  104 ++
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-exynos-ufs.c                       |  257 ++++
+ drivers/phy/phy-exynos-ufs.h                       |   88 ++
+ drivers/phy/phy-exynos7-ufs.h                      |   89 ++
+ drivers/scsi/ufs/Kconfig                           |   12 +
+ drivers/scsi/ufs/Makefile                          |    1 +
+ drivers/scsi/ufs/ufs-exynos-hw.c                   |  131 ++
+ drivers/scsi/ufs/ufs-exynos-hw.h                   |   43 +
+ drivers/scsi/ufs/ufs-exynos.c                      | 1317 ++++++++++++++++++++
+ drivers/scsi/ufs/ufs-exynos.h                      |  247 ++++
+ drivers/scsi/ufs/ufshcd.c                          |  168 ++-
+ drivers/scsi/ufs/ufshcd.h                          |   54 +
+ drivers/scsi/ufs/ufshci.h                          |   26 +-
+ drivers/scsi/ufs/unipro.h                          |   47 +
+ include/linux/phy/phy-exynos-ufs.h                 |  101 ++
+ 18 files changed, 2695 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+ create mode 100644 drivers/phy/phy-exynos-ufs.c
+ create mode 100644 drivers/phy/phy-exynos-ufs.h
+ create mode 100644 drivers/phy/phy-exynos7-ufs.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+ create mode 100644 include/linux/phy/phy-exynos-ufs.h
+
+-- 
+1.7.10.4
