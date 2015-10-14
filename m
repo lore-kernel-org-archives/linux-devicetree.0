@@ -1,87 +1,64 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 9/9] arm64: dts: mt8173: Add subsystem clock controller
- device nodes
-Date: Wed, 14 Oct 2015 15:26:37 +0200
-Message-ID: <561E580D.4090706@gmail.com>
-References: <1439200228-318-1-git-send-email-jamesjj.liao@mediatek.com>
- <1439200228-318-10-git-send-email-jamesjj.liao@mediatek.com>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
+ information from DT
+Date: Wed, 14 Oct 2015 08:26:27 -0500
+Message-ID: <561E5803.5090609@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
+ <561E41EB.3050005@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439200228-318-10-git-send-email-jamesjj.liao@mediatek.com>
+In-Reply-To: <561E41EB.3050005@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
-Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/08/15 11:50, James Liao wrote:
-> This patch adds device nodes providing subsystem clocks on MT8173,
-> includes mmsys, imgsys, vdecsys, vencsys and vencltsys.
+On 10/14/2015 06:52 AM, Roger Quadros wrote:
+> Franklin,
 >
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> ---
+> On 14/10/15 14:36, Roger Quadros wrote:
+>> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>>> Switch from dma_request_channel to allow passing dma channel
+>>> information from DT rather than hardcoding a value.
+>>>
+>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> Acked-by: Roger Quadros <rogerq@ti.com>
+>>
+>>> ---
+>>>  drivers/mtd/nand/omap2.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>>> index d0f2620..957c32f 100644
+>>> --- a/drivers/mtd/nand/omap2.c
+>>> +++ b/drivers/mtd/nand/omap2.c
+>>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>>  		dma_cap_zero(mask);
+>>>  		dma_cap_set(DMA_SLAVE, mask);
+>>>  		sig = OMAP24XX_DMA_GPMC;
+>>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+>>> +		info->dma = dma_request_slave_channel_compat(mask,
+>>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
+>>> +
+> Just discovered that you are using the parent device node.
+>
+> How about moving the dma bindings to the nand node instead and using
+> pdev->dev here?
+Roger,
 
-Applied, thanks.
-
->   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 37 ++++++++++++++++++++++++++++++++
->   1 file changed, 37 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index a2f63e4..32c85cc 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -102,6 +102,13 @@
->   		clock-output-names = "clk32k";
->   	};
->
-> +	cpum_ck: oscillator@2 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <0>;
-> +		clock-output-names = "cpum_ck";
-> +	};
-> +
->   	timer {
->   		compatible = "arm,armv8-timer";
->   		interrupt-parent = <&gic>;
-> @@ -227,6 +234,36 @@
->   			clocks = <&uart_clk>;
->   			status = "disabled";
->   		};
-> +
-> +		mmsys: clock-controller@14000000 {
-> +			compatible = "mediatek,mt8173-mmsys", "syscon";
-> +			reg = <0 0x14000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		imgsys: clock-controller@15000000 {
-> +			compatible = "mediatek,mt8173-imgsys", "syscon";
-> +			reg = <0 0x15000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vdecsys: clock-controller@16000000 {
-> +			compatible = "mediatek,mt8173-vdecsys", "syscon";
-> +			reg = <0 0x16000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vencsys: clock-controller@18000000 {
-> +			compatible = "mediatek,mt8173-vencsys", "syscon";
-> +			reg = <0 0x18000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vencltsys: clock-controller@19000000 {
-> +			compatible = "mediatek,mt8173-vencltsys", "syscon";
-> +			reg = <0 0x19000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
->   	};
->   };
->
+>From what I can tell the interrupt number and the dma channel will always be
+the same no matter what. Doesn't matter if you have multiple nands or a
+combination of nands and nors. Since that is the case I think it just makes
+sense to leave it in the gpmc parent node and define it once.
+>>>  		if (!info->dma) {
+>>>  			dev_err(&pdev->dev, "DMA engine request failed\n");
+>>>  			err = -ENXIO;
+>>>
+> cheers,
+> -roger
 >
