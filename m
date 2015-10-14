@@ -1,38 +1,42 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 0/3] hwrng: stm32 - add support for STM32 HW RNG
-Date: Wed, 14 Oct 2015 22:28:22 +0800
-Message-ID: <20151014142822.GF17455@gondor.apana.org.au>
-References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
- <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 0/3] Split Arizona DT bindings between subsystems
+Date: Wed, 14 Oct 2015 15:12:21 +0100
+Message-ID: <1444831944-4655-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Matt Mackall <mpm@selenic.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 12, 2015 at 09:21:27AM +0100, Daniel Thompson wrote:
-> This patchset introduces a driver for the STM32 hardware random number
-> generator.
-> 
-> v2:
-> 
->  * Moved binding docs from .../hwrng/ to .../rng/ and renamed to match
->    convention in new directory (Rob Herring).
->  * Adopted runtime PM and auto-suspend instead of managing the clocks
->    from the read function (Linus Walleij). Increased bandwidth by ~30%.
->  * Simplified error detection in main read loop (Linus Walleij, Maxime
->    Coquelin).
->  * Only WARN_ONCE() when hardware failure mechanisms trigger (Maxime
->    Coquelin).
->  * Simplify end of probe function after cocci warning (Fengguang Wu).
->  * Switch to devm_hwrng_register.
+As discussed the Arizona device tree bindings documentation
+will be split up into a seperate document holding properties
+specific to each subsystem.
 
-All applied.  Thanks!
+This series factors out the regulator and extcon
+bindings. It will probably make sense to split out a GPIO
+binding document as well but at the moment the only property
+here is the gpio-defaults which are still handled in the MFD
+driver and probably require significantly more thought to
+split out.
+
+Thanks,
+Charles
+
+Charles Keepax (3):
+  extcon: arizona: Add extcon specific device tree binding document
+  regulator: arizona: Add regulator specific device tree binding
+    document
+  mfd: arizona: Remove bindings covered in new subsystem specific docs
+
+ .../devicetree/bindings/extcon/extcon-arizona.txt  |   15 +++++++++
+ Documentation/devicetree/bindings/mfd/arizona.txt  |   30 ++---------------
+ .../bindings/regulator/arizona-regulator.txt       |   34 ++++++++++++++++++++
+ MAINTAINERS                                        |    3 ++
+ 4 files changed, 55 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.7.2.5
