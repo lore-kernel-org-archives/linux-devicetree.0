@@ -1,51 +1,64 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] arm64: mediatek: enable MTK_TIMER
-Date: Wed, 14 Oct 2015 15:38:33 +0200
-Message-ID: <561E5AD9.1000803@gmail.com>
-References: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
- <1443798319-45744-3-git-send-email-yingjoe.chen@mediatek.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
+Date: Wed, 14 Oct 2015 15:41:58 +0200
+Message-ID: <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
+References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
+	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
+	<561D1689.90703@linaro.org>
+	<CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
+	<CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
+	<561E58AC.80207@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1443798319-45744-3-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561E58AC.80207@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/10/15 17:05, Yingjoe Chen wrote:
-> Enable MTK_TIMER for MediaTek plaform, which will be used as
-> tick broadcast device and schedule clock.
+2015-10-14 15:29 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+> On 14/10/15 14:17, M'boumba Cedric Madianga wrote:
+>>
+>> Hi Daniel,
+>>
+>>>>> +
+>>>>> +static int stm32_dma_remove(struct platform_device *pdev)
+>>>>> +{
+>>>>> +       struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
+>>>>> +
+>>>>> +       of_dma_controller_free(pdev->dev.of_node);
+>>>>> +
+>>>>> +       dma_async_device_unregister(&dmadev->ddev);
+>>>>> +
+>>>>> +       clk_disable_unprepare(dmadev->clk);
+>>>>
+>>>>
+>>>>
+>>>> What is the purpose of disabling/unpreparing the clock here?
+>>>> stm32_dma_alloc_chan_resources() and stm32_dma_free_chan_resources()
+>>>> should
+>>>> pair up and the clock should already be stopped.
+>>
+>>
+>> stm32_dma_remove() could be called during an on-going transfer during
+>> module unload.
+>> So in that case, it seems that disabling/unpreparing the clock is needed.
 >
-> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
+>
+> Really?
+>
+> I think we need to be sure any on-going transfers are stopped.
+>
+> There are multiple reasons for this, not least the risk of executing a
+> callback that has been freed, but the one related to my point is that a
+> single clk_disable_unprepare() will remain broken because if you don't know
+> that the transfers have stopped then you don't know how many on-going
+> transfers there are.
 
-I reapplied this on v4.4-next/soc
-
->   arch/arm64/Kconfig.platforms | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 23800a1..8176455 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -42,6 +42,7 @@ config ARCH_MEDIATEK
->   	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
->   	select ARM_GIC
->   	select PINCTRL
-> +	select MTK_TIMER
->   	help
->   	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
->
->
+In the next version, I am going to stop the DMA, free all interrupts
+and kill tasklet in stm32_dma_remove.
+In that way, all on-going transfers will be lost as we don't have to
+wait the end of remaining transfer in order to execute this function
+as quickly as possible.
+But even with this improvement, I think I have to disable the clock here.
