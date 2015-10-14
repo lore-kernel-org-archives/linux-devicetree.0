@@ -1,45 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Wed, 14 Oct 2015 10:26:44 +0100
-Message-ID: <20151014092644.GO14956@sirena.org.uk>
-References: <561E1378.6000906@collabora.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: Re: [PATCH v9 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Wed, 14 Oct 2015 17:28:45 +0800
+Message-ID: <CAFiDJ59AuXmM8vN9=ry8_UvS-paRN54CdCFw6EUMx9RV2TT3bQ@mail.gmail.com>
+References: <1444790492-4051-1-git-send-email-lftan@altera.com>
+	<6044983.WR9BTgsOaA@wuerfel>
+	<CAFiDJ58Uwpv=xUXbBNQcd4FQq=fHGhtCnjTb7TKQBJ0TOxRLig@mail.gmail.com>
+	<5088538.zEUtS0EC0S@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="U+NfgObvpQT1Q9Yq"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <561E1378.6000906@collabora.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5088538.zEUtS0EC0S@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 14, 2015 at 5:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 14 October 2015 16:32:25 Ley Foon Tan wrote:
+>> On Wed, Oct 14, 2015 at 4:20 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Wednesday 14 October 2015 10:41:29 Ley Foon Tan wrote:
+>> >> +static int altera_pcie_remove(struct platform_device *pdev)
+>> >> +{
+>> >> +     struct altera_pcie *pcie = platform_get_drvdata(pdev);
+>> >> +
+>> >> +     altera_pcie_free_irq_domain(pcie);
+>> >> +     platform_set_drvdata(pdev, NULL);
+>> >> +     return 0;
+>> >> +}
+>> >
+>> > I just noticed this. Does it actually work to unload the module
+>> > and tear down all the pci_dev structures in a safe way?
+>> Good catch. It only can be compiled as builtin-moduley now, so we can
+>> remove this _remove callback function.
+>
+> I think we should change both: make it possible to load the
+> driver dynamically, and remove the altera_pcie_remove function.
+This driver depends on the pci fixups to work correctly. But, fixups
+callback functions in this driver are not being call if the driver is
+loadable module.
+The linker script keeps all pci fixup callbacks in pci fixup regions
+during kernel compile time. So, it needs to be builtin module. Do you
+know any way we can update those fixup regions?
 
---U+NfgObvpQT1Q9Yq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>
+> You can prevent the module from being unloaded if you also remove
+> the module_platform_driver() directive and add a module_init()
+> without a matching module_exit().
+>
+> Please also add a '.suppress_bind_attrs = true,' flag in the driver
+> struct to prevent manual unbinding.
+I think we don't need these if it only can work as builtin module.
 
-On Wed, Oct 14, 2015 at 10:34:00AM +0200, Tomeu Vizoso wrote:
+Thanks for reviewing.
 
-> git+ssh://git.collabora.co.uk/git/user/tomeu/linux.git
-> on-demand-probes-for-next
-
-In don't think that's the URL you intended to use (also everything looks
-word wrapped here)?
-
---U+NfgObvpQT1Q9Yq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWHh/TAAoJECTWi3JdVIfQJFEH/0DtvMyMdmzM7wIicUyiA2lv
-r+3E+VS/zXtD4Nhw0+K6j9xyAsui8izhwzpvIVVa0O4srJiRWnK/MW3actKeVXW1
-vWsNueK1J9TV+6Aq+X29ZM3LIroJzP7cT19kR1v3lh5MOVhzGTkdypnogu4255fq
-sRHkOBWaajzKFCYOsP1iPJQpuyfpBkY7iNix+Kv6HVNWk0dFsQUGHk8+g7Lovu0F
-vJLUDU6V2xSDBI93RFW8llD18AbJuPSH+fsGqVmX59uugnvo+b8kcCp+sFdqRjT8
-BJIw83BYlou79hE+Z4SgLoXI++5w8PLFjXCmzejxxy3zvYyjyfb1FlQ1LKBDbRY=
-=k50d
------END PGP SIGNATURE-----
-
---U+NfgObvpQT1Q9Yq--
+Regards
+Ley Foon
