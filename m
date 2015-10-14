@@ -1,91 +1,60 @@
-From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
- information from DT
-Date: Wed, 14 Oct 2015 15:03:07 -0500
-Message-ID: <561EB4FB.8040709@ti.com>
-References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
- <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
- <561E41EB.3050005@ti.com> <561E5803.5090609@ti.com> <561E629F.5070202@ti.com>
- <561E6791.3030404@ti.com> <20151014161813.GC10113@atomide.com>
- <561E8184.6020206@ti.com> <20151014181337.GF10113@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151014181337.GF10113-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH 0/7] Add STM32 pinctrl/GPIO driver
+Date: Wed, 14 Oct 2015 22:07:20 +0200
+Message-ID: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus, all,
 
+As you suggested during the submission of the STM32 machine support,
+I reworked the STM32 pinctrl driver to use the standardized pin config
+bindings.
 
-On 10/14/2015 01:13 PM, Tony Lindgren wrote:
-> * Franklin S Cooper Jr. <fcooper-l0cyMroinI0@public.gmane.org> [151014 09:27]:
->>
->> On 10/14/2015 11:18 AM, Tony Lindgren wrote:
->>> * Franklin S Cooper Jr. <fcooper-l0cyMroinI0@public.gmane.org> [151014 07:37]:
->>>> On 10/14/2015 09:11 AM, Roger Quadros wrote:
->>>>> On 14/10/15 16:26, Franklin S Cooper Jr. wrote:
->>>>>> On 10/14/2015 06:52 AM, Roger Quadros wrote:
->>>>>>> Franklin,
->>>>>>>
->>>>>>> On 14/10/15 14:36, Roger Quadros wrote:
->>>>>>>> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
->>>>>>>>> Switch from dma_request_channel to allow passing dma channel
->>>>>>>>> information from DT rather than hardcoding a value.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
->>>>>>>> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>>>>>>
->>>>>>>>> ---
->>>>>>>>>  drivers/mtd/nand/omap2.c | 4 +++-
->>>>>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
->>>>>>>>> index d0f2620..957c32f 100644
->>>>>>>>> --- a/drivers/mtd/nand/omap2.c
->>>>>>>>> +++ b/drivers/mtd/nand/omap2.c
->>>>>>>>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
->>>>>>>>>  		dma_cap_zero(mask);
->>>>>>>>>  		dma_cap_set(DMA_SLAVE, mask);
->>>>>>>>>  		sig = OMAP24XX_DMA_GPMC;
->>>>>>>>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
->>>>>>>>> +		info->dma = dma_request_slave_channel_compat(mask,
->>>>>>>>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
->>>>>>>>> +
->>>>>>> Just discovered that you are using the parent device node.
->>>>>>>
->>>>>>> How about moving the dma bindings to the nand node instead and using
->>>>>>> pdev->dev here?
->>>>>> Roger,
->>>>>>
->>>>>> From what I can tell the interrupt number and the dma channel will always be
->>>>>> the same no matter what. Doesn't matter if you have multiple nands or a
->>>>>> combination of nands and nors. Since that is the case I think it just makes
->>>>>> sense to leave it in the gpmc parent node and define it once.
->>>>> Is prefetch/writepost dma used for NOR or any other GPMC peripheral
->>>>> or only for NAND?
->>>> The dma seems tied to the prefetch. From what I can tell the prefetch is only
->>>> used by nand.
->>>>> Let's also get Tony's inputs on this.
->>>> Sure.
->>> Hmm so what would keep other devices from using the prefetch
->> Looking at the TRM any references to the prefetch are always with respect to
->> NAND.
->>
->> I also see the below mentioned in the TRM.
->> Pre-fetch and write posting engine associated with system DMA to get full performance from NAND
->> device with minimum impact on NOR/SRAM concurrent access.
-> OK up to you guys to figure out if it may be usable in a generic way then :)
-Ok I just got clarification from hw folks. DMA for GPMC can be used for any of the
-various modes. But the prefetch is specific to NAND.
->
-> Regards,
->
-> Tony
+The STM32 family has 16 pins per GPIO bank, and the number of bank varies
+depending on the model.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pins can be multiplexed either in GPIO mode, alternate function (up to 15
+functions per pin) or analog (for ADC/DAC).
+
+Kind regards,
+Maxime
+
+Maxime Coquelin (7):
+  ARM: Kconfig: Introduce MACH_STM32F429 flag
+  includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+  Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
+  pinctrl: Add support STM32 MCUs
+  ARM: mach-stm32: Select pinctrl
+  ARM: dts: Add pinctrl node to STM32F429
+  ARM: dts: Add USART1 pin config to STM32F429 boards
+
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  113 ++
+ arch/arm/Kconfig                                   |    6 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |    2 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |    2 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  110 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    4 +-
+ drivers/pinctrl/stm32/Kconfig                      |   16 +
+ drivers/pinctrl/stm32/Makefile                     |    5 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  856 +++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   43 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c          | 1598 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-stm32.h        |   12 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1241 +++++++++++++++
+ 14 files changed, 4008 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ create mode 100644 drivers/pinctrl/stm32/Kconfig
+ create mode 100644 drivers/pinctrl/stm32/Makefile
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+ create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+
+-- 
+1.9.1
