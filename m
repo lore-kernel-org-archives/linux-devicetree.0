@@ -1,97 +1,76 @@
-Return-Path: <ck.hu@mediatek.com>
-Message-ID: <1445321536.19417.5.camel@mtksdaap41>
-Subject: RE: [RFC 1/2] Dcumentation: bridge: Add documentation for ps8640 DT
- properties
-From: CK Hu <ck.hu@mediatek.com>
-Date: Tue, 20 Oct 2015 14:12:16 +0800
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Return-Path: <devicetree-owner@kernel.org>
+Received: from mout.kundenserver.de ([212.227.126.131]:60906 "EHLO
+	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932172AbbJNUKb (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Oct 2015 16:10:31 -0400
+Date: Wed, 14 Oct 2015 22:10:21 +0200
+From: Karsten Merker <merker@debian.org>
+Subject: Re: [PATCH RFC V2 1/3] Input: goodix - add dt axis swapping and axis
+ inversion support
+Message-ID: <20151014201021.GA1799@excalibur.cnev.de>
+References: <1444413352-24529-1-git-send-email-merker@debian.org>
+ <1444413352-24529-2-git-send-email-merker@debian.org>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE498@irsmsx105.ger.corp.intel.com>
 MIME-Version: 1.0
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "; Pawel Moll" <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "; David Airlie" <airlied@linux.ie>, Matthias, "Jitao Shi  <jitao.shi@mediatek.com>, ; Thierry Reding" <treding@nvidia.com>, "; Ajay Kumar" <ajaykumar.rs@samsung.com>, "; Inki Dae" <inki.dae@samsung.com>, Rahul, "Sean Paul  <seanpaul@chromium.org>, ; Vincent Palatin" <vpalatin@chromium.org>, "; Andy Yan" <andy.yan@rock-chips.com>, "; Philipp Zabel" <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha, Yingjoe, Eddie Huang <eddie.huang@mediatek.com>, "; Cawa Cheng" <cawa.cheng@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F0FE498@irsmsx105.ger.corp.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "Tirdea, Irina" <irina.tirdea@intel.com>
+Cc: Karsten Merker <merker@debian.org>, Bastien Nocera <hadess@hadess.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi, Mark:
+On Tue, Oct 13, 2015 at 06:58:07AM +0000, Tirdea, Irina wrote:
+> 
+> > -----Original Message-----
+> > From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of Karsten Merker
+> > Sent: 09 October, 2015 20:56
+> > To: Bastien Nocera; Dmitry Torokhov; Tirdea, Irina; Aleksei Mamlin; linux-input@vger.kernel.org; Ian Campbell
+> > Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Chen-Yu Tsai; Karsten Merker
+> > Subject: [PATCH RFC V2 1/3] Input: goodix - add dt axis swapping and axis inversion support
+> > 
+> > Implement support for the following device-tree properties
+> > in the goodix touchscreen driver:
+> > 
+> >  - touchscreen-inverted-x:  X axis is inverted (boolean)
+> >  - touchscreen-inverted-y:  Y axis is inverted (boolean)
+> >  - touchscreen-swapped-x-y: X and Y axis are swapped (boolean)
+> > 
+> > These are necessary on tablets which have a display in portrait
+> > format while the touchscreen is in landscape format, such as e.g.
+> > the MSI Primo 81.
+[...]
+> > @@ -950,6 +968,15 @@ static int goodix_ts_probe(struct i2c_client *client,
+> >  		return 0;
+> >  	}
+> > 
+> > +#ifdef CONFIG_OF
+> > +	ts->swapped_x_y = of_property_read_bool(client->dev.of_node,
+> > +						"touchscreen-swapped-x-y");
+> > +	ts->inverted_x = of_property_read_bool(client->dev.of_node,
+> > +					       "touchscreen-inverted-x");
+> > +	ts->inverted_y = of_property_read_bool(client->dev.of_node,
+> > +					       "touchscreen-inverted-y");
+> > +#endif
+> > +
+> 
+> If interrupt and reset gpio pins are declared in the DT configuration, this code will not
+> be executed.  To make the properties available for all configurations (with/without
+> gpio pins declared), you should read the properties inside goodix_configure_dev().
+> 
+> You could also use device_property_read_bool() instead, so that these properties can
+> be used with ACPI 5.1. as well.
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland@arm.com]
-> Sent: Friday, October 16, 2015 9:05 PM
-> > +++ b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
-> > @@ -0,0 +1,48 @@
-> > +ps8640-bridge bindings
-> > +
-> > +Required properties:
-> > +	- compatible: "parade,ps8640"
-> > +	- reg: first i2c address of the bridge
-> 
-> Ther can be multiple addresses?
+Hello,
 
-It means that the reg is the first page address of the continuous pages.
+many thanks for the review.
 
-> 
-> > +	- power-gpios: OF device-tree gpio specification for power pin.
-> > +	- reset-gpios: OF device-tree gpio specification for reset pin.
-> > +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel
-pin.
-> > +	- ps8640-1v2-supply: OF device-tree regulator specification for
-1v2.
-> > +	- ps8640-3v3-supply: OF device-tree regulator specification for
-3v3.
-> 
-> There's no need for the "ps8640-" prefix on these two. Please drop it.
+I'll address both points in a v3 of the patch.
 
-OK, we will fix it in next patch.
-
-> 
-> > +Optional properties:
-> > +	- video interfaces: Device node can contain video interface port
-> > +			    nodes for panel according to [1].
-> 
-> Replace this part with:
-> 
-> The device node can contain video interface port nodes per the
-> video-interfaces binding [1].
-
-OK, we will fix it in next patch.
-
-> 
-> Thanks,
-> Mark.
-> 
-> > +
-> > +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +Example:
-> > +	edp-bridge@18 {
-> > +		compatible = "parade,ps8640";
-> > +		reg = <0x18>;
-> > +		power-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
-> > +		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
-> > +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
-> > +		ps8640-1v2-supply = <&ps8640_fixed_1v2>;
-> > +		ps8640-3v3-supply = <&mt6397_vgp2_reg>;
-> > +
-> > +		ports {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			port@0 {
-> > +				reg = <0>;
-> > +
-> > +				ps8640_in: endpoint {
-> > +					remote-endpoint = <&dsi0_out>;
-> > +				};
-> > +			};
-> > +
-> > +			port@1 {
-> > +				reg = <1>;
-> > +
-> > +				ps8640_out: endpoint {
-> > +					remote-endpoint = <&panel_in>;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > --
-> > 1.7.9.5
-> >
+Regards,
+Karsten
+-- 
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
