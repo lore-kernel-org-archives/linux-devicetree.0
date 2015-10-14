@@ -1,37 +1,56 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 0/2] iio: adc: mcp320x: Add compatible with vendor prefix and deprecate old ones
-Date: Wed, 14 Oct 2015 14:54:37 +0200
-Message-ID: <1444827279-23163-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Michael Welling <mwelling@ieee.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Andrea Galbusera <gizero@gmail.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, =?UTF-8?q?S=C3=B8ren=20Andersen?= <san@rosetechnology.dk>, Peter Meerwald <pmeerw@pmeerw.net>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] MT8173 IOMMU SUPPORT
+Date: Wed, 14 Oct 2015 14:56:20 +0200
+Message-ID: <20151014125620.GQ27420@8bytes.org>
+References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444357388-30257-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Oct 09, 2015 at 10:23:02AM +0800, Yong Wu wrote:
+> Yong Wu (6):
+>   dt-bindings: iommu: Add binding for mediatek IOMMU
+>   dt-bindings: mediatek: Add smi dts binding
+>   iommu: add ARM short descriptor page table allocator
+>   memory: mediatek: Add SMI driver
+>   iommu/mediatek: Add mt8173 IOMMU driver
+>   dts: mt8173: Add iommu/smi nodes for mt8173
+> 
+>  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  61 ++
+>  .../memory-controllers/mediatek,smi-larb.txt       |  25 +
+>  .../bindings/memory-controllers/mediatek,smi.txt   |  24 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  81 ++
+>  drivers/iommu/Kconfig                              |  33 +
+>  drivers/iommu/Makefile                             |   2 +
+>  drivers/iommu/io-pgtable-arm-short.c               | 827 +++++++++++++++++++++
+>  drivers/iommu/io-pgtable-arm.c                     |   3 -
+>  drivers/iommu/io-pgtable.c                         |   3 +
+>  drivers/iommu/io-pgtable.h                         |  18 +-
+>  drivers/iommu/mtk_iommu.c                          | 767 +++++++++++++++++++
+>  drivers/memory/Kconfig                             |   8 +
+>  drivers/memory/Makefile                            |   1 +
+>  drivers/memory/mtk-smi.c                           | 274 +++++++
+>  include/dt-bindings/memory/mt8173-larb-port.h      | 105 +++
+>  include/soc/mediatek/smi.h                         |  60 ++
 
-When the patch "iio: adc: mcp320x: Set struct spi_driver .of_match_table" [0]
-was posted, there was a discussion on how to solve the fact that the driver's
-compatible strings don't have a vendor prefix and are already documented in
-the DT binding doc.
-
-Rob Herring suggested [1] to add new compatible strings with a vendor prefix
-and mark the old ones as deprecated. This patch series take care of that.
-
-[0]: https://lkml.org/lkml/2015/8/20/95
-[1]: https://lkml.org/lkml/2015/8/23/120
-
-Best regards,
-Javier
+So this contains not only IOMMU code. Are the patches dependent on each
+other or can the iommu parts be merged independently?
 
 
-Javier Martinez Canillas (2):
-  iio: adc: mcp320x: Deprecated compatible strings with no vendor prefix
-  iio: adc: mcp320x: Add compatible with vendor prefix to OF table
 
- .../devicetree/bindings/iio/adc/mcp320x.txt        | 30 +++++++++++++++-------
- drivers/iio/adc/mcp320x.c                          | 28 ++++++++++++++++++++
- 2 files changed, 49 insertions(+), 9 deletions(-)
-
--- 
-2.4.3
+	Joerg
