@@ -1,63 +1,83 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] iommu/hisilicon: Add hi6220 iommu driver
-Date: Wed, 14 Oct 2015 14:18:43 +0200
-Message-ID: <20151014121843.GN27420@8bytes.org>
-References: <1444290348-66509-1-git-send-email-puck.chen@hisilicon.com>
-	<1444290348-66509-2-git-send-email-puck.chen@hisilicon.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
+ mic detection
+Date: Wed, 14 Oct 2015 13:30:14 +0100
+Message-ID: <20151014123014.GJ32409@x1>
+References: <1443803363-3251-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1443803363-3251-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151007100017.GB12635@sirena.org.uk>
+ <20151007122642.GH17172@x1>
+ <20151012084554.GB8805@ck-lbox>
+ <20151012134309.GE1542@sirena.org.uk>
+ <20151013080218.GV17172@x1>
+ <20151013151252.GH14956@sirena.org.uk>
+ <20151014072812.GE32409@x1>
+ <20151014094903.GP14956@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444290348-66509-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+In-Reply-To: <20151014094903.GP14956-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 08, 2015 at 03:45:47PM +0800, Chen Feng wrote:
-> +static int hi6220_smmu_attach_dev(struct iommu_domain *domain,
-> +				  struct device *dev)
-> +{
-> +	struct hi6220_domain *m_domain = to_hi6220_domain(domain);
-> +
-> +	smmu_domain_prepare(m_domain);
-> +	dev->archdata.iommu = &m_domain->smmu_dev->iova_allocator;
-> +
-> +	return 0;
-> +}
+On Wed, 14 Oct 2015, Mark Brown wrote:
 
-What happens when you attach devices behind different smmus to one
-domain? Will that overwrite the smmu_dev pointer in the domain?
+> On Wed, Oct 14, 2015 at 08:28:12AM +0100, Lee Jones wrote:
+> > On Tue, 13 Oct 2015, Mark Brown wrote:
+> > > On Tue, Oct 13, 2015 at 09:02:18AM +0100, Lee Jones wrote:
+>=20
+> > > > Providing Acks should not (and has not to my knowledge) be a bi=
+nding
+> > > > contract to continue providing Acks.  However, should more bind=
+ings be
+> > > > submitted which appear as though they are related to a particul=
+ar
+> > > > maintainer, then sure, you'll be asked for your expert eye agai=
+n.
+>=20
+> > > It's a bit concerning when it seems like my review is becoming a =
+blocker
+> > > for something and I don't understand why.
+>=20
+> > Not necessarily _your_ review.  Just someone, other than the
+> > submitter, who I trust and knows about this stuff.  You just happen=
+=20
+> > to tick those boxes this time.  Cross pollination and knowledge sha=
+ring
+> > is one of the characteristics of MLs which I'm particularly proud o=
+f.
+>=20
+> That was what it read like.
+>=20
+> > > When your power budget is in the low double digit microamps and y=
+ou're
+> > > trying to respond promptly and reliably to rapidly changing and v=
+ariable
+> > > physical inputs it gets complicated.
+>=20
+> > This is exactly why I asked you.
+>=20
+> > Thanks for adding structure to my PoV. ;)=20
+>=20
+> So, a more specific question would have helped - just a general "any
+> thoughts" type question isn't very clear.
 
-> +static size_t hi6220_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-> +				size_t size)
-> +{
-> +	struct hi6220_domain *m_domain = to_hi6220_domain(domain);
-> +	size_t page_size = m_domain->smmu_dev->page_size;
-> +	struct hi6220_smmu *smmu_dev = m_domain->smmu_dev;
-> +	int *page_table = (unsigned int *)smmu_dev->pgtable_virt;
-> +
-> +	if (size != page_size) {
-> +		pr_err("unmap size error, only support %zd\n", page_size);
-> +		return 0;
-> +	}
-> +
-> +	__clear_smmu_pte(page_table + IOVA_PFN(iova));
-> +
-> +	return page_size;
-> +}
+To both comments -- this is how I phrased it:
 
-Don't you need a call to __invalid_smmu_tlb here too?
+"I either need an Ack from the DT folks, or at least someone who knows
+about this stuff.  Mark perhaps."
 
-
-
-	Joerg
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
