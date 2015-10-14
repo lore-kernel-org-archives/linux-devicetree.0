@@ -1,305 +1,110 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 15:07:16 +0200
-Message-ID: <CAOAejn3QOzrd952MztVTah4UbpNs1OabwkxhEtp15Mqz0B7LXA@mail.gmail.com>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
-	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
-	<20151014111615.GR27370@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v4 03/11] scsi: ufs: add quirk to contain unconformable utrd
+ field
+Date: Wed, 14 Oct 2015 18:25:43 +0530
+Message-ID: <1444827351-24128-4-git-send-email-alim.akhtar@samsung.com>
+References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151014111615.GR27370@localhost>
+In-reply-to: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: JBottomley@odin.com, vinholikatti@gmail.com, amit.daniel@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, alim.akhtar@samsung.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+From: Seungwon Jeon <essuuj@gmail.com>
 
+UTRD(UTP Transfer Request Descriptor)'s field such as offset/length,
+especially response's has DWORD expression. This quirk can be specified
+for host controller not to conform standard.
 
-2015-10-14 13:16 GMT+02:00 Vinod Koul <vinod.koul@intel.com>:
-> On Tue, Oct 13, 2015 at 04:05:25PM +0200, M'boumba Cedric Madianga wr=
-ote:
->> +#define STM32_DMA_LISR                       0x0000 /* DMA Low Int =
-Status Reg */
->> +#define STM32_DMA_HISR                       0x0004 /* DMA High Int=
- Status Reg */
->> +#define STM32_DMA_LIFCR                      0x0008 /* DMA Low Int =
-=46lag Clear Reg */
->> +#define STM32_DMA_HIFCR                      0x000c /* DMA High Int=
- Flag Clear Reg */
->> +#define STM32_DMA_TCI                        BIT(5) /* Transfer Com=
-plete Interrupt */
->> +#define STM32_DMA_HTI                        BIT(4) /* Half Transfe=
-r Interrupt */
->> +#define STM32_DMA_TEI                        BIT(3) /* Transfer Err=
-or Interrupt */
->> +#define STM32_DMA_DMEI                       BIT(2) /* Direct Mode =
-Error Interrupt */
->> +#define STM32_DMA_FEI                        BIT(0) /* FIFO Error I=
-nterrupt */
->
-> Why not use BIT() for everything here and make it consistent
->
-> Also where ever possible stick to 80 char limit like above you can
+Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ drivers/scsi/ufs/ufshcd.c |   28 +++++++++++++++++++++-------
+ drivers/scsi/ufs/ufshcd.h |    7 +++++++
+ 2 files changed, 28 insertions(+), 7 deletions(-)
 
-In fact STM32_DMA_LISR, HISR, LIFCR and HIFCR are offset to access regi=
-ster.
-So BIT() could not be used for this purpose.
-
->
->> +
->> +/* DMA Stream x Configuration Register */
->> +#define STM32_DMA_SCR(x)             (0x0010 + 0x18 * (x)) /* x =3D=
- 0..7 */
->> +#define STM32_DMA_SCR_REQ(n)         ((n & 0x7) << 25)
->
-> this and below looks ugly and hard to maintain, are you sure spec doe=
-sn't
-> have a formulae for these?
-
-We don't have any formulae in spec to handle this.
-It is clearly described that we have to access registers in that way
-to address the good channel.
-Please, see below an extract of the spec for more details:
-DMA stream x configuration register (DMA_SxCR) (x =3D 0..7)
-This register is used to configure the concerned stream.
-Address offset: 0x10 + 0x18 =C3=97 stream number
-
->
->> +static inline uint32_t stm32_dma_read(struct stm32_dma_device *dmad=
-ev, u32 reg)
->
-> this and few other could be made more readable
-
-Ok, I could replace uint32_t by u32. Is it what you expect ?
-=46or others, I don't see how I could make it more readable.
-Could you please give me more details to help me ? Thanks in advance
-
->
->> +static struct stm32_dma_desc *stm32_dma_alloc_desc(unsigned int num=
-_sgs)
->> +{
->> +     return kzalloc(sizeof(struct stm32_dma_desc) +
->> +                    sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_=
-ATOMIC);
->
-> Not GFP_NOWAIT ?
-
-You're right. We could use GFP_NOWAIT instead. Thanks.
-
->
->> +static enum stm32_dma_width stm32_get_dma_width(struct stm32_dma_ch=
-an *chan,
->> +                                             enum dma_slave_buswidt=
-h width)
->> +{
->> +     switch (width) {
->> +     case DMA_SLAVE_BUSWIDTH_1_BYTE:
->> +             return STM32_DMA_BYTE;
->> +     case DMA_SLAVE_BUSWIDTH_2_BYTES:
->> +             return STM32_DMA_HALF_WORD;
->> +     case DMA_SLAVE_BUSWIDTH_4_BYTES:
->> +             return STM32_DMA_WORD;
->> +     default:
->> +             dev_warn(chan2dev(chan),
->> +                      "Dma bus width not supported, using 32bits\n"=
-);
->> +             return STM32_DMA_WORD;
->
-> pls return error here
-> Assuming wrong parameter can cause havoc of transfer, so is not advis=
-able
-
-OK, I will fix it in the next version. Thanks for the explanation.
-
->
->> +static enum stm32_dma_burst_size stm32_get_dma_burst(
->> +             struct stm32_dma_chan *chan, u32 maxburst)
->> +{
->> +     switch (maxburst) {
->> +     case 0:
->> +     case 1:
->> +             return STM32_DMA_BURST_SINGLE;
->> +     case 4:
->> +             return STM32_DMA_BURST_INCR4;
->> +     case 8:
->> +             return STM32_DMA_BURST_INCR8;
->> +     case 16:
->> +             return STM32_DMA_BURST_INCR16;
->> +     default:
->> +             dev_warn(chan2dev(chan),
->> +                      "Dma burst size not supported, using single\n=
-");
->> +             return STM32_DMA_BURST_SINGLE;
->
-> here too
-
-Ditto
-
->
->> +     }
->> +}
->> +
->> +static int stm32_dma_slave_config(struct dma_chan *c,
->> +                               struct dma_slave_config *config)
->> +{
->> +     struct stm32_dma_chan *chan =3D to_stm32_dma_chan(c);
->> +
->> +     if (chan->busy) {
->> +             dev_err(chan2dev(chan), "Configuration not allowed\n")=
-;
->> +             return -EBUSY;
->> +     }
->
-> That is false condition. This configuration should be used for next
-> descriptor prepare
-
-OK. Will be fixed in the next patch version.
-
->
->> +static int stm32_dma_disable_chan(struct stm32_dma_chan *chan)
->> +{
->> +     struct stm32_dma_device *dmadev =3D stm32_dma_chan_get_dev(cha=
-n);
->> +     unsigned long timeout =3D jiffies + msecs_to_jiffies(5000);
->> +     u32 dma_scr;
->> +
->> +     dma_scr =3D stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
->> +     if (dma_scr & STM32_DMA_SCR_EN) {
->> +             dma_scr &=3D ~STM32_DMA_SCR_EN;
->> +             stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_s=
-cr);
->> +
->> +             do {
->> +                     dma_scr =3D stm32_dma_read(dmadev,
->> +                                              STM32_DMA_SCR(chan->i=
-d));
->> +                     dma_scr &=3D STM32_DMA_SCR_EN;
->> +                     if (!dma_scr)
->> +                             break;
->
-> empty line here would improve readability
-
-OK
-
->
->> +static irqreturn_t stm32_dma_chan_irq(int irq, void *devid)
->> +{
->> +     struct stm32_dma_chan *chan =3D devid;
->> +     struct stm32_dma_device *dmadev =3D stm32_dma_chan_get_dev(cha=
-n);
->> +     u32 status, scr, sfcr;
->> +
->> +     spin_lock(&chan->vchan.lock);
->> +
->> +     status =3D stm32_dma_irq_status(chan);
->> +     scr =3D stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
->> +     sfcr =3D stm32_dma_read(dmadev, STM32_DMA_SFCR(chan->id));
->> +
->> +     if ((status & STM32_DMA_HTI) && (scr & STM32_DMA_SCR_HTIE)) {
->> +             stm32_dma_irq_clear(chan, STM32_DMA_HTI);
->> +             vchan_cyclic_callback(&chan->desc->vdesc);
->> +             spin_unlock(&chan->vchan.lock);
->> +             return IRQ_HANDLED;
->
-> line here please and below
-
-OK
-
->
->> +     } else if ((status & STM32_DMA_TCI) && (scr & STM32_DMA_SCR_TC=
-IE)) {
->> +             stm32_dma_irq_clear(chan, STM32_DMA_TCI);
->> +             stm32_dma_handle_chan_done(chan);
->> +             spin_unlock(&chan->vchan.lock);
->> +             return IRQ_HANDLED;
->> +     } else if ((status & STM32_DMA_TEI) && (scr & STM32_DMA_SCR_TE=
-IE)) {
->> +             dev_err(chan2dev(chan), "DMA error: received TEI event=
-\n");
->> +             stm32_dma_irq_clear(chan, STM32_DMA_TEI);
->> +             chan->status =3D DMA_ERROR;
->> +             spin_unlock(&chan->vchan.lock);
->> +             return IRQ_HANDLED;
->> +     } else if ((status & STM32_DMA_FEI) && (sfcr & STM32_DMA_SFCR_=
-=46EIE)) {
->> +             dev_err(chan2dev(chan), "DMA error: received FEI event=
-\n");
->> +             stm32_dma_irq_clear(chan, STM32_DMA_FEI);
->> +             chan->status =3D DMA_ERROR;
->> +             spin_unlock(&chan->vchan.lock);
->> +             return IRQ_HANDLED;
->
-> this is repeat of above apart from err print!!
-
-Not only for print as we also need that to define which bit to clear
-in the IRQ status.
-In that way we will be sure to handle each interrupt event.
-
->
->> +     } else if ((status & STM32_DMA_DMEI) && (scr & STM32_DMA_SCR_D=
-MEIE)) {
->> +             dev_err(chan2dev(chan), "DMA error: received DMEI even=
-t\n");
->> +             stm32_dma_irq_clear(chan, STM32_DMA_DMEI);
->> +             chan->status =3D DMA_ERROR;
->> +             spin_unlock(&chan->vchan.lock);
->> +             return IRQ_HANDLED;
->
-> same here :(
-
-Ditto
-
->
->> +static enum dma_status stm32_dma_tx_status(struct dma_chan *c,
->> +                                        dma_cookie_t cookie,
->> +                                        struct dma_tx_state *state)
->> +{
->> +     struct stm32_dma_chan *chan =3D to_stm32_dma_chan(c);
->> +     struct virt_dma_desc *vdesc;
->> +     enum dma_status status;
->> +     unsigned long flags;
->> +     unsigned int residue;
->> +
->> +     status =3D dma_cookie_status(c, cookie, state);
->> +     if (status =3D=3D DMA_COMPLETE)
->> +             return status;
->> +
->> +     if (!state)
->> +             return chan->status;
-> why channel status and not status from dma_cookie_status()?
-
-If status is different than DMA_COMPLETE it seems better to use channel=
- status.
-Indeed, in that way, we have the possibility to notify that there is a
-potential error in the bus via DMA_ERROR.
-But if I return status from dma_cookie_status(), I will always notify
-DMA_IN_PROGRESS.
-
->
->> +static int stm32_dma_remove(struct platform_device *pdev)
->> +{
->> +     struct stm32_dma_device *dmadev =3D platform_get_drvdata(pdev)=
-;
->> +
->> +     of_dma_controller_free(pdev->dev.of_node);
->> +
->> +     dma_async_device_unregister(&dmadev->ddev);
->> +
->> +     clk_disable_unprepare(dmadev->clk);
->
-> and your irq is enabled and you can still receive interrupts and sche=
-dule
-> tasklets :(
-
-So, I have to free interrupts and also kill tasklet from interrupt here=
-=2E
-I will also disable the channel in case of ongoing transfer in  order
-to let the DMA controller in a good state.
-
-Thanks for your review :)
-
-BR,
-Cedric
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 131c72038bf8..587a9c8fbfe9 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1009,7 +1009,7 @@ ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
+  *
+  * Returns 0 in case of success, non-zero value in case of failure
+  */
+-static int ufshcd_map_sg(struct ufshcd_lrb *lrbp)
++static int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ {
+ 	struct ufshcd_sg_entry *prd_table;
+ 	struct scatterlist *sg;
+@@ -1023,8 +1023,13 @@ static int ufshcd_map_sg(struct ufshcd_lrb *lrbp)
+ 		return sg_segments;
+ 
+ 	if (sg_segments) {
+-		lrbp->utr_descriptor_ptr->prd_table_length =
+-					cpu_to_le16((u16) (sg_segments));
++		if (hba->quirks & UFSHCI_QUIRK_BYTE_ALIGN_UTRD)
++			lrbp->utr_descriptor_ptr->prd_table_length =
++				cpu_to_le16((u16)(sg_segments *
++					sizeof(struct ufshcd_sg_entry)));
++		else
++			lrbp->utr_descriptor_ptr->prd_table_length =
++				cpu_to_le16((u16) (sg_segments));
+ 
+ 		prd_table = (struct ufshcd_sg_entry *)lrbp->ucd_prdt_ptr;
+ 
+@@ -1347,7 +1352,7 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ 
+ 	/* form UPIU before issuing the command */
+ 	ufshcd_compose_upiu(hba, lrbp);
+-	err = ufshcd_map_sg(lrbp);
++	err = ufshcd_map_sg(hba, lrbp);
+ 	if (err) {
+ 		lrbp->cmd = NULL;
+ 		clear_bit_unlock(tag, &hba->lrb_in_use);
+@@ -2034,13 +2039,22 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
+ 		utrdlp[i].command_desc_base_addr_hi =
+ 				cpu_to_le32(upper_32_bits(cmd_desc_element_addr));
+ 
++		if (hba->quirks & UFSHCI_QUIRK_BYTE_ALIGN_UTRD) {
++			utrdlp[i].response_upiu_offset =
++				cpu_to_le16(response_offset);
++			utrdlp[i].prd_table_offset =
++				cpu_to_le16(prdt_offset);
++			utrdlp[i].response_upiu_length =
++				cpu_to_le16(ALIGNED_UPIU_SIZE);
++		} else {
+ 		/* Response upiu and prdt offset should be in double words */
+-		utrdlp[i].response_upiu_offset =
++			utrdlp[i].response_upiu_offset =
+ 				cpu_to_le16((response_offset >> 2));
+-		utrdlp[i].prd_table_offset =
++			utrdlp[i].prd_table_offset =
+ 				cpu_to_le16((prdt_offset >> 2));
+-		utrdlp[i].response_upiu_length =
++			utrdlp[i].response_upiu_length =
+ 				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
++		}
+ 
+ 		hba->lrb[i].utr_descriptor_ptr = (utrdlp + i);
+ 		hba->lrb[i].ucd_req_ptr =
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 2570d9477b37..6cd542a803d5 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -467,6 +467,13 @@ struct ufs_hba {
+ 	 */
+ 	#define UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		UFS_BIT(5)
+ 
++	/*
++	 * This quirk needs to be enabled if host controller doesn't conform
++	 * with UTRD. Some fields such as offset/length might not be in double
++	 * word, but in byte.
++	 */
++	#define UFSHCI_QUIRK_BYTE_ALIGN_UTRD			UFS_BIT(6)
++
+ 	unsigned int quirks;	/* Deviations from standard UFSHCI spec. */
+ 
+ 	wait_queue_head_t tm_wq;
+-- 
+1.7.10.4
