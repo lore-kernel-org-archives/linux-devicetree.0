@@ -1,88 +1,114 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 02/13] dmaengine: edma: Optimize memcpy operation
-Date: Wed, 14 Oct 2015 18:02:18 +0300
-Message-ID: <561E6E7A.6080408@ti.com>
-References: <1444828344-21378-1-git-send-email-peter.ujfalusi@ti.com>
- <1444828344-21378-3-git-send-email-peter.ujfalusi@ti.com>
- <20151014144105.GV27370@localhost>
+From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
+Date: Wed, 14 Oct 2015 16:05:21 +0100
+Message-ID: <561E6F31.9050804@huawei.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
+ <1444663237-238302-10-git-send-email-john.garry@huawei.com>
+ <561CA0CB.5090802@suse.de> <561D3BF1.8060600@huawei.com>
+ <561E1501.2070507@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151014144105.GV27370@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: nsekhar@ti.com, linux@arm.linux.org.uk, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, r.schwebel@pengutronix.de
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561E1501.2070507-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hannes Reinecke <hare-l3A5Bk7waGM@public.gmane.org>, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/2015 05:41 PM, Vinod Koul wrote:
-> On Wed, Oct 14, 2015 at 04:12:13PM +0300, Peter Ujfalusi wrote:
->> @@ -1320,41 +1317,92 @@ static struct dma_async_tx_descriptor *edma_=
-prep_dma_memcpy(
->>  	struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
->>  	size_t len, unsigned long tx_flags)
->>  {
->> -	int ret;
->> +	int ret, nslots;
->>  	struct edma_desc *edesc;
->>  	struct device *dev =3D chan->device->dev;
->>  	struct edma_chan *echan =3D to_edma_chan(chan);
->> -	unsigned int width;
->> +	unsigned int width, pset_len;
->> =20
->>  	if (unlikely(!echan || !len))
->>  		return NULL;
->> =20
->> -	edesc =3D kzalloc(sizeof(*edesc) + sizeof(edesc->pset[0]), GFP_ATO=
-MIC);
->> +	if (len < SZ_64K) {
->> +		/*
->> +		 * Transfer size less than 64K can be handled with one paRAM
->> +		 * slot. ACNT =3D length
->> +		 */
->> +		width =3D len;
->> +		pset_len =3D len;
->> +		nslots =3D 1;
->> +	} else {
->> +		/*
->> +		 * Transfer size bigger than 64K will be handled with maximum of
->> +		 * two paRAM slots.
->> +		 * slot1: ACNT =3D 32767, length1: (length / 32767)
->> +		 * slot2: the remaining amount of data.
->> +		 */
->> +		width =3D SZ_32K - 1;
->> +		pset_len =3D rounddown(len, width);
->> +		/* One slot is enough for lengths multiple of (SZ_32K -1) */
->=20
-> Hmm so does this mean if I have 140K transfer, it will do two 64K for=
- 1st
-> slot and 12K in second slot ?
+On 14/10/2015 09:40, Hannes Reinecke wrote:
+> On 10/13/2015 07:14 PM, John Garry wrote:
+>> On 13/10/2015 07:12, Hannes Reinecke wrote:
+>>> On 10/12/2015 05:20 PM, John Garry wrote:
+>>>> This SAS ID is chosen as Huawei IEEE id: 001882
+>>>>
+>>>> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>    drivers/scsi/hisi_sas/hisi_sas_init.c | 15 +++++++++++++++
+>>>>    1 file changed, 15 insertions(+)
+>>>>
+>>>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>>> b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>>> index 44fc524..c295c39 100644
+>>>> --- a/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>>> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>>> @@ -283,6 +283,19 @@ err_out:
+>>>>        return NULL;
+>>>>    }
+>>>>
+>>>> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
+>>>> +{
+>>>> +    u8 i;
+>>>> +
+>>>> +    /* Huawei IEEE id (001882) */
+>>>> +    for (i = 0; i < hisi_hba->n_phy; i++)
+>>>> +        hisi_hba->phy[i].dev_sas_addr =
+>>>> +            cpu_to_be64(0x5001882016072015ULL);
+>>>> +
+>>> Ouch. Each phy has the same SAS address?
+>>> For all boards? Ever?
+>>>
+>>> Not sure if that's a good idea, nor even valid.
+>>> It'll confuse the hell out of any SAS array.
+>>>
+>>> Please provide a means of having individual SAS addresses for each
+>>> HBA.
+>>>
+>>> Cheers,
+>>>
+>>> Hannes
+>>>
+>> Hello,
+>>
+>> Are you saying we should be getting the SAS address from fw with
+>> sas_request_addr() or the like?
+>>
+>> Marvell solution seems to hardcode it.
+>>
+> Doesn't make it any better, nor even valid.
+>
+> Problem is that using a hardcoded SAS address makes it impossible
+> do any resource allocation on a SAS target array.
+> The SAS target array is allocating / mapping the LUNs based on the
+> SAS address, so if HBAs from different machines coming in with the
+> same SAS address the SAS array will assume that all ports belong to
+> the same machine, thus allowing access to all of them.
+>
+> And don't try to _ever_ connect these HBAs to a SAS switch; that
+> will be even more confused.
+>
+> So please, if you have a chance _DO_ get the SAS address from fw.
+> If the firmware doesn't provide it you really should get in touch
+> with the firmware team to get you one.
+>
+> To clarify the situation the SAS spec states:
+>
+>    Device names are worldwide unique names for devices within a
+>    transport protocol (see SAM-3).
+>
+> and:
+>    The VENDOR - SPECIFIC IDENTIFIER contains a 36-bit numeric value
+>    that is uniquely assigned by the organization associated with the
+>    company identifier in the IEEE COMPANY ID field.
+>
+> So as you are using the Huawei Vendor ID Huawei as a company needs
+> to ensure uniqueness of the vendor-specific identifier (ie the last
+> 36 bits of the SAS address). Which the above patch most patently
+> fails to address.
+>
+> Cheers,
+>
+> Hannes
+>
+Hi,
 
-Not exactly. If the size is less than 64K it can be done with one 'burs=
-t' but
-if it is bigger we need to have two sets of transfer:
-1. 32K blocks
-2. the remaining data
+OK, we can look at adding the ability to read the SAS HBA address from a 
+FW image or EFI variables.
 
-so in case of 140K:
-4 x 32K followed by 12K
+Thanks,
+John
 
->=20
-> Is there a limit on 'blocks' of 64K we can do here?
-
-32767 32K blocks is the limit.
-
-The 64K burst is only possible if the whole transfer is less less than =
-64K.
-With the ACNT counter we can transfer 64K - 1 bytes, but if this is not=
- enough
-we need to use the BCNT counter and for that to work the the distance b=
-etween
-the start of 'slot n' and the start of 'slot n+1' need to be less than =
-32K,
-this is the reason why we have 32K 'blocks' to transfer first followed =
-by the
-remaining.
-
---=20
-P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
