@@ -1,210 +1,38 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 16:46:15 +0530
-Message-ID: <20151014111615.GR27370@localhost>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
- <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
+From: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
+Date: Wed, 14 Oct 2015 14:18:20 +0300
+Message-ID: <20151014111820.GV1492@lahna.fi.intel.com>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+ <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
+ <20151012164819.GA4010@dtor-ws>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
+ <20151013070824.GA22304@dtor-ws>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
+ <20151013100724.GG1492@lahna.fi.intel.com>
+ <20151014062303.GC20406@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444745127-1105-3-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20151014062303.GC20406@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Tirdea, Irina" <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13, 2015 at 04:05:25PM +0200, M'boumba Cedric Madianga wrote:
-> +#define STM32_DMA_LISR			0x0000 /* DMA Low Int Status Reg */
-> +#define STM32_DMA_HISR			0x0004 /* DMA High Int Status Reg */
-> +#define STM32_DMA_LIFCR			0x0008 /* DMA Low Int Flag Clear Reg */
-> +#define STM32_DMA_HIFCR			0x000c /* DMA High Int Flag Clear Reg */
-> +#define STM32_DMA_TCI			BIT(5) /* Transfer Complete Interrupt */
-> +#define STM32_DMA_HTI			BIT(4) /* Half Transfer Interrupt */
-> +#define STM32_DMA_TEI			BIT(3) /* Transfer Error Interrupt */
-> +#define STM32_DMA_DMEI			BIT(2) /* Direct Mode Error Interrupt */
-> +#define STM32_DMA_FEI			BIT(0) /* FIFO Error Interrupt */
+On Tue, Oct 13, 2015 at 11:23:03PM -0700, Dmitry Torokhov wrote:
+> I understand why one might use acpi_dev_add_driver_gpios() to augment
+> data in ACPI, however here we have completely different issue: driver
+> that expects named gpios gets returned gpio that has nothing to do with
+> what it requested, because gpiolib acpi code always falls back to
+> unnamed gpio if it does not find named gpio. That can be acceptable if
+> driver uses the same con_id for all requests to gpiolib, but is not
+> working when driver supplies different con_ids.
 
-Why not use BIT() for everything here and make it consistent
+Right, the ACPI fallback ignores con_id completely and uses only the
+index.
 
-Also where ever possible stick to 80 char limit like above you can
-
-> +
-> +/* DMA Stream x Configuration Register */
-> +#define STM32_DMA_SCR(x)		(0x0010 + 0x18 * (x)) /* x = 0..7 */
-> +#define STM32_DMA_SCR_REQ(n)		((n & 0x7) << 25)
-
-this and below looks ugly and hard to maintain, are you sure spec doesn't
-have a formulae for these?
-
-> +static inline uint32_t stm32_dma_read(struct stm32_dma_device *dmadev, u32 reg)
-
-this and few other could be made more readable
-
-> +static struct stm32_dma_desc *stm32_dma_alloc_desc(unsigned int num_sgs)
-> +{
-> +	return kzalloc(sizeof(struct stm32_dma_desc) +
-> +		       sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_ATOMIC);
-
-Not GFP_NOWAIT ?
-
-> +static enum stm32_dma_width stm32_get_dma_width(struct stm32_dma_chan *chan,
-> +						enum dma_slave_buswidth width)
-> +{
-> +	switch (width) {
-> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> +		return STM32_DMA_BYTE;
-> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> +		return STM32_DMA_HALF_WORD;
-> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> +		return STM32_DMA_WORD;
-> +	default:
-> +		dev_warn(chan2dev(chan),
-> +			 "Dma bus width not supported, using 32bits\n");
-> +		return STM32_DMA_WORD;
-
-pls return error here
-Assuming wrong parameter can cause havoc of transfer, so is not advisable
-
-> +static enum stm32_dma_burst_size stm32_get_dma_burst(
-> +		struct stm32_dma_chan *chan, u32 maxburst)
-> +{
-> +	switch (maxburst) {
-> +	case 0:
-> +	case 1:
-> +		return STM32_DMA_BURST_SINGLE;
-> +	case 4:
-> +		return STM32_DMA_BURST_INCR4;
-> +	case 8:
-> +		return STM32_DMA_BURST_INCR8;
-> +	case 16:
-> +		return STM32_DMA_BURST_INCR16;
-> +	default:
-> +		dev_warn(chan2dev(chan),
-> +			 "Dma burst size not supported, using single\n");
-> +		return STM32_DMA_BURST_SINGLE;
-
-here too
-
-> +	}
-> +}
-> +
-> +static int stm32_dma_slave_config(struct dma_chan *c,
-> +				  struct dma_slave_config *config)
-> +{
-> +	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
-> +
-> +	if (chan->busy) {
-> +		dev_err(chan2dev(chan), "Configuration not allowed\n");
-> +		return -EBUSY;
-> +	}
-
-That is false condition. This configuration should be used for next
-descriptor prepare
-
-> +static int stm32_dma_disable_chan(struct stm32_dma_chan *chan)
-> +{
-> +	struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
-> +	unsigned long timeout = jiffies + msecs_to_jiffies(5000);
-> +	u32 dma_scr;
-> +
-> +	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
-> +	if (dma_scr & STM32_DMA_SCR_EN) {
-> +		dma_scr &= ~STM32_DMA_SCR_EN;
-> +		stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
-> +
-> +		do {
-> +			dma_scr = stm32_dma_read(dmadev,
-> +						 STM32_DMA_SCR(chan->id));
-> +			dma_scr &= STM32_DMA_SCR_EN;
-> +			if (!dma_scr)
-> +				break;
-
-empty line here would improve readability
-
-> +static irqreturn_t stm32_dma_chan_irq(int irq, void *devid)
-> +{
-> +	struct stm32_dma_chan *chan = devid;
-> +	struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
-> +	u32 status, scr, sfcr;
-> +
-> +	spin_lock(&chan->vchan.lock);
-> +
-> +	status = stm32_dma_irq_status(chan);
-> +	scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
-> +	sfcr = stm32_dma_read(dmadev, STM32_DMA_SFCR(chan->id));
-> +
-> +	if ((status & STM32_DMA_HTI) && (scr & STM32_DMA_SCR_HTIE)) {
-> +		stm32_dma_irq_clear(chan, STM32_DMA_HTI);
-> +		vchan_cyclic_callback(&chan->desc->vdesc);
-> +		spin_unlock(&chan->vchan.lock);
-> +		return IRQ_HANDLED;
-
-line here please and below
-
-> +	} else if ((status & STM32_DMA_TCI) && (scr & STM32_DMA_SCR_TCIE)) {
-> +		stm32_dma_irq_clear(chan, STM32_DMA_TCI);
-> +		stm32_dma_handle_chan_done(chan);
-> +		spin_unlock(&chan->vchan.lock);
-> +		return IRQ_HANDLED;
-> +	} else if ((status & STM32_DMA_TEI) && (scr & STM32_DMA_SCR_TEIE)) {
-> +		dev_err(chan2dev(chan), "DMA error: received TEI event\n");
-> +		stm32_dma_irq_clear(chan, STM32_DMA_TEI);
-> +		chan->status = DMA_ERROR;
-> +		spin_unlock(&chan->vchan.lock);
-> +		return IRQ_HANDLED;
-> +	} else if ((status & STM32_DMA_FEI) && (sfcr & STM32_DMA_SFCR_FEIE)) {
-> +		dev_err(chan2dev(chan), "DMA error: received FEI event\n");
-> +		stm32_dma_irq_clear(chan, STM32_DMA_FEI);
-> +		chan->status = DMA_ERROR;
-> +		spin_unlock(&chan->vchan.lock);
-> +		return IRQ_HANDLED;
-
-this is repeat of above apart from err print!!
-
-> +	} else if ((status & STM32_DMA_DMEI) && (scr & STM32_DMA_SCR_DMEIE)) {
-> +		dev_err(chan2dev(chan), "DMA error: received DMEI event\n");
-> +		stm32_dma_irq_clear(chan, STM32_DMA_DMEI);
-> +		chan->status = DMA_ERROR;
-> +		spin_unlock(&chan->vchan.lock);
-> +		return IRQ_HANDLED;
-
-same here :(
-
-> +static enum dma_status stm32_dma_tx_status(struct dma_chan *c,
-> +					   dma_cookie_t cookie,
-> +					   struct dma_tx_state *state)
-> +{
-> +	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
-> +	struct virt_dma_desc *vdesc;
-> +	enum dma_status status;
-> +	unsigned long flags;
-> +	unsigned int residue;
-> +
-> +	status = dma_cookie_status(c, cookie, state);
-> +	if (status == DMA_COMPLETE)
-> +		return status;
-> +
-> +	if (!state)
-> +		return chan->status;
-why channel status and not status from dma_cookie_status()?
-
-> +static int stm32_dma_remove(struct platform_device *pdev)
-> +{
-> +	struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
-> +
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +
-> +	dma_async_device_unregister(&dmadev->ddev);
-> +
-> +	clk_disable_unprepare(dmadev->clk);
-
-and your irq is enabled and you can still receive interrupts and schedule
-tasklets :(
-
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+AFAIK there is only one driver using ACPI _CRS index method:
+sdhci-[acpi|pci].c. If we can convert that to use acpi_dev_add_driver_gpios()
+to feed names for card detection GPIOs, I think we can remove the
+fallback alltogether in favor of named GPIOs for ACPI.
