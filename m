@@ -1,56 +1,68 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc/fsl: Add PCI node in device tree of
- bsc9132qds
-Date: Wed, 14 Oct 2015 15:36:08 -0500
-Message-ID: <1444854968.5185.205.camel@freescale.com>
-References: <1444735761-1510-1-git-send-email-B48286@freescale.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm: dts: lpc32xx: fix improper usage of ranges property
+Date: Wed, 14 Oct 2015 23:15:09 +0200
+Message-ID: <CAGhQ9Vw2-4QWsWoZrLFBfL49eQnc0VtWpfZoZjfoD=MDW2kD_g@mail.gmail.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com>
+	<7163229.YtgKU9kxxJ@wuerfel>
+	<CAGhQ9VzKrsAYy=xwEZPD80jaTxmqR5MJj7fXeFTK-A2JnJXPqA@mail.gmail.com>
+	<19392174.3eZzHlAnnT@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444735761-1510-1-git-send-email-B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <19392174.3eZzHlAnnT@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiqiang Hou <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-10-13 at 19:29 +0800, Zhiqiang Hou wrote:
-> From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Change-Id: I4355add4a92d1fcf514843aea5ecadd2e2517969
-> Reviewed-on: http://git.am.freescale.net:8181/2454
-> Reviewed-by: Zang Tiefei-R61911 <tie-fei.zang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Kushwaha Prabhakar-B32579 <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Fleming Andrew-AFLEMING <AFLEMING-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Tested-by: Fleming Andrew-AFLEMING <AFLEMING-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 14 October 2015 at 22:07, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 14 October 2015 19:23:09 Joachim Eastwood wrote:
+>> >
+>> > /ahb5 {
+>> >         ranges = <0 0x20000000 0x10000000>;
+>> >
+>> >         apb {
+>> >                 ranges = <0 0x80000 0x20000>;
+>> >         };
+>> > };
+>> > /ahb6 {
+>> >         ranges = <0 0x30000000 0x10000000>,           /* AHB registers */
+>> >                  <0x80000000 0x80000000 0x40000000>, /* EMC DYCS0/1 */
+>> >                  <0xE0000000 0xE0000000 0x04000000>; /* EMC CS0-3 */
+>> >
+>> >         memory-controller@1080000 {
+>> >                 reg = <0x1080000 0x10000>;
+>> >         };
+>> > };
+>>
+>> Sorry for hijacking the thread, but I have related question to this.
+>>
+>> What is the advantage of using a hierarchical bus structure in dt?
+>> I thought the recommendation, at least for new device trees, was to
+>> keep it flat under a "soc"-node.
+>>
+>> If doesn't offer any advantages why not remove instead of adding the
+>> ranges property which seems to grow a bit complex now?
+>> Of course removing it would create a lot of churn because of the
+>> re-indentation but at least the end result would be simpler.
+>
+> The general recommendation is to have the DT structure resemble
+> the hardware as closely as possible. If the chip has a clear
+> hierarchy and you know it, then it's best to describe it that way.
+>
+> The reason for having a single 'soc' node in a lot of the modern
+> dtsi files is that either it's not documented, or they use AXI
+> 'buses' that are not really hierarchical but are point-to-point
+> connections.
 
-Get rid of the gerrit stuff.  And where is your signoff?
+Thanks for explaining, Arnd!
 
-> diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi 
-> b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
-> index c723071..78c8f1c 100644
-> --- a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
-> @@ -40,6 +40,35 @@
->       interrupts = <16 2 0 0 20 2 0 0>;
->  };
->  
-> +/* controller at 0xa000 */
-> +&pci0 {
-> +     compatible = "fsl,bsc9132-pcie", "fsl,qoriq-pcie-v2.2";
-> +     device_type = "pci";
-> +     #size-cells = <2>;
-> +     #address-cells = <3>;
-> +     bus-range = <0 255>;
-> +     clock-frequency = <33333333>;
-> +     interrupts = <16 2 0 0>;
+In that case lpc18xx.dtsi should have had a hierarchical structure as
+well. NXP LPC user manuals usually documents the bus structure.
 
-This clock-frequency is not correct for PCIe.  Just remove it.
 
--Scott
-
+regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
