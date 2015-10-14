@@ -1,118 +1,108 @@
-From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon
- SoC Hip05
-Date: Wed, 14 Oct 2015 08:34:43 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E162435E7@lhreml503-mbs>
-References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com>
- <561CA5AF.2080300@hisilicon.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E162428B1@lhreml503-mbs>
- <5549505.Kpo7ci0v8h@wuerfel>
+From: Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 09/25] scsi: hisi_sas: add phy SAS ADDR initialization
+Date: Wed, 14 Oct 2015 10:40:33 +0200
+Message-ID: <561E1501.2070507@suse.de>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-10-git-send-email-john.garry@huawei.com> <561CA0CB.5090802@suse.de> <561D3BF1.8060600@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5549505.Kpo7ci0v8h@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <561D3BF1.8060600@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>, James.Bottomley@HansenPartnership.com
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie
 List-Id: devicetree@vger.kernel.org
 
+On 10/13/2015 07:14 PM, John Garry wrote:
+> On 13/10/2015 07:12, Hannes Reinecke wrote:
+>> On 10/12/2015 05:20 PM, John Garry wrote:
+>>> This SAS ID is chosen as Huawei IEEE id: 001882
+>>>
+>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>> ---
+>>>   drivers/scsi/hisi_sas/hisi_sas_init.c | 15 +++++++++++++++
+>>>   1 file changed, 15 insertions(+)
+>>>
+>>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>> b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>> index 44fc524..c295c39 100644
+>>> --- a/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>> @@ -283,6 +283,19 @@ err_out:
+>>>       return NULL;
+>>>   }
+>>>
+>>> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
+>>> +{
+>>> +    u8 i;
+>>> +
+>>> +    /* Huawei IEEE id (001882) */
+>>> +    for (i =3D 0; i < hisi_hba->n_phy; i++)
+>>> +        hisi_hba->phy[i].dev_sas_addr =3D
+>>> +            cpu_to_be64(0x5001882016072015ULL);
+>>> +
+>> Ouch. Each phy has the same SAS address?
+>> For all boards? Ever?
+>>
+>> Not sure if that's a good idea, nor even valid.
+>> It'll confuse the hell out of any SAS array.
+>>
+>> Please provide a means of having individual SAS addresses for each
+>> HBA.
+>>
+>> Cheers,
+>>
+>> Hannes
+>>
+> Hello,
+>=20
+> Are you saying we should be getting the SAS address from fw with
+> sas_request_addr() or the like?
+>=20
+> Marvell solution seems to hardcode it.
+>=20
+Doesn't make it any better, nor even valid.
 
+Problem is that using a hardcoded SAS address makes it impossible
+do any resource allocation on a SAS target array.
+The SAS target array is allocating / mapping the LUNs based on the
+SAS address, so if HBAs from different machines coming in with the
+same SAS address the SAS array will assume that all ports belong to
+the same machine, thus allowing access to all of them.
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> Sent: Tuesday, October 13, 2015 12:19 PM
-> To: Gabriele Paoloni
-> Cc: Wangzhou (B); Bjorn Helgaas; Bjorn Helgaas; jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
-> pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org;
-> thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org; lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org;
-> james.morse-5wv7dgnIgG8@public.gmane.org; Liviu.Dudau-5wv7dgnIgG8@public.gmane.org; jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org;
-> robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
-> Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org; linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; zhangjukuo; qiuzhenfa; liudongdong (C);
-> qiujiang; xuwei (O); Liguozhu (Kenneth); Wangkefeng (Kevin); Rob
-> Herring
-> Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for
-> HiSilicon SoC Hip05
-> 
-> On Tuesday 13 October 2015 06:58:42 Gabriele Paoloni wrote:
-> >
-> > > >> +
-> > > >> +static int __init hisi_pcie_init(void)
-> > > >> +{
-> > > >> +	return platform_driver_probe(&hisi_pcie_driver,
-> hisi_pcie_probe);
-> > > >> +}
-> > > >> +subsys_initcall(hisi_pcie_init);
-> > > >
-> > > > Can you use module_platform_driver() or
-> module_platform_driver_probe()
-> > > > here instead of the subsys_initcall()?  No, I don't really know
-> what
-> > > > the difference between module_platform_driver() and
-> > > > module_platform_driver_probe() is, sorry :)
-> 
-> module_platform_driver_probe() will only call the probe function once
-> (and fail in case of -EPROBE_DEFER), while module_platform_driver()
-> installs the platform driver in a way that the device can be bound
-> and unbound at any point.
-> 
-> > > In fact, I used module_platform_driver_probe in previous version,
-> but
-> > > A PCIe VGA card of HiSilicon will use Hip05 PCIe host, so we
-> modified
-> > > module_platform_driver_probe to subsys_initcall which will be
-> called
-> > > before module_platform_driver_probe.
-> > >
-> > > We will upstream the driver of above PCIe VGA card soon.
-> 
-> I don't see a reason why a VGA driver would need the PCI host to be
-> probed this early, unless it is the only usable console in the system.
-> 
-> > Hi Bjorn, firstly many thanks for looking at this.
-> >
-> > About this last bit the reason why we use subsys_initcall() is that
-> > our host bridge is embedded in the SoC and as such is not hot-
-> pluggable
-> > for instance see:
-> > http://lxr.free-electrons.com/source/Documentation/driver-
-> model/platform.txt#L59
-> 
-> We should still be able to build the driver as a loadable module,
-> even if you don't do that on your own kernels.
+And don't try to _ever_ connect these HBAs to a SAS switch; that
+will be even more confused.
 
-Hi Arnd, I don't see the point of having loadable KOs for platform
-devices that are integrated into SoCs (like PCIe Host Controllers...)
+So please, if you have a chance _DO_ get the SAS address from fw.
+If the firmware doesn't provide it you really should get in touch
+with the firmware team to get you one.
 
-> 
-> This doesn't mean that it has to be module_platform_driver,
-> subsys_initcall
-> will also work in a loadable module, it just won't be as early. However,
-> we should try to come up with a consistent approach for all PCI host
-> drivers,
-> I don't see any reason for hisi to be different from the others here.
+To clarify the situation the SAS spec states:
 
-To me it sounds more appropriate to adopt subsys_initcall() for all the
-PCI Host Bridge controllers rather than having them as loadable modules...
+  Device names are worldwide unique names for devices within a
+  transport protocol (see SAM-3).
 
-What is your view?
+and:
+  The VENDOR - SPECIFIC IDENTIFIER contains a 36-bit numeric value
+  that is uniquely assigned by the organization associated with the
+  company identifier in the IEEE COMPANY ID field.
 
-Thanks
+So as you are using the Huawei Vendor ID Huawei as a company needs
+to ensure uniqueness of the vendor-specific identifier (ie the last
+36 bits of the SAS address). Which the above patch most patently
+fails to address.
 
-Gab
+Cheers,
 
-> 
-> > Our approach is also used by Exynos:
-> > http://lxr.free-electrons.com/source/drivers/pci/host/pci-
-> exynos.c#L644
-> 
-> Maybe we should change that too.
-> 
-> 	Arnd
+Hannes
+--=20
+Dr. Hannes Reinecke		               zSeries & Storage
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=FCrnberg
+GF: F. Imend=F6rffer, J. Smithard, J. Guild, D. Upmanyu, G. Norton
+HRB 21284 (AG N=FCrnberg)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-scsi" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
