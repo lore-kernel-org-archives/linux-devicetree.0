@@ -1,71 +1,27 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
-Date: Wed, 14 Oct 2015 23:56:33 +0200
-Message-ID: <5572871.GecUyqk59W@wuerfel>
-References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <30775300.COZ4nEMWXC@wuerfel> <561E23EB.7050504@hisilicon.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: dts: bcm5301x: Add BCM SVK DT files
+Date: Wed, 14 Oct 2015 18:14:48 -0400
+Message-ID: <1444860890-28649-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561E23EB.7050504@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Zhou Wang <wangzhou1@hisilicon.com>, "Wangkefeng (Kevin)" <wangkefeng.wang@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, qiujiang <qiujiang@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Bjorn Helgaas <helgaas@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "liudongdong (C)" <liudongdong3@huawei.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, thomas.petazz
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 October 2015 17:44:11 Zhou Wang wrote:
-> On 2015/10/14 17:06, Arnd Bergmann wrote:
-> > On Wednesday 14 October 2015 16:59:03 Zhou Wang wrote:
-> >>
-> >> Hi Arnd,
-> >>
-> >> In Hip05 PCIe host, it uses GITS_TRANSLATER's address to get TLP package
-> >> which contains MSI address and MSI data, and then combine BDF and MSI data
-> >> to a 32 bit data which will be writen to GITS_TRANSLATER register of ITS.
-> >>
-> >> I think maybe this is a defect of our PCIe controller.
-> > 
-> > I'd consider it a bug in the firmware if this is not set up correctly
-> > before boot.
-> > 
-> >>> I don't think what you do here is safe because the 'reg' property
-> >>> of the MSI controller might point to the address that is used for
-> >>> the message directly.
-> >>
-> >> I see your point, however we must get address of GITS_TRANSLATER and
-> >> set it to PCIe host. How about adding necessary comments here?
-> > 
-> > This seems to just be static setup that should be done before Linux
-> > is even loaded. Any reason you can't do it that way?
-> >
-> 
-> There are some ITSs in Hip05-D02 platform, in fact, we can use any of them
-> as a msi-controller,  which we can configure in dts. I am afraid that
-> hard-setting the value in BIOS would lead to restrictions in terms of flexibility,
-> as with the current implementation the same BIOS-driver can fit different
-> DTS structures.
 
-The dtb generally should be expected to match whatever the firmware sets up,
-so if there is one reasonable setting here, I see no problem with hardcoding
-it that way. In particular on server systems, we usually expect the firmware
-to configure almost everything in advance and just tell us how it is
-configured, while on embedded systems we can't trust the bootload and
-usually set it all up in the kernel from scratch.
+This patch series adds the device tree files for the Broadcom Northstar based SVKs.  
 
-What would be a reason to pick one ITS over another?
+Changes in v2:
+* Reorder the patches to add the DT binding documentation prior to the new DT files
+* Removed the DT documentation compat strings to only the SoCs, not the individual boards
+* Fixed the compat strings in the individual device tree files
+* Added the memory node and removed the "mem=" from the bootargs
 
-On a related note, don't you also need to describe in DT how PCI B/D/F
-function numbers get turned into addresses in the ITS? Does that also
-require configuration in the driver? I see this code here:
-
-
-+       hisi_pcie_apb_writel(pcie, PCIE_MSI_ASID_ENABLE | PCIE_MSI_ASID_VALUE,
-+                            PCIE_SLV_MSI_ASID);
-+       hisi_pcie_apb_writel(pcie, PCIE_MSI_TRANS_ENABLE, PCIE_MSI_TRANS_REG);
-+       hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
-
-plus all of hisi_pcie_config_context(). This looks like it will change
-the way the MSI is interpreted. This also seems like something that
-could be done in the firmware in advance, and just get reported in DT.
-
-	Arnd
+Thanks,
+Jon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
