@@ -1,189 +1,69 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v4 2/2] usb: chipidea: imx: refine clock operations to
- adapt for all platforms
-Date: Wed, 14 Oct 2015 10:07:59 +0200
-Message-ID: <561E0D5F.8030003@pengutronix.de>
-References: <1444787859-31509-1-git-send-email-peter.chen@freescale.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v5 0/17] Add Analogix Core Display Port Driver
+Date: Wed, 14 Oct 2015 10:18:10 +0200
+Message-ID: <561E0FC2.1070603@osg.samsung.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1442906428-2609-1-git-send-email-ykk@rock-chips.com>
+ <5614BADD.1070307@rock-chips.com> <5614DBE2.6080102@osg.samsung.com>
+ <5614DFBC.8060105@rock-chips.com> <5614E553.6060108@osg.samsung.com>
+ <5614FC6B.4080702@rock-chips.com> <56150128.2070309@osg.samsung.com>
+ <5615BB93.9020008@rock-chips.com> <56192135.2080608@rock-chips.com>
+ <561CCD09.6020801@osg.samsung.com> <561D0C10.4060002@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="MKTweChM8adGHS1Rlbk7XkAAgUuoM4lo7"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1444787859-31509-1-git-send-email-peter.chen@freescale.com>
-Sender: stable-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>, shawnguo@kernel.org, linux-usb@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, fabio.estevam@freescale.com, pawel.moll@arm.com, stable@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561D0C10.4060002-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---MKTweChM8adGHS1Rlbk7XkAAgUuoM4lo7
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hello Yakir,
 
-On 10/14/2015 03:57 AM, Peter Chen wrote:
-> Some i.mx platforms need three clocks to let controller work, but
-> others only need one, refine clock operation to adapt for all
-> platforms, it fixes a regression found at i.mx27.
->=20
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> Tested-by: Fabio Estevam <fabio.estevam@freescale.com>
-> Cc: <stable@vger.kernel.org> #v4.1+
-> ---
->  drivers/usb/chipidea/ci_hdrc_imx.c | 132 +++++++++++++++++++++++++++++=
-+++-----
->  1 file changed, 114 insertions(+), 18 deletions(-)
->=20
-> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/=
-ci_hdrc_imx.c
-> index 6ccbf60..82b1dfe 100644
-> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
-> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-> @@ -84,6 +84,12 @@ struct ci_hdrc_imx_data {
->  	struct imx_usbmisc_data *usbmisc_data;
->  	bool supports_runtime_pm;
->  	bool in_lpm;
-> +	/* SoC before i.mx6 (except imx23/imx28) needs three clks */
-> +	bool need_three_clks;
-> +	struct clk *clk_ipg;
-> +	struct clk *clk_ahb;
-> +	struct clk *clk_per;
-> +	/* --------------------------------- */
->  };
-> =20
->  /* Common functions shared by usbmisc drivers */
-> @@ -135,6 +141,103 @@ static struct imx_usbmisc_data *usbmisc_get_init_=
-data(struct device *dev)
->  }
-> =20
->  /* End of common functions shared by usbmisc drivers*/
-> +static int imx_get_clks(struct device *dev)
-> +{
-> +	struct ci_hdrc_imx_data *data =3D dev_get_drvdata(dev);
-> +	int ret =3D 0;
-> +
-> +	data->clk_ipg =3D devm_clk_get(dev, "ipg");
-> +	if (IS_ERR(data->clk_ipg)) {
-> +		/* If the platform only needs one clocks */
-> +		data->clk =3D devm_clk_get(dev, NULL);
-> +		if (IS_ERR(data->clk)) {
-> +			ret =3D PTR_ERR(data->clk);
-> +			dev_err(dev,
-> +				"Failed to get clock, err=3D%d\n", ret);
-> +			dev_err(dev,
-> +				"Failed to get ipg clock, err=3D%d\n", ret);
+On 10/13/2015 03:50 PM, Yakir Yang wrote:
+> On 10/13/2015 05:21 PM, Javier Martinez Canillas wrote:
+> 
 
-Nitpick, one error message should be enough.
+[snip]
 
-> +			return ret;
-> +		}
-> +		return ret;
-> +	}
-> +
-> +	data->clk_ahb =3D devm_clk_get(dev, "ahb");
-> +	if (IS_ERR(data->clk_ahb)) {
-> +		ret =3D PTR_ERR(data->clk_ahb);
-> +		dev_err(dev,
-> +			"Failed to get ahb clock, err=3D%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	data->clk_per =3D devm_clk_get(dev, "per");
-> +	if (IS_ERR(data->clk_per)) {
-> +		ret =3D PTR_ERR(data->clk_per);
-> +		dev_err(dev,
-> +			"Failed to get per clock, err=3D%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	data->need_three_clks =3D true;
-> +	return ret;
-> +}
-> +
-> +static int imx_prepare_enable_clks(struct device *dev)
-> +{
-> +	struct ci_hdrc_imx_data *data =3D dev_get_drvdata(dev);
-> +	int ret =3D 0;
-> +
-> +	if (data->need_three_clks) {
-> +		ret =3D clk_prepare_enable(data->clk_ipg);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Failed to prepare/enable ipg clk, err=3D%d\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +
-> +		ret =3D clk_prepare_enable(data->clk_ahb);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Failed to prepare/enable ahb clk, err=3D%d\n",
-> +				ret);
-> +			clk_disable_unprepare(data->clk_ipg);
-> +			return ret;
-> +		}
-> +
-> +		ret =3D clk_prepare_enable(data->clk_per);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Failed to prepare/enable per clk, err=3D%d\n",
-> +				ret);
-> +			clk_disable_unprepare(data->clk_ahb);
-> +			clk_disable_unprepare(data->clk_ipg);
-> +			return ret;
-> +		}
-> +	} else {
-> +		ret =3D clk_prepare_enable(data->clk);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Failed to prepare/enable clk, err=3D%d\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void imx_disable_unprepare_clks(struct device *dev)
-> +{
-> +	struct ci_hdrc_imx_data *data =3D dev_get_drvdata(dev);
-> +
-> +	if (data->need_three_clks) {
-> +		clk_disable_unprepare(data->clk_per);
-> +		clk_disable_unprepare(data->clk_ipg);
-> +		clk_disable_unprepare(data->clk_ahb);
+>>> And it's better to enable pstore function on mainline kernel, so we can analysis the last log when
+>>> the mainline kernel crashed. After enable PSTORE_RAM in .config, we still need add ramoops node
+>> Interesting, I knew about pstore but I never used it with the Exynos Chromebooks.
+>>
+>>> into file, like:
+>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>>> @@ -750,6 +750,15 @@
+>>>                  iommu = <&sysmmu_gsc3>;
+>>>          };
+>>>
+>>> +       ramoops: ramoops {
+>>> +               compatible = "ramoops";
+>>> +               name = "ramoops";
+>>> +               reg = <0x41f00000 0x100000>;
+>>> +               record-size = <0x20000>;
+>>> +               dump-oops;
+>>> +               status = "okay";
+>>> +       };
+>>> +
+>> Are you using mainline? There isn't a "ramoops" compatible string documented
+>> in the upstream DT bindings, platform_match() would match by driver name as
+>> a fallback but I don't see code in fs/pstore/ram.c that parses the properties
+>> in your device node. I wonder how this works for you or did I missunderstand?
+> 
+> Aha, I lost some things that I back port the pstore/ram.c from chrome
+> v3.14 tree which driver would parsed the "ramoops" compatible.
+>
 
-nit: you enable in this order: ipg, ahb, per. Disabling should be inverse=
-=2E
+Ah, that explains it then.
 
-> +	} else {
-> +		clk_disable_unprepare(data->clk);
-> +	}
-> +}
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---MKTweChM8adGHS1Rlbk7XkAAgUuoM4lo7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBCgAGBQJWHg1fAAoJEP5prqPJtc/HGeIH/37ot/KTywuggIJGeZUqf/y8
-gkEWNK3VLIERTJDGU5QwFq9xMhPKngWp/H9TzEVPq0MWyHd+7BhXIJxEMAZvVFcy
-t543PN5zsMEftiTPqE2IUwaU9BXhLiAJdYyIkPVhPoZltBAxpBRmcwG1D+1sySgn
-cE4E08JcVskKpNPFonK/EBPt2Gnfw0b5aQvwSoY6HzmOE0AyY4JPWgSOVzmi3n+Q
-TO7ZZESTy9X+8W1f85e9UBgT/+JdMESVfagew4+3BrOkB+yraMN54riQDLqEtX+6
-u2lbo3ASRar6SrY5jXE3rnNTJis3G8/WQStDRoTSKgH35QnIrF2snsdgPukIG+A=
-=LKoT
------END PGP SIGNATURE-----
-
---MKTweChM8adGHS1Rlbk7XkAAgUuoM4lo7--
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
