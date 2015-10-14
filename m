@@ -1,33 +1,107 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v4 0/3]
-Date: Wed, 14 Oct 2015 08:41:06 -0700
-Message-ID: <561E7792.409@oracle.com>
-References: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC 4/5] clk: iproc: define Broadcom NS2 iProc clock binding
+Date: Wed, 14 Oct 2015 11:44:10 -0400
+Message-ID: <20151014154410.GF15160@broadcom.com>
+References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
+ <1444771347-11382-5-git-send-email-jonmason@broadcom.com>
+ <561D84B4.4000002@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <561D84B4.4000002-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-10/14/2015 7:17 AM, Murali Karicheri wrote:
-> This patch series enable accumulator queue support for K2 SoCs. Accumulator
-> queues are a type of qmss queue that is monitored by the PDSP firmware and
-> accumulated. Host is interrupted by PDSP firmware when packets become
-> available in a ring buffer shared between the host and PDSP.
->
-> There was an issue raised when merging the original patch set at
->   (1) https://lkml.org/lkml/2015/9/4/681
-> 	[PATCH v1 1/2] soc: ti: display firmware file name as part of boot log
->   (2) https://lkml.org/lkml/2015/9/4/680
-> 	[PATCH v1 2/2] ARM: dts: keystone: enable accumulator channels
->
-> This series fixes the issues raised against v3. Maintainer, could you please
-> apply this series to v4.4 next please at your earliest opportunity.
->
-I have picked up the series. Thanks for quick turnaround.
+On Tue, Oct 13, 2015 at 03:24:52PM -0700, Ray Jui wrote:
+> Same as this patch. I thought device tree binding document should go
+> with the clock driver changes.
+> 
+> Strictly speaking, device tree binding document should always go before
+> the driver changes. In the binding document the DT interface is defined,
+> then changes are implemented in the driver.
 
-Regards,
-Santosh
+I split them off this way due to the clk maintainer not wanting to
+pull in any device tree changes.  Since the documentation is for the
+device tree enties, it makes logical sense to me that they be in the
+same device tree series.  If Stephen will pull these in with the clk
+changes, I am more than happy to have it done by him :)
+
+Thanks,
+Jon
+
+> 
+> Ray
+> 
+> On 10/13/2015 2:22 PM, Jon Mason wrote:
+> > Document the device tree bindings for Broadcom Northstar 2 architecture
+> > based clock controller
+> > 
+> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../bindings/clock/brcm,iproc-clocks.txt           | 48 ++++++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+> > index b3c3e9d..ede65a5 100644
+> > --- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+> > +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+> > @@ -160,3 +160,51 @@ Northstar Plus.  These clock IDs are defined in:
+> >      pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
+> >      sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
+> >      ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
+> > +
+> > +Northstar 2
+> > +-----------
+> > +PLL and leaf clock compatible strings for Northstar 2 are:
+> > +    "brcm,ns2-genpll-scr"
+> > +    "brcm,ns2-genpll-sw"
+> > +    "brcm,ns2-lcpll-ddr"
+> > +    "brcm,ns2-lcpll-ports"
+> > +
+> > +The following table defines the set of PLL/clock index and ID for Northstar 2.
+> > +These clock IDs are defined in:
+> > +    "include/dt-bindings/clock/bcm-ns2.h"
+> > +
+> > +    Clock	Source		Index	ID
+> > +    ---		-----		-----	---------
+> > +    crystal	N/A		N/A	N/A
+> > +
+> > +    genpll_scr	crystal		0	BCM_NS2_GENPLL_SCR
+> > +    scr		genpll_scr	1	BCM_NS2_GENPLL_SCR_SCR_CLK
+> > +    fs		genpll_scr	2	BCM_NS2_GENPLL_SCR_FS_CLK
+> > +    audio_ref	genpll_scr	3	BCM_NS2_GENPLL_SCR_AUDIO_CLK
+> > +    ch3_unused	genpll_scr	4	BCM_NS2_GENPLL_SCR_CH3_UNUSED
+> > +    ch4_unused	genpll_scr	5	BCM_NS2_GENPLL_SCR_CH4_UNUSED
+> > +    ch5_unused	genpll_scr	6	BCM_NS2_GENPLL_SCR_CH5_UNUSED
+> > +
+> > +    genpll_sw	crystal		0	BCM_NS2_GENPLL_SW
+> > +    rpe		genpll_sw	1	BCM_NS2_GENPLL_SW_RPE_CLK
+> > +    250		genpll_sw	2	BCM_NS2_GENPLL_SW_250_CLK
+> > +    nic		genpll_sw	3	BCM_NS2_GENPLL_SW_NIC_CLK
+> > +    chimp	genpll_sw	4	BCM_NS2_GENPLL_SW_CHIMP_CLK
+> > +    port	genpll_sw	5	BCM_NS2_GENPLL_SW_PORT_CLK
+> > +    sdio	genpll_sw	6	BCM_NS2_GENPLL_SW_SDIO_CLK
+> > +
+> > +    lcpll_ddr	crystal		0	BCM_NS2_LCPLL_DDR
+> > +    pcie_sata_usb lcpll_ddr	1	BCM_NS2_LCPLL_DDR_PCIE_SATA_USB_CLK
+> > +    ddr		lcpll_ddr	2	BCM_NS2_LCPLL_DDR_DDR_CLK
+> > +    ch2_unused	lcpll_ddr	3	BCM_NS2_LCPLL_DDR_CH2_UNUSED
+> > +    ch3_unused	lcpll_ddr	4	BCM_NS2_LCPLL_DDR_CH3_UNUSED
+> > +    ch4_unused	lcpll_ddr	5	BCM_NS2_LCPLL_DDR_CH4_UNUSED
+> > +    ch5_unused	lcpll_ddr	6	BCM_NS2_LCPLL_DDR_CH5_UNUSED
+> > +
+> > +    lcpll_ports	crystal		0	BCM_NS2_LCPLL_PORTS
+> > +    wan		lcpll_ports	1	BCM_NS2_LCPLL_PORTS_WAN_CLK
+> > +    rgmii	lcpll_ports	2	BCM_NS2_LCPLL_PORTS_RGMII_CLK
+> > +    ch2_unused	lcpll_ports	3	BCM_NS2_LCPLL_PORTS_CH2_UNUSED
+> > +    ch3_unused	lcpll_ports	4	BCM_NS2_LCPLL_PORTS_CH3_UNUSED
+> > +    ch4_unused	lcpll_ports	5	BCM_NS2_LCPLL_PORTS_CH4_UNUSED
+> > +    ch5_unused	lcpll_ports	6	BCM_NS2_LCPLL_PORTS_CH5_UNUSED
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
