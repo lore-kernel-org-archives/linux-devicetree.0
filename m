@@ -1,55 +1,85 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: porter: add HS-USB DT support
-Date: Wed, 14 Oct 2015 22:35:46 +0300
-Message-ID: <80272771.MSjafmr6yE@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH 2/2] dt-bindings: Add new boards to bcm4708 DT bindings
+Date: Wed, 14 Oct 2015 12:44:24 -0700
+Message-ID: <561EB098.4090400@broadcom.com>
+References: <1443824564-17291-1-git-send-email-jonmason@broadcom.com>
+ <1443824564-17291-2-git-send-email-jonmason@broadcom.com>
+ <561923BC.5040906@hauke-m.de> <20151013214051.GN12512@broadcom.com>
+ <561D87BD.5030405@gmail.com> <20151014153420.GC15160@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151014153420.GC15160@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Enable HS-USB device  for the Porter board, defining the GPIO that the
-driver should check  when probing (which is the ID output from MAX3355
-OTG chip).
+Hi Jon,
 
-Note that there  will be pinctrl-related error messages if both internal
-PCI  and  HS-USB drivers are enabled but they should be just ignored.
+Yes, please only add SoC part number compatible strings, not board 
+compatible strings.
 
-This patch is  analogous  to the commit 6f4f7156e0e6 (ARM: shmobile:
-henninger: enable HS-USB) as there  are no differences between the
-boards in this respect.
+On 15-10-14 08:34 AM, Jon Mason wrote:
+> On Tue, Oct 13, 2015 at 03:37:49PM -0700, Florian Fainelli wrote:
+>> On 13/10/15 14:40, Jon Mason wrote:
+>>> On Sat, Oct 10, 2015 at 04:42:04PM +0200, Hauke Mehrtens wrote:
+>>>> On 10/03/2015 12:22 AM, Jon Mason wrote:
+>>>>> Add the 4708, 4709, and 953012k SVKs to the the documentation for the
+>>>>> Broadcom Northstar device tree bindings.
+>>>>>
+>>>>> Signed-off-by: Jon Mason <jonmason@broadcom.com>
+>>>>> ---
+>>>>>   Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
+>>>>>   1 file changed, 7 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+>>>>> index 6b0f49f..bdf4c06 100644
+>>>>> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+>>>>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+>>>>
+>>>> What should be documented in this file? This is more a question to the
+>>>> guys more familiar with arm in Linux. Currently the Linux kernel only
+>>>> supports brcm,bcm4708 and all goes back to that one.
+>>>
+>>> I was under the impression that all boards should be added to these
+>>> files.  We have been doing so for Cygnus and NSP.
+>>
+>> Tracking exactly which boards are supported by the brcm,bcm4708
+>> compatible string might be tedious, I tend to agree with just listing
+>> the supported SoCs, and leaving the specific board compatibles to the
+>> individual DTS files instead.
+>
+> Ok, I'll simply add entries for NS and 4709 to this.
+Good - we have only been adding SoC compatible strings for Cygnus and 
+NSP - not board compatibles.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-This patch is against 'renesas-devel-20151013v2-v4.3-rc5' tag of Simon Horman's
-'renesas.git' repo.
-
- arch/arm/boot/dts/r8a7791-porter.dts |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -269,6 +269,14 @@
- 	status = "okay";
- };
- 
-+&hsusb {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+};
-+
- &usbphy {
- 	status = "okay";
- };
-
+>
+> Thanks,
+> Jon
+>
+>>
+>>>
+>>> Thanks,
+>>> Jon
+>>>
+>>>>
+>>>>> @@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
+>>>>>
+>>>>>   Required root node property:
+>>>>>
+>>>>> +bcm94709
+>>>>>   compatible = "brcm,bcm4708";
+>>>>> +
+>>>>> +bcm94709
+>>>>> +compatible = "brcm,bcm4709", "brcm,bcm4708";
+>>>>> +
+>>>>> +bcm953012k
+>>>>> +compatible = "brcm,bcm5301k", "brcm,bcm4708";
+>>>>>
+>>>>
+>>
+>>
+>> --
+>> Florian
