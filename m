@@ -1,43 +1,67 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Wed, 14 Oct 2015 11:09:16 +0200
-Message-ID: <5088538.zEUtS0EC0S@wuerfel>
-References: <1444790492-4051-1-git-send-email-lftan@altera.com> <6044983.WR9BTgsOaA@wuerfel> <CAFiDJ58Uwpv=xUXbBNQcd4FQq=fHGhtCnjTb7TKQBJ0TOxRLig@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Add wakeup interrupt source for
+ pixcir_i2c_ts
+Date: Wed, 14 Oct 2015 14:42:41 +0530
+Message-ID: <561E1C89.9080508@ti.com>
+References: <1444801956-17817-1-git-send-email-vigneshr@ti.com>
+ <561E165B.3000907@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAFiDJ58Uwpv=xUXbBNQcd4FQq=fHGhtCnjTb7TKQBJ0TOxRLig@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561E165B.3000907@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Gerlach, Dave" <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 October 2015 16:32:25 Ley Foon Tan wrote:
-> On Wed, Oct 14, 2015 at 4:20 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 14 October 2015 10:41:29 Ley Foon Tan wrote:
-> >> +static int altera_pcie_remove(struct platform_device *pdev)
-> >> +{
-> >> +     struct altera_pcie *pcie = platform_get_drvdata(pdev);
-> >> +
-> >> +     altera_pcie_free_irq_domain(pcie);
-> >> +     platform_set_drvdata(pdev, NULL);
-> >> +     return 0;
-> >> +}
-> >
-> > I just noticed this. Does it actually work to unload the module
-> > and tear down all the pci_dev structures in a safe way?
-> Good catch. It only can be compiled as builtin-moduley now, so we can
-> remove this _remove callback function.
 
-I think we should change both: make it possible to load the
-driver dynamically, and remove the altera_pcie_remove function.
 
-You can prevent the module from being unloaded if you also remove
-the module_platform_driver() directive and add a module_init()
-without a matching module_exit().
+On 10/14/2015 02:16 PM, Roger Quadros wrote:
 
-Please also add a '.suppress_bind_attrs = true,' flag in the driver
-struct to prevent manual unbinding.
+> 
+> On 14/10/15 08:52, Vignesh R wrote:
+>> On am437x-gp-evm, pixcir_i2c_ts can wakeup the system from lower power
+>> state via pinctrl and IO daisy chain using generic wakeirq framework.
+>> With commit 3fffd1283927 ("i2c: allow specifying separate wakeup
+>> interrupt in device tree") i2c core allows optional wakeirq to be
+>> specified via device tree. Add wakeup irq entry to enable pixcir_i2c_ts
+>> to wake the system from low power state.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>  arch/arm/boot/dts/am437x-gp-evm.dts | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+>> index 22038f21f228..69e93af7df0d 100644
+>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+>> @@ -581,8 +581,13 @@
+>>  
+>>  		attb-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+>>  
+>> +		interrupts-extended = <&gpio3 22 GPIO_ACTIVE_HIGH>,
+>> +				      <&am43xx_pinmux 0x264>;
+> 
+> How does this work?
+> 
+> interrupts-extended property must have
+> 1) interrupt parent
+> 2) interrupt number
+> 3) interrupt flags
+> 
+> Your change doesn't seem to comply with those requirements.
 
-	Arnd
+AFAIU, interrupts-extended has two parts: interrupt parent phandle and
+interrupt specifier.
+The number of cells in interrupt specifier is determined by
+interrupt-cells property of interrupt parent node.
+In above case, gpio3 has interrupt-cells = 2 hence interrupt specifier
+has interrupt number and interrupt flag field.
+But in case am43xx_pinmux node, interrupt-cells is 1 hence has no
+interrupt flag field.
+
+-- 
+Regards
+Vignesh
