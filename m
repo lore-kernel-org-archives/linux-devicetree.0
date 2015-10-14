@@ -1,67 +1,55 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] Add USB hooks into NanoBone DTS file
-Date: Wed, 14 Oct 2015 12:23:35 -0700
-Message-ID: <20151014192335.GG10113@atomide.com>
-References: <561E5908.8010004@newflow.co.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: porter: add HS-USB DT support
+Date: Wed, 14 Oct 2015 22:35:46 +0300
+Message-ID: <80272771.MSjafmr6yE@wasted.cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <561E5908.8010004@newflow.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Jackson <mpfj@newflow.co.uk>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Mark Jackson <mpfj@newflow.co.uk> [151014 06:35]:
-> Add USB hooks into NanoBone DTS file
+Enable HS-USB device  for the Porter board, defining the GPIO that the
+driver should check  when probing (which is the ID output from MAX3355
+OTG chip).
 
-Hmm looking at things, we really should not set status = "disabled"
-for any of the internal devices. Setting "disabled" makes the kernel
-completely ignore the device and we're better off from PM point of
-view to probe and idle the device. The devices are there for sure, and
-typically just the pins are not configured for them.
+Note that there  will be pinctrl-related error messages if both internal
+PCI  and  HS-USB drivers are enabled but they should be just ignored.
 
-How about just remove the status = "disabled" from am33xx.dtsi
-instead?
+This patch is  analogous  to the commit 6f4f7156e0e6 (ARM: shmobile:
+henninger: enable HS-USB) as there  are no differences between the
+boards in this respect.
 
-Regards,
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Tony
+---
+This patch is against 'renesas-devel-20151013v2-v4.3-rc5' tag of Simon Horman's
+'renesas.git' repo.
 
-> Signed-off-by: Mark Jackson <mpfj@newflow.co.uk>
-> ---
->  arch/arm/boot/dts/am335x-nano.dts | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-nano.dts b/arch/arm/boot/dts/am335x-nano.dts
-> index 5ed4ca6..b86937a 100644
-> --- a/arch/arm/boot/dts/am335x-nano.dts
-> +++ b/arch/arm/boot/dts/am335x-nano.dts
-> @@ -375,6 +375,23 @@
->  	wp-gpios = <&gpio3 18 0>;
->  };
->  
-> +&usb {
-> +	status = "okay";
-> +};
-> +
-> +&usb_ctrl_mod {
-> +	status = "okay";
-> +};
-> +
-> +&usb0_phy {
-> +	status = "okay";
-> +};
-> +
-> +&usb0 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +};
-> +
->  #include "tps65217.dtsi"
->  
->  &tps {
-> -- 
-> 1.9.1
-> 
+ arch/arm/boot/dts/r8a7791-porter.dts |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -269,6 +269,14 @@
+ 	status = "okay";
+ };
+ 
++&hsusb {
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
++};
++
+ &usbphy {
+ 	status = "okay";
+ };
+
