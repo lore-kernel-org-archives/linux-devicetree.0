@@ -1,32 +1,48 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: xgene-dma: Remove memcpy offload support due
- to performance drop
-Date: Wed, 14 Oct 2015 20:21:00 +0530
-Message-ID: <20151014145100.GX27370@localhost>
-References: <1444830907-8035-1-git-send-email-rsahu@apm.com>
+From: Daniel Walker <danielwa@cisco.com>
+Subject: Re: [PATCH-RFC 6/7] drivers: of: ifdef out cmdline section
+Date: Wed, 14 Oct 2015 07:48:02 -0700
+Message-ID: <561E6B22.1030204@cisco.com>
+References: <1444146434-12776-6-git-send-email-danielwa@cisco.com>
+ <CAL_JsqLmVRdWZqxFRAZ-pgd225PGW8MNv4A47bcfD+cD_+K7rg@mail.gmail.com>
+ <20151007162755.GA23283@fifo99.com>
+ <CAL_JsqJwFeDGJ0cTYwikX7DAvR7SK=CL6Qxyp9oKFWeFMgZNiA@mail.gmail.com>
+ <561D6603.4060006@cisco.com>
+ <CAL_JsqK5qymGdMaayK61WKPw1-Ws9K+Lxi5w6rO2CEg08Aq60A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444830907-8035-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK5qymGdMaayK61WKPw1-Ws9K+Lxi5w6rO2CEg08Aq60A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Daniel Walker <dwalker@fifo99.com>, xe-kernel@external.cisco.com, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 07:25:07PM +0530, Rameshwar Prasad Sahu wrote:
-> The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
-> computations. But the bandwidth of the entire DMA engine is shared
-> among all channels. This patch re-configures operations availability
-> such that one can achieve maximum performance for XOR and PQ
-> computation by removing the memory offload operations.
 
-Applied, thanks
 
--- 
-~Vinod
+There's one last little wrinkle .. In the current setup the defconfig 
+CONFIG_CMDLINE="" is used as a default in case the device tree has 
+nothing in it. In my changes, there is no identical functionality. The 
+only similar thing I have is the the CONFIG_CMDLINE_APPEND="" . The main 
+difference is that in the current implementation CONFIG_CMDLINE="" 
+doesn't get added at all if there is a device tree bootargs, but with my 
+implementation this line would be added unconditionally. It would 
+represent a subtle change where people would have to add into the DT 
+bootargs something to override what might be in the default command line.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For example,
+
+if a config has CONFIG_CMDLINE_APPEND="debug" then they would have to 
+add a "loglevel=7" into the DT bootargs to get back to normal. I 
+wouldn't think people would want "debug" as the default, but oddly 
+enough some of the configs do have this. Some of them also have default 
+ip address setting, nfsroot= settings, and loglevel= settings.
+
+What are your thoughts on this ? I think using the append type default 
+makes more sense because it's actually setting up global defaults. The 
+current complete replacement scheme seems to set the stage for people to 
+make an entirely custom default for a single development machine, which 
+IMO doesn't make sense. However, I'm not sure what the intent is with 
+the current setup.
+
+Daniel
