@@ -1,72 +1,133 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/5] mfd: arizona: Update DT binding documentation for
- mic detection
-Date: Wed, 14 Oct 2015 14:20:50 +0100
-Message-ID: <20151014132050.GK32409@x1>
-References: <20151007100017.GB12635@sirena.org.uk>
- <20151007122642.GH17172@x1>
- <20151012084554.GB8805@ck-lbox>
- <20151012134309.GE1542@sirena.org.uk>
- <20151013080218.GV17172@x1>
- <20151013151252.GH14956@sirena.org.uk>
- <20151014072812.GE32409@x1>
- <20151014094903.GP14956@sirena.org.uk>
- <20151014123014.GJ32409@x1>
- <20151014130920.GW14956@sirena.org.uk>
+From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Wed, 14 Oct 2015 21:21:23 +0800
+Message-ID: <561E56D3.3030105@linaro.org>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com> <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com> <20150828123228.GE31748@leverpostej> <CAFpQJXWzM644KsFWP9ei-k6gWgNVpBVT+UbY7NYdyfmyL=zMkw@mail.gmail.com> <CAFpQJXWFx2dQ_vv0POqkOiLe3eh9Ee=Sf+2Xx_08Vp=E4g6gLQ@mail.gmail.com> <20150930105331.GA10066@leverpostej> <CAFpQJXVegqortRLK+g7_9p82KMYwq0hg8n3_9bJqjGHsJvngaA@mail.gmail.com> <1443661547.2828.40.camel@kernel.crashing.org> <CAFpQJXXKcwks0iZN+3B=U0-9uYKFpAXcZE90GCHN9WyM45Hdpw@mail.gmail.com> <CAFpQJXUPWZxOWeJQnkw8E_voDoqhphH8iR-fr0xo0m3+FiL4sA@mail.gmail.com> <20151013164730.GF24353@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151014130920.GW14956@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151013164730.GF24353@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll@ar>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Oct 2015, Mark Brown wrote:
+On 10/14/2015 12:47 AM, Mark Rutland wrote:
+>>> Hi Mark,
+>>>
+>>> i am thinking, if we could not address(or becomes complex)  these topologies
+>>> using associativity,
+>>> we should think of an alternate binding which suits existing and upcoming
+>>> arm64 platforms.
+>>> can we think of below numa binding which is inline with ACPI and will
+>>> address all sort of topologies!
+>>>
+>>> i am proposing as below,
+>>>
+>>> 1. introduce "proximity" node property. this property will be
+>>> present in dt nodes like memory, cpu, bus and devices(like associativity
+>>> property) and
+>>> will tell which numa node(proximity domain) this dt node belongs to.
+>>>
+>>> examples:
+>>>                 cpu@000 {
+>>>                          device_type = "cpu";
+>>>                          compatible = "cavium,thunder", "arm,armv8";
+>>>                          reg = <0x0 0x000>;
+>>>                          enable-method = "psci";
+>>>                          proximity = <0>;
+>>>                  };
+>>>                 cpu@001 {
+>>>                          device_type = "cpu";
+>>>                          compatible = "cavium,thunder", "arm,armv8";
+>>>                          reg = <0x0 0x001>;
+>>>                          enable-method = "psci";
+>>>                          proximity = <1>;
+>>>                  };
+>>>
+>>>         memory@00000000 {
+>>>                  device_type = "memory";
+>>>                  reg = <0x0 0x01400000 0x3 0xFEC00000>;
+>>>                  proximity =<0>;
+>>>
+>>>          };
+>>>
+>>>          memory@10000000000 {
+>>>                  device_type = "memory";
+>>>                  reg = <0x100 0x00400000 0x3 0xFFC00000>;
+>>>                  proximity =<1>;
+>>>          };
+>>>
+>>> pcie0@0x8480,00000000 {
+>>>                  compatible = "cavium,thunder-pcie";
+>>>                  device_type = "pci";
+>>>                  msi-parent = <&its>;
+>>>                  bus-range = <0 255>;
+>>>                  #size-cells = <2>;
+>>>                  #address-cells = <3>;
+>>>                  #stream-id-cells = <1>;
+>>>                  reg = <0x8480 0x00000000 0 0x10000000>;  /*Configuration
+>>> space */
+>>>                  ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000
+>>> 0x70 0x00000000>, /* mem ranges */
+>>>                           <0x03000000 0x8300 0x00000000 0x8300 0x00000000
+>>> 0x500 0x00000000>;
+>>>                 proximity =<0>;
+>>>          };
+>>>
+>>>
+>>> 2. Introduce new dt node "proximity-map" which will capture the NxN numa
+>>> node distance matrix.
+>>>
+>>> for example,  4 nodes connected in mesh/ring structure as,
+>>> A(0) <connected to> B(1) <connected to> C(2) <connected to> D(3) <connected
+>>> to> A(1)
+>>>
+>>> relative distance would be,
+>>>        A -> B = 20
+>>>        B -> C  = 20
+>>>        C -> D = 20
+>>>        D -> A = 20
+>>>        A -> C = 40
+>>>        B -> D = 40
+>>>
+>>> and dt presentation for this distance matrix is :
+>>>
+>>>         proximity-map {
+>>>               node-count = <4>;
+>>>               distance-matrix = <0 0  10>,
+>>>                                  <0 1  20>,
+>>>                                  <0 2  40>,
+>>>                                  <0 3  20>,
+>>>                                  <1 0  20>,
+>>>                                  <1 1  10>,
+>>>                                  <1 2  20>,
+>>>                                  <1 3  40>,
+>>>                                  <2 0  40>,
+>>>                                  <2 1  20>,
+>>>                                  <2 2  10>,
+>>>                                  <2 3  20>,
+>>>                                  <3 0  20>,
+>>>                                  <3 1  40>,
+>>>                                  <3 2  20>,
+>>>                                  <3 3  10>;
+>>>            }
+>>>
+>>> the entries like < 0 0 > < 1 1>  < 2 2> < 3 3> can be optional and code can
+>>> put default value(local distance).
+>>> the entries like <1 0> can be optional if <0 1> and <1 0> are of same
+>>> distance.
+>> is this binding looks ok?
+>
+> This looks roughly requivalent to the ACPI SLIT, which means it's as
+> powerful, which allays my previous concerns.
 
-> On Wed, Oct 14, 2015 at 01:30:14PM +0100, Lee Jones wrote:
-> > On Wed, 14 Oct 2015, Mark Brown wrote:
->=20
-> > > > Not necessarily _your_ review.  Just someone, other than the
-> > > > submitter, who I trust and knows about this stuff.  You just ha=
-ppen=20
-> > > > to tick those boxes this time.  Cross pollination and knowledge=
- sharing
-> > > > is one of the characteristics of MLs which I'm particularly pro=
-ud of.
->=20
-> > > That was what it read like.
->=20
-> ...
->=20
-> > > So, a more specific question would have helped - just a general "=
-any
-> > > thoughts" type question isn't very clear.
->=20
-> > To both comments -- this is how I phrased it:
->=20
-> > "I either need an Ack from the DT folks, or at least someone who kn=
-ows
-> > about this stuff.  Mark perhaps."
->=20
-> I'd have expected something that says why you're looking for this -
-> something saying what you were unclear on, something more like "It se=
-ems
-> like there's an awful lot of properties for something that just check=
-s
-> if a jack".  From the above (especially with the request for the DT
-> people to review) it seems like more just a review because there's DT
-> properties.
+Cool, I think those bindings are quite extensible and easy understood.
 
-Your perception is not correct.  I always used to ask for a DT review
-if there are more than a couple being added.  These days I'm happy to
-apply either complex properties, or just ones I'm not 100% on with a
-suitable Maintainer Ack.  That continues to be the case.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks
+Hanjun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
