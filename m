@@ -1,55 +1,45 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] dt-bindings: Correct the example for Exynos power domain
- clocks
-Date: Wed, 14 Oct 2015 11:24:52 +0200
-Message-ID: <561E1F64.5010405@osg.samsung.com>
-References: <1444802526-18518-1-git-send-email-k.kozlowski@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Wed, 14 Oct 2015 10:26:44 +0100
+Message-ID: <20151014092644.GO14956@sirena.org.uk>
+References: <561E1378.6000906@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444802526-18518-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="U+NfgObvpQT1Q9Yq"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <561E1378.6000906@collabora.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-[dropping my old email address from the cc list]
 
-Hello Krzysztof,
+--U+NfgObvpQT1Q9Yq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 10/14/2015 08:02 AM, Krzysztof Kozlowski wrote:
-> Since commit 29e5eea06bc1 ("ARM: EXYNOS: Get current parent clock for
-> power domain on/off") the "pclkN" names of "clock-names" property is not
-> parsed any more. The bindings and driver were updated but the example
-> was not. Fix the example now.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  Documentation/devicetree/bindings/arm/exynos/power_domain.txt | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-> index e151057d92f0..4e947372a693 100644
-> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-> @@ -43,9 +43,8 @@ Example:
->  	mfc_pd: power-domain@10044060 {
->  		compatible = "samsung,exynos4210-pd";
->  		reg = <0x10044060 0x20>;
-> -		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_SW_ACLK333>,
-> -			<&clock CLK_MOUT_USER_ACLK333>;
-> -		clock-names = "oscclk", "pclk0", "clk0";
-> +		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
-> +		clock-names = "oscclk", "clk0";
->  		#power-domain-cells = <0>;
->  	};
->  
-> 
+On Wed, Oct 14, 2015 at 10:34:00AM +0200, Tomeu Vizoso wrote:
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> git+ssh://git.collabora.co.uk/git/user/tomeu/linux.git
+> on-demand-probes-for-next
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+In don't think that's the URL you intended to use (also everything looks
+word wrapped here)?
+
+--U+NfgObvpQT1Q9Yq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWHh/TAAoJECTWi3JdVIfQJFEH/0DtvMyMdmzM7wIicUyiA2lv
+r+3E+VS/zXtD4Nhw0+K6j9xyAsui8izhwzpvIVVa0O4srJiRWnK/MW3actKeVXW1
+vWsNueK1J9TV+6Aq+X29ZM3LIroJzP7cT19kR1v3lh5MOVhzGTkdypnogu4255fq
+sRHkOBWaajzKFCYOsP1iPJQpuyfpBkY7iNix+Kv6HVNWk0dFsQUGHk8+g7Lovu0F
+vJLUDU6V2xSDBI93RFW8llD18AbJuPSH+fsGqVmX59uugnvo+b8kcCp+sFdqRjT8
+BJIw83BYlou79hE+Z4SgLoXI++5w8PLFjXCmzejxxy3zvYyjyfb1FlQ1LKBDbRY=
+=k50d
+-----END PGP SIGNATURE-----
+
+--U+NfgObvpQT1Q9Yq--
