@@ -1,77 +1,210 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Add wakeup interrupt source for
- pixcir_i2c_ts
-Date: Wed, 14 Oct 2015 14:04:27 +0300
-Message-ID: <561E36BB.7000309@ti.com>
-References: <1444801956-17817-1-git-send-email-vigneshr@ti.com>
- <561E165B.3000907@ti.com> <561E1C89.9080508@ti.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
+Date: Wed, 14 Oct 2015 16:46:15 +0530
+Message-ID: <20151014111615.GR27370@localhost>
+References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
+ <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561E1C89.9080508@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Gerlach, Dave" <d-gerlach@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444745127-1105-3-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Vignesh,
+On Tue, Oct 13, 2015 at 04:05:25PM +0200, M'boumba Cedric Madianga wrote:
+> +#define STM32_DMA_LISR			0x0000 /* DMA Low Int Status Reg */
+> +#define STM32_DMA_HISR			0x0004 /* DMA High Int Status Reg */
+> +#define STM32_DMA_LIFCR			0x0008 /* DMA Low Int Flag Clear Reg */
+> +#define STM32_DMA_HIFCR			0x000c /* DMA High Int Flag Clear Reg */
+> +#define STM32_DMA_TCI			BIT(5) /* Transfer Complete Interrupt */
+> +#define STM32_DMA_HTI			BIT(4) /* Half Transfer Interrupt */
+> +#define STM32_DMA_TEI			BIT(3) /* Transfer Error Interrupt */
+> +#define STM32_DMA_DMEI			BIT(2) /* Direct Mode Error Interrupt */
+> +#define STM32_DMA_FEI			BIT(0) /* FIFO Error Interrupt */
 
-On 14/10/15 12:12, Vignesh R wrote:
-> 
-> 
-> On 10/14/2015 02:16 PM, Roger Quadros wrote:
-> 
->>
->> On 14/10/15 08:52, Vignesh R wrote:
->>> On am437x-gp-evm, pixcir_i2c_ts can wakeup the system from lower power
->>> state via pinctrl and IO daisy chain using generic wakeirq framework.
->>> With commit 3fffd1283927 ("i2c: allow specifying separate wakeup
->>> interrupt in device tree") i2c core allows optional wakeirq to be
->>> specified via device tree. Add wakeup irq entry to enable pixcir_i2c_ts
->>> to wake the system from low power state.
->>>
->>> Signed-off-by: Vignesh R <vigneshr@ti.com>
->>> ---
->>>  arch/arm/boot/dts/am437x-gp-evm.dts | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
->>> index 22038f21f228..69e93af7df0d 100644
->>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
->>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
->>> @@ -581,8 +581,13 @@
->>>  
->>>  		attb-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
->>>  
->>> +		interrupts-extended = <&gpio3 22 GPIO_ACTIVE_HIGH>,
->>> +				      <&am43xx_pinmux 0x264>;
->>
->> How does this work?
->>
->> interrupts-extended property must have
->> 1) interrupt parent
->> 2) interrupt number
->> 3) interrupt flags
->>
->> Your change doesn't seem to comply with those requirements.
-> 
-> AFAIU, interrupts-extended has two parts: interrupt parent phandle and
-> interrupt specifier.
-> The number of cells in interrupt specifier is determined by
-> interrupt-cells property of interrupt parent node.
+Why not use BIT() for everything here and make it consistent
 
-Got it.
+Also where ever possible stick to 80 char limit like above you can
 
-> In above case, gpio3 has interrupt-cells = 2 hence interrupt specifier
-> has interrupt number and interrupt flag field.
+> +
+> +/* DMA Stream x Configuration Register */
+> +#define STM32_DMA_SCR(x)		(0x0010 + 0x18 * (x)) /* x = 0..7 */
+> +#define STM32_DMA_SCR_REQ(n)		((n & 0x7) << 25)
 
-But is GPIO_ACTIVE_HIGH an interrupt flag?
+this and below looks ugly and hard to maintain, are you sure spec doesn't
+have a formulae for these?
 
-> But in case am43xx_pinmux node, interrupt-cells is 1 hence has no
-> interrupt flag field.
-> 
-Understood, thanks. Might be worth adding a comment as to what 0x264 means though.
+> +static inline uint32_t stm32_dma_read(struct stm32_dma_device *dmadev, u32 reg)
 
-cheers,
--roger
+this and few other could be made more readable
+
+> +static struct stm32_dma_desc *stm32_dma_alloc_desc(unsigned int num_sgs)
+> +{
+> +	return kzalloc(sizeof(struct stm32_dma_desc) +
+> +		       sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_ATOMIC);
+
+Not GFP_NOWAIT ?
+
+> +static enum stm32_dma_width stm32_get_dma_width(struct stm32_dma_chan *chan,
+> +						enum dma_slave_buswidth width)
+> +{
+> +	switch (width) {
+> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+> +		return STM32_DMA_BYTE;
+> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+> +		return STM32_DMA_HALF_WORD;
+> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+> +		return STM32_DMA_WORD;
+> +	default:
+> +		dev_warn(chan2dev(chan),
+> +			 "Dma bus width not supported, using 32bits\n");
+> +		return STM32_DMA_WORD;
+
+pls return error here
+Assuming wrong parameter can cause havoc of transfer, so is not advisable
+
+> +static enum stm32_dma_burst_size stm32_get_dma_burst(
+> +		struct stm32_dma_chan *chan, u32 maxburst)
+> +{
+> +	switch (maxburst) {
+> +	case 0:
+> +	case 1:
+> +		return STM32_DMA_BURST_SINGLE;
+> +	case 4:
+> +		return STM32_DMA_BURST_INCR4;
+> +	case 8:
+> +		return STM32_DMA_BURST_INCR8;
+> +	case 16:
+> +		return STM32_DMA_BURST_INCR16;
+> +	default:
+> +		dev_warn(chan2dev(chan),
+> +			 "Dma burst size not supported, using single\n");
+> +		return STM32_DMA_BURST_SINGLE;
+
+here too
+
+> +	}
+> +}
+> +
+> +static int stm32_dma_slave_config(struct dma_chan *c,
+> +				  struct dma_slave_config *config)
+> +{
+> +	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
+> +
+> +	if (chan->busy) {
+> +		dev_err(chan2dev(chan), "Configuration not allowed\n");
+> +		return -EBUSY;
+> +	}
+
+That is false condition. This configuration should be used for next
+descriptor prepare
+
+> +static int stm32_dma_disable_chan(struct stm32_dma_chan *chan)
+> +{
+> +	struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(5000);
+> +	u32 dma_scr;
+> +
+> +	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
+> +	if (dma_scr & STM32_DMA_SCR_EN) {
+> +		dma_scr &= ~STM32_DMA_SCR_EN;
+> +		stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
+> +
+> +		do {
+> +			dma_scr = stm32_dma_read(dmadev,
+> +						 STM32_DMA_SCR(chan->id));
+> +			dma_scr &= STM32_DMA_SCR_EN;
+> +			if (!dma_scr)
+> +				break;
+
+empty line here would improve readability
+
+> +static irqreturn_t stm32_dma_chan_irq(int irq, void *devid)
+> +{
+> +	struct stm32_dma_chan *chan = devid;
+> +	struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
+> +	u32 status, scr, sfcr;
+> +
+> +	spin_lock(&chan->vchan.lock);
+> +
+> +	status = stm32_dma_irq_status(chan);
+> +	scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
+> +	sfcr = stm32_dma_read(dmadev, STM32_DMA_SFCR(chan->id));
+> +
+> +	if ((status & STM32_DMA_HTI) && (scr & STM32_DMA_SCR_HTIE)) {
+> +		stm32_dma_irq_clear(chan, STM32_DMA_HTI);
+> +		vchan_cyclic_callback(&chan->desc->vdesc);
+> +		spin_unlock(&chan->vchan.lock);
+> +		return IRQ_HANDLED;
+
+line here please and below
+
+> +	} else if ((status & STM32_DMA_TCI) && (scr & STM32_DMA_SCR_TCIE)) {
+> +		stm32_dma_irq_clear(chan, STM32_DMA_TCI);
+> +		stm32_dma_handle_chan_done(chan);
+> +		spin_unlock(&chan->vchan.lock);
+> +		return IRQ_HANDLED;
+> +	} else if ((status & STM32_DMA_TEI) && (scr & STM32_DMA_SCR_TEIE)) {
+> +		dev_err(chan2dev(chan), "DMA error: received TEI event\n");
+> +		stm32_dma_irq_clear(chan, STM32_DMA_TEI);
+> +		chan->status = DMA_ERROR;
+> +		spin_unlock(&chan->vchan.lock);
+> +		return IRQ_HANDLED;
+> +	} else if ((status & STM32_DMA_FEI) && (sfcr & STM32_DMA_SFCR_FEIE)) {
+> +		dev_err(chan2dev(chan), "DMA error: received FEI event\n");
+> +		stm32_dma_irq_clear(chan, STM32_DMA_FEI);
+> +		chan->status = DMA_ERROR;
+> +		spin_unlock(&chan->vchan.lock);
+> +		return IRQ_HANDLED;
+
+this is repeat of above apart from err print!!
+
+> +	} else if ((status & STM32_DMA_DMEI) && (scr & STM32_DMA_SCR_DMEIE)) {
+> +		dev_err(chan2dev(chan), "DMA error: received DMEI event\n");
+> +		stm32_dma_irq_clear(chan, STM32_DMA_DMEI);
+> +		chan->status = DMA_ERROR;
+> +		spin_unlock(&chan->vchan.lock);
+> +		return IRQ_HANDLED;
+
+same here :(
+
+> +static enum dma_status stm32_dma_tx_status(struct dma_chan *c,
+> +					   dma_cookie_t cookie,
+> +					   struct dma_tx_state *state)
+> +{
+> +	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
+> +	struct virt_dma_desc *vdesc;
+> +	enum dma_status status;
+> +	unsigned long flags;
+> +	unsigned int residue;
+> +
+> +	status = dma_cookie_status(c, cookie, state);
+> +	if (status == DMA_COMPLETE)
+> +		return status;
+> +
+> +	if (!state)
+> +		return chan->status;
+why channel status and not status from dma_cookie_status()?
+
+> +static int stm32_dma_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
+> +
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +
+> +	dma_async_device_unregister(&dmadev->ddev);
+> +
+> +	clk_disable_unprepare(dmadev->clk);
+
+and your irq is enabled and you can still receive interrupts and schedule
+tasklets :(
+
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
