@@ -1,28 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL]Hisilicon ARMv7 based SoCs DT updates for V4.4
-Date: Wed, 14 Oct 2015 17:53:57 +0200
-Message-ID: <5092001.Q36f8PmoVe@wuerfel>
-References: <561BC8EB.4090505@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561BC8EB.4090505-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yanhaifeng <yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sanil Kumar <sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [PATCH v3 0/3] hwrng: stm32 - add support for STM32 HW RNG
+Date: Wed, 14 Oct 2015 16:55:22 +0100
+Message-ID: <1444838125-3422-1-git-send-email-daniel.thompson@linaro.org>
+References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 October 2015 15:51:23 Wei Xu wrote:
-> Hi Arnd, Hi Olof, Hi Kevin,
-> 
-> Please help to pull the following changes.
-> Thanks!
+This patchset introduces a driver for the STM32 hardware random number
+generator.
 
-Pulled into next/dt, thanks!
+Herbert: I have assumed the v2 version is *so* badly broken (sorry
+         again for that) that you would probably choose to remove v2
+	 completely and replace it with v3. In a moment I will also
+	 post a patch to fix the build without ripping out v2. Choose
+	 whichever suits you best.
 
-	Arnd
+v3:
+
+ * Fixed build with CONFIG_PM (Fengguang Wu). Runtime tested as normal
+   and also build tested on stm32 (which has CONFIG_PM set) and on
+   x86/COMPILE_TEST with and without CONFIG_PM.
+
+v2:
+
+ * Moved binding docs from .../hwrng/ to .../rng/ and renamed to match
+   convention in new directory (Rob Herring).
+ * Adopted runtime PM and auto-suspend instead of managing the clocks
+   from the read function (Linus Walleij). Increased bandwidth by ~30%.
+ * Simplified error detection in main read loop (Linus Walleij, Maxime
+   Coquelin).
+ * Only WARN_ONCE() when hardware failure mechanisms trigger (Maxime
+   Coquelin).
+ * Simplify end of probe function after cocci warning (Fengguang Wu).
+ * Switch to devm_hwrng_register.
+
+
+Daniel Thompson (3):
+  dt-bindings: Document the STM32 HW RNG bindings
+  hwrng: stm32 - add support for STM32 HW RNG
+  ARM: dts: stm32f429: Adopt STM32 RNG driver
+
+ .../devicetree/bindings/rng/st,stm32-rng.txt       |  21 +++
+ arch/arm/boot/dts/stm32f429.dtsi                   |   7 +
+ drivers/char/hw_random/Kconfig                     |  12 ++
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/stm32-rng.c                 | 202 +++++++++++++++++++++
+ 5 files changed, 243 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/st,stm32-rng.txt
+ create mode 100644 drivers/char/hw_random/stm32-rng.c
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.4.3
