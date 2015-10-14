@@ -1,90 +1,80 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 3/3] mfd: arizona: Remove bindings covered in new subsystem specific docs
-Date: Wed, 14 Oct 2015 15:12:24 +0100
-Message-ID: <1444831944-4655-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1444831944-4655-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
+ information from DT
+Date: Wed, 14 Oct 2015 09:32:49 -0500
+Message-ID: <561E6791.3030404@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
+ <561E41EB.3050005@ti.com> <561E5803.5090609@ti.com> <561E629F.5070202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444831944-4655-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561E629F.5070202-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Binding documentation has been added in new subsystem specific binding
-documents. This patch removes the now duplicate documentation from the
-MFD documentation. Also whilst we are at it add a missing maintainers
-entry for the MFD binding document.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |   30 ++------------------
- MAINTAINERS                                       |    1 +
- 2 files changed, 4 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index a8fee60..077c4fe 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -30,21 +30,9 @@ Required properties:
-   - #gpio-cells : Must be 2. The first cell is the pin number and the
-     second cell is used to specify optional parameters (currently unused).
- 
--  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
--    as covered in Documentation/devicetree/bindings/regulator/regulator.txt
--
--  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
--    wm5110, wm8280, wm8998, wm1814)
--
--  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
--    wm5110, wm8280, wm8998, wm1814)
--
--  - SPKVDD-supply : Speaker driver power supply (wm8997)
--
- Optional properties:
- 
-   - wlf,reset : GPIO specifier for the GPIO controlling /RESET
--  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
- 
-   - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
-     for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
-@@ -67,21 +55,9 @@ Optional properties:
-     present, the number of values should be less than or equal to the
-     number of inputs, unspecified inputs will use the chip default.
- 
--  - wlf,hpdet-channel : Headphone detection channel.
--    ARIZONA_ACCDET_MODE_HPL or 1 - Headphone detect mode is set to HPDETL
--    ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to HPDETR
--    If this node is not mentioned or if the value is unknown, then
--    headphone detection mode is set to HPDETL.
--
--  - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
--    they are being externally supplied. As covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--
--Optional subnodes:
--  - ldo1 : Initial data for the LDO1 regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--  - micvdd : Initial data for the MICVDD regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
-+Also see child specific device properties:
-+  Regulator - ../regulator/arizona-regulator.txt
-+  Extcon    - ../extcon/extcon-arizona.txt
- 
- Example:
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f353491..544c747 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11395,6 +11395,7 @@ S:	Supported
- F:	Documentation/hwmon/wm83??
- F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
- F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
-+F:	Documentation/devicetree/bindings/mfd/arizona.txt
- F:	arch/arm/mach-s3c64xx/mach-crag6410*
- F:	drivers/clk/clk-wm83*.c
- F:	drivers/extcon/extcon-arizona.c
--- 
-1.7.2.5
+On 10/14/2015 09:11 AM, Roger Quadros wrote:
+> On 14/10/15 16:26, Franklin S Cooper Jr. wrote:
+>>
+>> On 10/14/2015 06:52 AM, Roger Quadros wrote:
+>>> Franklin,
+>>>
+>>> On 14/10/15 14:36, Roger Quadros wrote:
+>>>> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>>>>> Switch from dma_request_channel to allow passing dma channel
+>>>>> information from DT rather than hardcoding a value.
+>>>>>
+>>>>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+>>>> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>>
+>>>>> ---
+>>>>>  drivers/mtd/nand/omap2.c | 4 +++-
+>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>>>>> index d0f2620..957c32f 100644
+>>>>> --- a/drivers/mtd/nand/omap2.c
+>>>>> +++ b/drivers/mtd/nand/omap2.c
+>>>>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>>>>  		dma_cap_zero(mask);
+>>>>>  		dma_cap_set(DMA_SLAVE, mask);
+>>>>>  		sig = OMAP24XX_DMA_GPMC;
+>>>>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+>>>>> +		info->dma = dma_request_slave_channel_compat(mask,
+>>>>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
+>>>>> +
+>>> Just discovered that you are using the parent device node.
+>>>
+>>> How about moving the dma bindings to the nand node instead and using
+>>> pdev->dev here?
+>> Roger,
+>>
+>> From what I can tell the interrupt number and the dma channel will always be
+>> the same no matter what. Doesn't matter if you have multiple nands or a
+>> combination of nands and nors. Since that is the case I think it just makes
+>> sense to leave it in the gpmc parent node and define it once.
+> Is prefetch/writepost dma used for NOR or any other GPMC peripheral
+> or only for NAND?
+The dma seems tied to the prefetch. From what I can tell the prefetch is only
+used by nand.
+>
+> Let's also get Tony's inputs on this.
+Sure.
+>
+>>>>>  		if (!info->dma) {
+>>>>>  			dev_err(&pdev->dev, "DMA engine request failed\n");
+>>>>>  			err = -ENXIO;
+>>>>>
+> --
+> cheers,
+> -roger
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
