@@ -1,56 +1,91 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 10:57:55 +0200
-Message-ID: <CAOAejn2SMDtDa8TmMNeTUb38aqbAQnX5bK9JuMCweV6mKNMKZQ@mail.gmail.com>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
-	<1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
-	<561D1689.90703@linaro.org>
-	<CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
-	<561E17EA.6000900@linaro.org>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon
+ SoC Hip05
+Date: Wed, 14 Oct 2015 16:59:03 +0800
+Message-ID: <561E1957.5030503@hisilicon.com>
+References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <6336414.HvfCQcuT3Y@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E16242C92@lhreml503-mbs> <11677087.JbqAo0FWJE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561E17EA.6000900-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <11677087.JbqAo0FWJE@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "james.morse-5wv7dgnIgG8@public.gmane.org" <james.morse-5wv7dgnIgG8@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devi>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-2015-10-14 10:52 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On 14/10/15 08:54, M'boumba Cedric Madianga wrote:
+On 2015/10/13 23:00, Arnd Bergmann wrote:
+> On Tuesday 13 October 2015 14:49:07 Gabriele Paoloni wrote:
+>>> On Monday 12 October 2015 16:35:45 Bjorn Helgaas wrote:
 >>>>
->>>> +static int stm32_dma_alloc_chan_resources(struct dma_chan *c)
->>>> +{
->>>> +       struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
->>>> +       struct stm32_dma_device *dmadev = stm32_dma_chan_get_dev(chan);
->>>> +       int ret;
->>>> +
->>>> +       chan->config_init = false;
->>>> +       ret = clk_prepare_enable(dmadev->clk);
->>>> +       if (ret < 0) {
->>>> +               dev_err(chan2dev(chan), "clk_prepare_enable failed:
->>>> %d\n",
->>>> ret);
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       ret = stm32_dma_disable_chan(chan);
->>>> +
->>>> +       return ret;
->>>> +}
+>>>>> +{
+>>>>> +     u64 addr;
+>>>>> +     struct device_node *msi_node;
+>>>>> +     struct resource res;
+>>>>> +     struct device_node *np = pp->dev->of_node;
+>>>>> +     struct hisi_pcie *pcie = to_hisi_pcie(pp);
+>>>>> +
+>>>>> +     msi_node = of_parse_phandle(np, "msi-parent", 0);
+>>>>> +     if (!msi_node) {
+>>>>> +             dev_err(pp->dev, "failed to find msi-parent\n");
+>>>>> +             return -EINVAL;
+>>>>> +     }
+>>>>> +     of_address_to_resource(msi_node, 0, &res);
+>>>>
+>>>> Does this use the "msi-parent" node in the same way as other drivers
+>>>> do?  I'm sure there must be other places where we extract struct
+>>>> resource information from an "msi-parent" node, but I don't see them.
+>>>>
+>>>> I'm trying to verify that this isn't some kind of incompatible
+>>>> extension of the "msi-parent" property.  I cc'd Arnd and Rob (DT
+>>>> experts).
 >>>
+>>> This is not ok, what this does is that it relies on a particular
+>>> implementation of the MSI controller and directly accesses its
+>>> registers.
+>>
+>> Hi Arnd, thanks for reviewing.
+>>
+>> What we do is to retrieve the msi-parent physical address and we store it
+>> in our internal PCIe register locations...
+> 
+> Ah, thanks for the clarification, I missed that part.
+> 
+>> So we do not operate directly on the msi controller registers...
+>>
+>> So I wonder if the current implementation is Ok to retrieve the
+>> msi-parent address....
+> 
+> Not sure. Why do you do this? Normally the PCI host does not know
+> or care about the address of the MSI controller, because the messages
+> are just passed up to the parent bus as DMA transfers.
 >
+
+Hi Arnd,
+
+In Hip05 PCIe host, it uses GITS_TRANSLATER's address to get TLP package
+which contains MSI address and MSI data, and then combine BDF and MSI data
+to a 32 bit data which will be writen to GITS_TRANSLATER register of ITS.
+
+I think maybe this is a defect of our PCIe controller.
+
+> I don't think what you do here is safe because the 'reg' property
+> of the MSI controller might point to the address that is used for
+> the message directly.
+
+I see your point, however we must get address of GITS_TRANSLATER and set it to PCIe
+host. How about adding necessary comments here?
+
+Best Regards,
+Zhou
+
 >
-> If stm32_dma_disable_chan() returns an error then we will not restore the
-> original the clock counts causing them to "leak".
+> 	Arnd
+> 
+> .
+> 
 
-Ok got it. Thanks for the clarification.
-I will fix it in the next version.
 
-BR,
-Cedric
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
