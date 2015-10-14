@@ -1,86 +1,38 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 15:24:13 +0100
-Message-ID: <561E658D.1070900@linaro.org>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
- <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
- <561D1689.90703@linaro.org>
- <CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
- <CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
- <561E58AC.80207@linaro.org>
- <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 0/3] hwrng: stm32 - add support for STM32 HW RNG
+Date: Wed, 14 Oct 2015 22:28:22 +0800
+Message-ID: <20151014142822.GF17455@gondor.apana.org.au>
+References: <1443904519-24012-1-git-send-email-daniel.thompson@linaro.org>
+ <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444638090-22886-1-git-send-email-daniel.thompson@linaro.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Matt Mackall <mpm@selenic.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, patches@linaro.org, linaro-kernel@lists.linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/10/15 14:41, M'boumba Cedric Madianga wrote:
-> 2015-10-14 15:29 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
->> On 14/10/15 14:17, M'boumba Cedric Madianga wrote:
->>>
->>> Hi Daniel,
->>>
->>>>>> +
->>>>>> +static int stm32_dma_remove(struct platform_device *pdev)
->>>>>> +{
->>>>>> +       struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
->>>>>> +
->>>>>> +       of_dma_controller_free(pdev->dev.of_node);
->>>>>> +
->>>>>> +       dma_async_device_unregister(&dmadev->ddev);
->>>>>> +
->>>>>> +       clk_disable_unprepare(dmadev->clk);
->>>>>
->>>>>
->>>>>
->>>>> What is the purpose of disabling/unpreparing the clock here?
->>>>> stm32_dma_alloc_chan_resources() and stm32_dma_free_chan_resources()
->>>>> should
->>>>> pair up and the clock should already be stopped.
->>>
->>>
->>> stm32_dma_remove() could be called during an on-going transfer during
->>> module unload.
->>> So in that case, it seems that disabling/unpreparing the clock is needed.
->>
->>
->> Really?
->>
->> I think we need to be sure any on-going transfers are stopped.
->>
->> There are multiple reasons for this, not least the risk of executing a
->> callback that has been freed, but the one related to my point is that a
->> single clk_disable_unprepare() will remain broken because if you don't know
->> that the transfers have stopped then you don't know how many on-going
->> transfers there are.
->
-> In the next version, I am going to stop the DMA, free all interrupts
-> and kill tasklet in stm32_dma_remove.
-> In that way, all on-going transfers will be lost as we don't have to
-> wait the end of remaining transfer in order to execute this function
-> as quickly as possible.
+On Mon, Oct 12, 2015 at 09:21:27AM +0100, Daniel Thompson wrote:
+> This patchset introduces a driver for the STM32 hardware random number
+> generator.
+> 
+> v2:
+> 
+>  * Moved binding docs from .../hwrng/ to .../rng/ and renamed to match
+>    convention in new directory (Rob Herring).
+>  * Adopted runtime PM and auto-suspend instead of managing the clocks
+>    from the read function (Linus Walleij). Increased bandwidth by ~30%.
+>  * Simplified error detection in main read loop (Linus Walleij, Maxime
+>    Coquelin).
+>  * Only WARN_ONCE() when hardware failure mechanisms trigger (Maxime
+>    Coquelin).
+>  * Simplify end of probe function after cocci warning (Fengguang Wu).
+>  * Switch to devm_hwrng_register.
 
-Hmnnn...
-
-The dmaengine framework will WARN_ONCE() if an dmaengine is removed 
-whilst it is active and also works hard to ensure dmaengine modules are 
-not removed whilst there are active drivers using the framework.
-
-How do we get into this function whilst there is still an active DMA 
-channels?
-
-
-> But even with this improvement, I think I have to disable the clock here.
-
-As above, I think the dmaengine framework work to protect you from this 
-sort problem. However even if I am wrong about that then unconditionally 
-calling clk_disable_unprepare() can not be used to reliably manage the 
-clocks. You don't know what the counts are!
-
-
-Daniel.
+All applied.  Thanks!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
