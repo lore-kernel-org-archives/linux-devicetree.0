@@ -1,64 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] arm64: dts: mt8173: Add nor flash node
-Date: Wed, 14 Oct 2015 14:05:17 +0300
-Message-ID: <561E36ED.7090103@cogentembedded.com>
-References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
- <1444729160-26433-4-git-send-email-bayi.cheng@mediatek.com>
- <561D1642.3070105@cogentembedded.com>
- <CAGS+omDm=74d6cw7kXwkZ_Jy-faBz7z4-vJQX9ZFVNskQqSS-w@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Add wakeup interrupt source for
+ pixcir_i2c_ts
+Date: Wed, 14 Oct 2015 14:04:27 +0300
+Message-ID: <561E36BB.7000309@ti.com>
+References: <1444801956-17817-1-git-send-email-vigneshr@ti.com>
+ <561E165B.3000907@ti.com> <561E1C89.9080508@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omDm=74d6cw7kXwkZ_Jy-faBz7z4-vJQX9ZFVNskQqSS-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561E1C89.9080508@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Gerlach, Dave" <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Vignesh,
 
-On 10/14/2015 4:07 AM, Daniel Kurtz wrote:
-
->>> Add Mediatek nor flash node
->>>
->>> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> ---
->>>    arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 +++++++++++++++
->>>    1 file changed, 15 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> index d18ee42..385c2e4 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> @@ -365,6 +365,21 @@
->>>                          status = "disabled";
->>>                  };
->>>
->>> +               nor_flash: spi@1100d000 {
+On 14/10/15 12:12, Vignesh R wrote:
+> 
+> 
+> On 10/14/2015 02:16 PM, Roger Quadros wrote:
+> 
 >>
->>     I don't think this is a good label name for a SPI controller.
->
-> You think "spi" is not a good name for SPI controller?
-> Or you mean the label "nor_flash"?
+>> On 14/10/15 08:52, Vignesh R wrote:
+>>> On am437x-gp-evm, pixcir_i2c_ts can wakeup the system from lower power
+>>> state via pinctrl and IO daisy chain using generic wakeirq framework.
+>>> With commit 3fffd1283927 ("i2c: allow specifying separate wakeup
+>>> interrupt in device tree") i2c core allows optional wakeirq to be
+>>> specified via device tree. Add wakeup irq entry to enable pixcir_i2c_ts
+>>> to wake the system from low power state.
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>>> ---
+>>>  arch/arm/boot/dts/am437x-gp-evm.dts | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+>>> index 22038f21f228..69e93af7df0d 100644
+>>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+>>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+>>> @@ -581,8 +581,13 @@
+>>>  
+>>>  		attb-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+>>>  
+>>> +		interrupts-extended = <&gpio3 22 GPIO_ACTIVE_HIGH>,
+>>> +				      <&am43xx_pinmux 0x264>;
+>>
+>> How does this work?
+>>
+>> interrupts-extended property must have
+>> 1) interrupt parent
+>> 2) interrupt number
+>> 3) interrupt flags
+>>
+>> Your change doesn't seem to comply with those requirements.
+> 
+> AFAIU, interrupts-extended has two parts: interrupt parent phandle and
+> interrupt specifier.
+> The number of cells in interrupt specifier is determined by
+> interrupt-cells property of interrupt parent node.
 
-    I think I said clearly: "label". :-)
+Got it.
 
-> Would you prefer:
->
->    spi_nor_flash: spi@1100d000
+> In above case, gpio3 has interrupt-cells = 2 hence interrupt specifier
+> has interrupt number and interrupt flag field.
 
-    I'd prefer the "_nor_flash" part to be dropped, to be used for the real 
-flash device (if needed) which is a sub-node of this node.
+But is GPIO_ACTIVE_HIGH an interrupt flag?
 
-[...]
+> But in case am43xx_pinmux node, interrupt-cells is 1 hence has no
+> interrupt flag field.
+> 
+Understood, thanks. Might be worth adding a comment as to what 0x264 means though.
 
-> -Dan
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
