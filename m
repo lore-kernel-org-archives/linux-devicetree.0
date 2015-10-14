@@ -1,89 +1,101 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Wed, 14 Oct 2015 15:32:35 +0200
-Message-ID: <5938877.UG8VySdxoE@wuerfel>
-References: <1444790492-4051-1-git-send-email-lftan@altera.com> <5210459.PtmhWaT6RM@wuerfel> <CAFiDJ59ZZ5TBZJ8wauEzP3Je=DeSaGG-PWvm87dkSLfjmyRwjQ@mail.gmail.com>
+From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 20/27] ARM: dts: dra7: Fix NAND device nodes.
+Date: Wed, 14 Oct 2015 08:34:40 -0500
+Message-ID: <561E59F0.8080906@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <1442588029-13769-21-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAFiDJ59ZZ5TBZJ8wauEzP3Je=DeSaGG-PWvm87dkSLfjmyRwjQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442588029-13769-21-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 October 2015 18:01:46 Ley Foon Tan wrote:
-> On Wed, Oct 14, 2015 at 5:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 14 October 2015 17:28:45 Ley Foon Tan wrote:
-> >> On Wed, Oct 14, 2015 at 5:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > Could we perhaps have a helper function that lets us register
-> > fixups dynamically?
-> >
-> >> The linker script keeps all pci fixup callbacks in pci fixup regions
-> >> during kernel compile time. So, it needs to be builtin module. Do you
-> >> know any way we can update those fixup regions?
-> >
-> > The only method I'm aware of at the moment is move the fixups to
-> > drivers/pci/quirks.c and enclose them in an #ifdef if you want them
-> > to not appear in kernels that don't support your SoC.
-> By looking at the drivers/pci/quirks.c, it looks like it is mainly for
-> the pci endpoint devices.
-> Fixups for host controller are in the driver itself.
-> 
-
-But if it's for the host itself, there are usually other ways to
-do this without needing a fixup: you already have the device structure
-present in the driver, so you should just be able to modify it there.
 
 
-I'm looking at the code in your fixups now:
+On 09/18/2015 09:53 AM, Roger Quadros wrote:
+> Add compatible id, GPMC register resource and interrupt
+> resource to NAND controller nodes.
+>
+> The GPMC driver now implements gpiochip and irqchip so
+> enable gpio-controller and interrupt-controller properties.
+>
+> With this the interrupt parent of NAND node changes so fix it
+> accordingly.
+>
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/dra7-evm.dts  | 5 ++++-
+>  arch/arm/boot/dts/dra7.dtsi     | 4 ++++
+>  arch/arm/boot/dts/dra72-evm.dts | 5 ++++-
+>  3 files changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+> index a6c82e5..8a31161 100644
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -585,9 +585,12 @@
+>  	status = "okay";
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&nand_flash_x16>;
+> -	ranges = <0 0 0 0x01000000>;	/* minimum GPMC partition = 16MB */
+> +	ranges = <0 0 0x08000000 0x01000000>;	/* minimum GPMC partition = 16MB */
+>  	nand@0,0 {
+> +		compatible = "ti,omap2-nand";
+>  		reg = <0 0 4>;		/* device IO registers */
+> +		interrupt-parent = <&crossbar_mpu>;
+> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>  		ti,nand-ecc-opt = "bch8";
+>  		ti,elm-id = <&elm>;
+>  		nand-bus-width = <16>;
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 5d65db9..f0a3616 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -1389,6 +1389,10 @@
+>  			gpmc,num-waitpins = <2>;
+>  			#address-cells = <2>;
+>  			#size-cells = <1>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+>  			status = "disabled";
+>  		};
+Based on the discussion on my patchset I noticed that the nand node defines the
+interrupt but it is also defined in the parent node. Similar to the dma channel we
+should conclude where the best place for it to be defined.  But to me it seems at
+least it should only be defined once.
 
-+static void altera_pcie_retrain(struct pci_dev *dev)
-+{
-+       u16 linkcap, linkstat;
-+
-+       /*
-+        * Set the retrain bit if the PCIe rootport support > 2.5GB/s, but
-+        * current speed is 2.5 GB/s.
-+        */
-+       pcie_capability_read_word(dev, PCI_EXP_LNKCAP, &linkcap);
-+
-+       if ((linkcap & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-+               return;
-+
-+       pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &linkstat);
-+       if ((linkstat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB)
-+               pcie_capability_set_word(dev, PCI_EXP_LNKCTL,
-+                                        PCI_EXP_LNKCTL_RL);
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ALTERA, PCI_ANY_ID, altera_pcie_retrain);
+This is true for your other patches making similar changes to the dt.
+>  
+> diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+> index 6f6bd98..245f5f9 100644
+> --- a/arch/arm/boot/dts/dra72-evm.dts
+> +++ b/arch/arm/boot/dts/dra72-evm.dts
+> @@ -395,13 +395,16 @@
+>  	status = "okay";
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&nand_default>;
+> -	ranges = <0 0 0 0x01000000>;	/* minimum GPMC partition = 16MB */
+> +	ranges = <0 0 0x08000000 0x01000000>;	/* minimum GPMC partition = 16MB */
+>  	nand@0,0 {
+>  		/* To use NAND, DIP switch SW5 must be set like so:
+>  		 * SW5.1 (NAND_SELn) = ON (LOW)
+>  		 * SW5.9 (GPMC_WPN) = OFF (HIGH)
+>  		 */
+> +		compatible = "ti,omap2-nand";
+>  		reg = <0 0 4>;		/* device IO registers */
+> +		interrupt-parent = <&crossbar_mpu>;
+> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>  		ti,nand-ecc-opt = "bch8";
+>  		ti,elm-id = <&elm>;
+>  		nand-bus-width = <16>;
 
-This looks related to the code in pci_set_bus_speed(). What is
-missing from that code?
-
-+static void altera_pcie_fixup_res(struct pci_dev *dev)
-+{
-+       /*
-+        * Prevent enumeration of root port.
-+        */
-+       if (!dev->bus->parent && dev->devfn == 0) {
-+               int i;
-+
-+               for (i = 0; i < PCI_NUM_RESOURCES; i++) {
-+                       dev->resource[i].start = 0;
-+                       dev->resource[i].end   = 0;
-+                       dev->resource[i].flags   = 0;
-+               }
-+       }
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ALTERA, PCI_ANY_ID,
-+                        altera_pcie_fixup_res);
-
-This seems really odd, too. Why is this needed?
-I think I've seen similar code in other host drivers, so
-it might be time to teach the PCI core about this kind of
-device.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
