@@ -1,114 +1,95 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] dmaengine: xgene-dma: Remove memcpy offload support due to performance drop
-Date: Wed, 14 Oct 2015 19:25:07 +0530
-Message-ID: <1444830907-8035-1-git-send-email-rsahu@apm.com>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH 4/5] ARM: dts: am437x/am33xx/omap3/dm816x: Add gpmc dma
+ channel
+Date: Wed, 14 Oct 2015 08:57:04 -0500
+Message-ID: <561E5F30.80302@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-5-git-send-email-fcooper@ti.com> <561E4019.7090904@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561E4019.7090904@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+To: Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-The DMA engine supports memory copy, RAID5 XOR, RAID6 PQ, and other
-computations. But the bandwidth of the entire DMA engine is shared
-among all channels. This patch re-configures operations availability
-such that one can achieve maximum performance for XOR and PQ
-computation by removing the memory offload operations.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/dma/xgene-dma.c | 59 +------------------------------------------------
- 1 file changed, 1 insertion(+), 58 deletions(-)
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index 8d57b1b..b291733 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -894,60 +894,6 @@ static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
- 	chan->desc_pool = NULL;
- }
+On 10/14/2015 06:44 AM, Roger Quadros wrote:
+> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>> Add dma channel information to the gpmc. Although not enabled by
+>> default this will allow prefetch-dma to be used.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> ---
+>>  arch/arm/boot/dts/am33xx.dtsi | 2 ++
+>>  arch/arm/boot/dts/am4372.dtsi | 2 ++
+>>  arch/arm/boot/dts/dm816x.dtsi | 2 ++
+>>  arch/arm/boot/dts/omap3.dtsi  | 2 ++
+> How about fixing up omap4/5 and dra7 as well?
 
--static struct dma_async_tx_descriptor *xgene_dma_prep_memcpy(
--	struct dma_chan *dchan, dma_addr_t dst, dma_addr_t src,
--	size_t len, unsigned long flags)
--{
--	struct xgene_dma_desc_sw *first = NULL, *new;
--	struct xgene_dma_chan *chan;
--	size_t copy;
--
--	if (unlikely(!dchan || !len))
--		return NULL;
--
--	chan = to_dma_chan(dchan);
--
--	do {
--		/* Allocate the link descriptor from DMA pool */
--		new = xgene_dma_alloc_descriptor(chan);
--		if (!new)
--			goto fail;
--
--		/* Create the largest transaction possible */
--		copy = min_t(size_t, len, XGENE_DMA_MAX_64B_DESC_BYTE_CNT);
--
--		/* Prepare DMA descriptor */
--		xgene_dma_prep_cpy_desc(chan, new, dst, src, copy);
--
--		if (!first)
--			first = new;
--
--		new->tx.cookie = 0;
--		async_tx_ack(&new->tx);
--
--		/* Update metadata */
--		len -= copy;
--		dst += copy;
--		src += copy;
--
--		/* Insert the link descriptor to the LD ring */
--		list_add_tail(&new->node, &first->tx_list);
--	} while (len);
--
--	new->tx.flags = flags; /* client is in control of this ack */
--	new->tx.cookie = -EBUSY;
--	list_splice(&first->tx_list, &new->tx_list);
--
--	return &new->tx;
--
--fail:
--	if (!first)
--		return NULL;
--
--	xgene_dma_free_desc_list(chan, &first->tx_list);
--	return NULL;
--}
--
- static struct dma_async_tx_descriptor *xgene_dma_prep_sg(
- 	struct dma_chan *dchan, struct scatterlist *dst_sg,
- 	u32 dst_nents, struct scatterlist *src_sg,
-@@ -1707,7 +1653,6 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
- 	dma_cap_zero(dma_dev->cap_mask);
+Shouldn't be a problem for omap4 and omap5.
 
- 	/* Set DMA device capability */
--	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
- 	dma_cap_set(DMA_SG, dma_dev->cap_mask);
-
- 	/* Basically here, the X-Gene SoC DMA engine channel 0 supports XOR
-@@ -1734,7 +1679,6 @@ static void xgene_dma_set_caps(struct xgene_dma_chan *chan,
- 	dma_dev->device_free_chan_resources = xgene_dma_free_chan_resources;
- 	dma_dev->device_issue_pending = xgene_dma_issue_pending;
- 	dma_dev->device_tx_status = xgene_dma_tx_status;
--	dma_dev->device_prep_dma_memcpy = xgene_dma_prep_memcpy;
- 	dma_dev->device_prep_dma_sg = xgene_dma_prep_sg;
-
- 	if (dma_has_cap(DMA_XOR, dma_dev->cap_mask)) {
-@@ -1787,8 +1731,7 @@ static int xgene_dma_async_register(struct xgene_dma *pdma, int id)
-
- 	/* DMA capability info */
- 	dev_info(pdma->dev,
--		 "%s: CAPABILITY ( %s%s%s%s)\n", dma_chan_name(&chan->dma_chan),
--		 dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask) ? "MEMCPY " : "",
-+		 "%s: CAPABILITY ( %s%s%s)\n", dma_chan_name(&chan->dma_chan),
- 		 dma_has_cap(DMA_SG, dma_dev->cap_mask) ? "SGCPY " : "",
- 		 dma_has_cap(DMA_XOR, dma_dev->cap_mask) ? "XOR " : "",
- 		 dma_has_cap(DMA_PQ, dma_dev->cap_mask) ? "PQ " : "");
---
-1.8.2.1
+Dra7 with sdma can't support this feature. With edma it works fine. So I'll
+wait until edma support for dra7 makes it into mainline and then I can send
+a new patch adding support.
+>
+> cheers,
+> -roger
+>
+>>  4 files changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+>> index e065f21..f2d8eed 100644
+>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>> @@ -819,6 +819,8 @@
+>>  			ti,no-idle-on-init;
+>>  			reg = <0x50000000 0x2000>;
+>>  			interrupts = <100>;
+>> +			dmas = <&edma 52>;
+>> +			dma-names = "rxtx";
+>>  			gpmc,num-cs = <7>;
+>>  			gpmc,num-waitpins = <2>;
+>>  			#address-cells = <2>;
+>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+>> index ec8b7a3..c02061b 100644
+>> --- a/arch/arm/boot/dts/am4372.dtsi
+>> +++ b/arch/arm/boot/dts/am4372.dtsi
+>> @@ -841,6 +841,8 @@
+>>  		gpmc: gpmc@50000000 {
+>>  			compatible = "ti,am3352-gpmc";
+>>  			ti,hwmods = "gpmc";
+>> +			dmas = <&edma 52>;
+>> +			dma-names = "rxtx";
+>>  			clocks = <&l3s_gclk>;
+>>  			clock-names = "fck";
+>>  			reg = <0x50000000 0x2000>;
+>> diff --git a/arch/arm/boot/dts/dm816x.dtsi b/arch/arm/boot/dts/dm816x.dtsi
+>> index 68fb444..d2e5d31 100644
+>> --- a/arch/arm/boot/dts/dm816x.dtsi
+>> +++ b/arch/arm/boot/dts/dm816x.dtsi
+>> @@ -180,6 +180,8 @@
+>>  			#address-cells = <2>;
+>>  			#size-cells = <1>;
+>>  			interrupts = <100>;
+>> +			dmas = <&edma 52>;
+>> +			dma-names = "rxtx";
+>>  			gpmc,num-cs = <6>;
+>>  			gpmc,num-waitpins = <2>;
+>>  			gpio-controller;
+>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+>> index 7f212b6..9dbbcf6 100644
+>> --- a/arch/arm/boot/dts/omap3.dtsi
+>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>> @@ -717,6 +717,8 @@
+>>  			ti,hwmods = "gpmc";
+>>  			reg = <0x6e000000 0x02d0>;
+>>  			interrupts = <20>;
+>> +			dmas = <&sdma 4>;
+>> +			dma-names = "rxtx";
+>>  			gpmc,num-cs = <8>;
+>>  			gpmc,num-waitpins = <4>;
+>>  			#address-cells = <2>;
+>>
