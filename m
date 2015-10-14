@@ -1,37 +1,73 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] dt-bindings: Correct the example for Exynos power domain clocks
-Date: Wed, 14 Oct 2015 15:02:06 +0900
-Message-ID: <1444802526-18518-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
+Date: Tue, 13 Oct 2015 23:23:03 -0700
+Message-ID: <20151014062303.GC20406@dtor-ws>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+ <1444663477-30062-3-git-send-email-irina.tirdea@intel.com>
+ <20151012164819.GA4010@dtor-ws>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
+ <20151013070824.GA22304@dtor-ws>
+ <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
+ <20151013100724.GG1492@lahna.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151013100724.GG1492@lahna.fi.intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+Cc: "Tirdea, Irina" <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Since commit 29e5eea06bc1 ("ARM: EXYNOS: Get current parent clock for
-power domain on/off") the "pclkN" names of "clock-names" property is not
-parsed any more. The bindings and driver were updated but the example
-was not. Fix the example now.
+On Tue, Oct 13, 2015 at 01:07:24PM +0300, mika.westerberg@linux.intel.com wrote:
+> On Tue, Oct 13, 2015 at 08:54:12AM +0000, Tirdea, Irina wrote:
+> > > > I did not use devm_gpiod_get_optional() in order to ignore more errors
+> > > > than -ENOENT. This is needed because the ACPI gpio core will fall back
+> > > > to indexed gpios if named gpios are not found. In the common case of
+> > > > having 2 indexed gpio pins declared in the ACPI table, the first
+> > > > devm_gpiod_get() will successfully get indexed gpio pin 0 and the
+> > > > second devm_gpiod_get() will try to get the same gpio pin 0 and return
+> > > > -EBUSY. Considering this, I thought it is better to just ignore all errors in
+> > > > order not to break any platforms currently using this driver.
+> > > 
+> > > This seems like issue with ACPI gpio lookup implementation. If I am
+> > > requesting named gpio and it is not present then I definitely do not
+> > > need to be returned some random gpio. Doing so breaks all other drivers
+> > > that use several names to retrieve GPIOs. We basically can't trust GPIO
+> > > API on ACPI systems.
+> > > 
+> > 
+> > I'm not sure there is a way to avoid fall back to indexed gpios when requesting
+> > named gpios.
+> > Adding Mika to this thread as he might help answer this.
+> 
+> Before ACPI 5.1 _DSD device properties were introduced all we had was an
+> array of GPIOs returned by _CRS ACPI method. Ordering of those GPIOs
+> could change from one vendor to another :-(
+> 
+> We can (and do) use acpi_dev_add_driver_gpios() to pass correct mappings
+> where _DSD is not present based on the device ACPI ID for instance. Not
+> all drivers do that, though.
+> 
+> I would like to get rid of the fallback completely at some point. We
+> have had already problems with the API because then some ACPI only
+> drivers did this:
+> 
+> 	reset_gpio = gpiod_get_index(dev, NULL, 0);
+> 	power_gpio = gpiod_get_index(dev, NULL, 1);
+> 
+> which might not do what is expected on DT systems. That's why
+> acpi_dev_add_driver_gpios() was added in the first place IIRC.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- Documentation/devicetree/bindings/arm/exynos/power_domain.txt | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I understand why one might use acpi_dev_add_driver_gpios() to augment
+data in ACPI, however here we have completely different issue: driver
+that expects named gpios gets returned gpio that has nothing to do with
+what it requested, because gpiolib acpi code always falls back to
+unnamed gpio if it does not find named gpio. That can be acceptable if
+driver uses the same con_id for all requests to gpiolib, but is not
+working when driver supplies different con_ids.
 
-diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-index e151057d92f0..4e947372a693 100644
---- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-+++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-@@ -43,9 +43,8 @@ Example:
- 	mfc_pd: power-domain@10044060 {
- 		compatible = "samsung,exynos4210-pd";
- 		reg = <0x10044060 0x20>;
--		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_SW_ACLK333>,
--			<&clock CLK_MOUT_USER_ACLK333>;
--		clock-names = "oscclk", "pclk0", "clk0";
-+		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
-+		clock-names = "oscclk", "clk0";
- 		#power-domain-cells = <0>;
- 	};
- 
+Thanks.
+
 -- 
-1.9.1
+Dmitry
