@@ -1,59 +1,63 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: at91/defconfig: update sama5 defconfig
-Date: Wed, 14 Oct 2015 14:11:24 +0200
-Message-ID: <1444824684-24526-3-git-send-email-ludovic.desroches@atmel.com>
-References: <1444824684-24526-1-git-send-email-ludovic.desroches@atmel.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] iommu/hisilicon: Add hi6220 iommu driver
+Date: Wed, 14 Oct 2015 14:18:43 +0200
+Message-ID: <20151014121843.GN27420@8bytes.org>
+References: <1444290348-66509-1-git-send-email-puck.chen@hisilicon.com>
+	<1444290348-66509-2-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444824684-24526-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444290348-66509-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add SAMA5D2 SoC plus Atmel flexcom and Atmel sdhci devices.
+On Thu, Oct 08, 2015 at 03:45:47PM +0800, Chen Feng wrote:
+> +static int hi6220_smmu_attach_dev(struct iommu_domain *domain,
+> +				  struct device *dev)
+> +{
+> +	struct hi6220_domain *m_domain = to_hi6220_domain(domain);
+> +
+> +	smmu_domain_prepare(m_domain);
+> +	dev->archdata.iommu = &m_domain->smmu_dev->iova_allocator;
+> +
+> +	return 0;
+> +}
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/configs/sama5_defconfig | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+What happens when you attach devices behind different smmus to one
+domain? Will that overwrite the smmu_dev pointer in the domain?
 
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index 31eb951..6e806f5 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -15,7 +15,7 @@ CONFIG_LBDAF=y
- # CONFIG_IOSCHED_DEADLINE is not set
- # CONFIG_IOSCHED_CFQ is not set
- CONFIG_ARCH_AT91=y
--CONFIG_SOC_SAM_V7=y
-+CONFIG_SOC_SAMA5D2=y
- CONFIG_SOC_SAMA5D3=y
- CONFIG_SOC_SAMA5D4=y
- CONFIG_AEABI=y
-@@ -135,6 +135,7 @@ CONFIG_POWER_SUPPLY=y
- CONFIG_POWER_RESET=y
- # CONFIG_HWMON is not set
- CONFIG_SSB=m
-+CONFIG_MFD_ATMEL_FLEXCOM=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_ACT8865=y
-@@ -171,6 +172,9 @@ CONFIG_USB_ATMEL_USBA=y
- CONFIG_USB_G_SERIAL=y
- CONFIG_MMC=y
- # CONFIG_MMC_BLOCK_BOUNCE is not set
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_SDHCI_OF_AT91=y
- CONFIG_MMC_ATMELMCI=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
--- 
-2.5.0
+> +static size_t hi6220_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+> +				size_t size)
+> +{
+> +	struct hi6220_domain *m_domain = to_hi6220_domain(domain);
+> +	size_t page_size = m_domain->smmu_dev->page_size;
+> +	struct hi6220_smmu *smmu_dev = m_domain->smmu_dev;
+> +	int *page_table = (unsigned int *)smmu_dev->pgtable_virt;
+> +
+> +	if (size != page_size) {
+> +		pr_err("unmap size error, only support %zd\n", page_size);
+> +		return 0;
+> +	}
+> +
+> +	__clear_smmu_pte(page_table + IOVA_PFN(iova));
+> +
+> +	return page_size;
+> +}
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Don't you need a call to __invalid_smmu_tlb here too?
+
+
+
+	Joerg
