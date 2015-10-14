@@ -1,105 +1,74 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] arm64: dts: mt8173: add MT8173 display PWM driver support
- node
-Date: Wed, 14 Oct 2015 15:45:00 +0200
-Message-ID: <561E5C5C.2080807@gmail.com>
-References: <1444117243-28391-1-git-send-email-yh.huang@mediatek.com>
- <561BDA26.5010203@gmail.com>
+From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/5] mtd: nand: omap2: Start dma request before enabling
+ prefetch
+Date: Wed, 14 Oct 2015 08:45:22 -0500
+Message-ID: <561E5C72.1020505@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-3-git-send-email-fcooper@ti.com> <561E3F5B.6040102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561BDA26.5010203@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: YH Huang <yh.huang@mediatek.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561E3F5B.6040102-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 12/10/15 18:04, Matthias Brugger wrote:
->
->
-> On 06/10/15 09:40, YH Huang wrote:
->> Add display PWM node in mt8173-evb.dts and mt8173.dtsi.
+On 10/14/2015 06:41 AM, Roger Quadros wrote:
+> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>> The prefetch engine sends a dma request once a FIFO threshold has
+>> been met. No other requests are received until the previous request
+>> is handled.
 >>
->> Signed-off-by: YH Huang <yh.huang@mediatek.com>
+>> Starting an edma transfer (dma_async_issue_pending) results in any
+>> previous event for the dma channel to be cleared. Therefore, starting
+>> the prefetch engine before initiating the dma transfer may result in
+>> the prefetch triggering a dma request but instead of it being handled
+>> it can end up being cleared. This will result in a hang since the code
+>> will continue to wait for the dma request to complete.
+>>
+>> By initiating the dma request before enabling the prefetch engine this
+>> race condition is avoided and no dma request are missed/cleared.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 >> ---
->>   arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   13 +++++++++++++
->>   arch/arm64/boot/dts/mediatek/mt8173.dtsi    |   22
->> ++++++++++++++++++++++
->>   2 files changed, 35 insertions(+)
+>>  drivers/mtd/nand/omap2.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
 >>
+>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>> index 957c32f..94d11de 100644
+>> --- a/drivers/mtd/nand/omap2.c
+>> +++ b/drivers/mtd/nand/omap2.c
+>> @@ -509,6 +509,9 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
+>>  	tx->callback_param = &info->comp;
+>>  	dmaengine_submit(tx);
+>>  
+>> +	init_completion(&info->comp);
+>> +	dma_async_issue_pending(info->dma);
+>> +
+>>  	/*  configure and start prefetch transfer */
+>>  	ret = omap_prefetch_enable(info->gpmc_cs,
+>>  		PREFETCH_FIFOTHRESHOLD_MAX, 0x1, len, is_write, info);
+>> @@ -516,9 +519,6 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
+>>  		/* PFPW engine is busy, use cpu copy method */
+>>  		goto out_copy_unmap;
+>>  
+>> -	init_completion(&info->comp);
+>> -	dma_async_issue_pending(info->dma);
+>> -
+>>  	/* setup and start DMA using dma_addr */
+> Is the above comment misplaced after this change?
+Yup you right.
 >
-> Applied, thanks.
+>>  	wait_for_completion(&info->comp);
+>>  	tim = 0;
+>>
+> cheers,
+> -roger
 
-I reapplied this on v4.4-next/arm64
-
->
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> index 811cb76..1b3fabd 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> @@ -92,6 +92,13 @@
->>   };
->>
->>   &pio {
->> +    disp_pwm0_pins: disp_pwm0_pins {
->> +        pins1 {
->> +            pinmux = <MT8173_PIN_87_DISP_PWM0__FUNC_DISP_PWM0>;
->> +            output-low;
->> +        };
->> +    };
->> +
->>       mmc0_pins_default: mmc0default {
->>           pins_cmd_dat {
->>               pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
->> @@ -190,6 +197,12 @@
->>       };
->>   };
->>
->> +&pwm0 {
->> +    pinctrl-names = "default";
->> +    pinctrl-0 = <&disp_pwm0_pins>;
->> +    status = "okay";
->> +};
->> +
->>   &pwrap {
->>       pmic: mt6397 {
->>           compatible = "mediatek,mt6397";
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index 4bce167..fd01134 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -500,6 +500,28 @@
->>               clock-names = "source", "hclk";
->>               status = "disabled";
->>           };
->> +
->> +        pwm0: pwm@1401e000 {
->> +            compatible = "mediatek,mt8173-disp-pwm",
->> +                     "mediatek,mt6595-disp-pwm";
->> +            reg = <0 0x1401e000 0 0x1000>;
->> +            #pwm-cells = <2>;
->> +            clocks = <&mmsys CLK_MM_DISP_PWM026M>,
->> +                 <&mmsys CLK_MM_DISP_PWM0MM>;
->> +            clock-names = "main", "mm";
->> +            status = "disabled";
->> +        };
->> +
->> +        pwm1: pwm@1401f000 {
->> +            compatible = "mediatek,mt8173-disp-pwm",
->> +                     "mediatek,mt6595-disp-pwm";
->> +            reg = <0 0x1401f000 0 0x1000>;
->> +            #pwm-cells = <2>;
->> +            clocks = <&mmsys CLK_MM_DISP_PWM126M>,
->> +                 <&mmsys CLK_MM_DISP_PWM1MM>;
->> +            clock-names = "main", "mm";
->> +            status = "disabled";
->> +        };
->>       };
->>   };
->>
->>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
