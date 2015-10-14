@@ -1,138 +1,99 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] iio: mma8452: support either of the available
- interrupt pins
-Date: Wed, 14 Oct 2015 12:28:55 +0100
-Message-ID: <20151014112854.GB32715@leverpostej>
-References: <1444816349-25103-1-git-send-email-martink@posteo.de>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH RFC 0/2] simplefb: Add regulator handling support
+Date: Wed, 14 Oct 2015 13:31:52 +0200
+Message-ID: <561E3D28.2090901@redhat.com>
+References: <1444669458-5588-1-git-send-email-wens@csie.org>
+ <561CAFE8.9080506@redhat.com> <20151014105556.GT14956@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444816349-25103-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151014105556.GT14956@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 11:52:29AM +0200, Martin Kepplinger wrote:
-> This change is important in order for everyone to be easily able to use the
-> driver for one of the supported accelerometer chips!
-> 
-> Until now, the driver blindly assumed that the INT1 interrupt line is wired
-> on a user's board. But these devices have 2 interrupt lines and can route
-> their different interrupt sources to one of them. Since only their motion
-> detection interrupt source is implemented as IIO events, users just use
-> either one of the pins.
-> 
-> Of course, this also falls back to assuming INT1, so for existing users
-> nothing will break. The new functionality is described in the bindings doc.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> ---
-> changelog:
-> v2: don't warn but normally handle if both pins are described in dts
->     thanks Mark Rutland
-> v1: initial post
-> 
-> 
->  .../devicetree/bindings/iio/accel/mma8452.txt      |  7 +++++++
->  drivers/iio/accel/mma8452.c                        | 22 ++++++++++++++++------
->  2 files changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> index e3c3746..f06ed87 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> @@ -7,13 +7,19 @@ Required properties:
->      * "fsl,mma8453"
->      * "fsl,mma8652"
->      * "fsl,mma8653"
-> +
->    - reg: the I2C address of the chip
->  
->  Optional properties:
->  
->    - interrupt-parent: should be the phandle for the interrupt controller
-> +
->    - interrupts: interrupt mapping for GPIO IRQ
->  
-> +  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
-> +		     interrupt line in use. If only "INT2" is present, INT2 is
-> +		     used; otherwise INT1.
+Hi,
 
-The last sentence should go, as it's a description of the OS behaviour
-rather than the hardware.
+On 14-10-15 12:55, Mark Brown wrote:
+> On Tue, Oct 13, 2015 at 09:16:56AM +0200, Hans de Goede wrote:
+>> On 12-10-15 19:04, Chen-Yu Tsai wrote:
+>
+>>> Now the DT bindings don't support a list of regulators directly, so
+>>> I'm working around it by having a "num-supplies" property to specify
+>>> the number of supply properties to check, and name the actual supplies
+>>> as "vinN-supply".
+>
+>> Hmm, I can see the need for a "supplies" property with a list of regulators
+>> in other use-cases (e.g. the generic mmc-pwrseq driver) too. Now as discussed
+>> we can simply do vin0-supply - vinN-supply properties and be done with it,
+>> but maybe we need to actually add support for a generic "supplies" property ?
+>
+> I really don't like having unnamed supplies, or supplies with names that
+> don't correspond to the schematic names for the physical supplies.  It
+> makes it harder to go between the DT and the schematic and encourages
+> bad practice on specific chip bindings which should be done properly
+> since it's harder to tell if the binding is done correctly.
 
-With that removed, the binding looks fine to me.
+Ok.
 
-> +
->  Example:
->  
->  	mma8453fc@1d {
-> @@ -21,4 +27,5 @@ Example:
->  		reg = <0x1d>;
->  		interrupt-parent = <&gpio1>;
->  		interrupts = <5 0>;
-> +		interrupt-names = "INT2";
->  	};
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 1eccc2d..4d69c3d 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -29,6 +29,7 @@
->  #include <linux/iio/events.h>
->  #include <linux/delay.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->  
->  #define MMA8452_STATUS				0x00
->  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-> @@ -1130,13 +1131,22 @@ static int mma8452_probe(struct i2c_client *client,
->  					   MMA8452_INT_FF_MT;
->  		int enabled_interrupts = MMA8452_INT_TRANS |
->  					 MMA8452_INT_FF_MT;
-> +		int irq1, irq2;
->  
-> -		/* Assume wired to INT1 pin */
-> -		ret = i2c_smbus_write_byte_data(client,
-> -						MMA8452_CTRL_REG5,
-> -						supported_interrupts);
-> -		if (ret < 0)
-> -			return ret;
-> +		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
-> +		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
-> +
-> +		/* if INT2 is found, use it. Otherwise INT1 */
-> +		if (!(irq2 > 0 && irq1 < 0)) {
-> +			ret = i2c_smbus_write_byte_data(client,
-> +							MMA8452_CTRL_REG5,
-> +							supported_interrupts);
-> +			if (ret < 0)
-> +				return ret;
-> +			dev_info(&client->dev, "using interrupt line INT1\n");
-> +		} else {
-> +			dev_info(&client->dev, "using interrupt line INT2\n");
-> +		}
+> Adding something with the pattern of parallel arrays of phandles and
+> names properties that got introduced after the regulator bindings were
+> done also means we need to go and update every single binding using
+> regulators to document the new properties which is going to be tedious
+> and require constant policing for a while.  I'm also not a big fan of
+> the pattern from a legibility point of view but that's a separate thing.
 
-Is this correct? As far as I can see you request client->irq regardless
-(and I assume that's just the first interrupt in the DT).
+Oh no, I was not suggesting to have this replace how we currently do
+things, I was merely suggesting allowing to have a supplies list property
+for bindings where a list of (unnamed) supplies makes sense like simplefb.
 
-Does this work for both
+I fully agree that we do not want to see matching a supplies-names prop,
+if names are needed the old name-supply schema should be used just like
+it is today.
 
-	interrupt-names = "IRQ2", "IRQ1";
-	interrupts = <2>, <1>;
+>> And if not then maybe we need a few generic helper devm helper function which
+>> takes a node, figures out how much vinN-supply properties there are and returns
+>> a dynamically allocated array containing references to all the regulators, or
+>> a PTR_ERR in case of err, at which point the caller is expected to fail the
+>> probe so that any successfully acquired regulators are released.
+>
+> I can see it for this sort of simplefb thing but I'm not sure how we'd
+> discourage drivers for specific hardware from also using the same helper
+> which then makes it easy to get sloppy board DTs which I'd expect to
+> lead to hassle down the road as drivers try to use their supplies and
+> find that actual DTs have things that don't correspond to reality in
+> them.  The nice thing about having drivers name the supplies they're
+> expecting is that it makes describing the board as it really is much
+> more the path of least resistance.
 
-or
-	interrupt-names = "IRQ1", "IRQ2";
-	interrupts = <1>, <2>;
+Ok, so as said I see some value in this for generic drivers like
+simplefb, mmc-pwrseq, but also the generic ahci-platform, ohci-platform
+and ehci-platform drivers, where often it is possible to use the generic
+driver (together with a soc specific phy driver) without needing to
+introduce new compatibles, as all we need is to specify a phy(s),
+bunch of clocks, resets, etc. It would be good IMHO if we could specify
+e.g. this is a generic ehci block, which needs this list of supplies
+to be enabled (note typically the supplies are tied to the phy, so
+maybe not the best example).
 
-?
+I like your idea in your other mail where you suggest to actually
+use foo-supply and bar-supply names in the simplefb node, and then have
+some code simple iterate over all the properties and check for *-supply
+properties, so that the proper, schematic matching names can be used.
 
-You might need to override client->irq.
+But surely if we go this way having a helper for this so that others
+can re-use that likely not entirely trivial code is a good idea ?
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+One user which comes to mind immediately here is the generic mmc-pwrseq
+driver.
+
+I agree that we need to be careful to not use a helper like this too
+much, but I do believe it will make sense to have it in some rare cases.
+We can put a big warning in both the header declaring it and above
+the implementation to use it scarcely.
+
+Regards,
+
+Hans
