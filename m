@@ -1,110 +1,89 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH v3] iio: mma8452: support either of the available interrupt pins
-Date: Wed, 14 Oct 2015 15:15:42 +0200
-Message-ID: <1444828542-28861-1-git-send-email-martink@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Wed, 14 Oct 2015 15:32:35 +0200
+Message-ID: <5938877.UG8VySdxoE@wuerfel>
+References: <1444790492-4051-1-git-send-email-lftan@altera.com> <5210459.PtmhWaT6RM@wuerfel> <CAFiDJ59ZZ5TBZJ8wauEzP3Je=DeSaGG-PWvm87dkSLfjmyRwjQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFiDJ59ZZ5TBZJ8wauEzP3Je=DeSaGG-PWvm87dkSLfjmyRwjQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This change is important in order for everyone to be easily able to use the
-driver for one of the supported accelerometer chips!
+On Wednesday 14 October 2015 18:01:46 Ley Foon Tan wrote:
+> On Wed, Oct 14, 2015 at 5:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wednesday 14 October 2015 17:28:45 Ley Foon Tan wrote:
+> >> On Wed, Oct 14, 2015 at 5:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > Could we perhaps have a helper function that lets us register
+> > fixups dynamically?
+> >
+> >> The linker script keeps all pci fixup callbacks in pci fixup regions
+> >> during kernel compile time. So, it needs to be builtin module. Do you
+> >> know any way we can update those fixup regions?
+> >
+> > The only method I'm aware of at the moment is move the fixups to
+> > drivers/pci/quirks.c and enclose them in an #ifdef if you want them
+> > to not appear in kernels that don't support your SoC.
+> By looking at the drivers/pci/quirks.c, it looks like it is mainly for
+> the pci endpoint devices.
+> Fixups for host controller are in the driver itself.
+> 
 
-Until now, the driver blindly assumed that the INT1 interrupt line is wired
-on a user's board. But these devices have 2 interrupt lines and can route
-their different interrupt sources to one of them. Since only their motion
-detection interrupt source is implemented as IIO events, users just use
-either one of the pins.
+But if it's for the host itself, there are usually other ways to
+do this without needing a fixup: you already have the device structure
+present in the driver, so you should just be able to modify it there.
 
-Of course, this also falls back to assuming INT1, so for existing users
-nothing will break. The new functionality is described in the bindings doc.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
----
-changelog:
-v3: correctly assign irq if both pins are described in DT. thanks again
-v2: don't warn but normally handle if both pins are described in dts
-    thanks Mark Rutland
-v1: initial post
+I'm looking at the code in your fixups now:
 
- .../devicetree/bindings/iio/accel/mma8452.txt      |  6 +++++
- drivers/iio/accel/mma8452.c                        | 26 +++++++++++++++++-----
- 2 files changed, 26 insertions(+), 6 deletions(-)
++static void altera_pcie_retrain(struct pci_dev *dev)
++{
++       u16 linkcap, linkstat;
++
++       /*
++        * Set the retrain bit if the PCIe rootport support > 2.5GB/s, but
++        * current speed is 2.5 GB/s.
++        */
++       pcie_capability_read_word(dev, PCI_EXP_LNKCAP, &linkcap);
++
++       if ((linkcap & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
++               return;
++
++       pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &linkstat);
++       if ((linkstat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB)
++               pcie_capability_set_word(dev, PCI_EXP_LNKCTL,
++                                        PCI_EXP_LNKCTL_RL);
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ALTERA, PCI_ANY_ID, altera_pcie_retrain);
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-index e3c3746..3c10e85 100644
---- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-@@ -7,13 +7,18 @@ Required properties:
-     * "fsl,mma8453"
-     * "fsl,mma8652"
-     * "fsl,mma8653"
+This looks related to the code in pci_set_bus_speed(). What is
+missing from that code?
+
++static void altera_pcie_fixup_res(struct pci_dev *dev)
++{
++       /*
++        * Prevent enumeration of root port.
++        */
++       if (!dev->bus->parent && dev->devfn == 0) {
++               int i;
 +
-   - reg: the I2C address of the chip
- 
- Optional properties:
- 
-   - interrupt-parent: should be the phandle for the interrupt controller
-+
-   - interrupts: interrupt mapping for GPIO IRQ
- 
-+  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
-+		     interrupt line in use.
-+
- Example:
- 
- 	mma8453fc@1d {
-@@ -21,4 +26,5 @@ Example:
- 		reg = <0x1d>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <5 0>;
-+		interrupt-names = "INT2";
- 	};
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 1eccc2d..6b9b360 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -29,6 +29,7 @@
- #include <linux/iio/events.h>
- #include <linux/delay.h>
- #include <linux/of_device.h>
-+#include <linux/of_irq.h>
- 
- #define MMA8452_STATUS				0x00
- #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-@@ -1130,13 +1131,26 @@ static int mma8452_probe(struct i2c_client *client,
- 					   MMA8452_INT_FF_MT;
- 		int enabled_interrupts = MMA8452_INT_TRANS |
- 					 MMA8452_INT_FF_MT;
-+		int irq1, irq2;
- 
--		/* Assume wired to INT1 pin */
--		ret = i2c_smbus_write_byte_data(client,
--						MMA8452_CTRL_REG5,
--						supported_interrupts);
--		if (ret < 0)
--			return ret;
-+		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
-+		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
-+
-+		/* if INT2 is found, use it. Otherwise INT1 */
-+		if (!(irq2 > 0 && irq1 < 0)) {
-+			ret = i2c_smbus_write_byte_data(client,
-+							MMA8452_CTRL_REG5,
-+							supported_interrupts);
-+			if (ret < 0)
-+				return ret;
-+
-+			if (irq1 > 0)
-+				client->irq = irq1;
-+			dev_info(&client->dev, "using interrupt line INT1\n");
-+		} else {
-+			client->irq = irq2;
-+			dev_info(&client->dev, "using interrupt line INT2\n");
-+		}
- 
- 		ret = i2c_smbus_write_byte_data(client,
- 						MMA8452_CTRL_REG4,
--- 
-2.1.4
++               for (i = 0; i < PCI_NUM_RESOURCES; i++) {
++                       dev->resource[i].start = 0;
++                       dev->resource[i].end   = 0;
++                       dev->resource[i].flags   = 0;
++               }
++       }
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ALTERA, PCI_ANY_ID,
++                        altera_pcie_fixup_res);
+
+This seems really odd, too. Why is this needed?
+I think I've seen similar code in other host drivers, so
+it might be time to teach the PCI core about this kind of
+device.
+
+	Arnd
