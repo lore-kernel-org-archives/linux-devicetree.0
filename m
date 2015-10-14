@@ -1,66 +1,74 @@
-From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/3] SMP support for Broadcom NSP
-Date: Wed, 14 Oct 2015 13:46:57 -0400
-Message-ID: <1444844820-24290-1-git-send-email-kapilh@broadcom.com>
+From: Kapil Hali <kapilh@broadcom.com>
+Subject: [PATCH 2/3] ARM: dts: add SMP support for Broadcom NSP
+Date: Wed, 14 Oct 2015 13:46:59 -0400
+Message-ID: <1444844820-24290-3-git-send-email-kapilh@broadcom.com>
+References: <1444844820-24290-1-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444844820-24290-1-git-send-email-kapilh@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kapil Hali <kapilh@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add device tree changes required for providing SMP support
+for Broadcom Northstar Plus SoC.
 
-This series adds SMP support for Broadcom's Northstar Plus SoC.
+Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
-There are similar SMP enablement methods for many ARMv7 bsed SoCs.
-BCM NSP SoC, has a typical such mechanism - after power-on, the
-secondary core is held in a standby state, primary core provides a
-startup address for the secondary core and wakes it up. Booting of
-the secondary core is serialized using pen_release global variable.
-
-The startup address is programmed at a special register location
-which is defined in the device tree using a "secondary-boot-reg"
-property in a node whose "enable-method" property matches.
-
-The first patch adds cpu-enable-method in the device tree bindings
-documentation. It also updates ARM CPU device tree documentation
-with Broadcom Northstar Plus CPU details.
-
-The second patch adds SMP support to the BCM NSP device tree file.
-
-Finally, third patch, enables SMP on BCM NSP. It also consolidates
-common SMP handling between BCM NSP and BCM Kona.
-
-This patch series is constructed based on Linux v4.3-rc2.
-
-The source code is available at GITHUB:
-https://github.com/Broadcom/cygnus-linux/tree/nsp-smp-v1
-
-Kapil Hali (3):
-  dt-bindings: add SMP enable-method for Broadcom NSP
-  ARM: dts: add SMP support for Broadcom NSP
-  ARM: BCM: Add SMP support for Broadcom NSP
-
- .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       |  36 ++++++
- Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
- arch/arm/boot/dts/bcm-nsp.dtsi                     |  33 +++--
- arch/arm/mach-bcm/Kconfig                          |   2 +
- arch/arm/mach-bcm/Makefile                         |   8 +-
- arch/arm/mach-bcm/bcm_nsp.h                        |  19 +++
- arch/arm/mach-bcm/headsmp.S                        |  37 ++++++
- arch/arm/mach-bcm/{kona_smp.c => platsmp.c}        | 142 +++++++++++++++++++--
- 8 files changed, 255 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
- create mode 100644 arch/arm/mach-bcm/bcm_nsp.h
- create mode 100644 arch/arm/mach-bcm/headsmp.S
- rename arch/arm/mach-bcm/{kona_smp.c => platsmp.c} (63%)
-
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 58aca27..d1875d9 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -40,24 +40,33 @@
+ 	model = "Broadcom Northstar Plus SoC";
+ 	interrupt-parent = <&gic>;
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "brcm,bcm-nsp-smp";
++		secondary-boot-reg = <0xffff042c>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
++			reg = <0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
++			reg = <0x1>;
++		};
++	};
++
+ 	mpcore {
+ 		compatible = "simple-bus";
+ 		ranges = <0x00000000 0x19020000 0x00003000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		cpus {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			cpu@0 {
+-				device_type = "cpu";
+-				compatible = "arm,cortex-a9";
+-				next-level-cache = <&L2>;
+-				reg = <0x0>;
+-			};
+-		};
+-
+ 		L2: l2-cache {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x2000 0x1000>;
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
