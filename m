@@ -1,101 +1,55 @@
-From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 20/27] ARM: dts: dra7: Fix NAND device nodes.
-Date: Wed, 14 Oct 2015 08:34:40 -0500
-Message-ID: <561E59F0.8080906@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <1442588029-13769-21-git-send-email-rogerq@ti.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 3/3] arm64: dts: mt8173: add timer node
+Date: Wed, 14 Oct 2015 15:39:01 +0200
+Message-ID: <561E5AF5.5020902@gmail.com>
+References: <1443798319-45744-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1443798319-45744-4-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442588029-13769-21-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1443798319-45744-4-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org, erin.lo@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 09/18/2015 09:53 AM, Roger Quadros wrote:
-> Add compatible id, GPMC register resource and interrupt
-> resource to NAND controller nodes.
+On 02/10/15 17:05, Yingjoe Chen wrote:
+> From: Daniel Kurtz <djkurtz@chromium.org>
 >
-> The GPMC driver now implements gpiochip and irqchip so
-> enable gpio-controller and interrupt-controller properties.
+> Add device node to enable GPT timer.
 >
-> With this the interrupt parent of NAND node changes so fix it
-> accordingly.
->
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 > ---
->  arch/arm/boot/dts/dra7-evm.dts  | 5 ++++-
->  arch/arm/boot/dts/dra7.dtsi     | 4 ++++
->  arch/arm/boot/dts/dra72-evm.dts | 5 ++++-
->  3 files changed, 12 insertions(+), 2 deletions(-)
+
+I reapplied this on v4.4-next/arm64
+
+
+>   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-> index a6c82e5..8a31161 100644
-> --- a/arch/arm/boot/dts/dra7-evm.dts
-> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> @@ -585,9 +585,12 @@
->  	status = "okay";
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&nand_flash_x16>;
-> -	ranges = <0 0 0 0x01000000>;	/* minimum GPMC partition = 16MB */
-> +	ranges = <0 0 0x08000000 0x01000000>;	/* minimum GPMC partition = 16MB */
->  	nand@0,0 {
-> +		compatible = "ti,omap2-nand";
->  		reg = <0 0 4>;		/* device IO registers */
-> +		interrupt-parent = <&crossbar_mpu>;
-> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
->  		ti,nand-ecc-opt = "bch8";
->  		ti,elm-id = <&elm>;
->  		nand-bus-width = <16>;
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 5d65db9..f0a3616 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -1389,6 +1389,10 @@
->  			gpmc,num-waitpins = <2>;
->  			#address-cells = <2>;
->  			#size-cells = <1>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
->  			status = "disabled";
->  		};
-Based on the discussion on my patchset I noticed that the nand node defines the
-interrupt but it is also defined in the parent node. Similar to the dma channel we
-should conclude where the best place for it to be defined.  But to me it seems at
-least it should only be defined once.
-
-This is true for your other patches making similar changes to the dt.
->  
-> diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
-> index 6f6bd98..245f5f9 100644
-> --- a/arch/arm/boot/dts/dra72-evm.dts
-> +++ b/arch/arm/boot/dts/dra72-evm.dts
-> @@ -395,13 +395,16 @@
->  	status = "okay";
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&nand_default>;
-> -	ranges = <0 0 0 0x01000000>;	/* minimum GPMC partition = 16MB */
-> +	ranges = <0 0 0x08000000 0x01000000>;	/* minimum GPMC partition = 16MB */
->  	nand@0,0 {
->  		/* To use NAND, DIP switch SW5 must be set like so:
->  		 * SW5.1 (NAND_SELn) = ON (LOW)
->  		 * SW5.9 (GPMC_WPN) = OFF (HIGH)
->  		 */
-> +		compatible = "ti,omap2-nand";
->  		reg = <0 0 4>;		/* device IO registers */
-> +		interrupt-parent = <&crossbar_mpu>;
-> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
->  		ti,nand-ecc-opt = "bch8";
->  		ti,elm-id = <&elm>;
->  		nand-bus-width = <16>;
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index d18ee42..d763803 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -238,6 +238,15 @@
+>   			reg = <0 0x10007000 0 0x100>;
+>   		};
+>
+> +		timer: timer@10008000 {
+> +			compatible = "mediatek,mt8173-timer",
+> +				     "mediatek,mt6577-timer";
+> +			reg = <0 0x10008000 0 0x1000>;
+> +			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&infracfg CLK_INFRA_CLK_13M>,
+> +				 <&topckgen CLK_TOP_RTC_SEL>;
+> +		};
+> +
+>   		pwrap: pwrap@1000d000 {
+>   			compatible = "mediatek,mt8173-pwrap";
+>   			reg = <0 0x1000d000 0 0x1000>;
+>
