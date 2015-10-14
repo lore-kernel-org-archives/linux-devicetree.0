@@ -1,71 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC 1/2] dt-bindings: simplefb: Support a list of
- regulator supply properties
-Date: Wed, 14 Oct 2015 11:36:48 +0100
-Message-ID: <20151014103648.GS14956@sirena.org.uk>
-References: <1444669458-5588-1-git-send-email-wens@csie.org>
- <1444669458-5588-2-git-send-email-wens@csie.org>
- <20151012171018.GB3659@leverpostej>
- <CAGb2v651=uaHEQK4wpEQywgr311NSbqEvYkpsC5zSHPSFq-HHg@mail.gmail.com>
- <561CADFE.2010609@redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OowMmFE4aK71mEhh"
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v1 2/2] ARM: dts: exynos5250: Add clocks to DISP1 domain
+Date: Wed, 14 Oct 2015 12:44:17 +0200
+Message-ID: <1444819457-27519-3-git-send-email-tomeu.vizoso@collabora.com>
+References: <1444819457-27519-1-git-send-email-tomeu.vizoso@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <561CADFE.2010609@redhat.com>
+In-Reply-To: <1444819457-27519-1-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Adds to the node of the DISP1 power domain the two clocks that need to
+be reparented while the domain is powered off:
+CLK_MOUT_ACLK200_DISP1_SUB and CLK_MOUT_ACLK300_DISP1_SUB.
 
---OowMmFE4aK71mEhh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Otherwise the state is unknown at power up and the mixer's clocks are
+all messed up.
 
-On Tue, Oct 13, 2015 at 09:08:46AM +0200, Hans de Goede wrote:
-> On 13-10-15 04:22, Chen-Yu Tsai wrote:
-> >On Tue, Oct 13, 2015 at 1:10 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >>On Tue, Oct 13, 2015 at 01:04:17AM +0800, Chen-Yu Tsai wrote:
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Link: http://lkml.kernel.org/g/561CDC33.7050103@collabora.com
+---
 
-> >>>+- num-supplies : The number of regulators used by the framebuffer.
-> >>>+- vinN-supply : The N-th (from 0) regulator used by the framebuffer.
+ arch/arm/boot/dts/exynos5250.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> >>I don't see why you need num-supplies. Why not just try probing
-> >>vin${N}-supply until such a property isn't present in the DT?
-
-> +1 for this.
-
-Even better would be to just enumerate all the properties on the node
-and request anything with a FOO-supply name.  That way we can keep
-using standard regulator bindings that name the supplies after their
-actual names on the device.
-
-> > That's doable. Though I'd add a hard limit on it. Does 16 seem
-> > reasonable?
-
-> I would not add a hard limit to the binding, you can use a fixed array in
-> the code to make the code simpler. I would say 8 should be sufficient, since
-> the limit will only be in the code we can always bump it when we need
-> to.
-
-Or just dynamically allocate the array and resize as needed if it starts
-to get to be a problem.
-
---OowMmFE4aK71mEhh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWHjBAAAoJECTWi3JdVIfQK/AH/1yPlf11H6nCC5On09TjJ5Ar
-vHQQf90Avaj6fFtPeB23iarIAYHa5xb3J5kn/HPEakh3G1s8lchURSKihGs3aIdK
-B11neQeJ0eJCRwFK3UJH/iUhx6J9EYK3OU/I3G1fwGNuMxjAfrCC4EzEVPiyTBzR
-QabqtJo1MU+Wg8S7BMETD30sx8LUjYWuuRdzuo72r3DZ9s9iVc0OQivKPg1CxYsb
-5+Bsh1U0oz+gDBdk7D8y7jVX7qqK0oZjj9ULLGUsMMwS70nl1m/ZCqSk06yU1sTl
-DsnPDU3ARCrhlSFOqjzo4ksJTeSFxfQdAviu+56Im/O+rA8u0VY5gHzgApkOPDM=
-=TZzQ
------END PGP SIGNATURE-----
-
---OowMmFE4aK71mEhh--
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index b24610ea8c2a..88b9cf5f226f 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -130,6 +130,10 @@
+ 		compatible = "samsung,exynos4210-pd";
+ 		reg = <0x100440A0 0x20>;
+ 		#power-domain-cells = <0>;
++		clocks = <&clock CLK_FIN_PLL>,
++			 <&clock CLK_MOUT_ACLK200_DISP1_SUB>,
++			 <&clock CLK_MOUT_ACLK300_DISP1_SUB>;
++		clock-names = "oscclk", "clk0", "clk1";
+ 	};
+ 
+ 	clock: clock-controller@10010000 {
+-- 
+2.5.0
