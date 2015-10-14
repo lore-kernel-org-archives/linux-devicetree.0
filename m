@@ -1,58 +1,110 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Wed, 14 Oct 2015 14:29:16 +0100
-Message-ID: <561E58AC.80207@linaro.org>
-References: <1444745127-1105-1-git-send-email-cedric.madianga@gmail.com>
- <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
- <561D1689.90703@linaro.org>
- <CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
- <CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Martin Kepplinger <martink@posteo.de>
+Subject: [PATCH v3] iio: mma8452: support either of the available interrupt pins
+Date: Wed, 14 Oct 2015 15:15:42 +0200
+Message-ID: <1444828542-28861-1-git-send-email-martink@posteo.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14/10/15 14:17, M'boumba Cedric Madianga wrote:
-> Hi Daniel,
->
->>>> +
->>>> +static int stm32_dma_remove(struct platform_device *pdev)
->>>> +{
->>>> +       struct stm32_dma_device *dmadev = platform_get_drvdata(pdev);
->>>> +
->>>> +       of_dma_controller_free(pdev->dev.of_node);
->>>> +
->>>> +       dma_async_device_unregister(&dmadev->ddev);
->>>> +
->>>> +       clk_disable_unprepare(dmadev->clk);
->>>
->>>
->>> What is the purpose of disabling/unpreparing the clock here?
->>> stm32_dma_alloc_chan_resources() and stm32_dma_free_chan_resources() should
->>> pair up and the clock should already be stopped.
->
-> stm32_dma_remove() could be called during an on-going transfer during
-> module unload.
-> So in that case, it seems that disabling/unpreparing the clock is needed.
+This change is important in order for everyone to be easily able to use the
+driver for one of the supported accelerometer chips!
 
-Really?
+Until now, the driver blindly assumed that the INT1 interrupt line is wired
+on a user's board. But these devices have 2 interrupt lines and can route
+their different interrupt sources to one of them. Since only their motion
+detection interrupt source is implemented as IIO events, users just use
+either one of the pins.
 
-I think we need to be sure any on-going transfers are stopped.
+Of course, this also falls back to assuming INT1, so for existing users
+nothing will break. The new functionality is described in the bindings doc.
 
-There are multiple reasons for this, not least the risk of executing a 
-callback that has been freed, but the one related to my point is that a 
-single clk_disable_unprepare() will remain broken because if you don't 
-know that the transfers have stopped then you don't know how many 
-on-going transfers there are.
+Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+---
+changelog:
+v3: correctly assign irq if both pins are described in DT. thanks again
+v2: don't warn but normally handle if both pins are described in dts
+    thanks Mark Rutland
+v1: initial post
 
+ .../devicetree/bindings/iio/accel/mma8452.txt      |  6 +++++
+ drivers/iio/accel/mma8452.c                        | 26 +++++++++++++++++-----
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-Daniel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+index e3c3746..3c10e85 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -7,13 +7,18 @@ Required properties:
+     * "fsl,mma8453"
+     * "fsl,mma8652"
+     * "fsl,mma8653"
++
+   - reg: the I2C address of the chip
+ 
+ Optional properties:
+ 
+   - interrupt-parent: should be the phandle for the interrupt controller
++
+   - interrupts: interrupt mapping for GPIO IRQ
+ 
++  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
++		     interrupt line in use.
++
+ Example:
+ 
+ 	mma8453fc@1d {
+@@ -21,4 +26,5 @@ Example:
+ 		reg = <0x1d>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <5 0>;
++		interrupt-names = "INT2";
+ 	};
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 1eccc2d..6b9b360 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -29,6 +29,7 @@
+ #include <linux/iio/events.h>
+ #include <linux/delay.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
+ 
+ #define MMA8452_STATUS				0x00
+ #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+@@ -1130,13 +1131,26 @@ static int mma8452_probe(struct i2c_client *client,
+ 					   MMA8452_INT_FF_MT;
+ 		int enabled_interrupts = MMA8452_INT_TRANS |
+ 					 MMA8452_INT_FF_MT;
++		int irq1, irq2;
+ 
+-		/* Assume wired to INT1 pin */
+-		ret = i2c_smbus_write_byte_data(client,
+-						MMA8452_CTRL_REG5,
+-						supported_interrupts);
+-		if (ret < 0)
+-			return ret;
++		irq1 = of_irq_get_byname(client->dev.of_node, "INT1");
++		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
++
++		/* if INT2 is found, use it. Otherwise INT1 */
++		if (!(irq2 > 0 && irq1 < 0)) {
++			ret = i2c_smbus_write_byte_data(client,
++							MMA8452_CTRL_REG5,
++							supported_interrupts);
++			if (ret < 0)
++				return ret;
++
++			if (irq1 > 0)
++				client->irq = irq1;
++			dev_info(&client->dev, "using interrupt line INT1\n");
++		} else {
++			client->irq = irq2;
++			dev_info(&client->dev, "using interrupt line INT2\n");
++		}
+ 
+ 		ret = i2c_smbus_write_byte_data(client,
+ 						MMA8452_CTRL_REG4,
+-- 
+2.1.4
