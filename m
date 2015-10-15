@@ -1,101 +1,73 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 00/11] ARM: OMAP/DTS: dra7/72-evm/beagle-x15: Audio
- support
-Date: Thu, 15 Oct 2015 10:08:37 +0300
-Message-ID: <561F50F5.9060909@ti.com>
-References: <1440400807-32274-1-git-send-email-peter.ujfalusi@ti.com>
- <55F68A60.6050900@ti.com> <20150914162851.GM4215@atomide.com>
- <20151012205732.GW23801@atomide.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v6 0/5] Add DT support for netxbig LEDs
+Date: Thu, 15 Oct 2015 09:16:42 +0200
+Message-ID: <87mvvk38kl.fsf@free-electrons.com>
+References: <1443301358-2131-1-git-send-email-simon.guinot@sequanux.org>
+	<56178C49.4070704@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151012205732.GW23801-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <56178C49.4070704@samsung.com> (Jacek Anaszewski's message of
+	"Fri, 09 Oct 2015 11:43:37 +0200")
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Simon Guinot <simon.guinot@sequanux.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vincent Donnefort <vdonnefort@gmail.com>, Yoann Sculo <yoann@printk.fr>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh@kernel.org>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Hi Jacek,
+ 
+ On ven., oct. 09 2015, Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
 
-On 10/12/2015 11:57 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [150914 09:32]:
->> * Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150914 01:54]:
->>> Hi Tony,
->>>
->>> On 08/24/2015 10:19 AM, Peter Ujfalusi wrote:
->>>> Hi,
->>>>
->>>> this series will enable analog audio (via onboard aic310x codec) f=
-or dra7-evm,
->>>> dra72-evm and am57xx-beagle-x15 boards.
->>>> In these board McASP3 is connected to the codec and for the McASP3=
- we needed to
->>>> have the DMA crossbar in place since the request lines are not map=
-ped by
->>>> default.
->>>
->>> Did you had a chance to look at this series?
+> On 09/26/2015 11:02 PM, Simon Guinot wrote:
+>> Hello,
+
+[..]
 >>
->> Looks OK to me, will look at it more once we have the fixes merged.
+>> Simon Guinot (5):
+>>    leds: netxbig: add device tree binding
+>>    ARM: Kirkwood: add LED DT entries for netxbig boards
+>>    ARM: mvebu: remove static LED setup for netxbig boards
+>>    leds: netxbig: convert to use the devm_ functions
+>>    leds: netxbig: set led_classdev max_brightness
 >>
->> Paul may have comments on the hwmod chage, looks like you forgot
->> to Cc him on it. Can you please resend that one with Paul in Cc?
->=20
-> Applying all the dts changes into omap-for-v4.3/dt thanks. Paul
-> can pick up the hwmod change then after reviewing it.
+>>   .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |  22 ++
+>>   .../devicetree/bindings/leds/leds-netxbig.txt      |  92 ++++++
+>>   arch/arm/boot/dts/kirkwood-net5big.dts             |  60 ++++
+>>   arch/arm/boot/dts/kirkwood-netxbig.dtsi            |  80 +++++
+>>   arch/arm/mach-mvebu/Kconfig                        |   7 -
+>>   arch/arm/mach-mvebu/Makefile                       |   1 -
+>>   arch/arm/mach-mvebu/board.h                        |  21 --
+>>   arch/arm/mach-mvebu/kirkwood.c                     |   4 -
+>>   arch/arm/mach-mvebu/netxbig.c                      | 191 ------------
+>>   drivers/leds/leds-netxbig.c                        | 336 ++++++++++++++++-----
+>>   include/dt-bindings/leds/leds-netxbig.h            |  18 ++
+>>   .../linux/platform_data/leds-kirkwood-netxbig.h    |   1 +
+>>   12 files changed, 531 insertions(+), 302 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-netxbig.txt
+>>   delete mode 100644 arch/arm/mach-mvebu/board.h
+>>   delete mode 100644 arch/arm/mach-mvebu/netxbig.c
+>>   create mode 100644 include/dt-bindings/leds/leds-netxbig.h
+>>
+>
+> Since no comment regarding DT bindings has appeared for a long time,
+> I decided to merge the patch set without DT maintainer's ack, thanks.
 
-Thanks for taking the DTS patches, however if Paul agrees with the way =
-I think we can handle the McASP in DRA7xx then the patch which adds the=
- mcasp3 node to dra7.dtsi needs to be replaced by:
+it is a good news that this series will be finally merged. However did
+you also take the patches "ARM: Kirkwood: add LED DT entries for netxbig
+boards" and "ARM: mvebu: remove static LED setup for netxbig boards" ?
 
-=46rom b6733f9ca96a997fab3d0455783e875dd9ae032b Mon Sep 17 00:00:00 200=
-1
-=46rom: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Date: Tue, 24 Feb 2015 15:12:59 +0200
-Subject: [PATCH v2 03/12] ARM: DTS: dra7: Add McASP3 node
+Thanks,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Gregory
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 8fedddc35999..cde0a3cbf262 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1404,6 +1404,21 @@
- 			status =3D "disabled";
- 		};
-=20
-+		mcasp3: mcasp@48468000 {
-+			compatible =3D "ti,dra7-mcasp-audio";
-+			ti,hwmods =3D "mcasp3";
-+			reg =3D <0x48468000 0x2000>;
-+			reg-names =3D "mpu";
-+			interrupts =3D <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "tx", "rx";
-+			dmas =3D <&sdma_xbar 133>, <&sdma_xbar 132>;
-+			dma-names =3D "tx", "rx";
-+			clocks =3D <&mcasp3_aux_gfclk_mux>, <&mcasp3_ahclkx_mux>;
-+			clock-names =3D "fck", "ahclkx";
-+			status =3D "disabled";
-+		};
-+
- 		crossbar_mpu: crossbar@4a002a48 {
- 			compatible =3D "ti,irq-crossbar";
- 			reg =3D <0x4a002a48 0x130>;
---=20
-2.6.1
+>
+> -- 
+> Best Regards,
+> Jacek Anaszewski
 
-
-
-
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
