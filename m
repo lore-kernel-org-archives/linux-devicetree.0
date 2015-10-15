@@ -1,118 +1,207 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/6] mfd: axp20x: Split the driver into core
- and i2c bits
-Date: Thu, 15 Oct 2015 15:39:58 +0800
-Message-ID: <CAGb2v66qa6aw4_YUxawuJk2M-fz24usYqcwKVAr6uKw-FBWjvQ@mail.gmail.com>
-References: <1444840342-9233-1-git-send-email-wens@csie.org>
- <1444840342-9233-3-git-send-email-wens@csie.org> <CAGRGNgXAtuV+9+i=rRerRX6T9=i6W+dDCBJN8Jh8QS7A82r+VA@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/5] MIPS: dt: xilfpga: Add xilfpga device tree files.
+Date: Thu, 15 Oct 2015 08:45:30 +0100
+Message-ID: <20151015074530.GD14475@jhogan-linux.le.imgtec.org>
+References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <1444827117-10939-4-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ5Q7WYAKGQESEXIMWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGRGNgXAtuV+9+i=rRerRX6T9=i6W+dDCBJN8Jh8QS7A82r+VA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iVCmgExH7+hIHJ1A"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444827117-10939-4-git-send-email-Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 6:37 AM, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Chen-Yu,
->
-> On Thu, Oct 15, 2015 at 3:32 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->> The axp20x driver assumes the device is i2c based. This is not the
->> case with later models, which use a proprietary 2 wire serial bus
->> called "Reduced Serial Bus".
->>
->> This patch follows the example of mfd/wm831x and splits it into
->> an interface independet core, and an i2c specific glue layer.
->>
->> The old MFD_AXP20X Kconfig symbol is kept until sub-device drivers
->> and defconfigs have migrated to the new MFD_AXP20X_CORE symbol.
->>
->> Included but unused header files are removed as well.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  drivers/mfd/Kconfig                     |  18 ++++-
->>  drivers/mfd/Makefile                    |   3 +-
->>  drivers/mfd/{axp20x.c => axp20x-core.c} | 105 +++-----------------------
->>  drivers/mfd/axp20x-i2c.c                | 127 ++++++++++++++++++++++++++++++++
->>  include/linux/mfd/axp20x.h              |  33 ++++++++-
->>  5 files changed, 186 insertions(+), 100 deletions(-)
->>  rename drivers/mfd/{axp20x.c => axp20x-core.c} (87%)
->>  create mode 100644 drivers/mfd/axp20x-i2c.c
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 99d63675f073..9ba3feb3f2fc 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -79,15 +79,25 @@ config MFD_BCM590XX
->>         help
->>           Support for the BCM590xx PMUs from Broadcom
->>
->> +# Keep the old symbol until subdevice driver dependencies and defconfigs
->> +# have been updated.
->>  config MFD_AXP20X
->> -       bool "X-Powers AXP20X"
->> +       bool "X-Powers AXP series PMICs"
->> +       select MFD_AXP20X_I2C
->
-> Unless something has changed in KConfig, (and my knowledge on this is
-> likely to be outdated) I don't believe this will work as I don't think
-> selects don't get propagated like you expect. Have you checked that
-> all possible configuration options survive make oldconfig and build
-> without warnings?
+--iVCmgExH7+hIHJ1A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah this totally did not work out like I expected.
+On Wed, Oct 14, 2015 at 01:51:55PM +0100, Zubair Lutfullah Kakakhel wrote:
+> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-> Also, unless there's some compelling reason not to, it's probably a
-> good idea to update the dependent drivers and defconfigs now. (or make
-> this change in a gentler manner.)
+Any chance of a little more explanation, other than the subject line?
 
-What I wanted was to keep the original symbol for a release cycle or
-more, giving me time to update the related entries across the kernel.
-After the changes are in, we could remove the old one.
+> ---
+>  arch/mips/boot/dts/Makefile                |  1 +
+>  arch/mips/boot/dts/xilfpga/Makefile        |  9 ++++++
+>  arch/mips/boot/dts/xilfpga/microAptiv.dtsi | 21 +++++++++++++
+>  arch/mips/boot/dts/xilfpga/nexys4ddr.dts   | 47 ++++++++++++++++++++++++=
+++++++
+>  4 files changed, 78 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
+>  create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+>  create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+>=20
+> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+> index 778a340..0571ef7 100644
+> --- a/arch/mips/boot/dts/Makefile
+> +++ b/arch/mips/boot/dts/Makefile
+> @@ -6,6 +6,7 @@ dts-dirs	+=3D mti
+>  dts-dirs	+=3D netlogic
+>  dts-dirs	+=3D qca
+>  dts-dirs	+=3D ralink
+> +dts-dirs	+=3D xilfpga
+> =20
+>  obj-y		:=3D $(addsuffix /, $(dts-dirs))
+> =20
+> diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xil=
+fpga/Makefile
+> new file mode 100644
+> index 0000000..913a752
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/xilfpga/Makefile
+> @@ -0,0 +1,9 @@
+> +dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+=3D nexys4ddr.dtb
+> +
+> +obj-y				+=3D $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-				+=3D dummy.o
+> +
+> +always				:=3D $(dtb-y)
+> +clean-files	:=3D *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/xilfpga/microAptiv.dtsi b/arch/mips/boot/=
+dts/xilfpga/microAptiv.dtsi
+> new file mode 100644
+> index 0000000..81d518e
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+> @@ -0,0 +1,21 @@
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	compatible =3D "img,xilfpga";
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		cpu@0 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "mips,m14Kc";
+> +			clocks	=3D <&ext>;
+> +			reg =3D <0>;
+> +		};
+> +	};
+> +
+> +	ext: ext {
+> +		compatible =3D "fixed-clock";
+> +		#clock-cells =3D <0>;
+> +	};
+> +};
+> diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/dt=
+s/xilfpga/nexys4ddr.dts
+> new file mode 100644
+> index 0000000..e225ae7
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+> @@ -0,0 +1,47 @@
+> +/dts-v1/;
+> +
+> +#include "microAptiv.dtsi"
+> +
+> +/ {
+> +	compatible =3D "img,xilfpga";
 
-The other way would be to change MFD_AXP20X to a hidden symbol, and
-let the 2 new ones select that. Then we'd just update all the
-defconfigs.
+You can have more than one compatible string, separated by commas. Does
+it make sense to have one that describes the specific system first
+(nexys4ddr??) in addition to the generic xilfpga one? That way software
+can still distinguish if it becomes necessary.
 
-I'll rework this and add defconfig updates.
+> +
+> +	memory {
+> +		device_type =3D "memory";
+> +		reg =3D <0x0 0x07ffffff>;
 
-Thanks
-ChenYu
+I think the second cell is size, not end address, so it should
+presumably be 0x08000000?
 
->> +
->> +config MFD_AXP20X_CORE
->> +       bool
->>         select MFD_CORE
->> -       select REGMAP_I2C
->>         select REGMAP_IRQ
->> +
->> +config MFD_AXP20X_I2C
->> +       bool "X-Powers AXP series I2C PMICs"
->> +       select MFD_AXP20X_CORE
->> +       select REGMAP_I2C
->>         depends on I2C=y
->>         help
->> -         If you say Y here you get support for the X-Powers AXP202, AXP209 and
->> -         AXP288 power management IC (PMIC).
->> +         If you say Y here you get support for the X-Powers AXP series I2C
->> +         based power management ICs (PMICs).
->>           This driver include only the core APIs. You have to select individual
->>           components like regulators or the PEK (Power Enable Key) under the
->>           corresponding menus.
->
-> Thanks,
->
-> --
-> Julian Calaby
->
-> Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Profile: http://www.google.com/profiles/julian.calaby/
+> +	};
+> +
+> +	cpuintc: interrupt-controller@0 {
+> +		#address-cells =3D <0>;
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-controller;
+> +		compatible =3D "mti,cpu-interrupt-controller";
+> +	};
+> +
+> +	axi_gpio: gpio@10600000 {
+> +		#gpio-cells =3D <1>;
+> +		compatible =3D "xlnx,xps-gpio-1.00.a";
+> +		gpio-controller;
+> +		reg =3D < 0x10600000 0x10000 >;
+
+Inconsistent whitespace between < > compared to other properties.
+
+> +		xlnx,all-inputs =3D <0x0>;
+> +		xlnx,dout-default =3D <0x0>;
+> +		xlnx,gpio-width =3D <0x16>;
+> +		xlnx,interrupt-present =3D <0x0>;
+> +		xlnx,is-dual =3D <0x0>;
+> +		xlnx,tri-default =3D <0xffffffff>;
+> +	} ;
+> +
+> +	axi_uart16550: serial@10400000 {
+> +		compatible =3D "ns16550a";
+> +		reg =3D <0x10400000 0x10000>;
+> +
+> +		reg-shift =3D <2>;
+> +		reg-offset =3D <0x1000>;
+> +
+> +		clock-frequency =3D <50000000>;
+
+I guess the binding for that device already exists, but is it worth
+extending it to take a clock node reference instead of a hardcoded
+frequency (I'm guessing ext by the frequency and choice of clocks)?
+
+> +		status =3D "okay";
+
+I don't think you normally need that unless you describe e.g. SoC
+peripheral hardware that might not be brought out by the board, in which
+case you'd say its disabled in the SoC dtsi file, but enable it at the
+board level, which doesn't seem to be happening here.
+
+Cheers
+James
+
+> +	};
+> +};
+> +
+> +&ext {
+> +	clock-frequency =3D <50000000>;
+> +};
+> --=20
+> 1.9.1
+>=20
+>=20
+
+--iVCmgExH7+hIHJ1A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWH1maAAoJEGwLaZPeOHZ6uOcQALnH8TsBKviQ5qZ2ZlE/In/w
+J7pSjNI3oki5bfa+JKWVRgCtQgwEK8LfmLavTKZbtI9x2dG/qzziBiFlK2n2qW8H
+lkH9uQFb9pv/lLQVrGcptoJoKwCsBtal9ub8PXyHN+huwnrewbrAHEFLowrS//k8
+Jl3mUp/Tbr+EjhwQ0PaN1DFXvH28Vcl0N+aRJ7PAbMDN1jR+JOFBpuU4T6XsXEg3
+/Y5lIH6UM9+lyJQ7JvgxMqApkPjUX0INZMpgmXvbebDoVY0HYUpQg1iOBmD2DJUL
+ljY+rtqWNBpwjEuVb/e9iZtYH52acIXPIXcZnHuYy/Sa2yVh0WhB+5fmyKUJCH4E
+dQfvzop+vfnMXHwU+ubz5ESr8hezvnTOyPF365TyDscWFvWxGpjoduS2gMXk8f2G
+xXLpddwjY5buvZ6/IMoTLqi+rqTK6wP7ATW9HBi2TJnQ0vChAlTz/hFmUMB0I7xK
+BV9lraqekIIZkORiiXM5ir/DcKwDGZWT5cgkfxfMB1arEqEpe3DGmfaSbzL+rvJ4
+15gl3OxRK7iFBMHgDOl2XgkgsppYDirJblEV3GZuRybnoDtXoG/tElJO+d5PBxRB
+b7rsZP792d2ZFGIOwlS64JMN9IdLKw7ishcY5km9LOxg7beKIGuPBo6NPhwjB2se
+oxRYHFBWACSPXzPw14gZ
+=weQU
+-----END PGP SIGNATURE-----
+
+--iVCmgExH7+hIHJ1A--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
