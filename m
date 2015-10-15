@@ -1,82 +1,37 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 08/13] clk: add ARM syscon ICST device tree bindings
-Date: Thu, 15 Oct 2015 12:23:25 -0700
-Message-ID: <20151015192325.GN4558@codeaurora.org>
-References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
- <1444916813-31024-9-git-send-email-linus.walleij@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and pcie
+Date: Thu, 15 Oct 2015 21:34:51 +0200
+Message-ID: <6215485.RTPqreMEMX@wuerfel>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <5192855.p6QLDWTiVi@wuerfel> <561FCDC0.3080109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444916813-31024-9-git-send-email-linus.walleij@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <561FCDC0.3080109@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/15, Linus Walleij wrote:
-> diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-> new file mode 100644
-> index 000000000000..19eb3aa765c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-> @@ -0,0 +1,40 @@
-> +ARM System Controller ICST clocks
-> +
-> +The ICS525 and ICS307 oscillators are produced by Integrated Devices
-> +Technology (IDT). ARM integrated these oscillators deeply into their
-> +reference designs by adding special control registers that manage such
-> +oscillators to their system controllers.
-> +
-> +The ARM system controller contains logic to serialized and initialize
+On Thursday 15 October 2015 12:01:04 Murali Karicheri wrote:
+> 
+> >> + * Redistributions in binary form must reproduce the above copyright
+> >> + * notice, this list of conditions and the following disclaimer in the
+> >> + * documentation and/or other materials provided with the
+> >> + * distribution.
+> >
+> > The current code does not do this when compiled, which might be a
+> > problem for distributors. Can you clarify the license?
+> >
+> Arnd,
+> 
+> Can you elaborate on this? I did a grep on the string "Redistributions 
+> in binary form must reproduce the above copyright" and I could find 
+> several instance of this. So I am not sure what you mean by "The current 
+> code does not do this when compiled".
 
-serialize ?
+You write that the binary form of the code must produce the copyright
+notice. I don't see any code that does this. If I was looking in the
+wrong place, let me know.
 
-> +an ICST clock request after a write to the 32 bit register at an offset
-> +into the system controller. Further, to even be able to alter one of
-
-Furthermore?
-
-> +these frequencies, the system controller must first be unlocked by
-> +writing a special token to another offset in the system controller.
-
-Sounds like a great design!
-
-> +
-> +The ICST oscillator must be provided inside a system controller node.
-> +
-> +Required properties:
-> +- lock-offset: the offset address into the system controller where the
-> +  unlocking register is located
-> +- vco-offset: the offset address into the system controller where the
-> +  ICST control register is located (even 32 bit address)
-
-Is there any reason why we don't use a reg property for this?
-
-> +- compatible: must be one of "arm,syscon-icst525" or "arm,syscon-icst307"
-> +- #clock-cells: must be <0>
-> +- clocks: parent clock, since the ICST needs a parent clock to derive its
-> +  frequency from, this attribute is compulsory.
-> +
-> +Example:
-> +
-> +syscon: syscon@10000000 {
-> +	compatible = "syscon";
-> +	reg = <0x10000000 0x1000>;
-> +
-> +	oscclk0: osc0@0c {
-> +		compatible = "arm,syscon-icst307";
-> +		#clock-cells = <0>;
-> +		lock-offset = <0x20>;
-> +		vco-offset = <0x0C>;
-
-lowercase the C?
-
-> +		clocks = <&xtal24mhz>;
-> +	};
-> +	(...)
-> +};
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+	Arnd
