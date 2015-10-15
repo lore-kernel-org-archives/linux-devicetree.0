@@ -1,247 +1,104 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH v3 04/10] clk: nsp: add clock support for Broadcom Northstar
- Plus SoC
-Date: Thu, 15 Oct 2015 15:48:27 -0400
-Message-ID: <1444938513-10758-5-git-send-email-jonmason@broadcom.com>
-References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 3/4] PCI/MSI:  Add helper function
+ pci_msi_domain_get_msi_rid().
+Date: Thu, 15 Oct 2015 15:08:36 -0500
+Message-ID: <20151015200836.GB10442@localhost>
+References: <1444342250-6196-1-git-send-email-ddaney.cavm@gmail.com>
+ <1444342250-6196-4-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444342250-6196-4-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom Northstar Plus SoC is architected under the iProc
-architecture. It has the following PLLs: ARMPLL, GENPLL, LCPLL0, all
-derived from an onboard crystal.
+On Thu, Oct 08, 2015 at 03:10:49PM -0700, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+> 
+> Add pci_msi_domain_get_msi_rid() to return the MSI requester id (RID).
+> Initially needed by gic-v3 based systems. It will be used by follow on
+> patch to drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> 
+> Initially supports mapping the RID via OF device tree.  In the future,
+> this could be extended to use ACPI _IORT tables as well.
+> 
+> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- drivers/clk/bcm/Makefile            |   2 +
- drivers/clk/bcm/clk-nsp.c           | 135 ++++++++++++++++++++++++++++++++++++
- include/dt-bindings/clock/bcm-nsp.h |  51 ++++++++++++++
- 3 files changed, 188 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-nsp.c
- create mode 100644 include/dt-bindings/clock/bcm-nsp.h
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 8a7a477..e258b28 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -4,3 +4,5 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
- obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
- obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
-+obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
-+obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
-diff --git a/drivers/clk/bcm/clk-nsp.c b/drivers/clk/bcm/clk-nsp.c
-new file mode 100644
-index 0000000..bc8ebdcd
---- /dev/null
-+++ b/drivers/clk/bcm/clk-nsp.c
-@@ -0,0 +1,135 @@
-+/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/err.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include <dt-bindings/clock/bcm-nsp.h>
-+#include "clk-iproc.h"
-+
-+#define REG_VAL(o, s, w) { .offset = o, .shift = s, .width = w, }
-+
-+#define AON_VAL(o, pw, ps, is) { .offset = o, .pwr_width = pw, \
-+	.pwr_shift = ps, .iso_shift = is }
-+
-+#define RESET_VAL(o, rs, prs, kis, kiw, kps, kpw, kas, kaw) { .offset = o, \
-+	.reset_shift = rs, .p_reset_shift = prs, .ki_shift = kis, \
-+	.ki_width = kiw, .kp_shift = kps, .kp_width = kpw, .ka_shift = kas, \
-+	.ka_width = kaw }
-+
-+#define ENABLE_VAL(o, es, hs, bs) { .offset = o, .enable_shift = es, \
-+	.hold_shift = hs, .bypass_shift = bs }
-+
-+static void __init nsp_armpll_init(struct device_node *node)
-+{
-+	iproc_armpll_setup(node);
-+}
-+CLK_OF_DECLARE(nsp_armpll, "brcm,nsp-armpll", nsp_armpll_init);
-+
-+static const struct iproc_pll_ctrl genpll = {
-+	.flags = IPROC_CLK_PLL_HAS_NDIV_FRAC | IPROC_CLK_EMBED_PWRCTRL,
-+	.aon = AON_VAL(0x0, 1, 12, 0),
-+	.reset = RESET_VAL(0x0, 11, 10, 4, 3, 0, 4, 7, 3),
-+	.ndiv_int = REG_VAL(0x14, 20, 10),
-+	.ndiv_frac = REG_VAL(0x14, 0, 20),
-+	.pdiv = REG_VAL(0x18, 24, 3),
-+	.status = REG_VAL(0x20, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl genpll_clk[] = {
-+	[BCM_NSP_GENPLL_PHY_CLK] = {
-+		.channel = BCM_NSP_GENPLL_PHY_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 12, 6, 18),
-+		.mdiv = REG_VAL(0x18, 16, 8),
-+	},
-+	[BCM_NSP_GENPLL_ENET_SW_CLK] = {
-+		.channel = BCM_NSP_GENPLL_ENET_SW_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 13, 7, 19),
-+		.mdiv = REG_VAL(0x18, 8, 8),
-+	},
-+	[BCM_NSP_GENPLL_USB_PHY_REF_CLK] = {
-+		.channel = BCM_NSP_GENPLL_USB_PHY_REF_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 14, 8, 20),
-+		.mdiv = REG_VAL(0x18, 0, 8),
-+	},
-+	[BCM_NSP_GENPLL_IPROCFAST_CLK] = {
-+		.channel = BCM_NSP_GENPLL_IPROCFAST_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 15, 9, 21),
-+		.mdiv = REG_VAL(0x1c, 16, 8),
-+	},
-+	[BCM_NSP_GENPLL_SATA1_CLK] = {
-+		.channel = BCM_NSP_GENPLL_SATA1_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 16, 10, 22),
-+		.mdiv = REG_VAL(0x1c, 8, 8),
-+	},
-+	[BCM_NSP_GENPLL_SATA2_CLK] = {
-+		.channel = BCM_NSP_GENPLL_SATA2_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 17, 11, 23),
-+		.mdiv = REG_VAL(0x1c, 0, 8),
-+	},
-+};
-+
-+static void __init nsp_genpll_clk_init(struct device_node *node)
-+{
-+	iproc_pll_clk_setup(node, &genpll, NULL, 0, genpll_clk,
-+			    ARRAY_SIZE(genpll_clk));
-+}
-+CLK_OF_DECLARE(nsp_genpll_clk, "brcm,nsp-genpll", nsp_genpll_clk_init);
-+
-+static const struct iproc_pll_ctrl lcpll0 = {
-+	.flags = IPROC_CLK_PLL_HAS_NDIV_FRAC | IPROC_CLK_EMBED_PWRCTRL,
-+	.aon = AON_VAL(0x0, 1, 24, 0),
-+	.reset = RESET_VAL(0x0, 23, 22, 16, 3, 12, 4, 19, 4),
-+	.ndiv_int = REG_VAL(0x4, 20, 8),
-+	.ndiv_frac = REG_VAL(0x4, 0, 20),
-+	.pdiv = REG_VAL(0x4, 28, 3),
-+	.status = REG_VAL(0x10, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl lcpll0_clk[] = {
-+	[BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK] = {
-+		.channel = BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 6, 3, 9),
-+		.mdiv = REG_VAL(0x8, 24, 8),
-+	},
-+	[BCM_NSP_LCPLL0_SDIO_CLK] = {
-+		.channel = BCM_NSP_LCPLL0_SDIO_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 7, 4, 10),
-+		.mdiv = REG_VAL(0x8, 16, 8),
-+	},
-+	[BCM_NSP_LCPLL0_DDR_PHY_CLK] = {
-+		.channel = BCM_NSP_LCPLL0_DDR_PHY_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 8, 5, 11),
-+		.mdiv = REG_VAL(0x8, 8, 8),
-+	},
-+};
-+
-+static void __init nsp_lcpll0_clk_init(struct device_node *node)
-+{
-+	iproc_pll_clk_setup(node, &lcpll0, NULL, 0, lcpll0_clk,
-+			    ARRAY_SIZE(lcpll0_clk));
-+}
-+CLK_OF_DECLARE(nsp_lcpll0_clk, "brcm,nsp-lcpll0", nsp_lcpll0_clk_init);
-diff --git a/include/dt-bindings/clock/bcm-nsp.h b/include/dt-bindings/clock/bcm-nsp.h
-new file mode 100644
-index 0000000..ad5827c
---- /dev/null
-+++ b/include/dt-bindings/clock/bcm-nsp.h
-@@ -0,0 +1,51 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *	* Redistributions of source code must retain the above copyright
-+ *	  notice, this list of conditions and the following disclaimer.
-+ *	* Redistributions in binary form must reproduce the above copyright
-+ *	  notice, this list of conditions and the following disclaimer in
-+ *	  the documentation and/or other materials provided with the
-+ *	  distribution.
-+ *	* Neither the name of Broadcom Corporation nor the names of its
-+ *	  contributors may be used to endorse or promote products derived
-+ *	  from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#ifndef _CLOCK_BCM_NSP_H
-+#define _CLOCK_BCM_NSP_H
-+
-+/* GENPLL clock channel ID */
-+#define BCM_NSP_GENPLL			0
-+#define BCM_NSP_GENPLL_PHY_CLK		1
-+#define BCM_NSP_GENPLL_ENET_SW_CLK	2
-+#define BCM_NSP_GENPLL_USB_PHY_REF_CLK	3
-+#define BCM_NSP_GENPLL_IPROCFAST_CLK	4
-+#define BCM_NSP_GENPLL_SATA1_CLK	5
-+#define BCM_NSP_GENPLL_SATA2_CLK	6
-+
-+/* LCPLL0 clock channel ID */
-+#define BCM_NSP_LCPLL0			0
-+#define BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK	1
-+#define BCM_NSP_LCPLL0_SDIO_CLK		2
-+#define BCM_NSP_LCPLL0_DDR_PHY_CLK	3
-+
-+#endif /* _CLOCK_BCM_NSP_H */
--- 
-1.9.1
+I assume Thomas will take these (or at least, somebody other than me).
+
+> ---
+>  drivers/pci/msi.c   | 30 ++++++++++++++++++++++++++++++
+>  include/linux/msi.h |  1 +
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index d449714..81a2798 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+>  #include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+>  
+>  #include "pci.h"
+>  
+> @@ -1327,4 +1328,33 @@ struct irq_domain *pci_msi_create_default_irq_domain(struct device_node *node,
+>  
+>  	return domain;
+>  }
+> +
+> +static int get_msi_id_cb(struct pci_dev *pdev, u16 alias, void *data)
+> +{
+> +	u32 *pa = data;
+> +
+> +	*pa = alias;
+> +	return 0;
+> +}
+> +/**
+> + * pci_msi_domain_get_msi_rid - Get the MSI requester id (RID)
+> + * @domain:	The interrupt domain
+> + * @pdev:	The PCI device.
+> + *
+> + * The RID for a device is formed from the alias, with a firmware
+> + * supplied mapping applied
+> + *
+> + * Returns: The RID.
+> + */
+> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
+> +{
+> +	u32 rid = 0;
+> +
+> +	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
+> +
+> +	if (domain->of_node)
+> +		rid = of_msi_map_rid(&pdev->dev, domain->of_node, rid);
+> +
+> +	return rid;
+> +}
+>  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index ad939d0..56e3b76 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -293,6 +293,7 @@ irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+>  					  struct msi_desc *desc);
+>  int pci_msi_domain_check_cap(struct irq_domain *domain,
+>  			     struct msi_domain_info *info, struct device *dev);
+> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+>  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
+>  
+>  #endif /* LINUX_MSI_H */
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
