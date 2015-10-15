@@ -1,63 +1,62 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2 2/5] mtd: nand: omap2: Start dma request before enabling prefetch
-Date: Thu, 15 Oct 2015 12:37:25 -0500
-Message-ID: <1444930648-19313-3-git-send-email-fcooper@ti.com>
-References: <1444930648-19313-1-git-send-email-fcooper@ti.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 1/1] net: phy: bcm-phy-lib: Fix module license issue
+Date: Thu, 15 Oct 2015 10:39:26 -0700
+Message-ID: <561FE4CE.2030101@gmail.com>
+References: <1444930633-23314-1-git-send-email-arunp@broadcom.com> <1444930633-23314-2-git-send-email-arunp@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444930648-19313-1-git-send-email-fcooper@ti.com>
+In-Reply-To: <1444930633-23314-2-git-send-email-arunp@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, rogerq@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+To: Arun Parameswaran <arunp@broadcom.com>, "David S . Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-The prefetch engine sends a dma request once a FIFO threshold has
-been met. No other requests are received until the previous request
-is handled.
+On 15/10/15 10:37, Arun Parameswaran wrote:
+> The 'bcm-phy-lib.c', added as a part of the commit
+> "net: phy: Add Broadcom phy library for common interfaces"
+> was missing the module license. This was causing an issue
+> when the library is built as a module; "module license
+> 'unspecified' taints kernel".
+> 
+> This patch fixes the issue by adding the module license,
+> author and description to the bcm-phy-lib.c file.
+> 
+> Fixes: a1cba5613edf5 ("net: phy: Add Broadcom phy library for
+> common interfaces")
 
-Starting an edma transfer (dma_async_issue_pending) results in any
-previous event for the dma channel to be cleared. Therefore, starting
-the prefetch engine before initiating the dma transfer may result in
-the prefetch triggering a dma request but instead of it being handled
-it can end up being cleared. This will result in a hang since the code
-will continue to wait for the dma request to complete.
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-By initiating the dma request before enabling the prefetch engine this
-race condition is avoided and no dma request are missed/cleared.
+> Signed-off-by: Arun Parameswaran <arunp@broadcom.com>
+> ---
+>  drivers/net/phy/bcm-phy-lib.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
+> index dd79ea6..ddb377e 100644
+> --- a/drivers/net/phy/bcm-phy-lib.c
+> +++ b/drivers/net/phy/bcm-phy-lib.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/brcmphy.h>
+>  #include <linux/export.h>
+>  #include <linux/mdio.h>
+> +#include <linux/module.h>
+>  #include <linux/phy.h>
+> 
+>  #define MII_BCM_CHANNEL_WIDTH     0x2000
+> @@ -206,3 +207,7 @@ int bcm_phy_enable_eee(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(bcm_phy_enable_eee);
+> +
+> +MODULE_DESCRIPTION("Broadcom PHY Library");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Broadcom Corporation");
+> --
+> 2.6.1
+> 
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
-V2 Changes:
-Moved comment
 
- drivers/mtd/nand/omap2.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-index 957c32f..1f58420 100644
---- a/drivers/mtd/nand/omap2.c
-+++ b/drivers/mtd/nand/omap2.c
-@@ -509,6 +509,11 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
- 	tx->callback_param = &info->comp;
- 	dmaengine_submit(tx);
- 
-+	init_completion(&info->comp);
-+
-+	/* setup and start DMA using dma_addr */
-+	dma_async_issue_pending(info->dma);
-+
- 	/*  configure and start prefetch transfer */
- 	ret = omap_prefetch_enable(info->gpmc_cs,
- 		PREFETCH_FIFOTHRESHOLD_MAX, 0x1, len, is_write, info);
-@@ -516,10 +521,6 @@ static inline int omap_nand_dma_transfer(struct mtd_info *mtd, void *addr,
- 		/* PFPW engine is busy, use cpu copy method */
- 		goto out_copy_unmap;
- 
--	init_completion(&info->comp);
--	dma_async_issue_pending(info->dma);
--
--	/* setup and start DMA using dma_addr */
- 	wait_for_completion(&info->comp);
- 	tim = 0;
- 	limit = (loops_per_jiffy * msecs_to_jiffies(OMAP_NAND_TIMEOUT_MS));
 -- 
-2.6.1
+Florian
