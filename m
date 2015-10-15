@@ -1,37 +1,81 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/10] clk: iproc: add support for BCM NS, NSP, and NS2
-Date: Thu, 15 Oct 2015 15:48:23 -0400
-Message-ID: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH v3 10/10] clk: iproc: define Broadcom NS2 iProc clock binding
+Date: Thu, 15 Oct 2015 15:48:33 -0400
+Message-ID: <1444938513-10758-11-git-send-email-jonmason@broadcom.com>
+References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+Document the device tree bindings for Broadcom Northstar 2 architecture
+based clock controller
 
-v3 - Added a patch to fix cygnus clk link failures, and added back the
-DT documentation patches that were removed from v2.
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ .../bindings/clock/brcm,iproc-clocks.txt           | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-v2 - Added a patch to change the Cygnus clk macros to uppercase,
-removed the device tree changes from the series (will send out those as
-an RFC), and other minor changes that Stephen Boyd requested.
+diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+index b3c3e9d..ede65a5 100644
+--- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+@@ -160,3 +160,51 @@ Northstar Plus.  These clock IDs are defined in:
+     pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
+     sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
+     ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
++
++Northstar 2
++-----------
++PLL and leaf clock compatible strings for Northstar 2 are:
++    "brcm,ns2-genpll-scr"
++    "brcm,ns2-genpll-sw"
++    "brcm,ns2-lcpll-ddr"
++    "brcm,ns2-lcpll-ports"
++
++The following table defines the set of PLL/clock index and ID for Northstar 2.
++These clock IDs are defined in:
++    "include/dt-bindings/clock/bcm-ns2.h"
++
++    Clock	Source		Index	ID
++    ---		-----		-----	---------
++    crystal	N/A		N/A	N/A
++
++    genpll_scr	crystal		0	BCM_NS2_GENPLL_SCR
++    scr		genpll_scr	1	BCM_NS2_GENPLL_SCR_SCR_CLK
++    fs		genpll_scr	2	BCM_NS2_GENPLL_SCR_FS_CLK
++    audio_ref	genpll_scr	3	BCM_NS2_GENPLL_SCR_AUDIO_CLK
++    ch3_unused	genpll_scr	4	BCM_NS2_GENPLL_SCR_CH3_UNUSED
++    ch4_unused	genpll_scr	5	BCM_NS2_GENPLL_SCR_CH4_UNUSED
++    ch5_unused	genpll_scr	6	BCM_NS2_GENPLL_SCR_CH5_UNUSED
++
++    genpll_sw	crystal		0	BCM_NS2_GENPLL_SW
++    rpe		genpll_sw	1	BCM_NS2_GENPLL_SW_RPE_CLK
++    250		genpll_sw	2	BCM_NS2_GENPLL_SW_250_CLK
++    nic		genpll_sw	3	BCM_NS2_GENPLL_SW_NIC_CLK
++    chimp	genpll_sw	4	BCM_NS2_GENPLL_SW_CHIMP_CLK
++    port	genpll_sw	5	BCM_NS2_GENPLL_SW_PORT_CLK
++    sdio	genpll_sw	6	BCM_NS2_GENPLL_SW_SDIO_CLK
++
++    lcpll_ddr	crystal		0	BCM_NS2_LCPLL_DDR
++    pcie_sata_usb lcpll_ddr	1	BCM_NS2_LCPLL_DDR_PCIE_SATA_USB_CLK
++    ddr		lcpll_ddr	2	BCM_NS2_LCPLL_DDR_DDR_CLK
++    ch2_unused	lcpll_ddr	3	BCM_NS2_LCPLL_DDR_CH2_UNUSED
++    ch3_unused	lcpll_ddr	4	BCM_NS2_LCPLL_DDR_CH3_UNUSED
++    ch4_unused	lcpll_ddr	5	BCM_NS2_LCPLL_DDR_CH4_UNUSED
++    ch5_unused	lcpll_ddr	6	BCM_NS2_LCPLL_DDR_CH5_UNUSED
++
++    lcpll_ports	crystal		0	BCM_NS2_LCPLL_PORTS
++    wan		lcpll_ports	1	BCM_NS2_LCPLL_PORTS_WAN_CLK
++    rgmii	lcpll_ports	2	BCM_NS2_LCPLL_PORTS_RGMII_CLK
++    ch2_unused	lcpll_ports	3	BCM_NS2_LCPLL_PORTS_CH2_UNUSED
++    ch3_unused	lcpll_ports	4	BCM_NS2_LCPLL_PORTS_CH3_UNUSED
++    ch4_unused	lcpll_ports	5	BCM_NS2_LCPLL_PORTS_CH4_UNUSED
++    ch5_unused	lcpll_ports	6	BCM_NS2_LCPLL_PORTS_CH5_UNUSED
+-- 
+1.9.1
 
-This patch series adds support for the Broadcom Northstar, Northstar
-Plus, and Northstar 2 clocks.  Some slight modifications were necessary
-to clk-iproc-pll to get Northstar and Northstar Plus working, due to
-differences in register layout.  This is the reason why the first patch
-is necessary.  Some more modifications were necessary to clk-iproc-pll
-to get Northstar 2 working, due to differences in register layout (and
-resulting fallout in Cygnus and NSP).  This is the reason why the sixth
-and seventh patches are necessary.  The fifth patch is clean-up to
-prevent accidentally forgetting to adjust for the base write errata
-(which happened a few times, but was caught in internal review).
-
-Thanks,
-Jon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
