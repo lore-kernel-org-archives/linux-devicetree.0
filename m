@@ -1,43 +1,56 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 1/2] dt-bindings: Add new SoCs to bcm4708 DT bindings
-Date: Thu, 15 Oct 2015 18:24:15 -0400
-Message-ID: <1444947856-26246-1-git-send-email-jonmason@broadcom.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3] DT: mmc: sh_mmcif: fix "compatible" property text
+Date: Fri, 16 Oct 2015 01:39:39 +0300
+Message-ID: <2188985.g7lrY44qCa@wasted.cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the 4708, 4709, and 53012 SoCs to the the documentation for the
-Broadcom Northstar device tree bindings.
+The "compatible" property text contradicts even the example given in the MMCIF
+binding document itself;  moreover, the Renesas MMCIF driver only matches  on
+the generic "compatible" string and doesn't look for the SoC specific strings
+at all. Thus describe "renesas,sh-mmcif" as a fallback value.
 
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+The patch is against Ulf Hansson's 'mmc.git' repo's 'fixes' or 'next' branches.
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-index 6b0f49f..8608a77 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-@@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
- 
- Required root node property:
- 
-+bcm4708
- compatible = "brcm,bcm4708";
-+
-+bcm4709
-+compatible = "brcm,bcm4709";
-+
-+bcm53012
-+compatible = "brcm,bcm53012";
--- 
-1.9.1
+Changes in version 3:
+- reworded the "compatible" property description to look like the majority of
+  the Renesas bindings.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in version 2:
+- kept the SoC specific "compatible" property values mandatory and made the
+  generic string a fallback.
+
+ Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+===================================================================
+--- mmc.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
++++ mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+@@ -6,11 +6,11 @@ and the properties used by the MMCIF dev
+ 
+ Required properties:
+ 
+-- compatible: must contain one of the following
++- compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif" as a
++  fallback. Examples with <soctype> are:
+ 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+ 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+ 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+-	- "renesas,sh-mmcif" for the generic MMCIF
+ 
+ - clocks: reference to the functional clock
+ 
+
