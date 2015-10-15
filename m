@@ -1,7 +1,7 @@
 From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH v3 05/10] clk: iproc: Add PLL base write function
-Date: Thu, 15 Oct 2015 15:48:28 -0400
-Message-ID: <1444938513-10758-6-git-send-email-jonmason@broadcom.com>
+Subject: [PATCH v3 06/10] clk: iproc: Split off dig_filter
+Date: Thu, 15 Oct 2015 15:48:29 -0400
+Message-ID: <1444938513-10758-7-git-send-email-jonmason@broadcom.com>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,225 +21,166 @@ To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.
 Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-All writes to the PLL base address must be flushed if the
-IPROC_CLK_NEEDS_READ_BACK flag is set.  If we add a function to make the
-necessary write and reads, we can make sure that any future code which
-makes PLL base writes will do the correct thing.
+The PLL loop filter/gain can be located in a separate register on some
+SoCs.  Split these off into a separate variable, so that an offset can
+be added if necessary.  Also, make the necessary modifications to the
+Cygnus and NSP drivers for this change.
 
 Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- drivers/clk/bcm/clk-iproc-pll.c | 80 +++++++++++++++++------------------------
- 1 file changed, 33 insertions(+), 47 deletions(-)
+ drivers/clk/bcm/clk-cygnus.c    | 17 +++++++++++------
+ drivers/clk/bcm/clk-iproc-pll.c | 14 +++++++++-----
+ drivers/clk/bcm/clk-iproc.h     | 10 +++++++++-
+ drivers/clk/bcm/clk-nsp.c       | 14 +++++++++-----
+ 4 files changed, 38 insertions(+), 17 deletions(-)
 
+diff --git a/drivers/clk/bcm/clk-cygnus.c b/drivers/clk/bcm/clk-cygnus.c
+index aac82c6..3a228b6 100644
+--- a/drivers/clk/bcm/clk-cygnus.c
++++ b/drivers/clk/bcm/clk-cygnus.c
+@@ -34,9 +34,11 @@
+ 		{ .offset = o, .en_shift = es, .high_shift = hs, \
+ 		.high_width = hw, .low_shift = ls, .low_width = lw }
+ 
+-#define RESET_VAL(o, rs, prs, kis, kiw, kps, kpw, kas, kaw) { .offset = o, \
+-	.reset_shift = rs, .p_reset_shift = prs, .ki_shift = kis, \
+-	.ki_width = kiw, .kp_shift = kps, .kp_width = kpw, .ka_shift = kas, \
++#define RESET_VAL(o, rs, prs) { .offset = o, .reset_shift = rs, \
++	.p_reset_shift = prs }
++
++#define DF_VAL(o, kis, kiw, kps, kpw, kas, kaw) { .offset = o, .ki_shift = kis,\
++	.ki_width = kiw, .kp_shift = kps, .kp_width = kpw, .ka_shift = kas,    \
+ 	.ka_width = kaw }
+ 
+ #define VCO_CTRL_VAL(uo, lo) { .u_offset = uo, .l_offset = lo }
+@@ -56,7 +58,8 @@ static const struct iproc_pll_ctrl genpll = {
+ 	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
+ 		IPROC_CLK_PLL_NEEDS_SW_CFG,
+ 	.aon = AON_VAL(0x0, 2, 1, 0),
+-	.reset = RESET_VAL(0x0, 11, 10, 4, 3, 0, 4, 7, 3),
++	.reset = RESET_VAL(0x0, 11, 10),
++	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
+ 	.sw_ctrl = SW_CTRL_VAL(0x10, 31),
+ 	.ndiv_int = REG_VAL(0x10, 20, 10),
+ 	.ndiv_frac = REG_VAL(0x10, 0, 20),
+@@ -114,7 +117,8 @@ CLK_OF_DECLARE(cygnus_genpll, "brcm,cygnus-genpll", cygnus_genpll_clk_init);
+ static const struct iproc_pll_ctrl lcpll0 = {
+ 	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_NEEDS_SW_CFG,
+ 	.aon = AON_VAL(0x0, 2, 5, 4),
+-	.reset = RESET_VAL(0x0, 31, 30, 27, 3, 23, 4, 19, 4),
++	.reset = RESET_VAL(0x0, 31, 30),
++	.dig_filter = DF_VAL(0x0, 27, 3, 23, 4, 19, 4),
+ 	.sw_ctrl = SW_CTRL_VAL(0x4, 31),
+ 	.ndiv_int = REG_VAL(0x4, 16, 10),
+ 	.pdiv = REG_VAL(0x4, 26, 4),
+@@ -191,7 +195,8 @@ static const struct iproc_pll_ctrl mipipll = {
+ 		 IPROC_CLK_NEEDS_READ_BACK,
+ 	.aon = AON_VAL(0x0, 4, 17, 16),
+ 	.asiu = ASIU_GATE_VAL(0x0, 3),
+-	.reset = RESET_VAL(0x0, 11, 10, 4, 3, 0, 4, 7, 4),
++	.reset = RESET_VAL(0x0, 11, 10),
++	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 4),
+ 	.ndiv_int = REG_VAL(0x10, 20, 10),
+ 	.ndiv_frac = REG_VAL(0x10, 0, 20),
+ 	.pdiv = REG_VAL(0x14, 0, 4),
 diff --git a/drivers/clk/bcm/clk-iproc-pll.c b/drivers/clk/bcm/clk-iproc-pll.c
-index e029ab3..74cdd66 100644
+index 74cdd66..d4aab4e 100644
 --- a/drivers/clk/bcm/clk-iproc-pll.c
 +++ b/drivers/clk/bcm/clk-iproc-pll.c
-@@ -137,6 +137,18 @@ static int pll_wait_for_lock(struct iproc_pll *pll)
- 	return -EIO;
- }
- 
-+static void iproc_pll_write(const struct iproc_pll *pll, void __iomem *base,
-+			    const u32 offset, u32 val)
-+{
-+	const struct iproc_pll_ctrl *ctrl = pll->ctrl;
-+
-+	writel(val, base + offset);
-+
-+	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK &&
-+		     base == pll->pll_base))
-+		val = readl(base + offset);
-+}
-+
- static void __pll_disable(struct iproc_pll *pll)
- {
+@@ -224,13 +224,17 @@ static void __pll_bring_out_reset(struct iproc_pll *pll, unsigned int kp,
+ 	u32 val;
  	const struct iproc_pll_ctrl *ctrl = pll->ctrl;
-@@ -145,27 +157,24 @@ static void __pll_disable(struct iproc_pll *pll)
- 	if (ctrl->flags & IPROC_CLK_PLL_ASIU) {
- 		val = readl(pll->asiu_base + ctrl->asiu.offset);
- 		val &= ~(1 << ctrl->asiu.en_shift);
--		writel(val, pll->asiu_base + ctrl->asiu.offset);
-+		iproc_pll_write(pll, pll->asiu_base, ctrl->asiu.offset, val);
- 	}
- 
- 	if (ctrl->flags & IPROC_CLK_EMBED_PWRCTRL) {
- 		val = readl(pll->pll_base + ctrl->aon.offset);
- 		val |= (bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
--		writel(val, pll->pll_base + ctrl->aon.offset);
--
--		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--			readl(pll->pll_base + ctrl->aon.offset);
-+		iproc_pll_write(pll, pll->pll_base, ctrl->aon.offset, val);
- 	}
- 
- 	if (pll->pwr_base) {
- 		/* latch input value so core power can be shut down */
- 		val = readl(pll->pwr_base + ctrl->aon.offset);
- 		val |= (1 << ctrl->aon.iso_shift);
--		writel(val, pll->pwr_base + ctrl->aon.offset);
-+		iproc_pll_write(pll, pll->pwr_base, ctrl->aon.offset, val);
- 
- 		/* power down the core */
- 		val &= ~(bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
--		writel(val, pll->pwr_base + ctrl->aon.offset);
-+		iproc_pll_write(pll, pll->pwr_base, ctrl->aon.offset, val);
- 	}
- }
- 
-@@ -177,10 +186,7 @@ static int __pll_enable(struct iproc_pll *pll)
- 	if (ctrl->flags & IPROC_CLK_EMBED_PWRCTRL) {
- 		val = readl(pll->pll_base + ctrl->aon.offset);
- 		val &= ~(bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
--		writel(val, pll->pll_base + ctrl->aon.offset);
--
--		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--			readl(pll->pll_base + ctrl->aon.offset);
-+		iproc_pll_write(pll, pll->pll_base, ctrl->aon.offset, val);
- 	}
- 
- 	if (pll->pwr_base) {
-@@ -188,14 +194,14 @@ static int __pll_enable(struct iproc_pll *pll)
- 		val = readl(pll->pwr_base + ctrl->aon.offset);
- 		val |= bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift;
- 		val &= ~(1 << ctrl->aon.iso_shift);
--		writel(val, pll->pwr_base + ctrl->aon.offset);
-+		iproc_pll_write(pll, pll->pwr_base, ctrl->aon.offset, val);
- 	}
- 
- 	/* certain PLLs also need to be ungated from the ASIU top level */
- 	if (ctrl->flags & IPROC_CLK_PLL_ASIU) {
- 		val = readl(pll->asiu_base + ctrl->asiu.offset);
- 		val |= (1 << ctrl->asiu.en_shift);
--		writel(val, pll->asiu_base + ctrl->asiu.offset);
-+		iproc_pll_write(pll, pll->asiu_base, ctrl->asiu.offset, val);
- 	}
- 
- 	return 0;
-@@ -209,9 +215,7 @@ static void __pll_put_in_reset(struct iproc_pll *pll)
+ 	const struct iproc_pll_reset_ctrl *reset = &ctrl->reset;
++	const struct iproc_pll_dig_filter_ctrl *dig_filter = &ctrl->dig_filter;
++
++	val = readl(pll->pll_base + dig_filter->offset);
++	val &= ~(bit_mask(dig_filter->ki_width) << dig_filter->ki_shift |
++		bit_mask(dig_filter->kp_width) << dig_filter->kp_shift |
++		bit_mask(dig_filter->ka_width) << dig_filter->ka_shift);
++	val |= ki << dig_filter->ki_shift | kp << dig_filter->kp_shift |
++	       ka << dig_filter->ka_shift;
++	iproc_pll_write(pll, pll->pll_base, dig_filter->offset, val);
  
  	val = readl(pll->pll_base + reset->offset);
- 	val &= ~(1 << reset->reset_shift | 1 << reset->p_reset_shift);
--	writel(val, pll->pll_base + reset->offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + reset->offset);
-+	iproc_pll_write(pll, pll->pll_base, reset->offset, val);
- }
- 
- static void __pll_bring_out_reset(struct iproc_pll *pll, unsigned int kp,
-@@ -228,9 +232,7 @@ static void __pll_bring_out_reset(struct iproc_pll *pll, unsigned int kp,
- 	val |=  ki << reset->ki_shift | kp << reset->kp_shift |
- 		ka << reset->ka_shift;
+-	val &= ~(bit_mask(reset->ki_width) << reset->ki_shift |
+-		 bit_mask(reset->kp_width) << reset->kp_shift |
+-		 bit_mask(reset->ka_width) << reset->ka_shift);
+-	val |=  ki << reset->ki_shift | kp << reset->kp_shift |
+-		ka << reset->ka_shift;
  	val |= 1 << reset->reset_shift | 1 << reset->p_reset_shift;
--	writel(val, pll->pll_base + reset->offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + reset->offset);
-+	iproc_pll_write(pll, pll->pll_base, reset->offset, val);
+ 	iproc_pll_write(pll, pll->pll_base, reset->offset, val);
  }
+diff --git a/drivers/clk/bcm/clk-iproc.h b/drivers/clk/bcm/clk-iproc.h
+index ff7bfad..b71c197 100644
+--- a/drivers/clk/bcm/clk-iproc.h
++++ b/drivers/clk/bcm/clk-iproc.h
+@@ -94,12 +94,19 @@ struct iproc_pll_aon_pwr_ctrl {
+ };
  
- static int pll_set_rate(struct iproc_clk *clk, unsigned int rate_index,
-@@ -285,9 +287,8 @@ static int pll_set_rate(struct iproc_clk *clk, unsigned int rate_index,
- 	/* put PLL in reset */
- 	__pll_put_in_reset(pll);
- 
--	writel(0, pll->pll_base + ctrl->vco_ctrl.u_offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->vco_ctrl.u_offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->vco_ctrl.u_offset, 0);
+ /*
+- * Control of the PLL reset, with Ki, Kp, and Ka parameters
++ * Control of the PLL reset
+  */
+ struct iproc_pll_reset_ctrl {
+ 	unsigned int offset;
+ 	unsigned int reset_shift;
+ 	unsigned int p_reset_shift;
++};
 +
- 	val = readl(pll->pll_base + ctrl->vco_ctrl.l_offset);
++/*
++ * Control of the Ki, Kp, and Ka parameters
++ */
++struct iproc_pll_dig_filter_ctrl {
++	unsigned int offset;
+ 	unsigned int ki_shift;
+ 	unsigned int ki_width;
+ 	unsigned int kp_shift;
+@@ -129,6 +136,7 @@ struct iproc_pll_ctrl {
+ 	struct iproc_pll_aon_pwr_ctrl aon;
+ 	struct iproc_asiu_gate asiu;
+ 	struct iproc_pll_reset_ctrl reset;
++	struct iproc_pll_dig_filter_ctrl dig_filter;
+ 	struct iproc_pll_sw_ctrl sw_ctrl;
+ 	struct iproc_clk_reg_op ndiv_int;
+ 	struct iproc_clk_reg_op ndiv_frac;
+diff --git a/drivers/clk/bcm/clk-nsp.c b/drivers/clk/bcm/clk-nsp.c
+index bc8ebdcd..cf66f64 100644
+--- a/drivers/clk/bcm/clk-nsp.c
++++ b/drivers/clk/bcm/clk-nsp.c
+@@ -26,9 +26,11 @@
+ #define AON_VAL(o, pw, ps, is) { .offset = o, .pwr_width = pw, \
+ 	.pwr_shift = ps, .iso_shift = is }
  
- 	if (rate >= VCO_LOW && rate < VCO_MID)
-@@ -298,17 +299,13 @@ static int pll_set_rate(struct iproc_clk *clk, unsigned int rate_index,
- 	else
- 		val |= (1 << PLL_VCO_HIGH_SHIFT);
+-#define RESET_VAL(o, rs, prs, kis, kiw, kps, kpw, kas, kaw) { .offset = o, \
+-	.reset_shift = rs, .p_reset_shift = prs, .ki_shift = kis, \
+-	.ki_width = kiw, .kp_shift = kps, .kp_width = kpw, .ka_shift = kas, \
++#define RESET_VAL(o, rs, prs) { .offset = o, .reset_shift = rs, \
++	.p_reset_shift = prs }
++
++#define DF_VAL(o, kis, kiw, kps, kpw, kas, kaw) { .offset = o, .ki_shift = kis,\
++	.ki_width = kiw, .kp_shift = kps, .kp_width = kpw, .ka_shift = kas,    \
+ 	.ka_width = kaw }
  
--	writel(val, pll->pll_base + ctrl->vco_ctrl.l_offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->vco_ctrl.l_offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->vco_ctrl.l_offset, val);
- 
- 	/* program integer part of NDIV */
- 	val = readl(pll->pll_base + ctrl->ndiv_int.offset);
- 	val &= ~(bit_mask(ctrl->ndiv_int.width) << ctrl->ndiv_int.shift);
- 	val |= vco->ndiv_int << ctrl->ndiv_int.shift;
--	writel(val, pll->pll_base + ctrl->ndiv_int.offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->ndiv_int.offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->ndiv_int.offset, val);
- 
- 	/* program fractional part of NDIV */
- 	if (ctrl->flags & IPROC_CLK_PLL_HAS_NDIV_FRAC) {
-@@ -316,18 +313,15 @@ static int pll_set_rate(struct iproc_clk *clk, unsigned int rate_index,
- 		val &= ~(bit_mask(ctrl->ndiv_frac.width) <<
- 			 ctrl->ndiv_frac.shift);
- 		val |= vco->ndiv_frac << ctrl->ndiv_frac.shift;
--		writel(val, pll->pll_base + ctrl->ndiv_frac.offset);
--		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--			readl(pll->pll_base + ctrl->ndiv_frac.offset);
-+		iproc_pll_write(pll, pll->pll_base, ctrl->ndiv_frac.offset,
-+				val);
- 	}
- 
- 	/* program PDIV */
- 	val = readl(pll->pll_base + ctrl->pdiv.offset);
- 	val &= ~(bit_mask(ctrl->pdiv.width) << ctrl->pdiv.shift);
- 	val |= vco->pdiv << ctrl->pdiv.shift;
--	writel(val, pll->pll_base + ctrl->pdiv.offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->pdiv.offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->pdiv.offset, val);
- 
- 	__pll_bring_out_reset(pll, kp, ka, ki);
- 
-@@ -467,14 +461,12 @@ static int iproc_clk_enable(struct clk_hw *hw)
- 	/* channel enable is active low */
- 	val = readl(pll->pll_base + ctrl->enable.offset);
- 	val &= ~(1 << ctrl->enable.enable_shift);
--	writel(val, pll->pll_base + ctrl->enable.offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->enable.offset, val);
- 
- 	/* also make sure channel is not held */
- 	val = readl(pll->pll_base + ctrl->enable.offset);
- 	val &= ~(1 << ctrl->enable.hold_shift);
--	writel(val, pll->pll_base + ctrl->enable.offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->enable.offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->enable.offset, val);
- 
- 	return 0;
- }
-@@ -491,9 +483,7 @@ static void iproc_clk_disable(struct clk_hw *hw)
- 
- 	val = readl(pll->pll_base + ctrl->enable.offset);
- 	val |= 1 << ctrl->enable.enable_shift;
--	writel(val, pll->pll_base + ctrl->enable.offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->enable.offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->enable.offset, val);
- }
- 
- static unsigned long iproc_clk_recalc_rate(struct clk_hw *hw,
-@@ -562,9 +552,7 @@ static int iproc_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 		val &= ~(bit_mask(ctrl->mdiv.width) << ctrl->mdiv.shift);
- 		val |= div << ctrl->mdiv.shift;
- 	}
--	writel(val, pll->pll_base + ctrl->mdiv.offset);
--	if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--		readl(pll->pll_base + ctrl->mdiv.offset);
-+	iproc_pll_write(pll, pll->pll_base, ctrl->mdiv.offset, val);
- 	clk->rate = parent_rate / div;
- 
- 	return 0;
-@@ -591,9 +579,7 @@ static void iproc_pll_sw_cfg(struct iproc_pll *pll)
- 
- 		val = readl(pll->pll_base + ctrl->sw_ctrl.offset);
- 		val |= BIT(ctrl->sw_ctrl.shift);
--		writel(val, pll->pll_base + ctrl->sw_ctrl.offset);
--		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
--			readl(pll->pll_base + ctrl->sw_ctrl.offset);
-+		iproc_pll_write(pll, pll->pll_base, ctrl->sw_ctrl.offset, val);
- 	}
- }
- 
+ #define ENABLE_VAL(o, es, hs, bs) { .offset = o, .enable_shift = es, \
+@@ -43,7 +45,8 @@ CLK_OF_DECLARE(nsp_armpll, "brcm,nsp-armpll", nsp_armpll_init);
+ static const struct iproc_pll_ctrl genpll = {
+ 	.flags = IPROC_CLK_PLL_HAS_NDIV_FRAC | IPROC_CLK_EMBED_PWRCTRL,
+ 	.aon = AON_VAL(0x0, 1, 12, 0),
+-	.reset = RESET_VAL(0x0, 11, 10, 4, 3, 0, 4, 7, 3),
++	.reset = RESET_VAL(0x0, 11, 10),
++	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
+ 	.ndiv_int = REG_VAL(0x14, 20, 10),
+ 	.ndiv_frac = REG_VAL(0x14, 0, 20),
+ 	.pdiv = REG_VAL(0x18, 24, 3),
+@@ -99,7 +102,8 @@ CLK_OF_DECLARE(nsp_genpll_clk, "brcm,nsp-genpll", nsp_genpll_clk_init);
+ static const struct iproc_pll_ctrl lcpll0 = {
+ 	.flags = IPROC_CLK_PLL_HAS_NDIV_FRAC | IPROC_CLK_EMBED_PWRCTRL,
+ 	.aon = AON_VAL(0x0, 1, 24, 0),
+-	.reset = RESET_VAL(0x0, 23, 22, 16, 3, 12, 4, 19, 4),
++	.reset = RESET_VAL(0x0, 23, 22),
++	.dig_filter = DF_VAL(0x0, 16, 3, 12, 4, 19, 4),
+ 	.ndiv_int = REG_VAL(0x4, 20, 8),
+ 	.ndiv_frac = REG_VAL(0x4, 0, 20),
+ 	.pdiv = REG_VAL(0x4, 28, 3),
 -- 
 1.9.1
