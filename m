@@ -1,117 +1,108 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
-Date: Thu, 15 Oct 2015 15:17:37 +0300
-Message-ID: <561F9961.30008@ti.com>
-References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
- <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
- <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: [PATCH v4] iio: mma8452: support either of the available interrupt pins
+Date: Thu, 15 Oct 2015 15:10:32 +0200
+Message-ID: <1444914632-4486-1-git-send-email-martink@posteo.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
---ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+This change is important in order for everyone to be easily able to use the
+driver for one of the supported accelerometer chips!
 
-Hi Rob,
+Until now, the driver blindly assumed that the INT1 interrupt line is wired
+on a user's board. But these devices have 2 interrupt lines and can route
+their interrupt sources to one of them. Now, if "INT2" is found and matches
+i2c_client->irq, INT2 will be used.
 
-On 13/10/15 17:21, Rob Herring wrote:
-> On Wed, Sep 30, 2015 at 4:32 AM, Tomi Valkeinen <tomi.valkeinen@ti.com>=
- wrote:
->> Add DT binding for led-backlight.
->=20
-> Please use get_maintainers.pl.
+The chip's default actually is INT2, which is why probably many boards will
+have it wired and can make use of this.
 
-At some point I got feedback that the DT maintainers don't have time to
-look at each individual driver binding, but rely on the subsystem
-maintainers to handle them. Maybe I misunderstood that.
+Of course, this also falls back to assuming INT1, so for existing users
+nothing will break. The new functionality is described in the bindings doc.
 
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>  .../bindings/video/backlight/led-backlight.txt     | 30 +++++++++++++=
-+++++++++
->>  1 file changed, 30 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/video/backlight/=
-led-backlight.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/backlight/led-bac=
-klight.txt b/Documentation/devicetree/bindings/video/backlight/led-backli=
-ght.txt
->> new file mode 100644
->> index 000000000000..d4621d7414bc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.=
-txt
->> @@ -0,0 +1,30 @@
->> +led-backlight bindings
->> +
->> +Required properties:
->> +  - compatible: "led-backlight"
->> +  - leds: phandle to a led OF node [0]
->=20
-> Why do we need 2 levels of LED nodes?
+Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+---
+changelog:
+v4: use irq that matches client->irq, backwards compatible
+v3: correctly assign irq if both pins are described in DT
+v2: don't warn but normally handle if both pins are described in dts
+    thanks Mark Rutland
+v1: initial post
 
-Sorry, didn't get that. What do you mean with 2 levels?
+ .../devicetree/bindings/iio/accel/mma8452.txt       |  6 ++++++
+ drivers/iio/accel/mma8452.c                         | 21 +++++++++++++++------
+ 2 files changed, 21 insertions(+), 6 deletions(-)
 
->> +  - brightness-levels: Array of distinct LED brightness levels. These=
-
->> +      are in the range from 0 to 255, passed to the LED class driver.=
-
->> +  - default-brightness-level: the default brightness level (index int=
-o the
->> +      array defined by the "brightness-levels" property)
->> +
->> +Optional properties:
->> +  - power-supply: regulator for supply voltage
->> +  - enable-gpios: contains a single GPIO specifier for the GPIO which=
- enables
->> +                  and disables the backlight (see GPIO binding[1])
->=20
-> Why are all of these not part of the LED node pointed to by leds?
-
-These are for the backlight, not for the LED chip. So "LED" here is a
-chip that produces (most likely) a PWM signal, and "backlight" is the
-collection of components that use the PWM to produce the backlight
-itself, and use the power-supply and gpios.
-
-> Describe the h/w, not what you want for a driver.
-
-I think this describes the HW quite well. The LED chip works fine
-without any of the properties here, and these are specific to the
-backlight part of the board.
-
- Tomi
-
-
---ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWH5liAAoJEPo9qoy8lh71RIMP/3JYbLaSpte3AzUOm0lKQT/D
-gdys+5G1PRQjJvlmdN3LwxiCCRJMPg4OK2Mivm5SQYJ7TDMsipnqJ6qq+ZWV0Y0b
-EfMNxL7HLEF/JAaL+HtqGA+GERXmfpoMfzeEIfZ6fUsTd6HrJdeupkVfRX38KlMn
-ccmsu6cUnF3ZxQMvAZWiPTMNx/abuXZX466H5wQ/OHxUYvYKblrwX/etD0OrWpcx
-iLXg4DjX9mzqybrxeOOotd/Uh70AoXBKuELRMT/RSunfIdPQCHb6QyG3Gq9QUeta
-F7CjaifoU+Pj1puVYgqyIs0WqwZDWSq5b0gVZq4hNum8BVVqsCiwhkI8uFDaDsHc
-osZvni6jYBhZ3IlLLBcLAAMTPrUR/IA4wT73qpxeWqa8dEKygGwQM9vesQBj6I6y
-vmcRejxt617c8EyK22xMh9pik7INEQjYqAPxWeYOYWLlb3uldRJ+cDxQLSVSu4ns
-yFmKUAwdDzH5Guifpd2dFWK7QtOsgyxJkScQg+2N8r0FygCUw1Q9XJ9Itp/JDYsl
-FP3H1o9+/iO3qJ3a4G5wZkKbPtVmJumkhsfnxFyCxetsSv1u75Ugc44Mn7bXLn5n
-ROjC9qHbrMBM7Dsbev0xw6fTWqvh6BJP6JKyE61roalUoUBx2q412Osroo5hBWep
-xkojurpH5azy1B12Gcjp
-=Gnho
------END PGP SIGNATURE-----
-
---ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd--
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+index e3c3746..3c10e85 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -7,13 +7,18 @@ Required properties:
+     * "fsl,mma8453"
+     * "fsl,mma8652"
+     * "fsl,mma8653"
++
+   - reg: the I2C address of the chip
+ 
+ Optional properties:
+ 
+   - interrupt-parent: should be the phandle for the interrupt controller
++
+   - interrupts: interrupt mapping for GPIO IRQ
+ 
++  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
++		     interrupt line in use.
++
+ Example:
+ 
+ 	mma8453fc@1d {
+@@ -21,4 +26,5 @@ Example:
+ 		reg = <0x1d>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <5 0>;
++		interrupt-names = "INT2";
+ 	};
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 1eccc2d..116a6e4 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -29,6 +29,7 @@
+ #include <linux/iio/events.h>
+ #include <linux/delay.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
+ 
+ #define MMA8452_STATUS				0x00
+ #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+@@ -1130,13 +1131,21 @@ static int mma8452_probe(struct i2c_client *client,
+ 					   MMA8452_INT_FF_MT;
+ 		int enabled_interrupts = MMA8452_INT_TRANS |
+ 					 MMA8452_INT_FF_MT;
++		int irq2;
+ 
+-		/* Assume wired to INT1 pin */
+-		ret = i2c_smbus_write_byte_data(client,
+-						MMA8452_CTRL_REG5,
+-						supported_interrupts);
+-		if (ret < 0)
+-			return ret;
++		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
++
++		if (irq2 == client->irq) {
++			dev_dbg(&client->dev, "using interrupt line INT2\n");
++		} else {
++			ret = i2c_smbus_write_byte_data(client,
++							MMA8452_CTRL_REG5,
++							supported_interrupts);
++			if (ret < 0)
++				return ret;
++
++			dev_dbg(&client->dev, "using interrupt line INT1\n");
++		}
+ 
+ 		ret = i2c_smbus_write_byte_data(client,
+ 						MMA8452_CTRL_REG4,
+-- 
+2.1.4
