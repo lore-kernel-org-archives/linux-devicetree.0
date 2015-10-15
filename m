@@ -1,85 +1,52 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [RFC] ARM: BCM: Add SMP support for Broadcom 4708
-Date: Thu, 15 Oct 2015 14:14:10 -0400
-Message-ID: <20151015181409.GJ32089@broadcom.com>
-References: <1444844820-24290-1-git-send-email-kapilh@broadcom.com>
- <1444844820-24290-4-git-send-email-kapilh@broadcom.com>
- <561ED691.8080407@hauke-m.de>
- <20151014224003.GO15160@broadcom.com>
- <20151015154934.GD32089@broadcom.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH] mtd: document linux-specific partition parser DT binding
+Date: Thu, 15 Oct 2015 12:22:24 -0600
+Message-ID: <20151015182224.GB17519@obsidianresearch.com>
+References: <1444915191-28350-1-git-send-email-linus.walleij@linaro.org>
+ <20151015162210.GA4545@localhost>
+ <20151015170428.GA9250@obsidianresearch.com>
+ <20151015174709.GB108923@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151015154934.GD32089@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+In-Reply-To: <20151015174709.GB108923-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ARM: BCM: Add SMP support for Broadcom 4708
+On Thu, Oct 15, 2015 at 10:47:09AM -0700, Brian Norris wrote:
+> Hmm, I don't know. I wouldn't expect people should really be using
+> cmdlineparts as a production solution, but I'd consider it more of a
+> debugging/development option -- if I want to override the DT (which is
+> sometimes a bit harder to change) or the on-flash layout (e.g.,
+> RedBoot), then I can fiddle with the command line.
 
-Add SMP support for Broadcom's 4708 SoCs.
+We don't have cmdline overrides for very much (if any?) of DT.
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- arch/arm/boot/dts/bcm4708.dtsi | 2 ++
- arch/arm/boot/dts/bcm94708.dts | 2 +-
- arch/arm/mach-bcm/Kconfig      | 1 +
- arch/arm/mach-bcm/Makefile     | 3 +++
- 4 files changed, 7 insertions(+), 1 deletion(-)
+The DT is supposed to describe the hardware/boot environment, if
+overriding the partition layout is really common, then is the DT
+binding really describing the hardware at all?
 
-diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-index 31141e8..22a41df 100644
---- a/arch/arm/boot/dts/bcm4708.dtsi
-+++ b/arch/arm/boot/dts/bcm4708.dtsi
-@@ -15,6 +15,8 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "brcm,bcm-nsp-smp";
-+		secondary-boot-reg = <0xffff0400>;
- 
- 		cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/bcm94708.dts b/arch/arm/boot/dts/bcm94708.dts
-index f60bb1d..49682d6 100644
---- a/arch/arm/boot/dts/bcm94708.dts
-+++ b/arch/arm/boot/dts/bcm94708.dts
-@@ -32,7 +32,7 @@
- 
- /dts-v1/;
- 
--#include "bcm5301x.dtsi"
-+#include "bcm4708.dtsi"
- 
- / {
- 	model = "NorthStar SVK (BCM94708)";
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 2e9dbb5..4fc8fa3 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -54,6 +54,7 @@ config ARCH_BCM_NSP
- config ARCH_BCM_5301X
- 	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
- 	select ARCH_BCM_IPROC
-+	select HAVE_SMP
- 	help
- 	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
- 
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index 36a4ca30..3ca1cf1 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -43,6 +43,9 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
- 
- # BCM5301X
- obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
-+ifeq ($(CONFIG_ARCH_BCM_5301X),y)
-+obj-$(CONFIG_SMP)		+= headsmp.o platsmp.o
-+endif
- 
- # BCM63XXx
- ifeq ($(CONFIG_ARCH_BCM_63XX),y)
--- 
-1.9.1
+The partition layout is already very border line to support in DT, it
+is really very close to a software configuration which is strongly
+discouraged from DT files.
+
+I justify it as the boot loader communicating the partition scheme it
+understands to the OS, so the OS can have a hope of setting up the
+flash in a way the bootloader understands.
+
+I've never used the cmdline option, so maybe I don't see the use case,
+but it seems like a really weird desire to change the partitioning
+away from what the bootloader supports.
+
+> Any better nominations for names?
+
+bcrm-part-table-43 ?
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
