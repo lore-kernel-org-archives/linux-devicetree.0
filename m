@@ -1,79 +1,215 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [GIT PULL] On-demand device probing
-Date: Thu, 15 Oct 2015 13:42:08 +0200
-Message-ID: <1444909328-24761-1-git-send-email-tomeu.vizoso@collabora.com>
-References: <20151014092644.GO14956@sirena.org.uk>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151014092644.GO14956@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?q?Terje=20Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Felipe Balbi <balbi@ti.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: Re: [PATCH 3/4] mmc: mediatek: Add tune support
+Date: Thu, 15 Oct 2015 19:43:47 +0800
+Message-ID: <1444909427.8751.30.camel@mhfsdcap03>
+References: <1444729078-26585-1-git-send-email-chaotian.jing@mediatek.com>
+	 <1444729078-26585-4-git-send-email-chaotian.jing@mediatek.com>
+	 <CAPDyKFqUFRZF2M4ichgqM2SeRQbh52e5U1oFG9AExsq0SkFj9w@mail.gmail.com>
+	 <1444877180.8751.15.camel@mhfsdcap03>
+	 <CAPDyKFq5fMDY3e1daCs380nPvNiZRDw9bWg8-x6C4fphBKm+Hw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFq5fMDY3e1daCs380nPvNiZRDw9bWg8-x6C4fphBKm+Hw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Hans de Goede <hdegoede@redhat.com>, Lars-Peter Clausen <lars@metafoo.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Howard Chen <ibanezchen@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, Kristina Martsenko <kristina.martsenko@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2015-10-15 at 11:17 +0200, Ulf Hansson wrote:
+> [...]
+> 
+> >> >
+> >> >         struct clk *src_clk;    /* msdc source clock */
+> >> > +       struct clk *src_clk_parent; /* src_clk's parent */
+> >> > +       struct clk *hs400_src;  /* 400Mhz source clock */
+> >>
+> >> Hmm, so you need to control the upper level clocks. Can you elaborate
+> >> on why this is needed?
+> >>
+> > hs400 is DDR200, in our host design, if the mode is DDR(HS400), if want
+> > to get 200Mhz mmc bus clock frequency, the minimum source clock is
+> > double of the mmc bus clock, So, we need it for HS400 mode with 200Mhz
+> > bus clock.
+> 
+> Thanks for clarifying.
+> 
+> [...]
+> 
+>  >         flags = readl(host->base + MSDC_INTEN);
+> >> >         sdr_clr_bits(host->base + MSDC_INTEN, flags);
+> >> > -       if (ddr) { /* may need to modify later */
+> >> > -               mode = 0x2; /* ddr mode and use divisor */
+> >> > +       sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
+> >> > +       if (timing == MMC_TIMING_UHS_DDR50 ||
+> >> > +           timing == MMC_TIMING_MMC_DDR52 ||
+> >>
+> >> So, no support for HS200?
+> >>
+> > HS200 is the same with other SDR modes, so it will be handled at else..
+> 
+> Okay, nice!
+> 
+> So, your the driver currently supports HS200, but without need for tuning!?
+> 
 
-this second pull request replaces the last references to device_initcall_sync with late_initcall, as noticed by Frank Rowand.
+It support and need tuning for HS200, but do not support tuning for
+HS400, that's why we fixed the hs400_ds_delay by project.
 
-Also fixes the url of the git repo and the wrapping, as suggested by Mark Brown.
+> [...]
+> 
+> >> > +static struct msdc_delay_phase get_best_delay(u32 delay)
+> >> > +{
+> >> > +       int start = 0, len = 0;
+> >> > +       int start_final = 0, len_final = 0;
+> >> > +       u8 final_phase = 0xff;
+> >> > +       struct msdc_delay_phase delay_phase;
+> >> > +
+> >> > +       if (delay == 0) {
+> >> > +               pr_err("phase error: [map:%x]\n", delay);
+> >>
+> >> Please use dev_err|warn|dbg|info instead.
+> >>
+> > As you know, this function is just only parse the argument "u32 delay",
+> > it do not bind with any device.
+> 
+> You may just add a msdc_host * as a parameter to the function, that
+> would solve this.
+> 
 
-Thanks,
+Ok, will do it.
 
-Tomeu
+> [...]
+> 
+> >> > +static int msdc_send_tuning(struct mmc_host *host, u32 opcode, int *cmd_error)
+> >>
+> >> I think you can remove this function and use mmc_send_tuning() instead.
+> > Hmm, I also noticed that there was a mmc_send_tuning, but, I need to get
+> > the cmd_error when tune cmd response, in this case, do not care the data
+> > error.
+> 
+> Well, if you need to extend the mmc_send_tuning() API to suite your
+> needs, let's do that instead of duplicating code.
+> 
 
-The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
+OK, will extend the mmc_send_tuning, but it need change other vendor's
+MMC driver, because it already use the mmc_send_tuning()
 
-  Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
+> >>
+> >> > +{
+> >> > +       struct mmc_request mrq = {NULL};
+> >> > +       struct mmc_command cmd = {0};
+> >> > +       struct mmc_data data = {0};
+> >> > +       struct scatterlist sg;
+> >> > +       struct mmc_ios *ios = &host->ios;
+> >> > +       int size, err = 0;
+> >> > +       u8 *data_buf;
+> >> > +
+> >> > +       if (ios->bus_width == MMC_BUS_WIDTH_8)
+> >> > +               size = 128;
+> >> > +       else if (ios->bus_width == MMC_BUS_WIDTH_4)
+> >> > +               size = 64;
+> >> > +       else
+> >> > +               return -EINVAL;
+> >> > +
+> >> > +       data_buf = kzalloc(size, GFP_KERNEL);
+> >> > +       if (!data_buf)
+> >> > +               return -ENOMEM;
+> >> > +
+> >> > +       mrq.cmd = &cmd;
+> >> > +       mrq.data = &data;
+> >> > +
+> >> > +       cmd.opcode = opcode;
+> >> > +       cmd.flags = MMC_RSP_R1 | MMC_CMD_ADTC;
+> >> > +
+> >> > +       data.blksz = size;
+> >> > +       data.blocks = 1;
+> >> > +       data.flags = MMC_DATA_READ;
+> >> > +
+> >> > +       /*
+> >> > +        * According to the tuning specs, Tuning process
+> >> > +        * is normally shorter 40 executions of CMD19,
+> >> > +        * and timeout value should be shorter than 150 ms
+> >> > +        */
+> >> > +       data.timeout_ns = 150 * NSEC_PER_MSEC;
+> >> > +
+> >> > +       data.sg = &sg;
+> >> > +       data.sg_len = 1;
+> >> > +       sg_init_one(&sg, data_buf, size);
+> >> > +
+> >> > +       mmc_wait_for_req(host, &mrq);
+> >> > +
+> >> > +       if (cmd_error)
+> >> > +               *cmd_error = cmd.error;
+> >> > +
+> >> > +       if (cmd.error) {
+> >> > +               err = cmd.error;
+> >> > +               goto out;
+> >> > +       }
+> >> > +
+> >> > +       if (data.error) {
+> >> > +               err = data.error;
+> >> > +               goto out;
+> >> > +       }
+> >> > +
+> >> > +out:
+> >> > +       kfree(data_buf);
+> >> > +       return err;
+> >> > +}
+> >> > +
+> 
+> [...]
+> 
+> >> > +       host->src_clk_parent = clk_get_parent(host->src_clk);
+> >>
+> >> Don't you need to check the return value here?
+> >>
+> > will check it.
+> >> > +       host->hs400_src = devm_clk_get(&pdev->dev, "400mhz");
+> >>
+> >> That's a really weird conid for a clock. If it's not too late to
+> >> change, please do that!
+> >>
+> >> > +       if (IS_ERR(host->hs400_src)) {
+> >> > +               dev_dbg(&pdev->dev, "Cannot find 400mhz at dts!\n");
+> >> > +       } else if (clk_set_parent(host->src_clk_parent, host->hs400_src) < 0) {
+> >> > +               dev_err(host->dev, "Failed to set 400mhz source clock!\n");
+> >> > +               ret = -EINVAL;
+> >>
+> >> I think it seems more apropriate to use the return value from
+> >> clk_set_parent() instead of inventing your own return value.
+> >>
+> > OK.
+> >> > +               goto host_free;
+> >> > +       }
+> >>
+> >> It seems like you don't need to store the src_clk_parent and the
+> >> hs400_src in the host struct, as you are only using it during
+> >> ->probe().
+> > OK,will remove the member src_clk.
+> 
+> According to your earlier clarification about the clock source and
+> clock rate. I think a more proper solution would be to use the
+> clk_set_min_rate() or clk_set_rate_range() API, instead of dealing
+> with re-parenting of the clock as above.
+> 
+> FYI, a clock provider may implement the ->determine_rate() ops to deal
+> with re-parenting to find the requested clock rate.
+> 
 
-are available in the git repository at:
+Actually,  at first, I use the clk_set_rate(), but our CCF owner
+suggests to use clk_set_parent, because the same clock frequency, may
+have several parent clock.
+by the way, Sascha suggests to use the "assigned-clocks" and
+"assigned-clock-parents", I tried and it works, and ,will move it from
+mt8173.dtsi to mt8173-evb.dts, because customer may want use other
+parent clock in it's projects.
+Thx!
 
-  git://git.collabora.com/git/user/tomeu/linux.git on-demand-probes-for-next
+> [...]
+> 
+> Kind regards
+> Uffe
 
-for you to fetch changes up to c074fef5d36e1c27dfdf7474e23c01a1b044ff98:
 
-  of/platform: Defer probes of registered devices (2015-10-15 13:25:47 +0200)
-
-----------------------------------------------------------------
-Tomeu Vizoso (20):
-      driver core: handle -EPROBE_DEFER from bus_type.match()
-      ARM: amba: Move reading of periphid to amba_match()
-      of/platform: Point to struct device from device node
-      of: add function to allow probing a device from a OF node
-      gpio: Probe GPIO drivers on demand
-      pinctrl: Probe pinctrl devices on demand
-      regulator: core: Probe regulators on demand
-      drm: Probe panels on demand
-      drm/tegra: Probe dpaux devices on demand
-      i2c: core: Probe i2c adapters and devices on demand
-      pwm: Probe PWM chip devices on demand
-      backlight: Probe backlight devices on demand
-      usb: phy: Probe phy devices on demand
-      clk: Probe clk providers on demand
-      pinctrl: Probe pinctrl devices on demand
-      phy: core: Probe phy providers on demand
-      dma: of: Probe DMA controllers on demand
-      power-supply: Probe power supplies on demand
-      driver core: Allow deferring probes until late init
-      of/platform: Defer probes of registered devices
-
- drivers/amba/bus.c                  | 88 +++++++++++++++++++------------------
- drivers/base/Kconfig                | 18 ++++++++
- drivers/base/dd.c                   | 30 ++++++++++++-
- drivers/clk/clk.c                   |  3 ++
- drivers/dma/of-dma.c                |  3 ++
- drivers/gpio/gpiolib-of.c           |  5 +++
- drivers/gpu/drm/drm_panel.c         |  3 ++
- drivers/gpu/drm/tegra/dpaux.c       |  3 ++
- drivers/i2c/i2c-core.c              |  4 ++
- drivers/of/device.c                 | 61 +++++++++++++++++++++++++
- drivers/of/platform.c               | 30 ++++++++-----
- drivers/phy/phy-core.c              |  3 ++
- drivers/pinctrl/devicetree.c        |  3 ++
- drivers/power/power_supply_core.c   |  3 ++
- drivers/pwm/core.c                  |  3 ++
- drivers/regulator/core.c            |  2 +
- drivers/usb/phy/phy.c               |  3 ++
- drivers/video/backlight/backlight.c |  3 ++
- include/linux/device.h              |  4 +-
- include/linux/of.h                  |  1 +
- include/linux/of_device.h           |  3 ++
- 21 files changed, 219 insertions(+), 57 deletions(-)
