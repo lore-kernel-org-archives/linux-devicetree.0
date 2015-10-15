@@ -1,98 +1,220 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: Re: [PATCH 1/3] dt-bindings: add SMP enable-method for Broadcom NSP
-Date: Thu, 15 Oct 2015 21:43:32 +0530
-Message-ID: <561FD0AC.50403@broadcom.com>
-References: <1444844820-24290-1-git-send-email-kapilh@broadcom.com>
- <1444844820-24290-2-git-send-email-kapilh@broadcom.com>
- <561ED6E8.4000208@hauke-m.de>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and pcie
+Date: Thu, 15 Oct 2015 11:14:31 -0500
+Message-ID: <CAL_JsqL+T7nCtBo9YA=tX1gi=YbvMSswbSj5Fj94uQwB9XStvA@mail.gmail.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561ED6E8.4000208@hauke-m.de>
+In-Reply-To: <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: WingMan Kwok <w-kwok2@ti.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Roger Quadros <rogerq@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 15, 2015 at 9:25 AM, WingMan Kwok <w-kwok2@ti.com> wrote:
+> On TI's Keystone platforms, several peripherals such as the
+> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
+> require the use of a SerDes for converting SoC parallel data into
+> serialized data that can be output over a high-speed electrical
+> interface, and also converting high-speed serial input data
+> into parallel data that can be processed by the SoC.  The
+> SerDeses used by those peripherals, though they may be different,
+> are largely similar in functionality and setup.
+>
+> This patch provides a SerDes phy driver implementation that can be
+> used by the above mentioned peripheral drivers to configure their
+> respective SerDeses.
+>
+> v1:
+>         - see cover letter for review comments addressed.
+>
+> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+> ---
+>  Documentation/devicetree/bindings/phy/ti-phy.txt |  278 +++
+>  drivers/phy/Kconfig                              |    8 +
+>  drivers/phy/Makefile                             |    1 +
+>  drivers/phy/phy-keystone-serdes.c                | 2373 ++++++++++++++++++++++
+>  4 files changed, 2660 insertions(+)
+>  create mode 100644 drivers/phy/phy-keystone-serdes.c
+>
+> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+> index 9cf9446..4dca271 100644
+> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+> @@ -115,4 +115,282 @@ sata_phy: phy@4A096000 {
+>         clock-names = "sysclk", "refclk";
+>         syscon-pllreset = <&scm_conf 0x3fc>;
+>         #phy-cells = <0>;
+> +
+> +TI Keystone SerDes PHY
+> +======================
+> +
+> +Required properties:
+> + - compatible: should be one of
+> +       * "ti,keystone-serdes-gbe"
+> +       * "ti,keystone-serdes-xgbe"
+> +       * "ti,keystone-serdes-pcie"
+
+These are different blocks or different modes of the same block? It's
+fine if the former. If the latter, then you should have a single
+compatible and then have a mode property. Perhaps phy-connection-type
+from ePAPR ethernet binding can be extended.
 
 
-On 10/15/2015 3:57 AM, Hauke Mehrtens wrote:
-> On 10/14/2015 07:46 PM, Kapil Hali wrote:
->> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
->> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
->> documentation file and create a new binding documentation for
->> Northstar Plus CPU pen-release mechanism.
->>
->> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
->> ---
->>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 36 ++++++++++++++++++++++
->>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->>  2 files changed, 37 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->> new file mode 100644
->> index 0000000..8506da7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->> @@ -0,0 +1,36 @@
->> +Broadcom Northstar Plus SoC CPU Enable Method
->> +---------------------------------------------
->> +This binding defines the enable method used for starting secondary
->> +CPUs in the following Broadcom SoCs:
->> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
->> +
->> +The enable method is specified by defining the following required
->> +properties in the "cpus" device tree node:
->> +  - enable-method = "brcm,bcm-nsp-smp";
->> +  - secondary-boot-reg = <...>;
->> +
->> +The secondary-boot-reg property is a u32 value that specifies the
->> +physical address of the register used to request the ROM holding pen
->> +code release a secondary CPU.
->> +
->> +Example:
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		enable-method = "brcm,bcm-nsp-smp";
->> +		secondary-boot-reg = <0xffff042c>;
-> 
-> Isn't this some offset in a SRAM? If this is a SRAM it should be handled
-> like it is done in some other SoC code.
-> 
-It is an internal SKU region. Is it handled differently in rest of the 
-SoCs? What is that method?
+> + - reg:
+> +       * base address and length of the SerDes register set
+> + - reg-names:
+> +       * "serdes"
+> +               - name of the reg SerDes register set
 
->> +
->> +		cpu0: cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a9";
->> +			next-level-cache = <&L2>;
->> +			reg = <0>;
->> +		};
->> +
->> +		cpu1: cpu@1 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a9";
->> +			next-level-cache = <&L2>;
->> +			reg = <1>;
->> +		};
->> +	};
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 91e6e5c..1172d9b 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
->>  			    "allwinner,sun6i-a31"
->>  			    "allwinner,sun8i-a23"
->>  			    "arm,psci"
->> +			    "brcm,bcm-nsp-smp"
->>  			    "brcm,brahma-b15"
->>  			    "marvell,armada-375-smp"
->>  			    "marvell,armada-380-smp"
->>
-> 
-Thanks,
-Kapil
+reg-names is kind of pointless with only 1.
+
+> + - #phy-cells:
+> +       * From the generic phy bindings, must be 0;
+> + - num-lanes:
+> +       * Number of lanes in SerDes.
+> +
+> +Optional properties:
+> + - syscon-peripheral:
+> +       * Handle to the subsystem register region of the peripheral
+> +         inside which the SerDes exists.
+> + - syscon-link:
+> +       * Handle to the Link register region of the peripheral inside
+> +         which the SerDes exists.  Example: it is the PCSR register
+> +         region in the case of 10gbe.
+> + - rx-force-enable:
+> +       * Include this property if receiver attenuation and boost are
+> +         to be configured with specific values defined in rx-force.
+> + - link-rate-kbps:
+> +       * SerDes link rate to be configured, in kbps.
+> +
+> +
+> +For gbe and 10gbe SerDes, it is optional to represent each lane as
+> +a sub-node, which can be enabled or disabled individually using
+> +the "status" property.
+> +
+> +Required properties (lane sub-node):
+> + - reg:
+> +       * lane number
+> +
+> +Optional properties (lane sub-node):
+> + - control-rate:
+> +       * Lane control rate
+> +               0: full rate
+> +               1: half rate
+> +               2: quarter rate
+> + - rx-start:
+> +       * Initial lane rx equalizer attenuation and boost configurations.
+> +       * Must be array of 2 integers.
+> + - rx-force:
+> +       * Forced lane rx equalizer attenuation and boost configurations.
+> +       * Must be array of 2 integers.
+> + - tx-coeff:
+> +       * Lane c1, c2, cm, attenuation and regulator output voltage
+> +         configurations.
+> +       * Must be array of 5 integers.
+> + - loopback:
+> +       * Include this property to enable loopback at the SerDes
+> +         lane level.
+
+This seems overly complicated. Do you really expect these to be
+different per lane?
+
+> +
+> +Example for Keystone K2E GBE:
+> +-----------------------------
+> +
+> +gbe_serdes0: gbe_serdes@232a000 {
+> +       #phy-cells              = <0>;
+> +       compatible              = "ti,keystone-serdes-gbe";
+> +       reg                     = <0x0232a000 0x2000>;
+> +       reg-names               = "serdes";
+> +       link-rate-kbps          = <1250000>;
+> +       num-lanes               = <4>;
+> +       lanes {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               lane@0 {
+> +                       /*loopback;*/
+> +                       reg             = <0>;
+> +                       control-rate    = <2>; /* quart */
+> +                       rx-start        = <7 5>;
+> +                       rx-force        = <1 1>;
+> +                       tx-coeff        = <0 0 0 12 4>;
+> +                              /* c1 c2 cm att vreg */
+> +               };
+> +               lane@1 {
+> +                       /*loopback;*/
+> +                       reg             = <1>;
+> +                       control-rate    = <2>; /* quart */
+> +                       rx-start        = <7 5>;
+> +                       rx-force        = <1 1>;
+> +                       tx-coeff        = <0 0 0 12 4>;
+> +                              /* c1 c2 cm att vreg */
+> +               };
+> +       };
+> +};
+> +
+> +gbe_serdes1: gbe_serdes@2324000 {
+> +       #phy-cells              = <0>;
+> +       compatible              = "ti,keystone-serdes-gbe";
+> +       reg                     = <0x02324000 0x2000>;
+> +       reg-names               = "serdes";
+> +       link-rate-kbps          = <1250000>;
+> +       num-lanes               = <4>;
+
+4 lanes, but only 2 child nodes?
+
+> +       lanes {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               lane@0 {
+> +                       /*loopback;*/
+> +                       reg             = <0>;
+> +                       control-rate    = <2>; /* quart */
+> +                       rx-start        = <7 5>;
+> +                       rx-force        = <1 1>;
+> +                       tx-coeff        = <0 0 0 12 4>;
+> +                              /* c1 c2 cm att vreg */
+> +               };
+> +               lane@1 {
+> +                       /*loopback;*/
+> +                       reg             = <1>;
+> +                       control-rate    = <2>; /* quart */
+> +                       rx-start        = <7 5>;
+> +                       rx-force        = <1 1>;
+> +                       tx-coeff        = <0 0 0 12 4>;
+> +                              /* c1 c2 cm att vreg */
+> +               };
+> +       };
+> +};
+> +
+> +netcp: netcp@24000000 {
+> +       ...
+> +
+> +       netcp-devices {
+> +               ...
+> +
+> +               gbe@200000 { /* ETHSS */
+> +                       ...
+> +                       serdeses {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +                               serdes@0 {
+> +                                       reg = <0>;
+> +                                       phys = <&gbe_serdes0>;
+> +                                       status = "ok";
+> +                               };
+> +                               serdes@1 {
+> +                                       reg = <1>;
+> +                                       phys = <&gbe_serdes1>;
+> +                                       status = "ok";
+
+This is way too complex. Just do:
+
+phys = <&gbe_serdes0, &gbe_serdes1>;
+
+in the gbe node.
+
+Rob
