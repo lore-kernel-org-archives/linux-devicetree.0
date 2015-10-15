@@ -1,60 +1,95 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: Re: [PATCH v3 04/10] clk: nsp: add clock support for Broadcom
- Northstar Plus SoC
-Date: Thu, 15 Oct 2015 17:04:01 -0400
-Message-ID: <20151015210400.GN32089@broadcom.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 08/10] clk: ns2: add clock support for Broadcom
+ Northstar 2 SoC
+Date: Thu, 15 Oct 2015 14:04:09 -0700
+Message-ID: <562014C9.5070708@broadcom.com>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-5-git-send-email-jonmason@broadcom.com>
- <56200F95.3040902@broadcom.com>
+ <1444938513-10758-9-git-send-email-jonmason@broadcom.com>
+ <56200F39.1060102@broadcom.com> <562012A8.8050707@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56200F95.3040902@broadcom.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562012A8.8050707-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 01:41:57PM -0700, Scott Branden wrote:
-> Jon,
-> 
-> Review below.
-> 
-> On 15-10-15 12:48 PM, Jon Mason wrote:
-> >The Broadcom Northstar Plus SoC is architected under the iProc
-> 
-> Based on changes in Makefile below - should this be for Northstar
-> and Northstar Plus?
+Hi Ray,
 
-Yes, that would be more accurate (or the 5301x/4708 verbage we are
-using now in Linux for that SoC family).  If there is the need for
-another version of this patch, I'll fix it up.
+Comment at near end.
 
-Thanks,
-Jon
+On 15-10-15 01:55 PM, Ray Jui wrote:
+>
+>
+> On 10/15/2015 1:40 PM, Scott Branden wrote:
+>> We need some sort of kconfig option to differentiate NS2 clock driver
+>> from being pulled in all the time.
+>>
+>> On 15-10-15 12:48 PM, Jon Mason wrote:
+>>> The Broadcom Northstar 2 SoC is architected under the iProc
+>>> architecture. It has the following PLLs: GENPLL SCR, GENPLL SW,
+>>> LCPLL DDR, LCPLL Ports, all derived from an onboard crystal.
+>>>
+>>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>    drivers/clk/Makefile                |   2 +-
+>>>    drivers/clk/bcm/Makefile            |   1 +
+>>>    drivers/clk/bcm/clk-ns2.c           | 288
+>>> ++++++++++++++++++++++++++++++++++++
+>>>    include/dt-bindings/clock/bcm-ns2.h |  72 +++++++++
+>>>    4 files changed, 362 insertions(+), 1 deletion(-)
+>>>    create mode 100644 drivers/clk/bcm/clk-ns2.c
+>>>    create mode 100644 include/dt-bindings/clock/bcm-ns2.h
+>>>
+>>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>>> index d08b3e5..6124bd3 100644
+>>> --- a/drivers/clk/Makefile
+>>> +++ b/drivers/clk/Makefile
+>>> @@ -47,7 +47,7 @@ obj-$(CONFIG_COMMON_CLK_WM831X)        += clk-wm831x.o
+>>>    obj-$(CONFIG_COMMON_CLK_XGENE)        += clk-xgene.o
+>>>    obj-$(CONFIG_COMMON_CLK_PWM)        += clk-pwm.o
+>>>    obj-$(CONFIG_COMMON_CLK_AT91)        += at91/
+>>> -obj-$(CONFIG_ARCH_BCM)            += bcm/
+>>> +obj-y                    += bcm/
+>>>    obj-$(CONFIG_ARCH_BERLIN)        += berlin/
+>>>    obj-$(CONFIG_ARCH_HISI)            += hisilicon/
+>>>    obj-$(CONFIG_ARCH_MXC)            += imx/
+>>> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+>>> index e258b28..2d1cbc5 100644
+>>> --- a/drivers/clk/bcm/Makefile
+>>> +++ b/drivers/clk/bcm/Makefile
+>>> @@ -3,6 +3,7 @@ obj-$(CONFIG_CLK_BCM_KONA)    += clk-kona-setup.o
+>>>    obj-$(CONFIG_CLK_BCM_KONA)    += clk-bcm281xx.o
+>>>    obj-$(CONFIG_CLK_BCM_KONA)    += clk-bcm21664.o
+>>>    obj-$(CONFIG_COMMON_CLK_IPROC)    += clk-iproc-armpll.o
+>>> clk-iproc-pll.o clk-iproc-asiu.o
+>>> +obj-$(CONFIG_COMMON_CLK_IPROC)    += clk-ns2.o
+>>
+>> NS2 code is dragged in for all IPROC SoCs.  We need a config option for
+>> NS2 (CONFIG_ARCH_BCM_NS2) to avoid this (if Arnd allows this for ARMv8
+>> processors... ?).
+>>
+>> You can see below ARMv7 processors don't have this problem.
+>>
+>
+> The arm64 maintainers (Catalin, Mark, and etc.) stated they only want
+> one ARCH options per chip family.
+>
+>> If not we need to add CONFIG_CLK_NS2.
+>
+> If using CONFIG_CLK_NS2, how is it going to be enabled/selected?
 
-> 
-> >architecture. It has the following PLLs: ARMPLL, GENPLL, LCPLL0, all
-> >derived from an onboard crystal.
-> >
-> >Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> >---
-> >  drivers/clk/bcm/Makefile            |   2 +
-> >  drivers/clk/bcm/clk-nsp.c           | 135 ++++++++++++++++++++++++++++++++++++
-> >  include/dt-bindings/clock/bcm-nsp.h |  51 ++++++++++++++
-> >  3 files changed, 188 insertions(+)
-> >  create mode 100644 drivers/clk/bcm/clk-nsp.c
-> >  create mode 100644 include/dt-bindings/clock/bcm-nsp.h
-> >
-> >diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> >index 8a7a477..e258b28 100644
-> >--- a/drivers/clk/bcm/Makefile
-> >+++ b/drivers/clk/bcm/Makefile
-> >@@ -4,3 +4,5 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
-> >  obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
-> >  obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
-> >  obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
-> >+obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
-> >+obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
-> 
+Since CONFIG_ARCH_BCM_NS2 isn't "allowed" to be introduced we will need 
+to create and select a CONFIG_CLK_BCM_NS2 in the defconfig instead.
+>
+> Ray
+>
+
+Regards,
+  Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
