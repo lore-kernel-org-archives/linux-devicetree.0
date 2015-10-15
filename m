@@ -1,62 +1,54 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v4 0/3]
-Date: Thu, 15 Oct 2015 12:29:41 -0400
-Message-ID: <561FD475.9000807@ti.com>
-References: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com> <561E7792.409@oracle.com> <561FCE2B.8020802@ti.com> <561FD273.2040208@oracle.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Thu, 15 Oct 2015 17:51:06 +0100
+Message-ID: <20151015165105.GE32532@n2100.arm.linux.org.uk>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561FD273.2040208@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: santosh shilimkar <santosh.shilimkar@oracle.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444919145-30845-1-git-send-email-w-kwok2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2015 12:21 PM, santosh shilimkar wrote:
-> On 10/15/2015 9:02 AM, Murali Karicheri wrote:
->> On 10/14/2015 11:41 AM, santosh shilimkar wrote:
->>> 10/14/2015 7:17 AM, Murali Karicheri wrote:
->>>> This patch series enable accumulator queue support for K2 SoCs.
->>>> Accumulator
->>>> queues are a type of qmss queue that is monitored by the PDSP firmware
->>>> and
->>>> accumulated. Host is interrupted by PDSP firmware when packets become
->>>> available in a ring buffer shared between the host and PDSP.
->>>>
->>>> There was an issue raised when merging the original patch set at
->>>>   (1) https://lkml.org/lkml/2015/9/4/681
->>>>     [PATCH v1 1/2] soc: ti: display firmware file name as part of boot
->>>> log
->>>>   (2) https://lkml.org/lkml/2015/9/4/680
->>>>     [PATCH v1 2/2] ARM: dts: keystone: enable accumulator channels
->>>>
->>>> This series fixes the issues raised against v3. Maintainer, could you
->>>> please
->>>> apply this series to v4.4 next please at your earliest opportunity.
->>>>
->>> I have picked up the series. Thanks for quick turnaround.
->>
->> Thanks Santosh. Could you send this pull request for v4.4 next. We want
->> this merged to our internal release and if this is on next branch it
->> will help.
->>
-> It should be already in linux-next and pull request was sent before I
-> replied yesterday. Its late for the merge window with usual norms
-> so lets see if it makes it.
-Santosh,
+On Thu, Oct 15, 2015 at 10:25:43AM -0400, WingMan Kwok wrote:
+> On TI's Keystone platforms, several peripherals such as the
+> gbe ethernet switch, 10gbe ethether switch and PCIe controller
+> require the use of a SerDes for converting SoC parallel data into
+> serialized data that can be output over a high-speed electrical
+> interface, and also converting high-speed serial input data
+> into parallel data that can be processed by the SoC.  The
+> SerDeses used by those peripherals, though they may be different,
+> are largely similar in functionality and setup.
 
-I see both driver and DTS. Thanks once again for your support
+Given that serdes is not specific to TI, should this be specific to
+TI, or should there be an effort to come up with something which
+everyone who has serdes links can make use of?
 
-Regards,
+Serdes comes in multiple different forms: PCIe, 1G SGMII ethernet,
+1000base-X ethernet, 10g ethernet, SATA... I'd hate to see a
+plethora of SoC specific stuff for this.
 
-Murali
->
-> Regards,
-> Santosh
->
->
+When serdes is combined with SFP cages, the situation becomes much
+more fun, because the serdes link then needs to become hotpluggable
+(SFP modules are designed to be hotplugged) which means you have to
+be able to switch between (at least) 1G SGMII and 1000base-X modes,
+and probably 10G mode as well.  There's even a SFP module that has
+a SATA connector on it, though I believe there's no standard for
+that, and it's more a hardware hack.
 
+I've been working in this area but from the Ethernet side on an
+Armada 38x based board which has a SFP cage on it, though it's
+slightly simpler there because there is no support (or I believe
+any desire) to reconfigure the serdes lanes between PCI, ethernet
+and SATA - that's all setup and initialised for us by uboot.
 
 -- 
-Murali Karicheri
-Linux Kernel, Keystone
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
