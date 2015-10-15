@@ -1,33 +1,97 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3] iio: mma8452: support either of the available
- interrupt pins
-Date: Thu, 15 Oct 2015 11:20:37 +0100
-Message-ID: <20151015102037.GB8825@leverpostej>
-References: <1444828542-28861-1-git-send-email-martink@posteo.de>
- <561E70E0.1010508@metafoo.de>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: dts: lpc32xx: add device node for the second
+ pwm controller
+Date: Thu, 15 Oct 2015 13:25:02 +0300
+Message-ID: <561F7EFE.5070908@mleia.com>
+References: <1444694045-22000-1-git-send-email-vz@mleia.com>	<1444694045-22000-6-git-send-email-vz@mleia.com> <CAGhQ9Vx9ghfAD0=ntsFL50+iBQDag=HHGb6=X2-AfYPtSb_-yQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <561E70E0.1010508-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9Vx9ghfAD0=ntsFL50+iBQDag=HHGb6=X2-AfYPtSb_-yQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 05:12:32PM +0200, Lars-Peter Clausen wrote:
-> On 10/14/2015 03:15 PM, Martin Kepplinger wrote:
-> [...]
-> > +			if (irq1 > 0)
-> > +				client->irq = irq1;
+Hi Joachim,
+
+On 14.10.2015 21:04, Joachim Eastwood wrote:
+> Hi Vladimir,
 > 
-> You must not overwrite client->irq, that field is manged by the I2C core and
-> is supposed to be read only for device drivers.
+> On 13 October 2015 at 01:54, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
+>> LPC32xx SoCs have two independent PWM controllers, they have different
+>> clock parents, clock gates and even slightly different controls,
+>> each of these two PWM controllers has one output channel. Due to
+>> almost similar controls arranged in a row it is incorrectly assumed
+>> that there is one PWM controller with two channels, fix this problem
+>> in lpc32xx.dtsi, which at the moment prevents separate configuration
+>> of different clock parents and gates for both PWM controllers.
+>>
+>> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/lpc32xx.dtsi | 10 ++++++++--
+>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+>> index 929458d..f4d2a0e 100644
+>> --- a/arch/arm/boot/dts/lpc32xx.dtsi
+>> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
+>> @@ -286,9 +286,15 @@
+>>                                 status = "disabled";
+>>                         };
+>>
+>> -                       pwm: pwm@4005C000 {
+>> +                       pwm1: pwm@4005C000 {
+>>                                 compatible = "nxp,lpc3220-pwm";
+>> -                               reg = <0x4005C000 0x8>;
+>> +                               reg = <0x4005C000 0x4>;
+>> +                               status = "disabled";
+>> +                       };
+>> +
+>> +                       pwm2: pwm@4005C004 {
+>> +                               compatible = "nxp,lpc3220-pwm";
+>> +                               reg = <0x4005C004 0x4>;
+>>                                 status = "disabled";
+>>                         };
+>>                 };
+> 
+> I am not really against your change, but...
+> 
+> What's wrong with a binding like the one below?
+> pwm: pwm@0x4005c000 {
+>     compatible = "nxp,lpc3220-pwm";
+>     reg = <0x4005C000 0x8>;
+>     clocks =<&clk CLK_PWM1, &clk CLK_PWM2>;
+>     clock-names = "pwm1", "pwm2";
+>     #pwm-cells = <3>;
+> };
+> 
+> With two clocks and where the first pwm-cell would select either PWM1 or PWM2.
+> 
+> Seems like the driver only handle one clock, but should be fairly easy to fix.
 
-Ok.
+I thought about it and IMHO it is a more complicated change in DTS (and
+no doubts in the driver), which hides the structure of hardware. There
+is no one PWM with two channels.
 
-I think for the moment the simlpest thing to do would be to check which
-of INT1 and INT2 match client->irq, and use that.
+There are two independent PWMs, even control registers are different,
+PWM2 can be programmed to output the internal interrupt status, and it
+means that possibly in future I may want to describe one of the PWMs
+with a different "compatible" property.
 
-Thanks,
-Mark.
+> Note: with your DT change you would also need to change the driver
+> since it currently sets npwm to 2.
+> 
+
+It is done -- http://permalink.gmane.org/gmane.linux.pwm/2831
+
+Thanks for review.
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
