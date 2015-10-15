@@ -1,37 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and pcie
-Date: Thu, 15 Oct 2015 21:34:51 +0200
-Message-ID: <6215485.RTPqreMEMX@wuerfel>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <5192855.p6QLDWTiVi@wuerfel> <561FCDC0.3080109@ti.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH 5/7] ARM: mach-stm32: Select pinctrl
+Date: Thu, 15 Oct 2015 21:42:50 +0200
+Message-ID: <562001BA.5040108@gmail.com>
+References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1444853247-31114-6-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <561FCDC0.3080109@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444853247-31114-6-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 October 2015 12:01:04 Murali Karicheri wrote:
-> 
-> >> + * Redistributions in binary form must reproduce the above copyright
-> >> + * notice, this list of conditions and the following disclaimer in the
-> >> + * documentation and/or other materials provided with the
-> >> + * distribution.
-> >
-> > The current code does not do this when compiled, which might be a
-> > problem for distributors. Can you clarify the license?
-> >
-> Arnd,
-> 
-> Can you elaborate on this? I did a grep on the string "Redistributions 
-> in binary form must reproduce the above copyright" and I could find 
-> several instance of this. So I am not sure what you mean by "The current 
-> code does not do this when compiled".
+Hi,
 
-You write that the binary form of the code must produce the copyright
-notice. I don't see any code that does this. If I was looking in the
-wrong place, let me know.
+Commenting myself before someone else does...
 
-	Arnd
+On 10/14/2015 10:07 PM, Maxime Coquelin wrote:
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> ---
+>   arch/arm/Kconfig                          | 1 +
+>   drivers/pinctrl/stm32/pinctrl-stm32f429.c | 2 +-
+>   2 files changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index bf94e54..8b1afd4 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -985,6 +985,7 @@ config ARCH_STM32
+>   	select ARMV7M_SYSTICK
+>   	select CLKSRC_STM32
+>   	select RESET_CONTROLLER
+> +	select PINCTRL
+This is not in alphabetical order...
+
+>   	help
+>   	  Support for STMicroelectronics STM32 processors.
+>
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32f429.c b/drivers/pinctrl/stm32/pinctrl-stm32f429.c
+> index 3535037..f34016b 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32f429.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32f429.c
+> @@ -1564,7 +1564,7 @@ static const struct stm32_desc_pin stm32f429_pins[] = {
+>   	),
+>   };
+>
+> -struct stm32_pinctrl_match_data stm32f429_match_data = {
+> +static struct stm32_pinctrl_match_data stm32f429_match_data = {
+>   	.pins = stm32f429_pins,
+>   	.npins = ARRAY_SIZE(stm32f429_pins),
+>   };
+>
+
+And I didn't fixed-up in the good patch... Should go in the driver one.
+
+Will be fixed in the v2.
+
+Maxime
