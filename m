@@ -1,50 +1,131 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH v3 04/10] clk: nsp: add clock support for Broadcom
- Northstar Plus SoC
-Date: Thu, 15 Oct 2015 13:41:57 -0700
-Message-ID: <56200F95.3040902@broadcom.com>
-References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-5-git-send-email-jonmason@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1444938513-10758-5-git-send-email-jonmason@broadcom.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jon Mason <jonmason@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH RFT] ARM: bcm2835: enable all bcm2835-relevant in defconfig
+Date: Thu, 15 Oct 2015 22:47:41 +0200
+Message-ID: <1444942061-23085-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jon,
+Rebuild bcm2835_defconfig using "make bcm2835_defconfig;
+make savedefconfig", and add the following features:
 
-Review below.
+* Enable all bcm2835-relevant drivers (MBOX, WDT, DMA,
+  PWM, SND)
+* Re-enable some features to keep the current settings
+  (stackprotector, LED GPIO, LED triggers)
 
-On 15-10-15 12:48 PM, Jon Mason wrote:
-> The Broadcom Northstar Plus SoC is architected under the iProc
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ arch/arm/configs/bcm2835_defconfig |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-Based on changes in Makefile below - should this be for Northstar and 
-Northstar Plus?
+This patch is only compile-tested.
 
-> architecture. It has the following PLLs: ARMPLL, GENPLL, LCPLL0, all
-> derived from an onboard crystal.
->
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> ---
->   drivers/clk/bcm/Makefile            |   2 +
->   drivers/clk/bcm/clk-nsp.c           | 135 ++++++++++++++++++++++++++++++++++++
->   include/dt-bindings/clock/bcm-nsp.h |  51 ++++++++++++++
->   3 files changed, 188 insertions(+)
->   create mode 100644 drivers/clk/bcm/clk-nsp.c
->   create mode 100644 include/dt-bindings/clock/bcm-nsp.h
->
-> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> index 8a7a477..e258b28 100644
-> --- a/drivers/clk/bcm/Makefile
-> +++ b/drivers/clk/bcm/Makefile
-> @@ -4,3 +4,5 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
->   obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
->   obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
->   obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
-> +obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
-> +obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
+diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
+index 31cb073..0fda844 100644
+--- a/arch/arm/configs/bcm2835_defconfig
++++ b/arch/arm/configs/bcm2835_defconfig
+@@ -10,7 +10,6 @@ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CGROUP_DEVICE=y
+ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_CPUACCT=y
+-CONFIG_RESOURCE_COUNTERS=y
+ CONFIG_CGROUP_PERF=y
+ CONFIG_CFS_BANDWIDTH=y
+ CONFIG_RT_GROUP_SCHED=y
+@@ -18,10 +17,6 @@ CONFIG_NAMESPACES=y
+ CONFIG_SCHED_AUTOGROUP=y
+ CONFIG_RELAY=y
+ CONFIG_BLK_DEV_INITRD=y
+-CONFIG_RD_BZIP2=y
+-CONFIG_RD_LZMA=y
+-CONFIG_RD_XZ=y
+-CONFIG_RD_LZO=y
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_EMBEDDED=y
+@@ -29,6 +24,7 @@ CONFIG_EMBEDDED=y
+ CONFIG_PROFILING=y
+ CONFIG_OPROFILE=y
+ CONFIG_JUMP_LABEL=y
++CONFIG_CC_STACKPROTECTOR_REGULAR=y
+ CONFIG_ARCH_MULTI_V6=y
+ # CONFIG_ARCH_MULTI_V7 is not set
+ CONFIG_ARCH_BCM=y
+@@ -38,7 +34,6 @@ CONFIG_AEABI=y
+ CONFIG_KSM=y
+ CONFIG_CLEANCACHE=y
+ CONFIG_SECCOMP=y
+-CONFIG_CC_STACKPROTECTOR=y
+ CONFIG_KEXEC=y
+ CONFIG_CRASH_DUMP=y
+ CONFIG_VFP=y
+@@ -57,7 +52,6 @@ CONFIG_DEVTMPFS_MOUNT=y
+ # CONFIG_STANDALONE is not set
+ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+-CONFIG_SCSI_MULTI_LUN=y
+ CONFIG_SCSI_CONSTANTS=y
+ CONFIG_SCSI_SCAN_ASYNC=y
+ CONFIG_NETDEVICES=y
+@@ -77,17 +71,27 @@ CONFIG_SPI=y
+ CONFIG_SPI_BCM2835=y
+ CONFIG_GPIO_SYSFS=y
+ # CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_BCM2835_WDT=y
+ CONFIG_FB=y
+ CONFIG_FB_SIMPLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
++CONFIG_SOUND=y
++CONFIG_SND=y
++CONFIG_SND_SOC=y
++CONFIG_SND_BCM2835_SOC_I2S=y
+ CONFIG_USB=y
+ CONFIG_USB_STORAGE=y
++CONFIG_USB_DWC2=y
+ CONFIG_MMC=y
+ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_SDHCI_BCM2835=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_TIMER=y
+ CONFIG_LEDS_TRIGGER_ONESHOT=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+@@ -96,17 +100,19 @@ CONFIG_LEDS_TRIGGER_GPIO=y
+ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+ CONFIG_LEDS_TRIGGER_TRANSIENT=y
+ CONFIG_LEDS_TRIGGER_CAMERA=y
++CONFIG_DMADEVICES=y
++CONFIG_DMA_BCM2835=y
+ CONFIG_STAGING=y
+-CONFIG_USB_DWC2=y
+-CONFIG_USB_DWC2_HOST=y
++CONFIG_MAILBOX=y
++CONFIG_BCM2835_MBOX=y
+ # CONFIG_IOMMU_SUPPORT is not set
++CONFIG_PWM=y
++CONFIG_PWM_BCM2835=y
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+ CONFIG_EXT2_FS_POSIX_ACL=y
+ CONFIG_EXT3_FS=y
+ CONFIG_EXT3_FS_POSIX_ACL=y
+-CONFIG_EXT4_FS=y
+-CONFIG_EXT4_FS_POSIX_ACL=y
+ CONFIG_FANOTIFY=y
+ CONFIG_MSDOS_FS=y
+ CONFIG_VFAT_FS=y
+-- 
+1.7.10.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
