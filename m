@@ -1,171 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
-Date: Thu, 15 Oct 2015 13:55:51 -0500
-Message-ID: <CAL_JsqJ0JUuwkVKtWbzqEWemx7wME61KYxgvv=vNUT8FiMtGYw@mail.gmail.com>
-References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
- <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com> <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
- <561F9961.30008@ti.com> <CAL_Jsq+trQ3jLczxvtzqfpUKBgxaazPdGyjLg+NT2YFva0_xbA@mail.gmail.com>
- <561FBC4F.6030306@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Fri, 16 Oct 2015 00:51:58 +0530
+Message-ID: <561FFCD6.7000509@ti.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+ <20151015165105.GE32532@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <561FBC4F.6030306@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151015165105.GE32532@n2100.arm.linux.org.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, WingMan Kwok <w-kwok2@ti.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 9:46 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> Hi Rob,
->
-> On 15/10/15 16:46, Rob Herring wrote:
->
->>> At some point I got feedback that the DT maintainers don't have time to
->>> look at each individual driver binding, but rely on the subsystem
->>> maintainers to handle them. Maybe I misunderstood that.
->>
->> True, but that doesn't mean to not copy us. If we didn't want to be
->> copied, we would update MAINTAINERS.
->
-> Ok.
->
->>>> Why do we need 2 levels of LED nodes?
->>>
->>> Sorry, didn't get that. What do you mean with 2 levels?
->>
->> You have the node the "leds" phandle points to which is the actual LED
->> device and then this node which is just backlight properties. And then
->> presumably another phandle in the panel device to point to the
->> backlight device.
->
-> Ok, I see what you mean.
->
-> Well, I have to say this is far from perfect. I initially pushed for a
-> PWM driver for the LED chip we use (tlc591xx), which would have allowed
-> us to use pwm-backlight driver. But Andrew was using the same chip for
-> more LED-ish use cases, for which a LED driver was more suitable.
->
-> But what I think we really should have is a more generic way to
-> represent output pins, so that GPIOs (well, GPOs really), PWMs and
-> current controlled outputs would all be done the same way.
->
-> It was rather difficult to use the LED driver and LED bindings for this,
-> as (afaics) they were really never designed to be used for anything else
-> than for simple LEDs (i.e. a LED connected directly to the LED chip).
-> The flash support was added later, but that's almost as simple as the
-> first case.
+Hi,
 
-There's still room to extend it though.
+On Thursday 15 October 2015 10:21 PM, Russell King - ARM Linux wrote:
+> On Thu, Oct 15, 2015 at 10:25:43AM -0400, WingMan Kwok wrote:
+>> On TI's Keystone platforms, several peripherals such as the
+>> gbe ethernet switch, 10gbe ethether switch and PCIe controller
+>> require the use of a SerDes for converting SoC parallel data into
+>> serialized data that can be output over a high-speed electrical
+>> interface, and also converting high-speed serial input data
+>> into parallel data that can be processed by the SoC.  The
+>> SerDeses used by those peripherals, though they may be different,
+>> are largely similar in functionality and setup.
+> 
+> Given that serdes is not specific to TI, should this be specific to
+> TI, or should there be an effort to come up with something which
+> everyone who has serdes links can make use of?
+> 
+> Serdes comes in multiple different forms: PCIe, 1G SGMII ethernet,
+> 1000base-X ethernet, 10g ethernet, SATA... I'd hate to see a
+> plethora of SoC specific stuff for this.
 
->>> These are for the backlight, not for the LED chip. So "LED" here is a
->>> chip that produces (most likely) a PWM signal, and "backlight" is the
->>> collection of components that use the PWM to produce the backlight
->>> itself, and use the power-supply and gpios.
->>
->> Okay, it wasn't clear that leds points to the LED controller node. The
->
-> No, it doesn't point to the main LED node (the one having 'compatible').
-> It points to a child node.
->
->> example made it seem as it was the device. We already have a way to
->> describe LEDs and that is as child nodes of the LED controller node.
->
-> True, but those child nodes are very limited. As I see it, those child
-> nodes really describe the outputs of the LED chip, not what's on the
-> other end of the lines.
+Generally every SoC use it's own serdes and the programming required is
+different for different SoCs. Each of them have their own register map
+and clock programming/regulator programming/reset programming are all
+different.
 
-The child nodes are supposed to be the other end. In the flash case,
-the properties are constraints on the flash LED (i.e. different flash
-LEDs will have different max currents).
+However most SoC vendors use the same PHY/SerDes IP to be used by
+multiple controllers like PCIe/SATA/USB in a single SoC and a single PHY
+driver is used for programming all these PHYs.
 
->
-> If on the other end of the lines is a more complex device, we need a
-> proper device driver for it, with a proper DT node with compatible
-> property etc.
->
-> Now, one could argue that a "backlight" that gets the LED signal from a
-> LED chip is really just a simple LED. But there are complications:
+Thanks
+Kishon
 
-I would say backlights are a complex example of LEDs. Of course, there
-are backlights not based on LEDs, but we're not talking about those
-here.
-
-> - Our board needs a GPIO to enable the backlight. I can't say what
-> exactly the GPIO does as my HW skills don't go far enough, but all this
-> is after the LED chip. I also see the circuitry using powers, which in
-> our case happen to be always on so we don't need to enable them explicitly.
-
-The GPIO is probably controlling a transistor to connect the LED anode
-to ground and therefore turn it on. These have nothing to do with
-backlights really, but really are common to LEDs. Every LED needs a
-supply rail too. This may come for a regulator or directly from an LED
-driver IC.
-
-If the flash LED binding doesn't have these, then it is only a matter of time.
-
->
-> - We need a backlight device/driver (because of the Linux SW stack).
-
->From a binding perspective, not my problem. The problem with the
-driver needs driving the binding definition is the drivers can change
-over time. IIRC there has been some discussion of combining the 2
-subsystems in the kernel, so we don't want to create something defined
-by current kernel needs.
-
-> So, maybe it would be possible to construct all that in a LED child
-> node, and the LED driver would create a child device for the nodes which
-> have 'compatible' property. But then, that would be very different from
-> pwm-backlight, and the parent-child relationships are usually used to
-> indicate a control relationship, right?
-
-This is along the lines I was thinking, but don't see how it is very
-different at the binding level. The parent-child relationship is
-typically control path or just what is downstream from the parent
-device. Some bindings like GPIO and PWM don't follow this, but that is
-often because they are just additional sideband interfaces on top of
-the main control interface. I think simply making the "backlight" node
-from the pwm-backlight binding a child works. We probably need a
-different compatible string though (led-backlight is as good as
-anything). I also think we should require child nodes to have a
-compatible string which we didn't do for flash devices. It's probably
-not too late to fix that.
-
-I think there are 2 cases of PWM connection to LEDs to consider. The
-PWM is an input to a LED driver chip or the PWM directly controls the
-LED (attached to the anode). The current pwm-backlight binding covers
-the latter. In the former case, pwms should probably be in the parent
-(LED driver IC node). Of course, if the driver IC has no s/w
-controllable interface beyond PWM, then it probably doesn't need to be
-modeled at all in DT.
-
-> The led-backlight in these patches is very much similar to pwm-backlight.
-
-Yes, I think we're really only debating the structure of nodes.
-
->
->> Please follow what was done for flash LEDs (leds/common.txt).
->
-> The flash support is quite simple. I'm not sure how I could do the same
-> for the backlight, as I described above.
->
->> What's wrong with the existing pwm-backlight binding in the PWM case?
->
-> Nothing, if there's a PWM driver. But if the LED chip is modelled as a
-> LED driver, pwm-backlight is out. I think there are two kinds of LED
-> chips, PWM ones and current-controlling ones. And then there are the PWM
-> devices which are clearly PWM ones.
->
->>>> Describe the h/w, not what you want for a driver.
->>>
->>> I think this describes the HW quite well. The LED chip works fine
->>> without any of the properties here, and these are specific to the
->>> backlight part of the board.
->>
->> A more complete example would be helpful here.
->
-> Of our HW? I can't give the schematics but I hope I described it enough
-> above.
-
-I just meant the relationship of all the nodes involved.
-
-Rob
+> 
+> When serdes is combined with SFP cages, the situation becomes much
+> more fun, because the serdes link then needs to become hotpluggable
+> (SFP modules are designed to be hotplugged) which means you have to
+> be able to switch between (at least) 1G SGMII and 1000base-X modes,
+> and probably 10G mode as well.  There's even a SFP module that has
+> a SATA connector on it, though I believe there's no standard for
+> that, and it's more a hardware hack.
+> 
+> I've been working in this area but from the Ethernet side on an
+> Armada 38x based board which has a SFP cage on it, though it's
+> slightly simpler there because there is no support (or I believe
+> any desire) to reconfigure the serdes lanes between PCI, ethernet
+> and SATA - that's all setup and initialised for us by uboot.
+> 
