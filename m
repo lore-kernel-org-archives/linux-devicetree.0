@@ -1,54 +1,53 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
- pcie
-Date: Thu, 15 Oct 2015 12:01:04 -0400
-Message-ID: <561FCDC0.3080109@ti.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <1444919145-30845-2-git-send-email-w-kwok2@ti.com> <5192855.p6QLDWTiVi@wuerfel>
+Subject: Re: [PATCH v4 0/3]
+Date: Thu, 15 Oct 2015 12:02:51 -0400
+Message-ID: <561FCE2B.8020802@ti.com>
+References: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com> <561E7792.409@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5192855.p6QLDWTiVi@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <561E7792.409@oracle.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: santosh shilimkar <santosh.shilimkar@oracle.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2015 10:51 AM, Arnd Bergmann wrote:
-> On Thursday 15 October 2015 10:25:44 WingMan Kwok wrote:
->> On TI's Keystone platforms, several peripherals such as the
->> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
->> require the use of a SerDes for converting SoC parallel data into
->> serialized data that can be output over a high-speed electrical
->> interface, and also converting high-speed serial input data
->> into parallel data that can be processed by the SoC.  The
->> SerDeses used by those peripherals, though they may be different,
->> are largely similar in functionality and setup.
+On 10/14/2015 11:41 AM, santosh shilimkar wrote:
+> 10/14/2015 7:17 AM, Murali Karicheri wrote:
+>> This patch series enable accumulator queue support for K2 SoCs.
+>> Accumulator
+>> queues are a type of qmss queue that is monitored by the PDSP firmware
+>> and
+>> accumulated. Host is interrupted by PDSP firmware when packets become
+>> available in a ring buffer shared between the host and PDSP.
 >>
->> This patch provides a SerDes phy driver implementation that can be
->> used by the above mentioned peripheral drivers to configure their
->> respective SerDeses.
+>> There was an issue raised when merging the original patch set at
+>>   (1) https://lkml.org/lkml/2015/9/4/681
+>>     [PATCH v1 1/2] soc: ti: display firmware file name as part of boot
+>> log
+>>   (2) https://lkml.org/lkml/2015/9/4/680
+>>     [PATCH v1 2/2] ARM: dts: keystone: enable accumulator channels
 >>
->> v1:
+>> This series fixes the issues raised against v3. Maintainer, could you
+>> please
+>> apply this series to v4.4 next please at your earliest opportunity.
+>>
+> I have picked up the series. Thanks for quick turnaround.
 
---------cut-------------------------------------------------------------
-
->> + * Redistributions in binary form must reproduce the above copyright
->> + * notice, this list of conditions and the following disclaimer in the
->> + * documentation and/or other materials provided with the
->> + * distribution.
->
-> The current code does not do this when compiled, which might be a
-> problem for distributors. Can you clarify the license?
->
-Arnd,
-
-Can you elaborate on this? I did a grep on the string "Redistributions 
-in binary form must reproduce the above copyright" and I could find 
-several instance of this. So I am not sure what you mean by "The current 
-code does not do this when compiled".
+Thanks Santosh. Could you send this pull request for v4.4 next. We want 
+this merged to our internal release and if this is on next branch it 
+will help.
 
 Thanks
+
+Murali
+>
+> Regards,
+> Santosh
+>
+>
+
+
 -- 
 Murali Karicheri
 Linux Kernel, Keystone
