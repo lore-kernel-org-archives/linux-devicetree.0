@@ -1,150 +1,94 @@
-From: WingMan Kwok <w-kwok2@ti.com>
-Subject: [PATCH v1 2/2] PCI: keystone: update to use generic keystone serdes driver
-Date: Thu, 15 Oct 2015 10:25:45 -0400
-Message-ID: <1444919145-30845-3-git-send-email-w-kwok2@ti.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] pinctrl: sunxi: Add irq pinmuxing to sun6i
+ "r" pincontroller
+Date: Thu, 15 Oct 2015 16:27:26 +0200
+Message-ID: <1444919246-23694-3-git-send-email-hdegoede@redhat.com>
+References: <1444919246-23694-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: WingMan Kwok <w-kwok2@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBX7P72YAKGQEQ4BXKAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1444919246-23694-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Kaiser <Thomas.Kaiser-id7G5ibTm3AZ78jC37dNPg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the Keystone PCI driver to use the
-generic Keystone serdes driver for serdes initialization
-and configuration.  The generic serdes driver supports
-peripherals on Keystone platforms that require serdes.
+Add pinmuxing for external interrupt functionality through the
+sun6i "r" pincontroller.
 
-v1:
-	- no change.
-
-Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/pci/host/pci-keystone.c |   54 ++++++++++++++++++++++++++++++++-------
- drivers/pci/host/pci-keystone.h |    2 ++
- 2 files changed, 47 insertions(+), 9 deletions(-)
+ drivers/pinctrl/sunxi/pinctrl-sun6i-a31-r.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-index 0aa81bd..b4de05b 100644
---- a/drivers/pci/host/pci-keystone.c
-+++ b/drivers/pci/host/pci-keystone.c
-@@ -335,6 +335,7 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
- {
- 	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
- 
-+	phy_exit(ks_pcie->serdes_phy);
- 	clk_disable_unprepare(ks_pcie->clk);
- 
- 	return 0;
-@@ -342,6 +343,8 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
- 
- static int __init ks_pcie_probe(struct platform_device *pdev)
- {
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *serdeses_np, *child;
- 	struct device *dev = &pdev->dev;
- 	struct keystone_pcie *ks_pcie;
- 	struct pcie_port *pp;
-@@ -349,6 +352,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	void __iomem *reg_p;
- 	struct phy *phy;
- 	int ret = 0;
-+	u32 phy_num;
- 
- 	ks_pcie = devm_kzalloc(&pdev->dev, sizeof(*ks_pcie),
- 				GFP_KERNEL);
-@@ -357,14 +361,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 
- 	pp = &ks_pcie->pp;
- 
--	/* initialize SerDes Phy if present */
--	phy = devm_phy_get(dev, "pcie-phy");
--	if (!IS_ERR_OR_NULL(phy)) {
--		ret = phy_init(phy);
--		if (ret < 0)
--			return ret;
--	}
--
- 	/* index 2 is to read PCI DEVICE_ID */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
- 	reg_p = devm_ioremap_resource(dev, res);
-@@ -385,6 +381,46 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	serdeses_np = of_get_child_by_name(node, "serdeses");
-+	if (serdeses_np) {
-+		for_each_available_child_of_node(serdeses_np, child) {
-+			ret = of_property_read_u32(child, "reg", &phy_num);
-+			if (ret) {
-+				dev_err(dev, "Failed to parse device tree\n");
-+				of_node_put(child);
-+				of_node_put(serdeses_np);
-+				goto fail_clk;
-+			}
-+
-+			if (phy_num >= MAX_NUM_PCI_SERDES) {
-+				dev_err(dev, "Invalid phy number: %u\n",
-+					phy_num);
-+				of_node_put(child);
-+				of_node_put(serdeses_np);
-+				ret = -EINVAL;
-+				goto fail_clk;
-+			}
-+
-+			phy = devm_of_phy_get(dev, child, NULL);
-+			of_node_put(child);
-+			ks_pcie->serdes_phy = phy;
-+			if (IS_ERR(phy)) {
-+				dev_err(dev, "No %s serdes driver found: %ld\n",
-+					node->name, PTR_ERR(phy));
-+				of_node_put(serdeses_np);
-+				ret = PTR_ERR(phy);
-+				goto fail_clk;
-+			}
-+
-+			ret = phy_init(phy);
-+			if (ret < 0) {
-+				of_node_put(serdeses_np);
-+				goto fail_clk;
-+			}
-+		}
-+		of_node_put(serdeses_np);
-+	}
-+
- 	ret = ks_add_pcie_port(ks_pcie, pdev);
- 	if (ret < 0)
- 		goto fail_clk;
-@@ -392,7 +428,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	return 0;
- fail_clk:
- 	clk_disable_unprepare(ks_pcie->clk);
--
-+	phy_exit(ks_pcie->serdes_phy);
- 	return ret;
- }
- 
-diff --git a/drivers/pci/host/pci-keystone.h b/drivers/pci/host/pci-keystone.h
-index 478d932..21662ba 100644
---- a/drivers/pci/host/pci-keystone.h
-+++ b/drivers/pci/host/pci-keystone.h
-@@ -15,6 +15,7 @@
- #define MAX_LEGACY_IRQS			4
- #define MAX_MSI_HOST_IRQS		8
- #define MAX_LEGACY_HOST_IRQS		4
-+#define MAX_NUM_PCI_SERDES		1
- 
- struct keystone_pcie {
- 	struct	clk		*clk;
-@@ -33,6 +34,7 @@ struct keystone_pcie {
- 	/* Application register space */
- 	void __iomem		*va_app_base;
- 	struct resource		app;
-+	struct phy		*serdes_phy;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun6i-a31-r.c b/drivers/pinctrl/sunxi/pinctrl-sun6i-a31-r.c
+index 9596b0a3..88bd20f 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun6i-a31-r.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun6i-a31-r.c
+@@ -47,45 +47,57 @@ static const struct sunxi_desc_pin sun6i_a31_r_pins[] = {
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 0, 0),	/* PL_EINT0 */
+ 		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* MS */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 0, 1),	/* PL_EINT1 */
+ 		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* CK */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 0, 2),	/* PL_EINT2 */
+ 		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* DO */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 0, 3),	/* PL_EINT3 */
+ 		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* DI */
+ 	/* Hole */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 0),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 0),	/* PM_EINT0 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 1),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 1),	/* PM_EINT1 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 2),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 2),	/* PM_EINT2 */
+ 		  SUNXI_FUNCTION(0x3, "1wire")),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 3),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 3),	/* PM_EINT3 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 4),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 4),	/* PM_EINT4 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 5),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 5),	/* PM_EINT5 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 6),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 6),	/* PM_EINT6 */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 7),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x2, 1, 7),	/* PM_EINT7 */
+ 		  SUNXI_FUNCTION(0x3, "rtc")),		/* CLKO */
  };
  
- /* Keystone DW specific MSI controller APIs/definitions */
 -- 
-1.7.9.5
+2.5.0
