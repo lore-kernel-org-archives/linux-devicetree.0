@@ -1,62 +1,84 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/7] includes: dt-bindings: Add STM32F429 pinctrl DT
- bindings
-Date: Thu, 15 Oct 2015 12:14:59 +0100
-Message-ID: <561F8AB3.9010103@linaro.org>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/7] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+Date: Thu, 15 Oct 2015 13:29:11 +0200
+Message-ID: <CALszF6Aj3xBqVKWhyBc5ihqm_YVTq4M3bidB0W+1RvtMVZqaDw@mail.gmail.com>
 References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
- <1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
+	<1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
+	<561F8AB3.9010103@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, bruherrera@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561F8AB3.9010103-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/10/15 21:07, Maxime Coquelin wrote:
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> ---
->   include/dt-bindings/pinctrl/pinctrl-stm32.h     |   12 +
->   include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1241 +++++++++++++++++++++++
->   2 files changed, 1253 insertions(+)
->   create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
->   create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+2015-10-15 13:14 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 14/10/15 21:07, Maxime Coquelin wrote:
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   include/dt-bindings/pinctrl/pinctrl-stm32.h     |   12 +
+>>   include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1241
+>> +++++++++++++++++++++++
+>>   2 files changed, 1253 insertions(+)
+>>   create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>   create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>
+>> diff --git a/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>> b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>> new file mode 100644
+>> index 0000000..a2e7222
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>> @@ -0,0 +1,12 @@
+>> +#ifndef _DT_BINDINGS_PINCTRL_STM32_H
+>> +#define _DT_BINDINGS_PINCTRL_STM32_H
+>> +
+>> +#define STM32_PIN_NO(x) ((x) << 8)
+>> +#define STM32_GET_PIN_NO(x) ((x) >> 8)
+>> +#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
+>> +
+>> +#define STM32_PIN_GPIO         0
+>> +#define STM32_PIN_AF(x)                ((x) + 1)
+>> +#define STM32_PIN_ANALOG       (STM32_PIN_AF(15) + 1)
+>> +
+>> +#endif /* _DT_BINDINGS_PINCTRL_STM32_H */
+>> diff --git a/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>> b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>> new file mode 100644
+>> index 0000000..979e4eb
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>> @@ -0,0 +1,1241 @@
+>> +#ifndef _DT_BINDINGS_STM32F429_PINFUNC_H
+>> +#define _DT_BINDINGS_STM32F429_PINFUNC_H
+>> +
+>> +#include <dt-bindings/pinctrl/pinctrl-stm32.h>
+>> +
+>> +#define STM32F429_PA0_FUNC_GPIO (STM32_PIN_NO(0) | STM32_PIN_GPIO)
+>> +#define STM32F429_PA0_FUNC_TIM2_CH1 TIM2_ETR (STM32_PIN_NO(0) |
+>> STM32_PIN_AF(1))
 >
-> diff --git a/include/dt-bindings/pinctrl/pinctrl-stm32.h b/include/dt-bindings/pinctrl/pinctrl-stm32.h
-> new file mode 100644
-> index 0000000..a2e7222
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/pinctrl-stm32.h
-> @@ -0,0 +1,12 @@
-> +#ifndef _DT_BINDINGS_PINCTRL_STM32_H
-> +#define _DT_BINDINGS_PINCTRL_STM32_H
-> +
-> +#define STM32_PIN_NO(x) ((x) << 8)
-> +#define STM32_GET_PIN_NO(x) ((x) >> 8)
-> +#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
-> +
-> +#define STM32_PIN_GPIO		0
-> +#define STM32_PIN_AF(x)		((x) + 1)
-> +#define STM32_PIN_ANALOG	(STM32_PIN_AF(15) + 1)
-> +
-> +#endif /* _DT_BINDINGS_PINCTRL_STM32_H */
-> diff --git a/include/dt-bindings/pinctrl/stm32f429-pinfunc.h b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
-> new file mode 100644
-> index 0000000..979e4eb
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
-> @@ -0,0 +1,1241 @@
-> +#ifndef _DT_BINDINGS_STM32F429_PINFUNC_H
-> +#define _DT_BINDINGS_STM32F429_PINFUNC_H
-> +
-> +#include <dt-bindings/pinctrl/pinctrl-stm32.h>
-> +
-> +#define STM32F429_PA0_FUNC_GPIO (STM32_PIN_NO(0) | STM32_PIN_GPIO)
-> +#define STM32F429_PA0_FUNC_TIM2_CH1 TIM2_ETR (STM32_PIN_NO(0) | STM32_PIN_AF(1))
+>
+> For the clock driver I was advised to get rid of this sort of "heroics" and
+> expose raw numbers from the datasheet directly to DT bindings users.
+>
+> Should the same logic apply to this *huge* collection of macros?
 
-For the clock driver I was advised to get rid of this sort of "heroics" 
-and expose raw numbers from the datasheet directly to DT bindings users.
+I'm open to change, I just took example on the Mediatek implementation.
+Advantage is that checkpatch will be more silent, drawback is that it
+will be a little harder to understand how these values are generated.
+If we decide to change to raw values, then the DT Bindings
+documentation will need to be more verbose on the way these values are
+generated.
 
-Should the same logic apply to this *huge* collection of macros?
+Note that it will not be painful, as I can generate them from a script.
+
+Regards,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
