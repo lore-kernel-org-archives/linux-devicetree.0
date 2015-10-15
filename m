@@ -1,154 +1,114 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 5/5] MIPS: Add xilfpga defconfig
-Date: Thu, 15 Oct 2015 09:34:08 +0100
-Message-ID: <20151015083408.GF14475@jhogan-linux.le.imgtec.org>
-References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1444827117-10939-6-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v10 4/6] PCI: hisi: Add PCIe host support for HiSilicon
+ SoC Hip05
+Date: Thu, 15 Oct 2015 16:33:14 +0800
+Message-ID: <561F64CA.7060606@hisilicon.com>
+References: <1444445957-239522-1-git-send-email-wangzhou1@hisilicon.com> <30775300.COZ4nEMWXC@wuerfel> <561E23EB.7050504@hisilicon.com> <5572871.GecUyqk59W@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="V4b9U9vrdWczvw78"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444827117-10939-6-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: ralf@linux-mips.org, robh+dt@kernel.org, linus.walleij@linaro.org, linux-mips@linux-mips.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5572871.GecUyqk59W@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Wangkefeng (Kevin)" <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Liviu.Dudau-5wv7dgnIgG8@public.gmane.org" <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, qiujiang <qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "liudongdong (C)" <liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, thomas.pet
 List-Id: devicetree@vger.kernel.org
 
---V4b9U9vrdWczvw78
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2015/10/15 5:56, Arnd Bergmann wrote:
+> On Wednesday 14 October 2015 17:44:11 Zhou Wang wrote:
+>> On 2015/10/14 17:06, Arnd Bergmann wrote:
+>>> On Wednesday 14 October 2015 16:59:03 Zhou Wang wrote:
+>>>>
+>>>> Hi Arnd,
+>>>>
+>>>> In Hip05 PCIe host, it uses GITS_TRANSLATER's address to get TLP package
+>>>> which contains MSI address and MSI data, and then combine BDF and MSI data
+>>>> to a 32 bit data which will be writen to GITS_TRANSLATER register of ITS.
+>>>>
+>>>> I think maybe this is a defect of our PCIe controller.
+>>>
+>>> I'd consider it a bug in the firmware if this is not set up correctly
+>>> before boot.
+>>>
+>>>>> I don't think what you do here is safe because the 'reg' property
+>>>>> of the MSI controller might point to the address that is used for
+>>>>> the message directly.
+>>>>
+>>>> I see your point, however we must get address of GITS_TRANSLATER and
+>>>> set it to PCIe host. How about adding necessary comments here?
+>>>
+>>> This seems to just be static setup that should be done before Linux
+>>> is even loaded. Any reason you can't do it that way?
+>>>
+>>
+>> There are some ITSs in Hip05-D02 platform, in fact, we can use any of them
+>> as a msi-controller,  which we can configure in dts. I am afraid that
+>> hard-setting the value in BIOS would lead to restrictions in terms of flexibility,
+>> as with the current implementation the same BIOS-driver can fit different
+>> DTS structures.
+> 
+> The dtb generally should be expected to match whatever the firmware sets up,
+> so if there is one reasonable setting here, I see no problem with hardcoding
+> it that way. In particular on server systems, we usually expect the firmware
+> to configure almost everything in advance and just tell us how it is
+> configured, while on embedded systems we can't trust the bootload and
+> usually set it all up in the kernel from scratch.
+>
 
-On Wed, Oct 14, 2015 at 01:51:57PM +0100, Zubair Lutfullah Kakakhel wrote:
-> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> ---
->  arch/mips/configs/xilfpga_defconfig | 59 +++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 arch/mips/configs/xilfpga_defconfig
->=20
-> diff --git a/arch/mips/configs/xilfpga_defconfig b/arch/mips/configs/xilf=
-pga_defconfig
-> new file mode 100644
-> index 0000000..94bb9b8
-> --- /dev/null
-> +++ b/arch/mips/configs/xilfpga_defconfig
-> @@ -0,0 +1,59 @@
-> +CONFIG_MACH_XILFPGA=3Dy
-> +# CONFIG_COMPACTION is not set
-> +# CONFIG_LOCALVERSION_AUTO is not set
-> +# CONFIG_CROSS_MEMORY_ATTACH is not set
-> +# CONFIG_USELIB is not set
-> +# CONFIG_SHMEM is not set
-> +# CONFIG_AIO is not set
-> +# CONFIG_ADVISE_SYSCALLS is not set
+I see your point. Actually in order to support platforms without PCIe configuration
+support BIOS we planned to have a further commit once the driver was upstreamed,
+where we check if the link is already up, if not we would configure it in the kernel,
+otherwise we would return silently.
 
-Did you disable these intentionally? Its a kernel tinification option
-that is rarely used in defconfigs.
+Now about this patchset we can remove GITS_TRANSLATER address setting and do this
+in BIOS together with link-up setup; then in the next commit for supporting platforms
+without PCIe setup in UEFI, we can add this part back where we first check
+if the link is already up (we can assume that if BIOS has configured link-up,
+it has also setup the msi-parent address), if the link is up we skip reading
+msi-parent address.
 
-> +CONFIG_EMBEDDED=3Dy
-> +# CONFIG_VM_EVENT_COUNTERS is not set
-> +# CONFIG_COMPAT_BRK is not set
-> +CONFIG_SLAB=3Dy
-> +# CONFIG_BLOCK is not set
-> +# CONFIG_SUSPEND is not set
-> +# CONFIG_UEVENT_HELPER is not set
-> +CONFIG_DEVTMPFS=3Dy
-> +CONFIG_DEVTMPFS_MOUNT=3Dy
-> +# CONFIG_STANDALONE is not set
-> +# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-> +# CONFIG_FW_LOADER is not set
-> +# CONFIG_ALLOW_DEV_COREDUMP is not set
-> +# CONFIG_INPUT_MOUSEDEV is not set
-> +# CONFIG_INPUT_KEYBOARD is not set
-> +# CONFIG_INPUT_MOUSE is not set
-> +# CONFIG_SERIO is not set
-> +CONFIG_VT_HW_CONSOLE_BINDING=3Dy
-> +# CONFIG_UNIX98_PTYS is not set
-> +# CONFIG_LEGACY_PTYS is not set
-> +# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
-> +CONFIG_SERIAL_8250_NR_UARTS=3D1
-> +CONFIG_SERIAL_8250_RUNTIME_UARTS=3D1
-> +CONFIG_SERIAL_OF_PLATFORM=3Dy
-> +# CONFIG_HW_RANDOM is not set
-> +CONFIG_GPIO_SYSFS=3Dy
-> +CONFIG_GPIO_XILINX=3Dy
-> +# CONFIG_HWMON is not set
-> +# CONFIG_USB_SUPPORT is not set
-> +# CONFIG_MIPS_PLATFORM_DEVICES is not set
-> +# CONFIG_IOMMU_SUPPORT is not set
-> +# CONFIG_FILE_LOCKING is not set
+> What would be a reason to pick one ITS over another?
 
-Likewise, intentional? Its another tinification option that isn't all
-that commonly used in defconfigs.
+In fact, we set PCIe host and ITS binding in dts. I mean that PCIe host can
+bind to any ITS nodes in system.
 
-> +# CONFIG_DNOTIFY is not set
-> +# CONFIG_INOTIFY_USER is not set
+> 
+> On a related note, don't you also need to describe in DT how PCI B/D/F
+> function numbers get turned into addresses in the ITS? Does that also
+> require configuration in the driver? I see this code here:
 
-Likewise, intentional? I don't think inotify is deprecated in favour of
-anything else yet (it appears to superscede dnotify).
+We don't need to describe this. we need only describe the relationship between
+PCIe host and ITS, PCIe host will service PCIe devices which are connected to it.
 
-> +# CONFIG_PROC_SYSCTL is not set
+> 
+> 
+> +       hisi_pcie_apb_writel(pcie, PCIE_MSI_ASID_ENABLE | PCIE_MSI_ASID_VALUE,
+> +                            PCIE_SLV_MSI_ASID);
+> +       hisi_pcie_apb_writel(pcie, PCIE_MSI_TRANS_ENABLE, PCIE_MSI_TRANS_REG);
+> +       hisi_pcie_change_apb_mode(pcie, PCIE_SLV_DBI_MODE);
+>
 
-Likewise.
+This code is to enable MSI support in PCIe host.
 
-> +# CONFIG_PROC_PAGE_MONITOR is not set
-> +# CONFIG_MISC_FILESYSTEMS is not set
-> +# CONFIG_ENABLE_WARN_DEPRECATED is not set
-> +# CONFIG_ENABLE_MUST_CHECK is not set
+> plus all of hisi_pcie_config_context(). This looks like it will change
+> the way the MSI is interpreted. This also seems like something that
+> could be done in the firmware in advance, and just get reported in DT.
 
-Particular reason to disable these two compile time warnings?
+I think all hisi_pcie_config_context can be move to BIOS for this patchset,
+however in order to support other BIOSs which have no PCIe setup we would plan
+a future commit adding this back and working as explained above.
 
-> +CONFIG_PANIC_ON_OOPS=3Dy
-> +# CONFIG_SCHED_DEBUG is not set
-> +CONFIG_DEBUG_LOCK_ALLOC=3Dy
+Thanks,
+Zhou
 
-Did you mean to leave this turned on?
+> 
+> 	Arnd
+> 
+> .
+> 
 
-> +# CONFIG_FTRACE is not set
-> +CONFIG_CMDLINE_BOOL=3Dy
-> +CONFIG_CMDLINE=3D"console=3DttyS0,115200 clk_ignore_unused earlyprintk=
-=3Dserial,ttyS0,115200"
 
-I believe you can specify an earlyprintk address on command line. Would
-it be preferable to do that rather than hard coding the address in the
-platform code?
-
-Cheers
-James
-
-> +CONFIG_CRYPTO_MD5=3Dy
-> +CONFIG_CRYPTO_SHA1=3Dy
-> +CONFIG_CRYPTO_DES=3Dy
-> +CONFIG_CRYPTO_DEFLATE=3Dy
-> +CONFIG_CRC16=3Dy
-> +CONFIG_LIBCRC32C=3Dy
-> --=20
-> 1.9.1
->=20
->=20
-
---V4b9U9vrdWczvw78
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWH2UAAAoJEGwLaZPeOHZ6Mm8QALPdiC3bMvt/ayU2HdP6gFD+
-FGPxAgFpsP/4G/qxapJiidSiIIOL/yl4P8M+zUV3Wixnk7RQeldc1WKhOhgzAZ5P
-MCttTeZlLjGP1Wk0lJnqG6+I1R39SvGJpNgNuYCRHOSH/uOkY8IsW/UXBj6sE8FJ
-07XzpjhxnXD+ZrdL43FN/3Vg68zL2Bh6q60KNb7QbTz9QaLfbfDWtzEz6ZDKX6H4
-LiirUZTYRgG29BkmpChxBhTJgRt36SORpHVJo3YFOpNkXsRcde0EEMACnanRGdnE
-77OxDniflmlHhxTJwpYd2P+lfWK/BDEzXUoM3dF7oFi8y6EWpHyD67VeZ8C+qbzZ
-HR+DdKDt9g12O78B2uF+YOSUEalb7SbLYFlqBabrqS0MWuNpm9gS1OEQid9fYYJT
-PF3zlXcmZzlAwnfudoEyDNbgh7tTMdpRTTt/hIL2Wj6+aK6sLfG73cKfBzbclZVG
-Wt/HLOoAHpD78XHtPU8yoq58dxAO1T2NhPZSQKIJ5rpWUz9vbrAhdZafvtjZITyc
-4N92UFsGHoUgVkCC4xPfbZWq7pM83RUykqwkgu8Fb3O4DMLKAeJr6/VpVdLURFrw
-nGl1mApxoAocmjXlIfW2GhhtZexp/1fyr1IvaBo0pew/nagXIM0g3hNuBHfTvbpY
-jp5Nv5P3gX7J/+SlUkCx
-=nZH4
------END PGP SIGNATURE-----
-
---V4b9U9vrdWczvw78--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
