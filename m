@@ -1,49 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: porter: add HS-USB DT support
-Date: Thu, 15 Oct 2015 13:27:17 +0300
-Message-ID: <561F7F85.1090306@cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
- <80272771.MSjafmr6yE@wasted.cogentembedded.com>
- <20151015001818.GA25019@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151015001818.GA25019@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v2 0/2] Fix display on second resume on 5250-snow
+Date: Thu, 15 Oct 2015 12:31:22 +0200
+Message-ID: <1444905084-22540-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 10/15/2015 3:18 AM, Simon Horman wrote:
+as discussed in [0], currently on the second resume from memory the
+display is broken on Snow boards (ARM Samsung Series 3 Chromebook).
 
->> Enable HS-USB device  for the Porter board, defining the GPIO that the
->> driver should check  when probing (which is the ID output from MAX3355
->> OTG chip).
->>
->> Note that there  will be pinctrl-related error messages if both internal
->> PCI  and  HS-USB drivers are enabled but they should be just ignored.
->>
->> This patch is  analogous  to the commit 6f4f7156e0e6 (ARM: shmobile:
->> henninger: enable HS-USB) as there  are no differences between the
->> boards in this respect.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> Thanks Sergei,
->
-> I have queued this up for v4.5.
->
-> I took the liberty of tweaking the changelog to address a complaint made
-> by Mr. Check Patch.
+The reason is that on resume the contents of register SRC_TOP3 aren't
+what the kernel thinks they are because the HW (or FW) is doing some
+clock reparenting beneath our feet.
 
-    Which means I forgot to run it again. Sorry about that. :-<
+This series tasks the kernel to do the reparenting itself so that the HW
+state always matches the kernel's internal state.
 
-> ERROR: Please use git commit description style 'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit 6f4f7156e0e6 ("ARM: shmobile: henninger: enable HS-USB")'
+Thanks,
 
-    Keep forgetting about the now enforced quotes...
+Tomeu
 
-MBR, Sergei
+[0] http://lkml.kernel.org/g/561CDC33.7050103@collabora.com
+
+Changes in v2:
+- Reuse mout_aclk200_p
+- Rename div_aclk300 as div_aclk300_disp
+
+Tomeu Vizoso (2):
+  clk: samsung: exynos5250: Add DISP1 clocks
+  ARM: dts: exynos5250: Add clocks to DISP1 domain
+
+ arch/arm/boot/dts/exynos5250.dtsi      |  4 ++++
+ drivers/clk/samsung/clk-exynos5250.c   | 14 +++++++++++++-
+ include/dt-bindings/clock/exynos5250.h |  4 +++-
+ 3 files changed, 20 insertions(+), 2 deletions(-)
+
+-- 
+2.5.0
 
