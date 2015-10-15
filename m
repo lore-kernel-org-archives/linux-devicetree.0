@@ -1,88 +1,62 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: document linux-specific partition parser DT binding
-Date: Thu, 15 Oct 2015 09:22:10 -0700
-Message-ID: <20151015162210.GA4545@localhost>
-References: <1444915191-28350-1-git-send-email-linus.walleij@linaro.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v4 0/3]
+Date: Thu, 15 Oct 2015 12:29:41 -0400
+Message-ID: <561FD475.9000807@ti.com>
+References: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com> <561E7792.409@oracle.com> <561FCE2B.8020802@ti.com> <561FD273.2040208@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444915191-28350-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <561FD273.2040208@oracle.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: santosh shilimkar <santosh.shilimkar@oracle.com>, corbet@lwn.net, ssantosh@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-+ others
+On 10/15/2015 12:21 PM, santosh shilimkar wrote:
+> On 10/15/2015 9:02 AM, Murali Karicheri wrote:
+>> On 10/14/2015 11:41 AM, santosh shilimkar wrote:
+>>> 10/14/2015 7:17 AM, Murali Karicheri wrote:
+>>>> This patch series enable accumulator queue support for K2 SoCs.
+>>>> Accumulator
+>>>> queues are a type of qmss queue that is monitored by the PDSP firmware
+>>>> and
+>>>> accumulated. Host is interrupted by PDSP firmware when packets become
+>>>> available in a ring buffer shared between the host and PDSP.
+>>>>
+>>>> There was an issue raised when merging the original patch set at
+>>>>   (1) https://lkml.org/lkml/2015/9/4/681
+>>>>     [PATCH v1 1/2] soc: ti: display firmware file name as part of boot
+>>>> log
+>>>>   (2) https://lkml.org/lkml/2015/9/4/680
+>>>>     [PATCH v1 2/2] ARM: dts: keystone: enable accumulator channels
+>>>>
+>>>> This series fixes the issues raised against v3. Maintainer, could you
+>>>> please
+>>>> apply this series to v4.4 next please at your earliest opportunity.
+>>>>
+>>> I have picked up the series. Thanks for quick turnaround.
+>>
+>> Thanks Santosh. Could you send this pull request for v4.4 next. We want
+>> this merged to our internal release and if this is on next branch it
+>> will help.
+>>
+> It should be already in linux-next and pull request was sent before I
+> replied yesterday. Its late for the merge window with usual norms
+> so lets see if it makes it.
+Santosh,
 
-Hi Linus,
+I see both driver and DTS. Thanks once again for your support
 
-On Thu, Oct 15, 2015 at 03:19:51PM +0200, Linus Walleij wrote:
-> The Linux code in drivers/mtd/maps/physmap_of.c will optionally
-> look for this binding for hints on a partition type to look for
-> in the MTD. It was added in commit 9d5da3a9b849
-> "mtd: extend physmap_of to let the device tree specify the parition probe"
-> but no corresponding device tree binding was added. Fix this.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> Reported-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Regards,
 
-Are you trying to use this binding, or is this just purely a mechanical
-documentation issue? I ask, because it seems that binding never really
-got reviewed at all, and others have recently tried to extend support
-for it generically [1], but a few objections came up [2][3].
+Murali
+>
+> Regards,
+> Santosh
+>
+>
 
-Unfortunately I/we dropped the ball a bit on that thread, but we'd
-ideally like to address those concerns in a new binding that is
-supported for all MTDs, and deprecate the old one. The new one would
-probably not directly use the parser name as used by Linux, but define
-some list of compatible strings that fit DT conventions better. Also, I
-don't want people including things like "cmdlinepart" in DT, but it
-should be available as an override if necessary. IOW, DT shouldn't
-supersede the kernel command line.
 
-That's not to say we can't document the old one, but I'm curious if
-there are real users. I'd also like to encourage new users to avoid the
-old one if we can make that feasible.
-
-> ---
->  Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> index 4a0a48bf4ecb..0dee084651da 100644
-> --- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> +++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> @@ -26,6 +26,9 @@ file systems on embedded devices.
->   - linux,mtd-name: allow to specify the mtd name for retro capability with
->     physmap-flash drivers as boot loader pass the mtd partition via the old
->     device name physmap-flash.
-> + - linux,part-probe: a flash partition type to look for, using the
-> +   Linux-internal partition naming scheme, e.g. "afs" for the ARM
-> +   Flash footers.
-
-IIUC, this property actually supports a list of parsers, not just a
-single partition type.
-
-Also, if we're really going to support this, we should list exactly what
-strings we support. And that's one of the problems with the existing
-binding; it supports any old string Linux supports, which doesn't match
-how we typically want to add bindings (i.e., via proposal + review).
-
->   - use-advanced-sector-protection: boolean to enable support for the
->     advanced sector protection (Spansion: PPB - Persistent Protection
->     Bits) locking.
-
-Brian
-
-[1] http://lists.infradead.org/pipermail/linux-mtd/2015-May/059226.html
-[2] http://lists.infradead.org/pipermail/linux-mtd/2015-May/059276.html
-[3] Tail end of Arnd's comments here:
-    http://thread.gmane.org/gmane.linux.drivers.devicetree/122479/focus=122788
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
