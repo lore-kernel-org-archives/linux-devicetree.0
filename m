@@ -1,46 +1,65 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/6] mfd: axp20x: Add AXP223 to list of
- supported PMICs in DT bindings
-Date: Thu, 15 Oct 2015 22:36:43 +0200
-Message-ID: <20151015203643.GF2711@lukather>
-References: <1444840342-9233-1-git-send-email-wens@csie.org>
- <1444840342-9233-2-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH v3 08/10] clk: ns2: add clock support for Broadcom
+ Northstar 2 SoC
+Date: Thu, 15 Oct 2015 13:40:25 -0700
+Message-ID: <56200F39.1060102@broadcom.com>
+References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
+ <1444938513-10758-9-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z+pzSjdB7cqptWpS"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZU4QCYQKGQE3AYYKYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444840342-9233-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444938513-10758-9-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
---z+pzSjdB7cqptWpS
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+We need some sort of kconfig option to differentiate NS2 clock driver 
+from being pulled in all the time.
 
-On Thu, Oct 15, 2015 at 12:32:17AM +0800, Chen-Yu Tsai wrote:
-> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-> It is functionally identical to AXP221; only the regulator default
-> voltage/status and the external host interface are different.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On 15-10-15 12:48 PM, Jon Mason wrote:
+> The Broadcom Northstar 2 SoC is architected under the iProc
+> architecture. It has the following PLLs: GENPLL SCR, GENPLL SW,
+> LCPLL DDR, LCPLL Ports, all derived from an onboard crystal.
+>
+> Signed-off-by: Jon Mason <jonmason@broadcom.com>
+> ---
+>   drivers/clk/Makefile                |   2 +-
+>   drivers/clk/bcm/Makefile            |   1 +
+>   drivers/clk/bcm/clk-ns2.c           | 288 ++++++++++++++++++++++++++++++++++++
+>   include/dt-bindings/clock/bcm-ns2.h |  72 +++++++++
+>   4 files changed, 362 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/clk/bcm/clk-ns2.c
+>   create mode 100644 include/dt-bindings/clock/bcm-ns2.h
+>
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index d08b3e5..6124bd3 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -47,7 +47,7 @@ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
+>   obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
+>   obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+>   obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
+> -obj-$(CONFIG_ARCH_BCM)			+= bcm/
+> +obj-y					+= bcm/
+>   obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+>   obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
+>   obj-$(CONFIG_ARCH_MXC)			+= imx/
+> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+> index e258b28..2d1cbc5 100644
+> --- a/drivers/clk/bcm/Makefile
+> +++ b/drivers/clk/bcm/Makefile
+> @@ -3,6 +3,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
+>   obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
+>   obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
+>   obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
+> +obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-ns2.o
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+NS2 code is dragged in for all IPROC SoCs.  We need a config option for 
+NS2 (CONFIG_ARCH_BCM_NS2) to avoid this (if Arnd allows this for ARMv8 
+processors... ?).
 
-Thanks!
-Maxime
+You can see below ARMv7 processors don't have this problem.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---z+pzSjdB7cqptWpS--
+If not we need to add CONFIG_CLK_NS2.
