@@ -1,88 +1,221 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/7] includes: dt-bindings: Add STM32F429 pinctrl DT
- bindings
-Date: Thu, 15 Oct 2015 12:55:18 +0100
-Message-ID: <561F9426.4090808@linaro.org>
-References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
- <1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
- <561F8AB3.9010103@linaro.org>
- <CALszF6Aj3xBqVKWhyBc5ihqm_YVTq4M3bidB0W+1RvtMVZqaDw@mail.gmail.com>
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 03/25] scsi: hisi_sas: add initial bare driver
+Date: Thu, 15 Oct 2015 20:07:58 +0800
+Message-ID: <561F971E.7060700@hisilicon.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-4-git-send-email-john.garry@huawei.com> <561F68A9.6090706@hisilicon.com> <561F707C.1070305@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALszF6Aj3xBqVKWhyBc5ihqm_YVTq4M3bidB0W+1RvtMVZqaDw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561F707C.1070305-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TZ19SzzRMN9sA@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/10/15 12:29, Maxime Coquelin wrote:
-> 2015-10-15 13:14 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
->> On 14/10/15 21:07, Maxime Coquelin wrote:
+On 2015/10/15 17:23, John Garry wrote:
+> On 15/10/2015 09:49, Xinwei Kong wrote:
+>>
+>>
+>> On 2015/10/12 23:20, John Garry wrote:
+>>> This patch adds the initial bare driver for the HiSilicon
+>>> SAS HBA. The driver includes no HW interaction, but only
+>>> the changes to build and load the driver module.
 >>>
->>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>> The HBA is a platform device.
+>>>
+>>> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 >>> ---
->>>    include/dt-bindings/pinctrl/pinctrl-stm32.h     |   12 +
->>>    include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1241
->>> +++++++++++++++++++++++
->>>    2 files changed, 1253 insertions(+)
->>>    create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
->>>    create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>>   drivers/scsi/Kconfig                  |  1 +
+>>>   drivers/scsi/Makefile                 |  1 +
+>>>   drivers/scsi/hisi_sas/Kconfig         |  5 +++
+>>>   drivers/scsi/hisi_sas/Makefile        |  2 ++
+>>>   drivers/scsi/hisi_sas/hisi_sas.h      | 24 +++++++++++++++
+>>>   drivers/scsi/hisi_sas/hisi_sas_init.c | 58 
+>>> +++++++++++++++++++++++++++++++++++
+>>>   6 files changed, 91 insertions(+)
+>>>   create mode 100644 drivers/scsi/hisi_sas/Kconfig
+>>>   create mode 100644 drivers/scsi/hisi_sas/Makefile
+>>>   create mode 100644 drivers/scsi/hisi_sas/hisi_sas.h
+>>>   create mode 100644 drivers/scsi/hisi_sas/hisi_sas_init.c
 >>>
->>> diff --git a/include/dt-bindings/pinctrl/pinctrl-stm32.h
->>> b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+>>> index 95f7a76..5c345f9 100644
+>>> --- a/drivers/scsi/Kconfig
+>>> +++ b/drivers/scsi/Kconfig
+>>> @@ -1774,5 +1774,6 @@ source "drivers/scsi/pcmcia/Kconfig"
+>>>   source "drivers/scsi/device_handler/Kconfig"
+>>>
+>>>   source "drivers/scsi/osd/Kconfig"
+>>> +source "drivers/scsi/hisi_sas/Kconfig"
+>>>
+>>>   endmenu
+>>> diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
+>>> index 1a8c9b5..03c30de 100644
+>>> --- a/drivers/scsi/Makefile
+>>> +++ b/drivers/scsi/Makefile
+>>> @@ -158,6 +158,7 @@ obj-$(CONFIG_CHR_DEV_SCH)    += ch.o
+>>>   obj-$(CONFIG_SCSI_ENCLOSURE)    += ses.o
+>>>
+>>>   obj-$(CONFIG_SCSI_OSD_INITIATOR) += osd/
+>>> +obj-$(CONFIG_SCSI_HISI_SAS) += hisi_sas/
+>>>
+>>>   # This goes last, so that "real" scsi devices probe earlier
+>>>   obj-$(CONFIG_SCSI_DEBUG)    += scsi_debug.o
+>>> diff --git a/drivers/scsi/hisi_sas/Kconfig 
+>>> b/drivers/scsi/hisi_sas/Kconfig
 >>> new file mode 100644
->>> index 0000000..a2e7222
+>>> index 0000000..a7f47a2
 >>> --- /dev/null
->>> +++ b/include/dt-bindings/pinctrl/pinctrl-stm32.h
->>> @@ -0,0 +1,12 @@
->>> +#ifndef _DT_BINDINGS_PINCTRL_STM32_H
->>> +#define _DT_BINDINGS_PINCTRL_STM32_H
->>> +
->>> +#define STM32_PIN_NO(x) ((x) << 8)
->>> +#define STM32_GET_PIN_NO(x) ((x) >> 8)
->>> +#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
->>> +
->>> +#define STM32_PIN_GPIO         0
->>> +#define STM32_PIN_AF(x)                ((x) + 1)
->>> +#define STM32_PIN_ANALOG       (STM32_PIN_AF(15) + 1)
->>> +
->>> +#endif /* _DT_BINDINGS_PINCTRL_STM32_H */
->>> diff --git a/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
->>> b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>> +++ b/drivers/scsi/hisi_sas/Kconfig
+>>> @@ -0,0 +1,5 @@
+>>> +config SCSI_HISI_SAS
+>>> +    tristate "HiSilicon SAS"
+>>> +    select SCSI_SAS_LIBSAS
+>>> +    help
+>>> +        This driver supports HiSilicon's SAS HBA
+>>> diff --git a/drivers/scsi/hisi_sas/Makefile 
+>>> b/drivers/scsi/hisi_sas/Makefile
 >>> new file mode 100644
->>> index 0000000..979e4eb
+>>> index 0000000..63c3c4d
 >>> --- /dev/null
->>> +++ b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
->>> @@ -0,0 +1,1241 @@
->>> +#ifndef _DT_BINDINGS_STM32F429_PINFUNC_H
->>> +#define _DT_BINDINGS_STM32F429_PINFUNC_H
+>>> +++ b/drivers/scsi/hisi_sas/Makefile
+>>> @@ -0,0 +1,2 @@
+>>> +obj-$(CONFIG_SCSI_HISI_SAS) += hisi_sas.o
+>>> +hisi_sas-y+= hisi_sas_init.o
+>>> diff --git a/drivers/scsi/hisi_sas/hisi_sas.h 
+>>> b/drivers/scsi/hisi_sas/hisi_sas.h
+>>> new file mode 100644
+>>> index 0000000..50204a2
+>>> --- /dev/null
+>>> +++ b/drivers/scsi/hisi_sas/hisi_sas.h
+>>> @@ -0,0 +1,24 @@
+>>> +/*
+>>> + * Copyright (c) 2015 Linaro Ltd.
+>>> + * Copyright (c) 2015 Hisilicon Limited.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or 
+>>> modify
+>>> + * it under the terms of the GNU General Public License as 
+>>> published by
+>>> + * the Free Software Foundation; either version 2 of the License, or
+>>> + * (at your option) any later version.
+>>> + *
+>>> + */
 >>> +
->>> +#include <dt-bindings/pinctrl/pinctrl-stm32.h>
+>>> +#ifndef _HISI_SAS_H_
+>>> +#define _HISI_SAS_H_
 >>> +
->>> +#define STM32F429_PA0_FUNC_GPIO (STM32_PIN_NO(0) | STM32_PIN_GPIO)
->>> +#define STM32F429_PA0_FUNC_TIM2_CH1 TIM2_ETR (STM32_PIN_NO(0) |
->>> STM32_PIN_AF(1))
->>
->>
->> For the clock driver I was advised to get rid of this sort of "heroics" and
->> expose raw numbers from the datasheet directly to DT bindings users.
->>
->> Should the same logic apply to this *huge* collection of macros?
+>>> +#include <linux/module.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/of_irq.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <scsi/libsas.h>
+>>> +
+>> why place some "include" head in .h file rather than .c file?
+> This is private header within the module, which:
+> - makes the code more concise
+> - relocate functions within c files is cleaner
+> - easier to change the kernel APIs we use in the module
 >
-> I'm open to change, I just took example on the Mediatek implementation.
-> Advantage is that checkpatch will be more silent, drawback is that it
-> will be a little harder to understand how these values are generated.
-> If we decide to change to raw values, then the DT Bindings
-> documentation will need to be more verbose on the way these values are
-> generated.
+this  .h file  wil be included by  "hisi_sas_main.c"   and 
+"hisi_sas_init.c" file.
+if all "include" term can't be used in both  ".c" file.  When you build 
+this code,
+it will add  some burden work.
 
-To be honest I was thinking about moaning about that anyway. Its pretty 
-tough from the docs you have currently to figure out the encoding.
+Thank you
+xinwei
+>>> +#define DRV_NAME "hisi_sas"
+>>> +#define DRV_VERSION "v1.0"
+>>> +
+>>> +#endif
+>>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c 
+>>> b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>> new file mode 100644
+>>> index 0000000..dd83430
+>>> --- /dev/null
+>>> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>>> @@ -0,0 +1,58 @@
+>>> +/*
+>>> + * Copyright (c) 2015 Linaro Ltd.
+>>> + * Copyright (c) 2015 Hisilicon Limited.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or 
+>>> modify
+>>> + * it under the terms of the GNU General Public License as 
+>>> published by
+>>> + * the Free Software Foundation; either version 2 of the License, or
+>>> + * (at your option) any later version.
+>>> + *
+>>> + */
+>>> +
+>>> +#include "hisi_sas.h"
+>>> +
+>>> +static const struct of_device_id sas_of_match[] = {
+>>> +    { .compatible = "hisilicon,sas-controller-v1",},
+>>> +    {},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, sas_of_match);
+>>> +static int hisi_sas_probe(struct platform_device *pdev)
+>>> +{
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int hisi_sas_remove(struct platform_device *pdev)
+>>> +{
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static struct platform_driver hisi_sas_driver = {
+>>> +    .probe = hisi_sas_probe,
+>>> +    .remove = hisi_sas_remove,
+>>> +    .driver = {
+>>> +        .name = DRV_NAME,
+>>> +        .of_match_table = sas_of_match,
+>>> +    },
+>>> +};
+>>> +
+>>> +static __init int hisi_sas_init(void)
+>>> +{
+>>> +    pr_info("hisi_sas: driver version %s\n", DRV_VERSION);
+>>> +
+>>> +    return platform_driver_register(&hisi_sas_driver);
+>>> +}
+>>> +
+>>> +static __exit void hisi_sas_exit(void)
+>>> +{
+>>> +    platform_driver_unregister(&hisi_sas_driver);
+>>> +}
+>>> +
+>>> +module_init(hisi_sas_init);
+>>> +module_exit(hisi_sas_exit);
+>>> +
+>>> +MODULE_VERSION(DRV_VERSION);
+>>> +MODULE_LICENSE("GPL");
+>> V2
+> Can add. We do say in the header that it is v2.
+>
+>>> +MODULE_AUTHOR("John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>");
+>>> +MODULE_DESCRIPTION("HISILICON SAS controller driver");
+>>> +MODULE_ALIAS("platform:" DRV_NAME);
+>>>
+>>
+>>
+>> .
+>>
+>
+> thanks,
+> John
+>
+>
+>
+> .
+>
 
-Does having header files really excuse us from documenting the bindings 
-properly? ;-)
 
-
-Daniel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
