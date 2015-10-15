@@ -1,56 +1,57 @@
-From: WingMan Kwok <w-kwok2@ti.com>
-Subject: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Thu, 15 Oct 2015 10:25:43 -0400
-Message-ID: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] pinctrl: sunxi: Fix irq_of_xlate for the
+ r_pio pinctrl block
+Date: Thu, 15 Oct 2015 16:27:25 +0200
+Message-ID: <1444919246-23694-2-git-send-email-hdegoede@redhat.com>
+References: <1444919246-23694-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: WingMan Kwok <w-kwok2@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBW7P72YAKGQEZCSE2LQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1444919246-23694-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Kaiser <Thomas.Kaiser-id7G5ibTm3AZ78jC37dNPg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On TI's Keystone platforms, several peripherals such as the
-gbe ethernet switch, 10gbe ethether switch and PCIe controller
-require the use of a SerDes for converting SoC parallel data into
-serialized data that can be output over a high-speed electrical
-interface, and also converting high-speed serial input data
-into parallel data that can be processed by the SoC.  The
-SerDeses used by those peripherals, though they may be different,
-are largely similar in functionality and setup.
+The r_pio gpio / pin controller has a pin_base of non 0, we need to
+adjust for this before calling sunxi_pinctrl_desc_find_function_by_pin.
 
-This patch series provides a SerDes phy driver implementation that can be
-used by the above mentioned peripheral drivers to configure their
-respective SerDeses.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-As an example of the using the SerDes driver, this patch series also
-updates the Keystone PCIe host driver to enable and use its SerDes block.
-
-References:
-[1] KeyStone II Architecture Serializer/Deserializer (SerDes) User's Guide
-    (http://www.ti.com/lit/ug/spruho3a/spruho3a.pdf)
-
-v1: 
-	- addresses the following review comments
-		1. https://lkml.org/lkml/2015/10/13/803
-		2. https://lkml.org/lkml/2015/10/14/613
-		3. https://lkml.org/lkml/2015/10/13/818
-
-	- An update to PCIe dts bindings to enable the PCIe SerDes is
-	  submitted in a separate patch.
-
-WingMan Kwok (2):
-  phy: keystone: serdes driver for gbe 10gbe and pcie
-  PCI: keystone: update to use generic keystone serdes driver
-
- Documentation/devicetree/bindings/phy/ti-phy.txt |  278 +++
- drivers/pci/host/pci-keystone.c                  |   54 +-
- drivers/pci/host/pci-keystone.h                  |    2 +
- drivers/phy/Kconfig                              |    8 +
- drivers/phy/Makefile                             |    1 +
- drivers/phy/phy-keystone-serdes.c                | 2373 ++++++++++++++++++++++
- 6 files changed, 2707 insertions(+), 9 deletions(-)
- create mode 100644 drivers/phy/phy-keystone-serdes.c
-
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 38e0c7b..96a58e4 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -716,6 +716,7 @@ static int sunxi_pinctrl_irq_of_xlate(struct irq_domain *d,
+ 				      unsigned long *out_hwirq,
+ 				      unsigned int *out_type)
+ {
++	struct sunxi_pinctrl *pctl = d->host_data;
+ 	struct sunxi_desc_function *desc;
+ 	int pin, base;
+ 
+@@ -723,10 +724,9 @@ static int sunxi_pinctrl_irq_of_xlate(struct irq_domain *d,
+ 		return -EINVAL;
+ 
+ 	base = PINS_PER_BANK * intspec[0];
+-	pin = base + intspec[1];
++	pin = pctl->desc->pin_base + base + intspec[1];
+ 
+-	desc = sunxi_pinctrl_desc_find_function_by_pin(d->host_data,
+-						       pin, "irq");
++	desc = sunxi_pinctrl_desc_find_function_by_pin(pctl, pin, "irq");
+ 	if (!desc)
+ 		return -EINVAL;
+ 
 -- 
-1.7.9.5
+2.5.0
