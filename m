@@ -1,64 +1,48 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
-Date: Thu, 15 Oct 2015 09:37:08 +0530
-Message-ID: <20151015040708.GC27370@localhost>
-References: <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
- <561D1689.90703@linaro.org>
- <CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
- <CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
- <561E58AC.80207@linaro.org>
- <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
- <561E658D.1070900@linaro.org>
- <CAOAejn1spB+BCRh9+jJtaKxEmaRc04nveF3rQEbT7kLMH0kOkg@mail.gmail.com>
- <561E7497.1050105@linaro.org>
- <CAOAejn0chZD5mgi8WrW3ow3APUHTJOYP4=G2jCZ_Po4qe9eACw@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] mmc: mediatek: Add tune support
+Date: Thu, 15 Oct 2015 08:29:58 +0200
+Message-ID: <20151015062958.GG7825@pengutronix.de>
+References: <1444729078-26585-1-git-send-email-chaotian.jing@mediatek.com>
+ <1444729078-26585-4-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOAejn0chZD5mgi8WrW3ow3APUHTJOYP4=G2jCZ_Po4qe9eACw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1444729078-26585-4-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kristina Martsenko <kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream@medi
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 05:41:26PM +0200, M'boumba Cedric Madianga wrote:
-> 2015-10-14 17:28 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> > On 14/10/15 16:26, M'boumba Cedric Madianga wrote:
-> >>
-> >> 2015-10-14 16:24 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> >>>
-> >>>
-> >>> Hmnnn...
-> >>>
-> >>> The dmaengine framework will WARN_ONCE() if an dmaengine is removed
-> >>> whilst
-> >>> it is active and also works hard to ensure dmaengine modules are not
-> >>> removed
-> >>> whilst there are active drivers using the framework.
-> >>>
-> >>> How do we get into this function whilst there is still an active DMA
-> >>> channels?
-> >>
-> >>
-> >> For example, when a user try "rmmod stm32-dma" in uart console.
-> >> It will enter in stm32_dma_remove while there is potentially still active
-> >> DMA.
-> >
-> >
-> > Check dmaengine.c for yourself but I think in this case the dmaengine
-> > framework will hold references to the module and prevent the remove from
-> > taking place.
-> 
-> Yes I did it.
-> As far I understand, the dmaengine framework will print a warning
-> message but doesn't stop removing operation if there are some active
-> clients.
+Hi,
 
-we hold a ref, so removal wont work, see dma_chan_get()
+On Tue, Oct 13, 2015 at 05:37:57PM +0800, Chaotian Jing wrote:
+> @@ -1260,6 +1547,16 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>  		goto host_free;
+>  	}
+>  
+> +	host->src_clk_parent = clk_get_parent(host->src_clk);
+> +	host->hs400_src = devm_clk_get(&pdev->dev, "400mhz");
+> +	if (IS_ERR(host->hs400_src)) {
+> +		dev_dbg(&pdev->dev, "Cannot find 400mhz at dts!\n");
+> +	} else if (clk_set_parent(host->src_clk_parent, host->hs400_src) < 0) {
+> +		dev_err(host->dev, "Failed to set 400mhz source clock!\n");
+> +		ret = -EINVAL;
+> +		goto host_free;
+> +	}
+
+This is a static setup. We have device tree bindings for doing this.
+Please look for assigned-clocks and assigned-clock-parents. Doing stuff
+like this in the driver almost certainly leads to problems because the
+next SoC will have different requirements here.
+
+Sascha
 
 -- 
-~Vinod
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
