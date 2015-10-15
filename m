@@ -1,82 +1,46 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH v3 01/10] ARM: cygnus: fix link failures when
- CONFIG_COMMON_CLK_IPROC is disabled
-Date: Thu, 15 Oct 2015 13:28:50 -0700
-Message-ID: <56200C82.1070508@broadcom.com>
-References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-2-git-send-email-jonmason@broadcom.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/6] mfd: axp20x: Add AXP223 to list of
+ supported PMICs in DT bindings
+Date: Thu, 15 Oct 2015 22:36:43 +0200
+Message-ID: <20151015203643.GF2711@lukather>
+References: <1444840342-9233-1-git-send-email-wens@csie.org>
+ <1444840342-9233-2-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1444938513-10758-2-git-send-email-jonmason@broadcom.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jon Mason <jonmason@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z+pzSjdB7cqptWpS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZU4QCYQKGQE3AYYKYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444840342-9233-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jon,
+--z+pzSjdB7cqptWpS
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-One question below for others to comment on.
+On Thu, Oct 15, 2015 at 12:32:17AM +0800, Chen-Yu Tsai wrote:
+> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+> It is functionally identical to AXP221; only the regulator default
+> voltage/status and the external host interface are different.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-On 15-10-15 12:48 PM, Jon Mason wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> When CONFIG_CYGNUS is set but CONFIG_COMMON_CLK_IPROC is disabled, the
-> following link failures are caused:
->
-> drivers/built-in.o: In function `cygnus_armpll_init':
-> :(.init.text+0x1d290): undefined reference to `iproc_armpll_setup'
-> drivers/built-in.o: In function `cygnus_genpll_clk_init':
-> :(.init.text+0x1d2c4): undefined reference to `iproc_pll_clk_setup'
-> drivers/built-in.o: In function `cygnus_lcpll0_clk_init':
-> :(.init.text+0x1d304): undefined reference to `iproc_pll_clk_setup'
-> drivers/built-in.o: In function `cygnus_mipipll_clk_init':
-> :(.init.text+0x1d344): undefined reference to `iproc_pll_clk_setup'
-> drivers/built-in.o: In function `cygnus_asiu_init':
-> :(.init.text+0x1d370): undefined reference to `iproc_asiu_setup'
->
-> It is fixed it by always selecting COMMON_CLK_IPROC from
-> ARCH_BCM_IPROC, and making COMMON_CLK_IPROC a silent option (thus
-> preventing it from being erroneously disabled by a user).
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> ---
->   arch/arm/mach-bcm/Kconfig | 2 +-
->   drivers/clk/bcm/Kconfig   | 4 +---
->   2 files changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 1319c3c..84bd265 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -14,7 +14,7 @@ config ARCH_BCM_IPROC
->   	select HAVE_ARM_SCU if SMP
->   	select HAVE_ARM_TWD if SMP
->   	select ARM_GLOBAL_TIMER
-> -
-> +	select COMMON_CLK_IPROC
->   	select CLKSRC_MMIO
->   	select ARCH_REQUIRE_GPIOLIB
->   	select ARM_AMBA
-> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> index 88febf5..46ee475 100644
-> --- a/drivers/clk/bcm/Kconfig
-> +++ b/drivers/clk/bcm/Kconfig
-> @@ -9,10 +9,8 @@ config CLK_BCM_KONA
->   	  in the BCM281xx and BCM21664 families.
->
->   config COMMON_CLK_IPROC
-> -	bool "Broadcom iProc clock support"
-> -	depends on ARCH_BCM_IPROC
-> +	bool
->   	depends on COMMON_CLK
-Should these depends on remain?  I think COMMON_CLK_IPROC won't work 
-without them.
-> -	default ARCH_BCM_IPROC
->   	help
->   	  Enable common clock framework support for Broadcom SoCs
->   	  based on the iProc architecture
->
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--z+pzSjdB7cqptWpS--
