@@ -1,43 +1,62 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] ARM: dts: uniphier: fix IRQ number for devices on
- PH1-LD6b ref board
-Date: Thu, 15 Oct 2015 19:54:05 +0900
-Message-ID: <CAK7LNASoH3dT5NERMAJMQxCw_euugqMaoYa5Yk92C6Ai033iBw@mail.gmail.com>
-References: <1444899496-1124-1-git-send-email-yamada.masahiro@socionext.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 2/7] includes: dt-bindings: Add STM32F429 pinctrl DT
+ bindings
+Date: Thu, 15 Oct 2015 12:14:59 +0100
+Message-ID: <561F8AB3.9010103@linaro.org>
+References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444899496-1124-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-2015-10-15 17:58 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> The IRQ signal from external devices on this board is connected to
-> the XIRQ1 pin of the SoC.  The IRQ number should be 51, not 50.
->
-> Fixes: a5e921b4771f ("ARM: dts: uniphier: add ProXstream2 and PH1-LD6b SoC/board support")
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On 14/10/15 21:07, Maxime Coquelin wrote:
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 > ---
+>   include/dt-bindings/pinctrl/pinctrl-stm32.h     |   12 +
+>   include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1241 +++++++++++++++++++++++
+>   2 files changed, 1253 insertions(+)
+>   create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+>   create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
 >
-> Hi Olof and Arnd,
->
-> Could you apply this simple fix for Linux 4.13, please?
-> (if it is troublesome, I can wait until Linux 4.14-rc1.)
->
-> Thanks
->
+> diff --git a/include/dt-bindings/pinctrl/pinctrl-stm32.h b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+> new file mode 100644
+> index 0000000..a2e7222
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+> @@ -0,0 +1,12 @@
+> +#ifndef _DT_BINDINGS_PINCTRL_STM32_H
+> +#define _DT_BINDINGS_PINCTRL_STM32_H
+> +
+> +#define STM32_PIN_NO(x) ((x) << 8)
+> +#define STM32_GET_PIN_NO(x) ((x) >> 8)
+> +#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
+> +
+> +#define STM32_PIN_GPIO		0
+> +#define STM32_PIN_AF(x)		((x) + 1)
+> +#define STM32_PIN_ANALOG	(STM32_PIN_AF(15) + 1)
+> +
+> +#endif /* _DT_BINDINGS_PINCTRL_STM32_H */
+> diff --git a/include/dt-bindings/pinctrl/stm32f429-pinfunc.h b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+> new file mode 100644
+> index 0000000..979e4eb
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+> @@ -0,0 +1,1241 @@
+> +#ifndef _DT_BINDINGS_STM32F429_PINFUNC_H
+> +#define _DT_BINDINGS_STM32F429_PINFUNC_H
+> +
+> +#include <dt-bindings/pinctrl/pinctrl-stm32.h>
+> +
+> +#define STM32F429_PA0_FUNC_GPIO (STM32_PIN_NO(0) | STM32_PIN_GPIO)
+> +#define STM32F429_PA0_FUNC_TIM2_CH1 TIM2_ETR (STM32_PIN_NO(0) | STM32_PIN_AF(1))
 
+For the clock driver I was advised to get rid of this sort of "heroics" 
+and expose raw numbers from the datasheet directly to DT bindings users.
 
-This patch turned out wrong.
-I retract this one and will send v2 later.
-
-Sorry.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Should the same logic apply to this *huge* collection of macros?
