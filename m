@@ -1,95 +1,94 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] clk: ns2: add clock support for Broadcom
- Northstar 2 SoC
-Date: Thu, 15 Oct 2015 14:04:09 -0700
-Message-ID: <562014C9.5070708@broadcom.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: Re: [PATCH v3 01/10] ARM: cygnus: fix link failures when
+ CONFIG_COMMON_CLK_IPROC is disabled
+Date: Thu, 15 Oct 2015 17:08:11 -0400
+Message-ID: <20151015210810.GO32089@broadcom.com>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-9-git-send-email-jonmason@broadcom.com>
- <56200F39.1060102@broadcom.com> <562012A8.8050707@broadcom.com>
+ <1444938513-10758-2-git-send-email-jonmason@broadcom.com>
+ <56200C82.1070508@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <562012A8.8050707-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56200C82.1070508@broadcom.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ray,
+On Thu, Oct 15, 2015 at 01:28:50PM -0700, Scott Branden wrote:
+> Jon,
+> 
+> One question below for others to comment on.
+> 
+> On 15-10-15 12:48 PM, Jon Mason wrote:
+> >From: Arnd Bergmann <arnd@arndb.de>
+> >
+> >When CONFIG_CYGNUS is set but CONFIG_COMMON_CLK_IPROC is disabled, the
+> >following link failures are caused:
+> >
+> >drivers/built-in.o: In function `cygnus_armpll_init':
+> >:(.init.text+0x1d290): undefined reference to `iproc_armpll_setup'
+> >drivers/built-in.o: In function `cygnus_genpll_clk_init':
+> >:(.init.text+0x1d2c4): undefined reference to `iproc_pll_clk_setup'
+> >drivers/built-in.o: In function `cygnus_lcpll0_clk_init':
+> >:(.init.text+0x1d304): undefined reference to `iproc_pll_clk_setup'
+> >drivers/built-in.o: In function `cygnus_mipipll_clk_init':
+> >:(.init.text+0x1d344): undefined reference to `iproc_pll_clk_setup'
+> >drivers/built-in.o: In function `cygnus_asiu_init':
+> >:(.init.text+0x1d370): undefined reference to `iproc_asiu_setup'
+> >
+> >It is fixed it by always selecting COMMON_CLK_IPROC from
+> >ARCH_BCM_IPROC, and making COMMON_CLK_IPROC a silent option (thus
+> >preventing it from being erroneously disabled by a user).
+> >
+> >Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >Signed-off-by: Jon Mason <jonmason@broadcom.com>
+> >---
+> >  arch/arm/mach-bcm/Kconfig | 2 +-
+> >  drivers/clk/bcm/Kconfig   | 4 +---
+> >  2 files changed, 2 insertions(+), 4 deletions(-)
+> >
+> >diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> >index 1319c3c..84bd265 100644
+> >--- a/arch/arm/mach-bcm/Kconfig
+> >+++ b/arch/arm/mach-bcm/Kconfig
+> >@@ -14,7 +14,7 @@ config ARCH_BCM_IPROC
+> >  	select HAVE_ARM_SCU if SMP
+> >  	select HAVE_ARM_TWD if SMP
+> >  	select ARM_GLOBAL_TIMER
+> >-
+> >+	select COMMON_CLK_IPROC
+> >  	select CLKSRC_MMIO
+> >  	select ARCH_REQUIRE_GPIOLIB
+> >  	select ARM_AMBA
+> >diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+> >index 88febf5..46ee475 100644
+> >--- a/drivers/clk/bcm/Kconfig
+> >+++ b/drivers/clk/bcm/Kconfig
+> >@@ -9,10 +9,8 @@ config CLK_BCM_KONA
+> >  	  in the BCM281xx and BCM21664 families.
+> >
+> >  config COMMON_CLK_IPROC
+> >-	bool "Broadcom iProc clock support"
+> >-	depends on ARCH_BCM_IPROC
+> >+	bool
+> >  	depends on COMMON_CLK
+> Should these depends on remain?  I think COMMON_CLK_IPROC won't work
+> without them.
 
-Comment at near end.
+The ones that were removed were not necessary (as ARCH_BCM_IPROC now
+selects it).  I left the "depends on COMMON_CLK" in the off chance
+that the dependency chain gets broken some how (as ARCH_BCM_IPROC is
+not selecting COMMON_CLK directly, but it is being selected by
+ARCH_MULTIPLATFORM).
 
-On 15-10-15 01:55 PM, Ray Jui wrote:
->
->
-> On 10/15/2015 1:40 PM, Scott Branden wrote:
->> We need some sort of kconfig option to differentiate NS2 clock driver
->> from being pulled in all the time.
->>
->> On 15-10-15 12:48 PM, Jon Mason wrote:
->>> The Broadcom Northstar 2 SoC is architected under the iProc
->>> architecture. It has the following PLLs: GENPLL SCR, GENPLL SW,
->>> LCPLL DDR, LCPLL Ports, all derived from an onboard crystal.
->>>
->>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>    drivers/clk/Makefile                |   2 +-
->>>    drivers/clk/bcm/Makefile            |   1 +
->>>    drivers/clk/bcm/clk-ns2.c           | 288
->>> ++++++++++++++++++++++++++++++++++++
->>>    include/dt-bindings/clock/bcm-ns2.h |  72 +++++++++
->>>    4 files changed, 362 insertions(+), 1 deletion(-)
->>>    create mode 100644 drivers/clk/bcm/clk-ns2.c
->>>    create mode 100644 include/dt-bindings/clock/bcm-ns2.h
->>>
->>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->>> index d08b3e5..6124bd3 100644
->>> --- a/drivers/clk/Makefile
->>> +++ b/drivers/clk/Makefile
->>> @@ -47,7 +47,7 @@ obj-$(CONFIG_COMMON_CLK_WM831X)        += clk-wm831x.o
->>>    obj-$(CONFIG_COMMON_CLK_XGENE)        += clk-xgene.o
->>>    obj-$(CONFIG_COMMON_CLK_PWM)        += clk-pwm.o
->>>    obj-$(CONFIG_COMMON_CLK_AT91)        += at91/
->>> -obj-$(CONFIG_ARCH_BCM)            += bcm/
->>> +obj-y                    += bcm/
->>>    obj-$(CONFIG_ARCH_BERLIN)        += berlin/
->>>    obj-$(CONFIG_ARCH_HISI)            += hisilicon/
->>>    obj-$(CONFIG_ARCH_MXC)            += imx/
->>> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
->>> index e258b28..2d1cbc5 100644
->>> --- a/drivers/clk/bcm/Makefile
->>> +++ b/drivers/clk/bcm/Makefile
->>> @@ -3,6 +3,7 @@ obj-$(CONFIG_CLK_BCM_KONA)    += clk-kona-setup.o
->>>    obj-$(CONFIG_CLK_BCM_KONA)    += clk-bcm281xx.o
->>>    obj-$(CONFIG_CLK_BCM_KONA)    += clk-bcm21664.o
->>>    obj-$(CONFIG_COMMON_CLK_IPROC)    += clk-iproc-armpll.o
->>> clk-iproc-pll.o clk-iproc-asiu.o
->>> +obj-$(CONFIG_COMMON_CLK_IPROC)    += clk-ns2.o
->>
->> NS2 code is dragged in for all IPROC SoCs.  We need a config option for
->> NS2 (CONFIG_ARCH_BCM_NS2) to avoid this (if Arnd allows this for ARMv8
->> processors... ?).
->>
->> You can see below ARMv7 processors don't have this problem.
->>
->
-> The arm64 maintainers (Catalin, Mark, and etc.) stated they only want
-> one ARCH options per chip family.
->
->> If not we need to add CONFIG_CLK_NS2.
->
-> If using CONFIG_CLK_NS2, how is it going to be enabled/selected?
+Thanks,
+Jon
 
-Since CONFIG_ARCH_BCM_NS2 isn't "allowed" to be introduced we will need 
-to create and select a CONFIG_CLK_BCM_NS2 in the defconfig instead.
->
-> Ray
->
-
-Regards,
-  Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >-	default ARCH_BCM_IPROC
+> >  	help
+> >  	  Enable common clock framework support for Broadcom SoCs
+> >  	  based on the iProc architecture
+> >
+> 
