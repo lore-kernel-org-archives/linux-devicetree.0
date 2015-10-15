@@ -1,58 +1,79 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 03/13] irqchips: fix ARM11MPCore GIC bindings
-Date: Thu, 15 Oct 2015 15:46:43 +0200
-Message-ID: <1444916813-31024-4-git-send-email-linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 08/13] clk: add ARM syscon ICST device tree bindings
+Date: Thu, 15 Oct 2015 15:46:48 +0200
+Message-ID: <1444916813-31024-9-git-send-email-linus.walleij@linaro.org>
 References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444916813-31024-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The GIC bindings for the ARM11MPCore need to differentiate between
-the GIC on the Test Chip and the one on the evaluation baseboard.
-Split the binding in two and define new compatible-strings.
+This adds the device tree bindings for the ARM Syscon ICST
+oscillators, which is a register-level interface to the
+Integrated Device Technology (IDT) ICS525 and ICS307
+serially programmable oscillators.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/gic.txt | 3 ++-
- drivers/irqchip/irq-gic.c                     | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+I'm looking for an ACK from the CLK maintainers to take this
+through the ARM SoC tree once the series stabilize.
+---
+ .../devicetree/bindings/clock/arm-syscon-icst.txt  | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index 2da059a4790c..a5445622c216 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -15,7 +15,8 @@ Main node required properties:
- 	"arm,cortex-a15-gic"
- 	"arm,cortex-a9-gic"
- 	"arm,cortex-a7-gic"
--	"arm,arm11mp-gic"
-+	"arm,tc11mp-gic"
-+	"arm,pb11mp-gic"
- 	"brcm,brahma-b15-gic"
- 	"arm,arm1176jzf-devchip-gic"
- 	"qcom,msm-8660-qgic"
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 982c09c2d791..5376d1cb0a4f 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -1184,7 +1184,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
- 	return 0;
- }
- IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
--IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", gic_of_init);
-+IRQCHIP_DECLARE(armtc11mp_gic, "arm,tc11mp-gic", gic_of_init);
-+IRQCHIP_DECLARE(armpb11mp_gic, "arm,pb11mp-gic", gic_of_init);
- IRQCHIP_DECLARE(arm1176jzf_dc_gic, "arm,arm1176jzf-devchip-gic", gic_of_init);
- IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
- IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
+diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+new file mode 100644
+index 000000000000..19eb3aa765c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+@@ -0,0 +1,40 @@
++ARM System Controller ICST clocks
++
++The ICS525 and ICS307 oscillators are produced by Integrated Devices
++Technology (IDT). ARM integrated these oscillators deeply into their
++reference designs by adding special control registers that manage such
++oscillators to their system controllers.
++
++The ARM system controller contains logic to serialized and initialize
++an ICST clock request after a write to the 32 bit register at an offset
++into the system controller. Further, to even be able to alter one of
++these frequencies, the system controller must first be unlocked by
++writing a special token to another offset in the system controller.
++
++The ICST oscillator must be provided inside a system controller node.
++
++Required properties:
++- lock-offset: the offset address into the system controller where the
++  unlocking register is located
++- vco-offset: the offset address into the system controller where the
++  ICST control register is located (even 32 bit address)
++- compatible: must be one of "arm,syscon-icst525" or "arm,syscon-icst307"
++- #clock-cells: must be <0>
++- clocks: parent clock, since the ICST needs a parent clock to derive its
++  frequency from, this attribute is compulsory.
++
++Example:
++
++syscon: syscon@10000000 {
++	compatible = "syscon";
++	reg = <0x10000000 0x1000>;
++
++	oscclk0: osc0@0c {
++		compatible = "arm,syscon-icst307";
++		#clock-cells = <0>;
++		lock-offset = <0x20>;
++		vco-offset = <0x0C>;
++		clocks = <&xtal24mhz>;
++	};
++	(...)
++};
 -- 
 2.4.3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
