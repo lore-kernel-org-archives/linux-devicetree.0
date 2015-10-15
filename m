@@ -1,201 +1,181 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7,3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND
- device tree nodes
-Date: Thu, 15 Oct 2015 09:47:28 +0100
-Message-ID: <20151015084727.GG14475@jhogan-linux.le.imgtec.org>
-References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
- <1444148837-10770-4-git-send-email-harvey.hunt@imgtec.com>
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 03/25] scsi: hisi_sas: add initial bare driver
+Date: Thu, 15 Oct 2015 16:49:45 +0800
+Message-ID: <561F68A9.6090706@hisilicon.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-4-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1giRMj6yz/+FOIRq"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444148837-10770-4-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1444663237-238302-4-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TZ19SzzRMN9sA@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---1giRMj6yz/+FOIRq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Harvey,
 
-On Tue, Oct 06, 2015 at 05:27:17PM +0100, Harvey Hunt wrote:
-> From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->=20
-> Add device tree nodes for the NEMC and BCH to the JZ4780 device tree,
-> and make use of them in the Ci20 device tree to add a node for the
-> board's NAND.
->=20
-> Note that since the pinctrl driver is not yet upstream, this includes
-> neither pin configuration nor busy/write-protect GPIO pins for the
-> NAND. Use of the NAND relies on the boot loader to have left the pins
-> configured in a usable state, which should be the case when booted
-> from the NAND.
->=20
-> Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
-> Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On 2015/10/12 23:20, John Garry wrote:
+> This patch adds the initial bare driver for the HiSilicon
+> SAS HBA. The driver includes no HW interaction, but only
+> the changes to build and load the driver module.
+> 
+> The HBA is a platform device.
+> 
+> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
-> v6 -> v7:
->  - Add nand-ecc-mode to DT.
->  - Add nand-on-flash-bbt to DT.
->=20
-> v4 -> v5:
->  - New patch adding DT nodes for the NAND so that the driver can be
->    tested.
->=20
->  arch/mips/boot/dts/ingenic/ci20.dts    | 54 ++++++++++++++++++++++++++++=
-++++++
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 26 ++++++++++++++++
->  2 files changed, 80 insertions(+)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ing=
-enic/ci20.dts
-> index 9fcb9e7..453f1d3 100644
-> --- a/arch/mips/boot/dts/ingenic/ci20.dts
-> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-> @@ -42,3 +42,57 @@
->  &uart4 {
->  	status =3D "okay";
->  };
+>  drivers/scsi/Kconfig                  |  1 +
+>  drivers/scsi/Makefile                 |  1 +
+>  drivers/scsi/hisi_sas/Kconfig         |  5 +++
+>  drivers/scsi/hisi_sas/Makefile        |  2 ++
+>  drivers/scsi/hisi_sas/hisi_sas.h      | 24 +++++++++++++++
+>  drivers/scsi/hisi_sas/hisi_sas_init.c | 58 +++++++++++++++++++++++++++++++++++
+>  6 files changed, 91 insertions(+)
+>  create mode 100644 drivers/scsi/hisi_sas/Kconfig
+>  create mode 100644 drivers/scsi/hisi_sas/Makefile
+>  create mode 100644 drivers/scsi/hisi_sas/hisi_sas.h
+>  create mode 100644 drivers/scsi/hisi_sas/hisi_sas_init.c
+> 
+> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+> index 95f7a76..5c345f9 100644
+> --- a/drivers/scsi/Kconfig
+> +++ b/drivers/scsi/Kconfig
+> @@ -1774,5 +1774,6 @@ source "drivers/scsi/pcmcia/Kconfig"
+>  source "drivers/scsi/device_handler/Kconfig"
+>  
+>  source "drivers/scsi/osd/Kconfig"
+> +source "drivers/scsi/hisi_sas/Kconfig"
+>  
+>  endmenu
+> diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
+> index 1a8c9b5..03c30de 100644
+> --- a/drivers/scsi/Makefile
+> +++ b/drivers/scsi/Makefile
+> @@ -158,6 +158,7 @@ obj-$(CONFIG_CHR_DEV_SCH)	+= ch.o
+>  obj-$(CONFIG_SCSI_ENCLOSURE)	+= ses.o
+>  
+>  obj-$(CONFIG_SCSI_OSD_INITIATOR) += osd/
+> +obj-$(CONFIG_SCSI_HISI_SAS) += hisi_sas/
+>  
+>  # This goes last, so that "real" scsi devices probe earlier
+>  obj-$(CONFIG_SCSI_DEBUG)	+= scsi_debug.o
+> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+> new file mode 100644
+> index 0000000..a7f47a2
+> --- /dev/null
+> +++ b/drivers/scsi/hisi_sas/Kconfig
+> @@ -0,0 +1,5 @@
+> +config SCSI_HISI_SAS
+> +	tristate "HiSilicon SAS"
+> +	select SCSI_SAS_LIBSAS
+> +	help
+> +		This driver supports HiSilicon's SAS HBA
+> diff --git a/drivers/scsi/hisi_sas/Makefile b/drivers/scsi/hisi_sas/Makefile
+> new file mode 100644
+> index 0000000..63c3c4d
+> --- /dev/null
+> +++ b/drivers/scsi/hisi_sas/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-$(CONFIG_SCSI_HISI_SAS) += hisi_sas.o
+> +hisi_sas-y+= hisi_sas_init.o
+> diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+> new file mode 100644
+> index 0000000..50204a2
+> --- /dev/null
+> +++ b/drivers/scsi/hisi_sas/hisi_sas.h
+> @@ -0,0 +1,24 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Copyright (c) 2015 Hisilicon Limited.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + */
 > +
-> +&nemc {
-> +	status =3D "okay";
+> +#ifndef _HISI_SAS_H_
+> +#define _HISI_SAS_H_
 > +
-> +	nand: nand@1 {
-> +		compatible =3D "ingenic,jz4780-nand";
-
-Isn't the NAND a micron part? This doesn't seem right. Is the device
-driver and binding already accepted upstream with that compatible
-string?
-
-Cheers
-James
-
-> +		reg =3D <1 0 0x1000000>;
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <scsi/libsas.h>
 > +
-> +		ingenic,nemc-tAS =3D <10>;
-> +		ingenic,nemc-tAH =3D <5>;
-> +		ingenic,nemc-tBP =3D <10>;
-> +		ingenic,nemc-tAW =3D <15>;
-> +		ingenic,nemc-tSTRV =3D <100>;
+why place some "include" head in .h file rather than .c file?
+> +#define DRV_NAME "hisi_sas"
+> +#define DRV_VERSION "v1.0"
 > +
-> +		ingenic,bch-controller =3D <&bch>;
-> +		ingenic,ecc-size =3D <1024>;
-> +		ingenic,ecc-strength =3D <24>;
+> +#endif
+> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/hisi_sas/hisi_sas_init.c
+> new file mode 100644
+> index 0000000..dd83430
+> --- /dev/null
+> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Copyright (c) 2015 Hisilicon Limited.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + */
 > +
-> +		nand-ecc-mode =3D "hw";
-> +		nand-on-flash-bbt;
+> +#include "hisi_sas.h"
 > +
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
+> +static const struct of_device_id sas_of_match[] = {
+> +	{ .compatible = "hisilicon,sas-controller-v1",},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sas_of_match);
+> +static int hisi_sas_probe(struct platform_device *pdev)
+> +{
 > +
-> +		partition@0 {
-> +			label =3D "u-boot-spl";
-> +			reg =3D <0x0 0x0 0x0 0x800000>;
-> +		};
+> +	return 0;
+> +}
 > +
-> +		partition@0x800000 {
-> +			label =3D "u-boot";
-> +			reg =3D <0x0 0x800000 0x0 0x200000>;
-> +		};
+> +static int hisi_sas_remove(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
 > +
-> +		partition@0xa00000 {
-> +			label =3D "u-boot-env";
-> +			reg =3D <0x0 0xa00000 0x0 0x200000>;
-> +		};
-> +
-> +		partition@0xc00000 {
-> +			label =3D "boot";
-> +			reg =3D <0x0 0xc00000 0x0 0x4000000>;
-> +		};
-> +
-> +		partition@0x8c00000 {
-> +			label =3D "system";
-> +			reg =3D <0x0 0x4c00000 0x1 0xfb400000>;
-> +		};
-> +	};
+> +static struct platform_driver hisi_sas_driver = {
+> +	.probe = hisi_sas_probe,
+> +	.remove = hisi_sas_remove,
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.of_match_table = sas_of_match,
+> +	},
 > +};
 > +
-> +&bch {
-> +	status =3D "okay";
-> +};
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/=
-ingenic/jz4780.dtsi
-> index 65389f6..b868b42 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -108,4 +108,30 @@
-> =20
->  		status =3D "disabled";
->  	};
+> +static __init int hisi_sas_init(void)
+> +{
+> +	pr_info("hisi_sas: driver version %s\n", DRV_VERSION);
 > +
-> +	nemc: nemc@13410000 {
-> +		compatible =3D "ingenic,jz4780-nemc";
-> +		reg =3D <0x13410000 0x10000>;
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <1 0 0x1b000000 0x1000000
-> +			  2 0 0x1a000000 0x1000000
-> +			  3 0 0x19000000 0x1000000
-> +			  4 0 0x18000000 0x1000000
-> +			  5 0 0x17000000 0x1000000
-> +			  6 0 0x16000000 0x1000000>;
+> +	return platform_driver_register(&hisi_sas_driver);
+> +}
 > +
-> +		clocks =3D <&cgu JZ4780_CLK_NEMC>;
+> +static __exit void hisi_sas_exit(void)
+> +{
+> +	platform_driver_unregister(&hisi_sas_driver);
+> +}
 > +
-> +		status =3D "disabled";
-> +	};
+> +module_init(hisi_sas_init);
+> +module_exit(hisi_sas_exit);
 > +
-> +	bch: bch@134d0000 {
-> +		compatible =3D "ingenic,jz4780-bch";
-> +		reg =3D <0x134d0000 0x10000>;
-> +
-> +		clocks =3D <&cgu JZ4780_CLK_BCH>;
-> +
-> +		status =3D "disabled";
-> +	};
->  };
-> --=20
-> 2.6.0
->=20
->=20
+> +MODULE_VERSION(DRV_VERSION);
+> +MODULE_LICENSE("GPL");
+V2
+> +MODULE_AUTHOR("John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("HISILICON SAS controller driver");
+> +MODULE_ALIAS("platform:" DRV_NAME);
+> 
 
---1giRMj6yz/+FOIRq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWH2gfAAoJEGwLaZPeOHZ6XK8P/iNT4kPjiBjkT+UjC9U0a67d
-5BZYlIrwtv82JmEoJJ82cwWC8f8Ywj7hCi77Jr0aIcQg8RX0u9gGgjW7yrvEpxe7
-5iey4tZbGGl/4xkxwfBuk3TSqZo5RFRi03nI/ZNy8/X9ymqbLW5hcv4H030G2YlW
-1DYHHOR7myFV6VXj9+MNHtuNThOhWlsKPJ455dY1j5toRncBa5e/ZOMqVZypwSMO
-89a0sOV34rr9/ab3qKuk90tTuvhECyiXKuVTDG2c/9HfhoUq7DgX49x/VjCZ6Eo9
-fHMuHYDG7a7iXUTyPR4l7JU1vbZmU87PXJ78lveIEmC2ZRUT9RgJnPjvJT+UzR/P
-ZoeHcd/E+Isl5tQshl02vFh2r6YJSQII3jY7e+XpkR0m3yFH3bYbu1+2aKFrB5Xq
-LnXRcjvW2r/6EQ2MZp4/FSe2aXNV6Ca6N4pTB7HPfA3CuyGV1o2kpDti/Ce9dV1M
-bmxpl9i+RmzsuqbHznqmtY/sAe0Sj7fHSMS81CC5vi/ObO0eJ1IgbsB0mHuCWaCr
-21TLUg4dmJOu5Cmj9mHRDngU2I4Fp1bH+uzFvzQQ1viLnkm7pxP2dKD3aX4XSO8g
-RKyGGJzGeRvVF9I8fth2ZivExQSG06E+ceIxRjOZaz5I7EBE6/NU9494X3FezxPK
-yJ/RNSTz/ks57uV9SUa7
-=G5wV
------END PGP SIGNATURE-----
-
---1giRMj6yz/+FOIRq--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
