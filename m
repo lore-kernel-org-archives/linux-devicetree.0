@@ -1,82 +1,67 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH v3 01/10] ARM: cygnus: fix link failures when
- CONFIG_COMMON_CLK_IPROC is disabled
-Date: Thu, 15 Oct 2015 15:48:24 -0400
-Message-ID: <1444938513-10758-2-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 09/10] clk: iproc: define Broadcom NSP iProc clock binding
+Date: Thu, 15 Oct 2015 15:48:32 -0400
+Message-ID: <1444938513-10758-10-git-send-email-jonmason@broadcom.com>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444938513-10758-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+Document the device tree bindings for Broadcom Northstar Plus
+architecture based clock controller
 
-When CONFIG_CYGNUS is set but CONFIG_COMMON_CLK_IPROC is disabled, the
-following link failures are caused:
-
-drivers/built-in.o: In function `cygnus_armpll_init':
-:(.init.text+0x1d290): undefined reference to `iproc_armpll_setup'
-drivers/built-in.o: In function `cygnus_genpll_clk_init':
-:(.init.text+0x1d2c4): undefined reference to `iproc_pll_clk_setup'
-drivers/built-in.o: In function `cygnus_lcpll0_clk_init':
-:(.init.text+0x1d304): undefined reference to `iproc_pll_clk_setup'
-drivers/built-in.o: In function `cygnus_mipipll_clk_init':
-:(.init.text+0x1d344): undefined reference to `iproc_pll_clk_setup'
-drivers/built-in.o: In function `cygnus_asiu_init':
-:(.init.text+0x1d370): undefined reference to `iproc_asiu_setup'
-
-It is fixed it by always selecting COMMON_CLK_IPROC from
-ARCH_BCM_IPROC, and making COMMON_CLK_IPROC a silent option (thus
-preventing it from being erroneously disabled by a user).
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/mach-bcm/Kconfig | 2 +-
- drivers/clk/bcm/Kconfig   | 4 +---
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ .../bindings/clock/brcm,iproc-clocks.txt           | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 1319c3c..84bd265 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -14,7 +14,7 @@ config ARCH_BCM_IPROC
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_ARM_TWD if SMP
- 	select ARM_GLOBAL_TIMER
--
-+	select COMMON_CLK_IPROC
- 	select CLKSRC_MMIO
- 	select ARCH_REQUIRE_GPIOLIB
- 	select ARM_AMBA
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index 88febf5..46ee475 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -9,10 +9,8 @@ config CLK_BCM_KONA
- 	  in the BCM281xx and BCM21664 families.
- 
- config COMMON_CLK_IPROC
--	bool "Broadcom iProc clock support"
--	depends on ARCH_BCM_IPROC
-+	bool
- 	depends on COMMON_CLK
--	default ARCH_BCM_IPROC
- 	help
- 	  Enable common clock framework support for Broadcom SoCs
- 	  based on the iProc architecture
+diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+index da8d9bb..b3c3e9d 100644
+--- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+@@ -130,3 +130,33 @@ These clock IDs are defined in:
+     ch3_unused mipipll          4       BCM_CYGNUS_MIPIPLL_CH3_UNUSED
+     ch4_unused mipipll          5       BCM_CYGNUS_MIPIPLL_CH4_UNUSED
+     ch5_unused mipipll          6       BCM_CYGNUS_MIPIPLL_CH5_UNUSED
++
++Northstar and Northstar Plus
++------
++PLL and leaf clock compatible strings for Northstar and Northstar Plus are:
++ "brcm,nsp-armpll"
++ "brcm,nsp-genpll"
++ "brcm,nsp-lcpll0"
++
++The following table defines the set of PLL/clock index and ID for Northstar and
++Northstar Plus.  These clock IDs are defined in:
++    "include/dt-bindings/clock/bcm-nsp.h"
++
++    Clock	Source		Index	ID
++    ---		-----		-----	---------
++    crystal	N/A		N/A	N/A
++
++    armpll	crystal		N/A	N/A
++
++    genpll	crystal		0	BCM_NSP_GENPLL
++    phy		genpll		1	BCM_NSP_GENPLL_PHY_CLK
++    ethernetclk	genpll		2	BCM_NSP_GENPLL_ENET_SW_CLK
++    usbclk	genpll		3	BCM_NSP_GENPLL_USB_PHY_REF_CLK
++    iprocfast	genpll		4	BCM_NSP_GENPLL_IPROCFAST_CLK
++    sata1	genpll		5	BCM_NSP_GENPLL_SATA1_CLK
++    sata2	genpll		6	BCM_NSP_GENPLL_SATA2_CLK
++
++    lcpll0	crystal		0	BCM_NSP_LCPLL0
++    pcie_phy	lcpll0		1	BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK
++    sdio	lcpll0		2	BCM_NSP_LCPLL0_SDIO_CLK
++    ddr_phy	lcpll0		3	BCM_NSP_LCPLL0_DDR_PHY_CLK
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
