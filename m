@@ -1,220 +1,52 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and pcie
-Date: Thu, 15 Oct 2015 11:14:31 -0500
-Message-ID: <CAL_JsqL+T7nCtBo9YA=tX1gi=YbvMSswbSj5Fj94uQwB9XStvA@mail.gmail.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
+From: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 0/3]
+Date: Thu, 15 Oct 2015 09:21:07 -0700
+Message-ID: <561FD273.2040208@oracle.com>
+References: <1444832235-15263-1-git-send-email-m-karicheri2@ti.com>
+ <561E7792.409@oracle.com> <561FCE2B.8020802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: WingMan Kwok <w-kwok2@ti.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Roger Quadros <rogerq@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561FCE2B.8020802-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, corbet-T1hC0tSOHrs@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 9:25 AM, WingMan Kwok <w-kwok2@ti.com> wrote:
-> On TI's Keystone platforms, several peripherals such as the
-> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
-> require the use of a SerDes for converting SoC parallel data into
-> serialized data that can be output over a high-speed electrical
-> interface, and also converting high-speed serial input data
-> into parallel data that can be processed by the SoC.  The
-> SerDeses used by those peripherals, though they may be different,
-> are largely similar in functionality and setup.
+On 10/15/2015 9:02 AM, Murali Karicheri wrote:
+> On 10/14/2015 11:41 AM, santosh shilimkar wrote:
+>> 10/14/2015 7:17 AM, Murali Karicheri wrote:
+>>> This patch series enable accumulator queue support for K2 SoCs.
+>>> Accumulator
+>>> queues are a type of qmss queue that is monitored by the PDSP firmware
+>>> and
+>>> accumulated. Host is interrupted by PDSP firmware when packets become
+>>> available in a ring buffer shared between the host and PDSP.
+>>>
+>>> There was an issue raised when merging the original patch set at
+>>>   (1) https://lkml.org/lkml/2015/9/4/681
+>>>     [PATCH v1 1/2] soc: ti: display firmware file name as part of boot
+>>> log
+>>>   (2) https://lkml.org/lkml/2015/9/4/680
+>>>     [PATCH v1 2/2] ARM: dts: keystone: enable accumulator channels
+>>>
+>>> This series fixes the issues raised against v3. Maintainer, could you
+>>> please
+>>> apply this series to v4.4 next please at your earliest opportunity.
+>>>
+>> I have picked up the series. Thanks for quick turnaround.
 >
-> This patch provides a SerDes phy driver implementation that can be
-> used by the above mentioned peripheral drivers to configure their
-> respective SerDeses.
+> Thanks Santosh. Could you send this pull request for v4.4 next. We want
+> this merged to our internal release and if this is on next branch it
+> will help.
 >
-> v1:
->         - see cover letter for review comments addressed.
->
-> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |  278 +++
->  drivers/phy/Kconfig                              |    8 +
->  drivers/phy/Makefile                             |    1 +
->  drivers/phy/phy-keystone-serdes.c                | 2373 ++++++++++++++++++++++
->  4 files changed, 2660 insertions(+)
->  create mode 100644 drivers/phy/phy-keystone-serdes.c
->
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 9cf9446..4dca271 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -115,4 +115,282 @@ sata_phy: phy@4A096000 {
->         clock-names = "sysclk", "refclk";
->         syscon-pllreset = <&scm_conf 0x3fc>;
->         #phy-cells = <0>;
-> +
-> +TI Keystone SerDes PHY
-> +======================
-> +
-> +Required properties:
-> + - compatible: should be one of
-> +       * "ti,keystone-serdes-gbe"
-> +       * "ti,keystone-serdes-xgbe"
-> +       * "ti,keystone-serdes-pcie"
+It should be already in linux-next and pull request was sent before I
+replied yesterday. Its late for the merge window with usual norms
+so lets see if it makes it.
 
-These are different blocks or different modes of the same block? It's
-fine if the former. If the latter, then you should have a single
-compatible and then have a mode property. Perhaps phy-connection-type
-from ePAPR ethernet binding can be extended.
-
-
-> + - reg:
-> +       * base address and length of the SerDes register set
-> + - reg-names:
-> +       * "serdes"
-> +               - name of the reg SerDes register set
-
-reg-names is kind of pointless with only 1.
-
-> + - #phy-cells:
-> +       * From the generic phy bindings, must be 0;
-> + - num-lanes:
-> +       * Number of lanes in SerDes.
-> +
-> +Optional properties:
-> + - syscon-peripheral:
-> +       * Handle to the subsystem register region of the peripheral
-> +         inside which the SerDes exists.
-> + - syscon-link:
-> +       * Handle to the Link register region of the peripheral inside
-> +         which the SerDes exists.  Example: it is the PCSR register
-> +         region in the case of 10gbe.
-> + - rx-force-enable:
-> +       * Include this property if receiver attenuation and boost are
-> +         to be configured with specific values defined in rx-force.
-> + - link-rate-kbps:
-> +       * SerDes link rate to be configured, in kbps.
-> +
-> +
-> +For gbe and 10gbe SerDes, it is optional to represent each lane as
-> +a sub-node, which can be enabled or disabled individually using
-> +the "status" property.
-> +
-> +Required properties (lane sub-node):
-> + - reg:
-> +       * lane number
-> +
-> +Optional properties (lane sub-node):
-> + - control-rate:
-> +       * Lane control rate
-> +               0: full rate
-> +               1: half rate
-> +               2: quarter rate
-> + - rx-start:
-> +       * Initial lane rx equalizer attenuation and boost configurations.
-> +       * Must be array of 2 integers.
-> + - rx-force:
-> +       * Forced lane rx equalizer attenuation and boost configurations.
-> +       * Must be array of 2 integers.
-> + - tx-coeff:
-> +       * Lane c1, c2, cm, attenuation and regulator output voltage
-> +         configurations.
-> +       * Must be array of 5 integers.
-> + - loopback:
-> +       * Include this property to enable loopback at the SerDes
-> +         lane level.
-
-This seems overly complicated. Do you really expect these to be
-different per lane?
-
-> +
-> +Example for Keystone K2E GBE:
-> +-----------------------------
-> +
-> +gbe_serdes0: gbe_serdes@232a000 {
-> +       #phy-cells              = <0>;
-> +       compatible              = "ti,keystone-serdes-gbe";
-> +       reg                     = <0x0232a000 0x2000>;
-> +       reg-names               = "serdes";
-> +       link-rate-kbps          = <1250000>;
-> +       num-lanes               = <4>;
-> +       lanes {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               lane@0 {
-> +                       /*loopback;*/
-> +                       reg             = <0>;
-> +                       control-rate    = <2>; /* quart */
-> +                       rx-start        = <7 5>;
-> +                       rx-force        = <1 1>;
-> +                       tx-coeff        = <0 0 0 12 4>;
-> +                              /* c1 c2 cm att vreg */
-> +               };
-> +               lane@1 {
-> +                       /*loopback;*/
-> +                       reg             = <1>;
-> +                       control-rate    = <2>; /* quart */
-> +                       rx-start        = <7 5>;
-> +                       rx-force        = <1 1>;
-> +                       tx-coeff        = <0 0 0 12 4>;
-> +                              /* c1 c2 cm att vreg */
-> +               };
-> +       };
-> +};
-> +
-> +gbe_serdes1: gbe_serdes@2324000 {
-> +       #phy-cells              = <0>;
-> +       compatible              = "ti,keystone-serdes-gbe";
-> +       reg                     = <0x02324000 0x2000>;
-> +       reg-names               = "serdes";
-> +       link-rate-kbps          = <1250000>;
-> +       num-lanes               = <4>;
-
-4 lanes, but only 2 child nodes?
-
-> +       lanes {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               lane@0 {
-> +                       /*loopback;*/
-> +                       reg             = <0>;
-> +                       control-rate    = <2>; /* quart */
-> +                       rx-start        = <7 5>;
-> +                       rx-force        = <1 1>;
-> +                       tx-coeff        = <0 0 0 12 4>;
-> +                              /* c1 c2 cm att vreg */
-> +               };
-> +               lane@1 {
-> +                       /*loopback;*/
-> +                       reg             = <1>;
-> +                       control-rate    = <2>; /* quart */
-> +                       rx-start        = <7 5>;
-> +                       rx-force        = <1 1>;
-> +                       tx-coeff        = <0 0 0 12 4>;
-> +                              /* c1 c2 cm att vreg */
-> +               };
-> +       };
-> +};
-> +
-> +netcp: netcp@24000000 {
-> +       ...
-> +
-> +       netcp-devices {
-> +               ...
-> +
-> +               gbe@200000 { /* ETHSS */
-> +                       ...
-> +                       serdeses {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               serdes@0 {
-> +                                       reg = <0>;
-> +                                       phys = <&gbe_serdes0>;
-> +                                       status = "ok";
-> +                               };
-> +                               serdes@1 {
-> +                                       reg = <1>;
-> +                                       phys = <&gbe_serdes1>;
-> +                                       status = "ok";
-
-This is way too complex. Just do:
-
-phys = <&gbe_serdes0, &gbe_serdes1>;
-
-in the gbe node.
-
-Rob
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
