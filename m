@@ -1,53 +1,56 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Thu, 15 Oct 2015 17:51:06 +0100
-Message-ID: <20151015165105.GE32532@n2100.arm.linux.org.uk>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH] mtd: document linux-specific partition parser DT binding
+Date: Thu, 15 Oct 2015 11:04:28 -0600
+Message-ID: <20151015170428.GA9250@obsidianresearch.com>
+References: <1444915191-28350-1-git-send-email-linus.walleij@linaro.org>
+ <20151015162210.GA4545@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444919145-30845-1-git-send-email-w-kwok2-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20151015162210.GA4545@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 10:25:43AM -0400, WingMan Kwok wrote:
-> On TI's Keystone platforms, several peripherals such as the
-> gbe ethernet switch, 10gbe ethether switch and PCIe controller
-> require the use of a SerDes for converting SoC parallel data into
-> serialized data that can be output over a high-speed electrical
-> interface, and also converting high-speed serial input data
-> into parallel data that can be processed by the SoC.  The
-> SerDeses used by those peripherals, though they may be different,
-> are largely similar in functionality and setup.
+On Thu, Oct 15, 2015 at 09:22:10AM -0700, Brian Norris wrote:
 
-Given that serdes is not specific to TI, should this be specific to
-TI, or should there be an effort to come up with something which
-everyone who has serdes links can make use of?
+> Are you trying to use this binding, or is this just purely a mechanical
+> documentation issue? I ask, because it seems that binding never really
+> got reviewed at all, and others have recently tried to extend
+> support
 
-Serdes comes in multiple different forms: PCIe, 1G SGMII ethernet,
-1000base-X ethernet, 10g ethernet, SATA... I'd hate to see a
-plethora of SoC specific stuff for this.
+I wrote it before ARM started down the DT direction and all these
+formalities were developed.
 
-When serdes is combined with SFP cages, the situation becomes much
-more fun, because the serdes link then needs to become hotpluggable
-(SFP modules are designed to be hotplugged) which means you have to
-be able to switch between (at least) 1G SGMII and 1000base-X modes,
-and probably 10G mode as well.  There's even a SFP module that has
-a SATA connector on it, though I believe there's no standard for
-that, and it's more a hardware hack.
+> That's not to say we can't document the old one, but I'm curious if
+> there are real users. I'd also like to encourage new users to avoid the
+> old one if we can make that feasible.
 
-I've been working in this area but from the Ethernet side on an
-Armada 38x based board which has a SFP cage on it, though it's
-slightly simpler there because there is no support (or I believe
-any desire) to reconfigure the serdes lanes between PCI, ethernet
-and SATA - that's all setup and initialised for us by uboot.
+We continue to use it here, there is just no way to autodetect flash
+partition layouts. I'm not fussed about having to change to something
+else in future.
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+The reason the original patch exposed the cmdline parser is because
+that is how the internal mechanisms work - but realistically, the
+cmdline parser is a hack to get around the lack of DT partition
+description. If the DT can describe the partitions it should supersede
+and obsolete the old command line hack. IMHO
+
+> Also, if we're really going to support this, we should list exactly what
+> strings we support. And that's one of the problems with the existing
+> binding; it supports any old string Linux supports, which doesn't match
+> how we typically want to add bindings (i.e., via proposal + review).
+
+That is why it is prefixed with linux, the review of the part parser name is
+the responsibility of the MTD crew, not the DT folks.
+
+bcm47xxpart seems like a terrible name for a partition scheme. Really,
+almost any scheme can be used on any SOC, naming a partition parser
+after a SOC family makes very little sense to me..
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
