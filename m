@@ -1,98 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
-Date: Thu, 15 Oct 2015 08:46:32 -0500
-Message-ID: <CAL_Jsq+trQ3jLczxvtzqfpUKBgxaazPdGyjLg+NT2YFva0_xbA@mail.gmail.com>
-References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
- <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com> <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
- <561F9961.30008@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <561F9961.30008@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/13] ARM: add some L220 DT settings
+Date: Thu, 15 Oct 2015 15:46:41 +0200
+Message-ID: <1444916813-31024-2-git-send-email-linus.walleij@linaro.org>
+References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444916813-31024-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 7:17 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> Hi Rob,
->
-> On 13/10/15 17:21, Rob Herring wrote:
->> On Wed, Sep 30, 2015 at 4:32 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->>> Add DT binding for led-backlight.
->>
->> Please use get_maintainers.pl.
->
-> At some point I got feedback that the DT maintainers don't have time to
-> look at each individual driver binding, but rely on the subsystem
-> maintainers to handle them. Maybe I misunderstood that.
+The RealView ARM11MPCore enables parity, eventmon and shared
+override in the cache controller through its current boardfile,
+but the code and DT bindings for the ARM L220 is currently
+lacking the ability to set this up from DT. Add the required
+bool parameters.
 
-True, but that doesn't mean to not copy us. If we didn't want to be
-copied, we would update MAINTAINERS.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+I know this patch mixes code and DT changes but it is silly to
+split such a small patch. Will submit this to Russell's patch
+tracker if it looks OK to the DT people. (Or if they are quiet.)
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
+ arch/arm/mm/cache-l2x0.c                       | 15 +++++++++++++++
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-I wouldn't call this one an individual driver either. This is very
-much a generic binding which we do want to review.
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index 06c88a4d28ac..4d262e9b3464 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -67,12 +67,14 @@ Optional properties:
+   disable if zero.
+ - arm,prefetch-offset : Override prefetch offset value. Valid values are
+   0-7, 15, 23, and 31.
+-- arm,shared-override : The default behavior of the pl310 cache controller with
+-  respect to the shareable attribute is to transform "normal memory
+-  non-cacheable transactions" into "cacheable no allocate" (for reads) or
+-  "write through no write allocate" (for writes).
++- arm,shared-override : The default behavior of the PL220 or PL310 cache
++  controllers with respect to the shareable attribute is to transform "normal
++  memory non-cacheable transactions" into "cacheable no allocate" (for reads)
++  or "write through no write allocate" (for writes).
+   On systems where this may cause DMA buffer corruption, this property must be
+   specified to indicate that such transforms are precluded.
++- arm,parity-enable : enable parity checking on the L2 cache (PL220 only).
++- arm,eventmon-enable : enable the event monitor on the L2 cache (PL220 only).
+ - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
+   (forcibly enable), property absent (retain settings set by firmware)
+ - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 493692d838c6..d4e9fa2594f3 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1060,6 +1060,21 @@ static void __init l2x0_of_parse(const struct device_node *np,
+ 		val |= (dirty - 1) << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
+ 	}
+ 
++	if (of_property_read_bool(np, "arm,parity-enable")) {
++		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
++		val |= L2C_AUX_CTRL_PARITY_ENABLE;
++	}
++
++	if (of_property_read_bool(np, "arm,eventmon-enable")) {
++		mask &= ~L2C_AUX_CTRL_EVTMON_ENABLE;
++		val |= L2C_AUX_CTRL_EVTMON_ENABLE;
++	}
++
++	if (of_property_read_bool(np, "arm,shared-override")) {
++		mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
++		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
++	}
++
+ 	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
+ 	if (ret)
+ 		return;
+-- 
+2.4.3
 
->
->>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->>> Cc: devicetree@vger.kernel.org
->>> ---
->>>  .../bindings/video/backlight/led-backlight.txt     | 30 ++++++++++++++++++++++
->>>  1 file changed, 30 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->>> new file mode 100644
->>> index 000000000000..d4621d7414bc
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->>> @@ -0,0 +1,30 @@
->>> +led-backlight bindings
->>> +
->>> +Required properties:
->>> +  - compatible: "led-backlight"
->>> +  - leds: phandle to a led OF node [0]
->>
->> Why do we need 2 levels of LED nodes?
->
-> Sorry, didn't get that. What do you mean with 2 levels?
-
-You have the node the "leds" phandle points to which is the actual LED
-device and then this node which is just backlight properties. And then
-presumably another phandle in the panel device to point to the
-backlight device.
-
->>> +  - brightness-levels: Array of distinct LED brightness levels. These
->>> +      are in the range from 0 to 255, passed to the LED class driver.
->>> +  - default-brightness-level: the default brightness level (index into the
->>> +      array defined by the "brightness-levels" property)
->>> +
->>> +Optional properties:
->>> +  - power-supply: regulator for supply voltage
->>> +  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
->>> +                  and disables the backlight (see GPIO binding[1])
->>
->> Why are all of these not part of the LED node pointed to by leds?
->
-> These are for the backlight, not for the LED chip. So "LED" here is a
-> chip that produces (most likely) a PWM signal, and "backlight" is the
-> collection of components that use the PWM to produce the backlight
-> itself, and use the power-supply and gpios.
-
-Okay, it wasn't clear that leds points to the LED controller node. The
-example made it seem as it was the device. We already have a way to
-describe LEDs and that is as child nodes of the LED controller node.
-Please follow what was done for flash LEDs (leds/common.txt).
-
-What's wrong with the existing pwm-backlight binding in the PWM case?
-
->
->> Describe the h/w, not what you want for a driver.
->
-> I think this describes the HW quite well. The LED chip works fine
-> without any of the properties here, and these are specific to the
-> backlight part of the board.
-
-A more complete example would be helpful here.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
