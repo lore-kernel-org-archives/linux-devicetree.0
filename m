@@ -1,139 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and pcie
-Date: Thu, 15 Oct 2015 16:51:02 +0200
-Message-ID: <5192855.p6QLDWTiVi@wuerfel>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 1/3] ARM: dts: sunxi: Fix
+ interrupt-cells for [r]pio on A23/A31/A33/A80
+Date: Thu, 15 Oct 2015 16:55:47 +0200
+Message-ID: <561FBE73.7070606@redhat.com>
+References: <1444919327-23747-1-git-send-email-hdegoede@redhat.com>
+ <5423411.WHZ4SNGvxb@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5423411.WHZ4SNGvxb@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Kaiser <Thomas.Kaiser-id7G5ibTm3AZ78jC37dNPg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 October 2015 10:25:44 WingMan Kwok wrote:
-> On TI's Keystone platforms, several peripherals such as the
-> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
-> require the use of a SerDes for converting SoC parallel data into
-> serialized data that can be output over a high-speed electrical
-> interface, and also converting high-speed serial input data
-> into parallel data that can be processed by the SoC.  The
-> SerDeses used by those peripherals, though they may be different,
-> are largely similar in functionality and setup.
-> 
-> This patch provides a SerDes phy driver implementation that can be
-> used by the above mentioned peripheral drivers to configure their
-> respective SerDeses.
-> 
-> v1:
-> 	- see cover letter for review comments addressed.
-> 
-> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |  278 +++
->  drivers/phy/Kconfig                              |    8 +
->  drivers/phy/Makefile                             |    1 +
->  drivers/phy/phy-keystone-serdes.c                | 2373 ++++++++++++++++++++++
->  4 files changed, 2660 insertions(+)
->  create mode 100644 drivers/phy/phy-keystone-serdes.c
+Hi,
 
-This is quite a bit of code. Are you very sure that this PHY is
-not used on any other SoC family, and that it is not licensed
-from a third party? I would hate to see multiple copies of
-this getting merged into the kernel over time, so thename should
-be chosen carefully to let the next person know when they have
-related hardware.
+On 15-10-15 16:38, Arnd Bergmann wrote:
+> On Thursday 15 October 2015 16:28:45 Hans de Goede wrote:
+>> When the gpio interrupt bindings where changed to add a bank to the
+>> specifier list, the r_pio nodes of A23/A31/A33 where not updated to
+>> match and neither was the pio node of the A80, this fixes this.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>
+>
+> Is this safe to apply by itself? I don't see any interrupts references
+> to these nodes, so I assume it's fine, but if there are any cross-dependencies
+> we need more careful planning.
 
-> +
-> +gbe_serdes0: gbe_serdes@232a000 {
+Should be safe to apply by itself, later patches in this series introduce
+the first interrupt users of these nodes, which is what made me notice
+the mistake in them.
 
+Regards,
 
-make that phy@232a000, the name should be one of the usual identifiers,
-not specific to the instance.
-
-> +config PHY_TI_KEYSTONE_SERDES
-> +	tristate "TI Keystone SerDes PHY support"
-> +	depends on OF && ARCH_KEYSTONE
-> +	select GENERIC_PHY
-> +	help
-> +	  This option enables support for TI Keystone SerDes PHY found
-> +	  in peripherals GBE, 10GBE and PCIe.
-> +
-
-(ARCH_KEYSTONE || COMPILE_TEST) ?
-
-> + * Redistributions in binary form must reproduce the above copyright
-> + * notice, this list of conditions and the following disclaimer in the
-> + * documentation and/or other materials provided with the
-> + * distribution.
-
-The current code does not do this when compiled, which might be a
-problem for distributors. Can you clarify the license?
-
-> +#define reg_rmw(addr, value, mask) \
-> +	__raw_writel(((__raw_readl(addr) & (~(mask))) | \
-> +			(value & (mask))), (addr))
-
-not endian safe, and potentially racy.
-
-> +static inline void _kserdes_reset_cdr(void __iomem *sregs, int lane)
-> +{
-> +	/* toggle signal detect */
-> +	_kserdes_force_signal_detect_low(sregs, lane);
-> +	mdelay(1);
-> +	_kserdes_force_signal_detect_high(sregs, lane);
-> +}
-
-Can you change the code so you can use msleep(1) here?
-
-> +
-> +	do {
-> +		mdelay(10);
-> +		memset(lane_down, 0, sizeof(lane_down));
-> +
-> +		link_up = _kserdes_check_link_status(dev, sregs,
-> +						     pcsr_regmap, lanes,
-> +						     lanes_enable,
-> +						     current_state, lane_down);
-> +
-> +		/* if we did not get link up then wait 100ms
-> +		 * before calling it again
-> +		 */
-> +		if (link_up)
-> +			break;
-> +
-> +		for (i = 0; i < lanes; i++) {
-> +			if ((lanes_enable & (1 << i)) && lane_down[i])
-> +				dev_dbg(dev,
-> +					"XGE: detected lane down on lane %d\n",
-> +					i);
-> +		}
-> +
-> +		if (++retries > 100)
-> +			return -ETIMEDOUT;
-> +
-> +	} while (!link_up);
-
-an more importantly here. Blocking the CPU for over one second is not good.
-
-Any use of mdelay() should have a comment explaining why you cannot use
-msleep() in that instance.
-
-> +
-> +static int __init keystone_serdes_phy_init(void)
-> +{
-> +	return platform_driver_register(&kserdes_driver);
-> +}
-> +module_init(keystone_serdes_phy_init);
-> +
-> +static void __exit keystone_serdes_phy_exit(void)
-> +{
-> +	platform_driver_unregister(&kserdes_driver);
-> +}
-> +module_exit(keystone_serdes_phy_exit);
-
-module_platform_driver()
-
-	Arnd
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
