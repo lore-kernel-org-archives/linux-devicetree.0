@@ -1,91 +1,62 @@
 From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/13] dmaengine: edma: Optimize memcpy operation
-Date: Thu, 15 Oct 2015 09:29:23 +0530
-Message-ID: <20151015035923.GA27370@localhost>
-References: <1444828344-21378-1-git-send-email-peter.ujfalusi@ti.com>
- <1444828344-21378-3-git-send-email-peter.ujfalusi@ti.com>
- <20151014144105.GV27370@localhost>
- <561E6E7A.6080408@ti.com>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 DMA driver
+Date: Thu, 15 Oct 2015 09:37:08 +0530
+Message-ID: <20151015040708.GC27370@localhost>
+References: <1444745127-1105-3-git-send-email-cedric.madianga@gmail.com>
+ <561D1689.90703@linaro.org>
+ <CAOAejn1N=dFZ3nQ_hNznJQX1-fkP3r=vdYuWY4OMH65PrW3xVg@mail.gmail.com>
+ <CAOAejn2pcFSn3Hf=j6zgg6Ui6GjJZrtRch6ywByHaVLsTLMk6A@mail.gmail.com>
+ <561E58AC.80207@linaro.org>
+ <CAOAejn1XqvZDmCgGr5rmZoz2EzFUyxtmpSm0_atLr81rSJrEcw@mail.gmail.com>
+ <561E658D.1070900@linaro.org>
+ <CAOAejn1spB+BCRh9+jJtaKxEmaRc04nveF3rQEbT7kLMH0kOkg@mail.gmail.com>
+ <561E7497.1050105@linaro.org>
+ <CAOAejn0chZD5mgi8WrW3ow3APUHTJOYP4=G2jCZ_Po4qe9eACw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <561E6E7A.6080408-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAOAejn0chZD5mgi8WrW3ow3APUHTJOYP4=G2jCZ_Po4qe9eACw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 06:02:18PM +0300, Peter Ujfalusi wrote:
-> On 10/14/2015 05:41 PM, Vinod Koul wrote:
-> > On Wed, Oct 14, 2015 at 04:12:13PM +0300, Peter Ujfalusi wrote:
-> >> @@ -1320,41 +1317,92 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
-> >>  	struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> >>  	size_t len, unsigned long tx_flags)
-> >>  {
-> >> -	int ret;
-> >> +	int ret, nslots;
-> >>  	struct edma_desc *edesc;
-> >>  	struct device *dev = chan->device->dev;
-> >>  	struct edma_chan *echan = to_edma_chan(chan);
-> >> -	unsigned int width;
-> >> +	unsigned int width, pset_len;
-> >>  
-> >>  	if (unlikely(!echan || !len))
-> >>  		return NULL;
-> >>  
-> >> -	edesc = kzalloc(sizeof(*edesc) + sizeof(edesc->pset[0]), GFP_ATOMIC);
-> >> +	if (len < SZ_64K) {
-> >> +		/*
-> >> +		 * Transfer size less than 64K can be handled with one paRAM
-> >> +		 * slot. ACNT = length
-> >> +		 */
-> >> +		width = len;
-> >> +		pset_len = len;
-> >> +		nslots = 1;
-> >> +	} else {
-> >> +		/*
-> >> +		 * Transfer size bigger than 64K will be handled with maximum of
-> >> +		 * two paRAM slots.
-> >> +		 * slot1: ACNT = 32767, length1: (length / 32767)
-> >> +		 * slot2: the remaining amount of data.
-> >> +		 */
-> >> +		width = SZ_32K - 1;
-> >> +		pset_len = rounddown(len, width);
-> >> +		/* One slot is enough for lengths multiple of (SZ_32K -1) */
-> > 
-> > Hmm so does this mean if I have 140K transfer, it will do two 64K for 1st
-> > slot and 12K in second slot ?
+On Wed, Oct 14, 2015 at 05:41:26PM +0200, M'boumba Cedric Madianga wrote:
+> 2015-10-14 17:28 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> > On 14/10/15 16:26, M'boumba Cedric Madianga wrote:
+> >>
+> >> 2015-10-14 16:24 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> >>>
+> >>>
+> >>> Hmnnn...
+> >>>
+> >>> The dmaengine framework will WARN_ONCE() if an dmaengine is removed
+> >>> whilst
+> >>> it is active and also works hard to ensure dmaengine modules are not
+> >>> removed
+> >>> whilst there are active drivers using the framework.
+> >>>
+> >>> How do we get into this function whilst there is still an active DMA
+> >>> channels?
+> >>
+> >>
+> >> For example, when a user try "rmmod stm32-dma" in uart console.
+> >> It will enter in stm32_dma_remove while there is potentially still active
+> >> DMA.
+> >
+> >
+> > Check dmaengine.c for yourself but I think in this case the dmaengine
+> > framework will hold references to the module and prevent the remove from
+> > taking place.
 > 
-> Not exactly. If the size is less than 64K it can be done with one 'burst' but
-> if it is bigger we need to have two sets of transfer:
-> 1. 32K blocks
-> 2. the remaining data
-> 
-> so in case of 140K:
-> 4 x 32K followed by 12K
+> Yes I did it.
+> As far I understand, the dmaengine framework will print a warning
+> message but doesn't stop removing operation if there are some active
+> clients.
 
-Okay this part wasn't very clear to me, can you please add some comment
-explaining this bit
+we hold a ref, so removal wont work, see dma_chan_get()
 
-> 
-> > 
-> > Is there a limit on 'blocks' of 64K we can do here?
-> 
-> 32767 32K blocks is the limit.
-> 
-> The 64K burst is only possible if the whole transfer is less less than 64K.
-> With the ACNT counter we can transfer 64K - 1 bytes, but if this is not enough
-> we need to use the BCNT counter and for that to work the the distance between
-> the start of 'slot n' and the start of 'slot n+1' need to be less than 32K,
-> this is the reason why we have 32K 'blocks' to transfer first followed by the
-> remaining.
-
-Okay IIUC, we have option to single burst if its less that 64K using one
-slot, otherwise split to 32K chunk with 2 slots, or would it be N in that
-case
-
-Really need more documentation here :)
 -- 
 ~Vinod
 --
