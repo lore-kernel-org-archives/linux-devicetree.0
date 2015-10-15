@@ -1,34 +1,117 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH v3 4/4] ARM: configs: Add STM32 DMA support in STM32 defconfig
-Date: Thu, 15 Oct 2015 14:14:20 +0200
-Message-ID: <1444911260-31993-5-git-send-email-cedric.madianga@gmail.com>
-References: <1444911260-31993-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444911260-31993-1-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
+Date: Thu, 15 Oct 2015 15:17:37 +0300
+Message-ID: <561F9961.30008@ti.com>
+References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
+ <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
+ <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds STM32 DMA support in stm32_defconfig file
+--ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
----
- arch/arm/configs/stm32_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Rob,
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index 4725fab..ec52505 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -54,6 +54,8 @@ CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_DMADEVICES=y
-+CONFIG_STM32_DMA=y
- # CONFIG_FILE_LOCKING is not set
- # CONFIG_DNOTIFY is not set
- # CONFIG_INOTIFY_USER is not set
--- 
-1.9.1
+On 13/10/15 17:21, Rob Herring wrote:
+> On Wed, Sep 30, 2015 at 4:32 AM, Tomi Valkeinen <tomi.valkeinen@ti.com>=
+ wrote:
+>> Add DT binding for led-backlight.
+>=20
+> Please use get_maintainers.pl.
+
+At some point I got feedback that the DT maintainers don't have time to
+look at each individual driver binding, but rely on the subsystem
+maintainers to handle them. Maybe I misunderstood that.
+
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  .../bindings/video/backlight/led-backlight.txt     | 30 +++++++++++++=
++++++++++
+>>  1 file changed, 30 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/video/backlight/=
+led-backlight.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/led-bac=
+klight.txt b/Documentation/devicetree/bindings/video/backlight/led-backli=
+ght.txt
+>> new file mode 100644
+>> index 000000000000..d4621d7414bc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.=
+txt
+>> @@ -0,0 +1,30 @@
+>> +led-backlight bindings
+>> +
+>> +Required properties:
+>> +  - compatible: "led-backlight"
+>> +  - leds: phandle to a led OF node [0]
+>=20
+> Why do we need 2 levels of LED nodes?
+
+Sorry, didn't get that. What do you mean with 2 levels?
+
+>> +  - brightness-levels: Array of distinct LED brightness levels. These=
+
+>> +      are in the range from 0 to 255, passed to the LED class driver.=
+
+>> +  - default-brightness-level: the default brightness level (index int=
+o the
+>> +      array defined by the "brightness-levels" property)
+>> +
+>> +Optional properties:
+>> +  - power-supply: regulator for supply voltage
+>> +  - enable-gpios: contains a single GPIO specifier for the GPIO which=
+ enables
+>> +                  and disables the backlight (see GPIO binding[1])
+>=20
+> Why are all of these not part of the LED node pointed to by leds?
+
+These are for the backlight, not for the LED chip. So "LED" here is a
+chip that produces (most likely) a PWM signal, and "backlight" is the
+collection of components that use the PWM to produce the backlight
+itself, and use the power-supply and gpios.
+
+> Describe the h/w, not what you want for a driver.
+
+I think this describes the HW quite well. The LED chip works fine
+without any of the properties here, and these are specific to the
+backlight part of the board.
+
+ Tomi
+
+
+--ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWH5liAAoJEPo9qoy8lh71RIMP/3JYbLaSpte3AzUOm0lKQT/D
+gdys+5G1PRQjJvlmdN3LwxiCCRJMPg4OK2Mivm5SQYJ7TDMsipnqJ6qq+ZWV0Y0b
+EfMNxL7HLEF/JAaL+HtqGA+GERXmfpoMfzeEIfZ6fUsTd6HrJdeupkVfRX38KlMn
+ccmsu6cUnF3ZxQMvAZWiPTMNx/abuXZX466H5wQ/OHxUYvYKblrwX/etD0OrWpcx
+iLXg4DjX9mzqybrxeOOotd/Uh70AoXBKuELRMT/RSunfIdPQCHb6QyG3Gq9QUeta
+F7CjaifoU+Pj1puVYgqyIs0WqwZDWSq5b0gVZq4hNum8BVVqsCiwhkI8uFDaDsHc
+osZvni6jYBhZ3IlLLBcLAAMTPrUR/IA4wT73qpxeWqa8dEKygGwQM9vesQBj6I6y
+vmcRejxt617c8EyK22xMh9pik7INEQjYqAPxWeYOYWLlb3uldRJ+cDxQLSVSu4ns
+yFmKUAwdDzH5Guifpd2dFWK7QtOsgyxJkScQg+2N8r0FygCUw1Q9XJ9Itp/JDYsl
+FP3H1o9+/iO3qJ3a4G5wZkKbPtVmJumkhsfnxFyCxetsSv1u75Ugc44Mn7bXLn5n
+ROjC9qHbrMBM7Dsbev0xw6fTWqvh6BJP6JKyE61roalUoUBx2q412Osroo5hBWep
+xkojurpH5azy1B12Gcjp
+=Gnho
+-----END PGP SIGNATURE-----
+
+--ocAEPGIkEoUlbm8Jm3t64DEjfg6r2LfGd--
