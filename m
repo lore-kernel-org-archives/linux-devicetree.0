@@ -1,46 +1,88 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/4] Enable Ethernet on StiH407 family boards
-Date: Thu, 15 Oct 2015 13:51:12 +0200
-Message-ID: <561F9330.7030309@st.com>
-References: <1443714982-16251-1-git-send-email-maxime.coquelin@st.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 2/7] includes: dt-bindings: Add STM32F429 pinctrl DT
+ bindings
+Date: Thu, 15 Oct 2015 12:55:18 +0100
+Message-ID: <561F9426.4090808@linaro.org>
+References: <1444853247-31114-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1444853247-31114-3-git-send-email-mcoquelin.stm32@gmail.com>
+ <561F8AB3.9010103@linaro.org>
+ <CALszF6Aj3xBqVKWhyBc5ihqm_YVTq4M3bidB0W+1RvtMVZqaDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443714982-16251-1-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALszF6Aj3xBqVKWhyBc5ihqm_YVTq4M3bidB0W+1RvtMVZqaDw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 15/10/15 12:29, Maxime Coquelin wrote:
+> 2015-10-15 13:14 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+>> On 14/10/15 21:07, Maxime Coquelin wrote:
+>>>
+>>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>> ---
+>>>    include/dt-bindings/pinctrl/pinctrl-stm32.h     |   12 +
+>>>    include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1241
+>>> +++++++++++++++++++++++
+>>>    2 files changed, 1253 insertions(+)
+>>>    create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>>    create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>>
+>>> diff --git a/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>> b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>> new file mode 100644
+>>> index 0000000..a2e7222
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>> @@ -0,0 +1,12 @@
+>>> +#ifndef _DT_BINDINGS_PINCTRL_STM32_H
+>>> +#define _DT_BINDINGS_PINCTRL_STM32_H
+>>> +
+>>> +#define STM32_PIN_NO(x) ((x) << 8)
+>>> +#define STM32_GET_PIN_NO(x) ((x) >> 8)
+>>> +#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
+>>> +
+>>> +#define STM32_PIN_GPIO         0
+>>> +#define STM32_PIN_AF(x)                ((x) + 1)
+>>> +#define STM32_PIN_ANALOG       (STM32_PIN_AF(15) + 1)
+>>> +
+>>> +#endif /* _DT_BINDINGS_PINCTRL_STM32_H */
+>>> diff --git a/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>> b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>> new file mode 100644
+>>> index 0000000..979e4eb
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>> @@ -0,0 +1,1241 @@
+>>> +#ifndef _DT_BINDINGS_STM32F429_PINFUNC_H
+>>> +#define _DT_BINDINGS_STM32F429_PINFUNC_H
+>>> +
+>>> +#include <dt-bindings/pinctrl/pinctrl-stm32.h>
+>>> +
+>>> +#define STM32F429_PA0_FUNC_GPIO (STM32_PIN_NO(0) | STM32_PIN_GPIO)
+>>> +#define STM32F429_PA0_FUNC_TIM2_CH1 TIM2_ETR (STM32_PIN_NO(0) |
+>>> STM32_PIN_AF(1))
+>>
+>>
+>> For the clock driver I was advised to get rid of this sort of "heroics" and
+>> expose raw numbers from the datasheet directly to DT bindings users.
+>>
+>> Should the same logic apply to this *huge* collection of macros?
+>
+> I'm open to change, I just took example on the Mediatek implementation.
+> Advantage is that checkpatch will be more silent, drawback is that it
+> will be a little harder to understand how these values are generated.
+> If we decide to change to raw values, then the DT Bindings
+> documentation will need to be more verbose on the way these values are
+> generated.
+
+To be honest I was thinking about moaning about that anyway. Its pretty 
+tough from the docs you have currently to figure out the encoding.
+
+Does having header files really excuse us from documenting the bindings 
+properly? ;-)
 
 
-On 10/01/2015 05:56 PM, Maxime Coquelin wrote:
-> This series enables Ethernet support on STiH407 family reference design
-> boards.
->
-> These boards use the RTL8367 Switch as PHY.
-> As it is previously configured by the bootloader, we declare it as a fixed
-> link.
->
-> Maxime Coquelin (4):
->    ARM: dts: Fix RGMII pinctrl timings
->    ARM: dts: Add Ethernet node to STiH407 family
->    ARM: dts: Enable Ethernet on STi's B2120 boards
->    ARM: dts: Enable Ethernet on STi's B2199 board
->
->   arch/arm/boot/dts/stih407-b2120.dts    |  1 +
->   arch/arm/boot/dts/stih407-family.dtsi  | 27 +++++++++++++++++++++++++++
->   arch/arm/boot/dts/stih407-pinctrl.dtsi |  4 ++--
->   arch/arm/boot/dts/stih410-b2120.dts    |  1 +
->   arch/arm/boot/dts/stih418-b2199.dts    |  8 ++++++++
->   arch/arm/boot/dts/stihxxx-b2120.dtsi   |  6 ++++++
->   6 files changed, 45 insertions(+), 2 deletions(-)
->
-Series applied.
-
-Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Daniel.
