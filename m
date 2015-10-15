@@ -1,176 +1,89 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 1/5] dt-bindings: MIPS: Document xilfpga bindings and
- boot style
-Date: Thu, 15 Oct 2015 08:22:16 +0100
-Message-ID: <20151015072216.GC14475@jhogan-linux.le.imgtec.org>
-References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1444827117-10939-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 1/5] mtd: nand: omap2: Support parsing dma channel
+ information from DT
+Date: Thu, 15 Oct 2015 10:35:25 +0300
+Message-ID: <561F573D.6010704@ti.com>
+References: <1444700338-27582-1-git-send-email-fcooper@ti.com>
+ <1444700338-27582-2-git-send-email-fcooper@ti.com> <561E3E4F.9020302@ti.com>
+ <561E41EB.3050005@ti.com> <561E5803.5090609@ti.com> <561E629F.5070202@ti.com>
+ <561E6791.3030404@ti.com> <20151014161813.GC10113@atomide.com>
+ <561E8184.6020206@ti.com> <20151014181337.GF10113@atomide.com>
+ <561EB4FB.8040709@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444827117-10939-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+In-Reply-To: <561EB4FB.8040709@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: ralf@linux-mips.org, robh+dt@kernel.org, linus.walleij@linaro.org, linux-mips@linux-mips.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Franklin S Cooper Jr." <fcooper@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
---jy6Sn24JjFx/iggw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 14/10/15 23:03, Franklin S Cooper Jr. wrote:
+> 
+> 
+> On 10/14/2015 01:13 PM, Tony Lindgren wrote:
+>> * Franklin S Cooper Jr. <fcooper@ti.com> [151014 09:27]:
+>>>
+>>> On 10/14/2015 11:18 AM, Tony Lindgren wrote:
+>>>> * Franklin S Cooper Jr. <fcooper@ti.com> [151014 07:37]:
+>>>>> On 10/14/2015 09:11 AM, Roger Quadros wrote:
+>>>>>> On 14/10/15 16:26, Franklin S Cooper Jr. wrote:
+>>>>>>> On 10/14/2015 06:52 AM, Roger Quadros wrote:
+>>>>>>>> Franklin,
+>>>>>>>>
+>>>>>>>> On 14/10/15 14:36, Roger Quadros wrote:
+>>>>>>>>> On 13/10/15 04:38, Franklin S Cooper Jr wrote:
+>>>>>>>>>> Switch from dma_request_channel to allow passing dma channel
+>>>>>>>>>> information from DT rather than hardcoding a value.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>>>>>>>>> Acked-by: Roger Quadros <rogerq@ti.com>
+>>>>>>>>>
+>>>>>>>>>> ---
+>>>>>>>>>>  drivers/mtd/nand/omap2.c | 4 +++-
+>>>>>>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>>>>>>>>>> index d0f2620..957c32f 100644
+>>>>>>>>>> --- a/drivers/mtd/nand/omap2.c
+>>>>>>>>>> +++ b/drivers/mtd/nand/omap2.c
+>>>>>>>>>> @@ -1866,7 +1866,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>>>>>>>>>  		dma_cap_zero(mask);
+>>>>>>>>>>  		dma_cap_set(DMA_SLAVE, mask);
+>>>>>>>>>>  		sig = OMAP24XX_DMA_GPMC;
+>>>>>>>>>> -		info->dma = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+>>>>>>>>>> +		info->dma = dma_request_slave_channel_compat(mask,
+>>>>>>>>>> +			omap_dma_filter_fn, &sig, pdev->dev.parent, "rxtx");
+>>>>>>>>>> +
+>>>>>>>> Just discovered that you are using the parent device node.
+>>>>>>>>
+>>>>>>>> How about moving the dma bindings to the nand node instead and using
+>>>>>>>> pdev->dev here?
+>>>>>>> Roger,
+>>>>>>>
+>>>>>>> From what I can tell the interrupt number and the dma channel will always be
+>>>>>>> the same no matter what. Doesn't matter if you have multiple nands or a
+>>>>>>> combination of nands and nors. Since that is the case I think it just makes
+>>>>>>> sense to leave it in the gpmc parent node and define it once.
+>>>>>> Is prefetch/writepost dma used for NOR or any other GPMC peripheral
+>>>>>> or only for NAND?
+>>>>> The dma seems tied to the prefetch. From what I can tell the prefetch is only
+>>>>> used by nand.
+>>>>>> Let's also get Tony's inputs on this.
+>>>>> Sure.
+>>>> Hmm so what would keep other devices from using the prefetch
+>>> Looking at the TRM any references to the prefetch are always with respect to
+>>> NAND.
+>>>
+>>> I also see the below mentioned in the TRM.
+>>> Pre-fetch and write posting engine associated with system DMA to get full performance from NAND
+>>> device with minimum impact on NOR/SRAM concurrent access.
+>> OK up to you guys to figure out if it may be usable in a generic way then :)
+> Ok I just got clarification from hw folks. DMA for GPMC can be used for any of the
+> various modes. But the prefetch is specific to NAND.
 
-Hi Zubair,
+In that case the dma information must be in the GPMC node.
 
-On Wed, Oct 14, 2015 at 01:51:53PM +0100, Zubair Lutfullah Kakakhel wrote:
-> Xilfpga boots only with device-tree. Document the required properties
-> and the unique boot style
->=20
-> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> ---
->  .../devicetree/bindings/mips/img/xilfpga.txt       | 76 ++++++++++++++++=
-++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/img/xilfpga.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mips/img/xilfpga.txt b/Doc=
-umentation/devicetree/bindings/mips/img/xilfpga.txt
-> new file mode 100644
-> index 0000000..1e7084c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
-> @@ -0,0 +1,76 @@
-> +Imagination University Program MIPSFpga
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Under the Imagination University Program, a microAptiv UP core has been =
-released for academic usage.
-
-Documentation files should still be wrapped to 80 columns.
-
-> +
-> +As we are dealing with a mips core instantiated on an FPGA, specificatio=
-ns are fluid and can be varied in RTL.
-> +
-> +This binding document is provided as baseline guidance for the example p=
-roject provided by IMG.
-> +
-> +The example project runs on the Nexys4DDR board by Digilent powered by t=
-he ARTIX-7 FPGA by Xilinx.
-> +
-> +Relevant details about the example project and the Nexys4DDR board:
-> +
-> +- microAptiv UP core m14Kc
-> +- 50MHz clock speed
-> +- 128Mbyte DDR RAM	at 0x0000_0000
-> +- 8Kbyte RAM		at 0x1000_0000
-> +- axi_intc		at 0x1020_0000
-> +- axi_uart16550		at 0x1040_0000
-> +- axi_gpio		at 0x1060_0000
-> +- axi_i2c		at 0x10A0_0000
-> +- custom_gpio		at 0x10C0_0000
-> +- axi_ethernetlite	at 0x10E0_0000
-> +- 8Kbyte BootRAM	at 0x1FC0_0000
-> +
-> +Required properties:
-> +--------------------
-> + - compatible: Must include "img,xilfpga".
-
-Is that specific enough to describe the system you're referring to
-unambiguously?
-
-> +
-> +CPU nodes:
-> +----------
-> +A "cpus" node is required.  Required properties:
-> + - #address-cells: Must be 1.
-> + - #size-cells: Must be 0.
-> +A CPU sub-node is also required for at least CPU 0. Required properties:
-> + - device_type: Must be "cpu".
-> + - compatible: Must be "mips,m14Kc".
-> + - reg: Must be <0>.
-> + - clocks: Must include the CPU clock.  See ../../clock/clock-bindings.t=
-xt for
-> +   details on clock bindings.
-> + - ext clock handle for fixed-clock received by MIPS core.
-
-that last bullet would appear to be a description of required clocks,
-rather than a required property of the cpu node. Perhaps it should be in
-the same paragraph as clocks property description.
-
-> +Example:
-
-your example doesn't have the required compatible string.
-
-> +	cpus {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type =3D "cpu";
-> +			compatible =3D "mips,m14Kc";
-> +			reg =3D <0>;
-> +			clocks	=3D <&ext>;
-> +		};
-> +	};
-> +
-> +	ext: ext {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <50000000>;
-> +	};
-> +
-> +Boot protocol:
-> +--------------
-> +
-> +The BootRAM is a writeable "RAM" in FPGA at 0x1FC0_0000. This is for eas=
-y reprogrammibility via JTAG.
-> +
-> +The BootRAM inializes the cache and the axi_uart peripheral.
-> +
-> +DDR initialiation is already handled by a HW IP block.
-> +
-> +When the example project bitstream is loaded, the cpu_reset button needs=
- to be pressed.
-> +
-> +The bootram initializes the cache and axi_uart. Then outputs MIPSFPGA\n\=
-r on the serial port
-> +on the Nexys4DDR board.
-> +
-> +At this point, the board is ready to load the Linux kernel vmlinux file =
-via JTAG.
-
-Maybe worth clarifying whether register state should be set to anything
-in particular, such as setting argument registers to zero so that you
-could use them for passing command line or device tree in future, e.g.
-if somebody ported u-boot to it (maybe ensure its compatible with the
-UHI boot specs).
-
-Cheers
-James
-
---jy6Sn24JjFx/iggw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWH1QoAAoJEGwLaZPeOHZ6KTkP/iIsYuSv6Gq6rbGLYLK9kx5D
-PIyuQz98ryPkUANK6ha6EG4moPFY9m07BheCp6tgqsTZDq3A1MZPoxxq2XqdRLaP
-BziPVlBxdzLO6rkFa2mK0qxOknC744k0+2ZhTYUpRcYCl3k4CxBAjQgaHnZLRRGr
-OIDgmOx9zNhcmKhBV/sjY8/+YbZDghFKasqv/9uxl6kshUJ/f9sNi3RZSNv/wER9
-0R3Py+hzKDJQROAiqbC6RKaSEMV/7QxiBedZ+Jdg0pj8kgvzJZq+bN1SW746KsJA
-jvG5h1/vcbbwyMeKrDCwNvtOgBkEOcG7P6pzY1FTJRXHrAvaHslAiQ0mmSLBVQiF
-F0LRgSTIPWDbjgpNflm58iWnYdCClSQcIgbcRf2w1ZZAz0sTMagpWnHl2GjI0HjU
-MftjZNdJKJ0a4sG1wZQUWjQ0QTNPSVciiTAmQhGYyFE4u+/2lDLFzRpOqAZRSCtx
-TBgT+vfZ7QJxbVuFaGXHbKLUSql+8OQfmrt/qxgBgPhWtaXXGdwduohgPLDusyEl
-xMsyl1285quTmEEkUyJuZZHPmlIJ/05IhAzZsmqTO7C4AGP6RK36v4ueoiakj3Mp
-Ohx5GIRv9IxZx6tz9B5KjC7Wz/FcpeSYx1u1zrazPf9UlJFdIhFeH9UENzfGUTtL
-aZc1vC+v6bDH4uXlN0Pl
-=2KRR
------END PGP SIGNATURE-----
-
---jy6Sn24JjFx/iggw--
+cheers,
+-roger
