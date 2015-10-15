@@ -1,35 +1,39 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 20/20] of/platform: Defer probes of registered devices
-Date: Wed, 14 Oct 2015 16:12:23 -0700
-Message-ID: <561EE157.4070604@gmail.com>
-References: <1443517859-30376-1-git-send-email-tomeu.vizoso@collabora.com> <1443517859-30376-21-git-send-email-tomeu.vizoso@collabora.com>
-Reply-To: frowand.list@gmail.com
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 0/4] input: gpio_keys_polled: Add support for abs/rel
+ axis
+Date: Wed, 14 Oct 2015 17:14:04 -0700
+Message-ID: <20151015001404.GB3673@dtor-ws>
+References: <1442928240-2452-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1443517859-30376-21-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442928240-2452-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/29/2015 2:10 AM, Tomeu Vizoso wrote:
-> Instead of trying to match and probe platform and AMBA devices right
-> after each is registered, delay their probes until device_initcall_sync.
-                                                     ^^^^^^^^^^^^^^^^^^^^
-                                                     late_initcall
-
+On Tue, Sep 22, 2015 at 03:23:56PM +0200, Hans de Goede wrote:
+> Hi Dmitry,
 > 
-> This means that devices will start probing once all built-in drivers
-> have registered, and after all platform and AMBA devices from the DT
-> have been registered already.
+> This patch-series really is 2 related series:
 > 
-> This allows us to prevent deferred probes by probing dependencies on
-> demand.
+> Patch 1 + 2:
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
+> Support for abs/rel axis in gpio_keys_polled, the dt-bindings patch is
+> updated, the actual implementation is the same as the v2 version.
+> 
+> Patch 3 + 4:
+> 
+> Add a single header with key / btn / axis defines to be shared by input.h
+> and the dt-bindings headers, as requested by you. The first patch introduces
+> a new header for this, the second patch makes dt-bindings/input/input.h
+> use this new header. The second patch has been Acked by the devicetree
+> maintainer, and since it depends on the first one I believe that it is
+> best if this patch gets merged via your tree too.
 
-< snip >
+Applied the lot, thank you.
 
+-- 
+Dmitry
