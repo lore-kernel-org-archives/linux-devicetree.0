@@ -1,104 +1,113 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5 3/4] PCI/MSI:  Add helper function
- pci_msi_domain_get_msi_rid().
-Date: Thu, 15 Oct 2015 15:08:36 -0500
-Message-ID: <20151015200836.GB10442@localhost>
-References: <1444342250-6196-1-git-send-email-ddaney.cavm@gmail.com>
- <1444342250-6196-4-git-send-email-ddaney.cavm@gmail.com>
+From: "Kwok, WingMan" <w-kwok2@ti.com>
+Subject: RE: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
+ pcie
+Date: Thu, 15 Oct 2015 20:08:32 +0000
+Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04228DB8@DFLE11.ent.ti.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+ <1444919145-30845-2-git-send-email-w-kwok2@ti.com>
+ <5192855.p6QLDWTiVi@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444342250-6196-4-git-send-email-ddaney.cavm@gmail.com>
+In-Reply-To: <5192855.p6QLDWTiVi@wuerfel>
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, David Daney <david.daney@cavium.com>
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 08, 2015 at 03:10:49PM -0700, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> Add pci_msi_domain_get_msi_rid() to return the MSI requester id (RID).
-> Initially needed by gic-v3 based systems. It will be used by follow on
-> patch to drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> 
-> Initially supports mapping the RID via OF device tree.  In the future,
-> this could be extended to use ACPI _IORT tables as well.
-> 
-> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: David Daney <david.daney@cavium.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-I assume Thomas will take these (or at least, somebody other than me).
-
-> ---
->  drivers/pci/msi.c   | 30 ++++++++++++++++++++++++++++++
->  include/linux/msi.h |  1 +
->  2 files changed, 31 insertions(+)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index d449714..81a2798 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -20,6 +20,7 @@
->  #include <linux/io.h>
->  #include <linux/slab.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
->  
->  #include "pci.h"
->  
-> @@ -1327,4 +1328,33 @@ struct irq_domain *pci_msi_create_default_irq_domain(struct device_node *node,
->  
->  	return domain;
->  }
-> +
-> +static int get_msi_id_cb(struct pci_dev *pdev, u16 alias, void *data)
-> +{
-> +	u32 *pa = data;
-> +
-> +	*pa = alias;
-> +	return 0;
-> +}
-> +/**
-> + * pci_msi_domain_get_msi_rid - Get the MSI requester id (RID)
-> + * @domain:	The interrupt domain
-> + * @pdev:	The PCI device.
-> + *
-> + * The RID for a device is formed from the alias, with a firmware
-> + * supplied mapping applied
-> + *
-> + * Returns: The RID.
-> + */
-> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
-> +{
-> +	u32 rid = 0;
-> +
-> +	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
-> +
-> +	if (domain->of_node)
-> +		rid = of_msi_map_rid(&pdev->dev, domain->of_node, rid);
-> +
-> +	return rid;
-> +}
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index ad939d0..56e3b76 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -293,6 +293,7 @@ irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
->  					  struct msi_desc *desc);
->  int pci_msi_domain_check_cap(struct irq_domain *domain,
->  			     struct msi_domain_info *info, struct device *dev);
-> +u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
->  
->  #endif /* LINUX_MSI_H */
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFu
+biBbbWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IFRodXJzZGF5LCBPY3RvYmVyIDE1LCAy
+MDE1IDEwOjUxIEFNDQo+IFRvOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcN
+Cj4gQ2M6IEt3b2ssIFdpbmdNYW47IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0u
+Y29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcu
+dWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOw0KPiBLSVNIT04gVklKQVkgQUJSQUhBTTsgUXVhZHJv
+cywgUm9nZXI7IEthcmljaGVyaSwgTXVyYWxpZGhhcmFuOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29t
+OyBzc2FudG9zaEBrZXJuZWwub3JnOyBsaW51eEBhcm0ubGludXgub3JnLnVrOw0KPiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+DQo+IHBjaUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MSAxLzJdIHBo
+eToga2V5c3RvbmU6IHNlcmRlcyBkcml2ZXIgZm9yIGdiZSAxMGdiZSBhbmQNCj4gcGNpZQ0KPiAN
+Cj4gT24gVGh1cnNkYXkgMTUgT2N0b2JlciAyMDE1IDEwOjI1OjQ0IFdpbmdNYW4gS3dvayB3cm90
+ZToNCj4gPiBPbiBUSSdzIEtleXN0b25lIHBsYXRmb3Jtcywgc2V2ZXJhbCBwZXJpcGhlcmFscyBz
+dWNoIGFzIHRoZQ0KPiA+IGdiZSBldGhlcm5ldCBzd2l0Y2gsIDEwZ2JlIGV0aGVybmV0IHN3aXRj
+aCBhbmQgUENJZSBjb250cm9sbGVyDQo+ID4gcmVxdWlyZSB0aGUgdXNlIG9mIGEgU2VyRGVzIGZv
+ciBjb252ZXJ0aW5nIFNvQyBwYXJhbGxlbCBkYXRhIGludG8NCj4gPiBzZXJpYWxpemVkIGRhdGEg
+dGhhdCBjYW4gYmUgb3V0cHV0IG92ZXIgYSBoaWdoLXNwZWVkIGVsZWN0cmljYWwNCj4gPiBpbnRl
+cmZhY2UsIGFuZCBhbHNvIGNvbnZlcnRpbmcgaGlnaC1zcGVlZCBzZXJpYWwgaW5wdXQgZGF0YQ0K
+PiA+IGludG8gcGFyYWxsZWwgZGF0YSB0aGF0IGNhbiBiZSBwcm9jZXNzZWQgYnkgdGhlIFNvQy4g
+IFRoZQ0KPiA+IFNlckRlc2VzIHVzZWQgYnkgdGhvc2UgcGVyaXBoZXJhbHMsIHRob3VnaCB0aGV5
+IG1heSBiZSBkaWZmZXJlbnQsDQo+ID4gYXJlIGxhcmdlbHkgc2ltaWxhciBpbiBmdW5jdGlvbmFs
+aXR5IGFuZCBzZXR1cC4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggcHJvdmlkZXMgYSBTZXJEZXMgcGh5
+IGRyaXZlciBpbXBsZW1lbnRhdGlvbiB0aGF0IGNhbiBiZQ0KPiA+IHVzZWQgYnkgdGhlIGFib3Zl
+IG1lbnRpb25lZCBwZXJpcGhlcmFsIGRyaXZlcnMgdG8gY29uZmlndXJlIHRoZWlyDQo+ID4gcmVz
+cGVjdGl2ZSBTZXJEZXNlcy4NCj4gPg0KPiA+IHYxOg0KPiA+IAktIHNlZSBjb3ZlciBsZXR0ZXIg
+Zm9yIHJldmlldyBjb21tZW50cyBhZGRyZXNzZWQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBX
+aW5nTWFuIEt3b2sgPHcta3dvazJAdGkuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3RpLXBoeS50eHQgfCAgMjc4ICsrKw0KPiA+ICBkcml2
+ZXJzL3BoeS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA4ICsNCj4g
+PiAgZHJpdmVycy9waHkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
+MSArDQo+ID4gIGRyaXZlcnMvcGh5L3BoeS1rZXlzdG9uZS1zZXJkZXMuYyAgICAgICAgICAgICAg
+ICB8IDIzNzMNCj4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQs
+IDI2NjAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkv
+cGh5LWtleXN0b25lLXNlcmRlcy5jDQo+IA0KPiBUaGlzIGlzIHF1aXRlIGEgYml0IG9mIGNvZGUu
+IEFyZSB5b3UgdmVyeSBzdXJlIHRoYXQgdGhpcyBQSFkgaXMNCj4gbm90IHVzZWQgb24gYW55IG90
+aGVyIFNvQyBmYW1pbHksIGFuZCB0aGF0IGl0IGlzIG5vdCBsaWNlbnNlZA0KPiBmcm9tIGEgdGhp
+cmQgcGFydHk/IEkgd291bGQgaGF0ZSB0byBzZWUgbXVsdGlwbGUgY29waWVzIG9mDQo+IHRoaXMg
+Z2V0dGluZyBtZXJnZWQgaW50byB0aGUga2VybmVsIG92ZXIgdGltZSwgc28gdGhlbmFtZSBzaG91
+bGQNCj4gYmUgY2hvc2VuIGNhcmVmdWxseSB0byBsZXQgdGhlIG5leHQgcGVyc29uIGtub3cgd2hl
+biB0aGV5IGhhdmUNCj4gcmVsYXRlZCBoYXJkd2FyZS4NCj4gDQo+ID4gKw0KPiA+ICtnYmVfc2Vy
+ZGVzMDogZ2JlX3NlcmRlc0AyMzJhMDAwIHsNCj4gDQo+IA0KPiBtYWtlIHRoYXQgcGh5QDIzMmEw
+MDAsIHRoZSBuYW1lIHNob3VsZCBiZSBvbmUgb2YgdGhlIHVzdWFsIGlkZW50aWZpZXJzLA0KPiBu
+b3Qgc3BlY2lmaWMgdG8gdGhlIGluc3RhbmNlLg0KPiANCg0Kd2lsbCBjaGFuZ2UgdG8gc29tZXRo
+aW5nIGxpa2UgZ2JlX3NlcmRlczA6IHBoeUAyMzJhMDAwIHt9Ow0KDQo+ID4gK2NvbmZpZyBQSFlf
+VElfS0VZU1RPTkVfU0VSREVTDQo+ID4gKwl0cmlzdGF0ZSAiVEkgS2V5c3RvbmUgU2VyRGVzIFBI
+WSBzdXBwb3J0Ig0KPiA+ICsJZGVwZW5kcyBvbiBPRiAmJiBBUkNIX0tFWVNUT05FDQo+ID4gKwlz
+ZWxlY3QgR0VORVJJQ19QSFkNCj4gPiArCWhlbHANCj4gPiArCSAgVGhpcyBvcHRpb24gZW5hYmxl
+cyBzdXBwb3J0IGZvciBUSSBLZXlzdG9uZSBTZXJEZXMgUEhZIGZvdW5kDQo+ID4gKwkgIGluIHBl
+cmlwaGVyYWxzIEdCRSwgMTBHQkUgYW5kIFBDSWUuDQo+ID4gKw0KPiANCj4gKEFSQ0hfS0VZU1RP
+TkUgfHwgQ09NUElMRV9URVNUKSA/DQo+IA0KDQp3aWxsIGFkZCBDT01QSUxFX1RFU1QNCg0KPiA+
+ICsgKiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFi
+b3ZlIGNvcHlyaWdodA0KPiA+ICsgKiBub3RpY2UsIHRoaXMgbGlzdCBvZiBjb25kaXRpb25zIGFu
+ZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIgaW4gdGhlDQo+ID4gKyAqIGRvY3VtZW50YXRpb24g
+YW5kL29yIG90aGVyIG1hdGVyaWFscyBwcm92aWRlZCB3aXRoIHRoZQ0KPiA+ICsgKiBkaXN0cmli
+dXRpb24uDQo+IA0KPiBUaGUgY3VycmVudCBjb2RlIGRvZXMgbm90IGRvIHRoaXMgd2hlbiBjb21w
+aWxlZCwgd2hpY2ggbWlnaHQgYmUgYQ0KPiBwcm9ibGVtIGZvciBkaXN0cmlidXRvcnMuIENhbiB5
+b3UgY2xhcmlmeSB0aGUgbGljZW5zZT8NCj4gDQoNCndpbGwgaW52ZXN0aWdhdGUNCg0KPiA+ICsj
+ZGVmaW5lIHJlZ19ybXcoYWRkciwgdmFsdWUsIG1hc2spIFwNCj4gPiArCV9fcmF3X3dyaXRlbCgo
+KF9fcmF3X3JlYWRsKGFkZHIpICYgKH4obWFzaykpKSB8IFwNCj4gPiArCQkJKHZhbHVlICYgKG1h
+c2spKSksIChhZGRyKSkNCj4gDQo+IG5vdCBlbmRpYW4gc2FmZSwgYW5kIHBvdGVudGlhbGx5IHJh
+Y3kuDQo+IA0KDQp3aWxsIGNoYW5nZSB0byANCg0KI2RlZmluZSByZWdfcm13KGFkZHIsIHZhbHVl
+LCBtYXNrKSBcDQoJd3JpdGVsKCgocmVhZGwoYWRkcikgJiAofihtYXNrKSkpIHwgXA0KCQkJKHZh
+bHVlICYgKG1hc2spKSksIChhZGRyKSkNCg0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgX2tzZXJk
+ZXNfcmVzZXRfY2RyKHZvaWQgX19pb21lbSAqc3JlZ3MsIGludCBsYW5lKQ0KPiA+ICt7DQo+ID4g
+KwkvKiB0b2dnbGUgc2lnbmFsIGRldGVjdCAqLw0KPiA+ICsJX2tzZXJkZXNfZm9yY2Vfc2lnbmFs
+X2RldGVjdF9sb3coc3JlZ3MsIGxhbmUpOw0KPiA+ICsJbWRlbGF5KDEpOw0KPiA+ICsJX2tzZXJk
+ZXNfZm9yY2Vfc2lnbmFsX2RldGVjdF9oaWdoKHNyZWdzLCBsYW5lKTsNCj4gPiArfQ0KPiANCj4g
+Q2FuIHlvdSBjaGFuZ2UgdGhlIGNvZGUgc28geW91IGNhbiB1c2UgbXNsZWVwKDEpIGhlcmU/DQo+
+IA0KDQp3aWxsIHJlcGxhY2UgZGVsYXlzIHdpdGggdXNsZWVwX3JhbmdlKCkNCg0KPiA+ICsNCj4g
+PiArCWRvIHsNCj4gPiArCQltZGVsYXkoMTApOw0KPiA+ICsJCW1lbXNldChsYW5lX2Rvd24sIDAs
+IHNpemVvZihsYW5lX2Rvd24pKTsNCj4gPiArDQo+ID4gKwkJbGlua191cCA9IF9rc2VyZGVzX2No
+ZWNrX2xpbmtfc3RhdHVzKGRldiwgc3JlZ3MsDQo+ID4gKwkJCQkJCSAgICAgcGNzcl9yZWdtYXAs
+IGxhbmVzLA0KPiA+ICsJCQkJCQkgICAgIGxhbmVzX2VuYWJsZSwNCj4gPiArCQkJCQkJICAgICBj
+dXJyZW50X3N0YXRlLCBsYW5lX2Rvd24pOw0KPiA+ICsNCj4gPiArCQkvKiBpZiB3ZSBkaWQgbm90
+IGdldCBsaW5rIHVwIHRoZW4gd2FpdCAxMDBtcw0KPiA+ICsJCSAqIGJlZm9yZSBjYWxsaW5nIGl0
+IGFnYWluDQo+ID4gKwkJICovDQo+ID4gKwkJaWYgKGxpbmtfdXApDQo+ID4gKwkJCWJyZWFrOw0K
+PiA+ICsNCj4gPiArCQlmb3IgKGkgPSAwOyBpIDwgbGFuZXM7IGkrKykgew0KPiA+ICsJCQlpZiAo
+KGxhbmVzX2VuYWJsZSAmICgxIDw8IGkpKSAmJiBsYW5lX2Rvd25baV0pDQo+ID4gKwkJCQlkZXZf
+ZGJnKGRldiwNCj4gPiArCQkJCQkiWEdFOiBkZXRlY3RlZCBsYW5lIGRvd24gb24gbGFuZSAlZFxu
+IiwNCj4gPiArCQkJCQlpKTsNCj4gPiArCQl9DQo+ID4gKw0KPiA+ICsJCWlmICgrK3JldHJpZXMg
+PiAxMDApDQo+ID4gKwkJCXJldHVybiAtRVRJTUVET1VUOw0KPiA+ICsNCj4gPiArCX0gd2hpbGUg
+KCFsaW5rX3VwKTsNCj4gDQo+IGFuIG1vcmUgaW1wb3J0YW50bHkgaGVyZS4gQmxvY2tpbmcgdGhl
+IENQVSBmb3Igb3ZlciBvbmUgc2Vjb25kIGlzIG5vdCBnb29kLg0KPiANCj4gQW55IHVzZSBvZiBt
+ZGVsYXkoKSBzaG91bGQgaGF2ZSBhIGNvbW1lbnQgZXhwbGFpbmluZyB3aHkgeW91IGNhbm5vdCB1
+c2UNCj4gbXNsZWVwKCkgaW4gdGhhdCBpbnN0YW5jZS4NCj4gDQoNCndpbGwgcmVwbGFjZSBkZWxh
+eXMgd2l0aCB1c2xlZXBfcmFuZ2UoKQ0KDQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IF9faW5pdCBr
+ZXlzdG9uZV9zZXJkZXNfcGh5X2luaXQodm9pZCkNCj4gPiArew0KPiA+ICsJcmV0dXJuIHBsYXRm
+b3JtX2RyaXZlcl9yZWdpc3Rlcigma3NlcmRlc19kcml2ZXIpOw0KPiA+ICt9DQo+ID4gK21vZHVs
+ZV9pbml0KGtleXN0b25lX3NlcmRlc19waHlfaW5pdCk7DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9p
+ZCBfX2V4aXQga2V5c3RvbmVfc2VyZGVzX3BoeV9leGl0KHZvaWQpDQo+ID4gK3sNCj4gPiArCXBs
+YXRmb3JtX2RyaXZlcl91bnJlZ2lzdGVyKCZrc2VyZGVzX2RyaXZlcik7DQo+ID4gK30NCj4gPiAr
+bW9kdWxlX2V4aXQoa2V5c3RvbmVfc2VyZGVzX3BoeV9leGl0KTsNCj4gDQo+IG1vZHVsZV9wbGF0
+Zm9ybV9kcml2ZXIoKQ0KPiAJDQoNCndpbGwgZG8uDQoNCj4gCUFybmQNCg0KVGhhbmtzLA0KV2lu
+Z01hbg0K
