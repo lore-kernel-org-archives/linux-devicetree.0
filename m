@@ -1,198 +1,196 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] mmc: mediatek: Add tune support
-Date: Thu, 15 Oct 2015 11:17:58 +0200
-Message-ID: <CAPDyKFq5fMDY3e1daCs380nPvNiZRDw9bWg8-x6C4fphBKm+Hw@mail.gmail.com>
-References: <1444729078-26585-1-git-send-email-chaotian.jing@mediatek.com>
- <1444729078-26585-4-git-send-email-chaotian.jing@mediatek.com>
- <CAPDyKFqUFRZF2M4ichgqM2SeRQbh52e5U1oFG9AExsq0SkFj9w@mail.gmail.com>
- <1444877180.8751.15.camel@mhfsdcap03>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 03/25] scsi: hisi_sas: add initial bare driver
+Date: Thu, 15 Oct 2015 10:23:08 +0100
+Message-ID: <561F707C.1070305@huawei.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
+ <1444663237-238302-4-git-send-email-john.garry@huawei.com>
+ <561F68A9.6090706@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1444877180.8751.15.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kristina Martsenko <kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter@intel.>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <561F68A9.6090706@hisilicon.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Xinwei Kong <kong.kongxinwei@hisilicon.com>, James.Bottomley@HansenPartnership.com
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, linux-scsi@vger.kernel.org, john.garry2@mail.dcu.ie, linuxarm@huawei.com, linux-kernel@vger.kernel.com, hare@suse.de, zhangfei.gao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
->> >
->> >         struct clk *src_clk;    /* msdc source clock */
->> > +       struct clk *src_clk_parent; /* src_clk's parent */
->> > +       struct clk *hs400_src;  /* 400Mhz source clock */
+On 15/10/2015 09:49, Xinwei Kong wrote:
+>
+>
+> On 2015/10/12 23:20, John Garry wrote:
+>> This patch adds the initial bare driver for the HiSilicon
+>> SAS HBA. The driver includes no HW interaction, but only
+>> the changes to build and load the driver module.
 >>
->> Hmm, so you need to control the upper level clocks. Can you elaborate
->> on why this is needed?
+>> The HBA is a platform device.
 >>
-> hs400 is DDR200, in our host design, if the mode is DDR(HS400), if want
-> to get 200Mhz mmc bus clock frequency, the minimum source clock is
-> double of the mmc bus clock, So, we need it for HS400 mode with 200Mhz
-> bus clock.
-
-Thanks for clarifying.
-
-[...]
-
- >         flags = readl(host->base + MSDC_INTEN);
->> >         sdr_clr_bits(host->base + MSDC_INTEN, flags);
->> > -       if (ddr) { /* may need to modify later */
->> > -               mode = 0x2; /* ddr mode and use divisor */
->> > +       sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
->> > +       if (timing == MMC_TIMING_UHS_DDR50 ||
->> > +           timing == MMC_TIMING_MMC_DDR52 ||
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>   drivers/scsi/Kconfig                  |  1 +
+>>   drivers/scsi/Makefile                 |  1 +
+>>   drivers/scsi/hisi_sas/Kconfig         |  5 +++
+>>   drivers/scsi/hisi_sas/Makefile        |  2 ++
+>>   drivers/scsi/hisi_sas/hisi_sas.h      | 24 +++++++++++++++
+>>   drivers/scsi/hisi_sas/hisi_sas_init.c | 58 +++++++++++++++++++++++++++++++++++
+>>   6 files changed, 91 insertions(+)
+>>   create mode 100644 drivers/scsi/hisi_sas/Kconfig
+>>   create mode 100644 drivers/scsi/hisi_sas/Makefile
+>>   create mode 100644 drivers/scsi/hisi_sas/hisi_sas.h
+>>   create mode 100644 drivers/scsi/hisi_sas/hisi_sas_init.c
 >>
->> So, no support for HS200?
+>> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+>> index 95f7a76..5c345f9 100644
+>> --- a/drivers/scsi/Kconfig
+>> +++ b/drivers/scsi/Kconfig
+>> @@ -1774,5 +1774,6 @@ source "drivers/scsi/pcmcia/Kconfig"
+>>   source "drivers/scsi/device_handler/Kconfig"
 >>
-> HS200 is the same with other SDR modes, so it will be handled at else..
-
-Okay, nice!
-
-So, your the driver currently supports HS200, but without need for tuning!?
-
-[...]
-
->> > +static struct msdc_delay_phase get_best_delay(u32 delay)
->> > +{
->> > +       int start = 0, len = 0;
->> > +       int start_final = 0, len_final = 0;
->> > +       u8 final_phase = 0xff;
->> > +       struct msdc_delay_phase delay_phase;
->> > +
->> > +       if (delay == 0) {
->> > +               pr_err("phase error: [map:%x]\n", delay);
+>>   source "drivers/scsi/osd/Kconfig"
+>> +source "drivers/scsi/hisi_sas/Kconfig"
 >>
->> Please use dev_err|warn|dbg|info instead.
+>>   endmenu
+>> diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
+>> index 1a8c9b5..03c30de 100644
+>> --- a/drivers/scsi/Makefile
+>> +++ b/drivers/scsi/Makefile
+>> @@ -158,6 +158,7 @@ obj-$(CONFIG_CHR_DEV_SCH)	+= ch.o
+>>   obj-$(CONFIG_SCSI_ENCLOSURE)	+= ses.o
 >>
-> As you know, this function is just only parse the argument "u32 delay",
-> it do not bind with any device.
-
-You may just add a msdc_host * as a parameter to the function, that
-would solve this.
-
-[...]
-
->> > +static int msdc_send_tuning(struct mmc_host *host, u32 opcode, int *cmd_error)
+>>   obj-$(CONFIG_SCSI_OSD_INITIATOR) += osd/
+>> +obj-$(CONFIG_SCSI_HISI_SAS) += hisi_sas/
 >>
->> I think you can remove this function and use mmc_send_tuning() instead.
-> Hmm, I also noticed that there was a mmc_send_tuning, but, I need to get
-> the cmd_error when tune cmd response, in this case, do not care the data
-> error.
+>>   # This goes last, so that "real" scsi devices probe earlier
+>>   obj-$(CONFIG_SCSI_DEBUG)	+= scsi_debug.o
+>> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+>> new file mode 100644
+>> index 0000000..a7f47a2
+>> --- /dev/null
+>> +++ b/drivers/scsi/hisi_sas/Kconfig
+>> @@ -0,0 +1,5 @@
+>> +config SCSI_HISI_SAS
+>> +	tristate "HiSilicon SAS"
+>> +	select SCSI_SAS_LIBSAS
+>> +	help
+>> +		This driver supports HiSilicon's SAS HBA
+>> diff --git a/drivers/scsi/hisi_sas/Makefile b/drivers/scsi/hisi_sas/Makefile
+>> new file mode 100644
+>> index 0000000..63c3c4d
+>> --- /dev/null
+>> +++ b/drivers/scsi/hisi_sas/Makefile
+>> @@ -0,0 +1,2 @@
+>> +obj-$(CONFIG_SCSI_HISI_SAS) += hisi_sas.o
+>> +hisi_sas-y+= hisi_sas_init.o
+>> diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+>> new file mode 100644
+>> index 0000000..50204a2
+>> --- /dev/null
+>> +++ b/drivers/scsi/hisi_sas/hisi_sas.h
+>> @@ -0,0 +1,24 @@
+>> +/*
+>> + * Copyright (c) 2015 Linaro Ltd.
+>> + * Copyright (c) 2015 Hisilicon Limited.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + */
+>> +
+>> +#ifndef _HISI_SAS_H_
+>> +#define _HISI_SAS_H_
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/platform_device.h>
+>> +#include <scsi/libsas.h>
+>> +
+> why place some "include" head in .h file rather than .c file?
+This is private header within the module, which:
+- makes the code more concise
+- relocate functions within c files is cleaner
+- easier to change the kernel APIs we use in the module
 
-Well, if you need to extend the mmc_send_tuning() API to suite your
-needs, let's do that instead of duplicating code.
+>> +#define DRV_NAME "hisi_sas"
+>> +#define DRV_VERSION "v1.0"
+>> +
+>> +#endif
+>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_init.c b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>> new file mode 100644
+>> index 0000000..dd83430
+>> --- /dev/null
+>> +++ b/drivers/scsi/hisi_sas/hisi_sas_init.c
+>> @@ -0,0 +1,58 @@
+>> +/*
+>> + * Copyright (c) 2015 Linaro Ltd.
+>> + * Copyright (c) 2015 Hisilicon Limited.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + */
+>> +
+>> +#include "hisi_sas.h"
+>> +
+>> +static const struct of_device_id sas_of_match[] = {
+>> +	{ .compatible = "hisilicon,sas-controller-v1",},
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sas_of_match);
+>> +static int hisi_sas_probe(struct platform_device *pdev)
+>> +{
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_sas_remove(struct platform_device *pdev)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver hisi_sas_driver = {
+>> +	.probe = hisi_sas_probe,
+>> +	.remove = hisi_sas_remove,
+>> +	.driver = {
+>> +		.name = DRV_NAME,
+>> +		.of_match_table = sas_of_match,
+>> +	},
+>> +};
+>> +
+>> +static __init int hisi_sas_init(void)
+>> +{
+>> +	pr_info("hisi_sas: driver version %s\n", DRV_VERSION);
+>> +
+>> +	return platform_driver_register(&hisi_sas_driver);
+>> +}
+>> +
+>> +static __exit void hisi_sas_exit(void)
+>> +{
+>> +	platform_driver_unregister(&hisi_sas_driver);
+>> +}
+>> +
+>> +module_init(hisi_sas_init);
+>> +module_exit(hisi_sas_exit);
+>> +
+>> +MODULE_VERSION(DRV_VERSION);
+>> +MODULE_LICENSE("GPL");
+> V2
+Can add. We do say in the header that it is v2.
 
+>> +MODULE_AUTHOR("John Garry <john.garry@huawei.com>");
+>> +MODULE_DESCRIPTION("HISILICON SAS controller driver");
+>> +MODULE_ALIAS("platform:" DRV_NAME);
 >>
->> > +{
->> > +       struct mmc_request mrq = {NULL};
->> > +       struct mmc_command cmd = {0};
->> > +       struct mmc_data data = {0};
->> > +       struct scatterlist sg;
->> > +       struct mmc_ios *ios = &host->ios;
->> > +       int size, err = 0;
->> > +       u8 *data_buf;
->> > +
->> > +       if (ios->bus_width == MMC_BUS_WIDTH_8)
->> > +               size = 128;
->> > +       else if (ios->bus_width == MMC_BUS_WIDTH_4)
->> > +               size = 64;
->> > +       else
->> > +               return -EINVAL;
->> > +
->> > +       data_buf = kzalloc(size, GFP_KERNEL);
->> > +       if (!data_buf)
->> > +               return -ENOMEM;
->> > +
->> > +       mrq.cmd = &cmd;
->> > +       mrq.data = &data;
->> > +
->> > +       cmd.opcode = opcode;
->> > +       cmd.flags = MMC_RSP_R1 | MMC_CMD_ADTC;
->> > +
->> > +       data.blksz = size;
->> > +       data.blocks = 1;
->> > +       data.flags = MMC_DATA_READ;
->> > +
->> > +       /*
->> > +        * According to the tuning specs, Tuning process
->> > +        * is normally shorter 40 executions of CMD19,
->> > +        * and timeout value should be shorter than 150 ms
->> > +        */
->> > +       data.timeout_ns = 150 * NSEC_PER_MSEC;
->> > +
->> > +       data.sg = &sg;
->> > +       data.sg_len = 1;
->> > +       sg_init_one(&sg, data_buf, size);
->> > +
->> > +       mmc_wait_for_req(host, &mrq);
->> > +
->> > +       if (cmd_error)
->> > +               *cmd_error = cmd.error;
->> > +
->> > +       if (cmd.error) {
->> > +               err = cmd.error;
->> > +               goto out;
->> > +       }
->> > +
->> > +       if (data.error) {
->> > +               err = data.error;
->> > +               goto out;
->> > +       }
->> > +
->> > +out:
->> > +       kfree(data_buf);
->> > +       return err;
->> > +}
->> > +
+>
+>
+> .
+>
 
-[...]
+thanks,
+John
 
->> > +       host->src_clk_parent = clk_get_parent(host->src_clk);
->>
->> Don't you need to check the return value here?
->>
-> will check it.
->> > +       host->hs400_src = devm_clk_get(&pdev->dev, "400mhz");
->>
->> That's a really weird conid for a clock. If it's not too late to
->> change, please do that!
->>
->> > +       if (IS_ERR(host->hs400_src)) {
->> > +               dev_dbg(&pdev->dev, "Cannot find 400mhz at dts!\n");
->> > +       } else if (clk_set_parent(host->src_clk_parent, host->hs400_src) < 0) {
->> > +               dev_err(host->dev, "Failed to set 400mhz source clock!\n");
->> > +               ret = -EINVAL;
->>
->> I think it seems more apropriate to use the return value from
->> clk_set_parent() instead of inventing your own return value.
->>
-> OK.
->> > +               goto host_free;
->> > +       }
->>
->> It seems like you don't need to store the src_clk_parent and the
->> hs400_src in the host struct, as you are only using it during
->> ->probe().
-> OK,will remove the member src_clk.
 
-According to your earlier clarification about the clock source and
-clock rate. I think a more proper solution would be to use the
-clk_set_min_rate() or clk_set_rate_range() API, instead of dealing
-with re-parenting of the clock as above.
-
-FYI, a clock provider may implement the ->determine_rate() ops to deal
-with re-parenting to find the requested clock rate.
-
-[...]
-
-Kind regards
-Uffe
