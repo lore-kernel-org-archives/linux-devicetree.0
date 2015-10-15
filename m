@@ -1,108 +1,46 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH v4] iio: mma8452: support either of the available interrupt pins
-Date: Thu, 15 Oct 2015 15:10:32 +0200
-Message-ID: <1444914632-4486-1-git-send-email-martink@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] mtd: document linux-specific partition parser DT binding
+Date: Thu, 15 Oct 2015 15:19:51 +0200
+Message-ID: <1444915191-28350-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This change is important in order for everyone to be easily able to use the
-driver for one of the supported accelerometer chips!
+The Linux code in drivers/mtd/maps/physmap_of.c will optionally
+look for this binding for hints on a partition type to look for
+in the MTD. It was added in commit 9d5da3a9b849
+"mtd: extend physmap_of to let the device tree specify the parition probe"
+but no corresponding device tree binding was added. Fix this.
 
-Until now, the driver blindly assumed that the INT1 interrupt line is wired
-on a user's board. But these devices have 2 interrupt lines and can route
-their interrupt sources to one of them. Now, if "INT2" is found and matches
-i2c_client->irq, INT2 will be used.
-
-The chip's default actually is INT2, which is why probably many boards will
-have it wired and can make use of this.
-
-Of course, this also falls back to assuming INT1, so for existing users
-nothing will break. The new functionality is described in the bindings doc.
-
-Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Reported-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-changelog:
-v4: use irq that matches client->irq, backwards compatible
-v3: correctly assign irq if both pins are described in DT
-v2: don't warn but normally handle if both pins are described in dts
-    thanks Mark Rutland
-v1: initial post
+ Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
- .../devicetree/bindings/iio/accel/mma8452.txt       |  6 ++++++
- drivers/iio/accel/mma8452.c                         | 21 +++++++++++++++------
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-index e3c3746..3c10e85 100644
---- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-@@ -7,13 +7,18 @@ Required properties:
-     * "fsl,mma8453"
-     * "fsl,mma8652"
-     * "fsl,mma8653"
-+
-   - reg: the I2C address of the chip
- 
- Optional properties:
- 
-   - interrupt-parent: should be the phandle for the interrupt controller
-+
-   - interrupts: interrupt mapping for GPIO IRQ
- 
-+  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
-+		     interrupt line in use.
-+
- Example:
- 
- 	mma8453fc@1d {
-@@ -21,4 +26,5 @@ Example:
- 		reg = <0x1d>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <5 0>;
-+		interrupt-names = "INT2";
- 	};
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 1eccc2d..116a6e4 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -29,6 +29,7 @@
- #include <linux/iio/events.h>
- #include <linux/delay.h>
- #include <linux/of_device.h>
-+#include <linux/of_irq.h>
- 
- #define MMA8452_STATUS				0x00
- #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-@@ -1130,13 +1131,21 @@ static int mma8452_probe(struct i2c_client *client,
- 					   MMA8452_INT_FF_MT;
- 		int enabled_interrupts = MMA8452_INT_TRANS |
- 					 MMA8452_INT_FF_MT;
-+		int irq2;
- 
--		/* Assume wired to INT1 pin */
--		ret = i2c_smbus_write_byte_data(client,
--						MMA8452_CTRL_REG5,
--						supported_interrupts);
--		if (ret < 0)
--			return ret;
-+		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
-+
-+		if (irq2 == client->irq) {
-+			dev_dbg(&client->dev, "using interrupt line INT2\n");
-+		} else {
-+			ret = i2c_smbus_write_byte_data(client,
-+							MMA8452_CTRL_REG5,
-+							supported_interrupts);
-+			if (ret < 0)
-+				return ret;
-+
-+			dev_dbg(&client->dev, "using interrupt line INT1\n");
-+		}
- 
- 		ret = i2c_smbus_write_byte_data(client,
- 						MMA8452_CTRL_REG4,
+diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+index 4a0a48bf4ecb..0dee084651da 100644
+--- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
++++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+@@ -26,6 +26,9 @@ file systems on embedded devices.
+  - linux,mtd-name: allow to specify the mtd name for retro capability with
+    physmap-flash drivers as boot loader pass the mtd partition via the old
+    device name physmap-flash.
++ - linux,part-probe: a flash partition type to look for, using the
++   Linux-internal partition naming scheme, e.g. "afs" for the ARM
++   Flash footers.
+  - use-advanced-sector-protection: boolean to enable support for the
+    advanced sector protection (Spansion: PPB - Persistent Protection
+    Bits) locking.
 -- 
-2.1.4
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
