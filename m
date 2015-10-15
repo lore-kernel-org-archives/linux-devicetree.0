@@ -1,74 +1,34 @@
 From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH v3 3/4] ARM: dts: Add STM32 DMA support for STM32F429 MCU
-Date: Thu, 15 Oct 2015 14:14:19 +0200
-Message-ID: <1444911260-31993-4-git-send-email-cedric.madianga@gmail.com>
+Subject: [PATCH v3 4/4] ARM: configs: Add STM32 DMA support in STM32 defconfig
+Date: Thu, 15 Oct 2015 14:14:20 +0200
+Message-ID: <1444911260-31993-5-git-send-email-cedric.madianga@gmail.com>
 References: <1444911260-31993-1-git-send-email-cedric.madianga@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1444911260-31993-1-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds STM32 DMA bindings for STM32F429.
+This patch adds STM32 DMA support in stm32_defconfig file
 
 Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm/configs/stm32_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index d78a481..037eb29 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -174,6 +174,37 @@
- 			reg = <0x40023800 0x400>;
- 			clocks = <&clk_hse>;
- 		};
-+
-+		dma1: dma-controller@40026000 {
-+			compatible = "st,stm32-dma";
-+			reg = <0x40026000 0x400>;
-+			interrupts = <11>,
-+				     <12>,
-+				     <13>,
-+				     <14>,
-+				     <15>,
-+				     <16>,
-+				     <17>,
-+				     <47>;
-+			clocks = <&rcc 0 21>;
-+			#dma-cells = <4>;
-+		};
-+
-+		dma2: dma-controller@40026400 {
-+			compatible = "st,stm32-dma";
-+			reg = <0x40026400 0x400>;
-+			interrupts = <56>,
-+				     <57>,
-+				     <58>,
-+				     <59>,
-+				     <60>,
-+				     <68>,
-+				     <69>,
-+				     <70>;
-+			clocks = <&rcc 0 22>;
-+			#dma-cells = <4>;
-+			st,mem2mem;
-+		};
- 	};
- };
- 
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 4725fab..ec52505 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -54,6 +54,8 @@ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_DMADEVICES=y
++CONFIG_STM32_DMA=y
+ # CONFIG_FILE_LOCKING is not set
+ # CONFIG_DNOTIFY is not set
+ # CONFIG_INOTIFY_USER is not set
 -- 
 1.9.1
