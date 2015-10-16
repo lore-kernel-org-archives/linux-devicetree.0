@@ -1,68 +1,77 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 09/14] dmaengine: edma: Merge the of parsing functions
-Date: Fri, 16 Oct 2015 10:18:07 +0300
-Message-ID: <1444979892-31626-10-git-send-email-peter.ujfalusi@ti.com>
-References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, nsekhar@ti.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, r.schwebel@pengutronix.de
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RESEND v4.1 0/5] Mailbox: Provide support STi based platforms
+Date: Fri, 16 Oct 2015 08:21:26 +0100
+Message-ID: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of nesting functions just merge them since the resulting function
-is still small and readable.
+Hi Jassi,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/edma.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+[Resending the updated patch-set this time]
 
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index c1b8bb09c221..d4d71e60da1b 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -1921,31 +1921,23 @@ static int edma_xbar_event_map(struct device *dev, struct edma_soc_info *pdata,
- 	return 0;
- }
- 
--static int edma_of_parse_dt(struct device *dev, struct edma_soc_info *pdata)
--{
--	int ret = 0;
--	struct property *prop;
--	size_t sz;
--
--	prop = of_find_property(dev->of_node, "ti,edma-xbar-event-map", &sz);
--	if (prop)
--		ret = edma_xbar_event_map(dev, pdata, sz);
--
--	return ret;
--}
--
- static struct edma_soc_info *edma_setup_info_from_dt(struct device *dev)
- {
- 	struct edma_soc_info *info;
-+	struct property *prop;
-+	size_t sz;
- 	int ret;
- 
- 	info = devm_kzalloc(dev, sizeof(struct edma_soc_info), GFP_KERNEL);
- 	if (!info)
- 		return ERR_PTR(-ENOMEM);
- 
--	ret = edma_of_parse_dt(dev, info);
--	if (ret)
--		return ERR_PTR(ret);
-+	prop = of_find_property(dev->of_node, "ti,edma-xbar-event-map", &sz);
-+	if (prop) {
-+		ret = edma_xbar_event_map(dev, info, sz);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
- 
- 	return info;
- }
+This should be it.  Exciting times!
+  
+ST's platforms currently support a maximum of 5 Mailboxes, one for
+each of the supported co-processors situated on the platform.  Each
+Mailbox is divided up into 4 instances which consist of 32 channels.
+Messages are passed between the application and co-processors using
+shared memory areas.
+  
+Also included in the set is an example Client which should be generic
+enough to use as a testing environment for all Mailbox IPs which use
+shared memory or the API to pass messages.  With small changes, it
+should also be able to test more extravagant implementations.
+  
+v3 -> v4:
+ - More protection in MBOX_BASE() MACRO
+ - Remove unused tx-only marker
+  
+v2 => v3:
+ - Controller
+   - Shared (DT <=> Device Driver) defines removed
+   - Return actual error codes instead of NULL in xlate()
+   - Not passing 'direction' configuration via DT anymore
+     - Removed all accompanying configuration checking code
+ - Test F/W
+   - Allow Rx-only and Tx-only controllers to be tested
+   - Cater for controllers requiring pre-Tx 'signal' to be sent
+   - Supply 'wr-' message debugfs file
+     - When written to, will Tx message through Mailbox Framework
+     - When read from, will print out a hexdump of Rx'ed message
+  
+v1 => v2:
+ - New MACRO() to obtain base address for a given instance
+ - Move locking into the structure it protects
+ - Stop checking for 'ready' state when sending data
+ - Don't clear channel data (that belongs to the API)
+ - #define register offsets instead of providing via pdata
+ - Register driver with module_platform_driver()
+
+Lee Jones (5):
+  mailbox: dt: Supply bindings for ST's Mailbox IP
+  mailbox: Add support for ST's Mailbox IP
+  ARM: STi: stih407-family: Add nodes for Mailbox
+  mailbox: Add generic mechanism for testing Mailbox Controllers
+  ARM: STi: DT: STiH407: Enable Mailbox testing facility
+
+ .../devicetree/bindings/mailbox/sti-mailbox.txt    |  51 ++
+ arch/arm/boot/dts/stih407-family.dtsi              |  39 ++
+ drivers/mailbox/Kconfig                            |  14 +
+ drivers/mailbox/Makefile                           |   4 +
+ drivers/mailbox/mailbox-sti.c                      | 513 +++++++++++++++++++++
+ drivers/mailbox/mailbox-test.c                     | 361 +++++++++++++++
+ 6 files changed, 982 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+ create mode 100644 drivers/mailbox/mailbox-sti.c
+ create mode 100644 drivers/mailbox/mailbox-test.c
+
 -- 
-2.6.1
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
