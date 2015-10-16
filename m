@@ -1,70 +1,57 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v4 2/3] arm64: Juno: Add support for the PCIe host bridge on
- Juno R1
-Date: Fri, 16 Oct 2015 16:22:08 +0100
-Message-ID: <1445008929-32267-3-git-send-email-Liviu.Dudau@arm.com>
-References: <1445008929-32267-1-git-send-email-Liviu.Dudau@arm.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
+ brcmnand_write()
+Date: Fri, 16 Oct 2015 08:36:22 -0700
+Message-ID: <56211976.1030401@broadcom.com>
+References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
+ <1444986537-28387-2-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445008929-32267-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444986537-28387-2-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Juno R1 board sports a functional PCIe host bridge that is
-compliant with the SBSA standard found [1] here. With the right
-firmware that initialises the XpressRICH3 controller one can
-use the generic Host Bridge driver to use the PCIe hardware.
+Correct me if I remember it wrong, but I thought this patch has already
+been merged by Brian?
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Thanks,
 
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0029a/
----
- arch/arm64/boot/dts/arm/juno-r1.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Ray
 
-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-index c627511..a25964d 100644
---- a/arch/arm64/boot/dts/arm/juno-r1.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-@@ -109,6 +109,26 @@
- 
- 	#include "juno-base.dtsi"
- 
-+	pcie-controller@40000000 {
-+		compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi", "pci-host-ecam-generic";
-+		device_type = "pci";
-+		reg = <0 0x40000000 0 0x10000000>;	/* ECAM config space */
-+		bus-range = <0 255>;
-+		linux,pci-domain = <0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		dma-coherent;
-+		ranges = <0x01000000 0x00 0x5f800000 0x00 0x5f800000 0x0 0x00800000>,
-+			 <0x02000000 0x00 0x50000000 0x00 0x50000000 0x0 0x08000000>,
-+			 <0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &gic 0 0 0 136 4>,
-+				<0 0 0 2 &gic 0 0 0 137 4>,
-+				<0 0 0 3 &gic 0 0 0 138 4>,
-+				<0 0 0 4 &gic 0 0 0 139 4>;
-+		msi-parent = <&v2m_0>;
-+	};
- };
- 
- &memtimer {
--- 
-2.6.0
+On 10/16/2015 2:08 AM, Anup Patel wrote:
+> We should always type-cast pointer to "long" or "unsigned long"
+> because size of pointer is same as machine word size. This will
+> avoid pointer type-cast issues on both 32bit and 64bit systems.
+> 
+> This patch fixes pointer type-cast issue in brcmnand_write()
+> as-per above info.
+> 
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>  drivers/mtd/nand/brcmnand/brcmnand.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+> index fddb795..4cba03d 100644
+> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> @@ -1544,9 +1544,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
+>  
+>  	dev_dbg(ctrl->dev, "write %llx <- %p\n", (unsigned long long)addr, buf);
+>  
+> -	if (unlikely((u32)buf & 0x03)) {
+> +	if (unlikely((unsigned long)buf & 0x03)) {
+>  		dev_warn(ctrl->dev, "unaligned buffer: %p\n", buf);
+> -		buf = (u32 *)((u32)buf & ~0x03);
+> +		buf = (u32 *)((unsigned long)buf & ~0x03);
+>  	}
+>  
+>  	brcmnand_wp(mtd, 0);
+> 
