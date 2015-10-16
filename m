@@ -1,120 +1,28 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] ARM: keystone: dts: add PCI serdes driver bindings
-Date: Fri, 16 Oct 2015 10:55:55 +0300
-Message-ID: <5620AD8B.3060503@ti.com>
-References: <1444919230-30932-1-git-send-email-w-kwok2@ti.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: sunxi: Fix irq_of_xlate for the r_pio
+ pinctrl block
+Date: Fri, 16 Oct 2015 15:57:23 +0800
+Message-ID: <CAGb2v64veFtkz3ds7csHEtde5tw=wMFqN04iGvLmANE9iGWByg@mail.gmail.com>
+References: <1444981572-17235-1-git-send-email-hdegoede@redhat.com> <1444981572-17235-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1444919230-30932-1-git-send-email-w-kwok2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444981572-17235-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-WingMan,
+On Fri, Oct 16, 2015 at 3:46 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The r_pio gpio / pin controller has a pin_base of non 0, we need to
+> adjust for this before calling sunxi_pinctrl_desc_find_function_by_pin.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-On 15/10/15 17:27, WingMan Kwok wrote:
-> This patch adds the required PCI serdes bindings whcih can then be
-> enabled by setting the corresponding statuses to "ok" in order to
-> configure and start the PCI serdes.
-> 
-> This patch depends on the updates to the Keystone PCIe host driver
-> and common serdes driver patch series that is submitted separately.
-> 
-> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
-> ---
->  arch/arm/boot/dts/k2e.dtsi      |   21 +++++++++++++++++++++
->  arch/arm/boot/dts/keystone.dtsi |   21 +++++++++++++++++++++
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
-> index 675fb8e..3b36575 100644
-> --- a/arch/arm/boot/dts/k2e.dtsi
-> +++ b/arch/arm/boot/dts/k2e.dtsi
-> @@ -86,6 +86,16 @@
->  			gpio,syscon-dev = <&devctrl 0x240>;
->  		};
->  
-> +		pcie1_phy: pciephy@2326000 {
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Should be
-		pcie1_phy: phy@2326000 {
-
-> +			#phy-cells = <0>;
-> +			compatible = "ti,keystone-serdes-pcie";
-> +			reg = <0x02326000 0x4000>;
-> +			reg-names = "serdes";
-> +			link-rate-kbps = <5000000>;
-> +			num-lanes = <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie1: pcie@21020000 {
->  			compatible = "ti,keystone-pcie","snps,dw-pcie";
->  			clocks = <&clkpcie1>;
-> @@ -130,6 +140,17 @@
->  					<GIC_SPI 375 IRQ_TYPE_EDGE_RISING>,
->  					<GIC_SPI 376 IRQ_TYPE_EDGE_RISING>;
->  			};
-> +
-> +			/* PCIE phy */
-> +			serdeses {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				serdes@0 {
-> +					reg = <0>;
-> +					phys = <&pcie1_phy>;
-> +				};
-> +			};
-> +
->  		};
->  
->  		mdio: mdio@24200f00 {
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index 72816d6..6566cc4 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -275,6 +275,16 @@
->  			ti,syscon-dev = <&devctrl 0x2a0>;
->  		};
->  
-> +		pcie0_phy: pciephy@2320000 {
-
-ditto.
-
-> +			#phy-cells = <0>;
-> +			compatible = "ti,keystone-serdes-pcie";
-> +			reg = <0x02320000 0x4000>;
-> +			reg-names = "serdes";
-> +			link-rate-kbps = <5000000>;
-> +			num-lanes = <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie0: pcie@21800000 {
->  			compatible = "ti,keystone-pcie", "snps,dw-pcie";
->  			clocks = <&clkpcie>;
-> @@ -319,6 +329,17 @@
->  					<GIC_SPI 28 IRQ_TYPE_EDGE_RISING>,
->  					<GIC_SPI 29 IRQ_TYPE_EDGE_RISING>;
->  			};
-> +
-> +			/* PCIE phy */
-> +			serdeses {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				serdes@0 {
-> +					reg = <0>;
-> +					phys = <&pcie0_phy>;
-> +				};
-> +			};
-> +
->  		};
->  	};
->  };
-> 
-
+Thanks!
 --
-cheers,
--roger
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
