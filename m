@@ -1,39 +1,49 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v11 6/6] MAINTAINERS: Add pcie-hisi maintainer
-Date: Fri, 16 Oct 2015 18:23:41 +0800
-Message-ID: <1444991021-109306-7-git-send-email-wangzhou1@hisilicon.com>
-References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
+From: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
+Subject: Re: [PATCH v7,3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND
+ device tree nodes
+Date: Fri, 16 Oct 2015 11:11:29 +0100
+Message-ID: <CAOFt0_D5mO-7_cnpvm_MwvsZNv1yCFynbeA3dSw=H5hVyQbgTA@mail.gmail.com>
+References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
+	<1444148837-10770-4-git-send-email-harvey.hunt@imgtec.com>
+	<20151015084727.GG14475@jhogan-linux.le.imgtec.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151015084727.GG14475-4bYivNCBEGTR3KXKvIWQxtm+Uo4AYnCiHZ5vskTnxNA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hi James,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7ba7ab7..944a229 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8047,6 +8047,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/xgene-pci-msi.txt
- F:	drivers/pci/host/pci-xgene-msi.c
- 
-+PCIE DRIVER FOR HISILICON
-+M:	Zhou Wang <wangzhou1@hisilicon.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-+F:	drivers/pci/host/pcie-hisi.c
-+
- PCMCIA SUBSYSTEM
- P:	Linux PCMCIA Team
- L:	linux-pcmcia@lists.infradead.org
--- 
-1.9.1
+On 15 October 2015 at 09:47, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+>> index 9fcb9e7..453f1d3 100644
+>> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>> @@ -42,3 +42,57 @@
+>>  &uart4 {
+>>       status = "okay";
+>>  };
+>> +
+>> +&nemc {
+>> +     status = "okay";
+>> +
+>> +     nand: nand@1 {
+>> +             compatible = "ingenic,jz4780-nand";
+>
+> Isn't the NAND a micron part? This doesn't seem right. Is the device
+> driver and binding already accepted upstream with that compatible
+> string?
+
+This is the compatible string for the JZ4780 NAND driver, this patch
+is part of the series adding that. Detection of the NAND part is
+handled by the MTD subsystem.
+
+Thanks,
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
