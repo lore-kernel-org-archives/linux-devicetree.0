@@ -1,108 +1,115 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH v9 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Fri, 16 Oct 2015 16:48:01 +0800
-Message-ID: <CAFiDJ5-4D=OCKuy_=5s0uknzaQu9kUYbqy_nLBL4WOEZs0i3bA@mail.gmail.com>
-References: <1444790492-4051-1-git-send-email-lftan@altera.com>
-	<5210459.PtmhWaT6RM@wuerfel>
-	<CAFiDJ59ZZ5TBZJ8wauEzP3Je=DeSaGG-PWvm87dkSLfjmyRwjQ@mail.gmail.com>
-	<5938877.UG8VySdxoE@wuerfel>
+From: Zhiqiang Hou <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V2 1/2] powerpc/fsl: Add PCI node in device tree of bsc9132qds
+Date: Fri, 16 Oct 2015 17:01:10 +0800
+Message-ID: <1444986071-27317-1-git-send-email-B48286@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5938877.UG8VySdxoE@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 9:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 14 October 2015 18:01:46 Ley Foon Tan wrote:
->> On Wed, Oct 14, 2015 at 5:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Wednesday 14 October 2015 17:28:45 Ley Foon Tan wrote:
->> >> On Wed, Oct 14, 2015 at 5:09 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >
->> > Could we perhaps have a helper function that lets us register
->> > fixups dynamically?
->> >
->> >> The linker script keeps all pci fixup callbacks in pci fixup regions
->> >> during kernel compile time. So, it needs to be builtin module. Do you
->> >> know any way we can update those fixup regions?
->> >
->> > The only method I'm aware of at the moment is move the fixups to
->> > drivers/pci/quirks.c and enclose them in an #ifdef if you want them
->> > to not appear in kernels that don't support your SoC.
->> By looking at the drivers/pci/quirks.c, it looks like it is mainly for
->> the pci endpoint devices.
->> Fixups for host controller are in the driver itself.
->>
->
-> But if it's for the host itself, there are usually other ways to
-> do this without needing a fixup: you already have the device structure
-> present in the driver, so you should just be able to modify it there.
-Thanks for your suggestion. You are right, I have tested this can work as well.
-So, I can remove those 2 PCI_FIXUP* in the driver.
->
->
-> I'm looking at the code in your fixups now:
->
-> +static void altera_pcie_retrain(struct pci_dev *dev)
-> +{
-> +       u16 linkcap, linkstat;
-> +
-> +       /*
-> +        * Set the retrain bit if the PCIe rootport support > 2.5GB/s, but
-> +        * current speed is 2.5 GB/s.
-> +        */
-> +       pcie_capability_read_word(dev, PCI_EXP_LNKCAP, &linkcap);
-> +
-> +       if ((linkcap & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-> +               return;
-> +
-> +       pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &linkstat);
-> +       if ((linkstat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB)
-> +               pcie_capability_set_word(dev, PCI_EXP_LNKCTL,
-> +                                        PCI_EXP_LNKCTL_RL);
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ALTERA, PCI_ANY_ID, altera_pcie_retrain);
->
-> This looks related to the code in pci_set_bus_speed(). What is
-> missing from that code?
-This fixup is different from pci_set_bus_speed(). This fixup is to set
-the retrain bit in the LNKCTL register if the host can support higher
-speed than current speed, this is required by our hardware. But,
-pci_set_bus_speed() is just read the LNKCAP and LNKSTA registers and
-store in data structure.
+From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
->
-> +static void altera_pcie_fixup_res(struct pci_dev *dev)
-> +{
-> +       /*
-> +        * Prevent enumeration of root port.
-> +        */
-> +       if (!dev->bus->parent && dev->devfn == 0) {
-> +               int i;
-> +
-> +               for (i = 0; i < PCI_NUM_RESOURCES; i++) {
-> +                       dev->resource[i].start = 0;
-> +                       dev->resource[i].end   = 0;
-> +                       dev->resource[i].flags   = 0;
-> +               }
-> +       }
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ALTERA, PCI_ANY_ID,
-> +                        altera_pcie_fixup_res);
->
-> This seems really odd, too. Why is this needed?
-> I think I've seen similar code in other host drivers, so
-> it might be time to teach the PCI core about this kind of
-> device.
-Yes, some host drivers have similar code as well. Some host controller
-have the BAR configuration enabled, but it doesn't fit to kernel
-resources. Example the BAR is 64-bit, but the processor is 32-bit. It
-will fail at the host driver probing stage.
+Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Change-Id: I4355add4a92d1fcf514843aea5ecadd2e2517969
+Reviewed-on: http://git.am.freescale.net:8181/2454
+Reviewed-by: Zang Tiefei-R61911 <tie-fei.zang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Reviewed-by: Kushwaha Prabhakar-B32579 <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Reviewed-by: Fleming Andrew-AFLEMING <AFLEMING-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Tested-by: Fleming Andrew-AFLEMING <AFLEMING-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+V2:
+ - Remove property clock-frequency.
 
-pci 0000:00:00.0: BAR 0: [mem 0x00000000-0xffffffff 64bit pref] has
-bogus alignment
+ arch/powerpc/boot/dts/bsc9132qds.dts          | 15 ++++++++++++++
+ arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi | 28 +++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi  |  1 +
+ 3 files changed, 44 insertions(+)
 
-Regards
-Ley Foon
+diff --git a/arch/powerpc/boot/dts/bsc9132qds.dts b/arch/powerpc/boot/dts/bsc9132qds.dts
+index 6cab106..940d719 100644
+--- a/arch/powerpc/boot/dts/bsc9132qds.dts
++++ b/arch/powerpc/boot/dts/bsc9132qds.dts
+@@ -29,6 +29,21 @@
+ 	soc: soc@ff700000 {
+ 		ranges = <0x0 0x0 0xff700000 0x100000>;
+ 	};
++
++	pci0: pcie@ff70a000 {
++		reg = <0 0xff70a000 0 0x1000>;
++		ranges = <0x2000000 0x0 0x90000000 0 0x90000000 0x0 0x20000000
++			  0x1000000 0x0 0x00000000 0 0xc0010000 0x0 0x10000>;
++		pcie@0 {
++			ranges = <0x2000000 0x0 0x90000000
++				  0x2000000 0x0 0x90000000
++				  0x0 0x20000000
++
++				  0x1000000 0x0 0x0
++				  0x1000000 0x0 0x0
++				  0x0 0x100000>;
++		};
++	};
+ };
+ 
+ /include/ "bsc9132qds.dtsi"
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
+index c723071..b5f0715 100644
+--- a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
+@@ -40,6 +40,34 @@
+ 	interrupts = <16 2 0 0 20 2 0 0>;
+ };
+ 
++/* controller at 0xa000 */
++&pci0 {
++	compatible = "fsl,bsc9132-pcie", "fsl,qoriq-pcie-v2.2";
++	device_type = "pci";
++	#size-cells = <2>;
++	#address-cells = <3>;
++	bus-range = <0 255>;
++	interrupts = <16 2 0 0>;
++
++	pcie@0 {
++		reg = <0 0 0 0 0>;
++		#interrupt-cells = <1>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		device_type = "pci";
++		interrupts = <16 2 0 0>;
++		interrupt-map-mask = <0xf800 0 0 7>;
++
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x0 0x2 0x0 0x0
++			0000 0x0 0x0 0x2 &mpic 0x1 0x2 0x0 0x0
++			0000 0x0 0x0 0x3 &mpic 0x2 0x2 0x0 0x0
++			0000 0x0 0x0 0x4 &mpic 0x3 0x2 0x0 0x0
++			>;
++	};
++};
++
+ &soc {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
+index 301a9db..90f7949 100644
+--- a/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
+@@ -45,6 +45,7 @@
+ 		serial0 = &serial0;
+ 		ethernet0 = &enet0;
+ 		ethernet1 = &enet1;
++		pci0 = &pci0;
+ 	};
+ 
+ 	cpus {
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
