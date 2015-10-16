@@ -1,69 +1,43 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 3/3] ARM: at91/defconfig: update sama5 defconfig
-Date: Fri, 16 Oct 2015 08:44:00 +0200
-Message-ID: <20151016064400.GH26893@odux.rfo.atmel.com>
-References: <1444824684-24526-1-git-send-email-ludovic.desroches@atmel.com>
- <1444824684-24526-3-git-send-email-ludovic.desroches@atmel.com>
- <20151015132451.GD3421@piout.net>
- <20151015153116.GE26893@odux.rfo.atmel.com>
- <561FC97D.2040806@atmel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: sun8i: Add NMI interrupt
+ controller node
+Date: Fri, 16 Oct 2015 08:44:13 +0200
+Message-ID: <20151016064413.GH2711@lukather>
+References: <1444840342-9233-1-git-send-email-wens@csie.org>
+ <1444840342-9233-6-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1EKig6ypoSyM7jaD"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPVZQKYQKGQESQXGKZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <561FC97D.2040806@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cyrille.pitchen@atmel.com, plagnioj@jcrosoft.com, linux-kernel@vger.kernel.org
+In-Reply-To: <1444840342-9233-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 05:42:53PM +0200, Nicolas Ferre wrote:
-> Le 15/10/2015 17:31, Ludovic Desroches a =E9crit :
-> > On Thu, Oct 15, 2015 at 03:24:51PM +0200, Alexandre Belloni wrote:
-> >> Hi,
-> >>
-> >> On 14/10/2015 at 14:11:24 +0200, Ludovic Desroches wrote :
-> >>> Add SAMA5D2 SoC plus Atmel flexcom and Atmel sdhci devices.
-> >>>
-> >>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> >>> ---
-> >>>  arch/arm/configs/sama5_defconfig | 6 +++++-
-> >>>  1 file changed, 5 insertions(+), 1 deletion(-)
-> >>>
-> >> It is probably worth updating the multi_v7_defconfig too (in a sep=
-arate
-> >> patch).
-> >>
-> >=20
-> > Maybe I have to send a whole defconfig update . I mean when you do
-> > savedefconfig, you have more changes. I won't send each one separat=
-ely. I
-> > have kept changes which were in relation with the stuff I had.
-> >=20
-> > Or I can send a defconfig update from the savedefconfig and then ad=
-d
-> > sama5d2, flexcom and sdhci.
->=20
-> Actually you can do this for our own AT91 defconfigs.
->=20
-> For the multi_v7_defconfig I would recommend to simply make a patch w=
-ith
-> our updates and let the arm-soc maintainer merge it with their curren=
-t
-> one: I mean, they will manage the conflicts on this file anyway and t=
-he
-> changes to this file will not be part of one or our pull-requests but=
- a
-> patch that they will handle separately: so no need to add more update
-> than the strictly needed ones on our end.
->=20
+--1EKig6ypoSyM7jaD
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-In fact, I realize that I have read too quickly Alexandre's answer. I
-have understood that I should put CONFIG_SOC_SAM_V7=3Dy in a separate
-patch.
+On Thu, Oct 15, 2015 at 12:32:21AM +0800, Chen-Yu Tsai wrote:
+> The NMI interrupt controller is in charge of the NMI pin exposed by
+> the SoC to the PMIC. The PMIC signals interrupts through this.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-So yes I would do a whole update for our defconfigs and only the
-addition needed for the multi_v7 one
+Applied, thanks!
+Maxime
 
-Ludovic
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--1EKig6ypoSyM7jaD--
