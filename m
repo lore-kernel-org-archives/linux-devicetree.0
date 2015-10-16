@@ -1,127 +1,61 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/3] ARM: dts: uniphier: add ProXstream2 Vodka board support
-Date: Fri, 16 Oct 2015 18:50:54 +0900
-Message-ID: <CAK7LNARJhpz0AmLDL9j5c20cnv=+7CGiJMgGHhreJEd0rG3zSw@mail.gmail.com>
-References: <1444899934-4754-1-git-send-email-yamada.masahiro@socionext.com>
-	<63719761.5kc6F97FjG@wuerfel>
-	<CAK7LNATzgOZp542rd-92YXDxux2DrAOH_mkzk8NjimQ3afrCCg@mail.gmail.com>
-	<9943173.h49fNtDsEp@wuerfel>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: properties to describe a rotary encoder
+Date: Fri, 16 Oct 2015 11:59:51 +0200
+Message-ID: <20151016095951.GA6533@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9943173.h49fNtDsEp@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, arm@kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hello,
 
-2015-10-16 18:18 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Friday 16 October 2015 14:24:30 Masahiro Yamada wrote:
->>
->> No, it is not a typo, but intentional.
->>
->>
->> i2c0 - i2c3 are connected to the pads of the SoC package.
->> On the other hand, i2c-4 - i2c-6 are connected to
->> internal devices inside the SoC package.
->>
->> i2c-4 - i2c-6 are always connected to the same hardware
->> devices and always used for the same purpose.
->>
->>
->> My expected scenario is:
->>
->> [1] i2c0 - i2c3 are connected to the on-board devices
->>     depending on board variants.
->>     On some boards, their status is "okay" and
->>     on some boards, their status is "disabled".
->>
->> [2] i2c4 - i2c6 are always used to communicate
->>     with in-package devices.  The status is always "okay".
->
-> I think you are getting confused because the data sheet uses
-> the same names as the kernel, but they are really different
-> things.
->
-> How about boards that have i2c connectors that are labeled
-> differently?
+there is already a driver for rotary encoders described in
+Documentation/devicetree/bindings/input/rotary-encoder.txt. This howeve=
+r
+is not suitable to describe the device I have here for two reasons:
 
+=46irst the driver can only make use of 2 gpio lines, while the device
+here has 4 lines, so I have 16 sectors instead of only 4. And the
+second difference is that my encoder has a detend for each sector while
+the driver only supports "half-period" and "full-period" (default) mode=
+=2E
+These names really only make sense for the 2 line case and mean the
+encoder has detends in 2 or 1 sector respectively.
 
-I guess it would rarely happen as it is confusing.
+So I'm thinking about how to generalize the description to allow to add
+support for "my" device.
 
-The board connectors are generally named
-correspondingly to the hardware block ID in the SoC.
+=46or the added gpio lines it's easy, that's just allowing more than tw=
+o
+gpios for the "gpios" property.
 
+Currently there is a property "rotary-encoder,steps" that describes the
+number of detends in a full turnaround. So if we stick to "steps" to
+describe detends, maybe something like "sectors-per-step" (with a
+default of 4) would be needed to describe what "half-period" is now.
+Does this make sense? Maybe someone has a better suggestion?
 
+I'll start implementing that now, but give you time to think about a
+good name/scheme already. :-)
 
-> We want the aliases to match whatever is written on the
-> board normally, to make it easier for users.
->
->> [3] Some user-land applications may want to have access
->>      through the same character devices,
->>       /dev/i2c4, /dev/i2c5, /dev/i2c6
->
-> That user space would however only work on boards with the
-> same SoC, which is not a safe assumption to make.
+=46eedback welcome.
 
-Right.
+Best regards
+Uwe
 
-> Either
-> it should be specific to just one board which has a known
-> set of buses, or it should be done in a way that works
-> across SoC generations of families.
->
-> Ideally the devices on the internal buses would have an
-> in-kernel driver that exports a high-level API to avoid this
-> problem. What devices are these?
-
-HDMI transmitter, TV signal demodulator, etc.
-
-
-
->> If your way is adopted,
->> the real hardware "i2c4" might be aligned to /dev/i2c1 on some boards,
->> and /dev/i2c2 on others, etc.
->
-> Right, I think that is how it should be. You could also make
-> the chip's i2c4 always link to user space /dev/i2c0 if you
-> want to keep those stable, but as I said that is still not
-> a good (software) system design.
->
-
-Right.  In-kernel drivers can handle it nicely.
-
-Also, we can write a device tree that specifies device connection
-hierarchy like follows.
-The device names will appear under /sys/ directory and user-land
-applications can check them.
-
-&i2c4 {
-        demodulator {
-                 compatible = "...";
-
-        };
-};
-
-&i2c6 {
-         hdmi_tx {
-
-                   compatible = "...";
-         };
-}
-
-
-I understand that I2C bus number assumption is avoidable,
-but I am still not fully convinced.
-
-Matching /dev/i2c* and the real hardware block ID (this is written in
-the SoC spec book)
-makes things clearer, I think.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
