@@ -1,113 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
-Date: Fri, 16 Oct 2015 14:37:01 -0700 (PDT)
-Message-ID: <2544073.SzFGJq3XZ1@wasted.cogentembedded.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 01/10] clk: rockchip: Add sclk_mipidsi_24m for mipi dsi
+Date: Fri, 16 Oct 2015 14:39:40 -0700
+Message-ID: <20151016213940.GA10182@codeaurora.org>
+References: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
+ <1444470930-17150-2-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444470930-17150-2-git-send-email-zyw@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Jeff Chen <cym@rock-chips.com>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Kumar Gala <galak@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sonny Rao <sonnyrao@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Huang Lin <hl@rock-chips.com>, Roger Chen <roger.chen@rock-chips.com>, Alexandru M Stan <amstan@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent part of the SDHI1 (connected to micro-SD
-slot) device nodes along with the necessary voltage regulators.
+On 10/10, Chris Zhong wrote:
+> sclk_mipidsi_24m is the gating of mipi dsi phy.
+> 
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> ---
 
-Based on the original patch by Vladimir Barinov
-<vladimir.barinov@cogentembedded.com>.
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+>  drivers/clk/rockchip/clk-rk3288.c      | 2 +-
+>  include/dt-bindings/clock/rk3288-cru.h | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> index 9040878..c7d7ebf 100644
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -709,7 +709,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+>  	GATE(SCLK_LCDC_PWM1, "sclk_lcdc_pwm1", "xin24m", 0, RK3288_CLKGATE_CON(13), 11, GFLAGS),
+>  	GATE(SCLK_PVTM_CORE, "sclk_pvtm_core", "xin24m", 0, RK3288_CLKGATE_CON(5), 9, GFLAGS),
+>  	GATE(SCLK_PVTM_GPU, "sclk_pvtm_gpu", "xin24m", 0, RK3288_CLKGATE_CON(5), 10, GFLAGS),
+> -	GATE(0, "sclk_mipidsi_24m", "xin24m", 0, RK3288_CLKGATE_CON(5), 15, GFLAGS),
+> +	GATE(SCLK_MIPI_24M, "sclk_mipidsi_24m", "xin24m", 0, RK3288_CLKGATE_CON(5), 15, GFLAGS),
+>  
 
----
-This patch is against 'renesas-devel-20151015-v4.3-rc5' tag of Simon Horman's
-'renesas.git' repo.
+It would have been better to make #defines for all these clocks
+even if they weren't going to be used here. Then we could have
+applied this patch directly to clk tree without having a clk tree
+to arm-soc dependency. </grumble>
 
-Changes in version 3:
-- removed the "disable-wp" property;
-- added empty line before the regulator nodes;
-- reformatted the changelog;
-- refreshed the patch.
-
-Changes in version 2:
-- removed non-working SDHI0 stuff, renamed the patch;
-- replaced SDHI1's "wp-gpios" property with "disable-wp".
-
- arch/arm/boot/dts/r8a7794-silk.dts |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -12,6 +12,7 @@
- 
- /dts-v1/;
- #include "r8a7794.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "SILK";
-@@ -39,6 +40,30 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	vcc_sdhi1: regulator@3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "SDHI1 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vccq_sdhi1: regulator@4 {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "SDHI1 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <1>;
-+		states = <3300000 1
-+			  1800000 0>;
-+	};
- };
- 
- &extal_clk {
-@@ -71,6 +96,11 @@
- 		renesas,function = "mmc";
- 	};
- 
-+	sdhi1_pins: sd1 {
-+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
-+		renesas,function = "sdhi1";
-+	};
-+
- 	qspi_pins: spi0 {
- 		renesas,groups = "qspi_ctrl", "qspi_data4";
- 		renesas,function = "qspi";
-@@ -147,6 +177,16 @@
- 	status = "okay";
- };
- 
-+&sdhi1 {
-+	pinctrl-0 = <&sdhi1_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&vcc_sdhi1>;
-+	vqmmc-supply = <&vccq_sdhi1>;
-+	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
- &qspi {
- 	pinctrl-0 = <&qspi_pins>;
- 	pinctrl-names = "default";
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
