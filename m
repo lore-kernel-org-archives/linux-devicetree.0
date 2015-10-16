@@ -1,60 +1,179 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: nvmem: Add NXP LPC18xx EEPROM memory binding documentation
-Date: Fri, 16 Oct 2015 12:41:57 -0300
-Message-ID: <CAAEAJfAAUWd9y8EBfV0irbRF_7EjxD1ycdPcNGScbs6oPxp4JQ@mail.gmail.com>
-References: <1445004426-6271-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<1445004426-6271-3-git-send-email-ariel@vanguardiasur.com.ar>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445004426-6271-3-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v2] ARM: dts: fix gpio-keys wakeup-source property
+Date: Fri, 16 Oct 2015 17:01:36 +0100
+Message-ID: <1445011296-29042-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arm@kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-+DT bindings maintainers
+The keyboard driver for GPIO buttons(gpio-keys) checks for one of the
+two boolean properties to enable gpio buttons as wakeup source:
+1. "wakeup-source" or
+2. the legacy "gpio-key,wakeup"
 
-As per the documentation in
-Documentation/devicetree/bindings/submitting-patches.txt
-this binding should be patch 1/2.
+However juno, ste-snowball and emev2-kzm9d dts file have a undetected
+"wakeup" property to indictate the wakeup source.
 
-On 16 October 2015 at 11:07, Ariel D'Alessandro
-<ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> Add the devicetree binding document for NXP LPC18xx EEPROM memory.
->
-> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> ---
->  .../devicetree/bindings/nvmem/lpc18xx_eeprom.txt   | 26 ++++++++++++=
-++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc18xx_e=
-eprom.txt
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.t=
-xt b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
-> new file mode 100644
-> index 0000000..372ff8c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
-> @@ -0,0 +1,26 @@
-> +* NXP LPC18xx EEPROM memory NVMEM driver
-> +
-> +Required properties:
-> +  - compatible: Should be "nxp,lpc1850-eeprom"
+This patch fixes it by making use of "wakeup-source" property.
 
-Correct me if I'm wrong, but I believe not all LPC18xx/43xx devices
-have an EEPROM.
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Acked-by: Simon Horman <horms@verge.net.au>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/arm/boot/dts/emev2-kzm9d.dts             |  8 ++++----
+ arch/arm/boot/dts/ste-snowball.dts            | 10 +++++-----
+ arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 12 ++++++------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-Isn't it restricted to LPC18x7/LPC43x7 devices?
-Should the compatible be nxp,lpc1857-eeprom to avoid confusion?
+Hi ARM-SoC group,
 
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please consider this as a fix for v4.3 if possible.
+
+v2->v1[1] :
+ - included all the reviewed/ack tags, also posting this fix independently
+
+Regards,
+Sudeep
+
+[1] https://lkml.org/lkml/2015/10/13/413
+
+diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
+index 955c24ee4a8c..8c24975e8f9d 100644
+--- a/arch/arm/boot/dts/emev2-kzm9d.dts
++++ b/arch/arm/boot/dts/emev2-kzm9d.dts
+@@ -35,28 +35,28 @@
+ 
+ 		button@1 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			label = "DSW2-1";
+ 			linux,code = <KEY_1>;
+ 			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+ 		};
+ 		button@2 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			label = "DSW2-2";
+ 			linux,code = <KEY_2>;
+ 			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+ 		};
+ 		button@3 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			label = "DSW2-3";
+ 			linux,code = <KEY_3>;
+ 			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+ 		};
+ 		button@4 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			label = "DSW2-4";
+ 			linux,code = <KEY_4>;
+ 			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index 32a5ccb14e7e..e80e42163883 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -47,35 +47,35 @@
+ 
+ 		button@1 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			linux,code = <2>;
+ 			label = "userpb";
+ 			gpios = <&gpio1 0 0x4>;
+ 		};
+ 		button@2 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			linux,code = <3>;
+ 			label = "extkb1";
+ 			gpios = <&gpio4 23 0x4>;
+ 		};
+ 		button@3 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			linux,code = <4>;
+ 			label = "extkb2";
+ 			gpios = <&gpio4 24 0x4>;
+ 		};
+ 		button@4 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			linux,code = <5>;
+ 			label = "extkb3";
+ 			gpios = <&gpio5 1 0x4>;
+ 		};
+ 		button@5 {
+ 			debounce_interval = <50>;
+-			wakeup = <1>;
++			wakeup-source;
+ 			linux,code = <6>;
+ 			label = "extkb4";
+ 			gpios = <&gpio5 2 0x4>;
+diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+index 902f14a8e85b..42153860b41f 100644
+--- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+@@ -61,42 +61,42 @@
+ 
+ 				button@1 {
+ 					debounce_interval = <50>;
+-					wakeup = <1>;
++					wakeup-source;
+ 					linux,code = <116>;
+ 					label = "POWER";
+ 					gpios = <&iofpga_gpio0 0 0x4>;
+ 				};
+ 				button@2 {
+ 					debounce_interval = <50>;
+-					wakeup = <1>;
++					wakeup-source;
+ 					linux,code = <102>;
+ 					label = "HOME";
+ 					gpios = <&iofpga_gpio0 1 0x4>;
+ 				};
+ 				button@3 {
+ 					debounce_interval = <50>;
+-					wakeup = <1>;
++					wakeup-source;
+ 					linux,code = <152>;
+ 					label = "RLOCK";
+ 					gpios = <&iofpga_gpio0 2 0x4>;
+ 				};
+ 				button@4 {
+ 					debounce_interval = <50>;
+-					wakeup = <1>;
++					wakeup-source;
+ 					linux,code = <115>;
+ 					label = "VOL+";
+ 					gpios = <&iofpga_gpio0 3 0x4>;
+ 				};
+ 				button@5 {
+ 					debounce_interval = <50>;
+-					wakeup = <1>;
++					wakeup-source;
+ 					linux,code = <114>;
+ 					label = "VOL-";
+ 					gpios = <&iofpga_gpio0 4 0x4>;
+ 				};
+ 				button@6 {
+ 					debounce_interval = <50>;
+-					wakeup = <1>;
++					wakeup-source;
+ 					linux,code = <99>;
+ 					label = "NMI";
+ 					gpios = <&iofpga_gpio0 5 0x4>;
+-- 
+1.9.1
