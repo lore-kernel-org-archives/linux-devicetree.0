@@ -1,32 +1,63 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/7] pinctrl: berlin: add the berlin4ct pinctrl driver
-Date: Fri, 16 Oct 2015 16:13:58 +0200
-Message-ID: <CACRpkdZpjZO9Mr0ZyDP3_fAPjNagzC-J+=1fwKhhCBNrSuQTyA@mail.gmail.com>
-References: <1444981032-4401-1-git-send-email-jszhang@marvell.com>
-	<1444981032-4401-4-git-send-email-jszhang@marvell.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Fri, 16 Oct 2015 19:44:18 +0530
+Message-ID: <5621063A.2050905@ti.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+ <20151015165105.GE32532@n2100.arm.linux.org.uk>
+ <CAL_JsqJTjCT8D-3OryFPEF8nnaPtrai7Mvf-gJRkh60aDixx-g@mail.gmail.com>
+ <20151016080222.GH32532@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444981032-4401-4-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151016080222.GH32532@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, WingMan Kwok <w-kwok2@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 9:37 AM, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+Hi,
 
-> Add the pin-controller driver for Marvell Berlin BG4CT SoC, with definition
-> of its groups and functions. This uses the core Berlin pinctrl driver.
->
-> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Friday 16 October 2015 01:32 PM, Russell King - ARM Linux wrote:
+> On Thu, Oct 15, 2015 at 08:00:41PM -0500, Rob Herring wrote:
+>> On Thu, Oct 15, 2015 at 11:51 AM, Russell King - ARM Linux
+>> <linux@arm.linux.org.uk> wrote:
+>>> On Thu, Oct 15, 2015 at 10:25:43AM -0400, WingMan Kwok wrote:
+>>>> On TI's Keystone platforms, several peripherals such as the
+>>>> gbe ethernet switch, 10gbe ethether switch and PCIe controller
+>>>> require the use of a SerDes for converting SoC parallel data into
+>>>> serialized data that can be output over a high-speed electrical
+>>>> interface, and also converting high-speed serial input data
+>>>> into parallel data that can be processed by the SoC.  The
+>>>> SerDeses used by those peripherals, though they may be different,
+>>>> are largely similar in functionality and setup.
+>>>
+>>> Given that serdes is not specific to TI, should this be specific to
+>>> TI, or should there be an effort to come up with something which
+>>> everyone who has serdes links can make use of?
+>>>
+>>> Serdes comes in multiple different forms: PCIe, 1G SGMII ethernet,
+>>> 1000base-X ethernet, 10g ethernet, SATA... I'd hate to see a
+>>> plethora of SoC specific stuff for this.
+>>
+>> The licensed IP I've seen doesn't provide a standard register
+>> interface, but just signals to the IP block. Same with PLL IP. So
+>> we'll probably get to see vendors continue to differentiate on PHY
+>> register design. :)
+> 
+> So what?  Network drivers differ radically in register design, yet we
+> still have a standardised interface to network drivers.
+> 
+The PHY framework (in drivers/phy/) already provides a standard
+interface to be used by the controller drivers no?
 
-Patch applied.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
