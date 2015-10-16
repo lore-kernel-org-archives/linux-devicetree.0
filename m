@@ -1,30 +1,45 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/trivial] serial: pl011: Spelling s/clocks-names/clock-names/
-Date: Fri, 16 Oct 2015 16:23:06 +0200
-Message-ID: <1445005386-17962-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Jiri Kosina <trivial@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: sunxi: Fix irq_of_xlate for
+ the r_pio pinctrl block
+Date: Fri, 16 Oct 2015 16:27:33 +0200
+Message-ID: <20151016142733.GL2711@lukather>
+References: <1444981572-17235-1-git-send-email-hdegoede@redhat.com>
+ <1444981572-17235-2-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2OzUYMsT4j3Kc+NU"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYUSQSYQKGQETP23ZBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444981572-17235-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/serial/pl011.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--2OzUYMsT4j3Kc+NU
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
-index cbae3d9a02780768..77863aefe9ef1eaf 100644
---- a/Documentation/devicetree/bindings/serial/pl011.txt
-+++ b/Documentation/devicetree/bindings/serial/pl011.txt
-@@ -19,7 +19,7 @@ Optional properties:
- 	   must correspond to the PCLK clocking the internal logic
- 	   of the block. Just listing one clock (the first one) is
- 	   deprecated.
--- clocks-names:
-+- clock-names:
- 	   When present, the first clock listed must be named
- 	   "uartclk" and the second clock listed must be named
- 	   "apb_pclk"
+On Fri, Oct 16, 2015 at 09:46:11AM +0200, Hans de Goede wrote:
+> The r_pio gpio / pin controller has a pin_base of non 0, we need to
+> adjust for this before calling sunxi_pinctrl_desc_find_function_by_pin.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+Maxime
+
 -- 
-1.9.1
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--2OzUYMsT4j3Kc+NU--
