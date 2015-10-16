@@ -1,44 +1,46 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v6 4/7] arm64: berlin: add the pinctrl dependency for
- Marvell Berlin SoCs
-Date: Fri, 16 Oct 2015 22:20:50 +0200
-Message-ID: <56215C22.4080705@gmail.com>
-References: <1444981032-4401-1-git-send-email-jszhang@marvell.com>
- <1444981032-4401-5-git-send-email-jszhang@marvell.com>
- <CACRpkdaKBZEN7j3rc9vzT_schNerqKorwckZeKuFEAugbzGBgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaKBZEN7j3rc9vzT_schNerqKorwckZeKuFEAugbzGBgQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Jisheng Zhang <jszhang@marvell.com>
-Cc: =?UTF-8?Q?Antoine_T=c3=a9nart?= <antoine.tenart@free-electrons.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH net-next 2/2] Documentation: dts: xgene: Add TX/RX delay field
+Date: Fri, 16 Oct 2015 13:35:52 -0700
+Message-ID: <1445027752-16982-3-git-send-email-isubramanian@apm.com>
+References: <1445027752-16982-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1445027752-16982-1-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16.10.2015 16:15, Linus Walleij wrote:
-> On Fri, Oct 16, 2015 at 9:37 AM, Jisheng Zhang <jszhang@marvell.com> wrote:
->
->> This is to add the pinctrl dependency for Marvell Berlin SoCs.
->>
->> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
->> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->> Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Please push this through the ARM SoC tree or wherever patches
-> to this file goes. It doesn't seem to be a hard dependency to the
-> pin control patches.
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+---
+ Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-[Added arm-soc Maintainers]
-
-This patch is touching arch/arm64/Kconfig.platforms. The hunk is
-very small so that it may be ok that I apply and send it with
-the next PR.
-
-If the arm-soc Maintainers want to pick it up, I can resend the
-original patch with all Acked-by to arm-soc maintainer e-mail
-directly.
-
-Sebastian
-
+diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+index f55aa28..5b17c13 100644
+--- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
++++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+@@ -37,6 +37,14 @@ Required properties for ethernet interfaces that have external PHY:
+ 
+ Optional properties:
+ - status: Should be "ok" or "disabled" for enabled/disabled. Default is "ok".
++- tx-delay: Delay value for RGMII TXD timming.
++	    Valid values are between 0 to 7, that maps to
++	    417, 717, 1020, 1321, 1611, 1913, 2215, 2514 ps
++	    Default value is 4, which corresponds to 1611 ps
++- rx-delay: Delay value for RGMII RXD timming in ps.
++	    Valid values are between 0 to 7, that maps to
++	    273, 589, 899, 1222, 1480, 1806, 2147, 2464 ps
++	    Default value is 2, which corresponds to 899 ps
+ 
+ Example:
+ 	menetclk: menetclk {
+@@ -72,5 +80,7 @@ Example:
+ 
+ /* Board-specific peripheral configurations */
+ &menet {
++	tx-delay = <4>;
++	rx-delay = <2>;
+         status = "ok";
+ };
+-- 
+1.9.1
