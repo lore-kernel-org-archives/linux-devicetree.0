@@ -1,57 +1,72 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
- brcmnand_write()
-Date: Fri, 16 Oct 2015 14:38:54 +0530
-Message-ID: <1444986537-28387-2-git-send-email-anup.patel@broadcom.com>
-References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] ARM: dts: uniphier: add ProXstream2 Vodka board support
+Date: Fri, 16 Oct 2015 11:18:04 +0200
+Message-ID: <9943173.h49fNtDsEp@wuerfel>
+References: <1444899934-4754-1-git-send-email-yamada.masahiro@socionext.com> <63719761.5kc6F97FjG@wuerfel> <CAK7LNATzgOZp542rd-92YXDxux2DrAOH_mkzk8NjimQ3afrCCg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Sandeep Tripathy <tripathy@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Pramod KUMAR <pramodku@broadcom.com>, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATzgOZp542rd-92YXDxux2DrAOH_mkzk8NjimQ3afrCCg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, arm@kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-We should always type-cast pointer to "long" or "unsigned long"
-because size of pointer is same as machine word size. This will
-avoid pointer type-cast issues on both 32bit and 64bit systems.
+On Friday 16 October 2015 14:24:30 Masahiro Yamada wrote:
+> 
+> No, it is not a typo, but intentional.
+> 
+> 
+> i2c0 - i2c3 are connected to the pads of the SoC package.
+> On the other hand, i2c-4 - i2c-6 are connected to
+> internal devices inside the SoC package.
+> 
+> i2c-4 - i2c-6 are always connected to the same hardware
+> devices and always used for the same purpose.
+> 
+> 
+> My expected scenario is:
+> 
+> [1] i2c0 - i2c3 are connected to the on-board devices
+>     depending on board variants.
+>     On some boards, their status is "okay" and
+>     on some boards, their status is "disabled".
+> 
+> [2] i2c4 - i2c6 are always used to communicate
+>     with in-package devices.  The status is always "okay".
 
-This patch fixes pointer type-cast issue in brcmnand_write()
-as-per above info.
+I think you are getting confused because the data sheet uses
+the same names as the kernel, but they are really different
+things.
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- drivers/mtd/nand/brcmnand/brcmnand.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+How about boards that have i2c connectors that are labeled
+differently?
 
-diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-index fddb795..4cba03d 100644
---- a/drivers/mtd/nand/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-@@ -1544,9 +1544,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
- 
- 	dev_dbg(ctrl->dev, "write %llx <- %p\n", (unsigned long long)addr, buf);
- 
--	if (unlikely((u32)buf & 0x03)) {
-+	if (unlikely((unsigned long)buf & 0x03)) {
- 		dev_warn(ctrl->dev, "unaligned buffer: %p\n", buf);
--		buf = (u32 *)((u32)buf & ~0x03);
-+		buf = (u32 *)((unsigned long)buf & ~0x03);
- 	}
- 
- 	brcmnand_wp(mtd, 0);
--- 
-1.9.1
+We want the aliases to match whatever is written on the
+board normally, to make it easier for users.
+
+> [3] Some user-land applications may want to have access
+>      through the same character devices,
+>       /dev/i2c4, /dev/i2c5, /dev/i2c6
+
+That user space would however only work on boards with the
+same SoC, which is not a safe assumption to make. Either
+it should be specific to just one board which has a known
+set of buses, or it should be done in a way that works
+across SoC generations of families.
+
+Ideally the devices on the internal buses would have an
+in-kernel driver that exports a high-level API to avoid this
+problem. What devices are these?
+
+> If your way is adopted,
+> the real hardware "i2c4" might be aligned to /dev/i2c1 on some boards,
+> and /dev/i2c2 on others, etc.
+
+Right, I think that is how it should be. You could also make
+the chip's i2c4 always link to user space /dev/i2c0 if you
+want to keep those stable, but as I said that is still not
+a good (software) system design.
+
+	Arnd
