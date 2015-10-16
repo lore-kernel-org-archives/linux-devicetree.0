@@ -1,71 +1,89 @@
-From: "Kwok, WingMan" <w-kwok2@ti.com>
-Subject: RE: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Fri, 16 Oct 2015 00:02:03 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04228E01@DFLE11.ent.ti.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
- <20151015165105.GE32532@n2100.arm.linux.org.uk> <561FFCD6.7000509@ti.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Thu, 15 Oct 2015 17:22:43 -0700
+Message-ID: <20151016002243.GA23912@codeaurora.org>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+ <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+ <55F72C97.2030306@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <561FFCD6.7000509@ti.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: KISHON VIJAY ABRAHAM <kishon@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F72C97.2030306@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS0lTSE9OIFZJ
-SkFZIEFCUkFIQU0NCj4gU2VudDogVGh1cnNkYXksIE9jdG9iZXIgMTUsIDIwMTUgMzoyMiBQTQ0K
-PiBUbzogUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4OyBLd29rLCBXaW5nTWFuDQo+IENjOiByb2Jo
-K2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207
-DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsg
-UXVhZHJvcywgUm9nZXI7DQo+IEthcmljaGVyaSwgTXVyYWxpZGhhcmFuOyBiaGVsZ2Fhc0Bnb29n
-bGUuY29tOyBzc2FudG9zaEBrZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IHBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIIHYxIDAvMl0gQ29tbW9uIFNlckRlcyBkcml2ZXIgZm9yIFRJJ3MgS2V5c3RvbmUg
-UGxhdGZvcm1zDQo+IA0KPiBIaSwNCj4gDQo+IE9uIFRodXJzZGF5IDE1IE9jdG9iZXIgMjAxNSAx
-MDoyMSBQTSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOg0KPiA+IE9uIFRodSwgT2N0
-IDE1LCAyMDE1IGF0IDEwOjI1OjQzQU0gLTA0MDAsIFdpbmdNYW4gS3dvayB3cm90ZToNCj4gPj4g
-T24gVEkncyBLZXlzdG9uZSBwbGF0Zm9ybXMsIHNldmVyYWwgcGVyaXBoZXJhbHMgc3VjaCBhcyB0
-aGUNCj4gPj4gZ2JlIGV0aGVybmV0IHN3aXRjaCwgMTBnYmUgZXRoZXRoZXIgc3dpdGNoIGFuZCBQ
-Q0llIGNvbnRyb2xsZXINCj4gPj4gcmVxdWlyZSB0aGUgdXNlIG9mIGEgU2VyRGVzIGZvciBjb252
-ZXJ0aW5nIFNvQyBwYXJhbGxlbCBkYXRhIGludG8NCj4gPj4gc2VyaWFsaXplZCBkYXRhIHRoYXQg
-Y2FuIGJlIG91dHB1dCBvdmVyIGEgaGlnaC1zcGVlZCBlbGVjdHJpY2FsDQo+ID4+IGludGVyZmFj
-ZSwgYW5kIGFsc28gY29udmVydGluZyBoaWdoLXNwZWVkIHNlcmlhbCBpbnB1dCBkYXRhDQo+ID4+
-IGludG8gcGFyYWxsZWwgZGF0YSB0aGF0IGNhbiBiZSBwcm9jZXNzZWQgYnkgdGhlIFNvQy4gIFRo
-ZQ0KPiA+PiBTZXJEZXNlcyB1c2VkIGJ5IHRob3NlIHBlcmlwaGVyYWxzLCB0aG91Z2ggdGhleSBt
-YXkgYmUgZGlmZmVyZW50LA0KPiA+PiBhcmUgbGFyZ2VseSBzaW1pbGFyIGluIGZ1bmN0aW9uYWxp
-dHkgYW5kIHNldHVwLg0KPiA+DQo+ID4gR2l2ZW4gdGhhdCBzZXJkZXMgaXMgbm90IHNwZWNpZmlj
-IHRvIFRJLCBzaG91bGQgdGhpcyBiZSBzcGVjaWZpYyB0bw0KPiA+IFRJLCBvciBzaG91bGQgdGhl
-cmUgYmUgYW4gZWZmb3J0IHRvIGNvbWUgdXAgd2l0aCBzb21ldGhpbmcgd2hpY2gNCj4gPiBldmVy
-eW9uZSB3aG8gaGFzIHNlcmRlcyBsaW5rcyBjYW4gbWFrZSB1c2Ugb2Y/DQo+ID4NCj4gPiBTZXJk
-ZXMgY29tZXMgaW4gbXVsdGlwbGUgZGlmZmVyZW50IGZvcm1zOiBQQ0llLCAxRyBTR01JSSBldGhl
-cm5ldCwNCj4gPiAxMDAwYmFzZS1YIGV0aGVybmV0LCAxMGcgZXRoZXJuZXQsIFNBVEEuLi4gSSdk
-IGhhdGUgdG8gc2VlIGENCj4gPiBwbGV0aG9yYSBvZiBTb0Mgc3BlY2lmaWMgc3R1ZmYgZm9yIHRo
-aXMuDQo+IA0KPiBHZW5lcmFsbHkgZXZlcnkgU29DIHVzZSBpdCdzIG93biBzZXJkZXMgYW5kIHRo
-ZSBwcm9ncmFtbWluZyByZXF1aXJlZCBpcw0KPiBkaWZmZXJlbnQgZm9yIGRpZmZlcmVudCBTb0Nz
-LiBFYWNoIG9mIHRoZW0gaGF2ZSB0aGVpciBvd24gcmVnaXN0ZXIgbWFwDQo+IGFuZCBjbG9jayBw
-cm9ncmFtbWluZy9yZWd1bGF0b3IgcHJvZ3JhbW1pbmcvcmVzZXQgcHJvZ3JhbW1pbmcgYXJlIGFs
-bA0KPiBkaWZmZXJlbnQuDQo+IA0KPiBIb3dldmVyIG1vc3QgU29DIHZlbmRvcnMgdXNlIHRoZSBz
-YW1lIFBIWS9TZXJEZXMgSVAgdG8gYmUgdXNlZCBieQ0KPiBtdWx0aXBsZSBjb250cm9sbGVycyBs
-aWtlIFBDSWUvU0FUQS9VU0IgaW4gYSBzaW5nbGUgU29DIGFuZCBhIHNpbmdsZSBQSFkNCj4gZHJp
-dmVyIGlzIHVzZWQgZm9yIHByb2dyYW1taW5nIGFsbCB0aGVzZSBQSFlzLg0KPiANCg0KVGhhbmtz
-IHNvIG11Y2ggZm9yIHRoZSBjbGFyaWZpY2F0aW9ucy4NCg0KPiBUaGFua3MNCj4gS2lzaG9uDQo+
-IA0KDQpSZWdhcmRzLA0KV2luZ01hbg0KDQo+ID4NCj4gPiBXaGVuIHNlcmRlcyBpcyBjb21iaW5l
-ZCB3aXRoIFNGUCBjYWdlcywgdGhlIHNpdHVhdGlvbiBiZWNvbWVzIG11Y2gNCj4gPiBtb3JlIGZ1
-biwgYmVjYXVzZSB0aGUgc2VyZGVzIGxpbmsgdGhlbiBuZWVkcyB0byBiZWNvbWUgaG90cGx1Z2dh
-YmxlDQo+ID4gKFNGUCBtb2R1bGVzIGFyZSBkZXNpZ25lZCB0byBiZSBob3RwbHVnZ2VkKSB3aGlj
-aCBtZWFucyB5b3UgaGF2ZSB0bw0KPiA+IGJlIGFibGUgdG8gc3dpdGNoIGJldHdlZW4gKGF0IGxl
-YXN0KSAxRyBTR01JSSBhbmQgMTAwMGJhc2UtWCBtb2RlcywNCj4gPiBhbmQgcHJvYmFibHkgMTBH
-IG1vZGUgYXMgd2VsbC4gIFRoZXJlJ3MgZXZlbiBhIFNGUCBtb2R1bGUgdGhhdCBoYXMNCj4gPiBh
-IFNBVEEgY29ubmVjdG9yIG9uIGl0LCB0aG91Z2ggSSBiZWxpZXZlIHRoZXJlJ3Mgbm8gc3RhbmRh
-cmQgZm9yDQo+ID4gdGhhdCwgYW5kIGl0J3MgbW9yZSBhIGhhcmR3YXJlIGhhY2suDQo+ID4NCj4g
-PiBJJ3ZlIGJlZW4gd29ya2luZyBpbiB0aGlzIGFyZWEgYnV0IGZyb20gdGhlIEV0aGVybmV0IHNp
-ZGUgb24gYW4NCj4gPiBBcm1hZGEgMzh4IGJhc2VkIGJvYXJkIHdoaWNoIGhhcyBhIFNGUCBjYWdl
-IG9uIGl0LCB0aG91Z2ggaXQncw0KPiA+IHNsaWdodGx5IHNpbXBsZXIgdGhlcmUgYmVjYXVzZSB0
-aGVyZSBpcyBubyBzdXBwb3J0IChvciBJIGJlbGlldmUNCj4gPiBhbnkgZGVzaXJlKSB0byByZWNv
-bmZpZ3VyZSB0aGUgc2VyZGVzIGxhbmVzIGJldHdlZW4gUENJLCBldGhlcm5ldA0KPiA+IGFuZCBT
-QVRBIC0gdGhhdCdzIGFsbCBzZXR1cCBhbmQgaW5pdGlhbGlzZWQgZm9yIHVzIGJ5IHVib290Lg0K
-PiA+DQo=
+On 09/14, Rob Herring wrote:
+> On 09/11/2015 07:01 AM, Viresh Kumar wrote:
+> > Regulators already have stable DT bindings, wherein the consumer (of
+> > supplies) will have following for each regulator/supply.
+> > 
+> > <name>-supply: <phandle to the regulator node>;
+> > 
+> > Current OPP bindings extend above, by transforming it into a list of
+> > phandles. But we missed the <name> string, which is used to identify the
+> > regulator.
+> > 
+> > And looking from regulators perspective, having two different ways of
+> > specifying regulators doesn't seem like a step forward, it also means we
+> > have to update every single device binding. And things will become
+> > complex.
+> > 
+> > Another way to support multiple regulators per device (in OPP V2
+> > bindings) is to leave regulator consumer bindings as is, and create a
+> > 'supply-names' property in the opp-table node, which will contain a list
+> > of strings. The names in this list shall match 'name' from the
+> > '<name>-supply' strings present in the device node.
+> > 
+> > The strings in this list also specify the order in which values must be
+> > present in 'opp-microvolt' and 'opp-microamp' properties.
+> > 
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/opp/opp.txt | 26 +++++++++++++++++++-------
+> >  1 file changed, 19 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > index 0cb44dc21f97..8759bc4783ed 100644
+> > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > @@ -69,6 +69,13 @@ This describes the OPPs belonging to a device. This node can have following
+> >  - compatible: Allow OPPs to express their compatibility. It should be:
+> >    "operating-points-v2".
+> >  
+> > +- supply-names: This is a required property, only if multiple supplies are
+> > +  available for the device. Otherwise it is optional.
+> > +
+> > +  This list is used to pass names of all the device supplies. The order of names
+> > +  present here is important, as that should match the order in which values are
+> > +  present in 'opp-microvolt' and 'opp-microamp' properties.
+> > +
+> 
+> What if we have a 2nd device and supply rail? For example, what if the
+> L2$ has a separate rail from the cores but is linked to the OPPs.
+
+I'm lost why we need this property at all. What happened to using
+
+ opp-microvolt-0 = <1 2 3>;
+ opp-microvolt-1 = <1>;
+ opp-microvolt-2 = <3 4 5>;
+ etc.
+
+That seems to avoid any problem with 3 vs. 1 element properties
+combined into one large array. Having supply-names seems too
+brittle and would tie us to a particular OPP user's decision to
+call supplies by some name.
+
+Also, I've seen devices that are split across two power domains.
+These devices aren't CPUs, but they are other devices including
+L2 caches. So we're going to need either multiple regulator
+support or multiple "power domain at a particular performance
+levels" support somehow.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
