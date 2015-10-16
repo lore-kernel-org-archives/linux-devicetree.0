@@ -1,77 +1,77 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 1/5] mailbox: dt: Supply bindings for ST's Mailbox IP
-Date: Fri, 16 Oct 2015 08:21:27 +0100
-Message-ID: <1444980091-16728-2-git-send-email-lee.jones@linaro.org>
-References: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 1/4] arm64: dts: Reserve memory regions for hi6220
+Date: Fri, 16 Oct 2015 15:30:26 +0800
+Message-ID: <20151016073026.GF3226@leoy-linaro>
+References: <1444697896-4323-1-git-send-email-leo.yan@linaro.org>
+ <1444697896-4323-2-git-send-email-leo.yan@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1444697896-4323-2-git-send-email-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, maxime.coquelin@st.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/mailbox/sti-mailbox.txt    | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+Hi Rob,
 
-diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-new file mode 100644
-index 0000000..b61eec9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-@@ -0,0 +1,51 @@
-+ST Microelectronics Mailbox Driver
-+
-+Each ST Mailbox IP currently consists of 4 instances of 32 channels.  Messages
-+are passed between Application and Remote processors using shared memory.
-+
-+Controller
-+----------
-+
-+Required properties:
-+- compatible		: Should be "st,stih407-mailbox"
-+- reg			: Offset and length of the device's register set
-+- mbox-name		: Name of the mailbox
-+- #mbox-cells:		: Must be 2
-+			  <&phandle instance channel direction>
-+			    phandle   : Label name of controller
-+			    instance  : Instance number
-+			    channel   : Channel number
-+
-+Optional properties
-+- interrupts		: Contains the IRQ line for a Rx mailbox
-+
-+Example:
-+
-+mailbox0: mailbox@0  {
-+	compatible	= "st,stih407-mailbox";
-+	reg		= <0x08f00000 0x1000>;
-+	interrupts	= <GIC_SPI 1 IRQ_TYPE_NONE>;
-+	#mbox-cells	= <2>;
-+	mbox-name	= "a9";
-+};
-+
-+Client
-+------
-+
-+Required properties:
-+- compatible		: Many (See the client docs)
-+- reg			: Shared (between Application and Remote) memory address
-+- mboxes		: Standard property to specify a Mailbox (See ./mailbox.txt)
-+			  Cells must match 'mbox-cells' (See Controller docs above)
-+
-+Optional properties
-+- mbox-names		: Name given to channels seen in the 'mboxes' property.
-+
-+Example:
-+
-+mailbox_test {
-+	compatible	= "mailbox_test";
-+	reg		= <0x[shared_memory_address], [shared_memory_size]>;
-+	mboxes		= <&mailbox2 0 1>, <&mailbox0 2 1>;
-+	mbox-names	= "tx",	"rx";
-+};
--- 
-1.9.1
+On Tue, Oct 13, 2015 at 08:58:13AM +0800, Leo Yan wrote:
+> On Hi6220, below memory regions in DDR have specific purpose:
+> 
+>   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+>   0x06df,f000 - 0x06df,ffff: For mailbox message data;
+>   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+>   0x3e00,0000 - 0x3fff,ffff: For OP-TEE.
+> 
+> This patch reserves these memory regions in DT.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index e36a539..e3f4cb3 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -7,9 +7,6 @@
+>  
+>  /dts-v1/;
+>  
+> -/*Reserved 1MB memory for MCU*/
+> -/memreserve/ 0x05e00000 0x00100000;
+> -
+>  #include "hi6220.dtsi"
+>  
+>  / {
+> @@ -24,8 +21,19 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	/*
+> +	 * Reserve below regions from memory node:
+> +	 *
+> +	 *  - 0x05e0,0000 - 0x05ef,ffff: MCU firmware runtime using
+> +	 *  - 0x06df,f000 - 0x06df,ffff: Mailbox message data
+> +	 *  - 0x0740,f000 - 0x0740,ffff: MCU firmware section
+> +	 *  - 0x3e00,0000 - 0x3fff,ffff: OP-TEE
+> +	 */
+>  	memory@0 {
+>  		device_type = "memory";
+> -		reg = <0x0 0x0 0x0 0x40000000>;
+> +		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
+> +		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
+> +		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
+> +		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
+>  	};
+>  };
+
+Are you convinced by the before's patch arguments from Mark and I? i'd
+like get green light from you.
+
+Thanks,
+Leo Yan
+
+> -- 
+> 1.9.1
+> 
