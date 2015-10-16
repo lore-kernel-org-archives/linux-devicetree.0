@@ -1,98 +1,55 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 2/5] [RFC] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
-Date: Fri, 16 Oct 2015 14:49:17 +0200
-Message-ID: <1444999760-15750-3-git-send-email-geert+renesas@glider.be>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] clk: samsung: exynos5250: Add DISP1 clocks
+Date: Fri, 16 Oct 2015 05:49:35 -0700
+Message-ID: <20151016124935.20687.4394@quantum>
+References: <1444905084-22540-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1444905084-22540-2-git-send-email-tomeu.vizoso@collabora.com>
+ <56203AD3.2050905@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56203AD3.2050905-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add all R-Car H3 CPG Core Clock Outputs defined in the datasheet.
+Quoting Krzysztof Kozlowski (2015-10-15 16:46:27)
+> On 15.10.2015 19:31, Tomeu Vizoso wrote:
+> > When the DISP1 power domain is powered off, there's two clocks that need
+> > to be temporarily reparented to OSC, and back to their original parents
+> > when the domain is powered on again.
+> > 
+> > We expose these two clocks in the DT bindings so that the DT node of the
+> > power domain can reference them.
+> > 
+> > Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > ---
+> > 
+> > Changes in v2:
+> > - Reuse mout_aclk200_p
+> > - Rename div_aclk300 as div_aclk300_disp
+> > 
+> >  drivers/clk/samsung/clk-exynos5250.c   | 14 +++++++++++++-
+> >  include/dt-bindings/clock/exynos5250.h |  4 +++-
+> >  2 files changed, 16 insertions(+), 2 deletions(-)
+> > 
+> 
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v4:
-  - Add all clocks instead of just the ones used by the current DTS.
+Applied to clk-next.
 
-v3:
-  - New.
----
- include/dt-bindings/clock/r8a7795-cpg-mssr.h | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
+Regards,
+Mike
 
-diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
-new file mode 100644
-index 0000000000000000..e864aae0a2561c4b
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
-@@ -0,0 +1,63 @@
-+/*
-+ * Copyright (C) 2015 Renesas Electronics Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/* r8a7795 CPG Core Clocks */
-+#define R8A7795_CLK_Z			0
-+#define R8A7795_CLK_Z2			1
-+#define R8A7795_CLK_ZR			2
-+#define R8A7795_CLK_ZG			3
-+#define R8A7795_CLK_ZTR			4
-+#define R8A7795_CLK_ZTRD2		5
-+#define R8A7795_CLK_ZT			6
-+#define R8A7795_CLK_ZX			7
-+#define R8A7795_CLK_S0D1		8
-+#define R8A7795_CLK_S0D4		9
-+#define R8A7795_CLK_S1D1		10
-+#define R8A7795_CLK_S1D2		11
-+#define R8A7795_CLK_S1D4		12
-+#define R8A7795_CLK_S2D1		13
-+#define R8A7795_CLK_S2D2		14
-+#define R8A7795_CLK_S2D4		15
-+#define R8A7795_CLK_S3D1		16
-+#define R8A7795_CLK_S3D2		17
-+#define R8A7795_CLK_S3D4		18
-+#define R8A7795_CLK_LB			19
-+#define R8A7795_CLK_CL			20
-+#define R8A7795_CLK_ZB3			21
-+#define R8A7795_CLK_ZB3D2		22
-+#define R8A7795_CLK_CR			23
-+#define R8A7795_CLK_CRD2		24
-+#define R8A7795_CLK_SD0H		25
-+#define R8A7795_CLK_SD0			26
-+#define R8A7795_CLK_SD1H		27
-+#define R8A7795_CLK_SD1			28
-+#define R8A7795_CLK_SD2H		29
-+#define R8A7795_CLK_SD2			30
-+#define R8A7795_CLK_SD3H		31
-+#define R8A7795_CLK_SD3			32
-+#define R8A7795_CLK_SSP2		33
-+#define R8A7795_CLK_SSP1		34
-+#define R8A7795_CLK_SSPRS		35
-+#define R8A7795_CLK_RPC			36
-+#define R8A7795_CLK_RPCD2		37
-+#define R8A7795_CLK_MSO			38
-+#define R8A7795_CLK_CANFD		39
-+#define R8A7795_CLK_HDMI		40
-+#define R8A7795_CLK_CSI0		41
-+#define R8A7795_CLK_CSIREF		42
-+#define R8A7795_CLK_CP			43
-+#define R8A7795_CLK_CPEX		44
-+#define R8A7795_CLK_R			45
-+#define R8A7795_CLK_OSC			46
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
--- 
-1.9.1
-
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
