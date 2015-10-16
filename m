@@ -1,91 +1,283 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7,3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND
- device tree nodes
-Date: Fri, 16 Oct 2015 11:31:12 +0100
-Message-ID: <20151016103112.GB29285@jhogan-linux.le.imgtec.org>
-References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
- <1444148837-10770-4-git-send-email-harvey.hunt@imgtec.com>
- <20151015084727.GG14475@jhogan-linux.le.imgtec.org>
- <CAOFt0_D5mO-7_cnpvm_MwvsZNv1yCFynbeA3dSw=H5hVyQbgTA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v3] rtc: pcf8563: add CLKOUT to common clock framework
+Date: Fri, 16 Oct 2015 12:39:01 +0200
+Message-ID: <1444991941-3564-1-git-send-email-hs@denx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOFt0_D5mO-7_cnpvm_MwvsZNv1yCFynbeA3dSw=H5hVyQbgTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
-Cc: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Georg.Soffel-k21M0aUVSxZWk0Htik3J/w@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---98e8jtXdkpgskNou
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add the clkout output clk to the common clock framework.
+Disable the CLKOUT of the RTC after power-up.
+After power-up/reset of the RTC, CLKOUT is enabled by default,
+with CLKOUT enabled the RTC chip has 2-3 times higher power
+consumption.
 
-Hi Alex,
+Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+---
 
-On Fri, Oct 16, 2015 at 11:11:29AM +0100, Alex Smith wrote:
-> Hi James,
->=20
-> On 15 October 2015 at 09:47, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> >> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/=
-ingenic/ci20.dts
-> >> index 9fcb9e7..453f1d3 100644
-> >> --- a/arch/mips/boot/dts/ingenic/ci20.dts
-> >> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-> >> @@ -42,3 +42,57 @@
-> >>  &uart4 {
-> >>       status =3D "okay";
-> >>  };
-> >> +
-> >> +&nemc {
-> >> +     status =3D "okay";
-> >> +
-> >> +     nand: nand@1 {
-> >> +             compatible =3D "ingenic,jz4780-nand";
-> >
-> > Isn't the NAND a micron part? This doesn't seem right. Is the device
-> > driver and binding already accepted upstream with that compatible
-> > string?
->=20
-> This is the compatible string for the JZ4780 NAND driver, this patch
-> is part of the series adding that. Detection of the NAND part is
-> handled by the MTD subsystem.
+Changes in v3:
+- use CONFIG_COMMON_CLK for common clk framework
+  changes
 
-Right (didn't spot that it was part of a series).
+Changes in v2:
+- add comments from Alexandre Belloni
+  - remove the DT property, instead
+    register for the CLKOUT a clk in the common
+    clk framework. The clk is disabled by default.
 
-The node appears to describe the NAND interface itself, i.e. a part of
-the SoC, so should be in the SoC dtsi file, with overrides in the board
-file if necessary for it to work with a particular NAND part
-(potentially utilising status=3D"disabled"). Would you agree?
+ Documentation/devicetree/bindings/rtc/pcf8563.txt |  28 ++++
+ drivers/rtc/rtc-pcf8563.c                         | 170 +++++++++++++++++++++-
+ 2 files changed, 197 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/pcf8563.txt
 
-Cheers
-James
+diff --git a/Documentation/devicetree/bindings/rtc/pcf8563.txt b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+new file mode 100644
+index 0000000..cdb81ef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+@@ -0,0 +1,28 @@
++* Philips PCF8563/Epson RTC8564 Real Time Clock
++
++Philips PCF8563/Epson RTC8564 Real Time Clock
++
++Required properties:
++see: Documentation/devicetree/bindings/i2c/trivial-devices.txt
++
++Optional property:
++- #clock-cells: Should be 1.
++- clocks: Reference to the clock entry.
++- clock-output-names:
++  overwrite the default clock name "pcf8563-clkout"
++
++Example:
++
++rtcclk: rtcclk {
++	compatible = "fixed-clock";
++	#clock-cells = <1>;
++	clock-frequency = <1>;
++	clock-output-names = "rtcclk";
++};
++
++pcf8563@51 {
++	compatible = "nxp,pcf8563";
++	reg = <0x51>;
++	#clock-cells = <1>;
++	clocks = <&rtcclk 0>;
++};
+diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+index e569243..9db3c1f 100644
+--- a/drivers/rtc/rtc-pcf8563.c
++++ b/drivers/rtc/rtc-pcf8563.c
+@@ -14,6 +14,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#include <linux/clk-provider.h>
+ #include <linux/i2c.h>
+ #include <linux/bcd.h>
+ #include <linux/rtc.h>
+@@ -40,7 +41,14 @@
+ 
+ #define PCF8563_REG_AMN		0x09 /* alarm */
+ 
+-#define PCF8563_REG_CLKO	0x0D /* clock out */
++#define PCF8563_REG_CLKO		0x0D /* clock out */
++#define PCF8563_REG_CLKO_FE		0x80 /* clock out enabled */
++#define PCF8563_REG_CLKO_F_MASK		0x03 /* frequenc mask */
++#define PCF8563_REG_CLKO_F_32768HZ	0x00
++#define PCF8563_REG_CLKO_F_1024HZ	0x01
++#define PCF8563_REG_CLKO_F_32HZ		0x02
++#define PCF8563_REG_CLKO_F_1HZ		0x03
++
+ #define PCF8563_REG_TMRC	0x0E /* timer control */
+ #define PCF8563_TMRC_ENABLE	BIT(7)
+ #define PCF8563_TMRC_4096	0
+@@ -76,6 +84,9 @@ struct pcf8563 {
+ 	int voltage_low; /* incicates if a low_voltage was detected */
+ 
+ 	struct i2c_client *client;
++#ifdef CONFIG_COMMON_CLK
++	struct clk_hw		clkout_hw;
++#endif
+ };
+ 
+ static int pcf8563_read_block_data(struct i2c_client *client, unsigned char reg,
+@@ -390,6 +401,158 @@ static int pcf8563_irq_enable(struct device *dev, unsigned int enabled)
+ 	return pcf8563_set_alarm_mode(to_i2c_client(dev), !!enabled);
+ }
+ 
++#ifdef CONFIG_COMMON_CLK
++/*
++ * Handling of the clkout
++ */
++
++#define clkout_hw_to_pcf8563(_hw) container_of(_hw, struct pcf8563, clkout_hw)
++
++static int clkout_rates[] = {
++	32768,
++	1024,
++	32,
++	1,
++};
++
++static unsigned long pcf8563_clkout_recalc_rate(struct clk_hw *hw,
++						unsigned long parent_rate)
++{
++	struct pcf8563 *pcf8563 = clkout_hw_to_pcf8563(hw);
++	struct i2c_client *client = pcf8563->client;
++	unsigned char buf;
++	int ret = pcf8563_read_block_data(client, PCF8563_REG_CLKO, 1, &buf);
++
++	if (ret < 0)
++		return 0;
++
++	buf &= PCF8563_REG_CLKO_F_MASK;
++	return clkout_rates[ret];
++}
++
++static long pcf8563_clkout_round_rate(struct clk_hw *hw, unsigned long rate,
++				      unsigned long *prate)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(clkout_rates); i++)
++		if (clkout_rates[i] <= rate)
++			return clkout_rates[i];
++
++	return 0;
++}
++
++static int pcf8563_clkout_set_rate(struct clk_hw *hw, unsigned long rate,
++				   unsigned long parent_rate)
++{
++	struct pcf8563 *pcf8563 = clkout_hw_to_pcf8563(hw);
++	struct i2c_client *client = pcf8563->client;
++	unsigned char buf;
++	int ret = pcf8563_read_block_data(client, PCF8563_REG_CLKO, 1, &buf);
++	int i;
++
++	if (ret < 0)
++		return ret;
++
++	for (i = 0; i < ARRAY_SIZE(clkout_rates); i++)
++		if (clkout_rates[i] == rate) {
++			buf &= ~PCF8563_REG_CLKO_F_MASK;
++			buf |= i;
++			ret = pcf8563_write_block_data(client,
++						       PCF8563_REG_CLKO, 1,
++						       &buf);
++			return ret;
++		}
++
++	return -EINVAL;
++}
++
++static int pcf8563_clkout_control(struct clk_hw *hw, bool enable)
++{
++	struct pcf8563 *pcf8563 = clkout_hw_to_pcf8563(hw);
++	struct i2c_client *client = pcf8563->client;
++	unsigned char buf;
++	int ret = pcf8563_read_block_data(client, PCF8563_REG_CLKO, 1, &buf);
++
++	if (ret < 0)
++		return ret;
++
++	if (enable)
++		buf |= PCF8563_REG_CLKO_FE;
++	else
++		buf &= ~PCF8563_REG_CLKO_FE;
++
++	ret = pcf8563_write_block_data(client, PCF8563_REG_CLKO, 1, &buf);
++	return ret;
++}
++
++static int pcf8563_clkout_prepare(struct clk_hw *hw)
++{
++	return pcf8563_clkout_control(hw, 1);
++}
++
++static void pcf8563_clkout_unprepare(struct clk_hw *hw)
++{
++	pcf8563_clkout_control(hw, 0);
++}
++
++static int pcf8563_clkout_is_prepared(struct clk_hw *hw)
++{
++	struct pcf8563 *pcf8563 = clkout_hw_to_pcf8563(hw);
++	struct i2c_client *client = pcf8563->client;
++	unsigned char buf;
++	int ret = pcf8563_read_block_data(client, PCF8563_REG_CLKO, 1, &buf);
++
++	if (ret < 0)
++		return ret;
++
++	return !!(buf & PCF8563_REG_CLKO_FE);
++}
++
++static const struct clk_ops pcf8563_clkout_ops = {
++	.prepare = pcf8563_clkout_prepare,
++	.unprepare = pcf8563_clkout_unprepare,
++	.is_prepared = pcf8563_clkout_is_prepared,
++	.recalc_rate = pcf8563_clkout_recalc_rate,
++	.round_rate = pcf8563_clkout_round_rate,
++	.set_rate = pcf8563_clkout_set_rate,
++};
++
++static struct clk *pcf8563_clkout_register_clk(struct pcf8563 *pcf8563)
++{
++	struct i2c_client *client = pcf8563->client;
++	struct device_node *node = client->dev.of_node;
++	struct clk *clk;
++	struct clk_init_data init;
++	int ret;
++	unsigned char buf;
++
++	/* disable the clkout output */
++	buf = 0;
++	ret = pcf8563_write_block_data(client, PCF8563_REG_CLKO, 1, &buf);
++	if (ret < 0)
++		return ERR_PTR(ret);
++
++	init.name = "pcf8563-clkout";
++	init.ops = &pcf8563_clkout_ops;
++	init.flags = CLK_IS_ROOT;
++	init.parent_names = NULL;
++	init.num_parents = 0;
++	pcf8563->clkout_hw.init = &init;
++
++	/* optional override of the clockname */
++	of_property_read_string(node, "clock-output-names", &init.name);
++
++	/* register the clock */
++	clk = clk_register(&client->dev, &pcf8563->clkout_hw);
++
++	if (!IS_ERR(clk))
++		of_clk_add_provider(node, of_clk_src_simple_get, clk);
++
++	return clk;
++}
++#endif
++
+ static const struct rtc_class_ops pcf8563_rtc_ops = {
+ 	.ioctl		= pcf8563_rtc_ioctl,
+ 	.read_time	= pcf8563_rtc_read_time,
+@@ -459,6 +622,11 @@ static int pcf8563_probe(struct i2c_client *client,
+ 
+ 	}
+ 
++#ifdef CONFIG_COMMON_CLK
++	/* register clk in common clk framework */
++	pcf8563_clkout_register_clk(pcf8563);
++#endif
++
+ 	/* the pcf8563 alarm only supports a minute accuracy */
+ 	pcf8563->rtc->uie_unsupported = 1;
+ 
+-- 
+2.1.0
 
---98e8jtXdkpgskNou
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWINHwAAoJEGwLaZPeOHZ6sx4QAIaMMqM4IJbFIcTiKRT8vdMr
-r89sxi5SsS6VdUDZI2IlAnQYnB6rrDjZ53Wag3PbA3G9PZFA16wOQDSVCyLiyPHL
-ss/4bl2D3cIabC9I9f5vjMQcSl0/AVD/VPDXSG3yP7XNv8Jh1cMkvIXIyI7mguIc
-kaJs0mlSTStWIOGuRf98vxqv1sVuxM7vnEu59SOfM90xYYsHSoAiKuAjUpVBZHcj
-0zWifGpbwBmUIjeA2znbbJifvrKUzybxywQaRlKmYC4cpxIEsrQWVj01OLB2nZv9
-wbXBQq3xzl79LHex/180IBzqzrpVZmt5ewHZLNv1zFH82WPMFJCON6JwgI7qL5g2
-6EnXX93WVC+kLfBv8gKFqumNnZgtQCjGgM5wMzmsofhFOOdk3ymusaubVFLd0KdR
-vcgsdiq59zthDTLEZjYHQa0zE1CANNvmz89WeMUjI/58qPbE0RwXoh7VJgaZlouP
-KICMH0MKTSvaSiuKobaS/ngz5W21z5LgLmDfna73Ia+wMgFcxd0svTfhv6fA+WWg
-bobnxtujCkFXTrlQHBiRnLLNrRx1hSjuH2azLlyW9MAHRLbbfZ+x6nTUOPghZtbR
-KTOOjHKvT0yD036ZQomRS98ubfAZWbj4YoQ/tYCuBik+nvZeAh92BRA/Oa75A7bu
-eEmfb7HtPycmATK4/6Ip
-=6LZP
------END PGP SIGNATURE-----
-
---98e8jtXdkpgskNou--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
