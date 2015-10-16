@@ -1,53 +1,43 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Fri, 16 Oct 2015 14:49:20 +0200
-Message-ID: <1444999760-15750-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 4/5] [RFC] clk: shmobile: cpg-mssr: Add new CPG/MSSR driver core
+Date: Fri, 16 Oct 2015 14:49:19 +0200
+Message-ID: <1444999760-15750-5-git-send-email-geert+renesas@glider.be>
 References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a new R-Car H3 Clock Pulse Generator / Module Standby and Software
-Reset driver, using the new CPG/MSSR driver core.
+Add the common core for the new Renesas Clock Pulse Generator / Module
+Standby and Software Reset driver.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v4:
   - New.
 ---
- drivers/clk/shmobile/Makefile               |   3 +-
- drivers/clk/shmobile/clk-r8a7795-cpg-mssr.c | 373 ++++++++++++++++++++++++++++
- 2 files changed, 375 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/shmobile/clk-r8a7795-cpg-mssr.c
+ drivers/clk/shmobile/clk-cpg-mssr.c | 578 ++++++++++++++++++++++++++++++++++++
+ drivers/clk/shmobile/clk-cpg-mssr.h | 118 ++++++++
+ 2 files changed, 696 insertions(+)
+ create mode 100644 drivers/clk/shmobile/clk-cpg-mssr.c
+ create mode 100644 drivers/clk/shmobile/clk-cpg-mssr.h
 
-diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-index 77b70b070e396a65..bbeb4d4ff715ff74 100644
---- a/drivers/clk/shmobile/Makefile
-+++ b/drivers/clk/shmobile/Makefile
-@@ -8,5 +8,6 @@ obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o clk-mstp.o clk-div6.o
- obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o clk-mstp.o clk-div6.o
- obj-$(CONFIG_ARCH_R8A7793)		+= clk-rcar-gen2.o clk-mstp.o clk-div6.o
- obj-$(CONFIG_ARCH_R8A7794)		+= clk-rcar-gen2.o clk-mstp.o clk-div6.o
--obj-$(CONFIG_ARCH_R8A7795)		+= clk-rcar-gen3.o clk-mssr.o clk-div6.o
-+obj-$(CONFIG_ARCH_R8A7795)		+= clk-cpg-mssr.o \
-+					   clk-r8a7795-cpg-mssr.o clk-div6.o
- obj-$(CONFIG_ARCH_SH73A0)		+= clk-sh73a0.o clk-mstp.o clk-div6.o
-diff --git a/drivers/clk/shmobile/clk-r8a7795-cpg-mssr.c b/drivers/clk/shmobile/clk-r8a7795-cpg-mssr.c
+diff --git a/drivers/clk/shmobile/clk-cpg-mssr.c b/drivers/clk/shmobile/clk-cpg-mssr.c
 new file mode 100644
-index 0000000000000000..18444a13e5722e2b
+index 0000000000000000..304af3b7dd09b6f7
 --- /dev/null
-+++ b/drivers/clk/shmobile/clk-r8a7795-cpg-mssr.c
-@@ -0,0 +1,373 @@
++++ b/drivers/clk/shmobile/clk-cpg-mssr.c
+@@ -0,0 +1,578 @@
 +/*
-+ * r8a7795 Clock Pulse Generator / Module Standby and Software Reset
++ * Renesas Clock Pulse Generator / Module Standby and Software Reset
 + *
 + * Copyright (C) 2015 Glider bvba
 + *
-+ * Based on clk-rcar-gen3.c
++ * Based on clk-mstp.c, clk-rcar-gen2.c, and clk-rcar-gen3.c
 + *
++ * Copyright (C) 2013 Ideas On Board SPRL
 + * Copyright (C) 2015 Renesas Electronics Corp.
 + *
 + * This program is free software; you can redistribute it and/or modify
@@ -55,365 +45,693 @@ index 0000000000000000..18444a13e5722e2b
 + * the Free Software Foundation; version 2 of the License.
 + */
 +
-+#include <linux/bug.h>
++#include <linux/clk.h>
 +#include <linux/clk-provider.h>
-+#include <linux/err.h>
 +#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_clock.h>
++#include <linux/pm_domain.h>
++#include <linux/slab.h>
 +
-+#include <dt-bindings/clock/r8a7795-cpg-mssr.h>
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
 +
 +#include "clk-cpg-mssr.h"
++#include "clk-div6.h"
 +
 +
-+enum clk_ids {
-+	/* Core Clock Outputs exported to DT */
-+	LAST_DT_CORE_CLOCK = R8A7795_CLK_OSC,
++/*
++ * Module Standby and Software Reset register offets.
++ *
++ * If the registers exist, these are valid for SH-Mobile, R-Mobile,
++ * R-Car Gen 2, and R-Car Gen 3.
++ * These are NOT valid for R-Car Gen1 and RZ/A1!
++ */
 +
-+	/* External Input Clocks */
-+	CLK_EXTAL,
-+	CLK_EXTALR,
++/*
++ * Module Stop Status Register offsets
++ */
 +
-+	/* Internal Core Clocks */
-+	CLK_MAIN,
-+	CLK_PLL0,
-+	CLK_PLL1,
-+	CLK_PLL2,
-+	CLK_PLL3,
-+	CLK_PLL4,
-+	CLK_PLL1_DIV2,
-+	CLK_PLL1_DIV4,
-+	CLK_S0,
-+	CLK_S1,
-+	CLK_S2,
-+	CLK_S3,
-+	CLK_SDSRC,
-+	CLK_SSPSRC,
++static const u16 mstpsr[] = {
++	0x030, 0x038, 0x040, 0x048, 0x04C, 0x03C, 0x1C0, 0x1C4,
++	0x9A0, 0x9A4, 0x9A8, 0x9AC,
++};
++
++#define	MSTPSR(i)	mstpsr[i]
++
++
++/*
++ * System Module Stop Control Register offsets
++ */
++
++static const u16 smstpcr[] = {
++	0x130, 0x134, 0x138, 0x13C, 0x140, 0x144, 0x148, 0x14C,
++	0x990, 0x994, 0x998, 0x99C,
++};
++
++#define	SMSTPCR(i)	smstpcr[i]
++
++
++/*
++ * Software Reset Register offsets
++ */
++
++static const u16 srcr[] = {
++	0x0A0, 0x0A8, 0x0B0, 0x0B8, 0x0BC, 0x0C4, 0x1C8, 0x1CC,
++	0x920, 0x924, 0x928, 0x92C,
++};
++
++#define	SRCR(i)		srcr[i]
++
++
++/* Realtime Module Stop Control Register offsets */
++#define RMSTPCR(i)	(smstpcr[i] - 0x20)
++
++/* Modem Module Stop Control Register offsets (r8a73a4) */
++#define MMSTPCR(i)	(smstpcr[i] + 0x20)
++
++/* Software Reset Clearing Register offsets */
++#define	SRSTCLR(i)	(0x940 + (i) * 4)
++
++
++#define MSTP_MAX_REGS		ARRAY_SIZE(smstpcr)
++#define MSTP_MAX_CLOCKS		(MSTP_MAX_REGS * 32)
++
++
++/**
++ * Clock Pulse Generator / Module Standby and Software Reset Private Data
++ *
++ * @base: CPG/MSSR register block base address
++ * @mstp_lock: protects writes to SMSTPCR
++ */
++struct cpg_mssr_priv {
++	void __iomem *base;
++	spinlock_t mstp_lock;
++
++	/* Core and Module Clocks */
++	struct clk **clks;
++
++	/* Core Clocks */
++	unsigned int num_core_clks;
++	unsigned int last_dt_core_clk;
 +
 +	/* Module Clocks */
-+	MOD_CLK_BASE
-+};
++	unsigned int num_mod_clks;
 +
-+enum r8a7795_clk_types {
-+	CLK_TYPE_GEN3_MAIN = CLK_TYPE_CUSTOM,
-+	CLK_TYPE_GEN3_PLL0,
-+	CLK_TYPE_GEN3_PLL1,
-+	CLK_TYPE_GEN3_PLL2,
-+	CLK_TYPE_GEN3_PLL3,
-+	CLK_TYPE_GEN3_PLL4,
-+};
-+
-+static const struct cpg_core_clk r8a7795_core_clks[] __initconst = {
-+	/* External Clock Inputs */
-+	DEF_INPUT("extal", CLK_EXTAL),
-+	DEF_INPUT("extalr", CLK_EXTALR),
-+
-+	/* Internal Core Clocks */
-+	DEF_BASE(".main",       CLK_MAIN, CLK_TYPE_GEN3_MAIN, CLK_EXTAL),
-+	DEF_BASE(".pll0",       CLK_PLL0, CLK_TYPE_GEN3_PLL0, CLK_MAIN),
-+	DEF_BASE(".pll1",       CLK_PLL1, CLK_TYPE_GEN3_PLL1, CLK_MAIN),
-+	DEF_BASE(".pll2",       CLK_PLL2, CLK_TYPE_GEN3_PLL2, CLK_MAIN),
-+	DEF_BASE(".pll3",       CLK_PLL3, CLK_TYPE_GEN3_PLL3, CLK_MAIN),
-+	DEF_BASE(".pll4",       CLK_PLL4, CLK_TYPE_GEN3_PLL4, CLK_MAIN),
-+
-+	DEF_FIXED(".pll1_div2", CLK_PLL1_DIV2,     CLK_PLL1,       2, 1),
-+	DEF_FIXED(".pll1_div4", CLK_PLL1_DIV4,     CLK_PLL1_DIV2,  2, 1),
-+	DEF_FIXED(".s0",        CLK_S0,            CLK_PLL1_DIV2,  2, 1),
-+	DEF_FIXED(".s1",        CLK_S1,            CLK_PLL1_DIV2,  3, 1),
-+	DEF_FIXED(".s2",        CLK_S2,            CLK_PLL1_DIV2,  4, 1),
-+	DEF_FIXED(".s3",        CLK_S3,            CLK_PLL1_DIV2,  6, 1),
-+
-+	/* Core Clock Outputs */
-+	DEF_FIXED("ztr",        R8A7795_CLK_ZTR,   CLK_PLL1_DIV2,  6, 1),
-+	DEF_FIXED("ztrd2",      R8A7795_CLK_ZTRD2, CLK_PLL1_DIV2, 12, 1),
-+	DEF_FIXED("zt",         R8A7795_CLK_ZT,    CLK_PLL1_DIV2,  4, 1),
-+	DEF_FIXED("zx",         R8A7795_CLK_ZX,    CLK_PLL1_DIV2,  2, 1),
-+	DEF_FIXED("s0d1",       R8A7795_CLK_S0D1,  CLK_S0,         1, 1),
-+	DEF_FIXED("s0d4",       R8A7795_CLK_S0D4,  CLK_S0,         4, 1),
-+	DEF_FIXED("s1d1",       R8A7795_CLK_S1D1,  CLK_S1,         1, 1),
-+	DEF_FIXED("s1d2",       R8A7795_CLK_S1D2,  CLK_S1,         2, 1),
-+	DEF_FIXED("s1d4",       R8A7795_CLK_S1D4,  CLK_S1,         4, 1),
-+	DEF_FIXED("s2d1",       R8A7795_CLK_S2D1,  CLK_S2,         1, 1),
-+	DEF_FIXED("s2d2",       R8A7795_CLK_S2D2,  CLK_S2,         2, 1),
-+	DEF_FIXED("s2d4",       R8A7795_CLK_S2D4,  CLK_S2,         4, 1),
-+	DEF_FIXED("s3d1",       R8A7795_CLK_S3D1,  CLK_S3,         1, 1),
-+	DEF_FIXED("s3d2",       R8A7795_CLK_S3D2,  CLK_S3,         2, 1),
-+	DEF_FIXED("s3d4",       R8A7795_CLK_S3D4,  CLK_S3,         4, 1),
-+	DEF_FIXED("cl",         R8A7795_CLK_CL,    CLK_PLL1_DIV2, 48, 1),
-+	DEF_FIXED("cp",         R8A7795_CLK_CP,    CLK_EXTAL,      2, 1),
-+	DEF_DIV6P1("mso",       R8A7795_CLK_MSO,   CLK_PLL1_DIV4, 0x014),
-+	DEF_DIV6P1("hdmi",      R8A7795_CLK_HDMI,  CLK_PLL1_DIV2, 0x250),
-+};
-+
-+static const struct mssr_mod_clk r8a7795_mod_clks[] __initconst = {
-+	{ "scif5",		202,	R8A7795_CLK_S3D4	},
-+	{ "scif4",		203,	R8A7795_CLK_S3D4	},
-+	{ "scif3",		204,	R8A7795_CLK_S3D4	},
-+	{ "scif1",		206,	R8A7795_CLK_S3D4	},
-+	{ "scif0",		207,	R8A7795_CLK_S3D4	},
-+	{ "msiof3",		208,	R8A7795_CLK_MSO		},
-+	{ "msiof2",		209,	R8A7795_CLK_MSO		},
-+	{ "msiof1",		210,	R8A7795_CLK_MSO		},
-+	{ "msiof0",		211,	R8A7795_CLK_MSO		},
-+	{ "sys-dmac2",		217,	R8A7795_CLK_S3D1	},
-+	{ "sys-dmac1",		218,	R8A7795_CLK_S3D1	},
-+	{ "sys-dmac0",		219,	R8A7795_CLK_S3D1	},
-+	{ "scif2",		310,	R8A7795_CLK_S3D4	},
-+	{ "intc-ap",		408,	R8A7795_CLK_S3D1	},
-+	{ "audmac0",		502,	R8A7795_CLK_S3D4	},
-+	{ "audmac1",		501,	R8A7795_CLK_S3D4	},
-+	{ "hscif4",		516,	R8A7795_CLK_S3D1	},
-+	{ "hscif3",		517,	R8A7795_CLK_S3D1	},
-+	{ "hscif2",		518,	R8A7795_CLK_S3D1	},
-+	{ "hscif1",		519,	R8A7795_CLK_S3D1	},
-+	{ "hscif0",		520,	R8A7795_CLK_S3D1	},
-+	{ "vspd3",		620,	R8A7795_CLK_S2D1	},
-+	{ "vspd2",		621,	R8A7795_CLK_S2D1	},
-+	{ "vspd1",		622,	R8A7795_CLK_S2D1	},
-+	{ "vspd0",		623,	R8A7795_CLK_S2D1	},
-+	{ "vspbc",		624,	R8A7795_CLK_S2D1	},
-+	{ "vspbd",		626,	R8A7795_CLK_S2D1	},
-+	{ "vspi2",		629,	R8A7795_CLK_S2D1	},
-+	{ "vspi1",		630,	R8A7795_CLK_S2D1	},
-+	{ "vspi0",		631,	R8A7795_CLK_S2D1	},
-+	{ "ehci2",		701,	R8A7795_CLK_S3D4	},
-+	{ "ehci1",		702,	R8A7795_CLK_S3D4	},
-+	{ "ehci0",		703,	R8A7795_CLK_S3D4	},
-+	{ "hsusb",		704,	R8A7795_CLK_S3D4	},
-+	{ "du3",		721,	R8A7795_CLK_S2D1	},
-+	{ "du2",		722,	R8A7795_CLK_S2D1	},
-+	{ "du1",		723,	R8A7795_CLK_S2D1	},
-+	{ "du0",		724,	R8A7795_CLK_S2D1	},
-+	{ "hdmi1",		728,	R8A7795_CLK_HDMI	},
-+	{ "hdmi0",		729,	R8A7795_CLK_HDMI	},
-+	{ "etheravb",		812,	R8A7795_CLK_S3D2	},
-+	{ "gpio7",		905,	R8A7795_CLK_CP		},
-+	{ "gpio6",		906,	R8A7795_CLK_CP		},
-+	{ "gpio5",		907,	R8A7795_CLK_CP		},
-+	{ "gpio4",		908,	R8A7795_CLK_CP		},
-+	{ "gpio3",		909,	R8A7795_CLK_CP		},
-+	{ "gpio2",		910,	R8A7795_CLK_CP		},
-+	{ "gpio1",		911,	R8A7795_CLK_CP		},
-+	{ "gpio0",		912,	R8A7795_CLK_CP		},
-+	{ "i2c6",		918,	R8A7795_CLK_S3D2	},
-+	{ "i2c5",		919,	R8A7795_CLK_S3D2	},
-+	{ "i2c4",		927,	R8A7795_CLK_S3D2	},
-+	{ "i2c3",		928,	R8A7795_CLK_S3D2	},
-+	{ "i2c2",		929,	R8A7795_CLK_S3D2	},
-+	{ "i2c1",		930,	R8A7795_CLK_S3D2	},
-+	{ "i2c0",		931,	R8A7795_CLK_S3D2	},
-+	{ "ssi-all",		1005,	R8A7795_CLK_S3D4	},
-+	{ "ssi9",		1006,	MOD_CLK_BASE + 1005	},
-+	{ "ssi8",		1007,	MOD_CLK_BASE + 1005	},
-+	{ "ssi7",		1008,	MOD_CLK_BASE + 1005	},
-+	{ "ssi6",		1009,	MOD_CLK_BASE + 1005	},
-+	{ "ssi5",		1010,	MOD_CLK_BASE + 1005	},
-+	{ "ssi4",		1011,	MOD_CLK_BASE + 1005	},
-+	{ "ssi3",		1012,	MOD_CLK_BASE + 1005	},
-+	{ "ssi2",		1013,	MOD_CLK_BASE + 1005	},
-+	{ "ssi1",		1014,	MOD_CLK_BASE + 1005	},
-+	{ "ssi0",		1015,	MOD_CLK_BASE + 1005	},
-+	{ "scu-all",		1017,	R8A7795_CLK_S3D4	},
-+	{ "scu-dvc1",		1018,	MOD_CLK_BASE + 1017	},
-+	{ "scu-dvc0",		1019,	MOD_CLK_BASE + 1017	},
-+	{ "scu-ctu1-mix1",	1020,	MOD_CLK_BASE + 1017	},
-+	{ "scu-ctu0-mix0",	1021,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src9",		1022,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src8",		1023,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src7",		1024,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src6",		1025,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src5",		1026,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src4",		1027,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src3",		1028,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src2",		1029,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src1",		1030,	MOD_CLK_BASE + 1017	},
-+	{ "scu-src0",		1031,	MOD_CLK_BASE + 1017	},
-+};
-+
-+static const unsigned int r8a7795_crit_mod_clks[] __initconst = {
-+	408,	/* INTC-AP (GIC) */
++	/* Core Clocks suitable for PM, in addition to the module clocks */
++	const unsigned int *core_pm_clks;
++	unsigned int num_core_pm_clks;
 +};
 +
 +
-+#define CPG_PLL0CR	0x00d8
-+#define CPG_PLL2CR	0x002c
-+
-+/*
-+ * CPG Clock Data
++/**
++ * struct mstp_clock - MSTP gating clock
++ * @hw: handle between common and hardware-specific interfaces
++ * @index: MSTP clock number
++ * @priv: CPG/MSSR private data
 + */
-+
-+/*
-+ *   MD		EXTAL		PLL0	PLL1	PLL2	PLL3	PLL4
-+ * 14 13 19 17	(MHz)
-+ *-------------------------------------------------------------------
-+ * 0  0  0  0	16.66 x 1	x180	x192	x144	x192	x144
-+ * 0  0  0  1	16.66 x 1	x180	x192	x144	x128	x144
-+ * 0  0  1  0	Prohibited setting
-+ * 0  0  1  1	16.66 x 1	x180	x192	x144	x192	x144
-+ * 0  1  0  0	20    x 1	x150	x156	x120	x156	x120
-+ * 0  1  0  1	20    x 1	x150	x156	x120	x106	x120
-+ * 0  1  1  0	Prohibited setting
-+ * 0  1  1  1	20    x 1	x150	x156	x120	x156	x120
-+ * 1  0  0  0	25    x 1	x120	x128	x96	x128	x96
-+ * 1  0  0  1	25    x 1	x120	x128	x96	x84	x96
-+ * 1  0  1  0	Prohibited setting
-+ * 1  0  1  1	25    x 1	x120	x128	x96	x128	x96
-+ * 1  1  0  0	33.33 / 2	x180	x192	x144	x192	x144
-+ * 1  1  0  1	33.33 / 2	x180	x192	x144	x128	x144
-+ * 1  1  1  0	Prohibited setting
-+ * 1  1  1  1	33.33 / 2	x180	x192	x144	x192	x144
-+ */
-+#define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 11) | \
-+					 (((md) & BIT(13)) >> 11) | \
-+					 (((md) & BIT(19)) >> 18) | \
-+					 (((md) & BIT(17)) >> 17))
-+
-+struct cpg_pll_config {
-+	unsigned int extal_div;
-+	unsigned int pll1_mult;
-+	unsigned int pll3_mult;
-+	unsigned int pll4_mult;
++struct mstp_clock {
++	struct clk_hw hw;
++	u32 index;
++	struct cpg_mssr_priv *priv;
 +};
 +
-+static const struct cpg_pll_config cpg_pll_configs[16] __initconst = {
-+/* EXTAL div	PLL1	PLL3	PLL4 */
-+	{ 1,	192,	192,	144, },
-+	{ 1,	192,	128,	144, },
-+	{ 0,	0,	0,	0,   }, /* Prohibited setting */
-+	{ 1,	192,	192,	144, },
-+	{ 1,	156,	156,	120, },
-+	{ 1,	156,	106,	120, },
-+	{ 0,	0,	0,	0,   }, /* Prohibited setting */
-+	{ 1,	156,	156,	120, },
-+	{ 1,	128,	128,	96,  },
-+	{ 1,	128,	84,	96,  },
-+	{ 0,	0,	0,	0,   }, /* Prohibited setting */
-+	{ 1,	128,	128,	96,  },
-+	{ 2,	192,	192,	144, },
-+	{ 2,	192,	128,	144, },
-+	{ 0,	0,	0,	0,   }, /* Prohibited setting */
-+	{ 2,	192,	192,	144, },
-+};
++#define to_mstp_clock(_hw) container_of(_hw, struct mstp_clock, hw)
 +
-+static const struct cpg_pll_config *cpg_pll_config __initdata;
-+
-+static
-+struct clk * __init r8a7795_cpg_clk_register(const struct cpg_core_clk *core,
-+					     const struct cpg_mssr_info *info,
-+					     struct clk **clks,
-+					     void __iomem *base)
++static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
 +{
-+	unsigned int idx = core->id;
-+	const struct clk *parent;
-+	unsigned int mult = 1;
-+	unsigned int div = 1;
++	struct mstp_clock *clock = to_mstp_clock(hw);
++	struct cpg_mssr_priv *priv = clock->priv;
++	unsigned int reg = clock->index / 32;
++	unsigned int bit = clock->index % 32;
++	u32 bitmask = BIT(bit);
++	unsigned long flags;
++	unsigned int i;
 +	u32 value;
 +
-+	pr_debug("Registering r8a7795 core clock %s id %u type %u\n",
-+		 core->name, idx, core->type);
-+	WARN_ON(idx >= info->num_total_core_clks);
-+	WARN_ON(PTR_ERR(clks[idx]) != -ENOENT);
++	pr_debug("MSTP %u%02u/%pC %s\n", reg, bit, hw->clk,
++		 enable ? "ON" : "OFF");
++	spin_lock_irqsave(&priv->mstp_lock, flags);
 +
-+	parent = clks[core->parent];
-+	if (IS_ERR(parent))
-+		return ERR_CAST(parent);
++	value = clk_readl(priv->base + SMSTPCR(reg));
++	if (enable)
++		value &= ~bitmask;
++	else
++		value |= bitmask;
++	clk_writel(value, priv->base + SMSTPCR(reg));
 +
-+	switch (core->type) {
-+	case CLK_TYPE_GEN3_MAIN:
-+		div = cpg_pll_config->extal_div;
++	spin_unlock_irqrestore(&priv->mstp_lock, flags);
++
++	if (!enable)
++		return 0;
++
++	for (i = 1000; i > 0; --i) {
++		if (!(clk_readl(priv->base + MSTPSR(reg)) &
++		      bitmask))
++			break;
++		cpu_relax();
++	}
++
++	if (!i) {
++		pr_err("%s: Failed to enable %p[%d]\n", __func__,
++		       priv->base + SMSTPCR(reg), bit);
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
++static int cpg_mstp_clock_enable(struct clk_hw *hw)
++{
++	return cpg_mstp_clock_endisable(hw, true);
++}
++
++static void cpg_mstp_clock_disable(struct clk_hw *hw)
++{
++	cpg_mstp_clock_endisable(hw, false);
++}
++
++static int cpg_mstp_clock_is_enabled(struct clk_hw *hw)
++{
++	struct mstp_clock *clock = to_mstp_clock(hw);
++	struct cpg_mssr_priv *priv = clock->priv;
++	u32 value;
++
++	value = clk_readl(priv->base + MSTPSR(clock->index / 32));
++
++	return !(value & BIT(clock->index % 32));
++}
++
++static const struct clk_ops cpg_mstp_clock_ops = {
++	.enable = cpg_mstp_clock_enable,
++	.disable = cpg_mstp_clock_disable,
++	.is_enabled = cpg_mstp_clock_is_enabled,
++};
++
++static
++struct clk *cpg_mssr_clk_src_twocell_get(struct of_phandle_args *clkspec,
++					 void *data)
++{
++	unsigned int clkidx = clkspec->args[1];
++	struct cpg_mssr_priv *priv = data;
++	unsigned int idx;
++	struct clk *clk;
++
++	switch (clkspec->args[0]) {
++	case CPG_CORE:
++		if (clkidx > priv->last_dt_core_clk) {
++			pr_err("%s: Invalid %s clock index %u\n", __func__,
++			       "core", clkidx);
++			return ERR_PTR(-EINVAL);
++		}
++		clk = priv->clks[clkidx];
 +		break;
 +
-+	case CLK_TYPE_GEN3_PLL0:
-+		/*
-+		 * PLL0 is a configurable multiplier clock. Register it as a
-+		 * fixed factor clock for now as there's no generic multiplier
-+		 * clock implementation and we currently have no need to change
-+		 * the multiplier value.
-+		 */
-+		value = readl(base + CPG_PLL0CR);
-+		mult = ((value >> 24) & 0x3f) + 1;
-+		break;
-+
-+	case CLK_TYPE_GEN3_PLL1:
-+		mult = cpg_pll_config->pll1_mult;
-+		break;
-+
-+	case CLK_TYPE_GEN3_PLL2:
-+		/*
-+		 * PLL2 is a configurable multiplier clock. Register it as a
-+		 * fixed factor clock for now as there's no generic multiplier
-+		 * clock implementation and we currently have no need to change
-+		 * the multiplier value.
-+		 */
-+		value = readl(base + CPG_PLL2CR);
-+		mult = ((value >> 24) & 0x3f) + 1;
-+		break;
-+
-+	case CLK_TYPE_GEN3_PLL3:
-+		mult = cpg_pll_config->pll3_mult;
-+		break;
-+
-+	case CLK_TYPE_GEN3_PLL4:
-+		mult = cpg_pll_config->pll4_mult;
++	case CPG_MOD:
++		/* Translate from sparse base-100 to packed index space */
++		idx = clkidx - (clkidx / 100) * (100 - 32);
++		if (clkidx % 100 > 31 || idx >= priv->num_mod_clks) {
++			pr_err("%s: Invalid %s clock index %u\n", __func__,
++			       "module", clkidx);
++			return ERR_PTR(-EINVAL);
++		}
++		clk = priv->clks[priv->num_core_clks + idx];
 +		break;
 +
 +	default:
-+		pr_err("%s: Unsupported clock type %u\n", __func__, core->type);
++		pr_err("%s: Invalid CPG clock type %u\n", __func__,
++		       clkspec->args[0]);
 +		return ERR_PTR(-EINVAL);
 +	}
 +
-+	return clk_register_fixed_factor(NULL, core->name,
-+					 __clk_get_name(parent), 0, mult, div);
++	if (IS_ERR(clk))
++		pr_err("%s: Cannot get %s clock %u: %ld", __func__,
++		       clkspec->args[0] == CPG_CORE ? "core" : "module",
++		       clkidx, PTR_ERR(clk));
++	else
++		pr_debug("%s: clock (%u, %u) is %pC\n", __func__,
++			 clkspec->args[0], clkspec->args[1], clk);
++	return clk;
 +}
 +
-+static const struct cpg_mssr_info r8a7795_cpg_mssr_info __initconst = {
-+	/* Core Clocks */
-+	.core_clks = r8a7795_core_clks,
-+	.num_core_clks = ARRAY_SIZE(r8a7795_core_clks),
-+	.last_dt_core_clk = LAST_DT_CORE_CLOCK,
-+	.num_total_core_clks = MOD_CLK_BASE,
 +
-+	/* Module Clocks */
-+	.mod_clks = r8a7795_mod_clks,
-+	.num_mod_clks = ARRAY_SIZE(r8a7795_mod_clks),
-+	.num_hw_mod_clks = 12 * 32,
++// FIXME Handle packing in a macro in cpg_mssr_info.mod_clks[]???
++static unsigned int __init mod_pack(unsigned int idx,
++				    struct cpg_mssr_priv *priv)
++{
++	WARN_ON(idx % 100 > 31);
++	idx -= (idx / 100) * (100 - 32);
++	WARN_ON(idx >= priv->num_mod_clks);
++	return idx;
++}
 +
-+	/* Critical Module Clocks */
-+	.crit_mod_clks = r8a7795_crit_mod_clks,
-+	.num_crit_mod_clks = ARRAY_SIZE(r8a7795_crit_mod_clks),
++static unsigned int __init id_to_idx(unsigned int id,
++				     struct cpg_mssr_priv *priv)
++{
++	unsigned int idx;
 +
-+	/* Callbacks */
-+	.cpg_clk_register = r8a7795_cpg_clk_register,
++	if (id < priv->num_core_clks) {
++		/* Core Clock */
++		pr_debug("%s: %u is a core clock\n", __func__, id);
++		return id;
++	}
++
++	/* Module Clock */
++	idx = priv->num_core_clks +
++	      mod_pack(id - priv->num_core_clks, priv);
++	pr_debug("%s: %u is module clock %u at index %u\n", __func__,
++		 id, id - priv->num_core_clks, idx);
++	return idx;
++}
++
++static void __init cpg_mssr_register_core_clk(struct device_node *np,
++					      const struct cpg_core_clk *core,
++					      const struct cpg_mssr_info *info,
++					      struct cpg_mssr_priv *priv)
++{
++	struct clk *clk = NULL, *parent;
++	unsigned int idx = core->id;
++	const char *parent_name;
++
++	pr_debug("Registering core clock %s id %u type %u\n", core->name, idx,
++		 core->type);
++	WARN_ON(idx >= priv->num_core_clks);
++	WARN_ON(PTR_ERR(priv->clks[idx]) != -ENOENT);
++
++	switch (core->type) {
++	/* Generic */
++	case CLK_TYPE_IN:
++		/* External Clock Input */
++		clk = of_clk_get_by_name(np, core->name);
++		break;
++
++	case CLK_TYPE_FF:
++		/* Fixed Factor Clock */
++		WARN_ON(core->parent >= priv->num_core_clks);
++		parent = priv->clks[core->parent];
++		if (IS_ERR(parent)) {
++			clk = parent;
++			goto fail;
++		}
++
++		parent_name = __clk_get_name(parent);
++		clk = clk_register_fixed_factor(NULL, core->name, parent_name,
++						0, core->mult, core->div);
++		break;
++
++	case CLK_TYPE_DIV6P1:
++		/* DIV6 Clock with 1 parent clock */
++		WARN_ON(core->parent >= priv->num_core_clks);
++		parent = priv->clks[core->parent];
++		if (IS_ERR(parent)) {
++			clk = parent;
++			goto fail;
++		}
++
++		parent_name = __clk_get_name(parent);
++		clk = cpg_div6_register(core->name, 1, &parent_name,
++					priv->base + core->offset);
++		break;
++
++	default:
++		if (info->cpg_clk_register)
++			clk = info->cpg_clk_register(core, info, priv->clks,
++						     priv->base);
++		else
++			pr_err("%s: Unsupported clock type %u\n", __func__,
++			       core->type);
++		break;
++	}
++
++	if (IS_ERR_OR_NULL(clk))
++		goto fail;
++
++	pr_debug("%s: Registered core clock %pC\n", __func__, clk);
++	priv->clks[idx] = clk;
++	return;
++
++fail:
++	pr_err("%s: Failed to register core clock %u: %ld\n", __func__, idx,
++	       PTR_ERR(clk));
++}
++
++static void __init cpg_mssr_register_mod_clk(const struct mssr_mod_clk *mod,
++					     const struct cpg_mssr_info *info,
++					     struct cpg_mssr_priv *priv)
++{
++	unsigned int mod_idx, idx, parent_idx;
++	struct mstp_clock *clock = NULL;
++	struct clk_init_data init;
++	struct clk *parent, *clk;
++	const char *parent_name;
++	unsigned int i;
++
++	pr_debug("Registering module clock %s id %u parent %u\n", mod->name,
++		 mod->id, mod->parent);
++
++	// FIXME Incorporate offset/packing in cpg_mssr_info.mod_clks[]?
++	mod_idx = mod_pack(mod->id, priv);
++	WARN_ON(mod_idx >= priv->num_mod_clks);
++	idx = priv->num_core_clks + mod_idx;
++	parent_idx = id_to_idx(mod->parent, priv);
++	WARN_ON(parent_idx >= priv->num_core_clks + priv->num_mod_clks);
++	WARN_ON(PTR_ERR(priv->clks[idx]) != -ENOENT);
++
++	parent = priv->clks[parent_idx];
++	if (IS_ERR(parent)) {
++		clk = parent;
++		goto fail;
++	}
++
++	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
++	if (!clock) {
++		clk = ERR_PTR(-ENOMEM);
++		goto fail;
++	}
++
++	init.name = mod->name;
++	init.ops = &cpg_mstp_clock_ops;
++	init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
++	for (i = 0; i < info->num_crit_mod_clks; i++)
++		if (mod->id == info->crit_mod_clks[i]) {
++#ifdef CLK_ENABLE_HAND_OFF // FIXME Not yet in -next
++			pr_debug("%s: MSTP %s setting CLK_ENABLE_HAND_OFF\n",
++				 __func__, mod->name);
++			init.flags |= CLK_ENABLE_HAND_OFF;
++			break;
++#else
++			pr_debug("%s: Ignoring MSTP %s to prevent disabling\n",
++				 __func__, mod->name);
++			return;
++#endif
++		}
++
++	parent_name = __clk_get_name(parent);
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	clock->index = mod_idx;
++	clock->priv = priv;
++	clock->hw.init = &init;
++
++	clk = clk_register(NULL, &clock->hw);
++	if (IS_ERR(clk))
++		goto fail;
++
++	pr_debug("%s: Created module clock %pC\n", __func__, clk);
++	priv->clks[idx] = clk;
++	return;
++
++fail:
++	pr_err("%s: Failed to create module clock %u: %ld\n", __func__,
++	       mod->id, PTR_ERR(clk));
++	kfree(clock);
++}
++
++
++#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
++static const struct of_device_id cpg_mssr_match[] = {
++	// FIXME Reuse the string as matched by the driver
++	{ .compatible = "renesas,r8a7791-cpg-mssr", },
++	{ .compatible = "renesas,r8a7795-cpg-mssr", },
++	{ /* sentinel */ }
 +};
 +
-+static void __init r8a7795_cpg_mssr_init(struct device_node *np)
++static bool cpg_mssr_is_pm_clk(const struct of_phandle_args *clkspec)
 +{
-+	struct regmap *regmap;
-+	u32 reg, cpg_mode;
++	if (!of_match_node(cpg_mssr_match, clkspec->np))
++		return false;
 +
-+	regmap = syscon_regmap_lookup_by_phandle(np, "renesas,modemr");
-+	if (IS_ERR(regmap) ||
-+	    of_property_read_u32_index(np, "renesas,modemr", 1, &reg) ||
-+	    regmap_read(regmap, reg, &cpg_mode)) {
-+		pr_err("%s: failed to parse renesas,modemr\n", np->full_name);
-+		return;
++	if (clkspec->args_count != 2)
++		return false;
++
++	switch (clkspec->args[0]) {
++	case CPG_CORE:
++		// FIXME Match against cpg_mssr_info.core_pm_clks[]
++		return false;
++
++	case CPG_MOD:
++		return true;
++
++	default:
++		return false;
 +	}
-+
-+	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-+	if (!cpg_pll_config->extal_div) {
-+		pr_err("%s: Prohibited setting (cpg_mode=0x%x)\n",
-+		       __func__, cpg_mode);
-+		return;
-+	}
-+
-+	cpg_mssr_probe(np, &r8a7795_cpg_mssr_info);
 +}
-+CLK_OF_DECLARE(r8a7795_cpg_mssr, "renesas,r8a7795-cpg-mssr",
-+	       r8a7795_cpg_mssr_init);
++
++static int cpg_mssr_attach_dev(struct generic_pm_domain *domain,
++			       struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct of_phandle_args clkspec;
++	struct clk *clk;
++	int i = 0;
++	int error;
++
++	while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
++					   &clkspec)) {
++		if (cpg_mssr_is_pm_clk(&clkspec))
++			goto found;
++
++		of_node_put(clkspec.np);
++		i++;
++	}
++
++	return 0;
++
++found:
++	clk = of_clk_get_from_provider(&clkspec);
++	of_node_put(clkspec.np);
++
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	error = pm_clk_create(dev);
++	if (error) {
++		dev_err(dev, "pm_clk_create failed %d\n", error);
++		goto fail_put;
++	}
++
++	error = pm_clk_add_clk(dev, clk);
++	if (error) {
++		dev_err(dev, "pm_clk_add_clk %pC failed %d\n", clk, error);
++		goto fail_destroy;
++	}
++
++	return 0;
++
++fail_destroy:
++	pm_clk_destroy(dev);
++fail_put:
++	clk_put(clk);
++	return error;
++}
++
++static void cpg_mssr_detach_dev(struct generic_pm_domain *domain,
++				struct device *dev)
++{
++	if (!list_empty(&dev->power.subsys_data->clock_list))
++		pm_clk_destroy(dev);
++}
++
++static void __init cpg_mssr_add_clk_domain(struct device_node *np)
++{
++	struct generic_pm_domain *pd;
++	u32 ncells;
++
++	if (of_property_read_u32(np, "#power-domain-cells", &ncells)) {
++		pr_warn("%s lacks #power-domain-cells\n", np->full_name);
++		return;
++	}
++
++	pd = kzalloc(sizeof(*pd), GFP_KERNEL);
++	if (!pd)
++		return;
++
++	pd->name = np->name;
++
++	pd->flags = GENPD_FLAG_PM_CLK;
++	pm_genpd_init(pd, &simple_qos_governor, false);
++	pd->attach_dev = cpg_mssr_attach_dev;
++	pd->detach_dev = cpg_mssr_detach_dev;
++
++	of_genpd_add_provider_simple(np, pd);
++}
++#else
++static inline void cpg_mssr_add_clk_domain(struct device_node *np) {}
++#endif /* !CONFIG_PM_GENERIC_DOMAINS_OF */
++
++
++void __init cpg_mssr_probe(struct device_node *np,
++			   const struct cpg_mssr_info *info)
++{
++	struct cpg_mssr_priv *priv;
++	unsigned int nclks, i;
++	struct clk **clks;
++
++	pr_debug("%s: Using %ps\n", __func__, info);
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return;
++
++	priv->base = of_iomap(np, 0);
++	if (!priv->base)
++		return;
++
++	nclks = info->num_total_core_clks + info->num_hw_mod_clks;
++	clks = kmalloc_array(nclks, sizeof(*clks), GFP_KERNEL);
++	if (!clks)
++		return;
++
++	spin_lock_init(&priv->mstp_lock);
++	priv->clks = clks;
++	priv->num_core_clks = info->num_total_core_clks;
++	priv->last_dt_core_clk = info->last_dt_core_clk;
++	priv->num_mod_clks = info->num_hw_mod_clks;
++
++	for (i = 0; i < nclks; i++)
++		clks[i] = ERR_PTR(-ENOENT);
++
++	for (i = 0; i < info->num_core_clks; i++)
++		cpg_mssr_register_core_clk(np, &info->core_clks[i], info,
++					   priv);
++
++	for (i = 0; i < info->num_mod_clks; i++)
++		cpg_mssr_register_mod_clk(&info->mod_clks[i], info, priv);
++
++	of_clk_add_provider(np, cpg_mssr_clk_src_twocell_get, priv);
++
++	cpg_mssr_add_clk_domain(np);
++}
++
++MODULE_DESCRIPTION("Renesas CPG/MSSR Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clk/shmobile/clk-cpg-mssr.h b/drivers/clk/shmobile/clk-cpg-mssr.h
+new file mode 100644
+index 0000000000000000..55100f0998265f45
+--- /dev/null
++++ b/drivers/clk/shmobile/clk-cpg-mssr.h
+@@ -0,0 +1,118 @@
++/*
++ * Renesas Clock Pulse Generator / Module Standby and Software Reset
++ *
++ * Copyright (C) 2015 Glider bvba
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ */
++
++
++    /*
++     * Definitions of CPG Core Clocks
++     *
++     * These include:
++     *   - Clock outputs exported to DT
++     *   - External input clocks
++     *   - Internal CPG clocks
++     */
++
++struct cpg_core_clk {
++	/* Common */
++	const char *name;
++	unsigned int id;
++	unsigned int type;
++	/* Depending on type */
++	unsigned int parent;	/* Core Clocks only */
++	unsigned int div;
++	unsigned int mult;
++	unsigned int offset;
++};
++
++enum clk_types {
++	/* Generic */
++	CLK_TYPE_IN,		/* External Clock Input */
++	CLK_TYPE_FF,		/* Fixed Factor Clock */
++	CLK_TYPE_DIV6P1,	/* DIV6 Clock with 1 parent clock */
++
++	/* Custom definitions start here */
++	CLK_TYPE_CUSTOM,
++};
++
++#define DEF_TYPE(_name, _id, _type...)	\
++	{ .name = _name, .id = _id, .type = _type }
++#define DEF_BASE(_name, _id, _type, _parent...)	\
++	DEF_TYPE(_name, _id, _type, .parent = _parent)
++
++#define DEF_INPUT(_name, _id) \
++	DEF_TYPE(_name, _id, CLK_TYPE_IN)
++#define DEF_FIXED(_name, _id, _parent, _div, _mult)	\
++	DEF_BASE(_name, _id, CLK_TYPE_FF, _parent, .div = _div, .mult = _mult)
++#define DEF_DIV6P1(_name, _id, _parent, _offset)	\
++	DEF_BASE(_name, _id, CLK_TYPE_DIV6P1, _parent, .offset = _offset)
++
++
++    /*
++     * Definitions of Module Clocks
++     */
++
++struct mssr_mod_clk {
++	const char *name;
++	unsigned int id;
++	unsigned int parent;	/* Add MOD_CLK_BASE for Module Clocks */
++};
++
++
++struct device_node;
++
++    /*
++     * SoC-specific CPG/MSSR Description
++     *
++     * @core_clks: Array of Core Clock definitions
++     * @num_core_clks: Number of entries in core_clks[]
++     * @last_dt_core_clk: ID of the last Core Clock exported to DT
++     * @num_total_core_clks: Total number of Core Clocks (exported + internal)
++     *
++     * @mod_clks: Array of Module Clock definitions
++     * @num_mod_clks: Number of entries in mod_clks[]
++     * @num_hw_mod_clks: Number of module clocks supported by the hardware
++     *
++     * @crit_mod_clks: Array with Module Clock IDs of critical clocks that
++     *                 should not be disabled without a knowledgeable driver
++     * @num_crit_mod_clks: Number of entries in crit_mod_clks[]
++     *
++     * @core_pm_clks: Array with IDs of Core Clocks that are suitable for Power
++     *                Management, in addition to Module Clocks
++     * @num_core_pm_clks: Number of entries in core_pm_clks[]
++     *
++     * @cpg_clk_register: Optional callback to handle special Core Clock types
++     */
++
++struct cpg_mssr_info {
++	/* Core Clocks */
++	const struct cpg_core_clk *core_clks;
++	unsigned int num_core_clks;
++	unsigned int last_dt_core_clk;
++	unsigned int num_total_core_clks;
++
++	/* Module Clocks */
++	const struct mssr_mod_clk *mod_clks;
++	unsigned int num_mod_clks;
++	unsigned int num_hw_mod_clks;
++
++	/* Critical Module Clocks that should not be disabled */
++	const unsigned int *crit_mod_clks;
++	unsigned int num_crit_mod_clks;
++
++	/* Core Clocks suitable for PM, in addition to the module clocks */
++	const unsigned int *core_pm_clks;
++	unsigned int num_core_pm_clks;
++
++	/* Callbacks */
++	struct clk *(*cpg_clk_register)(const struct cpg_core_clk *core,
++					const struct cpg_mssr_info *info,
++					struct clk **clks, void __iomem *base);
++};
++
++void cpg_mssr_probe(struct device_node *np, const struct cpg_mssr_info *info);
 -- 
 1.9.1
 
