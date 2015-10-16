@@ -1,551 +1,100 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
-Date: Fri, 16 Oct 2015 20:15:09 +0800
-Message-ID: <1444997709-57293-2-git-send-email-ck.hu@mediatek.com>
-References: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2] mailbox: Fix a couple of trivial static checker issues
+Date: Fri, 16 Oct 2015 13:32:47 +0100
+Message-ID: <20151016123247.GG31804@x1>
+References: <1444980091-16728-5-git-send-email-lee.jones@linaro.org>
+ <201510161646.D4m1dK6L%fengguang.wu@intel.com>
+ <20151016113251.GF31804@x1>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20151016113251.GF31804@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com
+To: jassisinghbrar@gmail.com
+Cc: kbuild-all@01.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org, kbuild test robot <lkp@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+mailbox: Fix a couple of trivial static checker issues
 
-This patch adds drm_bridge driver for parade DSI
-to eDP bridge chip.
+This patch deals with a few spelling, white space and type
+warnings reported by Intel's Kbuild Test Robot.
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/gpu/drm/bridge/Kconfig         |    9 +
- drivers/gpu/drm/bridge/Makefile        |    1 +
- drivers/gpu/drm/bridge/parade-ps8640.c |  489 ++++++++++++++++++++++++++++++++
- 3 files changed, 499 insertions(+)
- create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+v1 => v2:
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 2de52a5..8ecaeed 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -29,4 +29,13 @@ config DRM_PARADE_PS8622
- 	---help---
- 	  Parade eDP-LVDS bridge chip driver.
+Looks like I took the AKA in this too literally:
+
+  format '%d' expects argument of type 'int',
+    but argument 3 has type 'size_t {aka long unsigned int}'
+
+After some research I found a new printk format specifier suitable for size_t.
+
+ drivers/mailbox/mailbox-sti.c  |  2 +-
+ drivers/mailbox/mailbox-test.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mailbox/mailbox-sti.c b/drivers/mailbox/mailbox-sti.c
+index f11d4e8..4835817 100644
+--- a/drivers/mailbox/mailbox-sti.c
++++ b/drivers/mailbox/mailbox-sti.c
+@@ -64,7 +64,7 @@ struct sti_mbox_device {
+ };
  
-+config DRM_PARADE_PS8640
-+	bool "Parade PS8640 MIPI DSI to eDP Converter"
-+	select DRM_KMS_HELPER
-+	select DRM_PANEL
-+	---help---
-+	  Choose this option if you have PS8640 for display
-+	  The PS8640 is a high-performance and low-power
-+	  MIPI DSI to eDP converter
-+
- endmenu
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index e2eef1c..da9e4a4 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -3,3 +3,4 @@ ccflags-y := -Iinclude/drm
- obj-$(CONFIG_DRM_DW_HDMI) += dw_hdmi.o
- obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
- obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
-+obj-$(CONFIG_DRM_PARADE_PS8640) += parade-ps8640.o
-diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-new file mode 100644
-index 0000000..dc62dd7
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-@@ -0,0 +1,489 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/i2c.h>
-+#include <linux/gpio.h>
-+#include <linux/delay.h>
-+#include <linux/of_graph.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drmP.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_edid.h>
-+
-+#define PAGE2_GPIO_L	0xa6
-+#define PAGE2_GPIO_H	0xa7
-+#define PS_GPIO9	BIT(1)
-+
-+#define PAGE4_REV_L	0xf0
-+#define PAGE4_REV_H	0xf1
-+#define PAGE4_CHIP_L	0xf2
-+#define PAGE4_CHIP_H	0xf3
-+
-+#define bridge_to_ps8640(e)	container_of(e, struct ps8640, bridge)
-+#define connector_to_ps8640(e)	container_of(e, struct ps8640, connector)
-+
-+struct ps8640 {
-+	struct drm_connector connector;
-+	struct drm_bridge bridge;
-+	struct i2c_client *client;
-+	struct ps8640_driver_data *driver_data;
-+	struct regulator *pwr_1v2_supply;
-+	struct regulator *pwr_3v3_supply;
-+	struct drm_panel *panel;
-+	struct gpio_desc *gpio_rst_n;
-+	struct gpio_desc *gpio_pwr_n;
-+	struct gpio_desc *gpio_mode_sel_n;
-+	void *edid;
-+	u16 base_reg;
-+	bool enabled;
-+};
-+
-+static int ps8640_regr(struct i2c_client *client, u16 i2c_addr,
-+		       u8 reg, u8 *value)
-+{
-+	int ret;
-+
-+	client->addr = i2c_addr;
-+
-+	ret = i2c_master_send(client, &reg, 1);
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = i2c_master_recv(client, value, 1);
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to recv i2c data, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ps8640_regw(struct i2c_client *client, u16 i2c_addr,
-+		       u8 reg, u8 value)
-+{
-+	int ret;
-+	char buf[2];
-+
-+	client->addr = i2c_addr;
-+
-+	buf[0] = reg;
-+	buf[1] = value;
-+	ret = i2c_master_send(client, buf, ARRAY_SIZE(buf));
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ps8640_check_valid_id(struct ps8640 *ps_bridge)
-+{
-+	struct i2c_client *client = ps_bridge->client;
-+	u8 rev_id_low, rev_id_high, chip_id_low, chip_id_high;
-+	int retry_cnt = 0;
-+
-+	do {
-+		ps8640_regr(client, ps_bridge->base_reg + 4, PAGE4_CHIP_H,
-+			    &chip_id_high);
-+		if (chip_id_high != 0x30)
-+			DRM_INFO("chip_id_high = 0x%x\n", chip_id_high);
-+	} while ((retry_cnt++ < 2) && (chip_id_high != 0x30));
-+
-+	ps8640_regr(client, ps_bridge->base_reg + 4, PAGE4_REV_L, &rev_id_low);
-+	ps8640_regr(client, ps_bridge->base_reg + 4, PAGE4_REV_H, &rev_id_high);
-+	ps8640_regr(client, ps_bridge->base_reg + 4, PAGE4_CHIP_L,
-+		    &chip_id_low);
-+
-+	if ((rev_id_low == 0x00) && (rev_id_high == 0x0a) &&
-+	    (chip_id_low == 0x00) && (chip_id_high == 0x30))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static void ps8640_show_mcu_fw_version(struct ps8640 *ps_bridge)
-+{
-+	struct i2c_client *client = ps_bridge->client;
-+	u8 major_ver, minor_ver;
-+
-+	ps8640_regr(client, ps_bridge->base_reg + 5, 0x4, &major_ver);
-+	ps8640_regr(client, ps_bridge->base_reg + 5, 0x5, &minor_ver);
-+
-+	DRM_INFO_ONCE("ps8640 rom fw version %d.%d\n", major_ver, minor_ver);
-+}
-+
-+static int ps8640_bdg_enable(struct ps8640 *ps_bridge)
-+{
-+	struct i2c_client *client = ps_bridge->client;
-+
-+	if (ps8640_check_valid_id(ps_bridge)) {
-+		ps8640_regw(client, ps_bridge->base_reg + 3, 0xfe, 0x13);
-+		ps8640_regw(client, ps_bridge->base_reg + 3, 0xff, 0x18);
-+		ps8640_regw(client, ps_bridge->base_reg + 3, 0xfe, 0x13);
-+		ps8640_regw(client, ps_bridge->base_reg + 3, 0xff, 0x1c);
-+
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
-+static void ps8640_prepare(struct ps8640 *ps_bridge)
-+{
-+	struct i2c_client *client = ps_bridge->client;
-+	int err, retry_cnt = 0;
-+	u8 set_vdo_done;
-+
-+	if (ps_bridge->enabled)
-+		return;
-+
-+	if (drm_panel_prepare(ps_bridge->panel)) {
-+		DRM_ERROR("failed to prepare panel\n");
-+		return;
-+	}
-+
-+	err = regulator_enable(ps_bridge->pwr_1v2_supply);
-+	if (err < 0) {
-+		DRM_ERROR("failed to enable pwr_1v2_supply: %d\n", err);
-+		return;
-+	}
-+
-+	err = regulator_enable(ps_bridge->pwr_3v3_supply);
-+	if (err < 0) {
-+		DRM_ERROR("failed to enable pwr_3v3_supply: %d\n", err);
-+		return;
-+	}
-+
-+	gpiod_set_value(ps_bridge->gpio_pwr_n, 1);
-+	gpiod_set_value(ps_bridge->gpio_rst_n, 0);
-+	usleep_range(500, 700);
-+	gpiod_set_value(ps_bridge->gpio_rst_n, 1);
-+
-+	do {
-+		msleep(50);
-+		ps8640_regr(client, ps_bridge->base_reg + 2, PAGE2_GPIO_H,
-+			    &set_vdo_done);
-+	} while ((retry_cnt++ < 70) && ((set_vdo_done & PS_GPIO9) != PS_GPIO9));
-+
-+	ps8640_show_mcu_fw_version(ps_bridge);
-+	ps_bridge->enabled = true;
-+}
-+
-+static void ps8640_pre_enable(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+
-+	ps8640_prepare(ps_bridge);
-+}
-+
-+static void ps8640_enable(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+
-+	ps8640_bdg_enable(ps_bridge);
-+
-+	if (drm_panel_enable(ps_bridge->panel)) {
-+		DRM_ERROR("failed to enable panel\n");
-+		return;
-+	}
-+}
-+
-+static void ps8640_disable(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+
-+	if (!ps_bridge->enabled)
-+		return;
-+
-+	ps_bridge->enabled = false;
-+
-+	if (drm_panel_disable(ps_bridge->panel)) {
-+		DRM_ERROR("failed to disable panel\n");
-+		return;
-+	}
-+
-+	regulator_disable(ps_bridge->pwr_1v2_supply);
-+	regulator_disable(ps_bridge->pwr_3v3_supply);
-+	gpiod_set_value(ps_bridge->gpio_rst_n, 0);
-+	gpiod_set_value(ps_bridge->gpio_pwr_n, 0);
-+}
-+
-+static void ps8640_post_disable(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+
-+	if (drm_panel_unprepare(ps_bridge->panel)) {
-+		DRM_ERROR("failed to unprepare panel\n");
-+		return;
-+	}
-+}
-+
-+static int ps8640_get_modes(struct drm_connector *connector)
-+{
-+	struct ps8640 *ps_bridge = connector_to_ps8640(connector);
-+	struct i2c_client *client = ps_bridge->client;
-+
-+	ps8640_prepare(ps_bridge);
-+	ps8640_regw(client, ps_bridge->base_reg + 2, 0xea, 0xd0);
-+
-+	return drm_panel_get_modes(ps_bridge->panel);
-+}
-+
-+static struct drm_encoder *ps8640_best_encoder(struct drm_connector *connector)
-+{
-+	struct ps8640 *ps_bridge;
-+
-+	ps_bridge = connector_to_ps8640(connector);
-+	return ps_bridge->bridge.encoder;
-+}
-+
-+static const struct drm_connector_helper_funcs
-+	ps8640_connector_helper_funcs = {
-+	.get_modes = ps8640_get_modes,
-+	.best_encoder = ps8640_best_encoder,
-+};
-+
-+static enum drm_connector_status ps8640_detect(struct drm_connector *connector,
-+					       bool force)
-+{
-+	return connector_status_connected;
-+}
-+
-+static void ps8640_connector_destroy(struct drm_connector *connector)
-+{
-+	drm_connector_unregister(connector);
-+	drm_connector_cleanup(connector);
-+}
-+
-+static const struct drm_connector_funcs ps8640_connector_funcs = {
-+	.dpms = drm_atomic_helper_connector_dpms,
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.detect = ps8640_detect,
-+	.destroy = ps8640_connector_destroy,
-+	.reset = drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
-+int ps8640_bridge_attach(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+	int ret;
-+
-+	if (!bridge->encoder) {
-+		DRM_ERROR("Parent encoder object not found");
-+		return -ENODEV;
-+	}
-+
-+	ret = drm_connector_init(bridge->dev, &ps_bridge->connector,
-+				 &ps8640_connector_funcs,
-+				 DRM_MODE_CONNECTOR_eDP);
-+
-+	if (ret) {
-+		DRM_ERROR("Failed to initialize connector with drm\n");
-+		return ret;
-+	}
-+
-+	drm_connector_helper_add(&ps_bridge->connector,
-+				 &ps8640_connector_helper_funcs);
-+	drm_connector_register(&ps_bridge->connector);
-+
-+	ps_bridge->connector.dpms = DRM_MODE_DPMS_ON;
-+	drm_mode_connector_attach_encoder(&ps_bridge->connector,
-+					  bridge->encoder);
-+
-+	if (ps_bridge->panel)
-+		drm_panel_attach(ps_bridge->panel, &ps_bridge->connector);
-+
-+	return ret;
-+}
-+
-+static bool ps8640_bridge_mode_fixup(struct drm_bridge *bridge,
-+				     const struct drm_display_mode *mode,
-+				     struct drm_display_mode *adjusted_mode)
-+{
-+	return true;
-+}
-+
-+static const struct drm_bridge_funcs ps8640_bridge_funcs = {
-+	.attach = ps8640_bridge_attach,
-+	.mode_fixup = ps8640_bridge_mode_fixup,
-+	.disable = ps8640_disable,
-+	.post_disable = ps8640_post_disable,
-+	.pre_enable = ps8640_pre_enable,
-+	.enable = ps8640_enable,
-+};
-+
-+static int ps8640_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct ps8640 *ps_bridge;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *in_ep, *out_ep;
-+	struct device_node *panel_node = NULL;
-+	int ret, size;
-+	u32 temp_reg;
-+	const u8 *edidp;
-+
-+	ps_bridge = devm_kzalloc(dev, sizeof(*ps_bridge), GFP_KERNEL);
-+	if (!ps_bridge)
-+		return -ENOMEM;
-+
-+	/* FIXME - use of_graph_get_port_by_id(np, 1) on newer kernels */
-+	in_ep = of_graph_get_next_endpoint(np, NULL);
-+	if (in_ep) {
-+		out_ep = of_graph_get_next_endpoint(np, in_ep);
-+		of_node_put(in_ep);
-+		if (out_ep) {
-+			panel_node = of_graph_get_remote_port_parent(out_ep);
-+			of_node_put(out_ep);
-+		}
-+	}
-+	if (panel_node) {
-+		ps_bridge->panel = of_drm_find_panel(panel_node);
-+		of_node_put(panel_node);
-+		if (!ps_bridge->panel)
-+			return -EPROBE_DEFER;
-+	}
-+
-+	ps_bridge->client = client;
-+
-+	edidp = of_get_property(np, "edid", &size);
-+
-+	if (edidp)
-+		ps_bridge->edid = devm_kmemdup(&client->dev, edidp, size,
-+					       GFP_KERNEL);
-+
-+	ps_bridge->pwr_3v3_supply = devm_regulator_get(dev, "ps8640-3v3");
-+	if (IS_ERR(ps_bridge->pwr_3v3_supply)) {
-+		dev_err(dev, "cannot get ps_bridge->pwr_3v3_supply\n");
-+		return PTR_ERR(ps_bridge->pwr_3v3_supply);
-+	}
-+
-+	ps_bridge->pwr_1v2_supply = devm_regulator_get(dev, "ps8640-1v2");
-+	if (IS_ERR(ps_bridge->pwr_1v2_supply)) {
-+		dev_err(dev, "cannot get ps_bridge->pwr_1v2_supply\n");
-+		return PTR_ERR(ps_bridge->pwr_1v2_supply);
-+	}
-+
-+	ps_bridge->gpio_mode_sel_n = devm_gpiod_get(&client->dev, "mode-sel",
-+						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(ps_bridge->gpio_mode_sel_n)) {
-+		ret = PTR_ERR(ps_bridge->gpio_mode_sel_n);
-+		DRM_ERROR("cannot get gpio_mode_sel_n %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = gpiod_direction_output(ps_bridge->gpio_mode_sel_n, 1);
-+	if (ret) {
-+		DRM_ERROR("cannot configure gpio_mode_sel_n\n");
-+		return ret;
-+	}
-+
-+	ps_bridge->gpio_pwr_n = devm_gpiod_get(&client->dev, "power",
-+					       GPIOD_OUT_HIGH);
-+	if (IS_ERR(ps_bridge->gpio_pwr_n)) {
-+		ret = PTR_ERR(ps_bridge->gpio_pwr_n);
-+		DRM_ERROR("cannot get gpio_pwr_n %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = gpiod_direction_output(ps_bridge->gpio_pwr_n, 1);
-+	if (ret) {
-+		DRM_ERROR("cannot configure gpio_pwr_n\n");
-+		return ret;
-+	}
-+
-+	ps_bridge->gpio_rst_n = devm_gpiod_get(&client->dev, "reset",
-+					       GPIOD_OUT_HIGH);
-+	if (IS_ERR(ps_bridge->gpio_rst_n)) {
-+		ret = PTR_ERR(ps_bridge->gpio_rst_n);
-+		DRM_ERROR("cannot get gpio_rst_n %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = gpiod_direction_output(ps_bridge->gpio_rst_n, 1);
-+	if (ret) {
-+		DRM_ERROR("cannot configure gpio_rst_n\n");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(dev->of_node, "reg", &temp_reg);
-+	if (ret) {
-+		DRM_ERROR("Can't read base_reg value\n");
-+		return ret;
-+	}
-+	ps_bridge->base_reg = temp_reg;
-+
-+	ps_bridge->bridge.funcs = &ps8640_bridge_funcs;
-+	ps_bridge->bridge.of_node = dev->of_node;
-+	ret = drm_bridge_add(&ps_bridge->bridge);
-+	if (ret) {
-+		DRM_ERROR("Failed to add bridge\n");
-+		return ret;
-+	}
-+
-+	i2c_set_clientdata(client, ps_bridge);
-+
-+	return 0;
-+}
-+
-+static int ps8640_remove(struct i2c_client *client)
-+{
-+	struct ps8640 *ps_bridge = i2c_get_clientdata(client);
-+
-+	drm_bridge_remove(&ps_bridge->bridge);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ps8640_i2c_table[] = {
-+	{"parade,ps8640", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, ps8640_i2c_table);
-+
-+static const struct of_device_id ps8640_match[] = {
-+	{ .compatible = "parade,ps8640" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ps8640_match);
-+
-+static struct i2c_driver ps8640_driver = {
-+	.id_table = ps8640_i2c_table,
-+	.probe = ps8640_probe,
-+	.remove = ps8640_remove,
-+	.driver = {
-+		.name = "parade,ps8640",
-+		.owner = THIS_MODULE,
-+		.of_match_table = ps8640_match,
-+	},
-+};
-+module_i2c_driver(ps8640_driver);
-+
-+MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
-+MODULE_AUTHOR("CK Hu <ck.hu@mediatek.com>");
-+MODULE_DESCRIPTION("PARADE ps8640 DSI-eDP converter driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+ /**
+- * STi Mailbox platform specfic configuration
++ * STi Mailbox platform specific configuration
+  *
+  * @num_inst:	Maximum number of instances in one HW Mailbox
+  * @num_chan:	Maximum number of channel per instance
+diff --git a/drivers/mailbox/mailbox-test.c b/drivers/mailbox/mailbox-test.c
+index cac1ba2..22f2e40 100644
+--- a/drivers/mailbox/mailbox-test.c
++++ b/drivers/mailbox/mailbox-test.c
+@@ -22,7 +22,7 @@
+ #define MBOX_MAX_SIG_LEN	8
+ #define MBOX_MAX_MSG_LEN	128
+ #define MBOX_BYTES_PER_LINE	16
+-#define MBOX_HEXDUMP_LINE_LEN 	((MBOX_BYTES_PER_LINE * 4) + 2)
++#define MBOX_HEXDUMP_LINE_LEN	((MBOX_BYTES_PER_LINE * 4) + 2)
+ #define MBOX_HEXDUMP_MAX_LEN	(MBOX_HEXDUMP_LINE_LEN *		\
+ 				 (MBOX_MAX_MSG_LEN / MBOX_BYTES_PER_LINE))
+ 
+@@ -30,7 +30,7 @@ static struct dentry *root_debugfs_dir;
+ 
+ struct mbox_test_device {
+ 	struct device		*dev;
+-	void __iomem		*mmio;
++	void			*mmio;
+ 	struct mbox_chan	*tx_channel;
+ 	struct mbox_chan	*rx_channel;
+ 	char			*rx_buffer;
+@@ -53,7 +53,7 @@ static ssize_t mbox_test_signal_write(struct file *filp,
+ 
+ 	if (count > MBOX_MAX_SIG_LEN) {
+ 		dev_err(tdev->dev,
+-			"Signal length %d greater than max allowed %d\n",
++			"Signal length %zd greater than max allowed %d\n",
+ 			count, MBOX_MAX_SIG_LEN);
+ 		return -EINVAL;
+ 	}
+@@ -92,7 +92,7 @@ static ssize_t mbox_test_message_write(struct file *filp,
+ 
+ 	if (count > MBOX_MAX_MSG_LEN) {
+ 		dev_err(tdev->dev,
+-			"Message length %d greater than max allowed %d\n",
++			"Message length %zd greater than max allowed %d\n",
+ 			count, MBOX_MAX_MSG_LEN);
+ 		return -EINVAL;
+ 	}
+@@ -303,7 +303,7 @@ static int mbox_test_probe(struct platform_device *pdev)
+ 	tdev->tx_channel = mbox_test_request_channel(pdev, "tx");
+ 	tdev->rx_channel = mbox_test_request_channel(pdev, "rx");
+ 
+-	if (!tdev->tx_channel && !tdev->tx_channel)
++	if (!tdev->tx_channel && !tdev->rx_channel)
+ 		return -EPROBE_DEFER;
+ 
+ 	tdev->dev = &pdev->dev;
