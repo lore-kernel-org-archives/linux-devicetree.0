@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the TPS65086 PMIC
-Date: Fri, 16 Oct 2015 11:59:10 -0500
-Message-ID: <1445014753-15450-2-git-send-email-afd@ti.com>
+Subject: [PATCH 4/4] gpio: tps65086: Add GPIO driver for the TPS65086 PMIC
+Date: Fri, 16 Oct 2015 11:59:13 -0500
+Message-ID: <1445014753-15450-5-git-send-email-afd@ti.com>
 References: <1445014753-15450-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,135 +12,167 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The TPS65086 PMIC contains several regulators and a GPO controller.
-Add bindings for the TPS65086 PMIC.
+Add support for the TPS65086 PMIC GPOs.
+
+TPS65086 has four configurable GPOs that can be used for several
+purposes.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- .../devicetree/bindings/gpio/gpio-tps65086.txt     | 17 ++++++++
- Documentation/devicetree/bindings/mfd/tps65086.txt | 46 ++++++++++++++++++++++
- .../bindings/regulator/tps65086-regulator.txt      | 36 +++++++++++++++++
- 3 files changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
+ drivers/gpio/Kconfig         |   6 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-tps65086.c | 114 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 121 insertions(+)
+ create mode 100644 drivers/gpio/gpio-tps65086.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65086.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index b4fc9e4..c585d42 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -824,6 +824,12 @@ config GPIO_TIMBERDALE
+ 	---help---
+ 	Add support for the GPIO IP in the timberdale FPGA.
+ 
++config GPIO_TPS65086
++	tristate "TI TPS65086 GPO"
++	depends on MFD_TPS65086
++	help
++	  This driver supports the GPO on the TI TPS65086 PMIC.
++
+ config GPIO_TPS6586X
+ 	bool "TPS6586X GPIO"
+ 	depends on MFD_TPS6586X
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index f79a7c4..2611c7e 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
+ obj-$(CONFIG_ARCH_TEGRA)	+= gpio-tegra.o
+ obj-$(CONFIG_GPIO_TIMBERDALE)	+= gpio-timberdale.o
+ obj-$(CONFIG_GPIO_PALMAS)	+= gpio-palmas.o
++obj-$(CONFIG_GPIO_TPS65086)	+= gpio-tps65086.o
+ obj-$(CONFIG_GPIO_TPS6586X)	+= gpio-tps6586x.o
+ obj-$(CONFIG_GPIO_TPS65910)	+= gpio-tps65910.o
+ obj-$(CONFIG_GPIO_TPS65912)	+= gpio-tps65912.o
+diff --git a/drivers/gpio/gpio-tps65086.c b/drivers/gpio/gpio-tps65086.c
 new file mode 100644
-index 0000000..15e4063
+index 0000000..9fba758
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
-@@ -0,0 +1,17 @@
-+* TPS65086 GPO Controller bindings
++++ b/drivers/gpio/gpio-tps65086.c
+@@ -0,0 +1,114 @@
++/*
++ * TI TPS65086x GPIO Driver
++ *
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Author: Andrew F. Davis <afd@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether expressed or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License version 2 for more details.
++ *
++ * Based on the TPS65912 driver
++ */
 +
-+Required properties:
-+ - compatible		: Should be "ti,tps65086-gpio".
-+ - gpio-controller	: Marks the device node as a GPIO Controller.
-+ - #gpio-cells		: Should be two.  The first cell is the pin number
-+			  and the second cell is used to specify flags.
-+			  See include/dt-bindings/gpio/gpio.h for possible
-+			  values.
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
 +
-+Example:
++#include <linux/mfd/tps65086.h>
 +
-+	gpio4: tps65086_gpio {
-+		compatible = "ti,tps65086-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
-new file mode 100644
-index 0000000..4b6aeb4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
-@@ -0,0 +1,46 @@
-+* TPS65086 Power Management Integrated Circuit bindings
++struct tps65086_gpio {
++	struct gpio_chip gpio_chip;
++	struct tps65086 *tps;
++};
 +
-+Required properties:
-+ - compatible		: Should be "ti,tps65086".
-+ - reg			: Slave address.
-+ - interrupt-parent	: The parent interrupt controller.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: Marks the device node as an interrupt controller.
-+ - #interrupt-cells	: The number of cells to describe an IRQ, this
-+			  should be 2. The first cell is the IRQ number.
-+			  The second cell is the flags, encoded as the trigger
-+			  masks from ../interrupt-controller/interrupts.txt.
++#define to_tps65086_gpio(gc) container_of(gc, struct tps65086_gpio, gpio_chip)
 +
-+Additional nodes defined in:
-+ - Regulators	: ../regulator/tps65086-regulator.txt.
-+ - GPIO		: ../gpio/gpio-tps65086.txt.
++static int tps65086_gpio_get(struct gpio_chip *gc, unsigned offset)
++{
++	struct tps65086_gpio *gpio = to_tps65086_gpio(gc);
++	int ret, val;
 +
-+Example:
++	ret = regmap_read(gpio->tps->regmap, TPS65086_GPOCTRL, &val);
++	if (ret < 0)
++		return ret;
 +
-+	pmic: tps65086@5e {
-+		compatible = "ti,tps65086";
-+		reg = <0x5e>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++	return val & BIT(4 + offset);
++}
 +
-+		regulators {
-+			compatible = "ti,tps65086-regulator";
++static void tps65086_gpio_set(struct gpio_chip *gc, unsigned offset,
++			      int value)
++{
++	struct tps65086_gpio *gpio = to_tps65086_gpio(gc);
 +
-+			buck1 {
-+				regulator-name = "vcc1";
-+				regulator-min-microvolt = <1600000>;
-+				regulator-max-microvolt = <1600000>;
-+				regulator-boot-on;
-+				ti,regulator-decay;
-+				ti,regulator-step-size-25mv;
-+			};
-+		};
++	regmap_update_bits(gpio->tps->regmap, TPS65086_GPOCTRL,
++			   BIT(4 + offset), value ? BIT(4 + offset) : 0);
++}
 +
-+		gpio4: tps65086_gpio {
-+			compatible = "ti,tps65086-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/regulator/tps65086-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
-new file mode 100644
-index 0000000..023cd73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
-@@ -0,0 +1,36 @@
-+* TPS65086 regulator bindings
++static struct gpio_chip template_chip = {
++	.label			= "tps65086-gpio",
++	.owner			= THIS_MODULE,
++	.get			= tps65086_gpio_get,
++	.set			= tps65086_gpio_set,
++	.can_sleep		= true,
++	.ngpio			= 4,
++	.base			= -1,
++};
 +
-+Required properties:
-+ - compatible	: Should be "ti,tps65086-regulator".
-+ - list of regulators provided by this controller, must be named
-+     after their hardware counterparts: buck[1-6], ldoa[1-3], swa1,
-+     swb[1-2], and vtt.
++static int tps65086_gpio_probe(struct platform_device *pdev)
++{
++	struct tps65086_gpio *gpio;
++	int ret;
 +
-+Optional properties:
-+ - Per-regulator optional properties are defined in regulator.txt
-+ - ti,regulator-step-size-25mv	: This is applicable for buck[1,2,6].
-+				  Set this if the regulator is factory
-+				  set with a 25mv step voltage mapping.
-+ - ti,regulator-decay		: This is applicable for buck[1-6].
-+				  Set this if the output needs to decay,
-+				  default is for the output to slew down.
++	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
 +
-+Example:
++	gpio->tps = dev_get_drvdata(pdev->dev.parent);
++	gpio->gpio_chip = template_chip;
++	ret = gpiochip_add(&gpio->gpio_chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++		return ret;
++	}
 +
-+	regulators {
-+		compatible = "ti,tps65086-regulator";
++	platform_set_drvdata(pdev, gpio);
 +
-+		buck1 {
-+			regulator-name = "vcc1";
-+			regulator-min-microvolt = <1600000>;
-+			regulator-max-microvolt = <1600000>;
-+			regulator-boot-on;
-+			ti,regulator-step-size-25mv;
-+			ti,regulator-decay;
-+		};
++	return 0;
++}
 +
-+		swa1 {
-+			regulator-name = "ls1";
-+			regulator-boot-on;
-+		};
-+	};
++static int tps65086_gpio_remove(struct platform_device *pdev)
++{
++	struct tps65086_gpio *gpio = platform_get_drvdata(pdev);
++
++	gpiochip_remove(&gpio->gpio_chip);
++
++	return 0;
++}
++
++static const struct of_device_id tps65086_gpio_of_match_table[] = {
++	{ .compatible = "ti,tps65086-gpio", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tps65086_gpio_of_match_table);
++
++static struct platform_driver tps65086_gpio_driver = {
++	.driver = {
++		.name = "tps65086-gpio",
++		.of_match_table = tps65086_gpio_of_match_table,
++	},
++	.probe = tps65086_gpio_probe,
++	.remove = tps65086_gpio_remove,
++};
++
++module_platform_driver(tps65086_gpio_driver);
++
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("TPS65086 GPIO driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
