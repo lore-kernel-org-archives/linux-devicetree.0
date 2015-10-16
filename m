@@ -1,76 +1,49 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] mtd: nand: Allow MTD_NAND_BRCMNAND to be selected
- for ARM64
-Date: Fri, 16 Oct 2015 09:54:45 -0700
-Message-ID: <20151016165445.GG108923@google.com>
-References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
- <1444986537-28387-3-git-send-email-anup.patel@broadcom.com>
- <5673177.0QYFhMPCBq@wuerfel>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH 0/4] Add support for the TI TPS65086 PMIC.
+Date: Fri, 16 Oct 2015 11:59:09 -0500
+Message-ID: <1445014753-15450-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5673177.0QYFhMPCBq@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 06:24:21PM +0200, Arnd Bergmann wrote:
-> I think you also need this one:
+This series adds support for the TPS65086 PMIC. It is a MFD with an I2C
+interface, several regulators and load switches, and a GPO controller.
 
-Are you sure?
+Based on v4.3-rc1 and needs b4fe8ba ("regmap: Add generic macro to define regmap_irq")
+from Lee Jones' tree to build.
 
-> 8<-----------
-> From 0ab7b2d32921b3f3da15274d8c3982ba1d54660f Mon Sep 17 00:00:00 2001
-> From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Date: Thu, 4 Jun 2015 09:25:59 +0200
-> Subject: [PATCH] mtd: brcmnand depends on MTD_NAND
-> 
-> MTD_NAND_BRCMNAND uses the generic nand functions, but is currently allowed
-> to be built without CONFIG_MTD_NAND, which results in a link error:
-> 
-> drivers/built-in.o: In function `brcmnand_remove':
-> coresight-replicator.c:(.text+0x17ae6c): undefined reference to `nand_release'
-> drivers/built-in.o: In function `brcmnand_probe':
-> coresight-replicator.c:(.text+0x17d4b4): undefined reference to `nand_scan_ident'
-> coresight-replicator.c:(.text+0x17d948): undefined reference to `nand_scan_tail'
+Andrew F. Davis (4):
+  Documentation: tps65086: Add DT bindings for the TPS65086 PMIC
+  mfd: tps65086: Add driver for the TPS65086 PMIC
+  regulator: tps65086: Add regulator driver for the TPS65086 PMIC
+  gpio: tps65086: Add GPIO driver for the TPS65086 PMIC
 
-How did you get this? MTD_NAND_BRCMNAND is surrounded in the
-'if MTD_NAND' block, which implicitly generates a MTD_NAND dependency.
-And I can confirm that in menuconfig, I see this when I disable MTD_NAND
-and search for BRCMNAND:
+ .../devicetree/bindings/gpio/gpio-tps65086.txt     |  17 ++
+ Documentation/devicetree/bindings/mfd/tps65086.txt |  46 ++++
+ .../bindings/regulator/tps65086-regulator.txt      |  36 +++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-tps65086.c                       | 114 +++++++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/tps65086.c                             | 145 ++++++++++++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/tps65086-regulator.c             | 263 +++++++++++++++++++++
+ include/linux/mfd/tps65086.h                       | 120 ++++++++++
+ 13 files changed, 770 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
+ create mode 100644 drivers/gpio/gpio-tps65086.c
+ create mode 100644 drivers/mfd/tps65086.c
+ create mode 100644 drivers/regulator/tps65086-regulator.c
+ create mode 100644 include/linux/mfd/tps65086.h
 
-   Symbol: MTD_NAND_BRCMNAND [=n]
-   Type  : tristate
-   Prompt: Broadcom STB NAND controller
-     Location:
-       -> Device Drivers
-         -> Memory Technology Device (MTD) support (MTD [=y])
-   (1)     -> NAND Device Support (MTD_NAND [=n])
-     Defined at drivers/mtd/nand/Kconfig:394
-     Depends on: MTD [=y] && MTD_NAND [=n] && (ARM [=y] || ARM64 || MIPS)
+-- 
+1.9.1
 
-Brian
-
-> This adds an explicit Kconfig dependency.
-> 
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-> index 289664089cf3..4b7e853ce35d 100644
-> --- a/drivers/mtd/nand/Kconfig
-> +++ b/drivers/mtd/nand/Kconfig
-> @@ -393,6 +393,7 @@ config MTD_NAND_GPMI_NAND
->  
->  config MTD_NAND_BRCMNAND
->  	tristate "Broadcom STB NAND controller"
-> +	depends on MTD_NAND
->  	depends on ARM || ARM64 || MIPS
->  	help
->  	  Enables the Broadcom NAND controller driver. The controller was
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
