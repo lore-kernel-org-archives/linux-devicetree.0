@@ -1,49 +1,245 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 01/10] clk: rockchip: Add sclk_mipidsi_24m for mipi dsi
-Date: Fri, 16 Oct 2015 14:39:40 -0700
-Message-ID: <20151016213940.GA10182@codeaurora.org>
-References: <1444470930-17150-1-git-send-email-zyw@rock-chips.com>
- <1444470930-17150-2-git-send-email-zyw@rock-chips.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [PATCH v3 2/2] ARM: dts: bcm5301x: Add BCM SVK DT files
+Date: Fri, 16 Oct 2015 23:41:58 +0200
+Message-ID: <56216F26.9080003@hauke-m.de>
+References: <1444947856-26246-1-git-send-email-jonmason@broadcom.com>
+ <1444947856-26246-2-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444470930-17150-2-git-send-email-zyw@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Jeff Chen <cym@rock-chips.com>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Kumar Gala <galak@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sonny Rao <sonnyrao@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Huang Lin <hl@rock-chips.com>, Roger Chen <roger.chen@rock-chips.com>, Alexandru M Stan <amstan@chromium.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444947856-26246-2-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/10, Chris Zhong wrote:
-> sclk_mipidsi_24m is the gating of mipi dsi phy.
+On 10/16/2015 12:24 AM, Jon Mason wrote:
+> Add device tree files for Broadcom Northstar based SVKs.  Since the
+> bcm5301x.dtsi already exists, all that is necessary is the dts files to
+> enable the UARTs.  With these files, the SVKs are able to boot to shell.
 > 
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Signed-off-by: Jon Mason <jonmason@broadcom.com>
+
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+
 > ---
-
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
+>  arch/arm/boot/dts/Makefile       |  5 +++-
+>  arch/arm/boot/dts/bcm94708.dts   | 56 +++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm94709.dts   | 56 +++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm953012k.dts | 63 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 179 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/bcm94708.dts
+>  create mode 100644 arch/arm/boot/dts/bcm94709.dts
+>  create mode 100644 arch/arm/boot/dts/bcm953012k.dts
 > 
->  drivers/clk/rockchip/clk-rk3288.c      | 2 +-
->  include/dt-bindings/clock/rk3288-cru.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 233159d..96a1b58 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -72,7 +72,10 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+>  	bcm47081-buffalo-wzr-900dhp.dtb \
+>  	bcm4709-asus-rt-ac87u.dtb \
+>  	bcm4709-buffalo-wxr-1900dhp.dtb \
+> -	bcm4709-netgear-r8000.dtb
+> +	bcm4709-netgear-r8000.dtb \
+> +	bcm94708.dtb \
+> +	bcm94709.dtb \
+> +	bcm953012k.dtb
+>  dtb-$(CONFIG_ARCH_BCM_63XX) += \
+>  	bcm963138dvt.dtb
+>  dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+> diff --git a/arch/arm/boot/dts/bcm94708.dts b/arch/arm/boot/dts/bcm94708.dts
+> new file mode 100644
+> index 0000000..49682d6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm94708.dts
+> @@ -0,0 +1,56 @@
+> +/*
+> + *  BSD LICENSE
+> + *
+> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom Corporation nor the names of its
+> + *      contributors may be used to endorse or promote products derived
+> + *      from this software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "bcm4708.dtsi"
+> +
+> +/ {
+> +	model = "NorthStar SVK (BCM94708)";
+> +	compatible = "brcm,bcm94708", "brcm,bcm4708";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x00000000 0x08000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/bcm94709.dts b/arch/arm/boot/dts/bcm94709.dts
+> new file mode 100644
+> index 0000000..4ab19c0
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm94709.dts
+> @@ -0,0 +1,56 @@
+> +/*
+> + *  BSD LICENSE
+> + *
+> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom Corporation nor the names of its
+> + *      contributors may be used to endorse or promote products derived
+> + *      from this software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "bcm4708.dtsi"
+> +
+> +/ {
+> +	model = "NorthStar SVK (BCM94709)";
+> +	compatible = "brcm,bcm94709", "brcm,bcm4709", "brcm,bcm4708";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x00000000 0x08000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/bcm953012k.dts b/arch/arm/boot/dts/bcm953012k.dts
+> new file mode 100644
+> index 0000000..a512c45
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm953012k.dts
+> @@ -0,0 +1,63 @@
+> +/*
+> + *  BSD LICENSE
+> + *
+> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom Corporation nor the names of its
+> + *      contributors may be used to endorse or promote products derived
+> + *      from this software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "bcm4708.dtsi"
+> +
+> +/ {
+> +	model = "NorthStar SVK (BCM953012K)";
+> +	compatible = "brcm,bcm953012k", "brcm,brcm53012", "brcm,bcm4708";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x00000000 0x10000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	clock-frequency = <62499840>;
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	clock-frequency = <62499840>;
+> +	status = "okay";
+> +};
 > 
-> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> index 9040878..c7d7ebf 100644
-> --- a/drivers/clk/rockchip/clk-rk3288.c
-> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> @@ -709,7 +709,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
->  	GATE(SCLK_LCDC_PWM1, "sclk_lcdc_pwm1", "xin24m", 0, RK3288_CLKGATE_CON(13), 11, GFLAGS),
->  	GATE(SCLK_PVTM_CORE, "sclk_pvtm_core", "xin24m", 0, RK3288_CLKGATE_CON(5), 9, GFLAGS),
->  	GATE(SCLK_PVTM_GPU, "sclk_pvtm_gpu", "xin24m", 0, RK3288_CLKGATE_CON(5), 10, GFLAGS),
-> -	GATE(0, "sclk_mipidsi_24m", "xin24m", 0, RK3288_CLKGATE_CON(5), 15, GFLAGS),
-> +	GATE(SCLK_MIPI_24M, "sclk_mipidsi_24m", "xin24m", 0, RK3288_CLKGATE_CON(5), 15, GFLAGS),
->  
-
-It would have been better to make #defines for all these clocks
-even if they weren't going to be used here. Then we could have
-applied this patch directly to clk tree without having a clk tree
-to arm-soc dependency. </grumble>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
