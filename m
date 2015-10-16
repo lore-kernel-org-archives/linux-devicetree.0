@@ -1,179 +1,71 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2] ARM: dts: fix gpio-keys wakeup-source property
-Date: Fri, 16 Oct 2015 17:01:36 +0100
-Message-ID: <1445011296-29042-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arm@kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] mtd: nand: Allow MTD_NAND_BRCMNAND to be selected for ARM64
+Date: Fri, 16 Oct 2015 18:24:21 +0200
+Message-ID: <5673177.0QYFhMPCBq@wuerfel>
+References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com> <1444986537-28387-3-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444986537-28387-3-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The keyboard driver for GPIO buttons(gpio-keys) checks for one of the
-two boolean properties to enable gpio buttons as wakeup source:
-1. "wakeup-source" or
-2. the legacy "gpio-key,wakeup"
+On Friday 16 October 2015 14:38:55 Anup Patel wrote:
+> 
+> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> index 3324281..a1b5819 100644
+> --- a/drivers/mtd/nand/Kconfig
+> +++ b/drivers/mtd/nand/Kconfig
+> @@ -393,7 +393,7 @@ config MTD_NAND_GPMI_NAND
+>  
+>  config MTD_NAND_BRCMNAND
+>         tristate "Broadcom STB NAND controller"
+> -       depends on ARM || MIPS
+> +       depends on ARM || ARM64 || MIPS
+>         help
+>           Enables the Broadcom NAND controller driver. The controller was
+>           originally designed for Set-Top Box but is used on various BCM7xxx,
+> -- 
+> 
 
-However juno, ste-snowball and emev2-kzm9d dts file have a undetected
-"wakeup" property to indictate the wakeup source.
+I think you also need this one:
 
-This patch fixes it by making use of "wakeup-source" property.
+8<-----------
+>From 0ab7b2d32921b3f3da15274d8c3982ba1d54660f Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Date: Thu, 4 Jun 2015 09:25:59 +0200
+Subject: [PATCH] mtd: brcmnand depends on MTD_NAND
 
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Acked-by: Simon Horman <horms@verge.net.au>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- arch/arm/boot/dts/emev2-kzm9d.dts             |  8 ++++----
- arch/arm/boot/dts/ste-snowball.dts            | 10 +++++-----
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 12 ++++++------
- 3 files changed, 15 insertions(+), 15 deletions(-)
+MTD_NAND_BRCMNAND uses the generic nand functions, but is currently allowed
+to be built without CONFIG_MTD_NAND, which results in a link error:
 
-Hi ARM-SoC group,
+drivers/built-in.o: In function `brcmnand_remove':
+coresight-replicator.c:(.text+0x17ae6c): undefined reference to `nand_release'
+drivers/built-in.o: In function `brcmnand_probe':
+coresight-replicator.c:(.text+0x17d4b4): undefined reference to `nand_scan_ident'
+coresight-replicator.c:(.text+0x17d948): undefined reference to `nand_scan_tail'
 
-Please consider this as a fix for v4.3 if possible.
+This adds an explicit Kconfig dependency.
 
-v2->v1[1] :
- - included all the reviewed/ack tags, also posting this fix independently
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2015/10/13/413
-
-diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
-index 955c24ee4a8c..8c24975e8f9d 100644
---- a/arch/arm/boot/dts/emev2-kzm9d.dts
-+++ b/arch/arm/boot/dts/emev2-kzm9d.dts
-@@ -35,28 +35,28 @@
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index 289664089cf3..4b7e853ce35d 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -393,6 +393,7 @@ config MTD_NAND_GPMI_NAND
  
- 		button@1 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-1";
- 			linux,code = <KEY_1>;
- 			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
- 		};
- 		button@2 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-2";
- 			linux,code = <KEY_2>;
- 			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
- 		};
- 		button@3 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-3";
- 			linux,code = <KEY_3>;
- 			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
- 		};
- 		button@4 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			label = "DSW2-4";
- 			linux,code = <KEY_4>;
- 			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index 32a5ccb14e7e..e80e42163883 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -47,35 +47,35 @@
- 
- 		button@1 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <2>;
- 			label = "userpb";
- 			gpios = <&gpio1 0 0x4>;
- 		};
- 		button@2 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <3>;
- 			label = "extkb1";
- 			gpios = <&gpio4 23 0x4>;
- 		};
- 		button@3 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <4>;
- 			label = "extkb2";
- 			gpios = <&gpio4 24 0x4>;
- 		};
- 		button@4 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <5>;
- 			label = "extkb3";
- 			gpios = <&gpio5 1 0x4>;
- 		};
- 		button@5 {
- 			debounce_interval = <50>;
--			wakeup = <1>;
-+			wakeup-source;
- 			linux,code = <6>;
- 			label = "extkb4";
- 			gpios = <&gpio5 2 0x4>;
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index 902f14a8e85b..42153860b41f 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -61,42 +61,42 @@
- 
- 				button@1 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <116>;
- 					label = "POWER";
- 					gpios = <&iofpga_gpio0 0 0x4>;
- 				};
- 				button@2 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <102>;
- 					label = "HOME";
- 					gpios = <&iofpga_gpio0 1 0x4>;
- 				};
- 				button@3 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <152>;
- 					label = "RLOCK";
- 					gpios = <&iofpga_gpio0 2 0x4>;
- 				};
- 				button@4 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <115>;
- 					label = "VOL+";
- 					gpios = <&iofpga_gpio0 3 0x4>;
- 				};
- 				button@5 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <114>;
- 					label = "VOL-";
- 					gpios = <&iofpga_gpio0 4 0x4>;
- 				};
- 				button@6 {
- 					debounce_interval = <50>;
--					wakeup = <1>;
-+					wakeup-source;
- 					linux,code = <99>;
- 					label = "NMI";
- 					gpios = <&iofpga_gpio0 5 0x4>;
--- 
-1.9.1
+ config MTD_NAND_BRCMNAND
+ 	tristate "Broadcom STB NAND controller"
++	depends on MTD_NAND
+ 	depends on ARM || ARM64 || MIPS
+ 	help
+ 	  Enables the Broadcom NAND controller driver. The controller was
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
