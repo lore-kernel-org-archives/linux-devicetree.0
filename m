@@ -1,61 +1,141 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: properties to describe a rotary encoder
-Date: Fri, 16 Oct 2015 11:59:51 +0200
-Message-ID: <20151016095951.GA6533@pengutronix.de>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: [PATCH v11 0/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+Date: Fri, 16 Oct 2015 18:23:35 +0800
+Message-ID: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patchset adds PCIe host support for HiSilicon SoC Hip05. The PCIe hosts
+use PCIe IP core from Synopsys, So this driver is based on designware PCIe driver.
 
-there is already a driver for rotary encoders described in
-Documentation/devicetree/bindings/input/rotary-encoder.txt. This howeve=
-r
-is not suitable to describe the device I have here for two reasons:
+Hip05 is an ARMv8 architecture SoC. It should be able to use ARM64 PCIe API in
+designware PCIe driver. So this patch also adds ARM64 support for designware
+pcie.
 
-=46irst the driver can only make use of 2 gpio lines, while the device
-here has 4 lines, so I have 16 sectors instead of only 4. And the
-second difference is that my encoder has a detend for each sector while
-the driver only supports "half-period" and "full-period" (default) mode=
-=2E
-These names really only make sense for the 2 line case and mean the
-encoder has detends in 2 or 1 sector respectively.
+This patchset is based on v4.3-rc1.
 
-So I'm thinking about how to generalize the description to allow to add
-support for "my" device.
+Change from v10:
+- Remove MSI related setting and VMID/ASID table setting, they will be
+  implemented in BIOS.
+- Use module_platform_driver to init pcie-hisi.c
+- Add necessary comments.
 
-=46or the added gpio lines it's easy, that's just allowing more than tw=
-o
-gpios for the "gpios" property.
+Change from v9:
+- Use syscon to get subctrl base address.
+- 5/6 is based on [PATCH v3 0/2] arm64: Support Hisilicon Hip05-D02 board
+  from Ding Tianhong
+- Add hisi_pcie_cfg_read in pcie-hisi.c to match
+  [PATCH v6 0/3] PCI: designware: change dw_pcie_cfg_write() and dw_pcie_cfg_read()
+  from Gabriele.
 
-Currently there is a property "rotary-encoder,steps" that describes the
-number of detends in a full turnaround. So if we stick to "steps" to
-describe detends, maybe something like "sectors-per-step" (with a
-default of 4) would be needed to describe what "half-period" is now.
-Does this make sense? Maybe someone has a better suggestion?
+Change from v8:
+- Rebase on v4.3-rc1.
+- Add Tested-by from Gabriel and Minghuan.
+- Remove ITS domain parsing in msi_host_init in pcie-hisi.c, no need this as PCI
+  core does related job. Add ITS base address parsing in msi_host_init.
+- Change vmid/asid table configuration, previous configuration was wrong.
+- Add wr_own_conf callback in pcie-hisi.c.
+- Use subsys_initcall to init hisi PCIe.
 
-I'll start implementing that now, but give you time to think about a
-good name/scheme already. :-)
+Change from v7:
+- Remove pp->root_bus_nr = 0 in dra7xx, exynos, imx6, keystone, layerscape,
+  spear13xx. Pass pp->busn->start to pci_create_root_bus as root bus number.
+- Remove bus-range parsing in pcie-hisi.c.
 
-=46eedback welcome.
+Change from v6:
+- Add Pratyush's Acked-by for 1/6 and 2/6.
+- Add James' Tested-by for 3/6.
 
-Best regards
-Uwe
+Change from v5:
+- Merge 1/6 in this series, discussion about this can be found in [1]
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Change from v4:
+- Change the author of 1/5 to Gabriele.
+- Modify problems in 3/5 pointed by Bjorn.
+- Modify spelling problems in 4/5.
+
+Change from v3:
+- Change 1/5 to what Gabriele suggested.
+- Use win->__res.start to get *_mod_base in 2/5, this fix a bug in v3 series.
+
+Change from v2:
+- Move struct pci_dev *dev and struct pci_sys_data *sys in
+  pcibios_align_resource in 1/5.
+- Add Gabriele's codes in 2/5 which delete unnecessary information parse and
+  use of_pci_get_host_bridge_resources for both ARM32 and ARM64.
+- Add maintainer patch 5/5.
+
+Change from RFC v1:
+- Add 1/4 patch by Arnd which removes align_resource callback in ARM
+  pcibios_align_resource.
+- Change head file in pcie-designware from asm/hardirq.h to linux/hardirq.h.
+- Set pp->root_bus_nr = 0 in dra7xx, exynos, imx6, keystone, layerscape,
+  spear13xx.
+- Remove unnecessary parentheses of some macros in pcie-hisi.
+- Use macro to replace some magic values.
+- Merge two loops together and add some comments about it in context_config
+  function in pcie-hisi.
+- Modify some value of items in pcie node example in binding document. 
+
+Change from RFC:
+- delete dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+  merge related operations into dw_pcie_host_init.
+
+Link of v10:
+- http://www.spinics.net/lists/linux-pci/msg45490.html
+Link of v9:
+- http://www.spinics.net/lists/linux-pci/msg44545.html
+Link of v8:
+- http://www.spinics.net/lists/linux-pci/msg44192.html
+Link of v7:
+- http://www.spinics.net/lists/devicetree/msg90690.html
+Link of v6:
+- http://www.spinics.net/lists/linux-pci/msg43669.html
+Link of v5:
+- http://www.spinics.net/lists/devicetree/msg87959.html
+Link of v4:
+- http://www.spinics.net/lists/arm-kernel/msg433050.html
+Link of v3:
+- http://www.spinics.net/lists/linux-pci/msg42539.html
+Link of v2:
+- http://www.spinics.net/lists/linux-pci/msg41844.html
+Link of RFC v1:
+- http://www.spinics.net/lists/linux-pci/msg41305.html
+Link of RFC:
+- http://www.spinics.net/lists/linux-pci/msg40434.html
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/359741.html
+
+Zhou Wang (4):
+  PCI: designware: Add ARM64 support
+  PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+  Documentation: DT: Add HiSilicon PCIe host binding
+  MAINTAINERS: Add pcie-hisi maintainer
+
+gabriele paoloni (2):
+  PCI: designware: move calculation of bus addresses to DRA7xx
+  ARM/PCI: remove align_resource in pci_sys_data
+
+ .../bindings/arm/hisilicon/hisilicon.txt           |  17 ++
+ .../devicetree/bindings/pci/hisilicon-pcie.txt     |  44 ++++
+ MAINTAINERS                                        |   7 +
+ arch/arm/include/asm/mach/pci.h                    |   6 -
+ arch/arm/kernel/bios32.c                           |  12 +-
+ drivers/pci/host/Kconfig                           |   8 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pci-dra7xx.c                      |  13 ++
+ drivers/pci/host/pci-keystone-dw.c                 |   2 +-
+ drivers/pci/host/pcie-designware.c                 | 245 +++++++--------------
+ drivers/pci/host/pcie-designware.h                 |  14 +-
+ drivers/pci/host/pcie-hisi.c                       | 196 +++++++++++++++++
+ 12 files changed, 377 insertions(+), 188 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-hisi.c
+
+-- 
+1.9.1
