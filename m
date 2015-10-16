@@ -1,51 +1,51 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [PATCHv2 1/3] ARM: dt: fpga: Added binding docs for Xilinx Zynq FPGA manager.
-Date: Fri, 16 Oct 2015 15:42:28 -0700
-Message-ID: <1445035350-3569-2-git-send-email-moritz.fischer@ettus.com>
-References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: michal.simek@xilinx.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, linux@arm.linux.org.uk, atull@opensource.altera.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCHv2 0/3] Adding FPGA Manager support for Xilinx Zynq
+Date: Fri, 16 Oct 2015 15:42:27 -0700
+Message-ID: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
----
+Hi all,
 
-v2:
- - Clock names are now a required property
- - Removed interrupt-parent property
+I've tried to address most of the feedback that was brought up,
+the one thing I haven't looked at was the firmware format part,
+since that was still in discussion.
+So I'm still open to suggestions on how to handle this.
 
----
- .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+In the interest of moving forward, and early feedback I decided
+to submit another rev without the firmware format part addressed.
+
+Thanks to all the reviewers of the first round, can we maybe
+get ACKs for the docs and devicetree changes?
+
+Cheers,
+
+    Moritz
+
+Moritz Fischer (3):
+  ARM: dt: fpga: Added binding docs for Xilinx Zynq FPGA manager.
+  ARM: zynq: dt: Updated devicetree for Zynq 7000 platform.
+  fpga manager: Adding FPGA Manager support for Xilinx Zynq 7000
+
+ .../bindings/fpga/xilinx-zynq-fpga-mgr.txt         |  19 +
+ arch/arm/boot/dts/zynq-7000.dtsi                   |   5 +
+ drivers/fpga/Kconfig                               |   5 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/zynq-fpga.c                           | 533 +++++++++++++++++++++
+ 5 files changed, 563 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
+ create mode 100644 drivers/fpga/zynq-fpga.c
 
-diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
-new file mode 100644
-index 0000000..7018aa8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt
-@@ -0,0 +1,19 @@
-+Xilinx Zynq FPGA Manager
-+
-+Required properties:
-+- compatible:		should contain "xlnx,zynq-devcfg-1.0"
-+- reg:			base address and size for memory mapped io
-+- interrupts:		interrupt for the FPGA manager device
-+- clocks:		phandle for clocks required operation
-+- clock-names:		name for the clock, should be "ref_clk"
-+- syscon:		phandle for access to SLCR registers
-+
-+Example:
-+	devcfg: devcfg@f8007000 {
-+		compatible = "xlnx,zynq-devcfg-1.0";
-+		reg = <0xf8007000 0x100>;
-+		interrupts = <0 8 4>;
-+		clocks = <&clkc 12>;
-+		clock-names = "ref_clk";
-+		syscon = <&slcr>;
-+	};
 -- 
 2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
