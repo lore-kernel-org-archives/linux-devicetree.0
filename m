@@ -1,49 +1,146 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 5/5] clk: berlin: bg2: remove CLK_IGNORE_UNUSED flag for sdio clk
-Date: Fri, 16 Oct 2015 05:47:32 -0700
-Message-ID: <20151016124732.20687.35929@quantum>
-References: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
- <1444628796-5484-6-git-send-email-jszhang@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1444628796-5484-6-git-send-email-jszhang@marvell.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jisheng Zhang <jszhang@marvell.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 1/5] [RFC] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
+Date: Fri, 16 Oct 2015 14:49:16 +0200
+Message-ID: <1444999760-15750-2-git-send-email-geert+renesas@glider.be>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jisheng Zhang (2015-10-11 22:46:36)
-> The axi clock properties already exists, so there's no need to set this
-> flag for sdio0 and sdio1 clk any more.
-> 
-> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse
+Generator) and MSSR (Module Standby and Software Reset) blocks are
+intimately connected, and share the same register block.
 
-Applied to clk-next.
+Hence it makes sense to describe these two blocks using a
+single device node in DT, instead of using a hierarchical structure with
+multiple nodes, using a mix of generic and SoC-specific bindings.
 
-Regards,
-Mike
+These new DT bindings are intended to replace the existing DT bindings
+for CPG core clocks ("renesas,*-cpg-clocks", "renesas,cpg-div6-clock")
+and module clocks ("renesas,*-mstp-clocks"), at least for new SoCs.
 
-> ---
->  drivers/clk/berlin/bg2.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/berlin/bg2.c b/drivers/clk/berlin/bg2.c
-> index 73153fc..23e0e3b 100644
-> --- a/drivers/clk/berlin/bg2.c
-> +++ b/drivers/clk/berlin/bg2.c
-> @@ -490,8 +490,8 @@ static const struct berlin2_gate_data bg2_gates[] __initconst = {
->         { "usb0",       "perif",        11 },
->         { "usb1",       "perif",        12 },
->         { "pbridge",    "perif",        13, CLK_IGNORE_UNUSED },
-> -       { "sdio0",      "perif",        14, CLK_IGNORE_UNUSED },
-> -       { "sdio1",      "perif",        15, CLK_IGNORE_UNUSED },
-> +       { "sdio0",      "perif",        14 },
-> +       { "sdio1",      "perif",        15 },
->         { "nfc",        "perif",        17 },
->         { "smemc",      "perif",        19 },
->         { "audiohd",    "audiohd_pll",  26 },
-> -- 
-> 2.6.1
-> 
+This will make it easier to add module reset support later, which is
+currently not implemented, and difficult to achieve using the existing
+bindings due to the intertwined register layout.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v4:
+  - No changes,
+
+v3:
+  - Integrate CPG and MSSR,
+
+v2:
+  - Switch from MSTP to MSSR.
+---
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt | 71 ++++++++++++++++++++++
+ include/dt-bindings/clock/renesas-cpg-mssr.h       | 15 +++++
+ 2 files changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+ create mode 100644 include/dt-bindings/clock/renesas-cpg-mssr.h
+
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+new file mode 100644
+index 0000000000000000..a56836aa2131a8db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+@@ -0,0 +1,71 @@
++* Renesas Clock Pulse Generator / Module Standby and Software Reset
++
++On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
++and MSSR (Module Standby and Software Reset) blocks are intimately connected,
++and share the same register block.
++
++They provide the following functionalities:
++  - The CPG block generates various core clocks,
++  - The MSSR block provides two functions:
++      1. Module Standby, providing a Clock Domain to control the clock supply
++	 to individual SoC devices,
++      2. Reset Control, to perform a software reset of individual SoC devices.
++
++Required Properties:
++  - compatible: Must be one of:
++      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC
++      - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
++
++  - reg: Base address and length of the memory resource used by the CPG/MSSR
++    block
++
++  - clocks: References to external parent clocks, one entry for each entry in
++    clock-names
++  - clock-names: List of external parent clock names. Valid names are:
++      - "extal" (r8a7791, r8a7795)
++      - "extalr" (r8a7795)
++      - "usb_extal" (r8a7791)
++
++  - #clock-cells: Must be 2
++      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
++	and a core clock reference, as defined in
++	<dt-bindings/clock/*-cpg-mssr.h>.
++      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
++	a module number, as defined in the datasheet.
++
++  - #power-domain-cells: Must be 0
++      - SoC devices that are part of the CPG/MSSR Clock Domain and can be
++	power-managed through Module Standby should refer to the CPG device
++	node in their "power-domains" property, as documented by the generic PM
++	Domain bindings in
++	Documentation/devicetree/bindings/power/power_domain.txt.
++
++
++Examples
++--------
++
++  - CPG device node:
++
++	cpg: clock-controller@e6150000 {
++		compatible = "renesas,r8a7795-cpg-mssr";
++		reg = <0 0xe6150000 0 0x1000>;
++		clocks = <&extal_clk>, <&extalr_clk>;
++		clock-names = "extal", "extalr";
++		#clock-cells = <2>;
++		#power-domain-cells = <0>;
++	};
++
++
++  - CPG/MSSR Clock Domain member device node:
++
++	scif2: serial@e6e88000 {
++		compatible = "renesas,scif-r8a7795", "renesas,scif";
++		reg = <0 0xe6e88000 0 64>;
++		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg CPG_MOD 310>;
++		clock-names = "sci_ick";
++		dmas = <&dmac1 0x13>, <&dmac1 0x12>;
++		dma-names = "tx", "rx";
++		power-domains = <&cpg>;
++		status = "disabled";
++	};
+diff --git a/include/dt-bindings/clock/renesas-cpg-mssr.h b/include/dt-bindings/clock/renesas-cpg-mssr.h
+new file mode 100644
+index 0000000000000000..569a3cc33ffb5bc7
+--- /dev/null
++++ b/include/dt-bindings/clock/renesas-cpg-mssr.h
+@@ -0,0 +1,15 @@
++/*
++ * Copyright (C) 2015 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__
++
++#define CPG_CORE			0	/* Core Clock */
++#define CPG_MOD				1	/* Module Clock */
++
++#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
+-- 
+1.9.1
+
