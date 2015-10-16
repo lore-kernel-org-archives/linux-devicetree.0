@@ -1,67 +1,213 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v4 2/4] mailbox: Hi6220: add mailbox driver
-Date: Fri, 16 Oct 2015 14:18:24 +0800
-Message-ID: <20151016061824.GD3226@leoy-linaro>
-References: <1444667535-16948-1-git-send-email-leo.yan@linaro.org>
- <1444667535-16948-3-git-send-email-leo.yan@linaro.org>
- <CABb+yY2uJZFgDeviRzz8ghVhNzy5d6jf+=fpTAUez01m+O0ttw@mail.gmail.com>
- <20151016052910.GB3226@leoy-linaro>
- <CABb+yY1ArXRz+jznuPj-BOQR18EijTD=czkHJ2BMSh5mNFikow@mail.gmail.com>
- <20151016060809.GC3226@leoy-linaro>
- <CAJe_ZhejrJZZA=zVJvfrtmj7oBfTCd1NddoEmrJG1SEo5TvbNw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/6] mfd: axp20x: Add support for RSB based
+ AXP223 PMIC
+Date: Fri, 16 Oct 2015 08:41:59 +0200
+Message-ID: <20151016064159.GG2711@lukather>
+References: <1444840342-9233-1-git-send-email-wens@csie.org>
+ <1444840342-9233-4-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TmwHKJoIRFM7Mu/A"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOFYQKYQKGQEGBDGCXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJe_ZhejrJZZA=zVJvfrtmj7oBfTCd1NddoEmrJG1SEo5TvbNw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1444840342-9233-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 11:42:54AM +0530, Jassi Brar wrote:
-> On 16 October 2015 at 11:38, Leo Yan <leo.yan@linaro.org> wrote:
-> > On Fri, Oct 16, 2015 at 11:17:32AM +0530, Jassi Brar wrote:
-> >> On Fri, Oct 16, 2015 at 10:59 AM, Leo Yan <leo.yan@linaro.org> wrote:
-> >> > On Fri, Oct 16, 2015 at 10:43:00AM +0530, Jassi Brar wrote:
-> >> >> On Mon, Oct 12, 2015 at 10:02 PM, Leo Yan <leo.yan@linaro.org> wrote:
-> >> >>
-> >> >> > +
-> >> >> > +#define MBOX_CHAN_MAX                  32
-> >> >> > +#define MBOX_CHAN_NUM                  2
-> >> >> > +
-> >> >> You mean the hardware has 32 channels but this driver can not manage
-> >> >> more than 2 ?
-> >> >>
-> >> >> OR, there are 32 interfaces but only 2 physical 'floating' links, so
-> >> >> no more than 2 interfaces can be active at any time?
-> >> >
-> >> > For the later case.
-> >> Former is a s/w limitation and latter is h/w limitation. From what you
-> >> write below, it seems former to be the case.
-> >
-> > Sorry, i misunderstood the question. It's a s/w limitation.
-> >
-> >> > Mailbox also can be used by other modules, such
-> >> > like audio hifi; later need add links for them if want to enable
-> >> > audio. But so far only uses first 2 channels.
-> >> >
-> >> You mean every time your platform needs another channel, you'll update
-> >> the driver? Not sure about that. It should be simpler to assign which
-> >> ever and as many channels as the client asks via DT.
-> >
-> > For hi6220, every channel is fixed to specific purpose;
-> on different platform the purposes may be different, so ....
+--TmwHKJoIRFM7Mu/A
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Oct 15, 2015 at 12:32:19AM +0800, Chen-Yu Tsai wrote:
+> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+> It is functionally identical to AXP221; only the regulator default
+> voltage/status and the external host interface are different.
 > 
-> > so i can
-> > register all of them in driver, such like hifi related channels;
-> > Though i cannot test them currently, but this will avoid extra
-> > efforts for enabling channels anymore, do you think this is okay?
-> > Or you prefer to bind with DT?
-> >
-> .... DT please.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig        | 12 ++++++
+>  drivers/mfd/Makefile       |  1 +
+>  drivers/mfd/axp20x-core.c  |  2 +
+>  drivers/mfd/axp20x-rsb.c   | 93 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/axp20x.h |  1 +
+>  5 files changed, 109 insertions(+)
+>  create mode 100644 drivers/mfd/axp20x-rsb.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 9ba3feb3f2fc..6e5edb61d42e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -84,6 +84,7 @@ config MFD_BCM590XX
+>  config MFD_AXP20X
+>  	bool "X-Powers AXP series PMICs"
+>  	select MFD_AXP20X_I2C
+> +	select MFD_AXP20X_RSB
+>  
+>  config MFD_AXP20X_CORE
+>  	bool
+> @@ -102,6 +103,17 @@ config MFD_AXP20X_I2C
+>  	  components like regulators or the PEK (Power Enable Key) under the
+>  	  corresponding menus.
+>  
+> +config MFD_AXP20X_RSB
+> +	bool "X-Powers AXP series RSB PMICs"
+> +	select MFD_AXP20X_CORE
+> +	depends on SUNXI_RSB=y
 
-Ok, will do this.
+Do we need that? Even if the bus is compiled as a module, the driver
+will not be probed before that, will it?
 
-Thansk,
-Leo Yan
+> +	help
+> +	  If you say Y here you get support for the X-Powers AXP series RSB
+> +	  based power management ICs (PMICs).
+> +	  This driver include only the core APIs. You have to select individual
+> +	  components like regulators or the PEK (Power Enable Key) under the
+> +	  corresponding menus.
+> +
+>  config MFD_CROS_EC
+>  	tristate "ChromeOS Embedded Controller"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index ce3ad5fd4e2f..1eb278619dd6 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -108,6 +108,7 @@ obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
+>  obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
+>  obj-$(CONFIG_MFD_AXP20X_CORE)	+= axp20x-core.o
+>  obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
+> +obj-$(CONFIG_MFD_AXP20X_RSB)	+= axp20x-rsb.o
+>  
+>  obj-$(CONFIG_MFD_LP3943)	+= lp3943.o
+>  obj-$(CONFIG_MFD_LP8788)	+= lp8788.o lp8788-irq.o
+> diff --git a/drivers/mfd/axp20x-core.c b/drivers/mfd/axp20x-core.c
+> index dd33548d93c4..baecccb6d400 100644
+> --- a/drivers/mfd/axp20x-core.c
+> +++ b/drivers/mfd/axp20x-core.c
+> @@ -32,6 +32,7 @@ static const char * const axp20x_model_names[] = {
+>  	"AXP202",
+>  	"AXP209",
+>  	"AXP221",
+> +	"AXP223",
+>  	"AXP288",
+>  };
+>  
+> @@ -575,6 +576,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x, struct device *dev)
+>  		axp20x->regmap_irq_chip = &axp20x_regmap_irq_chip;
+>  		break;
+>  	case AXP221_ID:
+> +	case AXP223_ID:
+>  		axp20x->nr_cells = ARRAY_SIZE(axp22x_cells);
+>  		axp20x->cells = axp22x_cells;
+>  		axp20x->regmap_cfg = &axp22x_regmap_config;
+> diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+> new file mode 100644
+> index 000000000000..5d053d177717
+> --- /dev/null
+> +++ b/drivers/mfd/axp20x-rsb.c
+> @@ -0,0 +1,93 @@
+> +/*
+> + * axp20x-rsb.c - RSB driver for the X-Powers' Power Management ICs
+> + *
+> + * AXP20x typically comprises an adaptive USB-Compatible PWM charger, BUCK DC-DC
+> + * converters, LDOs, multiple 12-bit ADCs of voltage, current and temperature
+> + * as well as configurable GPIOs.
+> + *
+> + * This driver supports the RSB variants.
+> + *
+> + * Author: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/axp20x.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/soc/sunxi/sunxi_rsb.h>
+> +
+> +static const struct of_device_id axp20x_sunxi_rsb_of_match[] = {
+> +	{ .compatible = "x-powers,axp223", .data = (void *) AXP223_ID },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, axp20x_sunxi_rsb_of_match);
+> +
+> +static int axp20x_sunxi_rsb_match_device(struct axp20x_dev *axp20x,
+> +					 struct device *dev)
+> +{
+> +	const struct of_device_id *of_id;
+> +
+> +	of_id = of_match_device(axp20x_sunxi_rsb_of_match, dev);
+> +	if (!of_id) {
+> +		dev_err(dev, "Unable to match OF ID\n");
+> +		return -ENODEV;
+> +	}
+> +	axp20x->variant = (long) of_id->data;
+> +
+> +	return axp20x_match_device(axp20x, dev);
+> +}
+> +
+> +static int axp20x_sunxi_rsb_probe(struct sunxi_rsb_device *rdev)
+> +{
+> +	struct axp20x_dev *axp20x;
+> +	int ret;
+> +
+> +	axp20x = devm_kzalloc(&rdev->dev, sizeof(*axp20x), GFP_KERNEL);
+> +	if (!axp20x)
+> +		return -ENOMEM;
+> +
+> +	ret = axp20x_sunxi_rsb_match_device(axp20x, &rdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	axp20x->dev = &rdev->dev;
+> +	axp20x->irq = rdev->irq;
+> +	sunxi_rsb_device_set_drvdata(rdev, axp20x);
+> +
+> +	axp20x->regmap = devm_regmap_init_sunxi_rsb(rdev, axp20x->regmap_cfg);
+> +	if (IS_ERR(axp20x->regmap)) {
+> +		ret = PTR_ERR(axp20x->regmap);
+> +		dev_err(&rdev->dev, "regmap init failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return axp20x_device_probe(axp20x);
+> +}
+> +
+> +static int axp20x_sunxi_rsb_remove(struct sunxi_rsb_device *rdev)
+> +{
+> +	struct axp20x_dev *axp20x = sunxi_rsb_device_get_drvdata(rdev);
+> +
+> +	return axp20x_device_remove(axp20x);
+> +}
+> +
+> +static struct sunxi_rsb_driver axp20x_sunxi_rsb_driver = {
+> +	.driver = {
+> +		.name	= "axp20x-sunxi-rsb",
+
+Do we need to be that verbose in the name of the driver?
+
+axp20x-rsb should be enough, especially since it's also the name of
+your file.
+
+Looks good otherwise, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--TmwHKJoIRFM7Mu/A--
