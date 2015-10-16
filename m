@@ -1,226 +1,224 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
-Date: Fri, 16 Oct 2015 14:42:03 +0300
-Message-ID: <5620E28B.4040002@ti.com>
-References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
- <1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
- <CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
- <561F9961.30008@ti.com>
- <CAL_Jsq+trQ3jLczxvtzqfpUKBgxaazPdGyjLg+NT2YFva0_xbA@mail.gmail.com>
- <561FBC4F.6030306@ti.com>
- <CAL_JsqJ0JUuwkVKtWbzqEWemx7wME61KYxgvv=vNUT8FiMtGYw@mail.gmail.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] mmc: sdhci-pxav3: fix optional clock name
+Date: Fri, 16 Oct 2015 19:40:32 +0800
+Message-ID: <20151016194032.76514a5e@xhacker>
+References: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
+	<1444628796-5484-2-git-send-email-jszhang@marvell.com>
+	<56201D82.6080106@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="haLONVOnUUprtr8snVRC0RBTSsU7pednB"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ0JUuwkVKtWbzqEWemx7wME61KYxgvv=vNUT8FiMtGYw@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56201D82.6080106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---haLONVOnUUprtr8snVRC0RBTSsU7pednB
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Dear Sebastian,
 
-Hi Rob,
+On Thu, 15 Oct 2015 23:41:22 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On 15/10/15 21:55, Rob Herring wrote:
+> On 12.10.2015 07:46, Jisheng Zhang wrote:
+> > Commit 8afdc9cca27f ("mmc: sdhci-pxav3: Get optional core clock") adds
+> > additional optional clock support, but the clock names  isn't correct.
+> > The current "io" clock is really the PXAv3 SDHCI IP's "core" clock
+> > which is manadatory. The current "core" clock is really the IP's "axi"
+> > clock which is optional.
+> >
+> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >   .../devicetree/bindings/mmc/sdhci-pxa.txt          |  8 ++---
+> >   arch/arm/boot/dts/berlin2.dtsi                     |  6 ++--
+> >   arch/arm/boot/dts/berlin2cd.dtsi                   |  2 +-
+> >   arch/arm/boot/dts/berlin2q.dtsi                    |  2 +-
+> >   drivers/mmc/host/sdhci-pxav3.c                     | 40 +++++++++++-----------
+> >   5 files changed, 29 insertions(+), 29 deletions(-)  
+> 
+> 
+> Jisheng,
+> 
+> Please split the DT changes from the driver changes.
 
->> True, but those child nodes are very limited. As I see it, those child=
+Such split will break berlin SDHC functionality, I'm not sure whether this is
+acceptable.
 
->> nodes really describe the outputs of the LED chip, not what's on the
->> other end of the lines.
->=20
-> The child nodes are supposed to be the other end. In the flash case,
-> the properties are constraints on the flash LED (i.e. different flash
-> LEDs will have different max currents).
+> 
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> > index 3d1b449..25d5ba8 100644
+> > --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> > @@ -17,9 +17,9 @@ Required properties:
+> >   - reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
+> >     for "marvell,armada-380-sdhci"
+> >   - clocks: Array of clocks required for SDHCI; requires at least one for
+> > -    I/O clock.
+> > +    core clock.
+> >   - clock-names: Array of names corresponding to clocks property; shall be
+> > -    "io" for I/O clock and "core" for optional core clock.
+> > +    "core" for core clock and "axi" for optional axi clock.  
+> 
+> s/axi/bus/ ?
 
-Right, but what I meant is that the max current is applied to the LED
-controller hardware, so in that sense it can be considered as a property
-of the LED controller.
+HW call this clk as axi, "bus" seems more generic, right?
 
-If there was, say, a flash that supports changing the color of the
-light, that property would be applied to the flash HW so it'd be a
-property of the "other end".
+> 
+> >   Optional properties:
+> >   - mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
+> > @@ -32,7 +32,7 @@ sdhci@d4280800 {
+> >   	bus-width = <8>;
+> >   	interrupts = <27>;
+> >   	clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+> > -	clock-names = "io", "core";
+> > +	clock-names = "core", "axi";  
+> 
+> This will break backward compatibility, right?
+> 
+> >   	non-removable;
+> >   	mrvl,clk-delay-cycles = <31>;
+> >   };
+> > @@ -45,6 +45,6 @@ sdhci@d8000 {
+> >   		<0x18454 0x4>;
+> >   	interrupts = <0 25 0x4>;
+> >   	clocks = <&gateclk 17>;
+> > -	clock-names = "io";
+> > +	clock-names = "core";
+> >   	mrvl,clk-delay-cycles = <0x1F>;
+> >   };  
+> [...]
+> > diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> > index f5edf9d..cec95f1 100644
+> > --- a/drivers/mmc/host/sdhci-pxav3.c
+> > +++ b/drivers/mmc/host/sdhci-pxav3.c
+> > @@ -59,8 +59,8 @@
+> >   #define SDCE_MISC_INT_EN	(1<<1)
+> >
+> >   struct sdhci_pxa {
+> > +	struct clk *clk_axi;  
+> 
+> s/clk_axi/clk_bus/g
+> 
+> >   	struct clk *clk_core;
+> > -	struct clk *clk_io;
+> >   	u8	power_mode;
+> >   	void __iomem *sdio3_conf_reg;
+> >   };
+> > @@ -381,20 +381,20 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+> >   	pltfm_host = sdhci_priv(host);
+> >   	pltfm_host->priv = pxa;
+> >
+> > -	pxa->clk_io = devm_clk_get(dev, "io");
+> > -	if (IS_ERR(pxa->clk_io))
+> > -		pxa->clk_io = devm_clk_get(dev, NULL);
+> > -	if (IS_ERR(pxa->clk_io)) {
+> > -		dev_err(dev, "failed to get io clock\n");
+> > -		ret = PTR_ERR(pxa->clk_io);
+> > +	pxa->clk_core = devm_clk_get(dev, "core");  
+> 
+> To maintain backward compatibility, we should still
 
->> If on the other end of the lines is a more complex device, we need a
->> proper device driver for it, with a proper DT node with compatible
->> property etc.
->>
->> Now, one could argue that a "backlight" that gets the LED signal from =
-a
->> LED chip is really just a simple LED. But there are complications:
->=20
-> I would say backlights are a complex example of LEDs. Of course, there
-> are backlights not based on LEDs, but we're not talking about those
-> here.
+I just grep the kernel source, found that only mrvl berlin SoCs have two clks,
+other SoCs just have one clk and don't provide clock name. So the question
+here is whether we can break linux backward compatibility for mrvl berlin
+SoCs. I think we could for the following reason:
 
-I like the GPIO/PWM binding model, as it doesn't force any
-node-hierarchy to the consumer of the GPIO/PWM. I don't see LED
-controller output being any different than PWM, but the current LED
-bindings still force the consumers of the LED signal to be a child of
-the LED controller.
+1. rare boards outside mrvl can boot user self-built kernel, most boards should
+be protected by trust-chainloader mechanism.
 
-How about an LCD module, controlled via i2c, which takes a LED PWM
-signal as an input, but needs i2c commands to enable the actual
-backlight? So kind of i2c controlled smart LED. Or if the LCD module
-takes two LED PWM signal inputs to achieve some fancy backlight effects.
+2. mrvl berlin SoCs upgrade linux kernel and dtb at the same time
 
-Yes, it's theoretical HW, and I know some people don't like to discuss
-such things... But the above example is easily accomplished with the
-GPIO/PWM style bindings, but I don't have any idea how it could be done
-with the current LED bindings.
+what do you think?
 
->> - Our board needs a GPIO to enable the backlight. I can't say what
->> exactly the GPIO does as my HW skills don't go far enough, but all thi=
-s
->> is after the LED chip. I also see the circuitry using powers, which in=
+Is it better to refine patch 2, 3, 4, 5 to make use current "io","core" binding
+to clean up the clk's CLK_IGNORE_UNUSED flags? In fact, they doesn't depend
+on patch1. Could you please kindly give advice?
 
->> our case happen to be always on so we don't need to enable them explic=
-itly.
->=20
-> The GPIO is probably controlling a transistor to connect the LED anode
-> to ground and therefore turn it on. These have nothing to do with
-> backlights really, but really are common to LEDs. Every LED needs a
-> supply rail too. This may come for a regulator or directly from an LED
-> driver IC.
-
-There's something a bit more complex there. The gpio controls TI
-TPS6108x (http://www.ti.com/lit/ds/symlink/tps61081.pdf "High-Voltage
-DC-DC Boost Converter").
-
-But possibly all that can still be considered as you described.
-
-> If the flash LED binding doesn't have these, then it is only a matter o=
-f time.
->=20
->>
->> - We need a backlight device/driver (because of the Linux SW stack).
->=20
-> From a binding perspective, not my problem. The problem with the
-> driver needs driving the binding definition is the drivers can change
-> over time. IIRC there has been some discussion of combining the 2
-> subsystems in the kernel, so we don't want to create something defined
-> by current kernel needs.
-
-True. But on the other hand I would also not want to force new drivers
-to use the current binding model, if it doesn't quite fit.
-
-So if the PWM/GPIO model is fine, and LED controllers are really very
-similar, shouldn't we extend the LED bindings towards PWM/GPIO model
-rather than trying to fit everything into the current LED bindings?
-
-Of course, even if everybody would agree with the above, this particular
-backlight binding is rather simple, and I think we can fit it in the
-current model. But that then raises the question, if led-backlight and
-pwm-backlight are about the same, why are the binding model different.
-
->> So, maybe it would be possible to construct all that in a LED child
->> node, and the LED driver would create a child device for the nodes whi=
-ch
->> have 'compatible' property. But then, that would be very different fro=
-m
->> pwm-backlight, and the parent-child relationships are usually used to
->> indicate a control relationship, right?
->=20
-> This is along the lines I was thinking, but don't see how it is very
-> different at the binding level. The parent-child relationship is
-
-In my experience, the relationship between the nodes is usually the most
-difficult part with bindings, both in the design side and the driver
-implementation side.
-
-So if pwm-backlight links to the pwm source using a phandle, and
-led-backlight links by child-parent relationship, I see them as quite
-different, even if the rest of the properties are the same.
-
-> typically control path or just what is downstream from the parent
-> device. Some bindings like GPIO and PWM don't follow this, but that is
-> often because they are just additional sideband interfaces on top of
-> the main control interface. I think simply making the "backlight" node
-> from the pwm-backlight binding a child works. We probably need a
-> different compatible string though (led-backlight is as good as
-
-So hmm... You mean using the pwm-backlight node, without the "pwms"
-property, as the source is implicit? So:
-
-/* tlc59108 is an i2c device */
-tlc59116@40 {
-	#address-cells =3D <1>;
-	#size-cells =3D <0>;
-	compatible =3D "ti,tlc59108";
-	reg =3D <0x40>;
-
-	wan@0 {
-		label =3D "wrt1900ac:amber:wan";
-		reg =3D <0x0>;
-	};
-
-	bl@2 {
-		label =3D "backlight";
-		reg =3D <0x2>;
-
-		compatible =3D "led-backlight";
-		brightness-levels =3D <0 243 245 247 248 249 251 252 255>;
-		default-brightness-level =3D <8>;
-
-		enable-gpios =3D <&pcf_lcd 13 GPIO_ACTIVE_LOW>;
-	};
-};
-
-At the moment each LED controller driver does its own DT parsing, and
-there's no common code for anything related to DT in the LED framework
-and the LED framework is not even aware of DT nodes or such (which is
-why I needed a bit hackish approach in my patches to find the nodes).
-
-I have a gut feeling that going into this direction will require quite a
-bit of restructuring in the LED drivers, so I think I need to leave this
-task for others due to lack of time.
-
-> anything). I also think we should require child nodes to have a
-> compatible string which we didn't do for flash devices. It's probably
-> not too late to fix that.
-
-That is probably a good idea.
-
-> I think there are 2 cases of PWM connection to LEDs to consider. The
-> PWM is an input to a LED driver chip or the PWM directly controls the
-> LED (attached to the anode). The current pwm-backlight binding covers
-> the latter. In the former case, pwms should probably be in the parent
-> (LED driver IC node). Of course, if the driver IC has no s/w
-> controllable interface beyond PWM, then it probably doesn't need to be
-> modeled at all in DT.
-
-I guess one option would also be to create an MFD of the LED controller,
-so that it would offer some of the outputs as plain PWMs. Then
-pwm-backlight could be used directly.
-
- Tomi
+Thanks in advance,
+Jisheng
 
 
---haLONVOnUUprtr8snVRC0RBTSsU7pednB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> devm_clk_get(dev, "io") here - or even better, first
+> probe for "io" to catch old binding semantics including
+> old "core"/"bus" misnaming.
+> 
+> If we detected old semantics, print a warning that
+> firmware should be updated.
+> 
+> Sebastian
+> 
+> > +	if (IS_ERR(pxa->clk_core))
+> > +		pxa->clk_core = devm_clk_get(dev, NULL);
+> > +	if (IS_ERR(pxa->clk_core)) {
+> > +		dev_err(dev, "failed to get core clock\n");
+> > +		ret = PTR_ERR(pxa->clk_core);
+> >   		goto err_clk_get;
+> >   	}
+> > -	pltfm_host->clk = pxa->clk_io;
+> > -	clk_prepare_enable(pxa->clk_io);
+> > +	pltfm_host->clk = pxa->clk_core;
+> > +	clk_prepare_enable(pxa->clk_core);
+> >
+> > -	pxa->clk_core = devm_clk_get(dev, "core");
+> > -	if (!IS_ERR(pxa->clk_core))
+> > -		clk_prepare_enable(pxa->clk_core);
+> > +	pxa->clk_axi = devm_clk_get(dev, "axi");
+> > +	if (!IS_ERR(pxa->clk_axi))
+> > +		clk_prepare_enable(pxa->clk_axi);
+> >
+> >   	/* enable 1/8V DDR capable */
+> >   	host->mmc->caps |= MMC_CAP_1_8V_DDR;
+> > @@ -475,8 +475,8 @@ err_add_host:
+> >   err_of_parse:
+> >   err_cd_req:
+> >   err_mbus_win:
+> > -	clk_disable_unprepare(pxa->clk_io);
+> >   	clk_disable_unprepare(pxa->clk_core);
+> > +	clk_disable_unprepare(pxa->clk_axi);
+> >   err_clk_get:
+> >   	sdhci_pltfm_free(pdev);
+> >   	return ret;
+> > @@ -494,8 +494,8 @@ static int sdhci_pxav3_remove(struct platform_device *pdev)
+> >
+> >   	sdhci_remove_host(host, 1);
+> >
+> > -	clk_disable_unprepare(pxa->clk_io);
+> >   	clk_disable_unprepare(pxa->clk_core);
+> > +	clk_disable_unprepare(pxa->clk_axi);
+> >
+> >   	sdhci_pltfm_free(pdev);
+> >
+> > @@ -542,9 +542,9 @@ static int sdhci_pxav3_runtime_suspend(struct device *dev)
+> >   	if (ret)
+> >   		return ret;
+> >
+> > -	clk_disable_unprepare(pxa->clk_io);
+> > -	if (!IS_ERR(pxa->clk_core))
+> > -		clk_disable_unprepare(pxa->clk_core);
+> > +	clk_disable_unprepare(pxa->clk_core);
+> > +	if (!IS_ERR(pxa->clk_axi))
+> > +		clk_disable_unprepare(pxa->clk_axi);
+> >
+> >   	return 0;
+> >   }
+> > @@ -555,9 +555,9 @@ static int sdhci_pxav3_runtime_resume(struct device *dev)
+> >   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> >   	struct sdhci_pxa *pxa = pltfm_host->priv;
+> >
+> > -	clk_prepare_enable(pxa->clk_io);
+> > -	if (!IS_ERR(pxa->clk_core))
+> > -		clk_prepare_enable(pxa->clk_core);
+> > +	clk_prepare_enable(pxa->clk_core);
+> > +	if (!IS_ERR(pxa->clk_axi))
+> > +		clk_prepare_enable(pxa->clk_axi);
+> >
+> >   	return sdhci_runtime_resume_host(host);
+> >   }
+> >  
+> 
 
-iQIcBAEBCAAGBQJWIOKLAAoJEPo9qoy8lh71SxoP/0+dLBjEnGDYUYcOC4djv5q1
-Ub/rMRwNkSg4AQvCM3E1Exyh3rW5UmAlX2DCWLcw1gRGIOhbDgHys+H0VkLdTKw5
-y8UHBxsv5S5xsUlMNtDATerLwEe8HTnxoIuCuiXfdJxAvvuMAZ8aHL7ieLWzKnhd
-sZkwBzycyKLkLVLJwImelgQyQNe2g44AR+mI9J/k9gSb+wfHTiOEB7G3kZzQxF7q
-1Oj863CuKQD6I+r6ubakV0z3naVL6sY8Tjm0Nhwox8zLaexIvIWul8R1odKVPWb3
-vz5+DGtF29aHoWgksTQ1h1+OXZ/pbWUpZfjUixORshtD/3iDH9Ii4rMiKE5/+8tq
-HLxAH1u6yU7DgPwo3en586HnDVXMEqBjVWPlh36ydysILfeq7OBJ3Fuluvi1IVRq
-marznZM47lSHSlFSVucke7S0E9/kx2zGLdNuxt9vv207UHXX6BeMb7So5DHbOSg6
-yoN/Y/Z2cuuFseawWGTCfWOqeq8Svc+P/b1wRlo9IF1ANDrV5mJXq+dJRX2Z0wjC
-5evQvnVW6i4vEQeudcmn/wKca05bTfV6cu5NZbDzUvXRPOQU0xB0XFbOoldmWGwa
-+D47393YZgXhxV/XGubuaHFFSz+2WRNaUE3mSj0lZtlOx73bMCeU6GBX9y3u1lex
-DadKB9yo5I591NtTbeKC
-=gTvG
------END PGP SIGNATURE-----
-
---haLONVOnUUprtr8snVRC0RBTSsU7pednB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
