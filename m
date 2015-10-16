@@ -1,40 +1,48 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v4 0/5] Mailbox: Provide support STi based platforms
-Date: Fri, 16 Oct 2015 09:48:54 +0530
-Message-ID: <CAJe_ZhcBwSxOAwssztipQtYzG8mPQ4Wmu+=h47gT3vc4gv7mJg@mail.gmail.com>
-References: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: mailbox: Document Hi6220 mailbox driver
+Date: Fri, 16 Oct 2015 10:26:48 +0530
+Message-ID: <CABb+yY0S18ShH3+sBnq=mOYMY=f4BNp947cUJae4YPfR=wPGGg@mail.gmail.com>
+References: <1444667535-16948-1-git-send-email-leo.yan@linaro.org>
+	<1444667535-16948-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444050140-24733-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444667535-16948-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 October 2015 at 18:32, Lee Jones <lee.jones@linaro.org> wrote:
-> Hi Jassi,
->
-> This should be it.  Exciting times!
->
-> ST's platforms currently support a maximum of 5 Mailboxes, one for
-> each of the supported co-processors situated on the platform.  Each
-> Mailbox is divided up into 4 instances which consist of 32 channels.
-> Messages are passed between the application and co-processors using
-> shared memory areas.
->
-> Also included in the set is an example Client which should be generic
-> enough to use as a testing environment for all Mailbox IPs which use
-> shared memory or the API to pass messages.  With small changes, it
-> should also be able to test more extravagant implementations.
->
-> v3 -> v4:
->  - More protection in MBOX_BASE() MACRO
->  - Remove unused tx-only marker
->
-Are you sure about the tx-only marker? :)
+On Mon, Oct 12, 2015 at 10:02 PM, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Since it is also a DT property, I think we should have it removed
-before we apply the patchset. Lets get it done today.
+> +
+> +Mailbox Device Node:
+> +====================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:          Shall be "hisilicon,hi6220-mbox"
+> +- reg:                 Contains the mailbox register address range (base
+> +                       address and length); the first item is for IPC
+> +                       registers, the second item is shared buffer for
+> +                       slots.
+>
+Is the shared-buffer a part of mailbox controller or just regular
+memory that could be used for purposes other than mailbox also? If
+latter, please remove it from here.
 
-Thanks
+> +Mailbox client
+> +===============
+> +
+> +"mboxes" and the optional "mbox-names" (please see
+> +Documentation/devicetree/bindings/mailbox/mailbox.txt for details). Each value
+> +of the mboxes property should contain a phandle to the mailbox controller
+> +device node and second argument is the channel index. It must be 0 (hardware
+> +support only one channel).
+>
+sorry, what must be 0?  You have MBOX_CHAN_MAX and MBOX_CHAN_NUM as 32
+and 2 in the driver.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
