@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 3/5] [RFC] clk: shmobile: div6: Extract cpg_div6_register()
-Date: Fri, 16 Oct 2015 14:49:18 +0200
-Message-ID: <1444999760-15750-4-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 2/5] [RFC] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+Date: Fri, 16 Oct 2015 14:49:17 +0200
+Message-ID: <1444999760-15750-3-git-send-email-geert+renesas@glider.be>
 References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
@@ -10,204 +10,89 @@ To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Extract cpg_div6_register(), to allow registering div6 clocks from
-another clock driver.
+Add all R-Car H3 CPG Core Clock Outputs defined in the datasheet.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v4:
+  - Add all clocks instead of just the ones used by the current DTS.
+
+v3:
   - New.
 ---
- drivers/clk/shmobile/clk-div6.c | 119 +++++++++++++++++++++++++---------------
- drivers/clk/shmobile/clk-div6.h |   3 +
- 2 files changed, 77 insertions(+), 45 deletions(-)
- create mode 100644 drivers/clk/shmobile/clk-div6.h
+ include/dt-bindings/clock/r8a7795-cpg-mssr.h | 63 ++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
 
-diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
-index 57016ff9c585fc6e..5e8525fc60427229 100644
---- a/drivers/clk/shmobile/clk-div6.c
-+++ b/drivers/clk/shmobile/clk-div6.c
-@@ -18,6 +18,8 @@
- #include <linux/of_address.h>
- #include <linux/slab.h>
- 
-+#include "clk-div6.h"
-+
- #define CPG_DIV6_CKSTP		BIT(8)
- #define CPG_DIV6_DIV(d)		((d) & 0x3f)
- #define CPG_DIV6_DIV_MASK	0x3f
-@@ -172,60 +174,34 @@ static const struct clk_ops cpg_div6_clock_ops = {
- 	.set_rate = cpg_div6_clock_set_rate,
- };
- 
--static void __init cpg_div6_clock_init(struct device_node *np)
-+struct clk * __init cpg_div6_register(const char *name,
-+				      unsigned int num_parents,
-+				      const char **parent_names,
-+				      void __iomem *reg)
- {
--	unsigned int num_parents, valid_parents;
--	const char **parent_names;
-+	unsigned int valid_parents;
- 	struct clk_init_data init;
- 	struct div6_clock *clock;
--	const char *clk_name = np->name;
- 	struct clk *clk;
- 	unsigned int i;
- 
- 	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
- 	if (!clock)
--		return;
--
--	num_parents = of_clk_get_parent_count(np);
--	if (num_parents < 1) {
--		pr_err("%s: no parent found for %s DIV6 clock\n",
--		       __func__, np->name);
--		return;
--	}
-+		return ERR_PTR(-ENOMEM);
- 
- 	clock->parents = kmalloc_array(num_parents, sizeof(*clock->parents),
--		GFP_KERNEL);
--	parent_names = kmalloc_array(num_parents, sizeof(*parent_names),
--				GFP_KERNEL);
--	if (!parent_names)
--		return;
-+				       GFP_KERNEL);
-+	if (!clock->parents)
-+		return ERR_PTR(-ENOMEM);
- 
--	/* Remap the clock register and read the divisor. Disabling the
--	 * clock overwrites the divisor, so we need to cache its value for the
--	 * enable operation.
--	 */
--	clock->reg = of_iomap(np, 0);
--	if (clock->reg == NULL) {
--		pr_err("%s: failed to map %s DIV6 clock register\n",
--		       __func__, np->name);
--		goto error;
--	}
-+	clock->reg = reg;
- 
-+	/*
-+	 * Read the divisor. Disabling the clock overwrites the divisor, so we
-+	 * need to cache its value for the enable operation.
-+	 */
- 	clock->div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
- 
--	/* Parse the DT properties. */
--	of_property_read_string(np, "clock-output-names", &clk_name);
--
--	for (i = 0, valid_parents = 0; i < num_parents; i++) {
--		const char *name = of_clk_get_parent_name(np, i);
--
--		if (name) {
--			parent_names[valid_parents] = name;
--			clock->parents[valid_parents] = i;
--			valid_parents++;
--		}
--	}
--
- 	switch (num_parents) {
- 	case 1:
- 		/* fixed parent clock */
-@@ -243,12 +219,22 @@ static void __init cpg_div6_clock_init(struct device_node *np)
- 		break;
- 	default:
- 		pr_err("%s: invalid number of parents for DIV6 clock %s\n",
--		       __func__, np->name);
-+		       __func__, name);
-+		clk = ERR_PTR(-EINVAL);
- 		goto error;
- 	}
- 
-+	/* Filter out invalid parents */
-+	for (i = 0, valid_parents = 0; i < num_parents; i++) {
-+		if (parent_names[i]) {
-+			parent_names[valid_parents] = parent_names[i];
-+			clock->parents[valid_parents] = i;
-+			valid_parents++;
-+		}
-+	}
-+
- 	/* Register the clock. */
--	init.name = clk_name;
-+	init.name = name;
- 	init.ops = &cpg_div6_clock_ops;
- 	init.flags = CLK_IS_BASIC;
- 	init.parent_names = parent_names;
-@@ -257,6 +243,50 @@ static void __init cpg_div6_clock_init(struct device_node *np)
- 	clock->hw.init = &init;
- 
- 	clk = clk_register(NULL, &clock->hw);
-+	if (!IS_ERR(clk))
-+		return clk;
-+
-+error:
-+	kfree(clock->parents);
-+	kfree(clock);
-+	return clk;
-+}
-+
-+static void __init cpg_div6_clock_init(struct device_node *np)
-+{
-+	unsigned int num_parents;
-+	const char **parent_names;
-+	const char *clk_name = np->name;
-+	void __iomem *reg;
-+	struct clk *clk;
-+	unsigned int i;
-+
-+	num_parents = of_clk_get_parent_count(np);
-+	if (num_parents < 1) {
-+		pr_err("%s: no parent found for %s DIV6 clock\n",
-+		       __func__, np->name);
-+		return;
-+	}
-+
-+	parent_names = kmalloc_array(num_parents, sizeof(*parent_names),
-+				GFP_KERNEL);
-+	if (!parent_names)
-+		return;
-+
-+	reg = of_iomap(np, 0);
-+	if (reg == NULL) {
-+		pr_err("%s: failed to map %s DIV6 clock register\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	/* Parse the DT properties. */
-+	of_property_read_string(np, "clock-output-names", &clk_name);
-+
-+	for (i = 0; i < num_parents; i++)
-+		parent_names[i] = of_clk_get_parent_name(np, i);
-+
-+	clk = cpg_div6_register(clk_name, num_parents, parent_names, reg);
- 	if (IS_ERR(clk)) {
- 		pr_err("%s: failed to register %s DIV6 clock (%ld)\n",
- 		       __func__, np->name, PTR_ERR(clk));
-@@ -269,9 +299,8 @@ static void __init cpg_div6_clock_init(struct device_node *np)
- 	return;
- 
- error:
--	if (clock->reg)
--		iounmap(clock->reg);
-+	if (reg)
-+		iounmap(reg);
- 	kfree(parent_names);
--	kfree(clock);
- }
- CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock", cpg_div6_clock_init);
-diff --git a/drivers/clk/shmobile/clk-div6.h b/drivers/clk/shmobile/clk-div6.h
+diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
 new file mode 100644
-index 0000000000000000..d19531f42953c83f
+index 0000000000000000..e864aae0a2561c4b
 --- /dev/null
-+++ b/drivers/clk/shmobile/clk-div6.h
-@@ -0,0 +1,3 @@
++++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+@@ -0,0 +1,63 @@
++/*
++ * Copyright (C) 2015 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
 +
-+struct clk *cpg_div6_register(const char *name, unsigned int num_parents,
-+			      const char **parent_names, void __iomem *reg);
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* r8a7795 CPG Core Clocks */
++#define R8A7795_CLK_Z			0
++#define R8A7795_CLK_Z2			1
++#define R8A7795_CLK_ZR			2
++#define R8A7795_CLK_ZG			3
++#define R8A7795_CLK_ZTR			4
++#define R8A7795_CLK_ZTRD2		5
++#define R8A7795_CLK_ZT			6
++#define R8A7795_CLK_ZX			7
++#define R8A7795_CLK_S0D1		8
++#define R8A7795_CLK_S0D4		9
++#define R8A7795_CLK_S1D1		10
++#define R8A7795_CLK_S1D2		11
++#define R8A7795_CLK_S1D4		12
++#define R8A7795_CLK_S2D1		13
++#define R8A7795_CLK_S2D2		14
++#define R8A7795_CLK_S2D4		15
++#define R8A7795_CLK_S3D1		16
++#define R8A7795_CLK_S3D2		17
++#define R8A7795_CLK_S3D4		18
++#define R8A7795_CLK_LB			19
++#define R8A7795_CLK_CL			20
++#define R8A7795_CLK_ZB3			21
++#define R8A7795_CLK_ZB3D2		22
++#define R8A7795_CLK_CR			23
++#define R8A7795_CLK_CRD2		24
++#define R8A7795_CLK_SD0H		25
++#define R8A7795_CLK_SD0			26
++#define R8A7795_CLK_SD1H		27
++#define R8A7795_CLK_SD1			28
++#define R8A7795_CLK_SD2H		29
++#define R8A7795_CLK_SD2			30
++#define R8A7795_CLK_SD3H		31
++#define R8A7795_CLK_SD3			32
++#define R8A7795_CLK_SSP2		33
++#define R8A7795_CLK_SSP1		34
++#define R8A7795_CLK_SSPRS		35
++#define R8A7795_CLK_RPC			36
++#define R8A7795_CLK_RPCD2		37
++#define R8A7795_CLK_MSO			38
++#define R8A7795_CLK_CANFD		39
++#define R8A7795_CLK_HDMI		40
++#define R8A7795_CLK_CSI0		41
++#define R8A7795_CLK_CSIREF		42
++#define R8A7795_CLK_CP			43
++#define R8A7795_CLK_CPEX		44
++#define R8A7795_CLK_R			45
++#define R8A7795_CLK_OSC			46
++
++#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
 -- 
 1.9.1
 
