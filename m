@@ -1,43 +1,50 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add new SoCs to bcm4708 DT bindings
-Date: Fri, 16 Oct 2015 23:42:17 +0200
-Message-ID: <56216F39.3020400@hauke-m.de>
-References: <1444947856-26246-1-git-send-email-jonmason@broadcom.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC 4/5] clk: iproc: define Broadcom NS2 iProc clock binding
+Date: Fri, 16 Oct 2015 15:11:21 -0700
+Message-ID: <20151016221121.GD10182@codeaurora.org>
+References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
+ <1444771347-11382-5-git-send-email-jonmason@broadcom.com>
+ <561D84B4.4000002@broadcom.com>
+ <20151014154410.GF15160@broadcom.com>
+ <561E88A7.2090808@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444947856-26246-1-git-send-email-jonmason@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <561E88A7.2090808@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Ray Jui <rjui@broadcom.com>
+Cc: Jon Mason <jonmason@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2015 12:24 AM, Jon Mason wrote:
-> Add the 4708, 4709, and 53012 SoCs to the the documentation for the
-> Broadcom Northstar device tree bindings.
+On 10/14, Ray Jui wrote:
 > 
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+> 
+> On 10/14/2015 8:44 AM, Jon Mason wrote:
+> > On Tue, Oct 13, 2015 at 03:24:52PM -0700, Ray Jui wrote:
+> >> Same as this patch. I thought device tree binding document should go
+> >> with the clock driver changes.
+> >>
+> >> Strictly speaking, device tree binding document should always go before
+> >> the driver changes. In the binding document the DT interface is defined,
+> >> then changes are implemented in the driver.
+> > 
+> > I split them off this way due to the clk maintainer not wanting to
+> > pull in any device tree changes.  Since the documentation is for the
+> > device tree enties, it makes logical sense to me that they be in the
+> > same device tree series.  If Stephen will pull these in with the clk
+> > changes, I am more than happy to have it done by him :)
+> > 
+> > Thanks,
+> > Jon
+> 
+> Yeah the clock maintainers do not pull in device tree changes like
+> *.dtsi and *.dts. But they do take changes including the binding
+> documents and clock driver changes. You can confirm with Stephen.
+> 
 
-> ---
->  Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> index 6b0f49f..8608a77 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> @@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
->  
->  Required root node property:
->  
-> +bcm4708
->  compatible = "brcm,bcm4708";
-> +
-> +bcm4709
-> +compatible = "brcm,bcm4709";
-> +
-> +bcm53012
-> +compatible = "brcm,bcm53012";
-> 
+Yes we take bindings (I know I'm replying to an old patch).
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
