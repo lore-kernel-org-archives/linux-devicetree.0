@@ -1,66 +1,52 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: nvmem: Add NXP LPC18xx EEPROM memory binding documentation
-Date: Fri, 16 Oct 2015 19:09:23 +0200
-Message-ID: <CAGhQ9VzaqiUm0=vpBYKpppsTsLuhxmAKayi5N4FTXmG5dtiAhw@mail.gmail.com>
-References: <1445004426-6271-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<1445004426-6271-3-git-send-email-ariel@vanguardiasur.com.ar>
-	<CAAEAJfAAUWd9y8EBfV0irbRF_7EjxD1ycdPcNGScbs6oPxp4JQ@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] clk: samsung: exynos5250: Add DISP1 clocks
+Date: Fri, 16 Oct 2015 10:26:51 -0700
+Message-ID: <20151016172651.GB23912@codeaurora.org>
+References: <1444905084-22540-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1444905084-22540-2-git-send-email-tomeu.vizoso@collabora.com>
+ <56203AD3.2050905@samsung.com>
+ <20151016124935.20687.4394@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAEAJfAAUWd9y8EBfV0irbRF_7EjxD1ycdPcNGScbs6oPxp4JQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151016124935.20687.4394@quantum>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16 October 2015 at 17:41, Ezequiel Garcia
-<ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> +DT bindings maintainers
->
-> As per the documentation in
-> Documentation/devicetree/bindings/submitting-patches.txt
-> this binding should be patch 1/2.
->
-> On 16 October 2015 at 11:07, Ariel D'Alessandro
-> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
->> Add the devicetree binding document for NXP LPC18xx EEPROM memory.
->>
->> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/nvmem/lpc18xx_eeprom.txt   | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
->> new file mode 100644
->> index 0000000..372ff8c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
->> @@ -0,0 +1,26 @@
->> +* NXP LPC18xx EEPROM memory NVMEM driver
->> +
->> +Required properties:
->> +  - compatible: Should be "nxp,lpc1850-eeprom"
->
-> Correct me if I'm wrong, but I believe not all LPC18xx/43xx devices
-> have an EEPROM.
->
-> Isn't it restricted to LPC18x7/LPC43x7 devices?
+On 10/16, Michael Turquette wrote:
+> Quoting Krzysztof Kozlowski (2015-10-15 16:46:27)
+> > On 15.10.2015 19:31, Tomeu Vizoso wrote:
+> > > When the DISP1 power domain is powered off, there's two clocks that need
+> > > to be temporarily reparented to OSC, and back to their original parents
+> > > when the domain is powered on again.
+> > > 
+> > > We expose these two clocks in the DT bindings so that the DT node of the
+> > > power domain can reference them.
+> > > 
+> > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > > ---
+> > > 
+> > > Changes in v2:
+> > > - Reuse mout_aclk200_p
+> > > - Rename div_aclk300 as div_aclk300_disp
+> > > 
+> > >  drivers/clk/samsung/clk-exynos5250.c   | 14 +++++++++++++-
+> > >  include/dt-bindings/clock/exynos5250.h |  4 +++-
+> > >  2 files changed, 16 insertions(+), 2 deletions(-)
+> > > 
+> > 
+> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> Applied to clk-next.
+> 
 
-The EEPROM can only be found on Flash devices. Flashless devices
-doesn't have the EEPROM.
+I think Tomeu wanted to take this through arm-soc? Otherwise
+we'll need to provide a stable branch for the dt header.
 
-
-> Should the compatible be nxp,lpc1857-eeprom to avoid confusion?
-
-Yes, please. The EEPROM doesn't exist on LPC1850 so please use the
-compatibility string from Ezequiel.
-
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
