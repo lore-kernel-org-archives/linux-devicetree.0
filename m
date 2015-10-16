@@ -1,40 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 13/25] scsi: hisi_sas: add path from phyup irq to SAS framework
-Date: Fri, 16 Oct 2015 14:55:38 +0200
-Message-ID: <3757591.KXgD8p0a1E@wuerfel>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-14-git-send-email-john.garry@huawei.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: [PATCH v2 0/8] Enable several devices for Atmel SAMA5D2
+Date: Fri, 16 Oct 2015 15:04:43 +0200
+Message-ID: <1445000691-12402-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1444663237-238302-14-git-send-email-john.garry@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: James.Bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
+Cc: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cyrille.pitchen@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 October 2015 23:20:25 John Garry wrote:
-> @@ -804,6 +818,16 @@ static irqreturn_t int_phyup_v1_hw(int irq_no, void *p)
->                 phy->identify.target_port_protocols =
->                         SAS_PROTOCOL_SMP;
->  
-> +       wq = kmalloc(sizeof(*wq), GFP_ATOMIC);
-> +       if (!wq)
-> +               goto end;
-> +
-> +       wq->event = PHYUP;
-> +       wq->hisi_hba = hisi_hba;
-> +       wq->phy_no = phy_no;
-> +
-> +       INIT_WORK(&wq->work_struct, hisi_sas_wq_process);
-> +       queue_work(hisi_hba->wq, &wq->work_struct);
->  
->  end:
->         hisi_sas_phy_write32(hisi_hba, phy_no, CHL_INT2,
-> 
+Hi,
 
-While rereading some other parts of the code, I stumbled over this piece.
-You should generally not allocate work structs dynamically. Why not embed
-the work struct inside of the phy structure and then just queue that?
+This set of patches enables several devices for the freshly introduced SAMA5D2
+SoC. dts and defconfig files are updated to enable SAMA5D2 and its new devices
+such as Flexcom and AT91 SDHCI.
 
-	Arnd
+Changes:
+- v2:
+  - update whole Atmel defconfigs
+  - update multi_v7_defconfig
+
+Ludovic Desroches (8):
+  ARM: at91/dt: sama5d2: add missing devices
+  ARM: at91/dt: sama5d2 Xplained: add several devices
+  ARM: at91/defconfig: update sama5 defconfig
+  ARM: at91/defconfig: update at91_dt defconfig
+  ARM: at91/defconfig: add sama5d2 and its new devices to sama5
+    defconfig
+  ARM: multi_v7_defconfig: Add Atmel SAMA5D2 SoC
+  ARM: multi_v7_defconfig: Add Atmel Flexcom device
+  ARM: multi_v7_defconfig: Add Atmel SDHCI device
+
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 106 +++++++++++++++++++
+ arch/arm/boot/dts/sama5d2.dtsi              | 152 +++++++++++++++++++++++++++-
+ arch/arm/configs/at91_dt_defconfig          |  15 ---
+ arch/arm/configs/multi_v7_defconfig         |   3 +
+ arch/arm/configs/sama5_defconfig            |  16 ++-
+ 5 files changed, 265 insertions(+), 27 deletions(-)
+
+-- 
+2.5.0
