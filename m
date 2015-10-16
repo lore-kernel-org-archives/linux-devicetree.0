@@ -1,57 +1,57 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 3/4] mtd: brcmnand: Force 8bit mode before doing nand_scan_ident()
-Date: Fri, 16 Oct 2015 14:38:56 +0530
-Message-ID: <1444986537-28387-4-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
+ brcmnand_write()
+Date: Fri, 16 Oct 2015 14:38:54 +0530
+Message-ID: <1444986537-28387-2-git-send-email-anup.patel@broadcom.com>
 References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Sandeep Tripathy <tripathy@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Pramod KUMAR <pramodku@broadcom.com>, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Just like other NAND controllers, the NAND READID command only works
-in 8bit mode for all versions of BRCMNAND controller.
+We should always type-cast pointer to "long" or "unsigned long"
+because size of pointer is same as machine word size. This will
+avoid pointer type-cast issues on both 32bit and 64bit systems.
 
-This patch forces 8bit mode for each NAND CS in brcmnand_init_cs()
-before doing nand_scan_ident() to ensure that BRCMNAND controller
-is in 8bit mode when NAND READID command is issued.
+This patch fixes pointer type-cast issue in brcmnand_write()
+as-per above info.
 
 Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
 Reviewed-by: Ray Jui <rjui@broadcom.com>
 Reviewed-by: Scott Branden <sbranden@broadcom.com>
 ---
- drivers/mtd/nand/brcmnand/brcmnand.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/mtd/nand/brcmnand/brcmnand.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-index 4cba03d..0be8ef9 100644
+index fddb795..4cba03d 100644
 --- a/drivers/mtd/nand/brcmnand/brcmnand.c
 +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-@@ -1888,6 +1888,7 @@ static int brcmnand_init_cs(struct brcmnand_host *host)
- 	struct mtd_info *mtd;
- 	struct nand_chip *chip;
- 	int ret;
-+	u16 cfg_offs;
- 	struct mtd_part_parser_data ppdata = { .of_node = dn };
+@@ -1544,9 +1544,9 @@ static int brcmnand_write(struct mtd_info *mtd, struct nand_chip *chip,
  
- 	ret = of_property_read_u32(dn, "reg", &host->cs);
-@@ -1930,6 +1931,14 @@ static int brcmnand_init_cs(struct brcmnand_host *host)
+ 	dev_dbg(ctrl->dev, "write %llx <- %p\n", (unsigned long long)addr, buf);
  
- 	chip->controller = &ctrl->controller;
+-	if (unlikely((u32)buf & 0x03)) {
++	if (unlikely((unsigned long)buf & 0x03)) {
+ 		dev_warn(ctrl->dev, "unaligned buffer: %p\n", buf);
+-		buf = (u32 *)((u32)buf & ~0x03);
++		buf = (u32 *)((unsigned long)buf & ~0x03);
+ 	}
  
-+	/*
-+	 * The bootloader might have configured 16bit mode but
-+	 * NAND READID command only works in 8bit mode. We force
-+	 * 8bit mode here to ensure that NAND READID commands works.
-+	 */
-+	cfg_offs = brcmnand_cs_offset(ctrl, host->cs, BRCMNAND_CS_CFG);
-+	nand_writereg(ctrl, cfg_offs, nand_readreg(ctrl, cfg_offs) & ~BIT(23));
-+
- 	if (nand_scan_ident(mtd, 1, NULL))
- 		return -ENXIO;
- 
+ 	brcmnand_wp(mtd, 0);
 -- 
 1.9.1
