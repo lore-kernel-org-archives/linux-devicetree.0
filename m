@@ -1,55 +1,35 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 0/5] mtd: nand: Fix support for NAND DMA prefetch
-Date: Fri, 16 Oct 2015 11:11:14 +0300
-Message-ID: <5620B122.4000208@ti.com>
-References: <1444930648-19313-1-git-send-email-fcooper@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444930648-19313-1-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org, tony@atomide.com
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Subject: [PATCH] ARM: sun4i: fix a typo so that iteaduino-plus DTB builds
+Date: Fri, 16 Oct 2015 10:17:37 +0200
+Message-ID: <1444983457-27201-1-git-send-email-lkundrak@v3.sk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/10/15 20:37, Franklin S Cooper Jr wrote:
-> NAND DMA prefetch has been broken for awhile and seems to have only
-> worked for SDMA based devices
-> 
-> This patchset fixes DMA prefetch to work on both EDMA and SDMA devices
-> 
-> Test on:
-> am335x gp evm
-> am437x gp evm
-> am37x gp evm
-> 
-> This patchset depends on Roger Quadros recent v4 GPMC/NAND patchset
-> https://github.com/rogerq/linux.git
-> branch: for-v4.4/gpmc-v4
-> 
-> Franklin S Cooper Jr (5):
->   mtd: nand: omap2: Support parsing dma channel information from DT
->   mtd: nand: omap2: Start dma request before enabling prefetch
->   mtd: nand: omap2: Fix high memory dma prefetch transfer
->   ARM: dts: am437x/am33xx/omap/dm816x: Add gpmc dma channel
->   ARM: OMAP2+: Update GPMC and NAND DT binding documentation
-> 
->  .../bindings/memory-controllers/omap-gpmc.txt      |  7 +++++-
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  2 ++
->  arch/arm/boot/dts/am33xx.dtsi                      |  2 ++
->  arch/arm/boot/dts/am4372.dtsi                      |  2 ++
->  arch/arm/boot/dts/dm816x.dtsi                      |  2 ++
->  arch/arm/boot/dts/omap3.dtsi                       |  2 ++
->  arch/arm/boot/dts/omap4.dtsi                       |  2 ++
->  arch/arm/boot/dts/omap5.dtsi                       |  2 ++
->  drivers/mtd/nand/omap2.c                           | 27 +++++++++-------------
->  9 files changed, 31 insertions(+), 17 deletions(-)
-> 
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For all patches,
-
-Acked-by: Roger Quadros <rogerq@ti.com>
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 815bd3b..a0c439f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -582,7 +582,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-hackberry.dtb \
+ 	sun4i-a10-hyundai-a7hd.dtb \
+ 	sun4i-a10-inet97fv2.dtb \
+-	sun4i-a10-itead-iteaduino-plus.dts \
++	sun4i-a10-itead-iteaduino-plus.dtb \
+ 	sun4i-a10-jesurun-q5.dtb \
+ 	sun4i-a10-marsboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+-- 
+2.4.3
 
 --
-cheers,
--roger
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
