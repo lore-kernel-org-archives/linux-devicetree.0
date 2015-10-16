@@ -1,199 +1,130 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/2] mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
-Date: Fri, 16 Oct 2015 14:35:00 +0200
-Message-ID: <CAPDyKFpwgZSkE+TNehZ1Un=5CfjoEtfvELfrS6t-ZHZPscy3Yg@mail.gmail.com>
-References: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: properties to describe a rotary encoder
+Date: Fri, 16 Oct 2015 14:40:10 +0200
+Message-ID: <20151016124010.GL3982@pengutronix.de>
+References: <20151016095951.GA6533@pengutronix.de>
+ <5620CCD1.8030509@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, S?ren Brinkmann <soren.brinkmann@xilinx.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5620CCD1.8030509-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 September 2015 at 10:54, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> This patch adds Generic PHY access for sdhci-of-arasan. Driver
-> can get PHY handler from dt-binding, and power-on/init the PHY.
-> Also we add pm ops for PHY here if CONFIG_PM_SLEEP is enabled.
->
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
->
->  drivers/mmc/host/sdhci-of-arasan.c | 90 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index 621c3f4..fdd71c7 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -21,6 +21,7 @@
->
->  #include <linux/module.h>
->  #include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
->  #include "sdhci-pltfm.h"
->
->  #define SDHCI_ARASAN_CLK_CTRL_OFFSET   0x2c
-> @@ -35,6 +36,7 @@
->   */
->  struct sdhci_arasan_data {
->         struct clk      *clk_ahb;
-> +       struct phy      *phy;
->  };
->
->  static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_host *host)
-> @@ -67,6 +69,62 @@ static struct sdhci_pltfm_data sdhci_arasan_pdata = {
->
->  #ifdef CONFIG_PM_SLEEP
->  /**
-> +  * sdhci_arasan_suspend_phy - Suspend phy method for the driver
-> +  * @phy:        Handler of phy structure
-> +  * Returns 0 on success and error value on error
-> +  *
-> +  * Put the phy in a deactive state.
-> +  */
-> +static int sdhci_arasan_suspend_phy(struct phy *phy)
-> +{
-> +       int ret;
-> +
-> +       ret = phy_exit(phy);
-> +       if (ret < 0)
-> +               goto err_phy_exit;
+Hello,
 
-This odd to me. First you do phy_exit() then phy_power_off(). It seems
-like it should be in the opposite order.
+On Fri, Oct 16, 2015 at 12:09:21PM +0200, Daniel Mack wrote:
+> Hi,
+>=20
+> On 10/16/2015 11:59 AM, Uwe Kleine-K=F6nig wrote:
+> > there is already a driver for rotary encoders described in
+> > Documentation/devicetree/bindings/input/rotary-encoder.txt. This ho=
+wever
+> > is not suitable to describe the device I have here for two reasons:
+> >=20
+> > First the driver can only make use of 2 gpio lines, while the devic=
+e
+> > here has 4 lines,
+>=20
+> How does the phase diagram of that device look like, on what edges is
+> the system supposed to trigger?
+>=20
+> > so I have 16 sectors instead of only 4. And the
+>=20
+> What's a 'sector'?
 
-Moreover I wonder why phy_exit() is needed, I expected that to be
-called at ->remove() only!?
+My imagination is the image on the right on
+https://en.wikipedia.org/wiki/Rotary_encoder#Gray_encoding .
 
-> +
-> +       ret = phy_power_off(phy);
-> +       if (ret < 0)
-> +               goto err_phy_pwr_off;
-> +
-> +       return 0;
-> +
-> +err_phy_pwr_off:
-> +       phy_power_on(phy);
-> +err_phy_exit:
-> +       phy_init(phy);
-> +       return ret;
-> +}
-> +
-> +/**
-> +  * sdhci_arasan_resume_phy - Resume phy method for the driver
-> +  * @phy:        Handler of phy structure
-> +  * Returns 0 on success and error value on error
-> +  *
-> +  * Put the phy in a active state.
-> +  */
-> +static int sdhci_arasan_resume_phy(struct phy *phy)
-> +{
-> +       int ret;
-> +
-> +       ret = phy_power_on(phy);
-> +       if (ret < 0)
-> +               goto err_phy_pwr_on;
-> +
-> +       ret = phy_init(phy);
-> +       if (ret < 0)
-> +               goto err_phy_init;
-> +
+With more than period per 360=B0 "sector" is probably not a lucky
+choice. A colleague suggested "increment" instead, maybe this one is
+better? So with a 4-line encoder there are 16 increments per period
+while a 2-line encoder has only 4 increments per period.
 
-Similar comment as above.
+An rotary encoder that is currently described by:
 
-> +       return 0;
-> +
-> +err_phy_init:
-> +       phy_exit(phy);
-> +err_phy_pwr_on:
-> +       phy_power_off(phy);
-> +       return ret;
-> +}
-> +
-> +/**
->   * sdhci_arasan_suspend - Suspend method for the driver
->   * @dev:       Address of the device structure
->   * Returns 0 on success and error value on error
-> @@ -88,6 +146,12 @@ static int sdhci_arasan_suspend(struct device *dev)
->         clk_disable(pltfm_host->clk);
->         clk_disable(sdhci_arasan->clk_ahb);
->
-> +       if (sdhci_arasan->phy) {
-> +               ret = sdhci_arasan_suspend_phy(sdhci_arasan->phy);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
+	{
+		compatible =3D "rotary-encoder";
+		gpios =3D <..>, <..>;
+		rotary-encoder,steps =3D <24>;
+		rotary-encoder,half-period;
+	}
 
-This means you will suspend the phy after you have disabled the
-clocks. Of course I can't tell whether that okay, but it doesn't
-follow the same sequence as in ->probe(). To me that indicates that
-either probe or suspend/resume could be broken.
+would then be described as:
 
-> +
->         return 0;
->  }
->
-> @@ -119,6 +183,12 @@ static int sdhci_arasan_resume(struct device *dev)
->                 return ret;
->         }
->
-> +       if (sdhci_arasan->phy) {
-> +               ret = sdhci_arasan_resume_phy(sdhci_arasan->phy);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
-> +
->         return sdhci_resume_host(host);
->  }
->  #endif /* ! CONFIG_PM_SLEEP */
-> @@ -163,6 +233,26 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->                 goto clk_dis_ahb;
->         }
->
-> +       sdhci_arasan->phy = devm_phy_get(&pdev->dev, "phy_arasan");
-> +       if (!IS_ERR(sdhci_arasan->phy)) {
+	{
+		compatible =3D ...;
+		gpios =3D <..>, <..>;
+		rotary-encoder,steps =3D <24>;
+		rotary-encoder,increments-per-step =3D <2>;
+	}
 
-I understand the phy is optional, but you still need to handle the
-EPROBE_DEFER case.
+, an encoder without "..,half-period" would get
+"...,increments-per-step =3D <4>" and for mine I'd use
 
-Perhaps you should also use devm_phy_optional_get() instead!?
+	{
+		compatible =3D ...;
+		gpios =3D <..>, <..>, <..>, <..>;
+		rotary-encoder,steps =3D <16>;
+		rotary-encoder,increments-per-step =3D <1>;
+	}
 
-> +               ret = phy_power_on(sdhci_arasan->phy);
+> > second difference is that my encoder has a detend for each sector w=
+hile
+> > the driver only supports "half-period" and "full-period" (default) =
+mode.
+> > These names really only make sense for the 2 line case and mean the
+> > encoder has detends in 2 or 1 sector respectively.
+> >=20
+> > So I'm thinking about how to generalize the description to allow to=
+ add
+> > support for "my" device.
+> >=20
+> > For the added gpio lines it's easy, that's just allowing more than =
+two
+> > gpios for the "gpios" property.
+>=20
+> Doesn't the number of GPIOs already give enough information to implem=
+ent
+> proper support? Maybe there's no need for any other properties here.
 
-This looks a bit weird. Shouldn't you do phy_init() prior phy_power_on()?
+No, that alone isn't enough because "my" encoder has one increment per
+step while the driver only supports two increments per step
+("half-period") or four increments per step (absence of "half-period").
 
-Similar comment applies to phy_exit() and phy_power_off().
+> > Currently there is a property "rotary-encoder,steps" that describes=
+ the
+> > number of detends in a full turnaround. So if we stick to "steps" t=
+o
+> > describe detends, maybe something like "sectors-per-step" (with a
+> > default of 4) would be needed to describe what "half-period" is now=
+=2E
+> > Does this make sense? Maybe someone has a better suggestion?
+>=20
+> I'm not sure what a sector is supposed to refer to, but the number of
+> steps per 360=B0 is something that can vary for both 2-line and 4-lin=
+e
+> versions of a rotary encoder. So isn't that unrelated?
 
-> +               if (ret < 0) {
-> +                       dev_err(&pdev->dev, "phy_power_on err.\n");
-> +                       phy_power_off(sdhci_arasan->phy);
-> +                       goto clk_dis_ahb;
-> +               }
-> +
-> +               ret = phy_init(sdhci_arasan->phy);
-> +               if (ret < 0) {
-> +                       dev_err(&pdev->dev, "phy_init err.\n");
-> +                       phy_exit(sdhci_arasan->phy);
-> +                       phy_power_off(sdhci_arasan->phy);
-> +                       goto clk_dis_ahb;
-> +               }
-> +       } else {
+Yes, this is an (nearly) orthogonal property. But for a 4-line encoder
+I'd say that "half-period" would mean 8 increments per step (because a
+full period is 2**4 =3D=3D 16 increments), and that is hardly sensible.
 
-This else isn't needed. When you are about to access the phy you can
-check the cookie of it by "!IS_ERR(sdhci_arasan->phy)".
+Best regards
+Uwe
 
-> +               sdhci_arasan->phy = NULL;
-> +       }
-> +
->         host = sdhci_pltfm_init(pdev, &sdhci_arasan_pdata, 0);
->         if (IS_ERR(host)) {
->                 ret = PTR_ERR(host);
-> --
-> 2.3.7
->
->
-
-Kind regards
-Uffe
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
