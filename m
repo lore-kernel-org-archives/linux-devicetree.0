@@ -1,34 +1,55 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [2/3] powerpc: dts: p1022si: Add fsl,wake-on-filer for eTSEC
-Date: Fri, 16 Oct 2015 18:33:34 -0500
-Message-ID: <20151016233334.GA13511@home.buserror.net>
-References: <1443694222-29519-1-git-send-email-claudiu.manoil@freescale.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH v2 1/2] clk: samsung: exynos5250: Add DISP1 clocks
+Date: Sat, 17 Oct 2015 08:41:33 +0900
+Message-ID: <56218B2D.9040007@kernel.org>
+References: <1444905084-22540-1-git-send-email-tomeu.vizoso@collabora.com> <1444905084-22540-2-git-send-email-tomeu.vizoso@collabora.com> <56203AD3.2050905@samsung.com> <20151016124935.20687.4394@quantum> <20151016172651.GB23912@codeaurora.org> <CAAObsKAjZX8XxTAFVKq4BCSZSrKG5xQPTue+z+xnJDD8QwK88Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443694222-29519-1-git-send-email-claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhao Chenhui <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKAjZX8XxTAFVKq4BCSZSrKG5xQPTue+z+xnJDD8QwK88Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 01, 2015 at 01:10:22PM +0300, Claudiu Manoil wrote:
-> Enable the "wake-on-filer" (aka. wake on user defined packet)
-> wake on lan capability for the eTSEC ethernet nodes.
+On 10/17/15 03:56, Tomeu Vizoso wrote:
+> On 16 October 2015 at 19:26, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> On 10/16, Michael Turquette wrote:
+>>> Quoting Krzysztof Kozlowski (2015-10-15 16:46:27)
+>>>> On 15.10.2015 19:31, Tomeu Vizoso wrote:
+>>>>> When the DISP1 power domain is powered off, there's two clocks that need
+>>>>> to be temporarily reparented to OSC, and back to their original parents
+>>>>> when the domain is powered on again.
+>>>>>
+>>>>> We expose these two clocks in the DT bindings so that the DT node of the
+>>>>> power domain can reference them.
+>>>>>
+>>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>>>> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+>>>>> ---
+>>>>>
+>>>>> Changes in v2:
+>>>>> - Reuse mout_aclk200_p
+>>>>> - Rename div_aclk300 as div_aclk300_disp
+>>>>>
+>>>>>  drivers/clk/samsung/clk-exynos5250.c   | 14 +++++++++++++-
+>>>>>  include/dt-bindings/clock/exynos5250.h |  4 +++-
+>>>>>  2 files changed, 16 insertions(+), 2 deletions(-)
+>>>>>
+>>>>
+>>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>
+>>> Applied to clk-next.
+>>>
+>>
+>> I think Tomeu wanted to take this through arm-soc? Otherwise
+>> we'll need to provide a stable branch for the dt header.
 > 
-> Cc: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Zhao Chenhui <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Hi, Stephen is right, the second patch depends on this one.
 > 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/powerpc/boot/dts/fsl/p1022si-post.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+So...how can I take 2nd patch of this series in samsung(arm-soc) tree?
+And this series shouldn't be for fixes for 4.3?...Mike how do you think?
 
-Acked-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
--Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Kukjin
