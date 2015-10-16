@@ -1,30 +1,35 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
-Date: Fri, 16 Oct 2015 14:06:33 +0100
-Message-ID: <20151016130632.GE2054@leverpostej>
-References: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
- <1444997709-57293-2-git-send-email-ck.hu@mediatek.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: [PATCH v2 6/8] ARM: multi_v7_defconfig: Add Atmel SAMA5D2 SoC
+Date: Fri, 16 Oct 2015 15:04:49 +0200
+Message-ID: <1445000691-12402-7-git-send-email-ludovic.desroches@atmel.com>
+References: <1445000691-12402-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444997709-57293-2-git-send-email-ck.hu@mediatek.com>
+In-Reply-To: <1445000691-12402-1-git-send-email-ludovic.desroches@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang
+To: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
+Cc: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cyrille.pitchen@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-> +	/* FIXME - use of_graph_get_port_by_id(np, 1) on newer kernels */
-> +	in_ep = of_graph_get_next_endpoint(np, NULL);
+Add Atmel SAMA5D2 SoC family to multi_v7 image.
 
-Huh?
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +	edidp = of_get_property(np, "edid", &size);
-
-This property wasn't mentioned in the binding document.
-
-Please describe it. If it's from a more generic binding, refer to that
-from the binding document.
-
-Thanks,
-Mark.
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index bf099b7..63703fa 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -21,6 +21,7 @@ CONFIG_MACH_ARMADA_39X=y
+ CONFIG_MACH_ARMADA_XP=y
+ CONFIG_MACH_DOVE=y
+ CONFIG_ARCH_AT91=y
++CONFIG_SOC_SAMA5D2=y
+ CONFIG_SOC_SAMA5D3=y
+ CONFIG_SOC_SAMA5D4=y
+ CONFIG_ARCH_BCM=y
+-- 
+2.5.0
