@@ -1,7 +1,7 @@
 From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v11 1/6] PCI: designware: move calculation of bus addresses to DRA7xx
-Date: Fri, 16 Oct 2015 18:23:36 +0800
-Message-ID: <1444991021-109306-2-git-send-email-wangzhou1@hisilicon.com>
+Subject: [PATCH v11 4/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+Date: Fri, 16 Oct 2015 18:23:39 +0800
+Message-ID: <1444991021-109306-5-git-send-email-wangzhou1@hisilicon.com>
 References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,105 +12,245 @@ To: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gm
 Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-From: gabriele paoloni <gabriele.paoloni@huawei.com>
+This patch adds PCIe host support for HiSilicon SoC Hip05.
 
-Commit f4c55c5a3f7f ("PCI: designware: Program ATU with untranslated
-address") added the calculation of PCI BUS addresses in designware,
-storing them in new fields added in "struct pcie_port". This
-calculation is done for every designware user even if is only
-applicable to DRA7xx.
-This patch moves the calculation of the bus addresses to the DRA7xx
-driver and is needed to allow the rework of designware to use
-the new DT parsing API.
-
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
 Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-Acked-by: Pratyush Anand <pratyush.anand@gmail.com>
+Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Signed-off-by: liudongdong <liudongdong3@huawei.com>
 ---
- drivers/pci/host/pci-dra7xx.c      | 13 +++++++++++++
- drivers/pci/host/pcie-designware.c | 15 ++++-----------
- 2 files changed, 17 insertions(+), 11 deletions(-)
+ drivers/pci/host/Kconfig     |   8 ++
+ drivers/pci/host/Makefile    |   1 +
+ drivers/pci/host/pcie-hisi.c | 196 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 205 insertions(+)
+ create mode 100644 drivers/pci/host/pcie-hisi.c
 
-diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-index 199e29a..ebdffa0 100644
---- a/drivers/pci/host/pci-dra7xx.c
-+++ b/drivers/pci/host/pci-dra7xx.c
-@@ -62,6 +62,7 @@
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index d5e58ba..ae873be 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -145,4 +145,12 @@ config PCIE_IPROC_BCMA
+ 	  Say Y here if you want to use the Broadcom iProc PCIe controller
+ 	  through the BCMA bus interface
  
- #define	PCIECTRL_DRA7XX_CONF_PHY_CS			0x010C
- #define	LINK_UP						BIT(16)
-+#define	CPU_TO_BUS_ADDR					0x0FFFFFFF
- 
- struct dra7xx_pcie {
- 	void __iomem		*base;
-@@ -151,6 +152,18 @@ static void dra7xx_pcie_enable_interrupts(struct pcie_port *pp)
- static void dra7xx_pcie_host_init(struct pcie_port *pp)
- {
- 	dw_pcie_setup_rc(pp);
++config PCI_HISI
++	depends on OF && ARM64
++	bool "HiSilicon SoC HIP05 PCIe controller"
++	select PCIEPORTBUS
++	select PCIE_DW
++	help
++	  Say Y here if you want PCIe controller support on HiSilicon HIP05 SoC
 +
-+	if (pp->io_mod_base)
-+		pp->io_mod_base &= CPU_TO_BUS_ADDR;
+ endmenu
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 140d66f..ea1dbf2 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -17,3 +17,4 @@ obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
+ obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
+ obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
+ obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
++obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
+diff --git a/drivers/pci/host/pcie-hisi.c b/drivers/pci/host/pcie-hisi.c
+new file mode 100644
+index 0000000..a342a48
+--- /dev/null
++++ b/drivers/pci/host/pcie-hisi.c
+@@ -0,0 +1,196 @@
++/*
++ * PCIe host controller driver for HiSilicon Hip05 SoC
++ *
++ * Copyright (C) 2015 HiSilicon Co., Ltd. http://www.hisilicon.com
++ *
++ * Author: Zhou Wang <wangzhou1@hisilicon.com>
++ *         Dacai Zhu <zhudacai@hisilicon.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_address.h>
++#include <linux/of_pci.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+	if (pp->mem_mod_base)
-+		pp->mem_mod_base &= CPU_TO_BUS_ADDR;
++#include "pcie-designware.h"
 +
-+	if (pp->cfg0_mod_base) {
-+		pp->cfg0_mod_base &= CPU_TO_BUS_ADDR;
-+		pp->cfg1_mod_base &= CPU_TO_BUS_ADDR;
++#define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
++#define PCIE_LTSSM_LINKUP_STATE                         0x11
++#define PCIE_LTSSM_STATE_MASK                           0x3F
++
++#define to_hisi_pcie(x)	container_of(x, struct hisi_pcie, pp)
++
++struct hisi_pcie {
++	struct regmap *subctrl;
++	void __iomem *reg_base;
++	u32 port_id;
++	struct pcie_port pp;
++};
++
++static inline void hisi_pcie_apb_writel(struct hisi_pcie *pcie,
++					u32 val, u32 reg)
++{
++	writel(val, pcie->reg_base + reg);
++}
++
++static inline u32 hisi_pcie_apb_readl(struct hisi_pcie *pcie, u32 reg)
++{
++	return readl(pcie->reg_base + reg);
++}
++
++/* Hip05 PCIe host only supports 32-bit config access */
++static int hisi_pcie_cfg_read(struct pcie_port *pp, int where, int size,
++			      u32 *val)
++{
++	u32 reg;
++	u32 reg_val;
++	struct hisi_pcie *pcie = to_hisi_pcie(pp);
++	void *walker = &reg_val;
++
++	walker += (where & 0x3);
++	reg = where & ~0x3;
++	reg_val = hisi_pcie_apb_readl(pcie, reg);
++
++	if (size == 1)
++		*val = *(u8 __force *) walker;
++	else if (size == 2)
++		*val = *(u16 __force *) walker;
++	else if (size != 4)
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++/* Hip05 PCIe host only supports 32-bit config access */
++static int hisi_pcie_cfg_write(struct pcie_port *pp, int where, int  size,
++				u32 val)
++{
++	u32 reg_val;
++	u32 reg;
++	struct hisi_pcie *pcie = to_hisi_pcie(pp);
++	void *walker = &reg_val;
++
++	walker += (where & 0x3);
++	reg = where & ~0x3;
++	if (size == 4)
++		hisi_pcie_apb_writel(pcie, val, reg);
++	else if (size == 2) {
++		reg_val = hisi_pcie_apb_readl(pcie, reg);
++		*(u16 __force *) walker = val;
++		hisi_pcie_apb_writel(pcie, reg_val, reg);
++	} else if (size == 1) {
++		reg_val = hisi_pcie_apb_readl(pcie, reg);
++		*(u8 __force *) walker = val;
++		hisi_pcie_apb_writel(pcie, reg_val, reg);
++	} else
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int hisi_pcie_link_up(struct pcie_port *pp)
++{
++	u32 val;
++	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
++
++	regmap_read(hisi_pcie->subctrl, PCIE_SUBCTRL_SYS_STATE4_REG +
++		    0x100 * hisi_pcie->port_id, &val);
++
++	return ((val & PCIE_LTSSM_STATE_MASK) == PCIE_LTSSM_LINKUP_STATE);
++}
++
++static struct pcie_host_ops hisi_pcie_host_ops = {
++	.rd_own_conf = hisi_pcie_cfg_read,
++	.wr_own_conf = hisi_pcie_cfg_write,
++	.link_up = hisi_pcie_link_up,
++};
++
++static int __init hisi_add_pcie_port(struct pcie_port *pp,
++				     struct platform_device *pdev)
++{
++	int ret;
++	u32 port_id;
++	struct hisi_pcie *hisi_pcie = to_hisi_pcie(pp);
++
++	if (of_property_read_u32(pdev->dev.of_node, "port-id", &port_id)) {
++		dev_err(&pdev->dev, "failed to read port-id\n");
++		return -EINVAL;
++	}
++	if (port_id > 3) {
++		dev_err(&pdev->dev, "Invalid port-id: %d\n", port_id);
++		return -EINVAL;
++	}
++	hisi_pcie->port_id = port_id;
++
++	pp->ops = &hisi_pcie_host_ops;
++
++	ret = dw_pcie_host_init(pp);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to initialize host\n");
++		return ret;
 +	}
 +
- 	dra7xx_pcie_establish_link(pp);
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		dw_pcie_msi_init(pp);
-diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index 52aa6e3..75338a6 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -365,14 +365,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
- 	struct resource *cfg_res;
--	u32 val, na, ns;
-+	u32 val, ns;
- 	const __be32 *addrp;
- 	int i, index, ret;
- 
--	/* Find the address cell size and the number of cells in order to get
--	 * the untranslated address.
--	 */
--	of_property_read_u32(np, "#address-cells", &na);
- 	ns = of_n_size_cells(np);
- 
- 	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-@@ -415,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			pp->io_base = range.cpu_addr;
- 
- 			/* Find the untranslated IO space address */
--			pp->io_mod_base = of_read_number(parser.range -
--							 parser.np + na, ns);
-+			pp->io_mod_base = range.cpu_addr;
- 		}
- 		if (restype == IORESOURCE_MEM) {
- 			of_pci_range_to_resource(&range, np, &pp->mem);
-@@ -425,8 +420,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			pp->mem_bus_addr = range.pci_addr;
- 
- 			/* Find the untranslated MEM space address */
--			pp->mem_mod_base = of_read_number(parser.range -
--							  parser.np + na, ns);
-+			pp->mem_mod_base = range.cpu_addr;
- 		}
- 		if (restype == 0) {
- 			of_pci_range_to_resource(&range, np, &pp->cfg);
-@@ -436,8 +430,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
- 
- 			/* Find the untranslated configuration space address */
--			pp->cfg0_mod_base = of_read_number(parser.range -
--							   parser.np + na, ns);
-+			pp->cfg0_mod_base = range.cpu_addr;
- 			pp->cfg1_mod_base = pp->cfg0_mod_base +
- 					    pp->cfg0_size;
- 		}
++	return 0;
++}
++
++static int __init hisi_pcie_probe(struct platform_device *pdev)
++{
++	struct hisi_pcie *hisi_pcie;
++	struct pcie_port *pp;
++	struct resource *reg;
++	int ret;
++
++	hisi_pcie = devm_kzalloc(&pdev->dev, sizeof(*hisi_pcie), GFP_KERNEL);
++	if (!hisi_pcie)
++		return -ENOMEM;
++
++	pp = &hisi_pcie->pp;
++	pp->dev = &pdev->dev;
++
++	hisi_pcie->subctrl =
++	syscon_regmap_lookup_by_compatible("hisilicon,pcie-sas-subctrl");
++	if (IS_ERR(hisi_pcie->subctrl)) {
++		dev_err(pp->dev, "cannot get subctrl base\n");
++		return PTR_ERR(hisi_pcie->subctrl);
++	}
++
++	reg = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
++	hisi_pcie->reg_base = devm_ioremap_resource(&pdev->dev, reg);
++	if (IS_ERR(hisi_pcie->reg_base)) {
++		dev_err(pp->dev, "cannot get rc_dbi base\n");
++		return PTR_ERR(hisi_pcie->reg_base);
++	}
++
++	hisi_pcie->pp.dbi_base = hisi_pcie->reg_base;
++
++	ret = hisi_add_pcie_port(pp, pdev);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, hisi_pcie);
++
++	return 0;
++}
++
++static const struct of_device_id hisi_pcie_of_match[] = {
++	{.compatible = "hisilicon,hip05-pcie",},
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, hisi_pcie_of_match);
++
++static struct platform_driver hisi_pcie_driver = {
++	.probe  = hisi_pcie_probe,
++	.driver = {
++		   .name = "hisi-pcie",
++		   .of_match_table = hisi_pcie_of_match,
++	},
++};
++
++module_platform_driver(hisi_pcie_driver);
 -- 
 1.9.1
