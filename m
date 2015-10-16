@@ -1,191 +1,189 @@
 MIME-Version: 1.0
-In-Reply-To: <1444679211-823-3-git-send-email-m-karicheri2@ti.com>
-References: <1444679211-823-1-git-send-email-m-karicheri2@ti.com>
-	<1444679211-823-3-git-send-email-m-karicheri2@ti.com>
-Date: Tue, 13 Oct 2015 09:38:16 -0500
-Message-ID: <CAL_JsqL0TNL-EghS1Yjq+D9rk14Nx=EyLwXK8duoUA4B+yRYDQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] soc: ti: add firmware file name as part of the driver
-From: Rob Herring <robherring2@gmail.com>
+In-Reply-To: <5620E28B.4040002@ti.com>
+References: <1443605522-1118-1-git-send-email-tomi.valkeinen@ti.com>
+	<1443605522-1118-4-git-send-email-tomi.valkeinen@ti.com>
+	<CAL_JsqJ+xYpX86DNHFCOEqV85FRh-Xzh1wg3p6guA0QeWG4+pg@mail.gmail.com>
+	<561F9961.30008@ti.com>
+	<CAL_Jsq+trQ3jLczxvtzqfpUKBgxaazPdGyjLg+NT2YFva0_xbA@mail.gmail.com>
+	<561FBC4F.6030306@ti.com>
+	<CAL_JsqJ0JUuwkVKtWbzqEWemx7wME61KYxgvv=vNUT8FiMtGYw@mail.gmail.com>
+	<5620E28B.4040002@ti.com>
+Date: Fri, 16 Oct 2015 08:36:32 -0500
+Message-ID: <CAL_JsqLe_Bg6hDn_oppDfbq2coUUS2TLMkOzMhOAD1a3DQy9oQ@mail.gmail.com>
+Subject: Re: [PATCHv4 3/3] devicetree: Add led-backlight binding
+From: Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+ 
 
-
-On Mon, Oct 12, 2015 at 2:46 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> Currently firmware file name is included in the DTS. This is not scalable
-> as user has to change the DTS if they need upgrade to a new firmware.
-> Instead, add the firmware file name in the driver itself. As long as there
-> is no API change, new firmware upgrade is easy and require no driver
-> change. User is expected to copy the firmware image to the file system
-> and add a sym link to the new firmware for doing an upgrade. Driver add
-> a array of firmware file names to search for the available firmware blobs.
-> This scheme also prepare the driver for future changes to API if ever
-> happens. In such case it is assumed that driver needs to change to
-> accommodate the new firmware and new firmware file name will get added to
-> the array.
+On Fri, Oct 16, 2015 at 6:42 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> Hi Rob,
 >
-> Also update the DT document to remove the firmware attribute and add
-> description about firmware in the driver documentation.
+> On 15/10/15 21:55, Rob Herring wrote:
 >
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  - v2. Moved firmware file name from DT to driver code.
->  Documentation/arm/keystone/knav-qmss.txt           | 26 ++++++++++++
->  .../bindings/soc/ti/keystone-navigator-qmss.txt    |  1 -
->  drivers/soc/ti/knav_qmss.h                         |  1 -
->  drivers/soc/ti/knav_qmss_queue.c                   | 47 +++++++++++++---------
->  4 files changed, 54 insertions(+), 21 deletions(-)
+>>> True, but those child nodes are very limited. As I see it, those child
+>>> nodes really describe the outputs of the LED chip, not what's on the
+>>> other end of the lines.
+>>
+>> The child nodes are supposed to be the other end. In the flash case,
+>> the properties are constraints on the flash LED (i.e. different flash
+>> LEDs will have different max currents).
 >
-> diff --git a/Documentation/arm/keystone/knav-qmss.txt b/Documentation/arm/keystone/knav-qmss.txt
-> index 79946d1..da34a5b 100644
-> --- a/Documentation/arm/keystone/knav-qmss.txt
-> +++ b/Documentation/arm/keystone/knav-qmss.txt
-> @@ -22,3 +22,29 @@ pool management.
->  knav qmss driver provides a set of APIs to drivers to open/close qmss queues,
->  allocate descriptor pools, map the descriptors, push/pop to queues etc. For
->  details of the available APIs, please refers to include/linux/soc/ti/knav_qmss.h
-> +
-> +DT documentation is available at
-> +Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-> +
-> +Accumulator QMSS queues using PDSP firmware
-> +============================================
-> +The QMSS PDSP firmware support accumulator channel that can monitor a single
-> +queue or multiple contiguous queues. drivers/soc/ti/knav_qmss_acc.c is the
-> +driver that interface with the accumulator PDSP. This configures
-> +accumulator channels defined in DTS (example in DT documentation) to monitor
-> +1 or 32 queues per channel. More description on the firmware is available in
-> +CPPI/QMSS Low Level Driver document (docs/CPPI_QMSS_LLD_SDS.pdf) at
-> +       git://git.ti.com/keystone-rtos/qmss-lld.git
-> +
-> +k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin firmware supports upto 48 accumulator
-> +channels. This firmware is available under ti-keystone folder of
-> +firmware.git at
-> +   git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-> +
-> +To use copy the firmware image to lib/firmware folder of the initramfs or
-> +ubifs file system and provide a sym link to k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin
-> +in the file system and boot up the kernel. User would see
-> +
-> + "firmware file ks2_qmss_pdsp_acc48.bin downloaded for PDSP"
-> +
-> +in the boot up log if loading of firmware to PDSP is successful.
-> diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-> index 2cecea1..aac8c36 100644
-> --- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-> +++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-> @@ -209,7 +209,6 @@ qmss: qmss@2a40000 {
->                 #size-cells = <1>;
->                 ranges;
->                 pdsp0@0x2a10000 {
-> -                       firmware = "keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw";
->                         reg = <0x2a10000 0x1000>,
->                               <0x2a0f000 0x100>,
->                               <0x2a0c000 0x3c8>,
-> diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
-> index 51da234..c31b8d8 100644
-> --- a/drivers/soc/ti/knav_qmss.h
-> +++ b/drivers/soc/ti/knav_qmss.h
-> @@ -135,7 +135,6 @@ struct knav_pdsp_info {
+> Right, but what I meant is that the max current is applied to the LED
+> controller hardware, so in that sense it can be considered as a property
+> of the LED controller.
+>
+> If there was, say, a flash that supports changing the color of the
+> light, that property would be applied to the flash HW so it'd be a
+> property of the "other end".
+>
+>>> If on the other end of the lines is a more complex device, we need a
+>>> proper device driver for it, with a proper DT node with compatible
+>>> property etc.
+>>>
+>>> Now, one could argue that a "backlight" that gets the LED signal from a
+>>> LED chip is really just a simple LED. But there are complications:
+>>
+>> I would say backlights are a complex example of LEDs. Of course, there
+>> are backlights not based on LEDs, but we're not talking about those
+>> here.
+>
+> I like the GPIO/PWM binding model, as it doesn't force any
+> node-hierarchy to the consumer of the GPIO/PWM. I don't see LED
+> controller output being any different than PWM, but the current LED
+> bindings still force the consumers of the LED signal to be a child of
+> the LED controller.
+>
+> How about an LCD module, controlled via i2c, which takes a LED PWM
+> signal as an input, but needs i2c commands to enable the actual
+> backlight? So kind of i2c controlled smart LED. Or if the LCD module
+> takes two LED PWM signal inputs to achieve some fancy backlight effects.
+>
+> Yes, it's theoretical HW, and I know some people don't like to discuss
+> such things... But the above example is easily accomplished with the
+> GPIO/PWM style bindings, but I don't have any idea how it could be done
+> with the current LED bindings.
+>
+>>> - Our board needs a GPIO to enable the backlight. I can't say what
+>>> exactly the GPIO does as my HW skills don't go far enough, but all this
+>>> is after the LED chip. I also see the circuitry using powers, which in
+>>> our case happen to be always on so we don't need to enable them explicitly.
+>>
+>> The GPIO is probably controlling a transistor to connect the LED anode
+>> to ground and therefore turn it on. These have nothing to do with
+>> backlights really, but really are common to LEDs. Every LED needs a
+>> supply rail too. This may come for a regulator or directly from an LED
+>> driver IC.
+>
+> There's something a bit more complex there. The gpio controls TI
+> TPS6108x (http://www.ti.com/lit/ds/symlink/tps61081.pdf "High-Voltage
+> DC-DC Boost Converter").
+>
+> But possibly all that can still be considered as you described.
+>
+>> If the flash LED binding doesn't have these, then it is only a matter of time.
+>>
+>>>
+>>> - We need a backlight device/driver (because of the Linux SW stack).
+>>
+>> From a binding perspective, not my problem. The problem with the
+>> driver needs driving the binding definition is the drivers can change
+>> over time. IIRC there has been some discussion of combining the 2
+>> subsystems in the kernel, so we don't want to create something defined
+>> by current kernel needs.
+>
+> True. But on the other hand I would also not want to force new drivers
+> to use the current binding model, if it doesn't quite fit.
+>
+> So if the PWM/GPIO model is fine, and LED controllers are really very
+> similar, shouldn't we extend the LED bindings towards PWM/GPIO model
+> rather than trying to fit everything into the current LED bindings?
+>
+> Of course, even if everybody would agree with the above, this particular
+> backlight binding is rather simple, and I think we can fit it in the
+> current model. But that then raises the question, if led-backlight and
+> pwm-backlight are about the same, why are the binding model different.
+>
+>>> So, maybe it would be possible to construct all that in a LED child
+>>> node, and the LED driver would create a child device for the nodes which
+>>> have 'compatible' property. But then, that would be very different from
+>>> pwm-backlight, and the parent-child relationships are usually used to
+>>> indicate a control relationship, right?
+>>
+>> This is along the lines I was thinking, but don't see how it is very
+>> different at the binding level. The parent-child relationship is
+>
+> In my experience, the relationship between the nodes is usually the most
+> difficult part with bindings, both in the design side and the driver
+> implementation side.
+>
+> So if pwm-backlight links to the pwm source using a phandle, and
+> led-backlight links by child-parent relationship, I see them as quite
+> different, even if the rest of the properties are the same.
+>
+>> typically control path or just what is downstream from the parent
+>> device. Some bindings like GPIO and PWM don't follow this, but that is
+>> often because they are just additional sideband interfaces on top of
+>> the main control interface. I think simply making the "backlight" node
+>> from the pwm-backlight binding a child works. We probably need a
+>> different compatible string though (led-backlight is as good as
+>
+> So hmm... You mean using the pwm-backlight node, without the "pwms"
+> property, as the source is implicit? So:
+>
+> /* tlc59108 is an i2c device */
+> tlc59116@40 {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         compatible = "ti,tlc59108";
+>         reg = <0x40>;
+>
+>         wan@0 {
+>                 label = "wrt1900ac:amber:wan";
+>                 reg = <0x0>;
 >         };
->         void __iomem                                    *intd;
->         u32 __iomem                                     *iram;
-> -       const char                                      *firmware;
->         u32                                             id;
->         struct list_head                                list;
->  };
-> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-> index 6d8646d..06d9de8 100644
-> --- a/drivers/soc/ti/knav_qmss_queue.c
-> +++ b/drivers/soc/ti/knav_qmss_queue.c
-> @@ -68,6 +68,12 @@ static DEFINE_MUTEX(knav_dev_lock);
->              idx < (kdev)->num_queues_in_use;                   \
->              idx++, inst = knav_queue_idx_to_inst(kdev, idx))
 >
-> +/* All firmware file names end up here. List the firmware file names below.
-> + * Newest followed by older ones. Search is done from start of the array
-> + * until a firmware file is found.
-> + */
-> +const char *knav_acc_firmwares[] = {"ks2_qmss_pdsp_acc48.bin"};
-> +
->  /**
->   * knav_queue_notify: qmss queue notfier call
->   *
-> @@ -1439,7 +1445,6 @@ static int knav_queue_init_pdsps(struct knav_device *kdev,
->         struct device *dev = kdev->dev;
->         struct knav_pdsp_info *pdsp;
->         struct device_node *child;
-> -       int ret;
+>         bl@2 {
+>                 label = "backlight";
+>                 reg = <0x2>;
 >
->         for_each_child_of_node(pdsps, child) {
->                 pdsp = devm_kzalloc(dev, sizeof(*pdsp), GFP_KERNEL);
-> @@ -1448,17 +1453,6 @@ static int knav_queue_init_pdsps(struct knav_device *kdev,
->                         return -ENOMEM;
->                 }
->                 pdsp->name = knav_queue_find_name(child);
-> -               ret = of_property_read_string(child, "firmware",
-> -                                             &pdsp->firmware);
-> -               if (ret < 0 || !pdsp->firmware) {
-> -                       dev_err(dev, "unknown firmware for pdsp %s\n",
-> -                               pdsp->name);
-> -                       devm_kfree(dev, pdsp);
-> -                       continue;
-> -               }
-> -               dev_dbg(dev, "pdsp name %s fw name :%s\n", pdsp->name,
-> -                       pdsp->firmware);
-> -
->                 pdsp->iram =
->                         knav_queue_map_reg(kdev, child,
->                                            KNAV_QUEUE_PDSP_IRAM_REG_INDEX);
-> @@ -1489,9 +1483,9 @@ static int knav_queue_init_pdsps(struct knav_device *kdev,
->                 }
->                 of_property_read_u32(child, "id", &pdsp->id);
->                 list_add_tail(&pdsp->list, &kdev->pdsps);
-> -               dev_dbg(dev, "added pdsp %s: command %p, iram %p, regs %p, intd %p, firmware %s\n",
-> +               dev_dbg(dev, "added pdsp %s: command %p, iram %p, regs %p, intd %p\n",
->                         pdsp->name, pdsp->command, pdsp->iram, pdsp->regs,
-> -                       pdsp->intd, pdsp->firmware);
-> +                       pdsp->intd);
->         }
->         return 0;
->  }
-> @@ -1518,14 +1512,29 @@ static int knav_queue_load_pdsp(struct knav_device *kdev,
->  {
->         int i, ret, fwlen;
->         const struct firmware *fw;
-> +       bool found = false;
->         u32 *fwdata;
+>                 compatible = "led-backlight";
+>                 brightness-levels = <0 243 245 247 248 249 251 252 255>;
+>                 default-brightness-level = <8>;
 >
-> -       ret = request_firmware(&fw, pdsp->firmware, kdev->dev);
-> -       if (ret) {
-> -               dev_err(kdev->dev, "failed to get firmware %s for pdsp %s\n",
-> -                       pdsp->firmware, pdsp->name);
-> -               return ret;
-> +       for (i = 0; i < ARRAY_SIZE(knav_acc_firmwares); i++) {
-> +               if (knav_acc_firmwares[i]) {
-> +                       ret = request_firmware(&fw,
-> +                                              knav_acc_firmwares[i],
-> +                                              kdev->dev);
-> +                       if (!ret) {
-> +                               found = true;
-> +                               break;
-> +                       }
-> +               }
-> +       }
-> +
-> +       if (!found) {
-> +               dev_err(kdev->dev, "failed to get firmware for pdsp\n");
-> +               return -ENODEV;
->         }
-> +
-> +       dev_info(kdev->dev, "firmware file %s downloaded for PDSP\n",
-> +                knav_acc_firmwares[i]);
-> +
->         writel_relaxed(pdsp->id + 1, pdsp->command + 0x18);
->         /* download the firmware */
->         fwdata = (u32 *)fw->data;
-> --
-> 1.9.1
+>                 enable-gpios = <&pcf_lcd 13 GPIO_ACTIVE_LOW>;
+>         };
+> };
+>
+> At the moment each LED controller driver does its own DT parsing, and
+> there's no common code for anything related to DT in the LED framework
+> and the LED framework is not even aware of DT nodes or such (which is
+> why I needed a bit hackish approach in my patches to find the nodes).
+>
+> I have a gut feeling that going into this direction will require quite a
+> bit of restructuring in the LED drivers, so I think I need to leave this
+> task for others due to lack of time.
+>
+>> anything). I also think we should require child nodes to have a
+>> compatible string which we didn't do for flash devices. It's probably
+>> not too late to fix that.
+>
+> That is probably a good idea.
+>
+>> I think there are 2 cases of PWM connection to LEDs to consider. The
+>> PWM is an input to a LED driver chip or the PWM directly controls the
+>> LED (attached to the anode). The current pwm-backlight binding covers
+>> the latter. In the former case, pwms should probably be in the parent
+>> (LED driver IC node). Of course, if the driver IC has no s/w
+>> controllable interface beyond PWM, then it probably doesn't need to be
+>> modeled at all in DT.
+>
+> I guess one option would also be to create an MFD of the LED controller,
+> so that it would offer some of the outputs as plain PWMs. Then
+> pwm-backlight could be used directly.
+>
+>  Tomi
 >
