@@ -1,61 +1,33 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/5] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for
- sdio clk
-Date: Fri, 16 Oct 2015 15:27:14 +0200
-Message-ID: <5620FB32.8030705@gmail.com>
-References: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
- <1444628796-5484-5-git-send-email-jszhang@marvell.com>
- <20151016124705.20687.51712@quantum>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151016124705.20687.51712@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Fri, 16 Oct 2015 08:27:01 -0500
+Message-ID: <CAL_JsqJvmK-3+DFTHQEEjJuj6N_PCXbEGa1CVu9-yF3s+HKGfw@mail.gmail.com>
+References: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
+ <1444997709-57293-2-git-send-email-ck.hu@mediatek.com> <20151016130632.GE2054@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151016130632.GE2054@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: CK Hu <ck.hu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradea
 List-Id: devicetree@vger.kernel.org
 
-On 16.10.2015 14:47, Michael Turquette wrote:
-> Quoting Jisheng Zhang (2015-10-11 22:46:35)
->> Since we have added the necessary axi clk properties in dts, we can
->> remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
->>
->> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Fri, Oct 16, 2015 at 8:06 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> +     /* FIXME - use of_graph_get_port_by_id(np, 1) on newer kernels */
+>> +     in_ep = of_graph_get_next_endpoint(np, NULL);
 >
-> Applied to clk-next.
-
-Mike,
-
-these two patches will break Berlin SoCs if not applied
-after the sdhci and DT changes went in. Please hold them
-back until the discussion has been settled.
-
-Thanks,
-   Sebastian
-
+> Huh?
 >
->> ---
->>   drivers/clk/berlin/bg2q.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
->> index 221f40c..243f421 100644
->> --- a/drivers/clk/berlin/bg2q.c
->> +++ b/drivers/clk/berlin/bg2q.c
->> @@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
->>          { "usb2",       "perif",        13 },
->>          { "usb3",       "perif",        14 },
->>          { "pbridge",    "perif",        15, CLK_IGNORE_UNUSED },
->> -       { "sdio",       "perif",        16, CLK_IGNORE_UNUSED },
->> +       { "sdio",       "perif",        16 },
->>          { "nfc",        "perif",        18 },
->>          { "pcie",       "perif",        22 },
->>   };
->> --
->> 2.6.1
->>
+>> +     edidp = of_get_property(np, "edid", &size);
+>
+> This property wasn't mentioned in the binding document.
+>
+> Please describe it. If it's from a more generic binding, refer to that
+> from the binding document.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It should be generic, but currently documented in individual drivers.
+I also think this is not the right location in the DT for this
+property. It should be part of the panel or connector node instead.
+
+Rob
