@@ -1,55 +1,36 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 7/7] arm64: dts: berlin4ct: add default pinmux for uart0
-Date: Fri, 16 Oct 2015 15:37:12 +0800
-Message-ID: <1444981032-4401-8-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v6 2/7] pinctrl: berlin: Make berlin pinctrl driver visible if COMPILE_TEST=y
+Date: Fri, 16 Oct 2015 15:37:07 +0800
+Message-ID: <1444981032-4401-3-git-send-email-jszhang@marvell.com>
 References: <1444981032-4401-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444981032-4401-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444981032-4401-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, antoine.tenart@free-electrons.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Add urt0 txd and rxd muxing setup in the dtsi because uart0 always uses
-them to work, no other possibilities.
+It is good to allow berlin pinctrl driver to build with COMPILE_TEST, so
+make the it menu visible when compile-testing.
 
-Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pinctrl/berlin/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-index 8e66355..a4a1876 100644
---- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-+++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-@@ -288,12 +288,19 @@
- 				clocks = <&osc>;
- 				reg-shift = <2>;
- 				status = "disabled";
-+				pinctrl-0 = <&uart0_pmux>;
-+				pinctrl-names = "default";
- 			};
- 		};
+diff --git a/drivers/pinctrl/berlin/Kconfig b/drivers/pinctrl/berlin/Kconfig
+index b18322b..f7e45c8 100644
+--- a/drivers/pinctrl/berlin/Kconfig
++++ b/drivers/pinctrl/berlin/Kconfig
+@@ -1,4 +1,4 @@
+-if ARCH_BERLIN
++if (ARCH_BERLIN || COMPILE_TEST)
  
- 		system_pinctrl: pin-controller@fe2200 {
- 			compatible = "marvell,berlin4ct-system-pinctrl";
- 			reg = <0xfe2200 0xc>;
-+
-+			uart0_pmux: uart0-pmux {
-+				groups = "SM_URT0_TXD", "SM_URT0_RXD";
-+				function = "uart0";
-+			};
- 		};
- 	};
- };
+ config PINCTRL_BERLIN
+ 	bool
 -- 
 2.6.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
