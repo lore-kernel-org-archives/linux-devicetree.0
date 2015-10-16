@@ -1,43 +1,99 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH v2 0/8] Enable several devices for Atmel SAMA5D2
-Date: Fri, 16 Oct 2015 15:04:43 +0200
-Message-ID: <1445000691-12402-1-git-send-email-ludovic.desroches@atmel.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC 1/2] Dcumentation: bridge: Add documentation for ps8640 DT
+ properties
+Date: Fri, 16 Oct 2015 14:04:47 +0100
+Message-ID: <20151016130447.GD2054@leverpostej>
+References: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
-Cc: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cyrille.pitchen@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Oct 16, 2015 at 08:15:08PM +0800, CK Hu wrote:
+> From: Jitao Shi <jitao.shi@mediatek.com>
+> 
+> Add documentation for DT properties supported by ps8640
+> DSI-eDP converter.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/video/bridge/ps8640.txt    |   48 ++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/bridge/ps8640.txt b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> new file mode 100644
+> index 0000000..450b5df
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> @@ -0,0 +1,48 @@
+> +ps8640-bridge bindings
+> +
+> +Required properties:
+> +	- compatible: "parade,ps8640"
+> +	- reg: first i2c address of the bridge
 
-This set of patches enables several devices for the freshly introduced SAMA5D2
-SoC. dts and defconfig files are updated to enable SAMA5D2 and its new devices
-such as Flexcom and AT91 SDHCI.
+Ther can be multiple addresses?
 
-Changes:
-- v2:
-  - update whole Atmel defconfigs
-  - update multi_v7_defconfig
+> +	- power-gpios: OF device-tree gpio specification for power pin.
+> +	- reset-gpios: OF device-tree gpio specification for reset pin.
+> +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
+> +	- ps8640-1v2-supply: OF device-tree regulator specification for 1v2.
+> +	- ps8640-3v3-supply: OF device-tree regulator specification for 3v3.
 
-Ludovic Desroches (8):
-  ARM: at91/dt: sama5d2: add missing devices
-  ARM: at91/dt: sama5d2 Xplained: add several devices
-  ARM: at91/defconfig: update sama5 defconfig
-  ARM: at91/defconfig: update at91_dt defconfig
-  ARM: at91/defconfig: add sama5d2 and its new devices to sama5
-    defconfig
-  ARM: multi_v7_defconfig: Add Atmel SAMA5D2 SoC
-  ARM: multi_v7_defconfig: Add Atmel Flexcom device
-  ARM: multi_v7_defconfig: Add Atmel SDHCI device
+There's no need for the "ps8640-" prefix on these two. Please drop it.
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 106 +++++++++++++++++++
- arch/arm/boot/dts/sama5d2.dtsi              | 152 +++++++++++++++++++++++++++-
- arch/arm/configs/at91_dt_defconfig          |  15 ---
- arch/arm/configs/multi_v7_defconfig         |   3 +
- arch/arm/configs/sama5_defconfig            |  16 ++-
- 5 files changed, 265 insertions(+), 27 deletions(-)
+> +Optional properties:
+> +	- video interfaces: Device node can contain video interface port
+> +			    nodes for panel according to [1].
 
--- 
-2.5.0
+Replace this part with:
+
+The device node can contain video interface port nodes per the
+video-interfaces binding [1].
+
+Thanks,
+Mark.
+
+> +
+> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +	edp-bridge@18 {
+> +		compatible = "parade,ps8640";
+> +		reg = <0x18>;
+> +		power-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
+> +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
+> +		ps8640-1v2-supply = <&ps8640_fixed_1v2>;
+> +		ps8640-3v3-supply = <&mt6397_vgp2_reg>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +
+> +				ps8640_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +
+> +				ps8640_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.7.9.5
+> 
