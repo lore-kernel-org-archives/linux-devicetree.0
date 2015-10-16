@@ -1,45 +1,97 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC 1/2] Dcumentation: bridge: Add documentation for ps8640 DT
- properties
-Date: Fri, 16 Oct 2015 15:08:39 +0200
-Message-ID: <1445000919.3541.11.camel@pengutronix.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 1/2] Dcumentation: bridge: Add documentation for ps8640 DT properties
+Date: Fri, 16 Oct 2015 08:21:38 -0500
+Message-ID: <CAL_JsqKMqiqwZaxnZGKo3eh6m+mE9aX8HnWkDZkSivSn1PHy2A@mail.gmail.com>
 References: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444997709-57293-1-git-send-email-ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek@list
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ0ssCgp0aGVyZSBpcyBhIHR5cG8gaW4gdGhlIHN1YmplY3Q6IHMvRGN1bWVudGF0aW9uL0Rv
-Y3VtZW50YXRpb24vLgoKQW0gRnJlaXRhZywgZGVuIDE2LjEwLjIwMTUsIDIwOjE1ICswODAwIHNj
-aHJpZWIgQ0sgSHU6Cj4gRnJvbTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+
-IAo+IEFkZCBkb2N1bWVudGF0aW9uIGZvciBEVCBwcm9wZXJ0aWVzIHN1cHBvcnRlZCBieSBwczg2
-NDAKPiBEU0ktZURQIGNvbnZlcnRlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGpp
-dGFvLnNoaUBtZWRpYXRlay5jb20+ClsuLi5dCj4gKwktIHBzODY0MC0xdjItc3VwcGx5OiBPRiBk
-ZXZpY2UtdHJlZSByZWd1bGF0b3Igc3BlY2lmaWNhdGlvbiBmb3IgMXYyLgo+ICsJLSBwczg2NDAt
-M3YzLXN1cHBseTogT0YgZGV2aWNlLXRyZWUgcmVndWxhdG9yIHNwZWNpZmljYXRpb24gZm9yIDN2
-My4KClRoZSBwczg2NDAtIHBhcnQgb2YgdGhlIHJlZ3VsYXRvciBzdXBwbHkgcHJvcGVydHkgbmFt
-ZXMgaXMgcmVkdW5kYW50LgpUaGUgUFM4NjIyIGRyaXZlciB1c2VzIHZkZDEyLXN1cHBseSBhcyBp
-dHMgcmVndWxhdG9yLiBTaG91bGQgd2Ugc3RyaXZlCmZvciBjb25zaXN0ZW5jeSBoZXJlPyBPciBp
-ZiB5b3UgaGF2ZSBhY2Nlc3MgdG8gdGhlIGRhdGFzaGVldCwgaG93IGFyZQp0aGVzZSBpbnB1dHMg
-Y2FsbGVkIHRoZXJlPwoKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKwktIHZpZGVvIGlu
-dGVyZmFjZXM6IERldmljZSBub2RlIGNhbiBjb250YWluIHZpZGVvIGludGVyZmFjZSBwb3J0Cj4g
-KwkJCSAgICBub2RlcyBmb3IgcGFuZWwgYWNjb3JkaW5nIHRvIFsxXS4KPiArCj4gK1sxXTogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0
-CgpJdCBzaG91bGQgYmUgZG9jdW1lbnRlZCBoZXJlIHRoYXQgcG9ydEAwIGlzIHRoZSBpbnB1dCBw
-b3J0IGFuZCBwb3J0QDEgaXMKdGhlIG91dHB1dCBwb3J0LgoKYmVzdCByZWdhcmRzClBoaWxpcHAK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Oct 16, 2015 at 7:15 AM, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>
+> Add documentation for DT properties supported by ps8640
+> DSI-eDP converter.
+>
+> Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/bridge/ps8640.txt    |   48 ++++++++++++++++++++
+
+Please move to bindings/display/bridge/.
+
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/bridge/ps8640.txt
+>
+> diff --git a/Documentation/devicetree/bindings/video/bridge/ps8640.txt b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> new file mode 100644
+> index 0000000..450b5df
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> @@ -0,0 +1,48 @@
+> +ps8640-bridge bindings
+> +
+> +Required properties:
+> +       - compatible: "parade,ps8640"
+> +       - reg: first i2c address of the bridge
+> +       - power-gpios: OF device-tree gpio specification for power pin.
+> +       - reset-gpios: OF device-tree gpio specification for reset pin.
+> +       - mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
+> +       - ps8640-1v2-supply: OF device-tree regulator specification for 1v2.
+> +       - ps8640-3v3-supply: OF device-tree regulator specification for 3v3.
+
+As others have said, I would drop the part number and name them based
+on the supply name (e.g. vdd?, vcore?).
+
+> +
+> +Optional properties:
+> +       - video interfaces: Device node can contain video interface port
+> +                           nodes for panel according to [1].
+
+I don't think this should be optional.
+
+> +
+> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +       edp-bridge@18 {
+> +               compatible = "parade,ps8640";
+> +               reg = <0x18>;
+> +               power-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
+> +               reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
+> +               mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
+> +               ps8640-1v2-supply = <&ps8640_fixed_1v2>;
+> +               ps8640-3v3-supply = <&mt6397_vgp2_reg>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +
+> +                               ps8640_in: endpoint {
+> +                                       remote-endpoint = <&dsi0_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +
+> +                               ps8640_out: endpoint {
+> +                                       remote-endpoint = <&panel_in>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> --
+> 1.7.9.5
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
