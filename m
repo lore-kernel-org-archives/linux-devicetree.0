@@ -1,33 +1,59 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
-Date: Fri, 16 Oct 2015 08:27:01 -0500
-Message-ID: <CAL_JsqJvmK-3+DFTHQEEjJuj6N_PCXbEGa1CVu9-yF3s+HKGfw@mail.gmail.com>
-References: <1444997709-57293-1-git-send-email-ck.hu@mediatek.com>
- <1444997709-57293-2-git-send-email-ck.hu@mediatek.com> <20151016130632.GE2054@leverpostej>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 13/25] scsi: hisi_sas: add path from phyup irq to SAS
+ framework
+Date: Fri, 16 Oct 2015 14:29:55 +0100
+Message-ID: <5620FBD3.2020902@huawei.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
+ <1444663237-238302-14-git-send-email-john.garry@huawei.com>
+ <3757591.KXgD8p0a1E@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151016130632.GE2054@leverpostej>
+In-Reply-To: <3757591.KXgD8p0a1E@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: CK Hu <ck.hu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradea
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: James.Bottomley@hansenpartnership.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, zhangfei.gao@linaro.org, linux-scsi@vger.kernel.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, hare@suse.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 8:06 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> +     /* FIXME - use of_graph_get_port_by_id(np, 1) on newer kernels */
->> +     in_ep = of_graph_get_next_endpoint(np, NULL);
+On 16/10/2015 13:55, Arnd Bergmann wrote:
+> On Monday 12 October 2015 23:20:25 John Garry wrote:
+>> @@ -804,6 +818,16 @@ static irqreturn_t int_phyup_v1_hw(int irq_no, void *p)
+>>                  phy->identify.target_port_protocols =
+>>                          SAS_PROTOCOL_SMP;
+>>
+>> +       wq = kmalloc(sizeof(*wq), GFP_ATOMIC);
+>> +       if (!wq)
+>> +               goto end;
+>> +
+>> +       wq->event = PHYUP;
+>> +       wq->hisi_hba = hisi_hba;
+>> +       wq->phy_no = phy_no;
+>> +
+>> +       INIT_WORK(&wq->work_struct, hisi_sas_wq_process);
+>> +       queue_work(hisi_hba->wq, &wq->work_struct);
+>>
+>>   end:
+>>          hisi_sas_phy_write32(hisi_hba, phy_no, CHL_INT2,
+>>
 >
-> Huh?
+> While rereading some other parts of the code, I stumbled over this piece.
+> You should generally not allocate work structs dynamically. Why not embed
+> the work struct inside of the phy structure and then just queue that?
 >
->> +     edidp = of_get_property(np, "edid", &size);
+> 	Arnd
 >
-> This property wasn't mentioned in the binding document.
+> .
 >
-> Please describe it. If it's from a more generic binding, refer to that
-> from the binding document.
 
-It should be generic, but currently documented in individual drivers.
-I also think this is not the right location in the DT for this
-property. It should be part of the panel or connector node instead.
+It could be considered.
 
-Rob
+A potential issue I see is with hisi_sas_control_phy() for 
+PHY_FUNC_HARD_RESET: this allocates a hisi_sas_wq struct and processes 
+the reset in the queue work. When we re-enable the phy for the reset, 
+the phyup irq will want to use the same hisi_sas_wq struct which may be 
+in use.
+
+hisi_sas_control_phy() is added in 23/35.
+
+John
