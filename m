@@ -1,58 +1,40 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: exynos5250: Add clocks to DISP1 domain
-Date: Fri, 16 Oct 2015 10:19:08 +0200
-Message-ID: <5620B2FC.5040004@collabora.com>
-References: <1444905084-22540-1-git-send-email-tomeu.vizoso@collabora.com>
- <1444905084-22540-3-git-send-email-tomeu.vizoso@collabora.com>
- <56203A74.7040305@samsung.com>
+From: <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3] Mediatek EFUSE Support
+Date: Fri, 16 Oct 2015 16:39:08 +0800
+Message-ID: <1444984751-4572-1-git-send-email-andrew-ct.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56203A74.7040305@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
-Cc: Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2015 01:44 AM, Krzysztof Kozlowski wrote:
-> On 15.10.2015 19:31, Tomeu Vizoso wrote:
->> Adds to the node of the DISP1 power domain the two clocks that need to
->> be reparented while the domain is powered off:
->> CLK_MOUT_ACLK200_DISP1_SUB and CLK_MOUT_ACLK300_DISP1_SUB.
->>
->> Otherwise the state is unknown at power up and the mixer's clocks are
->> all messed up.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->> Link: http://lkml.kernel.org/g/561CDC33.7050103@collabora.com
->> ---
->>
->>
->>  arch/arm/boot/dts/exynos5250.dtsi | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index b24610ea8c2a..88b9cf5f226f 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -130,6 +130,10 @@
->>  		compatible = "samsung,exynos4210-pd";
->>  		reg = <0x100440A0 0x20>;
->>  		#power-domain-cells = <0>;
->> +		clocks = <&clock CLK_FIN_PLL>,
->> +			 <&clock CLK_MOUT_ACLK200_DISP1_SUB>,
->> +			 <&clock CLK_MOUT_ACLK300_DISP1_SUB>;
->> +		clock-names = "oscclk", "clk0", "clk1";
->>  	};
->>  
->>  	clock: clock-controller@10010000 {
->>
-> 
-> I reviewed it already. Any changes here since v1?
+This patch adds EFUSE support driver which is used by other drivers
+like thermal sensor and HDMI impedance.
 
-No, I just forgot to add your r-b tag, sorry about that.
+There are some efuses these fuses store things like calibration data,
+speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
+read out this data for configuring the driver.
 
-Thanks,
+Andrew-CT Chen (3):
+  dt-bindings: add document of mediatek efuse driver
+  nvmem: mediatek: Add Mediatek EFUSE driver
+  dts: arm64: Add EFUSE device node
 
-Tomeu
+ .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 +++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  5 ++
+ drivers/nvmem/Kconfig                              | 11 +++
+ drivers/nvmem/Makefile                             |  1 +
+ drivers/nvmem/mtk-efuse.c                          | 89 ++++++++++++++++++++++
+ 5 files changed, 142 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+ create mode 100644 drivers/nvmem/mtk-efuse.c
+
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
