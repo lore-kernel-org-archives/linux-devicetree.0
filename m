@@ -1,52 +1,35 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] clk: samsung: exynos5250: Add DISP1 clocks
-Date: Fri, 16 Oct 2015 10:26:51 -0700
-Message-ID: <20151016172651.GB23912@codeaurora.org>
-References: <1444905084-22540-1-git-send-email-tomeu.vizoso@collabora.com>
- <1444905084-22540-2-git-send-email-tomeu.vizoso@collabora.com>
- <56203AD3.2050905@samsung.com>
- <20151016124935.20687.4394@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151016124935.20687.4394@quantum>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 0/3] UART slave device support (goldelico version)
+Date: Fri, 16 Oct 2015 20:08:32 +0200
+Message-ID: <cover.1445018912.git.hns@goldelico.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jiri Slaby <jslaby@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Sergei Zviagintsev <sergei@s15v.net>, Peter Hurley <peter@hurleysoftware.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Sebastian Reichel <sre@kernel.org>, NeilBrown <neil@brown.name>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Marek Belisko <marek@goldelico.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/16, Michael Turquette wrote:
-> Quoting Krzysztof Kozlowski (2015-10-15 16:46:27)
-> > On 15.10.2015 19:31, Tomeu Vizoso wrote:
-> > > When the DISP1 power domain is powered off, there's two clocks that need
-> > > to be temporarily reparented to OSC, and back to their original parents
-> > > when the domain is powered on again.
-> > > 
-> > > We expose these two clocks in the DT bindings so that the DT node of the
-> > > power domain can reference them.
-> > > 
-> > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-> > > ---
-> > > 
-> > > Changes in v2:
-> > > - Reuse mout_aclk200_p
-> > > - Rename div_aclk300 as div_aclk300_disp
-> > > 
-> > >  drivers/clk/samsung/clk-exynos5250.c   | 14 +++++++++++++-
-> > >  include/dt-bindings/clock/exynos5250.h |  4 +++-
-> > >  2 files changed, 16 insertions(+), 2 deletions(-)
-> > > 
-> > 
-> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> Applied to clk-next.
-> 
+H. Nikolaus Schaller (3):
+  tty: serial core: provide a method to search uart by phandle
+  tty: serial_core: add hooks for uart slave drivers
+  misc: Add w2sg0004 gps receiver driver
 
-I think Tomeu wanted to take this through arm-soc? Otherwise
-we'll need to provide a stable branch for the dt header.
+ .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    |  18 +
+ .../devicetree/bindings/serial/slaves.txt          |  16 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ Documentation/serial/slaves.txt                    |  36 ++
+ drivers/misc/Kconfig                               |  18 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/w2sg0004.c                            | 443 +++++++++++++++++++++
+ drivers/tty/serial/serial_core.c                   | 214 +++++++++-
+ include/linux/serial_core.h                        |  25 +-
+ include/linux/w2sg0004.h                           |  27 ++
+ 10 files changed, 793 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/slaves.txt
+ create mode 100644 Documentation/serial/slaves.txt
+ create mode 100644 drivers/misc/w2sg0004.c
+ create mode 100644 include/linux/w2sg0004.h
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.5.1
+
