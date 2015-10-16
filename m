@@ -1,130 +1,47 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: properties to describe a rotary encoder
-Date: Fri, 16 Oct 2015 14:40:10 +0200
-Message-ID: <20151016124010.GL3982@pengutronix.de>
-References: <20151016095951.GA6533@pengutronix.de>
- <5620CCD1.8030509@zonque.org>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 4/5] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio clk
+Date: Fri, 16 Oct 2015 05:47:05 -0700
+Message-ID: <20151016124705.20687.51712@quantum>
+References: <1444628796-5484-1-git-send-email-jszhang@marvell.com>
+ <1444628796-5484-5-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5620CCD1.8030509-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1444628796-5484-5-git-send-email-jszhang@marvell.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Quoting Jisheng Zhang (2015-10-11 22:46:35)
+> Since we have added the necessary axi clk properties in dts, we can
+> remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 
-On Fri, Oct 16, 2015 at 12:09:21PM +0200, Daniel Mack wrote:
-> Hi,
->=20
-> On 10/16/2015 11:59 AM, Uwe Kleine-K=F6nig wrote:
-> > there is already a driver for rotary encoders described in
-> > Documentation/devicetree/bindings/input/rotary-encoder.txt. This ho=
-wever
-> > is not suitable to describe the device I have here for two reasons:
-> >=20
-> > First the driver can only make use of 2 gpio lines, while the devic=
-e
-> > here has 4 lines,
->=20
-> How does the phase diagram of that device look like, on what edges is
-> the system supposed to trigger?
->=20
-> > so I have 16 sectors instead of only 4. And the
->=20
-> What's a 'sector'?
+Applied to clk-next.
 
-My imagination is the image on the right on
-https://en.wikipedia.org/wiki/Rotary_encoder#Gray_encoding .
+Regards,
+Mike
 
-With more than period per 360=B0 "sector" is probably not a lucky
-choice. A colleague suggested "increment" instead, maybe this one is
-better? So with a 4-line encoder there are 16 increments per period
-while a 2-line encoder has only 4 increments per period.
-
-An rotary encoder that is currently described by:
-
-	{
-		compatible =3D "rotary-encoder";
-		gpios =3D <..>, <..>;
-		rotary-encoder,steps =3D <24>;
-		rotary-encoder,half-period;
-	}
-
-would then be described as:
-
-	{
-		compatible =3D ...;
-		gpios =3D <..>, <..>;
-		rotary-encoder,steps =3D <24>;
-		rotary-encoder,increments-per-step =3D <2>;
-	}
-
-, an encoder without "..,half-period" would get
-"...,increments-per-step =3D <4>" and for mine I'd use
-
-	{
-		compatible =3D ...;
-		gpios =3D <..>, <..>, <..>, <..>;
-		rotary-encoder,steps =3D <16>;
-		rotary-encoder,increments-per-step =3D <1>;
-	}
-
-> > second difference is that my encoder has a detend for each sector w=
-hile
-> > the driver only supports "half-period" and "full-period" (default) =
-mode.
-> > These names really only make sense for the 2 line case and mean the
-> > encoder has detends in 2 or 1 sector respectively.
-> >=20
-> > So I'm thinking about how to generalize the description to allow to=
- add
-> > support for "my" device.
-> >=20
-> > For the added gpio lines it's easy, that's just allowing more than =
-two
-> > gpios for the "gpios" property.
->=20
-> Doesn't the number of GPIOs already give enough information to implem=
-ent
-> proper support? Maybe there's no need for any other properties here.
-
-No, that alone isn't enough because "my" encoder has one increment per
-step while the driver only supports two increments per step
-("half-period") or four increments per step (absence of "half-period").
-
-> > Currently there is a property "rotary-encoder,steps" that describes=
- the
-> > number of detends in a full turnaround. So if we stick to "steps" t=
-o
-> > describe detends, maybe something like "sectors-per-step" (with a
-> > default of 4) would be needed to describe what "half-period" is now=
-=2E
-> > Does this make sense? Maybe someone has a better suggestion?
->=20
-> I'm not sure what a sector is supposed to refer to, but the number of
-> steps per 360=B0 is something that can vary for both 2-line and 4-lin=
-e
-> versions of a rotary encoder. So isn't that unrelated?
-
-Yes, this is an (nearly) orthogonal property. But for a 4-line encoder
-I'd say that "half-period" would mean 8 increments per step (because a
-full period is 2**4 =3D=3D 16 increments), and that is hardly sensible.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/clk/berlin/bg2q.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
+> index 221f40c..243f421 100644
+> --- a/drivers/clk/berlin/bg2q.c
+> +++ b/drivers/clk/berlin/bg2q.c
+> @@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
+>         { "usb2",       "perif",        13 },
+>         { "usb3",       "perif",        14 },
+>         { "pbridge",    "perif",        15, CLK_IGNORE_UNUSED },
+> -       { "sdio",       "perif",        16, CLK_IGNORE_UNUSED },
+> +       { "sdio",       "perif",        16 },
+>         { "nfc",        "perif",        18 },
+>         { "pcie",       "perif",        22 },
+>  };
+> -- 
+> 2.6.1
+> 
