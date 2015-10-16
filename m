@@ -1,35 +1,111 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
-Date: Fri, 16 Oct 2015 21:52:08 +0800
-Message-ID: <201510162146.XrY3ULaf%fengguang.wu@intel.com>
-References: <1444997709-57293-2-git-send-email-ck.hu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444997709-57293-2-git-send-email-ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.orgSascha Hauer <kerne>
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH v4 1/4] dt-bindings: Document the STM32 DMA bindings
+Date: Fri, 16 Oct 2015 15:59:13 +0200
+Message-ID: <1445003956-9150-2-git-send-email-cedric.madianga@gmail.com>
+References: <1445003956-9150-1-git-send-email-cedric.madianga@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445003956-9150-1-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mcoquelin.stm32@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jitao,
+This patch adds documentation of device tree bindings for the STM32 dma
+controller.
 
-[auto build test WARNING on drm-exynos/exynos-drm/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
-
-url:    https://github.com/0day-ci/linux/commits/CK-Hu/Dcumentation-bridge-Add-documentation-for-ps8640-DT-properties/20151016-201658
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/gpu/drm/bridge/parade-ps8640.c:480:3-8: No need to set .owner here. The core will do it.
-
-Please review and possibly fold the followup patch.
-
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/dma/stm32-dma.txt          | 82 ++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
+
+diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+new file mode 100644
+index 0000000..70cd13f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+@@ -0,0 +1,82 @@
++* STMicroelectronics STM32 DMA controller
++
++The STM32 DMA is a general-purpose direct memory access controller capable of
++supporting 8 independent DMA channels. Each channel can have up to 8 requests.
++
++Required properties:
++- compatible: Should be "st,stm32-dma"
++- reg: Should contain DMA registers location and length. This should include
++  all of the per-channel registers.
++- interrupts: Should contain all of the per-channel DMA interrupts in
++  ascending order with respect to the DMA channel index.
++- clocks: Should contain the input clock of the DMA instance.
++- #dma-cells : Must be <4>. See DMA client paragraph for more details.
++
++Optional properties:
++- resets: Reference to a reset controller asserting the DMA controller
++- st,mem2mem: boolean; if defined, it indicates that the controller supports
++  memory-to-memory transfer
++
++Example:
++
++	dma2: dma-controller@40026400 {
++		compatible = "st,stm32-dma";
++		reg = <0x40026400 0x400>;
++		interrupts = <56>,
++			     <57>,
++			     <58>,
++			     <59>,
++			     <60>,
++			     <68>,
++			     <69>,
++			     <70>;
++		clocks = <&clk_hclk>;
++		#dma-cells = <4>;
++		st,mem2mem;
++		resets = <&rcc 150>;
++	};
++
++* DMA client
++
++DMA clients connected to the STM32 DMA controller must use the format
++described in the dma.txt file, using a five-cell specifier for each
++channel: a phandle plus four integer cells.
++The four cells in order are:
++
++1. The channel id
++2. The request line number
++3. A 32bit mask specifying the DMA channel configuration which are device
++   dependent:
++  -bit 9: Peripheral Increment Address
++	0x0: no address increment between transfers
++	0x1: increment address between transfers
++ -bit 10: Memory Increment Address
++	0x0: no address increment between transfers
++	0x1: increment address between transfers
++ -bit 15: Peripheral Increment Offset Size
++	0x0: offset size is linked to the peripheral bus width
++	0x1: offset size is fixed to 4 (32-bit alignment)
++ -bit 16-17: Priority level
++	0x0: low
++	0x1: medium
++	0x2: high
++	0x3: very high
++5. A 32bit mask specifying the DMA FIFO threshold configuration which are device
++   dependent:
++ -bit 0-1: Fifo threshold
++	0x0: 1/4 full FIFO
++	0x1: 1/2 full FIFO
++	0x2: 3/4 full FIFO
++	0x3: full FIFO
++
++Example:
++
++	usart1: serial@40011000 {
++		compatible = "st,stm32-usart", "st,stm32-uart";
++		reg = <0x40011000 0x400>;
++		interrupts = <37>;
++		clocks = <&clk_pclk2>;
++		dmas = <&dma2 2 4 0x10400 0x3>,
++		       <&dma2 7 5 0x10200 0x3>;
++		dma-names = "rx", "tx";
++	};
+-- 
+1.9.1
