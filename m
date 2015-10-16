@@ -1,89 +1,44 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Thu, 15 Oct 2015 17:22:43 -0700
-Message-ID: <20151016002243.GA23912@codeaurora.org>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Thu, 15 Oct 2015 20:00:41 -0500
+Message-ID: <CAL_JsqJTjCT8D-3OryFPEF8nnaPtrai7Mvf-gJRkh60aDixx-g@mail.gmail.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <20151015165105.GE32532@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F72C97.2030306@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151015165105.GE32532-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/14, Rob Herring wrote:
-> On 09/11/2015 07:01 AM, Viresh Kumar wrote:
-> > Regulators already have stable DT bindings, wherein the consumer (of
-> > supplies) will have following for each regulator/supply.
-> > 
-> > <name>-supply: <phandle to the regulator node>;
-> > 
-> > Current OPP bindings extend above, by transforming it into a list of
-> > phandles. But we missed the <name> string, which is used to identify the
-> > regulator.
-> > 
-> > And looking from regulators perspective, having two different ways of
-> > specifying regulators doesn't seem like a step forward, it also means we
-> > have to update every single device binding. And things will become
-> > complex.
-> > 
-> > Another way to support multiple regulators per device (in OPP V2
-> > bindings) is to leave regulator consumer bindings as is, and create a
-> > 'supply-names' property in the opp-table node, which will contain a list
-> > of strings. The names in this list shall match 'name' from the
-> > '<name>-supply' strings present in the device node.
-> > 
-> > The strings in this list also specify the order in which values must be
-> > present in 'opp-microvolt' and 'opp-microamp' properties.
-> > 
-> > Cc: Mark Brown <broonie@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/opp/opp.txt | 26 +++++++++++++++++++-------
-> >  1 file changed, 19 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index 0cb44dc21f97..8759bc4783ed 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -69,6 +69,13 @@ This describes the OPPs belonging to a device. This node can have following
-> >  - compatible: Allow OPPs to express their compatibility. It should be:
-> >    "operating-points-v2".
-> >  
-> > +- supply-names: This is a required property, only if multiple supplies are
-> > +  available for the device. Otherwise it is optional.
-> > +
-> > +  This list is used to pass names of all the device supplies. The order of names
-> > +  present here is important, as that should match the order in which values are
-> > +  present in 'opp-microvolt' and 'opp-microamp' properties.
-> > +
-> 
-> What if we have a 2nd device and supply rail? For example, what if the
-> L2$ has a separate rail from the cores but is linked to the OPPs.
+On Thu, Oct 15, 2015 at 11:51 AM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Thu, Oct 15, 2015 at 10:25:43AM -0400, WingMan Kwok wrote:
+>> On TI's Keystone platforms, several peripherals such as the
+>> gbe ethernet switch, 10gbe ethether switch and PCIe controller
+>> require the use of a SerDes for converting SoC parallel data into
+>> serialized data that can be output over a high-speed electrical
+>> interface, and also converting high-speed serial input data
+>> into parallel data that can be processed by the SoC.  The
+>> SerDeses used by those peripherals, though they may be different,
+>> are largely similar in functionality and setup.
+>
+> Given that serdes is not specific to TI, should this be specific to
+> TI, or should there be an effort to come up with something which
+> everyone who has serdes links can make use of?
+>
+> Serdes comes in multiple different forms: PCIe, 1G SGMII ethernet,
+> 1000base-X ethernet, 10g ethernet, SATA... I'd hate to see a
+> plethora of SoC specific stuff for this.
 
-I'm lost why we need this property at all. What happened to using
+The licensed IP I've seen doesn't provide a standard register
+interface, but just signals to the IP block. Same with PLL IP. So
+we'll probably get to see vendors continue to differentiate on PHY
+register design. :)
 
- opp-microvolt-0 = <1 2 3>;
- opp-microvolt-1 = <1>;
- opp-microvolt-2 = <3 4 5>;
- etc.
-
-That seems to avoid any problem with 3 vs. 1 element properties
-combined into one large array. Having supply-names seems too
-brittle and would tie us to a particular OPP user's decision to
-call supplies by some name.
-
-Also, I've seen devices that are split across two power domains.
-These devices aren't CPUs, but they are other devices including
-L2 caches. So we're going to need either multiple regulator
-support or multiple "power domain at a particular performance
-levels" support somehow.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
