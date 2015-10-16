@@ -1,69 +1,110 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v7,3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND
- device tree nodes
-Date: Fri, 16 Oct 2015 11:48:48 +0100
-Message-ID: <20151016104848.GA1408@NP-P-BURTON>
-References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
- <1444148837-10770-4-git-send-email-harvey.hunt@imgtec.com>
- <20151015084727.GG14475@jhogan-linux.le.imgtec.org>
- <CAOFt0_D5mO-7_cnpvm_MwvsZNv1yCFynbeA3dSw=H5hVyQbgTA@mail.gmail.com>
- <20151016103112.GB29285@jhogan-linux.le.imgtec.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2] rtc: pcf8563: add CLKOUT to common clock framework
+Date: Fri, 16 Oct 2015 12:54:46 +0200
+Message-ID: <20151016105446.GK3421@piout.net>
+References: <1444982369-26046-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151016103112.GB29285@jhogan-linux.le.imgtec.org>
+In-Reply-To: <1444982369-26046-1-git-send-email-hs@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: Alex Smith <alex@alex-smith.me.uk>, Harvey Hunt <harvey.hunt@imgtec.com>, linux-mtd@lists.infradead.org, Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips <linux-mips@linux-mips.org>
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-kernel@vger.kernel.org, Georg.Soffel@bosch-si.com, rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 11:31:12AM +0100, James Hogan wrote:
-> > >> +
-> > >> +&nemc {
-> > >> +     status = "okay";
-> > >> +
-> > >> +     nand: nand@1 {
-> > >> +             compatible = "ingenic,jz4780-nand";
-> > >
-> > > Isn't the NAND a micron part? This doesn't seem right. Is the device
-> > > driver and binding already accepted upstream with that compatible
-> > > string?
-> > 
-> > This is the compatible string for the JZ4780 NAND driver, this patch
-> > is part of the series adding that. Detection of the NAND part is
-> > handled by the MTD subsystem.
+Hi,
+
+On 16/10/2015 at 09:59:29 +0200, Heiko Schocher wrote :
+> Add the clkout output clk to the common clock framework.
+> Disable the CLKOUT of the RTC after power-up.
+> After power-up/reset of the RTC, CLKOUT is enabled by default,
+> with CLKOUT enabled the RTC chip has 2-3 times higher power
+> consumption.
 > 
-> Right (didn't spot that it was part of a series).
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> ---
 > 
-> The node appears to describe the NAND interface itself, i.e. a part of
-> the SoC, so should be in the SoC dtsi file, with overrides in the board
-> file if necessary for it to work with a particular NAND part
-> (potentially utilising status="disabled"). Would you agree?
+> Changes in v2:
+> - add comments from Alexandre Belloni
+>   - remove the DT property, instead
+>     register for the CLKOUT a clk in the common
+>     clk framework. The clk is disabled by default.
+> 
+>  Documentation/devicetree/bindings/rtc/pcf8563.txt |  28 ++++
+>  drivers/rtc/rtc-pcf8563.c                         | 164 +++++++++++++++++++++-
+>  2 files changed, 191 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/pcf8563.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf8563.txt b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+> new file mode 100644
+> index 0000000..cdb81ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+> @@ -0,0 +1,28 @@
+> +* Philips PCF8563/Epson RTC8564 Real Time Clock
+> +
+> +Philips PCF8563/Epson RTC8564 Real Time Clock
+> +
+> +Required properties:
+> +see: Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +
+> +Optional property:
+> +- #clock-cells: Should be 1.
+> +- clocks: Reference to the clock entry.
+> +- clock-output-names:
+> +  overwrite the default clock name "pcf8563-clkout"
+> +
+> +Example:
+> +
+> +rtcclk: rtcclk {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <1>;
+> +	clock-frequency = <1>;
+> +	clock-output-names = "rtcclk";
+> +};
+> +
+> +pcf8563@51 {
+> +	compatible = "nxp,pcf8563";
+> +	reg = <0x51>;
+> +	#clock-cells = <1>;
+> +	clocks = <&rtcclk 0>;
+> +};
 
-Hi James,
+You don't seem to be using rtcclk, I would remove it from the example.
 
-The "nemc" node there is for the Nand & External Memory Controller which
-is a hardware block inside the SoC. It has 6 banks (ie. 6 chip select
-pins, each associated with a different address range, that connect to
-different devices). NAND flash is one such possible device, but a board
-could connect it to any of the 6 chip selects, or banks. To represent
-that in the SoC dtsi you'd want to have 6 NAND nodes, each disabled by
-default, which doesn't make a whole lot of sense to me. Other, non-NAND
-devices can connect to the NEMC too - for example the ethernet
-controller on the CI20 is connected to one bank.
+> +static struct clk *pcf8563_clkout_register_clk(struct pcf8563 *pcf8563)
+> +{
+> +	struct i2c_client *client = pcf8563->client;
+> +	struct device_node *node = client->dev.of_node;
+> +	struct clk *clk;
+> +	struct clk_init_data init;
+> +	int ret;
+> +	unsigned char buf;
+> +
+> +	/* disable the clkout output */
+> +	buf = 0;
+> +	ret = pcf8563_write_block_data(client, PCF8563_REG_CLKO, 1, &buf);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+> +
 
-The NAND device nodes are sort of a mix of describing the NAND flash
-(ie. Micron part as you point out) and its connections & properties, the
-way the NEMC should be used to interact with it alongside the BCH block,
-and the configuration for the NEMC such as timing parameters.
+Isn't that done automatically for an unused clock? However, I would do
+that in the probe as you will have to sprinkle some #ifdef
+CONFIG_COMMON_CLK after seeing the kbuild report.
 
-I imagine the most semantically correct means of describing it would
-probably be for the compatible string to reflect the Micron NAND part,
-and the NEMC driver to pick up on the relevant properties of its child
-nodes for configuring timings, whether the device is NAND etc. However
-the handling of registering NAND devices with MTD would probably then
-have to be part of the NEMC driver, which feels a bit off too.
+>  
+> +	/* register clk in common clk framework */
+> +	pcf8563_clkout_register_clk(pcf8563);
+> +
+>  	/* the pcf8563 alarm only supports a minute accuracy */
+>  	pcf8563->rtc->uie_unsupported = 1;
+>  
 
-Thanks,
-    Paul
+You probably need to unregister the clock at some point. Maybe using
+devm_clk_register() is the best thing to do.
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
