@@ -1,101 +1,44 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Sat, 17 Oct 2015 08:47:09 -0700
-Message-ID: <20151017154709.GE4059@kroah.com>
-References: <561E1378.6000906@collabora.com>
- <20151017065750.GA18607@kroah.com>
- <CAL_Jsq+Due3CgV0Z_m4vYQsa+X30DSxgmqz_r=26OrBV7v+H2g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun6i: Add a dts file for the
+ Sinovoip BPI-M2 board
+Date: Sat, 17 Oct 2015 18:24:29 +0200
+Message-ID: <20151017162429.GN2711@lukather>
+References: <1444919327-23747-1-git-send-email-hdegoede@redhat.com>
+ <1444919327-23747-3-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dZihrQ6eCIduWT38"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSPMRGYQKGQEM6VFQNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+Due3CgV0Z_m4vYQsa+X30DSxgmqz_r=26OrBV7v+H2g@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Felipe Balbi <balbi@ti.com>, Jing
+In-Reply-To: <1444919327-23747-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Kaiser <Thomas.Kaiser-id7G5ibTm3AZ78jC37dNPg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 17, 2015 at 10:04:55AM -0500, Rob Herring wrote:
-> On Sat, Oct 17, 2015 at 1:57 AM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Wed, Oct 14, 2015 at 10:34:00AM +0200, Tomeu Vizoso wrote:
-> >> Hi Rob,
-> >>
-> >> here is the pull request you asked for, with no changes from the version
-> >> that I posted last to the list.
-> >>
-> >> The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
-> >>
-> >> Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
-> >>
-> >> are available in the git repository at:
-> >>
-> >> git+ssh://git.collabora.co.uk/git/user/tomeu/linux.git
-> >> on-demand-probes-for-next
-> >
-> > That's not a signed tag :(
-> >
-> > Anyway, I REALLY don't like this series (sorry for the delay in
-> > reviewing them, normally I trust Rob's judgement...)
+--dZihrQ6eCIduWT38
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Oct 15, 2015 at 04:28:47PM +0200, Hans de Goede wrote:
+> The Sinovoip BPI-M2 is a SBC board based on the A31s SoC it features
+> 1G RAM, a microsd slot, Gbit ethernet, 4 usb-a USB-2 ports, ir receiver,
+> stereo headphone jack and hdmi video output.
 > 
-> We've seen a lot of attempts here. This is really the best solution so
-> far in that it is simple, uses existing data from DT, and was low risk
-> for breaking platforms (at least I thought it would be). Anyway,
-> getting more exposure is why I've put it into -next.
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Exposure is good, now we know it breaks some builds, which was useful :)
+Applied the three patches, thanks!
+Maxime
 
-> > I can't see adding calls like this all over the tree just to solve a
-> > bus-specific problem, you are adding of_* calls where they aren't
-> > needed, or wanted, at all.
-> 
-> I think Linus W, Mark B, and I all said a similar thing initially in
-> that dependencies should be handled in the driver core. We went down
-> the path of making this not firmware (aka bus) specific and an earlier
-> version had just that (with fwnode_* calls). That turned out to be
-> pointless as the calling locations were almost always in DT specific
-> code anyway. If you notice, the calls are next to other DT specific
-> calls generally (usually a "get"). So yes, I'd prefer not to have to
-> touch every subsystem, but we had to do that anyway to add DT support.
-
-If they are "next" to a call like that, why not put it in that call?  I
-really object to having to "sprinkle" this all over the kernel, for no
-obvious reason why that is happening at all (look at the USB patch for
-one such example.)
-
-> We've generally split the DT code into the core (in drivers/of) and
-> the binding specific (in subsystems). Extracting dependency
-> information the DT is going to require binding specific knowledge, so
-> subsystem changes are probably unavoidable.
-> 
-> The alternative is we put binding specific knowledge into the core DT
-> code to parse dependencies.
-> 
-> > What is the root-problem of your delay in device probing?  I read your
-> > last patch series and I can't seem to figure out what the issue is that
-> > this is solving in any "better" way from the existing deferred probing.
-> 
-> It saves 2 seconds in the boot time as re-probing takes time. That
-> alone seems compelling to me.
-
-2 seconds is _forever_, and really seems like some other driver is
-sleeping and causing this problem.  What does the bootlog time-chart say
-is really causing this long delay?  There's no way we are stuck in some
-sort of logic loop for that long (i.e. having to walk the list of
-devices somehow.)  This sounds like a driver-specific problem that is
-being worked around by having to touch all subsystems, which isn't nice.
-
-Hint, we didn't have to do this type of thing to solve boot delays on
-x86 when we had hardware that was slow to initialize, why should DT be
-special?  :)
-
-> Another downside to deferred probing is you have to touch every driver
-> and subsystem to support it. This contains the problem to the
-> subsystems.
-
-But we have deferred probing already, only those drivers that need/want
-it have to do anything, why create yet-another model here?
-
-thanks,
-
-greg k-h
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--dZihrQ6eCIduWT38--
