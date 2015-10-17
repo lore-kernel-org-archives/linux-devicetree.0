@@ -1,66 +1,72 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v2] mmc: core: Allow specifying current consumption
-Date: Sat, 17 Oct 2015 10:09:38 -0700
-Message-ID: <20151017170938.GP24668@usrtlx11787.corpusers.net>
-References: <1435725525-4367-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1444698032-9051-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAPDyKFqQEY64AToR0So72Sc4DtKhH5Sxff=oy8pDZZmw8O0aMQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqQEY64AToR0So72Sc4DtKhH5Sxff=oy8pDZZmw8O0aMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH v2 0/9] Add STM32 pinctrl/GPIO driver
+Date: Sat, 17 Oct 2015 19:23:15 +0200
+Message-ID: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri 16 Oct 05:55 PDT 2015, Ulf Hansson wrote:
+Hi Linus, all,
 
-> On 13 October 2015 at 03:00, Bjorn Andersson
-> <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> > This allows us to specify expected current consumption of the vmmc and
-> > vqmmc regulators. This is needed to bring the supplying regulators out
-> > of their low-power-mode while accessing the mmc.
-> 
-> This indeed makes sense, still I need to think a bit more on this.
-> 
+This is the second round of STM32 pinctrl series, which improves DT
+bindings declaration and documentation, and also fixes some commit fixup
+issues. The series also contains two more patches, adding GPIO LEDs
+support as a user of this driver.
 
-Thanks.
+The STM32 family has 16 pins per GPIO bank, and the number of bank varies
+depending on the model.
 
-We can currently work around this by using "regulator-system-load" on
-the vmmc regulator, but a proper fix would be nice.
+Pins can be multiplexed either in GPIO mode, alternate function (up to 15
+functions per pin) or analog (for ADC/DAC).
 
-> For example, can we allow these regulators to enter low power again at
-> some times? If so, when and what should that current value be.
-> 
+Changes since v1:
+-----------------
+ - Add GPIO LEDs support in DT and defconfig
+ - Changes pinmux DT bindings from macros to raw values (Daniel)
+ - Improve DT bindings documentation (Daniel)
+ - Fix some commit fixup and rebase issues.
 
-The regulator framework recalculates the total load on a regulator upon
-enable/disable, but currently it doesn't depend on the state of the
-regulator.
+Kind regards,
+Maxime
 
-I talked to Mark about this a while back and he was positive to us
-correcting this, so disabled regulators wouldn't count towards the total
-load of a regulator. (So that still is on my todo)
+Maxime Coquelin (9):
+  ARM: Kconfig: Introduce MACH_STM32F429 flag
+  Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
+  includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+  pinctrl: Add support STM32 MCUs
+  ARM: mach-stm32: Select pinctrl
+  ARM: dts: Add pinctrl node to STM32F429
+  ARM: dts: Add USART1 pin config to STM32F429 boards
+  ARM: dts: Add leds support to STM32F429 Discovery board
+  ARM: config: Enable GPIO Led driver in stm32_defconfig
 
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  126 ++
+ arch/arm/Kconfig                                   |    6 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |    2 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   12 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  110 ++
+ arch/arm/configs/stm32_defconfig                   |    1 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |   16 +
+ drivers/pinctrl/stm32/Makefile                     |    5 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  856 +++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   43 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c          | 1598 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-stm32.h        |   12 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1241 +++++++++++++++
+ 15 files changed, 4030 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ create mode 100644 drivers/pinctrl/stm32/Kconfig
+ create mode 100644 drivers/pinctrl/stm32/Makefile
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+ create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
 
-The second option would be to do what is done in the Qualcomm codeaurora
-kernels, where the regulators are never disabled and there's a smaller
-current specified for the suspend case.
+-- 
+1.9.1
 
-This would require bigger changes to the mmc core I presume, but the
-naming of the dt properties support such future adaption.
-
-> Moreover, wouldn't vmmc|vqmmc-active-current be depending what eMMC/SD
-> card that is attached?
-> 
-
-I would say so, I do however not know how to acquire or encode that
-information. Any suggestions here are welcome.
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
