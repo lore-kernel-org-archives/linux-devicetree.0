@@ -1,147 +1,46 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 3/3] phy: rcar-gen3-usb2: add runtime ID/VBUS pin
- detection
-Date: Sat, 17 Oct 2015 07:23:46 +0530
-Message-ID: <5621AA2A.9000000@ti.com>
-References: <1444731726-5328-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1444731726-5328-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
+ brcmnand_write()
+Date: Sat, 17 Oct 2015 02:52:26 +0000
+Message-ID: <39063E8F96E11742B35A201CC5D095B7AEE5AD@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
+ <1444986537-28387-2-git-send-email-anup.patel@broadcom.com>
+ <56211976.1030401@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1444731726-5328-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56211976.1030401-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tuesday 13 October 2015 03:52 PM, Yoshihiro Shimoda wrote:
-> This patch adds support for runtime ID/VBUS pin detection if
-> the channel 0 of R-Car gen3 is used. So, we are able to use
-> the channel as both host and peripheral.
+
+> -----Original Message-----
+> From: Ray Jui [mailto:rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org]
+> Sent: 16 October 2015 21:06
+> To: Anup Patel; David Woodhouse; Brian Norris; linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Catalin
+> Marinas; Will Deacon; Scott Branden; Florian Fainelli; Pramod Kumar; Vikram
+> Prakash; Sandeep Tripathy; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; bcm-kernel-
+> feedback-list
+> Subject: Re: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
+> brcmnand_write()
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
->  drivers/phy/phy-rcar-gen3-usb2.c                   | 43 +++++++++++++++++++++-
->  2 files changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> index 589f5c0..b30a98a 100644
-> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> @@ -18,6 +18,7 @@ properties. This is because HSUSB has registers to select USB 2.0 host or
->  peripheral at that channel:
->  - reg: offset and length of the partial HSUSB register block.
->  - reg-names: must be "hsusb".
-> +- interrupts: interrupt specifier for the PHY.
->  
->  Example (R-Car H3):
->  
-> @@ -25,6 +26,7 @@ Example (R-Car H3):
->  		compatible = "renesas,usb2-phy-r8a7795";
->  		reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
->  		reg-names = "usb2_host", "hsusb";
-> +		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
->  			 <&mstp7_clks R8A7795_CLK_HSUSB>;
->  	};
-> diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
-> index 03d7079..40d0005 100644
-> --- a/drivers/phy/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/phy-rcar-gen3-usb2.c
-> @@ -12,6 +12,7 @@
->   * published by the Free Software Foundation.
->   */
->  
-> +#include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -26,14 +27,18 @@
->  #define USB2_SPD_RSM_TIMSET	0x10c
->  #define USB2_OC_TIMSET		0x110
->  #define USB2_COMMCTRL		0x600
-> +#define USB2_OBINTSTA		0x604
-> +#define USB2_OBINTEN		0x608
->  #define USB2_VBCTRL		0x60c
->  #define USB2_LINECTRL1		0x610
->  #define USB2_ADPCTRL		0x630
->  
->  /* INT_ENABLE */
-> +#define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
->  #define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
->  #define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)
-> -#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_USBH_INTB_EN | \
-> +#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_UCOM_INTEN | \
-> +					 USB2_INT_ENABLE_USBH_INTB_EN | \
->  					 USB2_INT_ENABLE_USBH_INTA_EN)
->  
->  /* USBCTR */
-> @@ -49,6 +54,12 @@
->  /* COMMCTRL */
->  #define USB2_COMMCTRL_OTG_PERI		BIT(31)	/* 1 = Peripheral mode */
->  
-> +/* OBINTSTA and OBINTEN */
-> +#define USB2_OBINT_SESSVLDCHG		BIT(12)
-> +#define USB2_OBINT_IDDIGCHG		BIT(11)
-> +#define USB2_OBINT_BITS			(USB2_OBINT_SESSVLDCHG | \
-> +					 USB2_OBINT_IDDIGCHG)
-> +
->  /* VBCTRL */
->  #define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
->  
-> @@ -178,6 +189,9 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
->  
->  	tmp = readl(usb2_base + USB2_VBCTRL);
->  	writel(tmp | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
-> +	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-> +	tmp = readl(usb2_base + USB2_OBINTEN);
-> +	writel(tmp | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
->  	tmp = readl(usb2_base + USB2_ADPCTRL);
->  	writel(tmp | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
->  	tmp = readl(usb2_base + USB2_LINECTRL1);
-> @@ -289,6 +303,23 @@ static struct phy_ops rcar_gen3_phy_usb2_ops = {
->  	.owner		= THIS_MODULE,
->  };
->  
-> +static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
-> +{
-> +	struct rcar_gen3_chan *ch = _ch;
-> +	void __iomem *usb2_base = ch->usb2.base;
-> +	u32 status = readl(usb2_base + USB2_OBINTSTA);
-> +	irqreturn_t ret = IRQ_NONE;
-> +
-> +	if (status & USB2_OBINT_BITS) {
-> +		dev_dbg(&ch->phy->dev, "%s: %08x\n", __func__, status);
+> Correct me if I remember it wrong, but I thought this patch has already been
+> merged by Brian?
 
-This can be removed or use dev_vdbg.
-> +		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
-> +		rcar_gen3_device_recognition(ch);
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
->  	{ .compatible = "renesas,usb2-phy-r8a7795" },
->  	{ }
-> @@ -323,9 +354,19 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
->  
->  	/* To avoid error message by devm_ioremap_resource() */
->  	if (res) {
-> +		int ret, irq;
-> +
->  		channel->hsusb.base = devm_ioremap_resource(dev, res);
->  		if (IS_ERR(channel->hsusb.base))
->  			channel->hsusb.base = NULL;
-> +		/* call request_irq for OTG */
-> +		ret = irq = platform_get_irq(pdev, 0);
-is irq optional property? even then you don't need 2 variables to handle
-the same return value.
+Yes, patch1 and patch2 were merged by Brian. I realized this after I had
+send-out v2. Anyways we can ignore patch1 and patch2 from this patchset
+because they are same as v1.
 
-Thanks
-Kishon
+Regards,
+Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
