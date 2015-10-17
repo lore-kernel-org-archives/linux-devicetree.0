@@ -1,55 +1,88 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH 0/9] Add STM32 EXTI interrupt controller support
-Date: Sat, 17 Oct 2015 19:23:49 +0200
-Message-ID: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH 8/9] ARM: dts: Declare push button as GPIO key on stm32f429 Disco board
+Date: Sat, 17 Oct 2015 19:23:57 +0200
+Message-ID: <1445102638-11575-9-git-send-email-mcoquelin.stm32@gmail.com>
+References: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This series adds support to EXTI interrupt controller and GPIO IRQ support in
-STM32 pinctrl driver.
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+---
+ arch/arm/boot/dts/stm32429i-eval.dts  | 19 +++++++++++++++++++
+ arch/arm/boot/dts/stm32f429-disco.dts | 13 +++++++++++++
+ 2 files changed, 32 insertions(+)
 
-The STM32 external interrupt controller consists of edge detectors that
-generate interrupts requests or wake-up events.
-
-Each line can be independently configured as interrupt or wake-up source,
-and triggers either on rising, fallin or both edges. Each line can also
-be masked independently.
-
-This series applies on top of STM32 pinctrl v2 series.
-
-Regards,
-Maxime
-
-Maxime Coquelin (9):
-  Documentation: dt-bindings: Document STM32 EXTI controller bindings
-  drivers: irqchip: Add STM32 external interrupts support
-  ARM: STM32: Select external interrupts controller
-  ARM: dts: Add EXTI controller node to stm32f429
-  Documentation: dt-bindings: Add IRQ related properties of STM32
-    pinctrl
-  pinctrl: Add IRQ support to STM32 gpios
-  ARM: dts: Add GPIO irq support to STM2F429
-  ARM: dts: Declare push button as GPIO key on stm32f429 Disco board
-  ARM: config: Enable GPIO Key driver in stm32_defconfig
-
- .../interrupt-controller/st,stm32-exti.txt         |  20 +++
- .../bindings/pinctrl/st,stm32-pinctrl.txt          |   3 +
- arch/arm/Kconfig                                   |   1 +
- arch/arm/boot/dts/stm32429i-eval.dts               |  19 +++
- arch/arm/boot/dts/stm32f429-disco.dts              |  13 ++
- arch/arm/boot/dts/stm32f429.dtsi                   |  15 ++
- arch/arm/configs/stm32_defconfig                   |   6 +-
- drivers/irqchip/Kconfig                            |   4 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-stm32-exti.c                   | 169 +++++++++++++++++++++
- drivers/pinctrl/stm32/Kconfig                      |   1 +
- drivers/pinctrl/stm32/pinctrl-stm32.c              |  68 +++++++++
- 12 files changed, 319 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
- create mode 100644 drivers/irqchip/irq-stm32-exti.c
-
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 71fe17a..be21931 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -47,6 +47,7 @@
+ 
+ /dts-v1/;
+ #include "stm32f429.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "STMicroelectronics STM32429i-EVAL board";
+@@ -64,6 +65,24 @@
+ 	aliases {
+ 		serial0 = &usart1;
+ 	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++		button@0 {
++			label = "Wake up";
++			linux,code = <KEY_WAKEUP>;
++			gpios = <&gpioa 0 0>;
++		};
++		button@1 {
++			label = "Tamper";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpioc 13 0>;
++		};
++
++	};
+ };
+ 
+ &clk_hse {
+diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+index 532c499..2cb4c9e 100644
+--- a/arch/arm/boot/dts/stm32f429-disco.dts
++++ b/arch/arm/boot/dts/stm32f429-disco.dts
+@@ -47,6 +47,7 @@
+ 
+ /dts-v1/;
+ #include "stm32f429.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "STMicroelectronics STM32F429i-DISCO board";
+@@ -74,6 +75,18 @@
+ 			gpios = <&gpiog 13 0>;
+ 		};
+ 	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++		button@0 {
++			label = "User";
++			linux,code = <KEY_HOME>;
++			gpios = <&gpioa 0 0>;
++		};
++	};
+ };
+ 
+ &clk_hse {
 -- 
 1.9.1
