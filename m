@@ -1,45 +1,101 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
- brcmnand_write()
-Date: Sat, 17 Oct 2015 02:52:26 +0000
-Message-ID: <39063E8F96E11742B35A201CC5D095B7AEE5AD@SJEXCHMB10.corp.ad.broadcom.com>
-References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
- <1444986537-28387-2-git-send-email-anup.patel@broadcom.com>
- <56211976.1030401@broadcom.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] net: phy: smsc: disable energy detect mode
+Date: Sat, 17 Oct 2015 05:42:05 +0200
+Message-ID: <5621C38D.8010000@denx.de>
+References: <1444713189-23063-1-git-send-email-hs@denx.de>
+ <561D5AC8.7040801@gmail.com> <561DD749.9000802@denx.de>
+ <CAGVrzcZLTg_2tUCTyMkEF7y-Esh5ByZsputO6u41RLPizCcz+Q@mail.gmail.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56211976.1030401-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAGVrzcZLTg_2tUCTyMkEF7y-Esh5ByZsputO6u41RLPizCcz+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Georg.Soffel-k21M0aUVSxZWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Florian,
 
+Am 16.10.2015 um 18:27 schrieb Florian Fainelli:
+> 2015-10-13 21:17 GMT-07:00 Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>:
+>> Hello Florian,
+>>
+>>
+>> Am 13.10.2015 um 21:26 schrieb Florian Fainelli:
+>>>
+>>> On 12/10/15 22:13, Heiko Schocher wrote:
+>>>>
+>>>> On some boards the energy enable detect mode leads in
+>>>> trouble with some switches, so make the enabling of
+>>>> this mode configurable through DT.
+>>>>
+>>>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>>>> ---
+>>>>
+>>>>    .../devicetree/bindings/net/smsc-lan87xx.txt       | 19
+>>>> +++++++++++++++++
+>>>>    drivers/net/phy/smsc.c                             | 24
+>>>> +++++++++++++++++-----
+>>>>    2 files changed, 38 insertions(+), 5 deletions(-)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+>>>> b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+>>>> new file mode 100644
+>>>> index 0000000..39aa1dc
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+>>>> @@ -0,0 +1,19 @@
+>>>> +SMSC LAN87xx Ethernet PHY
+>>>> +
+>>>> +Some boards require special tuning values. Configure them
+>>>> +through an Ethernet OF device node.
+>>>> +
+>>>> +Optional properties:
+>>>> +
+>>>> +- disable-energy-detect:
+>>>> +  If set, do not enable energy detect mode for the SMSC phy.
+>>>> +  default: enable energy detect mode
+>>>
+>>>
+>>> Although energy detection is something that is implemented by many PHYs,
+>>> I am not sure a generic property is suitable here, I would prefix that
+>>> with the SMSC vendor prefix here to make it clear this only applies to
+>>> this PHY.
+>>
+>>
+>> Hmm... but all PHYs should be able to enable, disable it in some way, or?
+>
+> It may not always be controlled directly at the PHY level, sometimes
+> this is something that needs cooperation with the Ethernet MAC as well
+> in case of integrated designs.
 
-> -----Original Message-----
-> From: Ray Jui [mailto:rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org]
-> Sent: 16 October 2015 21:06
-> To: Anup Patel; David Woodhouse; Brian Norris; linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Catalin
-> Marinas; Will Deacon; Scott Branden; Florian Fainelli; Pramod Kumar; Vikram
-> Prakash; Sandeep Tripathy; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; bcm-kernel-
-> feedback-list
-> Subject: Re: [PATCH v2 1/4] mtd: brcmnand: Fix pointer type-cast in
-> brcmnand_write()
-> 
-> Correct me if I remember it wrong, but I thought this patch has already been
-> merged by Brian?
+Ah, ok!
 
-Yes, patch1 and patch2 were merged by Brian. I realized this after I had
-send-out v2. Anyways we can ignore patch1 and patch2 from this patchset
-because they are same as v1.
+>>> Would not you want to make it a reverse property here though, something
+>>> like this:
+>>>
+>>> smsc,energy-detect: boolean, when present indicates the PHY reliably
+>>> supports energy detection
+>>
+>>
+>> Yes, that was also my first thought, but currently, on this PHYs
+>> energy detect mode is on ... and if I introduce such a property,
+>> it will disable it for all existing boards, because property is
+>> missing ... so, maybe I break boards ...
+>
+> Fair enough, how about smsc,disabled-energy-detect or something like that then?
 
-Regards,
-Anup
+Yes, changed it to "smsc,disable-energy-detect"
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
