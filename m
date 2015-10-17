@@ -1,46 +1,30 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: PowerPC: Move Freescale device tree files into fsl folder
-Date: Sat, 17 Oct 2015 00:35:12 -0500
-Message-ID: <20151017053512.GA24971@home.buserror.net>
-References: <1442548824-45849-1-git-send-email-hongtao.jia@freescale.com>
+From: WEIR-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, FOUNDATION-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: GREETINGS TO YOU
+Date: Sat, 17 Oct 2015 07:35:36 +0100
+Message-ID: <DB5PR02MB10799CD821D05B708D73FDC1B83C0@DB5PR02MB1079.eurprd02.prod.outlook.com>
+Reply-To: <weirfoundationorg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442548824-45849-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Description: Mail message body
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Recipients-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 18, 2015 at 12:00:24PM +0800, Hongtao Jia wrote:
-> It makes no sense that some Freescale device tree files are in fsl
-> directory while some others not. This patch move Freescale device tree
-> files into fsl folder. To do that the following two steps are made:
-> - Move Freescale device tree files into fsl folder.
-> - Update the include path in these files from "fsl/*.dtsi" to "*.dtsi".
-> 
-> Please add "fsl/" prefix when you make dtb using Makefile.
-> 
-> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+You have Been Issued with the SUM of 1.1 Million Euro from the Weir Family Donation.Kindly get in Touch with your details Following:
 
-This broke cuImage -- I made this change when applying:
+Full Names ... Address: Phone No: Country ... Age .... ..
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 4eec430..99e4487 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -364,6 +364,9 @@ $(obj)/cuImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- $(obj)/cuImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- 	$(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb)
- 
-+$(obj)/cuImage.%: vmlinux $(obj)/fsl/%.dtb $(wrapperbits)
-+	$(call if_changed,wrap,cuboot-$*,,$(obj)/fsl/$*.dtb)
-+
- $(obj)/simpleImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- 	$(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+Check Link HTTP://www.bbc.com/news/uk-scotland-glasgow-west-18801698
 
--Scott
+We await your reply.
+Chris and Colin Weir
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
