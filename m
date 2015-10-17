@@ -1,88 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL PCIe Host Controller
-Date: Sat, 17 Oct 2015 13:49:25 +0200
-Message-ID: <5705956.6YyKSO4LdH@wuerfel>
-References: <1445066538-24638-1-git-send-email-bharatku@xilinx.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Sat, 17 Oct 2015 10:04:55 -0500
+Message-ID: <CAL_Jsq+Due3CgV0Z_m4vYQsa+X30DSxgmqz_r=26OrBV7v+H2g@mail.gmail.com>
+References: <561E1378.6000906@collabora.com> <20151017065750.GA18607@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445066538-24638-1-git-send-email-bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tinamdar-qTEPVZfXA3Y@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151017065750.GA18607@kroah.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Felipe Balbi <balbi@ti.com>, Jingoo
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 17 October 2015 12:52:18 Bharat Kumar Gogada wrote:
-> +       "msi_1, msi_0": interrupt asserted when msi is recieved
+On Sat, Oct 17, 2015 at 1:57 AM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Wed, Oct 14, 2015 at 10:34:00AM +0200, Tomeu Vizoso wrote:
+>> Hi Rob,
+>>
+>> here is the pull request you asked for, with no changes from the version
+>> that I posted last to the list.
+>>
+>> The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
+>>
+>> Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
+>>
+>> are available in the git repository at:
+>>
+>> git+ssh://git.collabora.co.uk/git/user/tomeu/linux.git
+>> on-demand-probes-for-next
+>
+> That's not a signed tag :(
+>
+> Anyway, I REALLY don't like this series (sorry for the delay in
+> reviewing them, normally I trust Rob's judgement...)
 
-Better avoid underscores in DT, use "msi0" instead of "msi_0".
+We've seen a lot of attempts here. This is really the best solution so
+far in that it is simple, uses existing data from DT, and was low risk
+for breaking platforms (at least I thought it would be). Anyway,
+getting more exposure is why I've put it into -next.
 
-> +- interrupt-map-mask and interrupt-map: standard PCI properties to define the
-> +       mapping of the PCI interface to interrupt numbers.
-> +- ranges: ranges for the PCI memory regions (I/O space region is not
-> +       supported by hardware)
-> +       Please refer to the standard PCI bus binding document for a more
-> +       detailed explanation
-> +- msi-controller: indicates that this is MSI controller node
-> +- msi-parent:  MSI parent of the root complex itself
-> +- pcie_intc: Interrupt controller device node for Legacy interrupts
-> +       - interrupt-controller: identifies the node as an interrupt controller
-> +       - #interrupt-cells: should be set to 1
-> +       - #address-cells: specifies the number of cells needed to encode an
-> +               address. The value must be 0.
+> I can't see adding calls like this all over the tree just to solve a
+> bus-specific problem, you are adding of_* calls where they aren't
+> needed, or wanted, at all.
 
-The name doesn't match: below, the name is "legacy-interrupt-controller",
-not "pcie_intc". I suppose it should really be "interrupt-controller"
-anyway.
+I think Linus W, Mark B, and I all said a similar thing initially in
+that dependencies should be handled in the driver core. We went down
+the path of making this not firmware (aka bus) specific and an earlier
+version had just that (with fwnode_* calls). That turned out to be
+pointless as the calling locations were almost always in DT specific
+code anyway. If you notice, the calls are next to other DT specific
+calls generally (usually a "get"). So yes, I'd prefer not to have to
+touch every subsystem, but we had to do that anyway to add DT support.
 
-> +
-> +Example:
-> +++++++++
-> +
-> +nwl_pcie: pcie@fd0e0000 {
-> +       #address-cells = >;
-> +       #size-cells = <2>;
-> +       compatible = "xlnx,nwl-pcie-2.11";
-> +       #interrupt-cells = <1>;
-> +       msi-controller;
-> +       device_type = "pci";
-> +       interrupt-parent = <&gic>;
-> +       interrupts = < 0 118 4
-> +                      0 116 4
-> +                      0 115 4          // MSI_1 [63...32]
-> +                      0 114 4 >;       // MSI_0 [31...0]
+We've generally split the DT code into the core (in drivers/of) and
+the binding specific (in subsystems). Extracting dependency
+information the DT is going to require binding specific knowledge, so
+subsystem changes are probably unavoidable.
 
-Better write these as tuples:
+The alternative is we put binding specific knowledge into the core DT
+code to parse dependencies.
 
-	interrupts = <0 118 4>, <0 116 4>, <0 115 4>, <0 114 4>;
+> What is the root-problem of your delay in device probing?  I read your
+> last patch series and I can't seem to figure out what the issue is that
+> this is solving in any "better" way from the existing deferred probing.
 
-And maybe reverse the order? It looks that might be what the
-soc integration person had in mind.
+It saves 2 seconds in the boot time as re-probing takes time. That
+alone seems compelling to me.
 
-Also, what is interrupt <0 117 4>? Is that connected here as well?
-Better list it as well then, even if you don't use it.
+Another downside to deferred probing is you have to touch every driver
+and subsystem to support it. This contains the problem to the
+subsystems.
 
-> +       interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +       interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1
-> +                        0x0 0x0 0x0 0x2 &pcie_intc 0x2
-> +                        0x0 0x0 0x0 0x3 &pcie_intc 0x3
-> +                        0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
-
-> +       msi-parent = <&nwl_pcie>;
-> +       reg = <0x0 0xfd0e0000 0x1000
-> +              0x0 0xfd480000 0x1000
-> +              0x0 0xE0000000 0x1000000>;
-
-Same grouping for reg and interrupt-map as above for interrupts.
-
-> +       reg-names = "breg", "pcireg", "cfg";
-> +       ranges = <0x02000000 0x00000000 0xE1000000 0x00000000 0xE1000000 0 0x0F000000>;
-
-No I/O space or prefetcheable memory?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
