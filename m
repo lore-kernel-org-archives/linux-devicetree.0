@@ -1,36 +1,364 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [V2,1/2] powerpc/fsl: Add PCI node in device tree of bsc9132qds
-Date: Fri, 16 Oct 2015 20:33:37 -0500
-Message-ID: <20151017013337.GA22242@home.buserror.net>
-References: <1444986071-27317-1-git-send-email-B48286@freescale.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 1/3] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY
+ driver
+Date: Sat, 17 Oct 2015 07:13:44 +0530
+Message-ID: <5621A7D0.7080808@ti.com>
+References: <1444731726-5328-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1444731726-5328-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1444986071-27317-1-git-send-email-B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiqiang Hou <b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444731726-5328-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 05:01:10PM +0800, Zhiqiang Hou wrote:
-> From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hi,
+
+On Tuesday 13 October 2015 03:52 PM, Yoshihiro Shimoda wrote:
+> This patch adds support for R-Car generation 3 USB2 PHY driver.
+> This SoC has 3 EHCI/OHCI channels, and the channel 0 is shared
+> with the HSUSB (USB2.0 peripheral) device. And each channel has
+> independent registers about the PHYs.
 > 
-> Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Change-Id: I4355add4a92d1fcf514843aea5ecadd2e2517969
-> Reviewed-on: http://git.am.freescale.net:8181/2454
-> Reviewed-by: Zang Tiefei-R61911 <tie-fei.zang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Kushwaha Prabhakar-B32579 <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Fleming Andrew-AFLEMING <AFLEMING-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Tested-by: Fleming Andrew-AFLEMING <AFLEMING-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> So, the purpose of this driver is:
+>  1) initializes some registers of SoC specific to use the
+>     {ehci,ohci}-platform driver.
+> 
+>  2) detects id pin to select host or peripheral on the channel 0.
+> 
+> For now, this driver only supports 1) above.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  37 ++++
+>  drivers/phy/Kconfig                                |   8 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-rcar-gen3-usb2.c                   | 240 +++++++++++++++++++++
+>  4 files changed, 286 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>  create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> new file mode 100644
+> index 0000000..589f5c0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -0,0 +1,37 @@
+> +* Renesas R-Car generation 3 USB 2.0 PHY
+> +
+> +This file provides information on what the device node for the R-Car generation
+> +3 USB 2.0 PHY contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
+> +	      SoC.
+> +- reg: offset and length of the partial USB 2.0 Host register block.
+> +- reg-names: must be "usb2_host".
+> +- clocks: clock phandle and specifier pair(s).
+> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
+> +
+> +Optional properties:
+> +To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
+> +combined, the device tree node should set HSUSB properties to reg and reg-names
+> +properties. This is because HSUSB has registers to select USB 2.0 host or
+> +peripheral at that channel:
+> +- reg: offset and length of the partial HSUSB register block.
+> +- reg-names: must be "hsusb".
+> +
+> +Example (R-Car H3):
+> +
+> +	usb-phy@ee080200 {
+> +		compatible = "renesas,usb2-phy-r8a7795";
+> +		reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
+> +		reg-names = "usb2_host", "hsusb";
+> +		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
+> +			 <&mstp7_clks R8A7795_CLK_HSUSB>;
+> +	};
+> +
+> +	usb-phy@ee0a0200 {
+> +		compatible = "renesas,usb2-phy-r8a7795";
+> +		reg = <0 0xee0a0200 0 0x6ff>;
+> +		reg-names = "usb2_host";
+> +		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>;
+> +	};
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 7eb5859d..45c6131 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -118,6 +118,14 @@ config PHY_RCAR_GEN2
+>  	help
+>  	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
+>  
+> +config PHY_RCAR_GEN3_USB2
+> +	tristate "Renesas R-Car generation 3 USB 2.0 PHY driver"
+> +	depends on OF
+> +	depends on ARCH_SHMOBILE
 
-Again:
+The depends on can be moved to a single line.
 
-Get rid of the gerrit stuff.  And where is your signoff?
+> +	depends on GENERIC_PHY
 
--Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+all the PHY drivers inside drivers/phy directory use select PHY. Please
+use select here.
+> +	help
+> +	  Support for USB 2.0 PHY found on Renesas R-Car generation 3 SoCs.
+> +
+>  config OMAP_CONTROL_PHY
+>  	tristate "OMAP CONTROL PHY Driver"
+>  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 075db1a..91d7a62 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
+>  obj-$(CONFIG_PHY_MIPHY28LP) 		+= phy-miphy28lp.o
+>  obj-$(CONFIG_PHY_MIPHY365X)		+= phy-miphy365x.o
+>  obj-$(CONFIG_PHY_RCAR_GEN2)		+= phy-rcar-gen2.o
+> +obj-$(CONFIG_PHY_RCAR_GEN3_USB2)	+= phy-rcar-gen3-usb2.o
+>  obj-$(CONFIG_OMAP_CONTROL_PHY)		+= phy-omap-control.o
+>  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+>  obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+> diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
+> new file mode 100644
+> index 0000000..d90dfcf
+> --- /dev/null
+> +++ b/drivers/phy/phy-rcar-gen3-usb2.c
+
+Add a MAINTAINER entry for this file if there is no one else.
+> @@ -0,0 +1,240 @@
+> +/*
+> + * Renesas R-Car Gen3 for USB2.0 PHY driver
+> + *
+> + * Copyright (C) 2015 Renesas Electronics Corporation
+> + *
+> + * This is based on the phy-rcar-gen2 driver:
+> + * Copyright (C) 2014 Renesas Solutions Corp.
+> + * Copyright (C) 2014 Cogent Embedded, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +
+> +/******* USB2.0 Host registers (original offset is +0x200) *******/
+> +#define USB2_INT_ENABLE		0x000
+> +#define USB2_USBCTR		0x00c
+> +#define USB2_SPD_RSM_TIMSET	0x10c
+> +#define USB2_OC_TIMSET		0x110
+> +
+> +/* INT_ENABLE */
+> +#define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
+> +#define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)
+> +#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_USBH_INTB_EN | \
+> +					 USB2_INT_ENABLE_USBH_INTA_EN)
+> +
+> +/* USBCTR */
+> +#define USB2_USBCTR_DIRPD	BIT(2)
+> +#define USB2_USBCTR_PLL_RST	BIT(1)
+> +
+> +/* SPD_RSM_TIMSET */
+> +#define USB2_SPD_RSM_TIMSET_INIT	0x014e029b
+> +
+> +/* OC_TIMSET */
+> +#define USB2_OC_TIMSET_INIT		0x000209ab
+> +
+> +/******* HSUSB registers (original offset is +0x100) *******/
+> +#define HSUSB_LPSTS			0x02
+> +#define HSUSB_UGCTRL2			0x84
+> +
+> +/* Low Power Status register (LPSTS) */
+> +#define HSUSB_LPSTS_SUSPM		0x4000
+> +
+> +/* USB General control register 2 (UGCTRL2) */
+> +#define HSUSB_UGCTRL2_MASK		0x00000031 /* bit[31:6] should be 0 */
+> +#define HSUSB_UGCTRL2_USB0SEL		0x00000030
+> +#define HSUSB_UGCTRL2_USB0SEL_HOST	0x00000010
+> +#define HSUSB_UGCTRL2_USB0SEL_HS_USB	0x00000020
+> +#define HSUSB_UGCTRL2_USB0SEL_OTG	0x00000030
+> +
+> +struct rcar_gen3_data {
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +};
+> +
+> +struct rcar_gen3_chan {
+> +	struct rcar_gen3_data usb2;
+> +	struct rcar_gen3_data hsusb;
+> +	struct phy *phy;
+> +	spinlock_t lock;
+
+Why do you need a spinlock? It seems like a single PHY phy-provider? Is
+it for future modifications?
+> +};
+> +
+> +static int rcar_gen3_phy_usb2_init(struct phy *p)
+> +{
+> +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> +	unsigned long flags;
+> +	void __iomem *usb2_base = channel->usb2.base;
+> +	void __iomem *hsusb_base = channel->hsusb.base;
+> +	u32 tmp;
+> +
+> +	spin_lock_irqsave(&channel->lock, flags);
+> +
+> +	/* Initialize USB2 part */
+> +	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
+> +	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
+> +	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+> +
+> +	/* Initialize HSUSB part */
+> +	if (hsusb_base) {
+> +		/* TODO: support "OTG" mode */
+> +		tmp = readl(hsusb_base + HSUSB_UGCTRL2);
+> +		tmp = (tmp & ~HSUSB_UGCTRL2_USB0SEL) |
+> +		      HSUSB_UGCTRL2_USB0SEL_HOST;
+> +		writel(tmp & HSUSB_UGCTRL2_MASK, hsusb_base + HSUSB_UGCTRL2);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&channel->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_gen3_phy_usb2_exit(struct phy *p)
+> +{
+> +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> +
+> +	writel(0, channel->usb2.base + USB2_INT_ENABLE);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+> +{
+> +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> +	void __iomem *usb2_base = channel->usb2.base;
+> +	void __iomem *hsusb_base = channel->hsusb.base;
+> +	unsigned long flags;
+> +	u32 tmp;
+> +
+> +	spin_lock_irqsave(&channel->lock, flags);
+> +
+> +	tmp = readl(usb2_base + USB2_USBCTR);
+> +	tmp |= USB2_USBCTR_PLL_RST;
+> +	writel(tmp, usb2_base + USB2_USBCTR);
+> +	tmp &= ~USB2_USBCTR_PLL_RST;
+> +	writel(tmp, usb2_base + USB2_USBCTR);
+> +
+> +	/*
+> +	 * TODO: To reduce power consuming, this driver should set the SUSPM
+> +	 *	after the PHY detects ID pin as peripheral.
+> +	 */
+> +	if (hsusb_base) {
+> +		/* Power on HSUSB PHY */
+> +		tmp = readw(hsusb_base + HSUSB_LPSTS);
+> +		tmp |= HSUSB_LPSTS_SUSPM;
+> +		writew(tmp, hsusb_base + HSUSB_LPSTS);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&channel->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_gen3_phy_usb2_power_off(struct phy *p)
+> +{
+> +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> +	void __iomem *hsusb_base = channel->hsusb.base;
+> +	unsigned long flags;
+> +	u32 tmp;
+> +
+> +	spin_lock_irqsave(&channel->lock, flags);
+> +
+> +	if (hsusb_base) {
+> +		/* Power off HSUSB PHY */
+> +		tmp = readw(hsusb_base + HSUSB_LPSTS);
+> +		tmp &= ~HSUSB_LPSTS_SUSPM;
+> +		writew(tmp, hsusb_base + HSUSB_LPSTS);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&channel->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_ops rcar_gen3_phy_usb2_ops = {
+> +	.init		= rcar_gen3_phy_usb2_init,
+> +	.exit		= rcar_gen3_phy_usb2_exit,
+> +	.power_on	= rcar_gen3_phy_usb2_power_on,
+> +	.power_off	= rcar_gen3_phy_usb2_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+> +	{ .compatible = "renesas,usb2-phy-r8a7795" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
+> +
+> +static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rcar_gen3_chan *channel;
+> +	struct phy_provider *provider;
+> +	struct resource *res;
+> +
+> +	if (!dev->of_node) {
+> +		dev_err(dev, "This driver needs device tree\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	channel = devm_kzalloc(dev, sizeof(*channel), GFP_KERNEL);
+> +	if (!channel)
+> +		return -ENOMEM;
+> +
+> +	spin_lock_init(&channel->lock);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "usb2_host");
+> +	channel->usb2.base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(channel->usb2.base))
+> +		return PTR_ERR(channel->usb2.base);
+> +
+> +	/* "hsusb" memory resource is optional */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsusb");
+> +
+> +	/* To avoid error message by devm_ioremap_resource() */
+> +	if (res) {
+> +		channel->hsusb.base = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(channel->hsusb.base))
+> +			channel->hsusb.base = NULL;
+> +	}
+> +
+> +	/* devm_phy_create() will call pm_runtime_enable(dev); */
+> +	channel->phy = devm_phy_create(dev, NULL, &rcar_gen3_phy_usb2_ops);
+> +	if (IS_ERR(channel->phy)) {
+> +		dev_err(dev, "Failed to create USB2 PHY\n");
+> +		return PTR_ERR(channel->phy);
+> +	}
+> +
+> +	phy_set_drvdata(channel->phy, channel);
+> +
+> +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	if (IS_ERR(provider)) {
+> +		dev_err(dev, "Failed to register PHY provider\n");
+> +		return PTR_ERR(provider);
+> +	}
+> +
+> +	dev_set_drvdata(dev, channel);
+
+This looks unnecessary and if you remove that you can use return
+PTR_ERR_OR_ZERO.
+
+Thanks
+Kishon
