@@ -1,151 +1,66 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Sat, 17 Oct 2015 09:56:17 -0700
-Message-ID: <20151017165617.GC25156@kroah.com>
-References: <561E1378.6000906@collabora.com>
- <20151017065750.GA18607@kroah.com>
- <CAL_Jsq+Due3CgV0Z_m4vYQsa+X30DSxgmqz_r=26OrBV7v+H2g@mail.gmail.com>
- <20151017154709.GE4059@kroah.com>
- <CAL_JsqJvtKt6FpZgnYcsEm_opr9gK_a013BVpZGvnB=51oSUXg@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH v2] mmc: core: Allow specifying current consumption
+Date: Sat, 17 Oct 2015 10:09:38 -0700
+Message-ID: <20151017170938.GP24668@usrtlx11787.corpusers.net>
+References: <1435725525-4367-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1444698032-9051-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAPDyKFqQEY64AToR0So72Sc4DtKhH5Sxff=oy8pDZZmw8O0aMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJvtKt6FpZgnYcsEm_opr9gK_a013BVpZGvnB=51oSUXg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Felipe Balbi <balbi@ti.com>, Jing
+In-Reply-To: <CAPDyKFqQEY64AToR0So72Sc4DtKhH5Sxff=oy8pDZZmw8O0aMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 17, 2015 at 11:28:29AM -0500, Rob Herring wrote:
-> On Sat, Oct 17, 2015 at 10:47 AM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Sat, Oct 17, 2015 at 10:04:55AM -0500, Rob Herring wrote:
-> >> On Sat, Oct 17, 2015 at 1:57 AM, Greg Kroah-Hartman
-> >> <gregkh@linuxfoundation.org> wrote:
-> >> > On Wed, Oct 14, 2015 at 10:34:00AM +0200, Tomeu Vizoso wrote:
-> >> >> Hi Rob,
-> >> >>
-> >> >> here is the pull request you asked for, with no changes from the version
-> >> >> that I posted last to the list.
-> >> >>
-> >> >> The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
-> >> >>
-> >> >> Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
-> >> >>
-> >> >> are available in the git repository at:
-> >> >>
-> >> >> git+ssh://git.collabora.co.uk/git/user/tomeu/linux.git
-> >> >> on-demand-probes-for-next
-> >> >
-> >> > That's not a signed tag :(
-> >> >
-> >> > Anyway, I REALLY don't like this series (sorry for the delay in
-> >> > reviewing them, normally I trust Rob's judgement...)
-> >>
-> >> We've seen a lot of attempts here. This is really the best solution so
-> >> far in that it is simple, uses existing data from DT, and was low risk
-> >> for breaking platforms (at least I thought it would be). Anyway,
-> >> getting more exposure is why I've put it into -next.
-> >
-> > Exposure is good, now we know it breaks some builds, which was useful :)
+On Fri 16 Oct 05:55 PDT 2015, Ulf Hansson wrote:
+
+> On 13 October 2015 at 03:00, Bjorn Andersson
+> <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> > This allows us to specify expected current consumption of the vmmc and
+> > vqmmc regulators. This is needed to bring the supplying regulators out
+> > of their low-power-mode while accessing the mmc.
 > 
-> Now that I've looked at them, they are somewhat questionable failures.
-> They do show the fragile nature of probe ordering and the implicit
-> dependencies we have.
+> This indeed makes sense, still I need to think a bit more on this.
 > 
-> >> > I can't see adding calls like this all over the tree just to solve a
-> >> > bus-specific problem, you are adding of_* calls where they aren't
-> >> > needed, or wanted, at all.
-> >>
-> >> I think Linus W, Mark B, and I all said a similar thing initially in
-> >> that dependencies should be handled in the driver core. We went down
-> >> the path of making this not firmware (aka bus) specific and an earlier
-> >> version had just that (with fwnode_* calls). That turned out to be
-> >> pointless as the calling locations were almost always in DT specific
-> >> code anyway. If you notice, the calls are next to other DT specific
-> >> calls generally (usually a "get"). So yes, I'd prefer not to have to
-> >> touch every subsystem, but we had to do that anyway to add DT support.
-> >
-> > If they are "next" to a call like that, why not put it in that call?  I
-> > really object to having to "sprinkle" this all over the kernel, for no
-> > obvious reason why that is happening at all (look at the USB patch for
-> > one such example.)
+
+Thanks.
+
+We can currently work around this by using "regulator-system-load" on
+the vmmc regulator, but a proper fix would be nice.
+
+> For example, can we allow these regulators to enter low power again at
+> some times? If so, when and what should that current value be.
 > 
-> Looking at it again, they are in DT specific code already. The USB one
-> is in devm_usb_get_phy_by_node() which is a DT specific call.
 
-But that's not very obvious, right?  Especially given that you now have
-to add a new .h file, which implies that suddenly this file is now
-touching a new subsystem.
+The regulator framework recalculates the total load on a regulator upon
+enable/disable, but currently it doesn't depend on the state of the
+regulator.
 
-> >> We've generally split the DT code into the core (in drivers/of) and
-> >> the binding specific (in subsystems). Extracting dependency
-> >> information the DT is going to require binding specific knowledge, so
-> >> subsystem changes are probably unavoidable.
-> >>
-> >> The alternative is we put binding specific knowledge into the core DT
-> >> code to parse dependencies.
-> >>
-> >> > What is the root-problem of your delay in device probing?  I read your
-> >> > last patch series and I can't seem to figure out what the issue is that
-> >> > this is solving in any "better" way from the existing deferred probing.
-> >>
-> >> It saves 2 seconds in the boot time as re-probing takes time. That
-> >> alone seems compelling to me.
-> >
-> > 2 seconds is _forever_, and really seems like some other driver is
-> > sleeping and causing this problem.  What does the bootlog time-chart say
-> > is really causing this long delay?  There's no way we are stuck in some
-> > sort of logic loop for that long (i.e. having to walk the list of
-> > devices somehow.)  This sounds like a driver-specific problem that is
-> > being worked around by having to touch all subsystems, which isn't nice.
+I talked to Mark about this a while back and he was positive to us
+correcting this, so disabled regulators wouldn't count towards the total
+load of a regulator. (So that still is on my todo)
+
+
+The second option would be to do what is done in the Qualcomm codeaurora
+kernels, where the regulators are never disabled and there's a smaller
+current specified for the suspend case.
+
+This would require bigger changes to the mmc core I presume, but the
+naming of the dt properties support such future adaption.
+
+> Moreover, wouldn't vmmc|vqmmc-active-current be depending what eMMC/SD
+> card that is attached?
 > 
-> I don't think it is one driver as the improvement is seen on multiple
-> platforms. I'll let Tomeu comment further on where the time was spent.
 
-That would be good to know, as 2 seconds is forever (my whole machine
-boots to a gnome login faster than that.)
+I would say so, I do however not know how to acquire or encode that
+information. Any suggestions here are welcome.
 
-> > Hint, we didn't have to do this type of thing to solve boot delays on
-> > x86 when we had hardware that was slow to initialize, why should DT be
-> > special?  :)
-> 
-> x86 did not need deferred probe either (though we probably can find
-> some initcall ordering hacks). This is an embedded problem, not a DT
-> problem.
-
-x86 is embedded :)
-
-> I'm guessing the time is a matter of probing and undoing the probes
-> rather than slow h/w. We could maybe improve things by making sure
-> drivers move what they defer on to the beginning of probe, but that
-> seems like a horrible, fragile hack.
-
-How can calling probe and failing cause 2 seconds?  How many different
-probe calls are failing here?  Again, a boot log graph would be great to
-see as it will show the root cause, not just guessing at this.
-
-> >> Another downside to deferred probing is you have to touch every driver
-> >> and subsystem to support it. This contains the problem to the
-> >> subsystems.
-> >
-> > But we have deferred probing already, only those drivers that need/want
-> > it have to do anything, why create yet-another model here?
-> 
-> Yes, the only ones needing it are drivers dependent on clocks, gpio,
-> regulators, pwm, pin-ctrl, dma, etc. That's not a small number. This
-> is a side benefit and wouldn't take this series for that reason alone.
-> 
-> I've used the deferred probing is good enough argument myself on
-> previous attempts. The boot time improvements convinced me it is not
-> good enough except for simple cases.
-
-Then let's fix deferred probing to do it "correctly", let's not add
-yet-another-way-to-probe instead please, as we will be forever
-sprinkling these calls around subsystems in a cargo-cult-like manner for
-forever.
-
-thanks,
-
-greg k-h
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
