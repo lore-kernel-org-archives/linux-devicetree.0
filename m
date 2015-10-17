@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/8] arm: dts: lpc32xx: add labels to all defined peripheral nodes
-Date: Sun, 18 Oct 2015 00:35:51 +0300
-Message-ID: <1445117757-8073-3-git-send-email-vz@mleia.com>
+Subject: [PATCH v2 3/8] arm: dts: lpc32xx: add reg property to cpu device node
+Date: Sun, 18 Oct 2015 00:35:52 +0300
+Message-ID: <1445117757-8073-4-git-send-email-vz@mleia.com>
 References: <1445117757-8073-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445117757-8073-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
@@ -10,108 +10,40 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+A
 Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To simplify writing of dts files for all lpc32xx.dtsi users who adjust
-device node properties, add labels to all defined peripheral device
-nodes in lpc32xx.dtsi.
+According to device tree bindings for ARM cpus cpu node must contain a
+reg property for enumeration scheme.
+
+The change adds reg = <0x0> indicating that the processor does not
+have CPU identification register and updates cell settings.
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
 Changes from v1 to v2:
-- none
+- new change, replaced v1 4/5 "arm: dts: lpc32xx: remove unneeded cell settings from cpus"
 
- arch/arm/boot/dts/lpc32xx.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index f35e982..00570b3 100644
+index 00570b3..fb0e9ae 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -49,7 +49,7 @@
- 			status = "disabled";
+@@ -18,12 +18,13 @@
+ 	interrupt-parent = <&mic>;
+ 
+ 	cpus {
+-		#address-cells = <0>;
++		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu {
++		cpu@0 {
+ 			compatible = "arm,arm926ej-s";
+ 			device_type = "cpu";
++			reg = <0x0>;
  		};
+ 	};
  
--		dma@31000000 {
-+		dma: dma@31000000 {
- 			compatible = "arm,pl080", "arm,primecell";
- 			reg = <0x31000000 0x1000>;
- 			interrupts = <0x1c 0>;
-@@ -58,21 +58,21 @@
- 		/*
- 		 * Enable either ohci or usbd (gadget)!
- 		 */
--		ohci@31020000 {
-+		ohci: ohci@31020000 {
- 			compatible = "nxp,ohci-nxp", "usb-ohci";
- 			reg = <0x31020000 0x300>;
- 			interrupts = <0x3b 0>;
- 			status = "disabled";
- 		};
- 
--		usbd@31020000 {
-+		usbd: usbd@31020000 {
- 			compatible = "nxp,lpc3220-udc";
- 			reg = <0x31020000 0x300>;
- 			interrupts = <0x3d 0>, <0x3e 0>, <0x3c 0>, <0x3a 0>;
- 			status = "disabled";
- 		};
- 
--		clcd@31040000 {
-+		clcd: clcd@31040000 {
- 			compatible = "arm,pl110", "arm,primecell";
- 			reg = <0x31040000 0x1000>;
- 			interrupts = <0x0e 0>;
-@@ -118,7 +118,7 @@
- 				reg = <0x20094000 0x1000>;
- 			};
- 
--			sd@20098000 {
-+			sd: sd@20098000 {
- 				compatible = "arm,pl18x", "arm,primecell";
- 				reg = <0x20098000 0x1000>;
- 				interrupts = <0x0f 0>, <0x0d 0>;
-@@ -243,7 +243,7 @@
- 				status = "disabled";
- 			};
- 
--			rtc@40024000 {
-+			rtc: rtc@40024000 {
- 				compatible = "nxp,lpc3220-rtc";
- 				reg = <0x40024000 0x1000>;
- 				interrupts = <0x34 0>;
-@@ -256,7 +256,7 @@
- 				#gpio-cells = <3>; /* bank, pin, flags */
- 			};
- 
--			watchdog@4003C000 {
-+			watchdog: watchdog@4003C000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
- 			};
-@@ -268,21 +268,21 @@
- 			 * them
- 			 */
- 
--			adc@40048000 {
-+			adc: adc@40048000 {
- 				compatible = "nxp,lpc3220-adc";
- 				reg = <0x40048000 0x1000>;
- 				interrupts = <0x27 0>;
- 				status = "disabled";
- 			};
- 
--			tsc@40048000 {
-+			tsc: tsc@40048000 {
- 				compatible = "nxp,lpc3220-tsc";
- 				reg = <0x40048000 0x1000>;
- 				interrupts = <0x27 0>;
- 				status = "disabled";
- 			};
- 
--			key@40050000 {
-+			key: key@40050000 {
- 				compatible = "nxp,lpc3220-key";
- 				reg = <0x40050000 0x1000>;
- 				interrupts = <54 0>;
 -- 
 2.1.4
 
