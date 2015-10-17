@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/8] arm: dts: lpc32xx: change include syntax to be C preprocessor friendly
-Date: Sun, 18 Oct 2015 00:35:50 +0300
-Message-ID: <1445117757-8073-2-git-send-email-vz@mleia.com>
+Subject: [PATCH v2 6/8] arm: dts: lpc32xx: add external memory controller device node
+Date: Sun, 18 Oct 2015 00:35:55 +0300
+Message-ID: <1445117757-8073-7-git-send-email-vz@mleia.com>
 References: <1445117757-8073-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445117757-8073-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
@@ -10,62 +10,54 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+A
 Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The change replaces /include/ to #include in lpc32xx.dtsi and
-derivatives, it is required, if C preprocessor is intended to be used
-over dtsi/dts files, otherwise errors like one below are generated:
+The change adds a description of ARM PrimeCell PL175 memory
+controller, which is found on NXP LPC32xx SoCs.
 
-  Error: ea3250.dts:15.1-9 syntax error
-  FATAL ERROR: Unable to parse input tree
+The controller supports up to 4 static memory devices mapped to
+0xE000 0000 - 0xE3FF FFFF physical memory area.
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
 Changes from v1 to v2:
-- none
+- none, new change
 
- arch/arm/boot/dts/ea3250.dts   | 2 +-
- arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
- arch/arm/boot/dts/phy3250.dts  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ea3250.dts b/arch/arm/boot/dts/ea3250.dts
-index a4ba31b..121d032 100644
---- a/arch/arm/boot/dts/ea3250.dts
-+++ b/arch/arm/boot/dts/ea3250.dts
-@@ -12,7 +12,7 @@
-  */
- 
- /dts-v1/;
--/include/ "lpc32xx.dtsi"
-+#include "lpc32xx.dtsi"
- 
- / {
- 	model = "Embedded Artists LPC3250 board based on NXP LPC3250";
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 3abebb7..f35e982 100644
+index be82992..a595a4b 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -11,7 +11,7 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
+@@ -32,7 +32,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "simple-bus";
+-		ranges = <0x20000000 0x20000000 0x30000000>;
++		ranges = <0x20000000 0x20000000 0x30000000>,
++			 <0xe0000000 0xe0000000 0x04000000>;
  
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
+ 		/*
+ 		 * Enable either SLC or MLC
+@@ -86,6 +87,19 @@
+ 			interrupts = <0x1d 0>;
+ 		};
  
- / {
- 	compatible = "nxp,lpc3220";
-diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
-index 90fdbd7..2a2d2cf 100644
---- a/arch/arm/boot/dts/phy3250.dts
-+++ b/arch/arm/boot/dts/phy3250.dts
-@@ -12,7 +12,7 @@
-  */
- 
- /dts-v1/;
--/include/ "lpc32xx.dtsi"
-+#include "lpc32xx.dtsi"
- 
- / {
- 	model = "PHYTEC phyCORE-LPC3250 board based on NXP LPC3250";
++		emc: memory-controller@31080000 {
++			compatible = "arm,pl175", "arm,primecell";
++			reg = <0x31080000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0 0xe0000000 0x01000000>,
++				 <1 0xe1000000 0x01000000>,
++				 <2 0xe2000000 0x01000000>,
++				 <3 0xe3000000 0x01000000>;
++			status = "disabled";
++		};
++
+ 		apb {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.1.4
 
