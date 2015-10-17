@@ -1,51 +1,225 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v2 8/9] ARM: dts: Add leds support to STM32F429 Discovery board
-Date: Sat, 17 Oct 2015 19:23:23 +0200
-Message-ID: <1445102604-11502-9-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, linux-kernel@vger.kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 2/9] drivers: irqchip: Add STM32 external interrupts support
+Date: Sat, 17 Oct 2015 19:23:51 +0200
+Message-ID: <1445102638-11575-3-git-send-email-mcoquelin.stm32@gmail.com>
+References: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
+
+The STM32 external interrupt controller consists of edge detectors that
+generate interrupts requests or wake-up events.
+
+Each line can be independently configured as interrupt or wake-up source,
+and triggers either on rising, fallin or both edges. Each line can also
+be masked independently.
 
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- arch/arm/boot/dts/stm32f429-disco.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/irqchip/Kconfig          |   4 +
+ drivers/irqchip/Makefile         |   1 +
+ drivers/irqchip/irq-stm32-exti.c | 169 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 174 insertions(+)
+ create mode 100644 drivers/irqchip/irq-stm32-exti.c
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index e3ce796..532c499 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -64,6 +64,16 @@
- 	aliases {
- 		serial0 = &usart1;
- 	};
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 27b52c8..5bd8df5 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -187,3 +187,7 @@ config IMX_GPCV2
+ 	select IRQ_DOMAIN
+ 	help
+ 	  Enables the wakeup IRQs for IMX platforms with GPCv2 block
 +
-+	leds {
-+		compatible = "gpio-leds";
-+		red {
-+			gpios = <&gpiog 14 0>;
-+		};
-+		green {
-+			gpios = <&gpiog 13 0>;
-+		};
-+	};
- };
- 
- &clk_hse {
++config STM32_EXTI
++	bool
++	select IRQ_DOMAIN
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index bb3048f..cabe2f4 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -55,3 +55,4 @@ obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
+ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
+ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
+ obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
++obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+new file mode 100644
+index 0000000..02bfa80
+--- /dev/null
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -0,0 +1,169 @@
++/*
++ * Copyright (C) Maxime Coquelin 2015
++ * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++
++#include <linux/bitops.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#define EXTI_IMR	0x0
++#define EXTI_EMR	0x4
++#define EXTI_RTSR	0x8
++#define EXTI_FTSR	0xc
++#define EXTI_SWIER	0x10
++#define EXTI_PR		0x14
++
++static void stm32_irq_handler(struct irq_desc *desc)
++{
++	struct irq_domain *domain = irq_desc_get_handler_data(desc);
++	struct irq_chip_generic *gc = domain->gc->gc[0];
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	unsigned long pending;
++	int n;
++
++	chained_irq_enter(chip, desc);
++
++	pending = irq_reg_readl(gc, EXTI_PR);
++	for_each_set_bit(n, &pending, BITS_PER_LONG) {
++		generic_handle_irq(irq_find_mapping(domain, n));
++	}
++
++	chained_irq_exit(chip, desc);
++}
++
++static int stm32_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
++	u32 rtsr, ftsr;
++	int pin = data->hwirq;
++
++	irq_gc_lock(gc);
++
++	rtsr = irq_reg_readl(gc, EXTI_RTSR);
++	ftsr = irq_reg_readl(gc, EXTI_FTSR);
++
++	switch (type) {
++	case IRQ_TYPE_EDGE_RISING:
++		rtsr |= BIT(pin);
++		ftsr &= ~BIT(pin);
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		rtsr &= ~BIT(pin);
++		ftsr |= BIT(pin);
++		break;
++	case IRQ_TYPE_EDGE_BOTH:
++		rtsr |= BIT(pin);
++		ftsr |= BIT(pin);
++		break;
++	default:
++		irq_gc_unlock(gc);
++		return -EINVAL;
++	}
++
++	irq_reg_writel(gc, rtsr, EXTI_RTSR);
++	irq_reg_writel(gc, ftsr, EXTI_FTSR);
++
++	irq_gc_unlock(gc);
++
++	return 0;
++}
++
++static int stm32_irq_set_wake(struct irq_data *data, unsigned int on)
++{
++	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
++	int pin = data->hwirq;
++	u32 emr;
++
++	irq_gc_lock(gc);
++
++	emr = irq_reg_readl(gc, EXTI_EMR);
++	if (on)
++		emr |= BIT(pin);
++	else
++		emr &= ~BIT(pin);
++	irq_reg_writel(gc, emr, EXTI_EMR);
++
++	irq_gc_unlock(gc);
++
++	return 0;
++}
++
++static int __init stm32_exti_init(struct device_node *node,
++				  struct device_node *parent)
++{
++	int nr_irqs, nr_exti, ret, i;
++	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
++	struct irq_domain *domain;
++	struct irq_chip_generic *gc;
++	void *base;
++
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: Unable to map registers\n", node->full_name);
++		return -ENOMEM;
++	}
++
++	/* Determine number of irqs supported */
++	writel_relaxed(~0UL, base + EXTI_RTSR);
++	nr_exti = fls(readl_relaxed(base + EXTI_RTSR));
++	writel_relaxed(0, base + EXTI_RTSR);
++
++	pr_info("%s: %d External IRQs detected\n", node->full_name, nr_exti);
++
++	domain = irq_domain_add_linear(node, nr_exti,
++				       &irq_generic_chip_ops, NULL);
++	if (!domain) {
++		pr_err("%s: Could not register interrupt domain.\n",
++				node->name);
++		ret = -ENOMEM;
++		goto out_unmap;
++	}
++
++	ret = irq_alloc_domain_generic_chips(domain, nr_exti, 1, "exti",
++					     handle_edge_irq, clr, 0, 0);
++	if (ret) {
++		pr_err("%s: Could not allocate generic interrupt chip.\n",
++			node->full_name);
++		goto out_free_domain;
++	}
++
++	gc = domain->gc->gc[0];
++	gc->reg_base                         = base;
++	gc->chip_types->type               = IRQ_TYPE_EDGE_BOTH;
++	gc->chip_types->chip.name          = gc->chip_types[0].chip.name;
++	gc->chip_types->chip.irq_ack       = irq_gc_ack_set_bit;
++	gc->chip_types->chip.irq_mask      = irq_gc_mask_clr_bit;
++	gc->chip_types->chip.irq_unmask    = irq_gc_mask_set_bit;
++	gc->chip_types->chip.irq_set_type  = stm32_irq_set_type;
++	gc->chip_types->chip.irq_set_wake  = stm32_irq_set_wake;
++	gc->chip_types->regs.ack           = EXTI_PR;
++	gc->chip_types->regs.mask          = EXTI_IMR;
++	gc->chip_types->handler            = handle_edge_irq;
++
++	nr_irqs = of_irq_count(node);
++	for (i = 0; i < nr_irqs; i++) {
++		unsigned int irq = irq_of_parse_and_map(node, i);
++
++		irq_set_handler_data(irq, domain);
++		irq_set_chained_handler(irq, stm32_irq_handler);
++	}
++
++	return 0;
++
++out_free_domain:
++	irq_domain_remove(domain);
++out_unmap:
++	iounmap(base);
++	return ret;
++}
++
++IRQCHIP_DECLARE(stm32_exti, "st,stm32-exti", stm32_exti_init);
 -- 
 1.9.1
