@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/8] arm: dts: lpc32xx: add reg property to cpu device node
-Date: Sun, 18 Oct 2015 00:35:52 +0300
-Message-ID: <1445117757-8073-4-git-send-email-vz@mleia.com>
+Subject: [PATCH v2 1/8] arm: dts: lpc32xx: change include syntax to be C preprocessor friendly
+Date: Sun, 18 Oct 2015 00:35:50 +0300
+Message-ID: <1445117757-8073-2-git-send-email-vz@mleia.com>
 References: <1445117757-8073-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445117757-8073-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
@@ -10,40 +10,62 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+A
 Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to device tree bindings for ARM cpus cpu node must contain a
-reg property for enumeration scheme.
+The change replaces /include/ to #include in lpc32xx.dtsi and
+derivatives, it is required, if C preprocessor is intended to be used
+over dtsi/dts files, otherwise errors like one below are generated:
 
-The change adds reg = <0x0> indicating that the processor does not
-have CPU identification register and updates cell settings.
+  Error: ea3250.dts:15.1-9 syntax error
+  FATAL ERROR: Unable to parse input tree
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
 Changes from v1 to v2:
-- new change, replaced v1 4/5 "arm: dts: lpc32xx: remove unneeded cell settings from cpus"
+- none
 
- arch/arm/boot/dts/lpc32xx.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ea3250.dts   | 2 +-
+ arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
+ arch/arm/boot/dts/phy3250.dts  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/arch/arm/boot/dts/ea3250.dts b/arch/arm/boot/dts/ea3250.dts
+index a4ba31b..121d032 100644
+--- a/arch/arm/boot/dts/ea3250.dts
++++ b/arch/arm/boot/dts/ea3250.dts
+@@ -12,7 +12,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "lpc32xx.dtsi"
++#include "lpc32xx.dtsi"
+ 
+ / {
+ 	model = "Embedded Artists LPC3250 board based on NXP LPC3250";
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 00570b3..fb0e9ae 100644
+index 3abebb7..f35e982 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -18,12 +18,13 @@
- 	interrupt-parent = <&mic>;
+@@ -11,7 +11,7 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
  
- 	cpus {
--		#address-cells = <0>;
-+		#address-cells = <1>;
- 		#size-cells = <0>;
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
  
--		cpu {
-+		cpu@0 {
- 			compatible = "arm,arm926ej-s";
- 			device_type = "cpu";
-+			reg = <0x0>;
- 		};
- 	};
+ / {
+ 	compatible = "nxp,lpc3220";
+diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
+index 90fdbd7..2a2d2cf 100644
+--- a/arch/arm/boot/dts/phy3250.dts
++++ b/arch/arm/boot/dts/phy3250.dts
+@@ -12,7 +12,7 @@
+  */
  
+ /dts-v1/;
+-/include/ "lpc32xx.dtsi"
++#include "lpc32xx.dtsi"
+ 
+ / {
+ 	model = "PHYTEC phyCORE-LPC3250 board based on NXP LPC3250";
 -- 
 2.1.4
 
