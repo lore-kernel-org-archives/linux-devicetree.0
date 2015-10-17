@@ -1,68 +1,47 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [RESEND v4.1 0/5] Mailbox: Provide support STi based platforms
-Date: Sat, 17 Oct 2015 10:42:02 +0530
-Message-ID: <CAJe_Zhfzvoz2FFN5XSg=O1PY-JT_Y0XCNj+PVSmWtnXq6LQJ4Q@mail.gmail.com>
-References: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: PowerPC: Move Freescale device tree files into fsl folder
+Date: Sat, 17 Oct 2015 00:35:12 -0500
+Message-ID: <20151017053512.GA24971@home.buserror.net>
+References: <1442548824-45849-1-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, kernel@stlinux.com, Maxime Coquelin <maxime.coquelin@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442548824-45849-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hongtao Jia <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16 October 2015 at 12:51, Lee Jones <lee.jones@linaro.org> wrote:
-> Hi Jassi,
->
-> [Resending the updated patch-set this time]
->
-> This should be it.  Exciting times!
->
-> ST's platforms currently support a maximum of 5 Mailboxes, one for
-> each of the supported co-processors situated on the platform.  Each
-> Mailbox is divided up into 4 instances which consist of 32 channels.
-> Messages are passed between the application and co-processors using
-> shared memory areas.
->
-> Also included in the set is an example Client which should be generic
-> enough to use as a testing environment for all Mailbox IPs which use
-> shared memory or the API to pass messages.  With small changes, it
-> should also be able to test more extravagant implementations.
->
-> v3 -> v4:
->  - More protection in MBOX_BASE() MACRO
->  - Remove unused tx-only marker
->
-> v2 => v3:
->  - Controller
->    - Shared (DT <=> Device Driver) defines removed
->    - Return actual error codes instead of NULL in xlate()
->    - Not passing 'direction' configuration via DT anymore
->      - Removed all accompanying configuration checking code
->  - Test F/W
->    - Allow Rx-only and Tx-only controllers to be tested
->    - Cater for controllers requiring pre-Tx 'signal' to be sent
->    - Supply 'wr-' message debugfs file
->      - When written to, will Tx message through Mailbox Framework
->      - When read from, will print out a hexdump of Rx'ed message
->
-> v1 => v2:
->  - New MACRO() to obtain base address for a given instance
->  - Move locking into the structure it protects
->  - Stop checking for 'ready' state when sending data
->  - Don't clear channel data (that belongs to the API)
->  - #define register offsets instead of providing via pdata
->  - Register driver with module_platform_driver()
->
-> Lee Jones (5):
->   mailbox: dt: Supply bindings for ST's Mailbox IP
->   mailbox: Add support for ST's Mailbox IP
->   ARM: STi: stih407-family: Add nodes for Mailbox
->   mailbox: Add generic mechanism for testing Mailbox Controllers
->   ARM: STi: DT: STiH407: Enable Mailbox testing facility
->
-Picked patches 1,2 & 4. Thanks for overhauling the old drivers, now we
-have fewer lines and simpler but more complete driver.
+On Fri, Sep 18, 2015 at 12:00:24PM +0800, Hongtao Jia wrote:
+> It makes no sense that some Freescale device tree files are in fsl
+> directory while some others not. This patch move Freescale device tree
+> files into fsl folder. To do that the following two steps are made:
+> - Move Freescale device tree files into fsl folder.
+> - Update the include path in these files from "fsl/*.dtsi" to "*.dtsi".
+> 
+> Please add "fsl/" prefix when you make dtb using Makefile.
+> 
+> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Thanks.
+This broke cuImage -- I made this change when applying:
+
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 4eec430..99e4487 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -364,6 +364,9 @@ $(obj)/cuImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
+ $(obj)/cuImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
+ 	$(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb)
+ 
++$(obj)/cuImage.%: vmlinux $(obj)/fsl/%.dtb $(wrapperbits)
++	$(call if_changed,wrap,cuboot-$*,,$(obj)/fsl/$*.dtb)
++
+ $(obj)/simpleImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
+ 	$(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+
+-Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
