@@ -1,109 +1,61 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v2 2/2] net: phy: smsc: disable energy detect mode
-Date: Sat, 17 Oct 2015 06:04:36 +0200
-Message-ID: <1445054676-21523-3-git-send-email-hs@denx.de>
-References: <1445054676-21523-1-git-send-email-hs@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445054676-21523-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Georg.Soffel-k21M0aUVSxZWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Sat, 17 Oct 2015 09:40:55 +0530
+Message-ID: <20151017041055.GZ19018@linux>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+ <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+ <55F72C97.2030306@kernel.org>
+ <20151016002243.GA23912@codeaurora.org>
+ <20151016060227.GS19018@linux>
+ <20151016191658.GA16437@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151016191658.GA16437@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On some boards the energy enable detect mode leads in
-trouble with some switches, so make the enabling of
-this mode configurable through DT.
+On 16-10-15, 12:16, Stephen Boyd wrote:
+> On 10/16, Viresh Kumar wrote:
+> > On 15-10-15, 17:22, Stephen Boyd wrote:
+> > > I'm lost why we need this property at all. What happened to using
+> > > 
+> > >  opp-microvolt-0 = <1 2 3>;
+> > >  opp-microvolt-1 = <1>;
+> > >  opp-microvolt-2 = <3 4 5>;
+> > >  etc.
+> > 
+> > Perhaps you are confusing this with the bindings we came up for
+> > picking right voltage levels based on the cuts/version of the hardware
+> > we are running on. The problem that Lee Jones mentioned and that can
+> > be used in your case as well.
+> 
+> Isn't that what this patch series is for?
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
----
+Hehe, no.
 
-Changes in v2:
-- add comments from Florian Fainelli
-  - I did not change disable property name into enable
-    because I fear to break existing behaviour
-  - add smsc vendor prefix
-  - remove CONFIG_OF and use __maybe_unused
-  - introduce "phy-handle" ability into ti,cpsw
-    driver, so I can remove bogus:
-      if (!of_node && dev->parent->of_node)
-          of_node = dev->parent->of_node;
-    construct. Therefore new patch for the ti,cpsw
-    driver is necessary.
+Okay here is the problem statement:
 
- .../devicetree/bindings/net/smsc-lan87xx.txt       | 24 ++++++++++++++++++++++
- drivers/net/phy/smsc.c                             | 19 ++++++++++++-----
- 2 files changed, 38 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/smsc-lan87xx.txt
+We have two supplies for a device and the device node will have
+something like:
 
-diff --git a/Documentation/devicetree/bindings/net/smsc-lan87xx.txt b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
-new file mode 100644
-index 0000000..974edd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/smsc-lan87xx.txt
-@@ -0,0 +1,24 @@
-+SMSC LAN87xx Ethernet PHY
-+
-+Some boards require special tuning values. Configure them
-+through an Ethernet OF device node.
-+
-+Optional properties:
-+
-+- smsc,disable-energy-detect:
-+  If set, do not enable energy detect mode for the SMSC phy.
-+  default: enable energy detect mode
-+
-+Examples:
-+smsc phy with disabled energy detect mode on an am335x based board.
-+&davinci_mdio {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
-+
-+	ethernetphy0: ethernet-phy@0 {
-+		reg = <0>;
-+		smsc,disable-energy-detect;
-+	};
-+};
-diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
-index 70b0895..dc2da87 100644
---- a/drivers/net/phy/smsc.c
-+++ b/drivers/net/phy/smsc.c
-@@ -43,16 +43,25 @@ static int smsc_phy_ack_interrupt(struct phy_device *phydev)
- 
- static int smsc_phy_config_init(struct phy_device *phydev)
- {
-+	int __maybe_unused len;
-+	struct device *dev __maybe_unused = &phydev->dev;
-+	struct device_node *of_node __maybe_unused = dev->of_node;
- 	int rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
-+	int enable_energy = 1;
- 
- 	if (rc < 0)
- 		return rc;
- 
--	/* Enable energy detect mode for this SMSC Transceivers */
--	rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
--		       rc | MII_LAN83C185_EDPWRDOWN);
--	if (rc < 0)
--		return rc;
-+	if (of_find_property(of_node, "smsc,disable-energy-detect", &len))
-+		enable_energy = 0;
-+
-+	if (enable_energy) {
-+		/* Enable energy detect mode for this SMSC Transceivers */
-+		rc = phy_write(phydev, MII_LAN83C185_CTRL_STATUS,
-+			       rc | MII_LAN83C185_EDPWRDOWN);
-+		if (rc < 0)
-+			return rc;
-+	}
- 
- 	return smsc_phy_ack_interrupt(phydev);
- }
+name1-supply = <&supply1>;
+name2-supply = <&supply2>;
+
+And the OPP node needs to have voltages for both of them:
+
+opp-microvolt = <X1 Y1 Z1>, <X2 Y2 Z2>;
+
+Where XYZ(1) are for supply1 and XYZ(2) are for supply2.
+
+Now we need to identify the supplies for which the values are present
+here and their order as well. How do we do that?
+
+The way I am suggesting is to add a property in opp node which will
+keep "name1" and "name2" in it.
+
 -- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
