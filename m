@@ -1,31 +1,55 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v2 9/9] ARM: config: Enable GPIO Led driver in stm32_defconfig
-Date: Sat, 17 Oct 2015 19:23:24 +0200
-Message-ID: <1445102604-11502-10-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH 0/9] Add STM32 EXTI interrupt controller support
+Date: Sat, 17 Oct 2015 19:23:49 +0200
+Message-ID: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/configs/stm32_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+This series adds support to EXTI interrupt controller and GPIO IRQ support in
+STM32 pinctrl driver.
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index 4725fab..92ade2e 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -52,6 +52,7 @@ CONFIG_SERIAL_STM32_CONSOLE=y
- # CONFIG_USB_SUPPORT is not set
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
- CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- # CONFIG_FILE_LOCKING is not set
+The STM32 external interrupt controller consists of edge detectors that
+generate interrupts requests or wake-up events.
+
+Each line can be independently configured as interrupt or wake-up source,
+and triggers either on rising, fallin or both edges. Each line can also
+be masked independently.
+
+This series applies on top of STM32 pinctrl v2 series.
+
+Regards,
+Maxime
+
+Maxime Coquelin (9):
+  Documentation: dt-bindings: Document STM32 EXTI controller bindings
+  drivers: irqchip: Add STM32 external interrupts support
+  ARM: STM32: Select external interrupts controller
+  ARM: dts: Add EXTI controller node to stm32f429
+  Documentation: dt-bindings: Add IRQ related properties of STM32
+    pinctrl
+  pinctrl: Add IRQ support to STM32 gpios
+  ARM: dts: Add GPIO irq support to STM2F429
+  ARM: dts: Declare push button as GPIO key on stm32f429 Disco board
+  ARM: config: Enable GPIO Key driver in stm32_defconfig
+
+ .../interrupt-controller/st,stm32-exti.txt         |  20 +++
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |   3 +
+ arch/arm/Kconfig                                   |   1 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |  19 +++
+ arch/arm/boot/dts/stm32f429-disco.dts              |  13 ++
+ arch/arm/boot/dts/stm32f429.dtsi                   |  15 ++
+ arch/arm/configs/stm32_defconfig                   |   6 +-
+ drivers/irqchip/Kconfig                            |   4 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-stm32-exti.c                   | 169 +++++++++++++++++++++
+ drivers/pinctrl/stm32/Kconfig                      |   1 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  68 +++++++++
+ 12 files changed, 319 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+ create mode 100644 drivers/irqchip/irq-stm32-exti.c
+
 -- 
 1.9.1
