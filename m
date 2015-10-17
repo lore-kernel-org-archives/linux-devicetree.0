@@ -1,59 +1,45 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 13/20] usb: phy: Probe phy devices on demand
-Date: Fri, 16 Oct 2015 23:55:52 -0700
-Message-ID: <20151017065552.GC18329@kroah.com>
-References: <1443517859-30376-1-git-send-email-tomeu.vizoso@collabora.com>
- <1443517859-30376-14-git-send-email-tomeu.vizoso@collabora.com>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Fri, 16 Oct 2015 23:57:50 -0700
+Message-ID: <20151017065750.GA18607@kroah.com>
+References: <561E1378.6000906@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443517859-30376-14-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
+In-Reply-To: <561E1378.6000906@collabora.com>
+Sender: linux-i2c-owner@vger.kernel.org
 To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Felipe Balbi <balbi@ti.com>Jingoo Han <j>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 29, 2015 at 11:10:51AM +0200, Tomeu Vizoso wrote:
-> When looking up a phy through its OF node, probe it if it hasn't
-> already.
+On Wed, Oct 14, 2015 at 10:34:00AM +0200, Tomeu Vizoso wrote:
+> Hi Rob,
 > 
-> The goal is to reduce deferred probes to a minimum, as it makes it very
-> cumbersome to find out why a device failed to probe, and can introduce
-> very big delays in when a critical device is probed.
+> here is the pull request you asked for, with no changes from the version
+> that I posted last to the list.
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
+> The following changes since commit 6ff33f3902c3b1c5d0db6b1e2c70b6d76fba357f:
 > 
+> Linux 4.3-rc1 (2015-09-12 16:35:56 -0700)
 > 
->  drivers/usb/phy/phy.c | 3 +++
->  1 file changed, 3 insertions(+)
+> are available in the git repository at:
 > 
-> diff --git a/drivers/usb/phy/phy.c b/drivers/usb/phy/phy.c
-> index 98f75d2842b7..fb0b650bb494 100644
-> --- a/drivers/usb/phy/phy.c
-> +++ b/drivers/usb/phy/phy.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  
->  #include <linux/usb/phy.h>
->  
-> @@ -196,6 +197,8 @@ struct  usb_phy *devm_usb_get_phy_by_node(struct device *dev,
->  		goto err0;
->  	}
->  
-> +	of_device_probe(node);
+> git+ssh://git.collabora.co.uk/git/user/tomeu/linux.git
+> on-demand-probes-for-next
 
-Ugh, this "sprinkling" of calls all over different subsystems like this
-isn't ok.  Why is of just so broken that it has to do crap like this?
+That's not a signed tag :(
 
-I really don't like this solution / series at all, sorry.  We have
-deferred probing, if you need stuff like that (where the dependancy tree
-isn't in order), how slow is that really?  What is taking your hardware
-so long to init that warrents this being spread all across the tree?
+Anyway, I REALLY don't like this series (sorry for the delay in
+reviewing them, normally I trust Rob's judgement...)
+
+I can't see adding calls like this all over the tree just to solve a
+bus-specific problem, you are adding of_* calls where they aren't
+needed, or wanted, at all.
+
+What is the root-problem of your delay in device probing?  I read your
+last patch series and I can't seem to figure out what the issue is that
+this is solving in any "better" way from the existing deferred probing.
 
 thanks,
 
