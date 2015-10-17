@@ -1,61 +1,68 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Sat, 17 Oct 2015 09:40:55 +0530
-Message-ID: <20151017041055.GZ19018@linux>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
- <20151016002243.GA23912@codeaurora.org>
- <20151016060227.GS19018@linux>
- <20151016191658.GA16437@codeaurora.org>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [RESEND v4.1 0/5] Mailbox: Provide support STi based platforms
+Date: Sat, 17 Oct 2015 10:42:02 +0530
+Message-ID: <CAJe_Zhfzvoz2FFN5XSg=O1PY-JT_Y0XCNj+PVSmWtnXq6LQJ4Q@mail.gmail.com>
+References: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151016191658.GA16437@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444980091-16728-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, kernel@stlinux.com, Maxime Coquelin <maxime.coquelin@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16-10-15, 12:16, Stephen Boyd wrote:
-> On 10/16, Viresh Kumar wrote:
-> > On 15-10-15, 17:22, Stephen Boyd wrote:
-> > > I'm lost why we need this property at all. What happened to using
-> > > 
-> > >  opp-microvolt-0 = <1 2 3>;
-> > >  opp-microvolt-1 = <1>;
-> > >  opp-microvolt-2 = <3 4 5>;
-> > >  etc.
-> > 
-> > Perhaps you are confusing this with the bindings we came up for
-> > picking right voltage levels based on the cuts/version of the hardware
-> > we are running on. The problem that Lee Jones mentioned and that can
-> > be used in your case as well.
-> 
-> Isn't that what this patch series is for?
+On 16 October 2015 at 12:51, Lee Jones <lee.jones@linaro.org> wrote:
+> Hi Jassi,
+>
+> [Resending the updated patch-set this time]
+>
+> This should be it.  Exciting times!
+>
+> ST's platforms currently support a maximum of 5 Mailboxes, one for
+> each of the supported co-processors situated on the platform.  Each
+> Mailbox is divided up into 4 instances which consist of 32 channels.
+> Messages are passed between the application and co-processors using
+> shared memory areas.
+>
+> Also included in the set is an example Client which should be generic
+> enough to use as a testing environment for all Mailbox IPs which use
+> shared memory or the API to pass messages.  With small changes, it
+> should also be able to test more extravagant implementations.
+>
+> v3 -> v4:
+>  - More protection in MBOX_BASE() MACRO
+>  - Remove unused tx-only marker
+>
+> v2 => v3:
+>  - Controller
+>    - Shared (DT <=> Device Driver) defines removed
+>    - Return actual error codes instead of NULL in xlate()
+>    - Not passing 'direction' configuration via DT anymore
+>      - Removed all accompanying configuration checking code
+>  - Test F/W
+>    - Allow Rx-only and Tx-only controllers to be tested
+>    - Cater for controllers requiring pre-Tx 'signal' to be sent
+>    - Supply 'wr-' message debugfs file
+>      - When written to, will Tx message through Mailbox Framework
+>      - When read from, will print out a hexdump of Rx'ed message
+>
+> v1 => v2:
+>  - New MACRO() to obtain base address for a given instance
+>  - Move locking into the structure it protects
+>  - Stop checking for 'ready' state when sending data
+>  - Don't clear channel data (that belongs to the API)
+>  - #define register offsets instead of providing via pdata
+>  - Register driver with module_platform_driver()
+>
+> Lee Jones (5):
+>   mailbox: dt: Supply bindings for ST's Mailbox IP
+>   mailbox: Add support for ST's Mailbox IP
+>   ARM: STi: stih407-family: Add nodes for Mailbox
+>   mailbox: Add generic mechanism for testing Mailbox Controllers
+>   ARM: STi: DT: STiH407: Enable Mailbox testing facility
+>
+Picked patches 1,2 & 4. Thanks for overhauling the old drivers, now we
+have fewer lines and simpler but more complete driver.
 
-Hehe, no.
-
-Okay here is the problem statement:
-
-We have two supplies for a device and the device node will have
-something like:
-
-name1-supply = <&supply1>;
-name2-supply = <&supply2>;
-
-And the OPP node needs to have voltages for both of them:
-
-opp-microvolt = <X1 Y1 Z1>, <X2 Y2 Z2>;
-
-Where XYZ(1) are for supply1 and XYZ(2) are for supply2.
-
-Now we need to identify the supplies for which the values are present
-here and their order as well. How do we do that?
-
-The way I am suggesting is to add a property in opp node which will
-keep "name1" and "name2" in it.
-
--- 
-viresh
+Thanks.
