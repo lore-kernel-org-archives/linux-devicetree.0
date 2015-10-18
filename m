@@ -1,85 +1,63 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 3/3] ARM: dts: vf610: add remaining SAI instaces
-Date: Sat, 17 Oct 2015 21:05:22 -0700
-Message-ID: <1445141122-14183-3-git-send-email-stefan@agner.ch>
+Subject: [PATCH 2/3] ARM: dts: vf610: fix clock definition for SAI2
+Date: Sat, 17 Oct 2015 21:05:21 -0700
+Message-ID: <1445141122-14183-2-git-send-email-stefan@agner.ch>
 References: <1445141122-14183-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1445141122-14183-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, kernel@pengutronix.de, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Li.Xiubo@freescale.com, zidan.wang@freescale.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, zidan.wang@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, galak@codeaurora.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the remaining SAI instances SAI0, SAI1 and SAI3. All
-instances are very similar, except that the DMA channel of SAI3
-is available on MUX1 (compared to MUX0 for SAI0-SAI2). Also,
-SAI3 has a slightly different memory map due to a deeper FIFO,
-however in practice the current driver works for SAI3 fine.
+So far, only the bus clock has been assigned, but in reality the
+SAI IP has for clock inputs. The driver has been updated to
+make use of the additional clock inputs by c3ecef21c3f2 ("ASoC:
+fsl_sai: add sai master mode support"). Due to a bug in the
+clock tree, the audio clock has been enabled none the less by
+the specified bus clock (see "ARM: imx: clk-vf610: fix SAI
+clock tree"), which made master mode even without the proper
+clock assigned working.
+
+This patch completes the clock definition for SAI2. On Vybrid,
+only two MCLK out of the four options are available (the first
+being the bus clock itself). See chapter 8.10.1.2.3 of the
+Vybrid Reference manual ("SAI transmitter and receiver options
+for MCLK selection"). Note: The audio clocks are only required
+in master mode.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/vfxxx.dtsi | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm/boot/dts/vfxxx.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index c2a4d1c..b45bc81 100644
+index 6865137..c2a4d1c 100644
 --- a/arch/arm/boot/dts/vfxxx.dtsi
 +++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -174,6 +174,34 @@
- 				status = "disabled";
- 			};
- 
-+			sai0: sai@4002f000 {
-+				compatible = "fsl,vf610-sai";
-+				reg = <0x4002f000 0x1000>;
-+				interrupts = <84 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks VF610_CLK_SAI0>,
-+					<&clks VF610_CLK_SAI0_DIV>,
-+					<&clks 0>, <&clks 0>;
-+				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-+				dma-names = "tx", "rx";
-+				dmas = <&edma0 0 17>,
-+					<&edma0 0 16>;
-+				status = "disabled";
-+			};
-+
-+			sai1: sai@40030000 {
-+				compatible = "fsl,vf610-sai";
-+				reg = <0x40030000 0x1000>;
-+				interrupts = <85 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks VF610_CLK_SAI1>,
-+					<&clks VF610_CLK_SAI1_DIV>,
-+					<&clks 0>, <&clks 0>;
-+				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-+				dma-names = "tx", "rx";
-+				dmas = <&edma0 0 19>,
-+					<&edma0 0 18>;
-+				status = "disabled";
-+			};
-+
- 			sai2: sai@40031000 {
+@@ -178,8 +178,10 @@
  				compatible = "fsl,vf610-sai";
  				reg = <0x40031000 0x1000>;
-@@ -188,6 +216,20 @@
- 				status = "disabled";
- 			};
- 
-+			sai3: sai@40032000 {
-+				compatible = "fsl,vf610-sai";
-+				reg = <0x40032000 0x1000>;
-+				interrupts = <87 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks VF610_CLK_SAI3>,
-+					<&clks VF610_CLK_SAI3_DIV>,
+ 				interrupts = <86 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks VF610_CLK_SAI2>;
+-				clock-names = "sai";
++				clocks = <&clks VF610_CLK_SAI2>,
++					<&clks VF610_CLK_SAI2_DIV>,
 +					<&clks 0>, <&clks 0>;
 +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-+				dma-names = "tx", "rx";
-+				dmas = <&edma0 1 9>,
-+					<&edma0 1 8>;
-+				status = "disabled";
-+			};
-+
- 			pit: pit@40037000 {
- 				compatible = "fsl,vf610-pit";
- 				reg = <0x40037000 0x1000>;
+ 				dma-names = "tx", "rx";
+ 				dmas = <&edma0 0 21>,
+ 					<&edma0 0 20>;
 -- 
 2.6.1
