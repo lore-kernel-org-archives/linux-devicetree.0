@@ -1,65 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC 0/2] simplefb: Add regulator handling support
-Date: Sun, 18 Oct 2015 20:57:19 +0100
-Message-ID: <20151018195719.GC14956@sirena.org.uk>
-References: <1444669458-5588-1-git-send-email-wens@csie.org>
- <561CAFE8.9080506@redhat.com>
- <20151014105556.GT14956@sirena.org.uk>
- <561E3D28.2090901@redhat.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] DT: nvmem: Add NXP LPC18xx EEPROM memory binding documentation
+Date: Sun, 18 Oct 2015 23:23:54 +0200
+Message-ID: <CAGhQ9VzbUz2+n__Y5W=HJ5FAV2Z5pMKgi-Ut662+0n2XuFR0PA@mail.gmail.com>
+References: <1445004426-6271-1-git-send-email-ariel@vanguardiasur.com.ar>
+	<1445004426-6271-3-git-send-email-ariel@vanguardiasur.com.ar>
+	<CAAEAJfAAUWd9y8EBfV0irbRF_7EjxD1ycdPcNGScbs6oPxp4JQ@mail.gmail.com>
+	<CAGhQ9VzaqiUm0=vpBYKpppsTsLuhxmAKayi5N4FTXmG5dtiAhw@mail.gmail.com>
+	<562145C5.8070507@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zkS4nBu7xsy2hAaK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <561E3D28.2090901@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562145C5.8070507-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16 October 2015 at 20:45, Ariel D'Alessandro
+<ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+> Ezequiel, Joachim, all,
+>
+> El 16/10/15 a las 14:09, Joachim Eastwood escribi=C3=B3:
+>> On 16 October 2015 at 17:41, Ezequiel Garcia
+>> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>>> +DT bindings maintainers
+>>>
+>>> As per the documentation in
+>>> Documentation/devicetree/bindings/submitting-patches.txt
+>>> this binding should be patch 1/2.
+>
+> I see. I'll modify that.
+>
+>>>
+>>> On 16 October 2015 at 11:07, Ariel D'Alessandro
+>>> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>>>> Add the devicetree binding document for NXP LPC18xx EEPROM memory.
+>>>>
+>>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/nvmem/lpc18xx_eeprom.txt   | 26 +++++++++=
++++++++++++++
+>>>>  1 file changed, 26 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc18x=
+x_eeprom.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/nvmem/lpc18xx_eepro=
+m.txt b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
+>>>> new file mode 100644
+>>>> index 0000000..372ff8c
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
+>>>> @@ -0,0 +1,26 @@
+>>>> +* NXP LPC18xx EEPROM memory NVMEM driver
+>>>> +
+>>>> +Required properties:
+>>>> +  - compatible: Should be "nxp,lpc1850-eeprom"
+>>>
+>>> Correct me if I'm wrong, but I believe not all LPC18xx/43xx devices
+>>> have an EEPROM.
+>>>
+>>> Isn't it restricted to LPC18x7/LPC43x7 devices?
+>>
+>> The EEPROM can only be found on Flash devices. Flashless devices
+>> doesn't have the EEPROM.
+>
+> Yes, you're right. LPC1850 is wrong, sorry.
+> The UM10430 (LPC18xx User Manual) says that LPC18(5|3|2|1)(7|5|3|2)
+> parts have flash and that the LPC185x/3x parts with flash also includ=
+e
+> the 16 kB EEPROM. I'll add this info in a new set of patches v2.
+>
+>>
+>>
+>>> Should the compatible be nxp,lpc1857-eeprom to avoid confusion?
+>>
+>> Yes, please. The EEPROM doesn't exist on LPC1850 so please use the
+>> compatibility string from Ezequiel.
+>
+> OK. I'll fix this. Is there any reason for using lpc1857 instead of a
+> different available one?
 
---zkS4nBu7xsy2hAaK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The lpc1850 was once chosen since it was the device that was
+applicable to most peripherals and it is the flashless "top model". So
+for peripherals found only on devices with flash use the top model
+there; lpc1857. That's the only half good reason I can give.
 
-On Wed, Oct 14, 2015 at 01:31:52PM +0200, Hans de Goede wrote:
+Note that I have also started to use lpc1857 on the mtd driver for the
+internal flash that I am working on.
 
-> I like your idea in your other mail where you suggest to actually
-> use foo-supply and bar-supply names in the simplefb node, and then have
-> some code simple iterate over all the properties and check for *-supply
-> properties, so that the proper, schematic matching names can be used.
 
-> But surely if we go this way having a helper for this so that others
-> can re-use that likely not entirely trivial code is a good idea ?
-
-Yeah.  It's trying to come up with a way to do this that is easy to
-avoid abuse that's tricky.
-
-> One user which comes to mind immediately here is the generic mmc-pwrseq
-> driver.
-
-> I agree that we need to be careful to not use a helper like this too
-> much, but I do believe it will make sense to have it in some rare cases.
-> We can put a big warning in both the header declaring it and above
-> the implementation to use it scarcely.
-
-I'd rather have something that was visible in the code, not everyone
-reads the documentation especially not subsystem maintainers reviewing
-drivers that use APIs they're not familiar with.
-
---zkS4nBu7xsy2hAaK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWI/meAAoJECTWi3JdVIfQ/KQH/AplrD5DclG0K6rHq14zyl3s
-6TPBcR95e/52urDktvCDt9V5+3rOo9E+I46dnj8UGNgOCgGrt8J7iwuFh2+MYgVy
-NBoid3vgU+sXw4vlQBdIwOuqcMPjU8pBuzTEYIjixeGxyjjfh5+eO4Dm8NXMtTcL
-I0i84zkG3RTDIlHg90CpDkQ631FRPtgw7A9DaUBOMoSjqqoPtq1Ud06NAqHa2iD0
-3y2M1BPJIgTGG2VtJu7peBTyIkTjKSWx2BMXW423/Bv0s1fh+tP3xS3RrLEU24na
-47Wc0QpkEgpkAEpZW6Ht2Og2UTG44G1Gm6rROtGEzn8toYrjtfwSVPtpYT08p5g=
-=ETM+
------END PGP SIGNATURE-----
-
---zkS4nBu7xsy2hAaK--
+regards,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
