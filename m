@@ -1,99 +1,183 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: nvmem: Add NXP LPC18xx EEPROM memory binding documentation
-Date: Sun, 18 Oct 2015 23:23:54 +0200
-Message-ID: <CAGhQ9VzbUz2+n__Y5W=HJ5FAV2Z5pMKgi-Ut662+0n2XuFR0PA@mail.gmail.com>
-References: <1445004426-6271-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<1445004426-6271-3-git-send-email-ariel@vanguardiasur.com.ar>
-	<CAAEAJfAAUWd9y8EBfV0irbRF_7EjxD1ycdPcNGScbs6oPxp4JQ@mail.gmail.com>
-	<CAGhQ9VzaqiUm0=vpBYKpppsTsLuhxmAKayi5N4FTXmG5dtiAhw@mail.gmail.com>
-	<562145C5.8070507@vanguardiasur.com.ar>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [RFC 3/5] ARM: dts: enable clock support for BCM5301X
+Date: Mon, 19 Oct 2015 00:34:18 +0200
+Message-ID: <56241E6A.2060406@hauke-m.de>
+References: <1444771347-11382-1-git-send-email-jonmason@broadcom.com>
+ <1444771347-11382-4-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <562145C5.8070507-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1444771347-11382-4-git-send-email-jonmason@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Mason <jonmason@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16 October 2015 at 20:45, Ariel D'Alessandro
-<ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> Ezequiel, Joachim, all,
->
-> El 16/10/15 a las 14:09, Joachim Eastwood escribi=C3=B3:
->> On 16 October 2015 at 17:41, Ezequiel Garcia
->> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
->>> +DT bindings maintainers
->>>
->>> As per the documentation in
->>> Documentation/devicetree/bindings/submitting-patches.txt
->>> this binding should be patch 1/2.
->
-> I see. I'll modify that.
->
->>>
->>> On 16 October 2015 at 11:07, Ariel D'Alessandro
->>> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
->>>> Add the devicetree binding document for NXP LPC18xx EEPROM memory.
->>>>
->>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/nvmem/lpc18xx_eeprom.txt   | 26 +++++++++=
-+++++++++++++
->>>>  1 file changed, 26 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc18x=
-x_eeprom.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/nvmem/lpc18xx_eepro=
-m.txt b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
->>>> new file mode 100644
->>>> index 0000000..372ff8c
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/nvmem/lpc18xx_eeprom.txt
->>>> @@ -0,0 +1,26 @@
->>>> +* NXP LPC18xx EEPROM memory NVMEM driver
->>>> +
->>>> +Required properties:
->>>> +  - compatible: Should be "nxp,lpc1850-eeprom"
->>>
->>> Correct me if I'm wrong, but I believe not all LPC18xx/43xx devices
->>> have an EEPROM.
->>>
->>> Isn't it restricted to LPC18x7/LPC43x7 devices?
->>
->> The EEPROM can only be found on Flash devices. Flashless devices
->> doesn't have the EEPROM.
->
-> Yes, you're right. LPC1850 is wrong, sorry.
-> The UM10430 (LPC18xx User Manual) says that LPC18(5|3|2|1)(7|5|3|2)
-> parts have flash and that the LPC185x/3x parts with flash also includ=
-e
-> the 16 kB EEPROM. I'll add this info in a new set of patches v2.
->
->>
->>
->>> Should the compatible be nxp,lpc1857-eeprom to avoid confusion?
->>
->> Yes, please. The EEPROM doesn't exist on LPC1850 so please use the
->> compatibility string from Ezequiel.
->
-> OK. I'll fix this. Is there any reason for using lpc1857 instead of a
-> different available one?
+On 10/13/2015 11:22 PM, Jon Mason wrote:
+> Replace current device tree dummy clocks with real clock support for
+> Broadcom Northstar SoCs.
+> 
+> Signed-off-by: Jon Mason <jonmason@broadcom.com>
 
-The lpc1850 was once chosen since it was the device that was
-applicable to most peripherals and it is the flashless "top model". So
-for peripherals found only on devices with flash use the top model
-there; lpc1857. That's the only half good reason I can give.
+The clock-frequency of the uarts should also be replaced with the
+correct clock from the clock driver.
 
-Note that I have also started to use lpc1857 on the mtd driver for the
-internal flash that I am working on.
-
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hauke
+> ---
+>  arch/arm/boot/dts/bcm5301x.dtsi | 88 ++++++++++++++++++++++++++++++++---------
+>  1 file changed, 69 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+> index 6f50f67..1eca551 100644
+> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+> @@ -8,6 +8,7 @@
+>   * Licensed under the GNU/GPL. See COPYING for details.
+>   */
+>  
+> +#include <dt-bindings/clock/bcm-nsp.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> @@ -42,41 +43,48 @@
+>  
+>  	mpcore {
+>  		compatible = "simple-bus";
+> -		ranges = <0x00000000 0x19020000 0x00003000>;
+> +		ranges = <0x00000000 0x19000000 0x00023000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  
+> -		scu@0000 {
+> +		a9pll: arm_clk@00000 {
+> +			#clock-cells = <0>;
+> +			compatible = "brcm,nsp-armpll";
+> +			clocks = <&osc>;
+> +			reg = <0x00000 0x1000>;
+> +		};
+> +
+> +		scu@20000 {
+>  			compatible = "arm,cortex-a9-scu";
+> -			reg = <0x0000 0x100>;
+> +			reg = <0x20000 0x100>;
+>  		};
+>  
+> -		timer@0200 {
+> +		timer@20200 {
+>  			compatible = "arm,cortex-a9-global-timer";
+> -			reg = <0x0200 0x100>;
+> +			reg = <0x20200 0x100>;
+>  			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&clk_periph>;
+> +			clocks = <&periph_clk>;
+>  		};
+>  
+> -		local-timer@0600 {
+> +		local-timer@20600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+> -			reg = <0x0600 0x100>;
+> +			reg = <0x20600 0x100>;
+>  			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&clk_periph>;
+> +			clocks = <&periph_clk>;
+>  		};
+>  
+> -		gic: interrupt-controller@1000 {
+> +		gic: interrupt-controller@21000 {
+>  			compatible = "arm,cortex-a9-gic";
+>  			#interrupt-cells = <3>;
+>  			#address-cells = <0>;
+>  			interrupt-controller;
+> -			reg = <0x1000 0x1000>,
+> -			      <0x0100 0x100>;
+> +			reg = <0x21000 0x1000>,
+> +			      <0x20100 0x100>;
+>  		};
+>  
+> -		L2: cache-controller@2000 {
+> +		L2: cache-controller@22000 {
+>  			compatible = "arm,pl310-cache";
+> -			reg = <0x2000 0x1000>;
+> +			reg = <0x22000 0x1000>;
+>  			cache-unified;
+>  			arm,shared-override;
+>  			prefetch-data = <1>;
+> @@ -94,14 +102,37 @@
+>  
+>  	clocks {
+>  		#address-cells = <1>;
+> -		#size-cells = <0>;
+> +		#size-cells = <1>;
+> +		ranges;
+>  
+> -		/* As long as we do not have a real clock driver us this
+> -		 * fixed clock */
+> -		clk_periph: periph {
+> +		osc: oscillator {
+> +			#clock-cells = <0>;
+>  			compatible = "fixed-clock";
+> +			clock-frequency = <25000000>;
+> +		};
+> +
+> +		iprocmed: iprocmed {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+> +			clock-div = <2>;
+> +			clock-mult = <1>;
+> +		};
+> +
+> +		iprocslow: iprocslow {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+> +			clock-div = <4>;
+> +			clock-mult = <1>;
+> +		};
+> +
+> +		periph_clk: periph_clk {
+>  			#clock-cells = <0>;
+> -			clock-frequency = <400000000>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&a9pll>;
+> +			clock-div = <2>;
+> +			clock-mult = <1>;
+>  		};
+>  	};
+>  
+> @@ -178,6 +209,25 @@
+>  		};
+>  	};
+>  
+> +	lcpll0: lcpll0@1800c100 {
+> +		#clock-cells = <1>;
+> +		compatible = "brcm,nsp-lcpll0";
+> +		reg = <0x1800c100 0x14>;
+> +		clocks = <&osc>;
+> +		clock-output-names = "lcpll0", "pcie_phy", "sdio",
+> +				     "ddr_phy";
+> +	};
+> +
+> +	genpll: genpll@1800c140 {
+> +		#clock-cells = <1>;
+> +		compatible = "brcm,nsp-genpll";
+> +		reg = <0x1800c140 0x24>;
+> +		clocks = <&osc>;
+> +		clock-output-names = "genpll", "phy", "ethernetclk",
+> +				     "usbclk", "iprocfast", "sata1",
+> +				     "sata2";
+> +	};
+> +
+>  	nand: nand@18028000 {
+>  		compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+>  		reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
+> 
