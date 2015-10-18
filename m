@@ -1,24 +1,122 @@
-From: Carolyn Talley <Carolyn.Talley-tR41VTiHoTGfRvmTrFJqzg@public.gmane.org>
-Subject: Attn:::
-Date: Sun, 18 Oct 2015 03:24:26 +0000
-Message-ID: <C82DEA22374D4B41BA18A37BBA441BB4BB9486E6@CM-SAS-MBX-08.sas.arkgov.net>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v10 3/3] arm64: dts: mediatek: add xHCI & usb phy for mt8173
+Date: Sun, 18 Oct 2015 11:51:19 +0800
+Message-ID: <1445140279-18121-4-git-send-email-chunfeng.yun@mediatek.com>
+References: <1445140279-18121-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445140279-18121-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
+add xHCI and phy drivers for MT8173-EVB
 
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 16 +++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 42 +++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
 
-I seek a TRUSTWORTHY individual who can handle the disbursement of a substantial amount of my estate to charity. If you feel compelled to make effort for the less
-privileged among you, please revert for details/information Via
-Email:alisaeedonation-zJpx2rpV7r/QT0dZR+AlfA@public.gmane.org
-
-Ali Saeed
-alisaeedonation-zJpx2rpV7r/QT0dZR+AlfA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+index 4be66ca..d039a1c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+@@ -13,6 +13,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
+ #include "mt8173.dtsi"
+ 
+ / {
+@@ -32,6 +33,15 @@
+ 	};
+ 
+ 	chosen { };
++
++	usb_p1_vbus: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &i2c1 {
+@@ -390,3 +400,9 @@
+ &uart0 {
+ 	status = "okay";
+ };
++
++&usb30 {
++	vusb33-supply = <&mt6397_vusb_reg>;
++	vbus-supply = <&usb_p1_vbus>;
++	mediatek,wakeup-src = <1>;
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index d18ee42..46f5f50 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/clock/mt8173-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/power/mt8173-power.h>
+ #include <dt-bindings/reset-controller/mt8173-resets.h>
+ #include "mt8173-pinfunc.h"
+@@ -487,6 +488,47 @@
+ 			clock-names = "source", "hclk";
+ 			status = "disabled";
+ 		};
++
++		usb30: usb@11270000 {
++			compatible = "mediatek,mt8173-xhci";
++			reg = <0 0x11270000 0 0x1000>,
++			      <0 0x11280700 0 0x0100>;
++			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++			clocks = <&topckgen CLK_TOP_USB30_SEL>,
++				 <&pericfg CLK_PERI_USB0>,
++				 <&pericfg CLK_PERI_USB1>;
++			clock-names = "sys_ck",
++				      "wakeup_deb_p0",
++				      "wakeup_deb_p1";
++			phys = <&phy_port0 PHY_TYPE_USB3>,
++			       <&phy_port1 PHY_TYPE_USB2>;
++			mediatek,syscon-wakeup = <&pericfg>;
++			status = "okay";
++		};
++
++		u3phy: usb-phy@11290000 {
++			compatible = "mediatek,mt8173-u3phy";
++			reg = <0 0x11290000 0 0x800>;
++			clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
++			clock-names = "u3phya_ref";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			status = "okay";
++
++			phy_port0: port@11290800 {
++				reg = <0 0x11290800 0 0x800>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
++
++			phy_port1: port@11291000 {
++				reg = <0 0x11291000 0 0x800>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
++		};
+ 	};
+ };
+ 
+-- 
+1.8.1.1.dirty
