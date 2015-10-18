@@ -1,86 +1,65 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Sun, 18 Oct 2015 20:53:30 +0100
-Message-ID: <20151018195330.GB14956@sirena.org.uk>
-References: <561E1378.6000906@collabora.com>
- <20151017065750.GA18607@kroah.com>
- <20151018192931.GY14956@sirena.org.uk>
- <20151018193757.GA9147@kroah.com>
+Subject: Re: [PATCH RFC 0/2] simplefb: Add regulator handling support
+Date: Sun, 18 Oct 2015 20:57:19 +0100
+Message-ID: <20151018195719.GC14956@sirena.org.uk>
+References: <1444669458-5588-1-git-send-email-wens@csie.org>
+ <561CAFE8.9080506@redhat.com>
+ <20151014105556.GT14956@sirena.org.uk>
+ <561E3D28.2090901@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fJz81ohldq3XijGc"
-Return-path: <linux-clk-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="zkS4nBu7xsy2hAaK"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151018193757.GA9147@kroah.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti.com>, Jin
+In-Reply-To: <561E3D28.2090901@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---fJz81ohldq3XijGc
+--zkS4nBu7xsy2hAaK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Oct 18, 2015 at 12:37:57PM -0700, Greg Kroah-Hartman wrote:
-> On Sun, Oct 18, 2015 at 08:29:31PM +0100, Mark Brown wrote:
-> > On Fri, Oct 16, 2015 at 11:57:50PM -0700, Greg Kroah-Hartman wrote:
+On Wed, Oct 14, 2015 at 01:31:52PM +0200, Hans de Goede wrote:
 
-> > > I can't see adding calls like this all over the tree just to solve a
-> > > bus-specific problem, you are adding of_* calls where they aren't
-> > > needed, or wanted, at all.
+> I like your idea in your other mail where you suggest to actually
+> use foo-supply and bar-supply names in the simplefb node, and then have
+> some code simple iterate over all the properties and check for *-supply
+> properties, so that the proper, schematic matching names can be used.
 
-> > This isn't bus specific, I'm not sure what makes you say that?
+> But surely if we go this way having a helper for this so that others
+> can re-use that likely not entirely trivial code is a good idea ?
 
-> You are making it bus-specific by putting these calls all over the tree
-> in different bus subsystems semi-randomly for all I can determine.
+Yeah.  It's trying to come up with a way to do this that is easy to
+avoid abuse that's tricky.
 
-Do you mean firmware rather than bus here?  I think that's the confusion
-I have...
+> One user which comes to mind immediately here is the generic mmc-pwrseq
+> driver.
 
-> > One is that regardless of the actual performance of the system when
-> > deferred probe goes off it splats errors all over the console which
-> > makes it look like something is going wrong even if everything is fine
-> > in the end.  If lots of deferred probing happens then the volume gets
-> > big too.  People find this distracting, noisy and ugly - it obscures
-> > actual issues and trains people to ignore errors.  I do think this is a
-> > reasonable concern and that it's worth trying to mitigate against
-> > deferral for this reason alone.  We don't want to just ignore the errors
-> > and not print anything either since if the resource doesn't appear the
-> > user needs to know what is preventing the driver from instantiating so
-> > they can try to fix it.
+> I agree that we need to be careful to not use a helper like this too
+> much, but I do believe it will make sense to have it in some rare cases.
+> We can put a big warning in both the header declaring it and above
+> the implementation to use it scarcely.
 
-> This has come up many times, I have no objection to just turning that
-> message into a debug message that can be dynamically enabled for those
-> people wanting to debug their systems for boot time issues.
+I'd rather have something that was visible in the code, not everyone
+reads the documentation especially not subsystem maintainers reviewing
+drivers that use APIs they're not familiar with.
 
-It's not just the driver core logging, it's also all the individual
-drivers logging that they failed to get whatever resource since silently
-failing is not a great user experience.  Many, hopefully most, of the
-drivers don't actually have special handling for probe deferral since
-half the beauty of probe deferral is that the subsystem supplying the
-resource can just return -EPROBE_DEFER when it notices something is
-missing but might appear and then the drivers will do the right thing so
-long as they have error handling code that they really should have
-anyway.
-
-We'd need to have a special dev_err() that handled probe deferral
-errors for drivers to use during probe or some other smarts in the
-logging infrastructure.  Which isn't a totally horrible idea.
-
---fJz81ohldq3XijGc
+--zkS4nBu7xsy2hAaK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWI/i6AAoJECTWi3JdVIfQHiAH/j87ui2ZA7zZlEigIswdU9WD
-jRpEO3ZVBH3VylDoyoCIEtgolJwSqWV1Qk6c1EVn8vyhrP1+t5HYWvqrz+49KJrX
-AwCkkEKmXiNBtIAENaSsqVTWH3WmwLWYqbaZ3tTM47zN3gVzj/qnaQNs2GMhPQTs
-Y9pCzL1LUTMdviMwoMGtq7Fz9gUu+/pXpj1lT07whQmzfHaiMkcJ35VjHeTMKWnC
-r2moRf5uUgZj7gtylYcItS6hr/6P+X/tc7zY91KEMNo+Qrhdh1eC0H35Lsw8VwGA
-IqYTYWiz802CQiBCvtAXf3UYMrHZiW3MFWE7MD4dPqcl410M8ZscSxJH9Lsiz8k=
-=Y8XH
+iQEcBAEBCAAGBQJWI/meAAoJECTWi3JdVIfQ/KQH/AplrD5DclG0K6rHq14zyl3s
+6TPBcR95e/52urDktvCDt9V5+3rOo9E+I46dnj8UGNgOCgGrt8J7iwuFh2+MYgVy
+NBoid3vgU+sXw4vlQBdIwOuqcMPjU8pBuzTEYIjixeGxyjjfh5+eO4Dm8NXMtTcL
+I0i84zkG3RTDIlHg90CpDkQ631FRPtgw7A9DaUBOMoSjqqoPtq1Ud06NAqHa2iD0
+3y2M1BPJIgTGG2VtJu7peBTyIkTjKSWx2BMXW423/Bv0s1fh+tP3xS3RrLEU24na
+47Wc0QpkEgpkAEpZW6Ht2Og2UTG44G1Gm6rROtGEzn8toYrjtfwSVPtpYT08p5g=
+=ETM+
 -----END PGP SIGNATURE-----
 
---fJz81ohldq3XijGc--
+--zkS4nBu7xsy2hAaK--
