@@ -1,119 +1,82 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v10 0/3] Mediatek xHCI support
-Date: Sun, 18 Oct 2015 11:51:16 +0800
-Message-ID: <1445140279-18121-1-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 1/3] ARM: imx: clk-vf610: fix SAI clock tree
+Date: Sat, 17 Oct 2015 21:05:20 -0700
+Message-ID: <1445141122-14183-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Li.Xiubo@freescale.com, zidan.wang@freescale.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
->From 66e467548861c39c52de1d3d899ddc980c6cb925 Mon Sep 17 00:00:00 2001
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Date: Sun, 18 Oct 2015 11:39:45 +0800
-Subject: [PATCH v10 0/3] Mediatek xHCI support
+The Synchronous Audio Interface (SAI) instances are clocked by
+independent clocks: The bus clock and the audio clock (as shown in
+Figure 51-1 in the Vybrid Reference Manual). The clock gates in
+CCGR0/CCGR1 for SAI0 through SAI3 are bus clock gates, as access
+tests to the registers with/without gating those clocks have shown.
+The audio clock is gated by the SAIx_EN gates in CCM_CSCDR1,
+followed by a clock divider (SAIx_DIV). Currently, the parent of
+the bus clock gates has been assigned to SAIx_DIV, which is not
+involved in the bus clock path for the SAI instances (see chapter
+9.10.12, SAI clocking in the Vybrid Reference Manual).
 
-The patch supports MediaTek's xHCI controller.
+Fix this by define the parent clock of VF610_CLK_SAIx to be the bus
+clock.
 
-There are some differences from xHCI spec:
-1. The interval is specified in 250 * 8ns increments for Interrupt Moderation
-Interval(IMODI) of the Interrupter Moderation(IMOD) register, it is 8 times as
-much as that defined in xHCI spec.
+If the driver needs the audio clock (when used in master mode), a
+fixed device tree is required which assign the audio clock properly
+to VF610_CLK_SAIx_DIV.
 
-2. For the value of TD Size in Normal TRB, MTK's xHCI controller defines a
-number of packets that remain to be transferred for a TD after processing all
-Max packets in all previous TRBs,that means don't include the current TRB's,
-but in xHCI spec it includes the current ones.
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+Hi all,
 
-3. To minimize the scheduling effort for synchronous endpoints in xHC, the MTK
-architecture defines some extra SW scheduling parameters for HW. According to
-these parameters provided by SW, the xHC can easily decide whether a
-synchronous endpoint should be scheduled in a specific uFrame. The extra SW
-scheduling parameters are put into reserved DWs in Slot and Endpoint Context.
-And a bandwidth scheduler algorithm is added to support such feature.
+Patch 1 and 2 are actual fixes and should be applied toghether. If
+the clock tree changes are applied only, master mode won't work
+anymore. With only the device tree changes applied, it probably
+will still work but the VF610_CLK_SAIx_DIV will be enabled twice.
 
-A usb3.0 phy driver is also added which used by mt65xx SoCs platform, it
-supports two usb2.0 ports and one usb3.0 port.
+Since Patch 3 also uses the fixed clock layout, it should be
+applied after the clock tree fix too...
 
-depend on the patch for TDS calculation:
-https://patchwork.kernel.org/patch/7140041/
-
-Change in v10:
-1. simplify clock stability checks
-2. put MTK xHCI configuration from xhci_mtk_probe() to xhci_mtk_setup()
-
-Change in v9:
-1. fix up issue of FS out-iso when use single-TT hub
-2. improve RX sensitivity
-3. remove udelay(800) called by phy_instance_power_on/off
-
-Change in v8:
-1. use struct overlay for ippc register
-2. change usb wakeup as optional feature
-3. add TDS quirk into unified TDS calculation function
-
-Change in v7:
-1. remove xHCI timing setting which only for FPGA
-2. revise xHCI scheduler algorithms
-3. replace "usb" by "USB" in xHCI binding file
-
-Change in v6:
-1. get register base address of port in probe instead of of_xlate
-2. enable clock in phy_init instead of probe
-
-Change in v5:
-1. descripte more exactly for each specifiers in xHCI binding
-2. make use of new multi-phy feature for phy driver
-
-Change in v4:
-1. descripte more exactly for each specifiers in binding file
-2. use BIT() to define a bit mask macro
-
-Change in v3:
-1. implement generic phy
-2. move opperations of IPPC and wakeup from phy driver to xHCI driver
-3. seperate quirk functions into a single C file to fix up dependence issue
-
-Change in v2:
-1. Rebase to 4.2-rc1
-2. Remove probe phy before add usb_hcd patch from this series due to 4.2-rc1
-   already fix this issue
-3. add xhci mac clocks
-4. add suspend/resume
-5. support remote wakeup
-
-Chunfeng Yun (3):
-  dt-bindings: Add a binding for Mediatek xHCI host controller
-  xhci: mediatek: support MTK xHCI host controller
-  arm64: dts: mediatek: add xHCI & usb phy for mt8173
-
- .../devicetree/bindings/usb/mt8173-xhci.txt        |  51 ++
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  16 +
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  42 ++
- drivers/usb/host/Kconfig                           |   9 +
- drivers/usb/host/Makefile                          |   4 +
- drivers/usb/host/xhci-mtk-sch.c                    | 415 +++++++++++
- drivers/usb/host/xhci-mtk.c                        | 765 +++++++++++++++++++++
- drivers/usb/host/xhci-mtk.h                        | 162 +++++
- drivers/usb/host/xhci-ring.c                       |  16 +-
- drivers/usb/host/xhci.c                            |  19 +-
- drivers/usb/host/xhci.h                            |   1 +
- 11 files changed, 1494 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
- create mode 100644 drivers/usb/host/xhci-mtk-sch.c
- create mode 100644 drivers/usb/host/xhci-mtk.c
- create mode 100644 drivers/usb/host/xhci-mtk.h
+Not sure through which tree these changes should go?
 
 --
-1.8.1.1.dirty
+Stefan
+
+ drivers/clk/imx/clk-vf610.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+index bff45ea..42a7a23 100644
+--- a/drivers/clk/imx/clk-vf610.c
++++ b/drivers/clk/imx/clk-vf610.c
+@@ -335,22 +335,22 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+ 	clk[VF610_CLK_SAI0_SEL] = imx_clk_mux("sai0_sel", CCM_CSCMR1, 0, 2, sai_sels, 4);
+ 	clk[VF610_CLK_SAI0_EN] = imx_clk_gate("sai0_en", "sai0_sel", CCM_CSCDR1, 16);
+ 	clk[VF610_CLK_SAI0_DIV] = imx_clk_divider("sai0_div", "sai0_en", CCM_CSCDR1, 0, 4);
+-	clk[VF610_CLK_SAI0] = imx_clk_gate2("sai0", "sai0_div", CCM_CCGR0, CCM_CCGRx_CGn(15));
++	clk[VF610_CLK_SAI0] = imx_clk_gate2("sai0", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(15));
+ 
+ 	clk[VF610_CLK_SAI1_SEL] = imx_clk_mux("sai1_sel", CCM_CSCMR1, 2, 2, sai_sels, 4);
+ 	clk[VF610_CLK_SAI1_EN] = imx_clk_gate("sai1_en", "sai1_sel", CCM_CSCDR1, 17);
+ 	clk[VF610_CLK_SAI1_DIV] = imx_clk_divider("sai1_div", "sai1_en", CCM_CSCDR1, 4, 4);
+-	clk[VF610_CLK_SAI1] = imx_clk_gate2("sai1", "sai1_div", CCM_CCGR1, CCM_CCGRx_CGn(0));
++	clk[VF610_CLK_SAI1] = imx_clk_gate2("sai1", "ipg_bus", CCM_CCGR1, CCM_CCGRx_CGn(0));
+ 
+ 	clk[VF610_CLK_SAI2_SEL] = imx_clk_mux("sai2_sel", CCM_CSCMR1, 4, 2, sai_sels, 4);
+ 	clk[VF610_CLK_SAI2_EN] = imx_clk_gate("sai2_en", "sai2_sel", CCM_CSCDR1, 18);
+ 	clk[VF610_CLK_SAI2_DIV] = imx_clk_divider("sai2_div", "sai2_en", CCM_CSCDR1, 8, 4);
+-	clk[VF610_CLK_SAI2] = imx_clk_gate2("sai2", "sai2_div", CCM_CCGR1, CCM_CCGRx_CGn(1));
++	clk[VF610_CLK_SAI2] = imx_clk_gate2("sai2", "ipg_bus", CCM_CCGR1, CCM_CCGRx_CGn(1));
+ 
+ 	clk[VF610_CLK_SAI3_SEL] = imx_clk_mux("sai3_sel", CCM_CSCMR1, 6, 2, sai_sels, 4);
+ 	clk[VF610_CLK_SAI3_EN] = imx_clk_gate("sai3_en", "sai3_sel", CCM_CSCDR1, 19);
+ 	clk[VF610_CLK_SAI3_DIV] = imx_clk_divider("sai3_div", "sai3_en", CCM_CSCDR1, 12, 4);
+-	clk[VF610_CLK_SAI3] = imx_clk_gate2("sai3", "sai3_div", CCM_CCGR1, CCM_CCGRx_CGn(2));
++	clk[VF610_CLK_SAI3] = imx_clk_gate2("sai3", "ipg_bus", CCM_CCGR1, CCM_CCGRx_CGn(2));
+ 
+ 	clk[VF610_CLK_NFC_SEL] = imx_clk_mux("nfc_sel", CCM_CSCMR1, 12, 2, nfc_sels, 4);
+ 	clk[VF610_CLK_NFC_EN] = imx_clk_gate("nfc_en", "nfc_sel", CCM_CSCDR2, 9);
+-- 
+2.6.1
+
