@@ -1,51 +1,58 @@
-From: Josh Cartwright <joshc@ni.com>
-Subject: Re: [PATCHv2 2/3] ARM: zynq: dt: Updated devicetree for Zynq 7000
- platform.
-Date: Mon, 19 Oct 2015 13:24:16 -0500
-Message-ID: <20151019182416.GL12756@jcartwri.amer.corp.natinst.com>
-References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
- <1445035350-3569-3-git-send-email-moritz.fischer@ettus.com>
- <20151018175324.GH12756@jcartwri.amer.corp.natinst.com>
- <5624F985.8050905@xilinx.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH V2 08/10] ASoC: img: Add driver for SPDIF
+ input controller
+Date: Mon, 19 Oct 2015 19:27:58 +0100
+Message-ID: <20151019182758.GK32054@sirena.org.uk>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1444653637-14711-9-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5624F985.8050905@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="k18oBAwMkTg3OUap"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, linux@arm.linux.org.uk, atull@opensource.altera.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1444653637-14711-9-git-send-email-Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 19, 2015 at 04:09:09PM +0200, Michal Simek wrote:
-> On 10/18/2015 07:53 PM, Josh Cartwright wrote:
-> > On Fri, Oct 16, 2015 at 03:42:29PM -0700, Moritz Fischer wrote:
-[..]
-> >> @@ -294,6 +294,11 @@
-> >>  		devcfg: devcfg@f8007000 {
-> >>  			compatible = "xlnx,zynq-devcfg-1.0";
-> >>  			reg = <0xf8007000 0x100>;
-> >> +			interrupt-parent = <&intc>;
-> > 
-> > You shouldn't need interrupt-parent here.  In fact, I suspect it can be
-> > removed from all sibling nodes as well.
-> 
-> Correct. But I tend to do it vice-versa. To remove it from amba node and
-> keep it in every IP here. The reason is simple to let everybody know
-> that setting up right interrupt controller is something what they have
-> to care. If you have more interrupt controllers in the system it can be
-> messy.
 
-If you like that, then you'd like the interrupt-extended properly even
-better (I think).
+--k18oBAwMkTg3OUap
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> But again. Please remove this patch from this series. This will go to
-> mainline through arm-soc but 1/3 and 3/3 will go through Greg. That's
-> why please do not include it here.
+On Mon, Oct 12, 2015 at 01:40:35PM +0100, Damien Horsley wrote:
 
-Not all of the patches in a series need to go through the same
-maintainer...splitting them up is common.  It's nice seeing related
-things out on the list together.  (Especially when there is a dependency
-at some level).
+> +static int img_spdif_in_get_lock_acquire(struct snd_kcontrol *kcontrol,
+> +				  struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_dai *cpu_dai = snd_kcontrol_chip(kcontrol);
+> +	struct img_spdif_in *spdif = snd_soc_dai_get_drvdata(cpu_dai);
+> +
+> +	ucontrol->value.integer.value[0] = spdif->lock_acquire;
+> +
+> +	return 0;
+> +}
 
-  Josh
+It would be nice to get some documentation of what these controls are...
+
+--k18oBAwMkTg3OUap
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJTYuAAoJECTWi3JdVIfQUSsH/0OyVUdjnBm+bHJDFM447k+U
+3ObSZ6IIGW+Wjq4t7p+cJqmtC2E0aHz+8Knfjo4G7ItoHIYbUObkehmml7UJuZR0
+843C2jjwob5oaaKsXjNZi3EIya1frsin31OLt9OK+PBZHldot2nHKqFGExO5oiMf
+dVqgdlsOjGGUL8h/DOD7SkeJnXhi2HbJWqSWFOImiBRlyE4P8+G7Qof9+nrPKPcu
+hkTngSWg1Ho6IwnhYm9N1a6NCZHyTkm0RzMb73qk7/cxwPKGF0uiIdOfBpyNr2uA
+syJZ7NjhWgMjVFWS1XPpa4ggjz23p9KNf87jbzQFbHpoTCi0eVmRi5nBqmRqpUk=
+=wqHD
+-----END PGP SIGNATURE-----
+
+--k18oBAwMkTg3OUap--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
