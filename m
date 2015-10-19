@@ -1,131 +1,138 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH RFC V3 1/3] Input: goodix - add axis swapping and axis
- inversion support
-Date: Mon, 19 Oct 2015 14:34:39 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F101B03@irsmsx105.ger.corp.intel.com>
-References: <1445183579-29176-1-git-send-email-merker@debian.org>
- <1445183579-29176-2-git-send-email-merker@debian.org>
+From: "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
+ pcie
+Date: Mon, 19 Oct 2015 14:47:43 +0000
+Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04229363@DFLE11.ent.ti.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
+ <5192855.p6QLDWTiVi@wuerfel> <561FCDC0.3080109@ti.com>
+ <6215485.RTPqreMEMX@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1445183579-29176-2-git-send-email-merker@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6215485.RTPqreMEMX@wuerfel>
 Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Karsten Merker <merker@debian.org>, Bastien Nocera <hadess@hadess.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, KISHON VIJAY ABRAHAM <kishon-l0cyMroinI0@public.gmane.org>, "Quadros, Roger" <rogerq-l0cyMroinI0@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Karsten Merker [mailto:merker@debian.org]
-> Sent: 18 October, 2015 18:53
-> To: Bastien Nocera; Dmitry Torokhov; Tirdea, Irina; Aleksei Mamlin; linux-input@vger.kernel.org; Ian Campbell
-> Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Chen-Yu Tsai; Karsten Merker
-> Subject: [PATCH RFC V3 1/3] Input: goodix - add axis swapping and axis inversion support
-> 
-> Implement support for the following device-tree and ACPI 5.1 DSD
-> properties in the goodix touchscreen driver:
-> 
->  - touchscreen-inverted-x:  X axis is inverted (boolean)
->  - touchscreen-inverted-y:  Y axis is inverted (boolean)
->  - touchscreen-swapped-x-y: X and Y axis are swapped (boolean)
-> 
-> These are necessary on tablets which have a display in portrait
-> format while the touchscreen is in landscape format, such as e.g.
-> the MSI Primo 81.
-> 
-> Signed-off-by: Karsten Merker <merker@debian.org>
-> Tested-by: Bastien Nocera <hadess@hadess.net>
-> ---
-
-Looks good to me, thanks for making the changes.
-Tested this with ACPI _DSD properties.
-
-Tested-by: Irina Tirdea <irina.tirdea@intel.com>
-
->  drivers/input/touchscreen/goodix.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index 22bfc4b..b585123 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -2,6 +2,7 @@
->   *  Driver for Goodix Touchscreens
->   *
->   *  Copyright (c) 2014 Red Hat Inc.
-> + *  Copyright (c) 2015 K. Merker <merker@debian.org>
->   *
->   *  This code is based on gt9xx.c authored by andrew@goodix.com:
->   *
-> @@ -53,6 +54,9 @@ struct goodix_ts_data {
->  	atomic_t open_count;
->  	/* Protects power management calls and access to suspended flag */
->  	struct mutex mutex;
-> +	bool swapped_x_y;
-> +	bool inverted_x;
-> +	bool inverted_y;
->  };
-> 
->  #define GOODIX_GPIO_INT_NAME		"irq"
-> @@ -271,6 +275,14 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
->  		input_y = ts->abs_y_max - input_y;
->  	}
-> 
-> +	/* Inversions have to happen before axis swapping */
-> +	if (ts->inverted_x)
-> +		input_x = ts->abs_x_max - input_x;
-> +	if (ts->inverted_y)
-> +		input_y = ts->abs_y_max - input_y;
-> +	if (ts->swapped_x_y)
-> +		swap(input_x, input_y);
-> +
->  	input_mt_slot(ts->input_dev, id);
->  	input_mt_report_slot_state(ts->input_dev, MT_TOOL_FINGER, true);
->  	input_report_abs(ts->input_dev, ABS_MT_POSITION_X, input_x);
-> @@ -666,6 +678,8 @@ static void goodix_read_config(struct goodix_ts_data *ts)
->  			 error);
->  		ts->abs_x_max = GOODIX_MAX_WIDTH;
->  		ts->abs_y_max = GOODIX_MAX_HEIGHT;
-> +		if (ts->swapped_x_y)
-> +			swap(ts->abs_x_max, ts->abs_y_max);
->  		ts->int_trigger_type = GOODIX_INT_TRIGGER;
->  		ts->max_touch_num = GOODIX_MAX_CONTACTS;
->  		return;
-> @@ -673,6 +687,8 @@ static void goodix_read_config(struct goodix_ts_data *ts)
-> 
->  	ts->abs_x_max = get_unaligned_le16(&config[RESOLUTION_LOC]);
->  	ts->abs_y_max = get_unaligned_le16(&config[RESOLUTION_LOC + 2]);
-> +	if (ts->swapped_x_y)
-> +		swap(ts->abs_x_max, ts->abs_y_max);
->  	ts->int_trigger_type = config[TRIGGER_LOC] & 0x03;
->  	ts->max_touch_num = config[MAX_CONTACTS_LOC] & 0x0f;
->  	if (!ts->abs_x_max || !ts->abs_y_max || !ts->max_touch_num) {
-> @@ -680,6 +696,8 @@ static void goodix_read_config(struct goodix_ts_data *ts)
->  			"Invalid config, using defaults\n");
->  		ts->abs_x_max = GOODIX_MAX_WIDTH;
->  		ts->abs_y_max = GOODIX_MAX_HEIGHT;
-> +		if (ts->swapped_x_y)
-> +			swap(ts->abs_x_max, ts->abs_y_max);
->  		ts->max_touch_num = GOODIX_MAX_CONTACTS;
->  	}
-> 
-> @@ -805,6 +823,13 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
->  {
->  	int error;
-> 
-> +	ts->swapped_x_y = device_property_read_bool(&ts->client->dev,
-> +						    "touchscreen-swapped-x-y");
-> +	ts->inverted_x = device_property_read_bool(&ts->client->dev,
-> +						   "touchscreen-inverted-x");
-> +	ts->inverted_y = device_property_read_bool(&ts->client->dev,
-> +						   "touchscreen-inverted-y");
-> +
->  	goodix_read_config(ts);
-> 
->  	error = goodix_request_input_dev(ts);
-> --
-> 2.1.4
-
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFu
+biBbbWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IFRodXJzZGF5LCBPY3RvYmVyIDE1LCAy
+MDE1IDM6MzUgUE0NCj4gVG86IEthcmljaGVyaSwgTXVyYWxpZGhhcmFuDQo+IENjOiBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IEt3b2ssIFdpbmdNYW47IHJvYmgrZHRAa2Vy
+bmVsLm9yZzsNCj4gcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpj
+K2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7DQo+IGdhbGFrQGNvZGVhdXJvcmEub3JnOyBLSVNI
+T04gVklKQVkgQUJSQUhBTTsgUXVhZHJvcywgUm9nZXI7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207
+IHNzYW50b3NoQGtlcm5lbC5vcmc7IGxpbnV4QGFybS5saW51eC5vcmcudWs7DQo+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0N
+Cj4gcGNpQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDEvMl0gcGh5
+OiBrZXlzdG9uZTogc2VyZGVzIGRyaXZlciBmb3IgZ2JlIDEwZ2JlIGFuZA0KPiBwY2llDQo+IA0K
+PiBPbiBUaHVyc2RheSAxNSBPY3RvYmVyIDIwMTUgMTI6MDE6MDQgTXVyYWxpIEthcmljaGVyaSB3
+cm90ZToNCj4gPg0KPiA+ID4+ICsgKiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVz
+dCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KPiA+ID4+ICsgKiBub3RpY2UsIHRoaXMg
+bGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIgaW4gdGhlDQo+
+ID4gPj4gKyAqIGRvY3VtZW50YXRpb24gYW5kL29yIG90aGVyIG1hdGVyaWFscyBwcm92aWRlZCB3
+aXRoIHRoZQ0KPiA+ID4+ICsgKiBkaXN0cmlidXRpb24uDQo+ID4gPg0KPiA+ID4gVGhlIGN1cnJl
+bnQgY29kZSBkb2VzIG5vdCBkbyB0aGlzIHdoZW4gY29tcGlsZWQsIHdoaWNoIG1pZ2h0IGJlIGEN
+Cj4gPiA+IHByb2JsZW0gZm9yIGRpc3RyaWJ1dG9ycy4gQ2FuIHlvdSBjbGFyaWZ5IHRoZSBsaWNl
+bnNlPw0KPiA+ID4NCj4gPiBBcm5kLA0KPiA+DQo+ID4gQ2FuIHlvdSBlbGFib3JhdGUgb24gdGhp
+cz8gSSBkaWQgYSBncmVwIG9uIHRoZSBzdHJpbmcgIlJlZGlzdHJpYnV0aW9ucw0KPiA+IGluIGJp
+bmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQiIGFuZCBJIGNvdWxk
+IGZpbmQNCj4gPiBzZXZlcmFsIGluc3RhbmNlIG9mIHRoaXMuIFNvIEkgYW0gbm90IHN1cmUgd2hh
+dCB5b3UgbWVhbiBieSAiVGhlIGN1cnJlbnQNCj4gPiBjb2RlIGRvZXMgbm90IGRvIHRoaXMgd2hl
+biBjb21waWxlZCIuDQo+IA0KPiBZb3Ugd3JpdGUgdGhhdCB0aGUgYmluYXJ5IGZvcm0gb2YgdGhl
+IGNvZGUgbXVzdCBwcm9kdWNlIHRoZSBjb3B5cmlnaHQNCj4gbm90aWNlLiBJIGRvbid0IHNlZSBh
+bnkgY29kZSB0aGF0IGRvZXMgdGhpcy4gSWYgSSB3YXMgbG9va2luZyBpbiB0aGUNCj4gd3Jvbmcg
+cGxhY2UsIGxldCBtZSBrbm93Lg0KPiANCj4gCUFybmQNCg0KRm9yIGV4YW1wbGUsIHdlIGRpZCBh
+IGdyZXAgb2YgdGhlIGZvbGxvd2luZyANCg0KbXlwYzpsaW51eChwZXJzb25hbC9saW51eC9zZXJk
+ZXMpICQgZ3JlcCAtcm5JICJSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXBy
+b2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodCIgLi9uZXQvDQouL25ldC9zdW5ycGMvYXV0aF9nc3Mv
+YXV0aF9nc3MuYzoxODogKiAgMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3Qg
+cmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3N1bnJwYy9hdXRoX2dzcy9nc3Nf
+bWVjaF9zd2l0Y2guYzoxNTogKiAgMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11
+c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3N1bnJwYy9hdXRoX2dzcy9n
+c3Nfa3JiNV9tZWNoLmM6MTY6ICogIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBt
+dXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC9ibHVldG9vdGgvZWNjLmM6
+MTA6ICogICogUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRo
+ZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L2JsdWV0b290aC9lY2MuaDoxMDogKiAgKiBSZWRpc3Ry
+aWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdo
+dA0KLi9uZXQvY2FuL2d3LmM6MTI6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3Jt
+IG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L2Nhbi9hZl9jYW4uYzox
+MzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhl
+IGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvY2FuL3Byb2MuYzoxMjogKiAyLiBSZWRpc3RyaWJ1dGlv
+bnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9u
+ZXQvY2FuL2JjbS5jOjEyOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0
+IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC9jYW4vcmF3LmM6MTI6ICogMi4g
+UmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBj
+b3B5cmlnaHQNCi4vbmV0L2Nhbi9hZl9jYW4uaDoxMDogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4g
+YmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlw
+Yy9kaXNjb3Zlci5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0
+IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL25vZGUuaDoxMzogKiAy
+LiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3Zl
+IGNvcHlyaWdodA0KLi9uZXQvdGlwYy9uZXRsaW5rX2NvbXBhdC5jOjEwOiAqIDIuIFJlZGlzdHJp
+YnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0
+DQouL25ldC90aXBjL25hbWVfZGlzdHIuaDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmlu
+YXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9i
+ZWFyZXIuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXBy
+b2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9uYW1lX3RhYmxlLmg6MTM6ICog
+Mi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92
+ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvbmFtZV9kaXN0ci5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0
+aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQou
+L25ldC90aXBjL2FkZHIuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0g
+bXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9zdWJzY3IuaDox
+MzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhl
+IGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9saW5rLmg6MTM6ICogMi4gUmVkaXN0cmlidXRp
+b25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4v
+bmV0L3RpcGMvbmV0Lmg6MTM6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11
+c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvbmV0bGluay5jOjEz
+OiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUg
+YWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL3N5c2N0bC5jOjEyOiAqIDIuIFJlZGlzdHJpYnV0
+aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQou
+L25ldC90aXBjL3VkcF9tZWRpYS5jOjExOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkg
+Zm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL3NvY2tl
+dC5oOjExOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVj
+ZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL3N1YnNjci5jOjEzOiAqIDIuIFJlZGlz
+dHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJp
+Z2h0DQouL25ldC90aXBjL21zZy5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkg
+Zm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL25hbWVf
+dGFibGUuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXBy
+b2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9tc2cuaDoxMzogKiAyLiBSZWRp
+c3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHly
+aWdodA0KLi9uZXQvdGlwYy9jb3JlLmM6MTM6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFy
+eSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvc29j
+a2V0LmM6MTM6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9k
+dWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvbmV0LmM6MTM6ICogMi4gUmVkaXN0
+cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmln
+aHQNCi4vbmV0L3RpcGMvYmNhc3QuYzoxNDogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5
+IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9iZWFy
+ZXIuaDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1
+Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9jb3JlLmg6MTM6ICogMi4gUmVkaXN0
+cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmln
+aHQNCi4vbmV0L3RpcGMvbm9kZS5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkg
+Zm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL2FkZHIu
+aDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2Ug
+dGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9pYl9tZWRpYS5jOjE3OiAqIDIuIFJlZGlz
+dHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJp
+Z2h0DQouL25ldC90aXBjL2xpbmsuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5
+IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9uZXRs
+aW5rLmg6MTI6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9k
+dWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvc2VydmVyLmM6MTI6ICogMi4gUmVk
+aXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5
+cmlnaHQNCi4vbmV0L3RpcGMvZGlzY292ZXIuaDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4g
+YmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlw
+Yy9ldGhfbWVkaWEuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVz
+dCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9iY2FzdC5oOjEzOiAq
+IDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJv
+dmUgY29weXJpZ2h0DQouL25ldC90aXBjL3NlcnZlci5oOjEyOiAqIDIuIFJlZGlzdHJpYnV0aW9u
+cyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25l
+dC82bG93cGFuL2lwaGMuYzoyOTogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0g
+bXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvc2NoZWQvc2NoX2NvZGVs
+LmM6MTc6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNl
+IHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L2llZWU4MDIxNTQvNmxvd3Bhbi9jb3JlLmM6Mjc6
+ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBh
+Ym92ZSBjb3B5cmlnaHQgDQoNClRoYW5rcywNCldpbmdNYW4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
