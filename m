@@ -1,84 +1,49 @@
-From: WingMan Kwok <w-kwok2@ti.com>
-Subject: [PATCH v1] ARM: keystone: dts: add PCI serdes driver bindings
-Date: Mon, 19 Oct 2015 14:58:00 -0400
-Message-ID: <1445281080-14818-1-git-send-email-w-kwok2@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] mt8173 spi multiple devices support
+Date: Mon, 19 Oct 2015 20:27:13 +0100
+Message-ID: <20151019192713.GR32054@sirena.org.uk>
+References: <1444793015-30359-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: WingMan Kwok <w-kwok2@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3XZQkxCYp0f/VEFS"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444793015-30359-1-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the serdes phy driver dts bindings
-for the keystone PCIe host driver.
 
-v1:
-	- addresses the following review comments
-		1. https://lkml.org/lkml/2015/10/19/264
-		2. https://lkml.org/lkml/2015/10/15/895
+--3XZQkxCYp0f/VEFS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
----
- arch/arm/boot/dts/k2e.dtsi      |   10 ++++++++++
- arch/arm/boot/dts/keystone.dtsi |   10 ++++++++++
- 2 files changed, 20 insertions(+)
+On Wed, Oct 14, 2015 at 11:23:30AM +0800, Leilk Liu wrote:
+> This series are based on 4.3-rc1 and provide 5 patches to support
+> mt8173 spi multiple devices.
 
-diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
-index 675fb8e..5f7cc0a 100644
---- a/arch/arm/boot/dts/k2e.dtsi
-+++ b/arch/arm/boot/dts/k2e.dtsi
-@@ -86,6 +86,15 @@
- 			gpio,syscon-dev = <&devctrl 0x240>;
- 		};
- 
-+		pcie1_phy: phy@2326000 {
-+			#phy-cells = <0>;
-+			compatible = "ti,keystone-serdes-pcie";
-+			reg = <0x02326000 0x4000>;
-+			link-rate-kbps = <5000000>;
-+			num-lanes = <2>;
-+			status = "disabled";
-+		};
-+
- 		pcie1: pcie@21020000 {
- 			compatible = "ti,keystone-pcie","snps,dw-pcie";
- 			clocks = <&clkpcie1>;
-@@ -99,6 +108,7 @@
- 			status = "disabled";
- 			device_type = "pci";
- 			num-lanes = <2>;
-+			phys = <&pcie1_phy>;
- 
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 72816d6..5c7c58a 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -275,6 +275,15 @@
- 			ti,syscon-dev = <&devctrl 0x2a0>;
- 		};
- 
-+		pcie0_phy: phy@2320000 {
-+			#phy-cells = <0>;
-+			compatible = "ti,keystone-serdes-pcie";
-+			reg = <0x02320000 0x4000>;
-+			link-rate-kbps = <5000000>;
-+			num-lanes = <2>;
-+			status = "disabled";
-+		};
-+
- 		pcie0: pcie@21800000 {
- 			compatible = "ti,keystone-pcie", "snps,dw-pcie";
- 			clocks = <&clkpcie>;
-@@ -288,6 +297,7 @@
- 			status = "disabled";
- 			device_type = "pci";
- 			num-lanes = <2>;
-+			phys = <&pcie0_phy>;
- 
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
--- 
-1.7.9.5
+This doesn't apply against current code, please check and resend.  Also
+note that it looks like you've got the execute bit set on some of the
+files.  The code itself looks fine.
+
+--3XZQkxCYp0f/VEFS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJUQQAAoJECTWi3JdVIfQRawH/1YU3tNYjifQ4QL5Meas0iex
++uLsg4TcjldUo9GRacr1zIgp17wzMT9tHWLrc5yFLdQYT0MtWHCCqvpLrXk4X+ze
+B83IG57pvIl5Bz7mF0Ln5i4//32TDn0g5GctfSyZcsihFyQ54xH3Fn/godpdiQYI
+Bmfle2cu5y4WV4M9jvpGDnISKP1ogkf9b8U+fbt/Gs7gJFJYVipGurdDJNk0syq6
+TAeuLy2aW2ADybBYmlUQyynxHMm633GWbdEGI2FcTI/DanBZ5maZ+5kONoGAN02j
+32Vw6lshQ3qYKgE2jjgi94WHCfNzPXBOXMGMT7U3syNhkv905LGuBON4KeEBW18=
+=2dfF
+-----END PGP SIGNATURE-----
+
+--3XZQkxCYp0f/VEFS--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
