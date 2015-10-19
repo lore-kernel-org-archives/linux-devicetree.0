@@ -1,70 +1,84 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 02/25] devicetree: bindings: scsi: HiSi SAS
-Date: Mon, 19 Oct 2015 22:51:22 +0800
-Message-ID: <5625036A.3040203@linaro.org>
-References: <1444663237-238302-1-git-send-email-john.garry@huawei.com> <1444663237-238302-3-git-send-email-john.garry@huawei.com> <CAL_JsqLk9p_YX2FCNiR4sOSU74asN0UrOSJ5gQfnyRhrFH8LgQ@mail.gmail.com> <5624CA64.9020209@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Mon, 19 Oct 2015 15:50:48 +0100
+Message-ID: <20151019145048.GI14956@sirena.org.uk>
+References: <561E1378.6000906@collabora.com>
+ <20151017065750.GA18607@kroah.com>
+ <20151018192931.GY14956@sirena.org.uk>
+ <20151018193757.GA9147@kroah.com>
+ <20151018195330.GB14956@sirena.org.uk>
+ <1445247881.53393.146.camel@infradead.org>
+ <CAL_JsqKehmSobpbdeXGo=-1pAbtrhCHovyyCWya_MNOhGCi8CQ@mail.gmail.com>
+ <1445258870.53393.173.camel@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <5624CA64.9020209@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>, Rob Herring <robh@kernel.org>
-Cc: Jej B <James.Bottomley@hansenpartnership.com>, linux-kernel@vger.kernel.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxarm@huawei.com, linux-scsi@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, john.garry2@mail.dcu.ie, hare@suse.de
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="P75d7mFgfYjpUjsN"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445258870.53393.173.camel@infradead.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti>
 List-Id: devicetree@vger.kernel.org
 
 
+--P75d7mFgfYjpUjsN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 10/19/2015 06:48 PM, John Garry wrote:
-> On 16/10/2015 14:47, Rob Herring wrote:
+On Mon, Oct 19, 2015 at 01:47:50PM +0100, David Woodhouse wrote:
+> On Mon, 2015-10-19 at 07:35 -0500, Rob Herring wrote:
 
->>> +  - reg : Address and length of the register sets for the device
->>> +   - SAS controller registers
->>> +   - SAS controller control registers
->>> +
->>> +  - reset-reg : offset to reset, status, and clock registers in
->>> control registers
->>
->> Within the above register range? If so and if this varies, then that
->> implies there is more than 1 version of IP. In that case you should
->> have a more specific compatible string.
->>
-> The registers in the second region are for syscon register offsets. See
-> last note, below.
->
->> How long is this property I count 3 cells here, but the example has 5.
->> Define what each cell corresponds to specifically.
->>
-> We will add all the cells to the decription, which are:
-> Reset assert, clock disable, reset status, reset de-assert, and clock
-> enable.
->>> +
+> > See version 2 of the series[1] which did that. It became obvious that
+> > was pointless because the call paths ended up looking like this:
 
-We have switch to using syscon,
-The dts has been changed to
+> > Generic subsystem code -> DT look-up code -> fwnode_probe_device ->
+> > of_probe_device
 
-         sas_ctrl0: sas_ctrl@c0000000 {
-                 compatible = "hisilicon,sas-ctrl", "syscon";
-                 reg = <0x0 0xc0000000 0x0 0x10000>;
-         };
+> You link to a thread which says that "AT LEAST CURRENTLY, the calling
+> locations [the 'DT look-up code' you mention above] are DT specific
+> functions anyway.
 
-         sas0: sas@c1000000 {
-                 compatible = "hisilicon,sas-controller-v1";
-                 reg = <0x0 0xc1000000 0x0 0x10000>;
-                 hisilicon,sas-syscon = <&sas_ctrl0>;
-                 ctrl-reg = <0xa60 0x33c 0x5a30 0xa64 0x338>;
+> But the point I'm making is that we are working towards *fixing* that,
+> and *not* using DT-specific code in places where we should be using the
+> generic APIs.
 
-ctrl-reg contains several regs in sas-ctrl, which need to be accessed 
-since some complicated requirement of the silicon.
+What is the plan for fixing things here?  It's not obvious (at least to
+me) that we don't want to have the subsystems having knowledge of how
+they are bound to a specific firmware which is what you seem to imply
+here.  That seems like it's going to fall down since the different
+firmware interfaces do have quite different ideas about how things fit
+together at a system level and different compatibility needs which do
+suggest that just trying to do a direct mapping from DT into ACPI may
+well not make people happy but it sounds like that's the intention.
 
-Have considered using
-hisilicon,sas-syscon = <&sas_ctrl0 0xa60 0x33c 0x5a30 0xa64 0x338>;
-But of_property_read_u32_array cat not get array from index 1.
-Then we have to use of_property_read_u32_index one by one.
+When it gets to drivers the situation is much more clear since it's
+normally just simple properties, it's generally a bit more worrying if
+drivers are needing to directly interact with cross-device linkage.
+This is all subsystem level code though.
 
-So instead we add additional ctrl-reg, and get the array one time via 
-of_property_read_u32_array.
+> None of that really negates that fact that we are *working* on cleaning
+> these code paths up to be firmware-agnostic, and the fact that we
+> haven't got to this one *yet* isn't necessarily a good reason to make
+> it *worse* by adding new firmware-specificity to it.
 
-Thanks
+It seems like we're going to have to refactor these bits of code when
+they get generalised anyway so I'm not sure that the additional cost
+here is that big.
 
+--P75d7mFgfYjpUjsN
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJQNHAAoJECTWi3JdVIfQaREH/3tn5eOlLmrwOqNfDROOkFts
+y5Wy3xg5mX9QlH88z3oxHPnKqWqSKDRoi/VgRujy8dqaZ4PPBKZA2ZuWqf5BAGar
+nAYP9oLWh8/3A0s2NaN6puJYvsmm8287OePqWxHrL+3I6azzj65/LcGx4HmjsM1j
+Z/qZaDh/6LwsBtEUv94Q4nhE+OykmmE7Y9EPmd03QOPrgoJhtQ+rO8JchP9NWkVq
+W3txdv4ktdFc//r6JJG1gemaOmeGXMcGHzKq2ukrQRCDRRhntp83oLQEw2Lx3o+/
+X/gYP+LZR5EL9+mZ6dZgpU5bImqD8cKxsrD30e65xNadnmcfjoXPrUFtQ71t2QQ=
+=1a8f
+-----END PGP SIGNATURE-----
+
+--P75d7mFgfYjpUjsN--
