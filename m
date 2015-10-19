@@ -1,98 +1,54 @@
-From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v10 3/3] arm64: dts: mediatek: add xHCI & usb phy for
- mt8173
-Date: Mon, 19 Oct 2015 13:31:27 +0800
-Message-ID: <1445232687.28324.4.camel@mhfsdcap03>
-References: <1445140279-18121-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1445140279-18121-4-git-send-email-chunfeng.yun@mediatek.com>
-	 <56237BF2.5070809@cogentembedded.com>
+From: Pramod Kumar <pramodku@broadcom.com>
+Subject: [PATCH 00/11] Generalized broadcom cygnus gpio driver
+Date: Mon, 19 Oct 2015 11:13:07 +0530
+Message-ID: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56237BF2.5070809-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas Gorski <jogo@openwrt.org>, Pramod Kumar <pramodku@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2015-10-18 at 14:01 +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 10/18/2015 6:51 AM, Chunfeng Yun wrote:
-> 
-> > add xHCI and phy drivers for MT8173-EVB
-> >
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> [...]
-> 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index d18ee42..46f5f50 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> [...]
-> > @@ -487,6 +488,47 @@
-> >   			clock-names = "source", "hclk";
-> >   			status = "disabled";
-> >   		};
-> > +
-> > +		usb30: usb@11270000 {
-> > +			compatible = "mediatek,mt8173-xhci";
-> > +			reg = <0 0x11270000 0 0x1000>,
-> > +			      <0 0x11280700 0 0x0100>;
-> > +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> > +			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> > +			clocks = <&topckgen CLK_TOP_USB30_SEL>,
-> > +				 <&pericfg CLK_PERI_USB0>,
-> > +				 <&pericfg CLK_PERI_USB1>;
-> > +			clock-names = "sys_ck",
-> > +				      "wakeup_deb_p0",
-> > +				      "wakeup_deb_p1";
-> > +			phys = <&phy_port0 PHY_TYPE_USB3>,
-> > +			       <&phy_port1 PHY_TYPE_USB2>;
-> > +			mediatek,syscon-wakeup = <&pericfg>;
-> > +			status = "okay";
-> > +		};
-> > +
-> > +		u3phy: usb-phy@11290000 {
-> > +			compatible = "mediatek,mt8173-u3phy";
-> > +			reg = <0 0x11290000 0 0x800>;
-> > +			clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> > +			clock-names = "u3phya_ref";
-> > +			#address-cells = <2>;
-> > +			#size-cells = <2>;
-> > +			ranges;
-> > +			status = "okay";
-> 
->     Don't you need the "power-domains" prop here as well?
-No, the power-domains of MAC and PHY are separated, but PHY's can't be
-operated by software.
+Generalized pinctrl-cygnus-gpio driver so that it could be used for all
+iProc architecture based future SoCs having same gpio pin controller.
+Generalization process made the below changes in driver-
 
-Thanks.
-> 
-> > +
-> > +			phy_port0: port@11290800 {
-> > +				reg = <0 0x11290800 0 0x800>;
-> > +				#phy-cells = <1>;
-> > +				status = "okay";
-> > +			};
-> > +
-> > +			phy_port1: port@11291000 {
-> > +				reg = <0 0x11291000 0 0x800>;
-> > +				#phy-cells = <1>;
-> > +				status = "okay";
-> > +			};
-> > +		};
-> >   	};
-> >   };
-> >
-> 
-> MBR, Sergei
-> 
+1. Removed pin mapping from driver and addressed this via DT through
+"gpio-ranges" property.
+2. Addressed number of pins from DT through "ngpios" property and removed
+from driver.
+3. Since all iProc based SoCs would use this driver hence renamed all
+variables/macros/functions and even file name on iproc.
 
+This patchset applies on v4.3-rc4 and is tested on cygnus SVK and could be
+find at-
+https://github.com/Broadcom/arm64-linux/tree/iproc-gpio-v1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pramod Kumar (11):
+  dt-bindings: pinctrl: Optional DT property to support pin mappings
+  pinctrl: Remove GPIO to Pinctrl pin mapping from driver
+  dts: pinctrl: Add GPIO to Pinctrl pin mapping in DT
+  dt-binding: Add new compatible string for gpio controller driver
+  dt-binding: Add ngpios property to GPIO controller node
+  dts: define ngpios property in gpio controller's node
+  pinctrl: use ngpios propety from DT
+  pinctrl: Add new compatible string to GPIO controller driver
+  gpio: Rename func/macro/var to IP-block,iproc
+  Documentation: Rename gpio controller name from cygnus to iproc
+  pinctrl: Rename gpio driver from cygnus to iproc
+
+ .../{brcm,cygnus-gpio.txt => brcm,iproc-gpio.txt}  |  25 +-
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  56 +-
+ drivers/pinctrl/bcm/Kconfig                        |  30 +-
+ drivers/pinctrl/bcm/Makefile                       |   2 +-
+ drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c          | 909 ---------------------
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           | 759 +++++++++++++++++
+ 6 files changed, 854 insertions(+), 927 deletions(-)
+ rename Documentation/devicetree/bindings/pinctrl/{brcm,cygnus-gpio.txt => brcm,iproc-gpio.txt} (75%)
+ delete mode 100644 drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+
+-- 
+1.9.1
+
