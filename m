@@ -1,37 +1,61 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] net: phy: bcm-phy-lib: Fix module license issue
-Date: Sun, 18 Oct 2015 19:35:32 -0700 (PDT)
-Message-ID: <20151018.193532.1720599526781320491.davem@davemloft.net>
-References: <1444930633-23314-1-git-send-email-arunp@broadcom.com>
-	<1444930633-23314-2-git-send-email-arunp@broadcom.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCHv2 1/3] ARM: dt: fpga: Added binding docs for Xilinx Zynq
+ FPGA manager.
+Date: Sun, 18 Oct 2015 19:24:10 -0700
+Message-ID: <20151019022410.GG5257@xsjsorenbubuntu>
+References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
+ <1445035350-3569-2-git-send-email-moritz.fischer@ettus.com>
+ <20151018175120.GG12756@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444930633-23314-2-git-send-email-arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151018175120.GG12756@jcartwri.amer.corp.natinst.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@ni.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, atull@opensource.altera.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Date: Thu, 15 Oct 2015 10:37:13 -0700
+On Sun, 2015-10-18 at 12:51PM -0500, Josh Cartwright wrote:
+> On Fri, Oct 16, 2015 at 03:42:28PM -0700, Moritz Fischer wrote:
+> > Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+> > ---
+> >=20
+> > v2:
+> >  - Clock names are now a required property
+> >  - Removed interrupt-parent property
+> >=20
+> > ---
+> >  .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.txt | 19 +++++++=
+++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-z=
+ynq-fpga-mgr.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpg=
+a-mgr.txt b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr=
+=2Etxt
+> > new file mode 100644
+> > index 0000000..7018aa8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.t=
+xt
+> > @@ -0,0 +1,19 @@
+> > +Xilinx Zynq FPGA Manager
+> > +
+> > +Required properties:
+> > +- compatible:		should contain "xlnx,zynq-devcfg-1.0"
+> > +- reg:			base address and size for memory mapped io
+> > +- interrupts:		interrupt for the FPGA manager device
 
-> The 'bcm-phy-lib.c', added as a part of the commit
-> "net: phy: Add Broadcom phy library for common interfaces"
-> was missing the module license. This was causing an issue
-> when the library is built as a module; "module license
-> 'unspecified' taints kernel".
-> 
-> This patch fixes the issue by adding the module license,
-> author and description to the bcm-phy-lib.c file.
-> 
-> Fixes: a1cba5613edf5 ("net: phy: Add Broadcom phy library for
-> common interfaces")
-> Signed-off-by: Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+If we are that picky, this is technically an interrupt specifier :)
 
-Applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- clocks:		phandle for clocks required operation
+>=20
+> Technically a "clock specifier", but other than that:
+>=20
+> Reviewed-by: Josh Cartwright <joshc@ni.com>
+Reviewed-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
+
+	S=C3=B6ren
