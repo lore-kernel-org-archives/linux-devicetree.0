@@ -1,139 +1,67 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
- pcie
-Date: Mon, 19 Oct 2015 14:50:57 -0400
-Message-ID: <56253B91.5040807@ti.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <5192855.p6QLDWTiVi@wuerfel> <561FCDC0.3080109@ti.com> <6215485.RTPqreMEMX@wuerfel> <230CBA6E4B6B6B418E8730AC28E6FC7E04229363@DFLE11.ent.ti.com>
+From: WingMan Kwok <w-kwok2@ti.com>
+Subject: [PATCH v2 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Mon, 19 Oct 2015 14:57:18 -0400
+Message-ID: <1445281040-14742-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <230CBA6E4B6B6B418E8730AC28E6FC7E04229363@DFLE11.ent.ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: "Kwok, WingMan" <w-kwok2@ti.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: WingMan Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2015 10:47 AM, Kwok, WingMan wrote:
-> Hi,
->
->> -----Original Message-----
->> From: Arnd Bergmann [mailto:arnd@arndb.de]
->> Sent: Thursday, October 15, 2015 3:35 PM
->> To: Karicheri, Muralidharan
->> Cc: linux-arm-kernel@lists.infradead.org; Kwok, WingMan; robh+dt@kernel.org;
->> pawel.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
->> galak@codeaurora.org; KISHON VIJAY ABRAHAM; Quadros, Roger;
->> bhelgaas@google.com; ssantosh@kernel.org; linux@arm.linux.org.uk;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
->> pci@vger.kernel.org
->> Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
->> pcie
->>
->> On Thursday 15 October 2015 12:01:04 Murali Karicheri wrote:
->>>
->>>>> + * Redistributions in binary form must reproduce the above copyright
->>>>> + * notice, this list of conditions and the following disclaimer in the
->>>>> + * documentation and/or other materials provided with the
->>>>> + * distribution.
->>>>
->>>> The current code does not do this when compiled, which might be a
->>>> problem for distributors. Can you clarify the license?
->>>>
->>> Arnd,
->>>
->>> Can you elaborate on this? I did a grep on the string "Redistributions
->>> in binary form must reproduce the above copyright" and I could find
->>> several instance of this. So I am not sure what you mean by "The current
->>> code does not do this when compiled".
->>
->> You write that the binary form of the code must produce the copyright
->> notice. I don't see any code that does this. If I was looking in the
->> wrong place, let me know.
->>
->> 	Arnd
->
+On TI's Keystone platforms, several peripherals such as the
+gbe ethernet switch, 10gbe ethernet switch and PCIe controller
+require the use of a SerDes for converting SoC parallel data into
+serialized data that can be output over a high-speed electrical
+interface, and also converting high-speed serial input data
+into parallel data that can be processed by the SoC.  The
+SerDeses used by those peripherals, though they may be different,
+are largely similar in functionality and setup.
 
-Thanks Wingman for the response.
+This patch series provides a SerDes phy driver implementation that can be
+used by the above mentioned peripheral drivers to configure their
+respective SerDeses.
 
-Arnd, by your statement 'I don't see any code that does this' do you 
-expect a piece of code that embed the license in the binary image? If 
-so, that seems weired to me.
+As an example of the using the SerDes driver, this patch series also
+updates the Keystone PCIe host driver to enable and use its SerDes block.
 
-Many of the drivers including this patch has the following statement in 
-the license that is additional company specific license such as BSD that 
-is applicable.
+References:
+[1] KeyStone II Architecture Serializer/Deserializer (SerDes) User's Guide
+    (http://www.ti.com/lit/ug/spruho3a/spruho3a.pdf)
 
-==== Cut and pasted from drivers/crypto/fcrypt.c =======================
-  * 2. Redistributions in binary form must reproduce the above copyright
-  *    notice, this list of conditions and the following disclaimer in the
-  *    documentation and/or other materials provided with the distribution.
-=========================================================================
-I read this as if the source is compiled and distributed as a binary 
-either a kernel module ko file or as part of the kernel binary, this 
-term must apply. Usually this is part of documentation that goes with 
-the product AFAIK.
+v2:
+	- addresses the following review comments on v1:
+		1. https://lkml.org/lkml/2015/10/15/896
+			-- this does not address the question:
+			   "The current code does not do this when compiled,
+			    which might be a problem for distributors.
+			    Can you clarify the license?"
+			-- the question is still under discussion here:
+			   https://lkml.org/lkml/2015/10/19/471
+		2. https://lkml.org/lkml/2015/10/15/895
 
-Murali
+v1: 
+	- addresses the following review comments
+		1. https://lkml.org/lkml/2015/10/13/803
+		2. https://lkml.org/lkml/2015/10/14/613
+		3. https://lkml.org/lkml/2015/10/13/818
 
-> For example, we did a grep of the following
->
-> mypc:linux(personal/linux/serdes) $ grep -rnI "Redistributions in binary form must reproduce the above copyright" ./net/
-> ./net/sunrpc/auth_gss/auth_gss.c:18: *  2. Redistributions in binary form must reproduce the above copyright
-> ./net/sunrpc/auth_gss/gss_mech_switch.c:15: *  2. Redistributions in binary form must reproduce the above copyright
-> ./net/sunrpc/auth_gss/gss_krb5_mech.c:16: *  2. Redistributions in binary form must reproduce the above copyright
-> ./net/bluetooth/ecc.c:10: *  * Redistributions in binary form must reproduce the above copyright
-> ./net/bluetooth/ecc.h:10: *  * Redistributions in binary form must reproduce the above copyright
-> ./net/can/gw.c:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/can/af_can.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/can/proc.c:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/can/bcm.c:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/can/raw.c:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/can/af_can.h:10: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/discover.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/node.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/netlink_compat.c:10: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/name_distr.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/bearer.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/name_table.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/name_distr.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/addr.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/subscr.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/link.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/net.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/netlink.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/sysctl.c:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/udp_media.c:11: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/socket.h:11: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/subscr.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/msg.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/name_table.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/msg.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/core.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/socket.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/net.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/bcast.c:14: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/bearer.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/core.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/node.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/addr.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/ib_media.c:17: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/link.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/netlink.h:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/server.c:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/discover.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/eth_media.c:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/bcast.h:13: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/tipc/server.h:12: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/6lowpan/iphc.c:29: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/sched/sch_codel.c:17: * 2. Redistributions in binary form must reproduce the above copyright
-> ./net/ieee802154/6lowpan/core.c:27: * 2. Redistributions in binary form must reproduce the above copyright
->
-> Thanks,
-> WingMan
->
+	- An update to PCIe dts bindings to enable the PCIe SerDes is
+	  submitted in a separate patch.
 
+WingMan Kwok (2):
+  phy: keystone: serdes driver for gbe 10gbe and pcie
+  PCI: keystone: update to use generic keystone serdes driver
+
+ Documentation/devicetree/bindings/phy/ti-phy.txt |  239 +++
+ drivers/pci/host/pci-keystone.c                  |   24 +-
+ drivers/pci/host/pci-keystone.h                  |    1 +
+ drivers/phy/Kconfig                              |    8 +
+ drivers/phy/Makefile                             |    1 +
+ drivers/phy/phy-keystone-serdes.c                | 2365 ++++++++++++++++++++++
+ 6 files changed, 2628 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/phy/phy-keystone-serdes.c
 
 -- 
-Murali Karicheri
-Linux Kernel, Keystone
+1.7.9.5
