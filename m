@@ -1,102 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 06/10] ASoC: img: Add driver for
- parallel output controller
-Date: Mon, 19 Oct 2015 19:07:57 +0100
-Message-ID: <20151019180757.GJ32054@sirena.org.uk>
-References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
- <1444653637-14711-7-git-send-email-Damien.Horsley@imgtec.com>
+From: Josh Cartwright <joshc@ni.com>
+Subject: Re: [PATCHv2 2/3] ARM: zynq: dt: Updated devicetree for Zynq 7000
+ platform.
+Date: Mon, 19 Oct 2015 13:24:16 -0500
+Message-ID: <20151019182416.GL12756@jcartwri.amer.corp.natinst.com>
+References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
+ <1445035350-3569-3-git-send-email-moritz.fischer@ettus.com>
+ <20151018175324.GH12756@jcartwri.amer.corp.natinst.com>
+ <5624F985.8050905@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2441072393446120635=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1444653637-14711-7-git-send-email-Damien.Horsley@imgtec.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Damien Horsley <Damien.Horsley@imgtec.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <James.Hartley@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5624F985.8050905@xilinx.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, linux@arm.linux.org.uk, atull@opensource.altera.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 19, 2015 at 04:09:09PM +0200, Michal Simek wrote:
+> On 10/18/2015 07:53 PM, Josh Cartwright wrote:
+> > On Fri, Oct 16, 2015 at 03:42:29PM -0700, Moritz Fischer wrote:
+[..]
+> >> @@ -294,6 +294,11 @@
+> >>  		devcfg: devcfg@f8007000 {
+> >>  			compatible = "xlnx,zynq-devcfg-1.0";
+> >>  			reg = <0xf8007000 0x100>;
+> >> +			interrupt-parent = <&intc>;
+> > 
+> > You shouldn't need interrupt-parent here.  In fact, I suspect it can be
+> > removed from all sibling nodes as well.
+> 
+> Correct. But I tend to do it vice-versa. To remove it from amba node and
+> keep it in every IP here. The reason is simple to let everybody know
+> that setting up right interrupt controller is something what they have
+> to care. If you have more interrupt controllers in the system it can be
+> messy.
 
---===============2441072393446120635==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="07FIeBX8hApXX6Bi"
-Content-Disposition: inline
+If you like that, then you'd like the interrupt-extended properly even
+better (I think).
 
+> But again. Please remove this patch from this series. This will go to
+> mainline through arm-soc but 1/3 and 3/3 will go through Greg. That's
+> why please do not include it here.
 
---07FIeBX8hApXX6Bi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not all of the patches in a series need to go through the same
+maintainer...splitting them up is common.  It's nice seeing related
+things out on the list together.  (Especially when there is a dependency
+at some level).
 
-On Mon, Oct 12, 2015 at 01:40:33PM +0100, Damien Horsley wrote:
-
-> +	spin_lock_irqsave(&prl->lock, flags);
-> +	reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
-> +	ucontrol->value.integer.value[0] = !!(reg & IMG_PRL_OUT_CTL_EDGE_MASK);
-> +	spin_unlock_irqrestore(&prl->lock, flags);
-
-Do you need to lock a single register read?
-
-> +static struct snd_kcontrol_new img_prl_out_controls[] = {
-> +	{
-> +		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
-> +		.name = "Parallel Out Edge Falling",
-> +		.info = img_prl_out_edge_info,
-> +		.get = img_prl_out_get_edge,
-> +		.put = img_prl_out_set_edge
-> +	}
-> +};
-
-If this is a boolean control (it looked like one) it should be called
-Switch but it's not clear to me what exactly is being controlled here or
-why it's something that should be exposed to userspace.
-
-> +	switch (cmd) {
-> +	case SNDRV_PCM_TRIGGER_START:
-> +	case SNDRV_PCM_TRIGGER_RESUME:
-> +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> +		reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
-> +		reg |= IMG_PRL_OUT_CTL_ME_MASK;
-> +		img_prl_out_writel(prl, reg, IMG_PRL_OUT_CTL);
-> +		prl->active = true;
-> +		break;
-> +	case SNDRV_PCM_TRIGGER_STOP:
-> +	case SNDRV_PCM_TRIGGER_SUSPEND:
-> +	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-> +		img_prl_out_reset(prl);
-> +		prl->active = false;
-> +		break;
-
-No need for locking on the reset (and doesn't this mean that the control
-state is going to be changed underneath userspace)?
-
---07FIeBX8hApXX6Bi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWJTF8AAoJECTWi3JdVIfQ+k0H/1ZJ5Xzxm4Ay4fUY8Epnr0o8
-t5ZYKMUQ15VUQCVFc3gCfd81eeHH4DX+WwWRFMmqyugWyqAq+aV/cjP3l2yb+QyA
-fyc/KB08oyghZ8xf64oUYGghjbIZb9NJIMM9W6AmwKcDzCUVSwXkCZwbcQgAzUyh
-UTSXMsGHERnC6POXAO51KqwcwFfR0ClPfK01XAdDazyVNDStUvkh1IvCEHpDj2iY
-YwBYeFKerm8DXamyrfxSqtHHGWzXTPKuROZWcJISrOWgaGveJjJ9hTMhuglI6azd
-A8gpk7NTk6W4smDxYbWKXTBffuc/I2qRIdyiCxi6Qs5scO/Lp4w2lcBiWviCN+o=
-=g+p1
------END PGP SIGNATURE-----
-
---07FIeBX8hApXX6Bi--
-
---===============2441072393446120635==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2441072393446120635==--
+  Josh
