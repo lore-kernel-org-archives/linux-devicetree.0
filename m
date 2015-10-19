@@ -1,65 +1,64 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Mon, 19 Oct 2015 16:35:49 +0100
-Message-ID: <20151019153548.GM32532@n2100.arm.linux.org.uk>
-References: <561E1378.6000906@collabora.com>
- <20151017065750.GA18607@kroah.com>
- <20151018192931.GY14956@sirena.org.uk>
- <20151018193757.GA9147@kroah.com>
- <20151018195330.GB14956@sirena.org.uk>
- <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
- <20151019131821.GA32532@n2100.arm.linux.org.uk>
- <CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com>
- <20151019143045.GE32532@n2100.arm.linux.org.uk>
- <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V3 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
+Date: Mon, 19 Oct 2015 23:36:18 +0800
+Message-ID: <20151019153618.GA14709@tiger>
+References: <cover.1444471684.git.shengjiu.wang@freescale.com>
+ <ee897786f33c9ba67b560964a76485891f2f63a8.1444471684.git.shengjiu.wang@freescale.com>
+ <20151019152807.20687.15779@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti.com>, Jin
+In-Reply-To: <20151019152807.20687.15779@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Shengjiu Wang <shengjiu.wang@freescale.com>, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 19, 2015 at 05:00:54PM +0200, Tomeu Vizoso wrote:
-> On 19 October 2015 at 16:30, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
-> > I typically see one or two, maybe five maximum on the platforms I have
-> > here, but normally zero.
+Hi Mike,
+
+On Mon, Oct 19, 2015 at 08:28:07AM -0700, Michael Turquette wrote:
+> Quoting Shengjiu Wang (2015-10-10 03:15:06)
+> > Correct SPDIF clock setting issue in clock tree, the SPDIF_GCLK is also
+> > one clock of SPDIF, which is missed before.
+> > 
+> > We found an issue that imx can't enter low power mode with spdif
+> > if IMX6x_CLK_SPDIF is used as the core clock of spdif. Because
+> > spdif driver will register IMX6x_CLK_SPDIF clock to regmap, regmap will do
+> > clk_prepare in init function, then IMX6x_CLK_SPDIF clock is prepared in probe,
+> > so its parent clock (PLL clock) is prepared, the prepare operation of
+> > PLL clock is to enable the clock. But I.MX needs all PLL clock is disabled,
+> > then it can enter low power mode.
+> > 
+> > So we can't use IMX6x_CLK_SPDIF as the core clock of spdif, the correct spdif
+> > core clock is SPDIF_GCLK, which share same gate bit with IMX6x_CLK_SPDIF clock.
+> > SPDIF_GCLK's parent clock is ipg clock.
 > 
-> Hmm, I have given a look at our lava farm and have seen 2 dozens as
-> common (with multi_v7).
+> I'm confused by this. Is there really a new clock signal to be added, or
+> this just to workaround some reference counting problems with regmap?
 
-No, because the lava farms tend not to be public.
+I was confused by the previous version of the patch, and asked Shengjiu
+to improve the commit log, which seems still not so good.  In short, the
+patch does add a missing clock, and the missing of the clock is
+discovered by a low-power-mode issue when SPDIF driver is enabled.
 
-> > What you can do is print those devices which have failed to probe at
-> > late_initcall() time - possibly augmenting that with reports from
-> > subsystems showing what resources are not available, but that's only
-> > a guide, because of the "it might or might not be in a kernel module"
-> > problem.
 > 
-> Well, adding those reports would give you a changelog similar to the
-> one in this series...
+> > 
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
+> 
+> Please Cc the linux-clk@vger.kernel.org mailing list for future clock
+> driver patches.
 
-I'm not sure about that, because what I was thinking of is adding
-a flag which would be set at late_initcall() time prior to running
-a final round of deferred device probing.
+Right, should have reminded him.  I will keep my eyes more closely on
+this.
 
-This flag would then be used in a deferred_warn() printk function
-which would normally be silent, but when this flag is set, it would
-print the reason for the deferral - and this would replace (or be
-added) to the subsystems and drivers which return -EPROBE_DEFER.
-
-That has the effect of hiding all the deferrals up until just before
-launching into userspace, which should then acomplish two things -
-firstly, getting rid of the rather useless deferred messages up to
-that point, and secondly printing the reason why the remaining
-deferrals are happening.
-
-That should be a small number of new lines plus a one-line change
-in subsystems and drivers.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Shawn
