@@ -1,138 +1,74 @@
-From: "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
- pcie
-Date: Mon, 19 Oct 2015 14:47:43 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04229363@DFLE11.ent.ti.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com>
- <5192855.p6QLDWTiVi@wuerfel> <561FCDC0.3080109@ti.com>
- <6215485.RTPqreMEMX@wuerfel>
+From: Caleb Crome <caleb@crome.org>
+Subject: Re: [PATCH v2 0/3] Add support for Cirrus Logic
+ CS47L24 and WM1831 codecs
+Date: Mon, 19 Oct 2015 07:50:26 -0700
+Message-ID: <CAG5mAdzqT6YpxikoNm9oxOvR8psi0_MCaw7nt0dPjzhSQnrn-A@mail.gmail.com>
+References: <1445264027-7357-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6215485.RTPqreMEMX@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, KISHON VIJAY ABRAHAM <kishon-l0cyMroinI0@public.gmane.org>, "Quadros, Roger" <rogerq-l0cyMroinI0@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1445264027-7357-1-git-send-email-rf@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: devicetree@vger.kernel.org, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFu
-biBbbWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IFRodXJzZGF5LCBPY3RvYmVyIDE1LCAy
-MDE1IDM6MzUgUE0NCj4gVG86IEthcmljaGVyaSwgTXVyYWxpZGhhcmFuDQo+IENjOiBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IEt3b2ssIFdpbmdNYW47IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsNCj4gcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpj
-K2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7DQo+IGdhbGFrQGNvZGVhdXJvcmEub3JnOyBLSVNI
-T04gVklKQVkgQUJSQUhBTTsgUXVhZHJvcywgUm9nZXI7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207
-IHNzYW50b3NoQGtlcm5lbC5vcmc7IGxpbnV4QGFybS5saW51eC5vcmcudWs7DQo+IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0N
-Cj4gcGNpQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDEvMl0gcGh5
-OiBrZXlzdG9uZTogc2VyZGVzIGRyaXZlciBmb3IgZ2JlIDEwZ2JlIGFuZA0KPiBwY2llDQo+IA0K
-PiBPbiBUaHVyc2RheSAxNSBPY3RvYmVyIDIwMTUgMTI6MDE6MDQgTXVyYWxpIEthcmljaGVyaSB3
-cm90ZToNCj4gPg0KPiA+ID4+ICsgKiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVz
-dCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KPiA+ID4+ICsgKiBub3RpY2UsIHRoaXMg
-bGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIgaW4gdGhlDQo+
-ID4gPj4gKyAqIGRvY3VtZW50YXRpb24gYW5kL29yIG90aGVyIG1hdGVyaWFscyBwcm92aWRlZCB3
-aXRoIHRoZQ0KPiA+ID4+ICsgKiBkaXN0cmlidXRpb24uDQo+ID4gPg0KPiA+ID4gVGhlIGN1cnJl
-bnQgY29kZSBkb2VzIG5vdCBkbyB0aGlzIHdoZW4gY29tcGlsZWQsIHdoaWNoIG1pZ2h0IGJlIGEN
-Cj4gPiA+IHByb2JsZW0gZm9yIGRpc3RyaWJ1dG9ycy4gQ2FuIHlvdSBjbGFyaWZ5IHRoZSBsaWNl
-bnNlPw0KPiA+ID4NCj4gPiBBcm5kLA0KPiA+DQo+ID4gQ2FuIHlvdSBlbGFib3JhdGUgb24gdGhp
-cz8gSSBkaWQgYSBncmVwIG9uIHRoZSBzdHJpbmcgIlJlZGlzdHJpYnV0aW9ucw0KPiA+IGluIGJp
-bmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQiIGFuZCBJIGNvdWxk
-IGZpbmQNCj4gPiBzZXZlcmFsIGluc3RhbmNlIG9mIHRoaXMuIFNvIEkgYW0gbm90IHN1cmUgd2hh
-dCB5b3UgbWVhbiBieSAiVGhlIGN1cnJlbnQNCj4gPiBjb2RlIGRvZXMgbm90IGRvIHRoaXMgd2hl
-biBjb21waWxlZCIuDQo+IA0KPiBZb3Ugd3JpdGUgdGhhdCB0aGUgYmluYXJ5IGZvcm0gb2YgdGhl
-IGNvZGUgbXVzdCBwcm9kdWNlIHRoZSBjb3B5cmlnaHQNCj4gbm90aWNlLiBJIGRvbid0IHNlZSBh
-bnkgY29kZSB0aGF0IGRvZXMgdGhpcy4gSWYgSSB3YXMgbG9va2luZyBpbiB0aGUNCj4gd3Jvbmcg
-cGxhY2UsIGxldCBtZSBrbm93Lg0KPiANCj4gCUFybmQNCg0KRm9yIGV4YW1wbGUsIHdlIGRpZCBh
-IGdyZXAgb2YgdGhlIGZvbGxvd2luZyANCg0KbXlwYzpsaW51eChwZXJzb25hbC9saW51eC9zZXJk
-ZXMpICQgZ3JlcCAtcm5JICJSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXBy
-b2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodCIgLi9uZXQvDQouL25ldC9zdW5ycGMvYXV0aF9nc3Mv
-YXV0aF9nc3MuYzoxODogKiAgMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3Qg
-cmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3N1bnJwYy9hdXRoX2dzcy9nc3Nf
-bWVjaF9zd2l0Y2guYzoxNTogKiAgMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11
-c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3N1bnJwYy9hdXRoX2dzcy9n
-c3Nfa3JiNV9tZWNoLmM6MTY6ICogIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBt
-dXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC9ibHVldG9vdGgvZWNjLmM6
-MTA6ICogICogUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRo
-ZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L2JsdWV0b290aC9lY2MuaDoxMDogKiAgKiBSZWRpc3Ry
-aWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdo
-dA0KLi9uZXQvY2FuL2d3LmM6MTI6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3Jt
-IG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L2Nhbi9hZl9jYW4uYzox
-MzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhl
-IGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvY2FuL3Byb2MuYzoxMjogKiAyLiBSZWRpc3RyaWJ1dGlv
-bnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9u
-ZXQvY2FuL2JjbS5jOjEyOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0
-IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC9jYW4vcmF3LmM6MTI6ICogMi4g
-UmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBj
-b3B5cmlnaHQNCi4vbmV0L2Nhbi9hZl9jYW4uaDoxMDogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4g
-YmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlw
-Yy9kaXNjb3Zlci5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0
-IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL25vZGUuaDoxMzogKiAy
-LiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3Zl
-IGNvcHlyaWdodA0KLi9uZXQvdGlwYy9uZXRsaW5rX2NvbXBhdC5jOjEwOiAqIDIuIFJlZGlzdHJp
-YnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0
-DQouL25ldC90aXBjL25hbWVfZGlzdHIuaDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmlu
-YXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9i
-ZWFyZXIuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXBy
-b2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9uYW1lX3RhYmxlLmg6MTM6ICog
-Mi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92
-ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvbmFtZV9kaXN0ci5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0
-aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQou
-L25ldC90aXBjL2FkZHIuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0g
-bXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9zdWJzY3IuaDox
-MzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhl
-IGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9saW5rLmg6MTM6ICogMi4gUmVkaXN0cmlidXRp
-b25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4v
-bmV0L3RpcGMvbmV0Lmg6MTM6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11
-c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvbmV0bGluay5jOjEz
-OiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUg
-YWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL3N5c2N0bC5jOjEyOiAqIDIuIFJlZGlzdHJpYnV0
-aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQou
-L25ldC90aXBjL3VkcF9tZWRpYS5jOjExOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkg
-Zm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL3NvY2tl
-dC5oOjExOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVj
-ZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL3N1YnNjci5jOjEzOiAqIDIuIFJlZGlz
-dHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJp
-Z2h0DQouL25ldC90aXBjL21zZy5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkg
-Zm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL25hbWVf
-dGFibGUuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXBy
-b2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9tc2cuaDoxMzogKiAyLiBSZWRp
-c3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHly
-aWdodA0KLi9uZXQvdGlwYy9jb3JlLmM6MTM6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFy
-eSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvc29j
-a2V0LmM6MTM6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9k
-dWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvbmV0LmM6MTM6ICogMi4gUmVkaXN0
-cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmln
-aHQNCi4vbmV0L3RpcGMvYmNhc3QuYzoxNDogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5
-IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9iZWFy
-ZXIuaDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1
-Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9jb3JlLmg6MTM6ICogMi4gUmVkaXN0
-cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5cmln
-aHQNCi4vbmV0L3RpcGMvbm9kZS5jOjEzOiAqIDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkg
-Zm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25ldC90aXBjL2FkZHIu
-aDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2Ug
-dGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9pYl9tZWRpYS5jOjE3OiAqIDIuIFJlZGlz
-dHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJp
-Z2h0DQouL25ldC90aXBjL2xpbmsuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5
-IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9uZXRs
-aW5rLmg6MTI6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9k
-dWNlIHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L3RpcGMvc2VydmVyLmM6MTI6ICogMi4gUmVk
-aXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBhYm92ZSBjb3B5
-cmlnaHQNCi4vbmV0L3RpcGMvZGlzY292ZXIuaDoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4g
-YmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlw
-Yy9ldGhfbWVkaWEuYzoxMzogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0gbXVz
-dCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvdGlwYy9iY2FzdC5oOjEzOiAq
-IDIuIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJv
-dmUgY29weXJpZ2h0DQouL25ldC90aXBjL3NlcnZlci5oOjEyOiAqIDIuIFJlZGlzdHJpYnV0aW9u
-cyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUgYWJvdmUgY29weXJpZ2h0DQouL25l
-dC82bG93cGFuL2lwaGMuYzoyOTogKiAyLiBSZWRpc3RyaWJ1dGlvbnMgaW4gYmluYXJ5IGZvcm0g
-bXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodA0KLi9uZXQvc2NoZWQvc2NoX2NvZGVs
-LmM6MTc6ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNl
-IHRoZSBhYm92ZSBjb3B5cmlnaHQNCi4vbmV0L2llZWU4MDIxNTQvNmxvd3Bhbi9jb3JlLmM6Mjc6
-ICogMi4gUmVkaXN0cmlidXRpb25zIGluIGJpbmFyeSBmb3JtIG11c3QgcmVwcm9kdWNlIHRoZSBh
-Ym92ZSBjb3B5cmlnaHQgDQoNClRoYW5rcywNCldpbmdNYW4NCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Does anybody have support written for the CS53L30 4 channel ADC ?
+
+
+Thanks,
+ -Caleb
+
+
+On Mon, Oct 19, 2015 at 7:13 AM, Richard Fitzgerald <
+rf@opensource.wolfsonmicro.com> wrote:
+
+> mfd patch based on Lee Jones's for-next
+> gpio patch based on Linus Walleij's for-next
+> ASoC patch based on Mark Brown's for-next
+>
+> Lee/Mark - can one of you take all three patches (with maintainer acks) so
+> that the patch set is kept together?
+>
+> Richard Fitzgerald (3):
+>   mfd: arizona: Support Cirrus Logic CS47L24 and WM1831
+>   gpio: arizona: Support Cirrus Logic CS47L24 and WM1831
+>   ASoC: cs47l24: Add driver for Cirrus Logic CS47L24 and WM1831 codecs
+>
+>  Documentation/devicetree/bindings/mfd/arizona.txt |    4 +-
+>  drivers/gpio/gpio-arizona.c                       |    4 +
+>  drivers/mfd/Kconfig                               |   19 +-
+>  drivers/mfd/Makefile                              |    3 +
+>  drivers/mfd/arizona-core.c                        |   74 +-
+>  drivers/mfd/arizona-irq.c                         |   40 +-
+>  drivers/mfd/arizona-spi.c                         |    7 +
+>  drivers/mfd/arizona.h                             |    4 +
+>  drivers/mfd/cs47l24-tables.c                      | 1629
+> +++++++++++++++++++++
+>  include/linux/mfd/arizona/core.h                  |    3 +
+>  sound/soc/codecs/Kconfig                          |    8 +
+>  sound/soc/codecs/Makefile                         |    2 +
+>  sound/soc/codecs/cs47l24.c                        | 1148 +++++++++++++++
+>  sound/soc/codecs/cs47l24.h                        |   23 +
+>  14 files changed, 2942 insertions(+), 26 deletions(-)
+>  create mode 100644 drivers/mfd/cs47l24-tables.c
+>  create mode 100644 sound/soc/codecs/cs47l24.c
+>  create mode 100644 sound/soc/codecs/cs47l24.h
+>
+> --
+> 1.9.1
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>
