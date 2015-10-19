@@ -1,72 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Include SoC part number in DT binding docs
-Date: Mon, 19 Oct 2015 09:44:04 +0300
-Message-ID: <9833652.FLB0aRvpVP@avalon>
-References: <20151019031003.7878.28510.sendpatchset@little-apple>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] Mediatek EFUSE Support
+Date: Mon, 19 Oct 2015 08:49:25 +0200
+Message-ID: <20151019064925.GF14476@pengutronix.de>
+References: <1444984751-4572-1-git-send-email-andrew-ct.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151019031003.7878.28510.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-sh@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, galak@codeaurora.org, horms+renesas@verge.net.au
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444984751-4572-1-git-send-email-andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+Hi,
 
-Thank you for the patch.
+On Fri, Oct 16, 2015 at 04:39:08PM +0800, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> This patch adds EFUSE support driver which is used by other drivers
+> like thermal sensor and HDMI impedance.
+> 
+> There are some efuses these fuses store things like calibration data,
+> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
+> read out this data for configuring the driver.
+> 
+> Andrew-CT Chen (3):
+>   dt-bindings: add document of mediatek efuse driver
+>   nvmem: mediatek: Add Mediatek EFUSE driver
+>   dts: arm64: Add EFUSE device node
 
-On Monday 19 October 2015 12:10:03 Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
-> IPMMU DT binding documentation. The example is also updated to show
-> how the generic compatible string may be used as fallback.
+Being the one who motivated using nvmem for the efuses and having
+reviewed the first internal version of this driver, this version looks
+ok to me.
 
-I'd use a wording stronger than "may" here, as the generic compatible value is 
-required. I would also explicitly state that in the bindings documentation.
+Reviewed-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> ---
-> 
->  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   12
-> ++++++++-- 1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-> +++
-> work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	
-2015-10
-> -18 15:53:08.850513000 +0900 @@ -7,7 +7,15 @@ connected to the IPMMU through
-> a port ca
-> 
->  Required Properties:
-> 
-> -  - compatible: Must contain "renesas,ipmmu-vmsa".
-> +  - compatible: Must contain one of the following:
-> +
-> +    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
-> +    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
-> +    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
-> +    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
-> +    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-> +    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
-> +
->    - reg: Base address and size of the IPMMU registers.
->    - interrupts: Specifiers for the MMU fault interrupts. For instances that
-> support secure mode two interrupts must be specified, for non-secure and @@
-> -27,7 +35,7 @@ node with the following property:
->  Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
-> 
->  	ipmmu_mx: mmu@fe951000 {
-> -		compatible = "renasas,ipmmu-vmsa";
-> +		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
->  		reg = <0 0xfe951000 0 0x1000>;
->  		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
+Sascha
+
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
