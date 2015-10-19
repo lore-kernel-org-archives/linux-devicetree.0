@@ -1,49 +1,135 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/5] mt8173 spi multiple devices support
-Date: Mon, 19 Oct 2015 20:27:13 +0100
-Message-ID: <20151019192713.GR32054@sirena.org.uk>
-References: <1444793015-30359-1-git-send-email-leilk.liu@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
+ pov protab2-ips9 tablet
+Date: Mon, 19 Oct 2015 21:43:13 +0200
+Message-ID: <20151019194313.GY2711@lukather>
+References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
+ <20150906163023.GR31584@lukather>
+ <55ED3739.609@redhat.com>
+ <20150907205603.GX31584@lukather>
+ <55EE9230.70209@redhat.com>
+ <20150913152224.GU9885@lukather>
+ <55F5B370.7040203@redhat.com>
+ <20150922150242.GF4684@lukather>
+ <560172B5.8090709@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3XZQkxCYp0f/VEFS"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yKkvi6mMqAM+MlBZ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWEPSWYQKGQEVSBMKRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444793015-30359-1-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <560172B5.8090709-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---3XZQkxCYp0f/VEFS
-Content-Type: text/plain; charset=us-ascii
+--yKkvi6mMqAM+MlBZ
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Wed, Oct 14, 2015 at 11:23:30AM +0800, Leilk Liu wrote:
-> This series are based on 4.3-rc1 and provide 5 patches to support
-> mt8173 spi multiple devices.
+On Tue, Sep 22, 2015 at 05:24:37PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 22-09-15 17:02, Maxime Ripard wrote:
+> >On Sun, Sep 13, 2015 at 07:33:36PM +0200, Hans de Goede wrote:
+> >>>Anyway. In both cases, the regulator really shouldn't be drifting
+> >>>along like this.
+> >>
+> >>Right which is why I've added the always-on property.
+> >
+> >Which is exactly what I meant by drifting along: that regulator will
+> >never be associated to the i2c bus, and will always be enabled even
+> >though the i2c bus might not even be accessible in the first place
+> >(driver not selected, compiled as a module and not loaded yet), which
+> >is just as bad.
+> >
+> >>>If the i2c bus needs a regulator to be operationaly,
+> >>>then we can just add an optional bus-supply property or something to
+> >>>give that to the i2c driver so that it can enable it when needed.
+> >>
+> >>I agree that that would be sensible if this regulator were tied to
+> >>the pull-ups, but I've my doubts that it is. We've not seen anything
+> >>similar on any other allwinner tablet, other then ChenYu-s Ippo-q8-v5
+> >>tablet.
+> >>
+> >>This tablet is sort of a high-end tablet (with a nice ips screen) and
+> >>such it also uses a different (better) sensor for its frontcam, a
+> >>gc2015 rather then the usual gc0308. I believe that this is the
+> >>culprit.
+> >>
+> >>Which would make modelling this as some sort of i2c-bus power-supply
+> >>wrong, and I've checked and none of the existing i2c bindings under
+> >>Documentation/devicetree/bindings/i2c contain such a thing, so we
+> >>would be the first and we will likely have a hard time selling a
+> >>binding for this upstream, esp. since we do not know what exactly
+> >>is going on.
+> >
+> >Well, strictly speaking, it is a supply needed to get the bus to
+> >work. We should really try to avoid having always-on for regulators,
+> >especially for devices that are already represented in the DT.
+> >
+> >>So all in all I strongly believe that just setting always-on
+> >>on the regulator in question is the best solution.
+> >
+> >It's a hack we can avoid.
+> 
+> How? By adding a regulator property to the i2c controller node
+> and then have the i2c controller driver enable this on probe ?
 
-This doesn't apply against current code, please check and resend.  Also
-note that it looks like you've got the execute bit set on some of the
-files.  The code itself looks fine.
+Yes.
 
---3XZQkxCYp0f/VEFS
-Content-Type: application/pgp-signature; name="signature.asc"
+> This will make 0 difference in practice since any useful kernel
+> config will always include the i2c controller as that is necessary
+> to talk to the pmic which controls this regulator in the first place.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+It's a choice we don't enforce. We had the option to run the kernel
+without a PMIC for a long time, and it's still an option. Not the best
+one, but an option.
 
-iQEcBAEBCAAGBQJWJUQQAAoJECTWi3JdVIfQRawH/1YU3tNYjifQ4QL5Meas0iex
-+uLsg4TcjldUo9GRacr1zIgp17wzMT9tHWLrc5yFLdQYT0MtWHCCqvpLrXk4X+ze
-B83IG57pvIl5Bz7mF0Ln5i4//32TDn0g5GctfSyZcsihFyQ54xH3Fn/godpdiQYI
-Bmfle2cu5y4WV4M9jvpGDnISKP1ogkf9b8U+fbt/Gs7gJFJYVipGurdDJNk0syq6
-TAeuLy2aW2ADybBYmlUQyynxHMm633GWbdEGI2FcTI/DanBZ5maZ+5kONoGAN02j
-32Vw6lshQ3qYKgE2jjgi94WHCfNzPXBOXMGMT7U3syNhkv905LGuBON4KeEBW18=
-=2dfF
------END PGP SIGNATURE-----
+And there's also the case where the user doesn't want to load or wants
+to unload the module. It's also a valid case.
 
---3XZQkxCYp0f/VEFS--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Having some sort of regulator property in the i2c-controller node
+> might be something worthwhile adding if we knew for sure that that
+> is how things are wired up, but we simply do not know.
+
+We have something called the device model, and we built most
+frameworks around it. Your patch simply circumvents it, and while we
+have a nice way to tie a resource to a device, you're not using it at
+all.
+
+This has the nasty side effect of not being able to control your
+resources, for example to shutdown the regulator when the bus is no
+longer in use. I remember having kind of the same argument with
+simplefb, but with you on the opposite side of the argument :)
+
+It also avoids debugging things properly, since the regulator isn't
+linked to the device actually using it.
+
+> I'm not going to submit a patch to the i2c bindings to add a
+> regulator if I cannot explain exactly during review why it is
+> needed.
+
+And I'm not going to pull something like that. Sorry.
+
+> The way I see it this board has some kinda bug making that bus
+> not work when the regulator in question is disabled, but we do
+> not exactly why, so we workaround the bug by not disabling the
+> regulator -> always-on.
+
+Yes. As long as the bus is in use.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--yKkvi6mMqAM+MlBZ--
