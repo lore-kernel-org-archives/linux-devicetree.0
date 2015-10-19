@@ -1,133 +1,42 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
- TPS65086 PMIC
-Date: Mon, 19 Oct 2015 10:16:47 -0500
-Message-ID: <5625095F.5080204@ti.com>
-References: <1445014753-15450-1-git-send-email-afd@ti.com>
- <1445014753-15450-2-git-send-email-afd@ti.com> <20151019091311.GH31804@x1>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] driver core: Disable late probes by default
+Date: Mon, 19 Oct 2015 08:19:53 -0700
+Message-ID: <20151019151953.GA22662@kroah.com>
+References: <20151016181129.GA1764@gradator.net>
+ <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151019091311.GH31804@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445267602-12576-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2015 04:13 AM, Lee Jones wrote:
-> On Fri, 16 Oct 2015, Andrew F. Davis wrote:
->
->> The TPS65086 PMIC contains several regulators and a GPO controller.
->> Add bindings for the TPS65086 PMIC.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>   .../devicetree/bindings/gpio/gpio-tps65086.txt     | 17 ++++++++
->>   Documentation/devicetree/bindings/mfd/tps65086.txt | 46 ++++++++++++++++++++++
->>   .../bindings/regulator/tps65086-regulator.txt      | 36 +++++++++++++++++
->
-> Please split these up into separate patches.
->
-> There is no functional reason to bundle them up.
->
+On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
+> To smooth the transition to late probes, make disabled the default for
+> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
+> get fixed.
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Link: https://lkml.kernel.org/g/20151016181129.GA1764-XWGZPxRNpGHk1uMJSBkQmQ@public.gmane.org
+> 
+> ---
+> 
+> Hi Rob,
+> 
+> I'm sending this in case you think it would be best to leave the
+> on-demand probe series in -next for now but have late probes disabled to
+> avoid hassle to some people.
 
-ACK
+I would like Rob to just drop this series please, I don't agree with it
+at all at the moment.
 
->>   3 files changed, 99 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
->>   create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
->>   create mode 100644 Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
->
-> [...]
->
->> diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
->> new file mode 100644
->> index 0000000..4b6aeb4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
->> @@ -0,0 +1,46 @@
->> +* TPS65086 Power Management Integrated Circuit bindings
->> +
->> +Required properties:
->> + - compatible		: Should be "ti,tps65086".
->
-> Any indication that it's a PMIC?
->
+thanks,
 
-In the compatible string?
-
->> + - reg			: Slave address.
->
-> I2C/SPI?
->
-
-ACK
-
->> + - interrupt-parent	: The parent interrupt controller.
->
-> Phandled to ...
->
-
-ACK
-
->> + - interrupts		: The interrupt line the device is connected to.
->> + - interrupt-controller	: Marks the device node as an interrupt controller.
->> + - #interrupt-cells	: The number of cells to describe an IRQ, this
->> +			  should be 2. The first cell is the IRQ number.
->> +			  The second cell is the flags, encoded as the trigger
->> +			  masks from ../interrupt-controller/interrupts.txt.
->
-> Masks?  What masks?
->
-> Best to make a link to the header where the flags are defined here.
->
-
-ACK
-
->> +Additional nodes defined in:
->> + - Regulators	: ../regulator/tps65086-regulator.txt.
->> + - GPIO		: ../gpio/gpio-tps65086.txt.
->
-> I'd suggest removing the full stops from all of the lines above.
->
-> Just treat them as bullet points like we normally do.
->
-
-ACK
-
->> +Example:
->> +
->> +	pmic: tps65086@5e {
->> +		compatible = "ti,tps65086";
->> +		reg = <0x5e>;
->> +		interrupt-parent = <&gpio1>;
->> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <2>;
->> +
->> +		regulators {
->> +			compatible = "ti,tps65086-regulator";
->> +
->> +			buck1 {
->> +				regulator-name = "vcc1";
->> +				regulator-min-microvolt = <1600000>;
->> +				regulator-max-microvolt = <1600000>;
->> +				regulator-boot-on;
->> +				ti,regulator-decay;
->> +				ti,regulator-step-size-25mv;
->> +			};
->> +		};
->> +
->> +		gpio4: tps65086_gpio {
->> +			compatible = "ti,tps65086-gpio";
->> +			gpio-controller;
->> +			#gpio-cells = <2>;
->> +		};
->> +	};
->
-> [...]
->
-
--- 
-Andrew F. Davis
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
