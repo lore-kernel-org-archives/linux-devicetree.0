@@ -1,118 +1,73 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [PATCH 7/7] ARM: EXYNOS: Remove code for restart and poweroff for
- exynos SoCs
-Date: Mon, 19 Oct 2015 21:43:33 +0530
-Message-ID: <CAGOxZ53k5Nftc=YgTnow382S2mG51yiLO4RmkMM8fONBB4GnCg@mail.gmail.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
- <1445234635-3950-8-git-send-email-alim.akhtar@samsung.com>
- <562494F8.6070003@samsung.com> <5624BE39.7020605@osg.samsung.com>
- <CAJKOXPcvKeDNwof5eyD5XjzUiZrHoyShD8gOPGo7uUxEyypQbw@mail.gmail.com> <5624F932.7030001@osg.samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Mon, 19 Oct 2015 18:21:40 +0200
+Message-ID: <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com>
+References: <561E1378.6000906@collabora.com>
+	<20151017065750.GA18607@kroah.com>
+	<20151018192931.GY14956@sirena.org.uk>
+	<20151018193757.GA9147@kroah.com>
+	<20151018195330.GB14956@sirena.org.uk>
+	<CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
+	<20151019131821.GA32532@n2100.arm.linux.org.uk>
+	<CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com>
+	<20151019143045.GE32532@n2100.arm.linux.org.uk>
+	<CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com>
+	<20151019153548.GM32532@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5624F932.7030001@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151019153548.GM32532@n2100.arm.linux.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gma>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Hi Russell,
 
-On Mon, Oct 19, 2015 at 7:37 PM, Javier Martinez Canillas
-<javier@osg.samsung.com> wrote:
-> Hello Krzysztof,
->
-> On 10/19/2015 03:28 PM, Krzysztof Kozlowski wrote:
->> 2015-10-19 18:56 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
->>> Hello,
->>>
->>> On 10/19/2015 09:00 AM, Krzysztof Kozlowski wrote:
->>>> On 19.10.2015 15:03, Alim Akhtar wrote:
->>>>> Now we can use the generic syscon-{reboot/poweroff} drivers,
->>>>> so we don't need special handling for reboot/poweroff in
->>>>> exynos pmu driver. This patch remove the same.
->>>>>
->>>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>>>> ---
->>>>>  arch/arm/mach-exynos/pmu.c |   43 -------------------------------------------
->>>>>  1 file changed, 43 deletions(-)
->>>>
->>>> I think that removal of this stuff will effectively remove the
->>>> restart/poweroff handlers from:
->>>> 1. Other defconfigs, like multi_v7
->>>> 2. Custom configs.
->>>>
->>>
->>> This will also break old DTBs that don't have a "syscon-poweroff" device
->>> node that contains the necessary PMU regmap, offset and mask information.
+On Mon, Oct 19, 2015 at 5:35 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+>> > What you can do is print those devices which have failed to probe at
+>> > late_initcall() time - possibly augmenting that with reports from
+>> > subsystems showing what resources are not available, but that's only
+>> > a guide, because of the "it might or might not be in a kernel module"
+>> > problem.
 >>
->> I am not sure whether this is ABI break issue. There was no compatible
->> mentioning that "reset works" which now would be replaced. The
->> existing PMU compatible (like samsung,exynos4412-pmu) does not mention
->> "reset" as a feature coming with this compatible.
->>
->> So no ABI break.
->>
->>
+>> Well, adding those reports would give you a changelog similar to the
+>> one in this series...
 >
-> I deliberately didn't use the "DT ABI break" expression since as you said is
-> not part of the documented DT bindings. But what I said is that this change
-> will break old DTBs with newer kernels since reboot and power off will stop
-> working after $SUBJECT.
->
-> I'm not a particular fan of the stable DT idea since in practice it seems to
-> do more harm than good but since that was decided, the expectation for users
-> is that booting a new kernel with an old DT should not cause any regression.
->
-> So I think that at least a comment in the commit message is needed so if
-> there are people really using old DTs with newer kernels on Exynos boards,
-> they can know that the commit causes such an issue instead of having to
-> figure it out themselves.
->
-Agree, will add a comment about this in commit message.
+> I'm not sure about that, because what I was thinking of is adding
+> a flag which would be set at late_initcall() time prior to running
+> a final round of deferred device probing.
 
->>>
->>>> Previously this code was always compiled in for ARCH_EXYNOS. Now it is
->>>> not so I am thinking about selecting necessary drivers from main exynos
->>>> Kconfig symbol. That could be tricky though, because "select" should be
->>>> used only for non-visible symbols.
->>>>
->>>> Any ideas how to solve that?
->>>>
->>>
->>> Is true that select should only be used for non-visible symbols but there
->>> are others user visible symbols that are selected by ARCH_EXYNOS such as
->>> EXYNOS_THERMAL. So I think selecting the regmap syscon reset stuff there
->>> is a sensible option.
->>
->> Selecting from defconfig is not sufficient... since I do not have
->> other idea than selecting then ovak, but Alim please check it whether
->> it does not create circular dependencies on various configs.
->>
+Which round is the final round?
+That's the one which didn't manage to bind any new devices to drivers,
+which is something you only know _after_ the round has been run.
+
+So I think we need one extra round to handle this.
+
+> This flag would then be used in a deferred_warn() printk function
+> which would normally be silent, but when this flag is set, it would
+> print the reason for the deferral - and this would replace (or be
+> added) to the subsystems and drivers which return -EPROBE_DEFER.
 >
-> Agreed, Kconfig circular dependencies is the reason why select is avoided.
-> Fortunately now the 0-day bot analyzes even posted patches so it's possible
-> that such an issue could be found even before these patches are merged.
+> That has the effect of hiding all the deferrals up until just before
+> launching into userspace, which should then acomplish two things -
+> firstly, getting rid of the rather useless deferred messages up to
+> that point, and secondly printing the reason why the remaining
+> deferrals are happening.
 >
-ok..will select it from mach-exynos/Kconfig.
-Thanks.
+> That should be a small number of new lines plus a one-line change
+> in subsystems and drivers.
 
->> Best regards,
->> Krzysztof
->>
->
-> Best regards,
-> --
-> Javier Martinez Canillas
-> Open Source Group
-> Samsung Research America
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Apart from the extra round we probably can't get rid of, that sounds OK to me.
 
+Gr{oetje,eeting}s,
 
+                        Geert
 
--- 
-Regards,
-Alim
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
