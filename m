@@ -1,100 +1,67 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 7/7] ARM: EXYNOS: Remove code for restart and poweroff for
- exynos SoCs
-Date: Mon, 19 Oct 2015 16:07:46 +0200
-Message-ID: <5624F932.7030001@osg.samsung.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
- <1445234635-3950-8-git-send-email-alim.akhtar@samsung.com>
- <562494F8.6070003@samsung.com> <5624BE39.7020605@osg.samsung.com>
- <CAJKOXPcvKeDNwof5eyD5XjzUiZrHoyShD8gOPGo7uUxEyypQbw@mail.gmail.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv2 2/3] ARM: zynq: dt: Updated devicetree for Zynq 7000
+ platform.
+Date: Mon, 19 Oct 2015 16:09:09 +0200
+Message-ID: <5624F985.8050905@xilinx.com>
+References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
+ <1445035350-3569-3-git-send-email-moritz.fischer@ettus.com>
+ <20151018175324.GH12756@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPcvKeDNwof5eyD5XjzUiZrHoyShD8gOPGo7uUxEyypQbw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151018175324.GH12756-ew3lsbMjNqt5wtABiV/Xjqyly8cj88Ttqxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 10/19/2015 03:28 PM, Krzysztof Kozlowski wrote:
-> 2015-10-19 18:56 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
->> Hello,
+On 10/18/2015 07:53 PM, Josh Cartwright wrote:
+> On Fri, Oct 16, 2015 at 03:42:29PM -0700, Moritz Fischer wrote:
+>> Added addtional nodes required for FPGA Manager operation
+>> of the Xilinx Zynq Devc configuration interface.
 >>
->> On 10/19/2015 09:00 AM, Krzysztof Kozlowski wrote:
->>> On 19.10.2015 15:03, Alim Akhtar wrote:
->>>> Now we can use the generic syscon-{reboot/poweroff} drivers,
->>>> so we don't need special handling for reboot/poweroff in
->>>> exynos pmu driver. This patch remove the same.
->>>>
->>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>>> ---
->>>>  arch/arm/mach-exynos/pmu.c |   43 -------------------------------------------
->>>>  1 file changed, 43 deletions(-)
->>>
->>> I think that removal of this stuff will effectively remove the
->>> restart/poweroff handlers from:
->>> 1. Other defconfigs, like multi_v7
->>> 2. Custom configs.
->>>
+>> Reviewed-by: S=F6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+>> ---
 >>
->> This will also break old DTBs that don't have a "syscon-poweroff" device
->> node that contains the necessary PMU regmap, offset and mask information.
-> 
-> I am not sure whether this is ABI break issue. There was no compatible
-> mentioning that "reset works" which now would be replaced. The
-> existing PMU compatible (like samsung,exynos4412-pmu) does not mention
-> "reset" as a feature coming with this compatible.
-> 
-> So no ABI break.
-> 
-> 
-
-I deliberately didn't use the "DT ABI break" expression since as you said is
-not part of the documented DT bindings. But what I said is that this change
-will break old DTBs with newer kernels since reboot and power off will stop
-working after $SUBJECT.
-
-I'm not a particular fan of the stable DT idea since in practice it seems to
-do more harm than good but since that was decided, the expectation for users
-is that booting a new kernel with an old DT should not cause any regression.
-
-So I think that at least a comment in the commit message is needed so if
-there are people really using old DTs with newer kernels on Exynos boards,
-they can know that the commit causes such an issue instead of having to
-figure it out themselves.
-
+>> v2: No changes
 >>
->>> Previously this code was always compiled in for ARCH_EXYNOS. Now it is
->>> not so I am thinking about selecting necessary drivers from main exynos
->>> Kconfig symbol. That could be tricky though, because "select" should be
->>> used only for non-visible symbols.
->>>
->>> Any ideas how to solve that?
->>>
+>> ---
+>>  arch/arm/boot/dts/zynq-7000.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
 >>
->> Is true that select should only be used for non-visible symbols but there
->> are others user visible symbols that are selected by ARCH_EXYNOS such as
->> EXYNOS_THERMAL. So I think selecting the regmap syscon reset stuff there
->> is a sensible option.
-> 
-> Selecting from defconfig is not sufficient... since I do not have
-> other idea than selecting then ovak, but Alim please check it whether
-> it does not create circular dependencies on various configs.
->
+>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zy=
+nq-7000.dtsi
+>> index dc0457e..1a5220e 100644
+>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>> @@ -294,6 +294,11 @@
+>>  		devcfg: devcfg@f8007000 {
+>>  			compatible =3D "xlnx,zynq-devcfg-1.0";
+>>  			reg =3D <0xf8007000 0x100>;
+>> +			interrupt-parent =3D <&intc>;
+>=20
+> You shouldn't need interrupt-parent here.  In fact, I suspect it can =
+be
+> removed from all sibling nodes as well.
 
-Agreed, Kconfig circular dependencies is the reason why select is avoided.
-Fortunately now the 0-day bot analyzes even posted patches so it's possible
-that such an issue could be found even before these patches are merged.
+Correct. But I tend to do it vice-versa. To remove it from amba node an=
+d
+keep it in every IP here. The reason is simple to let everybody know
+that setting up right interrupt controller is something what they have
+to care. If you have more interrupt controllers in the system it can be
+messy.
 
-> Best regards,
-> Krzysztof
->
+But again. Please remove this patch from this series. This will go to
+mainline through arm-soc but 1/3 and 3/3 will go through Greg. That's
+why please do not include it here.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Thanks,
+Michal
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
