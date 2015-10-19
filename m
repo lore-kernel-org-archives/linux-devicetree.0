@@ -1,382 +1,312 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v10 4/6] pci: altera: Add Altera PCIe MSI driver
-Date: Mon, 19 Oct 2015 16:19:26 +0800
-Message-ID: <1445242768-4423-5-git-send-email-lftan@altera.com>
-References: <1445242768-4423-1-git-send-email-lftan@altera.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v4 1/3] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY
+ driver
+Date: Mon, 19 Oct 2015 08:30:07 +0000
+Message-ID: <SG2PR06MB0919714A7B6E50FB2794A71ED83A0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1444731726-5328-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1444731726-5328-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <5621A7D0.7080808@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445242768-4423-1-git-send-email-lftan@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, lftan.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Ley Foon Tan <lftan@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5621A7D0.7080808@ti.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Altera PCIe MSI driver. This soft IP supports configurable
-number of vectors, which is a dts parameter.
+Hi,
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
----
- drivers/pci/host/Kconfig           |   8 +
- drivers/pci/host/Makefile          |   1 +
- drivers/pci/host/pcie-altera-msi.c | 313 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 322 insertions(+)
- create mode 100644 drivers/pci/host/pcie-altera-msi.c
+> Sent: Saturday, October 17, 2015 10:44 AM
+> 
+> Hi,
+> 
+> On Tuesday 13 October 2015 03:52 PM, Yoshihiro Shimoda wrote:
+< snip >
+> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> > index 7eb5859d..45c6131 100644
+> > --- a/drivers/phy/Kconfig
+> > +++ b/drivers/phy/Kconfig
+> > @@ -118,6 +118,14 @@ config PHY_RCAR_GEN2
+> >  	help
+> >  	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
+> >
+> > +config PHY_RCAR_GEN3_USB2
+> > +	tristate "Renesas R-Car generation 3 USB 2.0 PHY driver"
+> > +	depends on OF
+> > +	depends on ARCH_SHMOBILE
+> 
+> The depends on can be moved to a single line.
 
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index a9f6db4..35eba16 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -152,4 +152,12 @@ config PCIE_ALTERA
- 	  Say Y here if you want to enable PCIe controller support on Altera
- 	  FPGA.
- 
-+config PCIE_ALTERA_MSI
-+	bool "Altera PCIe MSI feature"
-+	depends on PCI_MSI
-+	select PCI_MSI_IRQ_DOMAIN
-+	help
-+	  Say Y here if you want PCIe MSI support for the Altera FPGA.
-+	  This MSI driver supports Altera MSI to GIC controller IP.
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 6954f76..6c4913d 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -18,3 +18,4 @@ obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
- obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
- obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
- obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
-+obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
-diff --git a/drivers/pci/host/pcie-altera-msi.c b/drivers/pci/host/pcie-altera-msi.c
-new file mode 100644
-index 0000000..1d8a1b6
---- /dev/null
-+++ b/drivers/pci/host/pcie-altera-msi.c
-@@ -0,0 +1,313 @@
-+/*
-+ * Copyright Altera Corporation (C) 2013-2015. All rights reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/module.h>
-+#include <linux/msi.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define MSI_STATUS		0x0
-+#define MSI_ERROR		0x4
-+#define MSI_INTMASK		0x8
-+
-+#define MAX_MSI_VECTORS		32
-+struct altera_msi {
-+	DECLARE_BITMAP(used, MAX_MSI_VECTORS);
-+	struct mutex		lock;	/* proctect used variable */
-+	struct platform_device	*pdev;
-+	struct irq_domain		*msi_domain;
-+	struct irq_domain		*inner_domain;
-+	void __iomem		*csr_base;
-+	void __iomem		*vector_base;
-+	phys_addr_t		vector_phy;
-+	u32			num_of_vectors;
-+	int			irq;
-+};
-+
-+static inline void msi_writel(struct altera_msi *msi, const u32 value,
-+			      const u32 reg)
-+{
-+	writel_relaxed(value, msi->csr_base + reg);
-+}
-+
-+static inline u32 msi_readl(struct altera_msi *msi, const u32 reg)
-+{
-+	return readl_relaxed(msi->csr_base + reg);
-+}
-+
-+static void altera_msi_isr(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct altera_msi *msi;
-+	unsigned long status;
-+	u32 num_of_vectors;
-+	u32 bit;
-+	u32 virq;
-+
-+	chained_irq_enter(chip, desc);
-+	msi = irq_desc_get_handler_data(desc);
-+	num_of_vectors = msi->num_of_vectors;
-+
-+	while ((status = msi_readl(msi, MSI_STATUS)) != 0) {
-+		for_each_set_bit(bit, &status, msi->num_of_vectors) {
-+			/* Dummy read from vector to clear the interrupt */
-+			readl_relaxed(msi->vector_base + (bit * sizeof(u32)));
-+
-+			virq = irq_find_mapping(msi->inner_domain, bit);
-+			if (virq)
-+				generic_handle_irq(virq);
-+			else
-+				dev_err(&msi->pdev->dev, "unexpected MSI\n");
-+		}
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static struct irq_chip altera_msi_irq_chip = {
-+	.name = "Altera PCIe MSI",
-+	.irq_mask = pci_msi_mask_irq,
-+	.irq_unmask = pci_msi_unmask_irq,
-+};
-+
-+static struct msi_domain_info altera_msi_domain_info = {
-+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		     MSI_FLAG_PCI_MSIX),
-+	.chip	= &altera_msi_irq_chip,
-+};
-+
-+static void altera_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct altera_msi *msi = irq_data_get_irq_chip_data(data);
-+	phys_addr_t addr = msi->vector_phy + (data->hwirq * sizeof(u32));
-+
-+	msg->address_lo = lower_32_bits(addr);
-+	msg->address_hi = upper_32_bits(addr);
-+	msg->data = data->hwirq;
-+
-+	dev_dbg(&msi->pdev->dev, "msi#%d address_hi 0x%x address_lo 0x%x\n",
-+		(int)data->hwirq, msg->address_hi, msg->address_lo);
-+}
-+
-+static int altera_msi_set_affinity(struct irq_data *irq_data,
-+				   const struct cpumask *mask, bool force)
-+{
-+	 return -EINVAL;
-+}
-+
-+static struct irq_chip altera_msi_bottom_irq_chip = {
-+	.name			= "Altera MSI",
-+	.irq_compose_msi_msg	= altera_compose_msi_msg,
-+	.irq_set_affinity	= altera_msi_set_affinity,
-+};
-+
-+static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs, void *args)
-+{
-+	struct altera_msi *msi = domain->host_data;
-+	unsigned long bit;
-+	u32 mask;
-+
-+	WARN_ON(nr_irqs != 1);
-+	mutex_lock(&msi->lock);
-+
-+	bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
-+	if (bit >= msi->num_of_vectors) {
-+		mutex_unlock(&msi->lock);
-+		return -ENOSPC;
-+	}
-+
-+	set_bit(bit, msi->used);
-+
-+	mutex_unlock(&msi->lock);
-+
-+	irq_domain_set_info(domain, virq, bit, &altera_msi_bottom_irq_chip,
-+			    domain->host_data, handle_simple_irq,
-+			    NULL, NULL);
-+
-+	mask = msi_readl(msi, MSI_INTMASK);
-+	mask |= 1 << bit;
-+	msi_writel(msi, mask, MSI_INTMASK);
-+
-+	return 0;
-+}
-+
-+static void altera_irq_domain_free(struct irq_domain *domain,
-+				   unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	struct altera_msi *msi = irq_data_get_irq_chip_data(d);
-+	u32 mask;
-+
-+	mutex_lock(&msi->lock);
-+
-+	if (!test_bit(d->hwirq, msi->used)) {
-+		dev_err(&msi->pdev->dev, "trying to free unused MSI#%lu\n",
-+			d->hwirq);
-+	} else {
-+		__clear_bit(d->hwirq, msi->used);
-+		mask = msi_readl(msi, MSI_INTMASK);
-+		mask &= ~(1 << d->hwirq);
-+		msi_writel(msi, mask, MSI_INTMASK);
-+	}
-+
-+	mutex_unlock(&msi->lock);
-+}
-+
-+static const struct irq_domain_ops msi_domain_ops = {
-+	.alloc	= altera_irq_domain_alloc,
-+	.free	= altera_irq_domain_free,
-+};
-+
-+static int altera_allocate_domains(struct altera_msi *msi)
-+{
-+	msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
-+					     &msi_domain_ops, msi);
-+	if (!msi->inner_domain) {
-+		dev_err(&msi->pdev->dev, "failed to create IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	msi->msi_domain = pci_msi_create_irq_domain(msi->pdev->dev.of_node,
-+				&altera_msi_domain_info, msi->inner_domain);
-+	if (!msi->msi_domain) {
-+		dev_err(&msi->pdev->dev, "failed to create MSI domain\n");
-+		irq_domain_remove(msi->inner_domain);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void altera_free_domains(struct altera_msi *msi)
-+{
-+	irq_domain_remove(msi->msi_domain);
-+	irq_domain_remove(msi->inner_domain);
-+}
-+
-+static int altera_msi_remove(struct platform_device *pdev)
-+{
-+	struct altera_msi *msi = platform_get_drvdata(pdev);
-+
-+	msi_writel(msi, 0, MSI_INTMASK);
-+	irq_set_chained_handler(msi->irq, NULL);
-+	irq_set_handler_data(msi->irq, NULL);
-+
-+	altera_free_domains(msi);
-+
-+	platform_set_drvdata(pdev, NULL);
-+	return 0;
-+}
-+
-+static int altera_msi_probe(struct platform_device *pdev)
-+{
-+	struct altera_msi *msi;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct resource *res;
-+	int ret;
-+
-+	msi = devm_kzalloc(&pdev->dev, sizeof(struct altera_msi),
-+			   GFP_KERNEL);
-+	if (!msi)
-+		return -ENOMEM;
-+
-+	mutex_init(&msi->lock);
-+	msi->pdev = pdev;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
-+	if (!res) {
-+		dev_err(&pdev->dev,
-+			"no csr memory resource defined\n");
-+		return -ENODEV;
-+	}
-+
-+	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(msi->csr_base)) {
-+		dev_err(&pdev->dev, "failed to map csr memory\n");
-+		return PTR_ERR(msi->csr_base);
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "vector_slave");
-+	if (!res) {
-+		dev_err(&pdev->dev,
-+			"no vector_slave memory resource defined\n");
-+		return -ENODEV;
-+	}
-+
-+	msi->vector_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(msi->vector_base)) {
-+		dev_err(&pdev->dev, "failed to map vector_slave memory\n");
-+		return PTR_ERR(msi->vector_base);
-+	}
-+
-+	msi->vector_phy = res->start;
-+
-+	if (of_property_read_u32(np, "num-vectors", &msi->num_of_vectors)) {
-+		dev_err(&pdev->dev, "failed to parse the number of vectors\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = altera_allocate_domains(msi);
-+	if (ret)
-+		return ret;
-+
-+	msi->irq = platform_get_irq(pdev, 0);
-+	if (msi->irq <= 0) {
-+		dev_err(&pdev->dev, "failed to map IRQ: %d\n", msi->irq);
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	irq_set_chained_handler_and_data(msi->irq, altera_msi_isr, msi);
-+	platform_set_drvdata(pdev, msi);
-+
-+	return 0;
-+
-+err:
-+	altera_msi_remove(pdev);
-+	return ret;
-+}
-+
-+static const struct of_device_id altera_msi_of_match[] = {
-+	{ .compatible = "altr,msi-1.0", NULL },
-+	{ },
-+};
-+
-+static struct platform_driver altera_msi_driver = {
-+	.driver = {
-+		.name = "altera-msi",
-+		.of_match_table = altera_msi_of_match,
-+	},
-+	.probe = altera_msi_probe,
-+	.remove = altera_msi_remove,
-+};
-+
-+static int __init altera_msi_init(void)
-+{
-+	return platform_driver_register(&altera_msi_driver);
-+}
-+
-+subsys_initcall(altera_msi_init);
-+
-+MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
-+MODULE_DESCRIPTION("Altera PCIe MSI support");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.2.1
+Thank you for the review!
+I will fix this.
+
+> > +	depends on GENERIC_PHY
+> 
+> all the PHY drivers inside drivers/phy directory use select PHY. Please
+> use select here.
+
+Oops, I will fix it.
+
+> > +	help
+> > +	  Support for USB 2.0 PHY found on Renesas R-Car generation 3 SoCs.
+> > +
+> >  config OMAP_CONTROL_PHY
+> >  	tristate "OMAP CONTROL PHY Driver"
+> >  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
+< snip >
+> > diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
+> > new file mode 100644
+> > index 0000000..d90dfcf
+> > --- /dev/null
+> > +++ b/drivers/phy/phy-rcar-gen3-usb2.c
+> 
+> Add a MAINTAINER entry for this file if there is no one else.
+
+I got it. I will add a MAINTAINER entry.
+
+> > @@ -0,0 +1,240 @@
+> > +/*
+> > + * Renesas R-Car Gen3 for USB2.0 PHY driver
+> > + *
+> > + * Copyright (C) 2015 Renesas Electronics Corporation
+> > + *
+> > + * This is based on the phy-rcar-gen2 driver:
+> > + * Copyright (C) 2014 Renesas Solutions Corp.
+> > + * Copyright (C) 2014 Cogent Embedded, Inc.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +/******* USB2.0 Host registers (original offset is +0x200) *******/
+> > +#define USB2_INT_ENABLE		0x000
+> > +#define USB2_USBCTR		0x00c
+> > +#define USB2_SPD_RSM_TIMSET	0x10c
+> > +#define USB2_OC_TIMSET		0x110
+> > +
+> > +/* INT_ENABLE */
+> > +#define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
+> > +#define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)
+> > +#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_USBH_INTB_EN | \
+> > +					 USB2_INT_ENABLE_USBH_INTA_EN)
+> > +
+> > +/* USBCTR */
+> > +#define USB2_USBCTR_DIRPD	BIT(2)
+> > +#define USB2_USBCTR_PLL_RST	BIT(1)
+> > +
+> > +/* SPD_RSM_TIMSET */
+> > +#define USB2_SPD_RSM_TIMSET_INIT	0x014e029b
+> > +
+> > +/* OC_TIMSET */
+> > +#define USB2_OC_TIMSET_INIT		0x000209ab
+> > +
+> > +/******* HSUSB registers (original offset is +0x100) *******/
+> > +#define HSUSB_LPSTS			0x02
+> > +#define HSUSB_UGCTRL2			0x84
+> > +
+> > +/* Low Power Status register (LPSTS) */
+> > +#define HSUSB_LPSTS_SUSPM		0x4000
+> > +
+> > +/* USB General control register 2 (UGCTRL2) */
+> > +#define HSUSB_UGCTRL2_MASK		0x00000031 /* bit[31:6] should be 0 */
+> > +#define HSUSB_UGCTRL2_USB0SEL		0x00000030
+> > +#define HSUSB_UGCTRL2_USB0SEL_HOST	0x00000010
+> > +#define HSUSB_UGCTRL2_USB0SEL_HS_USB	0x00000020
+> > +#define HSUSB_UGCTRL2_USB0SEL_OTG	0x00000030
+> > +
+> > +struct rcar_gen3_data {
+> > +	void __iomem *base;
+> > +	struct clk *clk;
+> > +};
+> > +
+> > +struct rcar_gen3_chan {
+> > +	struct rcar_gen3_data usb2;
+> > +	struct rcar_gen3_data hsusb;
+> > +	struct phy *phy;
+> > +	spinlock_t lock;
+> 
+> Why do you need a spinlock? It seems like a single PHY phy-provider? Is
+> it for future modifications?
+
+I used this spinlock to protect updating some registers from CPU(s).
+I will remove it if it is not really needed.
+
+> > +};
+> > +
+> > +static int rcar_gen3_phy_usb2_init(struct phy *p)
+> > +{
+> > +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> > +	unsigned long flags;
+> > +	void __iomem *usb2_base = channel->usb2.base;
+> > +	void __iomem *hsusb_base = channel->hsusb.base;
+> > +	u32 tmp;
+> > +
+> > +	spin_lock_irqsave(&channel->lock, flags);
+> > +
+> > +	/* Initialize USB2 part */
+> > +	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
+> > +	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
+> > +	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+> > +
+> > +	/* Initialize HSUSB part */
+> > +	if (hsusb_base) {
+> > +		/* TODO: support "OTG" mode */
+> > +		tmp = readl(hsusb_base + HSUSB_UGCTRL2);
+> > +		tmp = (tmp & ~HSUSB_UGCTRL2_USB0SEL) |
+> > +		      HSUSB_UGCTRL2_USB0SEL_HOST;
+> > +		writel(tmp & HSUSB_UGCTRL2_MASK, hsusb_base + HSUSB_UGCTRL2);
+> > +	}
+> > +
+> > +	spin_unlock_irqrestore(&channel->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int rcar_gen3_phy_usb2_exit(struct phy *p)
+> > +{
+> > +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> > +
+> > +	writel(0, channel->usb2.base + USB2_INT_ENABLE);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+> > +{
+> > +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> > +	void __iomem *usb2_base = channel->usb2.base;
+> > +	void __iomem *hsusb_base = channel->hsusb.base;
+> > +	unsigned long flags;
+> > +	u32 tmp;
+> > +
+> > +	spin_lock_irqsave(&channel->lock, flags);
+> > +
+> > +	tmp = readl(usb2_base + USB2_USBCTR);
+> > +	tmp |= USB2_USBCTR_PLL_RST;
+> > +	writel(tmp, usb2_base + USB2_USBCTR);
+> > +	tmp &= ~USB2_USBCTR_PLL_RST;
+> > +	writel(tmp, usb2_base + USB2_USBCTR);
+> > +
+> > +	/*
+> > +	 * TODO: To reduce power consuming, this driver should set the SUSPM
+> > +	 *	after the PHY detects ID pin as peripheral.
+> > +	 */
+> > +	if (hsusb_base) {
+> > +		/* Power on HSUSB PHY */
+> > +		tmp = readw(hsusb_base + HSUSB_LPSTS);
+> > +		tmp |= HSUSB_LPSTS_SUSPM;
+> > +		writew(tmp, hsusb_base + HSUSB_LPSTS);
+> > +	}
+> > +
+> > +	spin_unlock_irqrestore(&channel->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int rcar_gen3_phy_usb2_power_off(struct phy *p)
+> > +{
+> > +	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+> > +	void __iomem *hsusb_base = channel->hsusb.base;
+> > +	unsigned long flags;
+> > +	u32 tmp;
+> > +
+> > +	spin_lock_irqsave(&channel->lock, flags);
+> > +
+> > +	if (hsusb_base) {
+> > +		/* Power off HSUSB PHY */
+> > +		tmp = readw(hsusb_base + HSUSB_LPSTS);
+> > +		tmp &= ~HSUSB_LPSTS_SUSPM;
+> > +		writew(tmp, hsusb_base + HSUSB_LPSTS);
+> > +	}
+> > +
+> > +	spin_unlock_irqrestore(&channel->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct phy_ops rcar_gen3_phy_usb2_ops = {
+> > +	.init		= rcar_gen3_phy_usb2_init,
+> > +	.exit		= rcar_gen3_phy_usb2_exit,
+> > +	.power_on	= rcar_gen3_phy_usb2_power_on,
+> > +	.power_off	= rcar_gen3_phy_usb2_power_off,
+> > +	.owner		= THIS_MODULE,
+> > +};
+> > +
+> > +static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+> > +	{ .compatible = "renesas,usb2-phy-r8a7795" },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
+> > +
+> > +static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct rcar_gen3_chan *channel;
+> > +	struct phy_provider *provider;
+> > +	struct resource *res;
+> > +
+> > +	if (!dev->of_node) {
+> > +		dev_err(dev, "This driver needs device tree\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	channel = devm_kzalloc(dev, sizeof(*channel), GFP_KERNEL);
+> > +	if (!channel)
+> > +		return -ENOMEM;
+> > +
+> > +	spin_lock_init(&channel->lock);
+> > +
+> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "usb2_host");
+> > +	channel->usb2.base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(channel->usb2.base))
+> > +		return PTR_ERR(channel->usb2.base);
+> > +
+> > +	/* "hsusb" memory resource is optional */
+> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsusb");
+> > +
+> > +	/* To avoid error message by devm_ioremap_resource() */
+> > +	if (res) {
+> > +		channel->hsusb.base = devm_ioremap_resource(dev, res);
+> > +		if (IS_ERR(channel->hsusb.base))
+> > +			channel->hsusb.base = NULL;
+> > +	}
+> > +
+> > +	/* devm_phy_create() will call pm_runtime_enable(dev); */
+> > +	channel->phy = devm_phy_create(dev, NULL, &rcar_gen3_phy_usb2_ops);
+> > +	if (IS_ERR(channel->phy)) {
+> > +		dev_err(dev, "Failed to create USB2 PHY\n");
+> > +		return PTR_ERR(channel->phy);
+> > +	}
+> > +
+> > +	phy_set_drvdata(channel->phy, channel);
+> > +
+> > +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> > +	if (IS_ERR(provider)) {
+> > +		dev_err(dev, "Failed to register PHY provider\n");
+> > +		return PTR_ERR(provider);
+> > +	}
+> > +
+> > +	dev_set_drvdata(dev, channel);
+> 
+> This looks unnecessary and if you remove that you can use return
+> PTR_ERR_OR_ZERO.
+
+Thank you for the point. I will remove it.
+
+Best regards,
+Yoshihiro Shimoda
+
+> Thanks
+> Kishon
