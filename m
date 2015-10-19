@@ -1,34 +1,56 @@
 From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v10 2/6] pci: add Altera PCI vendor ID
-Date: Mon, 19 Oct 2015 16:19:24 +0800
-Message-ID: <1445242768-4423-3-git-send-email-lftan@altera.com>
+Subject: [PATCH v10 6/6] MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+Date: Mon, 19 Oct 2015 16:19:28 +0800
+Message-ID: <1445242768-4423-7-git-send-email-lftan@altera.com>
 References: <1445242768-4423-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1445242768-4423-1-git-send-email-lftan@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Ley Foon Tan <lftan@altera.com>
 ---
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index d9ba49c..08e4462 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1550,6 +1550,8 @@
- #define PCI_DEVICE_ID_SERVERWORKS_CSB6LPC 0x0227
- #define PCI_DEVICE_ID_SERVERWORKS_HT1100LD 0x0408
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b8577ad9..96b9fac 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7958,6 +7958,14 @@ F:	include/linux/pci*
+ F:	arch/x86/pci/
+ F:	arch/x86/kernel/quirks.c
  
-+#define PCI_VENDOR_ID_ALTERA		0x1172
++PCI DRIVER FOR ALTERA PCIE IP
++M:	Ley Foon Tan <lftan@altera.com>
++L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
++L:	linux-pci@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/pci/altera-pcie.txt
++F:	drivers/pci/host/pcie-altera.c
 +
- #define PCI_VENDOR_ID_SBE		0x1176
- #define PCI_DEVICE_ID_SBE_WANXL100	0x0301
- #define PCI_DEVICE_ID_SBE_WANXL200	0x0302
+ PCI DRIVER FOR ARM VERSATILE PLATFORM
+ M:	Rob Herring <robh@kernel.org>
+ L:	linux-pci@vger.kernel.org
+@@ -8059,6 +8067,14 @@ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ F:	drivers/pci/host/*spear*
+ 
++PCI MSI DRIVER FOR ALTERA MSI IP
++M:	Ley Foon Tan <lftan@altera.com>
++L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
++L:	linux-pci@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
++F:	drivers/pci/host/pcie-altera-msi.c
++
+ PCI MSI DRIVER FOR APPLIEDMICRO XGENE
+ M:	Duc Dang <dhdang@apm.com>
+ L:	linux-pci@vger.kernel.org
 -- 
 1.8.2.1
+
