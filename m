@@ -1,99 +1,43 @@
-From: Pramod Kumar <pramodku@broadcom.com>
-Subject: [PATCH 07/11] pinctrl: use ngpios propety from DT
-Date: Mon, 19 Oct 2015 11:13:14 +0530
-Message-ID: <1445233398-27129-8-git-send-email-pramodku@broadcom.com>
+From: Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 08/11] pinctrl: Add new compatible string to GPIO controller driver
+Date: Mon, 19 Oct 2015 11:13:15 +0530
+Message-ID: <1445233398-27129-9-git-send-email-pramodku@broadcom.com>
 References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas Gorski <jogo@openwrt.org>, Pramod Kumar <pramodku@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445233398-27129-1-git-send-email-pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jason Uy <jasonuy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since identical hardware is used in several instances and all pins
-are not routed to pinctrl hence getting total number of gpios from
-DT make more sense hence stop using total number of gpios pins from
-drivers and extract it from DT.
+This compatible string should be used for all new iproc based future
+SoCs having the same GPIO controller hardware.
 
-Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Signed-off-by: Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c | 45 +++++++------------------------
- 1 file changed, 9 insertions(+), 36 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c b/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-index 12a48f4..498a58a 100644
+index 498a58a..d0d788f 100644
 --- a/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
 +++ b/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-@@ -642,35 +642,11 @@ static void cygnus_gpio_unregister_pinconf(struct cygnus_gpio *chip)
- 		pinctrl_unregister(chip->pctl);
- }
- 
--struct cygnus_gpio_data {
--	unsigned num_gpios;
--};
--
--static const struct cygnus_gpio_data cygnus_cmm_gpio_data = {
--	.num_gpios = 24,
--};
--
--static const struct cygnus_gpio_data cygnus_asiu_gpio_data = {
--	.num_gpios = 146,
--};
--
--static const struct cygnus_gpio_data cygnus_crmu_gpio_data = {
--	.num_gpios = 6,
--};
--
- static const struct of_device_id cygnus_gpio_of_match[] = {
--	{
--		.compatible = "brcm,cygnus-ccm-gpio",
--		.data = &cygnus_cmm_gpio_data,
--	},
--	{
--		.compatible = "brcm,cygnus-asiu-gpio",
--		.data = &cygnus_asiu_gpio_data,
--	},
--	{
--		.compatible = "brcm,cygnus-crmu-gpio",
--		.data = &cygnus_crmu_gpio_data,
--	}
-+	{ .compatible = "brcm,cygnus-ccm-gpio" },
-+	{ .compatible = "brcm,cygnus-asiu-gpio" },
-+	{ .compatible = "brcm,cygnus-crmu-gpio" },
-+	{ }
+@@ -646,6 +646,7 @@ static const struct of_device_id cygnus_gpio_of_match[] = {
+ 	{ .compatible = "brcm,cygnus-ccm-gpio" },
+ 	{ .compatible = "brcm,cygnus-asiu-gpio" },
+ 	{ .compatible = "brcm,cygnus-crmu-gpio" },
++	{ .compatible = "brcm,iproc-gpio" },
+ 	{ }
  };
  
- static int cygnus_gpio_probe(struct platform_device *pdev)
-@@ -681,14 +657,6 @@ static int cygnus_gpio_probe(struct platform_device *pdev)
- 	struct gpio_chip *gc;
- 	u32 ngpios;
- 	int irq, ret;
--	const struct of_device_id *match;
--	const struct cygnus_gpio_data *gpio_data;
--
--	match = of_match_device(cygnus_gpio_of_match, dev);
--	if (!match)
--		return -ENODEV;
--	gpio_data = match->data;
--	ngpios = gpio_data->num_gpios;
- 
- 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
-@@ -713,6 +681,11 @@ static int cygnus_gpio_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (of_property_read_u32(dev->of_node, "ngpios", &ngpios)) {
-+		dev_err(&pdev->dev, "missing ngpios DT property\n");
-+		return -ENODEV;
-+	}
-+
- 	spin_lock_init(&chip->lock);
- 
- 	gc = &chip->gc;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
