@@ -1,82 +1,42 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v11 1/3] dt-bindings: Add a binding for Mediatek xHCI host controller
-Date: Mon, 19 Oct 2015 14:21:13 +0800
-Message-ID: <1445235675-29312-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1445235675-29312-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] arm: dts: berlin2q-marvell-dmp: remove broken-cd from eMMC node
+Date: Mon, 19 Oct 2015 14:22:40 +0800
+Message-ID: <1445235760-2062-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445235675-29312-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding documentation of xHCI host controller for the
-MT8173 SoC from Mediatek.
+The eMMC is non-removable so is marked with the non-removable DT
+property to avoid having to redetect it after a suspend/resume.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+But it also has the broken-cd property which is wrong since only
+one of the DT properties for card detection should be used
+
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-new file mode 100644
-index 0000000..3c0ac97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-@@ -0,0 +1,51 @@
-+MT8173 xHCI
-+
-+The device node for Mediatek SOC USB3.0 host controller
-+
-+Required properties:
-+ - compatible : should contain "mediatek,mt8173-xhci"
-+ - reg : specifies physical base address and size of the registers,
-+	the first one for MAC, the second for IPPC
-+ - interrupts : interrupt used by the controller
-+ - power-domains : a phandle to USB power domain node to control USB's
-+	mtcmos
-+ - vusb33-supply : regulator of USB avdd3.3v
-+
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must contain
-+	"sys_ck": for clock of xHCI MAC
-+	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-+	"wakeup_deb_p0": for USB wakeup debounce clock of port1
-+
-+ - phys : a list of phandle + phy specifier pairs
-+ - usb3-lpm-capable : supports USB3.0 LPM
-+
-+Optional properties:
-+ - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
-+	mode;
-+ - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-+	control register, it depends on "mediatek,wakeup-src".
-+ - vbus-supply : reference to the VBUS regulator;
-+
-+Example:
-+usb30: usb@11270000 {
-+	compatible = "mediatek,mt8173-xhci";
-+	reg = <0 0x11270000 0 0x1000>,
-+	      <0 0x11280700 0 0x0100>;
-+	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-+		 <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB1>;
-+	clock-names = "sys_ck",
-+		      "wakeup_deb_p0",
-+		      "wakeup_deb_p1";
-+	phys = <&phy_port0 PHY_TYPE_USB3>,
-+	       <&phy_port1 PHY_TYPE_USB2>;
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	vbus-supply = <&usb_p1_vbus>;
-+	usb3-lpm-capable;
-+	mediatek,syscon-wakeup = <&pericfg>;
-+	mediatek,wakeup-src = <1>;
-+};
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+index 4a749e5..0fa8f1e 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+@@ -93,7 +93,6 @@
+ };
+ 
+ &sdhci2 {
+-	broken-cd;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	status = "okay";
 -- 
-1.8.1.1.dirty
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
