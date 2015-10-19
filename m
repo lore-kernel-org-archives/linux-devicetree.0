@@ -1,95 +1,68 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
-Date: Mon, 19 Oct 2015 12:54:17 +0200
-Message-ID: <CAPDyKFqyXNUS2GwPjVWpoiPxOLNJ3T=FgDLO2NT+pEBGYMR1eQ@mail.gmail.com>
-References: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
-	<CAPDyKFpwgZSkE+TNehZ1Un=5CfjoEtfvELfrS6t-ZHZPscy3Yg@mail.gmail.com>
-	<56243E85.2040202@rock-chips.com>
-	<CAPDyKFpkH00roc=Nn067PufmQL59wqsi1c58tdv_UyP-7Gs-vg@mail.gmail.com>
-	<5624AC51.9060907@rock-chips.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Mon, 19 Oct 2015 12:02:38 +0100
+Message-ID: <20151019110238.GE14956@sirena.org.uk>
+References: <561E1378.6000906@collabora.com>
+ <20151017065750.GA18607@kroah.com>
+ <20151018192931.GY14956@sirena.org.uk>
+ <20151018193757.GA9147@kroah.com>
+ <20151018195330.GB14956@sirena.org.uk>
+ <1445247881.53393.146.camel@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5624AC51.9060907-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, S?ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KwgAcZnBnwoMp5TU"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445247881.53393.146.camel@infradead.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti>
 List-Id: devicetree@vger.kernel.org
 
-[...]
 
->>>
->>>>
->>>>> +               ret = phy_power_on(sdhci_arasan->phy);
->>>>
->>>>
->>>>
->>>> This looks a bit weird. Shouldn't you do phy_init() prior
->>>> phy_power_on()?
->>>>
->>>> Similar comment applies to phy_exit() and phy_power_off().
->>>
->>>
->>>
->>> Both are okay. It depends how the phy-driver implement the four
->>> interfaces.
->>>  From my case, power_on for arasan's phy driver firstly enable phy's clk
->>> and
->>> open power-domain, then programme phy internal registers to activate phy.
->>> Without enabling phy's clk and power-domain, we cannot do phy_init since
->>> phy
->>> can't be accessed by CPU.
->>>
->>> But here, I think you are right. It does look a bit weird.
->>> I think the better way is to remove phy_power_on here, and let phy-driver
->>> do
->>> power_on in phy_init internally. Similarly in the remove call.
->>
->>
->> That makes sense to me! I think it would also follow other phy clients
->> use of the phy API.
->>
->> What makes me wonder though is from a power management point of view.
->> *When* do you need to have phy initialized and powered?
->>
->
-> Whenever controller need to communicate with card, must init/power_on phy
-> firstly.
->
->> 1) For a removable card can leave the phy uninitialised or powered
->> off, but still detect card insertion/removal via GPIO? Is that a valid
->> scenario for you?
->>
->
-> Theoretically, it is.  Although my soc don't use phy for removable card, I
-> also consider how to handle this case. Should we add a hook
-> for sdhci_get_cd, and initialize phy if it's non-removeable device or
-> removeable card in slot ? Doesn't seem like a good idea.
->
-> Also seems not always work if we just use SDHCI_PRESENT_STATE to detect card
-> insertion/removal without phy in active state.
+--KwgAcZnBnwoMp5TU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-As you SoC don't use removable card, let's just leave this for now.
-Thanks for sharing your thoughts.
+On Mon, Oct 19, 2015 at 10:44:41AM +0100, David Woodhouse wrote:
+> On Sun, 2015-10-18 at 20:53 +0100, Mark Brown wrote:
 
->
->> 2) Considering the runtime PM case for the sdhci device. Typically you
->> can gate clocks etc at runtime suspend to save power, but what about
->> the phy? Can you power off it in runtime suspend?
->
->
-> yes, we can power off it in runtime suspend. So we can append some patches
-> later to introduce runtime pm for sdhci-of-arasan?
+> > Do you mean firmware rather than bus here?  I think that's the confusion
+> > I have...
 
-Yes, that's fine. I would thus expect that you want to do phy power
-off/on from the runtime PM callbacks, right!?
+> Certainly, if it literally is adding of_* calls then that would seem to
+> be gratuitously firmware-specific. Nothing should be using those these
+> days; any new code should be using the generic device property APIs
+> (except in special cases).
 
-If that's the case I think $subject patch should deal with *both* phy
-init and phy power on during ->probe().
+It's not entirely clear to me that we should be moving to fwnode_
+wholesale yet - the last advice was to hold off for a little while which
+makes sense given that the ACPI community still doesn't seem to have
+worked out what it wants to do here and how.  The x86 embedded people
+are all gung ho but it's less clear that anyone else wants to use _DSD
+in quite the same way (I know of some efforts to use _DSD separately to
+the DT compatibility stuff) and there are some vendors who definitely do
+have completely different binding schemes for ACPI and DT and therefore
+specifically care which is in use.
 
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It would really help if ACPI could get their binding review process in
+place, and if we do want to actually start converting everything to
+fwnode_ we need to start communicating that actively since otherwise
+people can't really be expected to know.
+
+--KwgAcZnBnwoMp5TU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJM3NAAoJECTWi3JdVIfQZWIH+wWlytIatZzb02megHs7cfkS
+XkfoBZZlTpwYYTLooWg9gc7XQ/Hx2qk/CTJwHZOudgYjrig+IWFuwOAU5Vw5YMm8
+7LN539ptj28jYJibjVxoIIX0bRAiQgrG9i3/5K5e6pmGzqnea/D2mu9sG5L2Fz//
+WLK/BYSFuVW6AzmoncTtGgYqECOFDXo8azymWx86d/NlXXMWKIvoEb0qVS+dJrgi
+6U7UQqhp46CwWEX3yk4Yf51Fi1wh6xAaLZcXeXqwvy+rYUXpBRNWKhG+0HR1d+Ep
+lOg6BbeD+4VpVvPL0yFpxmWEnjicr9mB6jVz/tkKq/tVq6aVat5SrbGTs5Tygjg=
+=TjUN
+-----END PGP SIGNATURE-----
+
+--KwgAcZnBnwoMp5TU--
