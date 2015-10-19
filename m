@@ -1,72 +1,55 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
-Date: Mon, 19 Oct 2015 09:50:51 +0200
-Message-ID: <CAPDyKFpkH00roc=Nn067PufmQL59wqsi1c58tdv_UyP-7Gs-vg@mail.gmail.com>
-References: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
-	<CAPDyKFpwgZSkE+TNehZ1Un=5CfjoEtfvELfrS6t-ZHZPscy3Yg@mail.gmail.com>
-	<56243E85.2040202@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RFC 0/2] simplefb: Add regulator handling support
+Date: Mon, 19 Oct 2015 09:59:25 +0200
+Message-ID: <5624A2DD.4020101@redhat.com>
+References: <1444669458-5588-1-git-send-email-wens@csie.org>
+ <561CAFE8.9080506@redhat.com> <20151014105556.GT14956@sirena.org.uk>
+ <561E3D28.2090901@redhat.com> <20151018195719.GC14956@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56243E85.2040202-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20151018195719.GC14956-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, S?ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+Hi,
 
->> I understand the phy is optional, but you still need to handle the
->> EPROBE_DEFER case.
->>
->> Perhaps you should also use devm_phy_optional_get() instead!?
+On 18-10-15 21:57, Mark Brown wrote:
+> On Wed, Oct 14, 2015 at 01:31:52PM +0200, Hans de Goede wrote:
 >
+>> I like your idea in your other mail where you suggest to actually
+>> use foo-supply and bar-supply names in the simplefb node, and then have
+>> some code simple iterate over all the properties and check for *-supply
+>> properties, so that the proper, schematic matching names can be used.
 >
-> I already changed it in version-2 [1]. :)
-> phy is mandatory for sdhci-arasan,5.1.
+>> But surely if we go this way having a helper for this so that others
+>> can re-use that likely not entirely trivial code is a good idea ?
 >
-> [1]: https://patchwork.kernel.org/patch/7173251/
-
-Oh, apologize for reviewing the old version!
-
+> Yeah.  It's trying to come up with a way to do this that is easy to
+> avoid abuse that's tricky.
 >
->>
->>> +               ret = phy_power_on(sdhci_arasan->phy);
->>
->>
->> This looks a bit weird. Shouldn't you do phy_init() prior phy_power_on()?
->>
->> Similar comment applies to phy_exit() and phy_power_off().
+>> One user which comes to mind immediately here is the generic mmc-pwrseq
+>> driver.
 >
+>> I agree that we need to be careful to not use a helper like this too
+>> much, but I do believe it will make sense to have it in some rare cases.
+>> We can put a big warning in both the header declaring it and above
+>> the implementation to use it scarcely.
 >
-> Both are okay. It depends how the phy-driver implement the four interfaces.
-> From my case, power_on for arasan's phy driver firstly enable phy's clk and
-> open power-domain, then programme phy internal registers to activate phy.
-> Without enabling phy's clk and power-domain, we cannot do phy_init since phy
-> can't be accessed by CPU.
->
-> But here, I think you are right. It does look a bit weird.
-> I think the better way is to remove phy_power_on here, and let phy-driver do
-> power_on in phy_init internally. Similarly in the remove call.
+> I'd rather have something that was visible in the code, not everyone
+> reads the documentation especially not subsystem maintainers reviewing
+> drivers that use APIs they're not familiar with.
 
-That makes sense to me! I think it would also follow other phy clients
-use of the phy API.
+I'm afraid there is not really a good way to do this though, so a big fat
+warning in the header declaring the function is really the bets we can
+do IMHO.
 
-What makes me wonder though is from a power management point of view.
-*When* do you need to have phy initialized and powered?
+Regards,
 
-1) For a removable card can leave the phy uninitialised or powered
-off, but still detect card insertion/removal via GPIO? Is that a valid
-scenario for you?
-
-2) Considering the runtime PM case for the sdhci device. Typically you
-can gate clocks etc at runtime suspend to save power, but what about
-the phy? Can you power off it in runtime suspend?
-
-[...]
-
-Kind regards
-Uffe
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
