@@ -1,32 +1,55 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/3] clk: samsung: exynos4: Add SSS gate clock
-Date: Mon, 19 Oct 2015 12:59:46 -0700
-Message-ID: <20151019195946.GH10182@codeaurora.org>
-References: <1445230834-32689-1-git-send-email-k.kozlowski@samsung.com>
- <1445230834-32689-2-git-send-email-k.kozlowski@samsung.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] phy: keystone: ks2_gbe_serdes_firmwares[] can be static
+Date: Tue, 20 Oct 2015 04:46:26 +0800
+Message-ID: <20151019204626.GA42156@athens>
+References: <201510200459.7i1D4X2p%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1445230834-32689-2-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <1445281040-14742-2-git-send-email-w-kwok2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+Cc: kbuild-all@01.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, WingMan Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19, Krzysztof Kozlowski wrote:
-> Add a gate clock for controlling all clocks of Security Sub System
-> (SSS).
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
 
-The To: list is huge, so I have no idea if you want me to apply
-this patch or not, and given that it's part of a series that has
-dts changes I guess that means it should go through arm-soc:
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+ phy-keystone-serdes.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+diff --git a/drivers/phy/phy-keystone-serdes.c b/drivers/phy/phy-keystone-serdes.c
+index ee1cda7..e34201c 100644
+--- a/drivers/phy/phy-keystone-serdes.c
++++ b/drivers/phy/phy-keystone-serdes.c
+@@ -209,9 +209,9 @@
+  * Newest first. Search starts from the 0-th array entry until a firmware
+  * file is found.
+  */
+-const char *ks2_gbe_serdes_firmwares[] = {"ks2_gbe_serdes.bin"};
+-const char *ks2_xgbe_serdes_firmwares[] = {"ks2_xgbe_serdes.bin"};
+-const char *ks2_pcie_serdes_firmwares[] = {"ks2_pcie_serdes.bin"};
++static const char *ks2_gbe_serdes_firmwares[] = {"ks2_gbe_serdes.bin"};
++static const char *ks2_xgbe_serdes_firmwares[] = {"ks2_xgbe_serdes.bin"};
++static const char *ks2_pcie_serdes_firmwares[] = {"ks2_pcie_serdes.bin"};
+ 
+ /* SERDES Link Rate Kbps */
+ enum KSERDES_LINK_RATE {
+@@ -933,7 +933,7 @@ done:
+ 	return val;
+ }
+ 
+-int kserdes_get_status(struct kserdes_config *sc)
++static int kserdes_get_status(struct kserdes_config *sc)
+ {
+ 	unsigned long timeout;
+ 
+@@ -1568,7 +1568,7 @@ static void kserdes_att_boost_phy_patch(struct kserdes_config *sc)
+ 		for_each_lane(kserdes_att_boost_phyb_patch, sc);
+ }
+ 
+-int kserdes_sgmii_lanes_enable(struct kserdes_config *sc)
++static int kserdes_sgmii_lanes_enable(struct kserdes_config *sc)
+ {
+ 	int ret, i;
+ 	u32 val, lanes_enable = 0;
