@@ -1,113 +1,67 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH] net, can, ti_hecc: add DT support for the ti,hecc
- controller
-Date: Mon, 19 Oct 2015 09:31:11 +0200
-Message-ID: <56249C3F.3080000@pengutronix.de>
-References: <1445236757-29019-1-git-send-email-hs@denx.de>
- <56249491.4020009@pengutronix.de> <56249B58.6090100@denx.de>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
+Date: Mon, 19 Oct 2015 13:10:14 +0530
+Message-ID: <56249E5E.80405@samsung.com>
+References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
+ <562493BF.9080301@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="RhfRqRK9DH9GN6VbLvL7VA3a5JxxOrk3j"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <56249B58.6090100@denx.de>
-Sender: linux-can-owner@vger.kernel.org
-To: hs@denx.de, anton.a.glukhov@gmail.com
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Anant Gole <anantgole@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Wolfgang Grandegger <wg@grandegger.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <562493BF.9080301@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---RhfRqRK9DH9GN6VbLvL7VA3a5JxxOrk3j
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On 10/19/2015 09:27 AM, Heiko Schocher wrote:
->>>   .../devicetree/bindings/net/can/ti_hecc-can.txt    | 20 ++++++++++
->>>   arch/arm/boot/dts/am3517.dtsi                      | 13 +++++++
->>>   drivers/net/can/ti_hecc.c                          | 45 +++++++++++=
-++++++++++-
->>>   3 files changed, 76 insertions(+), 2 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/net/can/ti_hec=
-c-can.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/can/ti_hecc-can.tx=
-t b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
->>> new file mode 100644
->>> index 0000000..09fab59
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
->>> @@ -0,0 +1,20 @@
->>> +* TI HECC CAN *
->>> +
->>> +Required properties:
->>> +  - compatible: Should be "ti,hecc"
+
+On 10/19/2015 12:24 PM, Krzysztof Kozlowski wrote:
+> On 19.10.2015 15:03, Alim Akhtar wrote:
+> ...
+>
+> Hi,
+>
+> I am happy to see more contributions from your side! Keep it up. :)
+>
+Thank you! will keep finding time and doing it.
+
+> However this empty space in your cover letter is the place for
+> description of the patchset. What do you want to achieve here? What kind
+> of problem are you solving? What features are you adding? Any dependencies?
+>
+Ah, my bad, I used --compose option with git-send-email and did composed 
+the message, somehow it got missed. Will take care.
+
+The motivation came when I tried to used reboot/poweroff on exynos7, and 
+since exynos7 has not added/enabled PMU and does not have access to 
+arch/arm/mach-exynos, so option are to have a reboot/restart driver or 
+we move pmu.c out of mach-exynos. I know there where some effort in past 
+to move pmu.c to drivers, but I feel that is still WIP.
+And then I came across this generic syscon regmap based driver which are 
+already in place, so just used it.
+Hope that helps.
+
+> Best regards,
+> Krzysztof
+>
+>> Alim Akhtar (7):
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+>>    ARM: exynos_defconfig: Normalize exynos defconfig
+>>    ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
+>>      drivers
+>>    ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
 >>
->> We usually put the name of the first SoC this IP core appears in to th=
-e
->> compatible.
->=20
-> Ok, so "ti,am335xx-hecc" would be OK?
-> @Anton: you used "am35x" ... it should be "am35xx"
-
-The "xx" is not okay. Give precisely the first SoC Version this IP core
-was implemented in.
-
->=20
->>> +  - reg: Should contain CAN controller registers location and length=
-
->>> +  - interrupts: Should contain IRQ line for the CAN controller
+>>   arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+>>   arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+>>   arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+>>   arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+>>   arch/arm/configs/exynos_defconfig |   11 +++++-----
+>>   arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+>>   6 files changed, 61 insertions(+), 49 deletions(-)
 >>
->> I'm missing the description of the ti,* properties. I think they are
->> required, too. Although the code doesn't enforce it.
->=20
-> Ok.
->=20
->>> +
->>> +Example:
->>> +
->>> +	can0: hecc@5c050000 {
->>> +		compatible =3D "ti,hecc";
->>> +		reg =3D <0x5c050000 0x4000>;
->>> +		interrupts =3D <24>;
->>> +		ti,hecc_scc_offset =3D <0>;
->>> +		ti,hecc_scc_ram_offset =3D <0x3000>;
->>> +		ti,hecc_ram_offset =3D <0x3000>;
->>> +		ti,hecc_mbx_offset =3D <0x2000>;
->>> +		ti,hecc_int_line =3D <0>;
->>> +		ti,hecc_version =3D <1>;
->>
->> Versioning in the OF world is done via the compatible. Are the offsets=
- a
->> per SoC parameter? I'm not sure if it's better to put
->> the offsets into the driver.
->=20
-> I am unsure here too..
-
-The devicetree people will hopefully help here.
-
-regards,
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---RhfRqRK9DH9GN6VbLvL7VA3a5JxxOrk3j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBCgAGBQJWJJxAAAoJEP5prqPJtc/HVrsH/24NElJepIIymxz/kYbei8YI
-+mT6IWc3rULUVCEy+Lp92NcajDCIXIK/CFDqfavKYAkgvlqLOYxtKha9ZsXfEoW2
-YaxqB4lS2lrxlNniCWGRY+rIf7BsTTmRl5nZgAMueR/mvMIv8B/qGBStSPxp+LDJ
-As0TyzeF5fEDpvldsAZfBeniUX7xT+Be4C/t8V6335EdqqKHnnnmhNz1syNtA2of
-WDHwWCae+rngZw6am+FFhsDVlTRtD+OSjzC10U95FixOfaCgCX8SMp/PZOPKzVIV
-P8qKaup+ncljy3dwwIeHl2CAJM3zbY93v1mgRarPXivuX4OXXi6e/F7f0vbf+wc=
-=VWj/
------END PGP SIGNATURE-----
-
---RhfRqRK9DH9GN6VbLvL7VA3a5JxxOrk3j--
+>
+>
