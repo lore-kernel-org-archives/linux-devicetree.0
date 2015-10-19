@@ -1,45 +1,46 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/5] ARM: dts: fix cpu compatible values
-Date: Mon, 19 Oct 2015 21:02:36 +0300
-Message-ID: <5625303C.6090902@mleia.com>
-References: <1443202506-13732-1-git-send-email-vz@mleia.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable USB DRC on pcDuino
+ v3 Nano
+Date: Mon, 19 Oct 2015 20:05:13 +0200
+Message-ID: <20151019180513.GW2711@lukather>
+References: <1445119709-1689-1-git-send-email-ats@offog.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1443202506-13732-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Er97KPJOrxRt+yKZ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZPBSSYQKGQE6GPV3KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445119709-1689-1-git-send-email-ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.09.2015 20:35, Vladimir Zapolskiy wrote:
-> The changeset corrects severeal cpu compatible properties
-> to defined ones in Documentation/devicetree/bindings/arm/cpus.txt
-> 
-> Vladimir Zapolskiy (5):
->   ARM: dts: i.MX31: fix cpu compatible value
->   ARM: dts: i.MX35: fix cpu compatible value
+--Er97KPJOrxRt+yKZ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Ping. Two patches above are applied by Shawn, could ARM maintainers
-apply the rest? Thank you in advance.
-
->   ARM: dts: S3C2416: fix cpu compatible value
->   ARM: dts: TI-Nspire: fix cpu compatible value
->   ARM: dts: WM8750: fix cpu compatible value
+On Sat, Oct 17, 2015 at 11:08:29PM +0100, Adam Sampson wrote:
+> The OTG arrangement on the LinkSprite pcDuino v3 Nano is the same as the
+> pcDuino 1/2/3: the OTG port's 5V line is connected directly to the 5V
+> bus (it's not switchable), and the OTG port's ID pin is connected to PH4
+> on the A20.
 > 
->  arch/arm/boot/dts/imx31.dtsi   | 2 +-
->  arch/arm/boot/dts/imx35.dtsi   | 2 +-
->  arch/arm/boot/dts/nspire.dtsi  | 2 +-
->  arch/arm/boot/dts/s3c2416.dtsi | 2 +-
->  arch/arm/boot/dts/wm8750.dtsi  | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
+> Tested successfully in both host and device modes.
 > 
+> Signed-off-by: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Er97KPJOrxRt+yKZ--
