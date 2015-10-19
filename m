@@ -1,7 +1,7 @@
 From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH 2/7] arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
-Date: Mon, 19 Oct 2015 11:33:50 +0530
-Message-ID: <1445234635-3950-3-git-send-email-alim.akhtar@samsung.com>
+Subject: [PATCH 3/7] arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+Date: Mon, 19 Oct 2015 11:33:51 +0530
+Message-ID: <1445234635-3950-4-git-send-email-alim.akhtar@samsung.com>
 References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-reply-to: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
@@ -11,19 +11,19 @@ Cc: kgene@kernel.org, k.kozlowski@samsung.com, javier@osg.samsung.com, devicetre
 List-Id: devicetree@vger.kernel.org
 
 This patch adds syscon-{reboot, poweroff} nodes to allow the
-generic syscon-{reboot, poweroff} driver to reset/poweroff exynos4 SoC.
+generic syscon-{reboot, poweroff} driver to reset/poweroff exynos5 SoCs.
 
 Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 ---
- arch/arm/boot/dts/exynos4.dtsi |   14 ++++++++++++++
+ arch/arm/boot/dts/exynos5.dtsi |   14 ++++++++++++++
  1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 98c0a368b777..79015320cdb6 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -158,6 +158,20 @@
- 		interrupt-parent = <&gic>;
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index 110dbd4fb884..1313777618b7 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -88,6 +88,20 @@
+ 		status = "disabled";
  	};
  
 +	poweroff: syscon-poweroff {
@@ -40,8 +40,8 @@ index 98c0a368b777..79015320cdb6 100644
 +		mask = <0x1>;
 +	};
 +
- 	dsi_0: dsi@11C80000 {
- 		compatible = "samsung,exynos4210-mipi-dsi";
- 		reg = <0x11C80000 0x10000>;
+ 	fimd: fimd@14400000 {
+ 		compatible = "samsung,exynos5250-fimd";
+ 		interrupt-parent = <&combiner>;
 -- 
 1.7.10.4
