@@ -1,46 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/5] gpio/xilinx: enable for MIPS
-Date: Mon, 19 Oct 2015 08:55:09 +0200
-Message-ID: <CACRpkdb0joX35HdcSJ=afchMCNVo7i=an3HE4BnK0xA_Gb5YpA@mail.gmail.com>
-References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-	<1444827117-10939-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-	<20151014151813.GL15287@xsjsorenbubuntu>
-	<561E7B65.3090704@metafoo.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
+Date: Mon, 19 Oct 2015 15:54:55 +0900
+Message-ID: <562493BF.9080301@samsung.com>
+References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <561E7B65.3090704@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 5:57 PM, Lars-Peter Clausen <lars@metafoo.de> w=
-rote:
-> On 10/14/2015 05:18 PM, S=C3=B6ren Brinkmann wrote:
->> On Wed, 2015-10-14 at 01:51PM +0100, Zubair Lutfullah Kakakhel wrote=
-:
+On 19.10.2015 15:03, Alim Akhtar wrote:
+...
 
->> Hmm, in general, this driver is hopefully generic enough that it doe=
-sn't
->> have any real architecture dependencies. And I suspect, we want to
->> enable this driver for ARM64 for ZynqMP soon too. Should we probably
->> drop these arch dependencies completely? It seems to become quite a =
-long list.
->
-> I've been thinking about this a while ago. This is certainly not the =
-only
-> driver affected by this problem. But the thing is people always compl=
-ain if
-> new symbols become visable in Kconfig that don't apply to their platf=
-orm.
+Hi,
 
-I don't think it's that important. If people go do down in the GPIO sub=
-menu
-they are looking at real weird stuff anyways. Please send a patch enabl=
-ing
-this for all rather than coming up with strange config symbols IMO.
+I am happy to see more contributions from your side! Keep it up. :)
 
-Yours,
-Linus Walleij
+However this empty space in your cover letter is the place for
+description of the patchset. What do you want to achieve here? What kind
+of problem are you solving? What features are you adding? Any dependencies?
+
+Best regards,
+Krzysztof
+
+> Alim Akhtar (7):
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+>   ARM: exynos_defconfig: Normalize exynos defconfig
+>   ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
+>     drivers
+>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
+> 
+>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+>  arch/arm/configs/exynos_defconfig |   11 +++++-----
+>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+>  6 files changed, 61 insertions(+), 49 deletions(-)
+> 
