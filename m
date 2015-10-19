@@ -1,34 +1,72 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 6/8] ARM: dts: berlin: enable wdt0 on the Google Chromecast
-Date: Mon, 19 Oct 2015 16:49:47 +0800
-Message-ID: <1445244589-4838-7-git-send-email-jszhang@marvell.com>
+Subject: [PATCH 2/8] arm: dts: berlin2cd: add watchdog nodes
+Date: Mon, 19 Oct 2015 16:49:43 +0800
+Message-ID: <1445244589-4838-3-git-send-email-jszhang@marvell.com>
 References: <1445244589-4838-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1445244589-4838-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable wdt0 on the Google Chromecast to make use of the watchdog
-functionality.
+The Marvell Berlin BG2CD has 3 watchdogs which are compatible with the
+snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
+corresponding device tree nodes.
+
+NOTE: although BG2CD doesn't have a HW sysmgr, but the sysmgr domain
+exists.
 
 Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/berlin2cd.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-index 772165a..a17c850 100644
---- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-+++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-@@ -85,3 +85,5 @@
- &usb_phy1 { status = "okay"; };
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+index 900213d..9108180 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -376,6 +376,30 @@
+ 			ranges = <0 0xfc0000 0x10000>;
+ 			interrupt-parent = <&sic>;
  
- &usb1 { status = "okay"; };
++			wdt0: watchdog@1000 {
++				compatible = "snps,dw-wdt";
++				reg = <0x1000 0x100>;
++				clocks = <&refclk>;
++				interrupts = <0>;
++				status = "disabled";
++			};
 +
-+&wdt0 { status = "okay"; };
++			wdt1: watchdog@2000 {
++				compatible = "snps,dw-wdt";
++				reg = <0x2000 0x100>;
++				clocks = <&refclk>;
++				interrupts = <1>;
++				status = "disabled";
++			};
++
++			wdt2: watchdog@3000 {
++				compatible = "snps,dw-wdt";
++				reg = <0x3000 0x100>;
++				clocks = <&refclk>;
++				interrupts = <2>;
++				status = "disabled";
++			};
++
+ 			sm_gpio1: gpio@5000 {
+ 				compatible = "snps,dw-apb-gpio";
+ 				reg = <0x5000 0x400>;
 -- 
 2.6.1
