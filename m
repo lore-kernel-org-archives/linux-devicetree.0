@@ -1,66 +1,51 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH 7/7] ARM: EXYNOS: Remove code for restart and poweroff for
- exynos SoCs
-Date: Mon, 19 Oct 2015 15:53:51 +0530
-Message-ID: <5624C4B7.30507@samsung.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
- <1445234635-3950-8-git-send-email-alim.akhtar@samsung.com>
- <562494F8.6070003@samsung.com> <5624BE39.7020605@osg.samsung.com>
+From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 00/25] HiSilicon SAS driver
+Date: Mon, 19 Oct 2015 11:40:02 +0100
+Message-ID: <5624C882.3090709@huawei.com>
+References: <1444663237-238302-1-git-send-email-john.garry@huawei.com>
+ <5624AE2D.9070200@huawei.com> <5624B015.3000603@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5624BE39.7020605@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5624B015.3000603-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hannes Reinecke <hare-l3A5Bk7waGM@public.gmane.org>, James.Bottomley-d9PhHud1JfjCXq6kfMZ53/egYHeGw8Jk@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 19/10/2015 09:55, Hannes Reinecke wrote:
+> On 10/19/2015 10:47 AM, John Garry wrote:
+>> Hi James,
+>>
+>> Could we please get a review for our driver? We have got some good
+>> input on changes we need to make, and we will produce another
+>> patchset in the coming days. However it would good to get a
+>> subsystem maintainer review/acknowledgement to progress our
+>> upstreaming.
+>>
+> In general any change will need to have at least two reviews, of
+> which one should be independent (ie not affiliated with the company)
+> from the original submitter.
+>
+> Once the reviews are done the maintainer will/should do a final
+> round of reviews and then include the patch in the next submission.
+>
+> However, you seem to be on a good course with your driver.
+> Please prepare for the next round of patches and we'll be reviewing
+> them.
+>
+> Cheers,
+>
+> Hannes
+>
 
+OK, thanks. I just want to make sure we're on the right path.
 
-On 10/19/2015 03:26 PM, Javier Martinez Canillas wrote:
-> Hello,
->
-> On 10/19/2015 09:00 AM, Krzysztof Kozlowski wrote:
->> On 19.10.2015 15:03, Alim Akhtar wrote:
->>> Now we can use the generic syscon-{reboot/poweroff} drivers,
->>> so we don't need special handling for reboot/poweroff in
->>> exynos pmu driver. This patch remove the same.
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> ---
->>>   arch/arm/mach-exynos/pmu.c |   43 -------------------------------------------
->>>   1 file changed, 43 deletions(-)
->>
->> I think that removal of this stuff will effectively remove the
->> restart/poweroff handlers from:
->> 1. Other defconfigs, like multi_v7
->> 2. Custom configs.
->>
->
-> This will also break old DTBs that don't have a "syscon-poweroff" device
-> node that contains the necessary PMU regmap, offset and mask information.
->
->> Previously this code was always compiled in for ARCH_EXYNOS. Now it is
->> not so I am thinking about selecting necessary drivers from main exynos
->> Kconfig symbol. That could be tricky though, because "select" should be
->> used only for non-visible symbols.
->>
->> Any ideas how to solve that?
->>
->
-> Is true that select should only be used for non-visible symbols but there
-> are others user visible symbols that are selected by ARCH_EXYNOS such as
-> EXYNOS_THERMAL. So I think selecting the regmap syscon reset stuff there
-> is a sensible option.
->
-Yes, another example is MFD_SYSYCON which is selected from Kconfig.
-Also CONFIG_POWER_RESET_SYSCON is enable in arch/arm64/config/defconfig.
-So both approaches are taken here.
-will go with maintainer suggestion here.
->> Best regards,
->> Krzysztof
->>
->
-> Best regards,
->
+Regards,
+john
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
