@@ -1,79 +1,50 @@
-From: "Kwok, WingMan" <w-kwok2@ti.com>
-Subject: RE: [PATCH] ARM: keystone: dts: add PCI serdes driver bindings
-Date: Mon, 19 Oct 2015 11:10:04 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04229107@DFLE11.ent.ti.com>
-References: <1444919230-30932-1-git-send-email-w-kwok2@ti.com>
- <5620AD8B.3060503@ti.com>
+From: Mathias Nyman <mathias.nyman@intel.com>
+Subject: Re: [PATCH v9 4/5] xhci: mediatek: support MTK xHCI host controller
+Date: Mon, 19 Oct 2015 14:25:49 +0300
+Message-ID: <5624D33D.5090807@intel.com>
+References: <1443495698-32233-1-git-send-email-chunfeng.yun@mediatek.com>	 <1443495698-32233-5-git-send-email-chunfeng.yun@mediatek.com>	 <561FBC40.7020100@linux.intel.com> <1445131519.17024.10.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5620AD8B.3060503@ti.com>
-Content-Language: en-US
+In-Reply-To: <1445131519.17024.10.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Quadros, Roger" <rogerq@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: chunfeng yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Um9nZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUXVhZHJvcywg
-Um9nZXINCj4gU2VudDogRnJpZGF5LCBPY3RvYmVyIDE2LCAyMDE1IDM6NTYgQU0NCj4gVG86IEt3
-b2ssIFdpbmdNYW47IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOw0KPiBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFr
-QGNvZGVhdXJvcmEub3JnOw0KPiBLSVNIT04gVklKQVkgQUJSQUhBTTsgS2FyaWNoZXJpLCBNdXJh
-bGlkaGFyYW47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IHNzYW50b3NoQGtlcm5lbC5vcmc7IGxp
-bnV4QGFybS5saW51eC5vcmcudWs7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0hdIEFSTToga2V5c3RvbmU6IGR0czogYWRkIFBDSSBzZXJkZXMgZHJpdmVyIGJpbmRpbmdzDQo+
-IA0KPiBXaW5nTWFuLA0KPiANCj4gT24gMTUvMTAvMTUgMTc6MjcsIFdpbmdNYW4gS3dvayB3cm90
-ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIHJlcXVpcmVkIFBDSSBzZXJkZXMgYmluZGluZ3Mg
-d2hjaWggY2FuIHRoZW4gYmUNCj4gPiBlbmFibGVkIGJ5IHNldHRpbmcgdGhlIGNvcnJlc3BvbmRp
-bmcgc3RhdHVzZXMgdG8gIm9rIiBpbiBvcmRlciB0bw0KPiA+IGNvbmZpZ3VyZSBhbmQgc3RhcnQg
-dGhlIFBDSSBzZXJkZXMuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGRlcGVuZHMgb24gdGhlIHVwZGF0
-ZXMgdG8gdGhlIEtleXN0b25lIFBDSWUgaG9zdCBkcml2ZXINCj4gPiBhbmQgY29tbW9uIHNlcmRl
-cyBkcml2ZXIgcGF0Y2ggc2VyaWVzIHRoYXQgaXMgc3VibWl0dGVkIHNlcGFyYXRlbHkuDQo+ID4N
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBXaW5nTWFuIEt3b2sgPHcta3dvazJAdGkuY29tPg0KPiA+IC0t
-LQ0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9rMmUuZHRzaSAgICAgIHwgICAyMSArKysrKysrKysr
-KysrKysrKysrKysNCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaSB8ICAgMjEg
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9u
-cygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syZS5kdHNpIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kNCj4gPiBpbmRleCA2NzVmYjhlLi4zYjM2NTc1IDEw
-MDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syZS5kdHNpDQo+ID4gKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvazJlLmR0c2kNCj4gPiBAQCAtODYsNiArODYsMTYgQEANCj4gPiAgCQkJ
-Z3BpbyxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MjQwPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4g
-KwkJcGNpZTFfcGh5OiBwY2llcGh5QDIzMjYwMDAgew0KPiANCj4gU2hvdWxkIGJlDQo+IAkJcGNp
-ZTFfcGh5OiBwaHlAMjMyNjAwMCB7DQo+IA0KDQp3aWxsIGNoYW5nZSBpbiBuZXh0IHZlcnNpb24u
-DQoNCj4gPiArCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJ0aSxr
-ZXlzdG9uZS1zZXJkZXMtcGNpZSI7DQo+ID4gKwkJCXJlZyA9IDwweDAyMzI2MDAwIDB4NDAwMD47
-DQo+ID4gKwkJCXJlZy1uYW1lcyA9ICJzZXJkZXMiOw0KPiA+ICsJCQlsaW5rLXJhdGUta2JwcyA9
-IDw1MDAwMDAwPjsNCj4gPiArCQkJbnVtLWxhbmVzID0gPDI+Ow0KPiA+ICsJCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICAJCXBjaWUxOiBwY2llQDIxMDIwMDAw
-IHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1wY2llIiwic25wcyxkdy1wY2ll
-IjsNCj4gPiAgCQkJY2xvY2tzID0gPCZjbGtwY2llMT47DQo+ID4gQEAgLTEzMCw2ICsxNDAsMTcg
-QEANCj4gPiAgCQkJCQk8R0lDX1NQSSAzNzUgSVJRX1RZUEVfRURHRV9SSVNJTkc+LA0KPiA+ICAJ
-CQkJCTxHSUNfU1BJIDM3NiBJUlFfVFlQRV9FREdFX1JJU0lORz47DQo+ID4gIAkJCX07DQo+ID4g
-Kw0KPiA+ICsJCQkvKiBQQ0lFIHBoeSAqLw0KPiA+ICsJCQlzZXJkZXNlcyB7DQo+ID4gKwkJCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsJ
-CQkJc2VyZGVzQDAgew0KPiA+ICsJCQkJCXJlZyA9IDwwPjsNCj4gPiArCQkJCQlwaHlzID0gPCZw
-Y2llMV9waHk+Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4gIAkJfTsNCj4g
-Pg0KPiA+ICAJCW1kaW86IG1kaW9AMjQyMDBmMDAgew0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9rZXlzdG9uZS5kdHNpDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUu
-ZHRzaQ0KPiA+IGluZGV4IDcyODE2ZDYuLjY1NjZjYzQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tl
-eXN0b25lLmR0c2kNCj4gPiBAQCAtMjc1LDYgKzI3NSwxNiBAQA0KPiA+ICAJCQl0aSxzeXNjb24t
-ZGV2ID0gPCZkZXZjdHJsIDB4MmEwPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gKwkJcGNpZTBfcGh5
-OiBwY2llcGh5QDIzMjAwMDAgew0KPiANCj4gZGl0dG8uDQo+IA0KDQp3aWxsIGNoYW5nZSBpbiBu
-ZXh0IHZlcnNpb24uDQoNCj4gPiArCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArCQkJY29tcGF0
-aWJsZSA9ICJ0aSxrZXlzdG9uZS1zZXJkZXMtcGNpZSI7DQo+ID4gKwkJCXJlZyA9IDwweDAyMzIw
-MDAwIDB4NDAwMD47DQo+ID4gKwkJCXJlZy1uYW1lcyA9ICJzZXJkZXMiOw0KPiA+ICsJCQlsaW5r
-LXJhdGUta2JwcyA9IDw1MDAwMDAwPjsNCj4gPiArCQkJbnVtLWxhbmVzID0gPDI+Ow0KPiA+ICsJ
-CQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICAJCXBjaWUwOiBw
-Y2llQDIxODAwMDAwIHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1wY2llIiwg
-InNucHMsZHctcGNpZSI7DQo+ID4gIAkJCWNsb2NrcyA9IDwmY2xrcGNpZT47DQo+ID4gQEAgLTMx
-OSw2ICszMjksMTcgQEANCj4gPiAgCQkJCQk8R0lDX1NQSSAyOCBJUlFfVFlQRV9FREdFX1JJU0lO
-Rz4sDQo+ID4gIAkJCQkJPEdJQ19TUEkgMjkgSVJRX1RZUEVfRURHRV9SSVNJTkc+Ow0KPiA+ICAJ
-CQl9Ow0KPiA+ICsNCj4gPiArCQkJLyogUENJRSBwaHkgKi8NCj4gPiArCQkJc2VyZGVzZXMgew0K
-PiA+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCQkjc2l6ZS1jZWxscyA9IDww
-PjsNCj4gPiArCQkJCXNlcmRlc0AwIHsNCj4gPiArCQkJCQlyZWcgPSA8MD47DQo+ID4gKwkJCQkJ
-cGh5cyA9IDwmcGNpZTBfcGh5PjsNCj4gPiArCQkJCX07DQo+ID4gKwkJCX07DQo+ID4gKw0KPiA+
-ICAJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+IA0KPiAtLQ0KPiBjaGVlcnMsDQo+IC1y
-b2dlcg0KDQpUaGFua3MsDQpXaW5nTWFuDQo=
+>>
+>> So basically we are trying to use as many microframes as possible with as few packets
+>> per microframe as possible.
+>>
+>> Did I understand this correctly?
+> Yes, you are right.
+>
+>> How will devices react if they expect to get 16 packets every 16th microframe,
+>> but they get one packet every microframe instead?
+> I think that the synchronous endpoint must specify its period by
+> bInterval, but can't specify how data should be transfered during the
+> period by the host, and it just only receives data passively. So the
+> device can receive data correctly in the case(bInterval is 5).
+>
+> quote from usb3_r1.0 section4.4.8 Isochronous Transfers:
+> "The host can request data from the device or send data to the device at
+> any time during the service interval for a particular endpoint on that
+> device"
+>
+
+As I understand the 4.4.8 section it just means the device can't assume a fixed
+time interval between transfers, meaning that the host can use the last microframe
+in one esit and the first microframe in the next esit, but still only use 1 microframe
+per esit.
+
+Section 8.12.6.1 describes how a 11 packet isoc transfer is allowed to be split
+to 1 burst of 11 packets, 2 burst (8 + 3),  3 burst (4+4+3) 6 bursts (2+2+2+2+2+1) or
+11 bursts of 1. These are however all within the same microframe. Splitting the
+transfer into several microframes in a esit kind of makes the whole interval concept pointless.
+
+-Mathias
+
+
+
+  
