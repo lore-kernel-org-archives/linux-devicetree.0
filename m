@@ -1,73 +1,63 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH] ASoC: dt-bindings: Drop unneeded properties rockchip i2s/spdif bindings
-Date: Mon, 19 Oct 2015 10:15:39 +0200
-Message-ID: <1445242539-9098-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Ley Foon Tan <lftan@altera.com>
+Subject: [PATCH v10 0/6] Altera PCIe host controller driver with MSI support
+Date: Mon, 19 Oct 2015 16:19:22 +0800
+Message-ID: <1445242768-4423-1-git-send-email-lftan@altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Neither the rockchip i2s nor the rockchip spdif binding support child
-devices so #address-cells and #size-cells properties aren't required.
-Remove these from the bindings.
+This is the 10th version of patch set to add support for Altera PCIe host
+controller with MSI feature on Altera FPGA device families. This patchset
+mainly resolve comments from Arnd to support loadable module and implement
+fixups within driver instead of calling *PCI_FIXUP* macro. Only PATCH 3/6 has
+changes, others unchanged.
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
----
-This patch is on top of the ASoC tree
+This patchset is based on v4.3-rc6.
 
- Documentation/devicetree/bindings/sound/rockchip-i2s.txt   | 4 ----
- Documentation/devicetree/bindings/sound/rockchip-spdif.txt | 4 ----
- 2 files changed, 8 deletions(-)
+v9->v10 changes:
+- altera-pcie: support loadable module
+- altera-pcie: implement fixups within driver instead of calling *PCI_FIXUP* macro
+- altera-pcie: remove altera_pcie_remove and add suppress_bind_attrs = true
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-index 9b82c20..085e0bc 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-@@ -12,8 +12,6 @@ Required properties:
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: should contain the I2S interrupt.
--- #address-cells: should be 1.
--- #size-cells: should be 0.
- - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
- 	Documentation/devicetree/bindings/dma/dma.txt
- - dma-names: should include "tx" and "rx".
-@@ -28,8 +26,6 @@ i2s@ff890000 {
- 	compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
- 	reg = <0xff890000 0x10000>;
- 	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--	#address-cells = <1>;
--	#size-cells = <0>;
- 	dmas = <&pdma1 0>, <&pdma1 1>;
- 	dma-names = "tx", "rx";
- 	clock-names = "i2s_hclk", "i2s_clk";
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-index 33dd82c..e64dbde 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-@@ -12,8 +12,6 @@ Required properties:
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: should contain the SPDIF interrupt.
--- #address-cells: should be 1.
--- #size-cells: should be 0.
- - dmas: DMA specifiers for tx dma. See the DMA client binding,
-   Documentation/devicetree/bindings/dma/dma.txt
- - dma-names: should be "tx"
-@@ -33,8 +31,6 @@ spdif: spdif@0x1011e000 {
- 	compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
- 	reg = <0x1011e000 0x2000>;
- 	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
--	#address-cells = <1>;
--	#size-cells = <0>;
- 	dmas = <&dmac1_s 8>;
- 	dma-names = "tx";
- 	clock-names = "hclk", "mclk";
+History:
+-------
+[v1]: https://lkml.org/lkml/2015/7/28/395
+[v2]: https://lkml.org/lkml/2015/7/31/267
+[v3]: http://www.kernelhub.org/?msg=811940&p=2
+[v4]: https://lkml.org/lkml/2015/8/17/141
+[v5]: https://lkml.org/lkml/2015/8/25/238
+[v6]: https://lkml.org/lkml/2015/9/1/177
+[v7]: https://lkml.org/lkml/2015/9/20/193
+[v8]: http://www.kernelhub.org/?msg=853553&p=2
+[v9]: https://lkml.org/lkml/2015/10/13/998
+
+Ley Foon Tan (6):
+  arm: add msi.h to Kbuild
+  pci: add Altera PCI vendor ID
+  pci:host: Add Altera PCIe host controller driver
+  pci: altera: Add Altera PCIe MSI driver
+  Documentation: dt-bindings: pci: altera pcie device tree binding
+  MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+
+ .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
+ .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+ MAINTAINERS                                        |  16 +
+ arch/arm/include/asm/Kbuild                        |   1 +
+ drivers/pci/host/Kconfig                           |  15 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pcie-altera-msi.c                 | 313 +++++++++++
+ drivers/pci/host/pcie-altera.c                     | 581 +++++++++++++++++++++
+ include/linux/pci_ids.h                            |   2 +
+ 9 files changed, 1007 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-altera-msi.c
+ create mode 100644 drivers/pci/host/pcie-altera.c
+
 -- 
-2.6.1
+1.8.2.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
