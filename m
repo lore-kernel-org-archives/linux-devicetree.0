@@ -1,112 +1,59 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx Zynq 7000
-Date: Mon, 19 Oct 2015 09:28:13 -0700
-Message-ID: <CAAtXAHf1nqSmcb64VYv+G5MMo59AuHTW2KXqZfo5_hp9R3bagw@mail.gmail.com>
-References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
-	<1445035350-3569-4-git-send-email-moritz.fischer@ettus.com>
-	<20151018180259.GI12756@jcartwri.amer.corp.natinst.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
+Date: Mon, 19 Oct 2015 22:06:25 +0530
+Message-ID: <CAGOxZ53YiHjdMNhvu4YMwaOEg+Kt2iOW5M9u_pj-0BUpMbgDdA@mail.gmail.com>
+References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com> <56251561.4010209@math.uni-bielefeld.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151018180259.GI12756-ew3lsbMjNqt5wtABiV/Xjqyly8cj88Ttqxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56251561.4010209@math.uni-bielefeld.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 18, 2015 at 11:02 AM, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org> wrote:
-> Hey Moritz-
+Hi Tobias,
+
+On Mon, Oct 19, 2015 at 9:38 PM, Tobias Jakobi
+<tjakobi@math.uni-bielefeld.de> wrote:
+> Hello Alim,
 >
-> On Fri, Oct 16, 2015 at 03:42:30PM -0700, Moritz Fischer wrote:
->> This commit adds FPGA Manager support for the Xilinx Zynq chip.
->> The code borrows some from the xdevcfg driver in Xilinx'
->> vendor tree.
+> I tested the Exynos4 bits on a Odroid-X2 and I can confirm that
+> poweroff/reboot (still) work.
+>
+Thanks for helping out in testing, will add your Tested-by of patch 2/7.
+
+> With best wishes,
+> Tobias
+>
+>
+> Alim Akhtar wrote:
+>> Alim Akhtar (7):
+>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+>>   ARM: exynos_defconfig: Normalize exynos defconfig
+>>   ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
+>>     drivers
+>>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
 >>
->> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
->> ---
+>>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+>>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+>>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+>>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+>>  arch/arm/configs/exynos_defconfig |   11 +++++-----
+>>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+>>  6 files changed, 61 insertions(+), 49 deletions(-)
 >>
->> v2:
->>  - Replaced locking error flag and broken completion with irq masking
->>    and changed completion handling
->>  - Dealing with timeout cases
->>  - Reworked clock handling
->>  - Moved initialization from probe() to write_init()
->>  - Fixed return value of devm_request_irq() check to check for non-zero
->>  - Alphabetized includes ;-)
->>  - Changed some of the comments, to better explain what's happening
-> [..]
->> +static int zynq_fpga_probe(struct platform_device *pdev)
->> +{
-> [..]
->> +     priv->clk = devm_clk_get(dev, "ref_clk");
->> +     if (IS_ERR(priv->clk)) {
->> +             dev_err(dev, "input clock not found");
->> +             return PTR_ERR(priv->clk);
->> +     }
->> +
->> +     err = clk_prepare_enable(priv->clk);
->> +     if (err) {
->> +             dev_err(dev, "unable to enable clock");
->> +             return err;
->> +     }
 >
-> prepare_cnt = 1, enable_cnt = 1
->
->> +
->> +     /* unlock the device */
->> +     zynq_fpga_write(priv, UNLOCK_OFFSET, UNLOCK_MASK);
->> +
->> +     clk_disable(priv->clk);
->
-> prepare_cnt = 1, enable_cnt = 0
->> +
->> +     err = fpga_mgr_register(dev, "Xilinx Zynq FPGA Manager",
->> +                             &zynq_fpga_ops, priv);
->> +     if (err) {
->> +             dev_err(dev, "unable to register FPGA manager");
->> +             clk_disable_unprepare(priv->clk);
->
-> prepare_cnt = 0, enable_cnt = -1 /* OOPS! */
->
-> Clock management is still wonky.  I think you only want clk_unprepare here.
->
->> +             return err;
->> +     }
->> +
->
-> Assuming all goes well, you'll be leaving probe() with:
->
-> prepare_cnt = 1, enable_cnt = 0.
->
->> +     return 0;
->> +}
->> +
->> +static int zynq_fpga_remove(struct platform_device *pdev)
->> +{
->> +     struct zynq_fpga_priv *priv;
->> +
->> +     fpga_mgr_unregister(&pdev->dev);
->> +
->> +     priv = platform_get_drvdata(pdev);
->> +
->> +     clk_disable_unprepare(priv->clk);
->
-> Which means, symmetrically, you'll only want this to be a clk_unprepare().
->
->   Josh
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Greg had already queued the v2 this weekend (which caught me by
-suprise). I tried to figure out if it's possible to send a v3,
-but he said to send follow up patches as he can't rebase the branch he
-merged it into.
-I will have access to hardware this afternoon, and send out follow up
-patches to fix the unbalanced clock handling.
 
-Cheers,
 
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Alim
