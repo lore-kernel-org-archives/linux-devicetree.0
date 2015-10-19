@@ -1,68 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Mon, 19 Oct 2015 12:02:38 +0100
-Message-ID: <20151019110238.GE14956@sirena.org.uk>
-References: <561E1378.6000906@collabora.com>
- <20151017065750.GA18607@kroah.com>
- <20151018192931.GY14956@sirena.org.uk>
- <20151018193757.GA9147@kroah.com>
- <20151018195330.GB14956@sirena.org.uk>
- <1445247881.53393.146.camel@infradead.org>
+From: "Kwok, WingMan" <w-kwok2@ti.com>
+Subject: RE: [PATCH] ARM: keystone: dts: add PCI serdes driver bindings
+Date: Mon, 19 Oct 2015 11:10:04 +0000
+Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04229107@DFLE11.ent.ti.com>
+References: <1444919230-30932-1-git-send-email-w-kwok2@ti.com>
+ <5620AD8B.3060503@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KwgAcZnBnwoMp5TU"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445247881.53393.146.camel@infradead.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5620AD8B.3060503@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Quadros, Roger" <rogerq@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---KwgAcZnBnwoMp5TU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Oct 19, 2015 at 10:44:41AM +0100, David Woodhouse wrote:
-> On Sun, 2015-10-18 at 20:53 +0100, Mark Brown wrote:
-
-> > Do you mean firmware rather than bus here?  I think that's the confusion
-> > I have...
-
-> Certainly, if it literally is adding of_* calls then that would seem to
-> be gratuitously firmware-specific. Nothing should be using those these
-> days; any new code should be using the generic device property APIs
-> (except in special cases).
-
-It's not entirely clear to me that we should be moving to fwnode_
-wholesale yet - the last advice was to hold off for a little while which
-makes sense given that the ACPI community still doesn't seem to have
-worked out what it wants to do here and how.  The x86 embedded people
-are all gung ho but it's less clear that anyone else wants to use _DSD
-in quite the same way (I know of some efforts to use _DSD separately to
-the DT compatibility stuff) and there are some vendors who definitely do
-have completely different binding schemes for ACPI and DT and therefore
-specifically care which is in use.
-
-It would really help if ACPI could get their binding review process in
-place, and if we do want to actually start converting everything to
-fwnode_ we need to start communicating that actively since otherwise
-people can't really be expected to know.
-
---KwgAcZnBnwoMp5TU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWJM3NAAoJECTWi3JdVIfQZWIH+wWlytIatZzb02megHs7cfkS
-XkfoBZZlTpwYYTLooWg9gc7XQ/Hx2qk/CTJwHZOudgYjrig+IWFuwOAU5Vw5YMm8
-7LN539ptj28jYJibjVxoIIX0bRAiQgrG9i3/5K5e6pmGzqnea/D2mu9sG5L2Fz//
-WLK/BYSFuVW6AzmoncTtGgYqECOFDXo8azymWx86d/NlXXMWKIvoEb0qVS+dJrgi
-6U7UQqhp46CwWEX3yk4Yf51Fi1wh6xAaLZcXeXqwvy+rYUXpBRNWKhG+0HR1d+Ep
-lOg6BbeD+4VpVvPL0yFpxmWEnjicr9mB6jVz/tkKq/tVq6aVat5SrbGTs5Tygjg=
-=TjUN
------END PGP SIGNATURE-----
-
---KwgAcZnBnwoMp5TU--
+Um9nZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUXVhZHJvcywg
+Um9nZXINCj4gU2VudDogRnJpZGF5LCBPY3RvYmVyIDE2LCAyMDE1IDM6NTYgQU0NCj4gVG86IEt3
+b2ssIFdpbmdNYW47IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOw0KPiBt
+YXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFr
+QGNvZGVhdXJvcmEub3JnOw0KPiBLSVNIT04gVklKQVkgQUJSQUhBTTsgS2FyaWNoZXJpLCBNdXJh
+bGlkaGFyYW47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IHNzYW50b3NoQGtlcm5lbC5vcmc7IGxp
+bnV4QGFybS5saW51eC5vcmcudWs7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0hdIEFSTToga2V5c3RvbmU6IGR0czogYWRkIFBDSSBzZXJkZXMgZHJpdmVyIGJpbmRpbmdzDQo+
+IA0KPiBXaW5nTWFuLA0KPiANCj4gT24gMTUvMTAvMTUgMTc6MjcsIFdpbmdNYW4gS3dvayB3cm90
+ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIHJlcXVpcmVkIFBDSSBzZXJkZXMgYmluZGluZ3Mg
+d2hjaWggY2FuIHRoZW4gYmUNCj4gPiBlbmFibGVkIGJ5IHNldHRpbmcgdGhlIGNvcnJlc3BvbmRp
+bmcgc3RhdHVzZXMgdG8gIm9rIiBpbiBvcmRlciB0bw0KPiA+IGNvbmZpZ3VyZSBhbmQgc3RhcnQg
+dGhlIFBDSSBzZXJkZXMuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGRlcGVuZHMgb24gdGhlIHVwZGF0
+ZXMgdG8gdGhlIEtleXN0b25lIFBDSWUgaG9zdCBkcml2ZXINCj4gPiBhbmQgY29tbW9uIHNlcmRl
+cyBkcml2ZXIgcGF0Y2ggc2VyaWVzIHRoYXQgaXMgc3VibWl0dGVkIHNlcGFyYXRlbHkuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBXaW5nTWFuIEt3b2sgPHcta3dvazJAdGkuY29tPg0KPiA+IC0t
+LQ0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9rMmUuZHRzaSAgICAgIHwgICAyMSArKysrKysrKysr
+KysrKysrKysrKysNCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaSB8ICAgMjEg
+KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9u
+cygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syZS5kdHNpIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kNCj4gPiBpbmRleCA2NzVmYjhlLi4zYjM2NTc1IDEw
+MDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syZS5kdHNpDQo+ID4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvazJlLmR0c2kNCj4gPiBAQCAtODYsNiArODYsMTYgQEANCj4gPiAgCQkJ
+Z3BpbyxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MjQwPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4g
+KwkJcGNpZTFfcGh5OiBwY2llcGh5QDIzMjYwMDAgew0KPiANCj4gU2hvdWxkIGJlDQo+IAkJcGNp
+ZTFfcGh5OiBwaHlAMjMyNjAwMCB7DQo+IA0KDQp3aWxsIGNoYW5nZSBpbiBuZXh0IHZlcnNpb24u
+DQoNCj4gPiArCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJ0aSxr
+ZXlzdG9uZS1zZXJkZXMtcGNpZSI7DQo+ID4gKwkJCXJlZyA9IDwweDAyMzI2MDAwIDB4NDAwMD47
+DQo+ID4gKwkJCXJlZy1uYW1lcyA9ICJzZXJkZXMiOw0KPiA+ICsJCQlsaW5rLXJhdGUta2JwcyA9
+IDw1MDAwMDAwPjsNCj4gPiArCQkJbnVtLWxhbmVzID0gPDI+Ow0KPiA+ICsJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICAJCXBjaWUxOiBwY2llQDIxMDIwMDAw
+IHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1wY2llIiwic25wcyxkdy1wY2ll
+IjsNCj4gPiAgCQkJY2xvY2tzID0gPCZjbGtwY2llMT47DQo+ID4gQEAgLTEzMCw2ICsxNDAsMTcg
+QEANCj4gPiAgCQkJCQk8R0lDX1NQSSAzNzUgSVJRX1RZUEVfRURHRV9SSVNJTkc+LA0KPiA+ICAJ
+CQkJCTxHSUNfU1BJIDM3NiBJUlFfVFlQRV9FREdFX1JJU0lORz47DQo+ID4gIAkJCX07DQo+ID4g
+Kw0KPiA+ICsJCQkvKiBQQ0lFIHBoeSAqLw0KPiA+ICsJCQlzZXJkZXNlcyB7DQo+ID4gKwkJCQkj
+YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsJ
+CQkJc2VyZGVzQDAgew0KPiA+ICsJCQkJCXJlZyA9IDwwPjsNCj4gPiArCQkJCQlwaHlzID0gPCZw
+Y2llMV9waHk+Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4gIAkJfTsNCj4g
+Pg0KPiA+ICAJCW1kaW86IG1kaW9AMjQyMDBmMDAgew0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9ib290L2R0cy9rZXlzdG9uZS5kdHNpDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUu
+ZHRzaQ0KPiA+IGluZGV4IDcyODE2ZDYuLjY1NjZjYzQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tl
+eXN0b25lLmR0c2kNCj4gPiBAQCAtMjc1LDYgKzI3NSwxNiBAQA0KPiA+ICAJCQl0aSxzeXNjb24t
+ZGV2ID0gPCZkZXZjdHJsIDB4MmEwPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gKwkJcGNpZTBfcGh5
+OiBwY2llcGh5QDIzMjAwMDAgew0KPiANCj4gZGl0dG8uDQo+IA0KDQp3aWxsIGNoYW5nZSBpbiBu
+ZXh0IHZlcnNpb24uDQoNCj4gPiArCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArCQkJY29tcGF0
+aWJsZSA9ICJ0aSxrZXlzdG9uZS1zZXJkZXMtcGNpZSI7DQo+ID4gKwkJCXJlZyA9IDwweDAyMzIw
+MDAwIDB4NDAwMD47DQo+ID4gKwkJCXJlZy1uYW1lcyA9ICJzZXJkZXMiOw0KPiA+ICsJCQlsaW5r
+LXJhdGUta2JwcyA9IDw1MDAwMDAwPjsNCj4gPiArCQkJbnVtLWxhbmVzID0gPDI+Ow0KPiA+ICsJ
+CQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICAJCXBjaWUwOiBw
+Y2llQDIxODAwMDAwIHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1wY2llIiwg
+InNucHMsZHctcGNpZSI7DQo+ID4gIAkJCWNsb2NrcyA9IDwmY2xrcGNpZT47DQo+ID4gQEAgLTMx
+OSw2ICszMjksMTcgQEANCj4gPiAgCQkJCQk8R0lDX1NQSSAyOCBJUlFfVFlQRV9FREdFX1JJU0lO
+Rz4sDQo+ID4gIAkJCQkJPEdJQ19TUEkgMjkgSVJRX1RZUEVfRURHRV9SSVNJTkc+Ow0KPiA+ICAJ
+CQl9Ow0KPiA+ICsNCj4gPiArCQkJLyogUENJRSBwaHkgKi8NCj4gPiArCQkJc2VyZGVzZXMgew0K
+PiA+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCQkjc2l6ZS1jZWxscyA9IDww
+PjsNCj4gPiArCQkJCXNlcmRlc0AwIHsNCj4gPiArCQkJCQlyZWcgPSA8MD47DQo+ID4gKwkJCQkJ
+cGh5cyA9IDwmcGNpZTBfcGh5PjsNCj4gPiArCQkJCX07DQo+ID4gKwkJCX07DQo+ID4gKw0KPiA+
+ICAJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+IA0KPiAtLQ0KPiBjaGVlcnMsDQo+IC1y
+b2dlcg0KDQpUaGFua3MsDQpXaW5nTWFuDQo=
