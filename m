@@ -1,73 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Mon, 19 Oct 2015 18:21:40 +0200
-Message-ID: <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com>
-References: <561E1378.6000906@collabora.com>
-	<20151017065750.GA18607@kroah.com>
-	<20151018192931.GY14956@sirena.org.uk>
-	<20151018193757.GA9147@kroah.com>
-	<20151018195330.GB14956@sirena.org.uk>
-	<CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
-	<20151019131821.GA32532@n2100.arm.linux.org.uk>
-	<CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com>
-	<20151019143045.GE32532@n2100.arm.linux.org.uk>
-	<CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com>
-	<20151019153548.GM32532@n2100.arm.linux.org.uk>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCHv2 0/3] Adding FPGA Manager support for Xilinx Zynq
+Date: Mon, 19 Oct 2015 09:25:46 -0700
+Message-ID: <CAAtXAHdxUJSKBmtRB-5WgO2j-=Oxw=U8_ze6jQq2ORu-huk-Rg@mail.gmail.com>
+References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
+	<20151018190840.GJ12756@jcartwri.amer.corp.natinst.com>
+	<5624FA4B.8080803@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151019153548.GM32532@n2100.arm.linux.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gma>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5624FA4B.8080803@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Josh Cartwright <joshc@ni.com>, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Alan Tull <atull@opensource.altera.com>, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Mon, Oct 19, 2015 at 5:35 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
->> > What you can do is print those devices which have failed to probe at
->> > late_initcall() time - possibly augmenting that with reports from
->> > subsystems showing what resources are not available, but that's only
->> > a guide, because of the "it might or might not be in a kernel module"
->> > problem.
+On Mon, Oct 19, 2015 at 7:12 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+> On 10/18/2015 09:08 PM, Josh Cartwright wrote:
+>> On Fri, Oct 16, 2015 at 03:42:27PM -0700, Moritz Fischer wrote:
+>>> Hi all,
+>>>
+>>> I've tried to address most of the feedback that was brought up,
+>>> the one thing I haven't looked at was the firmware format part,
+>>> since that was still in discussion.
+>>> So I'm still open to suggestions on how to handle this.
 >>
->> Well, adding those reports would give you a changelog similar to the
->> one in this series...
+>> Was there disagreement?  I had thought we settled on limiting the
+>> handling the BIN format explicitly, the rest of the thread was about
+>> userspace tooling for BIT->BIN conversion.
 >
-> I'm not sure about that, because what I was thinking of is adding
-> a flag which would be set at late_initcall() time prior to running
-> a final round of deferred device probing.
+> yep. Only BIN handling and keep small BIN header with sync word.
 
-Which round is the final round?
-That's the one which didn't manage to bind any new devices to drivers,
-which is something you only know _after_ the round has been run.
+Greg had already queued the v2 this weekend (which caught me by
+suprise). I tried to figure out if it's possible to send a v3,
+but he said to send follow up patches as he can't rebase the branch he
+merged it into.
+I will have access to hardware this afternoon, and send out follow up
+patches to fix the BIN vs BIT issue.
 
-So I think we need one extra round to handle this.
-
-> This flag would then be used in a deferred_warn() printk function
-> which would normally be silent, but when this flag is set, it would
-> print the reason for the deferral - and this would replace (or be
-> added) to the subsystems and drivers which return -EPROBE_DEFER.
 >
-> That has the effect of hiding all the deferrals up until just before
-> launching into userspace, which should then acomplish two things -
-> firstly, getting rid of the rather useless deferred messages up to
-> that point, and secondly printing the reason why the remaining
-> deferrals are happening.
+> Thanks,
+> Michal
 >
-> That should be a small number of new lines plus a one-line change
-> in subsystems and drivers.
+Cheers,
 
-Apart from the extra round we probably can't get rid of, that sounds OK to me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Moritz
