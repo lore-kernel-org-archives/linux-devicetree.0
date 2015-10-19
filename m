@@ -1,52 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH V2 00/10] Add support for Imagination
- Technologies audio controllers
-Date: Mon, 19 Oct 2015 19:36:16 +0100
-Message-ID: <20151019183616.GL32054@sirena.org.uk>
-References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Mon, 19 Oct 2015 19:39:06 +0100
+Message-ID: <20151019183905.GS32532@n2100.arm.linux.org.uk>
+References: <20151018192931.GY14956@sirena.org.uk>
+ <20151018193757.GA9147@kroah.com>
+ <20151018195330.GB14956@sirena.org.uk>
+ <1445247881.53393.146.camel@infradead.org>
+ <CAL_JsqKehmSobpbdeXGo=-1pAbtrhCHovyyCWya_MNOhGCi8CQ@mail.gmail.com>
+ <1445258870.53393.173.camel@infradead.org>
+ <20151019145048.GI14956@sirena.org.uk>
+ <1445268580.53393.183.camel@infradead.org>
+ <20151019154324.GN32532@n2100.arm.linux.org.uk>
+ <20151019182744.GD4931@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="w2xx78T4DcG3O+DJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Damien Horsley <Damien.Horsley@imgtec.com>
-Cc: alsa-devel@alsa-project.org, James Hartley <James.Hartley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20151019182744.GD4931@pengutronix.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: David Woodhouse <dwmw2@infradead.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdwood@g>
 List-Id: devicetree@vger.kernel.org
 
-
---w2xx78T4DcG3O+DJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Oct 12, 2015 at 01:40:27PM +0100, Damien Horsley wrote:
-> From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
+On Mon, Oct 19, 2015 at 08:27:44PM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
 >=20
-> Add drivers and binding documents for the following Imagination Technolog=
-ies audio controllers:
+> On Mon, Oct 19, 2015 at 04:43:24PM +0100, Russell King - ARM Linux wr=
+ote:
+> > It's a bit ironic that you've chosen GPIO as an example there.  The
+> > "new" GPIO API (the gpiod_* stuff) only has a fwnode way to get the
+> > gpio descriptor.  There's no of_* method.
+>=20
+> Without following all that fwnode discussion:
+> gpiod_get et al. should work for you here, doesn't it? It just takes =
+a
+> struct device * and I'm happy with it.
 
-This all looks mostly good, I had a few fairly minor comments which
-should be fairly easy to address, mostly stylistic.
+What if you don't have a struct device?  I had that problem recently
+when modifying the mvebu PCIe code.  The 'struct device' node doesn't
+contain the GPIOs, it's the PCIe controller.  Individual ports on the
+controller are described in DT as sub-nodes, and the sub-nodes can
+have a GPIO for card reset purposes.  These sub-nodes don't have a
+struct device.
 
-Please also fix your mail client to word wrap within paragraphs at
-something substantially less than 80 columns.  Doing this makes your
-messages much easier to read and reply to.
+Right now, I'm having to do this to work around this issue:
 
---w2xx78T4DcG3O+DJ
-Content-Type: application/pgp-signature; name="signature.asc"
+        reset_gpio =3D of_get_named_gpio_flags(child, "reset-gpios", 0,=
+ &flags);
+        if (reset_gpio =3D=3D -EPROBE_DEFER) {
+                ret =3D reset_gpio;
+                goto err;
+        }
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+        if (gpio_is_valid(reset_gpio)) {
+                unsigned long gpio_flags;
 
-iQEcBAEBCAAGBQJWJTgfAAoJECTWi3JdVIfQO5kH/203CIE8SQc1FlJ+NouRleiB
-B1KPSKkaepyebgmG76kyWQCwhsyZxd3+bI8/kMKXWl+Az6e+Xb6zu0IloWomvwLO
-/PZAZEdlrqWLAypARa7r7Bh2E6xVKOIFGiKHwa+vAt0Fs57qsIJLUyh+E5RsFla8
-306tkFlj61IsX4sG5EdAyjybHfo93+hSjiBAPtvljGrmdU9hLxSdqPLhsoaP8ijb
-C9iRTI77oPL/G1hJIC8Z0oJDkDIhd/xkHPgYWhVpwYHLQUtRYReNbfB3IdDbI6XS
-ekKrdzGc1mAXzYLUeVxXlBS6fxIogEhN7eKEXOxzEg4lf3g+JouzJz5kN1nu8Es=
-=LIfz
------END PGP SIGNATURE-----
+                port->reset_name =3D devm_kasprintf(dev, GFP_KERNEL, "%=
+s-reset",
+                                                  port->name);
+                if (!port->reset_name) {
+                        ret =3D -ENOMEM;
+                        goto err;
+                }
 
---w2xx78T4DcG3O+DJ--
+                if (flags & OF_GPIO_ACTIVE_LOW) {
+                        dev_info(dev, "%s: reset gpio is active low\n",
+                                 of_node_full_name(child));
+                        gpio_flags =3D GPIOF_ACTIVE_LOW |
+                                     GPIOF_OUT_INIT_LOW;
+                } else {
+                        gpio_flags =3D GPIOF_OUT_INIT_HIGH;
+                }
+
+                ret =3D devm_gpio_request_one(dev, reset_gpio, gpio_fla=
+gs,
+                                            port->reset_name);
+                if (ret) {
+                        if (ret =3D=3D -EPROBE_DEFER)
+                                goto err;
+                        goto skip;
+                }
+
+                port->reset_gpio =3D gpio_to_desc(reset_gpio);
+        }
+
+Not nice, is it?  Not nice to have that in lots of drivers either.
+
+However, switching to use any of_* or fwnode_* thing also carries with
+it another problem: you can't control the name appearing in the
+allocation, so you end up with a bunch of GPIOs requested with a "reset=
+"
+name - meaning you lose any identification of which port the GPIO was
+bound to.
+
+--=20
+=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
