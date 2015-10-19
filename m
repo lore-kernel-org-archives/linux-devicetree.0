@@ -1,143 +1,98 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH 7/7] ARM: EXYNOS: Remove code for restart and poweroff for
- exynos SoCs
-Date: Mon, 19 Oct 2015 13:57:15 +0530
-Message-ID: <5624A963.6000201@samsung.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
- <1445234635-3950-8-git-send-email-alim.akhtar@samsung.com>
- <562494F8.6070003@samsung.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH 1/2] mmc: sdhci-of-arasan: add phy support for
+ sdhci-of-arasan
+Date: Mon, 19 Oct 2015 16:39:45 +0800
+Message-ID: <5624AC51.9060907@rock-chips.com>
+References: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
+ <CAPDyKFpwgZSkE+TNehZ1Un=5CfjoEtfvELfrS6t-ZHZPscy3Yg@mail.gmail.com>
+ <56243E85.2040202@rock-chips.com>
+ <CAPDyKFpkH00roc=Nn067PufmQL59wqsi1c58tdv_UyP-7Gs-vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <562494F8.6070003@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFpkH00roc=Nn067PufmQL59wqsi1c58tdv_UyP-7Gs-vg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: shawn.lin@rock-chips.com, Michal Simek <michal.simek@xilinx.com>, S?ren Brinkmann <soren.brinkmann@xilinx.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On 2015/10/19 15:50, Ulf Hansson wrote:
+> [...]
+>
+>>> I understand the phy is optional, but you still need to handle the
+>>> EPROBE_DEFER case.
+>>>
+>>> Perhaps you should also use devm_phy_optional_get() instead!?
+>>
+>>
+>> I already changed it in version-2 [1]. :)
+>> phy is mandatory for sdhci-arasan,5.1.
+>>
+>> [1]: https://patchwork.kernel.org/patch/7173251/
+>
+> Oh, apologize for reviewing the old version!
+>
+>>
+>>>
+>>>> +               ret = phy_power_on(sdhci_arasan->phy);
+>>>
+>>>
+>>> This looks a bit weird. Shouldn't you do phy_init() prior phy_power_on()?
+>>>
+>>> Similar comment applies to phy_exit() and phy_power_off().
+>>
+>>
+>> Both are okay. It depends how the phy-driver implement the four interfaces.
+>>  From my case, power_on for arasan's phy driver firstly enable phy's clk and
+>> open power-domain, then programme phy internal registers to activate phy.
+>> Without enabling phy's clk and power-domain, we cannot do phy_init since phy
+>> can't be accessed by CPU.
+>>
+>> But here, I think you are right. It does look a bit weird.
+>> I think the better way is to remove phy_power_on here, and let phy-driver do
+>> power_on in phy_init internally. Similarly in the remove call.
+>
+> That makes sense to me! I think it would also follow other phy clients
+> use of the phy API.
+>
+> What makes me wonder though is from a power management point of view.
+> *When* do you need to have phy initialized and powered?
+>
 
-On 10/19/2015 12:30 PM, Krzysztof Kozlowski wrote:
-> On 19.10.2015 15:03, Alim Akhtar wrote:
->> Now we can use the generic syscon-{reboot/poweroff} drivers,
->> so we don't need special handling for reboot/poweroff in
->> exynos pmu driver. This patch remove the same.
->>
->> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> ---
->>   arch/arm/mach-exynos/pmu.c |   43 -------------------------------------------
->>   1 file changed, 43 deletions(-)
->
-> I think that removal of this stuff will effectively remove the
-> restart/poweroff handlers from:
-> 1. Other defconfigs, like multi_v7
-> 2. Custom configs.
->
-Well, I did have a plan to enable it on multi_v7
-Not sure about other custom configs, if there are some, they should also 
-enable it I feel.
+Whenever controller need to communicate with card, must init/power_on 
+phy firstly.
 
-> Previously this code was always compiled in for ARCH_EXYNOS. Now it is
-> not so I am thinking about selecting necessary drivers from main exynos
-> Kconfig symbol. That could be tricky though, because "select" should be
-> used only for non-visible symbols.
+> 1) For a removable card can leave the phy uninitialised or powered
+> off, but still detect card insertion/removal via GPIO? Is that a valid
+> scenario for you?
 >
-Probably adding these to mach-exynos/Kconfig as a "select" will do.
 
-> Any ideas how to solve that?
+Theoretically, it is.  Although my soc don't use phy for removable card, 
+I also consider how to handle this case. Should we add a hook
+for sdhci_get_cd, and initialize phy if it's non-removeable device or 
+removeable card in slot ? Doesn't seem like a good idea.
+
+Also seems not always work if we just use SDHCI_PRESENT_STATE to detect 
+card insertion/removal without phy in active state.
+
+> 2) Considering the runtime PM case for the sdhci device. Typically you
+> can gate clocks etc at runtime suspend to save power, but what about
+> the phy? Can you power off it in runtime suspend?
+
+yes, we can power off it in runtime suspend. So we can append some 
+patches later to introduce runtime pm for sdhci-of-arasan?
+
 >
-> Best regards,
-> Krzysztof
+> [...]
 >
->>
->> diff --git a/arch/arm/mach-exynos/pmu.c b/arch/arm/mach-exynos/pmu.c
->> index de68938ee6aa..393c04aa727e 100644
->> --- a/arch/arm/mach-exynos/pmu.c
->> +++ b/arch/arm/mach-exynos/pmu.c
->> @@ -14,9 +14,6 @@
->>   #include <linux/of_address.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/delay.h>
->> -#include <linux/notifier.h>
->> -#include <linux/reboot.h>
->> -
->>
->>   #include "exynos-pmu.h"
->>   #include "regs-pmu.h"
->> @@ -681,23 +678,6 @@ static unsigned int const exynos5420_list_disable_pmu_reg[] = {
->>   	EXYNOS5420_CMU_RESET_FSYS_SYS_PWR_REG,
->>   };
->>
->> -static void exynos_power_off(void)
->> -{
->> -	unsigned int tmp;
->> -
->> -	pr_info("Power down.\n");
->> -	tmp = pmu_raw_readl(EXYNOS_PS_HOLD_CONTROL);
->> -	tmp ^= (1 << 8);
->> -	pmu_raw_writel(tmp, EXYNOS_PS_HOLD_CONTROL);
->> -
->> -	/* Wait a little so we don't give a false warning below */
->> -	mdelay(100);
->> -
->> -	pr_err("Power down failed, please power off system manually.\n");
->> -	while (1)
->> -		;
->> -}
->> -
->>   static void exynos5420_powerdown_conf(enum sys_powerdown mode)
->>   {
->>   	u32 this_cluster;
->> @@ -875,14 +855,6 @@ static void exynos5420_pmu_init(void)
->>   	pr_info("EXYNOS5420 PMU initialized\n");
->>   }
->>
->> -static int pmu_restart_notify(struct notifier_block *this,
->> -		unsigned long code, void *unused)
->> -{
->> -	pmu_raw_writel(0x1, EXYNOS_SWRESET);
->> -
->> -	return NOTIFY_DONE;
->> -}
->> -
->>   static const struct exynos_pmu_data exynos3250_pmu_data = {
->>   	.pmu_config	= exynos3250_pmu_config,
->>   	.pmu_init	= exynos3250_pmu_init,
->> @@ -940,20 +912,11 @@ static const struct of_device_id exynos_pmu_of_device_ids[] = {
->>   	{ /*sentinel*/ },
->>   };
->>
->> -/*
->> - * Exynos PMU restart notifier, handles restart functionality
->> - */
->> -static struct notifier_block pmu_restart_handler = {
->> -	.notifier_call = pmu_restart_notify,
->> -	.priority = 128,
->> -};
->> -
->>   static int exynos_pmu_probe(struct platform_device *pdev)
->>   {
->>   	const struct of_device_id *match;
->>   	struct device *dev = &pdev->dev;
->>   	struct resource *res;
->> -	int ret;
->>
->>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>   	pmu_base_addr = devm_ioremap_resource(dev, res);
->> @@ -978,12 +941,6 @@ static int exynos_pmu_probe(struct platform_device *pdev)
->>
->>   	platform_set_drvdata(pdev, pmu_context);
->>
->> -	ret = register_restart_handler(&pmu_restart_handler);
->> -	if (ret)
->> -		dev_warn(dev, "can't register restart handler err=%d\n", ret);
->> -
->> -	pm_power_off = exynos_power_off;
->> -
->>   	dev_dbg(dev, "Exynos PMU Driver probe done\n");
->>   	return 0;
->>   }
->>
+> Kind regards
+> Uffe
 >
 >
+>
+
+
+-- 
+Best Regards
+Shawn Lin
