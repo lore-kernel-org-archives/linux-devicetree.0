@@ -1,46 +1,102 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Enable USB DRC on pcDuino
- v3 Nano
-Date: Mon, 19 Oct 2015 20:05:13 +0200
-Message-ID: <20151019180513.GW2711@lukather>
-References: <1445119709-1689-1-git-send-email-ats@offog.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 06/10] ASoC: img: Add driver for
+ parallel output controller
+Date: Mon, 19 Oct 2015 19:07:57 +0100
+Message-ID: <20151019180757.GJ32054@sirena.org.uk>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1444653637-14711-7-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Er97KPJOrxRt+yKZ"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZPBSSYQKGQE6GPV3KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445119709-1689-1-git-send-email-ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2441072393446120635=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1444653637-14711-7-git-send-email-Damien.Horsley@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <James.Hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
---Er97KPJOrxRt+yKZ
-Content-Type: text/plain; charset=UTF-8
+
+--===============2441072393446120635==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="07FIeBX8hApXX6Bi"
 Content-Disposition: inline
 
-On Sat, Oct 17, 2015 at 11:08:29PM +0100, Adam Sampson wrote:
-> The OTG arrangement on the LinkSprite pcDuino v3 Nano is the same as the
-> pcDuino 1/2/3: the OTG port's 5V line is connected directly to the 5V
-> bus (it's not switchable), and the OTG port's ID pin is connected to PH4
-> on the A20.
-> 
-> Tested successfully in both host and device modes.
-> 
-> Signed-off-by: Adam Sampson <ats-G+91BasbrijYtjvyW6yDsg@public.gmane.org>
 
-Applied, thanks!
-Maxime
+--07FIeBX8hApXX6Bi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Er97KPJOrxRt+yKZ--
+On Mon, Oct 12, 2015 at 01:40:33PM +0100, Damien Horsley wrote:
+
+> +	spin_lock_irqsave(&prl->lock, flags);
+> +	reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
+> +	ucontrol->value.integer.value[0] = !!(reg & IMG_PRL_OUT_CTL_EDGE_MASK);
+> +	spin_unlock_irqrestore(&prl->lock, flags);
+
+Do you need to lock a single register read?
+
+> +static struct snd_kcontrol_new img_prl_out_controls[] = {
+> +	{
+> +		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
+> +		.name = "Parallel Out Edge Falling",
+> +		.info = img_prl_out_edge_info,
+> +		.get = img_prl_out_get_edge,
+> +		.put = img_prl_out_set_edge
+> +	}
+> +};
+
+If this is a boolean control (it looked like one) it should be called
+Switch but it's not clear to me what exactly is being controlled here or
+why it's something that should be exposed to userspace.
+
+> +	switch (cmd) {
+> +	case SNDRV_PCM_TRIGGER_START:
+> +	case SNDRV_PCM_TRIGGER_RESUME:
+> +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+> +		reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
+> +		reg |= IMG_PRL_OUT_CTL_ME_MASK;
+> +		img_prl_out_writel(prl, reg, IMG_PRL_OUT_CTL);
+> +		prl->active = true;
+> +		break;
+> +	case SNDRV_PCM_TRIGGER_STOP:
+> +	case SNDRV_PCM_TRIGGER_SUSPEND:
+> +	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+> +		img_prl_out_reset(prl);
+> +		prl->active = false;
+> +		break;
+
+No need for locking on the reset (and doesn't this mean that the control
+state is going to be changed underneath userspace)?
+
+--07FIeBX8hApXX6Bi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJTF8AAoJECTWi3JdVIfQ+k0H/1ZJ5Xzxm4Ay4fUY8Epnr0o8
+t5ZYKMUQ15VUQCVFc3gCfd81eeHH4DX+WwWRFMmqyugWyqAq+aV/cjP3l2yb+QyA
+fyc/KB08oyghZ8xf64oUYGghjbIZb9NJIMM9W6AmwKcDzCUVSwXkCZwbcQgAzUyh
+UTSXMsGHERnC6POXAO51KqwcwFfR0ClPfK01XAdDazyVNDStUvkh1IvCEHpDj2iY
+YwBYeFKerm8DXamyrfxSqtHHGWzXTPKuROZWcJISrOWgaGveJjJ9hTMhuglI6azd
+A8gpk7NTk6W4smDxYbWKXTBffuc/I2qRIdyiCxi6Qs5scO/Lp4w2lcBiWviCN+o=
+=g+p1
+-----END PGP SIGNATURE-----
+
+--07FIeBX8hApXX6Bi--
+
+--===============2441072393446120635==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2441072393446120635==--
