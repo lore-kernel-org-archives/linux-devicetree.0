@@ -1,55 +1,344 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Mon, 19 Oct 2015 09:52:44 -0700
-Message-ID: <CAOesGMjzeJYVuNzrtahNxiMk-3Huq76=DVhKixMNC=3vebUc_Q@mail.gmail.com>
-References: <20151014092644.GO14956@sirena.org.uk>
-	<1444909328-24761-1-git-send-email-tomeu.vizoso@collabora.com>
-	<CAOesGMj44N3Xfv_D_iLEzXBrkN6LXBa-uh6m3fi_F2xDenDhMg@mail.gmail.com>
-	<CAL_Jsq+34sRXe0HWCKNceQfLj=WfDV4-soynumvdnH_nwuj+9g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+34sRXe0HWCKNceQfLj=WfDV4-soynumvdnH_nwuj+9g@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie>
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Mon, 19 Oct 2015 14:32:24 -0300
+Message-ID: <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445275946-32653-1-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 17, 2015 at 8:19 AM, Rob Herring <robh+dt@kernel.org> wrote:
-> On Fri, Oct 16, 2015 at 4:23 PM, Olof Johansson <olof@lixom.net> wrote:
->> Hi,
->>
->> I've bisected boot failures in next-20151016 down to patches in this branch:
->>
->> On Thu, Oct 15, 2015 at 4:42 AM, Tomeu Vizoso
->> <tomeu.vizoso@collabora.com> wrote:
->>> Tomeu Vizoso (20):
->>>       driver core: handle -EPROBE_DEFER from bus_type.match()
->>
->> The machine it happened on was OMAP5UEVM:
->>
->> http://arm-soc.lixom.net/bootlogs/next/next-20151016/omap5uevm-arm-omap2plus_defconfig.html
->
-> So this one is because the MMC node numbering changed. I don't know
-> how to fix that other than with aliases, but that doesn't solve
-> backwards compatibility.
+This commit adds support for NXP LPC18xx EEPROM memory found in NXP
+LPC185x/3x and LPC435x/3x/2x/1x devices.
 
-Yep, aliases will take care of it in this case. This is where -next
-fills a great purpose, we can make sure we get those aliases added in
-before the patches go in.
+EEPROM size is 16384 bytes and it can be entirely read and
+written/erased with 1 word (4 bytes) granularity. The last page
+(128 bytes) contains the EEPROM initialization data and is not writable.
 
->> But I've also seen it on tegra2, that one bisected down to:
->>
->>>      regulator: core: Probe regulators on demand
->>
->> http://arm-soc.lixom.net/bootlogs/next/next-20151016/seaboard-arm-multi_v7_defconfig.html
->
-> This one you need a rootwait I think. The MMC scanning is not
-> guaranteed to be done before the rootfs mounting AFAIK. There may be
-> other problems, but we can't see them since it panics.
+Erase/program time is less than 3ms. The EEPROM device requires a
+~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated dividing
+the system bus clock by the division factor, contained in the divider
+register (minus 1 encoded).
 
-Embarrassing, I almost always do this and I'm surprised this machine
-has been this stable without it.
+Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+---
+ drivers/nvmem/Kconfig          |   9 ++
+ drivers/nvmem/Makefile         |   2 +
+ drivers/nvmem/lpc18xx_eeprom.c | 266 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 277 insertions(+)
+ create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
 
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index bc4ea58..6ff1b50 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -25,6 +25,15 @@ config NVMEM_IMX_OCOTP
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called nvmem-imx-ocotp.
+ 
++config NVMEM_LPC18XX_EEPROM
++	tristate "NXP LPC18XX EEPROM Memory Support"
++	depends on ARCH_LPC18XX || COMPILE_TEST
++	help
++	  Say Y here to include support for NXP LPC18xx EEPROM memory found in
++	  NXP LPC185x/3x and LPC435x/3x/2x/1x devices.
++	  To compile this driver as a module, choose M here: the module
++	  will be called nvmem_lpc18xx_eeprom.
++
+ config NVMEM_MXS_OCOTP
+ 	tristate "Freescale MXS On-Chip OTP Memory Support"
+ 	depends on ARCH_MXS || COMPILE_TEST
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index 95dde3f..c14a556 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -8,6 +8,8 @@ nvmem_core-y			:= core.o
+ # Devices
+ obj-$(CONFIG_NVMEM_IMX_OCOTP)	+= nvmem-imx-ocotp.o
+ nvmem-imx-ocotp-y		:= imx-ocotp.o
++obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
++nvmem_lpc18xx_eeprom-y	:= lpc18xx_eeprom.o
+ obj-$(CONFIG_NVMEM_MXS_OCOTP)	+= nvmem-mxs-ocotp.o
+ nvmem-mxs-ocotp-y		:= mxs-ocotp.o
+ obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
+diff --git a/drivers/nvmem/lpc18xx_eeprom.c b/drivers/nvmem/lpc18xx_eeprom.c
+new file mode 100644
+index 0000000..ccdda66
+--- /dev/null
++++ b/drivers/nvmem/lpc18xx_eeprom.c
+@@ -0,0 +1,266 @@
++/*
++ * NXP LPC18xx/LPC43xx EEPROM memory NVMEM driver
++ *
++ * Copyright (c) 2015 Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgC/G2K4zDHf@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ */
++
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++
++/* Registers */
++#define LPC18XX_EEPROM_AUTOPROG		0x00c
++#define LPC18XX_EEPROM_AUTOPROG_WORD	0x1
++
++#define LPC18XX_EEPROM_CLKDIV		0x014
++
++#define LPC18XX_EEPROM_PWRDWN		0x018
++#define LPC18XX_EEPROM_PWRDWN_NO	0x0
++#define LPC18XX_EEPROM_PWRDWN_YES	0x1
++
++/* Fixed page size (bytes) */
++#define LPC18XX_EEPROM_PAGE_SIZE	0x80
++
++/* EEPROM device requires a ~1500 kHz clock (min 800 kHz, max 1600 kHz) */
++#define LPC18XX_EEPROM_CLOCK_HZ		1500000
++
++struct lpc18xx_eeprom_dev {
++	struct clk *clk;
++	void __iomem *reg_base;
++	void __iomem *mem_base;
++	struct nvmem_device *nvmem;
++	unsigned reg_bytes;
++	unsigned val_bytes;
++};
++
++static inline void lpc18xx_eeprom_writel(struct lpc18xx_eeprom_dev *eeprom,
++					 u32 reg, u32 val)
++{
++	writel(val, eeprom->reg_base + reg);
++}
++
++static int lpc18xx_eeprom_gather_write(void *context, const void *reg,
++				       size_t reg_size, const void *val,
++				       size_t val_size)
++{
++	struct lpc18xx_eeprom_dev *eeprom = context;
++	unsigned int offset = *(u32 *)reg;
++
++	/* 3 ms of erase/program time between each writing */
++	while (val_size) {
++		writel(*(u32 *)val, eeprom->mem_base + offset);
++		usleep_range(3000, 4000);
++		val_size -= eeprom->val_bytes;
++		val += eeprom->val_bytes;
++		offset += eeprom->val_bytes;
++	}
++
++	return 0;
++}
++
++static int lpc18xx_eeprom_write(void *context, const void *data, size_t count)
++{
++	struct lpc18xx_eeprom_dev *eeprom = context;
++	unsigned int offset = eeprom->reg_bytes;
++
++	if (count <= offset)
++		return -EINVAL;
++
++
++	return lpc18xx_eeprom_gather_write(context, data, eeprom->reg_bytes,
++					   data + offset, count - offset);
++}
++
++static int lpc18xx_eeprom_read(void *context, const void *reg, size_t reg_size,
++			       void *val, size_t val_size)
++{
++	struct lpc18xx_eeprom_dev *eeprom = context;
++	unsigned int offset = *(u32 *)reg;
++
++	while (val_size) {
++		*(u32 *)val = readl(eeprom->mem_base + offset);
++		val_size -= eeprom->val_bytes;
++		val += eeprom->val_bytes;
++		offset += eeprom->val_bytes;
++	}
++
++	return 0;
++}
++
++static struct regmap_bus lpc18xx_eeprom_bus = {
++	.write = lpc18xx_eeprom_write,
++	.gather_write = lpc18xx_eeprom_gather_write,
++	.read = lpc18xx_eeprom_read,
++	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
++	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
++};
++
++static struct regmap_config lpc18xx_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++};
++
++static bool lpc18xx_eeprom_writeable_reg(struct device *dev, unsigned int reg)
++{
++	/*
++	 * The last page contains the EEPROM initialization data and is not
++	 * writable.
++	 */
++	return reg <= lpc18xx_regmap_config.max_register -
++						LPC18XX_EEPROM_PAGE_SIZE;
++}
++
++static bool lpc18xx_eeprom_readable_reg(struct device *dev, unsigned int reg)
++{
++	return reg <= lpc18xx_regmap_config.max_register;
++}
++
++static struct nvmem_config lpc18xx_nvmem_config = {
++	.name = "lpc18xx-eeprom",
++	.owner = THIS_MODULE,
++};
++
++static const struct of_device_id lpc18xx_eeprom_of_match[] = {
++	{ .compatible = "nxp,lpc1857-eeprom" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, lpc18xx_eeprom_of_match);
++
++static int lpc18xx_eeprom_probe(struct platform_device *pdev)
++{
++	struct lpc18xx_eeprom_dev *eeprom;
++	struct device *dev = &pdev->dev;
++	struct reset_control *rst;
++	unsigned long clk_rate;
++	struct regmap *regmap;
++	struct resource *res;
++	int ret;
++
++	eeprom = devm_kzalloc(dev, sizeof(*eeprom), GFP_KERNEL);
++	if (!eeprom)
++		return -ENOMEM;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
++	eeprom->reg_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(eeprom->reg_base))
++		return PTR_ERR(eeprom->reg_base);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
++	eeprom->mem_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(eeprom->mem_base))
++		return PTR_ERR(eeprom->mem_base);
++
++	eeprom->clk = devm_clk_get(&pdev->dev, "eeprom");
++	if (IS_ERR(eeprom->clk)) {
++		dev_err(&pdev->dev, "failed to get eeprom clock\n");
++		return PTR_ERR(eeprom->clk);
++	}
++
++	ret = clk_prepare_enable(eeprom->clk);
++	if (ret < 0) {
++		dev_err(dev, "failed to prepare/enable eeprom clk: %d\n", ret);
++		return ret;
++	}
++
++	rst = devm_reset_control_get(dev, NULL);
++	if (IS_ERR(rst)) {
++		dev_err(dev, "failed to get reset: %ld\n", PTR_ERR(rst));
++		ret = PTR_ERR(rst);
++		goto err_clk;
++	}
++
++	ret = reset_control_deassert(rst);
++	if (ret < 0) {
++		dev_err(dev, "failed to deassert reset: %d\n", ret);
++		goto err_clk;
++	}
++
++	eeprom->val_bytes = lpc18xx_regmap_config.val_bits / 8;
++	eeprom->reg_bytes = lpc18xx_regmap_config.reg_bits / 8;
++
++	/*
++	 * Clock rate is generated by dividing the system bus clock by the
++	 * division factor, contained in the divider register (minus 1 encoded).
++	 */
++	clk_rate = clk_get_rate(eeprom->clk);
++	clk_rate = DIV_ROUND_UP(clk_rate, LPC18XX_EEPROM_CLOCK_HZ) - 1;
++	lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_CLKDIV, clk_rate);
++
++	/*
++	 * Writing a single word to the page will start the erase/program cycle
++	 * automatically
++	 */
++	lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_AUTOPROG,
++			      LPC18XX_EEPROM_AUTOPROG_WORD);
++
++	lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_PWRDWN,
++			      LPC18XX_EEPROM_PWRDWN_NO);
++
++	lpc18xx_regmap_config.max_register = resource_size(res) - 1;
++	lpc18xx_regmap_config.writeable_reg = lpc18xx_eeprom_writeable_reg;
++	lpc18xx_regmap_config.readable_reg = lpc18xx_eeprom_readable_reg;
++
++	regmap = devm_regmap_init(dev, &lpc18xx_eeprom_bus, eeprom,
++				  &lpc18xx_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "regmap init failed: %ld\n", PTR_ERR(regmap));
++		ret = PTR_ERR(regmap);
++		goto err_clk;
++	}
++
++	lpc18xx_nvmem_config.dev = dev;
++
++	eeprom->nvmem = nvmem_register(&lpc18xx_nvmem_config);
++	if (IS_ERR(eeprom->nvmem)) {
++		ret = PTR_ERR(eeprom->nvmem);
++		goto err_clk;
++	}
++
++	platform_set_drvdata(pdev, eeprom);
++
++	return 0;
++
++err_clk:
++	clk_disable_unprepare(eeprom->clk);
++
++	return ret;
++}
++
++static int lpc18xx_eeprom_remove(struct platform_device *pdev)
++{
++	struct lpc18xx_eeprom_dev *eeprom = platform_get_drvdata(pdev);
++
++	lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_PWRDWN,
++			      LPC18XX_EEPROM_PWRDWN_YES);
++
++	clk_disable_unprepare(eeprom->clk);
++
++	return nvmem_unregister(eeprom->nvmem);
++}
++
++static struct platform_driver lpc18xx_eeprom_driver = {
++	.probe = lpc18xx_eeprom_probe,
++	.remove = lpc18xx_eeprom_remove,
++	.driver = {
++		.name = "lpc18xx-eeprom",
++		.of_match_table = lpc18xx_eeprom_of_match,
++	},
++};
++
++module_platform_driver(lpc18xx_eeprom_driver);
++
++MODULE_AUTHOR("Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>");
++MODULE_DESCRIPTION("NXP LPC18xx EEPROM memory Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.6.1
 
--Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
