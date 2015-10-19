@@ -1,67 +1,73 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
-Date: Mon, 19 Oct 2015 13:10:14 +0530
-Message-ID: <56249E5E.80405@samsung.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
- <562493BF.9080301@samsung.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
+Date: Mon, 19 Oct 2015 09:50:51 +0200
+Message-ID: <CAPDyKFpkH00roc=Nn067PufmQL59wqsi1c58tdv_UyP-7Gs-vg@mail.gmail.com>
+References: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
+	<CAPDyKFpwgZSkE+TNehZ1Un=5CfjoEtfvELfrS6t-ZHZPscy3Yg@mail.gmail.com>
+	<56243E85.2040202@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <562493BF.9080301@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56243E85.2040202-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, S?ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
-
-On 10/19/2015 12:24 PM, Krzysztof Kozlowski wrote:
-> On 19.10.2015 15:03, Alim Akhtar wrote:
-> ...
->
-> Hi,
->
-> I am happy to see more contributions from your side! Keep it up. :)
->
-Thank you! will keep finding time and doing it.
-
-> However this empty space in your cover letter is the place for
-> description of the patchset. What do you want to achieve here? What kind
-> of problem are you solving? What features are you adding? Any dependencies?
->
-Ah, my bad, I used --compose option with git-send-email and did composed 
-the message, somehow it got missed. Will take care.
-
-The motivation came when I tried to used reboot/poweroff on exynos7, and 
-since exynos7 has not added/enabled PMU and does not have access to 
-arch/arm/mach-exynos, so option are to have a reboot/restart driver or 
-we move pmu.c out of mach-exynos. I know there where some effort in past 
-to move pmu.c to drivers, but I feel that is still WIP.
-And then I came across this generic syscon regmap based driver which are 
-already in place, so just used it.
-Hope that helps.
-
-> Best regards,
-> Krzysztof
->
->> Alim Akhtar (7):
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
->>    ARM: exynos_defconfig: Normalize exynos defconfig
->>    ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
->>      drivers
->>    ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
+>> I understand the phy is optional, but you still need to handle the
+>> EPROBE_DEFER case.
 >>
->>   arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
->>   arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
->>   arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
->>   arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
->>   arch/arm/configs/exynos_defconfig |   11 +++++-----
->>   arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
->>   6 files changed, 61 insertions(+), 49 deletions(-)
+>> Perhaps you should also use devm_phy_optional_get() instead!?
+>
+>
+> I already changed it in version-2 [1]. :)
+> phy is mandatory for sdhci-arasan,5.1.
+>
+> [1]: https://patchwork.kernel.org/patch/7173251/
+
+Oh, apologize for reviewing the old version!
+
+>
 >>
+>>> +               ret = phy_power_on(sdhci_arasan->phy);
+>>
+>>
+>> This looks a bit weird. Shouldn't you do phy_init() prior phy_power_on()?
+>>
+>> Similar comment applies to phy_exit() and phy_power_off().
 >
 >
+> Both are okay. It depends how the phy-driver implement the four interfaces.
+> From my case, power_on for arasan's phy driver firstly enable phy's clk and
+> open power-domain, then programme phy internal registers to activate phy.
+> Without enabling phy's clk and power-domain, we cannot do phy_init since phy
+> can't be accessed by CPU.
+>
+> But here, I think you are right. It does look a bit weird.
+> I think the better way is to remove phy_power_on here, and let phy-driver do
+> power_on in phy_init internally. Similarly in the remove call.
+
+That makes sense to me! I think it would also follow other phy clients
+use of the phy API.
+
+What makes me wonder though is from a power management point of view.
+*When* do you need to have phy initialized and powered?
+
+1) For a removable card can leave the phy uninitialised or powered
+off, but still detect card insertion/removal via GPIO? Is that a valid
+scenario for you?
+
+2) Considering the runtime PM case for the sdhci device. Typically you
+can gate clocks etc at runtime suspend to save power, but what about
+the phy? Can you power off it in runtime suspend?
+
+[...]
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
