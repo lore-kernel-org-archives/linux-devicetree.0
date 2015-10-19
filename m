@@ -1,79 +1,119 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Mon, 19 Oct 2015 10:58:25 -0500
-Message-ID: <CAL_JsqLwvc1H9kQnWs=mA8P4Mq4izmSSeFU6KRtkExBkzF9ABg@mail.gmail.com>
-References: <561E1378.6000906@collabora.com> <20151017065750.GA18607@kroah.com>
- <20151018192931.GY14956@sirena.org.uk> <20151018193757.GA9147@kroah.com>
- <20151018195330.GB14956@sirena.org.uk> <1445247881.53393.146.camel@infradead.org>
- <CAL_JsqKehmSobpbdeXGo=-1pAbtrhCHovyyCWya_MNOhGCi8CQ@mail.gmail.com>
- <1445258870.53393.173.camel@infradead.org> <20151019145048.GI14956@sirena.org.uk>
- <1445268580.53393.183.camel@infradead.org>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH 5/7] ARM: exynos_defconfig: Normalize exynos defconfig
+Date: Mon, 19 Oct 2015 21:28:44 +0530
+Message-ID: <CAGOxZ52bGrHo0DzjhyjGPXwX0CWUn0Oqkx-EGZY51zC5FWcAKw@mail.gmail.com>
+References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
+ <1445234635-3950-6-git-send-email-alim.akhtar@samsung.com> <5624EF5D.7080403@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1445268580.53393.183.camel@infradead.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti.co>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5624EF5D.7080403@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 19, 2015 at 10:29 AM, David Woodhouse <dwmw2@infradead.org>=
- wrote:
-> On Mon, 2015-10-19 at 15:50 +0100, Mark Brown wrote:
->> > But the point I'm making is that we are working towards *fixing* t=
-hat,
->> > and *not* using DT-specific code in places where we should be usin=
-g the
->> > generic APIs.
+Hi Javier,
+
+On Mon, Oct 19, 2015 at 6:55 PM, Javier Martinez Canillas
+<javier@osg.samsung.com> wrote:
+> Hello Alim,
+>
+> On 10/19/2015 08:03 AM, Alim Akhtar wrote:
+>> make savedefconfig result in some difference, lets normalize the
+>> defconfig.
 >>
->> What is the plan for fixing things here?  It's not obvious (at least=
- to
->> me) that we don't want to have the subsystems having knowledge of ho=
-w
->> they are bound to a specific firmware which is what you seem to impl=
-y
->> here.
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> ---
 >
-> I don't know that there *is* a coherent plan here to address it all.
+> Did you make savedefconfig against v4.3-rc6 or tot linux-next?
 >
-> Certainly, we *will* need subsystems to have firmware-specific
-> knowledge in some cases. Take GPIO as an example; ACPI *has* a way to
-> describe GPIO, and properties which reference GPIO pins are intended =
-to
-> work through that =E2=80=94 while in DT, properties which reference G=
-PIO pins
-> will have different contents. They'll be compatible at the driver
-> level, in the sense that there's a call to get a given GPIO given the
-> property name, but the subsystems *will* be doing different things
-> behind the scenes.
+These are based on v4.3-rc5.
+
+> I remember we had issues in the past due savedefconfig made against
+> linux-next but then some of the patches in linux-next not making it
+> to the next release. So I think it should be good to mention what's
+> the base used for this patch.
 >
-> My plan, such as it is, is to go through the leaf-node drivers which
-> almost definitely *should* be firmware-agnostic, and convert those. A=
-nd
-> then take stock of what we have left, and work out what, if anything,
-> still needs to be done.
+Ah, ok I didn't follow that, will check again on Linux-next as well as
+on 4.3-rc5
 
-Many cases are already agnostic in the drivers in terms of the *_get()
-functions. Some are DT specific, but probably because those subsystems
-are new and DT only. In any case, I don't think these 1 line changes
-do anything to make doing conversions here harder.
-
->> It seems like we're going to have to refactor these bits of code whe=
-n
->> they get generalised anyway so I'm not sure that the additional cost
->> here is that big.
+>>  arch/arm/configs/exynos_defconfig |    8 ++------
+>>  1 file changed, 2 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+>> index 1ff2bfa2e183..3349713e6c63 100644
+>> --- a/arch/arm/configs/exynos_defconfig
+>> +++ b/arch/arm/configs/exynos_defconfig
+>> @@ -99,10 +99,8 @@ CONFIG_SENSORS_LM90=y
+>>  CONFIG_SENSORS_NTC_THERMISTOR=y
+>>  CONFIG_SENSORS_PWM_FAN=y
+>>  CONFIG_SENSORS_INA2XX=y
+>> -CONFIG_THERMAL=y
+>>  CONFIG_CPU_THERMAL=y
+>>  CONFIG_THERMAL_EMULATION=y
+>> -CONFIG_EXYNOS_THERMAL=y
 >
-> That's an acceptable answer =E2=80=94 "we're adding legacy code here =
-but we
-> know it's going to be refactored anyway". If that's true, all it take=
-s
-> is a note in the commit comment to that effect. That's different from
-> having not thought about it :)
+> I would prefer to split all the changes that removes symbols into a
+> separate patch explaining why these are not needed anymore (i.e: it
+> is selected now by symbol $foo).
+>
+Ok ..let me rebase my patches and check these config changes again....
+>>  CONFIG_WATCHDOG=y
+>>  CONFIG_S3C2410_WATCHDOG=y
+>>  CONFIG_MFD_CROS_EC=y
+>> @@ -127,14 +125,14 @@ CONFIG_REGULATOR_S2MPS11=y
+>>  CONFIG_REGULATOR_S5M8767=y
+>>  CONFIG_REGULATOR_TPS65090=y
+>>  CONFIG_DRM=y
+>> -CONFIG_DRM_NXP_PTN3460=y
+>> -CONFIG_DRM_PARADE_PS8622=y
+>>  CONFIG_DRM_EXYNOS=y
+>>  CONFIG_DRM_EXYNOS_FIMD=y
+>>  CONFIG_DRM_EXYNOS_DSI=y
+>>  CONFIG_DRM_EXYNOS_HDMI=y
+>>  CONFIG_DRM_PANEL_SIMPLE=y
+>>  CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0=y
+>> +CONFIG_DRM_NXP_PTN3460=y
+>> +CONFIG_DRM_PARADE_PS8622=y
+>
+> Moving these DRM bridge symbols to match savedefconfig is ok IMHO.
+>
+>>  CONFIG_FB_SIMPLE=y
+>>  CONFIG_EXYNOS_VIDEO=y
+>>  CONFIG_EXYNOS_MIPI_DSI=y
+>> @@ -175,7 +173,6 @@ CONFIG_RTC_DRV_S5M=y
+>>  CONFIG_RTC_DRV_S3C=y
+>>  CONFIG_DMADEVICES=y
+>>  CONFIG_PL330_DMA=y
+>> -CONFIG_CHROME_PLATFORMS=y
+>>  CONFIG_CROS_EC_CHARDEV=y
+>>  CONFIG_COMMON_CLK_MAX77686=y
+>>  CONFIG_COMMON_CLK_MAX77802=y
+>> @@ -190,7 +187,6 @@ CONFIG_PWM_SAMSUNG=y
+>>  CONFIG_PHY_EXYNOS5250_SATA=y
+>>  CONFIG_EXT2_FS=y
+>>  CONFIG_EXT3_FS=y
+>> -CONFIG_EXT4_FS=y
+>>  CONFIG_MSDOS_FS=y
+>>  CONFIG_VFAT_FS=y
+>>  CONFIG_TMPFS=y
+>>
+>
+> Same comment than above, I would prefer these to be split.
+>
+> Best regards,
+> --
+> Javier Martinez Canillas
+> Open Source Group
+> Samsung Research America
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Considering at one point we did create a fwnode based API, we did
-think about it. Plus there was little input from ACPI folks as to
-whether the change was even useful for ACPI case. In any case, we're
-talking about adding 1 line.
 
-Rob
+
+-- 
+Regards,
+Alim
