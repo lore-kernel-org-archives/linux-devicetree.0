@@ -1,82 +1,25 @@
-From: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
-Subject: Re: [PATCH v4 2/3] phy: rcar-gen3-usb2: change the mode to OTG on
- the combined channel
-Date: Mon, 19 Oct 2015 18:50:48 +0700
-Message-ID: <5624D918.4040709@rvc.renesas.com>
-References: <1444731726-5328-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1444731726-5328-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <5621A8D4.40405@ti.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] iio:adc:palmas: add DT support
+Date: Mon, 19 Oct 2015 13:57:31 +0200
+Message-ID: <5624DAAB.9040207@metafoo.de>
+References: <cover.1445000017.git.hns@goldelico.com> <79429ca1a6d0465b6b19ede16d90de23e4363431.1445000017.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5621A8D4.40405@ti.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <79429ca1a6d0465b6b19ede16d90de23e4363431.1445000017.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Pradeep Goudagunta <pgoudagunta-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On 10/16/2015 02:53 PM, H. Nikolaus Schaller wrote:
+[...]
+> +Optional sub-nodes:
+> +ti,channel0-current-microamp: Channel 0 current in uA.
+> +	Values are rounded to derive 0uA, 5uA, 15uA, 20uA.
+> +ti,channel3-current-microamp: Channel 3 current in uA.
+> +	Valid are rounded to derive 0uA, 10uA, 400uA, 800uA.
+> +ti,enable-extended-delay: Enable extended delay.
 
-On 10/17/2015 8:48 AM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Tuesday 13 October 2015 03:52 PM, Yoshihiro Shimoda wrote:
->> To use the channel 0 of R-Car gen3 as periperal mode, This patch changes
->> the mode to OTG instead of HOST. Then, this driver needs to set some
->> registers to enable host mode and detects ID pin and VBUS pin at
->> phy_init() timing.
->>
->> For now, the channel 0 can be used as host mode only.
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> ---
->>   drivers/phy/phy-rcar-gen3-usb2.c | 126 ++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 124 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
->> index d90dfcf..03d7079 100644
->> --- a/drivers/phy/phy-rcar-gen3-usb2.c
->> +++ b/drivers/phy/phy-rcar-gen3-usb2.c
-
-[ .... ] snip
-
->> +
->> +	dev_dbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, tmp, host);
->
-> This shoulod be dev_vdbg.
-
-I guess using dev_dbg() is equivalent.
-
-I searched in same directory (drivers/phy) and the number of drivers 
-using dev_vdbg() are just few drivers. (in my search, only 3 drivers). 
-Other drivers use dev_dbg().
-The last driver using dev_dbg was from Jan 2015.
-I also recognized that dev_vdbug was used mostly in USB drivers...
-
-Is it your favorite way or is there any good point of using dev_vdbg() ?
-
->> +	if (host)
->> +		tmp &= ~USB2_COMMCTRL_OTG_PERI;
->> +	else
->> +		tmp |= USB2_COMMCTRL_OTG_PERI;
->> +	writel(tmp, usb2_base + USB2_COMMCTRL);
->> +}
->> +
->> +static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
->> +{
->> +	void __iomem *usb2_base = ch->usb2.base;
->> +	u32 tmp = readl(usb2_base + USB2_LINECTRL1);
->> +
->> +	dev_dbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, tmp, dp, dm);
->
-> same here.
-
-[.....] snip
->
-> Thanks
-> Kishon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
+Those three above sound more like configuration policy, rather than hardware
+description. What influence which values should be chosen?
