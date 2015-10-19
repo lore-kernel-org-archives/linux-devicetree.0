@@ -1,46 +1,52 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Mon, 19 Oct 2015 20:27:44 +0200
-Message-ID: <20151019182744.GD4931@pengutronix.de>
-References: <20151017065750.GA18607@kroah.com>
- <20151018192931.GY14956@sirena.org.uk>
- <20151018193757.GA9147@kroah.com>
- <20151018195330.GB14956@sirena.org.uk>
- <1445247881.53393.146.camel@infradead.org>
- <CAL_JsqKehmSobpbdeXGo=-1pAbtrhCHovyyCWya_MNOhGCi8CQ@mail.gmail.com>
- <1445258870.53393.173.camel@infradead.org>
- <20151019145048.GI14956@sirena.org.uk>
- <1445268580.53393.183.camel@infradead.org>
- <20151019154324.GN32532@n2100.arm.linux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH V2 00/10] Add support for Imagination
+ Technologies audio controllers
+Date: Mon, 19 Oct 2015 19:36:16 +0100
+Message-ID: <20151019183616.GL32054@sirena.org.uk>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="w2xx78T4DcG3O+DJ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151019154324.GN32532@n2100.arm.linux.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: David Woodhouse <dwmw2@infradead.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdwood@g>
+In-Reply-To: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: alsa-devel@alsa-project.org, James Hartley <James.Hartley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Mon, Oct 19, 2015 at 04:43:24PM +0100, Russell King - ARM Linux wrot=
-e:
-> It's a bit ironic that you've chosen GPIO as an example there.  The
-> "new" GPIO API (the gpiod_* stuff) only has a fwnode way to get the
-> gpio descriptor.  There's no of_* method.
+--w2xx78T4DcG3O+DJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Without following all that fwnode discussion:
-gpiod_get et al. should work for you here, doesn't it? It just takes a
-struct device * and I'm happy with it.
+On Mon, Oct 12, 2015 at 01:40:27PM +0100, Damien Horsley wrote:
+> From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
+>=20
+> Add drivers and binding documents for the following Imagination Technolog=
+ies audio controllers:
 
-Best regards
-Uwe
+This all looks mostly good, I had a few fairly minor comments which
+should be fairly easy to address, mostly stylistic.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Please also fix your mail client to word wrap within paragraphs at
+something substantially less than 80 columns.  Doing this makes your
+messages much easier to read and reply to.
+
+--w2xx78T4DcG3O+DJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJTgfAAoJECTWi3JdVIfQO5kH/203CIE8SQc1FlJ+NouRleiB
+B1KPSKkaepyebgmG76kyWQCwhsyZxd3+bI8/kMKXWl+Az6e+Xb6zu0IloWomvwLO
+/PZAZEdlrqWLAypARa7r7Bh2E6xVKOIFGiKHwa+vAt0Fs57qsIJLUyh+E5RsFla8
+306tkFlj61IsX4sG5EdAyjybHfo93+hSjiBAPtvljGrmdU9hLxSdqPLhsoaP8ijb
+C9iRTI77oPL/G1hJIC8Z0oJDkDIhd/xkHPgYWhVpwYHLQUtRYReNbfB3IdDbI6XS
+ekKrdzGc1mAXzYLUeVxXlBS6fxIogEhN7eKEXOxzEg4lf3g+JouzJz5kN1nu8Es=
+=LIfz
+-----END PGP SIGNATURE-----
+
+--w2xx78T4DcG3O+DJ--
