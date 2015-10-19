@@ -1,146 +1,155 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
- TPS65086 PMIC
-Date: Mon, 19 Oct 2015 10:23:37 -0500
-Message-ID: <56250AF9.3030907@ti.com>
-References: <1445014753-15450-1-git-send-email-afd@ti.com>
- <1445014753-15450-2-git-send-email-afd@ti.com> <20151019091311.GH31804@x1>
- <5625095F.5080204@ti.com> <20151019152100.GK31804@x1>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH V3 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
+Date: Mon, 19 Oct 2015 08:28:07 -0700
+Message-ID: <20151019152807.20687.15779@quantum>
+References: <cover.1444471684.git.shengjiu.wang@freescale.com>
+ <ee897786f33c9ba67b560964a76485891f2f63a8.1444471684.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151019152100.GK31804@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ee897786f33c9ba67b560964a76485891f2f63a8.1444471684.git.shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2015 10:21 AM, Lee Jones wrote:
-> On Mon, 19 Oct 2015, Andrew F. Davis wrote:
->
->> On 10/19/2015 04:13 AM, Lee Jones wrote:
->>> On Fri, 16 Oct 2015, Andrew F. Davis wrote:
->>>
->>>> The TPS65086 PMIC contains several regulators and a GPO controller.
->>>> Add bindings for the TPS65086 PMIC.
->>>>
->>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
->>>> ---
->>>>   .../devicetree/bindings/gpio/gpio-tps65086.txt     | 17 ++++++++
->>>>   Documentation/devicetree/bindings/mfd/tps65086.txt | 46 ++++++++++++++++++++++
->>>>   .../bindings/regulator/tps65086-regulator.txt      | 36 +++++++++++++++++
->>>
->>> Please split these up into separate patches.
->>>
->>> There is no functional reason to bundle them up.
->>>
->>
->> ACK
->>
->>>>   3 files changed, 99 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
->>>>   create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
->>>>   create mode 100644 Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
->>>
->>> [...]
->>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
->>>> new file mode 100644
->>>> index 0000000..4b6aeb4
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
->>>> @@ -0,0 +1,46 @@
->>>> +* TPS65086 Power Management Integrated Circuit bindings
->>>> +
->>>> +Required properties:
->>>> + - compatible		: Should be "ti,tps65086".
->>>
->>> Any indication that it's a PMIC?
->>>
->>
->> In the compatible string?
->
-> Ya.
->
+Quoting Shengjiu Wang (2015-10-10 03:15:06)
+> Correct SPDIF clock setting issue in clock tree, the SPDIF_GCLK is also
+> one clock of SPDIF, which is missed before.
+> 
+> We found an issue that imx can't enter low power mode with spdif
+> if IMX6x_CLK_SPDIF is used as the core clock of spdif. Because
+> spdif driver will register IMX6x_CLK_SPDIF clock to regmap, regmap will do
+> clk_prepare in init function, then IMX6x_CLK_SPDIF clock is prepared in probe,
+> so its parent clock (PLL clock) is prepared, the prepare operation of
+> PLL clock is to enable the clock. But I.MX needs all PLL clock is disabled,
+> then it can enter low power mode.
+> 
+> So we can't use IMX6x_CLK_SPDIF as the core clock of spdif, the correct spdif
+> core clock is SPDIF_GCLK, which share same gate bit with IMX6x_CLK_SPDIF clock.
+> SPDIF_GCLK's parent clock is ipg clock.
 
-Not sure what you mean then?, no one else seems to be doing that,
-"xx,xxxxxxx-pmic" is usually used for matching the regulator node,
-not the device itself.
+I'm confused by this. Is there really a new clock signal to be added, or
+this just to workaround some reference counting problems with regmap?
 
->>>> + - reg			: Slave address.
->>>
->>> I2C/SPI?
->>>
->>
->> ACK
->>
->>>> + - interrupt-parent	: The parent interrupt controller.
->>>
->>> Phandled to ...
->>>
->>
->> ACK
->>
->>>> + - interrupts		: The interrupt line the device is connected to.
->>>> + - interrupt-controller	: Marks the device node as an interrupt controller.
->>>> + - #interrupt-cells	: The number of cells to describe an IRQ, this
->>>> +			  should be 2. The first cell is the IRQ number.
->>>> +			  The second cell is the flags, encoded as the trigger
->>>> +			  masks from ../interrupt-controller/interrupts.txt.
->>>
->>> Masks?  What masks?
->>>
->>> Best to make a link to the header where the flags are defined here.
->>>
->>
->> ACK
->>
->>>> +Additional nodes defined in:
->>>> + - Regulators	: ../regulator/tps65086-regulator.txt.
->>>> + - GPIO		: ../gpio/gpio-tps65086.txt.
->>>
->>> I'd suggest removing the full stops from all of the lines above.
->>>
->>> Just treat them as bullet points like we normally do.
->>>
->>
->> ACK
->>
->>>> +Example:
->>>> +
->>>> +	pmic: tps65086@5e {
->>>> +		compatible = "ti,tps65086";
->>>> +		reg = <0x5e>;
->>>> +		interrupt-parent = <&gpio1>;
->>>> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
->>>> +		interrupt-controller;
->>>> +		#interrupt-cells = <2>;
->>>> +
->>>> +		regulators {
->>>> +			compatible = "ti,tps65086-regulator";
->>>> +
->>>> +			buck1 {
->>>> +				regulator-name = "vcc1";
->>>> +				regulator-min-microvolt = <1600000>;
->>>> +				regulator-max-microvolt = <1600000>;
->>>> +				regulator-boot-on;
->>>> +				ti,regulator-decay;
->>>> +				ti,regulator-step-size-25mv;
->>>> +			};
->>>> +		};
->>>> +
->>>> +		gpio4: tps65086_gpio {
->>>> +			compatible = "ti,tps65086-gpio";
->>>> +			gpio-controller;
->>>> +			#gpio-cells = <2>;
->>>> +		};
->>>> +	};
->>>
->>> [...]
->>>
->>
->
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
--- 
-Andrew F. Davis
+Please Cc the linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org mailing list for future clock
+driver patches.
+
+Regards,
+Mike
+
+> ---
+>  drivers/clk/imx/clk-imx6q.c               | 4 +++-
+>  drivers/clk/imx/clk-imx6sl.c              | 4 +++-
+>  drivers/clk/imx/clk-imx6sx.c              | 1 +
+>  include/dt-bindings/clock/imx6qdl-clock.h | 3 ++-
+>  include/dt-bindings/clock/imx6sl-clock.h  | 3 ++-
+>  include/dt-bindings/clock/imx6sx-clock.h  | 3 ++-
+>  6 files changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
+> index e9ba018..c193508 100644
+> --- a/drivers/clk/imx/clk-imx6q.c
+> +++ b/drivers/clk/imx/clk-imx6q.c
+> @@ -119,6 +119,7 @@ static unsigned int share_count_ssi1;
+>  static unsigned int share_count_ssi2;
+>  static unsigned int share_count_ssi3;
+>  static unsigned int share_count_mipi_core_cfg;
+> +static unsigned int share_count_spdif;
+>  
+>  static inline int clk_on_imx6q(void)
+>  {
+> @@ -462,7 +463,8 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+>         clk[IMX6QDL_CLK_SATA]         = imx_clk_gate2("sata",          "ahb",               base + 0x7c, 4);
+>         clk[IMX6QDL_CLK_SDMA]         = imx_clk_gate2("sdma",          "ahb",               base + 0x7c, 6);
+>         clk[IMX6QDL_CLK_SPBA]         = imx_clk_gate2("spba",          "ipg",               base + 0x7c, 12);
+> -       clk[IMX6QDL_CLK_SPDIF]        = imx_clk_gate2("spdif",         "spdif_podf",        base + 0x7c, 14);
+> +       clk[IMX6QDL_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",     "spdif_podf",     base + 0x7c, 14, &share_count_spdif);
+> +       clk[IMX6QDL_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk", "ipg",           base + 0x7c, 14, &share_count_spdif);
+>         clk[IMX6QDL_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",      "ipg",        base + 0x7c, 18, &share_count_ssi1);
+>         clk[IMX6QDL_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",      "ipg",        base + 0x7c, 20, &share_count_ssi2);
+>         clk[IMX6QDL_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",      "ipg",        base + 0x7c, 22, &share_count_ssi3);
+> diff --git a/drivers/clk/imx/clk-imx6sl.c b/drivers/clk/imx/clk-imx6sl.c
+> index 3c3333f..1be6230 100644
+> --- a/drivers/clk/imx/clk-imx6sl.c
+> +++ b/drivers/clk/imx/clk-imx6sl.c
+> @@ -97,6 +97,7 @@ static struct clk_div_table video_div_table[] = {
+>  static unsigned int share_count_ssi1;
+>  static unsigned int share_count_ssi2;
+>  static unsigned int share_count_ssi3;
+> +static unsigned int share_count_spdif;
+>  
+>  static struct clk *clks[IMX6SL_CLK_END];
+>  static struct clk_onecell_data clk_data;
+> @@ -397,7 +398,8 @@ static void __init imx6sl_clocks_init(struct device_node *ccm_node)
+>         clks[IMX6SL_CLK_PWM4]         = imx_clk_gate2("pwm4",         "perclk",            base + 0x78, 22);
+>         clks[IMX6SL_CLK_SDMA]         = imx_clk_gate2("sdma",         "ipg",               base + 0x7c, 6);
+>         clks[IMX6SL_CLK_SPBA]         = imx_clk_gate2("spba",         "ipg",               base + 0x7c, 12);
+> -       clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2("spdif",        "spdif0_podf",       base + 0x7c, 14);
+> +       clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",     "spdif0_podf",   base + 0x7c, 14, &share_count_spdif);
+> +       clks[IMX6SL_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk",  "ipg",         base + 0x7c, 14, &share_count_spdif);
+>         clks[IMX6SL_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",     "ipg",        base + 0x7c, 18, &share_count_ssi1);
+>         clks[IMX6SL_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",     "ipg",        base + 0x7c, 20, &share_count_ssi2);
+>         clks[IMX6SL_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",     "ipg",        base + 0x7c, 22, &share_count_ssi3);
+> diff --git a/drivers/clk/imx/clk-imx6sx.c b/drivers/clk/imx/clk-imx6sx.c
+> index f0ad8bb..fea125e 100644
+> --- a/drivers/clk/imx/clk-imx6sx.c
+> +++ b/drivers/clk/imx/clk-imx6sx.c
+> @@ -460,6 +460,7 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
+>         clks[IMX6SX_CLK_SPBA]         = imx_clk_gate2("spba",          "ipg",               base + 0x7c, 12);
+>         clks[IMX6SX_CLK_AUDIO]        = imx_clk_gate2_shared("audio",  "audio_podf",        base + 0x7c, 14, &share_count_audio);
+>         clks[IMX6SX_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",  "spdif_podf",        base + 0x7c, 14, &share_count_audio);
+> +       clks[IMX6SX_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk",    "ipg",        base + 0x7c, 14, &share_count_audio);
+>         clks[IMX6SX_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",      "ipg",        base + 0x7c, 18, &share_count_ssi1);
+>         clks[IMX6SX_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",      "ipg",        base + 0x7c, 20, &share_count_ssi2);
+>         clks[IMX6SX_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",      "ipg",        base + 0x7c, 22, &share_count_ssi3);
+> diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
+> index 8de173f..77985cc 100644
+> --- a/include/dt-bindings/clock/imx6qdl-clock.h
+> +++ b/include/dt-bindings/clock/imx6qdl-clock.h
+> @@ -254,6 +254,7 @@
+>  #define IMX6QDL_CLK_CAAM_MEM                   241
+>  #define IMX6QDL_CLK_CAAM_ACLK                  242
+>  #define IMX6QDL_CLK_CAAM_IPG                   243
+> -#define IMX6QDL_CLK_END                                244
+> +#define IMX6QDL_CLK_SPDIF_GCLK                 244
+> +#define IMX6QDL_CLK_END                                245
+>  
+>  #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+> diff --git a/include/dt-bindings/clock/imx6sl-clock.h b/include/dt-bindings/clock/imx6sl-clock.h
+> index 9ce4e42..e14573e 100644
+> --- a/include/dt-bindings/clock/imx6sl-clock.h
+> +++ b/include/dt-bindings/clock/imx6sl-clock.h
+> @@ -174,6 +174,7 @@
+>  #define IMX6SL_CLK_SSI1_IPG            161
+>  #define IMX6SL_CLK_SSI2_IPG            162
+>  #define IMX6SL_CLK_SSI3_IPG            163
+> -#define IMX6SL_CLK_END                 164
+> +#define IMX6SL_CLK_SPDIF_GCLK          164
+> +#define IMX6SL_CLK_END                 165
+>  
+>  #endif /* __DT_BINDINGS_CLOCK_IMX6SL_H */
+> diff --git a/include/dt-bindings/clock/imx6sx-clock.h b/include/dt-bindings/clock/imx6sx-clock.h
+> index 9957091..36f0324 100644
+> --- a/include/dt-bindings/clock/imx6sx-clock.h
+> +++ b/include/dt-bindings/clock/imx6sx-clock.h
+> @@ -274,6 +274,7 @@
+>  #define IMX6SX_PLL5_BYPASS             261
+>  #define IMX6SX_PLL6_BYPASS             262
+>  #define IMX6SX_PLL7_BYPASS             263
+> -#define IMX6SX_CLK_CLK_END             264
+> +#define IMX6SX_CLK_SPDIF_GCLK          264
+> +#define IMX6SX_CLK_CLK_END             265
+>  
+>  #endif /* __DT_BINDINGS_CLOCK_IMX6SX_H */
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
