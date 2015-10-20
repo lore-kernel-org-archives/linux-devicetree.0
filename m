@@ -1,57 +1,53 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH] driver core: Disable late probes by default
-Date: Tue, 20 Oct 2015 09:40:48 +0200
-Message-ID: <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
-References: <20151016181129.GA1764@gradator.net> <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
- <20151019151953.GA22662@kroah.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Using CONFIG_ARM_APPENDED_DTB with multiple device trees
+Date: Tue, 20 Oct 2015 10:11:30 +0200
+Message-ID: <15278051.o7VntWNuSM@wuerfel>
+References: <fce90e91fe3c452b80bcd2113f267003@svr-chch-ex1.atlnz.lc> <20151020040445.GA4478@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151019151953.GA22662-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20151020040445.GA4478-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19 October 2015 at 17:19, Greg Kroah-Hartman
-<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
->> To smooth the transition to late probes, make disabled the default for
->> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
->> get fixed.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> Link: https://lkml.kernel.org/g/20151016181129.GA1764-XWGZPxRNpGHk1uMJSBkQmQ@public.gmane.org
->>
->> ---
->>
->> Hi Rob,
->>
->> I'm sending this in case you think it would be best to leave the
->> on-demand probe series in -next for now but have late probes disabled to
->> avoid hassle to some people.
->
-> I would like Rob to just drop this series please, I don't agree with it
-> at all at the moment.
+On Tuesday 20 October 2015 06:04:45 Andrew Lunn wrote:
+> On Tue, Oct 20, 2015 at 03:27:15AM +0000, Chris Packham wrote:
+> > Hi,
+> > 
+> > We currently have several boards based around the 88f6281 (kirkwood) ARM 
+> > CPU.
+> > 
+> > The boards all share a kernel image (currently 3.16 based but we're in 
+> > the process of moving to 4.3). We use the machine id (and some other 
+> > eeprom type information) to distinguish the boards.
+> > 
+> > We'd like to move to a device tree based model but we're restricted in 
+> > that updating the bootloaders to a DT-aware u-boot is impractical. 
+> > CONFIG_ARM_APPENDED_DTB allows us to append a device tree but we still 
+> > need to account for the differences between the boards.
+> 
+> Hi Chris
+> 
+> You might want to look at what Debian does. When installing the
+> kernel, it appends the correct DT blob depending on what the current
+> running kernel is, to the new kernel image before writing it to the
+> boot medium.
+> 
+> Another option is the pxa-impedance-matcher.
+> 
 
-Hi Greg,
+Right, pxa-impedance-matcher is indeed meant to solve this. We intentionally
+do not support CONFIG_ARM_APPENDED_DTB with multiple DT files so we get
+people to eventually update their boot loaders to a version that
+understands DT.
 
-is it the case that you are satisfied with deferred probes as a way of
-ordering device probing and that I should look at how to solve my
-problem by improving it?
+For modern systems, the part of the boot loader that knows about the
+machine ID also knows about the DT.
 
-Thanks,
-
-Tomeu
-
-> thanks,
->
-> greg k-h
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
