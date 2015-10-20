@@ -1,39 +1,176 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2 4/4] clk: berlin: bg2: remove CLK_IGNORE_UNUSED flag for sdio clk
-Date: Tue, 20 Oct 2015 19:16:47 +0800
-Message-ID: <1445339807-2351-5-git-send-email-jszhang@marvell.com>
-References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
+ TPS65086 PMIC
+Date: Tue, 20 Oct 2015 12:31:28 +0100
+Message-ID: <20151020113128.GN31804@x1>
+References: <1445014753-15450-1-git-send-email-afd@ti.com>
+ <1445014753-15450-2-git-send-email-afd@ti.com>
+ <20151019091311.GH31804@x1>
+ <5625095F.5080204@ti.com>
+ <20151019152100.GK31804@x1>
+ <56250AF9.3030907@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
+Content-Disposition: inline
+In-Reply-To: <56250AF9.3030907@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The clocks' properties have been already properly set, so there's no
-need to set this flag for sdio0 and sdio1 clk any more.
+On Mon, 19 Oct 2015, Andrew F. Davis wrote:
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
- drivers/clk/berlin/bg2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On 10/19/2015 10:21 AM, Lee Jones wrote:
+> >On Mon, 19 Oct 2015, Andrew F. Davis wrote:
+> >
+> >>On 10/19/2015 04:13 AM, Lee Jones wrote:
+> >>>On Fri, 16 Oct 2015, Andrew F. Davis wrote:
+> >>>
+> >>>>The TPS65086 PMIC contains several regulators and a GPO controlle=
+r.
+> >>>>Add bindings for the TPS65086 PMIC.
+> >>>>
+> >>>>Signed-off-by: Andrew F. Davis <afd@ti.com>
+> >>>>---
+> >>>>  .../devicetree/bindings/gpio/gpio-tps65086.txt     | 17 +++++++=
++
+> >>>>  Documentation/devicetree/bindings/mfd/tps65086.txt | 46 +++++++=
++++++++++++++++
+> >>>>  .../bindings/regulator/tps65086-regulator.txt      | 36 +++++++=
+++++++++++
+> >>>
+> >>>Please split these up into separate patches.
+> >>>
+> >>>There is no functional reason to bundle them up.
+> >>>
+> >>
+> >>ACK
+> >>
+> >>>>  3 files changed, 99 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-=
+tps65086.txt
+> >>>>  create mode 100644 Documentation/devicetree/bindings/mfd/tps650=
+86.txt
+> >>>>  create mode 100644 Documentation/devicetree/bindings/regulator/=
+tps65086-regulator.txt
+> >>>
+> >>>[...]
+> >>>
+> >>>>diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b=
+/Documentation/devicetree/bindings/mfd/tps65086.txt
+> >>>>new file mode 100644
+> >>>>index 0000000..4b6aeb4
+> >>>>--- /dev/null
+> >>>>+++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
+> >>>>@@ -0,0 +1,46 @@
+> >>>>+* TPS65086 Power Management Integrated Circuit bindings
+> >>>>+
+> >>>>+Required properties:
+> >>>>+ - compatible		: Should be "ti,tps65086".
+> >>>
+> >>>Any indication that it's a PMIC?
+> >>>
+> >>
+> >>In the compatible string?
+> >
+> >Ya.
+> >
+>=20
+> Not sure what you mean then?, no one else seems to be doing that,
+> "xx,xxxxxxx-pmic" is usually used for matching the regulator node,
+> not the device itself.
 
-diff --git a/drivers/clk/berlin/bg2.c b/drivers/clk/berlin/bg2.c
-index 73153fc..23e0e3b 100644
---- a/drivers/clk/berlin/bg2.c
-+++ b/drivers/clk/berlin/bg2.c
-@@ -490,8 +490,8 @@ static const struct berlin2_gate_data bg2_gates[] __initconst = {
- 	{ "usb0",	"perif",	11 },
- 	{ "usb1",	"perif",	12 },
- 	{ "pbridge",	"perif",	13, CLK_IGNORE_UNUSED },
--	{ "sdio0",	"perif",	14, CLK_IGNORE_UNUSED },
--	{ "sdio1",	"perif",	15, CLK_IGNORE_UNUSED },
-+	{ "sdio0",	"perif",	14 },
-+	{ "sdio1",	"perif",	15 },
- 	{ "nfc",	"perif",	17 },
- 	{ "smemc",	"perif",	19 },
- 	{ "audiohd",	"audiohd_pll",	26 },
--- 
-2.6.1
+Either the driver is MFD is the PMIC or it's not.
+
+If it is, the compatible should reflect that, if isn't not then the
+description in the header comment and the one above is not correct.
+
+IMO, 'pmic' should not be used in the regulator compatible strings, as
+it's a general description of the overall device.  The regulators are
+just a component of that device.
+
+> >>>>+ - reg			: Slave address.
+> >>>
+> >>>I2C/SPI?
+> >>>
+> >>
+> >>ACK
+> >>
+> >>>>+ - interrupt-parent	: The parent interrupt controller.
+> >>>
+> >>>Phandled to ...
+> >>>
+> >>
+> >>ACK
+> >>
+> >>>>+ - interrupts		: The interrupt line the device is connected to.
+> >>>>+ - interrupt-controller	: Marks the device node as an interrupt =
+controller.
+> >>>>+ - #interrupt-cells	: The number of cells to describe an IRQ, th=
+is
+> >>>>+			  should be 2. The first cell is the IRQ number.
+> >>>>+			  The second cell is the flags, encoded as the trigger
+> >>>>+			  masks from ../interrupt-controller/interrupts.txt.
+> >>>
+> >>>Masks?  What masks?
+> >>>
+> >>>Best to make a link to the header where the flags are defined here=
+=2E
+> >>>
+> >>
+> >>ACK
+> >>
+> >>>>+Additional nodes defined in:
+> >>>>+ - Regulators	: ../regulator/tps65086-regulator.txt.
+> >>>>+ - GPIO		: ../gpio/gpio-tps65086.txt.
+> >>>
+> >>>I'd suggest removing the full stops from all of the lines above.
+> >>>
+> >>>Just treat them as bullet points like we normally do.
+> >>>
+> >>
+> >>ACK
+> >>
+> >>>>+Example:
+> >>>>+
+> >>>>+	pmic: tps65086@5e {
+> >>>>+		compatible =3D "ti,tps65086";
+> >>>>+		reg =3D <0x5e>;
+> >>>>+		interrupt-parent =3D <&gpio1>;
+> >>>>+		interrupts =3D <28 IRQ_TYPE_LEVEL_LOW>;
+> >>>>+		interrupt-controller;
+> >>>>+		#interrupt-cells =3D <2>;
+> >>>>+
+> >>>>+		regulators {
+> >>>>+			compatible =3D "ti,tps65086-regulator";
+> >>>>+
+> >>>>+			buck1 {
+> >>>>+				regulator-name =3D "vcc1";
+> >>>>+				regulator-min-microvolt =3D <1600000>;
+> >>>>+				regulator-max-microvolt =3D <1600000>;
+> >>>>+				regulator-boot-on;
+> >>>>+				ti,regulator-decay;
+> >>>>+				ti,regulator-step-size-25mv;
+> >>>>+			};
+> >>>>+		};
+> >>>>+
+> >>>>+		gpio4: tps65086_gpio {
+> >>>>+			compatible =3D "ti,tps65086-gpio";
+> >>>>+			gpio-controller;
+> >>>>+			#gpio-cells =3D <2>;
+> >>>>+		};
+> >>>>+	};
+> >>>
+> >>>[...]
+> >>>
+> >>
+> >
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
