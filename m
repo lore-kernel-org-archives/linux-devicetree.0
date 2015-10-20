@@ -1,57 +1,109 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] dts: keystone: Use new "ti,keystone-i2c" compatible
-Date: Tue, 20 Oct 2015 17:06:14 +0200
-Message-ID: <20151020150614.GG5379@katana>
-References: <55F68E36.2030609@nokia.com>
+From: "Anton.Glukhov" <anton.a.glukhov@gmail.com>
+Subject: Re: [PATCH] net, can, ti_hecc: add DT support for the ti,hecc
+ controller
+Date: Tue, 20 Oct 2015 18:09:59 +0300
+Message-ID: <56265947.8050008@gmail.com>
+References: <1445236757-29019-1-git-send-email-hs@denx.de>
+ <56249491.4020009@pengutronix.de> <56249B58.6090100@denx.de>
+ <56249C3F.3080000@pengutronix.de> <56265661.7000509@gmail.com>
+ <56265852.6000601@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rV8arf8D5Dod9UkK"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F68E36.2030609@nokia.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56265852.6000601@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, hs@denx.de
+Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Anant Gole <anantgole@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Wolfgang Grandegger <wg@grandegger.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---rV8arf8D5Dod9UkK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 14, 2015 at 11:07:02AM +0200, Alexander Sverdlin wrote:
-> Now as "i2c-davinci" driver has special handling for Keystone it's time t=
-o switch
-> the device tree to use new "compatible" property. Old one is left for bac=
-kwards-
-> compatibility.
->=20
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+On 20.10.2015 18:05, Marc Kleine-Budde wrote:
+> On 10/20/2015 04:57 PM, Anton.Glukhov wrote:
+>> Hello Marc, Heiko!
+>> I'm sorry for the delay!
+>>
+>> On 19.10.2015 10:31, Marc Kleine-Budde wrote:
+>>> On 10/19/2015 09:27 AM, Heiko Schocher wrote:
+>>>>>>   .../devicetree/bindings/net/can/ti_hecc-can.txt    | 20 ++++++++++
+>>>>>>   arch/arm/boot/dts/am3517.dtsi                      | 13 +++++++
+>>>>>>   drivers/net/can/ti_hecc.c                          | 45 +++++++++++++++++++++-
+>>>>>>   3 files changed, 76 insertions(+), 2 deletions(-)
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..09fab59
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
+>>>>>> @@ -0,0 +1,20 @@
+>>>>>> +* TI HECC CAN *
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +  - compatible: Should be "ti,hecc"
+>>>>>
+>>>>> We usually put the name of the first SoC this IP core appears in to the
+>>>>> compatible.
+>>>>
+>>>> Ok, so "ti,am335xx-hecc" would be OK?
+>>>> @Anton: you used "am35x" ... it should be "am35xx"
+>>>
+>>> The "xx" is not okay. Give precisely the first SoC Version this IP core
+>>> was implemented in.
+>>>
+>>
+>> It's OMAP3 based arch, but HECC is implemented only in AM3505 and AM3517 SoCs.
+>> So, I'm confused about what's "name" should I use.
+> 
+> Which SoC was available first? Pick that.
+> 
 
-Shall I take this one or shall it go via the davinci tree?
+What do you mean available? I know only that HECC appear in AM3505 and AM3517. Nowhere else.
 
+>>>>>> +  - reg: Should contain CAN controller registers location and length
+>>>>>> +  - interrupts: Should contain IRQ line for the CAN controller
+>>>>>
+>>>>> I'm missing the description of the ti,* properties. I think they are
+>>>>> required, too. Although the code doesn't enforce it.
+>>>>
+>>>> Ok.
+>>>>
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +
+>>>>>> +	can0: hecc@5c050000 {
+>>>>>> +		compatible = "ti,hecc";
+>>>>>> +		reg = <0x5c050000 0x4000>;
+>>>>>> +		interrupts = <24>;
+>>>>>> +		ti,hecc_scc_offset = <0>;
+>>>>>> +		ti,hecc_scc_ram_offset = <0x3000>;
+>>>>>> +		ti,hecc_ram_offset = <0x3000>;
+>>>>>> +		ti,hecc_mbx_offset = <0x2000>;
+>>>>>> +		ti,hecc_int_line = <0>;
+>>>>>> +		ti,hecc_version = <1>;
+>>>>>
+>>>>> Versioning in the OF world is done via the compatible. Are the offsets a
+>>>>> per SoC parameter? I'm not sure if it's better to put
+>>>>> the offsets into the driver.
+>>>>
+>>>> I am unsure here too..
+>>>
+>>> The devicetree people will hopefully help here.
+>>>
+>>
+>> I added offsets here just make it consistent with platform data in machine file.
+>> Actually it seems that it's not necessary to put offsets in DT file and I can move it to driver.
+>> But again, it was added to keep consistency.
+> 
+> The DT is supposed to be OS independent, copying from platform data to
+> DT is sometimes not the best way to go. Make yourself heard on the
+> devicetree mailinglist and figure out what's the best way to go here.
+> 
+> Are the offsets for the AM3505 and AM3517 identical?
 
---rV8arf8D5Dod9UkK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Yes, absolutely, and there is no HECC module in another SoCs. Ok, anyway I'll try to figure out what should we use here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWJlhmAAoJEBQN5MwUoCm2kb4QAJHpPRi1KTJr7XjNNOhdN5dF
-DazesAIt3ApGzkoGsB1K22osyJnq/gSsmuBJTk397SAB++Lb6CGm9GArNSlf3iMk
-MPJcGTBj0DAC0MLj/bQr11xX7Cr+91mDB+G/t/3VaXMElBLz/ErTWw8bmD2FwcmO
-C9o5rhADptB6QQXvv7csYAmNSdkS/O/5WGMzKBXuW7H+nUy+xGlCgqwgi5eFC678
-Z5NS47KBWPQ04ytZsq13fN8cPNw6creT///8XBfAQ7anhBL5OdUZ0x1wDR9CV8Sj
-+inBm0Xk0bisA4lRFaYCsotRU7pTAl4sFa0Tu43L91ZC8SnrRquPeGxXZ05pvNDJ
-xY7+EJtN7aXR1SPNiTBPDO8DEH6T5MzVmNYlxZovZ0rsOsF1dn8pt5B0qoar3hXa
-hnfkNYxk2mmyTU0PXZkJ4uI0BVfWXsRs0Ph2nFju2R4scXov0Zdup0vs9tAKdfZJ
-tx/YnJeOL4LAnWqNvzoWs5eLzllQ7uhpcr+AiZCDvTawE8nbobG5aaA6UiMu4cOI
-ib/JCA/4Qp4EylwFOfRIOp7MAmMI5Ia/ORBOxgHQJ8Ah5Q6lnpSIri4buEAVsD6G
-xDbtXCwcxexKtLQewC/ZvHkj9MopREJkBpSCv5aZT1S3Pues2s6w2kIRtKnQowrC
-wwfsxLIQxgXSx8fn14GX
-=Uvjv
------END PGP SIGNATURE-----
-
---rV8arf8D5Dod9UkK--
+> 
+> Marc
+> 
