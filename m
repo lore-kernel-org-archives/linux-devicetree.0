@@ -1,69 +1,189 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH] net, can, ti_hecc: add DT support for the ti,hecc
- controller
-Date: Tue, 20 Oct 2015 17:20:36 +0200
-Message-ID: <56265BC4.8080403@pengutronix.de>
-References: <1445236757-29019-1-git-send-email-hs@denx.de>
- <56249491.4020009@pengutronix.de> <56249B58.6090100@denx.de>
- <56249C3F.3080000@pengutronix.de> <56265661.7000509@gmail.com>
- <56265852.6000601@pengutronix.de> <56265947.8050008@gmail.com>
- <56265B55.2070203@pengutronix.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/4] Documentation, dt, arm64/arm: dt bindings for
+ numa.
+Date: Tue, 20 Oct 2015 16:35:26 +0100
+Message-ID: <20151020153526.GC3349@leverpostej>
+References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1445337931-11344-3-git-send-email-gkulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="U4N3LwP0TtCQv4oPeFGde3Nt3bNSuGJ3i"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <56265B55.2070203@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: "Anton.Glukhov" <anton.a.glukhov@gmail.com>, hs@denx.de
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Anant Gole <anantgole@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Wolfgang Grandegger <wg@grandegger.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445337931-11344-3-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---U4N3LwP0TtCQv4oPeFGde3Nt3bNSuGJ3i
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 20, 2015 at 04:15:29PM +0530, Ganapatrao Kulkarni wrote:
+> DT bindings for numa mapping of memory, cores and IOs.
+> 
+> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/numa.txt | 275 +++++++++++++++++++++++++
+>  1 file changed, 275 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+> new file mode 100644
+> index 0000000..f3bc8e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/numa.txt
+> @@ -0,0 +1,275 @@
+> +==============================================================================
+> +NUMA binding description.
+> +==============================================================================
+> +
+> +==============================================================================
+> +1 - Introduction
+> +==============================================================================
+> +
+> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
+> +collections of hardware resources including processors, memory, and I/O buses,
+> +that comprise what is commonly known as a NUMA node.
+> +Processor accesses to memory within the local NUMA node is generally faster
+> +than processor accesses to memory outside of the local NUMA node.
+> +DT defines interfaces that allow the platform to convey NUMA node
+> +topology information to OS.
+> +
+> +==============================================================================
+> +2 - proximity
+> +==============================================================================
+> +The proximity device node property describes proximity domains within a
+> +machine. This property can be used in device nodes like cpu, memory, bus and
+> +devices to map to respective numa nodes.
+> +
+> +proximity property is a 32-bit integer which defines numa node id to which
+> +this device node has numa proximity association.
+> +
+> +Example:
+> +	/* numa node 0 */
+> +	proximity = <0>;
+> +
+> +	/* numa node 1 */
+> +	proximity = <1>;
 
-On 10/20/2015 05:18 PM, Marc Kleine-Budde wrote:
-> On 10/20/2015 05:09 PM, Anton.Glukhov wrote:
->>>> It's OMAP3 based arch, but HECC is implemented only in AM3505 and AM=
-3517 SoCs.
->>>> So, I'm confused about what's "name" should I use.
->>>
->>> Which SoC was available first? Pick that.
->=20
->> What do you mean available? I know only that HECC appear in AM3505 and=
- AM3517. Nowhere else.
->=20
-> Available on the market. Which one was produced first or was soldered
-> first to some PCB?
 
-A colleague just looked it up, a AM3517 is a AM3505 with 3d graphics. So
-pick AM3505.
+It would probably be better to call this something like "numa-domain-id"
+or "numa-node-id". The "proximity" is a relationship (that's actually
+described in the distance map), and it makes it obvious that this is
+NUMA related.
 
-Marc
+> +
+> +==============================================================================
+> +3 - distance-map
+> +==============================================================================
+> +
+> +The device tree node distance-map describes the relative
+> +distance (memory latency) between all numa nodes.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Rather than making this another magic name, we should give it a
+compatible string. That will also help if/when updating this in future.
 
+> +
+> +- distance-matrix
+> +  This property defines a matrix to describe the relative distances
+> +  between all numa nodes.
+> +  It is represented as a list of node pairs and their relative distance.
+> +
+> +  Note:
+> +	1. If there is no distance-map, the system should setup:
+> +
+> +		      local/local:  10
+> +		      local/remote: 20
+> +	for all node distances.
 
---U4N3LwP0TtCQv4oPeFGde3Nt3bNSuGJ3i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I think that either you have both the IDs and a distance map, or we
+assume !NUMA (as we currently do). If your system is so trivial that the
+above defaults are good enough, it's trivial to write them explicitly.
 
------BEGIN PGP SIGNATURE-----
+So I think this should go.
 
-iQEcBAEBCgAGBQJWJlvEAAoJEP5prqPJtc/H1pUH+wU1Ei8QoFxN8lEQ6sFEyjLW
-ZSJ3Dhpf8jkSwhi8LkLBo2Sv9yI4/22LNkuiKI8jf7qi3xD6pMPinooIHxaswD1O
-/Aw+yWRXq5pjHzSKeDTgIOSWQr4AFp3RvHEMpYap1A2BqcdUsxi/c+0E41VDZOhA
-ccDTuXezFcXgKFZhi3dFhfDAIuQxLQ3RuDB7UFFtyY/zMB9nbV49p2JiIaoOJuwX
-po8qUu1eJyA2qHdtmw0c1xalti+HqtYkcQGtk2PclBE/wiyoWWuL8zv9lvhXZnG+
-kzUXOmezsyBmT9bqeDtb591r0/j4n0R4OGfFtkAGK8OnQTDe+AXzwnumEioYwTs=
-=fH6R
------END PGP SIGNATURE-----
+> +
+> +	2. If both directions between 2 nodes have the same distance, only
+> +	       one entry is required.
 
---U4N3LwP0TtCQv4oPeFGde3Nt3bNSuGJ3i--
+So there's a direction implied by each entry? That should be stated
+explicitly.
+
+That said, I'm having some difficulty comprehending an asymmetric
+distance, and I worry that it's ill-defined.
+
+What does the direction apply to specifically?
+
+How is it to be interpreted?
+
+Assuming I have two domains A and B, and I have:
+
+	distance-matrix = <A B 1>, <B A 255>;
+
+What does that mean for those domains? What's fast and what is slow?
+
+> +	3. distance-matrix shold have entries in ascending order of nodes.
+
+s/ascending/lexicographical ascending/, and s/nodes/domain ids/, just to
+be explicit.
+
+> +	4. Device node distance-map must reside in the root node.
+
+Presumably there should be no duplicate entries? We should state that
+explicitly.
+
+> +
+> +Example:
+> +	4 nodes connected in mesh/ring topology as below,
+> +
+> +		0_______20______1
+> +		|		|
+> +		|		|
+> +	     20	|		|20
+> +		|		|
+> +		|		|
+> +		|_______________|
+> +		3	20	2
+> +
+> +	if relative distance for each hop is 20,
+> +	then inter node distance would be for this topology will be,
+> +	      0 -> 1 = 20
+> +	      1 -> 2 = 20
+> +	      2 -> 3 = 20
+> +	      3 -> 0 = 20
+> +	      0 -> 2 = 40
+> +	      1 -> 3 = 40
+> +
+> +     and dt presentation for this distance matrix is,
+> +
+> +		distance-map {
+> +			 distance-matrix = <0 0  10>,
+> +					   <0 1  20>,
+> +					   <0 2  40>,
+> +					   <0 3  20>,
+> +					   <1 0  20>,
+> +					   <1 1  10>,
+> +					   <1 2  20>,
+> +					   <1 3  40>,
+> +					   <2 0  40>,
+> +					   <2 1  20>,
+> +					   <2 2  10>,
+> +					   <2 3  20>,
+> +					   <3 0  20>,
+> +					   <3 1  40>,
+> +					   <3 2  20>,
+> +					   <3 3  10>;
+> +		};
+> +
+> +Note:
+> +	 1. The entries like <0 0> <1 1>  <2 2> <3 3>
+> +	    can be optional and system can put default value(local distance, i.e 10).
+
+As mentioned above, I think this should go.
+
+Other than the comments above, this is looking promising!
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
