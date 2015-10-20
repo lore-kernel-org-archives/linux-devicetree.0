@@ -1,47 +1,63 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCHv2 2/3] ARM: zynq: dt: Updated devicetree for Zynq 7000
- platform.
-Date: Tue, 20 Oct 2015 13:15:11 +0200
-Message-ID: <5626223F.6040008@xilinx.com>
-References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com>
- <1445035350-3569-3-git-send-email-moritz.fischer@ettus.com>
- <20151018175324.GH12756@jcartwri.amer.corp.natinst.com>
- <5624F985.8050905@xilinx.com>
- <20151019182416.GL12756@jcartwri.amer.corp.natinst.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 01/10] clk/samsung: exynos5433: add definitions of HDMI-PHY
+ output clocks
+Date: Tue, 20 Oct 2015 13:17:35 +0200
+Message-ID: <562622CF.1070906@samsung.com>
+References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
+ <1445332961-25419-2-git-send-email-a.hajda@samsung.com>
+ <20151020103416.20687.40409@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151019182416.GL12756@jcartwri.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, linux@arm.linux.org.uk, atull@opensource.altera.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <20151020103416.20687.40409@quantum>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2015 08:24 PM, Josh Cartwright wrote:
-> On Mon, Oct 19, 2015 at 04:09:09PM +0200, Michal Simek wrote:
->> On 10/18/2015 07:53 PM, Josh Cartwright wrote:
->>> On Fri, Oct 16, 2015 at 03:42:29PM -0700, Moritz Fischer wrote:
-> [..]
->>>> @@ -294,6 +294,11 @@
->>>>  		devcfg: devcfg@f8007000 {
->>>>  			compatible = "xlnx,zynq-devcfg-1.0";
->>>>  			reg = <0xf8007000 0x100>;
->>>> +			interrupt-parent = <&intc>;
->>>
->>> You shouldn't need interrupt-parent here.  In fact, I suspect it can be
->>> removed from all sibling nodes as well.
->>
->> Correct. But I tend to do it vice-versa. To remove it from amba node and
->> keep it in every IP here. The reason is simple to let everybody know
->> that setting up right interrupt controller is something what they have
->> to care. If you have more interrupt controllers in the system it can be
->> messy.
-> 
-> If you like that, then you'd like the interrupt-extended properly even
-> better (I think).
+On 20/10/15 12:34, Michael Turquette wrote:
+>> diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+>> > index 5bd80d5..4f0d566 100644
+>> > --- a/include/dt-bindings/clock/exynos5433.h
+>> > +++ b/include/dt-bindings/clock/exynos5433.h
+>> > @@ -765,7 +765,10 @@
+>> >  #define CLK_SCLK_RGB_VCLK                              109
+>> >  #define CLK_SCLK_RGB_TV_VCLK                           110
+>> >  
+>> > -#define DISP_NR_CLK                                    111
+>> > +#define CLK_PHYCLK_HDMIPHY_PIXEL_CLKO_PHY              111
+>> > +#define CLK_PHYCLK_HDMIPHY_TMDS_CLKO_PHY               112
+>> > +
+>> > +#define DISP_NR_CLK                                    113
+>
+> Why break compatibility with older DTBs?
 
-yep. That works for me too.
+I used to be resistant to changing those _NR_CLK defines
+in the past but then realized they are not part of the DT ABI.
+These defines are used only in drivers and affect only size
+of the provider's allocated clock array. The confusion may be
+caused by the fact that the whole header is shared by the kernel
+source and dts.
 
-Thanks,
-Michal
+$ git grep -l _NR_CLK arch/arm/boot/dts drivers/clk/samsung/
+drivers/clk/samsung/clk-exynos-clkout.c
+drivers/clk/samsung/clk-exynos3250.c
+drivers/clk/samsung/clk-exynos4.c
+drivers/clk/samsung/clk-exynos4415.c
+drivers/clk/samsung/clk-exynos5250.c
+drivers/clk/samsung/clk-exynos5260.c
+drivers/clk/samsung/clk-exynos5410.c
+drivers/clk/samsung/clk-exynos5420.c
+drivers/clk/samsung/clk-exynos5433.c
+drivers/clk/samsung/clk-exynos5440.c
+drivers/clk/samsung/clk-exynos7.c
+
+There is no *_NR_CLK in any dts file.
+New kernel will work will older DTB, the driver will just
+register more clocks, which will not be dereferenced anywhere
+in older dtb.
+
+-- 
+Regards,
+Sylwester
