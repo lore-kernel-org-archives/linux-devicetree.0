@@ -1,48 +1,64 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
- pcie
-Date: Tue, 20 Oct 2015 11:11:17 -0400
-Message-ID: <56265995.5000800@ti.com>
-References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <230CBA6E4B6B6B418E8730AC28E6FC7E04229363@DFLE11.ent.ti.com> <56253B91.5040807@ti.com> <4661946.mPHVFLWuan@wuerfel>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH] net, can, ti_hecc: add DT support for the ti,hecc
+ controller
+Date: Tue, 20 Oct 2015 17:18:45 +0200
+Message-ID: <56265B55.2070203@pengutronix.de>
+References: <1445236757-29019-1-git-send-email-hs@denx.de>
+ <56249491.4020009@pengutronix.de> <56249B58.6090100@denx.de>
+ <56249C3F.3080000@pengutronix.de> <56265661.7000509@gmail.com>
+ <56265852.6000601@pengutronix.de> <56265947.8050008@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4661946.mPHVFLWuan@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Kwok, WingMan" <w-kwok2@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="0p5BFP2G1KLliXVdbUEA1pKkEuc5aIFoO"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <56265947.8050008@gmail.com>
+Sender: linux-can-owner@vger.kernel.org
+To: "Anton.Glukhov" <anton.a.glukhov@gmail.com>, hs@denx.de
+Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Anant Gole <anantgole@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Wolfgang Grandegger <wg@grandegger.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2015 04:24 AM, Arnd Bergmann wrote:
-> On Monday 19 October 2015 14:50:57 Murali Karicheri wrote:
->> Arnd, by your statement 'I don't see any code that does this' do you
->> expect a piece of code that embed the license in the binary image? If
->> so, that seems weired to me.
->>
->> Many of the drivers including this patch has the following statement in
->> the license that is additional company specific license such as BSD that
->> is applicable.
->>
->> ==== Cut and pasted from drivers/crypto/fcrypt.c =======================
->>    * 2. Redistributions in binary form must reproduce the above copyright
->>    *    notice, this list of conditions and the following disclaimer in the
->>    *    documentation and/or other materials provided with the distribution.
->> =========================================================================
->> I read this as if the source is compiled and distributed as a binary
->> either a kernel module ko file or as part of the kernel binary, this
->> term must apply. Usually this is part of documentation that goes with
->> the product AFAIK.
->
-> Sorry, my fault. This is indeed the standard BSD license, and
-> I misread this as having to produce the copyright statement
-> from the binary itself. Please ignore whatever I said on the
-> subject.
->
-> 	Arnd
->
-Thanks Arnd for the clarification.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--0p5BFP2G1KLliXVdbUEA1pKkEuc5aIFoO
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+On 10/20/2015 05:09 PM, Anton.Glukhov wrote:
+>>> It's OMAP3 based arch, but HECC is implemented only in AM3505 and AM3=
+517 SoCs.
+>>> So, I'm confused about what's "name" should I use.
+>>
+>> Which SoC was available first? Pick that.
+
+> What do you mean available? I know only that HECC appear in AM3505 and =
+AM3517. Nowhere else.
+
+Available on the market. Which one was produced first or was soldered
+first to some PCB?
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--0p5BFP2G1KLliXVdbUEA1pKkEuc5aIFoO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJWJltVAAoJEP5prqPJtc/H7DcH/1zE/JpjelxrgBicavhI+dGS
+8itX0v3ckRHDjSRvTYxtWIbvIKFksJe9ubg/6zMiM2qqD96ovYL87kQVrXroHOGP
+5Rr2qGY60dDuXSmtt7yzLpEBpcKBEgFzqNOCCaOVgaSlGzng8As5rlrsfQrmWxXO
+1d01m5kenxlIPEurephH8hhrGWT83qOq9yarn5ZF3PqMhT7UOezB5M/+o+XOxNep
+YgI8oYnw/htSEQQA86AVGOG141NVSfvKeTbzncFaAvWOyjebgF/GaXpf2M/6hrMT
++3fk88QWpBJ13UsPyNnME5Geo0yMVBE11iEmP3VL/b/sRMJAMQnb7aertAx/JHY=
+=p839
+-----END PGP SIGNATURE-----
+
+--0p5BFP2G1KLliXVdbUEA1pKkEuc5aIFoO--
