@@ -1,42 +1,39 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/4] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio clk
-Date: Tue, 20 Oct 2015 19:16:46 +0800
-Message-ID: <1445339807-2351-4-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v2 4/4] clk: berlin: bg2: remove CLK_IGNORE_UNUSED flag for sdio clk
+Date: Tue, 20 Oct 2015 19:16:47 +0800
+Message-ID: <1445339807-2351-5-git-send-email-jszhang@marvell.com>
 References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445339807-2351-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Since we have added the necessary two clks' properties in dts, we can
-remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
+The clocks' properties have been already properly set, so there's no
+need to set this flag for sdio0 and sdio1 clk any more.
 
-Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- drivers/clk/berlin/bg2q.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/berlin/bg2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
-index 221f40c..243f421 100644
---- a/drivers/clk/berlin/bg2q.c
-+++ b/drivers/clk/berlin/bg2q.c
-@@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
- 	{ "usb2",	"perif",	13 },
- 	{ "usb3",	"perif",	14 },
- 	{ "pbridge",	"perif",	15, CLK_IGNORE_UNUSED },
--	{ "sdio",	"perif",	16, CLK_IGNORE_UNUSED },
-+	{ "sdio",	"perif",	16 },
- 	{ "nfc",	"perif",	18 },
- 	{ "pcie",	"perif",	22 },
- };
+diff --git a/drivers/clk/berlin/bg2.c b/drivers/clk/berlin/bg2.c
+index 73153fc..23e0e3b 100644
+--- a/drivers/clk/berlin/bg2.c
++++ b/drivers/clk/berlin/bg2.c
+@@ -490,8 +490,8 @@ static const struct berlin2_gate_data bg2_gates[] __initconst = {
+ 	{ "usb0",	"perif",	11 },
+ 	{ "usb1",	"perif",	12 },
+ 	{ "pbridge",	"perif",	13, CLK_IGNORE_UNUSED },
+-	{ "sdio0",	"perif",	14, CLK_IGNORE_UNUSED },
+-	{ "sdio1",	"perif",	15, CLK_IGNORE_UNUSED },
++	{ "sdio0",	"perif",	14 },
++	{ "sdio1",	"perif",	15 },
+ 	{ "nfc",	"perif",	17 },
+ 	{ "smemc",	"perif",	19 },
+ 	{ "audiohd",	"audiohd_pll",	26 },
 -- 
 2.6.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
