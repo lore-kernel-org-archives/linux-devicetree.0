@@ -1,43 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 3/3] Add dts node for smmu on hi6220 SoC
-Date: Tue, 20 Oct 2015 11:00:06 +0200
-Message-ID: <39316856.jTQkIxu0yn@wuerfel>
-References: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com> <1445330724-129401-3-git-send-email-puck.chen@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445330724-129401-3-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>
-Cc: yudongbin@hisilicon.com, saberlily.xia@hisilicon.com, suzhuangluan@hisilicon.com, kong.kongxinwei@hisilicon.com, xuyiping@hisilicon.com, z.liuxinliang@hisilicon.com, puck.chen@aliyun.com, weidong2@hisilicon.com, w.f@huawei.com, joro@8bytes.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, qijiwen@hisilicon.com, peter.panshilin@hisilicon.com, dan.zhao@hisilicon.com, linuxarm@huawei.com
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: [PATCH 1/1] Input: ads7846: Add description how to use internal reference (ADS7846)
+Date: Tue, 20 Oct 2015 11:05:00 +0200
+Message-ID: <1445331900-4978-1-git-send-email-alexander.stein@systec-electronic.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 October 2015 16:45:24 Chen Feng wrote:
-> +
-> +               smmu@f4210000 {
+By simply setting vref-mv to 0 the internal reference will be used.
+Document that!
 
-I think the canonical name for an IOMMU device is 'iommu', not 'smmu'.
+Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+---
+ Documentation/devicetree/bindings/input/ads7846.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> +                       compatible = "hisilicon,hi6220-smmu";
-> +                       reg = <0x0 0xf4210000 0x0 0x1000>;
-> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&sys_ctrl HI6220_MMU_CLK>,
-> +                                <&media_ctrl HI6220_MED_MMU>,
-> +                                <&sys_ctrl HI6220_MEDIA_PLL_SRC>;
-> +                       clock-names = "smmu_clk",
-> +                                     "media_sc_clk",
-> +                                     "smmu_peri_clk";
+diff --git a/Documentation/devicetree/bindings/input/ads7846.txt b/Documentation/devicetree/bindings/input/ads7846.txt
+index df8b127..0414b4d 100644
+--- a/Documentation/devicetree/bindings/input/ads7846.txt
++++ b/Documentation/devicetree/bindings/input/ads7846.txt
+@@ -29,6 +29,8 @@ Optional properties:
+ 	ti,vref-delay-usecs		vref supply delay in usecs, 0 for
+ 					external vref (u16).
+ 	ti,vref-mv			The VREF voltage, in millivolts (u16).
++					Set to 0 to use internal refernce
++					(ADS7846).
+ 	ti,keep-vref-on			set to keep vref on for differential
+ 					measurements as well
+ 	ti,swap-xy			swap x and y axis
+-- 
+2.4.10
 
-
-Better avoid underscores in strings, and drop the "_clk" postfix in
-the clock names.
-
-I did not receive patch 1/3 this time, but I see in version 1, that
-you forgot to document the strings:
-
-> +- clock-names: The name to enable clock with clock framework.
-
-This needs to list the names of the clock inputs to the smmu.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
