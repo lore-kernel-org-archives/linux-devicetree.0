@@ -1,74 +1,72 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v6 0/17] Add Analogix Core Display Port Driver
-Date: Tue, 20 Oct 2015 10:10:41 +0800
-Message-ID: <5625A2A1.6090907@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1444491357-26095-1-git-send-email-ykk@rock-chips.com> <5624C896.8070108@osg.samsung.com>
+From: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH RESEND net-next] net: updates HNS config and documents
+Date: Tue, 20 Oct 2015 10:36:44 +0800
+Message-ID: <1445308604-95860-1-git-send-email-yankejian@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5624C896.8070108@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, joe@perches.com, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
-Cc: Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+updates the bindings documents and dtsi file according to the review
+comments from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On 10/19/2015 06:40 PM, Javier Martinez Canillas wrote:
-> Hello Yakir,
->
-> On 10/10/2015 05:35 PM, Yakir Yang wrote:
->> Hi all,
->>
->>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
->> share the same IP, so a lot of parts can be re-used. I split the common
->> code into bridge directory, then rk3288 and exynos only need to keep
->> some platform code. Cause I can't find the exact IP name of exynos dp
->> controller, so I decide to name dp core driver with "analogix" which I
->> find in rk3288 eDP TRM :)
->>
->> But  there are still three light registers setting differents bewteen
->> exynos and rk3288.
->> 1. RK3288 have five special pll resigters which not indicata in exynos
->>     dp controller.
->> 2. The address of DP_PHY_PD(dp phy power manager register) are different
->>     between rk3288 and exynos.
->> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp debug
->>     register).
->>
->> This series have been well tested on Rockchip platform with eDP panel
->> on Jerry Chromebook and Display Port Monitor on RK3288 board and thanks
->> to Javier@Samsung help me to find a way to install mainline kernel to
->> Samsung Exynos Chromebooks, so this series also have been tested on Samsung
->> Snow and Peach Pit Chromebooks which borrowed from my friends.
->>
->> Besides, This version was build on linux-next branch (tag next-20150918), and
->> the above test experiments also base on that tag. But I know the latest tag is
->> next-20151009, so i do rebase this series again on next-20151009, there were
->> little conflicts(exynos_dp removed the suspend/resume).
->>
->> But after I retest this series on next-20151009, I saw kernel crashed in mmc
->> driver(dw_mci_probe failed to get regulator). So i have to disabled the MMC
->> module(after all I boot with USB device), and I can see eDP light up normally
->> in startup stage, but kernel keep crashed when it try to mount the filesystem.
->> I thought this isn't related to dp driver directly, so i choice not to debug
->> more depth.
->>
->> That's to say if someone want to test this series, I suggest you applied this
->> series on tag-20150918, just need to fix some light conflicts with the 01 & 02
->> patches (or just email me, I can send you directly).
->>
->> Thanks,
-> Do you have a branch that I can use to test this series?
+Signed-off-by: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 2 +-
+ arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi                 | 8 +++-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-Thank you for your kind assistance, I have created a tree which checkout 
-from the next-20151019. Surely there were some conflicts to applied this 
-series on that tag, but things still works for me, here is the git 
-address [https://github.com/yakir-Yang/linux/tree/analogix_dp]
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+index 9940aa0..9c23fdf 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+@@ -12,7 +12,7 @@ Example:
+          mdio@803c0000 {
+                    #address-cells = <1>;
+                    #size-cells = <0>;
+-                   compatible = "hisilicon,mdio","hisilicon,hns-mdio";
++                   compatible = "hisilicon,hns-mdio","hisilicon,mdio";
+                    reg = <0x0 0x803c0000 0x0 0x10000>;
+ 
+                    ethernet-phy@0 {
+diff --git a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+index 3500586..606dd5a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+@@ -13,14 +13,12 @@ soc0: soc@000000000 {
+ 		reg = <0x0 0x803c0000 0x0 0x10000
+ 		       0x0 0x80000000 0x0 0x10000>;
+ 
+-		soc0_phy4: ethernet-phy@4 {
++		soc0_phy0: ethernet-phy@0 {
+ 			reg = <0x0>;
+-			device_type = "ethernet-phy";
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 		};
+-		soc0_phy5: ethernet-phy@5 {
++		soc0_phy1: ethernet-phy@1 {
+ 			reg = <0x1>;
+-			device_type = "ethernet-phy";
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 		};
+ 	};
+@@ -37,7 +35,7 @@ soc0: soc@000000000 {
+ 		       0x0 0xc7000000 0x0 0x60000
+ 		       >;
+ 
+-		phy-handle = <0 0 0 0 &soc0_phy4 &soc0_phy5 0 0>;
++		phy-handle = <0 0 0 0 &soc0_phy0 &soc0_phy1 0 0>;
+ 		interrupts = <
+ 			/* [14] ge fifo err 8 / xge 6**/
+ 			149 0x4 150 0x4 151 0x4 152 0x4
+-- 
+1.9.1
 
-Best regards,
-- Yakir
-
->
-> Best regards,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
