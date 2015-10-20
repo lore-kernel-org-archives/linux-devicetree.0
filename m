@@ -1,57 +1,61 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Include SoC part number in DT binding
-	docs
-Date: Tue, 20 Oct 2015 17:58:17 +0900
-Message-ID: <CANqRtoQ=nBpWX_eMUM9-febZ-cCAFayEGoUjMSpAXHaw3kekqQ@mail.gmail.com>
-References: <20151019031003.7878.28510.sendpatchset@little-apple>
-	<9833652.FLB0aRvpVP@avalon>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 0/4] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+Date: Tue, 20 Oct 2015 17:57:47 +0900
+Message-ID: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <9833652.FLB0aRvpVP@avalon>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+This patch is based on the latest linux-phy / next branch.
+(commit id = 0f8669e343982ac66f4420335777cb5456b8abb0)
 
-On Mon, Oct 19, 2015 at 3:44 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Magnus,
->
-> Thank you for the patch.
+ Changes from v4:
+  - Modify Kconfig to "depends on OF && ARCH_SHMOBILE".
+  - Modify Kconfig to "select GENERIC_PHY" instead of "depends on GENERIC_PHY".
+  - Modify device tree documentation about "reg" of example.
+  - Remove spinlock handling because phy-core driver calls mutex_lock().
+  - Change valiable name to val instead of tmp.
+  - Remove dev_set_drvdata.
+  - Use dev_vdbg() instead of dev_dbg().
+  - Change rcar_gen3_device_recognition()'s condition as one line.
+  - Remove unnecessary value in rcar_gen3_phy_usb2_probe().
+  - Modify MAINTAINERS about this driver.
 
-Thanks for your feedback!
+ Changes from v3:
+  - Shorten structure names to avoid new line if we add a long function name.
+  - Add ID/VBUS pin detection for peripheral mode.
 
-> On Monday 19 October 2015 12:10:03 Magnus Damm wrote:
->> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->>
->> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
->> IPMMU DT binding documentation. The example is also updated to show
->> how the generic compatible string may be used as fallback.
->
-> I'd use a wording stronger than "may" here, as the generic compatible value is
-> required. I would also explicitly state that in the bindings documentation.
+ Changes from v2:
+  - Modify Kconfig to add "depends on OF" and "depends on ARCH_SHMOBILE".
+  - Add more information in the dt document.
+  - Change reg-names from "usb2" to "usb2_host".
 
-I don't mind using a different wording, but it becomes a bit difficult
-to describe exactly when to use the generic compatible string and when
-not to. Is it always required, or does it depend on the hardware?
+ Changes from v1:
+  - Revise some typos.
+  - Remove using clk API to enable/disable the clocks.
+    (In other words, this driver expects to enable/disable the clocks by
+     Runtime PM API by the phy-core driver.)
+  - Remove an unnecessary header file (asm/cmpxchg.h).
 
- "For compatible hardware please use the generic compat string."
-Compatible with what? =)
+Yoshihiro Shimoda (4):
+  phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+  phy: rcar-gen3-usb2: change the mode to OTG on the combined channel
+  phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection
+  MAINTAINERS: add Renesas usb2 phy driver
 
-Any ideas how to describe it correctly in the binding documentation?
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  39 +++
+ MAINTAINERS                                        |   6 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-rcar-gen3-usb2.c                   | 380 +++++++++++++++++++++
+ 5 files changed, 433 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+ create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
 
-Cheers,
+-- 
+1.9.1
 
-/ magnus
