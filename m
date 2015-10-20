@@ -1,91 +1,154 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v6 0/17] Add Analogix Core Display Port Driver
-Date: Tue, 20 Oct 2015 11:48:54 +0200
-Message-ID: <56260E06.2040902@osg.samsung.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
- <1444491357-26095-1-git-send-email-ykk@rock-chips.com>
- <5624C896.8070108@osg.samsung.com> <5625A2A1.6090907@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/4] mfd: tps65086: Add driver for the TPS65086 PMIC
+Date: Tue, 20 Oct 2015 11:02:14 +0100
+Message-ID: <20151020100214.GM31804@x1>
+References: <1445014753-15450-1-git-send-email-afd@ti.com>
+ <1445014753-15450-3-git-send-email-afd@ti.com>
+ <20151019092336.GI31804@x1>
+ <56251468.7030609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5625A2A1.6090907-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56251468.7030609@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Yakir,
+On Mon, 19 Oct 2015, Andrew F. Davis wrote:
+> On 10/19/2015 04:23 AM, Lee Jones wrote:
+> >On Fri, 16 Oct 2015, Andrew F. Davis wrote:
+> >
+> >>Add support for the TPS65912 device. It provides communication
+> >>through I2C and contains the following components:
+> >>
+> >>  - Regulators
+> >>  - Load switches
+> >>  - GPO controller
+> >
+> >What's a GPO controller?
+>=20
+> General Purpose Output, this controller only has output control, it's
+> listed in the data-sheet this way, and other drivers have used this t=
+erm.
 
-On 10/20/2015 04:10 AM, Yakir Yang wrote:
-> Hi Javier,
-> 
-> On 10/19/2015 06:40 PM, Javier Martinez Canillas wrote:
->> Hello Yakir,
->>
->> On 10/10/2015 05:35 PM, Yakir Yang wrote:
->>> Hi all,
->>>
->>>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
->>> share the same IP, so a lot of parts can be re-used. I split the common
->>> code into bridge directory, then rk3288 and exynos only need to keep
->>> some platform code. Cause I can't find the exact IP name of exynos dp
->>> controller, so I decide to name dp core driver with "analogix" which I
->>> find in rk3288 eDP TRM :)
->>>
->>> But  there are still three light registers setting differents bewteen
->>> exynos and rk3288.
->>> 1. RK3288 have five special pll resigters which not indicata in exynos
->>>     dp controller.
->>> 2. The address of DP_PHY_PD(dp phy power manager register) are different
->>>     between rk3288 and exynos.
->>> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp debug
->>>     register).
->>>
->>> This series have been well tested on Rockchip platform with eDP panel
->>> on Jerry Chromebook and Display Port Monitor on RK3288 board and thanks
->>> to Javier@Samsung help me to find a way to install mainline kernel to
->>> Samsung Exynos Chromebooks, so this series also have been tested on Samsung
->>> Snow and Peach Pit Chromebooks which borrowed from my friends.
->>>
->>> Besides, This version was build on linux-next branch (tag next-20150918), and
->>> the above test experiments also base on that tag. But I know the latest tag is
->>> next-20151009, so i do rebase this series again on next-20151009, there were
->>> little conflicts(exynos_dp removed the suspend/resume).
->>>
->>> But after I retest this series on next-20151009, I saw kernel crashed in mmc
->>> driver(dw_mci_probe failed to get regulator). So i have to disabled the MMC
->>> module(after all I boot with USB device), and I can see eDP light up normally
->>> in startup stage, but kernel keep crashed when it try to mount the filesystem.
->>> I thought this isn't related to dp driver directly, so i choice not to debug
->>> more depth.
->>>
->>> That's to say if someone want to test this series, I suggest you applied this
->>> series on tag-20150918, just need to fix some light conflicts with the 01 & 02
->>> patches (or just email me, I can send you directly).
->>>
->>> Thanks,
->> Do you have a branch that I can use to test this series?
-> 
-> Thank you for your kind assistance, I have created a tree which checkout from the next-20151019. Surely there were some conflicts to applied this series on that tag, but things still works for me, here is the git address [https://github.com/yakir-Yang/linux/tree/analogix_dp]
->
+Okay.
 
-I tested your branch on an Exynos5800 Peach Pi Chromebook and display is
-working on boot. I also tested DPMS and S2R and things are still working
-so for the whole series feel free to add:
+> >>Signed-off-by: Andrew F. Davis <afd@ti.com>
+> >>---
+> >>  drivers/mfd/Kconfig          |  13 ++++
+> >>  drivers/mfd/Makefile         |   1 +
+> >>  drivers/mfd/tps65086.c       | 145 ++++++++++++++++++++++++++++++=
++++++++++++++
+> >>  include/linux/mfd/tps65086.h | 120 ++++++++++++++++++++++++++++++=
++++++
+> >>  4 files changed, 279 insertions(+)
+> >>  create mode 100644 drivers/mfd/tps65086.c
+> >>  create mode 100644 include/linux/mfd/tps65086.h
+> >>
+> >>diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >>index 99d6367..ab3b392 100644
+> >>--- a/drivers/mfd/Kconfig
+> >>+++ b/drivers/mfd/Kconfig
+> >>@@ -1093,6 +1093,19 @@ config TPS6507X
+> >>  	  This driver can also be built as a module.  If so, the module
+> >>  	  will be called tps6507x.
+> >>
+> >>+config MFD_TPS65086
+> >>+	tristate "TI TPS65086x Power Management chips"
+> >
+> >Use the full name:
+> >
+> >   "TI TPS65086x Power Management Integrated Chips (PMICs)"
+> >
+> >>+	select REGMAP
+> >>+	select REGMAP_IRQ
+> >>+	select REGMAP_I2C
+> >>+	depends on I2C
+> >
+> >REGMAP_I2C already depends on I2C.
+> >
+>=20
+> So if I force REGMAP_I2C to =3Dy without depending on I2C then couldn=
+'t
+> REGMAP_I2C get selected without I2C enabled? Selecting doesn't force
+> the selected item's dependencies still right?
 
-Tested-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Try it out. :)
 
-> Best regards,
-> - Yakir
-> 
+> >>+	depends on OF || COMPILE_TEST
+> >>+	help
+> >>+	  If you say yes here you get support for the TPS65086 series of
+> >>+	  Power Management chips.
+> >
+> >I'd remove the line break.
+> >
+> >>+	  These include voltage regulators, GPO and other features
+> >
+> >GPIO?
+> >
+> >>+	  that are often used in portable devices.
+> >
+> >This is meant to be a 'help', so instead of staying "and some other
+> >stuff", please list them.
+> >
+>=20
+> This seems to be what other devices do, I'll change it to something
+> else then.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+If you know what the "other features" are, it's best to name them.
+
+> >>  config TPS65911_COMPARATOR
+> >>  	tristate
+> >>
+> >>diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> >>index a59e3fc..7adb902 100644
+> >>--- a/drivers/mfd/Makefile
+> >>+++ b/drivers/mfd/Makefile
+> >>@@ -66,6 +66,7 @@ obj-$(CONFIG_MFD_WM8994)	+=3D wm8994-core.o wm899=
+4-irq.o wm8994-regmap.o
+> >>  obj-$(CONFIG_TPS6105X)		+=3D tps6105x.o
+> >>  obj-$(CONFIG_TPS65010)		+=3D tps65010.o
+> >>  obj-$(CONFIG_TPS6507X)		+=3D tps6507x.o
+> >>+obj-$(CONFIG_MFD_TPS65086)	+=3D tps65086.o
+> >>  obj-$(CONFIG_MFD_TPS65217)	+=3D tps65217.o
+> >>  obj-$(CONFIG_MFD_TPS65218)	+=3D tps65218.o
+> >>  obj-$(CONFIG_MFD_TPS65910)	+=3D tps65910.o
+> >>diff --git a/drivers/mfd/tps65086.c b/drivers/mfd/tps65086.c
+> >>new file mode 100644
+> >>index 0000000..be6d678
+> >>--- /dev/null
+> >>+++ b/drivers/mfd/tps65086.c
+> >>@@ -0,0 +1,145 @@
+> >>+/*
+> >>+ * Driver for TI TPS65086x PMICs
+> >
+> >I'd suggest removing the driver part.  We know it's a driver.
+>=20
+> Again this is what almost every other driver does,
+
+Almost every other driver.  That's some statement.
+
+I count 42%. ;)
+
+> I'm not sure how
+> else to describe this file without using the word driver.
+
+Perhaps I'm getting picky in my old age, but I think I'd prefer to see:
+
+  TI TPS65086x PMIC support
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
