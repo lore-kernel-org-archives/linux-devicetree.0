@@ -1,85 +1,79 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Tue, 20 Oct 2015 14:31:12 +0200
-Message-ID: <CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
-	<20151020122448.20687.11926@quantum>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 09/10] dt-bindings: video: exynos5433-decon: add bindings
+ for DECON-TV
+Date: Tue, 20 Oct 2015 21:30:56 +0900
+Message-ID: <56263400.6010200@samsung.com>
+References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
+ <1445332961-25419-10-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151020122448.20687.11926@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1445332961-25419-10-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, k.kozlowski.k@gmail.com, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
-
-On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette
-<mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Quoting Geert Uytterhoeven (2015-10-16 05:49:20)
->> +static void __init r8a7795_cpg_mssr_init(struct device_node *np)
->> +{
->> +       struct regmap *regmap;
->> +       u32 reg, cpg_mode;
->> +
->> +       regmap =3D syscon_regmap_lookup_by_phandle(np, "renesas,mode=
-mr");
->> +       if (IS_ERR(regmap) ||
->> +           of_property_read_u32_index(np, "renesas,modemr", 1, &reg=
-) ||
->> +           regmap_read(regmap, reg, &cpg_mode)) {
->> +               pr_err("%s: failed to parse renesas,modemr\n", np->f=
-ull_name);
->> +               return;
->> +       }
->> +
->> +       cpg_pll_config =3D &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg=
-_mode)];
->> +       if (!cpg_pll_config->extal_div) {
->> +               pr_err("%s: Prohibited setting (cpg_mode=3D0x%x)\n",
->> +                      __func__, cpg_mode);
->> +               return;
->> +       }
->> +
->> +       cpg_mssr_probe(np, &r8a7795_cpg_mssr_info);
->> +}
->> +CLK_OF_DECLARE(r8a7795_cpg_mssr, "renesas,r8a7795-cpg-mssr",
->> +              r8a7795_cpg_mssr_init);
->
-> Is CLK_OF_DECLARE needed? Is it possible to make this a real
-> platform_driver =C3=A0 la drivers/clk/qcom/gcc-apq8084.c?
-
-I tried making it a real platform driver, but it failed: devices that a=
-re
-part of the Clock Domain failed to get their clock (error -2, IIRC, whi=
-ch is
--ENOENT), and thus couldn't be instantiated.
-I didn't look deeper at that time.
-
-[... reading code ...]
-
-Aha, this may be caused by __of_clk_get_from_provider() returning
-hardcoded -ENOENT instead of propagating the error returned by
-__clk_create_clk()?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VyBkbml1IDIwLjEwLjIwMTUgbyAxODoyMiwgQW5kcnplaiBIYWpkYSBwaXN6ZToKPiBERUNPTi1U
+VihEaXNwbGF5IGFuZCBFbmhhbmNlbWVudCBDb250cm9sbGVyIGZvciBUVikgaXMgYSB2YXJpYXRp
+b24KPiBvZiBERUNPTiBJUC4gSXRzIG1haW4gcHVycG9zZSBpcyB0byBwcm9kdWNlIHZpZGVvIHN0
+cmVhbSBmb3IgSERNSSBJUC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhh
+amRhQHNhbXN1bmcuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9l
+eHlub3M1NDMzLWRlY29uLnR4dCAgfCAyMSArKysrKysrKysrKystLS0tLS0tLS0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3M1NDMzLWRl
+Y29uLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3M1
+NDMzLWRlY29uLnR4dAo+IGluZGV4IDNkZmY3OGIuLjJhODhjOGQgMTAwNjQ0Cj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0
+Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0
+MzMtZGVjb24udHh0Cj4gQEAgLTUsMjQgKzUsMjcgQEAgRXh5bm9zIHNlcmllcyBvZiBTb0NzIHdo
+aWNoIHRyYW5zZmVycyB0aGUgaW1hZ2UgZGF0YSBmcm9tIGEgdmlkZW8gbWVtb3J5Cj4gIGJ1ZmZl
+ciB0byBhbiBleHRlcm5hbCBMQ0QgaW50ZXJmYWNlLgo+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGll
+czoKPiAtLSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgInNhbXN1bmcsZXh5bm9zNTQzMy1k
+ZWNvbiI7Cj4gKy0gY29tcGF0aWJsZTogdmFsdWUgc2hvdWxkIGJlIG9uZSBvZjoKPiArCSJzYW1z
+dW5nLGV4eW5vczU0MzMtZGVjb24iLCAic2Ftc3VuZyxleHlub3M1NDMzLWRlY29uLXR2IjsKClVu
+dGlsIHRoaXMgcG9pbnQgaXQgbG9va2VkIGdvb2QuCgo+ICAtIHJlZzogcGh5c2ljYWwgYmFzZSBh
+ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERFQ09OIHJlZ2lzdGVycyBzZXQuCj4gLS0gaW50ZXJy
+dXB0czogc2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIGFsbCBERUNPTiBJUCBibG9jayBpbnRlcnJ1
+cHRzIGluIHRoZQo+IC0JICAgICAgb3JkZXI6IFZTWU5DLCBMQ0RfU1lTVEVNLiBUaGUgaW50ZXJy
+dXB0IHNwZWNpZmllciBmb3JtYXQKPiAtCSAgICAgIGRlcGVuZHMgb24gdGhlIGludGVycnVwdCBj
+b250cm9sbGVyIHVzZWQuCj4gLS0gaW50ZXJydXB0LW5hbWVzOiBzaG91bGQgY29udGFpbiB0aGUg
+aW50ZXJydXB0IG5hbWVzOiAidnN5bmMiLCAibGNkX3N5cyIKPiAtCQkgICBpbiB0aGUgc2FtZSBv
+cmRlciBhcyB0aGV5IHdlcmUgbGlzdGVkIGluIHRoZSBpbnRlcnJ1cHRzCj4gLQkJICAgcHJvcGVy
+dHkuCj4gKy0gaW50ZXJydXB0czogc2hvdWxkIGNvbnRhaW4gaW50ZXJydXB0IHNwZWNpZmllciBv
+ZiBWU1lOQyBhbmQgb3B0aW9uYWxseQo+ICsJICAgICAgTENEX1NZU1RFTS4gVGhlIGludGVycnVw
+dCBzcGVjaWZpZXIgZm9ybWF0IGRlcGVuZHMgb24KPiArCSAgICAgIHRoZSBpbnRlcnJ1cHQgY29u
+dHJvbGxlciB1c2VkLgo+ICstIGludGVycnVwdC1uYW1lczogc2hvdWxkIGNvbnRhaW4gdGhlIGlu
+dGVycnVwdCBuYW1lICJ2c3luYyIgYW5kIG9wdGlvbmFsbHkKPiArCQkgICAibGNkX3N5cyIgaW4g
+dGhlIHNhbWUgb3JkZXIgYXMgdGhleSB3ZXJlIGxpc3RlZCBpbgo+ICsJCSAgIHRoZSBpbnRlcnJ1
+cHRzIHByb3BlcnR5LgoKVGhlIGRyaXZlciBhbHJlYWR5IGRpZCBub3QgcmVxdWlyZSBib3RoIGlu
+dGVycnVwdHMsIHJpZ2h0PyBPbmx5IG9uZSBvZiB0aGVtPwoKPiAgLSBjbG9ja3M6IG11c3QgaW5j
+bHVkZSBjbG9jayBzcGVjaWZpZXJzIGNvcnJlc3BvbmRpbmcgdG8gZW50cmllcyBpbiB0aGUKPiAg
+CSAgY2xvY2stbmFtZXMgcHJvcGVydHkuCj4gIC0gY2xvY2stbmFtZXM6IGxpc3Qgb2YgY2xvY2sg
+bmFtZXMgc29ydGVkIGluIHRoZSBzYW1lIG9yZGVyIGFzIHRoZSBjbG9ja3MKPiAgCSAgICAgICBw
+cm9wZXJ0eS4gTXVzdCBjb250YWluICJwY2xrIiwgImFjbGtfZGVjb24iLCAiYWNsa19zbW11X2Rl
+Y29uMHgiLAo+ICAJICAgICAgICJhY2xrX3hpdV9kZWNvbjB4IiwgInBjbGtfc21tdV9kZWNvbjB4
+IiwgY2xrX2RlY29uX3ZjbGsiLAo+ICAJICAgICAgICJzY2xrX2RlY29uX2VjbGsiCj4gKwo+ICtP
+cHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIHBvcnRzOiBjb250YWlucyBhIHBvcnQgd2hpY2ggaXMg
+Y29ubmVjdGVkIHRvIG1pYyBub2RlLiBhZGRyZXNzLWNlbGxzIGFuZAo+IC0JIHNpemUtY2VsbHMg
+bXVzdCAxIGFuZCAwLCByZXNwZWN0aXZlbHkuCj4gKwkgc2l6ZS1jZWxscyBtdXN0IGJlIDEgYW5k
+IDAsIHJlc3BlY3RpdmVseS4KPiAgLSBwb3J0OiBjb250YWlucyBhbiBlbmRwb2ludCBub2RlIHdo
+aWNoIGlzIGNvbm5lY3RlZCB0byB0aGUgZW5kcG9pbnQgaW4gdGhlIG1pYwo+IC0Jbm9kZS4gVGhl
+IHJlZyB2YWx1ZSBtdXNldCBiZSAwLgo+ICsJbm9kZS4gVGhlIHJlZyB2YWx1ZSBtdXN0IGJlIDAu
+Cj4gIC0gaTgwLWlmLXRpbWluZ3M6IHNwZWNpZnkgd2hldGhlciB0aGUgcGFuZWwgd2hpY2ggaXMg
+Y29ubmVjdGVkIHRvIGRlY29uIHVzZXMKPiAgCQkgIGk4MCBsY2QgaW50ZXJmYWNlIG9yIG1pcGkg
+dmlkZW8gaW50ZXJmYWNlLiBUaGlzIG5vZGUgY29udGFpbnMKPiAgCQkgIG5vIHRpbWluZyBpbmZv
+cm1hdGlvbiBhcyB0aGF0IG9mIGZpbWQgZG9lcy4gQmVjYXVzZSB0aGVyZSBpcwo+IAoKVGhpcyBp
+cyBjbGVhbnVwLCBwbGVhc2Ugc3BsaXQgaXQuCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
