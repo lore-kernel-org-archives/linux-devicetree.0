@@ -1,100 +1,60 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Tue, 20 Oct 2015 15:07:31 +0200
-Message-ID: <CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
-	<20151020122448.20687.11926@quantum>
-	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
-	<20151020130004.20687.91058@quantum>
+From: Markus Reichl <m.reichl@fivetechno.de>
+Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
+Date: Tue, 20 Oct 2015 15:43:33 +0200
+Message-ID: <56264505.3090405@fivetechno.de>
+References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151020130004.20687.91058@quantum>
-Sender: linux-sh-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, k.kozlowski@samsung.com, javier@osg.samsung.com, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Am 19.10.2015 um 08:03 schrieb Alim Akhtar:
+> Alim Akhtar (7):
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+>   ARM: exynos_defconfig: Normalize exynos defconfig
+>   ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
+>     drivers
+>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
+> 
+>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+>  arch/arm/configs/exynos_defconfig |   11 +++++-----
+>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+>  6 files changed, 61 insertions(+), 49 deletions(-)
+> 
+Hi,
 
-On Tue, Oct 20, 2015 at 3:00 PM, Michael Turquette
-<mturquette@baylibre.com> wrote:
-> Quoting Geert Uytterhoeven (2015-10-20 05:31:12)
->> On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette
->> <mturquette@baylibre.com> wrote:
->> > Quoting Geert Uytterhoeven (2015-10-16 05:49:20)
->> >> +static void __init r8a7795_cpg_mssr_init(struct device_node *np)
->> >> +{
->> >> +       struct regmap *regmap;
->> >> +       u32 reg, cpg_mode;
->> >> +
->> >> +       regmap =3D syscon_regmap_lookup_by_phandle(np, "renesas,m=
-odemr");
->> >> +       if (IS_ERR(regmap) ||
->> >> +           of_property_read_u32_index(np, "renesas,modemr", 1, &=
-reg) ||
->> >> +           regmap_read(regmap, reg, &cpg_mode)) {
->> >> +               pr_err("%s: failed to parse renesas,modemr\n", np=
-->full_name);
->> >> +               return;
->> >> +       }
->> >> +
->> >> +       cpg_pll_config =3D &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(=
-cpg_mode)];
->> >> +       if (!cpg_pll_config->extal_div) {
->> >> +               pr_err("%s: Prohibited setting (cpg_mode=3D0x%x)\=
-n",
->> >> +                      __func__, cpg_mode);
->> >> +               return;
->> >> +       }
->> >> +
->> >> +       cpg_mssr_probe(np, &r8a7795_cpg_mssr_info);
->> >> +}
->> >> +CLK_OF_DECLARE(r8a7795_cpg_mssr, "renesas,r8a7795-cpg-mssr",
->> >> +              r8a7795_cpg_mssr_init);
->> >
->> > Is CLK_OF_DECLARE needed? Is it possible to make this a real
->> > platform_driver =C3=A0 la drivers/clk/qcom/gcc-apq8084.c?
->>
->> I tried making it a real platform driver, but it failed: devices tha=
-t are
->> part of the Clock Domain failed to get their clock (error -2, IIRC, =
-which is
->> -ENOENT), and thus couldn't be instantiated.
->> I didn't look deeper at that time.
->>
->> [... reading code ...]
->>
->> Aha, this may be caused by __of_clk_get_from_provider() returning
->> hardcoded -ENOENT instead of propagating the error returned by
->> __clk_create_clk()?
->
-> Well the only other error thrown by __clk_create_clk is -ENOMEM, so I=
-'m
-> not sure how that would help things.
+I have tested this patch on my Odroid U3 and U3+ using 4.3.0-rc6 from
+Tobias' repo at https://github.com/tobiasjakobi/linux-odroid/tree/odroid-4.3.y
 
-Hmm, you're right.
+and his debug config:
+https://raw.githubusercontent.com/tobiasjakobi/odroid-environment/master/sourcecode/system/vanilla-4.3-debug.conf
 
-> The bindings should go in for 4.4, but if the driver is slated for 4.=
-5
-> then can you investigate this some more? Stephen and I are on a missi=
-on
-> to have _real_ clk drivers.
+halt -p works (power goes down to 0W)
 
-Sure, I'll have a deeper look.
+reboot does not work, stuck at 0.5W, right after
+"systemd-shutdown[1]: rebooting".
 
-Gr{oetje,eeting}s,
+reboot did work with 4.3.0-rc3 from above repo (without Alim's patch).
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
+Thanks,
+-- 
+Markus Reichl
