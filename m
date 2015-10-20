@@ -1,233 +1,76 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v6 3/4] of: overlay: add per overlay sysfs attributes
-Date: Tue, 20 Oct 2015 22:13:16 +0300
-Message-ID: <1445368397-8732-4-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Brijesh Singh <brijeshkumar.singh@amd.com>
+Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
+Date: Tue, 20 Oct 2015 14:16:01 -0500
+Message-ID: <562692F1.1030209@amd.com>
+References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com>
+ <20151019205236.GB453@leverpostej> <56266F7E.6030404@amd.com>
+ <20151020165744.GE31130@pd.tnic> <20151020172654.GC4943@leverpostej>
+ <20151020173639.GH31130@pd.tnic> <20151020174144.GD4943@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151020174144.GD4943@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>
+Cc: devicetree@vger.kernel.org, brijeshkumar.singh@amd.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dougthompson@xmission.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* A per overlay can_remove sysfs attribute that reports whether
-the overlay can be removed or not due to another overlapping overlay.
 
-* A target sysfs attribute listing the target of each fragment,
-in a group named after the name of the fragment.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/overlay.c | 103 +++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 99 insertions(+), 4 deletions(-)
+On 10/20/2015 12:41 PM, Mark Rutland wrote:
+> On Tue, Oct 20, 2015 at 07:36:39PM +0200, Borislav Petkov wrote:
+>> On Tue, Oct 20, 2015 at 06:26:55PM +0100, Mark Rutland wrote:
+>>>> Btw, how much of this is implementing generic A57 functionality?
+>>>
+>>> The driver is entirely A57 generic.
+>>>
+>>>> If a lot, can we make this a generic a57_edac driver so that multiple
+>>>> vendors can use it?
+>>>
+>>> Yes.
+>>
+>> Ok, cool.
+>>
+>>>> How fast and how ugly can something like that become?
+>>>
+>>> Not sure I follow.
+>>
+>> In the sense that some vendor might require just a little bit different
+>> handling or maybe wants to read some vendor-specific registers in
+>> addition to the architectural ones.
+>>
+>> Then we'll start adding vendor-specific hacks to that generic driver.
+>> And therefore the question how fast and how ugly such hacks would
+>> become.
+>>
+>> I guess we'll worry about that when we get there...
+>>
+>> So Brijesh, if you only need generic, architectural functionality,
+>> please call it arm64_edac or so and let's add it so that other arm64
+>> vendors can use it too.
+> 
+> Please note that this is specific to Cortex-A57, not ARMv8 or aarch64.
+> 
+> It is an IMPLEMENTATION DEFINED feature as implemented by Cortex-A57,
+> which by definition is not implemented by other CPUs. It is not provided
+> by the ARM architecture.
+> 
+> So this cannot be arm64_edac, but could potentially be cortex_a57_edac.
+> 
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 067404e..2d51d9e2 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -25,8 +25,23 @@
- 
- #include "of_private.h"
- 
-+/* fwd. decl */
-+struct of_overlay;
-+struct of_overlay_info;
-+
-+/* an attribute for each fragment */
-+struct fragment_attribute {
-+	struct attribute attr;
-+	ssize_t (*show)(struct kobject *kobj, struct fragment_attribute *fattr,
-+			char *buf);
-+	ssize_t (*store)(struct kobject *kobj, struct fragment_attribute *fattr,
-+			 const char *buf, size_t count);
-+	struct of_overlay_info *ovinfo;
-+};
-+
- /**
-  * struct of_overlay_info - Holds a single overlay info
-+ * @info:	info node that contains the target and overlay
-  * @target:	target of the overlay operation
-  * @overlay:	pointer to the overlay contents node
-  *
-@@ -34,8 +49,13 @@
-  * records.
-  */
- struct of_overlay_info {
-+	struct of_overlay *ov;
-+	struct device_node *info;
- 	struct device_node *target;
- 	struct device_node *overlay;
-+	struct attribute_group attr_group;
-+	struct attribute *attrs[2];
-+	struct fragment_attribute target_attr;
- };
- 
- /**
-@@ -52,6 +72,7 @@ struct of_overlay {
- 	struct list_head node;
- 	int count;
- 	struct of_overlay_info *ovinfo_tab;
-+	const struct attribute_group **attr_groups;
- 	struct of_changeset cset;
- 	struct kobject kobj;
- };
-@@ -245,6 +266,8 @@ static int of_fill_overlay_info(struct of_overlay *ov,
- 	if (ovinfo->target == NULL)
- 		goto err_fail;
- 
-+	ovinfo->info = of_node_get(info_node);
-+
- 	return 0;
- 
- err_fail:
-@@ -255,6 +278,17 @@ err_fail:
- 	return -EINVAL;
- }
- 
-+static ssize_t target_show(struct kobject *kobj,
-+		struct fragment_attribute *fattr, char *buf)
-+{
-+	struct of_overlay_info *ovinfo = fattr->ovinfo;
-+
-+	return snprintf(buf, PAGE_SIZE, "%s\n",
-+			of_node_full_name(ovinfo->target));
-+}
-+
-+static const struct fragment_attribute target_template_attr = __ATTR_RO(target);
-+
- /**
-  * of_build_overlay_info() - Build an overlay info array
-  * @ov		Overlay to build
-@@ -272,7 +306,7 @@ static int of_build_overlay_info(struct of_overlay *ov,
- {
- 	struct device_node *node;
- 	struct of_overlay_info *ovinfo;
--	int cnt, err;
-+	int i, cnt, err;
- 
- 	/* worst case; every child is a node */
- 	cnt = 0;
-@@ -293,14 +327,45 @@ static int of_build_overlay_info(struct of_overlay *ov,
- 
- 	/* if nothing filled, return error */
- 	if (cnt == 0) {
--		kfree(ovinfo);
--		return -ENODEV;
-+		err = -ENODEV;
-+		goto err_free_ovinfo;
- 	}
- 
- 	ov->count = cnt;
- 	ov->ovinfo_tab = ovinfo;
- 
-+	ov->attr_groups = kcalloc(cnt + 1,
-+			sizeof(struct attribute_group *), GFP_KERNEL);
-+	if (ov->attr_groups == NULL) {
-+		err = -ENOMEM;
-+		goto err_free_ovinfo;
-+	}
-+
-+	for (i = 0; i < cnt; i++) {
-+		ovinfo = &ov->ovinfo_tab[i];
-+
-+		ov->attr_groups[i] = &ovinfo->attr_group;
-+
-+		ovinfo->target_attr = target_template_attr;
-+		/* make lockdep happy */
-+		sysfs_attr_init(&ovinfo->target_attr.attr);
-+		ovinfo->target_attr.ovinfo = ovinfo;
-+
-+		ovinfo->attrs[0] = &ovinfo->target_attr.attr;
-+		ovinfo->attrs[1] = NULL;
-+
-+		/* NOTE: direct reference to the full_name */
-+		ovinfo->attr_group.name = kbasename(ovinfo->info->full_name);
-+		ovinfo->attr_group.attrs = ovinfo->attrs;
-+
-+	}
-+	ov->attr_groups[i] = NULL;
-+
- 	return 0;
-+
-+err_free_ovinfo:
-+	kfree(ovinfo);
-+	return err;
- }
- 
- /**
-@@ -317,12 +382,16 @@ static int of_free_overlay_info(struct of_overlay *ov)
- 	struct of_overlay_info *ovinfo;
- 	int i;
- 
-+	/* free attribute groups space */
-+	kfree(ov->attr_groups);
-+
- 	/* do it in reverse */
- 	for (i = ov->count - 1; i >= 0; i--) {
- 		ovinfo = &ov->ovinfo_tab[i];
- 
- 		of_node_put(ovinfo->target);
- 		of_node_put(ovinfo->overlay);
-+		of_node_put(ovinfo->info);
- 	}
- 	kfree(ov->ovinfo_tab);
- 
-@@ -373,8 +442,25 @@ static const struct attribute *overlay_global_attrs[] = {
- 	NULL
- };
- 
-+static ssize_t can_remove_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct of_overlay *ov = kobj_to_overlay(kobj);
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", overlay_removal_is_ok(ov));
-+}
-+
-+static struct kobj_attribute can_remove_attr = __ATTR_RO(can_remove);
-+
-+static struct attribute *overlay_attrs[] = {
-+	&can_remove_attr.attr,
-+	NULL
-+};
-+
- static struct kobj_type of_overlay_ktype = {
- 	.release = of_overlay_release,
-+	.sysfs_ops = &kobj_sysfs_ops,	/* default kobj sysfs ops */
-+	.default_attrs = overlay_attrs,
- };
- 
- static struct kset *ov_kset;
-@@ -454,13 +540,21 @@ int of_overlay_create(struct device_node *tree)
- 		goto err_cancel_overlay;
- 	}
- 
-+	err = sysfs_create_groups(&ov->kobj, ov->attr_groups);
-+	if (err != 0) {
-+		pr_err("%s: sysfs_create_groups() failed for tree@%s\n",
-+				__func__, tree->full_name);
-+		goto err_remove_kobj;
-+	}
-+
- 	/* add to the tail of the overlay list */
- 	list_add_tail(&ov->node, &ov_list);
- 
- 	mutex_unlock(&of_mutex);
- 
- 	return id;
--
-+err_remove_kobj:
-+	kobject_put(&ov->kobj);
- err_cancel_overlay:
- 	of_changeset_revert(&ov->cset);
- err_revert_overlay:
-@@ -579,6 +673,7 @@ int of_overlay_destroy(int id)
- 
- 
- 	list_del(&ov->node);
-+	sysfs_remove_groups(&ov->kobj, ov->attr_groups);
- 	of_changeset_revert(&ov->cset);
- 	of_free_overlay_info(ov);
- 	idr_remove(&ov_idr, id);
--- 
-1.7.12
+Yes code is generic to Cortex A57 and naming it cortex_a57_edac sounds good.
+
+Also I will follow your suggestion and remove DT binding and use MIDR. 
+
+> Thanks,
+> Mark.
+> 
