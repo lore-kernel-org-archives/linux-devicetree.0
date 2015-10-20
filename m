@@ -1,72 +1,48 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH V3 1/2] clk: imx6: Add SPDIF_GCLK clock in clock tree
-Date: Tue, 20 Oct 2015 03:23:54 -0700
-Message-ID: <20151020102354.20687.97671@quantum>
-References: <cover.1444471684.git.shengjiu.wang@freescale.com>
- <ee897786f33c9ba67b560964a76485891f2f63a8.1444471684.git.shengjiu.wang@freescale.com>
- <20151019152807.20687.15779@quantum> <20151019153618.GA14709@tiger>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Include SoC part number in DT binding docs
+Date: Tue, 20 Oct 2015 13:27:47 +0300
+Message-ID: <1833179.ksYYvY8Qgn@avalon>
+References: <20151019031003.7878.28510.sendpatchset@little-apple> <9833652.FLB0aRvpVP@avalon> <CANqRtoQ=nBpWX_eMUM9-febZ-cCAFayEGoUjMSpAXHaw3kekqQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151019153618.GA14709@tiger>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Shengjiu Wang <shengjiu.wang@freescale.com>, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoQ=nBpWX_eMUM9-febZ-cCAFayEGoUjMSpAXHaw3kekqQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, joro <joro@8bytes.org>, SH-Linux <linux-sh@vger.kernel.org>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+Hi Magnus,
 
-Quoting Shawn Guo (2015-10-19 08:36:18)
-> Hi Mike,
-> 
-> On Mon, Oct 19, 2015 at 08:28:07AM -0700, Michael Turquette wrote:
-> > Quoting Shengjiu Wang (2015-10-10 03:15:06)
-> > > Correct SPDIF clock setting issue in clock tree, the SPDIF_GCLK is also
-> > > one clock of SPDIF, which is missed before.
-> > > 
-> > > We found an issue that imx can't enter low power mode with spdif
-> > > if IMX6x_CLK_SPDIF is used as the core clock of spdif. Because
-> > > spdif driver will register IMX6x_CLK_SPDIF clock to regmap, regmap will do
-> > > clk_prepare in init function, then IMX6x_CLK_SPDIF clock is prepared in probe,
-> > > so its parent clock (PLL clock) is prepared, the prepare operation of
-> > > PLL clock is to enable the clock. But I.MX needs all PLL clock is disabled,
-> > > then it can enter low power mode.
-> > > 
-> > > So we can't use IMX6x_CLK_SPDIF as the core clock of spdif, the correct spdif
-> > > core clock is SPDIF_GCLK, which share same gate bit with IMX6x_CLK_SPDIF clock.
-> > > SPDIF_GCLK's parent clock is ipg clock.
+On Tuesday 20 October 2015 17:58:17 Magnus Damm wrote:
+> On Mon, Oct 19, 2015 at 3:44 PM, Laurent Pinchart wrote:
+> > On Monday 19 October 2015 12:10:03 Magnus Damm wrote:
+> >> From: Magnus Damm <damm+renesas@opensource.se>
+> >> 
+> >> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
+> >> IPMMU DT binding documentation. The example is also updated to show
+> >> how the generic compatible string may be used as fallback.
 > > 
-> > I'm confused by this. Is there really a new clock signal to be added, or
-> > this just to workaround some reference counting problems with regmap?
+> > I'd use a wording stronger than "may" here, as the generic compatible
+> > value is required. I would also explicitly state that in the bindings
+> > documentation.
+>
+> I don't mind using a different wording, but it becomes a bit difficult
+> to describe exactly when to use the generic compatible string and when
+> not to. Is it always required, or does it depend on the hardware?
 > 
-> I was confused by the previous version of the patch, and asked Shengjiu
-> to improve the commit log, which seems still not so good.  In short, the
-> patch does add a missing clock, and the missing of the clock is
-> discovered by a low-power-mode issue when SPDIF driver is enabled.
+>  "For compatible hardware please use the generic compat string."
+> Compatible with what? =)
+> 
+> Any ideas how to describe it correctly in the binding documentation?
 
-Thank you for the explanation. Sounds good to me.
+Given that the generic compat string is always required I'd just say so. We 
+can then update the DT bindings later when we'll introduce the first SoC not 
+compatible with the generic compat string.
 
+-- 
 Regards,
-Mike
 
-> 
-> > 
-> > > 
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
-> > 
-> > Please Cc the linux-clk@vger.kernel.org mailing list for future clock
-> > driver patches.
-> 
-> Right, should have reminded him.  I will keep my eyes more closely on
-> this.
-> 
-> Shawn
+Laurent Pinchart
+
