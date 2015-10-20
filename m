@@ -1,145 +1,89 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 2/4] MIPS: dt: xilfpga: Add xilfpga device tree files.
-Date: Tue, 20 Oct 2015 17:30:59 +0100
-Message-ID: <1445358661-53953-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Mitchel Humpherys <mitchelh@codeaurora.org>
+Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
+Date: Tue, 20 Oct 2015 09:34:24 -0700
+Message-ID: <vnkw8u6xts6n.fsf@codeaurora.org>
+References: <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
+ <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
+ <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
+ <vnkwh9lwlymo.fsf@codeaurora.org>
+ <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ralf@linux-mips.org, robh+dt@kernel.org
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
+ (andrew@ncrmnt.org's message of "Tue, 13 Oct 2015 11:14:23 +0300")
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andrew <andrew@ncrmnt.org>
+Cc: Feng Tang <feng.tang@intel.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devel@driverdev.osuosl.org, Tom Gall <tom.gall@linaro.org>, arve@android.com, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Riley Andrews <riandrews@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, a.bogdanova@module.ru, linux-arm-kernel@lists.infradead.org, Laura Abbott <labbott@fedoraproject.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, a.makarov@module.ru, Laura Abbott <laura@labbott.name>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree files for the MIPSfpga platform.
+On Tue, Oct 13 2015 at 11:14:23 AM, Andrew <andrew@ncrmnt.org> wrote:
+> On 2015-10-12 21:39, Mitchel Humpherys wrote:
+>> On Tue, Oct 06 2015 at 05:35:41 PM, Rob Herring <robherring2@gmail.com>
+>> wrote:
+>>> On Tue, Oct 6, 2015 at 3:47 PM, Laura Abbott <labbott@fedoraproject.org>
+>>> wrote:
+>>
+>> [...]
+>>
+>>>> +Example:
+>>>> +
+>>>> +       ion {
+>>>> +               compatbile = "linux,ion";
+>>>> +               #address-cells = <1>;
+>>>> +               #size-cells = <0>;
+>>>> +
+>>>> +               ion-system-heap {
+>>>> +                       linux,ion-heap-id = <0>;
+>>>> +                       linux,ion-heap-type = <ION_SYSTEM_HEAP_TYPE>;
+>>>> +                       linux,ion-heap-name = "system";
+>>>
+>>> How does this vary across platforms? Is all of this being pushed down
+>>> to DT, because there is no coordination of this at the kernel ABI
+>>> level across platforms. In other words, why can't heap 0 be hardcoded
+>>> as system heap in the driver. It seems to me any 1 of these 3
+>>> properties could be used to derive the other 2.
+>>
+>> The heap-id<->heap-type mapping isn't necessarily 1:1.  As Laura
+>> indicated elsewhere on this thread, a given heap might need to be
+>> contiguous on one platform but not on another.  In that case you just
+>> swap out the heap-type here and there's no need for userspace to change.
+>>
+>> The heap-name, OTOH, could be derived from the heap-id, which is what we
+>> hackishly do here [1] and here[2].
+>
+> By the way, since we agreed that heap id and heap type mappings
+> are not 1:1 - we have a problem with the current API.
+>
+> In userspace we currently have this:
+>
+> int ion_alloc(int fd, size_t len, size_t align, unsigned int heap_mask,
+>               unsigned int flags, ion_user_handle_t *handle);
+>
+> We do not specify here what TYPE of heap we want the allocation to come
+> from.
+> This may lead to very unpleasant stuff when porting from one platfrom to
+> another.
 
-See Documentation/devicetree/bindings/mips/img/xilfpga.txt
-for details about MIPSfpga
+What "unpleasant stuff" are you referring to, exactly?  Abstracting the
+heap type away from userspace has actually made our lives easier since
+userspace doesn't need to know anything about the properties of the
+underlying platform.  It just asks for a buffer from the "camera" heap,
+for example.  On some platforms that's contiguous, on others it's not.
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
----
-V1 -> V2
-Reformatted git log for 80 column
-Added nexys4ddr compatible
-Fixed some whitespace
-Removed a redundant status okay
----
- arch/mips/boot/dts/Makefile                |  1 +
- arch/mips/boot/dts/xilfpga/Makefile        |  9 ++++++
- arch/mips/boot/dts/xilfpga/microAptiv.dtsi | 21 ++++++++++++++
- arch/mips/boot/dts/xilfpga/nexys4ddr.dts   | 46 ++++++++++++++++++++++++++++++
- 4 files changed, 77 insertions(+)
- create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
- create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
- create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+-Mitch
 
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 778a340..0571ef7 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -6,6 +6,7 @@ dts-dirs	+= mti
- dts-dirs	+= netlogic
- dts-dirs	+= qca
- dts-dirs	+= ralink
-+dts-dirs	+= xilfpga
- 
- obj-y		:= $(addsuffix /, $(dts-dirs))
- 
-diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xilfpga/Makefile
-new file mode 100644
-index 0000000..913a752
---- /dev/null
-+++ b/arch/mips/boot/dts/xilfpga/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+= nexys4ddr.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files	:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/xilfpga/microAptiv.dtsi b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
-new file mode 100644
-index 0000000..81d518e
---- /dev/null
-+++ b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
-@@ -0,0 +1,21 @@
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "img,xilfpga";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mips,m14Kc";
-+			clocks	= <&ext>;
-+			reg = <0>;
-+		};
-+	};
-+
-+	ext: ext {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+};
-diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-new file mode 100644
-index 0000000..686ebd1
---- /dev/null
-+++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-@@ -0,0 +1,46 @@
-+/dts-v1/;
-+
-+#include "microAptiv.dtsi"
-+
-+/ {
-+	compatible = "digilent,nexys4ddr";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+	cpuintc: interrupt-controller@0 {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	axi_gpio: gpio@10600000 {
-+		#gpio-cells = <1>;
-+		compatible = "xlnx,xps-gpio-1.00.a";
-+		gpio-controller;
-+		reg = <0x10600000 0x10000>;
-+		xlnx,all-inputs = <0x0>;
-+		xlnx,dout-default = <0x0>;
-+		xlnx,gpio-width = <0x16>;
-+		xlnx,interrupt-present = <0x0>;
-+		xlnx,is-dual = <0x0>;
-+		xlnx,tri-default = <0xffffffff>;
-+	} ;
-+
-+	axi_uart16550: serial@10400000 {
-+		compatible = "ns16550a";
-+		reg = <0x10400000 0x10000>;
-+
-+		reg-shift = <2>;
-+		reg-offset = <0x1000>;
-+
-+		clocks	= <&ext>;
-+	};
-+};
-+
-+&ext {
-+	clock-frequency = <50000000>;
-+};
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
