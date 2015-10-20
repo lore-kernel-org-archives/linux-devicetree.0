@@ -1,188 +1,97 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 2/4] phy: rcar-gen3-usb2: change the mode to OTG on the combined channel
-Date: Tue, 20 Oct 2015 17:57:49 +0900
-Message-ID: <1445331471-5028-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v4 2/3] arm64: Juno: Add support for the PCIe host bridge
+ on Juno R1
+Date: Tue, 20 Oct 2015 09:59:19 +0100
+Message-ID: <20151020085919.GZ3394@e106497-lin.cambridge.arm.com>
+References: <1445008929-32267-1-git-send-email-Liviu.Dudau@arm.com>
+ <1445008929-32267-3-git-send-email-Liviu.Dudau@arm.com>
+ <CAGjg+kGhTPXxYS84DTgwhHwqct2Enz_L1Cxsx+QR+tvyU6JzLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAGjg+kGhTPXxYS84DTgwhHwqct2Enz_L1Cxsx+QR+tvyU6JzLQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alex Shi <lkml.alex@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, device-tree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Robin Murphy <robin.murphy@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-To use the channel 0 of R-Car gen3 as periperal mode, This patch changes
-the mode to OTG instead of HOST. Then, this driver needs to set some
-registers to enable host mode and detects ID pin and VBUS pin at
-phy_init() timing.
-
-For now, the channel 0 can be used as host mode only.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/phy/phy-rcar-gen3-usb2.c | 124 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 122 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
-index 9d9cf26..cf91f9f 100644
---- a/drivers/phy/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/phy-rcar-gen3-usb2.c
-@@ -24,6 +24,10 @@
- #define USB2_USBCTR		0x00c
- #define USB2_SPD_RSM_TIMSET	0x10c
- #define USB2_OC_TIMSET		0x110
-+#define USB2_COMMCTRL		0x600
-+#define USB2_VBCTRL		0x60c
-+#define USB2_LINECTRL1		0x610
-+#define USB2_ADPCTRL		0x630
- 
- /* INT_ENABLE */
- #define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
-@@ -41,6 +45,24 @@
- /* OC_TIMSET */
- #define USB2_OC_TIMSET_INIT		0x000209ab
- 
-+/* COMMCTRL */
-+#define USB2_COMMCTRL_OTG_PERI		BIT(31)	/* 1 = Peripheral mode */
-+
-+/* VBCTRL */
-+#define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
-+
-+/* LINECTRL1 */
-+#define USB2_LINECTRL1_DPRPD_EN		BIT(19)
-+#define USB2_LINECTRL1_DP_RPD		BIT(18)
-+#define USB2_LINECTRL1_DMRPD_EN		BIT(17)
-+#define USB2_LINECTRL1_DM_RPD		BIT(16)
-+
-+/* ADPCTRL */
-+#define USB2_ADPCTRL_OTGSESSVLD		BIT(20)
-+#define USB2_ADPCTRL_IDDIG		BIT(19)
-+#define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
-+#define USB2_ADPCTRL_DRVVBUS		BIT(4)
-+
- /******* HSUSB registers (original offset is +0x100) *******/
- #define HSUSB_LPSTS			0x02
- #define HSUSB_UGCTRL2			0x84
-@@ -66,6 +88,102 @@ struct rcar_gen3_chan {
- 	struct phy *phy;
- };
- 
-+static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
-+{
-+	void __iomem *usb2_base = ch->usb2.base;
-+	u32 val = readl(usb2_base + USB2_COMMCTRL);
-+
-+	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, host);
-+	if (host)
-+		val &= ~USB2_COMMCTRL_OTG_PERI;
-+	else
-+		val |= USB2_COMMCTRL_OTG_PERI;
-+	writel(val, usb2_base + USB2_COMMCTRL);
-+}
-+
-+static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
-+{
-+	void __iomem *usb2_base = ch->usb2.base;
-+	u32 val = readl(usb2_base + USB2_LINECTRL1);
-+
-+	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
-+	val &= ~(USB2_LINECTRL1_DP_RPD | USB2_LINECTRL1_DM_RPD);
-+	if (dp)
-+		val |= USB2_LINECTRL1_DP_RPD;
-+	if (dm)
-+		val |= USB2_LINECTRL1_DM_RPD;
-+	writel(val, usb2_base + USB2_LINECTRL1);
-+}
-+
-+static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
-+{
-+	void __iomem *usb2_base = ch->usb2.base;
-+	u32 val = readl(usb2_base + USB2_ADPCTRL);
-+
-+	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, vbus);
-+	if (vbus)
-+		val |= USB2_ADPCTRL_DRVVBUS;
-+	else
-+		val &= ~USB2_ADPCTRL_DRVVBUS;
-+	writel(val, usb2_base + USB2_ADPCTRL);
-+}
-+
-+static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
-+{
-+	rcar_gen3_set_linectrl(ch, 1, 1);
-+	rcar_gen3_set_host_mode(ch, 1);
-+	rcar_gen3_enable_vbus_ctrl(ch, 1);
-+}
-+
-+static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
-+{
-+	rcar_gen3_set_linectrl(ch, 0, 1);
-+	rcar_gen3_set_host_mode(ch, 0);
-+	rcar_gen3_enable_vbus_ctrl(ch, 0);
-+}
-+
-+static bool rcar_gen3_check_vbus(struct rcar_gen3_chan *ch)
-+{
-+	return !!(readl(ch->usb2.base + USB2_ADPCTRL) &
-+		  USB2_ADPCTRL_OTGSESSVLD);
-+}
-+
-+static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
-+{
-+	return !!(readl(ch->usb2.base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
-+}
-+
-+static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
-+{
-+	bool is_host = true;
-+
-+	/* B-device? */
-+	if (rcar_gen3_check_id(ch) && rcar_gen3_check_vbus(ch))
-+		is_host = false;
-+
-+	if (is_host)
-+		rcar_gen3_init_for_host(ch);
-+	else
-+		rcar_gen3_init_for_peri(ch);
-+}
-+
-+static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
-+{
-+	void __iomem *usb2_base = ch->usb2.base;
-+	u32 val;
-+
-+	val = readl(usb2_base + USB2_VBCTRL);
-+	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
-+	val = readl(usb2_base + USB2_ADPCTRL);
-+	writel(val | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
-+	val = readl(usb2_base + USB2_LINECTRL1);
-+	rcar_gen3_set_linectrl(ch, 0, 0);
-+	writel(val | USB2_LINECTRL1_DPRPD_EN | USB2_LINECTRL1_DMRPD_EN,
-+	       usb2_base + USB2_LINECTRL1);
-+
-+	rcar_gen3_device_recognition(ch);
-+}
-+
- static int rcar_gen3_phy_usb2_init(struct phy *p)
- {
- 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
-@@ -80,11 +198,13 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 
- 	/* Initialize HSUSB part */
- 	if (hsusb_base) {
--		/* TODO: support "OTG" mode */
- 		val = readl(hsusb_base + HSUSB_UGCTRL2);
- 		val = (val & ~HSUSB_UGCTRL2_USB0SEL) |
--		      HSUSB_UGCTRL2_USB0SEL_HOST;
-+		      HSUSB_UGCTRL2_USB0SEL_OTG;
- 		writel(val & HSUSB_UGCTRL2_MASK, hsusb_base + HSUSB_UGCTRL2);
-+
-+		/* Initialize otg part */
-+		rcar_gen3_init_otg(channel);
- 	}
- 
- 	return 0;
--- 
-1.9.1
-
+T24gVHVlLCBPY3QgMjAsIDIwMTUgYXQgMTE6MzM6MTNBTSArMDgwMCwgQWxleCBTaGkgd3JvdGU6
+Cj4gICAgSXMgdGhlcmUgYW55IGNvbmNlcm4gdG8gbWVyZ2UgdGhlIGp1bm8gcjEgcGNpZSBEVCBw
+YXJ0IGludG8gdXBzdHJlYW0/CgpOb3QgdGhhdCBJJ3ZlIGhlYXJkIG9mLiBJJ3ZlIGFza2VkIENh
+dGFsaW4gYW5kIFdpbGwgaWYgdGhleSBuZWVkIGEgcHVsbCByZXF1ZXN0IHRvIGdldAp0aGUgcGF0
+Y2ggaW50byB0aGUgYXJtNjQgdHJlZSBidXQgSSBoYXZlbid0IGdvdCBhbiBhbnN3ZXIgeWV0LgoK
+Q2F0YWxpbiwgV2lsbCwgYXJlIHlvdSBPSyB3aXRoIHB1bGxpbmcgdGhpcyBwYXRjaCBpbnRvIGFy
+bTY0IGFuZCBpZiBzbyBkbyB5b3Ugd2FudAptZSB0byBzZW5kIGEgZGlmZmVyZW50IHB1bGwgcmVx
+dWVzdCBvciBhcmUgeW91IGhhcHB5IHRvIGZldGNoIGl0IGZyb20gdGhlIGdpdCB0cmVlCgpnaXQ6
+Ly9saW51eC1hcm0ub3JnL2xpbnV4LWxkLmdpdCBmb3ItdXBzdHJlYW0vanVuby1wY2llLgoKQmVz
+dCByZWdhcmRzLApMaXZpdQoKPiAgICBPbiBGcmksIE9jdCAxNiwgMjAxNSBhdCAxMToyMiBQTSwg
+TGl2aXUgRHVkYXUgPFsxXUxpdml1LkR1ZGF1QGFybS5jb20+IHdyb3RlOgo+IAo+ICAgICAgSnVu
+byBSMSBib2FyZCBzcG9ydHMgYSBmdW5jdGlvbmFsIFBDSWUgaG9zdCBicmlkZ2UgdGhhdCBpcwo+
+ICAgICAgY29tcGxpYW50IHdpdGggdGhlIFNCU0Egc3RhbmRhcmQgZm91bmQgWzFdIGhlcmUuIFdp
+dGggdGhlIHJpZ2h0Cj4gICAgICBmaXJtd2FyZSB0aGF0IGluaXRpYWxpc2VzIHRoZSBYcHJlc3NS
+SUNIMyBjb250cm9sbGVyIG9uZSBjYW4KPiAgICAgIHVzZSB0aGUgZ2VuZXJpYyBIb3N0IEJyaWRn
+ZSBkcml2ZXIgdG8gdXNlIHRoZSBQQ0llIGhhcmR3YXJlLgo+IAo+ICAgICAgU2lnbmVkLW9mZi1i
+eTogTGl2aXUgRHVkYXUgPFsyXUxpdml1LkR1ZGF1QGFybS5jb20+Cj4gICAgICBBY2tlZC1ieTog
+TWFyayBSdXRsYW5kIDxbM11tYXJrLnJ1dGxhbmRAYXJtLmNvbT4KPiAKPiAgICAgIFsxXSBbNF1o
+dHRwOi8vaW5mb2NlbnRlci5hcm0uY29tL2hlbHAvdG9waWMvY29tLmFybS5kb2MuZGVuMDAyOWEv
+Cj4gICAgICAtLS0KPiAgICAgIMKgYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1yMS5kdHMg
+fCAyMCArKysrKysrKysrKysrKysrKysrKwo+ICAgICAgwqAxIGZpbGUgY2hhbmdlZCwgMjAgaW5z
+ZXJ0aW9ucygrKQo+IAo+ICAgICAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJt
+L2p1bm8tcjEuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1yMS5kdHMKPiAgICAg
+IGluZGV4IGM2Mjc1MTEuLmEyNTk2NGQgMTAwNjQ0Cj4gICAgICAtLS0gYS9hcmNoL2FybTY0L2Jv
+b3QvZHRzL2FybS9qdW5vLXIxLmR0cwo+ICAgICAgKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9h
+cm0vanVuby1yMS5kdHMKPiAgICAgIEBAIC0xMDksNiArMTA5LDI2IEBACj4gCj4gICAgICDCoCDC
+oCDCoCDCoCAjaW5jbHVkZSAianVuby1iYXNlLmR0c2kiCj4gCj4gICAgICArwqAgwqAgwqAgwqBw
+Y2llLWNvbnRyb2xsZXJANDAwMDAwMDAgewo+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+Y29tcGF0aWJsZSA9ICJhcm0sanVuby1yMS1wY2llIiwgInBsZGEseHByZXNzcmljaDMtYXhpIiwg
+InBjaS1ob3N0LWVjYW0tZ2VuZXJpYyI7Cj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBk
+ZXZpY2VfdHlwZSA9ICJwY2kiOwo+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcmVnID0g
+PDAgMHg0MDAwMDAwMCAwIDB4MTAwMDAwMDA+O8KgIMKgIMKgIC8qIEVDQU0gY29uZmlnIHNwYWNl
+ICovCj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBidXMtcmFuZ2UgPSA8MCAyNTU+Owo+
+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgbGludXgscGNpLWRvbWFpbiA9IDwwPjsKPiAg
+ICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCNhZGRyZXNzLWNlbGxzID0gPDM+Owo+ICAgICAg
+K8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgI3NpemUtY2VsbHMgPSA8Mj47Cj4gICAgICArwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqBkbWEtY29oZXJlbnQ7Cj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqByYW5nZXMgPSA8MHgwMTAwMDAwMCAweDAwIDB4NWY4MDAwMDAgMHgwMCAweDVmODAwMDAw
+IDB4MCAweDAwODAwMDAwPiwKPiAgICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCA8MHgwMjAwMDAwMCAweDAwIDB4NTAwMDAwMDAgMHgwMCAweDUwMDAwMDAwIDB4MCAweDA4
+MDAwMDAwPiwKPiAgICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8MHg0
+MjAwMDAwMCAweDQwIDB4MDAwMDAwMDAgMHg0MCAweDAwMDAwMDAwIDB4MSAweDAwMDAwMDAwPjsK
+PiAgICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4g
+ICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAg
+Nz47Cj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHQtbWFwID0gPDAgMCAw
+IDEgJmdpYyAwIDAgMCAxMzYgND4sCj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqA8MCAwIDAgMiAmZ2ljIDAgMCAwIDEzNyA0PiwKPiAgICAgICvC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoDwwIDAgMCAzICZn
+aWMgMCAwIDAgMTM4IDQ+LAo+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgPDAgMCAwIDQgJmdpYyAwIDAgMCAxMzkgND47Cj4gICAgICArwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqBtc2ktcGFyZW50ID0gPCZ2Mm1fMD47Cj4gICAgICArwqAgwqAgwqAg
+wqB9Owo+ICAgICAgwqB9Owo+IAo+ICAgICAgwqAmbWVtdGltZXIgewo+ICAgICAgLS0KPiAgICAg
+IDIuNi4wCj4gCj4gICAgICAtLQo+ICAgICAgVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6
+IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWtlcm5lbCIgaW4KPiAgICAgIHRoZSBi
+b2R5IG9mIGEgbWVzc2FnZSB0byBbNV1tYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gICAgICBN
+b3JlIG1ham9yZG9tbyBpbmZvIGF0wqAgWzZdaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
+bW8taW5mby5odG1sCj4gICAgICBQbGVhc2UgcmVhZCB0aGUgRkFRIGF0wqAgWzddaHR0cDovL3d3
+dy50dXgub3JnL2xrbWwvCj4gCj4gICAgLS0KPiAgICBUaGFua3MKPiAgICDCoCDCoCBBbGV4Cj4g
+Cj4gUmVmZXJlbmNlcwo+IAo+ICAgIFZpc2libGUgbGlua3MKPiAgICAxLiBtYWlsdG86TGl2aXUu
+RHVkYXVAYXJtLmNvbQo+ICAgIDIuIG1haWx0bzpMaXZpdS5EdWRhdUBhcm0uY29tCj4gICAgMy4g
+bWFpbHRvOm1hcmsucnV0bGFuZEBhcm0uY29tCj4gICAgNC4gaHR0cDovL2luZm9jZW50ZXIuYXJt
+LmNvbS9oZWxwL3RvcGljL2NvbS5hcm0uZG9jLmRlbjAwMjlhLwo+ICAgIDUuIG1haWx0bzptYWpv
+cmRvbW9Admdlci5rZXJuZWwub3JnCj4gICAgNi4gaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpv
+cmRvbW8taW5mby5odG1sCj4gICAgNy4gaHR0cDovL3d3dy50dXgub3JnL2xrbWwvCgotLSAKPT09
+PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8
+CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEg
+IC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
