@@ -1,7 +1,7 @@
 From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/4] ARM: dts: berlin: add 2nd clock for BG2Q sdhci0 and sdhci1
-Date: Tue, 20 Oct 2015 19:16:45 +0800
-Message-ID: <1445339807-2351-3-git-send-email-jszhang@marvell.com>
+Subject: [PATCH v2 3/4] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio clk
+Date: Tue, 20 Oct 2015 19:16:46 +0800
+Message-ID: <1445339807-2351-4-git-send-email-jszhang@marvell.com>
 References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,27 @@ To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the optional 2nd clock for BG2Q's sdhci0 and sdhci1. This would let the
-clock be disabled during runtime pm, so saves power a bit.
+Since we have added the necessary two clks' properties in dts, we can
+remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
 
 Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2q.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/berlin/bg2q.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 2cb07fa..71b5d5e 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -102,7 +102,8 @@
- 		sdhci0: sdhci@ab0000 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0000 0x200>;
--			clocks = <&chip_clk CLKID_SDIO1XIN>;
-+			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
-+			clock-names = "io", "core";
- 			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-@@ -110,7 +111,8 @@
- 		sdhci1: sdhci@ab0800 {
- 			compatible = "mrvl,pxav3-mmc";
- 			reg = <0xab0800 0x200>;
--			clocks = <&chip_clk CLKID_SDIO1XIN>;
-+			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
-+			clock-names = "io", "core";
- 			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
+diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
+index 221f40c..243f421 100644
+--- a/drivers/clk/berlin/bg2q.c
++++ b/drivers/clk/berlin/bg2q.c
+@@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
+ 	{ "usb2",	"perif",	13 },
+ 	{ "usb3",	"perif",	14 },
+ 	{ "pbridge",	"perif",	15, CLK_IGNORE_UNUSED },
+-	{ "sdio",	"perif",	16, CLK_IGNORE_UNUSED },
++	{ "sdio",	"perif",	16 },
+ 	{ "nfc",	"perif",	18 },
+ 	{ "pcie",	"perif",	22 },
+ };
 -- 
 2.6.1
 
