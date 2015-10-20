@@ -1,55 +1,122 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: omap5-uevm: enable iio gpadc for Palmas
-Date: Tue, 20 Oct 2015 09:24:26 -0700
-Message-ID: <20151020162425.GH3078@atomide.com>
-References: <cover.1445000017.git.hns@goldelico.com>
- <05c57453151c9e2cbd3f15145f1e15223410cd87.1445000017.git.hns@goldelico.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 1/4] dt-bindings: MIPS: Document xilfpga bindings and boot style
+Date: Tue, 20 Oct 2015 17:30:58 +0100
+Message-ID: <1445358661-53953-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+References: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <05c57453151c9e2cbd3f15145f1e15223410cd87.1445000017.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Pradeep Goudagunta <pgoudagunta-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ralf@linux-mips.org, robh+dt@kernel.org
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Xilfpga boots only with device-tree. Document the required properties
+and the unique boot style
 
-* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [151016 05:58]:
-> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/omap5-uevm.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-> index 0e8128b..63f81bb 100644
-> --- a/arch/arm/boot/dts/omap5-uevm.dts
-> +++ b/arch/arm/boot/dts/omap5-uevm.dts
-> @@ -342,6 +342,16 @@
->  
->  			ti,ldo6-vibrator;
->  
-> +			gpadc {
-> +				compatible = "ti,palmas-gpadc";
-> +				interrupts = <18 0
-> +					      16 0
-> +					      17 0>;
-> +				#io-channel-cells = <1>;
-> +				ti,channel0-current-microamp = <5>;
-> +				ti,channel3-current-microamp = <10>;
-> +			};
-> +
->  			regulators {
->  				smps123_reg: smps123 {
->  					/* VDD_OPP_MPU */
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-FYI, please send this one separately once the binding and driver is
-merged.
+---
+V1->V2
 
-This need to be updated arch/arm/boot/dts/omap5-board-common.dts, so
-this will cause merge conflicts if applied with the driver.
+Reformatted to 80 char column
+Correct clock phandle description
+Added digilent,nexys4ddr to get more specific about platform
+Added compatible string in example.
+---
+ .../devicetree/bindings/mips/img/xilfpga.txt       | 83 ++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/img/xilfpga.txt
 
-Regards,
-
-Tony
+diff --git a/Documentation/devicetree/bindings/mips/img/xilfpga.txt b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
+new file mode 100644
+index 0000000..eaba22b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
+@@ -0,0 +1,83 @@
++Imagination University Program MIPSfpga
++=======================================
++
++Under the Imagination University Program, a microAptiv UP core has been
++released for academic usage.
++
++As we are dealing with a mips core instantiated on an FPGA, specifications
++are fluid and can be varied in RTL.
++
++This binding document is provided as baseline guidance for the example
++project provided by IMG.
++
++The example project runs on the Nexys4DDR board by Digilent powered by
++the ARTIX-7 FPGA by Xilinx.
++
++Relevant details about the example project and the Nexys4DDR board:
++
++- microAptiv UP core m14Kc
++- 50MHz clock speed
++- 128Mbyte DDR RAM	at 0x0000_0000
++- 8Kbyte RAM		at 0x1000_0000
++- axi_intc		at 0x1020_0000
++- axi_uart16550		at 0x1040_0000
++- axi_gpio		at 0x1060_0000
++- axi_i2c		at 0x10A0_0000
++- custom_gpio		at 0x10C0_0000
++- axi_ethernetlite	at 0x10E0_0000
++- 8Kbyte BootRAM	at 0x1FC0_0000
++
++Required properties:
++--------------------
++ - compatible: Must include "img,xilfpga","digilent,nexys4ddr".
++
++CPU nodes:
++----------
++A "cpus" node is required.  Required properties:
++ - #address-cells: Must be 1.
++ - #size-cells: Must be 0.
++A CPU sub-node is also required for at least CPU 0. Required properties:
++ - device_type: Must be "cpu".
++ - compatible: Must be "mips,m14Kc".
++ - reg: Must be <0>.
++ - clocks: phandle to ext clock for fixed-clock received by MIPS core.
++
++Example:
++
++	compatible = "img,xilfpga","digilent,nexys4ddr";
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "mips,m14Kc";
++			reg = <0>;
++			clocks	= <&ext>;
++		};
++	};
++
++	ext: ext {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <50000000>;
++	};
++
++Boot protocol:
++--------------
++
++The BootRAM is a writeable "RAM" in FPGA at 0x1FC0_0000.
++This is for easy reprogrammibility via JTAG.
++
++The BootRAM inializes the cache and the axi_uart peripheral.
++
++DDR initialiation is already handled by a HW IP block.
++
++When the example project bitstream is loaded, the cpu_reset button
++needs to be pressed.
++
++The bootram initializes the cache and axi_uart.
++Then outputs MIPSFPGA\n\r on the serial port on the Nexys4DDR board.
++
++At this point, the board is ready to load the Linux kernel
++vmlinux file via JTAG.
+-- 
+1.9.1
