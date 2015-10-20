@@ -1,7 +1,7 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 1/4] dt-bindings: MIPS: Document xilfpga bindings and boot style
-Date: Tue, 20 Oct 2015 17:30:58 +0100
-Message-ID: <1445358661-53953-2-git-send-email-Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 4/4] MIPS: Add xilfpga defconfig
+Date: Tue, 20 Oct 2015 17:31:01 +0100
+Message-ID: <1445358661-53953-5-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,111 +12,64 @@ To: ralf@linux-mips.org, robh+dt@kernel.org
 Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Xilfpga boots only with device-tree. Document the required properties
-and the unique boot style
+Add defconfig for MIPSfpga
 
 Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
 ---
-V1->V2
+V1 -> V2
 
-Reformatted to 80 char column
-Correct clock phandle description
-Added digilent,nexys4ddr to get more specific about platform
-Added compatible string in example.
+Reduced redundant options that had crept in
 ---
- .../devicetree/bindings/mips/img/xilfpga.txt       | 83 ++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/img/xilfpga.txt
+ arch/mips/configs/xilfpga_defconfig | 40 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 arch/mips/configs/xilfpga_defconfig
 
-diff --git a/Documentation/devicetree/bindings/mips/img/xilfpga.txt b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
+diff --git a/arch/mips/configs/xilfpga_defconfig b/arch/mips/configs/xilfpga_defconfig
 new file mode 100644
-index 0000000..eaba22b
+index 0000000..ed1dce3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/img/xilfpga.txt
-@@ -0,0 +1,83 @@
-+Imagination University Program MIPSfpga
-+=======================================
-+
-+Under the Imagination University Program, a microAptiv UP core has been
-+released for academic usage.
-+
-+As we are dealing with a mips core instantiated on an FPGA, specifications
-+are fluid and can be varied in RTL.
-+
-+This binding document is provided as baseline guidance for the example
-+project provided by IMG.
-+
-+The example project runs on the Nexys4DDR board by Digilent powered by
-+the ARTIX-7 FPGA by Xilinx.
-+
-+Relevant details about the example project and the Nexys4DDR board:
-+
-+- microAptiv UP core m14Kc
-+- 50MHz clock speed
-+- 128Mbyte DDR RAM	at 0x0000_0000
-+- 8Kbyte RAM		at 0x1000_0000
-+- axi_intc		at 0x1020_0000
-+- axi_uart16550		at 0x1040_0000
-+- axi_gpio		at 0x1060_0000
-+- axi_i2c		at 0x10A0_0000
-+- custom_gpio		at 0x10C0_0000
-+- axi_ethernetlite	at 0x10E0_0000
-+- 8Kbyte BootRAM	at 0x1FC0_0000
-+
-+Required properties:
-+--------------------
-+ - compatible: Must include "img,xilfpga","digilent,nexys4ddr".
-+
-+CPU nodes:
-+----------
-+A "cpus" node is required.  Required properties:
-+ - #address-cells: Must be 1.
-+ - #size-cells: Must be 0.
-+A CPU sub-node is also required for at least CPU 0. Required properties:
-+ - device_type: Must be "cpu".
-+ - compatible: Must be "mips,m14Kc".
-+ - reg: Must be <0>.
-+ - clocks: phandle to ext clock for fixed-clock received by MIPS core.
-+
-+Example:
-+
-+	compatible = "img,xilfpga","digilent,nexys4ddr";
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mips,m14Kc";
-+			reg = <0>;
-+			clocks	= <&ext>;
-+		};
-+	};
-+
-+	ext: ext {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <50000000>;
-+	};
-+
-+Boot protocol:
-+--------------
-+
-+The BootRAM is a writeable "RAM" in FPGA at 0x1FC0_0000.
-+This is for easy reprogrammibility via JTAG.
-+
-+The BootRAM inializes the cache and the axi_uart peripheral.
-+
-+DDR initialiation is already handled by a HW IP block.
-+
-+When the example project bitstream is loaded, the cpu_reset button
-+needs to be pressed.
-+
-+The bootram initializes the cache and axi_uart.
-+Then outputs MIPSFPGA\n\r on the serial port on the Nexys4DDR board.
-+
-+At this point, the board is ready to load the Linux kernel
-+vmlinux file via JTAG.
++++ b/arch/mips/configs/xilfpga_defconfig
+@@ -0,0 +1,40 @@
++CONFIG_MACH_XILFPGA=y
++# CONFIG_COMPACTION is not set
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_EMBEDDED=y
++# CONFIG_VM_EVENT_COUNTERS is not set
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLAB=y
++# CONFIG_BLOCK is not set
++# CONFIG_SUSPEND is not set
++# CONFIG_UEVENT_HELPER is not set
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_STANDALONE is not set
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++# CONFIG_FW_LOADER is not set
++# CONFIG_ALLOW_DEV_COREDUMP is not set
++# CONFIG_INPUT_MOUSEDEV is not set
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_SERIO is not set
++CONFIG_VT_HW_CONSOLE_BINDING=y
++# CONFIG_UNIX98_PTYS is not set
++# CONFIG_LEGACY_PTYS is not set
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_OF_PLATFORM=y
++# CONFIG_HW_RANDOM is not set
++CONFIG_GPIO_SYSFS=y
++CONFIG_GPIO_XILINX=y
++# CONFIG_HWMON is not set
++# CONFIG_USB_SUPPORT is not set
++# CONFIG_MIPS_PLATFORM_DEVICES is not set
++# CONFIG_IOMMU_SUPPORT is not set
++# CONFIG_PROC_PAGE_MONITOR is not set
++# CONFIG_MISC_FILESYSTEMS is not set
++CONFIG_PANIC_ON_OOPS=y
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_FTRACE is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE="console=ttyS0,115200"
 -- 
 1.9.1
