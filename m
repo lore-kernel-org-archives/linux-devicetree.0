@@ -1,365 +1,46 @@
-Return-Path: <devicetree-owner@kernel.org>
-Received: from mout.kundenserver.de ([212.227.126.187]:58401 "EHLO
-	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751631AbbJWOxb (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Oct 2015 10:53:31 -0400
-Date: Fri, 23 Oct 2015 16:53:09 +0200
-From: Karsten Merker <merker@debian.org>
-Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81
- tablet
-Message-ID: <20151023145309.GA1885@excalibur.cnev.de>
-References: <1445572241-13259-1-git-send-email-wens@csie.org>
- <1445572241-13259-5-git-send-email-wens@csie.org>
+Return-Path: <ck.hu@mediatek.com>
+Message-ID: <1445325251.19417.16.camel@mtksdaap41>
+Subject: RE: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
+From: CK Hu <ck.hu@mediatek.com>
+Date: Tue, 20 Oct 2015 15:14:11 +0800
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1445572241-13259-5-git-send-email-wens@csie.org>
-Sender: devicetree-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Karsten Merker <merker@debian.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@kernel.org>, Siarhei Siamashka <siarhei.siamashka@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, "; Mark Rutland" <mark.rutland@arm.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, "; Ian Campbell" <ijc+devicetree@hellion.org.uk>, "; Kumar Gala" <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "; Jitao Shi" <jitao.shi@mediatek.com>, Thierry, Ajay, Inki, Rahul Sharma <rahul.sharma@samsung.com>, "; Sean Paul" <seanpaul@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, "; Philipp Zabel" <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha, Yingjoe, Eddie Huang <eddie.huang@mediatek.com>, "; Cawa Cheng" <cawa.cheng@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Oct 23, 2015 at 11:50:41AM +0800, Chen-Yu Tsai wrote:
+Hi, Rob:
 
-> From: Karsten Merker <merker@debian.org>
+> -----Original Message-----
+> From: Rob Herring [mailto:robh+dt@kernel.org]
+> Sent: Friday, October 16, 2015 9:27 PM
+> Subject: Re: [RFC 2/2] drm/bridge: Add I2C based driver for ps8640
+bridge
 > 
-> The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
-> 768x1024 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
-> rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
-> and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
-> (both volume buttons are also connected to the UBOOT_SEL pin). The
-
-Hello Chen-Yu,
-
-the volume button function is something that I wanted to confirm
-again but forgot to ask previously: Siarhei had pointed out that
-only the volume+ button triggers UBOOT_SEL, but for me actually
-both volume buttons work as described above.  Could you
-cross-check that on your Primo81?
-
-> external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
-> OTG and 3.5mm headphone jack.
+> On Fri, Oct 16, 2015 at 8:06 AM, Mark Rutland <mark.rutland@arm.com>
+> wrote:
+> >> +     /* FIXME - use of_graph_get_port_by_id(np, 1) on newer
+kernels */
+> >> +     in_ep = of_graph_get_next_endpoint(np, NULL);
+> >
+> > Huh?
+> >
+> >> +     edidp = of_get_property(np, "edid", &size);
+> >
+> > This property wasn't mentioned in the binding document.
+> >
+> > Please describe it. If it's from a more generic binding, refer to
+that
+> > from the binding document.
 > 
-> USB OTG is enabled in host only mode. AXP221 USB power supply and
-> GPIO support are required for full USB OTG support.
+> It should be generic, but currently documented in individual drivers.
+> I also think this is not the right location in the DT for this
+property. It should be
+> part of the panel or connector node instead.
+
+edid property is the temp solution in develop. We will remove it next
+patch.
+
 > 
-> Signed-off-by: Siarhei Siamashka <siarhei.siamashka@gmail.com>
-> Signed-off-by: Karsten Merker <merker@debian.org>
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
-> 
-> Changes since last submission (was part of Sinlinx SinA31s series)
-> 
->   - Update axp22x.dtsi file name
->   - Sort regulators
->   - Drop URL in commit message
->   - Drop comment for capacitive touch panel
->   - Add simplefb regulators
->   - Drop regulator-always-on for regulators that aren't critical
->   - Fix CPU and GPU regulator supply mix-up
-> 
-> ---
->  arch/arm/boot/dts/Makefile               |   1 +
->  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 255 +++++++++++++++++++++++++++++++
->  2 files changed, 256 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c00b72e750ab..78ade1a5e886 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -612,6 +612,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->  	sun6i-a31-m9.dtb \
->  	sun6i-a31-mele-a1000g-quad.dtb \
->  	sun6i-a31s-cs908.dtb \
-> +	sun6i-a31s-primo81.dtb \
->  	sun6i-a31s-sina31s.dtb \
->  	sun6i-a31s-sinovoip-bpi-m2.dtb \
->  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
-> diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-> new file mode 100644
-> index 000000000000..2d4250b1faf8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-> @@ -0,0 +1,255 @@
-> +/*
-> + * Copyright 2014 Siarhei Siamashka <siarhei.siamashka@gmail.com>
-> + * Copyright 2015 Karsten Merker <merker@debian.org>
-> + * Copyright 2015 Chen-Yu Tsai <wens@csie.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun6i-a31s.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +/ {
-> +	model = "MSI Primo81 tablet";
-> +	compatible = "msi,primo81", "allwinner,sun6i-a31s";
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&reg_dcdc3>;
-> +};
-> +
-> +&ehci0 {
-> +	/* rtl8188etv wifi is connected here */
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	/* pull-ups and device VDDIO use AXP221 DLDO3 */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_pins_a>;
-> +	status = "failed";
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins_a>;
-> +	status = "okay";
-> +
-> +	ctp@5d {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gt911_int_primo81>;
-> +		compatible = "goodix,gt911";
-> +		reg = <0x5d>;
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>; /* PA3 */
-
-I'd like to add a
-
-		touchscreen-swapped-x-y = "true";
-
-as described in
-Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-here, as the display is in portrait mode while the touchscreen is
-in landscape mode and needs to have the x and y axes swapped to
-work in the same coordinate system as the display.
-
-Regarding the driver side: the goodix driver in kernel 4.3
-doesn't yet support this property, but patches to add support for
-it are on the linux-input list and should hopefully make it into
-kernel 4.4.
-
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins_a>;
-> +	status = "okay";
-> +
-> +	accelerometer@1c {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&mma8452_int_primo81>;
-> +		compatible = "fsl,mma8452";
-> +		reg = <0x1c>;
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>; /* PA9 */
-> +		#io-channel-cells = <1>;
-> +	};
-> +};
-> +
-> +&lradc {
-> +	vref-supply = <&reg_aldo3>;
-> +	status = "okay";
-> +
-> +	button@158 {
-> +		label = "Volume Up";
-> +		linux,code = <KEY_VOLUMEUP>;
-> +		channel = <0>;
-> +		voltage = <158730>;
-> +	};
-> +
-> +	button@349 {
-> +		label = "Volume Down";
-> +		linux,code = <KEY_VOLUMEDOWN>;
-> +		channel = <0>;
-> +		voltage = <349206>;
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_primo81>;
-> +	vmmc-supply = <&reg_dcdc1>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
-> +	cd-inverted;
-> +	status = "okay";
-> +};
-> +
-> +&pio {
-> +	gt911_int_primo81: gt911_int_pin@0 {
-> +		allwinner,pins = "PA3";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +
-> +	mma8452_int_primo81: mma8452_int_pin@0 {
-> +		allwinner,pins = "PA9";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
-> +
-> +	mmc0_cd_pin_primo81: mmc0_cd_pin@0 {
-> +		allwinner,pins = "PA8";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
-> +};
-> +
-> +&p2wi {
-> +	status = "okay";
-> +
-> +	axp22x: pmic@68 {
-> +		compatible = "x-powers,axp221";
-> +		reg = <0x68>;
-> +		interrupt-parent = <&nmi_intc>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +};
-> +
-> +#include "axp22x.dtsi"
-> +
-> +&reg_aldo3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <2700000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "avcc";
-> +};
-> +
-> +&reg_dc1sw {
-> +	regulator-min-microvolt = <3000000>;
-> +	regulator-max-microvolt = <3000000>;
-> +	regulator-name = "vcc-lcd";
-> +};
-> +
-> +&reg_dc5ldo {
-> +	regulator-min-microvolt = <700000>;
-> +	regulator-max-microvolt = <1320000>;
-> +	regulator-name = "vdd-cpus"; /* This is an educated guess */
-> +};
-> +
-> +&reg_dcdc1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3000000>;
-> +	regulator-max-microvolt = <3000000>;
-> +	regulator-name = "vcc-3v0";
-> +};
-> +
-> +&reg_dcdc2 {
-> +	regulator-min-microvolt = <700000>;
-> +	regulator-max-microvolt = <1320000>;
-> +	regulator-name = "vdd-gpu";
-> +};
-> +
-> +&reg_dcdc3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <700000>;
-> +	regulator-max-microvolt = <1320000>;
-> +	regulator-name = "vdd-cpu";
-> +};
-> +
-> +&reg_dcdc4 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <700000>;
-> +	regulator-max-microvolt = <1320000>;
-> +	regulator-name = "vdd-sys-dll";
-> +};
-> +
-> +&reg_dcdc5 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1500000>;
-> +	regulator-max-microvolt = <1500000>;
-> +	regulator-name = "vcc-dram";
-> +};
-> +
-> +&reg_dldo1 {
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-wifi";
-> +};
-> +
-> +&reg_dldo3 {
-> +	regulator-min-microvolt = <2800000>;
-> +	regulator-max-microvolt = <2800000>;
-> +	regulator-name = "vddio-csi";
-> +};
-> +
-> +&reg_eldo3 {
-> +	regulator-min-microvolt = <1080000>;
-> +	regulator-max-microvolt = <1320000>;
-> +	regulator-name = "vdd-mipi-bridge";
-> +};
-> +
-> +&simplefb_lcd {
-> +	vcc-lcd-supply = <&reg_dc1sw>;
-> +	vdd-mipi-bridge-supply = <&reg_eldo3>;
-> +};
-> +
-> +&usb_otg {
-> +	/* otg support requires support for AXP221 usb-power-supply and GPIO */
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usbphy {
-> +	usb1_vbus-supply = <&reg_dldo1>;
-> +	status = "okay";
-> +};
-> -- 
-> 2.6.1
-
-Regards,
-Karsten
--- 
-Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
-sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
-Werbung sowie der Markt- oder Meinungsforschung.
+> Rob
