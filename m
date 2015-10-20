@@ -1,17 +1,11 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v4 2/3] arm64: Juno: Add support for the PCIe host bridge
- on Juno R1
-Date: Tue, 20 Oct 2015 09:59:19 +0100
-Message-ID: <20151020085919.GZ3394@e106497-lin.cambridge.arm.com>
-References: <1445008929-32267-1-git-send-email-Liviu.Dudau@arm.com>
- <1445008929-32267-3-git-send-email-Liviu.Dudau@arm.com>
- <CAGjg+kGhTPXxYS84DTgwhHwqct2Enz_L1Cxsx+QR+tvyU6JzLQ@mail.gmail.com>
+From: Chen Feng <puck.chen@hisilicon.com>
+Subject: [PATCH V2 1/3] Documentation for system mmu in hi6220 platform.
+Date: Tue, 20 Oct 2015 16:45:22 +0800
+Message-ID: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAGjg+kGhTPXxYS84DTgwhHwqct2Enz_L1Cxsx+QR+tvyU6JzLQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,77 +15,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alex Shi <lkml.alex@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, device-tree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Robin Murphy <robin.murphy@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+To: puck.chen@hisilicon.com, yudongbin@hisilicon.com, saberlily.xia@hisilicon.com, suzhuangluan@hisilicon.com, kong.kongxinwei@hisilicon.com, xuyiping@hisilicon.com, z.liuxinliang@hisilicon.com, puck.chen@aliyun.com, weidong2@hisilicon.com, w.f@huawei.com, joro@8bytes.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: dan.zhao@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMjAsIDIwMTUgYXQgMTE6MzM6MTNBTSArMDgwMCwgQWxleCBTaGkgd3JvdGU6
-Cj4gICAgSXMgdGhlcmUgYW55IGNvbmNlcm4gdG8gbWVyZ2UgdGhlIGp1bm8gcjEgcGNpZSBEVCBw
-YXJ0IGludG8gdXBzdHJlYW0/CgpOb3QgdGhhdCBJJ3ZlIGhlYXJkIG9mLiBJJ3ZlIGFza2VkIENh
-dGFsaW4gYW5kIFdpbGwgaWYgdGhleSBuZWVkIGEgcHVsbCByZXF1ZXN0IHRvIGdldAp0aGUgcGF0
-Y2ggaW50byB0aGUgYXJtNjQgdHJlZSBidXQgSSBoYXZlbid0IGdvdCBhbiBhbnN3ZXIgeWV0LgoK
-Q2F0YWxpbiwgV2lsbCwgYXJlIHlvdSBPSyB3aXRoIHB1bGxpbmcgdGhpcyBwYXRjaCBpbnRvIGFy
-bTY0IGFuZCBpZiBzbyBkbyB5b3Ugd2FudAptZSB0byBzZW5kIGEgZGlmZmVyZW50IHB1bGwgcmVx
-dWVzdCBvciBhcmUgeW91IGhhcHB5IHRvIGZldGNoIGl0IGZyb20gdGhlIGdpdCB0cmVlCgpnaXQ6
-Ly9saW51eC1hcm0ub3JnL2xpbnV4LWxkLmdpdCBmb3ItdXBzdHJlYW0vanVuby1wY2llLgoKQmVz
-dCByZWdhcmRzLApMaXZpdQoKPiAgICBPbiBGcmksIE9jdCAxNiwgMjAxNSBhdCAxMToyMiBQTSwg
-TGl2aXUgRHVkYXUgPFsxXUxpdml1LkR1ZGF1QGFybS5jb20+IHdyb3RlOgo+IAo+ICAgICAgSnVu
-byBSMSBib2FyZCBzcG9ydHMgYSBmdW5jdGlvbmFsIFBDSWUgaG9zdCBicmlkZ2UgdGhhdCBpcwo+
-ICAgICAgY29tcGxpYW50IHdpdGggdGhlIFNCU0Egc3RhbmRhcmQgZm91bmQgWzFdIGhlcmUuIFdp
-dGggdGhlIHJpZ2h0Cj4gICAgICBmaXJtd2FyZSB0aGF0IGluaXRpYWxpc2VzIHRoZSBYcHJlc3NS
-SUNIMyBjb250cm9sbGVyIG9uZSBjYW4KPiAgICAgIHVzZSB0aGUgZ2VuZXJpYyBIb3N0IEJyaWRn
-ZSBkcml2ZXIgdG8gdXNlIHRoZSBQQ0llIGhhcmR3YXJlLgo+IAo+ICAgICAgU2lnbmVkLW9mZi1i
-eTogTGl2aXUgRHVkYXUgPFsyXUxpdml1LkR1ZGF1QGFybS5jb20+Cj4gICAgICBBY2tlZC1ieTog
-TWFyayBSdXRsYW5kIDxbM11tYXJrLnJ1dGxhbmRAYXJtLmNvbT4KPiAKPiAgICAgIFsxXSBbNF1o
-dHRwOi8vaW5mb2NlbnRlci5hcm0uY29tL2hlbHAvdG9waWMvY29tLmFybS5kb2MuZGVuMDAyOWEv
-Cj4gICAgICAtLS0KPiAgICAgIMKgYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1yMS5kdHMg
-fCAyMCArKysrKysrKysrKysrKysrKysrKwo+ICAgICAgwqAxIGZpbGUgY2hhbmdlZCwgMjAgaW5z
-ZXJ0aW9ucygrKQo+IAo+ICAgICAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJt
-L2p1bm8tcjEuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1yMS5kdHMKPiAgICAg
-IGluZGV4IGM2Mjc1MTEuLmEyNTk2NGQgMTAwNjQ0Cj4gICAgICAtLS0gYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2FybS9qdW5vLXIxLmR0cwo+ICAgICAgKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9h
-cm0vanVuby1yMS5kdHMKPiAgICAgIEBAIC0xMDksNiArMTA5LDI2IEBACj4gCj4gICAgICDCoCDC
-oCDCoCDCoCAjaW5jbHVkZSAianVuby1iYXNlLmR0c2kiCj4gCj4gICAgICArwqAgwqAgwqAgwqBw
-Y2llLWNvbnRyb2xsZXJANDAwMDAwMDAgewo+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-Y29tcGF0aWJsZSA9ICJhcm0sanVuby1yMS1wY2llIiwgInBsZGEseHByZXNzcmljaDMtYXhpIiwg
-InBjaS1ob3N0LWVjYW0tZ2VuZXJpYyI7Cj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBk
-ZXZpY2VfdHlwZSA9ICJwY2kiOwo+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcmVnID0g
-PDAgMHg0MDAwMDAwMCAwIDB4MTAwMDAwMDA+O8KgIMKgIMKgIC8qIEVDQU0gY29uZmlnIHNwYWNl
-ICovCj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBidXMtcmFuZ2UgPSA8MCAyNTU+Owo+
-ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgbGludXgscGNpLWRvbWFpbiA9IDwwPjsKPiAg
-ICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCNhZGRyZXNzLWNlbGxzID0gPDM+Owo+ICAgICAg
-K8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgI3NpemUtY2VsbHMgPSA8Mj47Cj4gICAgICArwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqBkbWEtY29oZXJlbnQ7Cj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqByYW5nZXMgPSA8MHgwMTAwMDAwMCAweDAwIDB4NWY4MDAwMDAgMHgwMCAweDVmODAwMDAw
-IDB4MCAweDAwODAwMDAwPiwKPiAgICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCA8MHgwMjAwMDAwMCAweDAwIDB4NTAwMDAwMDAgMHgwMCAweDUwMDAwMDAwIDB4MCAweDA4
-MDAwMDAwPiwKPiAgICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8MHg0
-MjAwMDAwMCAweDQwIDB4MDAwMDAwMDAgMHg0MCAweDAwMDAwMDAwIDB4MSAweDAwMDAwMDAwPjsK
-PiAgICAgICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4g
-ICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAg
-Nz47Cj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHQtbWFwID0gPDAgMCAw
-IDEgJmdpYyAwIDAgMCAxMzYgND4sCj4gICAgICArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqA8MCAwIDAgMiAmZ2ljIDAgMCAwIDEzNyA0PiwKPiAgICAgICvC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoDwwIDAgMCAzICZn
-aWMgMCAwIDAgMTM4IDQ+LAo+ICAgICAgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgPDAgMCAwIDQgJmdpYyAwIDAgMCAxMzkgND47Cj4gICAgICArwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqBtc2ktcGFyZW50ID0gPCZ2Mm1fMD47Cj4gICAgICArwqAgwqAgwqAg
-wqB9Owo+ICAgICAgwqB9Owo+IAo+ICAgICAgwqAmbWVtdGltZXIgewo+ICAgICAgLS0KPiAgICAg
-IDIuNi4wCj4gCj4gICAgICAtLQo+ICAgICAgVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6
-IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWtlcm5lbCIgaW4KPiAgICAgIHRoZSBi
-b2R5IG9mIGEgbWVzc2FnZSB0byBbNV1tYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gICAgICBN
-b3JlIG1ham9yZG9tbyBpbmZvIGF0wqAgWzZdaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
-bW8taW5mby5odG1sCj4gICAgICBQbGVhc2UgcmVhZCB0aGUgRkFRIGF0wqAgWzddaHR0cDovL3d3
-dy50dXgub3JnL2xrbWwvCj4gCj4gICAgLS0KPiAgICBUaGFua3MKPiAgICDCoCDCoCBBbGV4Cj4g
-Cj4gUmVmZXJlbmNlcwo+IAo+ICAgIFZpc2libGUgbGlua3MKPiAgICAxLiBtYWlsdG86TGl2aXUu
-RHVkYXVAYXJtLmNvbQo+ICAgIDIuIG1haWx0bzpMaXZpdS5EdWRhdUBhcm0uY29tCj4gICAgMy4g
-bWFpbHRvOm1hcmsucnV0bGFuZEBhcm0uY29tCj4gICAgNC4gaHR0cDovL2luZm9jZW50ZXIuYXJt
-LmNvbS9oZWxwL3RvcGljL2NvbS5hcm0uZG9jLmRlbjAwMjlhLwo+ICAgIDUuIG1haWx0bzptYWpv
-cmRvbW9Admdlci5rZXJuZWwub3JnCj4gICAgNi4gaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpv
-cmRvbW8taW5mby5odG1sCj4gICAgNy4gaHR0cDovL3d3dy50dXgub3JnL2xrbWwvCgotLSAKPT09
-PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8
-CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEg
-IC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+docs: iommu: Documentation for smmu in hi6220 SoC.
+
+Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: Yu Dongbin <yudongbin@hisilicon.com>
+---
+ .../bindings/iommu/hisi,hi6220-iommu.txt           | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
+
+diff --git a/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
+new file mode 100644
+index 0000000..93e0701
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
+@@ -0,0 +1,52 @@
++Hi6220 SoC SMMU Device Driver devicetree document
++=======================================================================
++The Architecture of SMMU on Hi6220 SoC:
++
++   +------------------------------------------------------------------+
++   |                                                                  |
++   |         +---------+  +--------+  +-------------+   +-------+     |
++   |         |   ADE   |  |  ISP   |  |  V/J codec  |   |  G3D  |     |
++   |         +----|----+  +---|----+  +------|------+   +---|---|     |
++   |              |           |              |              |         |
++   |     ---------v-----------v--------------v--------------v-----    |
++   |                           Media Bus                              |
++   |     --------------------------------|---------------|--------    |
++   |                                     |               |            |
++   |                                 +---v---------------v--------+   |
++   |                                 |            SMMU            |   |
++   |                                 +----------|---------|-------+   |
++   |                                            |         |           |
++   +--------------------------------------------|---------|-----------+
++                                                |         |
++                                   +------------v---------v-----------+
++                                   |              DDRC                |
++                                   +----------------------------------+
++
++Note:
++The media system shared the same smmu IP. to access DDR memory. And all
++media IP used the same page table.
++
++Below binding describes the system mmu for media system in hi6220 platform
++
++Required properties:
++- compatible: Should be "hisilicon,hi6220-smmu" example:
++		compatible = "hisilicon,hi6220-smmu";
++- reg: A tuple of base address and size of System MMU registers.
++- interrupts: An interrupt specifier for interrupt signal of System MMU.
++- clocks: The clock used for smmu IP.
++- clock-names: The name to enable clock with clock framework.
++- #iommu-cells: The iommu-cells should be 1 for muti-master to use.
++
++Examples:
++	smmu@f4210000 {
++		compatible = "hisilicon,hi6220-smmu";
++		reg = <0x0 0xf4210000 0x0 0x1000>;
++		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&sys_ctrl HI6220_MMU_CLK>,
++		         <&media_ctrl HI6220_MED_MMU>,
++		         <&sys_ctrl HI6220_MEDIA_PLL_SRC>;
++		clock-names = "smmu_clk",
++			      "media_sc_clk",
++			      "smmu_peri_clk";
++		#iommu-cells = <1>;
++	};
+-- 
+1.9.1
