@@ -1,182 +1,111 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] extcon: add MAX3355 driver
-Date: Tue, 20 Oct 2015 21:20:31 +0300
-Message-ID: <562685EF.7010504@cogentembedded.com>
-References: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
- <5490CEE2.1030900@samsung.com> <5491FC69.7090203@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5 2/2] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+Date: Tue, 20 Oct 2015 20:50:00 +0200
+Message-ID: <1445367000-11525-3-git-send-email-geert+renesas@glider.be>
+References: <1445367000-11525-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5491FC69.7090203@cogentembedded.com>
+In-Reply-To: <1445367000-11525-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add all R-Car H3 Clock Pulse Generator Core Clock Outputs, as listed in
+Table 8.2a ("List of Clocks [R-Car H3]") of the R-Car Gen3 datasheet
+(rev. 0.5E).
 
-On 12/18/2014 12:58 AM, Sergei Shtylyov wrote:
+Note that internal CPG clocks (S0, S1, S2, S3, SDSRC, SSPSRC, and
+RPCSRC) are not included, as they're used as internal clock sources
+only.
 
->>> MAX3355E chip integrates a charge pump and comparators to enable a system with
->>> an integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
->>> device. In addition to sensing/controlling Vbus, the chip also passes thru the
->>> ID signal from the USB OTG connector.  On some Renesas boards, this signal  is
->>> just  fed into the SoC thru a GPIO pin -- there's no real OTG controller, only
->>> host and gadget USB controllers sharing the same USB bus; however,  we'd  like
->>> to allow host or gadget drivers to be loaded depending on the cable type,
->>> hence
->>> the need for the MAX3355 extcon driver. The Vbus status signals are also wired
->>> to GPIOs (however, we're not currently intested in them), the  OFFVBUS# signal
->>> is controlled  by the host controllers, there's also the SHDN# signal wired to
->>> GPIO, which should be high for normal operation.
->
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
->>> ---
->>> The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
->
->>>   Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 ++
->>>   drivers/extcon/Kconfig                                      |    6
->>>   drivers/extcon/Makefile                                     |    1
->>>   drivers/extcon/extcon-max3355.c                             |  122
->>> ++++++++++++
->>>   4 files changed, 150 insertions(+)
->
->>> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
->>> ===================================================================
->>> --- /dev/null
->>> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
->>> @@ -0,0 +1,21 @@
->>> +MAX3355 USB OTG chip
->
->> Need manufactor information as following :
->>    -> Maxim MAX3355
->
->     Would be Maxim enough? Or perhaps I should use Maxim Integrated [Products]?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Michael Turquette <mturquette@baylibre.com>
+Reviewed-by: Magnus Damm <damm+renesas@opensource.se>
+---
+v5:
+  - Add Acked-by, Reviewed-by,
+  - Add datasheet table and revision references,
+  - Add internal clock omissions,
 
-    You haven't replied to my questions.
+v4:
+  - Add all clocks instead of just the ones used by the current DTS,
 
->>> +--------------------
->>> +
->>> +MAX3355 integrates a charge pump and comparators to enable a system with an
->>> +integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
->>> +device.
->>> +
->>> +Required properties:
->>> +- compatible: should be "maxim,max3355";
->>> +- maxim,shdn-gpio: should contain a phandle and GPIO specifier for the
->>> GPIO pin
->>> +  connected to the MAX3355's SHDN# pin;
->>> +- maxim,id-gpio: should contain a phandle and GPIO specifier for the GPIO pin
->>> +  connected to the MAX3355's ID_OUT pin.
->>> +
->>> +Example (Koelsch board):
->>> +
->>> +    usb-otg {
->>> +        compatible = "maxim,max3355";
->>> +        maxim,shdn-gpio = <&gpio2 4 GPIO_ACTIVE_LOW>;
->>> +        maxim,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
->
->> Kernel already supported the gpio helper function to get gpio from devicetree.
->> I prefer use follwoing style by using of_get_gpio()/of_get_gpio_flags() in
->> include/linux/of_gpio.h.
->
->>         gpios = <&gpio2 4 GPIO_ACTIVE_LOW>, <&gpio5 31 GPIO_ACTIVE_HIGH>;
->
->     OK, though Documentation/devicetree/bindings/gpio/gpio.txt does not seem
-> to insist on using this one...
+v3:
+  - New.
 
-    Moreover, it now says "gpios" isn't allowed for the new bindings. So I 
-have to strongly disagree here...
+ include/dt-bindings/clock/r8a7795-cpg-mssr.h | 63 ++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
 
-[...]
-
->>> +static irqreturn_t max3355_id_irq(int irq, void *dev_id)
->>> +{
->>> +    struct max3355_data *data = dev_id;
->>> +    int id = gpio_get_value(data->id_gpio);
->>> +
->>> +    extcon_set_cable_state(data->edev, "USB-HOST", !id);
->
->> You have to get the gpio flag in the devicetree by using of_get_gpio_flags()
->> function
->> and then you would set the cable state according to gpio state and flag.
->
->     I'm sorry but I just don't see why I have to do it. This is not a generic
-> GPIO driver, and the polarities of the GPIOs are determined solely by the
-> MAX3355 specs.
-
-    Again, got not reply...
-
-> [...]
->>> +static int max3355_probe(struct platform_device *pdev)
->>> +{
->>> +    struct device_node *np = pdev->dev.of_node;
->>> +    struct max3355_data *data;
->>> +    int gpio, irq, ret;
->>> +
->>> +    data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
->>> +                GFP_KERNEL);
->>> +    if (!data)
->>> +        return -ENOMEM;
->>> +
->>> +    data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
->>> +    if (IS_ERR(data->edev)) {
->>> +        dev_err(&pdev->dev, "failed to allocate extcon device\n");
->>> +        return PTR_ERR(data->edev);
->>> +    }
->>> +    data->edev->name = kstrdup(np->name, GFP_KERNEL);
->>> +
->>> +    gpio = of_get_named_gpio(np, "maxim,id-gpio", 0);
->
->> Use of_get_gpio() or of_get_gpio_flags().
->
->     OK, I'll use the first one.
-
-    No, I won't due to not being able to use "gpios" anymore.
-
-[...]
-
->>> +
->>> +    ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
->>> +                    IRQF_TRIGGER_RISING |
->>> +                    IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->
->> Is it right to add both RISING and FALLING trigger?
->
->     How else I'm supposed to know when the OTG ID signal goes low and high?
->
->> and need to add IRQF_NO_SUSPEND to wakeup from suspend state when interrupt
->> happen.
->
->     Hm, are you sure we want to wake up on plugging another kind of USB cable?
-
-    No reply to that as well...
-
-[...]
->>> +static struct platform_driver max3355_driver = {
->>> +    .probe        = max3355_probe,
->>> +    .driver        = {
->>> +        .name    = "extcon-max3355",
->>> +        .of_match_table = max3355_match_table,
->>> +        .owner    = THIS_MODULE,
->>> +    },
->>> +};
->>> +
->>> +module_platform_driver(max3355_driver);
->>> +
->
->> Don't need un-used blank line.
->
->     I don't understand. There's empty line in such case in extcon-gpio.c...
-
-    No reply...
-
-[...]
-
->> Thanks,
->> Chanwoo Choi
-
-MBR, Sergei
+diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+new file mode 100644
+index 0000000000000000..e864aae0a2561c4b
+--- /dev/null
++++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+@@ -0,0 +1,63 @@
++/*
++ * Copyright (C) 2015 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
++
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* r8a7795 CPG Core Clocks */
++#define R8A7795_CLK_Z			0
++#define R8A7795_CLK_Z2			1
++#define R8A7795_CLK_ZR			2
++#define R8A7795_CLK_ZG			3
++#define R8A7795_CLK_ZTR			4
++#define R8A7795_CLK_ZTRD2		5
++#define R8A7795_CLK_ZT			6
++#define R8A7795_CLK_ZX			7
++#define R8A7795_CLK_S0D1		8
++#define R8A7795_CLK_S0D4		9
++#define R8A7795_CLK_S1D1		10
++#define R8A7795_CLK_S1D2		11
++#define R8A7795_CLK_S1D4		12
++#define R8A7795_CLK_S2D1		13
++#define R8A7795_CLK_S2D2		14
++#define R8A7795_CLK_S2D4		15
++#define R8A7795_CLK_S3D1		16
++#define R8A7795_CLK_S3D2		17
++#define R8A7795_CLK_S3D4		18
++#define R8A7795_CLK_LB			19
++#define R8A7795_CLK_CL			20
++#define R8A7795_CLK_ZB3			21
++#define R8A7795_CLK_ZB3D2		22
++#define R8A7795_CLK_CR			23
++#define R8A7795_CLK_CRD2		24
++#define R8A7795_CLK_SD0H		25
++#define R8A7795_CLK_SD0			26
++#define R8A7795_CLK_SD1H		27
++#define R8A7795_CLK_SD1			28
++#define R8A7795_CLK_SD2H		29
++#define R8A7795_CLK_SD2			30
++#define R8A7795_CLK_SD3H		31
++#define R8A7795_CLK_SD3			32
++#define R8A7795_CLK_SSP2		33
++#define R8A7795_CLK_SSP1		34
++#define R8A7795_CLK_SSPRS		35
++#define R8A7795_CLK_RPC			36
++#define R8A7795_CLK_RPCD2		37
++#define R8A7795_CLK_MSO			38
++#define R8A7795_CLK_CANFD		39
++#define R8A7795_CLK_HDMI		40
++#define R8A7795_CLK_CSI0		41
++#define R8A7795_CLK_CSIREF		42
++#define R8A7795_CLK_CP			43
++#define R8A7795_CLK_CPEX		44
++#define R8A7795_CLK_R			45
++#define R8A7795_CLK_OSC			46
++
++#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
+-- 
+1.9.1
 
