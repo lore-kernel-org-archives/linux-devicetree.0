@@ -1,78 +1,182 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: drm/msm: Update bindings for MDP5
-Date: Tue, 20 Oct 2015 14:17:47 -0400
-Message-ID: <CAF6AEGsyN_FNXGO+SrM6SFQJA7jtCnVBjcCdYqVWgQ23-fH+ZQ@mail.gmail.com>
-References: <1444997172-9308-1-git-send-email-architt@codeaurora.org>
-	<CAJAp7OhSLFHAdg9POwfhFRU2NmYS8Oc-Zpn8-UCdLfpBWepbdw@mail.gmail.com>
-	<56248452.6060509@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] extcon: add MAX3355 driver
+Date: Tue, 20 Oct 2015 21:20:31 +0300
+Message-ID: <562685EF.7010504@cogentembedded.com>
+References: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
+ <5490CEE2.1030900@samsung.com> <5491FC69.7090203@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56248452.6060509@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5491FC69.7090203@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 19, 2015 at 1:49 AM, Archit Taneja <architt@codeaurora.org> wrote:
+Hello.
+
+On 12/18/2014 12:58 AM, Sergei Shtylyov wrote:
+
+>>> MAX3355E chip integrates a charge pump and comparators to enable a system with
+>>> an integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
+>>> device. In addition to sensing/controlling Vbus, the chip also passes thru the
+>>> ID signal from the USB OTG connector.  On some Renesas boards, this signal  is
+>>> just  fed into the SoC thru a GPIO pin -- there's no real OTG controller, only
+>>> host and gadget USB controllers sharing the same USB bus; however,  we'd  like
+>>> to allow host or gadget drivers to be loaded depending on the cable type,
+>>> hence
+>>> the need for the MAX3355 extcon driver. The Vbus status signals are also wired
+>>> to GPIOs (however, we're not currently intested in them), the  OFFVBUS# signal
+>>> is controlled  by the host controllers, there's also the SHDN# signal wired to
+>>> GPIO, which should be high for normal operation.
 >
-> On 10/18/2015 08:49 AM, Bjorn Andersson wrote:
->>
->> On Fri, Oct 16, 2015 at 5:06 AM, Archit Taneja <architt@codeaurora.org>
->> wrote:
->>>
->>> MDP5 has a different compatible string (which causes checkpatch warnings
->>> when we try to add MDP5 device nodes). It also has different list of
->>> clocks.
->>>
->>> Update the bindings for MDP5.
->>>
->>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
 >>> ---
->>>   Documentation/devicetree/bindings/drm/msm/mdp.txt | 23
->>> ++++++++++++++++-------
->>>   1 file changed, 16 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/drm/msm/mdp.txt
->>> b/Documentation/devicetree/bindings/drm/msm/mdp.txt
->>> index 1a0598e..e926daa 100644
->>> --- a/Documentation/devicetree/bindings/drm/msm/mdp.txt
->>> +++ b/Documentation/devicetree/bindings/drm/msm/mdp.txt
->>> @@ -3,18 +3,27 @@ Qualcomm adreno/snapdragon display controller
->>>   Required properties:
->>>   - compatible:
->>>     * "qcom,mdp" - mdp4
->>> +  * "qcom,mdss_mdp" - mdp5
->>
->>
->> Wouldn't it be better to name these "qcom,mdp4" and "qcom,mdp5" so
->> that we don't have to rely on some magic detection mechanism to
->> support future versions?
+>>> The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
 >
+>>>   Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 ++
+>>>   drivers/extcon/Kconfig                                      |    6
+>>>   drivers/extcon/Makefile                                     |    1
+>>>   drivers/extcon/extcon-max3355.c                             |  122
+>>> ++++++++++++
+>>>   4 files changed, 150 insertions(+)
 >
-> My guess is that compatibility string "mdss_mdp" came from the
-> downstream kernels. Chips having MDP4 were supported on downstream
-> kernels that preceded DT.
+>>> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
+>>> @@ -0,0 +1,21 @@
+>>> +MAX3355 USB OTG chip
 >
-> Since we don't have any MDP DT upstream, I think we could go with the
-> string names you suggested. It might break things for people who might
-> try to use an old downstream dts file with a new kernel. But that
-> doesn't sound like the worst thing.
+>> Need manufactor information as following :
+>>    -> Maxim MAX3355
+>
+>     Would be Maxim enough? Or perhaps I should use Maxim Integrated [Products]?
 
-it would break things for downstream 3.10/mdp5 dt files..  but what
-I'd suggest is to make the code look for both qcom,mdp5 and
-qcom,mdss_mdp but only document the former
+    You haven't replied to my questions.
 
-BR,
--R
+>>> +--------------------
+>>> +
+>>> +MAX3355 integrates a charge pump and comparators to enable a system with an
+>>> +integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
+>>> +device.
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be "maxim,max3355";
+>>> +- maxim,shdn-gpio: should contain a phandle and GPIO specifier for the
+>>> GPIO pin
+>>> +  connected to the MAX3355's SHDN# pin;
+>>> +- maxim,id-gpio: should contain a phandle and GPIO specifier for the GPIO pin
+>>> +  connected to the MAX3355's ID_OUT pin.
+>>> +
+>>> +Example (Koelsch board):
+>>> +
+>>> +    usb-otg {
+>>> +        compatible = "maxim,max3355";
+>>> +        maxim,shdn-gpio = <&gpio2 4 GPIO_ACTIVE_LOW>;
+>>> +        maxim,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
+>
+>> Kernel already supported the gpio helper function to get gpio from devicetree.
+>> I prefer use follwoing style by using of_get_gpio()/of_get_gpio_flags() in
+>> include/linux/of_gpio.h.
+>
+>>         gpios = <&gpio2 4 GPIO_ACTIVE_LOW>, <&gpio5 31 GPIO_ACTIVE_HIGH>;
+>
+>     OK, though Documentation/devicetree/bindings/gpio/gpio.txt does not seem
+> to insist on using this one...
 
-> Archit
+    Moreover, it now says "gpios" isn't allowed for the new bindings. So I 
+have to strongly disagree here...
+
+[...]
+
+>>> +static irqreturn_t max3355_id_irq(int irq, void *dev_id)
+>>> +{
+>>> +    struct max3355_data *data = dev_id;
+>>> +    int id = gpio_get_value(data->id_gpio);
+>>> +
+>>> +    extcon_set_cable_state(data->edev, "USB-HOST", !id);
 >
->>
->> Regards,
->> Bjorn
->>
+>> You have to get the gpio flag in the devicetree by using of_get_gpio_flags()
+>> function
+>> and then you would set the cable state according to gpio state and flag.
 >
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
+>     I'm sorry but I just don't see why I have to do it. This is not a generic
+> GPIO driver, and the polarities of the GPIOs are determined solely by the
+> MAX3355 specs.
+
+    Again, got not reply...
+
+> [...]
+>>> +static int max3355_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct device_node *np = pdev->dev.of_node;
+>>> +    struct max3355_data *data;
+>>> +    int gpio, irq, ret;
+>>> +
+>>> +    data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
+>>> +                GFP_KERNEL);
+>>> +    if (!data)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
+>>> +    if (IS_ERR(data->edev)) {
+>>> +        dev_err(&pdev->dev, "failed to allocate extcon device\n");
+>>> +        return PTR_ERR(data->edev);
+>>> +    }
+>>> +    data->edev->name = kstrdup(np->name, GFP_KERNEL);
+>>> +
+>>> +    gpio = of_get_named_gpio(np, "maxim,id-gpio", 0);
+>
+>> Use of_get_gpio() or of_get_gpio_flags().
+>
+>     OK, I'll use the first one.
+
+    No, I won't due to not being able to use "gpios" anymore.
+
+[...]
+
+>>> +
+>>> +    ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
+>>> +                    IRQF_TRIGGER_RISING |
+>>> +                    IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>
+>> Is it right to add both RISING and FALLING trigger?
+>
+>     How else I'm supposed to know when the OTG ID signal goes low and high?
+>
+>> and need to add IRQF_NO_SUSPEND to wakeup from suspend state when interrupt
+>> happen.
+>
+>     Hm, are you sure we want to wake up on plugging another kind of USB cable?
+
+    No reply to that as well...
+
+[...]
+>>> +static struct platform_driver max3355_driver = {
+>>> +    .probe        = max3355_probe,
+>>> +    .driver        = {
+>>> +        .name    = "extcon-max3355",
+>>> +        .of_match_table = max3355_match_table,
+>>> +        .owner    = THIS_MODULE,
+>>> +    },
+>>> +};
+>>> +
+>>> +module_platform_driver(max3355_driver);
+>>> +
+>
+>> Don't need un-used blank line.
+>
+>     I don't understand. There's empty line in such case in extcon-gpio.c...
+
+    No reply...
+
+[...]
+
+>> Thanks,
+>> Chanwoo Choi
+
+MBR, Sergei
+
