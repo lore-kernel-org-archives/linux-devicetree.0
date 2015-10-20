@@ -1,52 +1,90 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 3/4] of: overlay: add per overlay sysfs attributes
-Date: Tue, 20 Oct 2015 16:54:35 -0500
-Message-ID: <CAL_JsqLeQC7x3fuUFRm=MqHHwvDSLFz6GFxvOTCUToO-=yA0Kg@mail.gmail.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1445368397-8732-4-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_JsqKFJttTsTfwZdMBPEjzqo_OLV=GpHTYZrDGnsgBjF3Bzg@mail.gmail.com> <8A0C91DE-EDF8-449D-918C-95C9807A7616@konsulko.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
+ pov protab2-ips9 tablet
+Date: Tue, 20 Oct 2015 23:59:49 +0200
+Message-ID: <5626B955.3070906@redhat.com>
+References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
+ <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
+ <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
+ <20150913152224.GU9885@lukather> <55F5B370.7040203@redhat.com>
+ <20150922150242.GF4684@lukather> <560172B5.8090709@redhat.com>
+ <20151019194313.GY2711@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8A0C91DE-EDF8-449D-918C-95C9807A7616@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXXSTKYQKGQEQY4GFII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151019194313.GY2711@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 4:11 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> Hi Rob,
->
->> On Oct 21, 2015, at 00:04 , Rob Herring <robherring2@gmail.com> wrote:
+Hi,
+
+On 10/19/2015 09:43 PM, Maxime Ripard wrote:
+> On Tue, Sep 22, 2015 at 05:24:37PM +0200, Hans de Goede wrote:
+>> Hi,
 >>
->> On Tue, Oct 20, 2015 at 2:13 PM, Pantelis Antoniou
->> <pantelis.antoniou@konsulko.com> wrote:
->>> * A per overlay can_remove sysfs attribute that reports whether
->>> the overlay can be removed or not due to another overlapping overlay.
+>> On 22-09-15 17:02, Maxime Ripard wrote:
+>>> On Sun, Sep 13, 2015 at 07:33:36PM +0200, Hans de Goede wrote:
+>>>>> Anyway. In both cases, the regulator really shouldn't be drifting
+>>>>> along like this.
+>>>>
+>>>> Right which is why I've added the always-on property.
 >>>
->>> * A target sysfs attribute listing the target of each fragment,
->>> in a group named after the name of the fragment.
-
-[...]
-
->>> @@ -255,6 +278,17 @@ err_fail:
->>>        return -EINVAL;
->>> }
+>>> Which is exactly what I meant by drifting along: that regulator will
+>>> never be associated to the i2c bus, and will always be enabled even
+>>> though the i2c bus might not even be accessible in the first place
+>>> (driver not selected, compiled as a module and not loaded yet), which
+>>> is just as bad.
 >>>
->>> +static ssize_t target_show(struct kobject *kobj,
->>> +               struct fragment_attribute *fattr, char *buf)
->>> +{
->>> +       struct of_overlay_info *ovinfo = fattr->ovinfo;
->>> +
->>> +       return snprintf(buf, PAGE_SIZE, "%s\n",
->>> +                       of_node_full_name(ovinfo->target));
+>>>>> If the i2c bus needs a regulator to be operationaly,
+>>>>> then we can just add an optional bus-supply property or something to
+>>>>> give that to the i2c driver so that it can enable it when needed.
+>>>>
+>>>> I agree that that would be sensible if this regulator were tied to
+>>>> the pull-ups, but I've my doubts that it is. We've not seen anything
+>>>> similar on any other allwinner tablet, other then ChenYu-s Ippo-q8-v5
+>>>> tablet.
+>>>>
+>>>> This tablet is sort of a high-end tablet (with a nice ips screen) and
+>>>> such it also uses a different (better) sensor for its frontcam, a
+>>>> gc2015 rather then the usual gc0308. I believe that this is the
+>>>> culprit.
+>>>>
+>>>> Which would make modelling this as some sort of i2c-bus power-supply
+>>>> wrong, and I've checked and none of the existing i2c bindings under
+>>>> Documentation/devicetree/bindings/i2c contain such a thing, so we
+>>>> would be the first and we will likely have a hard time selling a
+>>>> binding for this upstream, esp. since we do not know what exactly
+>>>> is going on.
+>>>
+>>> Well, strictly speaking, it is a supply needed to get the bus to
+>>> work. We should really try to avoid having always-on for regulators,
+>>> especially for devices that are already represented in the DT.
+>>>
+>>>> So all in all I strongly believe that just setting always-on
+>>>> on the regulator in question is the best solution.
+>>>
+>>> It's a hack we can avoid.
 >>
->> This can be a link to the node itself, can't it?
->>
+>> How? By adding a regulator property to the i2c controller node
+>> and then have the i2c controller driver enable this on probe ?
 >
-> Yes. Do you want it like this?
+> Yes.
 
-Yes, hence the suggestion. Unless you see some reason why not.
+Ok, I'll send a v2 marking i2c1 as failed for now, as you've done with
+sun6i-a31-hummingbird.dts, and drop the ldo3 node.
 
-Rob
+And I'll put looking into fixing this via a supply property for the
+i2c-host node on my todo list.
+
+Regards,
+
+Hans
