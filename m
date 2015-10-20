@@ -1,79 +1,110 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 0/4] MIPS: Add Xilfpga platform
-Date: Tue, 20 Oct 2015 17:30:57 +0100
-Message-ID: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+Date: Tue, 20 Oct 2015 18:32:36 +0200
+Message-ID: <CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
+	<56261239.5030007@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: ralf@linux-mips.org, robh+dt@kernel.org
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56261239.5030007-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+2015-10-20 12:06 GMT+02:00 Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 17/10/15 18:23, Maxime Coquelin wrote:
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   include/dt-bindings/pinctrl/pinctrl-stm32.h     |   12 +
+>>   include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1241
+>> +++++++++++++++++++++++
+>>   2 files changed, 1253 insertions(+)
+>>   create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+>>   create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>>
+>> diff --git a/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>> b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>> new file mode 100644
+>> index 0000000..a2e7222
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/pinctrl-stm32.h
+>> @@ -0,0 +1,12 @@
+>> +#ifndef _DT_BINDINGS_PINCTRL_STM32_H
+>> +#define _DT_BINDINGS_PINCTRL_STM32_H
+>> +
+>> +#define STM32_PIN_NO(x) ((x) << 8)
+>> +#define STM32_GET_PIN_NO(x) ((x) >> 8)
+>> +#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
+>> +
+>> +#define STM32_PIN_GPIO         0
+>> +#define STM32_PIN_AF(x)                ((x) + 1)
+>> +#define STM32_PIN_ANALOG       (STM32_PIN_AF(15) + 1)
+>> +
+>> +#endif /* _DT_BINDINGS_PINCTRL_STM32_H */
+>> diff --git a/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>> b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>> new file mode 100644
+>> index 0000000..9dd5fd0
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+>> @@ -0,0 +1,1241 @@
+>> +#ifndef _DT_BINDINGS_STM32F429_PINFUNC_H
+>> +#define _DT_BINDINGS_STM32F429_PINFUNC_H
+>> +
+>> +#include <dt-bindings/pinctrl/pinctrl-stm32.h>
+>> +
+>> +#define STM32F429_PA0_FUNC_GPIO 0x0
+>> +#define STM32F429_PA0_FUNC_TIM2_CH1_TIM2_ETR 0x2
+>
+>
+> Did you expand these out after my feedback (instead of things like:
+> STM32_PIN_NO(0) | STM32_PIN_AF(1) )?
+Yes.
 
-This series is based on v4.3-rc6.
+>
+> If so I must have been somewhat unclear.
+Most likely I didn't understood what you meant!
 
-Adds support for the Imagination University Program MIPSfpga platform.
+>
+> I suggesting that, like with the clock driver, there is no need to the
+> STM32F429_PAXX_FUNC_YYY macros at all.
+>
+> Given the way you can enumerate pin config options in stm32f429.dtsi then I
+> think stm32f429.dtsi is the only file that will ever include this header? If
+> so then why not just plug the values directly into the pinmux fields. Its
+> not duplicative and is easier to map back to data sheets.
+>
+> ~~~
+> #define PIN_NO(x) ...
+> #define PIN_AF(x) ...
+>
+> usart1_pins_a: usart1@0 {
+>                                 pins1 {
+>                                         pinmux = PIN_NO(9) | PIN_AF(7);
+>                                         bias-disable;
+>                                         drive-push-pull;
+>                                         slew-rate = <0>;
+>                                 };
+>                                 ...
+>                         };
+> ~~~
 
-See the first dt-bindings patch for details about the platform.
+The advantage with the defines is that you can see easily which pin we
+are talking about.
+Moreover, the defines are generated from the datasheet, so it is
+painless to generate them.
+And it will be consistent with Mediatek implementation, on which I
+heavily inspired.
 
-These patches allow the kernel to boot with UART and gpio support.
+Linus, what is your view?
 
-Acks from DT (patch 1/4) welcome.
-
-Regards,
-ZubairLK
-
-V1 -> V2
-Nothing major functional.
-Mostly cleanup. Individual patches have changelogs.
-Removed the gpio patch from this series as Linus Walleij applied it.
-
-Zubair Lutfullah Kakakhel (4):
-  dt-bindings: MIPS: Document xilfpga bindings and boot style
-  MIPS: dt: xilfpga: Add xilfpga device tree files.
-  MIPS: xilfpga: Add mipsfpga platform code
-  MIPS: Add xilfpga defconfig
-
- .../devicetree/bindings/mips/img/xilfpga.txt       | 83 ++++++++++++++++++++++
- arch/mips/Kbuild.platforms                         |  1 +
- arch/mips/Kconfig                                  | 23 ++++++
- arch/mips/boot/dts/Makefile                        |  1 +
- arch/mips/boot/dts/xilfpga/Makefile                |  9 +++
- arch/mips/boot/dts/xilfpga/microAptiv.dtsi         | 21 ++++++
- arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 46 ++++++++++++
- arch/mips/configs/xilfpga_defconfig                | 40 +++++++++++
- arch/mips/include/asm/mach-xilfpga/gpio.h          | 19 +++++
- arch/mips/include/asm/mach-xilfpga/irq.h           | 18 +++++
- arch/mips/xilfpga/Kconfig                          |  9 +++
- arch/mips/xilfpga/Makefile                         |  7 ++
- arch/mips/xilfpga/Platform                         |  3 +
- arch/mips/xilfpga/init.c                           | 57 +++++++++++++++
- arch/mips/xilfpga/intc.c                           | 25 +++++++
- arch/mips/xilfpga/time.c                           | 41 +++++++++++
- 16 files changed, 403 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/img/xilfpga.txt
- create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
- create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
- create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
- create mode 100644 arch/mips/configs/xilfpga_defconfig
- create mode 100644 arch/mips/include/asm/mach-xilfpga/gpio.h
- create mode 100644 arch/mips/include/asm/mach-xilfpga/irq.h
- create mode 100644 arch/mips/xilfpga/Kconfig
- create mode 100644 arch/mips/xilfpga/Makefile
- create mode 100644 arch/mips/xilfpga/Platform
- create mode 100644 arch/mips/xilfpga/init.c
- create mode 100644 arch/mips/xilfpga/intc.c
- create mode 100644 arch/mips/xilfpga/time.c
-
--- 
-1.9.1
+Thanks,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
