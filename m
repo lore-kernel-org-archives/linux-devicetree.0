@@ -1,55 +1,57 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: rockchip: Add the OTP gpio pinctrl
-Date: Tue, 20 Oct 2015 17:11:04 +0800
-Message-ID: <1445332264-6054-5-git-send-email-wxt@rock-chips.com>
-References: <1445332264-6054-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445332264-6054-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: [PATCH v2 0/9] Add tune support of Mediatek MMC driver
+Date: Tue, 20 Oct 2015 17:13:02 +0800
+Message-ID: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Barry Song <baohua@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Lars-Peter Clausen <lars@metafoo.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Howard Chen <ibanezchen@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Kristina Martsenko <kristina.martsenko@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cog>
 List-Id: devicetree@vger.kernel.org
 
-We need the OTP pin is gpio state before resetting the TSADC controller,
-since the tshut polarity will generate a high signal.
+Change in v2:
+Drop the 400mhz and use assigned-clock-parents to instead
+Split the original tune patch to several independent patches
+Re-write the mmc_send_tuning()
+Fix GPD checksum error
+Move the HS400 setting to ops->prepare_hs400_tuning()	
+Modify SD driving settings
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Change in v1:
+Add DT bindings for eMMC hardware reset
+Add pinctrl of data strobe pin for HS400 mode
+Modify eMMC driving settings
+Add 400mhz source clock for HS400 mode
+Add eMMC HS200/HS400 mode support
+Add SD SDR50/SDR104 mode support
+Add implement of tune function with CMD19/CMD21
 
- arch/arm/boot/dts/rk3288.dtsi | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Chaotian Jing (9):
+  mmc: core: Add DT bindings for eMMC hardware reset support
+  mmc: dt-bindings: update Mediatek MMC bindings
+  mmc: mediatek: make cmd_ints_mask to const
+  mmc: mediatek: change the argument "ddr" to "timing"
+  mmc: mediatek: fix got GPD checksum error interrupt when data transfer
+  mmc: mediatek: add implement of ops->hw_reset()
+  mmc: mmc: extend the mmc_send_tuning()
+  mmc: mediatek: add HS400 support
+  arm64: dts: mediatek: add HS200/HS400/SDR50/SDR104 support
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 906e938..b59c451 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -447,8 +447,9 @@
- 		clock-names = "tsadc", "apb_pclk";
- 		resets = <&cru SRST_TSADC>;
- 		reset-names = "tsadc-apb";
--		pinctrl-names = "default";
--		pinctrl-0 = <&otp_out>;
-+		pinctrl-names = "default", "otp_out";
-+		pinctrl-0 = <&otp_gpio>;
-+		pinctrl-1 = <&otp_out>;
- 		#thermal-sensor-cells = <1>;
- 		rockchip,hw-tshut-temp = <95000>;
- 		status = "disabled";
-@@ -1273,6 +1274,10 @@
- 		};
- 
- 		tsadc {
-+			otp_gpio: otp-gpio {
-+				rockchip,pins = <0 10 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+
- 			otp_out: otp-out {
- 				rockchip,pins = <0 10 RK_FUNC_1 &pcfg_pull_none>;
- 			};
+ Documentation/devicetree/bindings/mmc/mmc.txt    |   1 +
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt |  11 +-
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  27 ++-
+ drivers/mmc/core/host.c                          |   2 +
+ drivers/mmc/core/mmc_ops.c                       |   8 +-
+ drivers/mmc/host/dw_mmc-exynos.c                 |   4 +-
+ drivers/mmc/host/dw_mmc.c                        |   2 +-
+ drivers/mmc/host/dw_mmc.h                        |   2 +-
+ drivers/mmc/host/mtk-sd.c                        | 296 ++++++++++++++++++++---
+ drivers/mmc/host/sdhci-esdhc-imx.c               |   6 +-
+ drivers/mmc/host/sdhci-msm.c                     |   2 +-
+ drivers/mmc/host/sdhci-sirf.c                    |   2 +-
+ include/linux/mmc/core.h                         |   2 +-
+ 13 files changed, 314 insertions(+), 51 deletions(-)
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
