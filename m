@@ -1,76 +1,59 @@
-From: Brijesh Singh <brijeshkumar.singh@amd.com>
-Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
-Date: Tue, 20 Oct 2015 14:16:01 -0500
-Message-ID: <562692F1.1030209@amd.com>
-References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com>
- <20151019205236.GB453@leverpostej> <56266F7E.6030404@amd.com>
- <20151020165744.GE31130@pd.tnic> <20151020172654.GC4943@leverpostej>
- <20151020173639.GH31130@pd.tnic> <20151020174144.GD4943@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Tue, 20 Oct 2015 20:35:28 +0100
+Message-ID: <20151020193528.GE32054@sirena.org.uk>
+References: <CAAObsKChQN4gg91dCWJS_Co_MrYyBrB1J7gxgGo4hsPXNZRp3g@mail.gmail.com>
+ <Pine.LNX.4.44L0.1510201311260.1855-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151020174144.GD4943@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>
-Cc: devicetree@vger.kernel.org, brijeshkumar.singh@amd.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dougthompson@xmission.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-edac@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7fVr/IRGAG9sAW4J"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1510201311260.1855-100000@iolanthe.rowland.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbary>
 List-Id: devicetree@vger.kernel.org
 
 
+--7fVr/IRGAG9sAW4J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 10/20/2015 12:41 PM, Mark Rutland wrote:
-> On Tue, Oct 20, 2015 at 07:36:39PM +0200, Borislav Petkov wrote:
->> On Tue, Oct 20, 2015 at 06:26:55PM +0100, Mark Rutland wrote:
->>>> Btw, how much of this is implementing generic A57 functionality?
->>>
->>> The driver is entirely A57 generic.
->>>
->>>> If a lot, can we make this a generic a57_edac driver so that multiple
->>>> vendors can use it?
->>>
->>> Yes.
->>
->> Ok, cool.
->>
->>>> How fast and how ugly can something like that become?
->>>
->>> Not sure I follow.
->>
->> In the sense that some vendor might require just a little bit different
->> handling or maybe wants to read some vendor-specific registers in
->> addition to the architectural ones.
->>
->> Then we'll start adding vendor-specific hacks to that generic driver.
->> And therefore the question how fast and how ugly such hacks would
->> become.
->>
->> I guess we'll worry about that when we get there...
->>
->> So Brijesh, if you only need generic, architectural functionality,
->> please call it arm64_edac or so and let's add it so that other arm64
->> vendors can use it too.
-> 
-> Please note that this is specific to Cortex-A57, not ARMv8 or aarch64.
-> 
-> It is an IMPLEMENTATION DEFINED feature as implemented by Cortex-A57,
-> which by definition is not implemented by other CPUs. It is not provided
-> by the ARM architecture.
-> 
-> So this cannot be arm64_edac, but could potentially be cortex_a57_edac.
-> 
+On Tue, Oct 20, 2015 at 01:14:46PM -0400, Alan Stern wrote:
+> On Tue, 20 Oct 2015, Tomeu Vizoso wrote:
 
-Yes code is generic to Cortex A57 and naming it cortex_a57_edac sounds good.
+> > This iteration of the series would make this quite easy, as
+> > dependencies are calculated before probes are attempted:
 
-Also I will follow your suggestion and remove DT binding and use MIDR. 
+> > https://lkml.org/lkml/2015/6/17/311
 
-> Thanks,
-> Mark.
-> 
+> But what Rafael is proposing is quite general; it would apply to _all_
+> dependencies as opposed to just those present in DT drivers or those=20
+> affecting platform_devices.
+
+We'll still need most of the DT bits that are there at the minute (the
+ones strewn around the subsystems) AFAICT since it's at the point where
+we parse the DT and work out what the dependencies are which we probably
+want to do prior to getting the drivers up and will be different for
+ACPI.  I think the level of DT dependency here looks a lot larger than
+it actually is due to the fact that a lot of what's being modified is DT
+parsing code.
+
+--7fVr/IRGAG9sAW4J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJpd/AAoJECTWi3JdVIfQyOUH/3aWMFomvCvS2CL4BvzIQDB4
+BphbR2H9ODV06RJMlHiGXa91+iBfp+FxWHQeyoc0ySA1Jn2tzZp8YwHnkNB32MvM
+lh9IOvlTQGwWOFxNNJZeExicoCW4ui3F1sQmcS3ycu9gHHUi/xdqczCFlIeJdJRX
+mSuLTMmuJVsxwFPY/X7EmKZzJLG8eIHWwzkH66432AO4UpU9Bs/dZ5vPxCSCsL89
+xEBG0PSdsFy/hL2Ag1zHZcu49cpEDLK/26vKrW96Ql6dklsfN5D3HDazZ4l0RE0r
+5iF7s3G0fFNpopm+SgwuwWXN92NtcPiHMEfZwLFeekLgyA+fdXC8yesekx0zmVg=
+=cBfe
+-----END PGP SIGNATURE-----
+
+--7fVr/IRGAG9sAW4J--
