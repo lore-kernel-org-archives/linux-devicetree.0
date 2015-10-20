@@ -1,118 +1,266 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] Documentation: ABI: /sys/firmware/devicetree/overlays
-Date: Tue, 20 Oct 2015 17:00:13 -0500
-Message-ID: <CAL_JsqLRjnbPRR0bU=qwdMgGWiFTOKWt9SasdrQpd40_H7oc2A@mail.gmail.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1445368397-8732-5-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_JsqJ1nPp17bnp5b59i7Huov8f-qOByRG2dW6XBj5-4_fvSw@mail.gmail.com> <235F6C23-4962-4114-BCB2-4279E775E23E@konsulko.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun4i: Add dts file for the pov
+ protab2-ips9 tablet
+Date: Wed, 21 Oct 2015 00:04:29 +0200
+Message-ID: <1445378669-21622-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <235F6C23-4962-4114-BCB2-4279E775E23E-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB67UTKYQKGQEDYGKVRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 4:02 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
->> On Oct 20, 2015, at 23:56 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->>
->> On Tue, Oct 20, 2015 at 2:13 PM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>> Documentation ABI entry for overlays sysfs entries.
->>>
->>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>> ---
->>> .../ABI/testing/sysfs-firmware-devicetree-overlays | 40 +++++++++++=
-+++++++++++
->>> 1 file changed, 40 insertions(+)
->>> create mode 100644 Documentation/ABI/testing/sysfs-firmware-devicet=
-ree-overlays
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-firmware-devicetree-ov=
-erlays b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
->>> new file mode 100644
->>> index 0000000..adc4068
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
->>> @@ -0,0 +1,40 @@
->>> +What:          /sys/firmware/devicetree/overlays/
->>> +Date:          October 2015
->>> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>> +Description:
->>> +               This directory contains the applied device tree ove=
-rlays of
->>> +               the running system, as directories of the overlay i=
-d.
->>> +
->>> +               enable: The master enable switch, by default is 1, =
-and when
->>> +                       set to 0 it cannot be re-enabled for securi=
-ty reasons.
->>> +
->>> +               The discussion about this switch takes place in:
->>> +               http://comments.gmane.org/gmane.linux.drivers.devic=
-etree/101871
->>> +
->>> +               Kees Cook:
->>> +               "Coming from the perspective of drawing a bright li=
-ne between
->>> +               kernel and the root user (which tends to start with=
- disabling
->>> +               kernel module loading), I would say that there at l=
-east needs
->>> +               to be a high-level one-way "off" switch for the int=
-erface so
->>> +               that systems that have this interface can choose to=
- turn it off
->>> +               during initial boot, etc."
->>> +
->>> +What:          /sys/firmware/devicetree/overlays/<id>
->>> +Date:          October 2015
->>> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>> +Description:
->>> +               Each directory represents an applied overlay, conta=
-ining
->>> +               the following attribute files.
->>> +
->>> +               can_remove: The attribute set to 1 means that the o=
-verlay can
->>> +                           be removed, while 0 means that the over=
-lay is being
->>> +                           overlapped therefore removal is prohibi=
-ted.
->>> +
->>> +What:          /sys/firmware/devicetree/overlays/<id>/<fragment-na=
-me>/
->>> +Date:          October 2015
->>> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>> +Description:
->>> +               Each of these directories contain information about=
- of the
->>> +               particular overlay fragment.
->>> +
->>> +               target: The full-path of the target of the fragment
->>> --
->>
->> What happened to attributes within the fragment dir?
->>
->
-> There=E2=80=99s a single attribute named target that contains the tar=
-get of the fragment.
->
-> At the moment this is the only attribute. I eventually intent to put =
-the full contents of the overlay fragment
-> there as /sysfs/firmware/devicetree/base does, but this would make th=
-ings quite complicated for now.
->
-> Should I add a What: line for that too?
+The Point of View protab2-ips9 is a tablet with a 9" ips 1024x768 lcd screen,
+microsd slot, headphones, mini hdmi, mini usb b and power barrel connectors.
 
-There should be an entry for every file. These should not be in the
-description. So "enable" and "can_remove" need entries too.
+It uses a rtl8188cus usb wifi chip and a RDA 5875Y bluetooth chip attached
+to uart2. It has a bma250 accelerometer attached to i2c1 addr 0x18, this
+only works when ldo3 is set to 2.8 volt, otherwise i2c1 gets stuck, so
+for now we mark i2c1 as failed.
 
-Rob
+It has a pixcir,pixcir_tangoc compatible touchscreen attached to i2c2 addr
+0x5c. This is not enabled in this dts, because this variant of the
+pixcir_tangoc has separate wakeup and enable pins both of which need
+to be driven low before the touchscreen will work. Before we can enable
+this the pixcir driver and devicetree-bindings need to be extended to
+support these pins.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Mark i2c1 as failed until we've a way to tie a regulator to an i2c bus
+---
+ arch/arm/boot/dts/Makefile                       |   3 +-
+ arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts | 199 +++++++++++++++++++++++
+ 2 files changed, 201 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index bedf51b..0e4f03e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -588,7 +588,8 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-mk802ii.dtb \
+ 	sun4i-a10-olinuxino-lime.dtb \
+ 	sun4i-a10-pcduino.dtb \
+-	sun4i-a10-pcduino2.dtb
++	sun4i-a10-pcduino2.dtb \
++	sun4i-a10-pov-protab2-ips9.dtb
+ dtb-$(CONFIG_MACH_SUN5I) += \
+ 	sun5i-a10s-auxtek-t003.dtb \
+ 	sun5i-a10s-auxtek-t004.dtb \
+diff --git a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+new file mode 100644
+index 0000000..82e69c3
+--- /dev/null
++++ b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+@@ -0,0 +1,199 @@
++/*
++ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun4i-a10.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Point of View Protab2-IPS9";
++	compatible = "pov,protab2-ips9", "allwinner,sun4i-a10";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupts = <0>;
++	};
++};
++
++#include "axp209.dtsi"
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	/* pull-ups and devices require AXP209 LDO3 */
++	status = "failed";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&lradc {
++	vref-supply = <&reg_ldo2>;
++	status = "okay";
++
++	button@400 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <400000>;
++	};
++
++	button@800 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <800000>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&otg_sram {
++	status = "okay";
++};
++
++&pio {
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PH4";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
++		allwinner,pins = "PH5";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
++	};
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1250000>;
++	regulator-max-microvolt = <1250000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb0_vbus {
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
++	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++	usb0_vbus-supply = <&reg_usb0_vbus>;
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
+-- 
+2.5.0
