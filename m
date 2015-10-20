@@ -1,239 +1,236 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v3 2/2] ARM: dts: mediatek: add MT2701 basic support
-Date: Tue, 20 Oct 2015 14:34:31 +0800
-Message-ID: <1445322871-14134-3-git-send-email-erin.lo@mediatek.com>
-References: <1445322871-14134-1-git-send-email-erin.lo@mediatek.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v5 2/2] usb: chipidea: imx: refine clock operations to adapt for all platforms
+Date: Tue, 20 Oct 2015 14:58:39 +0800
+Message-ID: <1445324319-19063-3-git-send-email-peter.chen@freescale.com>
+References: <1445324319-19063-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445322871-14134-1-git-send-email-erin.lo@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Erin Lo <erin.lo@mediatek.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445324319-19063-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds basic chip support for Mediatek 2701.
+Some i.mx platforms need three clocks to let controller work, but
+others only need one, refine clock operation to adapt for all
+platforms, it fixes a regression found at i.mx27.
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> #v4.1+
 ---
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/mt2701-evb.dts  |  29 ++++++++
- arch/arm/boot/dts/mt2701.dtsi     | 146 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-mediatek/mediatek.c |   1 +
- 4 files changed, 177 insertions(+)
- create mode 100644 arch/arm/boot/dts/mt2701-evb.dts
- create mode 100644 arch/arm/boot/dts/mt2701.dtsi
+ drivers/usb/chipidea/ci_hdrc_imx.c | 131 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 113 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 233159d..aec787e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -732,6 +732,7 @@ dtb-$(CONFIG_MACH_DOVE) += \
- 	dove-dove-db.dtb \
- 	dove-sbc-a510.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += \
-+	mt2701-evb.dtb \
- 	mt6580-evbp1.dtb \
- 	mt6589-aquaris5.dtb \
- 	mt6592-evb.dtb \
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-new file mode 100644
-index 0000000..082ca88
---- /dev/null
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Erin Lo <erin.lo@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "mt2701.dtsi"
-+
-+/ {
-+	model = "MediaTek MT2701 evaluation board";
-+	compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
-+
-+	memory {
-+		reg = <0 0x80000000 0 0x40000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-new file mode 100644
-index 0000000..69f240f
---- /dev/null
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Erin.Lo <erin.lo@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "skeleton64.dtsi"
-+
-+/ {
-+	compatible = "mediatek,mt2701";
-+	interrupt-parent = <&sysirq>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x2>;
-+		};
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x3>;
-+		};
-+	};
-+
-+	system_clk: dummy13m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <13000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	rtc_clk: dummy32k {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	watchdog: watchdog@10007000 {
-+		compatible = "mediatek,mt2701-wdt",
-+			     "mediatek,mt6589-wdt";
-+		reg = <0 0x10007000 0 0x100>;
-+	};
-+
-+	timer: timer@10008000 {
-+		compatible = "mediatek,mt2701-timer",
-+			     "mediatek,mt6577-timer";
-+		reg = <0x10008000 0x80>;
-+		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&system_clk>, <&rtc_clk>;
-+		clock-names = "system-clk", "rtc-clk";
-+	};
-+
-+	sysirq: interrupt-controller@10200100 {
-+		compatible = "mediatek,mt2701-sysirq",
-+			     "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200100 0 0x1c>;
-+	};
-+
-+	gic: interrupt-controller@10211000 {
-+		compatible = "arm,cortex-a7-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10211000 0 0x1000>,
-+		      <0 0x10212000 0 0x1000>,
-+		      <0 0x10214000 0 0x2000>,
-+		      <0 0x10216000 0 0x2000>;
-+	};
-+
-+	uart0: serial@11002000 {
-+		compatible = "mediatek,mt2701-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11002000 0 0x400>;
-+		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@11003000 {
-+		compatible = "mediatek,mt2701-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11003000 0 0x400>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@11004000 {
-+		compatible = "mediatek,mt2701-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11004000 0 0x400>;
-+		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@11005000 {
-+		compatible = "mediatek,mt2701-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11005000 0 0x400>;
-+		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-index a954900..1b98f7a 100644
---- a/arch/arm/mach-mediatek/mediatek.c
-+++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -18,6 +18,7 @@
- #include <asm/mach/arch.h>
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index 6ccbf60..7c9b630 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -84,6 +84,12 @@ struct ci_hdrc_imx_data {
+ 	struct imx_usbmisc_data *usbmisc_data;
+ 	bool supports_runtime_pm;
+ 	bool in_lpm;
++	/* SoC before i.mx6 (except imx23/imx28) needs three clks */
++	bool need_three_clks;
++	struct clk *clk_ipg;
++	struct clk *clk_ahb;
++	struct clk *clk_per;
++	/* --------------------------------- */
+ };
  
- static const char * const mediatek_board_dt_compat[] = {
-+	"mediatek,mt2701",
- 	"mediatek,mt6589",
- 	"mediatek,mt6592",
- 	"mediatek,mt8127",
+ /* Common functions shared by usbmisc drivers */
+@@ -135,6 +141,102 @@ static struct imx_usbmisc_data *usbmisc_get_init_data(struct device *dev)
+ }
+ 
+ /* End of common functions shared by usbmisc drivers*/
++static int imx_get_clks(struct device *dev)
++{
++	struct ci_hdrc_imx_data *data = dev_get_drvdata(dev);
++	int ret = 0;
++
++	data->clk_ipg = devm_clk_get(dev, "ipg");
++	if (IS_ERR(data->clk_ipg)) {
++		/* If the platform only needs one clocks */
++		data->clk = devm_clk_get(dev, NULL);
++		if (IS_ERR(data->clk)) {
++			ret = PTR_ERR(data->clk);
++			dev_err(dev,
++				"Failed to get clks, err=%ld,%ld\n",
++				PTR_ERR(data->clk), PTR_ERR(data->clk_ipg));
++			return ret;
++		}
++		return ret;
++	}
++
++	data->clk_ahb = devm_clk_get(dev, "ahb");
++	if (IS_ERR(data->clk_ahb)) {
++		ret = PTR_ERR(data->clk_ahb);
++		dev_err(dev,
++			"Failed to get ahb clock, err=%d\n", ret);
++		return ret;
++	}
++
++	data->clk_per = devm_clk_get(dev, "per");
++	if (IS_ERR(data->clk_per)) {
++		ret = PTR_ERR(data->clk_per);
++		dev_err(dev,
++			"Failed to get per clock, err=%d\n", ret);
++		return ret;
++	}
++
++	data->need_three_clks = true;
++	return ret;
++}
++
++static int imx_prepare_enable_clks(struct device *dev)
++{
++	struct ci_hdrc_imx_data *data = dev_get_drvdata(dev);
++	int ret = 0;
++
++	if (data->need_three_clks) {
++		ret = clk_prepare_enable(data->clk_ipg);
++		if (ret) {
++			dev_err(dev,
++				"Failed to prepare/enable ipg clk, err=%d\n",
++				ret);
++			return ret;
++		}
++
++		ret = clk_prepare_enable(data->clk_ahb);
++		if (ret) {
++			dev_err(dev,
++				"Failed to prepare/enable ahb clk, err=%d\n",
++				ret);
++			clk_disable_unprepare(data->clk_ipg);
++			return ret;
++		}
++
++		ret = clk_prepare_enable(data->clk_per);
++		if (ret) {
++			dev_err(dev,
++				"Failed to prepare/enable per clk, err=%d\n",
++				ret);
++			clk_disable_unprepare(data->clk_ahb);
++			clk_disable_unprepare(data->clk_ipg);
++			return ret;
++		}
++	} else {
++		ret = clk_prepare_enable(data->clk);
++		if (ret) {
++			dev_err(dev,
++				"Failed to prepare/enable clk, err=%d\n",
++				ret);
++			return ret;
++		}
++	}
++
++	return ret;
++}
++
++static void imx_disable_unprepare_clks(struct device *dev)
++{
++	struct ci_hdrc_imx_data *data = dev_get_drvdata(dev);
++
++	if (data->need_three_clks) {
++		clk_disable_unprepare(data->clk_per);
++		clk_disable_unprepare(data->clk_ahb);
++		clk_disable_unprepare(data->clk_ipg);
++	} else {
++		clk_disable_unprepare(data->clk);
++	}
++}
+ 
+ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ {
+@@ -153,23 +255,18 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	platform_set_drvdata(pdev, data);
+ 	data->usbmisc_data = usbmisc_get_init_data(&pdev->dev);
+ 	if (IS_ERR(data->usbmisc_data))
+ 		return PTR_ERR(data->usbmisc_data);
+ 
+-	data->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(data->clk)) {
+-		dev_err(&pdev->dev,
+-			"Failed to get clock, err=%ld\n", PTR_ERR(data->clk));
+-		return PTR_ERR(data->clk);
+-	}
++	ret = imx_get_clks(&pdev->dev);
++	if (ret)
++		return ret;
+ 
+-	ret = clk_prepare_enable(data->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev,
+-			"Failed to prepare or enable clock, err=%d\n", ret);
++	ret = imx_prepare_enable_clks(&pdev->dev);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	data->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "fsl,usbphy", 0);
+ 	if (IS_ERR(data->phy)) {
+@@ -212,8 +309,6 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 		goto disable_device;
+ 	}
+ 
+-	platform_set_drvdata(pdev, data);
+-
+ 	if (data->supports_runtime_pm) {
+ 		pm_runtime_set_active(&pdev->dev);
+ 		pm_runtime_enable(&pdev->dev);
+@@ -226,7 +321,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ disable_device:
+ 	ci_hdrc_remove_device(data->ci_pdev);
+ err_clk:
+-	clk_disable_unprepare(data->clk);
++	imx_disable_unprepare_clks(&pdev->dev);
+ 	return ret;
+ }
+ 
+@@ -240,7 +335,7 @@ static int ci_hdrc_imx_remove(struct platform_device *pdev)
+ 		pm_runtime_put_noidle(&pdev->dev);
+ 	}
+ 	ci_hdrc_remove_device(data->ci_pdev);
+-	clk_disable_unprepare(data->clk);
++	imx_disable_unprepare_clks(&pdev->dev);
+ 
+ 	return 0;
+ }
+@@ -252,7 +347,7 @@ static int imx_controller_suspend(struct device *dev)
+ 
+ 	dev_dbg(dev, "at %s\n", __func__);
+ 
+-	clk_disable_unprepare(data->clk);
++	imx_disable_unprepare_clks(dev);
+ 	data->in_lpm = true;
+ 
+ 	return 0;
+@@ -270,7 +365,7 @@ static int imx_controller_resume(struct device *dev)
+ 		return 0;
+ 	}
+ 
+-	ret = clk_prepare_enable(data->clk);
++	ret = imx_prepare_enable_clks(dev);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -285,7 +380,7 @@ static int imx_controller_resume(struct device *dev)
+ 	return 0;
+ 
+ clk_disable:
+-	clk_disable_unprepare(data->clk);
++	imx_disable_unprepare_clks(dev);
+ 	return ret;
+ }
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
