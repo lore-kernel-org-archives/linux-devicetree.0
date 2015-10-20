@@ -1,89 +1,100 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv2] ARM: dts: use vmmc-supply of emmc/sd for exynos5422-odroidxu3
-Date: Tue, 20 Oct 2015 12:56:33 +0000
-Message-ID: <1445345793-5189-1-git-send-email-linux.amoon@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Anand Moon <linux.amoon@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
+Date: Tue, 20 Oct 2015 15:07:31 +0200
+Message-ID: <CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
+	<20151020122448.20687.11926@quantum>
+	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
+	<20151020130004.20687.91058@quantum>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151020130004.20687.91058@quantum>
+Sender: linux-sh-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes need for host controller to detect UHS-I highspeed cards.
-Changes in VDDQ_MMC2 voltage range help scale
-the required voltage to detect and load the microSD cards.
+Hi Mike,
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
+On Tue, Oct 20, 2015 at 3:00 PM, Michael Turquette
+<mturquette@baylibre.com> wrote:
+> Quoting Geert Uytterhoeven (2015-10-20 05:31:12)
+>> On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette
+>> <mturquette@baylibre.com> wrote:
+>> > Quoting Geert Uytterhoeven (2015-10-16 05:49:20)
+>> >> +static void __init r8a7795_cpg_mssr_init(struct device_node *np)
+>> >> +{
+>> >> +       struct regmap *regmap;
+>> >> +       u32 reg, cpg_mode;
+>> >> +
+>> >> +       regmap =3D syscon_regmap_lookup_by_phandle(np, "renesas,m=
+odemr");
+>> >> +       if (IS_ERR(regmap) ||
+>> >> +           of_property_read_u32_index(np, "renesas,modemr", 1, &=
+reg) ||
+>> >> +           regmap_read(regmap, reg, &cpg_mode)) {
+>> >> +               pr_err("%s: failed to parse renesas,modemr\n", np=
+->full_name);
+>> >> +               return;
+>> >> +       }
+>> >> +
+>> >> +       cpg_pll_config =3D &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(=
+cpg_mode)];
+>> >> +       if (!cpg_pll_config->extal_div) {
+>> >> +               pr_err("%s: Prohibited setting (cpg_mode=3D0x%x)\=
+n",
+>> >> +                      __func__, cpg_mode);
+>> >> +               return;
+>> >> +       }
+>> >> +
+>> >> +       cpg_mssr_probe(np, &r8a7795_cpg_mssr_info);
+>> >> +}
+>> >> +CLK_OF_DECLARE(r8a7795_cpg_mssr, "renesas,r8a7795-cpg-mssr",
+>> >> +              r8a7795_cpg_mssr_init);
+>> >
+>> > Is CLK_OF_DECLARE needed? Is it possible to make this a real
+>> > platform_driver =C3=A0 la drivers/clk/qcom/gcc-apq8084.c?
+>>
+>> I tried making it a real platform driver, but it failed: devices tha=
+t are
+>> part of the Clock Domain failed to get their clock (error -2, IIRC, =
+which is
+>> -ENOENT), and thus couldn't be instantiated.
+>> I didn't look deeper at that time.
+>>
+>> [... reading code ...]
+>>
+>> Aha, this may be caused by __of_clk_get_from_provider() returning
+>> hardcoded -ENOENT instead of propagating the error returned by
+>> __clk_create_clk()?
+>
+> Well the only other error thrown by __clk_create_clk is -ENOMEM, so I=
+'m
+> not sure how that would help things.
 
-Changes:
-Drop the ranp_delay for LDO9.
+Hmm, you're right.
 
-Thanks to : Krzysztof, Doug Anderson, Jaehoon Chung for helping
-me out figure out the mmc core requirement.
+> The bindings should go in for 4.4, but if the driver is slated for 4.=
+5
+> then can you investigate this some more? Stephen and I are on a missi=
+on
+> to have _real_ clk drivers.
 
-Also drop the previous changes:
-use cd-gpio method to detect sd-card.
-Added UHS-I bus speed support.
+Sure, I'll have a deeper look.
 
-[    4.713553] random: nonblocking pool is initialized
-[    4.718423] 14530000.hdmi supply hdmi-en not found, using dummy regulator
-[    4.726206] exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-[    4.732555] exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
-[    4.740180] exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
-[    4.746936] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    4.753428] [drm] No driver support for vblank timestamp query.
-[    4.940794] Console: switching to colour frame buffer device 274x77
-[    4.995344] exynos-drm exynos-drm: fb0:  frame buffer device
-[    5.024573] [drm] Initialized exynos 1.0.0 20110530 on minor 0
-[    5.031164] exynos-dwc3 usb@12000000: no suspend clk specified
-[    5.054571] usb 2-1: new full-speed USB device number 2 using exynos-ohci
-[    5.159527] dwmmc_exynos 12220000.mmc: Busy; trying anyway
-[    5.163705] mmc_host mmc1: Timeout sending command (cmd 0x202000 arg 0x0 status 0x0)
----
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Gr{oetje,eeting}s,
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 1af5bdc..a4be3e0 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -182,9 +182,10 @@
- 
- 			ldo13_reg: LDO13 {
- 				regulator-name = "vdd_ldo13";
--				regulator-min-microvolt = <2800000>;
-+				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
-+				regulator-ramp-delay = <12000>;
- 			};
- 
- 			ldo15_reg: LDO15 {
-@@ -213,6 +214,7 @@
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
-+				regulator-ramp-delay = <12000>;
- 			};
- 
- 			ldo24_reg: LDO24 {
-@@ -338,6 +340,7 @@
- 	samsung,dw-mshc-ddr-timing = <0 2>;
- 	samsung,dw-mshc-hs400-timing = <0 2>;
- 	samsung,read-strobe-delay = <90>;
-+	vmmc-supply = <&ldo3_reg>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd &sd0_rclk>;
- 	bus-width = <8>;
-@@ -355,6 +358,8 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
- 	bus-width = <4>;
-+	vmmc-supply = <&ldo19_reg>;
-+	vqmmc-supply = <&ldo13_reg>;
- 	cap-sd-highspeed;
- };
- 
--- 
-2.1.4
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
