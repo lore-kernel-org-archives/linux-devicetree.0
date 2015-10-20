@@ -1,64 +1,172 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
-Date: Tue, 20 Oct 2015 22:56:46 +0900
-Message-ID: <CAJKOXPd74=CuUP_ue=ZqPFX6HbMu9qBCTYtNU+KZ1X4Dvs2ZGA@mail.gmail.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
-	<56264505.3090405@fivetechno.de>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
+ TPS65086 PMIC
+Date: Tue, 20 Oct 2015 09:02:56 -0500
+Message-ID: <56264990.8050501@ti.com>
+References: <1445014753-15450-1-git-send-email-afd@ti.com>
+ <1445014753-15450-2-git-send-email-afd@ti.com> <20151019091311.GH31804@x1>
+ <5625095F.5080204@ti.com> <20151019152100.GK31804@x1>
+ <56250AF9.3030907@ti.com> <20151020113128.GN31804@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <56264505.3090405@fivetechno.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Markus Reichl <m.reichl@fivetechno.de>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151020113128.GN31804@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2015-10-20 22:43 GMT+09:00 Markus Reichl <m.reichl@fivetechno.de>:
-> Am 19.10.2015 um 08:03 schrieb Alim Akhtar:
->> Alim Akhtar (7):
->>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
->>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
->>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
->>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
->>   ARM: exynos_defconfig: Normalize exynos defconfig
->>   ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
->>     drivers
->>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
+On 10/20/2015 06:31 AM, Lee Jones wrote:
+> On Mon, 19 Oct 2015, Andrew F. Davis wrote:
+>
+>> On 10/19/2015 10:21 AM, Lee Jones wrote:
+>>> On Mon, 19 Oct 2015, Andrew F. Davis wrote:
+>>>
+>>>> On 10/19/2015 04:13 AM, Lee Jones wrote:
+>>>>> On Fri, 16 Oct 2015, Andrew F. Davis wrote:
+>>>>>
+>>>>>> The TPS65086 PMIC contains several regulators and a GPO controller.
+>>>>>> Add bindings for the TPS65086 PMIC.
+>>>>>>
+>>>>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>>>>>> ---
+>>>>>>   .../devicetree/bindings/gpio/gpio-tps65086.txt     | 17 ++++++++
+>>>>>>   Documentation/devicetree/bindings/mfd/tps65086.txt | 46 ++++++++++++++++++++++
+>>>>>>   .../bindings/regulator/tps65086-regulator.txt      | 36 +++++++++++++++++
+>>>>>
+>>>>> Please split these up into separate patches.
+>>>>>
+>>>>> There is no functional reason to bundle them up.
+>>>>>
+>>>>
+>>>> ACK
+>>>>
+>>>>>>   3 files changed, 99 insertions(+)
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..4b6aeb4
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
+>>>>>> @@ -0,0 +1,46 @@
+>>>>>> +* TPS65086 Power Management Integrated Circuit bindings
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> + - compatible		: Should be "ti,tps65086".
+>>>>>
+>>>>> Any indication that it's a PMIC?
+>>>>>
+>>>>
+>>>> In the compatible string?
+>>>
+>>> Ya.
+>>>
 >>
->>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
->>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
->>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
->>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
->>  arch/arm/configs/exynos_defconfig |   11 +++++-----
->>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
->>  6 files changed, 61 insertions(+), 49 deletions(-)
+>> Not sure what you mean then?, no one else seems to be doing that,
+>> "xx,xxxxxxx-pmic" is usually used for matching the regulator node,
+>> not the device itself.
+>
+> Either the driver is MFD is the PMIC or it's not.
+>
+> If it is, the compatible should reflect that, if isn't not then the
+> description in the header comment and the one above is not correct.
+>
+> IMO, 'pmic' should not be used in the regulator compatible strings, as
+> it's a general description of the overall device.  The regulators are
+> just a component of that device.
+>
+
+I agree about not using compatible in regulator nodes (Mark Brown and I had
+a discussion on this topic), what I mean with "xxxxxxx-pmic" is for the MFD
+core to match sub-drivers (mfd_cells). For example drivers/mfd/tps80031.c,
+matches the regulator with "tps80031-pmic", the clock with "tps80031-clock",
+the charger with "tps80031-charger", etc..
+
+The core device itself is just matched with "ti,tps65086" through the I2C bus
+matching.
+
+I could change the core to be "tps65086-pmic", then call the regulator
+driver "tps65086-regulator" if this works for you, this seems to be the
+way new drivers name the regulator driver (max77843.c).
+
+>>>>>> + - reg			: Slave address.
+>>>>>
+>>>>> I2C/SPI?
+>>>>>
+>>>>
+>>>> ACK
+>>>>
+>>>>>> + - interrupt-parent	: The parent interrupt controller.
+>>>>>
+>>>>> Phandled to ...
+>>>>>
+>>>>
+>>>> ACK
+>>>>
+>>>>>> + - interrupts		: The interrupt line the device is connected to.
+>>>>>> + - interrupt-controller	: Marks the device node as an interrupt controller.
+>>>>>> + - #interrupt-cells	: The number of cells to describe an IRQ, this
+>>>>>> +			  should be 2. The first cell is the IRQ number.
+>>>>>> +			  The second cell is the flags, encoded as the trigger
+>>>>>> +			  masks from ../interrupt-controller/interrupts.txt.
+>>>>>
+>>>>> Masks?  What masks?
+>>>>>
+>>>>> Best to make a link to the header where the flags are defined here.
+>>>>>
+>>>>
+>>>> ACK
+>>>>
+>>>>>> +Additional nodes defined in:
+>>>>>> + - Regulators	: ../regulator/tps65086-regulator.txt.
+>>>>>> + - GPIO		: ../gpio/gpio-tps65086.txt.
+>>>>>
+>>>>> I'd suggest removing the full stops from all of the lines above.
+>>>>>
+>>>>> Just treat them as bullet points like we normally do.
+>>>>>
+>>>>
+>>>> ACK
+>>>>
+>>>>>> +Example:
+>>>>>> +
+>>>>>> +	pmic: tps65086@5e {
+>>>>>> +		compatible = "ti,tps65086";
+>>>>>> +		reg = <0x5e>;
+>>>>>> +		interrupt-parent = <&gpio1>;
+>>>>>> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
+>>>>>> +		interrupt-controller;
+>>>>>> +		#interrupt-cells = <2>;
+>>>>>> +
+>>>>>> +		regulators {
+>>>>>> +			compatible = "ti,tps65086-regulator";
+>>>>>> +
+>>>>>> +			buck1 {
+>>>>>> +				regulator-name = "vcc1";
+>>>>>> +				regulator-min-microvolt = <1600000>;
+>>>>>> +				regulator-max-microvolt = <1600000>;
+>>>>>> +				regulator-boot-on;
+>>>>>> +				ti,regulator-decay;
+>>>>>> +				ti,regulator-step-size-25mv;
+>>>>>> +			};
+>>>>>> +		};
+>>>>>> +
+>>>>>> +		gpio4: tps65086_gpio {
+>>>>>> +			compatible = "ti,tps65086-gpio";
+>>>>>> +			gpio-controller;
+>>>>>> +			#gpio-cells = <2>;
+>>>>>> +		};
+>>>>>> +	};
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>
+>>>
 >>
-> Hi,
 >
-> I have tested this patch on my Odroid U3 and U3+ using 4.3.0-rc6 from
-> Tobias' repo at https://github.com/tobiasjakobi/linux-odroid/tree/odroid-4.3.y
->
-> and his debug config:
-> https://raw.githubusercontent.com/tobiasjakobi/odroid-environment/master/sourcecode/system/vanilla-4.3-debug.conf
->
-> halt -p works (power goes down to 0W)
->
-> reboot does not work, stuck at 0.5W, right after
-> "systemd-shutdown[1]: rebooting".
->
-> reboot did work with 4.3.0-rc3 from above repo (without Alim's patch).
-
-Hi Markus,
-
-You replied to v1 so I assume you tested v1. Please test latest version: v2.
-
-Mentioned Tobias' repo does not look like vanilla 4.3.0-rc6. Because
-of that it may contain additional patches which can fix something...
-or break something (like the reboot).
-Please test it on latest mainline release or some recent linux-next.
-
-In my case I tested it on linux-next on Oroid XU3 and tomorrow I will
-give it a try on Trats2.
-
-Best regards,
-Krzysztof
