@@ -1,98 +1,55 @@
-From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
-Date: Tue, 20 Oct 2015 21:22:05 +0530
-Message-ID: <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
-References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
- <562656D4.1040403@fivetechno.de> <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH net-next 1/4] net:hns: Add support of Hip06 SoC to the
+ Hislicon Network Subsystem
+Date: Tue, 20 Oct 2015 23:54:56 +0800
+Message-ID: <201510202306.WYUMdngA%fengguang.wu@intel.com>
+References: <1445353278-130498-2-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
-Cc: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kgene <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tobias Jakobi <tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445353278-130498-2-git-send-email-salil.mehta@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, salil.mehta@huawei.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com, yankejian <yankejian@huawei.com>, lipeng <lipeng321@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 9:17 PM, Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Markus,
->
-> On Tue, Oct 20, 2015 at 8:29 PM, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org> wrote:
->> Am 20.10.2015 um 11:24 schrieb Alim Akhtar:
->>> Now we have a nice way to reboot/poweroff system using a generic
->>> syscon regmap based drivers, this series moves exynos SoCs to
->>> make use of the same.
->>>
->>> Changes since v1:
->>> * Added a comment about the register information
->>> * Droped defconfig changes as disscussed
->>> * Collected various Reviewed-by, Tested-by and Acked-by tags
->>> * Added SYSCON-{RESET, POWEROFF} to select from Kconfig
->>>
->>> Alim Akhtar (6):
->>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
->>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
->>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
->>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
->>>   ARM: exynos: select POWER_RESET_SYSCON and
->>>     POWER_RESET_SYSCON_POWEROFF
->>>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
->>>
->>>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
->>>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
->>>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
->>>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
->>>  arch/arm/mach-exynos/Kconfig      |    3 +++
->>>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
->>>  6 files changed, 59 insertions(+), 43 deletions(-)
->>>
->>
->> Hi Alim,
->>
->> I have installed your patch set above with git am on top of
->> 4.3.0-rc6-00108-gce1fad2 torvalds/linux of today
->> with make exynos_defconfig on Odroid U3.
->>
-> which exynos soc Odroid U3 uses?
->
-OK, I can see its uses exynos4412 and exynos4412-odroidu3.dts does
-include exynos4.dtsi,
-so these should have worked.
+Hi Salil,
 
->> "halt -p" worked (power 0.0W).
->> "reboot" got stuck at 0.5W.
->>
-> reboot stuck mean system does not reboot any more?
-> As far as I can see there in __no__ functional changes that my patch introduce.
-> So ideally it should have work. My patches are based on the top on
-> vanilla v4.3-rc5.
-> (25cb62b Linux 4.3-rc5), can you check at this commit?
->
-> Will check with the commit mentioned by you tomorrow.
->
->>
->> Without your patch set reboot worked.
->>
->>
->> Thanks,
->> --
->> Markus Reichl
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
-> --
-> Regards,
-> Alim
+[auto build test WARNING on net-next/master -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+
+url:    https://github.com/0day-ci/linux/commits/Salil/net-hns-Add-support-of-Hip06-SoC-to-the-Hislicon-Network-Subsystem/20151020-225151
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
 
+sparse warnings: (new ones prefixed by >>)
 
--- 
-Regards,
-Alim
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:110:20: sparse: symbol 'hns_ae_get_handle' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:297:6: sparse: symbol 'hns_ae_stop' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:328:6: sparse: symbol 'hns_ae_toggle_ring_irq' was not declared. Should it be static?
+>> drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:340:6: sparse: symbol 'hns_aev2_toggle_ring_irq' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:500:6: sparse: symbol 'hns_ae_update_stats' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:583:6: sparse: symbol 'hns_ae_get_stats' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:615:6: sparse: symbol 'hns_ae_get_strings' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:647:5: sparse: symbol 'hns_ae_get_sset_count' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:685:6: sparse: symbol 'hns_ae_update_led_status' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:696:5: sparse: symbol 'hns_ae_cpld_set_led_id' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:708:6: sparse: symbol 'hns_ae_get_regs' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c:735:5: sparse: symbol 'hns_ae_get_regs_len' was not declared. Should it be static?
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   drivers/net/ethernet/hisilicon/hns/hnae.h:601:31: sparse: cast to restricted __le64
+   drivers/net/ethernet/hisilicon/hns/hnae.h:594:31: sparse: cast to restricted __le64
+   drivers/net/ethernet/hisilicon/hns/hns_enet.c:962:6: sparse: symbol 'hns_nic_update_stats' was not declared. Should it be static?
+>> drivers/net/ethernet/hisilicon/hns/hns_enet.c:998:6: sparse: symbol 'hns_set_irq_affinity' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_enet.c:1260:6: sparse: symbol 'hns_nic_poll_controller' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_enet.c:1331:6: sparse: symbol 'hns_set_multicast_list' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_enet.c:1349:6: sparse: symbol 'hns_nic_set_rx_mode' was not declared. Should it be static?
+   drivers/net/ethernet/hisilicon/hns/hns_enet.c:1364:26: sparse: symbol 'hns_nic_get_stats64' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
