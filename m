@@ -1,22 +1,30 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 2/2] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
-Date: Tue, 20 Oct 2015 20:50:00 +0200
-Message-ID: <1445367000-11525-3-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v5 1/2] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
+Date: Tue, 20 Oct 2015 20:49:59 +0200
+Message-ID: <1445367000-11525-2-git-send-email-geert+renesas@glider.be>
 References: <1445367000-11525-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1445367000-11525-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add all R-Car H3 Clock Pulse Generator Core Clock Outputs, as listed in
-Table 8.2a ("List of Clocks [R-Car H3]") of the R-Car Gen3 datasheet
-(rev. 0.5E).
+On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse
+Generator) and MSSR (Module Standby and Software Reset) blocks are
+intimately connected, and share the same register block.
 
-Note that internal CPG clocks (S0, S1, S2, S3, SDSRC, SSPSRC, and
-RPCSRC) are not included, as they're used as internal clock sources
-only.
+Hence it makes sense to describe these two blocks using a
+single device node in DT, instead of using a hierarchical structure with
+multiple nodes, using a mix of generic and SoC-specific bindings.
+
+These new DT bindings are intended to replace the existing DT bindings
+for CPG core clocks ("renesas,*-cpg-clocks", "renesas,cpg-div6-clock")
+and module clocks ("renesas,*-mstp-clocks"), at least for new SoCs.
+
+This will make it easier to add module reset support later, which is
+currently not implemented, and difficult to achieve using the existing
+bindings due to the intertwined register layout.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Acked-by: Michael Turquette <mturquette@baylibre.com>
@@ -24,25 +32,104 @@ Reviewed-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 v5:
   - Add Acked-by, Reviewed-by,
-  - Add datasheet table and revision references,
-  - Add internal clock omissions,
+  - Drop r8a7791.
 
 v4:
-  - Add all clocks instead of just the ones used by the current DTS,
+  - No changes,
 
 v3:
-  - New.
+  - Integrate CPG and MSSR,
 
- include/dt-bindings/clock/r8a7795-cpg-mssr.h | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
+v2:
+  - Switch from MSTP to MSSR.
 
-diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt | 69 ++++++++++++++++++++++
+ include/dt-bindings/clock/renesas-cpg-mssr.h       | 15 +++++
+ 2 files changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+ create mode 100644 include/dt-bindings/clock/renesas-cpg-mssr.h
+
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
 new file mode 100644
-index 0000000000000000..e864aae0a2561c4b
+index 0000000000000000..59297d34b2084429
 --- /dev/null
-+++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+@@ -0,0 +1,69 @@
++* Renesas Clock Pulse Generator / Module Standby and Software Reset
++
++On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
++and MSSR (Module Standby and Software Reset) blocks are intimately connected,
++and share the same register block.
++
++They provide the following functionalities:
++  - The CPG block generates various core clocks,
++  - The MSSR block provides two functions:
++      1. Module Standby, providing a Clock Domain to control the clock supply
++	 to individual SoC devices,
++      2. Reset Control, to perform a software reset of individual SoC devices.
++
++Required Properties:
++  - compatible: Must be one of:
++      - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
++
++  - reg: Base address and length of the memory resource used by the CPG/MSSR
++    block
++
++  - clocks: References to external parent clocks, one entry for each entry in
++    clock-names
++  - clock-names: List of external parent clock names. Valid names are:
++      - "extal" (r8a7795)
++      - "extalr" (r8a7795)
++
++  - #clock-cells: Must be 2
++      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
++	and a core clock reference, as defined in
++	<dt-bindings/clock/*-cpg-mssr.h>.
++      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
++	a module number, as defined in the datasheet.
++
++  - #power-domain-cells: Must be 0
++      - SoC devices that are part of the CPG/MSSR Clock Domain and can be
++	power-managed through Module Standby should refer to the CPG device
++	node in their "power-domains" property, as documented by the generic PM
++	Domain bindings in
++	Documentation/devicetree/bindings/power/power_domain.txt.
++
++
++Examples
++--------
++
++  - CPG device node:
++
++	cpg: clock-controller@e6150000 {
++		compatible = "renesas,r8a7795-cpg-mssr";
++		reg = <0 0xe6150000 0 0x1000>;
++		clocks = <&extal_clk>, <&extalr_clk>;
++		clock-names = "extal", "extalr";
++		#clock-cells = <2>;
++		#power-domain-cells = <0>;
++	};
++
++
++  - CPG/MSSR Clock Domain member device node:
++
++	scif2: serial@e6e88000 {
++		compatible = "renesas,scif-r8a7795", "renesas,scif";
++		reg = <0 0xe6e88000 0 64>;
++		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg CPG_MOD 310>;
++		clock-names = "sci_ick";
++		dmas = <&dmac1 0x13>, <&dmac1 0x12>;
++		dma-names = "tx", "rx";
++		power-domains = <&cpg>;
++		status = "disabled";
++	};
+diff --git a/include/dt-bindings/clock/renesas-cpg-mssr.h b/include/dt-bindings/clock/renesas-cpg-mssr.h
+new file mode 100644
+index 0000000000000000..569a3cc33ffb5bc7
+--- /dev/null
++++ b/include/dt-bindings/clock/renesas-cpg-mssr.h
+@@ -0,0 +1,15 @@
 +/*
 + * Copyright (C) 2015 Renesas Electronics Corp.
 + *
@@ -51,61 +138,12 @@ index 0000000000000000..e864aae0a2561c4b
 + * the Free Software Foundation; either version 2 of the License, or
 + * (at your option) any later version.
 + */
-+#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
++#ifndef __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__
 +
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#define CPG_CORE			0	/* Core Clock */
++#define CPG_MOD				1	/* Module Clock */
 +
-+/* r8a7795 CPG Core Clocks */
-+#define R8A7795_CLK_Z			0
-+#define R8A7795_CLK_Z2			1
-+#define R8A7795_CLK_ZR			2
-+#define R8A7795_CLK_ZG			3
-+#define R8A7795_CLK_ZTR			4
-+#define R8A7795_CLK_ZTRD2		5
-+#define R8A7795_CLK_ZT			6
-+#define R8A7795_CLK_ZX			7
-+#define R8A7795_CLK_S0D1		8
-+#define R8A7795_CLK_S0D4		9
-+#define R8A7795_CLK_S1D1		10
-+#define R8A7795_CLK_S1D2		11
-+#define R8A7795_CLK_S1D4		12
-+#define R8A7795_CLK_S2D1		13
-+#define R8A7795_CLK_S2D2		14
-+#define R8A7795_CLK_S2D4		15
-+#define R8A7795_CLK_S3D1		16
-+#define R8A7795_CLK_S3D2		17
-+#define R8A7795_CLK_S3D4		18
-+#define R8A7795_CLK_LB			19
-+#define R8A7795_CLK_CL			20
-+#define R8A7795_CLK_ZB3			21
-+#define R8A7795_CLK_ZB3D2		22
-+#define R8A7795_CLK_CR			23
-+#define R8A7795_CLK_CRD2		24
-+#define R8A7795_CLK_SD0H		25
-+#define R8A7795_CLK_SD0			26
-+#define R8A7795_CLK_SD1H		27
-+#define R8A7795_CLK_SD1			28
-+#define R8A7795_CLK_SD2H		29
-+#define R8A7795_CLK_SD2			30
-+#define R8A7795_CLK_SD3H		31
-+#define R8A7795_CLK_SD3			32
-+#define R8A7795_CLK_SSP2		33
-+#define R8A7795_CLK_SSP1		34
-+#define R8A7795_CLK_SSPRS		35
-+#define R8A7795_CLK_RPC			36
-+#define R8A7795_CLK_RPCD2		37
-+#define R8A7795_CLK_MSO			38
-+#define R8A7795_CLK_CANFD		39
-+#define R8A7795_CLK_HDMI		40
-+#define R8A7795_CLK_CSI0		41
-+#define R8A7795_CLK_CSIREF		42
-+#define R8A7795_CLK_CP			43
-+#define R8A7795_CLK_CPEX		44
-+#define R8A7795_CLK_R			45
-+#define R8A7795_CLK_OSC			46
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
++#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
 -- 
 1.9.1
-
