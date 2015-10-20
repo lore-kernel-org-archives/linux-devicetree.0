@@ -1,63 +1,34 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 01/10] clk/samsung: exynos5433: add definitions of HDMI-PHY
- output clocks
-Date: Tue, 20 Oct 2015 13:17:35 +0200
-Message-ID: <562622CF.1070906@samsung.com>
-References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
- <1445332961-25419-2-git-send-email-a.hajda@samsung.com>
- <20151020103416.20687.40409@quantum>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v2 0/4] berlin sdhci clock clean up
+Date: Tue, 20 Oct 2015 19:16:43 +0800
+Message-ID: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <20151020103416.20687.40409@quantum>
 Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/10/15 12:34, Michael Turquette wrote:
->> diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
->> > index 5bd80d5..4f0d566 100644
->> > --- a/include/dt-bindings/clock/exynos5433.h
->> > +++ b/include/dt-bindings/clock/exynos5433.h
->> > @@ -765,7 +765,10 @@
->> >  #define CLK_SCLK_RGB_VCLK                              109
->> >  #define CLK_SCLK_RGB_TV_VCLK                           110
->> >  
->> > -#define DISP_NR_CLK                                    111
->> > +#define CLK_PHYCLK_HDMIPHY_PIXEL_CLKO_PHY              111
->> > +#define CLK_PHYCLK_HDMIPHY_TMDS_CLKO_PHY               112
->> > +
->> > +#define DISP_NR_CLK                                    113
->
-> Why break compatibility with older DTBs?
+Add or fix the optional clock property, then remove the CLK_IGNORE_UNUSED
+flag for sdio clk(s).
 
-I used to be resistant to changing those _NR_CLK defines
-in the past but then realized they are not part of the DT ABI.
-These defines are used only in drivers and affect only size
-of the provider's allocated clock array. The confusion may be
-caused by the fact that the whole header is shared by the kernel
-source and dts.
+Since v1:
+  - remove the "mmc: sdhci-pxav3: fix optional clock name" patch to not
+    block the clock clean up patches, will send another separate patch 
+    after talking with HW people.
 
-$ git grep -l _NR_CLK arch/arm/boot/dts drivers/clk/samsung/
-drivers/clk/samsung/clk-exynos-clkout.c
-drivers/clk/samsung/clk-exynos3250.c
-drivers/clk/samsung/clk-exynos4.c
-drivers/clk/samsung/clk-exynos4415.c
-drivers/clk/samsung/clk-exynos5250.c
-drivers/clk/samsung/clk-exynos5260.c
-drivers/clk/samsung/clk-exynos5410.c
-drivers/clk/samsung/clk-exynos5420.c
-drivers/clk/samsung/clk-exynos5433.c
-drivers/clk/samsung/clk-exynos5440.c
-drivers/clk/samsung/clk-exynos7.c
+Jisheng Zhang (4):
+  ARM: dts: berlin: correct BG2Q's sdhci2 2nd clock
+  ARM: dts: berlin: add 2nd clock for BG2Q sdhci0 and sdhci1
+  clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio clk
+  clk: berlin: bg2: remove CLK_IGNORE_UNUSED flag for sdio clk
 
-There is no *_NR_CLK in any dts file.
-New kernel will work will older DTB, the driver will just
-register more clocks, which will not be dereferenced anywhere
-in older dtb.
+ arch/arm/boot/dts/berlin2q.dtsi | 8 +++++---
+ drivers/clk/berlin/bg2.c        | 4 ++--
+ drivers/clk/berlin/bg2q.c       | 2 +-
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
 -- 
-Regards,
-Sylwester
+2.6.1
+
