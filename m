@@ -1,122 +1,74 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] Documentation for system mmu in hi6220 platform.
-Date: Tue, 20 Oct 2015 11:34:02 +0100
-Message-ID: <20151020103402.GB968@leverpostej>
-References: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 01/10] clk/samsung: exynos5433: add definitions of HDMI-PHY
+ output clocks
+Date: Tue, 20 Oct 2015 03:34:16 -0700
+Message-ID: <20151020103416.20687.40409@quantum>
+References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
+ <1445332961-25419-2-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445330724-129401-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-Dw/NWeUnuQfQT0dZR+AlfA@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445332961-25419-2-git-send-email-a.hajda@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 04:45:22PM +0800, Chen Feng wrote:
-> docs: iommu: Documentation for smmu in hi6220 SoC.
+Quoting Andrzej Hajda (2015-10-20 02:22:32)
+> HDMI driver must re-parent respective muxes during HDMI-PHY on/off
+> to HDMI-PHY output clocks. To reference those clocks their
+> definitions should be added.
 > 
-> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
->  .../bindings/iommu/hisi,hi6220-iommu.txt           | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
+>  drivers/clk/samsung/clk-exynos5433.c   | 6 ++++--
+>  include/dt-bindings/clock/exynos5433.h | 5 ++++-
+>  2 files changed, 8 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
-> new file mode 100644
-> index 0000000..93e0701
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
-> @@ -0,0 +1,52 @@
-> +Hi6220 SoC SMMU Device Driver devicetree document
-> +=======================================================================
-> +The Architecture of SMMU on Hi6220 SoC:
+> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+> index 650ec13..e037406 100644
+> --- a/drivers/clk/samsung/clk-exynos5433.c
+> +++ b/drivers/clk/samsung/clk-exynos5433.c
+> @@ -2614,8 +2614,10 @@ static struct samsung_fixed_rate_clock disp_fixed_clks[] __initdata = {
+>         FRATE(0, "phyclk_mipidphy0_rxclkesc0_phy", NULL, CLK_IS_ROOT,
+>                         100000000),
+>         /* PHY clocks from HDMI_PHY */
+> -       FRATE(0, "phyclk_hdmiphy_tmds_clko_phy", NULL, CLK_IS_ROOT, 300000000),
+> -       FRATE(0, "phyclk_hdmiphy_pixel_clko_phy", NULL, CLK_IS_ROOT, 166000000),
+> +       FRATE(CLK_PHYCLK_HDMIPHY_TMDS_CLKO_PHY, "phyclk_hdmiphy_tmds_clko_phy",
+> +                       NULL, CLK_IS_ROOT, 300000000),
+> +       FRATE(CLK_PHYCLK_HDMIPHY_PIXEL_CLKO_PHY, "phyclk_hdmiphy_pixel_clko_phy",
+> +                       NULL, CLK_IS_ROOT, 166000000),
+>  };
+>  
+>  static struct samsung_mux_clock disp_mux_clks[] __initdata = {
+> diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+> index 5bd80d5..4f0d566 100644
+> --- a/include/dt-bindings/clock/exynos5433.h
+> +++ b/include/dt-bindings/clock/exynos5433.h
+> @@ -765,7 +765,10 @@
+>  #define CLK_SCLK_RGB_VCLK                              109
+>  #define CLK_SCLK_RGB_TV_VCLK                           110
+>  
+> -#define DISP_NR_CLK                                    111
+> +#define CLK_PHYCLK_HDMIPHY_PIXEL_CLKO_PHY              111
+> +#define CLK_PHYCLK_HDMIPHY_TMDS_CLKO_PHY               112
 > +
-> +   +------------------------------------------------------------------+
-> +   |                                                                  |
-> +   |         +---------+  +--------+  +-------------+   +-------+     |
-> +   |         |   ADE   |  |  ISP   |  |  V/J codec  |   |  G3D  |     |
-> +   |         +----|----+  +---|----+  +------|------+   +---|---|     |
-> +   |              |           |              |              |         |
-> +   |     ---------v-----------v--------------v--------------v-----    |
-> +   |                           Media Bus                              |
-> +   |     --------------------------------|---------------|--------    |
-> +   |                                     |               |            |
-> +   |                                 +---v---------------v--------+   |
-> +   |                                 |            SMMU            |   |
-> +   |                                 +----------|---------|-------+   |
-> +   |                                            |         |           |
-> +   +--------------------------------------------|---------|-----------+
-> +                                                |         |
-> +                                   +------------v---------v-----------+
-> +                                   |              DDRC                |
-> +                                   +----------------------------------+
-> +
-> +Note:
-> +The media system shared the same smmu IP. to access DDR memory. And all
+> +#define DISP_NR_CLK                                    113
 
-Nit: s/IP./IP/
+Why break compatibility with older DTBs?
 
-> +media IP used the same page table.
-> +
-> +Below binding describes the system mmu for media system in hi6220 platform
-> +
-> +Required properties:
-> +- compatible: Should be "hisilicon,hi6220-smmu" example:
-> +		compatible = "hisilicon,hi6220-smmu";
+Regards,
+Mike
 
-No need for the example here.
-
-Just say:
-
-- compatible: should contain "hisilicon,hi6220-smmu".
-
-> +- reg: A tuple of base address and size of System MMU registers.
-> +- interrupts: An interrupt specifier for interrupt signal of System MMU.
-> +- clocks: The clock used for smmu IP.
-> +- clock-names: The name to enable clock with clock framework.
-
-The description of clocks and clock-names makes no sense.
-
-You must define the exact set of names you expect, and the relationship
-between clocks and clock names. e.g.
-
-- clocks: a list of phandle + clock-specifier pairs, one for each entry
-  in clock-names
-
-- clock-names: should contain:
-  * "smmu_clk"
-  * "media_sc_clk"
-  * "smmu_peri_clk"
-
-> +- #iommu-cells: The iommu-cells should be 1 for muti-master to use.
-
-s/muti/multi/
-
-You must define what that one cell corresponds to in the hardware.
-
-Thanks,
-Mark.
-
-> +
-> +Examples:
-> +	smmu@f4210000 {
-> +		compatible = "hisilicon,hi6220-smmu";
-> +		reg = <0x0 0xf4210000 0x0 0x1000>;
-> +		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&sys_ctrl HI6220_MMU_CLK>,
-> +		         <&media_ctrl HI6220_MED_MMU>,
-> +		         <&sys_ctrl HI6220_MEDIA_PLL_SRC>;
-> +		clock-names = "smmu_clk",
-> +			      "media_sc_clk",
-> +			      "smmu_peri_clk";
-> +		#iommu-cells = <1>;
-> +	};
+>  
+>  /* CMU_AUD */
+>  #define CLK_MOUT_AUD_PLL_USER                          1
 > -- 
 > 1.9.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
