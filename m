@@ -1,34 +1,41 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2 0/4] berlin sdhci clock clean up
-Date: Tue, 20 Oct 2015 19:16:43 +0800
-Message-ID: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/4] ARM: dts: berlin: correct BG2Q's sdhci2 2nd clock
+Date: Tue, 20 Oct 2015 19:16:44 +0800
+Message-ID: <1445339807-2351-2-git-send-email-jszhang@marvell.com>
+References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445339807-2351-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add or fix the optional clock property, then remove the CLK_IGNORE_UNUSED
-flag for sdio clk(s).
+The optional 2nd clock is CLKID_SDIO.
 
-Since v1:
-  - remove the "mmc: sdhci-pxav3: fix optional clock name" patch to not
-    block the clock clean up patches, will send another separate patch 
-    after talking with HW people.
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/berlin2q.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jisheng Zhang (4):
-  ARM: dts: berlin: correct BG2Q's sdhci2 2nd clock
-  ARM: dts: berlin: add 2nd clock for BG2Q sdhci0 and sdhci1
-  clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio clk
-  clk: berlin: bg2: remove CLK_IGNORE_UNUSED flag for sdio clk
-
- arch/arm/boot/dts/berlin2q.dtsi | 8 +++++---
- drivers/clk/berlin/bg2.c        | 4 ++--
- drivers/clk/berlin/bg2q.c       | 2 +-
- 3 files changed, 8 insertions(+), 6 deletions(-)
-
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 63a4849..2cb07fa 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -119,7 +119,7 @@
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab1000 0x200>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&chip_clk CLKID_NFC_ECC>, <&chip_clk CLKID_NFC>;
++			clocks = <&chip_clk CLKID_NFC_ECC>, <&chip_clk CLKID_SDIO>;
+ 			clock-names = "io", "core";
+ 			status = "disabled";
+ 		};
 -- 
 2.6.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
