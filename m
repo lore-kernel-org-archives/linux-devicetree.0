@@ -1,89 +1,86 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH] driver core: Disable late probes by default
-Date: Tue, 20 Oct 2015 18:17:39 +0200
-Message-ID: <CAAObsKAL782-poBT1gkid+zzhWBOrnOUh7P7epjcja38j_-fbQ@mail.gmail.com>
-References: <20151016181129.GA1764@gradator.net> <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
- <20151019151953.GA22662@kroah.com> <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
- <20151020140523.GA22021@kroah.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] soc: ti: Introduce wkup_m3_ipc driver
+Date: Tue, 20 Oct 2015 09:18:43 -0700
+Message-ID: <20151020161843.GE3078@atomide.com>
+References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151020140523.GA22021@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442967294-23837-1-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Keerty J <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 October 2015 at 16:05, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Tue, Oct 20, 2015 at 09:40:48AM +0200, Tomeu Vizoso wrote:
->> On 19 October 2015 at 17:19, Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->> > On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
->> >> To smooth the transition to late probes, make disabled the default for
->> >> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
->> >> get fixed.
->> >>
->> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->> >> Link: https://lkml.kernel.org/g/20151016181129.GA1764@gradator.net
->> >>
->> >> ---
->> >>
->> >> Hi Rob,
->> >>
->> >> I'm sending this in case you think it would be best to leave the
->> >> on-demand probe series in -next for now but have late probes disabled to
->> >> avoid hassle to some people.
->> >
->> > I would like Rob to just drop this series please, I don't agree with it
->> > at all at the moment.
->>
->> Hi Greg,
->>
->> is it the case that you are satisfied with deferred probes as a way of
->> ordering device probing and that I should look at how to solve my
->> problem by improving it?
->
-> Yes, especially given that you have said this does not speed up your
-> boot times, which I thought was your main goal here :(
+Hi all,
 
-Sorry if I'm repeating myself too often, but I have two goals: change
-the probing order to not send deferred probes to the back of the queue
-(getting the display up as fast as possible), and making easier to
-understand the boot process on embedded platforms.
+* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150922 17:20]:
+> Hi,
+> This series is version 3 of the code to introduce a wkup_m3_ipc driver
+> to handle communication between the MPU and Cortex M3 present on TI AM335x
+> and AM437x SoCs. v2 of this series can be found at [1]. Only patch 3
+> has been changed based on a request from Tony and a few cleanups:
+> 
+> - Rather than exporting all of the functionality of the driver, added
+>   wkup_m3_ipc_get and wkup_m3_ipc_put to allow users to just get a handle
+>   containing an ops structure for use.
+> 
+> - Changed all ops (previously exported functions) to take pointer to
+>   struct wkup_m3_ipc as an argument now that user code will get this
+>   from wkup_m3_ipc_get.
+> 
+> - General cleanup to probe function
+> 
+> - Added MODULE_DEVICE_TABLE so driver can probe automatically.
+> 
+> The series containing the DT nodes can be found here [2]. The actual dt
+> nodes for wkup_m3_ipc (last two patches) have been merged but discussion
+> is still open for the ti,mbox-send-noirq flag patches and depends on the
+> comments provided for the omap-mailbox change presented in patch 1 of
+> this series.
+> 
+> A full branch containing all necessary PM code for both am335x and am437x
+> has been pushed here [3] to provide a big picture view of the plan for
+> this series.
+> 
+> This driver relies on the firmware at [4] in the next-upstream branch
+> being present in /lib/firmware in the rootfs or built in to the kernel.
 
-The concrete issue that would be fixed by achieving the first goal was
-explained in this email from last year:
-
-http://lists.freedesktop.org/archives/dri-devel/2014-August/066527.html
-
-Because of that, ChromeOS had to use their own bindings for the panel
-node so that the panel probe wouldn't be deferred, introducing a
-sizable delta that is a barrier to rebasing on newer mainline releases
-and for vendors to upstream their HW adaptation for chrome devices.
-
-The goal of the project I'm working on is to help reduce the delta so
-that ChromeOS (but will also help other downstreams) can rebase more
-often and so that vendors have one excuse less to upstream support for
-their SoCs in a timely way.
-
-About simplifying the boot processes, I was really convinced that
-people were as tired as me of debugging probing issues with deferred
-probes in the middle and I'm very surprised that you and Russell don't
-see any problem with it.
+Anybody got comments on this one? Should I pick up this series or
+what's the plan?
 
 Regards,
 
-Tomeu
+Tony
 
-> If deferred probes doesn't work well, we can fix it, but for now it
-> seems our best option.
->
-> thanks,
->
-> greg k-h
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+
+> [1] https://lkml.org/lkml/2015/7/17/797
+> [2] https://lkml.org/lkml/2015/7/17/813
+> [3] https://github.com/dgerlach/linux-pm/tree/pm-v4.3-rc1-amx3-suspend
+> [4] https://git.ti.com/ti-cm3-pm-firmware
+> 
+> Dave Gerlach (3):
+>   mailbox/omap: Add ti,mbox-send-noirq quirk to fix AM33xx CPU Idle
+>   Documentation: dt: add bindings for TI Wakeup M3 IPC device
+>   soc: ti: Add wkup_m3_ipc driver
+> 
+>  .../devicetree/bindings/mailbox/omap-mailbox.txt   |   8 +
+>  .../devicetree/bindings/soc/ti/wkup_m3_ipc.txt     |  57 +++
+>  drivers/mailbox/omap-mailbox.c                     |  49 +-
+>  drivers/soc/ti/Kconfig                             |  10 +
+>  drivers/soc/ti/Makefile                            |   1 +
+>  drivers/soc/ti/wkup_m3_ipc.c                       | 508 +++++++++++++++++++++
+>  include/linux/wkup_m3_ipc.h                        |  55 +++
+>  7 files changed, 684 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
+>  create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
+>  create mode 100644 include/linux/wkup_m3_ipc.h
+> 
+> -- 
+> 2.4.6
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
