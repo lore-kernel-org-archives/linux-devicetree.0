@@ -1,947 +1,123 @@
-From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Subject: [PATCH v6 4/4] arm64, dt,
- thunderx: Add initial dts for Cavium Thunderx in 2 node topology.
-Date: Tue, 20 Oct 2015 16:15:31 +0530
-Message-ID: <1445337931-11344-5-git-send-email-gkulkarni@caviumnetworks.com>
-References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4] iio: mma8452: support either of the available interrupt
+ pins
+Date: Tue, 20 Oct 2015 13:03:10 +0200
+Message-ID: <56261F6E.80807@posteo.de>
+References: <1444914632-4486-1-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, rrichter@cavium.com, Prasun.Kapoor@caviumnetworks.com
-Cc: gpkulkarni@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444914632-4486-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding dt file for Cavium's Thunderx dual socket platform.
+Am 2015-10-15 um 15:10 schrieb Martin Kepplinger:
+> This change is important in order for everyone to be easily able to use the
+> driver for one of the supported accelerometer chips!
+> 
+> Until now, the driver blindly assumed that the INT1 interrupt line is wired
+> on a user's board. But these devices have 2 interrupt lines and can route
+> their interrupt sources to one of them. Now, if "INT2" is found and matches
+> i2c_client->irq, INT2 will be used.
+> 
+> The chip's default actually is INT2, which is why probably many boards will
+> have it wired and can make use of this.
+> 
+> Of course, this also falls back to assuming INT1, so for existing users
+> nothing will break. The new functionality is described in the bindings doc.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> ---
+> changelog:
+> v4: use irq that matches client->irq, backwards compatible
+> v3: correctly assign irq if both pins are described in DT
+> v2: don't warn but normally handle if both pins are described in dts
+>     thanks Mark Rutland
+> v1: initial post
+> 
+>  .../devicetree/bindings/iio/accel/mma8452.txt       |  6 ++++++
+>  drivers/iio/accel/mma8452.c                         | 21 +++++++++++++++------
+>  2 files changed, 21 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> index e3c3746..3c10e85 100644
+> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> @@ -7,13 +7,18 @@ Required properties:
+>      * "fsl,mma8453"
+>      * "fsl,mma8652"
+>      * "fsl,mma8653"
+> +
+>    - reg: the I2C address of the chip
+>  
+>  Optional properties:
+>  
+>    - interrupt-parent: should be the phandle for the interrupt controller
+> +
+>    - interrupts: interrupt mapping for GPIO IRQ
+>  
+> +  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
+> +		     interrupt line in use.
+> +
+>  Example:
+>  
+>  	mma8453fc@1d {
+> @@ -21,4 +26,5 @@ Example:
+>  		reg = <0x1d>;
+>  		interrupt-parent = <&gpio1>;
+>  		interrupts = <5 0>;
+> +		interrupt-names = "INT2";
+>  	};
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 1eccc2d..116a6e4 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/iio/events.h>
+>  #include <linux/delay.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -1130,13 +1131,21 @@ static int mma8452_probe(struct i2c_client *client,
+>  					   MMA8452_INT_FF_MT;
+>  		int enabled_interrupts = MMA8452_INT_TRANS |
+>  					 MMA8452_INT_FF_MT;
+> +		int irq2;
+>  
+> -		/* Assume wired to INT1 pin */
+> -		ret = i2c_smbus_write_byte_data(client,
+> -						MMA8452_CTRL_REG5,
+> -						supported_interrupts);
+> -		if (ret < 0)
+> -			return ret;
+> +		irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
+> +
+> +		if (irq2 == client->irq) {
+> +			dev_dbg(&client->dev, "using interrupt line INT2\n");
+> +		} else {
+> +			ret = i2c_smbus_write_byte_data(client,
+> +							MMA8452_CTRL_REG5,
+> +							supported_interrupts);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			dev_dbg(&client->dev, "using interrupt line INT1\n");
+> +		}
+>  
+>  		ret = i2c_smbus_write_byte_data(client,
+>  						MMA8452_CTRL_REG4,
+> 
 
-Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
----
- arch/arm64/boot/dts/cavium/Makefile             |   2 +-
- arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  82 +++
- arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 806 ++++++++++++++++++++++++
- 3 files changed, 889 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
- create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
+This works fine and would be convenient to have. Any objections?
 
-diff --git a/arch/arm64/boot/dts/cavium/Makefile b/arch/arm64/boot/dts/cavium/Makefile
-index e34f89d..7fe7067 100644
---- a/arch/arm64/boot/dts/cavium/Makefile
-+++ b/arch/arm64/boot/dts/cavium/Makefile
-@@ -1,4 +1,4 @@
--dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-+dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb thunder-88xx-2n.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts b/arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
-new file mode 100644
-index 0000000..4bde994
---- /dev/null
-+++ b/arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
-@@ -0,0 +1,82 @@
-+/*
-+ * Cavium Thunder DTS file - Thunder board description
-+ *
-+ * Copyright (C) 2014, Cavium Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "thunder-88xx-2n.dtsi"
-+
-+/ {
-+	model = "Cavium ThunderX CN88XX board";
-+	compatible = "cavium,thunder-88xx";
-+
-+	aliases {
-+		serial0 = &uaa0;
-+		serial1 = &uaa1;
-+	};
-+
-+	memory@00000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x01400000 0x3 0xFEC00000>;
-+		/* socket 0 */
-+		proximity = <0>;
-+	};
-+
-+	memory@10000000000 {
-+		device_type = "memory";
-+		reg = <0x100 0x00400000 0x3 0xFFC00000>;
-+		 /* socket 1 */
-+		proximity = <1>;
-+	};
-+
-+	distance-map {
-+		distance-matrix = <0 0  10>,
-+				  <0 1  20>,
-+				  <1 1  10>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi b/arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
-new file mode 100644
-index 0000000..959a65a
---- /dev/null
-+++ b/arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
-@@ -0,0 +1,806 @@
-+/*
-+ * Cavium Thunder DTS file - Thunder SoC description
-+ *
-+ * Copyright (C) 2014, Cavium Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/ {
-+	compatible = "cavium,thunder-88xx";
-+	interrupt-parent = <&gic0>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu@000 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x000>;
-+			enable-method = "psci";
-+			/* socket 0 */
-+			proximity = <0>;
-+		};
-+		cpu@001 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x001>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@002 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x002>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@003 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x003>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@004 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x004>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@005 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x005>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@006 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x006>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@007 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x007>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@008 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x008>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@009 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x009>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@00a {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x00a>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@00b {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x00b>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@00c {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x00c>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@00d {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x00d>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@00e {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x00e>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@00f {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x00f>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@100 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@101 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@102 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x102>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@103 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x103>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@104 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x104>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@105 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x105>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@106 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x106>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@107 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x107>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@108 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x108>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@109 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x109>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10a {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10a>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10b {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10b>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10c {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10c>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10d {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10d>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10e {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10e>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10f {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10f>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@200 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@201 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x201>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@202 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x202>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@203 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x203>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@204 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x204>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@205 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x205>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@206 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x206>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@207 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x207>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@208 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x208>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@209 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x209>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@20a {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x20a>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@20b {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x20b>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@20c {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x20c>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@20d {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x20d>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@20e {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x20e>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@20f {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x20f>;
-+			enable-method = "psci";
-+			proximity = <0>;
-+		};
-+		cpu@10000 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10000>;
-+			enable-method = "psci";
-+			/* socket 1 */
-+			proximity = <1>;
-+		};
-+		cpu@10001 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10001>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10002 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10002>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10003 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10003>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10004 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10004>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10005 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10005>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10006 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10006>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10007 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10007>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10008 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10008>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10009 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10009>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1000a {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1000a>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1000b {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1000b>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1000c {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1000c>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1000d {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1000d>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1000e {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1000e>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1000f {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1000f>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10100 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10100>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10101 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10101>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10102 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10102>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10103 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10103>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10104 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10104>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10105 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10105>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10106 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10106>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10107 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10107>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10108 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10108>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10109 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10109>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1010a {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1010a>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1010b {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1010b>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1010c {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1010c>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1010d {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1010d>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1010e {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1010e>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1010f {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1010f>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10200 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10200>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10201 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10201>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10202 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10202>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10203 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10203>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10204 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10204>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10205 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10205>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10206 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10206>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10207 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10207>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10208 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10208>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@10209 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x10209>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1020a {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1020a>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1020b {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1020b>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1020c {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1020c>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1020d {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1020d>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1020e {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1020e>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+		cpu@1020f {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder", "arm,armv8";
-+			reg = <0x0 0x1020f>;
-+			enable-method = "psci";
-+			proximity = <1>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 13 0xff01>,
-+		             <1 14 0xff01>,
-+		             <1 11 0xff01>,
-+		             <1 10 0xff01>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		refclk50mhz: refclk50mhz {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <50000000>;
-+			clock-output-names = "refclk50mhz";
-+		};
-+
-+		gic0: interrupt-controller@8010,00000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			#redistributor-regions = <2>;
-+			ranges;
-+			interrupt-controller;
-+			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
-+			      <0x8010 0x80000000 0x0 0x600000>, /* GICR Node 0 */
-+			      <0x9010 0x80000000 0x0 0x600000>; /* GICR Node 1 */
-+			interrupts = <1 9 0xf04>;
-+
-+			its: gic-its@8010,00020000 {
-+				compatible = "arm,gic-v3-its";
-+				msi-controller;
-+				reg = <0x8010 0x20000 0x0 0x200000>;
-+				proximity = <0>;
-+			};
-+
-+			its1: gic-its@9010,00020000 {
-+				compatible = "arm,gic-v3-its";
-+				msi-controller;
-+				reg = <0x9010 0x20000 0x0 0x200000>;
-+				proximity = <1>;
-+			};
-+		};
-+
-+		uaa0: serial@87e0,24000000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x87e0 0x24000000 0x0 0x1000>;
-+			interrupts = <1 21 4>;
-+			clocks = <&refclk50mhz>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		uaa1: serial@87e0,25000000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x87e0 0x25000000 0x0 0x1000>;
-+			interrupts = <1 22 4>;
-+			clocks = <&refclk50mhz>;
-+			clock-names = "apb_pclk";
-+		};
-+	};
-+};
--- 
-1.8.1.4
+thanks
+                         martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
