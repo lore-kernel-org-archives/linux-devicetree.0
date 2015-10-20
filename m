@@ -1,95 +1,164 @@
-From: "Anton.Glukhov" <anton.a.glukhov@gmail.com>
-Subject: Re: [PATCH] net, can, ti_hecc: add DT support for the ti,hecc
- controller
-Date: Tue, 20 Oct 2015 17:57:37 +0300
-Message-ID: <56265661.7000509@gmail.com>
-References: <1445236757-29019-1-git-send-email-hs@denx.de>
- <56249491.4020009@pengutronix.de> <56249B58.6090100@denx.de>
- <56249C3F.3080000@pengutronix.de>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/4] mfd: tps65086: Add driver for the TPS65086 PMIC
+Date: Tue, 20 Oct 2015 09:58:51 -0500
+Message-ID: <562656AB.3060808@ti.com>
+References: <1445014753-15450-1-git-send-email-afd@ti.com>
+ <1445014753-15450-3-git-send-email-afd@ti.com> <20151019092336.GI31804@x1>
+ <56251468.7030609@ti.com> <20151020100214.GM31804@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <56249C3F.3080000@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, hs@denx.de
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Anant Gole <anantgole@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Wolfgang Grandegger <wg@grandegger.com>, linux-omap@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151020100214.GM31804@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc, Heiko!
-I'm sorry for the delay!
-
-On 19.10.2015 10:31, Marc Kleine-Budde wrote:
-> On 10/19/2015 09:27 AM, Heiko Schocher wrote:
->>>>   .../devicetree/bindings/net/can/ti_hecc-can.txt    | 20 ++++++++++
->>>>   arch/arm/boot/dts/am3517.dtsi                      | 13 +++++++
->>>>   drivers/net/can/ti_hecc.c                          | 45 +++++++++++++++++++++-
->>>>   3 files changed, 76 insertions(+), 2 deletions(-)
->>>>   create mode 100644 Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
+On 10/20/2015 05:02 AM, Lee Jones wrote:
+> On Mon, 19 Oct 2015, Andrew F. Davis wrote:
+>> On 10/19/2015 04:23 AM, Lee Jones wrote:
+>>> On Fri, 16 Oct 2015, Andrew F. Davis wrote:
+>>>
+>>>> Add support for the TPS65912 device. It provides communication
+>>>> through I2C and contains the following components:
 >>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
+>>>>   - Regulators
+>>>>   - Load switches
+>>>>   - GPO controller
+>>>
+>>> What's a GPO controller?
+>>
+>> General Purpose Output, this controller only has output control, it's
+>> listed in the data-sheet this way, and other drivers have used this term.
+>
+> Okay.
+>
+>>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>>>> ---
+>>>>   drivers/mfd/Kconfig          |  13 ++++
+>>>>   drivers/mfd/Makefile         |   1 +
+>>>>   drivers/mfd/tps65086.c       | 145 +++++++++++++++++++++++++++++++++++++++++++
+>>>>   include/linux/mfd/tps65086.h | 120 +++++++++++++++++++++++++++++++++++
+>>>>   4 files changed, 279 insertions(+)
+>>>>   create mode 100644 drivers/mfd/tps65086.c
+>>>>   create mode 100644 include/linux/mfd/tps65086.h
+>>>>
+>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>> index 99d6367..ab3b392 100644
+>>>> --- a/drivers/mfd/Kconfig
+>>>> +++ b/drivers/mfd/Kconfig
+>>>> @@ -1093,6 +1093,19 @@ config TPS6507X
+>>>>   	  This driver can also be built as a module.  If so, the module
+>>>>   	  will be called tps6507x.
+>>>>
+>>>> +config MFD_TPS65086
+>>>> +	tristate "TI TPS65086x Power Management chips"
+>>>
+>>> Use the full name:
+>>>
+>>>    "TI TPS65086x Power Management Integrated Chips (PMICs)"
+>>>
+>>>> +	select REGMAP
+>>>> +	select REGMAP_IRQ
+>>>> +	select REGMAP_I2C
+>>>> +	depends on I2C
+>>>
+>>> REGMAP_I2C already depends on I2C.
+>>>
+>>
+>> So if I force REGMAP_I2C to =y without depending on I2C then couldn't
+>> REGMAP_I2C get selected without I2C enabled? Selecting doesn't force
+>> the selected item's dependencies still right?
+>
+> Try it out. :)
+>
+
+OK, I just tried a little test and it did as I expected, I was able to
+select a symbol and it did not enable its dependency, so this would
+break build. So, I'm still confused, why does REGMAP_I2C depending
+on I2C matter? What are you suggesting my Kconfig should look like?
+
+>>>> +	depends on OF || COMPILE_TEST
+>>>> +	help
+>>>> +	  If you say yes here you get support for the TPS65086 series of
+>>>> +	  Power Management chips.
+>>>
+>>> I'd remove the line break.
+>>>
+>>>> +	  These include voltage regulators, GPO and other features
+>>>
+>>> GPIO?
+>>>
+>>>> +	  that are often used in portable devices.
+>>>
+>>> This is meant to be a 'help', so instead of staying "and some other
+>>> stuff", please list them.
+>>>
+>>
+>> This seems to be what other devices do, I'll change it to something
+>> else then.
+>
+> If you know what the "other features" are, it's best to name them.
+>
+
+I was giving a generic description of a PMIC, I didn't really want to
+list all the features and start marketing the part in the Kconfig, unless
+you want, I'm sure TI won't mind the advertisement. :)
+
+I'm not sure why we write so much about these driver parts at all in the
+help, people who need them know what they are, it's not like some core
+kernel config option that people might be undecided on and need explained
+its function.
+
+>>>>   config TPS65911_COMPARATOR
+>>>>   	tristate
+>>>>
+>>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>>>> index a59e3fc..7adb902 100644
+>>>> --- a/drivers/mfd/Makefile
+>>>> +++ b/drivers/mfd/Makefile
+>>>> @@ -66,6 +66,7 @@ obj-$(CONFIG_MFD_WM8994)	+= wm8994-core.o wm8994-irq.o wm8994-regmap.o
+>>>>   obj-$(CONFIG_TPS6105X)		+= tps6105x.o
+>>>>   obj-$(CONFIG_TPS65010)		+= tps65010.o
+>>>>   obj-$(CONFIG_TPS6507X)		+= tps6507x.o
+>>>> +obj-$(CONFIG_MFD_TPS65086)	+= tps65086.o
+>>>>   obj-$(CONFIG_MFD_TPS65217)	+= tps65217.o
+>>>>   obj-$(CONFIG_MFD_TPS65218)	+= tps65218.o
+>>>>   obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
+>>>> diff --git a/drivers/mfd/tps65086.c b/drivers/mfd/tps65086.c
 >>>> new file mode 100644
->>>> index 0000000..09fab59
+>>>> index 0000000..be6d678
 >>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
->>>> @@ -0,0 +1,20 @@
->>>> +* TI HECC CAN *
->>>> +
->>>> +Required properties:
->>>> +  - compatible: Should be "ti,hecc"
+>>>> +++ b/drivers/mfd/tps65086.c
+>>>> @@ -0,0 +1,145 @@
+>>>> +/*
+>>>> + * Driver for TI TPS65086x PMICs
 >>>
->>> We usually put the name of the first SoC this IP core appears in to the
->>> compatible.
+>>> I'd suggest removing the driver part.  We know it's a driver.
 >>
->> Ok, so "ti,am335xx-hecc" would be OK?
->> @Anton: you used "am35x" ... it should be "am35xx"
-> 
-> The "xx" is not okay. Give precisely the first SoC Version this IP core
-> was implemented in.
-> 
+>> Again this is what almost every other driver does,
+>
+> Almost every other driver.  That's some statement.
+>
+> I count 42%. ;)
+>
 
-It's OMAP3 based arch, but HECC is implemented only in AM3505 and AM3517 SoCs.
-So, I'm confused about what's "name" should I use.
+I'm finding in drivers/mfd ~89% of drivers mention at some point that
+they are a driver. But I do admit my original statement was based on a
+quick monte carlo selection of a couple files. :)
 
->>
->>>> +  - reg: Should contain CAN controller registers location and length
->>>> +  - interrupts: Should contain IRQ line for the CAN controller
->>>
->>> I'm missing the description of the ti,* properties. I think they are
->>> required, too. Although the code doesn't enforce it.
->>
->> Ok.
->>
->>>> +
->>>> +Example:
->>>> +
->>>> +	can0: hecc@5c050000 {
->>>> +		compatible = "ti,hecc";
->>>> +		reg = <0x5c050000 0x4000>;
->>>> +		interrupts = <24>;
->>>> +		ti,hecc_scc_offset = <0>;
->>>> +		ti,hecc_scc_ram_offset = <0x3000>;
->>>> +		ti,hecc_ram_offset = <0x3000>;
->>>> +		ti,hecc_mbx_offset = <0x2000>;
->>>> +		ti,hecc_int_line = <0>;
->>>> +		ti,hecc_version = <1>;
->>>
->>> Versioning in the OF world is done via the compatible. Are the offsets a
->>> per SoC parameter? I'm not sure if it's better to put
->>> the offsets into the driver.
->>
->> I am unsure here too..
-> 
-> The devicetree people will hopefully help here.
-> 
+>> I'm not sure how
+>> else to describe this file without using the word driver.
+>
+> Perhaps I'm getting picky in my old age, but I think I'd prefer to see:
+>
+>    TI TPS65086x PMIC support
+>
 
-I added offsets here just make it consistent with platform data in machine file.
-Actually it seems that it's not necessary to put offsets in DT file and I can move it to driver.
-But again, it was added to keep consistency.
+Still not sure this describes the file, maybe we could just drop that
+line completely from files with an obvious purpose? Doesn't really bother
+me ether way.
 
-> regards,
-> Marc
-> 
-
-regards,
-Anton
+> [...]
+>
