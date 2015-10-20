@@ -1,67 +1,62 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 11/22] i2c: core: Probe i2c adapters and devices on
- demand
-Date: Tue, 20 Oct 2015 12:42:26 +0200
-Message-ID: <20151020104226.GA3654@katana>
-References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
- <1441628627-5143-12-git-send-email-tomeu.vizoso@collabora.com>
+From: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH V2 3/3] Add dts node for smmu on hi6220 SoC
+Date: Tue, 20 Oct 2015 18:17:13 +0800
+Message-ID: <562614A9.8050501@hisilicon.com>
+References: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com>
+ <1445330724-129401-3-git-send-email-puck.chen@hisilicon.com>
+ <39316856.jTQkIxu0yn@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441628627-5143-12-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <39316856.jTQkIxu0yn@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, puck.chen-Dw/NWeUnuQfQT0dZR+AlfA@public.gmane.org, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for review.
+On 2015/10/20 17:00, Arnd Bergmann wrote:
+> On Tuesday 20 October 2015 16:45:24 Chen Feng wrote:
+>> +
+>> +               smmu@f4210000 {
+> 
+> I think the canonical name for an IOMMU device is 'iommu', not 'smmu'.
+Accept.
+> 
+>> +                       compatible = "hisilicon,hi6220-smmu";
+>> +                       reg = <0x0 0xf4210000 0x0 0x1000>;
+>> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       clocks = <&sys_ctrl HI6220_MMU_CLK>,
+>> +                                <&media_ctrl HI6220_MED_MMU>,
+>> +                                <&sys_ctrl HI6220_MEDIA_PLL_SRC>;
+>> +                       clock-names = "smmu_clk",
+>> +                                     "media_sc_clk",
+>> +                                     "smmu_peri_clk";
+> 
+> 
+> Better avoid underscores in strings, and drop the "_clk" postfix in
+> the clock names.
+> 
+> I did not receive patch 1/3 this time, but I see in version 1, that
+> you forgot to document the strings:
+> 
+Accept, I will change this.
+>> +- clock-names: The name to enable clock with clock framework.
+> 
+> This needs to list the names of the clock inputs to the smmu.
+> 
+> 	Arnd
+> _______________________________________________
+> linuxarm mailing list
+> linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
+> 
+> .
+> 
 
-On Mon, Sep 07, 2015 at 02:23:36PM +0200, Tomeu Vizoso wrote:
-> When looking up an i2c adapter or device through its OF node, probe it
-> if it hasn't already.
->=20
-> The goal is to reduce deferred probes to a minimum, as it makes it very
-> cumbersome to find out why a device failed to probe, and can introduce
-> very big delays in when a critical device is probed.
->=20
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-
-If the I2C part stays that simple and the core part of the series is
-accepted, then:
-
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-Thanks,
-
-   Wolfram
-
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWJhqSAAoJEBQN5MwUoCm24w4QAJ8ONPT/Hm1UJ6mBcD2gL8gN
-YIrmKR0KrZKo+POtx1Ke64FBO29RZP/OlJKW2C1j6ZFu+Ab3DI0bERI5Vc6BzZLr
-KC0zkEHP1i2Ya0AjGvUoYNFR7jsmLL48++UknY3TMPDKO/Z4/B+UEPHexF9dpkY7
-94L8HIwQFj6+40VLmf7bvk+R6qTPMxb2CgV8cEiDUJX3u3EDAHX8Kegrcb5ndz6i
-xCFEMiWHAT6FG9HJUUly1xV1aV69r0pX3DJeN0G+cnLTTMfrXzlCT+txtK7rgMPi
-iT/43yeBvk4nrm1A2wkYIQfet2uAuwg/Jd179nN53mfHPtZcEa8mYr5wnlhIYzfj
-NmpII7BnXz9SR15TU1ryTLvqueJNXpWk7TXqKDCBec2P6gJZIYD81rgxNQST7tqI
-BxxSYjL7VRycQAlg33lgV/eSOnZLH8PppC8ALOpGm9mv4WkIIveaHjzLQO5xq8oq
-tzlTdI4CKHPlndPbiVDCbjyv3/dHBLNCTusx5V1HxNheM8T7nuPGgT9wEsdTLVId
-yTFvoKxJx8EmQbw1KWvmEXvo+c8cLNP8x41cwy2mYdoqgWoRZ23Ajtb/e7o/FSuG
-izf6V5ztmhqX7f5hLKPbwj3hf5iWRkjO7f3c3aV09YZ5/VSTwaSd9d4mFZh9BzE3
-Rh1W53P/SLYh3Jtbib31
-=VtHt
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
