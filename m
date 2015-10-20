@@ -1,41 +1,60 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 04/10] dt-bindings: video: add PCLK clock entry to
- exynos5433-decon
-Date: Tue, 20 Oct 2015 21:24:30 +0900
-Message-ID: <5626327E.3050002@samsung.com>
-References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
- <1445332961-25419-5-git-send-email-a.hajda@samsung.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
+Date: Tue, 20 Oct 2015 05:24:48 -0700
+Message-ID: <20151020122448.20687.11926@quantum>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+ <1444999760-15750-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1445332961-25419-5-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>
-Cc: k.kozlowski.k@gmail.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444999760-15750-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 20.10.2015 o 18:22, Andrzej Hajda pisze:
-> DECON IP requires this clock to access configuration registers.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  Documentation/devicetree/bindings/video/exynos5433-decon.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/exynos5433-decon.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
-> index 377afbf..3dff78b 100644
-> --- a/Documentation/devicetree/bindings/video/exynos5433-decon.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
-> @@ -16,7 +16,7 @@ Required properties:
->  - clocks: must include clock specifiers corresponding to entries in the
->  	  clock-names property.
->  - clock-names: list of clock names sorted in the same order as the clocks
-> -	       property. Must contain "aclk_decon", "aclk_smmu_decon0x",
-> +	       property. Must contain "pclk", "aclk_decon", "aclk_smmu_decon0x",
+Hi Geert,
 
-I assume that old DTB wouldn't work at all, so there is no point in
-maintaining ABI compatibility?
+Quoting Geert Uytterhoeven (2015-10-16 05:49:20)
+> +static void __init r8a7795_cpg_mssr_init(struct device_node *np)
+> +{
+> +       struct regmap *regmap;
+> +       u32 reg, cpg_mode;
+> +
+> +       regmap =3D syscon_regmap_lookup_by_phandle(np, "renesas,modem=
+r");
+> +       if (IS_ERR(regmap) ||
+> +           of_property_read_u32_index(np, "renesas,modemr", 1, &reg)=
+ ||
+> +           regmap_read(regmap, reg, &cpg_mode)) {
+> +               pr_err("%s: failed to parse renesas,modemr\n", np->fu=
+ll_name);
+> +               return;
+> +       }
+> +
+> +       cpg_pll_config =3D &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_=
+mode)];
+> +       if (!cpg_pll_config->extal_div) {
+> +               pr_err("%s: Prohibited setting (cpg_mode=3D0x%x)\n",
+> +                      __func__, cpg_mode);
+> +               return;
+> +       }
+> +
+> +       cpg_mssr_probe(np, &r8a7795_cpg_mssr_info);
+> +}
+> +CLK_OF_DECLARE(r8a7795_cpg_mssr, "renesas,r8a7795-cpg-mssr",
+> +              r8a7795_cpg_mssr_init);
 
-Best regards,
-Krzysztof
+Is CLK_OF_DECLARE needed? Is it possible to make this a real
+platform_driver =C3=A0 la drivers/clk/qcom/gcc-apq8084.c?
+
+Sorry if I already asked this in a previous version, but a quick search
+of my email didn't reveal anything.
+
+Regards,
+Mike
+
+> --=20
+> 1.9.1
+>=20
