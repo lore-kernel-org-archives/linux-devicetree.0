@@ -1,125 +1,51 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
-Date: Tue, 20 Oct 2015 18:25:40 +0100
-Message-ID: <20151020172539.GB4943@leverpostej>
+Date: Tue, 20 Oct 2015 18:26:55 +0100
+Message-ID: <20151020172654.GC4943@leverpostej>
 References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com>
  <20151019205236.GB453@leverpostej>
  <56266F7E.6030404@amd.com>
+ <20151020165744.GE31130@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56266F7E.6030404-5C7GfCeVMHo@public.gmane.org>
+In-Reply-To: <20151020165744.GE31130-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 11:44:46AM -0500, Brijesh Singh wrote:
-> Hi Mark,
+On Tue, Oct 20, 2015 at 06:57:44PM +0200, Borislav Petkov wrote:
+> On Tue, Oct 20, 2015 at 11:44:46AM -0500, Brijesh Singh wrote:
+> > > This second property doesn't describe the hardware in any way. It should
+> > > be runtime-configurable and dpesn't belong in the DT.
+> > > 
+> > > Regardless, the binding is wrong. This is in no way specific to AMD
+> > > Seattle, and per the code is actually used to imply the presence of a
+> > > Cortex-A57 feature. No reference to AMD Seattle belongs in the DT
+> > > binding (with the exception of the example, perhaps), nor in the driver.
+> > > 
+> > > NAK while this pretends to be something that it isn't. At minimum, you
+> > > need to correctly describe the feature you are trying to add support
+> > > for.
+> > > 
+> > I will remove AMD specific string in compatibility field and make
+> > the poll-delay-msec optional. Will also expose this as module
+> > parameter as you suggested below.
 > 
-> Thanks for review. 
-> 
-> -Brijesh
-> 
-> On 10/19/2015 03:52 PM, Mark Rutland wrote:
-> > Hi,
-> > 
-> > Please Cc the devicetree list (devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org) when sending
-> > binding patches. I see you've added the people from the MAINTAINERS
-> > entry; the list should also be Cc'd.
-> > 
-> Noted.
-> > On Mon, Oct 19, 2015 at 02:23:17PM -0500, Brijesh Singh wrote:
-> >> Add support for the AMD Seattle SoC EDAC driver.
-> >>
-> >> Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/edac/amd-seattle-edac.txt  |  15 +
-> >>  drivers/edac/Kconfig                               |   6 +
-> >>  drivers/edac/Makefile                              |   1 +
-> >>  drivers/edac/seattle_edac.c                        | 306 +++++++++++++++++++++
-> >>  4 files changed, 328 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/edac/amd-seattle-edac.txt
-> >>  create mode 100644 drivers/edac/seattle_edac.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/edac/amd-seattle-edac.txt b/Documentation/devicetree/bindings/edac/amd-seattle-edac.txt
-> >> new file mode 100644
-> >> index 0000000..a0354e8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/edac/amd-seattle-edac.txt
-> >> @@ -0,0 +1,15 @@
-> >> +* AMD Seattle SoC EDAC node
-> >> +
-> >> +EDAC node is defined to describe on-chip error detection and reporting.
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "amd,arm-seattle-edac"
-> >> +- poll-delay-msec: Indicates how often the edac check callback should be called.
-> >> +  Time in msec.
-> > 
-> > This second property doesn't describe the hardware in any way. It should
-> > be runtime-configurable and dpesn't belong in the DT.
-> > 
-> > Regardless, the binding is wrong. This is in no way specific to AMD
-> > Seattle, and per the code is actually used to imply the presence of a
-> > Cortex-A57 feature. No reference to AMD Seattle belongs in the DT
-> > binding (with the exception of the example, perhaps), nor in the driver.
-> > 
-> > NAK while this pretends to be something that it isn't. At minimum, you
-> > need to correctly describe the feature you are trying to add support
-> > for.
-> > 
-> I will remove AMD specific string in compatibility field and make the
-> poll-delay-msec optional. Will also expose this as module parameter as
-> you suggested below.
+> Btw, how much of this is implementing generic A57 functionality?
 
-I don't think it should be optional; I don't think it should be there at
-all.
+The driver is entirely A57 generic.
 
-I'm not sure if we even need a DT binding if we can derive the presence
-of the feature from the MIDR.
+> If a lot, can we make this a generic a57_edac driver so that multiple
+> vendors can use it?
 
-> >> + * The driver polls CPUMERRSR_EL1 and L2MERRSR_EL1 registers to logs the 
-> > 
-> > These are IMPLEMENTATION DEFINED registers which are specific to
-> > Cortex-A57, and I note that L2MERRSR_EL1 changed in r1p0.
-> > 
-> > Which revisions of Cortex-A57 does this work with?
-> > 
-> I have tested my code on r1p2.
-> 
-> > Generally we avoid touching IMPLEMENTATION DEFINED registers as they may
-> > not exist in some configurations or revisions, and could trap or undef.
-> > Is it always safe to access these registers (in current revisions of
-> > Cortex-A57)?
-> > 
-> So far I have not ran into any trap error, was able to read/write
-> registers from EL1 all the times. I looked at TRM but could not find
-> reference that it would fail. As per doc the register should be
-> available at all EL's except EL0.
+Yes.
 
-Ok.
+> How fast and how ugly can something like that become?
 
-> >> + * non-fatal errors. Whereas the single bit and double bit ECC erros are 
-> >> + * handled by firmware.
-> > 
-> > I had expected this would be all be left for firmware, given that this
-> > feature may change in any revision of the CPU.
-> > 
-> > What precisely does the AMD Seattle firmware do for double-bit ECC
-> > errors, and how is it triggered?
-> > 
-> The error handling firmware is work in progress. I believe the
-> approach is: Configure the platform to trigger a firmware handler when
-> the error occurs, trusted firmware will receive the fatal error
-> interrupt and take the action and will generate APEI objects; if error
-> requires a SoC warm reset then it will communicate with SCP to warm
-> reset the SoC. The SCP firmware will then need to provide the ACPI
-> BERT error logging information back when the A57 restarts. 
-
-Can signalling of single-bit errors not happen in the same way via APEI?
-Or is APEI handled fatally?
+Not sure I follow.
 
 Thanks,
 Mark.
