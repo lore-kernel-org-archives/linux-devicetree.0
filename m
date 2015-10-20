@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH 12/30] nfc: st-nci: Keep st_nci_gates unchanged in load_session
-Date: Tue, 20 Oct 2015 23:48:03 +0200
-Message-ID: <1445377701-8353-13-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 23/30] nfc: st21nfca: Fix host_list verification after secure element activation
+Date: Tue, 20 Oct 2015 23:48:14 +0200
+Message-ID: <1445377701-8353-24-git-send-email-christophe-h.ricard@st.com>
 References: <1445377701-8353-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <1445377701-8353-1-git-send-email-christophe-h.ricard@st.com>
@@ -10,40 +10,39 @@ To: sameo@linux.intel.com
 Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We need to keep initial st_nci_gates values in order for
-nci_hci_dev_connect_gates to create and open pipe when necessary.
-
-For example after a firmware update CLF pipes are cleared. Changing pipe
-values in st_nci_gates was causing nci_hci_dev_connect_gates not using
-accurate pipes value.
+A secure element can be activated in different order. The host_list is
+updated keeping a fixed order: <terminal_host_id><uicc_id><ese_id>.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- drivers/nfc/st-nci/st-nci_se.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/nfc/st21nfca/st21nfca_se.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/st-nci_se.c b/drivers/nfc/st-nci/st-nci_se.c
-index 3ea5384..2a475ce 100644
---- a/drivers/nfc/st-nci/st-nci_se.c
-+++ b/drivers/nfc/st-nci/st-nci_se.c
-@@ -233,13 +233,13 @@ int st_nci_hci_load_session(struct nci_dev *ndev)
- 		if (j < ARRAY_SIZE(st_nci_gates) &&
- 		    st_nci_gates[j].gate == dm_pipe_info->dst_gate_id &&
- 		    ST_NCI_DM_IS_PIPE_OPEN(dm_pipe_info->pipe_state)) {
--			st_nci_gates[j].pipe = pipe_info[2];
-+			ndev->hci_dev->init_data.gates[j].pipe = pipe_info[2];
+diff --git a/drivers/nfc/st21nfca/st21nfca_se.c b/drivers/nfc/st21nfca/st21nfca_se.c
+index 3197e9b..0eb42ef 100644
+--- a/drivers/nfc/st21nfca/st21nfca_se.c
++++ b/drivers/nfc/st21nfca/st21nfca_se.c
+@@ -101,7 +101,7 @@ static int st21nfca_hci_control_se(struct nfc_hci_dev *hdev, u32 se_idx,
+ 				u8 state)
+ {
+ 	struct st21nfca_hci_info *info = nfc_hci_get_clientdata(hdev);
+-	int r;
++	int r, i;
+ 	struct sk_buff *sk_host_list;
+ 	u8 se_event, host_id;
  
- 			ndev->hci_dev->gate2pipe[st_nci_gates[j].gate] =
--						st_nci_gates[j].pipe;
--			ndev->hci_dev->pipes[st_nci_gates[j].pipe].gate =
-+						pipe_info[2];
-+			ndev->hci_dev->pipes[pipe_info[2]].gate =
- 						st_nci_gates[j].gate;
--			ndev->hci_dev->pipes[st_nci_gates[j].pipe].host =
-+			ndev->hci_dev->pipes[pipe_info[2]].host =
- 						dm_pipe_info->src_host_id;
- 		}
- 		kfree_skb(skb_pipe_info);
+@@ -149,7 +149,10 @@ static int st21nfca_hci_control_se(struct nfc_hci_dev *hdev, u32 se_idx,
+ 	if (r < 0)
+ 		return r;
+ 
+-	host_id = sk_host_list->data[sk_host_list->len - 1];
++	for (i = 0; i < sk_host_list->len &&
++		sk_host_list->data[i] != se_idx; i++)
++		;
++	host_id = sk_host_list->data[i];
+ 	kfree_skb(sk_host_list);
+ 
+ 	if (state == ST21NFCA_SE_MODE_ON && host_id == se_idx)
 -- 
 2.1.4
