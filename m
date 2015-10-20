@@ -1,109 +1,48 @@
-From: "Anton.Glukhov" <anton.a.glukhov@gmail.com>
-Subject: Re: [PATCH] net, can, ti_hecc: add DT support for the ti,hecc
- controller
-Date: Tue, 20 Oct 2015 18:09:59 +0300
-Message-ID: <56265947.8050008@gmail.com>
-References: <1445236757-29019-1-git-send-email-hs@denx.de>
- <56249491.4020009@pengutronix.de> <56249B58.6090100@denx.de>
- <56249C3F.3080000@pengutronix.de> <56265661.7000509@gmail.com>
- <56265852.6000601@pengutronix.de>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v1 1/2] phy: keystone: serdes driver for gbe 10gbe and
+ pcie
+Date: Tue, 20 Oct 2015 11:11:17 -0400
+Message-ID: <56265995.5000800@ti.com>
+References: <1444919145-30845-1-git-send-email-w-kwok2@ti.com> <230CBA6E4B6B6B418E8730AC28E6FC7E04229363@DFLE11.ent.ti.com> <56253B91.5040807@ti.com> <4661946.mPHVFLWuan@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56265852.6000601@pengutronix.de>
+In-Reply-To: <4661946.mPHVFLWuan@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, hs@denx.de
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Anant Gole <anantgole@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Wolfgang Grandegger <wg@grandegger.com>, linux-omap@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Kwok, WingMan" <w-kwok2@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20.10.2015 18:05, Marc Kleine-Budde wrote:
-> On 10/20/2015 04:57 PM, Anton.Glukhov wrote:
->> Hello Marc, Heiko!
->> I'm sorry for the delay!
+On 10/20/2015 04:24 AM, Arnd Bergmann wrote:
+> On Monday 19 October 2015 14:50:57 Murali Karicheri wrote:
+>> Arnd, by your statement 'I don't see any code that does this' do you
+>> expect a piece of code that embed the license in the binary image? If
+>> so, that seems weired to me.
 >>
->> On 19.10.2015 10:31, Marc Kleine-Budde wrote:
->>> On 10/19/2015 09:27 AM, Heiko Schocher wrote:
->>>>>>   .../devicetree/bindings/net/can/ti_hecc-can.txt    | 20 ++++++++++
->>>>>>   arch/arm/boot/dts/am3517.dtsi                      | 13 +++++++
->>>>>>   drivers/net/can/ti_hecc.c                          | 45 +++++++++++++++++++++-
->>>>>>   3 files changed, 76 insertions(+), 2 deletions(-)
->>>>>>   create mode 100644 Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..09fab59
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/net/can/ti_hecc-can.txt
->>>>>> @@ -0,0 +1,20 @@
->>>>>> +* TI HECC CAN *
->>>>>> +
->>>>>> +Required properties:
->>>>>> +  - compatible: Should be "ti,hecc"
->>>>>
->>>>> We usually put the name of the first SoC this IP core appears in to the
->>>>> compatible.
->>>>
->>>> Ok, so "ti,am335xx-hecc" would be OK?
->>>> @Anton: you used "am35x" ... it should be "am35xx"
->>>
->>> The "xx" is not okay. Give precisely the first SoC Version this IP core
->>> was implemented in.
->>>
+>> Many of the drivers including this patch has the following statement in
+>> the license that is additional company specific license such as BSD that
+>> is applicable.
 >>
->> It's OMAP3 based arch, but HECC is implemented only in AM3505 and AM3517 SoCs.
->> So, I'm confused about what's "name" should I use.
-> 
-> Which SoC was available first? Pick that.
-> 
+>> ==== Cut and pasted from drivers/crypto/fcrypt.c =======================
+>>    * 2. Redistributions in binary form must reproduce the above copyright
+>>    *    notice, this list of conditions and the following disclaimer in the
+>>    *    documentation and/or other materials provided with the distribution.
+>> =========================================================================
+>> I read this as if the source is compiled and distributed as a binary
+>> either a kernel module ko file or as part of the kernel binary, this
+>> term must apply. Usually this is part of documentation that goes with
+>> the product AFAIK.
+>
+> Sorry, my fault. This is indeed the standard BSD license, and
+> I misread this as having to produce the copyright statement
+> from the binary itself. Please ignore whatever I said on the
+> subject.
+>
+> 	Arnd
+>
+Thanks Arnd for the clarification.
 
-What do you mean available? I know only that HECC appear in AM3505 and AM3517. Nowhere else.
-
->>>>>> +  - reg: Should contain CAN controller registers location and length
->>>>>> +  - interrupts: Should contain IRQ line for the CAN controller
->>>>>
->>>>> I'm missing the description of the ti,* properties. I think they are
->>>>> required, too. Although the code doesn't enforce it.
->>>>
->>>> Ok.
->>>>
->>>>>> +
->>>>>> +Example:
->>>>>> +
->>>>>> +	can0: hecc@5c050000 {
->>>>>> +		compatible = "ti,hecc";
->>>>>> +		reg = <0x5c050000 0x4000>;
->>>>>> +		interrupts = <24>;
->>>>>> +		ti,hecc_scc_offset = <0>;
->>>>>> +		ti,hecc_scc_ram_offset = <0x3000>;
->>>>>> +		ti,hecc_ram_offset = <0x3000>;
->>>>>> +		ti,hecc_mbx_offset = <0x2000>;
->>>>>> +		ti,hecc_int_line = <0>;
->>>>>> +		ti,hecc_version = <1>;
->>>>>
->>>>> Versioning in the OF world is done via the compatible. Are the offsets a
->>>>> per SoC parameter? I'm not sure if it's better to put
->>>>> the offsets into the driver.
->>>>
->>>> I am unsure here too..
->>>
->>> The devicetree people will hopefully help here.
->>>
->>
->> I added offsets here just make it consistent with platform data in machine file.
->> Actually it seems that it's not necessary to put offsets in DT file and I can move it to driver.
->> But again, it was added to keep consistency.
-> 
-> The DT is supposed to be OS independent, copying from platform data to
-> DT is sometimes not the best way to go. Make yourself heard on the
-> devicetree mailinglist and figure out what's the best way to go here.
-> 
-> Are the offsets for the AM3505 and AM3517 identical?
-
-Yes, absolutely, and there is no HECC module in another SoCs. Ok, anyway I'll try to figure out what should we use here.
-
-> 
-> Marc
-> 
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
