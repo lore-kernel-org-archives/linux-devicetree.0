@@ -1,53 +1,108 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Tue, 20 Oct 2015 13:14:46 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1510201311260.1855-100000@iolanthe.rowland.org>
-References: <CAAObsKChQN4gg91dCWJS_Co_MrYyBrB1J7gxgGo4hsPXNZRp3g@mail.gmail.com>
+From: Markus Reichl <m.reichl@fivetechno.de>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Tue, 20 Oct 2015 19:23:49 +0200
+Message-ID: <1606098.olLAyTIhB3@dell2.five-lan.de>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com> <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com> <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+Reply-To: m.reichl@fivetechno.de
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKChQN4gg91dCWJS_Co_MrYyBrB1J7gxgGo4hsPXNZRp3g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.c>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, Krzysztof =?utf-8?B?S296xYJvd3NraQ==?= <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Oct 2015, Tomeu Vizoso wrote:
-
-> On 20 October 2015 at 18:04, Alan Stern <stern@rowland.harvard.edu> wrote:
-> > On Tue, 20 Oct 2015, Mark Brown wrote:
+Am Dienstag, 20. Oktober 2015, 21:22:05 schrieb Alim Akhtar:
+> On Tue, Oct 20, 2015 at 9:17 PM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
+> > Hi Markus,
 > >
-> >> On Tue, Oct 20, 2015 at 10:40:03AM -0400, Alan Stern wrote:
+> > On Tue, Oct 20, 2015 at 8:29 PM, Markus Reichl <m.reichl@fivetechno.de> wrote:
+> >> Am 20.10.2015 um 11:24 schrieb Alim Akhtar:
+> >>> Now we have a nice way to reboot/poweroff system using a generic
+> >>> syscon regmap based drivers, this series moves exynos SoCs to
+> >>> make use of the same.
+> >>>
+> >>> Changes since v1:
+> >>> * Added a comment about the register information
+> >>> * Droped defconfig changes as disscussed
+> >>> * Collected various Reviewed-by, Tested-by and Acked-by tags
+> >>> * Added SYSCON-{RESET, POWEROFF} to select from Kconfig
+> >>>
+> >>> Alim Akhtar (6):
+> >>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+> >>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+> >>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+> >>>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+> >>>   ARM: exynos: select POWER_RESET_SYSCON and
+> >>>     POWER_RESET_SYSCON_POWEROFF
+> >>>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
+> >>>
+> >>>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+> >>>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+> >>>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+> >>>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+> >>>  arch/arm/mach-exynos/Kconfig      |    3 +++
+> >>>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+> >>>  6 files changed, 59 insertions(+), 43 deletions(-)
+> >>>
 > >>
-> >> > Furthermore, that applies only to devices that use synchronous suspend.
-> >> > Async suspend is becoming common, and there the only restrictions are
-> >> > parent-child relations plus whatever explicit requirements that drivers
-> >> > impose by calling device_pm_wait_for_dev().
+> >> Hi Alim,
 > >>
-> >> Hrm, this is the first I'd noticed that feature though I see the initial
-> >> commit dates from January.
-> >
-> > Async suspend and device_pm_wait_for_dev() were added in January 2010,
-> > not 2015!
-> >
-> >>  It looks like most of the users are PCs at
-> >> the minute but we should be using it more widely for embedded things,
-> >> there's definitely some cases I'm aware of where it will allow us to
-> >> remove some open coding.
+> >> I have installed your patch set above with git am on top of
+> >> 4.3.0-rc6-00108-gce1fad2 torvalds/linux of today
+> >> with make exynos_defconfig on Odroid U3.
 > >>
-> >> It does seem like we want to be feeding dependency information we
-> >> discover for probing way into the suspend dependencies...
+> > which exynos soc Odroid U3 uses?
 > >
-> > Rafael has been thinking about a way to do this systematically.
-> > Nothing concrete has emerged yet.
+> OK, I can see its uses exynos4412 and exynos4412-odroidu3.dts does
+> include exynos4.dtsi,
+> so these should have worked.
 > 
-> This iteration of the series would make this quite easy, as
-> dependencies are calculated before probes are attempted:
+> >> "halt -p" worked (power 0.0W).
+> >> "reboot" got stuck at 0.5W.
+> >>
+> > reboot stuck mean system does not reboot any more?
+
+It freezes when going for reboot.
+Have to power off/on to boot again.
+
+Btw I use an mmc, not an sd-card.
+No other HW connected, just LAN-cable.
+Bootloader is u-boot v2015.10.
+
+> > As far as I can see there in __no__ functional changes that my patch introduce.
+> > So ideally it should have work. My patches are based on the top on
+> > vanilla v4.3-rc5.
+> > (25cb62b Linux 4.3-rc5), can you check at this commit?
+
+Will try tomorrow.
+
+> >
+> > Will check with the commit mentioned by you tomorrow.
+> >
+> >>
+> >> Without your patch set reboot worked.
+> >>
+> >>
+> >> Thanks,
+> >> --
+> >> Markus Reichl
+> >> --
+> >> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> >> the body of a message to majordomo@vger.kernel.org
+> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+> >
+> >
+> > --
+> > Regards,
+> > Alim
 > 
-> https://lkml.org/lkml/2015/6/17/311
-
-But what Rafael is proposing is quite general; it would apply to _all_
-dependencies as opposed to just those present in DT drivers or those 
-affecting platform_devices.
-
-Alan Stern
+> 
+> 
+> 
+Thanks,
+--
+Markus
