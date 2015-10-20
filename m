@@ -1,90 +1,118 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Tue, 20 Oct 2015 23:59:49 +0200
-Message-ID: <5626B955.3070906@redhat.com>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
- <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
- <20150913152224.GU9885@lukather> <55F5B370.7040203@redhat.com>
- <20150922150242.GF4684@lukather> <560172B5.8090709@redhat.com>
- <20151019194313.GY2711@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 4/4] Documentation: ABI: /sys/firmware/devicetree/overlays
+Date: Tue, 20 Oct 2015 17:00:13 -0500
+Message-ID: <CAL_JsqLRjnbPRR0bU=qwdMgGWiFTOKWt9SasdrQpd40_H7oc2A@mail.gmail.com>
+References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1445368397-8732-5-git-send-email-pantelis.antoniou@konsulko.com>
+ <CAL_JsqJ1nPp17bnp5b59i7Huov8f-qOByRG2dW6XBj5-4_fvSw@mail.gmail.com> <235F6C23-4962-4114-BCB2-4279E775E23E@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBXXSTKYQKGQEQY4GFII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151019194313.GY2711@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <235F6C23-4962-4114-BCB2-4279E775E23E-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10/19/2015 09:43 PM, Maxime Ripard wrote:
-> On Tue, Sep 22, 2015 at 05:24:37PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 22-09-15 17:02, Maxime Ripard wrote:
->>> On Sun, Sep 13, 2015 at 07:33:36PM +0200, Hans de Goede wrote:
->>>>> Anyway. In both cases, the regulator really shouldn't be drifting
->>>>> along like this.
->>>>
->>>> Right which is why I've added the always-on property.
->>>
->>> Which is exactly what I meant by drifting along: that regulator will
->>> never be associated to the i2c bus, and will always be enabled even
->>> though the i2c bus might not even be accessible in the first place
->>> (driver not selected, compiled as a module and not loaded yet), which
->>> is just as bad.
->>>
->>>>> If the i2c bus needs a regulator to be operationaly,
->>>>> then we can just add an optional bus-supply property or something to
->>>>> give that to the i2c driver so that it can enable it when needed.
->>>>
->>>> I agree that that would be sensible if this regulator were tied to
->>>> the pull-ups, but I've my doubts that it is. We've not seen anything
->>>> similar on any other allwinner tablet, other then ChenYu-s Ippo-q8-v5
->>>> tablet.
->>>>
->>>> This tablet is sort of a high-end tablet (with a nice ips screen) and
->>>> such it also uses a different (better) sensor for its frontcam, a
->>>> gc2015 rather then the usual gc0308. I believe that this is the
->>>> culprit.
->>>>
->>>> Which would make modelling this as some sort of i2c-bus power-supply
->>>> wrong, and I've checked and none of the existing i2c bindings under
->>>> Documentation/devicetree/bindings/i2c contain such a thing, so we
->>>> would be the first and we will likely have a hard time selling a
->>>> binding for this upstream, esp. since we do not know what exactly
->>>> is going on.
->>>
->>> Well, strictly speaking, it is a supply needed to get the bus to
->>> work. We should really try to avoid having always-on for regulators,
->>> especially for devices that are already represented in the DT.
->>>
->>>> So all in all I strongly believe that just setting always-on
->>>> on the regulator in question is the best solution.
->>>
->>> It's a hack we can avoid.
->>
->> How? By adding a regulator property to the i2c controller node
->> and then have the i2c controller driver enable this on probe ?
+On Tue, Oct 20, 2015 at 4:02 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
 >
-> Yes.
+>> On Oct 20, 2015, at 23:56 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+>>
+>> On Tue, Oct 20, 2015 at 2:13 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> Documentation ABI entry for overlays sysfs entries.
+>>>
+>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>> .../ABI/testing/sysfs-firmware-devicetree-overlays | 40 +++++++++++=
++++++++++++
+>>> 1 file changed, 40 insertions(+)
+>>> create mode 100644 Documentation/ABI/testing/sysfs-firmware-devicet=
+ree-overlays
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-firmware-devicetree-ov=
+erlays b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+>>> new file mode 100644
+>>> index 0000000..adc4068
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+>>> @@ -0,0 +1,40 @@
+>>> +What:          /sys/firmware/devicetree/overlays/
+>>> +Date:          October 2015
+>>> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>> +Description:
+>>> +               This directory contains the applied device tree ove=
+rlays of
+>>> +               the running system, as directories of the overlay i=
+d.
+>>> +
+>>> +               enable: The master enable switch, by default is 1, =
+and when
+>>> +                       set to 0 it cannot be re-enabled for securi=
+ty reasons.
+>>> +
+>>> +               The discussion about this switch takes place in:
+>>> +               http://comments.gmane.org/gmane.linux.drivers.devic=
+etree/101871
+>>> +
+>>> +               Kees Cook:
+>>> +               "Coming from the perspective of drawing a bright li=
+ne between
+>>> +               kernel and the root user (which tends to start with=
+ disabling
+>>> +               kernel module loading), I would say that there at l=
+east needs
+>>> +               to be a high-level one-way "off" switch for the int=
+erface so
+>>> +               that systems that have this interface can choose to=
+ turn it off
+>>> +               during initial boot, etc."
+>>> +
+>>> +What:          /sys/firmware/devicetree/overlays/<id>
+>>> +Date:          October 2015
+>>> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>> +Description:
+>>> +               Each directory represents an applied overlay, conta=
+ining
+>>> +               the following attribute files.
+>>> +
+>>> +               can_remove: The attribute set to 1 means that the o=
+verlay can
+>>> +                           be removed, while 0 means that the over=
+lay is being
+>>> +                           overlapped therefore removal is prohibi=
+ted.
+>>> +
+>>> +What:          /sys/firmware/devicetree/overlays/<id>/<fragment-na=
+me>/
+>>> +Date:          October 2015
+>>> +Contact:       Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>> +Description:
+>>> +               Each of these directories contain information about=
+ of the
+>>> +               particular overlay fragment.
+>>> +
+>>> +               target: The full-path of the target of the fragment
+>>> --
+>>
+>> What happened to attributes within the fragment dir?
+>>
+>
+> There=E2=80=99s a single attribute named target that contains the tar=
+get of the fragment.
+>
+> At the moment this is the only attribute. I eventually intent to put =
+the full contents of the overlay fragment
+> there as /sysfs/firmware/devicetree/base does, but this would make th=
+ings quite complicated for now.
+>
+> Should I add a What: line for that too?
 
-Ok, I'll send a v2 marking i2c1 as failed for now, as you've done with
-sun6i-a31-hummingbird.dts, and drop the ldo3 node.
+There should be an entry for every file. These should not be in the
+description. So "enable" and "can_remove" need entries too.
 
-And I'll put looking into fixing this via a supply property for the
-i2c-host node on my todo list.
-
-Regards,
-
-Hans
+Rob
