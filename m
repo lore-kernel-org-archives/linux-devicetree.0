@@ -1,57 +1,55 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Tue, 20 Oct 2015 18:21:55 +0200
-Message-ID: <CAAObsKChQN4gg91dCWJS_Co_MrYyBrB1J7gxgGo4hsPXNZRp3g@mail.gmail.com>
-References: <20151020153612.GB32054@sirena.org.uk> <Pine.LNX.4.44L0.1510201159400.1855-100000@iolanthe.rowland.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: omap5-uevm: enable iio gpadc for Palmas
+Date: Tue, 20 Oct 2015 09:24:26 -0700
+Message-ID: <20151020162425.GH3078@atomide.com>
+References: <cover.1445000017.git.hns@goldelico.com>
+ <05c57453151c9e2cbd3f15145f1e15223410cd87.1445000017.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1510201159400.1855-100000@iolanthe.rowland.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.c>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <05c57453151c9e2cbd3f15145f1e15223410cd87.1445000017.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Pradeep Goudagunta <pgoudagunta-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 October 2015 at 18:04, Alan Stern <stern@rowland.harvard.edu> wrote:
-> On Tue, 20 Oct 2015, Mark Brown wrote:
->
->> On Tue, Oct 20, 2015 at 10:40:03AM -0400, Alan Stern wrote:
->>
->> > Furthermore, that applies only to devices that use synchronous suspend.
->> > Async suspend is becoming common, and there the only restrictions are
->> > parent-child relations plus whatever explicit requirements that drivers
->> > impose by calling device_pm_wait_for_dev().
->>
->> Hrm, this is the first I'd noticed that feature though I see the initial
->> commit dates from January.
->
-> Async suspend and device_pm_wait_for_dev() were added in January 2010,
-> not 2015!
->
->>  It looks like most of the users are PCs at
->> the minute but we should be using it more widely for embedded things,
->> there's definitely some cases I'm aware of where it will allow us to
->> remove some open coding.
->>
->> It does seem like we want to be feeding dependency information we
->> discover for probing way into the suspend dependencies...
->
-> Rafael has been thinking about a way to do this systematically.
-> Nothing concrete has emerged yet.
+Hi,
 
-This iteration of the series would make this quite easy, as
-dependencies are calculated before probes are attempted:
+* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [151016 05:58]:
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap5-uevm.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+> index 0e8128b..63f81bb 100644
+> --- a/arch/arm/boot/dts/omap5-uevm.dts
+> +++ b/arch/arm/boot/dts/omap5-uevm.dts
+> @@ -342,6 +342,16 @@
+>  
+>  			ti,ldo6-vibrator;
+>  
+> +			gpadc {
+> +				compatible = "ti,palmas-gpadc";
+> +				interrupts = <18 0
+> +					      16 0
+> +					      17 0>;
+> +				#io-channel-cells = <1>;
+> +				ti,channel0-current-microamp = <5>;
+> +				ti,channel3-current-microamp = <10>;
+> +			};
+> +
+>  			regulators {
+>  				smps123_reg: smps123 {
+>  					/* VDD_OPP_MPU */
 
-https://lkml.org/lkml/2015/6/17/311
+FYI, please send this one separately once the binding and driver is
+merged.
+
+This need to be updated arch/arm/boot/dts/omap5-board-common.dts, so
+this will cause merge conflicts if applied with the driver.
 
 Regards,
 
-Tomeu
-
-> Alan Stern
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Tony
