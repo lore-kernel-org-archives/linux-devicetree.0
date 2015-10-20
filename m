@@ -1,132 +1,57 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH RFT] ARM: bcm2835: dt: fix memory of Raspberry Pi B+
-Date: Tue, 20 Oct 2015 01:53:38 -0700
-Message-ID: <8737x5ncod.fsf@eliezer.anholt.net>
-References: <1444942124-23122-1-git-send-email-stefan.wahren@i2se.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Include SoC part number in DT binding
+	docs
+Date: Tue, 20 Oct 2015 17:58:17 +0900
+Message-ID: <CANqRtoQ=nBpWX_eMUM9-febZ-cCAFayEGoUjMSpAXHaw3kekqQ@mail.gmail.com>
+References: <20151019031003.7878.28510.sendpatchset@little-apple>
+	<9833652.FLB0aRvpVP@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444942124-23122-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <9833652.FLB0aRvpVP@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Laurent,
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-
-> Since the Raspberry Pi models differ in memory amount we
-> better define it at board level. After that we are able
-> to fix the memory node of the Raspberry Pi B+ .
+On Mon, Oct 19, 2015 at 3:44 PM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> Hi Magnus,
 >
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm2835-rpi-a-plus.dts |    4 ++++
->  arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |    4 ++++
->  arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts |    4 ++++
->  arch/arm/boot/dts/bcm2835-rpi-b.dts      |    4 ++++
->  arch/arm/boot/dts/bcm2835-rpi.dtsi       |    4 ----
->  5 files changed, 16 insertions(+), 4 deletions(-)
+> Thank you for the patch.
+
+Thanks for your feedback!
+
+> On Monday 19 October 2015 12:10:03 Magnus Damm wrote:
+>> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+>>
+>> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
+>> IPMMU DT binding documentation. The example is also updated to show
+>> how the generic compatible string may be used as fallback.
 >
-> This patch is only compile-tested.
->
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts=
-/bcm2835-rpi-a-plus.dts
-> index b2bff43..c08dff2 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-> +++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-> @@ -5,6 +5,10 @@
->  	compatible =3D "raspberrypi,model-a-plus", "brcm,bcm2835";
->  	model =3D "Raspberry Pi Model A+";
->=20=20
-> +	memory {
-> +		reg =3D <0 0x10000000>; /* 256 MB */
-> +	};
-> +
->  	leds {
->  		act {
->  			gpios =3D <&gpio 47 0>;
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts=
-/bcm2835-rpi-b-plus.dts
-> index 668442b..b4a1e56 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> @@ -5,6 +5,10 @@
->  	compatible =3D "raspberrypi,model-b-plus", "brcm,bcm2835";
->  	model =3D "Raspberry Pi Model B+";
->=20=20
-> +	memory {
-> +		reg =3D <0 0x20000000>; /* 512 MB */
-> +	};
-> +
->  	leds {
->  		act {
->  			gpios =3D <&gpio 47 0>;
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts=
-/bcm2835-rpi-b-rev2.dts
-> index eab8b591..e6ccfab 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-> @@ -5,6 +5,10 @@
->  	compatible =3D "raspberrypi,model-b-rev2", "brcm,bcm2835";
->  	model =3D "Raspberry Pi Model B rev2";
->=20=20
-> +	memory {
-> +		reg =3D <0 0x10000000>; /* 256 MB */
-> +	};
-> +
->  	leds {
->  		act {
->  			gpios =3D <&gpio 16 1>;
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2=
-835-rpi-b.dts
-> index ff6b2d1..bfd917c 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-> +++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-> @@ -5,6 +5,10 @@
->  	compatible =3D "raspberrypi,model-b", "brcm,bcm2835";
->  	model =3D "Raspberry Pi Model B";
->=20=20
-> +	memory {
-> +		reg =3D <0 0x10000000>; /* 256 MB */
-> +	};
-> +
->  	leds {
->  		act {
->  			gpios =3D <&gpio 16 1>;
+> I'd use a wording stronger than "may" here, as the generic compatible value is
+> required. I would also explicitly state that in the bindings documentation.
 
-Seems like a good idea.  The closed firmware passes us an edited
-devicetree with good memory fields, but I don't think U-Boot is up to it
-if you chainload it.
+I don't mind using a different wording, but it becomes a bit difficult
+to describe exactly when to use the generic compatible string and when
+not to. Is it always required, or does it depend on the hardware?
 
-However, isn't the rpi-b-rev2 the 512MB variant of the rpi-b?
+ "For compatible hardware please use the generic compat string."
+Compatible with what? =)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Any ideas how to describe it correctly in the binding documentation?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Cheers,
 
-iQIcBAEBCgAGBQJWJgETAAoJELXWKTbR/J7o0KsQAK0sVOPabqxtXOzLpufRUJQ7
-ipLoOobM41VBrFhSk8QbcfmAXIWhNeRKfZTXRyQSlfqZgOpeeUHQTwiPcvB8P6p0
-MVX+jDG7t0Zm9beTZ5YBuwwUlA6d+jNVXZlGOqR5NtFuRdkDX9uUa2r/hImVjWw7
-DwC6wOj5rxEwiDrODf1xIFdnQ/SitmB7R+mrE3mz5UsULyuo3LxNEWjJnvJ8EFsR
-hSdlum2iSkXivKACqljDmc9QitfB425+HUxnnZX7A4zzOi8UfzIfX36dmaZjuM5l
-d+XHnJuU76Ai5F5GNZK+StKRJYaPtZZgtyV+jhXVn/gG7GfykKs+KFU8e1V1/TIj
-cxKo8P8bOYiN+TMfR3mQB2bpvKleC1zZNbAXNzws4gTcU62H19WcOWRJOjSDvtpS
-2uHjWTVaFxWQfJfUN8qrBwMUgFs2mDD2mq+sYphio0NeWn+5dat3B16fyaIMgA1B
-X6n4jJz8a9rPUQO91nuG9+H8za+x/MUz9We+DgiIjeQU3DyozZxoD0+GLPktheEw
-M11EofecKCnFkUrGbgaVu7TLADWFI2iagxjECR1ohjMWpJhmU1iobPL64b49XdFv
-bDs95YVwNpSJ1bpBsMVJBuVG+7I1DWzcr6ZHmzJUf8ntBLt4x+kngIwEEFy1L/+q
-0pmPl0qQNSMimBnaD+Ci
-=nFEy
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/ magnus
