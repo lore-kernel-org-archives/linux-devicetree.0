@@ -1,7 +1,7 @@
 From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V2 3/4] MIPS: xilfpga: Add mipsfpga platform code
-Date: Tue, 20 Oct 2015 17:31:00 +0100
-Message-ID: <1445358661-53953-4-git-send-email-Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V2 2/4] MIPS: dt: xilfpga: Add xilfpga device tree files.
+Date: Tue, 20 Oct 2015 17:30:59 +0100
+Message-ID: <1445358661-53953-3-git-send-email-Zubair.Kakakhel@imgtec.com>
 References: <1445358661-53953-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,320 +12,134 @@ To: ralf@linux-mips.org, robh+dt@kernel.org
 Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The xilfpga platform will be DT only.
+Add device tree files for the MIPSfpga platform.
 
-Add required platform code.
-DT files have already been added separately.
+See Documentation/devicetree/bindings/mips/img/xilfpga.txt
+for details about MIPSfpga
 
 Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
 ---
 V1 -> V2
-Minor nitpicks. Nothing functional.
-Removed some redundant select 8250 serial.
-Removed a newline
-Added description of platform in Kconfig
-Reformated makefile
+Reformatted git log for 80 column
+Added nexys4ddr compatible
+Fixed some whitespace
+Removed a redundant status okay
 ---
- arch/mips/Kbuild.platforms                |  1 +
- arch/mips/Kconfig                         | 23 +++++++++++++
- arch/mips/include/asm/mach-xilfpga/gpio.h | 19 +++++++++++
- arch/mips/include/asm/mach-xilfpga/irq.h  | 18 ++++++++++
- arch/mips/xilfpga/Kconfig                 |  9 +++++
- arch/mips/xilfpga/Makefile                |  7 ++++
- arch/mips/xilfpga/Platform                |  3 ++
- arch/mips/xilfpga/init.c                  | 57 +++++++++++++++++++++++++++++++
- arch/mips/xilfpga/intc.c                  | 25 ++++++++++++++
- arch/mips/xilfpga/time.c                  | 41 ++++++++++++++++++++++
- 10 files changed, 203 insertions(+)
- create mode 100644 arch/mips/include/asm/mach-xilfpga/gpio.h
- create mode 100644 arch/mips/include/asm/mach-xilfpga/irq.h
- create mode 100644 arch/mips/xilfpga/Kconfig
- create mode 100644 arch/mips/xilfpga/Makefile
- create mode 100644 arch/mips/xilfpga/Platform
- create mode 100644 arch/mips/xilfpga/init.c
- create mode 100644 arch/mips/xilfpga/intc.c
- create mode 100644 arch/mips/xilfpga/time.c
+ arch/mips/boot/dts/Makefile                |  1 +
+ arch/mips/boot/dts/xilfpga/Makefile        |  9 ++++++
+ arch/mips/boot/dts/xilfpga/microAptiv.dtsi | 21 ++++++++++++++
+ arch/mips/boot/dts/xilfpga/nexys4ddr.dts   | 46 ++++++++++++++++++++++++++++++
+ 4 files changed, 77 insertions(+)
+ create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
+ create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+ create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
 
-diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
-index a424e46..a96c81d 100644
---- a/arch/mips/Kbuild.platforms
-+++ b/arch/mips/Kbuild.platforms
-@@ -33,6 +33,7 @@ platforms += sibyte
- platforms += sni
- platforms += txx9
- platforms += vr41xx
-+platforms += xilfpga
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 778a340..0571ef7 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -6,6 +6,7 @@ dts-dirs	+= mti
+ dts-dirs	+= netlogic
+ dts-dirs	+= qca
+ dts-dirs	+= ralink
++dts-dirs	+= xilfpga
  
- # include the platform specific files
- include $(patsubst %, $(srctree)/arch/mips/%/Platform, $(platforms))
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index e3aa5b0..1e3d3bd 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -401,6 +401,28 @@ config MACH_PISTACHIO
- 	help
- 	  This enables support for the IMG Pistachio SoC platform.
+ obj-y		:= $(addsuffix /, $(dts-dirs))
  
-+config MACH_XILFPGA
-+	bool "MIPSFPGA Xilinx based boards"
-+	select ARCH_REQUIRE_GPIOLIB
-+	select BOOT_ELF32
-+	select BOOT_RAW
-+	select BUILTIN_DTB
-+	select CEVT_R4K
-+	select COMMON_CLK
-+	select CSRC_R4K
-+	select IRQ_MIPS_CPU
-+	select LIBFDT
-+	select MIPS_CPU_SCACHE
-+	select SYS_HAS_EARLY_PRINTK
-+	select SYS_HAS_CPU_MIPS32_R2
-+	select SYS_SUPPORTS_32BIT_KERNEL
-+	select SYS_SUPPORTS_LITTLE_ENDIAN
-+	select SYS_SUPPORTS_ZBOOT_UART16550
-+	select USE_OF
-+	select USE_GENERIC_EARLY_PRINTK_8250
-+	help
-+	  This enables support for the IMG University Program MIPSfpga platform.
-+
- config MIPS_MALTA
- 	bool "MIPS Malta board"
- 	select ARCH_MAY_HAVE_PC_FDC
-@@ -964,6 +986,7 @@ source "arch/mips/loongson32/Kconfig"
- source "arch/mips/loongson64/Kconfig"
- source "arch/mips/netlogic/Kconfig"
- source "arch/mips/paravirt/Kconfig"
-+source "arch/mips/xilfpga/Kconfig"
- 
- endmenu
- 
-diff --git a/arch/mips/include/asm/mach-xilfpga/gpio.h b/arch/mips/include/asm/mach-xilfpga/gpio.h
+diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xilfpga/Makefile
 new file mode 100644
-index 0000000..26778fc
+index 0000000..913a752
 --- /dev/null
-+++ b/arch/mips/include/asm/mach-xilfpga/gpio.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (C) 2015 Imagination Technologies
-+ * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#ifndef __ASM_MACH_XILFPGA_GPIO_H
-+#define __ASM_MACH_XILFPGA_GPIO_H
-+
-+#include <asm-generic/gpio.h>
-+
-+#define gpio_get_value __gpio_get_value
-+#define gpio_set_value __gpio_set_value
-+
-+#endif /* __ASM_MACH_XILFPGA_GPIO_H */
-diff --git a/arch/mips/include/asm/mach-xilfpga/irq.h b/arch/mips/include/asm/mach-xilfpga/irq.h
-new file mode 100644
-index 0000000..0132a5b9
---- /dev/null
-+++ b/arch/mips/include/asm/mach-xilfpga/irq.h
-@@ -0,0 +1,18 @@
-+/*
-+ * Copyright (C) 2015 Imagination Technologies
-+ * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#ifndef __MIPS_ASM_MACH_XILFPGA_IRQ_H__
-+#define __MIPS_ASM_MACH_XILFPGA_IRQ_H__
-+
-+#define NR_IRQS 32
-+
-+#include_next <irq.h>
-+
-+#endif /* __MIPS_ASM_MACH_XILFPGA_IRQ_H__ */
-diff --git a/arch/mips/xilfpga/Kconfig b/arch/mips/xilfpga/Kconfig
-new file mode 100644
-index 0000000..42a030a
---- /dev/null
-+++ b/arch/mips/xilfpga/Kconfig
++++ b/arch/mips/boot/dts/xilfpga/Makefile
 @@ -0,0 +1,9 @@
-+choice
-+	prompt "Machine type"
-+	depends on MACH_XILFPGA
-+	default XILFPGA_NEXYS4DDR
++dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+= nexys4ddr.dtb
 +
-+config XILFPGA_NEXYS4DDR
-+	bool "Nexys4DDR by Digilent"
++obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
 +
-+endchoice
-diff --git a/arch/mips/xilfpga/Makefile b/arch/mips/xilfpga/Makefile
++# Force kbuild to make empty built-in.o if necessary
++obj-				+= dummy.o
++
++always				:= $(dtb-y)
++clean-files	:= *.dtb *.dtb.S
+diff --git a/arch/mips/boot/dts/xilfpga/microAptiv.dtsi b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
 new file mode 100644
-index 0000000..a4deec6
+index 0000000..81d518e
 --- /dev/null
-+++ b/arch/mips/xilfpga/Makefile
-@@ -0,0 +1,7 @@
-+#
-+# Makefile for the Xilfpga
-+#
++++ b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+@@ -0,0 +1,21 @@
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "img,xilfpga";
 +
-+obj-y +=	init.o
-+obj-y +=	intc.o
-+obj-y +=	time.o
-diff --git a/arch/mips/xilfpga/Platform b/arch/mips/xilfpga/Platform
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "mips,m14Kc";
++			clocks	= <&ext>;
++			reg = <0>;
++		};
++	};
++
++	ext: ext {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++};
+diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
 new file mode 100644
-index 0000000..ed375af
+index 0000000..686ebd1
 --- /dev/null
-+++ b/arch/mips/xilfpga/Platform
-@@ -0,0 +1,3 @@
-+platform-$(CONFIG_MACH_XILFPGA) += xilfpga/
-+cflags-$(CONFIG_MACH_XILFPGA) += -I$(srctree)/arch/mips/include/asm/mach-xilfpga
-+load-$(CONFIG_MACH_XILFPGA) += 0xffffffff80100000
-diff --git a/arch/mips/xilfpga/init.c b/arch/mips/xilfpga/init.c
-new file mode 100644
-index 0000000..5348af8
---- /dev/null
-+++ b/arch/mips/xilfpga/init.c
-@@ -0,0 +1,57 @@
-+/*
-+ * Xilfpga platform setup
-+ *
-+ * Copyright (C) 2015 Imagination Technologies
-+ * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
++++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+@@ -0,0 +1,46 @@
++/dts-v1/;
 +
-+#include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
++#include "microAptiv.dtsi"
 +
-+#include <asm/prom.h>
++/ {
++	compatible = "digilent,nexys4ddr";
 +
-+#define XILFPGA_UART_BASE	0xb0401000
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x08000000>;
++	};
 +
-+const char *get_system_type(void)
-+{
-+	return "MIPSFpga";
-+}
++	cpuintc: interrupt-controller@0 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
 +
-+void __init plat_mem_setup(void)
-+{
-+	__dt_setup_arch(__dtb_start);
-+	strlcpy(arcs_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-+}
++	axi_gpio: gpio@10600000 {
++		#gpio-cells = <1>;
++		compatible = "xlnx,xps-gpio-1.00.a";
++		gpio-controller;
++		reg = <0x10600000 0x10000>;
++		xlnx,all-inputs = <0x0>;
++		xlnx,dout-default = <0x0>;
++		xlnx,gpio-width = <0x16>;
++		xlnx,interrupt-present = <0x0>;
++		xlnx,is-dual = <0x0>;
++		xlnx,tri-default = <0xffffffff>;
++	} ;
 +
-+void __init prom_init(void)
-+{
-+	setup_8250_early_printk_port(XILFPGA_UART_BASE, 2, 50000);
-+}
++	axi_uart16550: serial@10400000 {
++		compatible = "ns16550a";
++		reg = <0x10400000 0x10000>;
 +
-+void __init prom_free_prom_memory(void)
-+{
-+}
++		reg-shift = <2>;
++		reg-offset = <0x1000>;
 +
-+void __init device_tree_init(void)
-+{
-+	if (!initial_boot_params)
-+		return;
-+
-+	unflatten_and_copy_device_tree();
-+}
-+
-+static int __init plat_of_setup(void)
-+{
-+	if (!of_have_populated_dt())
-+		panic("Device tree not present");
-+
-+	if (of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL))
-+		panic("Failed to populate DT");
-+
-+	return 0;
-+}
-+arch_initcall(plat_of_setup);
-diff --git a/arch/mips/xilfpga/intc.c b/arch/mips/xilfpga/intc.c
-new file mode 100644
-index 0000000..c4d1a71
---- /dev/null
-+++ b/arch/mips/xilfpga/intc.c
-@@ -0,0 +1,25 @@
-+/*
-+ * Xilfpga interrupt controller setup
-+ *
-+ * Copyright (C) 2015 Imagination Technologies
-+ * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+
-+#include <asm/irq_cpu.h>
-+
-+static struct of_device_id of_irq_ids[] __initdata = {
-+	{ .compatible = "mti,cpu-interrupt-controller", .data = mips_cpu_irq_of_init },
-+	{},
++		clocks	= <&ext>;
++	};
 +};
 +
-+void __init arch_init_irq(void)
-+{
-+	of_irq_init(of_irq_ids);
-+}
-diff --git a/arch/mips/xilfpga/time.c b/arch/mips/xilfpga/time.c
-new file mode 100644
-index 0000000..a1c0fc8
---- /dev/null
-+++ b/arch/mips/xilfpga/time.c
-@@ -0,0 +1,41 @@
-+/*
-+ * Xilfpga clocksource/timer setup
-+ *
-+ * Copyright (C) 2015 Imagination Technologies
-+ * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clocksource.h>
-+#include <linux/of.h>
-+
-+#include <asm/time.h>
-+
-+void __init plat_time_init(void)
-+{
-+	struct device_node *np;
-+	struct clk *clk;
-+
-+	of_clk_init(NULL);
-+	clocksource_of_init();
-+
-+	np = of_get_cpu_node(0, NULL);
-+	if (!np) {
-+		pr_err("Failed to get CPU node\n");
-+		return;
-+	}
-+
-+	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk)) {
-+		pr_err("Failed to get CPU clock: %ld\n", PTR_ERR(clk));
-+		return;
-+	}
-+
-+	mips_hpt_frequency = clk_get_rate(clk) / 2;
-+	clk_put(clk);
-+}
++&ext {
++	clock-frequency = <50000000>;
++};
 -- 
 1.9.1
