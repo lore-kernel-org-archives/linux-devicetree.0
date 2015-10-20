@@ -1,130 +1,51 @@
-From: chenfeng <puck.chen@hisilicon.com>
-Subject: Re: [PATCH V2 1/3] Documentation for system mmu in hi6220 platform.
-Date: Tue, 20 Oct 2015 20:33:35 +0800
-Message-ID: <5626349F.3040108@hisilicon.com>
-References: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com>
- <20151020103402.GB968@leverpostej>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 04/10] dt-bindings: video: add PCLK clock entry to
+ exynos5433-decon
+Date: Tue, 20 Oct 2015 14:41:53 +0200
+Message-ID: <56263691.1080804@samsung.com>
+References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
+ <1445332961-25419-5-git-send-email-a.hajda@samsung.com>
+ <5626327E.3050002@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151020103402.GB968@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: yudongbin@hisilicon.com, saberlily.xia@hisilicon.com, suzhuangluan@hisilicon.com, kong.kongxinwei@hisilicon.com, xuyiping@hisilicon.com, z.liuxinliang@hisilicon.com, puck.chen@aliyun.com, weidong2@hisilicon.com, w.f@huawei.com, joro@8bytes.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, qijiwen@hisilicon.com, peter.panshilin@hisilicon.com, dan.zhao@hisilicon.com, linuxarm@huawei.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <5626327E.3050002@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, k.kozlowski.k@gmail.com, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-Mark, thanks very much.
-
-On 2015/10/20 18:34, Mark Rutland wrote:
-> On Tue, Oct 20, 2015 at 04:45:22PM +0800, Chen Feng wrote:
->> docs: iommu: Documentation for smmu in hi6220 SoC.
->>
->> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
->> Signed-off-by: Yu Dongbin <yudongbin@hisilicon.com>
->> ---
->>  .../bindings/iommu/hisi,hi6220-iommu.txt           | 52 ++++++++++++++++++++++
->>  1 file changed, 52 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
->> new file mode 100644
->> index 0000000..93e0701
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
->> @@ -0,0 +1,52 @@
->> +Hi6220 SoC SMMU Device Driver devicetree document
->> +=======================================================================
->> +The Architecture of SMMU on Hi6220 SoC:
->> +
->> +   +------------------------------------------------------------------+
->> +   |                                                                  |
->> +   |         +---------+  +--------+  +-------------+   +-------+     |
->> +   |         |   ADE   |  |  ISP   |  |  V/J codec  |   |  G3D  |     |
->> +   |         +----|----+  +---|----+  +------|------+   +---|---|     |
->> +   |              |           |              |              |         |
->> +   |     ---------v-----------v--------------v--------------v-----    |
->> +   |                           Media Bus                              |
->> +   |     --------------------------------|---------------|--------    |
->> +   |                                     |               |            |
->> +   |                                 +---v---------------v--------+   |
->> +   |                                 |            SMMU            |   |
->> +   |                                 +----------|---------|-------+   |
->> +   |                                            |         |           |
->> +   +--------------------------------------------|---------|-----------+
->> +                                                |         |
->> +                                   +------------v---------v-----------+
->> +                                   |              DDRC                |
->> +                                   +----------------------------------+
->> +
->> +Note:
->> +The media system shared the same smmu IP. to access DDR memory. And all
-> 
-> Nit: s/IP./IP/
-> 
->> +media IP used the same page table.
->> +
->> +Below binding describes the system mmu for media system in hi6220 platform
->> +
->> +Required properties:
->> +- compatible: Should be "hisilicon,hi6220-smmu" example:
->> +		compatible = "hisilicon,hi6220-smmu";
-> 
-> No need for the example here.
-> 
-> Just say:
-> 
-> - compatible: should contain "hisilicon,hi6220-smmu".
-> 
-ok,
->> +- reg: A tuple of base address and size of System MMU registers.
->> +- interrupts: An interrupt specifier for interrupt signal of System MMU.
->> +- clocks: The clock used for smmu IP.
->> +- clock-names: The name to enable clock with clock framework.
-> 
-> The description of clocks and clock-names makes no sense.
-> 
-> You must define the exact set of names you expect, and the relationship
-> between clocks and clock names. e.g.
-> 
-ok
-> - clocks: a list of phandle + clock-specifier pairs, one for each entry
->   in clock-names
-> 
-> - clock-names: should contain:
->   * "smmu_clk"
->   * "media_sc_clk"
->   * "smmu_peri_clk"
-> 
->> +- #iommu-cells: The iommu-cells should be 1 for muti-master to use.
-> 
-> s/muti/multi/
-> 
-> You must define what that one cell corresponds to in the hardware.
-> 
-> Thanks,
-> Mark.
-> 
-
-I will change this next version.
->> +
->> +Examples:
->> +	smmu@f4210000 {
->> +		compatible = "hisilicon,hi6220-smmu";
->> +		reg = <0x0 0xf4210000 0x0 0x1000>;
->> +		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks = <&sys_ctrl HI6220_MMU_CLK>,
->> +		         <&media_ctrl HI6220_MED_MMU>,
->> +		         <&sys_ctrl HI6220_MEDIA_PLL_SRC>;
->> +		clock-names = "smmu_clk",
->> +			      "media_sc_clk",
->> +			      "smmu_peri_clk";
->> +		#iommu-cells = <1>;
->> +	};
->> -- 
->> 1.9.1
->>
-> 
-> .
-> 
+T24gMTAvMjAvMjAxNSAwMjoyNCBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPiBXIGRu
+aXUgMjAuMTAuMjAxNSBvIDE4OjIyLCBBbmRyemVqIEhhamRhIHBpc3plOgo+PiBERUNPTiBJUCBy
+ZXF1aXJlcyB0aGlzIGNsb2NrIHRvIGFjY2VzcyBjb25maWd1cmF0aW9uIHJlZ2lzdGVycy4KPj4K
+Pj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPj4g
+LS0tCj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zNTQz
+My1kZWNvbi50eHQgfCAyICstCj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy92aWRlby9leHlub3M1NDMzLWRlY29uLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy92aWRlby9leHlub3M1NDMzLWRlY29uLnR4dAo+PiBpbmRleCAzNzdhZmJm
+Li4zZGZmNzhiIDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmlkZW8vZXh5bm9zNTQzMy1kZWNvbi50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0Cj4+IEBAIC0xNiw3ICsx
+Niw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAtIGNsb2NrczogbXVzdCBpbmNsdWRlIGNs
+b2NrIHNwZWNpZmllcnMgY29ycmVzcG9uZGluZyB0byBlbnRyaWVzIGluIHRoZQo+PiAgCSAgY2xv
+Y2stbmFtZXMgcHJvcGVydHkuCj4+ICAtIGNsb2NrLW5hbWVzOiBsaXN0IG9mIGNsb2NrIG5hbWVz
+IHNvcnRlZCBpbiB0aGUgc2FtZSBvcmRlciBhcyB0aGUgY2xvY2tzCj4+IC0JICAgICAgIHByb3Bl
+cnR5LiBNdXN0IGNvbnRhaW4gImFjbGtfZGVjb24iLCAiYWNsa19zbW11X2RlY29uMHgiLAo+PiAr
+CSAgICAgICBwcm9wZXJ0eS4gTXVzdCBjb250YWluICJwY2xrIiwgImFjbGtfZGVjb24iLCAiYWNs
+a19zbW11X2RlY29uMHgiLAo+IEkgYXNzdW1lIHRoYXQgb2xkIERUQiB3b3VsZG4ndCB3b3JrIGF0
+IGFsbCwgc28gdGhlcmUgaXMgbm8gcG9pbnQgaW4KPiBtYWludGFpbmluZyBBQkkgY29tcGF0aWJp
+bGl0eT8KClllcywgRXh5bm9zIDU0MzMgaGFzIG5vdCB5ZXQgbGFuZGVkIGluIG1haW5saW5lLgoK
+UmVnYXJkcwpBbmRyemVqCgo+Cj4gQmVzdCByZWdhcmRzLAo+IEtyenlzenRvZgo+Cj4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
