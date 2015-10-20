@@ -1,61 +1,89 @@
-Return-Path: <hns@goldelico.com>
-Subject: [PATCH v2 0/3] Add Palmas iio gpadc
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <86F849CB-1A50-4BEB-99C6-79FF97971DCB@goldelico.com>
-Date: Sun, 4 Oct 2015 18:05:46 +0200
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <08A14DB0-0A79-42F4-A0D2-9BEAB3328405@goldelico.com>
-References: <86F849CB-1A50-4BEB-99C6-79FF97971DCB@goldelico.com>
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Marek Belisko <marek@goldelico.com>, Pradeep Goudagunta <pgoudagunta@nvidia.com>, Nikolaus Schaller <hns@goldelico.com>, Laxman Dewangan <ldewangan@nvidia.com>, gg@slimlogic.co.uk, jic23@jic23.retrosnub.co.uk
-Cc: devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, linux-iio@vger.kernel.org, Grazvydas Ignotas <notasas@gmail.com>
+Return-Path: <ck.hu@mediatek.com>
+Message-ID: <1445325731.19417.20.camel@mtksdaap41>
+Subject: RE: [RFC 1/2] Dcumentation: bridge: Add documentation for ps8640 DT
+ properties
+From: CK Hu <ck.hu@mediatek.com>
+Date: Tue, 20 Oct 2015 15:22:11 +0800
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, "; Mark Rutland" <mark.rutland@arm.com>, "; Ian Campbell" <ijc+devicetree@hellion.org.uk>, "; Kumar Gala" <galak@codeaurora.org>, "; David Airlie" <airlied@linux.ie>, Matthias, "Jitao Shi  <jitao.shi@mediatek.com>, ; Thierry Reding" <treding@nvidia.com>, "; Ajay Kumar" <ajaykumar.rs@samsung.com>, "; Inki Dae" <inki.dae@samsung.com>, Rahul, "Sean Paul  <seanpaul@chromium.org>, ; Vincent Palatin" <vpalatin@chromium.org>, "; Andy Yan" <andy.yan@rock-chips.com>, "; Philipp Zabel" <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha, Yingjoe, Eddie Huang <eddie.huang@mediatek.com>, "; Cawa Cheng" <cawa.cheng@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-V2 changes:
-- worked in review comments by Peter Meerwald
-- made channels 1 and 3 report (raw) temperature values
-- moved PALMAS_GPADC_TRIMINVALID to driver core
-- worked in review comments by Jonathan Cameron
-- iio_map removed
+Hi, Rob:
 
-Add iio driver for the TI Palmas (twl6035, 6037) including device tree =
-bindings.
-It enables the gpadc for the OMAP5 uevm.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh+dt@kernel.org]
+> Sent: Friday, October 16, 2015 9:22 PM
+> Subject: Re: [RFC 1/2] Dcumentation: bridge: Add documentation for
+ps8640
+> DT properties
+> 
+> On Fri, Oct 16, 2015 at 7:15 AM, CK Hu <ck.hu@mediatek.com> wrote:
+> > From: Jitao Shi <jitao.shi@mediatek.com>
+> >
+> > Add documentation for DT properties supported by ps8640 DSI-eDP
+> > converter.
+> >
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/video/bridge/ps8640.txt    |   48
+> ++++++++++++++++++++
+> 
+> Please move to bindings/display/bridge/.
 
-This patch series is based on original code taken from Android Tegra =
-kernels:
-=
-(https://android.googlesource.com/kernel/tegra/+/aaabb2e045f31e5a970109ffd=
-aae900dd403d17e/drivers/staging/iio/adc)
+ok, we will move ps8640.txt to bindings/display/bridge/
 
-Tegra code was developed by:
-Pradeep Goudagunta <pgoudagunta@nvidia.com>
-Laxman Dewangan <ldewangan@nvidia.com>
+> 
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> >
+> > diff --git
+a/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> > b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> > new file mode 100644
+> > index 0000000..450b5df
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/video/bridge/ps8640.txt
+> > @@ -0,0 +1,48 @@
+> > +ps8640-bridge bindings
+> > +
+> > +Required properties:
+> > +       - compatible: "parade,ps8640"
+> > +       - reg: first i2c address of the bridge
+> > +       - power-gpios: OF device-tree gpio specification for power
+pin.
+> > +       - reset-gpios: OF device-tree gpio specification for reset
+pin.
+> > +       - mode-sel-gpios: OF device-tree gpio specification for
+mode-sel
+> pin.
+> > +       - ps8640-1v2-supply: OF device-tree regulator specification
+for
+> 1v2.
+> > +       - ps8640-3v3-supply: OF device-tree regulator specification
+for
+> 3v3.
+> 
+> As others have said, I would drop the part number and name them based
+on
+> the supply name (e.g. vdd?, vcore?).
 
-Edited and extended for mainline by:
-H. Nikolaus Schaller <hns@goldelico.com>
-Marek Belisko <marek@goldelico.com>
+yes, we should use vdd12-supply and vdd33-supply, we'll fixed it in next
+patch.
 
+> 
+> > +
+> > +Optional properties:
+> > +       - video interfaces: Device node can contain video interface
+port
+> > +                           nodes for panel according to [1].
+> 
+> I don't think this should be optional.
+> 
 
-H. Nikolaus Schaller (2):
- iio:adc: add iio driver for Palmas (twl6035/7) gpadc
- ARM: dts: omap5-uevm: enable iio gpadc for Palmas
+yes, we will fix it in next patch.
 
-Marek Belisko (1):
- iio:adc:palmas: add DT support
-
-.../devicetree/bindings/iio/adc/palmas-gpadc.txt   |  46 ++
-arch/arm/boot/dts/omap5-uevm.dts                   |   9 +
-drivers/iio/adc/Kconfig                            |   9 +
-drivers/iio/adc/Makefile                           |   1 +
-drivers/iio/adc/palmas_gpadc.c                     | 860 =
-+++++++++++++++++++++
-include/linux/mfd/palmas.h                         |  75 +-
-6 files changed, 976 insertions(+), 24 deletions(-)
-create mode 100644 =
-Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-create mode 100644 drivers/iio/adc/palmas_gpadc.c
-
---=20
-2.5.1
+> >
