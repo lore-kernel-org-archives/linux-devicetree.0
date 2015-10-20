@@ -1,38 +1,51 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: [PATCH 1/1] Input: ads7846: Add description how to use internal reference (ADS7846)
-Date: Tue, 20 Oct 2015 11:05:00 +0200
-Message-ID: <1445331900-4978-1-git-send-email-alexander.stein@systec-electronic.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
+Date: Tue, 20 Oct 2015 14:26:39 +0530
+Message-ID: <562601C7.8070705@samsung.com>
+References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
+ <CAAtXAHfjdNvJtXW6e4Wm4dba9vbzhpMGJvTBXxvmya08EvHenA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAAtXAHfjdNvJtXW6e4Wm4dba9vbzhpMGJvTBXxvmya08EvHenA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene@kernel.org, k.kozlowski@samsung.com, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-By simply setting vref-mv to 0 the internal reference will be used.
-Document that!
+Hi Moritz,
 
-Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
----
- Documentation/devicetree/bindings/input/ads7846.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/input/ads7846.txt b/Documentation/devicetree/bindings/input/ads7846.txt
-index df8b127..0414b4d 100644
---- a/Documentation/devicetree/bindings/input/ads7846.txt
-+++ b/Documentation/devicetree/bindings/input/ads7846.txt
-@@ -29,6 +29,8 @@ Optional properties:
- 	ti,vref-delay-usecs		vref supply delay in usecs, 0 for
- 					external vref (u16).
- 	ti,vref-mv			The VREF voltage, in millivolts (u16).
-+					Set to 0 to use internal refernce
-+					(ADS7846).
- 	ti,keep-vref-on			set to keep vref on for differential
- 					measurements as well
- 	ti,swap-xy			swap x and y axis
--- 
-2.4.10
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 10/20/2015 02:48 AM, Moritz Fischer wrote:
+> On Sun, Oct 18, 2015 at 11:03 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
+>> Alim Akhtar (7):
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+>>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+>>    ARM: exynos_defconfig: Normalize exynos defconfig
+>>    ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
+>>      drivers
+>>    ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
+>>
+>>   arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+>>   arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+>>   arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+>>   arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+>>   arch/arm/configs/exynos_defconfig |   11 +++++-----
+>>   arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+>>   6 files changed, 61 insertions(+), 49 deletions(-)
+>>
+>> --
+>> 1.7.10.4
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Feel free to add Acked-By: Moritz Fischer <moritz.fischer@ettus.com>
+> to the patches in your series
+>
+Thanks!
+> Moritz
+>
