@@ -1,154 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/4] mfd: tps65086: Add driver for the TPS65086 PMIC
-Date: Tue, 20 Oct 2015 11:02:14 +0100
-Message-ID: <20151020100214.GM31804@x1>
-References: <1445014753-15450-1-git-send-email-afd@ti.com>
- <1445014753-15450-3-git-send-email-afd@ti.com>
- <20151019092336.GI31804@x1>
- <56251468.7030609@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 2/5] [RFC] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+Date: Tue, 20 Oct 2015 12:09:55 +0200
+Message-ID: <CAMuHMdX8kHcRCkmLbPt7SNC4CZnQm+B834sLdotT2PtQuzFUmA@mail.gmail.com>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+	<1444999760-15750-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56251468.7030609@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444999760-15750-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Oct 2015, Andrew F. Davis wrote:
-> On 10/19/2015 04:23 AM, Lee Jones wrote:
-> >On Fri, 16 Oct 2015, Andrew F. Davis wrote:
-> >
-> >>Add support for the TPS65912 device. It provides communication
-> >>through I2C and contains the following components:
-> >>
-> >>  - Regulators
-> >>  - Load switches
-> >>  - GPO controller
-> >
-> >What's a GPO controller?
->=20
-> General Purpose Output, this controller only has output control, it's
-> listed in the data-sheet this way, and other drivers have used this t=
-erm.
+On Fri, Oct 16, 2015 at 2:49 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Add all R-Car H3 CPG Core Clock Outputs defined in the datasheet.
 
-Okay.
+Cfr. Table 8.2a ("List of Clocks [R-Car H3]").
 
-> >>Signed-off-by: Andrew F. Davis <afd@ti.com>
-> >>---
-> >>  drivers/mfd/Kconfig          |  13 ++++
-> >>  drivers/mfd/Makefile         |   1 +
-> >>  drivers/mfd/tps65086.c       | 145 ++++++++++++++++++++++++++++++=
-+++++++++++++
-> >>  include/linux/mfd/tps65086.h | 120 ++++++++++++++++++++++++++++++=
-+++++
-> >>  4 files changed, 279 insertions(+)
-> >>  create mode 100644 drivers/mfd/tps65086.c
-> >>  create mode 100644 include/linux/mfd/tps65086.h
-> >>
-> >>diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >>index 99d6367..ab3b392 100644
-> >>--- a/drivers/mfd/Kconfig
-> >>+++ b/drivers/mfd/Kconfig
-> >>@@ -1093,6 +1093,19 @@ config TPS6507X
-> >>  	  This driver can also be built as a module.  If so, the module
-> >>  	  will be called tps6507x.
-> >>
-> >>+config MFD_TPS65086
-> >>+	tristate "TI TPS65086x Power Management chips"
-> >
-> >Use the full name:
-> >
-> >   "TI TPS65086x Power Management Integrated Chips (PMICs)"
-> >
-> >>+	select REGMAP
-> >>+	select REGMAP_IRQ
-> >>+	select REGMAP_I2C
-> >>+	depends on I2C
-> >
-> >REGMAP_I2C already depends on I2C.
-> >
->=20
-> So if I force REGMAP_I2C to =3Dy without depending on I2C then couldn=
-'t
-> REGMAP_I2C get selected without I2C enabled? Selecting doesn't force
-> the selected item's dependencies still right?
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+> @@ -0,0 +1,63 @@
+> +/*
+> + * Copyright (C) 2015 Renesas Electronics Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* r8a7795 CPG Core Clocks */
+> +#define R8A7795_CLK_Z                  0
+> +#define R8A7795_CLK_Z2                 1
+> +#define R8A7795_CLK_ZR                 2
+> +#define R8A7795_CLK_ZG                 3
+> +#define R8A7795_CLK_ZTR                        4
+> +#define R8A7795_CLK_ZTRD2              5
+> +#define R8A7795_CLK_ZT                 6
+> +#define R8A7795_CLK_ZX                 7
+> +#define R8A7795_CLK_S0D1               8
+> +#define R8A7795_CLK_S0D4               9
+> +#define R8A7795_CLK_S1D1               10
+> +#define R8A7795_CLK_S1D2               11
+> +#define R8A7795_CLK_S1D4               12
+> +#define R8A7795_CLK_S2D1               13
+> +#define R8A7795_CLK_S2D2               14
+> +#define R8A7795_CLK_S2D4               15
+> +#define R8A7795_CLK_S3D1               16
+> +#define R8A7795_CLK_S3D2               17
+> +#define R8A7795_CLK_S3D4               18
 
-Try it out. :)
+Please note that I deliberately left out S[0-3], as they're used as
+internal clock
+sources only.
 
-> >>+	depends on OF || COMPILE_TEST
-> >>+	help
-> >>+	  If you say yes here you get support for the TPS65086 series of
-> >>+	  Power Management chips.
-> >
-> >I'd remove the line break.
-> >
-> >>+	  These include voltage regulators, GPO and other features
-> >
-> >GPIO?
-> >
-> >>+	  that are often used in portable devices.
-> >
-> >This is meant to be a 'help', so instead of staying "and some other
-> >stuff", please list them.
-> >
->=20
-> This seems to be what other devices do, I'll change it to something
-> else then.
+Gr{oetje,eeting}s,
 
-If you know what the "other features" are, it's best to name them.
+                        Geert
 
-> >>  config TPS65911_COMPARATOR
-> >>  	tristate
-> >>
-> >>diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> >>index a59e3fc..7adb902 100644
-> >>--- a/drivers/mfd/Makefile
-> >>+++ b/drivers/mfd/Makefile
-> >>@@ -66,6 +66,7 @@ obj-$(CONFIG_MFD_WM8994)	+=3D wm8994-core.o wm899=
-4-irq.o wm8994-regmap.o
-> >>  obj-$(CONFIG_TPS6105X)		+=3D tps6105x.o
-> >>  obj-$(CONFIG_TPS65010)		+=3D tps65010.o
-> >>  obj-$(CONFIG_TPS6507X)		+=3D tps6507x.o
-> >>+obj-$(CONFIG_MFD_TPS65086)	+=3D tps65086.o
-> >>  obj-$(CONFIG_MFD_TPS65217)	+=3D tps65217.o
-> >>  obj-$(CONFIG_MFD_TPS65218)	+=3D tps65218.o
-> >>  obj-$(CONFIG_MFD_TPS65910)	+=3D tps65910.o
-> >>diff --git a/drivers/mfd/tps65086.c b/drivers/mfd/tps65086.c
-> >>new file mode 100644
-> >>index 0000000..be6d678
-> >>--- /dev/null
-> >>+++ b/drivers/mfd/tps65086.c
-> >>@@ -0,0 +1,145 @@
-> >>+/*
-> >>+ * Driver for TI TPS65086x PMICs
-> >
-> >I'd suggest removing the driver part.  We know it's a driver.
->=20
-> Again this is what almost every other driver does,
-
-Almost every other driver.  That's some statement.
-
-I count 42%. ;)
-
-> I'm not sure how
-> else to describe this file without using the word driver.
-
-Perhaps I'm getting picky in my old age, but I think I'd prefer to see:
-
-  TI TPS65086x PMIC support
-
-[...]
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
