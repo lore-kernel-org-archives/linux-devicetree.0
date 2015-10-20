@@ -1,51 +1,53 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH 0/7] Switch to generic syscon regmap based drivers
-Date: Tue, 20 Oct 2015 14:26:39 +0530
-Message-ID: <562601C7.8070705@samsung.com>
-References: <1445234635-3950-1-git-send-email-alim.akhtar@samsung.com>
- <CAAtXAHfjdNvJtXW6e4Wm4dba9vbzhpMGJvTBXxvmya08EvHenA@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: Add BRCM IPROC NAND DT node for NS2
+Date: Tue, 20 Oct 2015 10:05:59 +0100
+Message-ID: <562603F7.7000202@arm.com>
+References: <1444986537-28387-1-git-send-email-anup.patel@broadcom.com>
+ <1444986537-28387-5-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAAtXAHfjdNvJtXW6e4Wm4dba9vbzhpMGJvTBXxvmya08EvHenA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene@kernel.org, k.kozlowski@samsung.com, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444986537-28387-5-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Moritz,
 
-On 10/20/2015 02:48 AM, Moritz Fischer wrote:
-> On Sun, Oct 18, 2015 at 11:03 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
->> Alim Akhtar (7):
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
->>    arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
->>    ARM: exynos_defconfig: Normalize exynos defconfig
->>    ARM: exynos_defconfig: Enable generic syscon-{reboot, poweroff}
->>      drivers
->>    ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
->>
->>   arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
->>   arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
->>   arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
->>   arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
->>   arch/arm/configs/exynos_defconfig |   11 +++++-----
->>   arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
->>   6 files changed, 61 insertions(+), 49 deletions(-)
->>
->> --
->> 1.7.10.4
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 16/10/15 10:08, Anup Patel wrote:
+> The NAND controller on NS2 SoC is compatible with existing
+> BRCM IPROC NAND driver so let's enable it in NS2 DT and
+> NS2 SVK DT.
 >
-> Feel free to add Acked-By: Moritz Fischer <moritz.fischer@ettus.com>
-> to the patches in your series
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>   arch/arm64/boot/dts/broadcom/ns2-svk.dts | 12 ++++++++++++
+>   arch/arm64/boot/dts/broadcom/ns2.dtsi    | 14 ++++++++++++++
+>   2 files changed, 26 insertions(+)
 >
-Thanks!
-> Moritz
->
+> diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+> index e5950d5..a754160 100644
+> --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+> +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+> @@ -63,5 +63,17 @@
+>   		uart3: serial@66130000 {
+>   			status = "ok";
+>   		};
+
+Better to change even the above reference, see below.
+
+> +
+> +		nand: nand@66460000 {
+
+In most of the cases where such static overlays are done, I have seen
+the labels being used to refer back the node. Using the complete node
+name again is kind of inviting trouble as even minor typo results in
+creation of another node.
+
+-- 
+Regards,
+Sudeep
