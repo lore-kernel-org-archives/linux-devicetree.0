@@ -1,31 +1,43 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2] dts: keystone: Use new "ti,keystone-i2c" compatible
-Date: Tue, 20 Oct 2015 19:10:57 +0300
-Message-ID: <56266791.5000805@ti.com>
-References: <55F68E36.2030609@nokia.com> <20151020150614.GG5379@katana>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] ARM: DTS: dra72-evm: remove cpsw gpio hogging and
+ add mode-gpios
+Date: Tue, 20 Oct 2015 09:16:41 -0700
+Message-ID: <20151020161640.GD3078@atomide.com>
+References: <1442847231-23637-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20151020150614.GG5379@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Alexander Sverdlin <alexander.sverdlin@nokia.com>, Sekhar Nori <nsekhar@ti.com>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442847231-23637-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2015 06:06 PM, Wolfram Sang wrote:
-> On Mon, Sep 14, 2015 at 11:07:02AM +0200, Alexander Sverdlin wrote:
->> Now as "i2c-davinci" driver has special handling for Keystone it's time to switch
->> the device tree to use new "compatible" property. Old one is left for backwards-
->> compatibility.
->>
->> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
->
-> Shall I take this one or shall it go via the davinci tree?
->
+* Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> [150921 07:58]:
+> With the current implementation of GPIO hogging and with
+> gpio-pcf857x is built as module, ethernet doesn't work on boot
+> and doesn't throw any error/warning to user. Ethernet becomes
+> operational when inserting gpio-pcf857x module, even this time
+> there is no error/warning logs to user that ethernet is
+> operational.
+> 
+> When using with NFS rootfs and gpio-pcf857x as module, board
+> doesn't boot as it doesn't get any ip address and doesn't throw
+> any error/warning. To over come this, now cpsw driver tries to
+> get mode-gpios. When gpio-pcf857x is built as module it will
+> throw error, so that user can decide either to built in
+> gpio-pcf857x to continue with nfs boot or choose alternate rootfs
+> filesystem like sd/ramdisk.
+> 
+> When using mmc/ramdisk as root fs, cpsw will probe defer and
+> re-probes again when gpio-pcf857x module is inserted and ethernet
+> becomes operational.
 
-To: Sekhar
+Applying into omap-for-v4.4/dt thanks.
 
--- 
-regards,
--grygorii
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
