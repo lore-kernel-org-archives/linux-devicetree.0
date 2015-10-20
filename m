@@ -1,89 +1,76 @@
-From: Mitchel Humpherys <mitchelh@codeaurora.org>
-Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
-Date: Tue, 20 Oct 2015 09:34:24 -0700
-Message-ID: <vnkw8u6xts6n.fsf@codeaurora.org>
-References: <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
- <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
- <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
- <vnkwh9lwlymo.fsf@codeaurora.org>
- <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 0/9] Add tune support of Mediatek MMC driver
+Date: Tue, 20 Oct 2015 18:41:02 +0200
+Message-ID: <CAPDyKFrTrR5U7QoXpiWj29bUD5SEp4ccbx8qNs9HF0cYxuqdBw@mail.gmail.com>
+References: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
- (andrew@ncrmnt.org's message of "Tue, 13 Oct 2015 11:14:23 +0300")
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andrew <andrew@ncrmnt.org>
-Cc: Feng Tang <feng.tang@intel.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devel@driverdev.osuosl.org, Tom Gall <tom.gall@linaro.org>, arve@android.com, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Riley Andrews <riandrews@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, a.bogdanova@module.ru, linux-arm-kernel@lists.infradead.org, Laura Abbott <labbott@fedoraproject.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, a.makarov@module.ru, Laura Abbott <laura@labbott.name>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Barry Song <baohua@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Lars-Peter Clausen <lars@metafoo.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Howard Chen <ibanezchen@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Kristina Martsenko <kristina.martsenko@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Stephen Boyd <sboyd@codeau>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 13 2015 at 11:14:23 AM, Andrew <andrew@ncrmnt.org> wrote:
-> On 2015-10-12 21:39, Mitchel Humpherys wrote:
->> On Tue, Oct 06 2015 at 05:35:41 PM, Rob Herring <robherring2@gmail.com>
->> wrote:
->>> On Tue, Oct 6, 2015 at 3:47 PM, Laura Abbott <labbott@fedoraproject.org>
->>> wrote:
->>
->> [...]
->>
->>>> +Example:
->>>> +
->>>> +       ion {
->>>> +               compatbile = "linux,ion";
->>>> +               #address-cells = <1>;
->>>> +               #size-cells = <0>;
->>>> +
->>>> +               ion-system-heap {
->>>> +                       linux,ion-heap-id = <0>;
->>>> +                       linux,ion-heap-type = <ION_SYSTEM_HEAP_TYPE>;
->>>> +                       linux,ion-heap-name = "system";
->>>
->>> How does this vary across platforms? Is all of this being pushed down
->>> to DT, because there is no coordination of this at the kernel ABI
->>> level across platforms. In other words, why can't heap 0 be hardcoded
->>> as system heap in the driver. It seems to me any 1 of these 3
->>> properties could be used to derive the other 2.
->>
->> The heap-id<->heap-type mapping isn't necessarily 1:1.  As Laura
->> indicated elsewhere on this thread, a given heap might need to be
->> contiguous on one platform but not on another.  In that case you just
->> swap out the heap-type here and there's no need for userspace to change.
->>
->> The heap-name, OTOH, could be derived from the heap-id, which is what we
->> hackishly do here [1] and here[2].
+On 20 October 2015 at 11:13, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> Change in v2:
+> Drop the 400mhz and use assigned-clock-parents to instead
+> Split the original tune patch to several independent patches
+> Re-write the mmc_send_tuning()
+> Fix GPD checksum error
+> Move the HS400 setting to ops->prepare_hs400_tuning()
+> Modify SD driving settings
 >
-> By the way, since we agreed that heap id and heap type mappings
-> are not 1:1 - we have a problem with the current API.
+> Change in v1:
+> Add DT bindings for eMMC hardware reset
+> Add pinctrl of data strobe pin for HS400 mode
+> Modify eMMC driving settings
+> Add 400mhz source clock for HS400 mode
+> Add eMMC HS200/HS400 mode support
+> Add SD SDR50/SDR104 mode support
+> Add implement of tune function with CMD19/CMD21
 >
-> In userspace we currently have this:
+> Chaotian Jing (9):
+>   mmc: core: Add DT bindings for eMMC hardware reset support
+>   mmc: dt-bindings: update Mediatek MMC bindings
+>   mmc: mediatek: make cmd_ints_mask to const
+>   mmc: mediatek: change the argument "ddr" to "timing"
+>   mmc: mediatek: fix got GPD checksum error interrupt when data transfer
+>   mmc: mediatek: add implement of ops->hw_reset()
+>   mmc: mmc: extend the mmc_send_tuning()
+>   mmc: mediatek: add HS400 support
+>   arm64: dts: mediatek: add HS200/HS400/SDR50/SDR104 support
 >
-> int ion_alloc(int fd, size_t len, size_t align, unsigned int heap_mask,
->               unsigned int flags, ion_user_handle_t *handle);
+>  Documentation/devicetree/bindings/mmc/mmc.txt    |   1 +
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |  11 +-
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  27 ++-
+>  drivers/mmc/core/host.c                          |   2 +
+>  drivers/mmc/core/mmc_ops.c                       |   8 +-
+>  drivers/mmc/host/dw_mmc-exynos.c                 |   4 +-
+>  drivers/mmc/host/dw_mmc.c                        |   2 +-
+>  drivers/mmc/host/dw_mmc.h                        |   2 +-
+>  drivers/mmc/host/mtk-sd.c                        | 296 ++++++++++++++++++++---
+>  drivers/mmc/host/sdhci-esdhc-imx.c               |   6 +-
+>  drivers/mmc/host/sdhci-msm.c                     |   2 +-
+>  drivers/mmc/host/sdhci-sirf.c                    |   2 +-
+>  include/linux/mmc/core.h                         |   2 +-
+>  13 files changed, 314 insertions(+), 51 deletions(-)
 >
-> We do not specify here what TYPE of heap we want the allocation to come
-> from.
-> This may lead to very unpleasant stuff when porting from one platfrom to
-> another.
+> --
+> 1.8.1.1.dirty
 
-What "unpleasant stuff" are you referring to, exactly?  Abstracting the
-heap type away from userspace has actually made our lives easier since
-userspace doesn't need to know anything about the properties of the
-underlying platform.  It just asks for a buffer from the "camera" heap,
-for example.  On some platforms that's contiguous, on others it's not.
+I have reviewed the patches, I think they overall looks good! Some
+comments though.
 
+You need to split patch 9, the DT parts enabling hw reset shall go in
+separately.
 
--Mitch
+Regarding the hw-reset changes in patch1, patch6 and patch9, I believe
+I requested you to separate the HW reset changes from $subject
+patchset as they are unrelated, please do this.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Running checkpatch, it gave me warnings and errors for patch 8.
+Patch7 didn't apply to my next branch.
+
+Kind regards
+Uffe
