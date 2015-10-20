@@ -1,69 +1,47 @@
-From: Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: [PATCH v2 6/9] mmc: mediatek: add implement of ops->hw_reset()
-Date: Tue, 20 Oct 2015 17:13:08 +0800
-Message-ID: <1445332391-30530-7-git-send-email-chaotian.jing@mediatek.com>
-References: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH 00/10] drm/exynos/decon5433: add support to DECON-TV
+Date: Tue, 20 Oct 2015 11:22:31 +0200
+Message-ID: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Minda Chen <Minda.Chen@csr.com>, Dong Aisheng <b29396@freescale.com>, Lars-Peter Clausen <lars@metafoo.de>, Weijun Yang <Weijun.Yang@csr.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-samsung-soc@vger.kernel.org, Howard Chen <ibanezchen@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, ivan.ivanov@linaro.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-add implement of ops->hw_reset() for eMMC
-
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-
----
- drivers/mmc/host/mtk-sd.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 3858163..5627644 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -64,6 +64,7 @@
- #define SDC_RESP2        0x48
- #define SDC_RESP3        0x4c
- #define SDC_BLK_NUM      0x50
-+#define EMMC_IOCON       0x7c
- #define SDC_ACMD_RESP    0x80
- #define MSDC_DMA_SA      0x90
- #define MSDC_DMA_CTRL    0x98
-@@ -1209,6 +1210,15 @@ end:
- 	pm_runtime_put_autosuspend(host->dev);
- }
- 
-+static void msdc_hw_reset(struct mmc_host *mmc)
-+{
-+	struct msdc_host *host = mmc_priv(mmc);
-+
-+	sdr_set_bits(host->base + EMMC_IOCON, 1);
-+	udelay(10); /* 10us is enough */
-+	sdr_clr_bits(host->base + EMMC_IOCON, 1);
-+}
-+
- static struct mmc_host_ops mt_msdc_ops = {
- 	.post_req = msdc_post_req,
- 	.pre_req = msdc_pre_req,
-@@ -1216,6 +1226,7 @@ static struct mmc_host_ops mt_msdc_ops = {
- 	.set_ios = msdc_ops_set_ios,
- 	.start_signal_voltage_switch = msdc_ops_switch_volt,
- 	.card_busy = msdc_card_busy,
-+	.hw_reset = msdc_hw_reset,
- };
- 
- static int msdc_drv_probe(struct platform_device *pdev)
--- 
-1.8.1.1.dirty
+SGkgSW5raSwKClRoaXMgcGF0Y2hzZXQgYWRkcyBzdXBwb3J0IHRvIERFQ09OLVRWIGluIEV4eW5v
+czU0MzMgU29DLgpUaGUgbWFpbiBwYXRjaCBpcyBwcmVwZW5kZWQgd2l0aCBmZXcgcHJlcGFyYXRp
+b24gcGF0Y2hlczoKLSBhZGQgdGhyZWUgY2xvY2tzIHJlcXVpcmVkIGJ5IEhETUkgcGlwZWxpbmUs
+Ci0gc21hbGwgYmluZGluZ3MgdXBkYXRlLAotIGRyaXZlciBjbGVhbnVwLgoKVGhlIHBhdGNoc2V0
+IGlzIGJhc2VkIG9uIHRoZSBsYXRlc3QgZXh5bm9zLWRybS1uZXh0IGJyYW5jaC4KClJlZ2FyZHMK
+QW5kcnplagoKCkFuZHJ6ZWogSGFqZGEgKDEwKToKICBjbGsvc2Ftc3VuZzogZXh5bm9zNTQzMzog
+YWRkIGRlZmluaXRpb25zIG9mIEhETUktUEhZIG91dHB1dCBjbG9ja3MKICBjbGsvc2Ftc3VuZzog
+ZXh5bm9zNTQzMzogYWRkIHBjbGtfZGVjb24gY2xvY2sKICBkcm0vZXh5bm9zL2RlY29uNTQzMzog
+YWRkIFBDTEsgY2xvY2sKICBkdC1iaW5kaW5nczogdmlkZW86IGFkZCBQQ0xLIGNsb2NrIGVudHJ5
+IHRvIGV4eW5vczU0MzMtZGVjb24KICBkcm0vZXh5bm9zL2RlY29uNTQzMzogZml4IHRpbWluZyBy
+ZWdpc3RlcnMgd3JpdGVzCiAgZHJtL2V4eW5vcy9kZWNvbjU0MzM6IGFkZCBmdW5jdGlvbiB0byBz
+ZXQgcGFydGljdWxhciByZWdpc3RlciBiaXRzCiAgZHJtL2V4eW5vcy9kZWNvbjU0MzM6IG1lcmdl
+IGRpZmZlcmVudCBmbGFnIGZpZWxkcwogIGRybS9leHlub3MvZGVjb241NDMzOiByZW1vdmUgZHVw
+bGljYXRlZCBpbml0aWFsaXphdGlvbgogIGR0LWJpbmRpbmdzOiB2aWRlbzogZXh5bm9zNTQzMy1k
+ZWNvbjogYWRkIGJpbmRpbmdzIGZvciBERUNPTi1UVgogIGRybS9leHlub3MvZGVjb241NDMzOiBh
+ZGQgc3VwcG9ydCBmb3IgREVDT04tVFYKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9l
+eHlub3M1NDMzLWRlY29uLnR4dCB8ICAyMyArLQogZHJpdmVycy9jbGsvc2Ftc3VuZy9jbGstZXh5
+bm9zNTQzMy5jICAgICAgICAgICAgICAgfCAgIDggKy0KIGRyaXZlcnMvZ3B1L2RybS9leHlub3Mv
+ZXh5bm9zNTQzM19kcm1fZGVjb24uYyAgICAgIHwgMzIwICsrKysrKysrKystLS0tLS0tLS0tLQog
+aW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9leHlub3M1NDMzLmggICAgICAgICAgICAgfCAgIDcg
+Ky0KIGluY2x1ZGUvdmlkZW8vZXh5bm9zNTQzM19kZWNvbi5oICAgICAgICAgICAgICAgICAgIHwg
+IDI5ICsrCiA1IGZpbGVzIGNoYW5nZWQsIDIxNCBpbnNlcnRpb25zKCspLCAxNzMgZGVsZXRpb25z
+KC0pCgotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
