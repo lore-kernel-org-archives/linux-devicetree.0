@@ -1,67 +1,31 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] [RFC] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
-Date: Tue, 20 Oct 2015 14:16:34 +0200
-Message-ID: <CAMuHMdVhBipbf13o0jb3H6qmcewh6CCtq3=Hj-9nvgar+AYdFg@mail.gmail.com>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-	<1444999760-15750-2-git-send-email-geert+renesas@glider.be>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 02/10] clk/samsung: exynos5433: add pclk_decon clock
+Date: Tue, 20 Oct 2015 21:19:00 +0900
+Message-ID: <CAJKOXPfNQ51nDpemiirs-jyQCo5TeCK0H7S-m1x-Wdv5Hs8_6A@mail.gmail.com>
+References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
+	<1445332961-25419-3-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444999760-15750-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445332961-25419-3-git-send-email-a.hajda@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 2:49 PM, Geert Uytterhoeven
-<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> @@ -0,0 +1,71 @@
-> +* Renesas Clock Pulse Generator / Module Standby and Software Reset
-> +
-> +On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse Generator)
-> +and MSSR (Module Standby and Software Reset) blocks are intimately connected,
-> +and share the same register block.
-> +
-> +They provide the following functionalities:
-> +  - The CPG block generates various core clocks,
-> +  - The MSSR block provides two functions:
-> +      1. Module Standby, providing a Clock Domain to control the clock supply
-> +        to individual SoC devices,
-> +      2. Reset Control, to perform a software reset of individual SoC devices.
-> +
-> +Required Properties:
-> +  - compatible: Must be one of:
-> +      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC
+2015-10-20 18:22 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+> This undocumented gate clock is used by DECON IP.
+>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5433.c   | 2 ++
+>  include/dt-bindings/clock/exynos5433.h | 4 +++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
 
-I'll drop the reference to "r8a7791", as we won't convert r8a7791 (yet).
+Indeed looks undocumented... but vendor tree has it so it makes sense to me:
 
-> +      - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
-> +
-> +  - reg: Base address and length of the memory resource used by the CPG/MSSR
-> +    block
-> +
-> +  - clocks: References to external parent clocks, one entry for each entry in
-> +    clock-names
-> +  - clock-names: List of external parent clock names. Valid names are:
-> +      - "extal" (r8a7791, r8a7795)
-> +      - "extalr" (r8a7795)
-> +      - "usb_extal" (r8a7791)
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Likewise.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
