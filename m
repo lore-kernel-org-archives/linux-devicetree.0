@@ -1,38 +1,45 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] DT: mmc: sh_mmcif: document R8A779[34] support
-Date: Tue, 20 Oct 2015 23:19:27 +0300
-Message-ID: <5626A1CF.9050309@cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <2657565.2y8qYzu3eL@wasted.cogentembedded.com>
- <CAPDyKFqLuH9u2n1EKSc-89E6iDR8JH0A+5c=wn8g3THPKvDX7A@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: PCI Device Tree binding documentation links broken
+Date: Tue, 20 Oct 2015 15:47:29 -0500
+Message-ID: <CAL_Jsq+URYS5HSxLRuq7bhOtwGj_rySx2VqojivcoX0LproyoQ@mail.gmail.com>
+References: <20151020153942.GE8224@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqLuH9u2n1EKSc-89E6iDR8JH0A+5c=wn8g3THPKvDX7A@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151020153942.GE8224@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tue, Oct 20, 2015 at 10:39 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> Hi Linus,
+>
+> 301d2d87cb4f ("Documentation/devicetree: add a small note on PCI")
+> added some useful links:
+>
+>   +PCI Bus Binding to: IEEE Std 1275-1994
+>   +http://www.openfirmware.org/ofwg/bindings/pci/pci2_1.pdf
 
-On 10/16/2015 04:07 PM, Ulf Hansson wrote:
+http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
 
->> Renesas R8A7794 SoC also has the MMCIF controller...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+>   +Open Firmware Recommended Practice: Interrupt Mapping
+>   +http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
 
-> Thanks, applied for next.
+http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
 
-    Oops, just noticed the subject was stale. I wasn't adding R8A7793 support 
-in that version. Is it possible to fix?
+> But both links are now broken.  I looked a little bit, but didn't find
+> anything that looked like a reliable source.  Do you know of anything
+> better?
 
-> Kind regards
-> Uffe
+Here's the top level:
 
-[...]
+http://www.firmware.org/1275/home.html
 
-MBR, Sergei
+There used to be several mirrors, but seems we're down to only this
+one. I've at least archived it myself now:
 
+wget -r http://www.firmware.org/1275/home.html
 
+Rob
