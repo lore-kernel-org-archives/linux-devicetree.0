@@ -1,266 +1,301 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun4i: Add dts file for the pov
- protab2-ips9 tablet
-Date: Wed, 21 Oct 2015 00:04:29 +0200
-Message-ID: <1445378669-21622-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Wed, 21 Oct 2015 01:34:10 +0200
+Message-ID: <4903022.NtioyRkmbB@vostro.rjw.lan>
+References: <561E1378.6000906@collabora.com> <4025469.zmyipZqCsP@vostro.rjw.lan> <CAL_JsqJuu5_Osqi+X6M6UeRDZFQB+_8riYDF1gvsGayk5-4SFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB67UTKYQKGQEDYGKVRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJuu5_Osqi+X6M6UeRDZFQB+_8riYDF1gvsGayk5-4SFw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?ISO-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Liam Girdwood <lgirdw>
 List-Id: devicetree@vger.kernel.org
 
-The Point of View protab2-ips9 is a tablet with a 9" ips 1024x768 lcd screen,
-microsd slot, headphones, mini hdmi, mini usb b and power barrel connectors.
+On Tuesday, October 20, 2015 09:15:01 AM Rob Herring wrote:
+> On Tue, Oct 20, 2015 at 2:56 AM, Rafael J. Wysocki <rjw@rjwysocki.net=
+> wrote:
+> > On Monday, October 19, 2015 05:58:40 PM Rob Herring wrote:
+> >> On Mon, Oct 19, 2015 at 4:40 PM, Rafael J. Wysocki <rjw@rjwysocki.=
+net> wrote:
+> >> > On Monday, October 19, 2015 10:58:25 AM Rob Herring wrote:
+> >> >> On Mon, Oct 19, 2015 at 10:29 AM, David Woodhouse <dwmw2@infrad=
+ead.org> wrote:
+> >> >> > On Mon, 2015-10-19 at 15:50 +0100, Mark Brown wrote:
+> >> >> >> > But the point I'm making is that we are working towards *f=
+ixing* that,
+> >> >> >> > and *not* using DT-specific code in places where we should=
+ be using the
+> >> >> >> > generic APIs.
+> >> >> >>
+> >> >> >> What is the plan for fixing things here?  It's not obvious (=
+at least to
+> >> >> >> me) that we don't want to have the subsystems having knowled=
+ge of how
+> >> >> >> they are bound to a specific firmware which is what you seem=
+ to imply
+> >> >> >> here.
+> >> >> >
+> >> >> > I don't know that there *is* a coherent plan here to address =
+it all.
+> >> >> >
+> >> >> > Certainly, we *will* need subsystems to have firmware-specifi=
+c
+> >> >> > knowledge in some cases. Take GPIO as an example; ACPI *has* =
+a way to
+> >> >> > describe GPIO, and properties which reference GPIO pins are i=
+ntended to
+> >> >> > work through that =E2=80=94 while in DT, properties which ref=
+erence GPIO pins
+> >> >> > will have different contents. They'll be compatible at the dr=
+iver
+> >> >> > level, in the sense that there's a call to get a given GPIO g=
+iven the
+> >> >> > property name, but the subsystems *will* be doing different t=
+hings
+> >> >> > behind the scenes.
+> >> >> >
+> >> >> > My plan, such as it is, is to go through the leaf-node driver=
+s which
+> >> >> > almost definitely *should* be firmware-agnostic, and convert =
+those. And
+> >> >> > then take stock of what we have left, and work out what, if a=
+nything,
+> >> >> > still needs to be done.
+> >> >>
+> >> >> Many cases are already agnostic in the drivers in terms of the =
+*_get()
+> >> >> functions. Some are DT specific, but probably because those sub=
+systems
+> >> >> are new and DT only. In any case, I don't think these 1 line ch=
+anges
+> >> >> do anything to make doing conversions here harder.
+> >> >>
+> >> >> >> It seems like we're going to have to refactor these bits of =
+code when
+> >> >> >> they get generalised anyway so I'm not sure that the additio=
+nal cost
+> >> >> >> here is that big.
+> >> >> >
+> >> >> > That's an acceptable answer =E2=80=94 "we're adding legacy co=
+de here but we
+> >> >> > know it's going to be refactored anyway". If that's true, all=
+ it takes
+> >> >> > is a note in the commit comment to that effect. That's differ=
+ent from
+> >> >> > having not thought about it :)
+> >> >>
+> >> >> Considering at one point we did create a fwnode based API, we d=
+id
+> >> >> think about it. Plus there was little input from ACPI folks as =
+to
+> >> >> whether the change was even useful for ACPI case.
+> >> >
+> >> > Well, sorry, but who was asking whom, specifically?
+> >>
+> >> You and linux-acpi have been copied on v2 and later of the entire
+> >> series I think.
+> >
+> > Yes, but it wasn't like a direct request, say "We need your input, =
+so can you
+> > please have a look and BTW we want this in 4.4, so please do it ASA=
+P".  In
+> > which case I'd prioritize that before other things I needed to take=
+ care of.
+>=20
+> Fair enough. Can you please review and comment on v7 of the series? W=
+e
+> can discuss at KS as well.
 
-It uses a rtl8188cus usb wifi chip and a RDA 5875Y bluetooth chip attached
-to uart2. It has a bma250 accelerometer attached to i2c1 addr 0x18, this
-only works when ldo3 is set to 2.8 volt, otherwise i2c1 gets stuck, so
-for now we mark i2c1 as failed.
+I'll do that.
 
-It has a pixcir,pixcir_tangoc compatible touchscreen attached to i2c2 addr
-0x5c. This is not enabled in this dts, because this variant of the
-pixcir_tangoc has separate wakeup and enable pins both of which need
-to be driven low before the touchscreen will work. Before we can enable
-this the pixcir driver and devicetree-bindings need to be extended to
-support these pins.
+I'm in the middle of travel right now and speaking at a conference tomo=
+rrow,
+so I may not be able to get to that for a couple of days, but will do m=
+y best
+to do it as soon as I possibly can.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Mark i2c1 as failed until we've a way to tie a regulator to an i2c bus
----
- arch/arm/boot/dts/Makefile                       |   3 +-
- arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts | 199 +++++++++++++++++++++++
- 2 files changed, 201 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+> >> > The underlying problem is present in ACPI too and we don't reall=
+y have a good
+> >> > solution for it.  We might benefit from a common one if it exist=
+ed.
+> >>
+> >> The problem for DT is we don't generically know what are the
+> >> dependencies at a core level. We could know some or most dependenc=
+ies
+> >> if phandles (links to other nodes) were typed, but they are not. I=
+f
+> >> the core had this information, we could simply control the device
+> >> creation to order probing. Instead, this information is encoded in=
+to
+> >> the bindings and binding parsing resides in the subsystems. That
+> >> parsing happens during probe of the client side and is done by the
+> >> subsystems (for common bindings). Since we already do the parsing =
+at
+> >> this point, it is a convenient place to trigger the probe of the
+> >> dependency. Is ACPI going to be similar in this regard?
+> >
+> > It is similar in some ways.  For example, if a device's functionali=
+ty depends
+> > on an I2C resource (connection), the core doesn't know that at the =
+device
+> > creation time at least in some cases.  Same for GPIO, SPI, DMA engi=
+nes etc.
+>=20
+> So you will need to create devices, defer their probing and then prob=
+e
+> on demand as well unless you have other ideas how you would do it.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bedf51b..0e4f03e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -588,7 +588,8 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-mk802ii.dtb \
- 	sun4i-a10-olinuxino-lime.dtb \
- 	sun4i-a10-pcduino.dtb \
--	sun4i-a10-pcduino2.dtb
-+	sun4i-a10-pcduino2.dtb \
-+	sun4i-a10-pov-protab2-ips9.dtb
- dtb-$(CONFIG_MACH_SUN5I) += \
- 	sun5i-a10s-auxtek-t003.dtb \
- 	sun5i-a10s-auxtek-t004.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
-new file mode 100644
-index 0000000..82e69c3
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
-@@ -0,0 +1,199 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Point of View Protab2-IPS9";
-+	compatible = "pov,protab2-ips9", "allwinner,sun4i-a10";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupts = <0>;
-+	};
-+};
-+
-+#include "axp209.dtsi"
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	/* pull-ups and devices require AXP209 LDO3 */
-+	status = "failed";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_ldo2>;
-+	status = "okay";
-+
-+	button@400 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <400000>;
-+	};
-+
-+	button@800 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <800000>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pio {
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-+		allwinner,pins = "PH5";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-+	};
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1250000>;
-+	regulator-max-microvolt = <1250000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	status = "okay";
-+};
--- 
-2.5.0
+Right.
+
+> > There is a _DEP object in ACPI that can be used by firmware to tell=
+ the OS
+> > about those dependencies, but there's no way in the driver core to =
+use that
+> > information anyway today.
+>=20
+> I would think that the equivalent function for ACPI to of_device_prob=
+e
+> could process these if they are generic and you can associate the
+> dependency to a struct device.
+
+Well, something along these lines probably.
+
+> >> Fundamentally, it is a question of probe devices when their
+> >> dependencies are present or drivers ensure their dependencies are
+> >> ready. IIRC, init systems went thru a similar debate for service
+> >> dependencies.
+> >
+> > The probe ordering is not the entire picture, though.
+> >
+> > Even if you get the probe ordering right, the problem is going to s=
+how up in
+> > multiple other places: system suspend/resume, runtime PM, system sh=
+utdown,
+> > unbinding of drivers.  In all of those cases it is necessary to han=
+dle things
+> > in a specific order if there is a dependency.
+>=20
+> My understanding was with deferred probe that it also solves suspend
+> ordering problems because things are suspended in reverse order of
+> probing. I suppose you could have slightly different dependencies for
+> suspend, runtime PM, etc. than for probe? Perhaps we need to save the
+> list of dependencies as we probe them. I don't think that would be to=
+o
+> hard to add on to this series, but then if we don't need it now, why
+> add it?
+
+As Alan said, there are two problems here.  First off, the ordering of =
+the
+list used by system suspend/resume is the registration ordering, not th=
+e
+probe ordering.  Moreover, though, even if we get the ordering right, i=
+t
+still is not sufficient for devices with async_suspend set.
+
+To address this, the core will have to make the involved async threads =
+wait
+for each other in accordance with the dependencies too.  That, in turn,=
+ is
+very close to what's needed for runtime PM.
+
+> >> >> In any case, we're talking about adding 1 line.
+> >> >
+> >> > But also about making the driver core slighly OF-centric.
+> >>
+> >> How so? The one line is in DT binding parsing code in subsystems, =
+not
+> >> driver core. The driver core change is we add every device (that
+> >> happened to be created by DT) to the deferred probe list, so they
+> >> don't probe right away.
+> >
+> > The "that happened to be created by DT" part is of concern here.  W=
+hat is there
+> > that makes DT special in that respect?  Why shouldn't that be appli=
+cable to
+> > devices created by the ACPI core, for example, or by a board file o=
+r something
+> > else?
+>=20
+> DT is first. I think both examples could use this. Board files avoid
+> the problem by controlling the registration order with initcall level=
+s
+> and just the call order in the code. You could come up with some way
+> to define dependencies for devices in board files and reuse this
+> mechanism. ACPI could use this as well if the dependencies are handle=
+d
+> in a similar way and it seems like they could be.
+>=20
+> >> > Sure, we need OF-specific code and ACPI-specific code wherever d=
+ifferent
+> >> > handling is required, but doing that at the driver core level se=
+ems to be
+> >> > a bit of a stretch to me.
+> >> >
+> >> > Please note that we don't really have ACPI-specific calls in the=
+ driver core,
+> >> > although we might have added them long ago even before the OF st=
+uff appeared
+> >> > in the kernel for the first time.  We didn't do that, (among oth=
+er things)
+> >> > because we didn't want that particular firmware interface to app=
+ear special
+> >> > in any way and I'm not really sure why it is now OK to make OF l=
+ook special
+> >> > instead.
+> >>
+> >> I don't think DT is special and we avoid DT specific core changes =
+as
+> >> much as possible. I think the difference is DT uses platform_devic=
+e
+> >> and ACPI does not.
+> >
+> > ACPI uses platform devices too.  In fact, ACPI device objects are e=
+numerated as
+> > platform devices by default now.
+>=20
+> Okay, I should have grepped for that:
+> drivers/base/platform.c:                ACPI_COMPANION_SET(&pdev->dev=
+, NULL);
+> drivers/base/platform.c:        len =3D acpi_device_modalias(dev, buf=
+,
+> PAGE_SIZE -1);
+> drivers/base/platform.c:        rc =3D acpi_device_uevent_modalias(de=
+v, env);
+> drivers/base/platform.c:        /* Then try ACPI style match */
+> drivers/base/platform.c:        if (acpi_driver_match_device(dev, drv=
+))
+>=20
+> These are all cases which have DT version as well, so we're not reall=
+y
+> all that different here. There's a few more for DT, but that probably
+> means you have just not hit the problems we have yet. For example,
+> what happens if you have an interrupt line in which the controller is
+> probed after the device connected to the interrupt line? That require=
+d
+> resolving irqs in platform_get_irq rather than using static resources
+> to support deferred probe.
+
+We don't have this particular problem, because the IRQ controllers are
+enumerated in a special way.
+
+> Converting things like this to fwnode calls isn't hard to do. There
+> just hasn't been a pressing need or mandate to do so.
+
+Well, to me the problem is actually generic, so it is better to use gen=
+eric
+concepts to start with when trying to address it where that doesn't add=
+ too
+much overhead.  Otherwise it's very easy to lose the broader context fr=
+om
+one's sight and then to start cutting corners.
+
+Thanks,
+Rafael
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
