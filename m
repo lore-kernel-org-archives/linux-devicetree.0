@@ -1,82 +1,79 @@
-From: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Wed, 21 Oct 2015 08:56:39 -0400
-Message-ID: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
+From: WingMan Kwok <w-kwok2@ti.com>
+Subject: [PATCH] ARM: keystone: dts: add PCI serdes driver bindings
+Date: Wed, 21 Oct 2015 08:57:22 -0400
+Message-ID: <1445432242-16129-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: WingMan Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On TI's Keystone platforms, several peripherals such as the
-gbe ethernet switch, 10gbe ethernet switch and PCIe controller
-require the use of a SerDes for converting SoC parallel data into
-serialized data that can be output over a high-speed electrical
-interface, and also converting high-speed serial input data
-into parallel data that can be processed by the SoC.  The
-SerDeses used by those peripherals, though they may be different,
-are largely similar in functionality and setup.
+This patch adds the serdes phy driver dts bindings
+for the keystone PCIe host driver.
 
-This patch series provides a SerDes phy driver implementation that can be
-used by the above mentioned peripheral drivers to configure their
-respective SerDeses.
+Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+---
+ arch/arm/boot/dts/k2e.dtsi      |   10 ++++++++++
+ arch/arm/boot/dts/keystone.dtsi |   10 ++++++++++
+ 2 files changed, 20 insertions(+)
 
-As an example of the using the SerDes driver, this patch series also
-updates the Keystone PCIe host driver to enable and use its SerDes block.
-
-References:
-[1] KeyStone II Architecture Serializer/Deserializer (SerDes) User's Guide
-    (http://www.ti.com/lit/ug/spruho3a/spruho3a.pdf)
-
-v3:
-	- addresses the following review comments
-		1. https://lkml.org/lkml/2015/10/19/756
-			-- included sizes.h
-		2. https://lkml.org/lkml/2015/10/19/781
-			-- updated base on Fengguang Wu's suggestions.
-		3. https://lkml.org/lkml/2015/10/15/896
-			-- clarified here https://lkml.org/lkml/2015/10/20/512
-			-- nothing to do.
-
-v2:
-	- addresses the following review comments on v1:
-		1. https://lkml.org/lkml/2015/10/15/896
-			-- this does not address the question:
-			   "The current code does not do this when compiled,
-			    which might be a problem for distributors.
-			    Can you clarify the license?"
-			-- the question is still under discussion here:
-			   https://lkml.org/lkml/2015/10/19/471
-		2. https://lkml.org/lkml/2015/10/15/895
-
-v1: 
-	- addresses the following review comments
-		1. https://lkml.org/lkml/2015/10/13/803
-		2. https://lkml.org/lkml/2015/10/14/613
-		3. https://lkml.org/lkml/2015/10/13/818
-
-	- An update to PCIe dts bindings to enable the PCIe SerDes is
-	  submitted in a separate patch.
-
-WingMan Kwok (2):
-  phy: keystone: serdes driver for gbe 10gbe and pcie
-  PCI: keystone: update to use generic keystone serdes driver
-
- Documentation/devicetree/bindings/phy/ti-phy.txt |  239 +++
- drivers/pci/host/pci-keystone.c                  |   24 +-
- drivers/pci/host/pci-keystone.h                  |    1 +
- drivers/phy/Kconfig                              |    8 +
- drivers/phy/Makefile                             |    1 +
- drivers/phy/phy-keystone-serdes.c                | 2366 ++++++++++++++++++++++
- 6 files changed, 2629 insertions(+), 10 deletions(-)
- create mode 100644 drivers/phy/phy-keystone-serdes.c
-
+diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
+index 675fb8e..5f7cc0a 100644
+--- a/arch/arm/boot/dts/k2e.dtsi
++++ b/arch/arm/boot/dts/k2e.dtsi
+@@ -86,6 +86,15 @@
+ 			gpio,syscon-dev = <&devctrl 0x240>;
+ 		};
+ 
++		pcie1_phy: phy@2326000 {
++			#phy-cells = <0>;
++			compatible = "ti,keystone-serdes-pcie";
++			reg = <0x02326000 0x4000>;
++			link-rate-kbps = <5000000>;
++			num-lanes = <2>;
++			status = "disabled";
++		};
++
+ 		pcie1: pcie@21020000 {
+ 			compatible = "ti,keystone-pcie","snps,dw-pcie";
+ 			clocks = <&clkpcie1>;
+@@ -99,6 +108,7 @@
+ 			status = "disabled";
+ 			device_type = "pci";
+ 			num-lanes = <2>;
++			phys = <&pcie1_phy>;
+ 
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 72816d6..5c7c58a 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -275,6 +275,15 @@
+ 			ti,syscon-dev = <&devctrl 0x2a0>;
+ 		};
+ 
++		pcie0_phy: phy@2320000 {
++			#phy-cells = <0>;
++			compatible = "ti,keystone-serdes-pcie";
++			reg = <0x02320000 0x4000>;
++			link-rate-kbps = <5000000>;
++			num-lanes = <2>;
++			status = "disabled";
++		};
++
+ 		pcie0: pcie@21800000 {
+ 			compatible = "ti,keystone-pcie", "snps,dw-pcie";
+ 			clocks = <&clkpcie>;
+@@ -288,6 +297,7 @@
+ 			status = "disabled";
+ 			device_type = "pci";
+ 			num-lanes = <2>;
++			phys = <&pcie0_phy>;
+ 
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
