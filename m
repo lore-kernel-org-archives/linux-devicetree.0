@@ -1,119 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: Document the STM32 DMA bindings
-Date: Tue, 20 Oct 2015 20:01:08 -0500
-Message-ID: <CAL_JsqJH23z4CHwQDFVzKszU3KnaZck_w9qZQxLK3rQQnJOONQ@mail.gmail.com>
-References: <1445003956-9150-1-git-send-email-cedric.madianga@gmail.com> <1445003956-9150-2-git-send-email-cedric.madianga@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 1/2] dt-bindings: Consolidate Exynos SoC bindings under Samsung
+ directory
+Date: Wed, 21 Oct 2015 10:30:50 +0900
+Message-ID: <1445391051-3727-1-git-send-email-k.kozlowski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445003956-9150-2-git-send-email-cedric.madianga@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 8:59 AM, M'boumba Cedric Madianga
-<cedric.madianga@gmail.com> wrote:
-> This patch adds documentation of device tree bindings for the STM32 dma
-> controller.
->
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> ---
->  .../devicetree/bindings/dma/stm32-dma.txt          | 82 ++++++++++++++++++++++
+Exynos SoC Device Tree bindings are spread over arm/exynos/ and
+arm/samsung/ directories. There is no need for that separation and it
+actually confuses. Put everything under arm/samsung/.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+---
+ .../devicetree/bindings/arm/{exynos => samsung}/power_domain.txt          | 0
+ Documentation/devicetree/bindings/arm/{ => samsung}/samsung-boards.txt    | 0
+ Documentation/devicetree/bindings/arm/{exynos => samsung}/smp-sysram.txt  | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/arm/{exynos => samsung}/power_domain.txt (100%)
+ rename Documentation/devicetree/bindings/arm/{ => samsung}/samsung-boards.txt (100%)
+ rename Documentation/devicetree/bindings/arm/{exynos => samsung}/smp-sysram.txt (100%)
 
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
->
-> diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> new file mode 100644
-> index 0000000..70cd13f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-> @@ -0,0 +1,82 @@
-> +* STMicroelectronics STM32 DMA controller
-> +
-> +The STM32 DMA is a general-purpose direct memory access controller capable of
-> +supporting 8 independent DMA channels. Each channel can have up to 8 requests.
-> +
-> +Required properties:
-> +- compatible: Should be "st,stm32-dma"
-> +- reg: Should contain DMA registers location and length. This should include
-> +  all of the per-channel registers.
-> +- interrupts: Should contain all of the per-channel DMA interrupts in
-> +  ascending order with respect to the DMA channel index.
-> +- clocks: Should contain the input clock of the DMA instance.
-> +- #dma-cells : Must be <4>. See DMA client paragraph for more details.
-> +
-> +Optional properties:
-> +- resets: Reference to a reset controller asserting the DMA controller
-> +- st,mem2mem: boolean; if defined, it indicates that the controller supports
-> +  memory-to-memory transfer
-> +
-> +Example:
-> +
-> +       dma2: dma-controller@40026400 {
-> +               compatible = "st,stm32-dma";
-> +               reg = <0x40026400 0x400>;
-> +               interrupts = <56>,
-> +                            <57>,
-> +                            <58>,
-> +                            <59>,
-> +                            <60>,
-> +                            <68>,
-> +                            <69>,
-> +                            <70>;
-> +               clocks = <&clk_hclk>;
-> +               #dma-cells = <4>;
-> +               st,mem2mem;
-> +               resets = <&rcc 150>;
-> +       };
-> +
-> +* DMA client
-> +
-> +DMA clients connected to the STM32 DMA controller must use the format
-> +described in the dma.txt file, using a five-cell specifier for each
-> +channel: a phandle plus four integer cells.
-> +The four cells in order are:
-> +
-> +1. The channel id
-> +2. The request line number
-> +3. A 32bit mask specifying the DMA channel configuration which are device
-> +   dependent:
-> +  -bit 9: Peripheral Increment Address
-> +       0x0: no address increment between transfers
-> +       0x1: increment address between transfers
-> + -bit 10: Memory Increment Address
-> +       0x0: no address increment between transfers
-> +       0x1: increment address between transfers
-> + -bit 15: Peripheral Increment Offset Size
-> +       0x0: offset size is linked to the peripheral bus width
-> +       0x1: offset size is fixed to 4 (32-bit alignment)
-> + -bit 16-17: Priority level
-> +       0x0: low
-> +       0x1: medium
-> +       0x2: high
-> +       0x3: very high
-> +5. A 32bit mask specifying the DMA FIFO threshold configuration which are device
-> +   dependent:
-> + -bit 0-1: Fifo threshold
-> +       0x0: 1/4 full FIFO
-> +       0x1: 1/2 full FIFO
-> +       0x2: 3/4 full FIFO
-> +       0x3: full FIFO
-> +
-> +Example:
-> +
-> +       usart1: serial@40011000 {
-> +               compatible = "st,stm32-usart", "st,stm32-uart";
-> +               reg = <0x40011000 0x400>;
-> +               interrupts = <37>;
-> +               clocks = <&clk_pclk2>;
-> +               dmas = <&dma2 2 4 0x10400 0x3>,
-> +                      <&dma2 7 5 0x10200 0x3>;
-> +               dma-names = "rx", "tx";
-> +       };
-> --
-> 1.9.1
->
+diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/samsung/power_domain.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+rename to Documentation/devicetree/bindings/arm/samsung/power_domain.txt
+diff --git a/Documentation/devicetree/bindings/arm/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/samsung-boards.txt
+rename to Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt b/Documentation/devicetree/bindings/arm/samsung/smp-sysram.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
+rename to Documentation/devicetree/bindings/arm/samsung/smp-sysram.txt
+-- 
+1.9.1
