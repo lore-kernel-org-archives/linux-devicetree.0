@@ -1,64 +1,48 @@
-From: "Kwok, WingMan" <w-kwok2@ti.com>
-Subject: RE: [PATCH] ARM: keystone: dts: add PCI serdes driver bindings
-Date: Wed, 21 Oct 2015 15:14:58 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04229FCB@DFLE11.ent.ti.com>
-References: <1445432242-16129-1-git-send-email-w-kwok2@ti.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: Sync the dts to this document
+Date: Wed, 21 Oct 2015 10:18:17 -0500
+Message-ID: <CAL_JsqJ6ZRjZbtc7dqo-g=CzO+H_FWcRqs2gBGH2HMBBM1xU3g@mail.gmail.com>
+References: <1445395380-5365-1-git-send-email-wxt@rock-chips.com> <1445395380-5365-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445432242-16129-1-git-send-email-w-kwok2@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "Kwok, WingMan" <w-kwok2@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445395380-5365-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNClBsZWFzZSBpZ25vcmUgdGhlIHN1YmplY3QgcGF0Y2ggd2hpY2ggaXMgZXhhY3RseQ0K
-dGhlIHNhbWUgYXMgdGhlIG9uZQ0KDQpbUEFUQ0ggdjFdIEFSTToga2V5c3RvbmU6IGR0czogYWRk
-IFBDSSBzZXJkZXMgZHJpdmVyIGJpbmRpbmdzDQoNCnN1Ym1pdHRlZCBlYXJsaWVyLg0KDQpUaGFu
-a3MsDQpXaW5nTWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3dv
-aywgV2luZ01hbg0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIgMjEsIDIwMTUgODo1NyBBTQ0K
-PiBUbzogcm9iaCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFu
-ZEBhcm0uY29tOw0KPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1
-cm9yYS5vcmc7IEtJU0hPTiBWSUpBWSBBQlJBSEFNOw0KPiBRdWFkcm9zLCBSb2dlcjsgS2FyaWNo
-ZXJpLCBNdXJhbGlkaGFyYW47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IHNzYW50b3NoQGtlcm5l
-bC5vcmc7IGxpbnV4QGFybS5saW51eC5vcmcudWs7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IENjOiBLd29r
-LCBXaW5nTWFuDQo+IFN1YmplY3Q6IFtQQVRDSF0gQVJNOiBrZXlzdG9uZTogZHRzOiBhZGQgUENJ
-IHNlcmRlcyBkcml2ZXIgYmluZGluZ3MNCj4gDQo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc2VyZGVz
-IHBoeSBkcml2ZXIgZHRzIGJpbmRpbmdzDQo+IGZvciB0aGUga2V5c3RvbmUgUENJZSBob3N0IGRy
-aXZlci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFdpbmdNYW4gS3dvayA8dy1rd29rMkB0aS5jb20+
-DQo+IC0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kgICAgICB8ICAgMTAgKysrKysr
-KysrKw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaSB8ICAgMTAgKysrKysrKysr
-Kw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9rMmUuZHRz
-aQ0KPiBpbmRleCA2NzVmYjhlLi41ZjdjYzBhIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290
-L2R0cy9rMmUuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9rMmUuZHRzaQ0KPiBAQCAt
-ODYsNiArODYsMTUgQEANCj4gIAkJCWdwaW8sc3lzY29uLWRldiA9IDwmZGV2Y3RybCAweDI0MD47
-DQo+ICAJCX07DQo+IA0KPiArCQlwY2llMV9waHk6IHBoeUAyMzI2MDAwIHsNCj4gKwkJCSNwaHkt
-Y2VsbHMgPSA8MD47DQo+ICsJCQljb21wYXRpYmxlID0gInRpLGtleXN0b25lLXNlcmRlcy1wY2ll
-IjsNCj4gKwkJCXJlZyA9IDwweDAyMzI2MDAwIDB4NDAwMD47DQo+ICsJCQlsaW5rLXJhdGUta2Jw
-cyA9IDw1MDAwMDAwPjsNCj4gKwkJCW51bS1sYW5lcyA9IDwyPjsNCj4gKwkJCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQo+ICsJCX07DQo+ICsNCj4gIAkJcGNpZTE6IHBjaWVAMjEwMjAwMDAgew0KPiAg
-CQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1wY2llIiwic25wcyxkdy1wY2llIjsNCj4gIAkJ
-CWNsb2NrcyA9IDwmY2xrcGNpZTE+Ow0KPiBAQCAtOTksNiArMTA4LDcgQEANCj4gIAkJCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQo+ICAJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiAgCQkJbnVtLWxh
-bmVzID0gPDI+Ow0KPiArCQkJcGh5cyA9IDwmcGNpZTFfcGh5PjsNCj4gDQo+ICAJCQkjaW50ZXJy
-dXB0LWNlbGxzID0gPDE+Ow0KPiAgCQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0K
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2tleXN0b25lLmR0c2kNCj4gaW5kZXggNzI4MTZkNi4uNWM3YzU4YSAxMDA2
-NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiArKysgYi9hcmNo
-L2FybS9ib290L2R0cy9rZXlzdG9uZS5kdHNpDQo+IEBAIC0yNzUsNiArMjc1LDE1IEBADQo+ICAJ
-CQl0aSxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MmEwPjsNCj4gIAkJfTsNCj4gDQo+ICsJCXBj
-aWUwX3BoeTogcGh5QDIzMjAwMDAgew0KPiArCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gKwkJCWNv
-bXBhdGlibGUgPSAidGksa2V5c3RvbmUtc2VyZGVzLXBjaWUiOw0KPiArCQkJcmVnID0gPDB4MDIz
-MjAwMDAgMHg0MDAwPjsNCj4gKwkJCWxpbmstcmF0ZS1rYnBzID0gPDUwMDAwMDA+Ow0KPiArCQkJ
-bnVtLWxhbmVzID0gPDI+Ow0KPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gKwkJfTsNCj4g
-Kw0KPiAgCQlwY2llMDogcGNpZUAyMTgwMDAwMCB7DQo+ICAJCQljb21wYXRpYmxlID0gInRpLGtl
-eXN0b25lLXBjaWUiLCAic25wcyxkdy1wY2llIjsNCj4gIAkJCWNsb2NrcyA9IDwmY2xrcGNpZT47
-DQo+IEBAIC0yODgsNiArMjk3LDcgQEANCj4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAJ
-CQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiAgCQkJbnVtLWxhbmVzID0gPDI+Ow0KPiArCQkJcGh5
-cyA9IDwmcGNpZTBfcGh5PjsNCj4gDQo+ICAJCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiAg
-CQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KPiAtLQ0KPiAxLjcuOS41DQoNCg==
+On Tue, Oct 20, 2015 at 9:42 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Add the OTP gpio state, we need switch the pin to gpio state
+> before the TSADC controller is reset.
+>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+> Changes in v1:
+>   - As the Doug comments, add the 'init' property to sync document.
+>
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> index ef802de..28e84f7 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -27,8 +27,9 @@ tsadc: tsadc@ff280000 {
+>         clock-names = "tsadc", "apb_pclk";
+>         resets = <&cru SRST_TSADC>;
+>         reset-names = "tsadc-apb";
+> -       pinctrl-names = "default";
+> -       pinctrl-0 = <&otp_out>;
+> +       pinctrl-names = "init", "default";
+> +       pinctrl-0 = <&otp_gpio>;
+> +       pinctrl-1 = <&otp_out>;
+
+Are these optional or required? They only appear in the example.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
