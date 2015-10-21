@@ -1,32 +1,63 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH v2 2/9] NFC: NCI: export nci_send_frame
- function
-Date: Wed, 21 Oct 2015 07:57:50 +0200
-Message-ID: <20151021055750.GE11271@zurbaran.home>
-References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
- <1443443594-14353-3-git-send-email-cuissard@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH RFC v2 1/2] dt-bindings: simplefb: Support a list of regulator supply properties
+Date: Wed, 21 Oct 2015 13:59:00 +0800
+Message-ID: <1445407141-16459-2-git-send-email-wens@csie.org>
+References: <1445407141-16459-1-git-send-email-wens@csie.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443443594-14353-3-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1445407141-16459-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+The physical display tied to the framebuffer may have regulators
+providing power to it, such as power for LCDs or interface conversion
+chips.
 
-On Mon, Sep 28, 2015 at 02:33:07PM +0200, Vincent Cuissard wrote:
-> Export nci_send_frame symbol to allow drivers to use it.
-> This is needed for example if NCI is used during firmware
-> download phase.
-If what you need is a way to directly send completely custom frames then
-I'd prefer that you export a routine that puts such frame on the
-cmd_q skb queue and schedule the cmd_work work.
+The number of regulators in use may vary, but the regulator supply
+binding can not be a list. Work around this by adding a "num-supplies"
+property to communicate the number of supplies, and a list of 0 ~ N
+"vinN-supply" properties for the actual regulator supply.
 
-Cheers,
-Samuel.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ .../devicetree/bindings/video/simple-framebuffer.txt        | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 4474ef6e0b95..8c9e9f515c87 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -47,10 +47,14 @@ Required properties:
+   - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+ 
+ Optional properties:
+-- clocks : List of clocks used by the framebuffer. Clocks listed here
+-           are expected to already be configured correctly. The OS must
+-           ensure these clocks are not modified or disabled while the
+-           simple framebuffer remains active.
++- clocks : List of clocks used by the framebuffer.
++- *-supply : Any number of regulators used by the framebuffer. These should
++	     be named according to the names in the device's design.
++
++  The above resources are expected to already be configured correctly.
++  The OS must ensure they are not modified or disabled while the simple
++  framebuffer remains active.
++
+ - display : phandle pointing to the primary display hardware node
+ 
+ Example:
+@@ -68,6 +72,7 @@ chosen {
+ 		stride = <(1600 * 2)>;
+ 		format = "r5g6b5";
+ 		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
++		lcd-supply = <&reg_dc1sw>;
+ 		display = <&lcdc0>;
+ 	};
+ 	stdout-path = "display0";
+-- 
+2.6.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
