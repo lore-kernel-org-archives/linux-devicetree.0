@@ -1,75 +1,53 @@
-From: Brijesh Singh <brijeshkumar.singh@amd.com>
-Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
-Date: Wed, 21 Oct 2015 11:22:24 -0500
-Message-ID: <5627BBC0.2000008@amd.com>
-References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com>
- <20151019205236.GB453@leverpostej> <56266F7E.6030404@amd.com>
- <20151020165744.GE31130@pd.tnic> <20151020172654.GC4943@leverpostej>
- <20151020173639.GH31130@pd.tnic> <5626F09F.4050107@huawei.com>
- <20151021093536.GA3575@pd.tnic> <5627627A.9010906@arm.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [REPOST PATCH 0/3] dwc2 patches to allow wakeup on Rockchip rk3288
+Date: Wed, 21 Oct 2015 09:23:14 -0700
+Message-ID: <CAD=FV=W-iT48ah4WJDpAGqeNMkcTp3gMMddKYVz0ad-QXVz3fw@mail.gmail.com>
+References: <1436207224-21849-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5627627A.9010906@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>, Borislav Petkov <bp@alien8.de>, Hanjun Guo <guohanjun@huawei.com>
-Cc: brijeshkumar.singh@amd.com, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, mchehab@osg.samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Huxinwei <huxinwei@huawei.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1436207224-21849-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Petr Mladek <pmladek-AlSwsSmVLrQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthew Garrett <mjg59-JW9irJGTvgXQT0dZR+AlfA@public.gmane.org>, Robert Schlabbach <Robert.Schlabbach-hi6Y0CQ0nG0@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregory Herrero <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>Greg Kroah-Hartman <gre>
 List-Id: devicetree@vger.kernel.org
 
+John,
 
+On Mon, Jul 6, 2015 at 11:27 AM, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> This series of patches, together with
+> <https://patchwork.kernel.org/patch/6652341/> from Chris Zhong and a
+> dts change allow us to wake up from a USB device on rk3288 boards.
+> The patches were tested on rk3288-jerry in the chromeos-3.14 kernel.
+> The chromeos-3.14 kernel tested included a full set of dwc2 backports
+> from upstream, so this is expected to function upstream once we get
+> everything setup there.
+>
+>
+> Douglas Anderson (3):
+>   USB: Export usb_wakeup_enabled_descendants()
+>   Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+>   USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+>
+>  Documentation/devicetree/bindings/usb/dwc2.txt |  4 +++
+>  drivers/usb/core/hub.c                         |  7 ++--
+>  drivers/usb/dwc2/core.h                        |  2 ++
+>  drivers/usb/dwc2/platform.c                    | 45 ++++++++++++++++++++++++--
+>  include/linux/usb/hcd.h                        |  5 +++
+>  5 files changed, 58 insertions(+), 5 deletions(-)
 
-On 10/21/2015 05:01 AM, Andre Przywara wrote:
-> Hi,
-> 
-> On 21/10/15 10:35, Borislav Petkov wrote:
->> On Wed, Oct 21, 2015 at 09:55:43AM +0800, Hanjun Guo wrote:
->>> So I think the meaning of those error register is the same, but the way
->>> of handle it may different from SoCs, for single bit error:
->>>
->>>  - SoC may trigger a interrupt;
->>>  - SoC may just keep silent so we need to scan the registers using poll
->>>    mechanism.
->>>
->>> For Double bit error:
->>>   - SoC may also keep silent
->>>   - Trigger a interrupt
->>>   - Trigger a SEI (system error)
->>>
->>> Any suggestion to cover those cases?
->>
->> Well, I guess we can implement all those and have them configurable
->> in the sense that a single driver loads, it has all functionality and
->> dependent on the vendor detection, it does only what the vendor wants
->> like trigger an interrupt or remain silent or ...
-> 
-> I guess the firmware (running in EL3) will take precedence over this
-> driver anyway, so we could just optimistically implement all errors, as
-> the driver will just never see errors that are handled in firmware (?)
-> In case of a critical error for instance I expect the firmware to never
-> return to EL1.
-> 
->>
->> Btw, in talking about this with Andre last night, he had the suggestion
->> that this functionality is also in other implementations besides A57 so
->> maybe the driver should be called arm_cortex_edac...
-> 
-> Yeah, so looking at the A-72 and the A-53 TRM I see those registers to
-> be there as well. The A-72 and the A-57 versions look identical to me,
-> the A-53 version is only slightly different, but apparently still
-> compatible.
-> So I'd suggest to let this driver load on detecting all three MIDRs.
-> Should later revisions of any of those parts change the register
-> meaning, we could add a blacklist or specific MIDR detection.
-> 
-> But let's just not assume the worst in the first place ;-)
-> 
-Ok. Will make it generic cortex_arm64_edac. Will check MIDR and call appropriate CPUMERRSR_EL1 and L2MERRSR_EL1. Since I don't have A53 and A72 hence my testing will be limited to Cortex A57.
-> Cheers,
-> Andre.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+This series was posted a while ago.  Do you have any comments on it?
+Should I repost it?
+
+Thanks!
+
+-Doug
