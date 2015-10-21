@@ -1,66 +1,56 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 21 Oct 2015 08:20:28 -0700
-Message-ID: <20151021152028.GO3078@atomide.com>
-References: <20151006083346.GL23801@atomide.com>
- <56139A72.6040600@ti.com>
- <20151006100000.GN23801@atomide.com>
- <56139CE9.8020002@ti.com>
- <5613A256.8000105@ti.com>
- <20151006110134.GO23801@atomide.com>
- <5613ABEF.9000904@ti.com>
- <20151016212510.GF24370@atomide.com>
- <562496DB.4050803@ti.com>
- <56274D69.1090402@ti.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] of: overlay: kobjectify overlay objects
+Date: Wed, 21 Oct 2015 08:22:36 -0700
+Message-ID: <20151021152236.GA20589@kroah.com>
+References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1445368397-8732-2-git-send-email-pantelis.antoniou@konsulko.com>
+ <20151020210349.GA28724@kroah.com>
+ <302128B9-A82A-477D-A158-3283DE30F43A@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56274D69.1090402-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <302128B9-A82A-477D-A158-3283DE30F43A-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [151021 01:31]:
-> On 19/10/15 10:08, Roger Quadros wrote:
-> > On 17/10/15 00:25, Tony Lindgren wrote:
-> >> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [151006 04:13]:
-> >>>
-> >>> Fine. The updated series is now at
-> >>>
-> >>> git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:rogerq/linux.git
-> >>>  * [new branch]      for-v4.4/gpmc-v4
-> >>
-> >> Looks like it produces some build errors, this with RMKs 3430 and =
-4430
-> >> only .configs:
-> >>
-> >> drivers/memory/omap-gpmc.c:2035:43: error: =E2=80=98struct gpio_ch=
-ip=E2=80=99 has no
-> >> member named =E2=80=98irqdomain=E2=80=99
-> >> drivers/memory/omap-gpmc.c:2116:8: error: implicit declaration of
-> >> function =E2=80=98gpiochip_irqchip_add=E2=80=99 [-Werror=3Dimplici=
-t-function-declaration]
-> >>
-> >=20
-> > Good catch. We'll have to select GPIOLIB_IRQCHIP for this driver.
-> >=20
-> >> Maybe run randconfig builds on it for overnight?
-> >=20
-> > OK. I'll do that.
+On Wed, Oct 21, 2015 at 04:28:33PM +0300, Pantelis Antoniou wrote:
+> Hi Greg,
 >=20
-> I couldn't run randconfig beyond few iterations as it keeps failing
-> everywhere. How do we limit the randconfig options to OMAP only
-> platforms?
+> > On Oct 21, 2015, at 00:03 , Greg Kroah-Hartman <gregkh@linuxfoundat=
+ion.org> wrote:
+> >=20
+> > On Tue, Oct 20, 2015 at 10:13:14PM +0300, Pantelis Antoniou wrote:
+> >> We are going to need the overlays to appear on sysfs with runtime
+> >> global properties (like master enable) so turn them into kobjects.
+> >=20
+> > Why kobjects and not 'struct device=E2=80=99?
+> >=20
+>=20
+> Cause it=E2=80=99s overkill.
+>=20
+> There is no hardware/abstract device connection between an overlay an=
+d a device as what=E2=80=99s being used right now in driver core.
+>=20
+> kobjs are enough to present them in the filesystem hierarchy.
+>=20
+> > Why even have them in sysfs at all?  You need more information here=
+ as
+> > to why you want to do this.
+> >=20
+>=20
+> They have to be in sysfs so that people can have information about th=
+e overlays applied in the system, i.e. where their targets are and whet=
+her removal is possible. That=E2=80=99s what=E2=80=99s possible for now=
+; in the future we might present the full contents of the overlay there=
+, and what changes to the live tree were made.
 
-You can use Felipe's scripts from github.
+Ok, then say that in the changelog to explain what you are doing here :=
+)
 
-Regards,
-
-Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
