@@ -1,567 +1,97 @@
-From: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-Subject: [PATCH v2] EDAC: Add ARM64 EDAC
-Date: Wed, 21 Oct 2015 15:41:37 -0500
-Message-ID: <1445460097-10260-1-git-send-email-brijeshkumar.singh@amd.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] driver core: Disable late probes by default
+Date: Wed, 21 Oct 2015 15:53:31 -0500
+Message-ID: <CAL_JsqKYDcWZMSh92k1n6RYBshP8zLCCZjUsoT5X41hCsvrFtg@mail.gmail.com>
+References: <20151019151953.GA22662@kroah.com> <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
+ <20151020140523.GA22021@kroah.com> <CAAObsKAL782-poBT1gkid+zzhWBOrnOUh7P7epjcja38j_-fbQ@mail.gmail.com>
+ <20151021033917.GB32366@kroah.com> <CAAObsKBLL_-bARp_W0sVqoGdpQ+nftdJtQepnFL1foJOGJmbQQ@mail.gmail.com>
+ <20151021151447.GA19720@kroah.com> <CAAObsKASbhBrEoE-=k3Vwg7BygLQ2vXU2jxu3FyxNrD5AAHROg@mail.gmail.com>
+ <20151021160656.GA20899@kroah.com> <CAL_Jsq+iGjXz2DVrwif7Lj4iJwnoBMb0OAHji-3hNG2UbvM6yQ@mail.gmail.com>
+ <20151021184546.GA31745@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151021184546.GA31745@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Cortex A57 and A53 EDAC driver.
+On Wed, Oct 21, 2015 at 1:45 PM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Wed, Oct 21, 2015 at 01:09:55PM -0500, Rob Herring wrote:
+>> On Wed, Oct 21, 2015 at 11:06 AM, Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>> > On Wed, Oct 21, 2015 at 05:53:13PM +0200, Tomeu Vizoso wrote:
+>> >> On 21 October 2015 at 17:14, Greg Kroah-Hartman
+>> >> <gregkh@linuxfoundation.org> wrote:
+>> >> > On Wed, Oct 21, 2015 at 04:35:58PM +0200, Tomeu Vizoso wrote:
+>> >> >> On 21 October 2015 at 05:39, Greg Kroah-Hartman
+>> >> >> <gregkh@linuxfoundation.org> wrote:
+>> >> >> > On Tue, Oct 20, 2015 at 06:17:39PM +0200, Tomeu Vizoso wrote:
+>> >> >> >> On 20 October 2015 at 16:05, Greg Kroah-Hartman
+>> >> >> >> <gregkh@linuxfoundation.org> wrote:
 
-Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-CC: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-CC: pawel.moll-5wv7dgnIgG8@public.gmane.org
-CC: mark.rutland-5wv7dgnIgG8@public.gmane.org
-CC: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
-CC: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-CC: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org
-CC: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org
-CC: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-CC: andre.przywara-5wv7dgnIgG8@public.gmane.org
-CC: arnd-r2nGTMty4D4@public.gmane.org
-CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
+[...]
 
-v2:
-* convert into generic arm64 edac driver
-* remove AMD specific references from dt binding
-* remove poll_msec property from dt binding
-* add poll_msec as a module param, default is 100ms
-* update copyright text
-* define macro mnemonics for L1 and L2 RAMID
-* check L2 error per-cluster instead of per core
-* update function names
-* use get_online_cpus() and put_online_cpus() to make L1 and L2 register 
-  read hotplug-safe
-* add error check in probe routine
+>> >> >> >> Because of that, ChromeOS had to use their own bindings for the panel
+>> >> >> >> node so that the panel probe wouldn't be deferred, introducing a
+>> >> >> >> sizable delta that is a barrier to rebasing on newer mainline releases
+>> >> >> >> and for vendors to upstream their HW adaptation for chrome devices.
+>> >> >> >
+>> >> >> > 1.5 second delay is crazy (again, my laptop boots to X in less time than
+>> >> >> > that),
+>> >> >>
+>> >> >> 1.5 seconds isn't crazy at all for the kernel to initialize all the
+>> >> >> devices in an embedded board. That's the current state of affairs
+>> >> >> today.
+>> >> >
+>> >> > Then someone needs to fix that, that really is crazy.  What takes so
+>> >> > long here?  Why aren't you using async probing to do things in parallel
+>> >> > when you need to sleep in device probe (I'm hoping you are sleeping in
+>> >> > device probe, otherwise that's really broken)?
+>> >>
+>> >> I'm a bit surprised now. During all the time that I have been pushing
+>> >> this forward I have been regularly testing on more than a dozen boards
+>> >> with different socs and 1.5 seconds to probe all the devices isn't
+>> >> that much. This is basically due to having to wait for the hardware a
+>> >> bit here and there, and to the sheer number of devices involved.
+>> >>
+>> >> Of course people have been looking at speeding up boot on ARM devices
+>> >> for years now and this is what we have come with up to now.
+>> >>
+>> >> > Have you used the tools we have to find where the time is being spent?
+>> >>
+>> >> Have to recognize that my starting point has been that probe order was
+>> >> the cause of the problem and haven't profiled the whole boot process,
+>> >> but I don't see how probe ordering would become irrelevant unless we
+>> >> got total probing time down to 200ms. And that would give us a
+>> >> fabulously fast boot, which I don't think is as realistic as you seem
+>> >> to believe.
+>> >
+>> > So you aren't using the tools that we have today that were created years
+>> > ago, to help to reduce boot time problems like this and instead work on
+>> > changing the driver core to try to guess at what the real issue is here?
+>> >
+>> > Come on, until you really know where you are taking so long, how can you
+>> > know what you need to fix?  I strongly recommend doing that here first,
+>> > that's why those tools were written in the first place.
+>>
+>> For something everyone is or should be doing for years, there is
+>> surprisingly zero information I can find. It is perf timechart you are
+>> talking about, right? Everything I find on it is all after userspace
+>> starts. I know perf has command line options, but I never could get it
+>> to do what I wanted (which was dumping events up until a boot hang).
+>
+> scripts/bootgraph.pl combined with 'initcall_debug' on the kernel
+> command line.  Landed in Linus's tree back in 2008, perf is not needed.
 
- .../devicetree/bindings/edac/armv8-edac.txt        |  15 +
- drivers/edac/Kconfig                               |   6 +
- drivers/edac/Makefile                              |   1 +
- drivers/edac/cortex_arm64_edac.c                   | 457 +++++++++++++++++++++
- 4 files changed, 479 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/armv8-edac.txt
- create mode 100644 drivers/edac/cortex_arm64_edac.c
+Okay, well that I have used. I was thinking something more granular
+than that. It will get you driver probe times, but the problem could
+be some underlying dependency causing the actual problem. For example,
+a driver enabling its regulator which happens to be connected via a
+bit-banged I2C bus. Obviously we can dig down from there, but it is
+not as simple as enabling the tool, running it, and instantly
+identifying the problem.
 
-diff --git a/Documentation/devicetree/bindings/edac/armv8-edac.txt b/Documentation/devicetree/bindings/edac/armv8-edac.txt
-new file mode 100644
-index 0000000..dfd128f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/armv8-edac.txt
-@@ -0,0 +1,15 @@
-+* ARMv8 L1/L2 cache error reporting
-+
-+On ARMv8, CPU Memory Error Syndrome Register and L2 Memory Error Syndrome
-+Register can be used for checking L1 and L2 memory errors.
-+
-+The following section describes the ARMv8 EDAC DT node binding.
-+
-+Required properties:
-+- compatible: Should be "arm,armv8-edac"
-+
-+Example:
-+	edac {
-+		compatible = "arm,armv8-edac";
-+	};
-+
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index ef25000..dd7c195 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -390,4 +390,10 @@ config EDAC_XGENE
- 	  Support for error detection and correction on the
- 	  APM X-Gene family of SOCs.
- 
-+config EDAC_CORTEX_ARM64
-+	tristate "ARM Cortex A57/A53"
-+	depends on EDAC_MM_EDAC && ARM64
-+	help
-+	  Support for error detection and correction on the
-+	  ARM Cortex A57 and A53.
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index ae3c5f3..ac01660 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -68,3 +68,4 @@ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
- obj-$(CONFIG_EDAC_ALTERA_MC)		+= altera_edac.o
- obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
- obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
-+obj-$(CONFIG_EDAC_CORTEX_ARM64)		+= cortex_arm64_edac.o
-diff --git a/drivers/edac/cortex_arm64_edac.c b/drivers/edac/cortex_arm64_edac.c
-new file mode 100644
-index 0000000..c37bb94
---- /dev/null
-+++ b/drivers/edac/cortex_arm64_edac.c
-@@ -0,0 +1,457 @@
-+/*
-+ * Cortex ARM64 EDAC
-+ *
-+ * Copyright (c) 2015, Advanced Micro Devices
-+ * Author: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#include "edac_core.h"
-+
-+#define EDAC_MOD_STR             "cortex_arm64_edac"
-+
-+#define A57_CPUMERRSR_EL1_INDEX(x)   ((x) & 0x1ffff)
-+#define A57_CPUMERRSR_EL1_BANK(x)    (((x) >> 18) & 0x1f)
-+#define A57_CPUMERRSR_EL1_RAMID(x)   (((x) >> 24) & 0x7f)
-+#define A57_CPUMERRSR_EL1_VALID(x)   ((x) & (1 << 31))
-+#define A57_CPUMERRSR_EL1_REPEAT(x)  (((x) >> 32) & 0x7f)
-+#define A57_CPUMERRSR_EL1_OTHER(x)   (((x) >> 40) & 0xff)
-+#define A57_CPUMERRSR_EL1_FATAL(x)   ((x) & (1UL << 63))
-+#define A57_L1_I_TAG_RAM	     0x00
-+#define A57_L1_I_DATA_RAM	     0x01
-+#define A57_L1_D_TAG_RAM	     0x08
-+#define A57_L1_D_DATA_RAM	     0x09
-+#define A57_L1_TLB_RAM		     0x18
-+
-+#define A57_L2MERRSR_EL1_INDEX(x)    ((x) & 0x1ffff)
-+#define A57_L2MERRSR_EL1_CPUID(x)    (((x) >> 18) & 0xf)
-+#define A57_L2MERRSR_EL1_RAMID(x)    (((x) >> 24) & 0x7f)
-+#define A57_L2MERRSR_EL1_VALID(x)    ((x) & (1 << 31))
-+#define A57_L2MERRSR_EL1_REPEAT(x)   (((x) >> 32) & 0xff)
-+#define A57_L2MERRSR_EL1_OTHER(x)    (((x) >> 40) & 0xff)
-+#define A57_L2MERRSR_EL1_FATAL(x)    ((x) & (1UL << 63))
-+#define A57_L2_TAG_RAM		     0x10
-+#define A57_L2_DATA_RAM		     0x11
-+#define A57_L2_SNOOP_TAG_RAM	     0x12
-+#define A57_L2_DIRTY_RAM	     0x14
-+#define A57_L2_INCLUSION_PF_RAM      0x18
-+
-+#define A53_CPUMERRSR_EL1_ADDR(x)    ((x) & 0xfff)
-+#define A53_CPUMERRSR_EL1_CPUID(x)   (((x) >> 18) & 0x07)
-+#define A53_CPUMERRSR_EL1_RAMID(x)   (((x) >> 24) & 0x7f)
-+#define A53_CPUMERRSR_EL1_VALID(x)   ((x) & (1 << 31))
-+#define A53_CPUMERRSR_EL1_REPEAT(x)  (((x) >> 32) & 0xff)
-+#define A53_CPUMERRSR_EL1_OTHER(x)   (((x) >> 40) & 0xff)
-+#define A53_CPUMERRSR_EL1_FATAL(x)   ((x) & (1UL << 63))
-+#define A53_L1_I_TAG_RAM	     0x00
-+#define A53_L1_I_DATA_RAM	     0x01
-+#define A53_L1_D_TAG_RAM	     0x08
-+#define A53_L1_D_DATA_RAM	     0x09
-+#define A53_L1_D_DIRT_RAM	     0x0A
-+#define A53_L1_TLB_RAM		     0x18
-+
-+#define A53_L2MERRSR_EL1_INDEX(x)    (((x) >> 3) & 0x3fff)
-+#define A53_L2MERRSR_EL1_CPUID(x)    (((x) >> 18) & 0x0f)
-+#define A53_L2MERRSR_EL1_RAMID(x)    (((x) >> 24) & 0x7f)
-+#define A53_L2MERRSR_EL1_VALID(x)    ((x) & (1 << 31))
-+#define A53_L2MERRSR_EL1_REPEAT(x)   (((x) >> 32) & 0xff)
-+#define A53_L2MERRSR_EL1_OTHER(x)    (((x) >> 40) & 0xff)
-+#define A53_L2MERRSR_EL1_FATAL(x)    ((x) & (1UL << 63))
-+#define A53_L2_TAG_RAM		     0x10
-+#define A53_L2_DATA_RAM		     0x11
-+#define A53_L2_SNOOP_RAM	     0x12
-+
-+#define L1_CACHE		     0
-+#define L2_CACHE		     1
-+
-+int poll_msec = 100;
-+
-+struct cortex_arm64_edac {
-+	struct edac_device_ctl_info *edac_ctl;
-+};
-+
-+static inline u64 read_cpumerrsr_el1(void)
-+{
-+	u64 val;
-+
-+	asm volatile("mrs %0, s3_1_c15_c2_2" : "=r" (val));
-+	return val;
-+}
-+
-+static inline void write_cpumerrsr_el1(u64 val)
-+{
-+	asm volatile("msr s3_1_c15_c2_2, %0" :: "r" (val));
-+}
-+
-+static inline u64 read_l2merrsr_el1(void)
-+{
-+	u64 val;
-+
-+	asm volatile("mrs %0, s3_1_c15_c2_3" : "=r" (val));
-+	return val;
-+}
-+
-+static inline void write_l2merrsr_el1(u64 val)
-+{
-+	asm volatile("msr s3_1_c15_c2_3, %0" :: "r" (val));
-+}
-+
-+static void a53_parse_l2merrsr(struct edac_device_ctl_info *edac_ctl)
-+{
-+	int fatal;
-+	int repeat_err, other_err;
-+	u64 val = read_l2merrsr_el1();
-+
-+	if (!A53_L2MERRSR_EL1_VALID(val))
-+		return;
-+
-+	fatal = A53_L2MERRSR_EL1_FATAL(val);
-+	repeat_err = A53_L2MERRSR_EL1_REPEAT(val);
-+	other_err = A53_L2MERRSR_EL1_OTHER(val);
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR,
-+		    "A53 CPU%d L2 %s error detected!\n", smp_processor_id(),
-+		    fatal ? "fatal" : "non-fatal");
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2MERRSR_EL1=%#llx\n", val);
-+
-+	switch (A53_L2MERRSR_EL1_RAMID(val)) {
-+	case A53_L2_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Tag RAM\n");
-+		break;
-+	case A53_L2_DATA_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Data RAM\n");
-+		break;
-+	case A53_L2_SNOOP_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Snoop filter RAM\n");
-+		break;
-+	default:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
-+		break;
-+	}
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
-+		    repeat_err);
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
-+		    other_err);
-+	if (fatal)
-+		edac_device_handle_ue(edac_ctl, smp_processor_id(), L2_CACHE,
-+				      edac_ctl->name);
-+	else
-+		edac_device_handle_ce(edac_ctl, smp_processor_id(), L2_CACHE,
-+				      edac_ctl->name);
-+	write_l2merrsr_el1(0);
-+}
-+
-+static void a57_parse_l2merrsr(struct edac_device_ctl_info *edac_ctl)
-+{
-+	int fatal;
-+	int repeat_err, other_err;
-+	u64 val = read_l2merrsr_el1();
-+
-+	if (!A57_L2MERRSR_EL1_VALID(val))
-+		return;
-+
-+	fatal = A57_L2MERRSR_EL1_FATAL(val);
-+	repeat_err = A57_L2MERRSR_EL1_REPEAT(val);
-+	other_err = A57_L2MERRSR_EL1_OTHER(val);
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR,
-+		    "A57 CPU%d L2 %s error detected!\n", smp_processor_id(),
-+		    fatal ? "fatal" : "non-fatal");
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2MERRSR_EL1=%#llx\n", val);
-+
-+	switch (A57_L2MERRSR_EL1_RAMID(val)) {
-+	case A57_L2_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Tag RAM\n");
-+		break;
-+	case A57_L2_DATA_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Data RAM\n");
-+		break;
-+	case A57_L2_SNOOP_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Snoop tag RAM\n");
-+		break;
-+	case A57_L2_DIRTY_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Dirty RAM\n");
-+		break;
-+	case A57_L2_INCLUSION_PF_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 inclusion PF RAM\n");
-+		break;
-+	default:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
-+		break;
-+	}
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
-+		    repeat_err);
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
-+		    other_err);
-+	if (fatal)
-+		edac_device_handle_ue(edac_ctl, smp_processor_id(), L2_CACHE,
-+				      edac_ctl->name);
-+	else
-+		edac_device_handle_ce(edac_ctl, smp_processor_id(), L2_CACHE,
-+				      edac_ctl->name);
-+	write_l2merrsr_el1(0);
-+}
-+
-+static void a57_parse_cpumerrsr(struct edac_device_ctl_info *edac_ctl)
-+{
-+	int fatal;
-+	int repeat_err, other_err;
-+	u64 val = read_cpumerrsr_el1();
-+
-+	if (!A57_CPUMERRSR_EL1_VALID(val))
-+		return;
-+
-+	fatal = A57_CPUMERRSR_EL1_FATAL(val);
-+	repeat_err = A57_CPUMERRSR_EL1_REPEAT(val);
-+	other_err = A57_CPUMERRSR_EL1_OTHER(val);
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR,
-+		    "CPU%d L1 %s error detected!\n", smp_processor_id(),
-+		    fatal ? "fatal" : "non-fatal");
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "CPUMERRSR_EL1=%#llx\n", val);
-+
-+	switch (A57_CPUMERRSR_EL1_RAMID(val)) {
-+	case A57_L1_I_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Tag RAM\n");
-+		break;
-+	case A57_L1_I_DATA_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Data RAM\n");
-+		break;
-+	case A57_L1_D_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Tag RAM\n");
-+		break;
-+	case A57_L1_D_DATA_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Data RAM\n");
-+		break;
-+	case A57_L1_TLB_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 TLB RAM\n");
-+		break;
-+	default:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
-+		break;
-+	}
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
-+		    repeat_err);
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
-+		    other_err);
-+
-+	if (fatal)
-+		edac_device_handle_ue(edac_ctl, smp_processor_id(), L1_CACHE,
-+				      edac_ctl->name);
-+	else
-+		edac_device_handle_ce(edac_ctl, smp_processor_id(), L1_CACHE,
-+				      edac_ctl->name);
-+	write_cpumerrsr_el1(0);
-+}
-+
-+static void a53_parse_cpumerrsr(struct edac_device_ctl_info *edac_ctl)
-+{
-+	int fatal;
-+	int repeat_err, other_err;
-+	u64 val = read_cpumerrsr_el1();
-+
-+	if (!A53_CPUMERRSR_EL1_VALID(val))
-+		return;
-+
-+	fatal = A53_CPUMERRSR_EL1_FATAL(val);
-+	repeat_err = A53_CPUMERRSR_EL1_REPEAT(val);
-+	other_err = A53_CPUMERRSR_EL1_OTHER(val);
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR,
-+		    "A53 CPU%d L1 %s error detected!\n", smp_processor_id(),
-+		    fatal ? "fatal" : "non-fatal");
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "CPUMERRSR_EL1=%#llx\n", val);
-+
-+	switch (A53_CPUMERRSR_EL1_RAMID(val)) {
-+	case A53_L1_I_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Tag RAM\n");
-+		break;
-+	case A53_L1_I_DATA_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Data RAM\n");
-+		break;
-+	case A53_L1_D_TAG_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Tag RAM\n");
-+		break;
-+	case A53_L1_D_DATA_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Data RAM\n");
-+		break;
-+	case A53_L1_TLB_RAM:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 TLB RAM\n");
-+		break;
-+	default:
-+		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
-+		break;
-+	}
-+
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
-+		    repeat_err);
-+	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
-+		    other_err);
-+
-+	if (fatal)
-+		edac_device_handle_ue(edac_ctl, smp_processor_id(), L1_CACHE,
-+				      edac_ctl->name);
-+	else
-+		edac_device_handle_ce(edac_ctl, smp_processor_id(), L1_CACHE,
-+				      edac_ctl->name);
-+	write_cpumerrsr_el1(0);
-+}
-+
-+static void parse_cpumerrsr(void *args)
-+{
-+	struct edac_device_ctl_info *edac_ctl = args;
-+	int partnum = read_cpuid_part_number();
-+
-+	switch (partnum) {
-+	case ARM_CPU_PART_CORTEX_A57:
-+		a57_parse_cpumerrsr(edac_ctl);
-+		break;
-+	case ARM_CPU_PART_CORTEX_A53:
-+		a53_parse_cpumerrsr(edac_ctl);
-+		break;
-+	}
-+}
-+
-+static void parse_l2merrsr(void *args)
-+{
-+	struct edac_device_ctl_info *edac_ctl = args;
-+	int partnum = read_cpuid_part_number();
-+
-+	switch (partnum) {
-+	case ARM_CPU_PART_CORTEX_A57:
-+		a57_parse_l2merrsr(edac_ctl);
-+		break;
-+	case ARM_CPU_PART_CORTEX_A53:
-+		a53_parse_l2merrsr(edac_ctl);
-+		break;
-+	}
-+}
-+
-+static void arm64_monitor_cache_errors(struct edac_device_ctl_info *edev_ctl)
-+{
-+	int cpu;
-+	struct cpumask cluster_mask, old_mask;
-+
-+	cpumask_clear(&cluster_mask);
-+	cpumask_clear(&old_mask);
-+
-+	get_online_cpus();
-+	for_each_online_cpu(cpu) {
-+		smp_call_function_single(cpu, parse_cpumerrsr, edev_ctl, 0);
-+		cpumask_copy(&cluster_mask, topology_core_cpumask(cpu));
-+		if (cpumask_equal(&cluster_mask, &old_mask))
-+			continue;
-+		cpumask_copy(&old_mask, &cluster_mask);
-+		smp_call_function_any(&cluster_mask, parse_l2merrsr,
-+				      edev_ctl, 0);
-+	}
-+	put_online_cpus();
-+}
-+
-+static int cortex_arm64_edac_probe(struct platform_device *pdev)
-+{
-+	int rc;
-+	struct cortex_arm64_edac *drv;
-+	struct device *dev = &pdev->dev;
-+
-+	drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
-+	if (!drv)
-+		return -ENOMEM;
-+
-+	drv->edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-+						   num_possible_cpus(), "L", 2,
-+						   1, NULL, 0,
-+						   edac_device_alloc_index());
-+	if (IS_ERR(drv->edac_ctl))
-+		return -ENOMEM;
-+
-+	drv->edac_ctl->poll_msec = poll_msec;
-+	drv->edac_ctl->edac_check = arm64_monitor_cache_errors;
-+	drv->edac_ctl->dev = dev;
-+	drv->edac_ctl->mod_name = dev_name(dev);
-+	drv->edac_ctl->dev_name = dev_name(dev);
-+	drv->edac_ctl->ctl_name = "cpu_err";
-+	drv->edac_ctl->panic_on_ue = 1;
-+	platform_set_drvdata(pdev, drv);
-+
-+	rc = edac_device_add_device(drv->edac_ctl);
-+	if (rc)
-+		goto edac_alloc_failed;
-+
-+	return 0;
-+
-+edac_alloc_failed:
-+	edac_device_free_ctl_info(drv->edac_ctl);
-+	return rc;
-+}
-+
-+static int cortex_arm64_edac_remove(struct platform_device *pdev)
-+{
-+	struct cortex_arm64_edac *drv = dev_get_drvdata(&pdev->dev);
-+	struct edac_device_ctl_info *edac_ctl = drv->edac_ctl;
-+
-+	edac_device_del_device(edac_ctl->dev);
-+	edac_device_free_ctl_info(edac_ctl);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cortex_arm64_edac_of_match[] = {
-+	{ .compatible = "arm,armv8-edac" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-+
-+static struct platform_driver cortex_arm64_edac_driver = {
-+	.probe = cortex_arm64_edac_probe,
-+	.remove = cortex_arm64_edac_remove,
-+	.driver = {
-+		.name = "arm64-edac",
-+		.owner = THIS_MODULE,
-+		.of_match_table = cortex_arm64_edac_of_match,
-+	},
-+};
-+
-+static int __init cortex_arm64_edac_init(void)
-+{
-+	int rc;
-+
-+	/* Only POLL mode is supported so far */
-+	edac_op_state = EDAC_OPSTATE_POLL;
-+
-+	rc = platform_driver_register(&cortex_arm64_edac_driver);
-+	if (rc) {
-+		edac_printk(KERN_ERR, EDAC_MOD_STR, "failed to register\n");
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+module_init(cortex_arm64_edac_init);
-+
-+static void __exit cortex_arm64_edac_exit(void)
-+{
-+	platform_driver_unregister(&cortex_arm64_edac_driver);
-+}
-+module_exit(cortex_arm64_edac_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>");
-+MODULE_DESCRIPTION("Cortex A57 and A53 EDAC driver");
-+module_param(poll_msec, int, 0444);
-+MODULE_PARM_DESC(poll_msec, "EDAC monitor poll interval in msec");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
