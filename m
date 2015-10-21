@@ -1,889 +1,144 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dtc: Plugin and fixup support
-Date: Wed, 21 Oct 2015 16:52:25 +0300
-Message-ID: <B8D23946-69DB-4A15-96FE-86C67E358B81@konsulko.com>
-References: <1440614674-7055-1-git-send-email-pantelis.antoniou@konsulko.com> <1440614674-7055-2-git-send-email-pantelis.antoniou@konsulko.com> <20151021022903.GB15881@voom.fritz.box>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151021022903.GB15881-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH 4/5] MIPS: xilfpga: Add mipsfpga platform code
+Date: Wed, 21 Oct 2015 16:35:02 +0200
+Message-ID: <20151021163502.44be785f@avionic-0020>
+References: <1444827117-10939-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+	<1444827117-10939-5-git-send-email-Zubair.Kakakhel@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444827117-10939-5-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Alban <albeu@free.fr>, ralf@linux-mips.org, robh+dt@kernel.org, linus.walleij@linaro.org, linux-mips@linux-mips.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-> On Oct 21, 2015, at 05:29 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org=
-> wrote:
->=20
-> On Wed, Aug 26, 2015 at 09:44:33PM +0300, Pantelis Antoniou wrote:
->> This patch enable the generation of symbols & local fixup informatio=
-n
->> for trees compiled with the -@ (--symbols) option.
->>=20
->> Using this patch labels in the tree and their users emit information
->> in __symbols__ and __local_fixups__ nodes.
->>=20
->> The __fixups__ node make possible the dynamic resolution of phandle
->> references which are present in the plugin tree but lie in the
->> tree that are applying the overlay against.
->>=20
->> panto: The original alternative syntax patch required the use of an =
-empty node
->> which is no longer required.
->> Numbering of fragments in sequence was also implemented.
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->=20
-> Sorry it's taken me so very long to look at this.  I've been a bit
-> swamped by critical bugs in my day job.
->=20
-
-No worries.
-
-> As I've said before (and say several times below), I don't much like
-> the fixups/symbols format, but it's in use so I guess we're stuck wit=
-h
-> it.
->=20
-> So, the concept and behaviour of this patch seems mostly fine to me.
-> I've made a number of comments below.  Some are just trivial nits, bu=
-t
-> a few are important implementation problems that could lead to nasty
-> behaviour in edge cases.
->=20
->> ---
->> Documentation/manual.txt |  16 ++++
->> checks.c                 |  18 ++++-
->> dtc-lexer.l              |   5 ++
->> dtc-parser.y             |  54 +++++++++++--
->> dtc.c                    |  21 ++++-
->> dtc.h                    |  13 ++-
->> livetree.c               | 202 +++++++++++++++++++++++++++++++++++++=
-++++++++++
->> treesource.c             |   3 +
->> 8 files changed, 321 insertions(+), 11 deletions(-)
->>=20
->> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
->> index 398de32..29682df 100644
->> --- a/Documentation/manual.txt
->> +++ b/Documentation/manual.txt
->> @@ -119,6 +119,20 @@ Options:
->> 	Make space for <number> reserve map entries
->> 	Relevant for dtb and asm output only.
->>=20
->> +    -@
->> +        Generates a __symbols__ node at the root node of the result=
-ing blob
->=20
-> Nit: indentation error here.
->=20
-
-OK.
-
->> +	for any node labels used, and for any local references using phand=
-les
->> +	it also generates a __local_fixups__ node that tracks them.
->> +
->> +	When using the /plugin/ tag all unresolved label references to
->> +	be tracked in the __fixups__ node, making dynamic resolution possi=
-ble.
->> +
->> +    -A
->> +	Generate automatically aliases for all node labels. This is simila=
-r to
->> +	the -@ option (the __symbols__ node contain identical information)=
- but
->> +	the semantics are slightly different since no phandles are automat=
-ically
->> +	generated for labeled nodes.
->> +
->>     -S <bytes>
->> 	Ensure the blob at least <bytes> long, adding additional
->> 	space if needed.
->> @@ -153,6 +167,8 @@ Here is a very rough overview of the layout of a=
- DTS source file:
->>=20
->>     devicetree:   '/' nodedef
->>=20
->> +    plugindecl:   '/' 'plugin' '/' ';'
->> +
->>     nodedef:      '{' list_of_property list_of_subnode '}' ';'
->>=20
->>     property:     label PROPNAME '=3D' propdata ';'
->> diff --git a/checks.c b/checks.c
->> index 0c03ac9..65bf6fd 100644
->> --- a/checks.c
->> +++ b/checks.c
->> @@ -466,8 +466,12 @@ static void fixup_phandle_references(struct che=
-ck *c, struct node *dt,
->>=20
->> 		refnode =3D get_node_by_ref(dt, m->ref);
->> 		if (! refnode) {
->> -			FAIL(c, "Reference to non-existent node or label \"%s\"\n",
->> -			     m->ref);
->> +			if (!source_is_plugin)
->> +				FAIL(c, "Reference to non-existent node or "
->> +						"label \"%s\"\n", m->ref);
->> +			else /* mark the entry as unresolved */
->> +				*((cell_t *)(prop->val.val + m->offset)) =3D
->> +					cpu_to_fdt32(0xffffffff);
->> 			continue;
->> 		}
->>=20
->> @@ -652,6 +656,15 @@ static void check_obsolete_chosen_interrupt_con=
-troller(struct check *c,
->> }
->> TREE_WARNING(obsolete_chosen_interrupt_controller, NULL);
->>=20
->> +static void check_deprecated_plugin_syntax(struct check *c,
->> +					   struct node *dt)
->> +{
->> +	if (deprecated_plugin_syntax_warning)
->> +		FAIL(c, "Use '/dts-v1/ /plugin/'; syntax. /dts-v1/; /plugin/; "
->> +				"is going to be removed in next versions");
->=20
-> Better to put this warning directly where the bad syntax is detected
-> in the parser (using ERROR), transferring it to here with the global
-> is pretty ugly.
->=20
-> The checks infrastructure isn't meant to handle all possible error
-> conditions - just those that are related to the tree's semantic
-> content, rather than pars
->=20
-> Plus.. the old syntax was never committed upstream, so I'm inclined t=
-o
-> just drop it now, making this irrelevant.
->=20
-
-OK, I will drop the deprecated syntax, but I will maintain an out of tr=
-ee
-patch for people that still keep old style DTSes around.
-
->> +}
->> +TREE_WARNING(deprecated_plugin_syntax, NULL);
->> +
->> static struct check *check_table[] =3D {
->> 	&duplicate_node_names, &duplicate_property_names,
->> 	&node_name_chars, &node_name_format, &property_name_chars,
->> @@ -669,6 +682,7 @@ static struct check *check_table[] =3D {
->>=20
->> 	&avoid_default_addr_size,
->> 	&obsolete_chosen_interrupt_controller,
->> +	&deprecated_plugin_syntax,
->>=20
->> 	&always_fail,
->> };
->> diff --git a/dtc-lexer.l b/dtc-lexer.l
->> index 0ee1caf..dd44ba2 100644
->> --- a/dtc-lexer.l
->> +++ b/dtc-lexer.l
->> @@ -113,6 +113,11 @@ static void lexical_error(const char *fmt, ...)=
-;
->> 			return DT_V1;
->> 		}
->>=20
->> +<*>"/plugin/"	{
->> +			DPRINT("Keyword: /plugin/\n");
->> +			return DT_PLUGIN;
->> +		}
->> +
->> <*>"/memreserve/"	{
->> 			DPRINT("Keyword: /memreserve/\n");
->> 			BEGIN_DEFAULT();
->> diff --git a/dtc-parser.y b/dtc-parser.y
->> index 5a897e3..accccba 100644
->> --- a/dtc-parser.y
->> +++ b/dtc-parser.y
->> @@ -19,6 +19,7 @@
->>  */
->> %{
->> #include <stdio.h>
->> +#include <inttypes.h>
->>=20
->> #include "dtc.h"
->> #include "srcpos.h"
->> @@ -52,9 +53,11 @@ extern bool treesource_error;
->> 	struct node *nodelist;
->> 	struct reserve_info *re;
->> 	uint64_t integer;
->> +	bool is_plugin;
->> }
->>=20
->> %token DT_V1
->> +%token DT_PLUGIN
->> %token DT_MEMRESERVE
->> %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
->> %token DT_BITS
->> @@ -71,6 +74,7 @@ extern bool treesource_error;
->>=20
->> %type <data> propdata
->> %type <data> propdataprefix
->> +%type <is_plugin> plugindecl
->> %type <re> memreserve
->> %type <re> memreserves
->> %type <array> arrayprefix
->> @@ -101,10 +105,39 @@ extern bool treesource_error;
->> %%
->>=20
->> sourcefile:
->> -	  DT_V1 ';' memreserves devicetree
->> +	    basesource
->> +	  | pluginsource
->> +	  ;
->> +
->> +basesource:
->> +	  DT_V1 ';' plugindecl memreserves devicetree
->> +		{
->> +			source_is_plugin =3D $3;
->> +			if (source_is_plugin)
->> +				deprecated_plugin_syntax_warning =3D true;
->> +			the_boot_info =3D build_boot_info($4, $5,
->> +							guess_boot_cpuid($5));
->> +		}
->> +	;
->> +
->> +plugindecl:
->> +	/* empty */
->> +		{
->> +			$$ =3D false;
->> +		}
->> +	| DT_PLUGIN ';'
->> +		{
->> +			$$ =3D true;
->> +		}
->> +	;
->> +
->> +pluginsource:
->> +	DT_V1 DT_PLUGIN ';' memreserves devicetree
->> 		{
->> -			the_boot_info =3D build_boot_info($3, $4,
->> -							guess_boot_cpuid($4));
->> +			source_is_plugin =3D true;
->> +			deprecated_plugin_syntax_warning =3D false;
->> +			the_boot_info =3D build_boot_info($4, $5,
->> +							guess_boot_cpuid($5));
->> 		}
->=20
-> I think the above will be clearer if you make a new non-terminal, say
-> 'versioninfo', that incorporates the DT_V1 and (optionally) the
-> /plugin/ tag.  We can extend that with other global flags if we ever
-> need them.
->=20
-
-OK.
-
->> 	;
->>=20
->> @@ -156,10 +189,14 @@ devicetree:
->> 		{
->> 			struct node *target =3D get_node_by_ref($1, $2);
->>=20
->> -			if (target)
->> +			if (target) {
->> 				merge_nodes(target, $3);
->> -			else
->> -				ERROR(&@2, "Label or path %s not found", $2);
->> +			} else {
->> +				if (symbol_fixup_support)
->> +					add_orphan_node($1, $3, $2);
->> +				else
->> +					ERROR(&@2, "Label or path %s not found", $2);
->> +			}
->> 			$$ =3D $1;
->> 		}
->> 	| devicetree DT_DEL_NODE DT_REF ';'
->> @@ -174,6 +211,11 @@ devicetree:
->>=20
->> 			$$ =3D $1;
->> 		}
->> +	| /* empty */
->> +		{
->> +			/* build empty node */
->> +			$$ =3D name_node(build_node(NULL, NULL), "");
->> +		}
->> 	;
->=20
-> What's the importance of this new rule?  It's connection to plugins
-> isn't obvious to me.
->=20
-
-It is required when you use the syntactic sugar version of an overlay d=
-efinition.=20
-
-&target {
-	foo;
-};
-
->>=20
->> nodedef:
->> diff --git a/dtc.c b/dtc.c
->> index 5fa23c4..ee37be9 100644
->> --- a/dtc.c
->> +++ b/dtc.c
->> @@ -31,6 +31,8 @@ int reservenum;		/* Number of memory reservation s=
-lots */
->> int minsize;		/* Minimum blob size */
->> int padsize;		/* Additional padding to blob */
->> int phandle_format =3D PHANDLE_BOTH;	/* Use linux,phandle or phandle=
- properties */
->> +int symbol_fixup_support;
->> +int auto_label_aliases;
->>=20
->> static void fill_fullpaths(struct node *tree, const char *prefix)
->> {
->> @@ -53,7 +55,7 @@ static void fill_fullpaths(struct node *tree, cons=
-t char *prefix)
->> #define FDT_VERSION(version)	_FDT_VERSION(version)
->> #define _FDT_VERSION(version)	#version
->> static const char usage_synopsis[] =3D "dtc [options] <input file>";
->> -static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:fb:i:H:s=
-W:E:hv";
->> +static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:fb:i:H:s=
-W:E:@Ahv";
->> static struct option const usage_long_opts[] =3D {
->> 	{"quiet",            no_argument, NULL, 'q'},
->> 	{"in-format",         a_argument, NULL, 'I'},
->> @@ -71,6 +73,8 @@ static struct option const usage_long_opts[] =3D {
->> 	{"phandle",           a_argument, NULL, 'H'},
->> 	{"warning",           a_argument, NULL, 'W'},
->> 	{"error",             a_argument, NULL, 'E'},
->> +	{"symbols",	     no_argument, NULL, '@'},
->> +	{"auto-alias",       no_argument, NULL, 'A'},
->> 	{"help",             no_argument, NULL, 'h'},
->> 	{"version",          no_argument, NULL, 'v'},
->> 	{NULL,               no_argument, NULL, 0x0},
->> @@ -101,6 +105,8 @@ static const char * const usage_opts_help[] =3D =
-{
->> 	 "\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties",
->> 	"\n\tEnable/disable warnings (prefix with \"no-\")",
->> 	"\n\tEnable/disable errors (prefix with \"no-\")",
->> +	"\n\tEnable symbols/fixup support",
->> +	"\n\tEnable auto-alias of labels",
->> 	"\n\tPrint this help and exit",
->> 	"\n\tPrint version and exit",
->> 	NULL,
->> @@ -233,7 +239,12 @@ int main(int argc, char *argv[])
->> 		case 'E':
->> 			parse_checks_option(false, true, optarg);
->> 			break;
->> -
->> +		case '@':
->> +			symbol_fixup_support =3D 1;
->> +			break;
->> +		case 'A':
->> +			auto_label_aliases =3D 1;
->> +			break;
->> 		case 'h':
->> 			usage(NULL);
->> 		default:
->> @@ -294,6 +305,12 @@ int main(int argc, char *argv[])
->> 	if (sort)
->> 		sort_tree(bi);
->>=20
->> +	if (symbol_fixup_support || auto_label_aliases)
->> +		generate_label_node(bi->dt, bi->dt);
->> +
->> +	if (symbol_fixup_support)
->> +		generate_fixups_node(bi->dt, bi->dt);
->> +
->> 	if (streq(outname, "-")) {
->> 		outf =3D stdout;
->> 	} else {
->> diff --git a/dtc.h b/dtc.h
->> index 56212c8..d025111 100644
->> --- a/dtc.h
->> +++ b/dtc.h
->> @@ -20,7 +20,7 @@
->>  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-=
-1307
->>  *                                                                  =
- USA
->>  */
->> -
->> +#define _GNU_SOURCE
->=20
-> Ugh.. I'm at least trying to keep dtc compilable on FreeBSD, so I'd
-> prefer to avoid using GNU extensions.  What's the feature you needed
-> this for?
->=20
-
-Hmm, it=E2=80=99s for using asprintf.
-
-=46unnily asprintf is already used in the srcpos.c file, which is used =
-for the
-converter. I can easily switch to sprintf with some hit to readability.
-
->> #include <stdio.h>
->> #include <string.h>
->> #include <stdlib.h>
->> @@ -54,6 +54,14 @@ extern int reservenum;		/* Number of memory reser=
-vation slots */
->> extern int minsize;		/* Minimum blob size */
->> extern int padsize;		/* Additional padding to blob */
->> extern int phandle_format;	/* Use linux,phandle or phandle propertie=
-s */
->> +extern int symbol_fixup_support;/* enable symbols & fixup support *=
-/
->> +extern int auto_label_aliases;	/* auto generate labels -> aliases *=
-/
->> +
->> +/*
->> + * Tree source globals
->> + */
->> +extern bool source_is_plugin;
->=20
-> I think it makes sense to put this flag into the_boot_info, rather
-> than adding a new global.
-
-OK
-
->=20
->> +extern bool deprecated_plugin_syntax_warning;
->=20
-> And as noted above, I don't think you need this one at all.
->=20
-
-OK.
-
->> #define PHANDLE_LEGACY	0x1
->> #define PHANDLE_EPAPR	0x2
->> @@ -194,6 +202,7 @@ struct node *build_node_delete(void);
->> struct node *name_node(struct node *node, char *name);
->> struct node *chain_node(struct node *first, struct node *list);
->> struct node *merge_nodes(struct node *old_node, struct node *new_nod=
-e);
->> +void add_orphan_node(struct node *old_node, struct node *new_node, =
-char *ref);
->>=20
->> void add_property(struct node *node, struct property *prop);
->> void delete_property_by_name(struct node *node, char *name);
->> @@ -244,6 +253,8 @@ struct boot_info {
->> struct boot_info *build_boot_info(struct reserve_info *reservelist,
->> 				  struct node *tree, uint32_t boot_cpuid_phys);
->> void sort_tree(struct boot_info *bi);
->> +void generate_label_node(struct node *node, struct node *dt);
->> +void generate_fixups_node(struct node *node, struct node *dt);
->>=20
->> /* Checks */
->>=20
->> diff --git a/livetree.c b/livetree.c
->> index e229b84..1ef9fc4 100644
->> --- a/livetree.c
->> +++ b/livetree.c
->> @@ -216,6 +216,34 @@ struct node *merge_nodes(struct node *old_node,=
- struct node *new_node)
->> 	return old_node;
->> }
->>=20
->> +void add_orphan_node(struct node *dt, struct node *new_node, char *=
-ref)
->> +{
->> +	static unsigned int next_orphan_fragment =3D 0;
->> +	struct node *ovl =3D xmalloc(sizeof(*ovl));
->> +	struct property *p;
->> +	struct data d =3D empty_data;
->> +	char *name;
->> +	int ret;
->> +
->> +	memset(ovl, 0, sizeof(*ovl));
->> +
->> +	d =3D data_add_marker(d, REF_PHANDLE, ref);
->> +	d =3D data_append_integer(d, 0xffffffff, 32);
->> +	p =3D build_property("target", d);
->> +	add_property(ovl, p);
->=20
-> Hmm, using a phandle (which has to be later mangled) rather than a
-> string ref directly in the target property seems an unnecessarily
-> difficult way of doing things, but I guess the format's in use so we
-> can't fix that now.
-
-It makes sense in practice though and it makes this to work:
-
-&target {
-	foo;
-};
-
->=20
->> +	ret =3D asprintf(&name, "fragment@%u",
->> +			next_orphan_fragment++);
->> +	if (ret =3D=3D -1)
->> +		die("asprintf() failed\n");
->> +	name_node(ovl, name);
->> +	name_node(new_node, "__overlay__");
->=20
-> It's a bit confusing to me that it's the original node, not 'ovl'
-> which gets the name "__overlay__".  Maybe a different variable name.
->=20
-> This could produce some confusing results if a plugin source contains
-> a "base" tree construction.
->=20
-
-This is part of the syntactic sugar part. I will change the names of
-the variables to make things clearer.
-
->> +	add_child(dt, ovl);
->> +	add_child(ovl, new_node);
->> +}
->> +
->> struct node *chain_node(struct node *first, struct node *list)
->> {
->> 	assert(first->next_sibling =3D=3D NULL);
->> @@ -709,3 +737,177 @@ void sort_tree(struct boot_info *bi)
->> 	sort_reserve_entries(bi);
->> 	sort_node(bi->dt);
->> }
->> +
->> +void generate_label_node(struct node *node, struct node *dt)
->=20
-> I prefer to put "context" parameters before more specific parameters,
-> so I'd like to see dt then node.  Also, maybe call it 'tree', since
-> that seems to be the more common name in livetree.c.
->=20
-
-OK.
-
->> +{
->> +	struct node *c, *an;
->> +	struct property *p;
->> +	struct label *l;
->> +	int has_label;
->> +	char *gen_node_name;
->> +
->> +	if (auto_label_aliases)
->> +		gen_node_name =3D "aliases";
->> +	else
->> +		gen_node_name =3D "__symbols__";
->=20
-> Doing just one or the other here also seems dubious to me, as does
-> referencing the global here.  I'd prefer to see this as a parameter,
-> which the main function can pass in.  That way you can also better
-> handle the case of using both -A and -@ at the same time.
->=20
-
-I=E2=80=99ll see what I can do=E2=80=A6 there were some complications w=
-hen I tried it.
-
-> I also think it would be nice to construct the alias/symbols node jus=
-t
-> once for the tree then pass the reference to the recursive call.
->=20
-
-Hmm=E2=80=A6 maybe. I=E2=80=99ll give it a whirl.
-
->=20
->> +
->> +	/* Make sure the label isn't already there */
->=20
-> Comment doesn't match the code, this just tests if the node has a
-> label at all.  For which 'if (node-labels)' would suffice.
->=20
-
-Comment will be deleted. Probably a leftover.
-
->> +	has_label =3D 0;
->> +	for_each_label(node->labels, l) {
->> +		has_label =3D 1;
->> +		break;
->> +	}
->> +
->> +	if (has_label) {
->> +
->=20
-> Nit: extraneous blank line.
->=20
-
-OK. (geeze)
-
->> +		/* an is the aliases/__symbols__ node */
->> +		an =3D get_subnode(dt, gen_node_name);
->> +		/* if no node exists, create it */
->> +		if (!an) {
->> +			an =3D build_node(NULL, NULL);
->> +			name_node(an, gen_node_name);
->> +			add_child(dt, an);
->> +		}
->> +
->> +		/* now add the label in the node */
->> +		for_each_label(node->labels, l) {
->> +			/* check whether the label already exists */
->> +			p =3D get_property(an, l->label);
->> +			if (p) {
->> +				fprintf(stderr, "WARNING: label %s already"
->> +					" exists in /%s", l->label,
->> +					gen_node_name);
->> +				continue;
->> +			}
->> +
->> +			/* insert it */
->> +			p =3D build_property(l->label,
->> +				data_copy_escape_string(node->fullpath,
->> +						strlen(node->fullpath)));
->=20
-> fullpath should not contain escape characters, and if it does you
-> shouldn't be unescaping them, so data_copy_escape_string() is the
-> wrong tool for this job.
->=20
-
-OK.
-
->> +			add_property(an, p);
->> +		}
->> +
->> +		/* force allocation of a phandle for this node */
->> +		if (symbol_fixup_support)
->> +			(void)get_node_phandle(dt, node);
->=20
-> Again, I'd prefer to see a parameter rather than referencing the glob=
-al.
->=20
-
-OK
-
->> +	}
->> +
->> +	for_each_child(node, c)
->> +		generate_label_node(c, dt);
->> +}
->> +
->> +static void add_fixup_entry(struct node *dt, struct node *node,
->> +		struct property *prop, struct marker *m)
->> +{
->> +	struct node *fn;	/* local fixup node */
->> +	struct property *p;
->> +	char *fixups_name =3D "__fixups__";
->> +	struct data d;
->> +	char *entry;
->> +	int ret;
->> +
->> +	/* fn is the node we're putting entries in */
->> +	fn =3D get_subnode(dt, fixups_name);
->> +	/* if no node exists, create it */
->> +	if (!fn) {
->> +		fn =3D build_node(NULL, NULL);
->> +		name_node(fn, fixups_name);
->> +		add_child(dt, fn);
->> +	}
->=20
-> Again, I'd prefer to see construction and location of the fixups node
-> factored out.
->=20
-
-OK.
-
->> +
->> +	ret =3D asprintf(&entry, "%s:%s:%u",
->> +			node->fullpath, prop->name, m->offset);
->=20
-> I hate this encoding of things into a string that will have to be
-> parsed, rather than using the existing mechanisms we have for
-> structure in the tree.  But, again, the format is in use so I guess
-> we're stuck with it.
->=20
-> I would at least like to see this throw an error if the path or the
-> property name include ':' characters that will mess this up.
->=20
-
-Will do.
-
->=20
->> +	if (ret =3D=3D -1)
->> +		die("asprintf() failed\n");
->=20
-> Hrm.  We should put an xasprintf function in util.  That also lets us
-> supply our own implementation when necessary and avoid relying on the
-> gnu extension.
->=20
-
-I think that would be best.
-
->> +
->> +	p =3D get_property(fn, m->ref);
->=20
-> This doesn't handle the case where m->ref is a path rather than a
-> label.  It will lead to creating a property with '/' in the name
-> below, which you really don't want.
->=20
-
-I haven=E2=80=99t thought of the m->ref being a path. Will guard agains=
-t it.
-
->> +	d =3D data_append_data(p ? p->val : empty_data, entry, strlen(entr=
-y) + 1);
->> +	if (!p)
->> +		add_property(fn, build_property(m->ref, d));
->> +	else
->> +		p->val =3D d;
->=20
-> I think this would be clearer with just a single if, rather than an i=
-f
-> and the parallel conditional expression.
->=20
-
-OK.
-
->> +}
->> +
->> +static void add_local_fixup_entry(struct node *dt, struct node *nod=
-e,
->> +		struct property *prop, struct marker *m,
->> +		struct node *refnode)
->> +{
->> +	struct node *lfn, *wn, *nwn;	/* local fixup node, walk node, new *=
-/
->> +	struct property *p;
->> +	struct data d;
->> +	char *local_fixups_name =3D "__local_fixups__";
->> +	char *s, *e, *comp;
->> +	int len;
->> +
->> +	/* fn is the node we're putting entries in */
->> +	lfn =3D get_subnode(dt, local_fixups_name);
->> +	/* if no node exists, create it */
->> +	if (!lfn) {
->> +		lfn =3D build_node(NULL, NULL);
->> +		name_node(lfn, local_fixups_name);
->> +		add_child(dt, lfn);
->> +	}
->=20
-> Again, please factor the node creation.
->=20
-
-OK
-
->> +
->> +	/* walk the path components creating nodes if they don't exist */
->=20
-> Might be worth making a helper function for this operation.  As it is=
-,
-> it somewhat obscures the fixup logic that this function is actually
-> about.
->=20
-
-OK
-
-> It also seems absurd to me that the local fixups take such a
-> completely different format from the non-local fixups.  But, yet
-> again, stuck with it.
->=20
-
-I explained before, there=E2=80=99s a reason for it :)
-
->> +	comp =3D NULL;
->> +	/* start skipping the first / */
->> +	s =3D node->fullpath + 1;
->> +	wn =3D lfn;
->> +	while (*s) {
->> +		/* retrieve path component */
->> +		e =3D strchr(s, '/');
->> +		if (e =3D=3D NULL)
->> +			e =3D s + strlen(s);
->> +		len =3D e - s;
->> +		comp =3D xrealloc(comp, len + 1);
->=20
-> You can just allocate comp with strlen(fullpath) bytes in the first
-> place, rather than realloc()ing on every iteration.
->=20
-
-OK
-
->> +		memcpy(comp, s, len);
->> +		comp[len] =3D '\0';
->> +
->> +		/* if no node exists, create it */
->> +		nwn =3D get_subnode(wn, comp);
->> +		if (!nwn) {
->> +			nwn =3D build_node(NULL, NULL);
->> +			name_node(nwn, strdup(comp));
->> +			add_child(wn, nwn);
->=20
-> This build/name/add tuple appears in a bunch of places in your code,
-> might be worth a helper function for that too.
->=20
-
-OK
-
->> +		}
->> +		wn =3D nwn;
->> +
->> +		/* last path component */
->> +		if (!*e)
->> +			break;
->> +
->> +		/* next path component */
->> +		s =3D e + 1;
->> +	}
->> +	free(comp);
->> +
->> +	p =3D get_property(wn, prop->name);
->> +	d =3D data_append_cell(p ? p->val : empty_data, (cell_t)m->offset)=
-;
->> +	if (!p)
->> +		add_property(wn, build_property(prop->name, d));
->> +	else
->> +		p->val =3D d;
->> +}
->> +
->> +void generate_fixups_node(struct node *node, struct node *dt)
->> +{
->> +	struct node *c;
->> +	struct property *prop;
->> +	struct marker *m;
->> +	struct node *refnode;
->> +
->> +	for_each_property(node, prop) {
->> +		m =3D prop->val.markers;
->> +		for_each_marker_of_type(m, REF_PHANDLE) {
->> +			refnode =3D get_node_by_ref(dt, m->ref);
->> +			if (!refnode)
->> +				add_fixup_entry(dt, node, prop, m);
->> +			else
->> +				add_local_fixup_entry(dt, node, prop, m,
->> +						refnode);
->=20
-> Do you need to consider REF_PATH fixups?
->=20
-
-I don=E2=80=99t think so, but I will take a look.
-
->> +		}
->> +	}
->> +
->> +	for_each_child(node, c)
->> +		generate_fixups_node(c, dt);
->> +}
->> diff --git a/treesource.c b/treesource.c
->> index a55d1d1..e1d6657 100644
->> --- a/treesource.c
->> +++ b/treesource.c
->> @@ -28,6 +28,9 @@ extern YYLTYPE yylloc;
->> struct boot_info *the_boot_info;
->> bool treesource_error;
->>=20
->> +bool source_is_plugin;
->> +bool deprecated_plugin_syntax_warning;
->> +
->> struct boot_info *dt_from_source(const char *fname)
->> {
->> 	the_boot_info =3D NULL;
->=20
-
-It=E2=80=99s going to take a couple of days for the updated patch to be=
- sent.
-
-Thanks for the review.
-
-> --=20
-> David Gibson			| I'll have my music baroque, and my code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _o=
-ther_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
-
-Regards
-
-=E2=80=94 Pantelis
+Am Wed, 14 Oct 2015 13:51:56 +0100
+schrieb Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>:
+
+> The xilfpga platform will be DT only.
+> 
+> Add required platform code. DT files have already been added separately
+>
+> [...]
+>
+> diff --git a/arch/mips/include/asm/mach-xilfpga/gpio.h b/arch/mips/include/asm/mach-xilfpga/gpio.h
+> new file mode 100644
+> index 0000000..26778fc
+> --- /dev/null
+> +++ b/arch/mips/include/asm/mach-xilfpga/gpio.h
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright (C) 2015 Imagination Technologies
+> + * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +
+> +#ifndef __ASM_MACH_XILFPGA_GPIO_H
+> +#define __ASM_MACH_XILFPGA_GPIO_H
+> +
+> +#include <asm-generic/gpio.h>
+> +
+> +#define gpio_get_value __gpio_get_value
+> +#define gpio_set_value __gpio_set_value
+> +
+> +#endif /* __ASM_MACH_XILFPGA_GPIO_H */
+
+Custom gpio.h has been disabled, this file won't be used, it can just
+be dropped.
+
+> diff --git a/arch/mips/include/asm/mach-xilfpga/irq.h b/arch/mips/include/asm/mach-xilfpga/irq.h
+> new file mode 100644
+> index 0000000..0132a5b9
+> --- /dev/null
+> +++ b/arch/mips/include/asm/mach-xilfpga/irq.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + * Copyright (C) 2015 Imagination Technologies
+> + * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +
+> +#ifndef __MIPS_ASM_MACH_XILFPGA_IRQ_H__
+> +#define __MIPS_ASM_MACH_XILFPGA_IRQ_H__
+> +
+> +#define NR_IRQS 32
+> +
+> +#include_next <irq.h>
+> +
+> +#endif /* __MIPS_ASM_MACH_XILFPGA_IRQ_H__ */
+
+Is this really needed? If not I would not add it to keep the maintenance
+burden down.
+
+> [...]
+>
+> diff --git a/arch/mips/xilfpga/time.c b/arch/mips/xilfpga/time.c
+> new file mode 100644
+> index 0000000..3f2e39e
+> --- /dev/null
+> +++ b/arch/mips/xilfpga/time.c
+> @@ -0,0 +1,41 @@
+> +/*
+> + * Xilfpga clocksource/timer setup
+> + *
+> + * Copyright (C) 2015 Imagination Technologies
+> + * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/of.h>
+> +
+> +#include <asm/time.h>
+> +
+> +void __init plat_time_init(void)
+> +{
+> +	struct device_node *np;
+> +	struct clk *clk = 0;
+> +
+> +	of_clk_init(NULL);
+> +	clocksource_of_init();
+> +
+> +	np = of_get_cpu_node(0, NULL);
+> +	if (!np) {
+> +		pr_err("Failed to get CPU node\n");
+> +		return;
+> +	}
+> +
+> +	clk = of_clk_get(np, 0);
+> +	if (IS_ERR(clk)) {
+> +		pr_err("Failed to get CPU clock: %ld\n", PTR_ERR(clk));
+> +		return;
+> +	}
+> +
+> +	mips_hpt_frequency = clk_get_rate(clk) / 2;
+> +	clk_put(clk);
+> +}
+
+I wanted to use something similar on ATH79 once all boards moved to DT.
+On the other hand I saw that BMIPS use a dedicated property on the CPU
+node to represent the HPT frequency. If possible it would make sense to
+use a common scheme for all MIPS platforms. However I personally don't
+know enough about MIPS in general to judge this.
+
+On the other hand I think it might make more sense to have a dedicated
+node in DT to represent the HPT timer instead of hacking on the CPU
+node. That would also fit better if the HPT code ever become is a real
+driver.
+
+Alban
