@@ -1,52 +1,55 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: [PATCH RFT] ARM: bcm2835: enable all bcm2835-relevant in
- defconfig
-Date: Wed, 21 Oct 2015 18:16:31 +0200
-Message-ID: <5627BA5F.104@lategoodbye.de>
-References: <1444942061-23085-1-git-send-email-stefan.wahren@i2se.com>
- <5626F934.6090706@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator, dt: add dt support for tps6502x regulator
+Date: Wed, 21 Oct 2015 17:17:32 +0100
+Message-ID: <20151021161732.GO32054@sirena.org.uk>
+References: <1445236033-27747-1-git-send-email-hs@denx.de>
+ <20151021121925.GC8232@sirena.org.uk>
+ <56278AA3.3060109@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5626F934.6090706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Eclf2LUqbhpvYoNt"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56278AA3.3060109@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 21.10.2015 um 04:32 schrieb Stephen Warren:
-> On 10/15/2015 02:47 PM, Stefan Wahren wrote:
->> Rebuild bcm2835_defconfig using "make bcm2835_defconfig;
->> make savedefconfig", and add the following features:
->>
->> * Enable all bcm2835-relevant drivers (MBOX, WDT, DMA,
->>    PWM, SND)
->> * Re-enable some features to keep the current settings
->>    (stackprotector, LED GPIO, LED triggers)
->
-> Can you explain that second bullet a bit more?
 
-Yes, the last update to bcm2835_defconfig was on 25th September 2014.
-So a little bit changed in the configs like renaming of options.
-After saving the defconfig i noticed that we "lost" 2 features with
-the new defconfig:
+--Eclf2LUqbhpvYoNt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-* CONFIG_CC_STACKPROTECTOR because of renaming to 
-CONFIG_CC_STACKPROTECTOR_REGULAR
+On Wed, Oct 21, 2015 at 02:52:51PM +0200, Heiko Schocher wrote:
+> Am 21.10.2015 um 14:19 schrieb Mark Brown:
+> >On Mon, Oct 19, 2015 at 08:27:13AM +0200, Heiko Schocher wrote:
 
-* CONFIG_LEDS_TRIGGER_HEARTBEAT because of the following new dependencies
-   * CONFIG_NEW_LEDS
-   * CONFIG_LEDS_CLASS
-   * CONFIG_LEDS_TRIGGERS
+> >If this file is needed there is something broken, if this file is not
+> >needed then it is just noise since everything in it needs to be
+> >overridden by users anyway.  Either way please remove it.
 
-Do you want 2 separate patches (first update with re-enable and second 
-with new bcm2835 stuff)?
+> Uh, I thought to do it like:
 
-Best regards
-Stefan
+> arch/arm/boot/dts/tps65217.dtsi
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> but, okay, removed.
+
+That too is broken and should be removed :(
+
+--Eclf2LUqbhpvYoNt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJ7qbAAoJECTWi3JdVIfQiv0H/2cycPlNqM/RbITdvu5Q02SS
+i7lz6LJgGRGKIYECbVPjOK1txE04CB/G6djiLi/V4GCUWgb0k5DusDuybRW/54Iw
+5i5jSCde/lj8SHchWo8GyBPI9q0lWvNRxlF14v07CO+2GaFhhmidbQtIAjvllTHe
+Ii4nr0qVt8Vko0Qe88PcLuVdlb5EnoNTd7P0Xf2k94/Py4tl+cUgzEC6h155xIA5
+S7PjifAt53MQFQsbJRfBkrich4VsgIJ/Lc+W8WpoM72LzdtaxwrIn10w6tAaw2Su
+t3goC+MlTrMN5cZ1SLpwP0vS3FtoQgTpa9/iuipa5bttvgGVjr7SH/oIuiepvhw=
+=Zlox
+-----END PGP SIGNATURE-----
+
+--Eclf2LUqbhpvYoNt--
