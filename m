@@ -1,120 +1,105 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] driver core: Disable late probes by default
-Date: Wed, 21 Oct 2015 09:06:56 -0700
-Message-ID: <20151021160656.GA20899@kroah.com>
-References: <20151016181129.GA1764@gradator.net>
- <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
- <20151019151953.GA22662@kroah.com>
- <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
- <20151020140523.GA22021@kroah.com>
- <CAAObsKAL782-poBT1gkid+zzhWBOrnOUh7P7epjcja38j_-fbQ@mail.gmail.com>
- <20151021033917.GB32366@kroah.com>
- <CAAObsKBLL_-bARp_W0sVqoGdpQ+nftdJtQepnFL1foJOGJmbQQ@mail.gmail.com>
- <20151021151447.GA19720@kroah.com>
- <CAAObsKASbhBrEoE-=k3Vwg7BygLQ2vXU2jxu3FyxNrD5AAHROg@mail.gmail.com>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3 support
+Date: Wed, 21 Oct 2015 18:13:21 +0200
+Message-ID: <1445444007-4260-1-git-send-email-jenskuske@gmail.com>
+Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAObsKASbhBrEoE-=k3Vwg7BygLQ2vXU2jxu3FyxNrD5AAHROg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBLPTT2YQKGQEX7PUJXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 05:53:13PM +0200, Tomeu Vizoso wrote:
-> On 21 October 2015 at 17:14, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Wed, Oct 21, 2015 at 04:35:58PM +0200, Tomeu Vizoso wrote:
-> >> On 21 October 2015 at 05:39, Greg Kroah-Hartman
-> >> <gregkh@linuxfoundation.org> wrote:
-> >> > On Tue, Oct 20, 2015 at 06:17:39PM +0200, Tomeu Vizoso wrote:
-> >> >> On 20 October 2015 at 16:05, Greg Kroah-Hartman
-> >> >> <gregkh@linuxfoundation.org> wrote:
-> >> >> > On Tue, Oct 20, 2015 at 09:40:48AM +0200, Tomeu Vizoso wrote:
-> >> >> >> On 19 October 2015 at 17:19, Greg Kroah-Hartman
-> >> >> >> <gregkh@linuxfoundation.org> wrote:
-> >> >> >> > On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
-> >> >> >> >> To smooth the transition to late probes, make disabled the default for
-> >> >> >> >> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
-> >> >> >> >> get fixed.
-> >> >> >> >>
-> >> >> >> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> >> >> >> >> Link: https://lkml.kernel.org/g/20151016181129.GA1764@gradator.net
-> >> >> >> >>
-> >> >> >> >> ---
-> >> >> >> >>
-> >> >> >> >> Hi Rob,
-> >> >> >> >>
-> >> >> >> >> I'm sending this in case you think it would be best to leave the
-> >> >> >> >> on-demand probe series in -next for now but have late probes disabled to
-> >> >> >> >> avoid hassle to some people.
-> >> >> >> >
-> >> >> >> > I would like Rob to just drop this series please, I don't agree with it
-> >> >> >> > at all at the moment.
-> >> >> >>
-> >> >> >> Hi Greg,
-> >> >> >>
-> >> >> >> is it the case that you are satisfied with deferred probes as a way of
-> >> >> >> ordering device probing and that I should look at how to solve my
-> >> >> >> problem by improving it?
-> >> >> >
-> >> >> > Yes, especially given that you have said this does not speed up your
-> >> >> > boot times, which I thought was your main goal here :(
-> >> >>
-> >> >> Sorry if I'm repeating myself too often, but I have two goals: change
-> >> >> the probing order to not send deferred probes to the back of the queue
-> >> >> (getting the display up as fast as possible), and making easier to
-> >> >> understand the boot process on embedded platforms.
-> >> >>
-> >> >> The concrete issue that would be fixed by achieving the first goal was
-> >> >> explained in this email from last year:
-> >> >>
-> >> >> http://lists.freedesktop.org/archives/dri-devel/2014-August/066527.html
-> >> >>
-> >> >> Because of that, ChromeOS had to use their own bindings for the panel
-> >> >> node so that the panel probe wouldn't be deferred, introducing a
-> >> >> sizable delta that is a barrier to rebasing on newer mainline releases
-> >> >> and for vendors to upstream their HW adaptation for chrome devices.
-> >> >
-> >> > 1.5 second delay is crazy (again, my laptop boots to X in less time than
-> >> > that),
-> >>
-> >> 1.5 seconds isn't crazy at all for the kernel to initialize all the
-> >> devices in an embedded board. That's the current state of affairs
-> >> today.
-> >
-> > Then someone needs to fix that, that really is crazy.  What takes so
-> > long here?  Why aren't you using async probing to do things in parallel
-> > when you need to sleep in device probe (I'm hoping you are sleeping in
-> > device probe, otherwise that's really broken)?
-> 
-> I'm a bit surprised now. During all the time that I have been pushing
-> this forward I have been regularly testing on more than a dozen boards
-> with different socs and 1.5 seconds to probe all the devices isn't
-> that much. This is basically due to having to wait for the hardware a
-> bit here and there, and to the sheer number of devices involved.
-> 
-> Of course people have been looking at speeding up boot on ARM devices
-> for years now and this is what we have come with up to now.
-> 
-> > Have you used the tools we have to find where the time is being spent?
-> 
-> Have to recognize that my starting point has been that probe order was
-> the cause of the problem and haven't profiled the whole boot process,
-> but I don't see how probe ordering would become irrelevant unless we
-> got total probing time down to 200ms. And that would give us a
-> fabulously fast boot, which I don't think is as realistic as you seem
-> to believe.
+Hi everyone,
 
-So you aren't using the tools that we have today that were created years
-ago, to help to reduce boot time problems like this and instead work on
-changing the driver core to try to guess at what the real issue is here?
+This is v3 of my patch series introducing basic kernel support for Allwinner's
+H3 SoC. It mainly adds basic clocks and pinctrl. It also adds interrupts,
+timers, watchdog, RTC, dmaengine, MMC and UARTs, which are mostly compatible
+to those in earlier SoCs like A23 and A31, and can simply be reused.
 
-Come on, until you really know where you are taking so long, how can you
-know what you need to fix?  I strongly recommend doing that here first,
-that's why those tools were written in the first place.
+These patches are based on Maxime's sunxi/for-next branch from
+git://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git
 
-{sigh}
 
-greg k-h
+Patch 1 improves the sunxi divs clock to read the name of the base factor clock
+from devicetree instead of hardcoding it, which allows us to reuse sun6i-pll6
+for our pll8.
+
+Patch 2 adds support for the basic clocks.
+
+Patch 3 adds the pin sets for the H3 main PIO.
+
+Patch 4 adds a new compatible for the H3 reset controller
+
+Patch 5 adds the DTSI for the H3.
+
+Patch 6 adds a DTS for the Orange Pi Plus SBC, which these patches
+were developed and tested with.
+
+
+Changes since v2:
+- add mbus clock
+- add Maxime's suggestion to take the substring up to the first "_" as name
+  for the divs base clock
+- use A31 pll6 for H3 pll6
+- use a clock similar to the new simple gates for H3 bus gates
+- drop the pinctrl-as-module patch since pinctrl and gpio don't seem to be
+  ready for removable drivers
+- documentation and machine support are merged already
+  
+Changes since v1:
+- Update sunxi README in Documentation
+- Add the multiple parents gates and use them for bus-gates instead of
+  ahb1, ahb2, apb1 and apb2 gates
+- Merge the pll8 clock with sun6i pll6
+- Merge the ahb12, apb1 and apb2 resets to bus-resets with own compatible
+- Add sun6i_timer_init to sun8i machine
+- Remove the single SoC names from machine definition, its sun8i family
+- Make the pinctrl driver tristate and put its Kconfig entry in the right order
+- Rename pinctrl "scr" to "sim" and clock "sim" to "scr" to match user manual
+- Remove the address paragraph from GPL in dts and dtsi
+- Some style cleanup and line wrapping in dtsi
+- Add ARM architected timers
+- dmaengine isn't included anymore, it is merged already
+
+Best Regards,
+Jens
+
+
+Jens Kuske (6):
+  clk: sunxi: Let divs clocks read the base factor clock name from
+    devicetree
+  clk: sunxi: Add H3 clocks support
+  pinctrl: sunxi: Add H3 PIO controller support
+  reset: sunxi: Add compatible for Allwinner H3 bus resets
+  ARM: dts: sunxi: Add Allwinner H3 DTSI
+  ARM: dts: sun8i: Add Orange Pi Plus support
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  77 +++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 499 ++++++++++++++++++++
+ drivers/clk/sunxi/Makefile                         |   1 +
+ drivers/clk/sunxi/clk-bus-gates.c                  | 105 +++++
+ drivers/clk/sunxi/clk-sunxi.c                      |  47 +-
+ drivers/pinctrl/sunxi/Kconfig                      |   4 +
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 516 +++++++++++++++++++++
+ drivers/reset/reset-sunxi.c                        |   1 +
+ 13 files changed, 1245 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
+ create mode 100644 drivers/clk/sunxi/clk-bus-gates.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
+
+-- 
+2.6.1
