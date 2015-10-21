@@ -1,52 +1,59 @@
-From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH v2 9/9] NFC: nfcmrvl: update device tree
- bindings for Marvell NFC
-Date: Wed, 21 Oct 2015 08:55:04 +0000
-Message-ID: <BB521FE3-00DB-4C29-9AAD-B1B67320CA5A@marvell.com>
-References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
- <1443443594-14353-10-git-send-email-cuissard@marvell.com>,<20151021055734.GD11271@zurbaran.home>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Wed, 21 Oct 2015 10:55:14 +0200
+Message-ID: <CAMuHMdWoSdoT1p0e+Bc9ucrykxO7ESLKYHRzackpVjQAs_XaDg@mail.gmail.com>
+References: <561E1378.6000906@collabora.com>
+	<4025469.zmyipZqCsP@vostro.rjw.lan>
+	<CAL_JsqJuu5_Osqi+X6M6UeRDZFQB+_8riYDF1gvsGayk5-4SFw@mail.gmail.com>
+	<4903022.NtioyRkmbB@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151021055734.GD11271-nKCvNrh56OoJmsy6czSMtA@public.gmane.org>
-Content-Language: fr-FR
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4903022.NtioyRkmbB@vostro.rjw.lan>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Rob Herring <robh@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmai>
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+Hi Rafael,
 
-> Le 21 oct. 2015 =E0 07:58, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> a =E9=
-crit :
->=20
-> Hi Vincent,
->=20
->> On Mon, Sep 28, 2015 at 02:33:14PM +0200, Vincent Cuissard wrote:
->> diff --git a/drivers/nfc/nfcmrvl/i2c.c b/drivers/nfc/nfcmrvl/i2c.c
->> index b48c3ee..aa022e3 100644
->> --- a/drivers/nfc/nfcmrvl/i2c.c
->> +++ b/drivers/nfc/nfcmrvl/i2c.c
->> @@ -273,7 +273,7 @@ static int nfcmrvl_i2c_remove(struct i2c_client =
-*client)
->>=20
->>=20
->> static const struct of_device_id of_nfcmrvl_i2c_match[] =3D {
->> -    { .compatible =3D "mrvl,nfc-i2c", },
->> +    { .compatible =3D "marvell,nfc-i2c", },
-> You can't just replace the old one with the new one as we already
-> released kernels with the old compatible string. This is an ABI and w=
-e
-> have to be backward compatible.
-> Please keep both strings.
+On Wed, Oct 21, 2015 at 1:34 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Tuesday, October 20, 2015 09:15:01 AM Rob Herring wrote:
+>> On Tue, Oct 20, 2015 at 2:56 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>> > ACPI uses platform devices too.  In fact, ACPI device objects are enumerated as
+>> > platform devices by default now.
+>>
+>> Okay, I should have grepped for that:
+>> drivers/base/platform.c:                ACPI_COMPANION_SET(&pdev->dev, NULL);
+>> drivers/base/platform.c:        len = acpi_device_modalias(dev, buf,
+>> PAGE_SIZE -1);
+>> drivers/base/platform.c:        rc = acpi_device_uevent_modalias(dev, env);
+>> drivers/base/platform.c:        /* Then try ACPI style match */
+>> drivers/base/platform.c:        if (acpi_driver_match_device(dev, drv))
+>>
+>> These are all cases which have DT version as well, so we're not really
+>> all that different here. There's a few more for DT, but that probably
+>> means you have just not hit the problems we have yet. For example,
+>> what happens if you have an interrupt line in which the controller is
+>> probed after the device connected to the interrupt line? That required
+>> resolving irqs in platform_get_irq rather than using static resources
+>> to support deferred probe.
+>
+> We don't have this particular problem, because the IRQ controllers are
+> enumerated in a special way.
 
-Ok.
+What does "in a special way" mean? Can you please be more specific?
 
-Br,
---=20
-Vincent--
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you have interrupt controllers that depend on clocks, pin controllers,
+and PM domains?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
