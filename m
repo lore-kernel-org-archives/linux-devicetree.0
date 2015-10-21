@@ -1,104 +1,40 @@
-From: Aleksei Mamlin <mamlinav@gmail.com>
-Subject: Re: [PATCH RFC V3 0/3] Input: goodix - add axis swapping and axis
- inversion support
-Date: Wed, 21 Oct 2015 13:44:23 +0300
-Message-ID: <20151021134423.cd519ae71b851dc33e7b36cd@gmail.com>
-References: <1445183579-29176-1-git-send-email-merker@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1445183579-29176-1-git-send-email-merker@debian.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Karsten Merker <merker@debian.org>
-Cc: Bastien Nocera <hadess@hadess.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Irina Tirdea <irina.tirdea@intel.com>, linux-input@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH] devicetree: bindings: Document CompuLab vendor
+Date: Wed, 21 Oct 2015 13:47:44 +0300
+Message-ID: <1445424464-28281-1-git-send-email-uri.mashiach@compulab.co.il>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, igor.grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 Oct 2015 17:52:56 +0200
-Karsten Merker <merker@debian.org> wrote:
+Add CompuLab Ltd. to the list of device tree vendor prefixes.
 
-> Hello,
-> 
-> this is v3 of my "Input: goodix - add axis swapping and axis inversion
-> support" patchset.
-> 
-> The goodix touchscreen driver has gained device-tree support in kernel
-> 4.1, but doesn't currently support the touchscreen-swapped-x-y,
-> touchscreen-inverted-x and touchscreen-inverted-y properties.
-> On systems which combine a portrait-mode display with a landscape-mode
-> touchscreen, such as e.g. the MSI Primo 81 tablet, support for these
-> features is necessary to have the touchscreen and the display use the
-> same coordinate system.
-> 
-> With support for axis inversion, the "rotated_screen" flag in the
-> driver can also be removed, as "rotated_screen" is just a special case
-> of x/y axis inversion.
-> 
-> This patchset sits on top of the "[PATCH v9 0/9] Goodix touchscreen
-> enhancements" series by Irina Tirdea:
-> https://www.spinics.net/lists/linux-input/msg41501.html
-> 
-> The axis swapping has successfully been tested on an (arm-based)
-> MSI Primo 81 tablet; the x/y inversion resp. the rotated_screen
-> functionality has successfully been tested on a WinBook TW100.
-> 
-> @Bastien: You had acked patch No. 1 in v2 of the patchset. I have
->           not transferred that ack to v3 of the same patch
->           because I have have introduced some changes into that
->           patch (based on Irina's review comments, cf. the
->           changelog below) after your ack.  I would apprechiate
->           very much if you could take a look and tell me whether
->           your ack extends to v3 as well.
-> 
-> Regards,
-> Karsten
-> 
-> Changelog:
-> 
-> v1: * Initial version (based von v6 of Irina Tirdea's "Goodix
->       touchscreen enhancements" series).
->       Reviewed-by: Bastien Nocera <hadess@hadess.net>
-> 
-> v2: * Rebase against v8 of Irina Tirdea's "Goodix touchscreen
->       enhancements" series.
->     * Fix a typo in the commit message.
->     * Add an update for the goodix dt bindings documentation
->       (patch No. 3).
->     * Reviews/Tests:
->       Patch 1+2: Tested-by: Bastien Nocera <hadess@hadess.net>
->                  Acked-by: Bastien Nocera <hadess@hadess.net>
->       Patch 2+3: Reviewed-by: Irina Tirdea <irina.tirdea@intel.com>
-> 
-> v3: * Rebase against v9 of Irina Tirdea's "Goodix touchscreen
->       enhancements" series.
->     * Address the review comments for patch No. 1 by Irina Tirdea
->       (https://www.spinics.net/lists/linux-input/msg41536.html):
->       - Move reading the dt properties from goodix_ts_probe to
->         goodix_configure_dev to make them work properly in all
->         configurations (with and without gpio declarations).
->       - Use the new unified device properties API (device_property_*)
->         instead of the classic DT API (of_property_*). This
->         provides support for ACPI 5.1 DSD properties as well as 
->         for device-tree properties.
-> 
-> Karsten Merker (3):
->   Input: goodix - add axis swapping and axis inversion support
->   Input: goodix - use "inverted_[xy]" flags instead of "rotated_screen"
->   Input: goodix - update dt bindings documentation (axis
->     swapping/inversion)
-> 
->  .../bindings/input/touchscreen/goodix.txt          |  6 +++++
->  drivers/input/touchscreen/goodix.c                 | 31 ++++++++++++++++++----
->  2 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> -- 
-> 2.1.4
+CompuLab manufacturers ARM-based computer-on-module, system-on-module
+products, and miniature fanless-PCs.
 
-Tested on Wexler TAB7200 with device-tree properties.
+Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Tested-by: Aleksei Mamlin <mamlinav@gmail.com>
-
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 82d2ac9..0f60dbd 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -51,6 +51,7 @@ cirrus	Cirrus Logic, Inc.
+ cloudengines	Cloud Engines, Inc.
+ cnm	Chips&Media, Inc.
+ cnxt	Conexant Systems, Inc.
++compulab	CompuLab Ltd.
+ cortina	Cortina Systems, Inc.
+ cosmic	Cosmic Circuits
+ crystalfontz	Crystalfontz America, Inc.
 -- 
-Thanks and regards,
-Aleksei Mamlin
+2.6.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
