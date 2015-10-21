@@ -1,52 +1,69 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio
- clk
-Date: Wed, 21 Oct 2015 02:30:39 -0700
-Message-ID: <20151021093039.20687.88701@quantum>
-References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
- <1445339807-2351-4-git-send-email-jszhang@marvell.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 01/10] clk/samsung: exynos5433: add definitions of HDMI-PHY
+ output clocks
+Date: Wed, 21 Oct 2015 01:59:40 -0700
+Message-ID: <20151021085940.20687.94974@quantum>
+References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
+ <1445332961-25419-2-git-send-email-a.hajda@samsung.com>
+ <20151020103416.20687.40409@quantum> <562622CF.1070906@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445339807-2351-4-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <562622CF.1070906@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jisheng Zhang (2015-10-20 04:16:46)
-> Since we have added the necessary two clks' properties in dts, we can
-> remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
-> 
-> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-
-Applied to clk-next.
-
-Regards,
-Mike
-
-> ---
->  drivers/clk/berlin/bg2q.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
-> index 221f40c..243f421 100644
-> --- a/drivers/clk/berlin/bg2q.c
-> +++ b/drivers/clk/berlin/bg2q.c
-> @@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
->         { "usb2",       "perif",        13 },
->         { "usb3",       "perif",        14 },
->         { "pbridge",    "perif",        15, CLK_IGNORE_UNUSED },
-> -       { "sdio",       "perif",        16, CLK_IGNORE_UNUSED },
-> +       { "sdio",       "perif",        16 },
->         { "nfc",        "perif",        18 },
->         { "pcie",       "perif",        22 },
->  };
-> -- 
-> 2.6.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UXVvdGluZyBTeWx3ZXN0ZXIgTmF3cm9ja2kgKDIwMTUtMTAtMjAgMDQ6MTc6MzUpCj4gT24gMjAv
+MTAvMTUgMTI6MzQsIE1pY2hhZWwgVHVycXVldHRlIHdyb3RlOgo+ID4+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2V4eW5vczU0MzMuaCBiL2luY2x1ZGUvZHQtYmluZGlu
+Z3MvY2xvY2svZXh5bm9zNTQzMy5oCj4gPj4gPiBpbmRleCA1YmQ4MGQ1Li40ZjBkNTY2IDEwMDY0
+NAo+ID4+ID4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9leHlub3M1NDMzLmgKPiA+
+PiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZXh5bm9zNTQzMy5oCj4gPj4gPiBA
+QCAtNzY1LDcgKzc2NSwxMCBAQAo+ID4+ID4gICNkZWZpbmUgQ0xLX1NDTEtfUkdCX1ZDTEsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAxMDkKPiA+PiA+ICAjZGVmaW5lIENMS19TQ0xLX1JH
+Ql9UVl9WQ0xLICAgICAgICAgICAgICAgICAgICAgICAgICAgMTEwCj4gPj4gPiAgCj4gPj4gPiAt
+I2RlZmluZSBESVNQX05SX0NMSyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEx
+MQo+ID4+ID4gKyNkZWZpbmUgQ0xLX1BIWUNMS19IRE1JUEhZX1BJWEVMX0NMS09fUEhZICAgICAg
+ICAgICAgICAxMTEKPiA+PiA+ICsjZGVmaW5lIENMS19QSFlDTEtfSERNSVBIWV9UTURTX0NMS09f
+UEhZICAgICAgICAgICAgICAgMTEyCj4gPj4gPiArCj4gPj4gPiArI2RlZmluZSBESVNQX05SX0NM
+SyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDExMwo+ID4KPiA+IFdoeSBicmVh
+ayBjb21wYXRpYmlsaXR5IHdpdGggb2xkZXIgRFRCcz8KPiAKPiBJIHVzZWQgdG8gYmUgcmVzaXN0
+YW50IHRvIGNoYW5naW5nIHRob3NlIF9OUl9DTEsgZGVmaW5lcwo+IGluIHRoZSBwYXN0IGJ1dCB0
+aGVuIHJlYWxpemVkIHRoZXkgYXJlIG5vdCBwYXJ0IG9mIHRoZSBEVCBBQkkuCj4gVGhlc2UgZGVm
+aW5lcyBhcmUgdXNlZCBvbmx5IGluIGRyaXZlcnMgYW5kIGFmZmVjdCBvbmx5IHNpemUKPiBvZiB0
+aGUgcHJvdmlkZXIncyBhbGxvY2F0ZWQgY2xvY2sgYXJyYXkuIFRoZSBjb25mdXNpb24gbWF5IGJl
+Cj4gY2F1c2VkIGJ5IHRoZSBmYWN0IHRoYXQgdGhlIHdob2xlIGhlYWRlciBpcyBzaGFyZWQgYnkg
+dGhlIGtlcm5lbAo+IHNvdXJjZSBhbmQgZHRzLgo+IAo+ICQgZ2l0IGdyZXAgLWwgX05SX0NMSyBh
+cmNoL2FybS9ib290L2R0cyBkcml2ZXJzL2Nsay9zYW1zdW5nLwo+IGRyaXZlcnMvY2xrL3NhbXN1
+bmcvY2xrLWV4eW5vcy1jbGtvdXQuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5vczMy
+NTAuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5vczQuYwo+IGRyaXZlcnMvY2xrL3Nh
+bXN1bmcvY2xrLWV4eW5vczQ0MTUuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5vczUy
+NTAuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5vczUyNjAuYwo+IGRyaXZlcnMvY2xr
+L3NhbXN1bmcvY2xrLWV4eW5vczU0MTAuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5v
+czU0MjAuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4eW5vczU0MzMuYwo+IGRyaXZlcnMv
+Y2xrL3NhbXN1bmcvY2xrLWV4eW5vczU0NDAuYwo+IGRyaXZlcnMvY2xrL3NhbXN1bmcvY2xrLWV4
+eW5vczcuYwo+IAo+IFRoZXJlIGlzIG5vICpfTlJfQ0xLIGluIGFueSBkdHMgZmlsZS4KPiBOZXcg
+a2VybmVsIHdpbGwgd29yayB3aWxsIG9sZGVyIERUQiwgdGhlIGRyaXZlciB3aWxsIGp1c3QKPiBy
+ZWdpc3RlciBtb3JlIGNsb2Nrcywgd2hpY2ggd2lsbCBub3QgYmUgZGVyZWZlcmVuY2VkIGFueXdo
+ZXJlCj4gaW4gb2xkZXIgZHRiLgoKSSBza2ltbWVkIHRocm91Z2ggdGhlIGNvZGUgdG9vIGZhc3Qu
+IFlvdSdyZSByaWdodCwgaXRzIGEgc2VudGluZWwvbWF4CnZhbHVlIHRoaW5nIHdoaWNoIGlzIG5v
+dCBwYXJ0IG9mIHRoZSBBQkkuCgpQYXJkb24gdGhlIG5vaXNlLiBOb3RoaW5nIHRvIHNlZSBoZXJl
+LCBtb3ZlIGFsb25nLi4uCgpSZWdhcmRzLApNaWtlCgo+IAo+IC0tIAo+IFJlZ2FyZHMsCj4gU3ls
+d2VzdGVyCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGlu
+ZSAidW5zdWJzY3JpYmUgbGludXgtY2xrIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBt
+YWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDov
+L3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
