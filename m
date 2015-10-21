@@ -1,91 +1,50 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] of: overlay: add per overlay sysfs attributes
-Date: Tue, 20 Oct 2015 16:25:02 -0700
-Message-ID: <20151020232502.GA7881@kroah.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1445368397-8732-4-git-send-email-pantelis.antoniou@konsulko.com>
- <20151020210806.GC28724@kroah.com>
- <D2471EF1-6837-41CC-8205-FE7D8573ACC3@konsulko.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Wed, 21 Oct 2015 09:08:53 +0900
+Message-ID: <5626D795.5090500@samsung.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <D2471EF1-6837-41CC-8205-FE7D8573ACC3-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 12:15:00AM +0300, Pantelis Antoniou wrote:
-> Hi Greg,
+On 20.10.2015 18:24, Alim Akhtar wrote:
+> Now we have a nice way to reboot/poweroff system using a generic
+> syscon regmap based drivers, this series moves exynos SoCs to
+> make use of the same.
 > 
-> > On Oct 21, 2015, at 00:08 , Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> > 
-> > On Tue, Oct 20, 2015 at 10:13:16PM +0300, Pantelis Antoniou wrote:
-> >> * A per overlay can_remove sysfs attribute that reports whether
-> >> the overlay can be removed or not due to another overlapping overlay.
-> >> 
-> >> * A target sysfs attribute listing the target of each fragment,
-> >> in a group named after the name of the fragment.
-> >> 
-> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >> drivers/of/overlay.c | 103 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> >> 1 file changed, 99 insertions(+), 4 deletions(-)
-> >> 
-> >> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> >> index 067404e..2d51d9e2 100644
-> >> --- a/drivers/of/overlay.c
-> >> +++ b/drivers/of/overlay.c
-> >> @@ -25,8 +25,23 @@
-> >> 
-> >> #include "of_private.h"
-> >> 
-> >> +/* fwd. decl */
-> >> +struct of_overlay;
-> >> +struct of_overlay_info;
-> >> +
-> >> +/* an attribute for each fragment */
-> >> +struct fragment_attribute {
-> >> +	struct attribute attr;
-> >> +	ssize_t (*show)(struct kobject *kobj, struct fragment_attribute *fattr,
-> >> +			char *buf);
-> >> +	ssize_t (*store)(struct kobject *kobj, struct fragment_attribute *fattr,
-> >> +			 const char *buf, size_t count);
-> >> +	struct of_overlay_info *ovinfo;
-> >> +};
-> >> +
-> >> /**
-> >>  * struct of_overlay_info - Holds a single overlay info
-> >> + * @info:	info node that contains the target and overlay
-> >>  * @target:	target of the overlay operation
-> >>  * @overlay:	pointer to the overlay contents node
-> >>  *
-> >> @@ -34,8 +49,13 @@
-> >>  * records.
-> >>  */
-> >> struct of_overlay_info {
-> >> +	struct of_overlay *ov;
-> >> +	struct device_node *info;
-> >> 	struct device_node *target;
-> >> 	struct device_node *overlay;
-> >> +	struct attribute_group attr_group;
-> >> +	struct attribute *attrs[2];
-> > 
-> > Why both 2 attributes _and_ an attribute group?  Why not put the
-> > attributes in the attribute group?
-> > 
-> > And why just one attribute group?  Why not an array of them like the
-> > rest of the kernel is used to handle?
-> > 
+> Changes since v1:
+> * Added a comment about the register information
+> * Droped defconfig changes as disscussed
+> * Collected various Reviewed-by, Tested-by and Acked-by tags
+> * Added SYSCON-{RESET, POWEROFF} to select from Kconfig
 > 
-> Because this makes it easier to add all the attributes for all the fragments in a single
-> sysfs_create_groups() call, once for each overlay, instead of having a call to 
-> sysfs_create_group() for each fragment of the overlay.
+> Alim Akhtar (6):
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+>   arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+>   ARM: exynos: select POWER_RESET_SYSCON and
+>     POWER_RESET_SYSCON_POWEROFF
+>   ARM: EXYNOS: Remove code for restart and poweroff for exynos SoCs
 > 
-> Reusing driver core helpers is good, no?
+>  arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+>  arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+>  arch/arm/mach-exynos/Kconfig      |    3 +++
+>  arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+>  6 files changed, 59 insertions(+), 43 deletions(-)
+> 
 
-Yes it is, sorry, I missed how you used these later on, and the
-attribute_groups usage there, nice job, sorry for the noise.
+Entire patchset tested on Odroid XU3-Lite and Trats2 boards:
 
-greg k-h
+Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
