@@ -1,59 +1,107 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Which is better to specify console, "console= " or "stdout-path"
- ?
-Date: Wed, 21 Oct 2015 13:54:21 +0100
-Message-ID: <56278AFD.8000505@arm.com>
-References: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg@mail.gmail.com>
- <562753A6.3070107@arm.com> <56278911.9050704@hurleysoftware.com>
+From: WingMan Kwok <w-kwok2@ti.com>
+Subject: [PATCH v3 2/2] PCI: keystone: update to use generic keystone serdes driver
+Date: Wed, 21 Oct 2015 08:56:41 -0400
+Message-ID: <1445432201-16007-3-git-send-email-w-kwok2@ti.com>
+References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56278911.9050704-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, m-karicheri2@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: WingMan Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch updates the Keystone PCI driver to use the
+generic Keystone serdes driver for serdes initialization
+and configuration.  The generic serdes driver supports
+peripherals on Keystone platforms that require serdes.
 
+Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+---
+ drivers/pci/host/pci-keystone.c |   24 ++++++++++++++----------
+ drivers/pci/host/pci-keystone.h |    1 +
+ 2 files changed, 15 insertions(+), 10 deletions(-)
 
-On 21/10/15 13:46, Peter Hurley wrote:
-> On 10/21/2015 04:58 AM, Sudeep Holla wrote:
->> On 21/10/15 06:09, Masahiro Yamada wrote:
->>> I think there exist two ways to specify the console port and baudrate.
->>>
->>>
->>> [1] Specify console in bootargs
->>>
->>>     chosen {
->>>           bootargs = "console=ttyS0,115200";
->>>     };
->>>
->>>
->>> [2] Specify stdout-path
->>>
->>>      chosen {
->>>            stdout-path = "serial0:115200n8";
->>
->> This will work for even early/boot console, so this is better than
->> option [1]
->
-> Be aware that options specified via /chosen/stdout-path are
-> currently ignored by earlycon. There were some hiccups getting the
-> initial support upstream; when 4.4 hits mainline, I'll resubmit
-> my series that implements the of_serial i/o properties and
-> options passthrough to earlycon setup.
->
-
-Yes I am aware of that. IIUC it's in -next now and works fine for me.
-But having stdout-path in the DTS won't hinder normal console in anyway.
-So I prefer it even without the patch you are referring(to support early
-console parsing stdout-path)
-
+diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
+index 0aa81bd..4cc8faa 100644
+--- a/drivers/pci/host/pci-keystone.c
++++ b/drivers/pci/host/pci-keystone.c
+@@ -335,6 +335,7 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
+ {
+ 	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
+ 
++	phy_exit(ks_pcie->serdes_phy);
+ 	clk_disable_unprepare(ks_pcie->clk);
+ 
+ 	return 0;
+@@ -342,12 +343,12 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
+ 
+ static int __init ks_pcie_probe(struct platform_device *pdev)
+ {
++	struct device_node *node = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+ 	struct keystone_pcie *ks_pcie;
+ 	struct pcie_port *pp;
+ 	struct resource *res;
+ 	void __iomem *reg_p;
+-	struct phy *phy;
+ 	int ret = 0;
+ 
+ 	ks_pcie = devm_kzalloc(&pdev->dev, sizeof(*ks_pcie),
+@@ -357,14 +358,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 
+ 	pp = &ks_pcie->pp;
+ 
+-	/* initialize SerDes Phy if present */
+-	phy = devm_phy_get(dev, "pcie-phy");
+-	if (!IS_ERR_OR_NULL(phy)) {
+-		ret = phy_init(phy);
+-		if (ret < 0)
+-			return ret;
+-	}
+-
+ 	/* index 2 is to read PCI DEVICE_ID */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+ 	reg_p = devm_ioremap_resource(dev, res);
+@@ -385,6 +378,17 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	ks_pcie->serdes_phy = devm_of_phy_get(dev, node, NULL);
++	if (IS_ERR(ks_pcie->serdes_phy)) {
++		dev_err(dev, "No %s serdes driver found: %ld\n",
++			node->name, PTR_ERR(ks_pcie->serdes_phy));
++		goto fail_clk;
++	}
++
++	ret = phy_init(ks_pcie->serdes_phy);
++	if (ret < 0)
++		goto fail_clk;
++
+ 	ret = ks_add_pcie_port(ks_pcie, pdev);
+ 	if (ret < 0)
+ 		goto fail_clk;
+@@ -392,7 +396,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	return 0;
+ fail_clk:
+ 	clk_disable_unprepare(ks_pcie->clk);
+-
++	phy_exit(ks_pcie->serdes_phy);
+ 	return ret;
+ }
+ 
+diff --git a/drivers/pci/host/pci-keystone.h b/drivers/pci/host/pci-keystone.h
+index 478d932..1e6d122 100644
+--- a/drivers/pci/host/pci-keystone.h
++++ b/drivers/pci/host/pci-keystone.h
+@@ -33,6 +33,7 @@ struct keystone_pcie {
+ 	/* Application register space */
+ 	void __iomem		*va_app_base;
+ 	struct resource		app;
++	struct phy		*serdes_phy;
+ };
+ 
+ /* Keystone DW specific MSI controller APIs/definitions */
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
