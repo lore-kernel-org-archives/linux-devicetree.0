@@ -1,81 +1,104 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 2/2] dt-bindings: EXYNOS: Document compatibles from other
- vendors
-Date: Wed, 21 Oct 2015 10:30:51 +0900
-Message-ID: <1445391051-3727-2-git-send-email-k.kozlowski@samsung.com>
-References: <1445391051-3727-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1445391051-3727-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Hakjoo Kim <ruppi.kim@hardkernel.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
+Date: Wed, 21 Oct 2015 09:45:17 +0800
+Message-ID: <5626EE2D.8090506@huawei.com>
+References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com> <20151019205236.GB453@leverpostej> <56266F7E.6030404@amd.com> <20151020172539.GB4943@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151020172539.GB4943@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Brijesh Singh <brijeshkumar.singh@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document compatibles used on other Exynos-based boards (non-Samsung):
-FriendlyARM, Google, Hardkernel and Insignal.
+On 2015/10/21 1:25, Mark Rutland wrote:
+> On Tue, Oct 20, 2015 at 11:44:46AM -0500, Brijesh Singh wrote:
+>> Hi Mark,
+>>
+>> Thanks for review. 
+>>
+>> -Brijesh
+>>
+>> On 10/19/2015 03:52 PM, Mark Rutland wrote:
+>>> Hi,
+>>>
+>>> Please Cc the devicetree list (devicetree@vger.kernel.org) when sending
+>>> binding patches. I see you've added the people from the MAINTAINERS
+>>> entry; the list should also be Cc'd.
+>>>
+>> Noted.
+>>> On Mon, Oct 19, 2015 at 02:23:17PM -0500, Brijesh Singh wrote:
+>>>> Add support for the AMD Seattle SoC EDAC driver.
+>>>>
+>>>> Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
+>>>> ---
+>>>>  .../devicetree/bindings/edac/amd-seattle-edac.txt  |  15 +
+>>>>  drivers/edac/Kconfig                               |   6 +
+>>>>  drivers/edac/Makefile                              |   1 +
+>>>>  drivers/edac/seattle_edac.c                        | 306 +++++++++++++++++++++
+>>>>  4 files changed, 328 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/edac/amd-seattle-edac.txt
+>>>>  create mode 100644 drivers/edac/seattle_edac.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/edac/amd-seattle-edac.txt b/Documentation/devicetree/bindings/edac/amd-seattle-edac.txt
+>>>> new file mode 100644
+>>>> index 0000000..a0354e8
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/edac/amd-seattle-edac.txt
+>>>> @@ -0,0 +1,15 @@
+>>>> +* AMD Seattle SoC EDAC node
+>>>> +
+>>>> +EDAC node is defined to describe on-chip error detection and reporting.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should be "amd,arm-seattle-edac"
+>>>> +- poll-delay-msec: Indicates how often the edac check callback should be called.
+>>>> +  Time in msec.
+>>> This second property doesn't describe the hardware in any way. It should
+>>> be runtime-configurable and dpesn't belong in the DT.
+>>>
+>>> Regardless, the binding is wrong. This is in no way specific to AMD
+>>> Seattle, and per the code is actually used to imply the presence of a
+>>> Cortex-A57 feature. No reference to AMD Seattle belongs in the DT
+>>> binding (with the exception of the example, perhaps), nor in the driver.
+>>>
+>>> NAK while this pretends to be something that it isn't. At minimum, you
+>>> need to correctly describe the feature you are trying to add support
+>>> for.
+>>>
+>> I will remove AMD specific string in compatibility field and make the
+>> poll-delay-msec optional. Will also expose this as module parameter as
+>> you suggested below.
+> I don't think it should be optional; I don't think it should be there at
+> all.
+>
+> I'm not sure if we even need a DT binding if we can derive the presence
+> of the feature from the MIDR.
+>
+>>>> + * The driver polls CPUMERRSR_EL1 and L2MERRSR_EL1 registers to logs the 
+>>> These are IMPLEMENTATION DEFINED registers which are specific to
+>>> Cortex-A57, and I note that L2MERRSR_EL1 changed in r1p0.
+>>>
+>>> Which revisions of Cortex-A57 does this work with?
+>>>
+>> I have tested my code on r1p2.
+>>
+>>> Generally we avoid touching IMPLEMENTATION DEFINED registers as they may
+>>> not exist in some configurations or revisions, and could trap or undef.
+>>> Is it always safe to access these registers (in current revisions of
+>>> Cortex-A57)?
+>>>
+>> So far I have not ran into any trap error, was able to read/write
+>> registers from EL1 all the times. I looked at TRM but could not find
+>> reference that it would fail. As per doc the register should be
+>> available at all EL's except EL0.
+> Ok.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Hakjoo Kim <ruppi.kim@hardkernel.com>
----
- .../bindings/arm/samsung/samsung-boards.txt        | 44 +++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+This also works on Hisilicon D02 board. but the mechanism to handle the error
+is a little bit different, on D02, it use poll mechanism to scan the single bit ECC error
+just as Seattle, but D02 will trigger SEI when double bit ECC error happened.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-index 43589d2466a7..da078702ae73 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-@@ -16,7 +16,49 @@ Required root node properties:
- 	- "samsung,sd5v1"	- for Exynos5440-based Samsung board.
- 	- "samsung,ssdk5440"	- for Exynos5440-based Samsung board.
- 
--Optional:
-+* Other companies Exynos SoC based
-+  * FriendlyARM
-+        - "friendlyarm,tiny4412"  - for Exynos4412-based FriendlyARM
-+                                    TINY4412 board.
-+
-+  * Google
-+        - "google,pi"             - for Exynos5800-based Google Peach Pi
-+                                    Rev 10+ board,
-+          also: "google,pi-rev16", "google,pi-rev15", "google,pi-rev14",
-+		"google,pi-rev13", "google,pi-rev12", "google,pi-rev11",
-+                "google,pi-rev10", "google,peach".
-+
-+        - "google,pit"            - for Exynos5420-based Google Peach Pit
-+                                    Rev 6+ (Exynos5420),
-+          also: "google,pit-rev16", "google,pit-rev15", "google,pit-rev14",
-+                "google,pit-rev13", "google,pit-rev12", "google,pit-rev11",
-+                "google,pit-rev10", "google,pit-rev9", "google,pit-rev8",
-+                "google,pit-rev7", "google,pit-rev6", "google,peach".
-+
-+        - "google,snow-rev4"      - for Exynos5250-based Google Snow board,
-+          also: "google,snow"
-+        - "google,snow-rev5"      - for Exynos5250-based Google Snow
-+                                    Rev 5+ board.
-+        - "google,spring"         - for Exynos5250-based Google Spring board.
-+
-+  * Hardkernel
-+        - "hardkernel,odroid-u3"  - for Exynos4412-based Hardkernel Odroid U3.
-+        - "hardkernel,odroid-x"   - for Exynos4412-based Hardkernel Odroid X.
-+        - "hardkernel,odroid-x2"  - for Exynos4412-based Hardkernel Odroid X2.
-+        - "hardkernel,odroid-xu3" - for Exynos5422-based Hardkernel Odroid XU3.
-+        - "hardkernel,odroid-xu3-lite" - for Exynos5422-based Hardkernel
-+                                         Odroid XU3 Lite board.
-+        - "hardkernel,odroid-xu4" - for Exynos5422-based Hardkernel Odroid XU4.
-+
-+  * Insignal
-+        - "insignal,arndale"      - for Exynos5250-based Insignal Arndale board.
-+        - "insignal,arndale-octa" - for Exynos5420-based Insignal Arndale
-+                                    Octa board.
-+        - "insignal,origen"       - for Exynos4210-based Insignal Origen board.
-+        - "insignal,origen4412    - for Exynos4412-based Insignal Origen board.
-+
-+
-+Optional nodes:
-     - firmware node, specifying presence and type of secure firmware:
-         - compatible: only "samsung,secure-firmware" is currently supported
-         - reg: address of non-secure SYSRAM used for communication with firmware
--- 
-1.9.1
+Thanks
+Hanjun
