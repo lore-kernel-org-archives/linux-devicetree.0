@@ -1,240 +1,78 @@
-From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/6] clk: sunxi: Add H3 clocks support
-Date: Wed, 21 Oct 2015 18:13:23 +0200
-Message-ID: <1445444007-4260-3-git-send-email-jenskuske@gmail.com>
-References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com>
-Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
+ TPS65086 PMIC
+Date: Wed, 21 Oct 2015 17:13:39 +0100
+Message-ID: <20151021161339.GN32054@sirena.org.uk>
+References: <5625095F.5080204@ti.com>
+ <20151019152100.GK31804@x1>
+ <56250AF9.3030907@ti.com>
+ <20151020113128.GN31804@x1>
+ <56264990.8050501@ti.com>
+ <20151021084633.GB3270@x1>
+ <20151021102952.GJ32054@sirena.org.uk>
+ <20151021111832.GC3270@x1>
+ <20151021121409.GA8232@sirena.org.uk>
+ <20151021152659.GF3270@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBM7TT2YQKGQET7XLS6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445444007-4260-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Y8IEA2AKDLXNckrV"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151021152659.GF3270@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The H3 clock control unit is similar to the those of other sun8i family
-members like the A23.
 
-It adds a new bus gates clock similar to the simple gates, but with a
-different parent clock for each single gate.
-Some of the gates use the new AHB2 clock as parent, whose clock source
-is muxable between AHB1 and PLL6/2. The documentation isn't totally clear
-about which devices belong to AHB2 now, especially USB EHIC/OHIC, so it
-is mostly based on Allwinner kernel source code.
+--Y8IEA2AKDLXNckrV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
- drivers/clk/sunxi/Makefile                        |   1 +
- drivers/clk/sunxi/clk-bus-gates.c                 | 105 ++++++++++++++++++++++
- drivers/clk/sunxi/clk-sunxi.c                     |  12 ++-
- 4 files changed, 117 insertions(+), 3 deletions(-)
- create mode 100644 drivers/clk/sunxi/clk-bus-gates.c
+On Wed, Oct 21, 2015 at 04:26:59PM +0100, Lee Jones wrote:
+> On Wed, 21 Oct 2015, Mark Brown wrote:
+> > On Wed, Oct 21, 2015 at 12:18:32PM +0100, Lee Jones wrote:
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 8a47b77..d303dec 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -28,6 +28,7 @@ Required properties:
- 	"allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
- 	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
- 	"allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
-+	"allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
- 	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
- 	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
- 	"allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
-@@ -55,6 +56,7 @@ Required properties:
- 	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
- 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
- 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
-+	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
- 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
- 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
- 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index f5a35b8..ecaff7f 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -5,6 +5,7 @@
- obj-y += clk-sunxi.o clk-factors.o
- obj-y += clk-a10-hosc.o
- obj-y += clk-a20-gmac.o
-+obj-y += clk-bus-gates.o
- obj-y += clk-mod0.o
- obj-y += clk-simple-gates.o
- obj-y += clk-sun8i-mbus.o
-diff --git a/drivers/clk/sunxi/clk-bus-gates.c b/drivers/clk/sunxi/clk-bus-gates.c
-new file mode 100644
-index 0000000..5bba0b9
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-bus-gates.c
-@@ -0,0 +1,105 @@
-+/*
-+ * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Based on clk-simple-gates.c, which is:
-+ * Copyright 2015 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+static DEFINE_SPINLOCK(gates_lock);
-+
-+static void __init sunxi_bus_gates_setup(struct device_node *node,
-+					 const int protected[],
-+					 int nprotected)
-+{
-+	struct clk_onecell_data *clk_data;
-+	const char *clk_parent, *clk_name;
-+	struct property *prop;
-+	struct resource res;
-+	void __iomem *clk_reg;
-+	void __iomem *reg;
-+	const __be32 *p;
-+	int number, i = 0, j;
-+	u8 clk_bit;
-+	u32 index;
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg))
-+		return;
-+
-+	clk_data = kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
-+	if (!clk_data)
-+		goto err_unmap;
-+
-+	number = of_property_count_u32_elems(node, "clock-indices");
-+	of_property_read_u32_index(node, "clock-indices", number - 1, &number);
-+
-+	clk_data->clks = kcalloc(number + 1, sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_data->clks)
-+		goto err_free_data;
-+
-+	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
-+		of_property_read_string_index(node, "clock-output-names",
-+					      i, &clk_name);
-+
-+		clk_parent = of_clk_get_parent_name(node, i);
-+
-+		clk_reg = reg + 4 * (index / 32);
-+		clk_bit = index % 32;
-+
-+		clk_data->clks[index] = clk_register_gate(NULL, clk_name,
-+							  clk_parent, 0,
-+							  clk_reg,
-+							  clk_bit,
-+							  0, &gates_lock);
-+		i++;
-+
-+		if (IS_ERR(clk_data->clks[index])) {
-+			WARN_ON(true);
-+			continue;
-+		}
-+
-+		for (j = 0; j < nprotected; j++)
-+			if (protected[j] == index)
-+				clk_prepare_enable(clk_data->clks[index]);
-+
-+	}
-+
-+	clk_data->clk_num = number + 1;
-+	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+
-+	return;
-+
-+err_free_data:
-+	kfree(clk_data);
-+err_unmap:
-+	iounmap(reg);
-+	of_address_to_resource(node, 0, &res);
-+	release_mem_region(res.start, resource_size(&res));
-+}
-+
-+static void __init sunxi_bus_gates_init(struct device_node *node)
-+{
-+	sunxi_bus_gates_setup(node, NULL, 0);
-+}
-+
-+CLK_OF_DECLARE(sun8i_h3_bus_gates, "allwinner,sun8i-h3-bus-gates-clk",
-+	       sunxi_bus_gates_init);
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 7c4aee0..6293c65 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -769,6 +769,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
- 	.shift = 12,
- };
- 
-+static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
-+	.shift = 0,
-+};
-+
- static void __init sunxi_mux_clk_setup(struct device_node *node,
- 				       struct mux_data *data)
- {
-@@ -945,10 +949,11 @@ static const struct divs_data pll6_divs_data __initconst = {
- 
- static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
- 	.factors = &sun6i_a31_pll6_data,
--	.ndivs = 2,
-+	.ndivs = 3,
- 	.div = {
- 		{ .fixed = 2 }, /* normal output */
- 		{ .self = 1 }, /* base factor clock, 2x */
-+		{ .fixed = 4 }, /* divided output, /2 */
- 	}
- };
- 
-@@ -1000,9 +1005,8 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
- 
- 		for (i = 0; i < SUNXI_DIVS_BASE_NAME_MAX_LEN - 1 &&
- 						clk_name[i] != '_' &&
--						clk_name[i] != '\0'; i++) {
-+						clk_name[i] != '\0'; i++)
- 			base_name[i] = clk_name[i];
--		}
- 
- 		base_name[i] = '\0';
- 		factors.name = base_name;
-@@ -1147,6 +1151,7 @@ static const struct of_device_id clk_divs_match[] __initconst = {
- static const struct of_device_id clk_mux_match[] __initconst = {
- 	{.compatible = "allwinner,sun4i-a10-cpu-clk", .data = &sun4i_cpu_mux_data,},
- 	{.compatible = "allwinner,sun6i-a31-ahb1-mux-clk", .data = &sun6i_a31_ahb1_mux_data,},
-+	{.compatible = "allwinner,sun8i-h3-ahb2-clk", .data = &sun8i_h3_ahb2_mux_data,},
- 	{}
- };
- 
-@@ -1229,6 +1234,7 @@ CLK_OF_DECLARE(sun6i_a31_clk_init, "allwinner,sun6i-a31", sun6i_init_clocks);
- CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
- CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
- CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
-+CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
- 
- static void __init sun9i_init_clocks(struct device_node *node)
- {
--- 
-2.6.1
+> > > I didn't say it hasn't been done before, just that I didn't like it
+> > > for the aforementioned reasons.  I can also find 1000's of compatible
+> > > strings which do append "-<device_type>", so it's not exactly an
+> > > unheard of practice.
+
+> > It's a pretty substantial change in the way we make compatible strings
+> > that we probably want to discuss more widely if we want to adopt it -
+> > we've not been using that idiom and it's pretty surprising.  I'm not
+> > really sure it help much and we do already have the pre-@ noise words
+> > for this purpose (as well as comments in the DT).
+
+> I'm not *that* fussed about it to justify starting-up wider community
+> discussions.
+
+> My only point is that:
+
+>   compatible = "<vendor>,udw9283";
+
+> ... is meaningless gibberish and I think it'd be better to be more
+> forthcoming which prevents having to dig around in DTS files for the
+> node name/label for true device/type identification.
+
+What I suspect most people actually do here is google the part name if
+it's not obvious from context (presumably people with a compatible
+string only are either looking at the driver or some DT source
+instantiating it).
+
+--Y8IEA2AKDLXNckrV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWJ7myAAoJECTWi3JdVIfQQNIIAILVDGXE7QSIwF98dmirjiDY
++StoA/fUn7qFtoTMxCubnBftujj8hcFFCGvtXRsb/ze1Pp4xWwRljul9Ejqtbr7D
+4xAnAAp0k2OMacH85eSRgqbHwGFNXF47zulphX1dcbZAMg+zRIpyy7aYKqXNu4z7
+rtH38j1rfu7pr7oUQcbne/11uOOLblm5TxO/R83Wdwe0KmVIqo5dxO7s1HS9J1+m
+B9Kq2n/IxKXR52BoHY0l+l5Q+Hs5EjayIJn3RzJ1wURGWHulGOMsBEXnCXdsnYrn
+Hxlb4AXFltlSigrMgQ/3kC/Q25hqEcTr0qM4oRPoE8mSS47EvhynKhfkM/BgqXo=
+=H09d
+-----END PGP SIGNATURE-----
+
+--Y8IEA2AKDLXNckrV--
