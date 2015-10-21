@@ -1,89 +1,94 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 16/19] ARM: dts: s5pv210: replace legacy *,wakeup property with wakeup-source
-Date: Wed, 21 Oct 2015 11:10:13 +0100
-Message-ID: <1445422216-29375-17-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH 08/19] ARM: dts: spear: replace gpio-key,
+ wakeup with wakeup-source property
+Date: Wed, 21 Oct 2015 11:10:05 +0100
+Message-ID: <1445422216-29375-9-git-send-email-sudeep.holla@arm.com>
 References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Though the keyboard and other driver will continue to support the legacy
-"gpio-key,wakeup", "linux,input-wakeup" boolean property to enable the
-wakeup source, "wakeup-source" is the new standard binding.
+Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
+"gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
+source.
 
-This patch replaces all the legacy wakeup properties with the unified
-"wakeup-source" property in order to avoid any futher copy-paste
-duplication.
+Few dts files assign value "1" to gpio-key,wakeup which is incorrect.
+Since the presence of the boolean property indicates it is enabled,
+value of "0" or "1" have no significance.
 
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
+This patch replaces the legacy "gpio-key,wakeup" with the unified
+"wakeup-source" property which inturn fixes the above mentioned issue.
+
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm/boot/dts/s5pv210-aquila.dts   | 4 ++--
- arch/arm/boot/dts/s5pv210-goni.dts     | 4 ++--
- arch/arm/boot/dts/s5pv210-smdkv210.dts | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/spear1310-evb.dts | 2 +-
+ arch/arm/boot/dts/spear1340-evb.dts | 2 +-
+ arch/arm/boot/dts/spear320-hmi.dts  | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/s5pv210-aquila.dts b/arch/arm/boot/dts/s5pv210-aquila.dts
-index f00cea7aca2f..72f162e7040b 100644
---- a/arch/arm/boot/dts/s5pv210-aquila.dts
-+++ b/arch/arm/boot/dts/s5pv210-aquila.dts
-@@ -257,7 +257,7 @@
- 			linux,code = <KEY_POWER>;
- 			label = "power";
- 			debounce-interval = <1>;
--			gpio-key,wakeup;
-+			wakeup-source;
+diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
+index e48857249ce7..84101e4eebbf 100644
+--- a/arch/arm/boot/dts/spear1310-evb.dts
++++ b/arch/arm/boot/dts/spear1310-evb.dts
+@@ -161,7 +161,7 @@
+ 				linux,code = <0x100>;
+ 				gpios = <&gpio0 7 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				wakeup-source;
+ 			};
  		};
- 	};
- };
-@@ -268,7 +268,7 @@
  
- &keypad {
- 	linux,input-no-autorepeat;
--	linux,input-wakeup;
-+	wakeup-source;
- 	samsung,keypad-num-rows = <3>;
- 	samsung,keypad-num-columns = <3>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
-index a3d4643b202e..f4d0a023c31c 100644
---- a/arch/arm/boot/dts/s5pv210-goni.dts
-+++ b/arch/arm/boot/dts/s5pv210-goni.dts
-@@ -239,7 +239,7 @@
- 			linux,code = <KEY_POWER>;
- 			label = "power";
- 			debounce-interval = <1>;
--			gpio-key,wakeup;
-+			wakeup-source;
+diff --git a/arch/arm/boot/dts/spear1340-evb.dts b/arch/arm/boot/dts/spear1340-evb.dts
+index c611f5606dfe..6565f3cb866f 100644
+--- a/arch/arm/boot/dts/spear1340-evb.dts
++++ b/arch/arm/boot/dts/spear1340-evb.dts
+@@ -223,7 +223,7 @@
+ 				linux,code = <0x100>;
+ 				gpios = <&gpio1 1 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				wakeup-source;
+ 			};
  		};
- 	};
- };
-@@ -250,7 +250,7 @@
  
- &keypad {
- 	linux,input-no-autorepeat;
--	linux,input-wakeup;
-+	wakeup-source;
- 	samsung,keypad-num-rows = <3>;
- 	samsung,keypad-num-columns = <3>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/s5pv210-smdkv210.dts b/arch/arm/boot/dts/s5pv210-smdkv210.dts
-index da7d210df670..54fcc3fc82e2 100644
---- a/arch/arm/boot/dts/s5pv210-smdkv210.dts
-+++ b/arch/arm/boot/dts/s5pv210-smdkv210.dts
-@@ -59,7 +59,7 @@
+diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
+index 0aa6fef5ce22..0d0da1f65f0e 100644
+--- a/arch/arm/boot/dts/spear320-hmi.dts
++++ b/arch/arm/boot/dts/spear320-hmi.dts
+@@ -141,7 +141,7 @@
+ 				linux,code = <0x100>;
+ 				gpios = <&stmpegpio 3 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				wakeup-source;
+ 			};
  
- &keypad {
- 	linux,input-no-autorepeat;
--	linux,input-wakeup;
-+	wakeup-source;
- 	samsung,keypad-num-rows = <8>;
- 	samsung,keypad-num-columns = <8>;
- 	pinctrl-names = "default";
+ 			button@2 {
+@@ -149,7 +149,7 @@
+ 				linux,code = <0x200>;
+ 				gpios = <&stmpegpio 2 0x4>;
+ 				debounce-interval = <20>;
+-				gpio-key,wakeup = <1>;
++				wakeup-source;
+ 			};
+ 		};
+ 
 -- 
 1.9.1
