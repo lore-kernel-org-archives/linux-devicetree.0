@@ -1,54 +1,42 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 21 Oct 2015 11:31:37 +0300
-Message-ID: <56274D69.1090402@ti.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <560BC0DB.5020205@ti.com> <20151006083346.GL23801@atomide.com>
- <56139A72.6040600@ti.com> <20151006100000.GN23801@atomide.com>
- <56139CE9.8020002@ti.com> <5613A256.8000105@ti.com>
- <20151006110134.GO23801@atomide.com> <5613ABEF.9000904@ti.com>
- <20151016212510.GF24370@atomide.com> <562496DB.4050803@ti.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] DT: mmc: sh_mmcif: document R8A779[34] support
+Date: Wed, 21 Oct 2015 10:38:48 +0200
+Message-ID: <CAPDyKFqyJo47A+kPnCK27QYgS7-4jqrG0zR92yqD9wfq-s3AxA@mail.gmail.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+	<2657565.2y8qYzu3eL@wasted.cogentembedded.com>
+	<CAPDyKFqLuH9u2n1EKSc-89E6iDR8JH0A+5c=wn8g3THPKvDX7A@mail.gmail.com>
+	<5626A1CF.9050309@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <562496DB.4050803@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, computersforpeace@gmail.com, dwmw2@infradead.org, fcooper@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5626A1CF.9050309-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/10/15 10:08, Roger Quadros wrote:
-> On 17/10/15 00:25, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [151006 04:13]:
+On 20 October 2015 at 22:19, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Hello.
+>
+> On 10/16/2015 04:07 PM, Ulf Hansson wrote:
+>
+>>> Renesas R8A7794 SoC also has the MMCIF controller...
 >>>
->>> Fine. The updated series is now at
->>>
->>> git@github.com:rogerq/linux.git
->>>  * [new branch]      for-v4.4/gpmc-v4
->>
->> Looks like it produces some build errors, this with RMKs 3430 and 44=
-30
->> only .configs:
->>
->> drivers/memory/omap-gpmc.c:2035:43: error: =E2=80=98struct gpio_chip=
-=E2=80=99 has no
->> member named =E2=80=98irqdomain=E2=80=99
->> drivers/memory/omap-gpmc.c:2116:8: error: implicit declaration of
->> function =E2=80=98gpiochip_irqchip_add=E2=80=99 [-Werror=3Dimplicit-=
-function-declaration]
->>
->=20
-> Good catch. We'll have to select GPIOLIB_IRQCHIP for this driver.
->=20
->> Maybe run randconfig builds on it for overnight?
->=20
-> OK. I'll do that.
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>
+>
+>> Thanks, applied for next.
+>
+>
+>    Oops, just noticed the subject was stale. I wasn't adding R8A7793 support
+> in that version. Is it possible to fix?
 
-I couldn't run randconfig beyond few iterations as it keeps failing
-everywhere. How do we limit the randconfig options to OMAP only
-platforms?
+I have updated the subject, no worries!
 
-cheers,
--roger
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
