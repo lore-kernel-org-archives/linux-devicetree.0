@@ -1,68 +1,62 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
- TPS65086 PMIC
-Date: Wed, 21 Oct 2015 16:26:59 +0100
-Message-ID: <20151021152659.GF3270@x1>
-References: <20151019091311.GH31804@x1>
- <5625095F.5080204@ti.com>
- <20151019152100.GK31804@x1>
- <56250AF9.3030907@ti.com>
- <20151020113128.GN31804@x1>
- <56264990.8050501@ti.com>
- <20151021084633.GB3270@x1>
- <20151021102952.GJ32054@sirena.org.uk>
- <20151021111832.GC3270@x1>
- <20151021121409.GA8232@sirena.org.uk>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 10/19] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Wed, 21 Oct 2015 17:27:23 +0200
+Message-ID: <5627AEDB.2000405@atmel.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+ <1445422216-29375-11-git-send-email-sudeep.holla@arm.com>
+ <5627672D.60108@atmel.com> <56276832.9040006@arm.com>
+ <CAPDyKFq8CfzVPPCz=1AxZM3wsw8pkOPG6Ua_5spDuYa=Gzshrw@mail.gmail.com>
+ <56277372.6080203@arm.com> <562787E9.9030606@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151021121409.GA8232@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562787E9.9030606-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Oct 2015, Mark Brown wrote:
-
-> On Wed, Oct 21, 2015 at 12:18:32PM +0100, Lee Jones wrote:
-> > On Wed, 21 Oct 2015, Mark Brown wrote:
-> > > On Wed, Oct 21, 2015 at 09:46:33AM +0100, Lee Jones wrote:
-> > > > On Tue, 20 Oct 2015, Andrew F. Davis wrote:
+Le 21/10/2015 14:41, Sudeep Holla a =C3=A9crit :
 >=20
-> > > It is however the normal way we write compatible strings - the cl=
-ass
-> > > information would normaly go in the node name (ie, i2c@7000c000 o=
-r
-> > > whatever).
 >=20
-> > I didn't say it hasn't been done before, just that I didn't like it
-> > for the aforementioned reasons.  I can also find 1000's of compatib=
-le
-> > strings which do append "-<device_type>", so it's not exactly an
-> > unheard of practice.
+> On 21/10/15 12:13, Sudeep Holla wrote:
+>> On 21/10/15 12:01, Ulf Hansson wrote:
+>>> On 21 October 2015 at 12:25, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wr=
+ote:
 >=20
-> It's a pretty substantial change in the way we make compatible string=
-s
-> that we probably want to discuss more widely if we want to adopt it -
-> we've not been using that idiom and it's pretty surprising.  I'm not
-> really sure it help much and we do already have the pre-@ noise words
-> for this purpose (as well as comments in the DT).
+> [..]
+>=20
+>>>>
+>>>> Yes that was my intention for splitting the patches per SoC group.
+>>>> Many SoC maintainers prefer that.
+>>>
+>>> Hold on! All patches that changes the DT parsing to accept the
+>>> "standardized wakeup-source" binding, need to be merged upstream
+>>> before corresponding DTS changes.
+>>>
+>>
+>> Agreed. Sorry for that I forgot about it as there are only few
+>> subsystems that needed additions. Most of the input subsystem had
+>> already moved to new binding, just that binding documents were left
+>> unchanged.
+>>
+>=20
+> Having looked at it again, I think at-least this patch has no depende=
+ncy
+> on those driver/sub-system changes. Only patch 11, 13 and 17 has
+> dependency. All the other DTS changes are related to input subsystem
+> where all the required changes are already there.
 
-I'm not *that* fussed about it to justify starting-up wider community
-discussions.
+Actually I checked before answering and all the drivers are already
+converted for the AT91 patch: so for this 10/19 patch I'm fine...
 
-My only point is that:
-
-  compatible =3D "<vendor>,udw9283";
-
-=2E.. is meaningless gibberish and I think it'd be better to be more
-forthcoming which prevents having to dig around in DTS files for the
-node name/label for true device/type identification.
-
+Bye,
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
