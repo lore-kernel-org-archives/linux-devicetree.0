@@ -1,121 +1,63 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
-Date: Wed, 21 Oct 2015 16:16:50 +0530
-Message-ID: <56276D1A.1070007@samsung.com>
-References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
- <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
- <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
- <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
- <562765F3.9010306@osg.samsung.com> <56276C0F.4090807@fivetechno.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 10/19] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Wed, 21 Oct 2015 13:01:17 +0200
+Message-ID: <CAPDyKFq8CfzVPPCz=1AxZM3wsw8pkOPG6Ua_5spDuYa=Gzshrw@mail.gmail.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+	<1445422216-29375-11-git-send-email-sudeep.holla@arm.com>
+	<5627672D.60108@atmel.com>
+	<56276832.9040006@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <56276C0F.4090807@fivetechno.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Reichl <m.reichl@fivetechno.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Alim Akhtar <alim.akhtar@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, kgene <kgene@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56276832.9040006@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/21/2015 04:12 PM, Markus Reichl wrote:
-> Am 21.10.2015 um 12:16 schrieb Javier Martinez Canillas:
->> Hello Alim,
+On 21 October 2015 at 12:25, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 21/10/15 11:21, Nicolas Ferre wrote:
 >>
->> On 10/21/2015 08:09 AM, Alim Akhtar wrote:
->>
->> [snip]
->>
->>>>>>>
->>>>>>> Hi Alim,
->>>>>>>
->>>>>>> I have installed your patch set above with git am on top of
->>>>>>> 4.3.0-rc6-00108-gce1fad2 torvalds/linux of today
->>>>>>> with make exynos_defconfig on Odroid U3.
->>>>>>>
->>>>>> which exynos soc Odroid U3 uses?
->>>>>>
->>>>> OK, I can see its uses exynos4412 and exynos4412-odroidu3.dts does
->>>>> include exynos4.dtsi,
->>>>> so these should have worked.
->>>>>
->>>>>>> "halt -p" worked (power 0.0W).
->>>>>>> "reboot" got stuck at 0.5W.
->>>>>>>
->>>>>> reboot stuck mean system does not reboot any more?
->>>>
->>>> It freezes when going for reboot.
->>>> Have to power off/on to boot again.
->>>>
->>>> Btw I use an mmc, not an sd-card.
->>>> No other HW connected, just LAN-cable.
->>>> Bootloader is u-boot v2015.10.
->>>> o
->>> Have checked on 4.3.0-rc6-00006-gd03c139e7e77, still works on peach boards.
->>> Sorry I don't have Odroid U3 with me, may be Javier or Krzysztof might help here to check whats wrong. To me its looks more of a board specific issue for now.
+>> Le 21/10/2015 12:10, Sudeep Holla a =C3=A9crit :
 >>>
+>>> Though the keyboard driver for GPIO buttons(gpio-keys) will continu=
+e to
+>>> check for/support the legacy "gpio-key,wakeup" boolean property to
+>>> enable gpio buttons as wakeup source, "wakeup-source" is the new
+>>> standard binding.
+>>>
+>>> This patch replaces the legacy "gpio-key,wakeup" with the unified
+>>> "wakeup-source" property in order to avoid any futher copy-paste
+>>> duplication.
+>>>
+>>> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
 >>
->> Krzysztof has an Odroid XU3 lite and I have an Odroid XU4, both uses an
->> Exynos5422 so we can't check what's wrong with Odroid U3 (Exynos4412).
 >>
->> Having said that I think I know what is the issue here. Markus said that
->> he is using an eMMC instead of an uSD (which is what I used and my guess
->> is that Krzysztof did too).
->>
->> Now, there is a subtle difference between the old PMU restart handler
->> and the syscon-reboot one, and that is the restart handler priorities:
->>
->> notifier                    priority
->> ------------------------------------
->> pmu_restart_notify          128
->> mmc_pwrseq_emmc_reset_nb    129
->> syscon_restart_handle       192
->>
->> So, without Alim's patches, first the eMMC reset handler will be called
->> and then the PMU restart handler but after his series, the syscon reset
->> handler has a higher priority so the eMMC reset will never be called.
->>
->> But the problem is that the eMMC card has to be properly reset on system
->> restart to allow the SoC iROM to be able to read the bootloader from the
->> eMMC since the iROM doesn't have restart logic and the card shouldn't be
->> left in an unknown state.
->>
->> So the problem here is not that the system is not being reset (that I
->> think that works) but that on reboot, the system is not able to boot
->> again since the ROM is not able to read the second stage bootloader.
->>
->> Markus,
->>
->> Can you please test following patch [0] on top of Alim's series? If that
->> works then it should either be part of Alim's series or the patches will
->> have to wait until that patch lands into mainline. I don't have an eMMC
->> to test it in XU4 but I'm pretty confident that it will solve the issue.
->
-> Hi Javier,
->
-> your patch fixes the issue, reboot works now on U3.
->
-Good to know that.
-Thanks
-> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->
-> Thanks,
-> --
-> Markus
->
->
->>
->> Best regards,
+>> I'm not against this if the whole series goes further.
+>> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 >>
 >
+> Thanks !
 >
+>> I suspect that we would need to take this patch with us on the AT91
+>> branches that would go to arm-soc. Is it the intentions?
+>>
 >
+> Yes that was my intention for splitting the patches per SoC group.
+> Many SoC maintainers prefer that.
+
+Hold on! All patches that changes the DT parsing to accept the
+"standardized wakeup-source" binding, need to be merged upstream
+before corresponding DTS changes.
+
+Therefore, I suggest we go for a two step approach, starting with
+changes affecting the DT parsing/documentation for various
+drivers/subsystem and perhaps we can reach 4.4 for these.
+Then the DTS changes can go in at any later point.
+
+Kind regards
+Uffe
