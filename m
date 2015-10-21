@@ -1,65 +1,72 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: Sync the dts to this document
-Date: Wed, 21 Oct 2015 23:45:13 +0800
-Message-ID: <5627B309.9080309@gmail.com>
-References: <1445395380-5365-1-git-send-email-wxt@rock-chips.com> <1445395380-5365-2-git-send-email-wxt@rock-chips.com> <CAL_JsqJ6ZRjZbtc7dqo-g=CzO+H_FWcRqs2gBGH2HMBBM1xU3g@mail.gmail.com>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: Re: [PATCH v1 01/17] scsi: ufs-qcom: add number of lanes per direction
+Date: Thu, 22 Oct 2015 00:47:42 +0900
+Message-ID: <CAC5umyip2hnH5bTB5WggEsjTK1S_XAhZAW2616OkC_A72BuQqg@mail.gmail.com>
+References: <1442155977-7686-1-git-send-email-ygardi@codeaurora.org>
+	<1442155977-7686-2-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ6ZRjZbtc7dqo-g=CzO+H_FWcRqs2gBGH2HMBBM1xU3g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1442155977-7686-2-git-send-email-ygardi@codeaurora.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Yaniv Gardi <ygardi@codeaurora.org>
+Cc: Jej B <James.Bottomley@hansenpartnership.com>, Paul Bolle <pebolle@tiscali.nl>, Christoph Hellwig <hch@infradead.org>, LKML <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Gilad Broner <gbroner@codeaurora.org>, Dolev Raviv <draviv@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, open li
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-=E5=9C=A8 2015=E5=B9=B410=E6=9C=8821=E6=97=A5 23:18, Rob Herring =E5=86=
-=99=E9=81=93:
-> On Tue, Oct 20, 2015 at 9:42 PM, Caesar Wang <wxt@rock-chips.com> wro=
-te:
->> Add the OTP gpio state, we need switch the pin to gpio state
->> before the TSADC controller is reset.
->>
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->> ---
->>
->> Changes in v1:
->>    - As the Doug comments, add the 'init' property to sync document.
->>
->>   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 5=
- +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
-mal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.tx=
-t
->> index ef802de..28e84f7 100644
->> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> @@ -27,8 +27,9 @@ tsadc: tsadc@ff280000 {
->>          clock-names =3D "tsadc", "apb_pclk";
->>          resets =3D <&cru SRST_TSADC>;
->>          reset-names =3D "tsadc-apb";
->> -       pinctrl-names =3D "default";
->> -       pinctrl-0 =3D <&otp_out>;
->> +       pinctrl-names =3D "init", "default";
->> +       pinctrl-0 =3D <&otp_gpio>;
->> +       pinctrl-1 =3D <&otp_out>;
-> Are these optional or required? They only appear in the example.
-
-Yep,
-These are required for TSADC.
-
-I=E2=80=98m assumed that's right,
-I think we don't need to introduce the pinctrl in this document.
-
-> Rob
+2015-09-13 23:52 GMT+09:00 Yaniv Gardi <ygardi@codeaurora.org>:
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 1c37a7d..9638553 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/async.h>
+>  #include <linux/devfreq.h>
 >
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> +#include <linux/of.h>
+>  #include "ufshcd.h"
+>  #include "unipro.h"
+>  #define UFSHCD_REQ_SENSE_SIZE  18
+> @@ -87,6 +88,8 @@
+>  /* Interrupt aggregation default timeout, unit: 40us */
+>  #define INT_AGGR_DEF_TO        0x02
+>
+> +#define UFSHCD_DEFAULT_LANES_PER_DIRECTION             2
+> +
+>  #define ufshcd_toggle_vreg(_dev, _vreg, _on)                           \
+>         ({                                                              \
+>                 int _ret;                                               \
+> @@ -5765,6 +5768,21 @@ static struct devfreq_dev_profile ufs_devfreq_profile = {
+>         .get_dev_status = ufshcd_devfreq_get_dev_status,
+>  };
+>
+> +static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
+> +{
+> +       struct device *dev = hba->dev;
+> +       int ret;
+> +
+> +       ret = of_property_read_u32(dev->of_node, "lanes-per-direction",
+> +               &hba->lanes_per_direction);
+> +       if (ret) {
+> +               dev_dbg(hba->dev,
+> +                       "%s: failed to read lanes-per-direction, ret=%d\n",
+> +                       __func__, ret);
+> +               hba->lanes_per_direction = UFSHCD_DEFAULT_LANES_PER_DIRECTION;
+> +       }
+> +}
+> +
+>  /**
+>   * ufshcd_init - Driver initialization routine
+>   * @hba: per-adapter instance
+> @@ -5788,6 +5806,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+>         hba->mmio_base = mmio_base;
+>         hba->irq = irq;
+>
+> +       ufshcd_init_lanes_per_dir(hba);
+> +
+>         err = ufshcd_hba_init(hba);
+>         if (err)
+>                 goto out_error;
 
+Should this be called in ufshcd_pltfrm_init() and move
+ufshcd_init_lanes_per_dir() to
+ufshcd-pltfrm.c?  Because all 'of_' stuffs are in ufshcd-pltfrm.c.
