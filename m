@@ -1,41 +1,149 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] arm: dts: lpc32xx: updates to LPC32xx SoC and boards
-Date: Wed, 21 Oct 2015 16:45 +0200
-Message-ID: <3973745.SoYxz6UFdV@wuerfel>
-References: <1445117757-8073-1-git-send-email-vz@mleia.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Wed, 21 Oct 2015 20:20:43 +0530
+Message-ID: <CAGOxZ52-ia8uhgGg5CiU9TSYkfAsRD52zvLqq++Y-mr4uaFOpg@mail.gmail.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+ <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+ <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com> <562765F3.9010306@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445117757-8073-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <562765F3.9010306@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 18 October 2015 00:35:49 Vladimir Zapolskiy wrote:
-> The change improves description of NXP LPC32xx hardware, among
-> important changes it adds standard timers and external memory
-> controller nodes, splits PWM device node into two,
-> 
-> Changes from v1 to v2:
-> - removed v1 2/5 "arm: dts: lpc32xx: fix improper usage of ranges property"
-> - v1 4/5 "arm: dts: lpc32xx: remove unneeded cell settings from cpus"
->   is replaced by v2 3/8 "arm: dts: lpc32xx: add reg property to cpu device node"
-> - new change, sets physical memory offset for EA3250 and PHY3250 v5/8
-> - new change, added EMC device node v2 6/8
-> - new change, added standard timer nodes v2 7/8
-> - new change, grouped USB subdevices together v2 8/8
+Hi Javier,
 
-Looks ok to me. Who should pick them up? I haven't seen pull requests from
-Roland in a while. If he's still interested in the port, I think it would be
-best if he could create a branch here.
+On Wed, Oct 21, 2015 at 3:46 PM, Javier Martinez Canillas
+<javier@osg.samsung.com> wrote:
+> Hello Alim,
+>
+> On 10/21/2015 08:09 AM, Alim Akhtar wrote:
+>
+> [snip]
+>
+>>>>>>
+>>>>>> Hi Alim,
+>>>>>>
+>>>>>> I have installed your patch set above with git am on top of
+>>>>>> 4.3.0-rc6-00108-gce1fad2 torvalds/linux of today
+>>>>>> with make exynos_defconfig on Odroid U3.
+>>>>>>
+>>>>> which exynos soc Odroid U3 uses?
+>>>>>
+>>>> OK, I can see its uses exynos4412 and exynos4412-odroidu3.dts does
+>>>> include exynos4.dtsi,
+>>>> so these should have worked.
+>>>>
+>>>>>> "halt -p" worked (power 0.0W).
+>>>>>> "reboot" got stuck at 0.5W.
+>>>>>>
+>>>>> reboot stuck mean system does not reboot any more?
+>>>
+>>> It freezes when going for reboot.
+>>> Have to power off/on to boot again.
+>>>
+>>> Btw I use an mmc, not an sd-card.
+>>> No other HW connected, just LAN-cable.
+>>> Bootloader is u-boot v2015.10.
+>>> o
+>> Have checked on 4.3.0-rc6-00006-gd03c139e7e77, still works on peach boards.
+>> Sorry I don't have Odroid U3 with me, may be Javier or Krzysztof might help here to check whats wrong. To me its looks more of a board specific issue for now.
+>>
+>
+> Krzysztof has an Odroid XU3 lite and I have an Odroid XU4, both uses an
+> Exynos5422 so we can't check what's wrong with Odroid U3 (Exynos4412).
+>
+> Having said that I think I know what is the issue here. Markus said that
+> he is using an eMMC instead of an uSD (which is what I used and my guess
+> is that Krzysztof did too).
+>
+> Now, there is a subtle difference between the old PMU restart handler
+> and the syscon-reboot one, and that is the restart handler priorities:
+>
+> notifier                    priority
+> ------------------------------------
+> pmu_restart_notify          128
+> mmc_pwrseq_emmc_reset_nb    129
+> syscon_restart_handle       192
+>
+> So, without Alim's patches, first the eMMC reset handler will be called
+> and then the PMU restart handler but after his series, the syscon reset
+> handler has a higher priority so the eMMC reset will never be called.
+>
+> But the problem is that the eMMC card has to be properly reset on system
+> restart to allow the SoC iROM to be able to read the bootloader from the
+> eMMC since the iROM doesn't have restart logic and the card shouldn't be
+> left in an unknown state.
+>
+> So the problem here is not that the system is not being reset (that I
+> think that works) but that on reboot, the system is not able to boot
+> again since the ROM is not able to read the second stage bootloader.
+>
+> Markus,
+>
+> Can you please test following patch [0] on top of Alim's series? If that
+> works then it should either be part of Alim's series or the patches will
+> have to wait until that patch lands into mainline. I don't have an eMMC
+> to test it in XU4 but I'm pretty confident that it will solve the issue.
+>
+> Best regards,
+> --
+> Javier Martinez Canillas
+> Open Source Group
+> Samsung Research America
+>
+> [0]:
+> From c9b250ee03bae338339b70693e906145c719f783 Mon Sep 17 00:00:00 2001
+> From: Javier Martinez Canillas <javier@osg.samsung.com>
+> Date: Wed, 21 Oct 2015 11:59:44 +0200
+> Subject: [RFT PATCH] mmc: pwrseq: Use highest priority for eMMC restart
+>  handler
+>
+> The pwrseq_emmc driver does a eMMC card reset before a system reboot to
+> allow broken or limited ROM boot-loaders, that don't have an eMMC reset
+> logic, to be able to read the second stage from the eMMC.
+>
+> But this has to be called before a system reboot handler and while most
+> of them use the priority 128, there are other restart handlers (such as
+> the syscon-reboot one) that use a higher priority. So, use the highest
+> priority to make sure that the eMMC hw is reset before a system reboot.
+>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+Looks good.
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-If not, we can pick them up directly this time into arm-soc, but then we
-should find a new maintainer.
+>  drivers/mmc/core/pwrseq_emmc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/mmc/core/pwrseq_emmc.c b/drivers/mmc/core/pwrseq_emmc.c
+> index 137c97fb7aa8..ad4f94ec7e8d 100644
+> --- a/drivers/mmc/core/pwrseq_emmc.c
+> +++ b/drivers/mmc/core/pwrseq_emmc.c
+> @@ -84,11 +84,11 @@ struct mmc_pwrseq *mmc_pwrseq_emmc_alloc(struct mmc_host *host,
+>
+>         /*
+>          * register reset handler to ensure emmc reset also from
+> -        * emergency_reboot(), priority 129 schedules it just before
+> -        * system reboot
+> +        * emergency_reboot(), priority 255 is the highest priority
+> +        * so it will be executed before any system reboot handler.
+>          */
+>         pwrseq->reset_nb.notifier_call = mmc_pwrseq_emmc_reset_nb;
+> -       pwrseq->reset_nb.priority = 129;
+> +       pwrseq->reset_nb.priority = 255;
+>         register_restart_handler(&pwrseq->reset_nb);
+>
+>         pwrseq->pwrseq.ops = &mmc_pwrseq_emmc_ops;
+> --
+> 2.4.3
 
-	Arnd 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+-- 
+Regards,
+Alim
