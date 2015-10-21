@@ -1,105 +1,52 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH 2/3] ARM: dts: NSP: Add NAND Support to DT
-Date: Wed, 21 Oct 2015 19:08:52 -0400
-Message-ID: <1445468933-25933-3-git-send-email-jonmason@broadcom.com>
-References: <1445468933-25933-1-git-send-email-jonmason@broadcom.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Thu, 22 Oct 2015 01:39:42 +0200
+Message-ID: <13395371.QJ0TvhYnx8@vostro.rjw.lan>
+References: <561E1378.6000906@collabora.com> <4903022.NtioyRkmbB@vostro.rjw.lan> <CAMuHMdWoSdoT1p0e+Bc9ucrykxO7ESLKYHRzackpVjQAs_XaDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445468933-25933-1-git-send-email-jonmason@broadcom.com>
+In-Reply-To: <CAMuHMdWoSdoT1p0e+Bc9ucrykxO7ESLKYHRzackpVjQAs_XaDg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?ISO-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gm>
 List-Id: devicetree@vger.kernel.org
 
-Add NAND support to the device tree for the Broadcom Northstar Plus SoC.
-Since no driver changes are needed to enable this hardware, only the
-device tree changes are required to make this functional.
+On Wednesday, October 21, 2015 10:55:14 AM Geert Uytterhoeven wrote:
+> Hi Rafael,
+> 
+> On Wed, Oct 21, 2015 at 1:34 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > On Tuesday, October 20, 2015 09:15:01 AM Rob Herring wrote:
+> >> On Tue, Oct 20, 2015 at 2:56 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >> > ACPI uses platform devices too.  In fact, ACPI device objects are enumerated as
+> >> > platform devices by default now.
+> >>
+> >> Okay, I should have grepped for that:
+> >> drivers/base/platform.c:                ACPI_COMPANION_SET(&pdev->dev, NULL);
+> >> drivers/base/platform.c:        len = acpi_device_modalias(dev, buf,
+> >> PAGE_SIZE -1);
+> >> drivers/base/platform.c:        rc = acpi_device_uevent_modalias(dev, env);
+> >> drivers/base/platform.c:        /* Then try ACPI style match */
+> >> drivers/base/platform.c:        if (acpi_driver_match_device(dev, drv))
+> >>
+> >> These are all cases which have DT version as well, so we're not really
+> >> all that different here. There's a few more for DT, but that probably
+> >> means you have just not hit the problems we have yet. For example,
+> >> what happens if you have an interrupt line in which the controller is
+> >> probed after the device connected to the interrupt line? That required
+> >> resolving irqs in platform_get_irq rather than using static resources
+> >> to support deferred probe.
+> >
+> > We don't have this particular problem, because the IRQ controllers are
+> > enumerated in a special way.
+> 
+> What does "in a special way" mean? Can you please be more specific?
+> 
+> Can you have interrupt controllers that depend on clocks, pin controllers,
+> and PM domains?
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi   | 16 +++++++++++++++-
- arch/arm/boot/dts/bcm958625k.dts | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 1 deletion(-)
+Currently, there's no native way to represent those dependencies in ACPI.
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 85fb1c8..62bc86f 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -96,7 +96,7 @@
- 
- 	axi {
- 		compatible = "simple-bus";
--		ranges = <0x00000000 0x18000000 0x00015000>;
-+		ranges = <0x00000000 0x18000000 0x0011ba08>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -187,5 +187,19 @@
- 
- 			status = "disabled";
- 		};
-+
-+		nand: nand@18026000 {
-+			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
-+			reg = <0x026000 0x600>,
-+			      <0x11b408 0x600>,
-+			      <0x026f00 0x20>;
-+			reg-names = "nand", "iproc-idm", "iproc-ext";
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			brcm,nand-has-wp;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-index 4859268..b966955 100644
---- a/arch/arm/boot/dts/bcm958625k.dts
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -67,3 +67,41 @@
- &pcie2 {
- 	status = "okay";
- };
-+
-+&nand {
-+	nandcs@0 {
-+		compatible = "brcm,nandcs";
-+		reg = <0>;
-+		nand-on-flash-bbt;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		nand-ecc-strength = <24>;
-+		nand-ecc-step-size = <1024>;
-+
-+		brcm,nand-oob-sector-size = <27>;
-+
-+		partition@0 {
-+			label = "nboot";
-+			reg = <0x00000000 0x00200000>;
-+			read-only;
-+		};
-+		partition@1 {
-+			label = "nenv";
-+			reg = <0x00200000 0x00400000>;
-+		};
-+		partition@2 {
-+			label = "nsystem";
-+			reg = <0x00600000 0x00a00000>;
-+		};
-+		partition@3 {
-+			label = "nrootfs";
-+			reg = <0x01000000 0x03000000>;
-+		};
-+		partition@4 {
-+			label = "ncustfs";
-+			reg = <0x04000000 0x3c000000>;
-+		};
-+	};
-+};
--- 
-1.9.1
+Thanks,
+Rafael
