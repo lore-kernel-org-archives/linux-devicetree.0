@@ -1,62 +1,65 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 10/19] ARM: dts: at91: replace gpio-key,wakeup with
- wakeup-source property
-Date: Wed, 21 Oct 2015 17:27:23 +0200
-Message-ID: <5627AEDB.2000405@atmel.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
- <1445422216-29375-11-git-send-email-sudeep.holla@arm.com>
- <5627672D.60108@atmel.com> <56276832.9040006@arm.com>
- <CAPDyKFq8CfzVPPCz=1AxZM3wsw8pkOPG6Ua_5spDuYa=Gzshrw@mail.gmail.com>
- <56277372.6080203@arm.com> <562787E9.9030606@arm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: Alternative approach to solve the deferred probe
+Date: Wed, 21 Oct 2015 08:36:23 -0700
+Message-ID: <5627B0F7.7010600@gmail.com>
+References: <20151018195330.GB14956@sirena.org.uk> <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com> <20151019131821.GA32532@n2100.arm.linux.org.uk> <CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com> <20151019143045.GE32532@n2100.arm.linux.org.uk> <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com> <20151019153548.GM32532@n2100.arm.linux.org.uk> <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com> <20151020154656.GY32532@n2100.arm.linux.org.uk> <56270D5B.5010902@gmail.com> <20151021081847.GB32532@n2100.arm.linux.org.uk>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <562787E9.9030606-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20151021081847.GB32532@n2100.arm.linux.org.uk>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwo>
 List-Id: devicetree@vger.kernel.org
 
-Le 21/10/2015 14:41, Sudeep Holla a =C3=A9crit :
->=20
->=20
-> On 21/10/15 12:13, Sudeep Holla wrote:
->> On 21/10/15 12:01, Ulf Hansson wrote:
->>> On 21 October 2015 at 12:25, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wr=
-ote:
->=20
-> [..]
->=20
->>>>
->>>> Yes that was my intention for splitting the patches per SoC group.
->>>> Many SoC maintainers prefer that.
->>>
->>> Hold on! All patches that changes the DT parsing to accept the
->>> "standardized wakeup-source" binding, need to be merged upstream
->>> before corresponding DTS changes.
->>>
->>
->> Agreed. Sorry for that I forgot about it as there are only few
->> subsystems that needed additions. Most of the input subsystem had
->> already moved to new binding, just that binding documents were left
->> unchanged.
->>
->=20
-> Having looked at it again, I think at-least this patch has no depende=
-ncy
-> on those driver/sub-system changes. Only patch 11, 13 and 17 has
-> dependency. All the other DTS changes are related to input subsystem
-> where all the required changes are already there.
+On 10/21/2015 1:18 AM, Russell King - ARM Linux wrote:
+> On Tue, Oct 20, 2015 at 08:58:19PM -0700, Frank Rowand wrote:
+>> On 10/20/2015 8:46 AM, Russell King - ARM Linux wrote:
 
-Actually I checked before answering and all the drivers are already
-converted for the AT91 patch: so for this 10/19 patch I'm fine...
+< snip >
 
-Bye,
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> +
+>>>  static bool driver_deferred_probe_enable = false;
+>>> +
+>>>  /**
+>>>   * driver_deferred_probe_trigger() - Kick off re-probing deferred devices
+>>>   *
+>>> @@ -188,6 +210,13 @@ static int deferred_probe_initcall(void)
+>>>  	driver_deferred_probe_trigger();
+>>
+>> Couldn't you put the "driver_deferred_probe_report = true" here?  And then
+>> not add another round of probes.
+> 
+> The idea is not to report anything for drivers that were deferred
+> during the normal bootup.  The above is part of the normal bootup,
+> and the deferred activity should not be warned about.
+
+The above is currently the last point for probe to succeed or defer
+(until possibly, as you mentioned, module loading resolves the defer).
+If a probe defers above, it will defer again below.  The set of defers
+should be exactly the same above and below.
+
+> 
+> If we have any devices still deferring after _this_ round, that must
+> indicate that some resource they want is not available, and that
+> should be warned about.
+> 
+> Of course, modules can defer too - and I made some suggestions in my
+> waffle above the patch about that.
+> 
+
+< adding back trimmed, for fuller context >
+
+>>>  	/* Sort as many dependencies as possible before exiting initcalls */
+>>>  	flush_workqueue(deferred_wq);
+>>> +
+>>> +	/* Now one final round, reporting any devices that remain deferred */
+>>> +	driver_deferred_probe_report = true;
+>>> +	driver_deferred_probe_trigger();
+>>> +	/* Sort as many dependencies as possible before exiting initcalls */
+>>> +	flush_workqueue(deferred_wq);
+>>> +
+>>>  	return 0;
+>>>  }
