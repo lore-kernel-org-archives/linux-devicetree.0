@@ -1,102 +1,118 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 1/4] ARM: dts: uniphier: use stdout-path instead of console
-Date: Wed, 21 Oct 2015 20:36:27 +0900
-Message-ID: <1445427390-22750-2-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 3/4] ARM: dts: uniphier: add ProXstream2 Gentil board support
+Date: Wed, 21 Oct 2015 20:36:29 +0900
+Message-ID: <1445427390-22750-4-git-send-email-yamada.masahiro@socionext.com>
 References: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445427390-22750-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, arm@kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Specifying both console and stdout-path is redundant.  Add options
-":115200n8" to stdout-path and drop "console=ttyS0,115200".
+Initial version of DTS for ProXstream2 Gentil board.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  | 3 +--
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 3 +--
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts | 3 +--
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts | 3 +--
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts | 3 +--
- 5 files changed, 5 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/Makefile                        |  3 +-
+ arch/arm/boot/dts/uniphier-proxstream2-gentil.dts | 74 +++++++++++++++++++++++
+ 2 files changed, 76 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
 
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-index e9722a5..f1e9d40 100644
---- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-@@ -57,8 +57,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200";
--		stdout-path = &serial0;
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-index da2d564..5baa9fc 100644
---- a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-@@ -57,8 +57,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200";
--		stdout-path = &serial0;
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-index 47e2edb..2462668 100644
---- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-@@ -57,8 +57,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200";
--		stdout-path = &serial0;
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-index adcbbc6..b7a03215 100644
---- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-@@ -58,8 +58,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200";
--		stdout-path = &serial0;
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-index bcf2e7c..fc7250c 100644
---- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-@@ -57,8 +57,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttyS0,115200";
--		stdout-path = &serial0;
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	aliases {
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index bb8fa02..d7eefec 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -672,7 +672,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
+ 	uniphier-ph1-ld6b-ref.dtb \
+ 	uniphier-ph1-pro4-ref.dtb \
+ 	uniphier-ph1-sld3-ref.dtb \
+-	uniphier-ph1-sld8-ref.dtb 
++	uniphier-ph1-sld8-ref.dtb \
++	uniphier-proxstream2-gentil.dtb
+ dtb-$(CONFIG_ARCH_VERSATILE) += \
+ 	versatile-ab.dtb \
+ 	versatile-pb.dtb
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts b/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
+new file mode 100644
+index 0000000..5cb58b6
+--- /dev/null
++++ b/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
+@@ -0,0 +1,74 @@
++/*
++ * Device Tree Source for UniPhier ProXstream2 Gentil Board
++ *
++ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++/include/ "uniphier-proxstream2.dtsi"
++
++/ {
++	model = "UniPhier ProXstream2 Gentil Board";
++	compatible = "socionext,proxstream2-gentil", "socionext,proxstream2";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x80000000>;
++	};
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
++
++	aliases {
++		serial0 = &serial0;
++		serial1 = &serial1;
++		serial2 = &serial2;
++	};
++};
++
++&serial2 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
