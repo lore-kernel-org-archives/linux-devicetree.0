@@ -1,56 +1,57 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
-Date: Wed, 21 Oct 2015 11:35:36 +0200
-Message-ID: <20151021093536.GA3575@pd.tnic>
-References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com>
- <20151019205236.GB453@leverpostej>
- <56266F7E.6030404@amd.com>
- <20151020165744.GE31130@pd.tnic>
- <20151020172654.GC4943@leverpostej>
- <20151020173639.GH31130@pd.tnic>
- <5626F09F.4050107@huawei.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 3/4] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag for sdio
+ clk
+Date: Wed, 21 Oct 2015 02:54:54 -0700
+Message-ID: <20151021095454.20687.98330@quantum>
+References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
+ <1445339807-2351-4-git-send-email-jszhang@marvell.com>
+ <20151021093039.20687.88701@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5626F09F.4050107-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huxinwei <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151021093039.20687.88701@quantum>
+Sender: linux-clk-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 09:55:43AM +0800, Hanjun Guo wrote:
-> So I think the meaning of those error register is the same, but the way
-> of handle it may different from SoCs, for single bit error:
+Quoting Michael Turquette (2015-10-21 02:30:39)
+> Quoting Jisheng Zhang (2015-10-20 04:16:46)
+> > Since we have added the necessary two clks' properties in dts, we can
+> > remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 > 
->  - SoC may trigger a interrupt;
->  - SoC may just keep silent so we need to scan the registers using poll
->    mechanism.
+> Applied to clk-next.
+
+So the sdhci change was dropped from v2. Do you want me to Ack these
+instead so you can send them all together?
+
+Regards,
+Mike
+
 > 
-> For Double bit error:
->   - SoC may also keep silent
->   - Trigger a interrupt
->   - Trigger a SEI (system error)
+> Regards,
+> Mike
 > 
-> Any suggestion to cover those cases?
-
-Well, I guess we can implement all those and have them configurable
-in the sense that a single driver loads, it has all functionality and
-dependent on the vendor detection, it does only what the vendor wants
-like trigger an interrupt or remain silent or ...
-
-Btw, in talking about this with Andre last night, he had the suggestion
-that this functionality is also in other implementations besides A57 so
-maybe the driver should be called arm_cortex_edac...
-
-Just putting it out there and adding Andre to CC.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > ---
+> >  drivers/clk/berlin/bg2q.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
+> > index 221f40c..243f421 100644
+> > --- a/drivers/clk/berlin/bg2q.c
+> > +++ b/drivers/clk/berlin/bg2q.c
+> > @@ -283,7 +283,7 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
+> >         { "usb2",       "perif",        13 },
+> >         { "usb3",       "perif",        14 },
+> >         { "pbridge",    "perif",        15, CLK_IGNORE_UNUSED },
+> > -       { "sdio",       "perif",        16, CLK_IGNORE_UNUSED },
+> > +       { "sdio",       "perif",        16 },
+> >         { "nfc",        "perif",        18 },
+> >         { "pcie",       "perif",        22 },
+> >  };
+> > -- 
+> > 2.6.1
+> > 
