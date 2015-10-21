@@ -1,48 +1,60 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add new SoCs to bcm4708 DT bindings
-Date: Tue, 20 Oct 2015 21:21:56 -0500
-Message-ID: <CAL_Jsq+-0TZ-SOz+W2WxUvC+e7iYnBStFuJHR0icy9Gfiu7rzA@mail.gmail.com>
-References: <1444947856-26246-1-git-send-email-jonmason@broadcom.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: bcm2835: dt: Add Raspberry Pi Model A+
+Date: Tue, 20 Oct 2015 20:20:19 -0600
+Message-ID: <5626F663.1050609@wwwdotorg.org>
+References: <1444592237-12433-1-git-send-email-lkundrak@v3.sk>
+ <1444592237-12433-3-git-send-email-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444947856-26246-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1444592237-12433-3-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 5:24 PM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Add the 4708, 4709, and 53012 SoCs to the the documentation for the
-> Broadcom Northstar device tree bindings.
->
-> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On 10/11/2015 01:37 PM, Lubomir Rintel wrote:
+> Essentially the same as B+.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+(It'd be good practice to CC RPi patches to the ARM kernel mailing list too)
 
-> ---
->  Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> index 6b0f49f..8608a77 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> @@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
->
->  Required root node property:
->
-> +bcm4708
->  compatible = "brcm,bcm4708";
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+
+> +	leds {
+> +		act {
+> +			gpios = <&gpio 47 0>;
+> +		};
 > +
-> +bcm4709
-> +compatible = "brcm,bcm4709";
-> +
-> +bcm53012
-> +compatible = "brcm,bcm53012";
-> --
-> 1.9.1
->
+> +		pwr {
+> +			label = "PWR";
+> +			gpios = <&gpio 35 0>;
+> +			default-state = "keep";
+> +			linux,default-trigger = "default-on";
+> +		};
+> +	};
+
+Since the A+ and B+ are so similar, I wonder if it makes sense to
+sometime create a shared "plus" .dtsi file for the shared parts?
+
+Same for the I2S below.
+
+Perhaps the DTs are so simple that it's a waste of complexity to do that
+though.
+
+Out of curiosity, are you planning on creating DT files for all the
+possible options:
+
+		"bcm2835-rpi-a.dtb",
+		"bcm2835-rpi-a-plus.dtb",
+		"bcm2835-rpi-b.dtb",
+		"bcm2835-rpi-b-i2c0.dtb",
+		"bcm2835-rpi-b-plus.dtb",
+		"bcm2835-rpi-b-rev2.dtb",
+		"bcm2835-rpi-cm.dtb",
+		"bcm2836-rpi-2-b.dtb",
+
+(list taken from U-Boot's board/raspberrypi/rpi/rpi.c)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
