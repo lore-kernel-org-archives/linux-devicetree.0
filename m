@@ -1,58 +1,48 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] of: overlay: kobjectify overlay objects
-Date: Wed, 21 Oct 2015 08:22:36 -0700
-Message-ID: <20151021152236.GA20589@kroah.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1445368397-8732-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20151020210349.GA28724@kroah.com>
- <302128B9-A82A-477D-A158-3283DE30F43A@konsulko.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2] ARM: dts: fix gpio-keys wakeup-source property
+Date: Wed, 21 Oct 2015 16:23:41 +0100
+Message-ID: <5627ADFD.4050003@arm.com>
+References: <1445011296-29042-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <302128B9-A82A-477D-A158-3283DE30F43A-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445011296-29042-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 04:28:33PM +0300, Pantelis Antoniou wrote:
-> Hi Greg,
->=20
-> > On Oct 21, 2015, at 00:03 , Greg Kroah-Hartman <gregkh@linuxfoundat=
-ion.org> wrote:
-> >=20
-> > On Tue, Oct 20, 2015 at 10:13:14PM +0300, Pantelis Antoniou wrote:
-> >> We are going to need the overlays to appear on sysfs with runtime
-> >> global properties (like master enable) so turn them into kobjects.
-> >=20
-> > Why kobjects and not 'struct device=E2=80=99?
-> >=20
->=20
-> Cause it=E2=80=99s overkill.
->=20
-> There is no hardware/abstract device connection between an overlay an=
-d a device as what=E2=80=99s being used right now in driver core.
->=20
-> kobjs are enough to present them in the filesystem hierarchy.
->=20
-> > Why even have them in sysfs at all?  You need more information here=
- as
-> > to why you want to do this.
-> >=20
->=20
-> They have to be in sysfs so that people can have information about th=
-e overlays applied in the system, i.e. where their targets are and whet=
-her removal is possible. That=E2=80=99s what=E2=80=99s possible for now=
-; in the future we might present the full contents of the overlay there=
-, and what changes to the live tree were made.
+Hi Arnd,
 
-Ok, then say that in the changelog to explain what you are doing here :=
-)
+On 16/10/15 17:01, Sudeep Holla wrote:
+> The keyboard driver for GPIO buttons(gpio-keys) checks for one of the
+> two boolean properties to enable gpio buttons as wakeup source:
+> 1. "wakeup-source" or
+> 2. the legacy "gpio-key,wakeup"
+>
+> However juno, ste-snowball and emev2-kzm9d dts file have a undetected
+> "wakeup" property to indictate the wakeup source.
+>
+> This patch fixes it by making use of "wakeup-source" property.
+>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Acked-by: Simon Horman <horms@verge.net.au>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>   arch/arm/boot/dts/emev2-kzm9d.dts             |  8 ++++----
+>   arch/arm/boot/dts/ste-snowball.dts            | 10 +++++-----
+>   arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 12 ++++++------
+>   3 files changed, 15 insertions(+), 15 deletions(-)
+>
+> Hi ARM-SoC group,
+>
+> Please consider this as a fix for v4.3 if possible.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you include this for v4.3 fixes please ?
+
+-- 
+Regards,
+Sudeep
