@@ -1,116 +1,120 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Wed, 21 Oct 2015 08:59:51 -0700
-Message-ID: <5627B677.5090109@gmail.com>
-References: <561E1378.6000906@collabora.com> <20151017065750.GA18607@kroah.com> <20151018192931.GY14956@sirena.org.uk> <20151018193757.GA9147@kroah.com> <20151018195330.GB14956@sirena.org.uk> <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] driver core: Disable late probes by default
+Date: Wed, 21 Oct 2015 09:06:56 -0700
+Message-ID: <20151021160656.GA20899@kroah.com>
+References: <20151016181129.GA1764@gradator.net>
+ <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
+ <20151019151953.GA22662@kroah.com>
+ <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
+ <20151020140523.GA22021@kroah.com>
+ <CAAObsKAL782-poBT1gkid+zzhWBOrnOUh7P7epjcja38j_-fbQ@mail.gmail.com>
+ <20151021033917.GB32366@kroah.com>
+ <CAAObsKBLL_-bARp_W0sVqoGdpQ+nftdJtQepnFL1foJOGJmbQQ@mail.gmail.com>
+ <20151021151447.GA19720@kroah.com>
+ <CAAObsKASbhBrEoE-=k3Vwg7BygLQ2vXU2jxu3FyxNrD5AAHROg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, =?UTF-8?B?VGVyamUgQmVyZ3N0csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>J
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAObsKASbhBrEoE-=k3Vwg7BygLQ2vXU2jxu3FyxNrD5AAHROg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2015 5:34 AM, Tomeu Vizoso wrote:
-> On 18 October 2015 at 21:53, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Sun, Oct 18, 2015 at 12:37:57PM -0700, Greg Kroah-Hartman wrote:
->>> On Sun, Oct 18, 2015 at 08:29:31PM +0100, Mark Brown wrote:
->>>> On Fri, Oct 16, 2015 at 11:57:50PM -0700, Greg Kroah-Hartman wrote=
-:
+On Wed, Oct 21, 2015 at 05:53:13PM +0200, Tomeu Vizoso wrote:
+> On 21 October 2015 at 17:14, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Wed, Oct 21, 2015 at 04:35:58PM +0200, Tomeu Vizoso wrote:
+> >> On 21 October 2015 at 05:39, Greg Kroah-Hartman
+> >> <gregkh@linuxfoundation.org> wrote:
+> >> > On Tue, Oct 20, 2015 at 06:17:39PM +0200, Tomeu Vizoso wrote:
+> >> >> On 20 October 2015 at 16:05, Greg Kroah-Hartman
+> >> >> <gregkh@linuxfoundation.org> wrote:
+> >> >> > On Tue, Oct 20, 2015 at 09:40:48AM +0200, Tomeu Vizoso wrote:
+> >> >> >> On 19 October 2015 at 17:19, Greg Kroah-Hartman
+> >> >> >> <gregkh@linuxfoundation.org> wrote:
+> >> >> >> > On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
+> >> >> >> >> To smooth the transition to late probes, make disabled the default for
+> >> >> >> >> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
+> >> >> >> >> get fixed.
+> >> >> >> >>
+> >> >> >> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> >> >> >> >> Link: https://lkml.kernel.org/g/20151016181129.GA1764@gradator.net
+> >> >> >> >>
+> >> >> >> >> ---
+> >> >> >> >>
+> >> >> >> >> Hi Rob,
+> >> >> >> >>
+> >> >> >> >> I'm sending this in case you think it would be best to leave the
+> >> >> >> >> on-demand probe series in -next for now but have late probes disabled to
+> >> >> >> >> avoid hassle to some people.
+> >> >> >> >
+> >> >> >> > I would like Rob to just drop this series please, I don't agree with it
+> >> >> >> > at all at the moment.
+> >> >> >>
+> >> >> >> Hi Greg,
+> >> >> >>
+> >> >> >> is it the case that you are satisfied with deferred probes as a way of
+> >> >> >> ordering device probing and that I should look at how to solve my
+> >> >> >> problem by improving it?
+> >> >> >
+> >> >> > Yes, especially given that you have said this does not speed up your
+> >> >> > boot times, which I thought was your main goal here :(
+> >> >>
+> >> >> Sorry if I'm repeating myself too often, but I have two goals: change
+> >> >> the probing order to not send deferred probes to the back of the queue
+> >> >> (getting the display up as fast as possible), and making easier to
+> >> >> understand the boot process on embedded platforms.
+> >> >>
+> >> >> The concrete issue that would be fixed by achieving the first goal was
+> >> >> explained in this email from last year:
+> >> >>
+> >> >> http://lists.freedesktop.org/archives/dri-devel/2014-August/066527.html
+> >> >>
+> >> >> Because of that, ChromeOS had to use their own bindings for the panel
+> >> >> node so that the panel probe wouldn't be deferred, introducing a
+> >> >> sizable delta that is a barrier to rebasing on newer mainline releases
+> >> >> and for vendors to upstream their HW adaptation for chrome devices.
+> >> >
+> >> > 1.5 second delay is crazy (again, my laptop boots to X in less time than
+> >> > that),
+> >>
+> >> 1.5 seconds isn't crazy at all for the kernel to initialize all the
+> >> devices in an embedded board. That's the current state of affairs
+> >> today.
+> >
+> > Then someone needs to fix that, that really is crazy.  What takes so
+> > long here?  Why aren't you using async probing to do things in parallel
+> > when you need to sleep in device probe (I'm hoping you are sleeping in
+> > device probe, otherwise that's really broken)?
+> 
+> I'm a bit surprised now. During all the time that I have been pushing
+> this forward I have been regularly testing on more than a dozen boards
+> with different socs and 1.5 seconds to probe all the devices isn't
+> that much. This is basically due to having to wait for the hardware a
+> bit here and there, and to the sheer number of devices involved.
+> 
+> Of course people have been looking at speeding up boot on ARM devices
+> for years now and this is what we have come with up to now.
+> 
+> > Have you used the tools we have to find where the time is being spent?
+> 
+> Have to recognize that my starting point has been that probe order was
+> the cause of the problem and haven't profiled the whole boot process,
+> but I don't see how probe ordering would become irrelevant unless we
+> got total probing time down to 200ms. And that would give us a
+> fabulously fast boot, which I don't think is as realistic as you seem
+> to believe.
 
-< snip >
+So you aren't using the tools that we have today that were created years
+ago, to help to reduce boot time problems like this and instead work on
+changing the driver core to try to guess at what the real issue is here?
 
-> hope you don't mind I summarize the points taken instead of replying
-> to the individual emails. I tried to address all the concerns that
-> have been raised again in the cover letter, but I guess I did a bad
-> job at explaining myself, so here's another (more in-depth) go at it.
+Come on, until you really know where you are taking so long, how can you
+know what you need to fix?  I strongly recommend doing that here first,
+that's why those tools were written in the first place.
 
-< snip >
+{sigh}
 
-> 3) Regarding total boot time, I don't expect this series to make much
-> of a difference because though we would save a lot of matching and
-> querying for resources, that's little time compared with how long we
-> wait for hardware to react during probing. Async probing is more
-> likely to help with drivers that take a long time to probe.
-
-And then in your reply to Russell's reply to your email you say:
-
-> To be clear, I was saying that this series should NOT affect total
-> boot times much.
-
-I'm confused.  If I understood correctly, improving boot time was
-the key justification for accepting this patch set.  For example,
-from "[PATCH v7 0/20] On-demand device probing":
-
-   I have a problem with the panel on my Tegra Chromebook taking longer
-   than expected to be ready during boot (St=C3=A9phane Marchesin repor=
-ted what
-   is basically the same issue in [0]), and have looked into ordered
-   probing as a better way of solving this than moving nodes around in =
-the
-   DT or playing with initcall levels and linking order.
-
-   ...
-
-   With this series I get the kernel to output to the panel in 0.5s,
-   instead of 2.8s.
-
-Alexander Holler reported improved boot times for his patch set
-in August, which is another approach to ordering probes
-(http://article.gmane.org/gmane.linux.drivers.devicetree/133010).
-His results for 5 boards was four booted faster, one slightly
-slower:
-
-   Some numbers (5 boots on each board, without and with ordering drive=
-rs),
-   all times are seconds.
-
-   Kirkwood (dockstar, armv5):
-
-   Boot to "Freeing unused kernel memory" (includes mounting the rootfs=
-),
-   unordered:
-   4.456016 3.937801 4.114788 4.114526 3.949480 (average 4.1145222)
-   ordered:
-   3.173054 3.164045 3.141418 3.480679 3.459298 (3.2836988)
-   Time needed to sort (of_init_build_order()):
-   0.003024
-   Time needed to match drivers to the order (without calling them):
-   0.002884
-
-   Beagleboard (rev C4, armv7):
-
-   unordered:
-   6.706024 6.821746 6.696014 6.673675 6.769866 (6.733465)
-   ordered:
-   5.544860 5.514160 5.505859 5.527374 5.496795 (5.5178096)
-   sorting: 0.021209
-   matching: 0.006165
-
-   Beaglebone Black (rev A5, armv7):
-
-   unordered:
-   3.826531 3.825662 3.826648 3.825434 3.825263 (3.8259076)
-   ordered:
-   2.838554 2.838322 2.839459 2.838467 2.838421 (2.8386446)
-   sorting: 0.004769
-   matching: 0.004860
-
-   imx6q (armv7):
-
-   unordered:
-   3.451998 3.418864 3.446952 3.429974 3.440996 (3.4377568)
-   ordered:
-   3.538312 3.549019 3.538105 3.515916 3.555715 (3.5394134)
-   sorting: 0.004622
-   matching: 0.003868
-
-While not as dramatic as your results, they are somewhat supportive.
-What has changed your assessment that the on-demand device probing
-patches will give a big boot performance increase?  Do you have
-new data or analysis?
-
--Frank
+greg k-h
