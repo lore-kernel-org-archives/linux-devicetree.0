@@ -1,45 +1,102 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 03/19] rtc: opal: enable support for the stardard "wakeup-source" property
-Date: Wed, 21 Oct 2015 11:10:00 +0100
-Message-ID: <1445422216-29375-4-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH 09/19] ARM: dts: am335x: replace gpio-key,wakeup with wakeup-source property
+Date: Wed, 21 Oct 2015 11:10:06 +0100
+Message-ID: <1445422216-29375-10-git-send-email-sudeep.holla@arm.com>
 References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, rtc-linux@googlegroups.com
+Cc: Sudeep Holla <sudeep.holla@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Though the opal rtc driver should and will continue to support the legacy
-"has-tpo" property to enable RTC as the wakeup source, we need to add
-support for the new standard property "wakeup-source"
+Though the keyboard driver for GPIO buttons(gpio-keys) will continue to
+check for/support the legacy "gpio-key,wakeup" boolean property to
+enable gpio buttons as wakeup source, "wakeup-source" is the new
+standard binding.
 
-This patch adds support for "wakeup-source" property in addition to the
-existing "has-tpo" property.
+This patch replaces the legacy "gpio-key,wakeup" with the unified
+"wakeup-source" property in order to avoid any futher copy-paste
+duplication.
 
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: rtc-linux@googlegroups.com
+Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/rtc/rtc-opal.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am335x-evm.dts    | 4 ++--
+ arch/arm/boot/dts/am335x-evmsk.dts  | 2 +-
+ arch/arm/boot/dts/am335x-pepper.dts | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/rtc/rtc-opal.c b/drivers/rtc/rtc-opal.c
-index 6fbf9e617151..4087d53ecd73 100644
---- a/drivers/rtc/rtc-opal.c
-+++ b/drivers/rtc/rtc-opal.c
-@@ -199,8 +199,9 @@ static int opal_rtc_probe(struct platform_device *pdev)
- {
- 	struct rtc_device *rtc;
- 
--	if (pdev->dev.of_node && of_get_property(pdev->dev.of_node, "has-tpo",
--						 NULL)) {
-+	if (pdev->dev.of_node &&
-+	    (of_property_read_bool(pdev->dev.of_node, "wakeup-source") ||
-+	     of_property_read_bool(pdev->dev.of_node, "has-tpo")/* legacy */)) {
- 		device_set_wakeup_capable(&pdev->dev, true);
- 		opal_rtc_ops.read_alarm	= opal_get_tpo_time;
- 		opal_rtc_ops.set_alarm = opal_set_tpo_time;
--- 
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335=
+x-evm.dts
+index 1942a5c8132d..a6e398a213ec 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -83,14 +83,14 @@
+ 			label =3D "volume-up";
+ 			linux,code =3D <115>;
+ 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+=20
+ 		switch@10 {
+ 			label =3D "volume-down";
+ 			linux,code =3D <114>;
+ 			gpios =3D <&gpio0 3 GPIO_ACTIVE_LOW>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+=20
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am3=
+35x-evmsk.dts
+index 315bb02c9920..6b57baaa2bb0 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -123,7 +123,7 @@
+ 			label =3D "button2";
+ 			linux,code =3D <0x102>;
+ 			gpios =3D <&gpio0 30 GPIO_ACTIVE_HIGH>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+=20
+ 		switch@4 {
+diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am=
+335x-pepper.dts
+index 7106114c7464..5107dbb07a7d 100644
+--- a/arch/arm/boot/dts/am335x-pepper.dts
++++ b/arch/arm/boot/dts/am335x-pepper.dts
+@@ -627,21 +627,21 @@
+ 		label =3D "home";
+ 		linux,code =3D <KEY_HOME>;
+ 		gpios =3D <&gpio1 22 GPIO_ACTIVE_LOW>;
+-		gpio-key,wakeup;
++		wakeup-source;
+ 	};
+=20
+ 	button@1 {
+ 		label =3D "menu";
+ 		linux,code =3D <KEY_MENU>;
+ 		gpios =3D <&gpio1 23 GPIO_ACTIVE_LOW>;
+-		gpio-key,wakeup;
++		wakeup-source;
+ 	};
+=20
+ 	buttons@2 {
+ 		label =3D "power";
+ 		linux,code =3D <KEY_POWER>;
+ 		gpios =3D <&gpio0 7 GPIO_ACTIVE_LOW>;
+-		gpio-key,wakeup;
++		wakeup-source;
+ 	};
+ };
+=20
+--=20
 1.9.1
