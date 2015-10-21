@@ -1,33 +1,55 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 02/10] clk: cygnus: Convert all macros to all caps
-Date: Wed, 21 Oct 2015 16:44:14 -0700
-Message-ID: <20151021234414.GO19782@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 03/10] clk: iproc: Add PWRCTRL support
+Date: Wed, 21 Oct 2015 16:48:10 -0700
+Message-ID: <20151021234810.GP19782@codeaurora.org>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-3-git-send-email-jonmason@broadcom.com>
+ <1444938513-10758-4-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444938513-10758-3-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+In-Reply-To: <1444938513-10758-4-git-send-email-jonmason@broadcom.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jon Mason <jonmason@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
 On 10/15, Jon Mason wrote:
-> The macros that are being used to initialize the values of the clk
-> structures should be all caps.  Find and replace all of them with their
-> relevant counterparts.
+> Some iProc SoC clocks use a different way to control clock power, via
+> the PWRDWN bit in the PLL control register.  Since the PLL control
+> register is used to access the PWRDWN bit, there is no need for the
+> pwr_base when this is being used.  A new flag, IPROC_CLK_EMBED_PWRCTRL,
+> has been added to identify this usage.  We can use the AON interface to
+> write the values to enable/disable PWRDOWN.
 > 
-> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jon Mason <jonmason@broadcom.com>
 > ---
 
-Applied to clk-next
+Applied to clk-next + 
 
+---8<----
+diff --git a/drivers/clk/bcm/clk-iproc-pll.c b/drivers/clk/bcm/clk-iproc-pll.c
+index 61b49ba24602..fb1e6b1d0df6 100644
+--- a/drivers/clk/bcm/clk-iproc-pll.c
++++ b/drivers/clk/bcm/clk-iproc-pll.c
+@@ -150,7 +150,7 @@ static void __pll_disable(struct iproc_pll *pll)
+ 
+ 	if (ctrl->flags & IPROC_CLK_EMBED_PWRCTRL) {
+ 		val = readl(pll->pll_base + ctrl->aon.offset);
+-		val |= (bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift);
++		val |= bit_mask(ctrl->aon.pwr_width) << ctrl->aon.pwr_shift;
+ 		writel(val, pll->pll_base + ctrl->aon.offset);
+ 
+ 		if (unlikely(ctrl->flags & IPROC_CLK_NEEDS_READ_BACK))
+@@ -160,7 +160,7 @@ static void __pll_disable(struct iproc_pll *pll)
+ 	if (pll->pwr_base) {
+ 		/* latch input value so core power can be shut down */
+ 		val = readl(pll->pwr_base + ctrl->aon.offset);
+-		val |= (1 << ctrl->aon.iso_shift);
++		val |= 1 << ctrl->aon.iso_shift;
+ 		writel(val, pll->pwr_base + ctrl->aon.offset);
+ 
+ 		/* power down the core */
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
