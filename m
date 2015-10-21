@@ -1,47 +1,58 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 3/4] ARM: dts: uniphier: add ProXstream2 Gentil board support
-Date: Wed, 21 Oct 2015 20:36:29 +0900
-Message-ID: <1445427390-22750-4-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH 4/4] ARM: dts: uniphier: add ProXstream2 Vodka board support
+Date: Wed, 21 Oct 2015 20:36:30 +0900
+Message-ID: <1445427390-22750-5-git-send-email-yamada.masahiro@socionext.com>
 References: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Initial version of DTS for ProXstream2 Gentil board.
+Initial version of DTS for ProXstream2 Vodka board.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- arch/arm/boot/dts/Makefile                        |  3 +-
- arch/arm/boot/dts/uniphier-proxstream2-gentil.dts | 74 +++++++++++++++++++++++
+ arch/arm/boot/dts/Makefile                       |  3 +-
+ arch/arm/boot/dts/uniphier-proxstream2-vodka.dts | 74 ++++++++++++++++++++++++
  2 files changed, 76 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
+ create mode 100644 arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bb8fa02..d7eefec 100644
+index d7eefec..2e1bc82 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -672,7 +672,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
- 	uniphier-ph1-ld6b-ref.dtb \
+@@ -673,7 +673,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
  	uniphier-ph1-pro4-ref.dtb \
  	uniphier-ph1-sld3-ref.dtb \
--	uniphier-ph1-sld8-ref.dtb 
-+	uniphier-ph1-sld8-ref.dtb \
-+	uniphier-proxstream2-gentil.dtb
+ 	uniphier-ph1-sld8-ref.dtb \
+-	uniphier-proxstream2-gentil.dtb
++	uniphier-proxstream2-gentil.dtb \
++	uniphier-proxstream2-vodka.dtb
  dtb-$(CONFIG_ARCH_VERSATILE) += \
  	versatile-ab.dtb \
  	versatile-pb.dtb
-diff --git a/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts b/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts b/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
 new file mode 100644
-index 0000000..5cb58b6
+index 0000000..76040bb
 --- /dev/null
-+++ b/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
++++ b/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
 @@ -0,0 +1,74 @@
 +/*
-+ * Device Tree Source for UniPhier ProXstream2 Gentil Board
++ * Device Tree Source for UniPhier ProXstream2 Vodka Board
 + *
 + * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
 + *
@@ -88,8 +99,8 @@ index 0000000..5cb58b6
 +/include/ "uniphier-proxstream2.dtsi"
 +
 +/ {
-+	model = "UniPhier ProXstream2 Gentil Board";
-+	compatible = "socionext,proxstream2-gentil", "socionext,proxstream2";
++	model = "UniPhier ProXstream2 Vodka Board";
++	compatible = "socionext,proxstream2-vodka", "socionext,proxstream2";
 +
 +	memory {
 +		device_type = "memory";
