@@ -1,75 +1,115 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/6] remoteproc: Add driver for STMicroelectronics platforms
-Date: Wed, 21 Oct 2015 12:47:01 +0100
-Message-ID: <1445428027-26174-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 6/6] ARM: STiH407: Move over to using the 'reserved-memory' API for obtaining DMA memory
+Date: Wed, 21 Oct 2015 12:47:07 +0100
+Message-ID: <1445428027-26174-7-git-send-email-lee.jones@linaro.org>
+References: <1445428027-26174-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445428027-26174-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-ST's platforms often have multiple co-processors (usually ST40s or ST231s)
-on-board.  This provides the Linux-side infrastructure to flash and boot
-them successfully.
+Doing so saves quite a bit of code in the driver.
 
-This set has been tested on an STiH410-B2120.
+For more information on the 'reserved-memory' bindings see:
 
-v3 => v4:
- Suggested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
- - Move to using 'reserved-memory' API
-   - New 'reserved-memory' nodes
-   - Remove memory locations from RemoteProc's DT node's reg properties
-   - Remove C code obtaining/allocating DMA memory
- - Re-order .start() and .stop() ops
- - Add protection around Reset API in error path
- - Explicitly set .has_iommu to false
+  Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
 
-v2 => v3:
- - Generify syscon property (st,syscfg-boot => st,syscfg)
- - Rename IP in DT bindings doc (Remote Processor => Co-Processor)
- - Remove superfluous 'clock-names' property
- - Remove superfluous 'reg-names' property
- - Populate MAINTAINERS
- - Clean-up DTS formatting
- - Use strings in debugfs to control procs ('1|0' => 'start|stop')
- - Align copyright statement with MODULE() macros
- - Rename driver data structure ('st_rproc' => 'ddata')
- - Addition of a full error path in .start()
+Suggested-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 46 +++++++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
-v1 => v2:
- - Remove Linux implementation specific comment from binding document
- - Force debugfs '0' to shutdown co-processor - rather than !1
- - Supply more detailed commit message
- - Propagate errors back from .stop()
- - Review GPL wording
- - Supply original author's SoBs
-
-Lee Jones (6):
-  remoteproc: dt: Provide bindings for ST's Remote Processor Controller
-    driver
-  remoteproc: debugfs: Add ability to boot remote processor using
-    debugfs
-  remoteproc: Supply controller driver for ST's Remote Processors
-  MAINTAINERS: Add ST's Remote Processor Driver to ARM/STI ARCHITECTURE
-  ARM: STiH407: Add nodes for RemoteProc
-  ARM: STiH407: Move over to using the 'reserved-memory' API for
-    obtaining DMA memory
-
- .../devicetree/bindings/remoteproc/st-rproc.txt    |  41 +++
- MAINTAINERS                                        |   1 +
- arch/arm/boot/dts/stih407-family.dtsi              |  70 +++++
- drivers/remoteproc/Kconfig                         |   9 +
- drivers/remoteproc/Makefile                        |   1 +
- drivers/remoteproc/remoteproc_debugfs.c            |  34 +++
- drivers/remoteproc/st_remoteproc.c                 | 297 +++++++++++++++++++++
- 7 files changed, 453 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
- create mode 100644 drivers/remoteproc/st_remoteproc.c
-
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 15c20b6..27b8efc 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -15,6 +15,36 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		gp0_reserved: rproc@40000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x40000000 0x01000000>;
++			no-map;
++		};
++
++		gp1_reserved: rproc@41000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x41000000 0x01000000>;
++			no-map;
++		};
++
++		audio_reserved: rproc@42000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x42000000 0x01000000>;
++			no-map;
++		};
++
++		dmu_reserved: rproc@43000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x43000000 0x01000000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -651,9 +681,9 @@
+ 			status		= "okay";
+ 		};
+ 
+-		st231_gp0: st231-gp0@40000000 {
++		st231_gp0: st231-gp0 {
+ 			compatible	= "st,st231-rproc";
+-			reg		= <0x40000000 0x01000000>;
++			memory-region	= <&gp0_reserved>;
+ 			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
+ 			reset-names	= "sw_reset";
+ 			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_0>;
+@@ -661,9 +691,9 @@
+ 			st,syscfg	= <&syscfg_core 0x22c>;
+ 		};
+ 
+-		st231_gp1: st231-gp1@41000000 {
++		st231_gp1: st231-gp1 {
+ 			compatible	= "st,st231-rproc";
+-			reg		= <0x41000000 0x01000000>;
++			memory-region	= <&gp1_reserved>;
+ 			resets		= <&softreset STIH407_ST231_GP1_SOFTRESET>;
+ 			reset-names	= "sw_reset";
+ 			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_1>;
+@@ -671,9 +701,9 @@
+ 			st,syscfg	= <&syscfg_core 0x220>;
+ 		};
+ 
+-		st231_audio: st231-audio@42000000 {
++		st231_audio: st231-audio {
+ 			compatible	= "st,st231-rproc";
+-			reg		= <0x42000000 0x01000000>;
++			memory-region	= <&audio_reserved>;
+ 			resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
+ 			reset-names	= "sw_reset";
+ 			clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
+@@ -681,9 +711,9 @@
+ 			st,syscfg	= <&syscfg_core 0x228>;
+ 		};
+ 
+-		st231_dmu: st231-dmu@43000000 {
++		st231_dmu: st231-dmu {
+ 			compatible	= "st,st231-rproc";
+-			reg		= <0x43000000 0x01000000>;
++			memory-region	= <&dmu_reserved>;
+ 			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
+ 			reset-names	= "sw_reset";
+ 			clocks		= <&clk_s_c0_flexgen CLK_ST231_DMU>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
