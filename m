@@ -1,101 +1,123 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: Alternative approach to solve the deferred probe
-Date: Wed, 21 Oct 2015 11:02:59 -0700
-Message-ID: <5627D353.2040007@gmail.com>
-References: <20151018195330.GB14956@sirena.org.uk> <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com> <20151019131821.GA32532@n2100.arm.linux.org.uk> <CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com> <20151019143045.GE32532@n2100.arm.linux.org.uk> <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com> <20151019153548.GM32532@n2100.arm.linux.org.uk> <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com> <20151020154656.GY32532@n2100.arm.linux.org.uk> <56270D5B.5010902@gmail.com> <20151021081847.GB32532@n2100.arm.linux.org.uk> <5627B0F7.7010600@gmail.com> <5627C381.60602@ti.com>
-Reply-To: frowand.list@gmail.com
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] driver core: Disable late probes by default
+Date: Wed, 21 Oct 2015 13:09:55 -0500
+Message-ID: <CAL_Jsq+iGjXz2DVrwif7Lj4iJwnoBMb0OAHji-3hNG2UbvM6yQ@mail.gmail.com>
+References: <20151016181129.GA1764@gradator.net> <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
+ <20151019151953.GA22662@kroah.com> <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
+ <20151020140523.GA22021@kroah.com> <CAAObsKAL782-poBT1gkid+zzhWBOrnOUh7P7epjcja38j_-fbQ@mail.gmail.com>
+ <20151021033917.GB32366@kroah.com> <CAAObsKBLL_-bARp_W0sVqoGdpQ+nftdJtQepnFL1foJOGJmbQQ@mail.gmail.com>
+ <20151021151447.GA19720@kroah.com> <CAAObsKASbhBrEoE-=k3Vwg7BygLQ2vXU2jxu3FyxNrD5AAHROg@mail.gmail.com>
+ <20151021160656.GA20899@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5627C381.60602@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?windows-1252?Q?Terje_Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>David
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151021160656.GA20899@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2015 9:55 AM, Grygorii Strashko wrote:
-> On 10/21/2015 06:36 PM, Frank Rowand wrote:
->> On 10/21/2015 1:18 AM, Russell King - ARM Linux wrote:
->>> On Tue, Oct 20, 2015 at 08:58:19PM -0700, Frank Rowand wrote:
->>>> On 10/20/2015 8:46 AM, Russell King - ARM Linux wrote:
+On Wed, Oct 21, 2015 at 11:06 AM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Wed, Oct 21, 2015 at 05:53:13PM +0200, Tomeu Vizoso wrote:
+>> On 21 October 2015 at 17:14, Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>> > On Wed, Oct 21, 2015 at 04:35:58PM +0200, Tomeu Vizoso wrote:
+>> >> On 21 October 2015 at 05:39, Greg Kroah-Hartman
+>> >> <gregkh@linuxfoundation.org> wrote:
+>> >> > On Tue, Oct 20, 2015 at 06:17:39PM +0200, Tomeu Vizoso wrote:
+>> >> >> On 20 October 2015 at 16:05, Greg Kroah-Hartman
+>> >> >> <gregkh@linuxfoundation.org> wrote:
+>> >> >> > On Tue, Oct 20, 2015 at 09:40:48AM +0200, Tomeu Vizoso wrote:
+>> >> >> >> On 19 October 2015 at 17:19, Greg Kroah-Hartman
+>> >> >> >> <gregkh@linuxfoundation.org> wrote:
+>> >> >> >> > On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
+>> >> >> >> >> To smooth the transition to late probes, make disabled the default for
+>> >> >> >> >> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
+>> >> >> >> >> get fixed.
+>> >> >> >> >>
+>> >> >> >> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> >> >> >> >> Link: https://lkml.kernel.org/g/20151016181129.GA1764@gradator.net
+>> >> >> >> >>
+>> >> >> >> >> ---
+>> >> >> >> >>
+>> >> >> >> >> Hi Rob,
+>> >> >> >> >>
+>> >> >> >> >> I'm sending this in case you think it would be best to leave the
+>> >> >> >> >> on-demand probe series in -next for now but have late probes disabled to
+>> >> >> >> >> avoid hassle to some people.
+>> >> >> >> >
+>> >> >> >> > I would like Rob to just drop this series please, I don't agree with it
+>> >> >> >> > at all at the moment.
+>> >> >> >>
+>> >> >> >> Hi Greg,
+>> >> >> >>
+>> >> >> >> is it the case that you are satisfied with deferred probes as a way of
+>> >> >> >> ordering device probing and that I should look at how to solve my
+>> >> >> >> problem by improving it?
+>> >> >> >
+>> >> >> > Yes, especially given that you have said this does not speed up your
+>> >> >> > boot times, which I thought was your main goal here :(
+>> >> >>
+>> >> >> Sorry if I'm repeating myself too often, but I have two goals: change
+>> >> >> the probing order to not send deferred probes to the back of the queue
+>> >> >> (getting the display up as fast as possible), and making easier to
+>> >> >> understand the boot process on embedded platforms.
+>> >> >>
+>> >> >> The concrete issue that would be fixed by achieving the first goal was
+>> >> >> explained in this email from last year:
+>> >> >>
+>> >> >> http://lists.freedesktop.org/archives/dri-devel/2014-August/066527.html
+>> >> >>
+>> >> >> Because of that, ChromeOS had to use their own bindings for the panel
+>> >> >> node so that the panel probe wouldn't be deferred, introducing a
+>> >> >> sizable delta that is a barrier to rebasing on newer mainline releases
+>> >> >> and for vendors to upstream their HW adaptation for chrome devices.
+>> >> >
+>> >> > 1.5 second delay is crazy (again, my laptop boots to X in less time than
+>> >> > that),
+>> >>
+>> >> 1.5 seconds isn't crazy at all for the kernel to initialize all the
+>> >> devices in an embedded board. That's the current state of affairs
+>> >> today.
+>> >
+>> > Then someone needs to fix that, that really is crazy.  What takes so
+>> > long here?  Why aren't you using async probing to do things in parallel
+>> > when you need to sleep in device probe (I'm hoping you are sleeping in
+>> > device probe, otherwise that's really broken)?
 >>
->> < snip >
+>> I'm a bit surprised now. During all the time that I have been pushing
+>> this forward I have been regularly testing on more than a dozen boards
+>> with different socs and 1.5 seconds to probe all the devices isn't
+>> that much. This is basically due to having to wait for the hardware a
+>> bit here and there, and to the sheer number of devices involved.
 >>
->>>>> +
->>>>>   static bool driver_deferred_probe_enable = false;
->>>>> +
->>>>>   /**
->>>>>    * driver_deferred_probe_trigger() - Kick off re-probing deferred devices
->>>>>    *
->>>>> @@ -188,6 +210,13 @@ static int deferred_probe_initcall(void)
->>>>>   	driver_deferred_probe_trigger();
->>>>
->>>> Couldn't you put the "driver_deferred_probe_report = true" here?  And then
->>>> not add another round of probes.
->>>
->>> The idea is not to report anything for drivers that were deferred
->>> during the normal bootup.  The above is part of the normal bootup,
->>> and the deferred activity should not be warned about.
+>> Of course people have been looking at speeding up boot on ARM devices
+>> for years now and this is what we have come with up to now.
 >>
->> The above is currently the last point for probe to succeed or defer
->> (until possibly, as you mentioned, module loading resolves the defer).
->> If a probe defers above, it will defer again below.  The set of defers
->> should be exactly the same above and below.
+>> > Have you used the tools we have to find where the time is being spent?
 >>
-> 
-> Unfortunately this is not "the last point for probe to succeed or defer".
-> There are still a bunch of drivers in Kernel which will be probed at late_initcall() level.
-> (like ./drivers/net/ethernet/ti/cpsw.c => late_initcall(cpsw_init);
+>> Have to recognize that my starting point has been that probe order was
+>> the cause of the problem and haven't profiled the whole boot process,
+>> but I don't see how probe ordering would become irrelevant unless we
+>> got total probing time down to 200ms. And that would give us a
+>> fabulously fast boot, which I don't think is as realistic as you seem
+>> to believe.
+>
+> So you aren't using the tools that we have today that were created years
+> ago, to help to reduce boot time problems like this and instead work on
+> changing the driver core to try to guess at what the real issue is here?
+>
+> Come on, until you really know where you are taking so long, how can you
+> know what you need to fix?  I strongly recommend doing that here first,
+> that's why those tools were written in the first place.
 
-Yes, cpsw_init() should _not_ be a late_initcall.  This is yet another
-example of playing games with ordering probes that we have been trying
-to eliminate.
+For something everyone is or should be doing for years, there is
+surprisingly zero information I can find. It is perf timechart you are
+talking about, right? Everything I find on it is all after userspace
+starts. I know perf has command line options, but I never could get it
+to do what I wanted (which was dumping events up until a boot hang).
 
-Thanks for pointing out one of the resulting problems this causes for the
-deferred probe mechanism.
+Still, the 1.5 sec doesn't surprise me either.
 
-> Yes - they probably need to be updated to use module_init(), but that's what
-> we have now). Those drivers will re-trigger deferred device probing if their
-> probe succeeded.
-
-Yes, if cpsw_init() leads to a successful probe, then deferred device probing
-will be re-triggered.  I do not know if cpsw_init() will be called before or
-after deferred_probe_initcall().  The general initcall mechanism does not
-provide any ordering guarantees between the two functions because they are
-at the same initcall level.
-
-> 
-> As result, it is impossible to say when will it happen the 
-> "final round of deferred device probing" :( and final list of drivers which
-> was "deferred forever" will be know only when kernel exits to User space 
-> ("deferred forever" - before loading modules).
-> 
-> May be, we also can consider adding debug_fs entry which can be used to display
-> actual state of deferred_probe_pending_list? 
-> 
->>>
->>> If we have any devices still deferring after _this_ round, that must
->>> indicate that some resource they want is not available, and that
->>> should be warned about.
->>>
->>> Of course, modules can defer too - and I made some suggestions in my
->>> waffle above the patch about that.
->>>
->>
->> < adding back trimmed, for fuller context >
->>
->>>>>   	/* Sort as many dependencies as possible before exiting initcalls */
->>>>>   	flush_workqueue(deferred_wq);
->>>>> +
->>>>> +	/* Now one final round, reporting any devices that remain deferred */
->>>>> +	driver_deferred_probe_report = true;
->>>>> +	driver_deferred_probe_trigger();
->>>>> +	/* Sort as many dependencies as possible before exiting initcalls */
->>>>> +	flush_workqueue(deferred_wq);
->>>>> +
->>>>>   	return 0;
->>>>>   }
-> 
-> 
-
+Rob
