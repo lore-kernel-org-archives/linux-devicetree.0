@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 5/7] ARM: dts: qcom: msm8974-honami: Add uSD slot nodes
-Date: Tue, 20 Oct 2015 21:57:48 -0700
-Message-ID: <1445403470-17434-5-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [PATCH 6/7] ARM: dts: qcom: msm8974-honami: Specify charging parameters
+Date: Tue, 20 Oct 2015 21:57:49 -0700
+Message-ID: <1445403470-17434-6-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,68 +12,40 @@ To: Andy Gross <agross@codeaurora.org>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add and enable the sdhci2 slot, the pinctrl configuration and card
-detect.
-
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
- .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+
+Echoing a reasonable limit into [1] is required as there's currently no
+way for this value to be propagated from the USB stack to the charging
+driver.  Otherwise the block will pull maximum 100mA off USB, which is
+not enough to actually charge the running platform.
+
+[1] /sys/class/power_supply/smbb-usbin/charge_control_limit
+
+ arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index de3529d1a8ca..113cc18ee2f5 100644
+index 113cc18ee2f5..1cf455fff3c2 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -290,6 +290,20 @@
- 		pinctrl-0 = <&sdhc1_pin_a>;
- 	};
+@@ -371,6 +371,17 @@
  
-+	sdhci@f98a4900 {
-+		status = "ok";
-+
-+		bus-width = <4>;
-+
-+		vmmc-supply = <&pm8941_l21>;
-+		vqmmc-supply = <&pm8941_l13>;
-+
-+		cd-gpios = <&msmgpio 62 GPIO_ACTIVE_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdhc2_pin_a>, <&sdhc2_cd_pin_a>;
-+	};
-+
- 	serial@f991e000 {
- 		status = "ok";
- 
-@@ -329,6 +343,29 @@
- 				bias-pull-up;
- 			};
- 		};
-+
-+		sdhc2_cd_pin_a: sdhc2-cd-pin-active {
-+			pins = "gpio62";
-+			function = "gpio";
-+
-+			drive-strength = <2>;
-+			bias-disable;
-+		 };
-+
-+		sdhc2_pin_a: sdhc2-pin-active {
-+			clk {
-+				pins = "sdc2_clk";
-+				drive-strength = <10>;
-+				bias-disable;
-+			};
-+
-+			cmd-data {
-+				pins = "sdc2_cmd", "sdc2_data";
-+				drive-strength = <6>;
-+				bias-pull-up;
-+			};
+ &spmi_bus {
+ 	pm8941@0 {
++		charger@1000 {
++			qcom,fast-charge-safe-current = <1500000>;
++			qcom,fast-charge-current-limit = <1500000>;
++			qcom,dc-current-limit = <1800000>;
++			qcom,fast-charge-safe-voltage = <4400000>;
++			qcom,fast-charge-high-threshold-voltage = <4350000>;
++			qcom,fast-charge-low-threshold-voltage = <3400000>;
++			qcom,auto-recharge-threshold-voltage = <4200000>;
++			qcom,minimum-input-voltage = <4300000>;
 +		};
 +
- 	};
- };
- 
+ 		gpios@c000 {
+ 			boost_bypass_n_pin: boost-bypass {
+ 				pins = "gpio21";
 -- 
 2.4.2
