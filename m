@@ -1,249 +1,80 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 2/4] mfd: tps65086: Add driver for the TPS65086 PMIC
-Date: Wed, 21 Oct 2015 11:28:01 -0500
-Message-ID: <5627BD11.1000704@ti.com>
-References: <1445014753-15450-1-git-send-email-afd@ti.com>
- <1445014753-15450-3-git-send-email-afd@ti.com> <20151019092336.GI31804@x1>
- <56251468.7030609@ti.com> <20151020100214.GM31804@x1>
- <562656AB.3060808@ti.com> <20151021084320.GA3270@x1>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Wed, 21 Oct 2015 17:27:58 +0100
+Message-ID: <20151021162758.GP32054@sirena.org.uk>
+References: <561E1378.6000906@collabora.com>
+ <20151017065750.GA18607@kroah.com>
+ <20151018192931.GY14956@sirena.org.uk>
+ <20151018193757.GA9147@kroah.com>
+ <20151018195330.GB14956@sirena.org.uk>
+ <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
+ <5627B677.5090109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wrbiW19WTymQQzps"
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151021084320.GA3270@x1>
+Content-Disposition: inline
+In-Reply-To: <5627B677.5090109@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2015 03:43 AM, Lee Jones wrote:
-> On Tue, 20 Oct 2015, Andrew F. Davis wrote:
->
->> On 10/20/2015 05:02 AM, Lee Jones wrote:
->>> On Mon, 19 Oct 2015, Andrew F. Davis wrote:
->>>> On 10/19/2015 04:23 AM, Lee Jones wrote:
->>>>> On Fri, 16 Oct 2015, Andrew F. Davis wrote:
->>>>>
->>>>>> Add support for the TPS65912 device. It provides communication
->>>>>> through I2C and contains the following components:
->>>>>>
->>>>>>   - Regulators
->>>>>>   - Load switches
->>>>>>   - GPO controller
->>>>>
->>>>> What's a GPO controller?
->>>>
->>>> General Purpose Output, this controller only has output control, it's
->>>> listed in the data-sheet this way, and other drivers have used this term.
->>>
->>> Okay.
->>>
->>>>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
->>>>>> ---
->>>>>>   drivers/mfd/Kconfig          |  13 ++++
->>>>>>   drivers/mfd/Makefile         |   1 +
->>>>>>   drivers/mfd/tps65086.c       | 145 +++++++++++++++++++++++++++++++++++++++++++
->>>>>>   include/linux/mfd/tps65086.h | 120 +++++++++++++++++++++++++++++++++++
->>>>>>   4 files changed, 279 insertions(+)
->>>>>>   create mode 100644 drivers/mfd/tps65086.c
->>>>>>   create mode 100644 include/linux/mfd/tps65086.h
->>>>>>
->>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>>>> index 99d6367..ab3b392 100644
->>>>>> --- a/drivers/mfd/Kconfig
->>>>>> +++ b/drivers/mfd/Kconfig
->>>>>> @@ -1093,6 +1093,19 @@ config TPS6507X
->>>>>>   	  This driver can also be built as a module.  If so, the module
->>>>>>   	  will be called tps6507x.
->>>>>>
->>>>>> +config MFD_TPS65086
->>>>>> +	tristate "TI TPS65086x Power Management chips"
->>>>>
->>>>> Use the full name:
->>>>>
->>>>>    "TI TPS65086x Power Management Integrated Chips (PMICs)"
->>>>>
->>>>>> +	select REGMAP
->>>>>> +	select REGMAP_IRQ
->>>>>> +	select REGMAP_I2C
->>>>>> +	depends on I2C
->>>>>
->>>>> REGMAP_I2C already depends on I2C.
->>>>>
->>>>
->>>> So if I force REGMAP_I2C to =y without depending on I2C then couldn't
->>>> REGMAP_I2C get selected without I2C enabled? Selecting doesn't force
->>>> the selected item's dependencies still right?
->>>
->>> Try it out. :)
->>>
->>
->> OK, I just tried a little test and it did as I expected, I was able to
->> select a symbol and it did not enable its dependency, so this would
->> break build. So, I'm still confused, why does REGMAP_I2C depending
->> on I2C matter? What are you suggesting my Kconfig should look like?
->
-> That's fine, if you've tested it and it's a problem the above will do.
->
-> I'm still little curious as to why it's necessary to depend on the
-> same symbols your dependencies depend on.
->
 
-Because I don't 'depend' on REGMAP_I2C, I 'select' it. So none of its
-dependencies need be met, so I have to depend on them for REGMAP_I2C.
+--wrbiW19WTymQQzps
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-'Depending' on REGMAP_I2C would also be undesirable as my symbol would
-only be visible when REGMAP_I2C is =y, this would obscure my symbol as
-no one would know to turn on REGMAP_I2C to make my driver appear. I
-only need I2C and then I can go manually enable all my random helper
-symbols myself if I'm selected.
+On Wed, Oct 21, 2015 at 08:59:51AM -0700, Frank Rowand wrote:
+> On 10/19/2015 5:34 AM, Tomeu Vizoso wrote:
 
-> How far up the chain is it possible to go?
->
-> config DEPA
->
-> config DEPB
->         select DEPA
->
-> config DEPC
->         select DEPB
->         depends on DEPA
->
-> config DEPD
->         select DEPC
->         depends on DEPA
->         depends on DEPB
->
-> config YOU
->         select DEPD
->         depends on DEPA
->         depends on DEPB
->         depends on DEPC
->
-> Etc.
->
+> > To be clear, I was saying that this series should NOT affect total
+> > boot times much.
 
-To me it seems like a fundamental issue with how the Kconfig system
-was originally designed (a quick check shows it existed in some form
-20 years ago...) that leads to this kind of thing, if they knew how
-it would be used today they probably would have made it more
-directed-tree like, without the reverse dependencies and all.
+> I'm confused.  If I understood correctly, improving boot time was
+> the key justification for accepting this patch set.  For example,
+> from "[PATCH v7 0/20] On-demand device probing":
+>=20
+>    I have a problem with the panel on my Tegra Chromebook taking longer
+>    than expected to be ready during boot (St=E9phane Marchesin reported w=
+hat
+>    is basically the same issue in [0]), and have looked into ordered
+>    probing as a better way of solving this than moving nodes around in the
+>    DT or playing with initcall levels and linking order.
+>=20
+>    ...
+>=20
+>    With this series I get the kernel to output to the panel in 0.5s,
+>    instead of 2.8s.
 
->>>>>> +	depends on OF || COMPILE_TEST
->>>>>> +	help
->>>>>> +	  If you say yes here you get support for the TPS65086 series of
->>>>>> +	  Power Management chips.
->>>>>
->>>>> I'd remove the line break.
->>>>>
->>>>>> +	  These include voltage regulators, GPO and other features
->>>>>
->>>>> GPIO?
->>>>>
->>>>>> +	  that are often used in portable devices.
->>>>>
->>>>> This is meant to be a 'help', so instead of staying "and some other
->>>>> stuff", please list them.
->>>>>
->>>>
->>>> This seems to be what other devices do, I'll change it to something
->>>> else then.
->>>
->>> If you know what the "other features" are, it's best to name them.
->>
->> I was giving a generic description of a PMIC, I didn't really want to
->> list all the features and start marketing the part in the Kconfig, unless
->> you want, I'm sure TI won't mind the advertisement. :)
->>
->> I'm not sure why we write so much about these driver parts at all in the
->> help, people who need them know what they are, it's not like some core
->> kernel config option that people might be undecided on and need explained
->> its function.
->
-> I'm sure when you've been trying to find answers to questions you've
-> found the help helpful (or maybe it was poorly underwritten and you
-> didn't find it useful at all).  Without the help, all these drivers
-> are just a selection of random letters, numbers and code/project
-> names.  It's the help which brings them to life, so to speak.
->
+Overall boot time and time to get some individual built in component up
+and running aren't the same thing - what this'll do is get things up
+more in the link order of the leaf consumers rather than deferring those
+leaf consumers when their dependencies aren't ready yet.
 
-Well sure, they have been a lot of help for core config where I might
-not know what CONFIG_PERF_EVENTS means and a long explanation is nice,
-but I know what a TPS65086 is, if I didn't I wouldn't be trying to
-enable the driver for it.
+> While not as dramatic as your results, they are somewhat supportive.
+> What has changed your assessment that the on-demand device probing
+> patches will give a big boot performance increase?  Do you have
+> new data or analysis?
 
-> Please describe the device and what it provides.  No sales pitch
-> required.
->
+See above, my understanding was that the performance improvements were
+more around improved control/predictability/handwave of the boot
+ordering rather than total time.
 
-I'll see what I can think up. "These include voltage regulators, GPIO
-and other features that are often used in portable devices." Really
-does give the gist of it for uninformed users who might want to know
-why this is enabled for their computer/board.
+--wrbiW19WTymQQzps
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Honestly I don't think the part actually does anything else, but saying
-that when other similar parts add the "other features" line is kinda
-odd and might single out this part as looking less useful.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
->>>>>>   config TPS65911_COMPARATOR
->>>>>>   	tristate
->>>>>>
->>>>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->>>>>> index a59e3fc..7adb902 100644
->>>>>> --- a/drivers/mfd/Makefile
->>>>>> +++ b/drivers/mfd/Makefile
->>>>>> @@ -66,6 +66,7 @@ obj-$(CONFIG_MFD_WM8994)	+= wm8994-core.o wm8994-irq.o wm8994-regmap.o
->>>>>>   obj-$(CONFIG_TPS6105X)		+= tps6105x.o
->>>>>>   obj-$(CONFIG_TPS65010)		+= tps65010.o
->>>>>>   obj-$(CONFIG_TPS6507X)		+= tps6507x.o
->>>>>> +obj-$(CONFIG_MFD_TPS65086)	+= tps65086.o
->>>>>>   obj-$(CONFIG_MFD_TPS65217)	+= tps65217.o
->>>>>>   obj-$(CONFIG_MFD_TPS65218)	+= tps65218.o
->>>>>>   obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
->>>>>> diff --git a/drivers/mfd/tps65086.c b/drivers/mfd/tps65086.c
->>>>>> new file mode 100644
->>>>>> index 0000000..be6d678
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/mfd/tps65086.c
->>>>>> @@ -0,0 +1,145 @@
->>>>>> +/*
->>>>>> + * Driver for TI TPS65086x PMICs
->>>>>
->>>>> I'd suggest removing the driver part.  We know it's a driver.
->>>>
->>>> Again this is what almost every other driver does,
->>>
->>> Almost every other driver.  That's some statement.
->>>
->>> I count 42%. ;)
->>>
->>
->> I'm finding in drivers/mfd ~89% of drivers mention at some point that
->> they are a driver. But I do admit my original statement was based on a
->> quick monte carlo selection of a couple files. :)
->
-> I'm sure many drivers, mention the word driver at one point.  However,
-> this is specifically regarding the file title/header.
->
+iQEcBAEBCAAGBQJWJ70OAAoJECTWi3JdVIfQeWcH/j2uOXOzgx7pnrlm7I69Kibp
+atBDWslC2PLIFyM8NQMCCyylED2dqSr72HHG++eDyB9kHbaaba+ZNu8DDqcbQYSF
+MaVOWhUulhhEnyRhj3I+aYT+GVZ9QQwTzRau/cUD0Mrqf/lUvGZKUeU+gq34v4DK
+JfBU6MLZJNjAskQSSLPwzllg2hSb0VP5zy2ScbiawsUyRRNDn5tHUQ+r0K/rlWHJ
+9Zjr/q9QxHcDVhdX+bORqc7QCSlQhsrIATItLhLksSaX99iuhTltgGWjE/UonSId
+LHxDyw9zGss8voGsVVfmBf2FaD1/lEDyVMzGq0+GizxNNwaYXZ/fpGHvSbT2/Sw=
+=D7aZ
+-----END PGP SIGNATURE-----
 
-Got it, just felt like hairsplitting :)
-
->>>> I'm not sure how
->>>> else to describe this file without using the word driver.
->>>
->>> Perhaps I'm getting picky in my old age, but I think I'd prefer to see:
->>>
->>>    TI TPS65086x PMIC support
->>>
->>
->> Still not sure this describes the file, maybe we could just drop that
->> line completely from files with an obvious purpose? Doesn't really bother
->> me ether way.
->
-> Sure.
->
-
-ACK
-
--- 
-Andrew F. Davis
+--wrbiW19WTymQQzps--
