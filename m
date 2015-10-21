@@ -1,71 +1,63 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v6 3/4] of: overlay: add per overlay sysfs attributes
-Date: Wed, 21 Oct 2015 22:37:45 +0300
-Message-ID: <1148C5AF-CA7C-44CE-9CBD-BCD949C6B5FD@konsulko.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com> <1445368397-8732-4-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqKFJttTsTfwZdMBPEjzqo_OLV=GpHTYZrDGnsgBjF3Bzg@mail.gmail.com> <8A0C91DE-EDF8-449D-918C-95C9807A7616@konsulko.com> <CAL_JsqLeQC7x3fuUFRm=MqHHwvDSLFz6GFxvOTCUToO-=yA0Kg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLeQC7x3fuUFRm=MqHHwvDSLFz6GFxvOTCUToO-=yA0Kg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: Alternative approach to solve the deferred probe
+Date: Wed, 21 Oct 2015 21:35:19 +0100
+Message-ID: <20151021203519.GO32532@n2100.arm.linux.org.uk>
+References: <20151019131821.GA32532@n2100.arm.linux.org.uk>
+ <CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com>
+ <20151019143045.GE32532@n2100.arm.linux.org.uk>
+ <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com>
+ <20151019153548.GM32532@n2100.arm.linux.org.uk>
+ <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com>
+ <20151020154656.GY32532@n2100.arm.linux.org.uk>
+ <56270D5B.5010902@gmail.com>
+ <20151021081847.GB32532@n2100.arm.linux.org.uk>
+ <5627B0F7.7010600@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5627B0F7.7010600@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwo>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Oct 21, 2015 at 08:36:23AM -0700, Frank Rowand wrote:
+> On 10/21/2015 1:18 AM, Russell King - ARM Linux wrote:
+> > On Tue, Oct 20, 2015 at 08:58:19PM -0700, Frank Rowand wrote:
+> >> On 10/20/2015 8:46 AM, Russell King - ARM Linux wrote:
+> 
+> < snip >
+> 
+> >>> +
+> >>>  static bool driver_deferred_probe_enable = false;
+> >>> +
+> >>>  /**
+> >>>   * driver_deferred_probe_trigger() - Kick off re-probing deferred devices
+> >>>   *
+> >>> @@ -188,6 +210,13 @@ static int deferred_probe_initcall(void)
+> >>>  	driver_deferred_probe_trigger();
+> >>
+> >> Couldn't you put the "driver_deferred_probe_report = true" here?  And then
+> >> not add another round of probes.
+> > 
+> > The idea is not to report anything for drivers that were deferred
+> > during the normal bootup.  The above is part of the normal bootup,
+> > and the deferred activity should not be warned about.
+> 
+> The above is currently the last point for probe to succeed or defer
+> (until possibly, as you mentioned, module loading resolves the defer).
+> If a probe defers above, it will defer again below.  The set of defers
+> should be exactly the same above and below.
 
-> On Oct 21, 2015, at 00:54 , Rob Herring <robherring2@gmail.com> wrote=
-:
->=20
-> On Tue, Oct 20, 2015 at 4:11 PM, Pantelis Antoniou
-> <pantelis.antoniou@konsulko.com> wrote:
->> Hi Rob,
->>=20
->>> On Oct 21, 2015, at 00:04 , Rob Herring <robherring2@gmail.com> wro=
-te:
->>>=20
->>> On Tue, Oct 20, 2015 at 2:13 PM, Pantelis Antoniou
->>> <pantelis.antoniou@konsulko.com> wrote:
->>>> * A per overlay can_remove sysfs attribute that reports whether
->>>> the overlay can be removed or not due to another overlapping overl=
-ay.
->>>>=20
->>>> * A target sysfs attribute listing the target of each fragment,
->>>> in a group named after the name of the fragment.
->=20
-> [...]
->=20
->>>> @@ -255,6 +278,17 @@ err_fail:
->>>>       return -EINVAL;
->>>> }
->>>>=20
->>>> +static ssize_t target_show(struct kobject *kobj,
->>>> +               struct fragment_attribute *fattr, char *buf)
->>>> +{
->>>> +       struct of_overlay_info *ovinfo =3D fattr->ovinfo;
->>>> +
->>>> +       return snprintf(buf, PAGE_SIZE, "%s\n",
->>>> +                       of_node_full_name(ovinfo->target));
->>>=20
->>> This can be a link to the node itself, can't it?
->>>=20
->>=20
->> Yes. Do you want it like this?
->=20
-> Yes, hence the suggestion. Unless you see some reason why not.
->=20
+Why should it?  Isn't this late_initcall() the first opportunity that
+deferred devices get to be re-probed from their first set of attempts
+via the drivers having their initcalls called?
 
-Nope, can=E2=80=99t be done. The sysfs API only allows linking one kobj=
- to another.
-The kobj is the overlay but the target is in the fragment attribute gro=
-up.
+If what you're saying is true, what's the point of this late_initcall()?
 
-Sorry, I really tried, but can=E2=80=99t be done without hacking in a n=
-ew link sysfs API.=20
+<re-cut again, I've no idea why you keep adding it back>
 
-> Rob
-
-Regards
-
-=E2=80=94 Pantelis
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
