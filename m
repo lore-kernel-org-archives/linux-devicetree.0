@@ -1,70 +1,89 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 04/19] rtc: isl12057: enable support for the standard
- "wakeup-source" property
-Date: Wed, 21 Oct 2015 11:10:01 +0100
-Message-ID: <1445422216-29375-5-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH 16/19] ARM: dts: s5pv210: replace legacy *,wakeup property with wakeup-source
+Date: Wed, 21 Oct 2015 11:10:13 +0100
+Message-ID: <1445422216-29375-17-git-send-email-sudeep.holla@arm.com>
 References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, rtc-linux@googlegroups.com, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Though the isl12057 rtc driver should and will continue to support the
-legacy "isil,irq2-can-wakeup-machine" property to enable RTC as the
-wakeup source, we need to add support for the new standard property
-"wakeup-source".
+Though the keyboard and other driver will continue to support the legacy
+"gpio-key,wakeup", "linux,input-wakeup" boolean property to enable the
+wakeup source, "wakeup-source" is the new standard binding.
 
-This patch adds support for "wakeup-source" property in addition to the
-existing "isil,irq2-can-wakeup-machine" property.
+This patch replaces all the legacy wakeup properties with the unified
+"wakeup-source" property in order to avoid any futher copy-paste
+duplication.
 
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: rtc-linux@googlegroups.com
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/rtc/rtc-isl12057.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/s5pv210-aquila.dts   | 4 ++--
+ arch/arm/boot/dts/s5pv210-goni.dts     | 4 ++--
+ arch/arm/boot/dts/s5pv210-smdkv210.dts | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
-index a0462e5430c7..54328d4ac0d3 100644
---- a/drivers/rtc/rtc-isl12057.c
-+++ b/drivers/rtc/rtc-isl12057.c
-@@ -466,9 +466,8 @@ static int isl12057_check_rtc_status(struct device *dev, struct regmap *regmap)
-  * is for instance the case on ReadyNAS 102, 104 and 2120. On those
-  * devices with no IRQ driectly connected to the SoC, the RTC chip
-  * can be forced as a wakeup source by stating that explicitly in
-- * the device's .dts file using the "isil,irq2-can-wakeup-machine"
-- * boolean property. This will guarantee 'wakealarm' sysfs entry is
-- * available on the device.
-+ * the device's .dts file using the "wakeup-source" boolean property.
-+ * This will guarantee 'wakealarm' sysfs entry is available on the device.
-  *
-  * The function below returns 1, i.e. the capability of the chip to
-  * wakeup the device, based on IRQ availability or if the boolean
-@@ -479,8 +478,9 @@ static bool isl12057_can_wakeup_machine(struct device *dev)
- {
- 	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+diff --git a/arch/arm/boot/dts/s5pv210-aquila.dts b/arch/arm/boot/dts/s5pv210-aquila.dts
+index f00cea7aca2f..72f162e7040b 100644
+--- a/arch/arm/boot/dts/s5pv210-aquila.dts
++++ b/arch/arm/boot/dts/s5pv210-aquila.dts
+@@ -257,7 +257,7 @@
+ 			linux,code = <KEY_POWER>;
+ 			label = "power";
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ };
+@@ -268,7 +268,7 @@
  
--	return (data->irq || of_property_read_bool(dev->of_node,
--					      "isil,irq2-can-wakeup-machine"));
-+	return data->irq || of_property_read_bool(dev->of_node, "wakeup-source")
-+		|| of_property_read_bool(dev->of_node, /* legacy */
-+					 "isil,irq2-can-wakeup-machine");
- }
- #else
- static bool isl12057_can_wakeup_machine(struct device *dev)
+ &keypad {
+ 	linux,input-no-autorepeat;
+-	linux,input-wakeup;
++	wakeup-source;
+ 	samsung,keypad-num-rows = <3>;
+ 	samsung,keypad-num-columns = <3>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
+index a3d4643b202e..f4d0a023c31c 100644
+--- a/arch/arm/boot/dts/s5pv210-goni.dts
++++ b/arch/arm/boot/dts/s5pv210-goni.dts
+@@ -239,7 +239,7 @@
+ 			linux,code = <KEY_POWER>;
+ 			label = "power";
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ };
+@@ -250,7 +250,7 @@
+ 
+ &keypad {
+ 	linux,input-no-autorepeat;
+-	linux,input-wakeup;
++	wakeup-source;
+ 	samsung,keypad-num-rows = <3>;
+ 	samsung,keypad-num-columns = <3>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/s5pv210-smdkv210.dts b/arch/arm/boot/dts/s5pv210-smdkv210.dts
+index da7d210df670..54fcc3fc82e2 100644
+--- a/arch/arm/boot/dts/s5pv210-smdkv210.dts
++++ b/arch/arm/boot/dts/s5pv210-smdkv210.dts
+@@ -59,7 +59,7 @@
+ 
+ &keypad {
+ 	linux,input-no-autorepeat;
+-	linux,input-wakeup;
++	wakeup-source;
+ 	samsung,keypad-num-rows = <8>;
+ 	samsung,keypad-num-columns = <8>;
+ 	pinctrl-names = "default";
 -- 
 1.9.1
