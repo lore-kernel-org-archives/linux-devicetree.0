@@ -1,46 +1,120 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] dts: keystone: Use new "ti,keystone-i2c" compatible
-Date: Wed, 21 Oct 2015 13:33:42 +0200
-Message-ID: <56277816.2080801@nokia.com>
-References: <55F68E36.2030609@nokia.com> <20151020150614.GG5379@katana>
- <56266791.5000805@ti.com> <56276565.4060505@ti.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 2/4] ARM: dts: uniphier: delete i2c aliases
+Date: Wed, 21 Oct 2015 20:36:28 +0900
+Message-ID: <1445427390-22750-3-git-send-email-yamada.masahiro@socionext.com>
+References: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56276565.4060505-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: EXT Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The user space should not expect that a particular I2C channel is
+always visible through the same character device.
+No reason to fix the I2C indexes with aliases.
 
-On 21/10/15 12:13, EXT Sekhar Nori wrote:
->>>> Now as "i2c-davinci" driver has special handling for Keystone it's
->>>> >>> time to switch
->>>> >>> the device tree to use new "compatible" property. Old one is left for
->>>> >>> backwards-
->>>> >>> compatibility.
->>>> >>>
->>>> >>> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
->>> >>
->>> >> Shall I take this one or shall it go via the davinci tree?
-> I don't have the patch in my mailbox now. But as I remember this is a
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-You can review it here:
-http://patchwork.ozlabs.org/patch/517321/
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  | 4 ----
+ arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 7 -------
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts | 6 ------
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts | 5 -----
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts | 4 ----
+ 5 files changed, 26 deletions(-)
 
-> driver only patch and should go via i2c tree.
-
-It's a DT change, because we agreed (with Grygorii) that new "compatible" is more
-future proof.
-
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+index f1e9d40..052fcc0 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+@@ -65,10 +65,6 @@
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
+-		i2c0 = &i2c0;
+-		i2c1 = &i2c1;
+-		i2c2 = &i2c2;
+-		i2c3 = &i2c3;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+index 5baa9fc..90563fd 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+@@ -64,13 +64,6 @@
+ 		serial0 = &serial0;
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+-		i2c0 = &i2c0;
+-		i2c1 = &i2c1;
+-		i2c2 = &i2c2;
+-		i2c3 = &i2c3;
+-		i2c4 = &i2c4;
+-		i2c5 = &i2c5;
+-		i2c6 = &i2c6;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+index 2462668..0c52847 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+@@ -65,12 +65,6 @@
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
+-		i2c0 = &i2c0;
+-		i2c1 = &i2c1;
+-		i2c2 = &i2c2;
+-		i2c3 = &i2c3;
+-		i2c5 = &i2c5;
+-		i2c6 = &i2c6;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+index b7a03215..5b12f5a 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+@@ -65,11 +65,6 @@
+ 		serial0 = &serial0;
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+-		i2c0 = &i2c0;
+-		i2c1 = &i2c1;
+-		i2c2 = &i2c2;
+-		i2c3 = &i2c3;
+-		i2c4 = &i2c4;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+index fc7250c..6d788f0 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+@@ -65,10 +65,6 @@
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
+-		i2c0 = &i2c0;
+-		i2c1 = &i2c1;
+-		i2c2 = &i2c2;
+-		i2c3 = &i2c3;
+ 	};
+ };
+ 
 -- 
-Best regards,
-Alexander Sverdlin.
-Sent from my pdp-11
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
