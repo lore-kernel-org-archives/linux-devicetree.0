@@ -1,7 +1,7 @@
 From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: [PATCH 8/9] MIPS: BMIPS: brcmstb: add I2C node for bcm7360
-Date: Wed, 21 Oct 2015 11:37:00 +0900
-Message-ID: <1445395021-4204-9-git-send-email-jaedon.shin@gmail.com>
+Subject: [PATCH 7/9] MIPS: BMIPS: brcmstb: add I2C node for bcm7358
+Date: Wed, 21 Oct 2015 11:36:59 +0900
+Message-ID: <1445395021-4204-8-git-send-email-jaedon.shin@gmail.com>
 References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
 Return-path: <linux-i2c-owner@vger.kernel.org>
 In-Reply-To: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
@@ -10,18 +10,18 @@ To: Wolfram Sang <wsa@the-dreams.de>, Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Ba
 Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Jaedon Shin <jaedon.shin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add I2C device nodes to BMIPS based BCM7360 platform.
+Add I2C device nodes to BMIPS based BCM7358 platform.
 
 Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 ---
- arch/mips/boot/dts/brcm/bcm7360.dtsi     | 62 ++++++++++++++++++++++++++++++--
- arch/mips/boot/dts/brcm/bcm97360svmb.dts | 16 +++++++++
+ arch/mips/boot/dts/brcm/bcm7358.dtsi     | 62 ++++++++++++++++++++++++++++++--
+ arch/mips/boot/dts/brcm/bcm97358svmb.dts | 16 +++++++++
  2 files changed, 76 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7360.dtsi b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-index 9e1e571ba346..7e5f76040fb8 100644
---- a/arch/mips/boot/dts/brcm/bcm7360.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7360.dtsi
+diff --git a/arch/mips/boot/dts/brcm/bcm7358.dtsi b/arch/mips/boot/dts/brcm/bcm7358.dtsi
+index 277a90adc1a7..8e2501694d03 100644
+--- a/arch/mips/boot/dts/brcm/bcm7358.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm7358.dtsi
 @@ -81,14 +81,32 @@
  			compatible = "brcm,bcm7120-l2-intc";
  			reg = <0x406600 0x8>;
@@ -104,10 +104,10 @@ index 9e1e571ba346..7e5f76040fb8 100644
  		enet0: ethernet@430000 {
  			phy-mode = "internal";
  			phy-handle = <&phy1>;
-diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-index eee8b0e32681..d48462e091f1 100644
---- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
+diff --git a/arch/mips/boot/dts/brcm/bcm97358svmb.dts b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
+index a8dc01e30313..02ce6b429dc4 100644
+--- a/arch/mips/boot/dts/brcm/bcm97358svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
 @@ -29,6 +29,22 @@
  	status = "okay";
  };
