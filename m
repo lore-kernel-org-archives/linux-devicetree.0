@@ -1,53 +1,80 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [REPOST PATCH 0/3] dwc2 patches to allow wakeup on Rockchip rk3288
-Date: Wed, 21 Oct 2015 09:23:14 -0700
-Message-ID: <CAD=FV=W-iT48ah4WJDpAGqeNMkcTp3gMMddKYVz0ad-QXVz3fw@mail.gmail.com>
-References: <1436207224-21849-1-git-send-email-dianders@chromium.org>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: Which is better to specify console, "console= " or "stdout-path"
+ ?
+Date: Wed, 21 Oct 2015 12:26:36 -0400
+Message-ID: <5627BCBC.5040701@hurleysoftware.com>
+References: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg@mail.gmail.com>
+ <562753A6.3070107@arm.com> <56278911.9050704@hurleysoftware.com>
+ <CAK7LNAQ_+_9K-y7bmpdGwcH2u4uqJhJhON1Ew4OvzSSa-amyvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1436207224-21849-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Petr Mladek <pmladek-AlSwsSmVLrQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthew Garrett <mjg59-JW9irJGTvgXQT0dZR+AlfA@public.gmane.org>, Robert Schlabbach <Robert.Schlabbach-hi6Y0CQ0nG0@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregory Herrero <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>Greg Kroah-Hartman <gre>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNAQ_+_9K-y7bmpdGwcH2u4uqJhJhON1Ew4OvzSSa-amyvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-John,
+On 10/21/2015 11:38 AM, Masahiro Yamada wrote:
+> Hi Peter.
+> 
+> 2015-10-21 21:46 GMT+09:00 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>:
+>> On 10/21/2015 04:58 AM, Sudeep Holla wrote:
+>>> On 21/10/15 06:09, Masahiro Yamada wrote:
+>>>> I think there exist two ways to specify the console port and baudrate.
+>>>>
+>>>>
+>>>> [1] Specify console in bootargs
+>>>>
+>>>>    chosen {
+>>>>          bootargs = "console=ttyS0,115200";
+>>>>    };
+>>>>
+>>>>
+>>>> [2] Specify stdout-path
+>>>>
+>>>>     chosen {
+>>>>           stdout-path = "serial0:115200n8";
+>>>
+>>> This will work for even early/boot console, so this is better than
+>>> option [1]
+>>
+>> Be aware that options specified via /chosen/stdout-path are
+>> currently ignored by earlycon. There were some hiccups getting the
+>> initial support upstream; when 4.4 hits mainline, I'll resubmit
+>> my series that implements the of_serial i/o properties and
+>> options passthrough to earlycon setup.
+> 
+> 
+> As I said in another thread ("serial: earlycon: allow to specify
+> uartclk in earlycon kernel-parameter"),
+> stdout-path can pass dev->baud, but not port->uartclk.
 
-On Mon, Jul 6, 2015 at 11:27 AM, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> This series of patches, together with
-> <https://patchwork.kernel.org/patch/6652341/> from Chris Zhong and a
-> dts change allow us to wake up from a USB device on rk3288 boards.
-> The patches were tested on rk3288-jerry in the chromeos-3.14 kernel.
-> The chromeos-3.14 kernel tested included a full set of dwc2 backports
-> from upstream, so this is expected to function upstream once we get
-> everything setup there.
->
->
-> Douglas Anderson (3):
->   USB: Export usb_wakeup_enabled_descendants()
->   Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
->   USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
->
->  Documentation/devicetree/bindings/usb/dwc2.txt |  4 +++
->  drivers/usb/core/hub.c                         |  7 ++--
->  drivers/usb/dwc2/core.h                        |  2 ++
->  drivers/usb/dwc2/platform.c                    | 45 ++++++++++++++++++++++++--
->  include/linux/usb/hcd.h                        |  5 +++
->  5 files changed, 58 insertions(+), 5 deletions(-)
+That's true but I'm not seeing in that thread where you wrote that?
+My replies there were specific to uartclk on the kernel command line,
+which isn't necessary if the bootloader has already initialized the
+uart.
 
-This series was posted a while ago.  Do you have any comments on it?
-Should I repost it?
+> It is usually specified "clocks" phandle, but
+> clk is not ready at the point of earlycon.
+> 
+> It seems impossible to set up the baudrate even if the options are passed.
 
-Thanks!
+It's difficult to understand what you're trying to do when I can't
+see the code you're referring to.  For example, I only recently
+understood that you're talking about a earlycon implementation
+that you're working on and not the 8250 earlycon itself.
 
--Doug
+If you look at other non-8250 earlycons, you'll see they all ignore
+the baud rate, on the assumption the bootloader already set it up.
+
+The 8250 earlycon is a little different because legacy platforms
+do not initialize the uart.
+
+Regards,
+Peter Hurley
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
