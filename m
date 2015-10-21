@@ -1,78 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/4] Documentation: tps65086: Add DT bindings for the
- TPS65086 PMIC
-Date: Wed, 21 Oct 2015 17:13:39 +0100
-Message-ID: <20151021161339.GN32054@sirena.org.uk>
-References: <5625095F.5080204@ti.com>
- <20151019152100.GK31804@x1>
- <56250AF9.3030907@ti.com>
- <20151020113128.GN31804@x1>
- <56264990.8050501@ti.com>
- <20151021084633.GB3270@x1>
- <20151021102952.GJ32054@sirena.org.uk>
- <20151021111832.GC3270@x1>
- <20151021121409.GA8232@sirena.org.uk>
- <20151021152659.GF3270@x1>
+From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Subject: Re: [PATCH RFT] ARM: bcm2835: enable all bcm2835-relevant in
+ defconfig
+Date: Wed, 21 Oct 2015 18:16:31 +0200
+Message-ID: <5627BA5F.104@lategoodbye.de>
+References: <1444942061-23085-1-git-send-email-stefan.wahren@i2se.com>
+ <5626F934.6090706@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Y8IEA2AKDLXNckrV"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151021152659.GF3270@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5626F934.6090706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am 21.10.2015 um 04:32 schrieb Stephen Warren:
+> On 10/15/2015 02:47 PM, Stefan Wahren wrote:
+>> Rebuild bcm2835_defconfig using "make bcm2835_defconfig;
+>> make savedefconfig", and add the following features:
+>>
+>> * Enable all bcm2835-relevant drivers (MBOX, WDT, DMA,
+>>    PWM, SND)
+>> * Re-enable some features to keep the current settings
+>>    (stackprotector, LED GPIO, LED triggers)
+>
+> Can you explain that second bullet a bit more?
 
---Y8IEA2AKDLXNckrV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, the last update to bcm2835_defconfig was on 25th September 2014.
+So a little bit changed in the configs like renaming of options.
+After saving the defconfig i noticed that we "lost" 2 features with
+the new defconfig:
 
-On Wed, Oct 21, 2015 at 04:26:59PM +0100, Lee Jones wrote:
-> On Wed, 21 Oct 2015, Mark Brown wrote:
-> > On Wed, Oct 21, 2015 at 12:18:32PM +0100, Lee Jones wrote:
+* CONFIG_CC_STACKPROTECTOR because of renaming to 
+CONFIG_CC_STACKPROTECTOR_REGULAR
 
-> > > I didn't say it hasn't been done before, just that I didn't like it
-> > > for the aforementioned reasons.  I can also find 1000's of compatible
-> > > strings which do append "-<device_type>", so it's not exactly an
-> > > unheard of practice.
+* CONFIG_LEDS_TRIGGER_HEARTBEAT because of the following new dependencies
+   * CONFIG_NEW_LEDS
+   * CONFIG_LEDS_CLASS
+   * CONFIG_LEDS_TRIGGERS
 
-> > It's a pretty substantial change in the way we make compatible strings
-> > that we probably want to discuss more widely if we want to adopt it -
-> > we've not been using that idiom and it's pretty surprising.  I'm not
-> > really sure it help much and we do already have the pre-@ noise words
-> > for this purpose (as well as comments in the DT).
+Do you want 2 separate patches (first update with re-enable and second 
+with new bcm2835 stuff)?
 
-> I'm not *that* fussed about it to justify starting-up wider community
-> discussions.
+Best regards
+Stefan
 
-> My only point is that:
-
->   compatible = "<vendor>,udw9283";
-
-> ... is meaningless gibberish and I think it'd be better to be more
-> forthcoming which prevents having to dig around in DTS files for the
-> node name/label for true device/type identification.
-
-What I suspect most people actually do here is google the part name if
-it's not obvious from context (presumably people with a compatible
-string only are either looking at the driver or some DT source
-instantiating it).
-
---Y8IEA2AKDLXNckrV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWJ7myAAoJECTWi3JdVIfQQNIIAILVDGXE7QSIwF98dmirjiDY
-+StoA/fUn7qFtoTMxCubnBftujj8hcFFCGvtXRsb/ze1Pp4xWwRljul9Ejqtbr7D
-4xAnAAp0k2OMacH85eSRgqbHwGFNXF47zulphX1dcbZAMg+zRIpyy7aYKqXNu4z7
-rtH38j1rfu7pr7oUQcbne/11uOOLblm5TxO/R83Wdwe0KmVIqo5dxO7s1HS9J1+m
-B9Kq2n/IxKXR52BoHY0l+l5Q+Hs5EjayIJn3RzJ1wURGWHulGOMsBEXnCXdsnYrn
-Hxlb4AXFltlSigrMgQ/3kC/Q25hqEcTr0qM4oRPoE8mSS47EvhynKhfkM/BgqXo=
-=H09d
------END PGP SIGNATURE-----
-
---Y8IEA2AKDLXNckrV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
