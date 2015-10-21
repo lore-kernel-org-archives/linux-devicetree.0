@@ -1,48 +1,62 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Wed, 21 Oct 2015 18:48:32 +0530
-Message-ID: <20151021131832.GG7784@ubuntu>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
- <20151016002243.GA23912@codeaurora.org>
- <20151016060227.GS19018@linux>
- <20151016191658.GA16437@codeaurora.org>
- <20151017041055.GZ19018@linux>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Wed, 21 Oct 2015 15:23:32 +0200
+Message-ID: <562791D4.3050105@osg.samsung.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+ <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+ <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
+ <562765F3.9010306@osg.samsung.com> <56276C87.6040509@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151017041055.GZ19018@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56276C87.6040509@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, m.reichl@fivetechno.de, Alim Akhtar <alim.akhtar@gmail.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 List-Id: devicetree@vger.kernel.org
 
-On 17-10-15, 09:40, Viresh Kumar wrote:
-> Hehe, no.
-> 
-> Okay here is the problem statement:
-> 
-> We have two supplies for a device and the device node will have
-> something like:
-> 
-> name1-supply = <&supply1>;
-> name2-supply = <&supply2>;
-> 
-> And the OPP node needs to have voltages for both of them:
-> 
-> opp-microvolt = <X1 Y1 Z1>, <X2 Y2 Z2>;
-> 
-> Where XYZ(1) are for supply1 and XYZ(2) are for supply2.
-> 
-> Now we need to identify the supplies for which the values are present
-> here and their order as well. How do we do that?
-> 
-> The way I am suggesting is to add a property in opp node which will
-> keep "name1" and "name2" in it.
+Hello Alim,
 
-Any more comments? Acks ? I want to close this series :)
+On 10/21/2015 12:44 PM, Alim Akhtar wrote:
 
+[snip]
+
+>>
+>> Can you please test following patch [0] on top of Alim's series? If that
+>> works then it should either be part of Alim's series or the patches will
+>> have to wait until that patch lands into mainline. I don't have an eMMC
+>> to test it in XU4 but I'm pretty confident that it will solve the issue.
+>>
+> I am fine with including this with my series or lowering syscon_restart_handler priority to 128.
+
+Yes, I also considered changing the syscon-reboot handler priority to 128 but
+then I noticed this commit:
+
+b81180b3fd48 ("power: reset: adjust priority of simple syscon reboot driver").
+
+So as you can see, it was 128 before but was bumped to 192 so it was called
+before restart handlers registered by watchdogs. So, changing to 128 would
+break other people use cases.
+
+Now, I don't know if that is the right fix since register_restart_handler()
+explanation about the policy used for restart handler priority numbers is
+scarce. It only mentions 0, 128 and 255 so probably the correct thing to do
+is to change all watchdog restart handler to 0 but that is a separate issue.
+
+> It also make sense to increase eMMC priority as you suggested as before system reboot, devices should have reseted itself.
+
+That was my rationale as well and is why I think the handler for devices
+should use the highest priority regardless if the syscon-reboot is later
+changed to prio 128 and the watchdog handlers to 0.
+
+Best regards,
+
+[0]: http://lxr.free-electrons.com/source/kernel/reboot.c#L113
+
+Best regards,
 -- 
-viresh
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
