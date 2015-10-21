@@ -1,104 +1,290 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 7/7] ARM: defconfig: Update qcom_defconfig
-Date: Tue, 20 Oct 2015 21:57:50 -0700
-Message-ID: <1445403470-17434-7-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [PATCH 2/7] ARM: dts: qcom: msm8974-honami: Add regulator nodes for
+ Honami
+Date: Tue, 20 Oct 2015 21:57:45 -0700
+Message-ID: <1445403470-17434-2-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
-
-This enables smem, smd, rpm, regulators, pmic pinctrl and hwspinlock as
-these platform features are now merged. It enables gpio-keys as this is
-used by most boards and enables fhandle and cgroups, so we can boot
-systemd.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
 
-MSM_IOMMU is marked as BROKEN as of next-20151020, the other options
-that is disabled are done so because they are now default on.
+This patch was previously submitted standalone, minor updates has been
+done to correct the 8841 voltage ranges and the logic surrounding
+vreg_boost.
 
- arch/arm/configs/qcom_defconfig | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+l20 is marked for 200mA current consumption to force the eMMC supply
+into HPM, to allow reliable mounting.
 
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index ff7985ba226e..0efe0741b5be 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -1,8 +1,10 @@
- CONFIG_SYSVIPC=y
-+CONFIG_FHANDLE=y
- CONFIG_NO_HZ=y
- CONFIG_HIGH_RES_TIMERS=y
- CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
-+CONFIG_CGROUPS=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_SYSCTL_SYSCALL=y
- CONFIG_KALLSYMS_ALL=y
-@@ -25,7 +27,6 @@ CONFIG_SMP=y
- CONFIG_PREEMPT=y
- CONFIG_AEABI=y
- CONFIG_HIGHMEM=y
--CONFIG_HIGHPTE=y
- CONFIG_CLEANCACHE=y
- CONFIG_ARM_APPENDED_DTB=y
- CONFIG_ARM_ATAG_DTB_COMPAT=y
-@@ -78,6 +79,7 @@ CONFIG_USB_USBNET=y
- # CONFIG_USB_NET_ZAURUS is not set
- CONFIG_INPUT_EVDEV=y
- # CONFIG_KEYBOARD_ATKBD is not set
-+CONFIG_KEYBOARD_GPIO=y
- # CONFIG_MOUSE_PS2 is not set
- CONFIG_INPUT_JOYSTICK=y
- CONFIG_INPUT_TOUCHSCREEN=y
-@@ -99,16 +101,21 @@ CONFIG_PINCTRL_APQ8084=y
- CONFIG_PINCTRL_IPQ8064=y
- CONFIG_PINCTRL_MSM8960=y
- CONFIG_PINCTRL_MSM8X74=y
-+CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
-+CONFIG_PINCTRL_QCOM_SSBI_PMIC=y
- CONFIG_GPIOLIB=y
- CONFIG_DEBUG_GPIO=y
- CONFIG_GPIO_SYSFS=y
-+CONFIG_CHARGER_QCOM_SMBB=y
- CONFIG_POWER_RESET=y
- CONFIG_POWER_RESET_MSM=y
- CONFIG_THERMAL=y
- CONFIG_MFD_QCOM_RPM=y
-+CONFIG_MFD_SPMI_PMIC=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_QCOM_RPM=y
-+CONFIG_REGULATOR_QCOM_SMD_RPM=y
- CONFIG_MEDIA_SUPPORT=y
- CONFIG_FB=y
- CONFIG_SOUND=y
-@@ -145,16 +152,17 @@ CONFIG_MSM_GCC_8660=y
- CONFIG_MSM_LCC_8960=y
- CONFIG_MSM_MMCC_8960=y
- CONFIG_MSM_MMCC_8974=y
--CONFIG_MSM_IOMMU=y
-+CONFIG_HWSPINLOCK_QCOM=y
- CONFIG_QCOM_GSBI=y
- CONFIG_QCOM_PM=y
-+CONFIG_QCOM_SMEM=y
-+CONFIG_QCOM_SMD=y
-+CONFIG_QCOM_SMD_RPM=y
- CONFIG_PHY_QCOM_APQ8064_SATA=y
- CONFIG_PHY_QCOM_IPQ806X_SATA=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
- CONFIG_EXT3_FS=y
--# CONFIG_EXT3_DEFAULTS_TO_ORDERED is not set
--CONFIG_EXT4_FS=y
- CONFIG_FUSE_FS=y
- CONFIG_VFAT_FS=y
- CONFIG_TMPFS=y
+ .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 226 +++++++++++++++++++++
+ 1 file changed, 226 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+index 6f7e4ef4ccf7..5768c97bb124 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -1,6 +1,8 @@
+ #include "qcom-msm8974.dtsi"
+ #include "qcom-pm8841.dtsi"
+ #include "qcom-pm8941.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ 
+ / {
+ 	model = "Sony Xperia Z1";
+@@ -18,6 +20,223 @@
+ 		reg = <0 0x40000000>, <0x40000000 0x40000000>;
+ 		device_type = "memory";
+ 	};
++
++	smd {
++		rpm {
++			rpm_requests {
++				pm8841-regulators {
++					s1 {
++						regulator-min-microvolt = <675000>;
++						regulator-max-microvolt = <1050000>;
++					};
++
++					s2 {
++						regulator-min-microvolt = <500000>;
++						regulator-max-microvolt = <1050000>;
++					};
++
++					s3 {
++						regulator-min-microvolt = <500000>;
++						regulator-max-microvolt = <1050000>;
++					};
++
++					s4 {
++						regulator-min-microvolt = <500000>;
++						regulator-max-microvolt = <1050000>;
++					};
++				};
++
++				pm8941-regulators {
++					vdd_l1_l3-supply = <&pm8941_s1>;
++					vdd_l2_lvs1_2_3-supply = <&pm8941_s3>;
++					vdd_l4_l11-supply = <&pm8941_s1>;
++					vdd_l5_l7-supply = <&pm8941_s2>;
++					vdd_l6_l12_l14_l15-supply = <&pm8941_s2>;
++					vdd_l9_l10_l17_l22-supply = <&vreg_boost>;
++					vdd_l13_l20_l23_l24-supply = <&vreg_boost>;
++					vdd_l21-supply = <&vreg_boost>;
++					vin_5vs-supply = <&pm8941_5v>;
++
++					s1 {
++						regulator-min-microvolt = <1300000>;
++						regulator-max-microvolt = <1300000>;
++						regulator-always-on;
++						regulator-boot-on;
++					};
++
++					s2 {
++						regulator-min-microvolt = <2150000>;
++						regulator-max-microvolt = <2150000>;
++						regulator-boot-on;
++					};
++
++					s3 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++						regulator-always-on;
++						regulator-boot-on;
++					};
++
++					s4 {
++						regulator-min-microvolt = <5000000>;
++						regulator-max-microvolt = <5000000>;
++					};
++
++					l1 {
++						regulator-min-microvolt = <1225000>;
++						regulator-max-microvolt = <1225000>;
++
++						regulator-always-on;
++						regulator-boot-on;
++					};
++
++					l2 {
++						regulator-min-microvolt = <1200000>;
++						regulator-max-microvolt = <1200000>;
++					};
++
++					l3 {
++						regulator-min-microvolt = <1200000>;
++						regulator-max-microvolt = <1200000>;
++					};
++
++					l4 {
++						regulator-min-microvolt = <1225000>;
++						regulator-max-microvolt = <1225000>;
++					};
++
++					l5 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++					};
++
++					l6 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++
++						regulator-boot-on;
++					};
++
++					l7 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++
++						regulator-boot-on;
++					};
++
++					l8 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++					};
++
++					l9 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <2950000>;
++					};
++
++					l11 {
++						regulator-min-microvolt = <1300000>;
++						regulator-max-microvolt = <1350000>;
++					};
++
++					l12 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++
++						regulator-always-on;
++						regulator-boot-on;
++					};
++
++					l13 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <2950000>;
++
++						regulator-boot-on;
++					};
++
++					l14 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++					};
++
++					l15 {
++						regulator-min-microvolt = <2050000>;
++						regulator-max-microvolt = <2050000>;
++					};
++
++					l16 {
++						regulator-min-microvolt = <2700000>;
++						regulator-max-microvolt = <2700000>;
++					};
++
++					l17 {
++						regulator-min-microvolt = <2700000>;
++						regulator-max-microvolt = <2700000>;
++					};
++
++					l18 {
++						regulator-min-microvolt = <2850000>;
++						regulator-max-microvolt = <2850000>;
++					};
++
++					l19 {
++						regulator-min-microvolt = <3300000>;
++						regulator-max-microvolt = <3300000>;
++					};
++
++					l20 {
++						regulator-min-microvolt = <2950000>;
++						regulator-max-microvolt = <2950000>;
++
++						regulator-allow-set-load;
++						regulator-boot-on;
++						regulator-system-load = <200000>;
++					};
++
++					l21 {
++						regulator-min-microvolt = <2950000>;
++						regulator-max-microvolt = <2950000>;
++
++						regulator-boot-on;
++					};
++
++					l22 {
++						regulator-min-microvolt = <3000000>;
++						regulator-max-microvolt = <3000000>;
++					};
++
++					l23 {
++						regulator-min-microvolt = <2800000>;
++						regulator-max-microvolt = <2800000>;
++					};
++
++					l24 {
++						regulator-min-microvolt = <3075000>;
++						regulator-max-microvolt = <3075000>;
++
++						regulator-boot-on;
++					};
++				};
++			};
++		};
++	};
++
++	vreg_boost: vreg-boost {
++		compatible = "regulator-fixed";
++
++		regulator-name = "vreg-boost";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++
++		regulator-always-on;
++		regulator-boot-on;
++
++		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&boost_bypass_n_pin>;
++     };
+ };
+ 
+ &soc {
+@@ -51,6 +270,13 @@
+ 
+ &spmi_bus {
+ 	pm8941@0 {
++		gpios@c000 {
++			boost_bypass_n_pin: boost-bypass {
++				pins = "gpio21";
++				function = "normal";
++			};
++		};
++
+ 		coincell@2800 {
+ 			status = "ok";
+ 			qcom,rset-ohms = <2100>;
 -- 
 2.4.2
