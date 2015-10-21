@@ -1,219 +1,150 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH RFC v2 2/2] simplefb: Claim and enable regulators
-Date: Wed, 21 Oct 2015 10:09:11 +0200
-Message-ID: <56274827.3000708@redhat.com>
-References: <1445407141-16459-1-git-send-email-wens@csie.org>
- <1445407141-16459-3-git-send-email-wens@csie.org>
- <562744A9.1070705@redhat.com>
- <CAGb2v643sDnNv5DPYocu-50UB3q-itpwGdw8hZ3YN=V+nEBkMg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: Alternative approach to solve the deferred probe
+Date: Wed, 21 Oct 2015 09:18:47 +0100
+Message-ID: <20151021081847.GB32532@n2100.arm.linux.org.uk>
+References: <20151018195330.GB14956@sirena.org.uk>
+ <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
+ <20151019131821.GA32532@n2100.arm.linux.org.uk>
+ <CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com>
+ <20151019143045.GE32532@n2100.arm.linux.org.uk>
+ <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com>
+ <20151019153548.GM32532@n2100.arm.linux.org.uk>
+ <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com>
+ <20151020154656.GY32532@n2100.arm.linux.org.uk>
+ <56270D5B.5010902@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v643sDnNv5DPYocu-50UB3q-itpwGdw8hZ3YN=V+nEBkMg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56270D5B.5010902@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwo>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Oct 20, 2015 at 08:58:19PM -0700, Frank Rowand wrote:
+> On 10/20/2015 8:46 AM, Russell King - ARM Linux wrote:
+> > On Mon, Oct 19, 2015 at 06:21:40PM +0200, Geert Uytterhoeven wrote:
+> >> Hi Russell,
+> >>
+> >> On Mon, Oct 19, 2015 at 5:35 PM, Russell King - ARM Linux
+> >> <linux@arm.linux.org.uk> wrote:
+> >>>>> What you can do is print those devices which have failed to probe at
+> >>>>> late_initcall() time - possibly augmenting that with reports from
+> >>>>> subsystems showing what resources are not available, but that's only
+> >>>>> a guide, because of the "it might or might not be in a kernel module"
+> >>>>> problem.
+> >>>>
+> >>>> Well, adding those reports would give you a changelog similar to the
+> >>>> one in this series...
+> >>>
+> >>> I'm not sure about that, because what I was thinking of is adding
+> >>> a flag which would be set at late_initcall() time prior to running
+> >>> a final round of deferred device probing.
+> >>
+> >> Which round is the final round?
+> >> That's the one which didn't manage to bind any new devices to drivers,
+> >> which is something you only know _after_ the round has been run.
+> >>
+> >> So I think we need one extra round to handle this.
+> >>
+> >>> This flag would then be used in a deferred_warn() printk function
+> >>> which would normally be silent, but when this flag is set, it would
+> >>> print the reason for the deferral - and this would replace (or be
+> >>> added) to the subsystems and drivers which return -EPROBE_DEFER.
+> >>>
+> >>> That has the effect of hiding all the deferrals up until just before
+> >>> launching into userspace, which should then acomplish two things -
+> >>> firstly, getting rid of the rather useless deferred messages up to
+> >>> that point, and secondly printing the reason why the remaining
+> >>> deferrals are happening.
+> >>>
+> >>> That should be a small number of new lines plus a one-line change
+> >>> in subsystems and drivers.
+> >>
+> >> Apart from the extra round we probably can't get rid of, that sounds OK to me.
+> > 
+> > Something like this.  I haven't put a lot of effort into it to change all
+> > the places which return an -EPROBE_DEFER, and it also looks like we need
+> > some helpers to report when we have only an device_node (or should that
+> > be fwnode?)  See the commented out of_warn_deferred() in
+> > drivers/gpio/gpiolib-of.c.  Adding this stuff in the subsystems searching
+> > for resources should make debugging why things are getting deferred easier.
+> > 
+> > We could make driver_deferred_probe_report something that can be
+> > deactivated again after the last deferred probe run, and provide the
+> > user with a knob that they can turn it back on again.
+> > 
+> > I've tried this out on two of my platforms, including forcing
+> > driver_deferred_probe_report to be enabled, and I get exactly one
+> > deferred probe, so not a particularly good test.
+> > 
+> > The patch won't apply as-is to mainline for all files; it's based on my
+> > tree which has some 360 additional patches (which seems to be about
+> > normal for my tree now.)
+> 
+> I like the concept (I have been thinking along similar lines lately).
+> But I think this might make the console messages more confusing than
+> they are now.
 
-On 21-10-15 10:04, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Wed, Oct 21, 2015 at 3:54 PM, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->>
->> On 21-10-15 07:59, Chen-Yu Tsai wrote:
->>>
->>> This claims and enables regulators listed in the simple framebuffer dt
->>> node. This is needed so that regulators powering the display pipeline
->>> and external hardware, described in the device node and known by the
->>> kernel code, will remain properly enabled.
->>>
->>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->>> ---
->>>    drivers/video/fbdev/simplefb.c | 122
->>> ++++++++++++++++++++++++++++++++++++++++-
->>>    1 file changed, 121 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/video/fbdev/simplefb.c
->>> b/drivers/video/fbdev/simplefb.c
->>> index 52c5c7e63b52..c4ee10d83a70 100644
->>> --- a/drivers/video/fbdev/simplefb.c
->>> +++ b/drivers/video/fbdev/simplefb.c
->>> @@ -28,7 +28,10 @@
->>>    #include <linux/platform_device.h>
->>>    #include <linux/clk.h>
->>>    #include <linux/clk-provider.h>
->>> +#include <linux/of.h>
->>>    #include <linux/of_platform.h>
->>> +#include <linux/parser.h>
->>> +#include <linux/regulator/consumer.h>
->>>
->>>    static struct fb_fix_screeninfo simplefb_fix = {
->>>          .id             = "simple",
->>> @@ -174,6 +177,10 @@ struct simplefb_par {
->>>          int clk_count;
->>>          struct clk **clks;
->>>    #endif
->>> +#if defined CONFIG_OF && defined CONFIG_REGULATOR
->>> +       u32 regulator_count;
->>> +       struct regulator **regulators;
->>> +#endif
->>>    };
->>>
->>>    #if defined CONFIG_OF && defined CONFIG_COMMON_CLK
->>> @@ -269,6 +276,112 @@ static int simplefb_clocks_init(struct simplefb_par
->>> *par,
->>>    static void simplefb_clocks_destroy(struct simplefb_par *par) { }
->>>    #endif
->>>
->>> +#if defined CONFIG_OF && defined CONFIG_REGULATOR
->>> +
->>> +#define SUPPLY_SUFFIX "-supply"
->>> +
->>> +/*
->>> + * Regulator handling code.
->>> + *
->>> + * Here we handle the num-supplies and vin*-supply properties of our
->>> + * "simple-framebuffer" dt node. This is necessary so that we can make
->>> sure
->>> + * that any regulators needed by the display hardware that the bootloader
->>> + * set up for us (and for which it provided a simplefb dt node), stay up,
->>> + * for the life of the simplefb driver.
->>> + *
->>> + * When the driver unloads, we cleanly disable, and then release the
->>> + * regulators.
->>> + *
->>> + * We only complain about errors here, no action is taken as the most
->>> likely
->>> + * error can only happen due to a mismatch between the bootloader which
->>> set
->>> + * up simplefb, and the regulator definitions in the device tree. Chances
->>> are
->>> + * that there are no adverse effects, and if there are, a clean teardown
->>> of
->>> + * the fb probe will not help us much either. So just complain and carry
->>> on,
->>> + * and hope that the user actually gets a working fb at the end of
->>> things.
->>> + */
->>> +static int simplefb_regulators_init(struct simplefb_par *par,
->>> +       struct platform_device *pdev)
->>> +{
->>> +       struct device_node *np = pdev->dev.of_node;
->>> +       struct property *prop;
->>> +       struct regulator *regulator;
->>> +       const char *p;
->>> +       int count = 0, i = 0, ret;
->>> +
->>> +       if (dev_get_platdata(&pdev->dev) || !np)
->>> +               return 0;
->>> +
->>> +       /* Count the number of regulator supplies */
->>> +       for_each_property_of_node(np, prop) {
->>> +               p = strstr(prop->name, SUPPLY_SUFFIX);
->>> +               if (p && p != prop->name)
->>> +                       count++;
->>> +       }
->>> +
->>> +       if (!count)
->>> +               return 0;
->>> +
->>> +       par->regulators = devm_kcalloc(&pdev->dev, count,
->>> +                                      sizeof(struct regulator *),
->>> GFP_KERNEL);
->>> +       if (!par->regulators)
->>> +               return -ENOMEM;
->>> +
->>> +       /* Get all the regulators */
->>> +       for_each_property_of_node(np, prop) {
->>> +               char name[32]; /* 32 is max size of property name */
->>> +
->>> +               p = strstr(prop->name, SUPPLY_SUFFIX);
->>> +               if (p && p != prop->name)
->>> +                       continue;
->>> +
->>> +               strlcpy(name, prop->name,
->>> +                       strlen(prop->name) - sizeof(SUPPLY_SUFFIX) + 1);
->>> +               regulator = devm_regulator_get_optional(&pdev->dev, name);
->>> +               if (IS_ERR(regulator)) {
->>> +                       if (PTR_ERR(regulator) == -EPROBE_DEFER)
->>> +                               return -EPROBE_DEFER;
->>> +                       dev_err(&pdev->dev, "regulator %s not found:
->>> %ld\n",
->>> +                               name, PTR_ERR(regulator));
->>> +                       continue;
->>> +               }
->>> +               par->regulators[i++] = regulator;
->>
->>
->> So you only fill slots when the regulator_get has succeeded
->>
->>> +       }
->>> +       par->regulator_count = i;
->>
->>
->> and regulator_count now is the amount of successfully gotten regulators
->> (which may be different from count).
->>
->>> +
->>> +       /* Enable all the regulators */
->>> +       for (i = 0; i < par->regulator_count; i++) {
->>> +               if (par->regulators[i]) {
->>
->>
->> That means that this "if" is not necessary, it will always be true.
->
-> Right. This is leftover code from the first version. I'll remove it.
->
->>> +                       ret = regulator_enable(par->regulators[i]);
->>> +                       if (ret) {
->>> +                               dev_err(&pdev->dev,
->>> +                                       "failed to enable regulator %d:
->>> %d\n",
->>> +                                       i, ret);
->>> +                               devm_regulator_put(par->regulators[i]);
->>> +                               par->regulators[i] = NULL;
->
-> Note here.
->
->>> +                       }
->>> +               }
->>> +       }
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static void simplefb_regulators_destroy(struct simplefb_par *par)
->>> +{
->>> +       int i;
->>> +
->>> +       if (!par->regulators)
->>> +               return;
->>> +
->>> +       for (i = 0; i < par->regulator_count; i++)
->>> +               if (par->regulators[i])
->>
->>
->> And idem for this if.
->
-> This is still needed, since if we fail to enable any regulator, we just
-> ignore it, call regulator_put() on it, and forget about it (set the entry
-> to NULL). See the noted place above.
+If messages end up being given from the subsystem rather than the driver,
+surely they become more consistent?
 
-Ah right, ok lets keep that in then :)
+> The problem is that debug, warn, and error messages
+> come from a somewhat random set of locations at the moment.  Some
+> come from the driver probe routines and some come from the subsystems
+> that the probe routines call.  So the patch is suppressing some
+> messages, but not others.
 
-Regards,
+The patch is not complete (read the description above).
 
-Hans
+> > +void dev_warn_deferred(struct device *dev, const char *fmt, ...)
+> > +{
+> > +	if (driver_deferred_probe_report) {
+> > +		struct va_format vaf;
+> > +		va_list ap;
+> > +
+> > +		va_start(ap, fmt);
+> > +		vaf.fmt = fmt;
+> > +		vaf.va = &ap;
+> > +
+> > +		dev_warn(dev, "deferring probe: %pV", &vaf);
+> > +		va_end(ap);
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_GPL(dev_warn_deferred);
+> 
+> The places where dev_warn_deferred() replaces dev_dbg(), we lose the
+> ability to turn on debugging and observe the driver reporting the
+> specific reason the deferral is occurring. So it would be useful to
+> add an "else dev_dbg()" in dev_warn_deferred() to retain that capability.
+
+That's a possibility.
+
+> 
+> > +
+> >  static bool driver_deferred_probe_enable = false;
+> > +
+> >  /**
+> >   * driver_deferred_probe_trigger() - Kick off re-probing deferred devices
+> >   *
+> > @@ -188,6 +210,13 @@ static int deferred_probe_initcall(void)
+> >  	driver_deferred_probe_trigger();
+> 
+> Couldn't you put the "driver_deferred_probe_report = true" here?  And then
+> not add another round of probes.
+
+The idea is not to report anything for drivers that were deferred
+during the normal bootup.  The above is part of the normal bootup,
+and the deferred activity should not be warned about.
+
+If we have any devices still deferring after _this_ round, that must
+indicate that some resource they want is not available, and that
+should be warned about.
+
+Of course, modules can defer too - and I made some suggestions in my
+waffle above the patch about that.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
