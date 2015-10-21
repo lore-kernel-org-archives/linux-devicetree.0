@@ -1,55 +1,99 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 1/7] ARM: dts: qcom: msm8974-honami: Define pinctrl state for blsp_uart2
-Date: Tue, 20 Oct 2015 21:57:44 -0700
-Message-ID: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH 3/7] ARM: dts: qcom: msm8974-honami: Introduce gpio-keys
+Date: Tue, 20 Oct 2015 21:57:46 -0700
+Message-ID: <1445403470-17434-3-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445403470-17434-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make sure the blsp1_uart2 pins are in the correct state for the uart.
+Introduce a gpio-keys node defining the physical keys of the Honami and
+the associated pinctrl state.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 ---
- .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index 016f9ad9392a..6f7e4ef4ccf7 100644
+index 5768c97bb124..8c0753a32b20 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -23,6 +23,29 @@
- &soc {
- 	serial@f991e000 {
- 		status = "ok";
+@@ -2,6 +2,7 @@
+ #include "qcom-pm8841.dtsi"
+ #include "qcom-pm8941.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ 
+ / {
+@@ -16,6 +17,42 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		input-name = "gpio-keys";
 +
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&blsp1_uart2_pin_a>;
++		pinctrl-0 = <&gpio_keys_pin_a>;
++
++		volume-down {
++			label = "volume_down";
++			gpios = <&pm8941_gpios 2 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++
++		camera-snapshot {
++			label = "camera_snapshot";
++			gpios = <&pm8941_gpios 3 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_CAMERA>;
++		};
++
++		camera-focus {
++			label = "camera_focus";
++			gpios = <&pm8941_gpios 4 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_CAMERA_FOCUS>;
++		};
++
++		volume-up {
++			label = "volume_up";
++			gpios = <&pm8941_gpios 5 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
 +	};
 +
-+	pinctrl@fd510000 {
-+		blsp1_uart2_pin_a: blsp1-uart2-pin-active {
-+			rx {
-+				pins = "gpio5";
-+				function = "blsp_uart2";
+ 	memory@0 {
+ 		reg = <0 0x40000000>, <0x40000000 0x40000000>;
+ 		device_type = "memory";
+@@ -275,6 +312,14 @@
+ 				pins = "gpio21";
+ 				function = "normal";
+ 			};
 +
-+				drive-strength = <2>;
++			gpio_keys_pin_a: gpio-keys-active {
++				pins = "gpio2", "gpio3", "gpio4", "gpio5";
++				function = "normal";
++
 +				bias-pull-up;
++				power-source = <PM8941_GPIO_S3>;
 +			};
-+
-+			tx {
-+				pins = "gpio4";
-+				function = "blsp_uart2";
-+
-+				drive-strength = <4>;
-+				bias-disable;
-+			};
-+		};
- 	};
- };
+ 		};
  
+ 		coincell@2800 {
 -- 
 2.4.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
