@@ -1,119 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] driver core: Disable late probes by default
-Date: Wed, 21 Oct 2015 08:14:47 -0700
-Message-ID: <20151021151447.GA19720@kroah.com>
-References: <20151016181129.GA1764@gradator.net>
- <1445267602-12576-1-git-send-email-tomeu.vizoso@collabora.com>
- <20151019151953.GA22662@kroah.com>
- <CAAObsKC5LZU1YTmQd16duiN1d0WhpLF8Af8z4ep-PUVy3n_hnw@mail.gmail.com>
- <20151020140523.GA22021@kroah.com>
- <CAAObsKAL782-poBT1gkid+zzhWBOrnOUh7P7epjcja38j_-fbQ@mail.gmail.com>
- <20151021033917.GB32366@kroah.com>
- <CAAObsKBLL_-bARp_W0sVqoGdpQ+nftdJtQepnFL1foJOGJmbQQ@mail.gmail.com>
+From: "Kwok, WingMan" <w-kwok2@ti.com>
+Subject: RE: [PATCH] ARM: keystone: dts: add PCI serdes driver bindings
+Date: Wed, 21 Oct 2015 15:14:58 +0000
+Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04229FCB@DFLE11.ent.ti.com>
+References: <1445432242-16129-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAObsKBLL_-bARp_W0sVqoGdpQ+nftdJtQepnFL1foJOGJmbQQ@mail.gmail.com>
+In-Reply-To: <1445432242-16129-1-git-send-email-w-kwok2@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "Kwok, WingMan" <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 04:35:58PM +0200, Tomeu Vizoso wrote:
-> On 21 October 2015 at 05:39, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Oct 20, 2015 at 06:17:39PM +0200, Tomeu Vizoso wrote:
-> >> On 20 October 2015 at 16:05, Greg Kroah-Hartman
-> >> <gregkh@linuxfoundation.org> wrote:
-> >> > On Tue, Oct 20, 2015 at 09:40:48AM +0200, Tomeu Vizoso wrote:
-> >> >> On 19 October 2015 at 17:19, Greg Kroah-Hartman
-> >> >> <gregkh@linuxfoundation.org> wrote:
-> >> >> > On Mon, Oct 19, 2015 at 05:13:22PM +0200, Tomeu Vizoso wrote:
-> >> >> >> To smooth the transition to late probes, make disabled the default for
-> >> >> >> DELAY_DEVICE_PROBES and let individual SoCs enable the option as they
-> >> >> >> get fixed.
-> >> >> >>
-> >> >> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> >> >> >> Link: https://lkml.kernel.org/g/20151016181129.GA1764@gradator.net
-> >> >> >>
-> >> >> >> ---
-> >> >> >>
-> >> >> >> Hi Rob,
-> >> >> >>
-> >> >> >> I'm sending this in case you think it would be best to leave the
-> >> >> >> on-demand probe series in -next for now but have late probes disabled to
-> >> >> >> avoid hassle to some people.
-> >> >> >
-> >> >> > I would like Rob to just drop this series please, I don't agree with it
-> >> >> > at all at the moment.
-> >> >>
-> >> >> Hi Greg,
-> >> >>
-> >> >> is it the case that you are satisfied with deferred probes as a way of
-> >> >> ordering device probing and that I should look at how to solve my
-> >> >> problem by improving it?
-> >> >
-> >> > Yes, especially given that you have said this does not speed up your
-> >> > boot times, which I thought was your main goal here :(
-> >>
-> >> Sorry if I'm repeating myself too often, but I have two goals: change
-> >> the probing order to not send deferred probes to the back of the queue
-> >> (getting the display up as fast as possible), and making easier to
-> >> understand the boot process on embedded platforms.
-> >>
-> >> The concrete issue that would be fixed by achieving the first goal was
-> >> explained in this email from last year:
-> >>
-> >> http://lists.freedesktop.org/archives/dri-devel/2014-August/066527.html
-> >>
-> >> Because of that, ChromeOS had to use their own bindings for the panel
-> >> node so that the panel probe wouldn't be deferred, introducing a
-> >> sizable delta that is a barrier to rebasing on newer mainline releases
-> >> and for vendors to upstream their HW adaptation for chrome devices.
-> >
-> > 1.5 second delay is crazy (again, my laptop boots to X in less time than
-> > that),
-> 
-> 1.5 seconds isn't crazy at all for the kernel to initialize all the
-> devices in an embedded board. That's the current state of affairs
-> today.
-
-Then someone needs to fix that, that really is crazy.  What takes so
-long here?  Why aren't you using async probing to do things in parallel
-when you need to sleep in device probe (I'm hoping you are sleeping in
-device probe, otherwise that's really broken)?
-
-Have you used the tools we have to find where the time is being spent?
-
-> > if there are a zillion probe deferrs, then maybe you can blame
-> > this type of system, but I would _strongly_ suggest fixing the broken
-> > driver that is causing such a delay instead, as that's the real problem
-> > here.
-> >
-> > And again, you say you did this to save boot time, yet you didn't
-> > actually test to see if you fixed this issue, sorry, but I need to see
-> > real numbers.
-> 
-> I haven't said that I did this to save boot time, but I do have
-> repeated several times that the goal is to get the display up as early
-> as possible during the boot process.
-
-Ok, sorry, I implied that this was speeding it up, you are just
-reordering things, makes sense.  But you shouldn't have to touch all
-different subsystems just to reorder things, why not do that to the
-device tree file itself before you parse it?
-
-> Again, the problem is that a device that defers its probe is currently
-> sent to the back of the queue, so it will be given a second chance
-> only after most other devices have been probed.
-> 
-> On a tegra124-nyan-big with multi_v7_defconfig I get this difference:
-> 
-> [    0.310032] [drm] Initialized tegra 0.0.0 20120330 on minor 0
-> [    2.038431] [drm] Initialized tegra 0.0.0 20120330 on minor 0
-
-Again, broken drivers, go fix them, we have the tools to do so, that's
-a crazy and unacceptable delay.
-
-greg k-h
+SGksDQoNClBsZWFzZSBpZ25vcmUgdGhlIHN1YmplY3QgcGF0Y2ggd2hpY2ggaXMgZXhhY3RseQ0K
+dGhlIHNhbWUgYXMgdGhlIG9uZQ0KDQpbUEFUQ0ggdjFdIEFSTToga2V5c3RvbmU6IGR0czogYWRk
+IFBDSSBzZXJkZXMgZHJpdmVyIGJpbmRpbmdzDQoNCnN1Ym1pdHRlZCBlYXJsaWVyLg0KDQpUaGFu
+a3MsDQpXaW5nTWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3dv
+aywgV2luZ01hbg0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIgMjEsIDIwMTUgODo1NyBBTQ0K
+PiBUbzogcm9iaCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOw0KPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1
+cm9yYS5vcmc7IEtJU0hPTiBWSUpBWSBBQlJBSEFNOw0KPiBRdWFkcm9zLCBSb2dlcjsgS2FyaWNo
+ZXJpLCBNdXJhbGlkaGFyYW47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IHNzYW50b3NoQGtlcm5l
+bC5vcmc7IGxpbnV4QGFybS5saW51eC5vcmcudWs7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IENjOiBLd29r
+LCBXaW5nTWFuDQo+IFN1YmplY3Q6IFtQQVRDSF0gQVJNOiBrZXlzdG9uZTogZHRzOiBhZGQgUENJ
+IHNlcmRlcyBkcml2ZXIgYmluZGluZ3MNCj4gDQo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc2VyZGVz
+IHBoeSBkcml2ZXIgZHRzIGJpbmRpbmdzDQo+IGZvciB0aGUga2V5c3RvbmUgUENJZSBob3N0IGRy
+aXZlci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFdpbmdNYW4gS3dvayA8dy1rd29rMkB0aS5jb20+
+DQo+IC0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kgICAgICB8ICAgMTAgKysrKysr
+KysrKw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaSB8ICAgMTAgKysrKysrKysr
+Kw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvazJlLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9rMmUuZHRz
+aQ0KPiBpbmRleCA2NzVmYjhlLi41ZjdjYzBhIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9rMmUuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9rMmUuZHRzaQ0KPiBAQCAt
+ODYsNiArODYsMTUgQEANCj4gIAkJCWdwaW8sc3lzY29uLWRldiA9IDwmZGV2Y3RybCAweDI0MD47
+DQo+ICAJCX07DQo+IA0KPiArCQlwY2llMV9waHk6IHBoeUAyMzI2MDAwIHsNCj4gKwkJCSNwaHkt
+Y2VsbHMgPSA8MD47DQo+ICsJCQljb21wYXRpYmxlID0gInRpLGtleXN0b25lLXNlcmRlcy1wY2ll
+IjsNCj4gKwkJCXJlZyA9IDwweDAyMzI2MDAwIDB4NDAwMD47DQo+ICsJCQlsaW5rLXJhdGUta2Jw
+cyA9IDw1MDAwMDAwPjsNCj4gKwkJCW51bS1sYW5lcyA9IDwyPjsNCj4gKwkJCXN0YXR1cyA9ICJk
+aXNhYmxlZCI7DQo+ICsJCX07DQo+ICsNCj4gIAkJcGNpZTE6IHBjaWVAMjEwMjAwMDAgew0KPiAg
+CQkJY29tcGF0aWJsZSA9ICJ0aSxrZXlzdG9uZS1wY2llIiwic25wcyxkdy1wY2llIjsNCj4gIAkJ
+CWNsb2NrcyA9IDwmY2xrcGNpZTE+Ow0KPiBAQCAtOTksNiArMTA4LDcgQEANCj4gIAkJCXN0YXR1
+cyA9ICJkaXNhYmxlZCI7DQo+ICAJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiAgCQkJbnVtLWxh
+bmVzID0gPDI+Ow0KPiArCQkJcGh5cyA9IDwmcGNpZTFfcGh5PjsNCj4gDQo+ICAJCQkjaW50ZXJy
+dXB0LWNlbGxzID0gPDE+Ow0KPiAgCQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0K
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2tleXN0b25lLmR0c2kNCj4gaW5kZXggNzI4MTZkNi4uNWM3YzU4YSAxMDA2
+NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUuZHRzaQ0KPiArKysgYi9hcmNo
+L2FybS9ib290L2R0cy9rZXlzdG9uZS5kdHNpDQo+IEBAIC0yNzUsNiArMjc1LDE1IEBADQo+ICAJ
+CQl0aSxzeXNjb24tZGV2ID0gPCZkZXZjdHJsIDB4MmEwPjsNCj4gIAkJfTsNCj4gDQo+ICsJCXBj
+aWUwX3BoeTogcGh5QDIzMjAwMDAgew0KPiArCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gKwkJCWNv
+bXBhdGlibGUgPSAidGksa2V5c3RvbmUtc2VyZGVzLXBjaWUiOw0KPiArCQkJcmVnID0gPDB4MDIz
+MjAwMDAgMHg0MDAwPjsNCj4gKwkJCWxpbmstcmF0ZS1rYnBzID0gPDUwMDAwMDA+Ow0KPiArCQkJ
+bnVtLWxhbmVzID0gPDI+Ow0KPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gKwkJfTsNCj4g
+Kw0KPiAgCQlwY2llMDogcGNpZUAyMTgwMDAwMCB7DQo+ICAJCQljb21wYXRpYmxlID0gInRpLGtl
+eXN0b25lLXBjaWUiLCAic25wcyxkdy1wY2llIjsNCj4gIAkJCWNsb2NrcyA9IDwmY2xrcGNpZT47
+DQo+IEBAIC0yODgsNiArMjk3LDcgQEANCj4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAJ
+CQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiAgCQkJbnVtLWxhbmVzID0gPDI+Ow0KPiArCQkJcGh5
+cyA9IDwmcGNpZTBfcGh5PjsNCj4gDQo+ICAJCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiAg
+CQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KPiAtLQ0KPiAxLjcuOS41DQoNCg==
