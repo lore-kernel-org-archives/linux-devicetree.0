@@ -1,48 +1,34 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH v2 3/4] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag
- for sdio clk
-Date: Wed, 21 Oct 2015 18:08:56 +0800
-Message-ID: <20151021180856.217e11ea@xhacker>
-References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
-	<1445339807-2351-4-git-send-email-jszhang@marvell.com>
-	<20151021093039.20687.88701@quantum>	<20151021095454.20687.98330@quantum>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2] dts: keystone: Use new "ti,keystone-i2c" compatible
+Date: Wed, 21 Oct 2015 15:43:57 +0530
+Message-ID: <56276565.4060505@ti.com>
+References: <55F68E36.2030609@nokia.com> <20151020150614.GG5379@katana>
+ <56266791.5000805@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151021095454.20687.98330@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <56266791.5000805@ti.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Wolfram Sang <wsa@the-dreams.de>, Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Michael,
+On Tuesday 20 October 2015 09:40 PM, Grygorii Strashko wrote:
+> On 10/20/2015 06:06 PM, Wolfram Sang wrote:
+>> On Mon, Sep 14, 2015 at 11:07:02AM +0200, Alexander Sverdlin wrote:
+>>> Now as "i2c-davinci" driver has special handling for Keystone it's
+>>> time to switch
+>>> the device tree to use new "compatible" property. Old one is left for
+>>> backwards-
+>>> compatibility.
+>>>
+>>> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+>>
+>> Shall I take this one or shall it go via the davinci tree?
 
-On Wed, 21 Oct 2015 02:54:54 -0700
-Michael Turquette <mturquette@baylibre.com> wrote:
-
-> Quoting Michael Turquette (2015-10-21 02:30:39)
-> > Quoting Jisheng Zhang (2015-10-20 04:16:46)  
-> > > Since we have added the necessary two clks' properties in dts, we can
-> > > remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
-> > > 
-> > > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>  
-> > 
-> > Applied to clk-next.  
-> 
-> So the sdhci change was dropped from v2. Do you want me to Ack these
-> instead so you can send them all together?
-
-I'll send another patch to for the sdhci change. it doesn't matter even the
-sdhci change delay a merge window because no functionality changes in the
-sdhci commit.
-
-It's better we firstly take these clk clean ups because it saves power a bit
-and clean up the CLK_IGNORE_UNUSED flag.
-
-Hi Sebastian,
-
-What do you think?
+I don't have the patch in my mailbox now. But as I remember this is a
+driver only patch and should go via i2c tree.
 
 Thanks,
-Jisheng
+Sekhar
