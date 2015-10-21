@@ -1,40 +1,45 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH RFT] ARM: bcm2835: dt: fix memory of Raspberry Pi B+
-Date: Tue, 20 Oct 2015 20:37:51 -0600
-Message-ID: <5626FA7F.2060903@wwwdotorg.org>
-References: <1444942124-23122-1-git-send-email-stefan.wahren@i2se.com>
- <8737x5ncod.fsf@eliezer.anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/9] i2c: brcmstb: add support for BMIPS_GENERIC
+Date: Wed, 21 Oct 2015 11:36:52 +0900
+Message-ID: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8737x5ncod.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2015 02:53 AM, Eric Anholt wrote:
-> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-> 
->> Since the Raspberry Pi models differ in memory amount we better
->> define it at board level. After that we are able to fix the
->> memory node of the Raspberry Pi B+ .
+Hi all,
 
->> diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
->> b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+This patch series adds support for BMIPS_GENERIC, and fixes running conditions.
 
->> +	memory { +		reg = <0 0x10000000>; /* 256 MB */ +	}; +
+Thanks.
 
-> 
-> Seems like a good idea.  The closed firmware passes us an edited 
-> devicetree with good memory fields, but I don't think U-Boot is up
-> to it if you chainload it.
+Jaedon Shin (9):
+  i2c: brcmstb: make the driver buildable on BMIPS_GENERIC
+  i2c: brcmstb: fix typo in i2c-brcmstb
+  i2c: brcmstb: add missing parenthesis
+  i2c: brcmstb: enable ACK condition
+  i2c: brcmstb: fix start and stop conditions
+  MIPS: BMIPS: brcmstb: add I2C node for bcm7346
+  MIPS: BMIPS: brcmstb: add I2C node for bcm7358
+  MIPS: BMIPS: brcmstb: add I2C node for bcm7360
+  MIPS: BMIPS: brcmstb: add I2C node for bcm7362
 
-U-Boot fills in the memory size in DT correctly too.
+ arch/mips/boot/dts/brcm/bcm7346.dtsi      | 72 ++++++++++++++++++++++++++++++-
+ arch/mips/boot/dts/brcm/bcm7358.dtsi      | 62 +++++++++++++++++++++++++-
+ arch/mips/boot/dts/brcm/bcm7360.dtsi      | 62 +++++++++++++++++++++++++-
+ arch/mips/boot/dts/brcm/bcm7362.dtsi      | 52 +++++++++++++++++++++-
+ arch/mips/boot/dts/brcm/bcm97346dbsmb.dts | 20 +++++++++
+ arch/mips/boot/dts/brcm/bcm97358svmb.dts  | 16 +++++++
+ arch/mips/boot/dts/brcm/bcm97360svmb.dts  | 16 +++++++
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts  | 12 ++++++
+ drivers/i2c/busses/Kconfig                |  2 +-
+ drivers/i2c/busses/i2c-brcmstb.c          | 11 +++--
+ 10 files changed, 310 insertions(+), 15 deletions(-)
 
-I have no objection to the patch since it looks correct at a very
-brief glance, but I think it will have zero practical effect.
+-- 
+2.6.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
