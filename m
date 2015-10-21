@@ -1,38 +1,33 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 5/6] ARM: exynos: select POWER_RESET_SYSCON and
- POWER_RESET_SYSCON_POWEROFF
-Date: Wed, 21 Oct 2015 09:14:02 +0900
-Message-ID: <5626D8CA.7000505@samsung.com>
-References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
- <1445333085-22837-6-git-send-email-alim.akhtar@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
+Date: Wed, 21 Oct 2015 09:31:45 +0900
+Message-ID: <20151021003145.GF31026@verge.net.au>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+ <2544073.SzFGJq3XZ1@wasted.cogentembedded.com>
+ <56237CD5.6010609@cogentembedded.com>
+ <20151019004627.GD20599@verge.net.au>
+ <562680BC.9070100@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1445333085-22837-6-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <562680BC.9070100@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20.10.2015 18:24, Alim Akhtar wrote:
-> Since we switch to use generic syscon regmap based reset/poweroff
-> driver for exynos SoC, lets select it from ARCH_EXYNOS instead of
-> enabling it from various defconfigs. This also select POWER_RESET
-> as SYSCON-{reset, poweroff} drivers depends on it.
+On Tue, Oct 20, 2015 at 08:58:20PM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
+> On 10/19/2015 03:46 AM, Simon Horman wrote:
 > 
-> Have run make for allyes, allmod, multi_v7 and exynos defconfigs
-> no error/warrning reported.
+> >>There should have been [PATCH v3] in the subject, of course.
+> >
+> >Thanks for following up.
+> >
+> >I have queued this up for v4.5.
 > 
->  arch/arm/mach-exynos/Kconfig |    3 +++
->  1 file changed, 3 insertions(+)
+>    Again, not seeing anything new today from renesas.git...
 
-Thanks for update:
-
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-Best regards,
-Krzysztof
+Thanks for noticing, it should be there now.
