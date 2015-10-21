@@ -1,59 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Wed, 21 Oct 2015 10:55:14 +0200
-Message-ID: <CAMuHMdWoSdoT1p0e+Bc9ucrykxO7ESLKYHRzackpVjQAs_XaDg@mail.gmail.com>
-References: <561E1378.6000906@collabora.com>
-	<4025469.zmyipZqCsP@vostro.rjw.lan>
-	<CAL_JsqJuu5_Osqi+X6M6UeRDZFQB+_8riYDF1gvsGayk5-4SFw@mail.gmail.com>
-	<4903022.NtioyRkmbB@vostro.rjw.lan>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Which is better to specify console, "console= " or "stdout-path"
+ ?
+Date: Wed, 21 Oct 2015 09:58:14 +0100
+Message-ID: <562753A6.3070107@arm.com>
+References: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <4903022.NtioyRkmbB@vostro.rjw.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Rob Herring <robh@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
 
-On Wed, Oct 21, 2015 at 1:34 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Tuesday, October 20, 2015 09:15:01 AM Rob Herring wrote:
->> On Tue, Oct 20, 2015 at 2:56 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->> > ACPI uses platform devices too.  In fact, ACPI device objects are enumerated as
->> > platform devices by default now.
->>
->> Okay, I should have grepped for that:
->> drivers/base/platform.c:                ACPI_COMPANION_SET(&pdev->dev, NULL);
->> drivers/base/platform.c:        len = acpi_device_modalias(dev, buf,
->> PAGE_SIZE -1);
->> drivers/base/platform.c:        rc = acpi_device_uevent_modalias(dev, env);
->> drivers/base/platform.c:        /* Then try ACPI style match */
->> drivers/base/platform.c:        if (acpi_driver_match_device(dev, drv))
->>
->> These are all cases which have DT version as well, so we're not really
->> all that different here. There's a few more for DT, but that probably
->> means you have just not hit the problems we have yet. For example,
->> what happens if you have an interrupt line in which the controller is
->> probed after the device connected to the interrupt line? That required
->> resolving irqs in platform_get_irq rather than using static resources
->> to support deferred probe.
+
+On 21/10/15 06:09, Masahiro Yamada wrote:
+> Hi.
 >
-> We don't have this particular problem, because the IRQ controllers are
-> enumerated in a special way.
+>
+> I think there exist two ways to specify the console port and baudrate.
+>
+>
+> [1] Specify console in bootargs
+>
+>    chosen {
+>          bootargs = "console=ttyS0,115200";
+>    };
+>
+>
+> [2] Specify stdout-path
+>
+>     chosen {
+>           stdout-path = "serial0:115200n8";
 
-What does "in a special way" mean? Can you please be more specific?
+This will work for even early/boot console, so this is better than
+option [1]
 
-Can you have interrupt controllers that depend on clocks, pin controllers,
-and PM domains?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+-- 
+Regards,
+Sudeep
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
