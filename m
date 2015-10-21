@@ -1,193 +1,48 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 07/19] ARM: dts: rockchip: replace gpio-key,
- wakeup with wakeup-source property
-Date: Wed, 21 Oct 2015 11:10:04 +0100
-Message-ID: <1445422216-29375-8-git-send-email-sudeep.holla@arm.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v2 3/4] clk: berlin: bg2q: remove CLK_IGNORE_UNUSED flag
+ for sdio clk
+Date: Wed, 21 Oct 2015 18:08:56 +0800
+Message-ID: <20151021180856.217e11ea@xhacker>
+References: <1445339807-2351-1-git-send-email-jszhang@marvell.com>
+	<1445339807-2351-4-git-send-email-jszhang@marvell.com>
+	<20151021093039.20687.88701@quantum>	<20151021095454.20687.98330@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1445422216-29375-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151021095454.20687.98330@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
-"gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
-source.
+Dear Michael,
 
-Few dts files assign value "1" to gpio-key,wakeup and in one instance a
-value "0" is assigned probably assuming it won't be enabled as a wakeup
-source. Since the presence of the boolean property indicates it is
-enabled, value of "0" have no value.
+On Wed, 21 Oct 2015 02:54:54 -0700
+Michael Turquette <mturquette@baylibre.com> wrote:
 
-This patch replaces the legacy "gpio-key,wakeup" with the unified
-"wakeup-source" property which inturn fixes the above mentioned issue.
+> Quoting Michael Turquette (2015-10-21 02:30:39)
+> > Quoting Jisheng Zhang (2015-10-20 04:16:46)  
+> > > Since we have added the necessary two clks' properties in dts, we can
+> > > remove the "sdio" clk's CLK_IGNORE_UNUSED flag now.
+> > > 
+> > > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>  
+> > 
+> > Applied to clk-next.  
+> 
+> So the sdhci change was dropped from v2. Do you want me to Ack these
+> instead so you can send them all together?
 
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/rk3066a-bqcurie2.dts          | 3 +--
- arch/arm/boot/dts/rk3066a-rayeager.dts          | 2 +-
- arch/arm/boot/dts/rk3188-radxarock.dts          | 2 +-
- arch/arm/boot/dts/rk3288-evb.dtsi               | 2 +-
- arch/arm/boot/dts/rk3288-firefly.dtsi           | 2 +-
- arch/arm/boot/dts/rk3288-popmetal.dts           | 2 +-
- arch/arm/boot/dts/rk3288-r89.dts                | 2 +-
- arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 2 +-
- arch/arm/boot/dts/rk3288-veyron.dtsi            | 2 +-
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts     | 2 +-
- 10 files changed, 10 insertions(+), 11 deletions(-)
+I'll send another patch to for the sdhci change. it doesn't matter even the
+sdhci change delay a merge window because no functionality changes in the
+sdhci commit.
 
-diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-index c0273755431a..93be8f066e6d 100644
---- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-+++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-@@ -74,7 +74,7 @@
- 			linux,code = <116>;
- 			label = "GPIO Key Power";
- 			linux,input-type = <1>;
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			debounce-interval = <100>;
- 		};
- 		button@1 {
-@@ -82,7 +82,6 @@
- 			linux,code = <104>;
- 			label = "GPIO Key Vol-";
- 			linux,input-type = <1>;
--			gpio-key,wakeup = <0>;
- 			debounce-interval = <100>;
- 		};
- 		/* VOL+ comes somehow thru the ADC */
-diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
-index e36383c701dc..da1c37a721c0 100644
---- a/arch/arm/boot/dts/rk3066a-rayeager.dts
-+++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
-@@ -65,7 +65,7 @@
- 		#size-cells = <0>;
- 
- 		button@0 {
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			gpios = <&gpio6 2 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <116>;
-diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
-index d2180e5d2b05..acd3bb940e9a 100644
---- a/arch/arm/boot/dts/rk3188-radxarock.dts
-+++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-@@ -63,7 +63,7 @@
- 			linux,code = <116>;
- 			label = "GPIO Key Power";
- 			linux,input-type = <1>;
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			debounce-interval = <100>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index f6d2e7894b05..e35cebc69e87 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -103,7 +103,7 @@
- 			linux,code = <116>;
- 			label = "GPIO Key Power";
- 			linux,input-type = <1>;
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			debounce-interval = <100>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-index 20fa0ef0b96b..c5dd26139b63 100644
---- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-@@ -67,7 +67,7 @@
- 		#size-cells = <0>;
- 
- 		button@0 {
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <116>;
-diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
-index f82b956ebf17..34a0b063b3ec 100644
---- a/arch/arm/boot/dts/rk3288-popmetal.dts
-+++ b/arch/arm/boot/dts/rk3288-popmetal.dts
-@@ -74,7 +74,7 @@
- 			linux,code = <116>;
- 			label = "GPIO Key Power";
- 			linux,input-type = <1>;
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			debounce-interval = <100>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
-index 14b9fc73c8a4..dc2f83a38d4f 100644
---- a/arch/arm/boot/dts/rk3288-r89.dts
-+++ b/arch/arm/boot/dts/rk3288-r89.dts
-@@ -73,7 +73,7 @@
- 			linux,code = <116>;
- 			label = "GPIO Key Power";
- 			linux,input-type = <1>;
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			debounce-interval = <100>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-index 136d650dd05f..610769d99522 100644
---- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-@@ -108,7 +108,7 @@
- 	lid {
- 		label = "Lid";
- 		gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
--		gpio-key,wakeup;
-+		wakeup-source;
- 		linux,code = <0>; /* SW_LID */
- 		linux,input-type = <5>; /* EV_SW */
- 		debounce-interval = <1>;
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 275c78ccc0f3..914c299f9dda 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -64,7 +64,7 @@
- 			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
- 			linux,code = <KEY_POWER>;
- 			debounce-interval = <100>;
--			gpio-key,wakeup;
-+			wakeup-source;
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-index 401a81231eb9..730bac3a1c0a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-@@ -71,7 +71,7 @@
- 		pinctrl-0 = <&pwr_key>;
- 
- 		button@0 {
--			gpio-key,wakeup = <1>;
-+			wakeup-source;
- 			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
- 			label = "GPIO Power";
- 			linux,code = <116>;
--- 
-1.9.1
+It's better we firstly take these clk clean ups because it saves power a bit
+and clean up the CLK_IGNORE_UNUSED flag.
+
+Hi Sebastian,
+
+What do you think?
+
+Thanks,
+Jisheng
