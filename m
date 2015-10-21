@@ -1,8 +1,8 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 05/19] mmc: core/host: enable support for the standard
+Subject: [PATCH 04/19] rtc: isl12057: enable support for the standard
  "wakeup-source" property
-Date: Wed, 21 Oct 2015 11:10:02 +0100
-Message-ID: <1445422216-29375-6-git-send-email-sudeep.holla@arm.com>
+Date: Wed, 21 Oct 2015 11:10:01 +0100
+Message-ID: <1445422216-29375-5-git-send-email-sudeep.holla@arm.com>
 References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,52 +19,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, rtc-linux@googlegroups.com, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Though the mmc core driver should/will continue to support the legacy
-"enable-sdio-wakeup" property to enable SDIO as the wakeup source, we
-need to add support for the new standard property "wakeup-source".
+Though the isl12057 rtc driver should and will continue to support the
+legacy "isil,irq2-can-wakeup-machine" property to enable RTC as the
+wakeup source, we need to add support for the new standard property
+"wakeup-source".
 
 This patch adds support for "wakeup-source" property in addition to the
-existing "enable-sdio-wakeup" property.
+existing "isil,irq2-can-wakeup-machine" property.
 
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc@vger.kernel.org
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: rtc-linux@googlegroups.com
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/mmc/core/host.c        | 3 ++-
- drivers/mmc/host/sdhci-pltfm.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-isl12057.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 5466f25f0281..85222bb56c73 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -513,7 +513,8 @@ int mmc_of_parse(struct mmc_host *host)
- 		host->caps2 |= MMC_CAP2_FULL_PWR_CYCLE;
- 	if (of_property_read_bool(np, "keep-power-in-suspend"))
- 		host->pm_caps |= MMC_PM_KEEP_POWER;
--	if (of_property_read_bool(np, "enable-sdio-wakeup"))
-+	if (of_property_read_bool(np, "wakeup-source") ||
-+	    of_property_read_bool(np, "enable-sdio-wakeup")) /* legacy */
- 		host->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
- 	if (of_property_read_bool(np, "mmc-ddr-1_8v"))
- 		host->caps |= MMC_CAP_1_8V_DDR;
-diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-index a207f5aaf62f..f00374bdafc9 100644
---- a/drivers/mmc/host/sdhci-pltfm.c
-+++ b/drivers/mmc/host/sdhci-pltfm.c
-@@ -108,7 +108,8 @@ void sdhci_get_of_property(struct platform_device *pdev)
- 	if (of_find_property(np, "keep-power-in-suspend", NULL))
- 		host->mmc->pm_caps |= MMC_PM_KEEP_POWER;
+diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
+index a0462e5430c7..54328d4ac0d3 100644
+--- a/drivers/rtc/rtc-isl12057.c
++++ b/drivers/rtc/rtc-isl12057.c
+@@ -466,9 +466,8 @@ static int isl12057_check_rtc_status(struct device *dev, struct regmap *regmap)
+  * is for instance the case on ReadyNAS 102, 104 and 2120. On those
+  * devices with no IRQ driectly connected to the SoC, the RTC chip
+  * can be forced as a wakeup source by stating that explicitly in
+- * the device's .dts file using the "isil,irq2-can-wakeup-machine"
+- * boolean property. This will guarantee 'wakealarm' sysfs entry is
+- * available on the device.
++ * the device's .dts file using the "wakeup-source" boolean property.
++ * This will guarantee 'wakealarm' sysfs entry is available on the device.
+  *
+  * The function below returns 1, i.e. the capability of the chip to
+  * wakeup the device, based on IRQ availability or if the boolean
+@@ -479,8 +478,9 @@ static bool isl12057_can_wakeup_machine(struct device *dev)
+ {
+ 	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
  
--	if (of_find_property(np, "enable-sdio-wakeup", NULL))
-+	if (of_property_read_bool(np, "wakeup-source") ||
-+	    of_property_read_bool(np, "enable-sdio-wakeup")) /* legacy */
- 		host->mmc->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
+-	return (data->irq || of_property_read_bool(dev->of_node,
+-					      "isil,irq2-can-wakeup-machine"));
++	return data->irq || of_property_read_bool(dev->of_node, "wakeup-source")
++		|| of_property_read_bool(dev->of_node, /* legacy */
++					 "isil,irq2-can-wakeup-machine");
  }
  #else
+ static bool isl12057_can_wakeup_machine(struct device *dev)
 -- 
 1.9.1
