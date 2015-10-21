@@ -1,37 +1,33 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 01/10] ARM: cygnus: fix link failures when
- CONFIG_COMMON_CLK_IPROC is disabled
-Date: Wed, 21 Oct 2015 16:40:02 -0700
-Message-ID: <20151021234002.GN19782@codeaurora.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 02/10] clk: cygnus: Convert all macros to all caps
+Date: Wed, 21 Oct 2015 16:44:14 -0700
+Message-ID: <20151021234414.GO19782@codeaurora.org>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-2-git-send-email-jonmason@broadcom.com>
+ <1444938513-10758-3-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1444938513-10758-2-git-send-email-jonmason@broadcom.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jon Mason <jonmason@broadcom.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <1444938513-10758-3-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/15, Jon Mason wrote:
-> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> index 88febf5..46ee475 100644
-> --- a/drivers/clk/bcm/Kconfig
-> +++ b/drivers/clk/bcm/Kconfig
-> @@ -9,10 +9,8 @@ config CLK_BCM_KONA
->  	  in the BCM281xx and BCM21664 families.
->  
->  config COMMON_CLK_IPROC
-> -	bool "Broadcom iProc clock support"
-> -	depends on ARCH_BCM_IPROC
+> The macros that are being used to initialize the values of the clk
+> structures should be all caps.  Find and replace all of them with their
+> relevant counterparts.
+> 
+> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
 
-Another patch added COMPILE_TEST here, so I've removed
-COMPILE_TEST now.
-
-Applied to clk-next.
+Applied to clk-next
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
