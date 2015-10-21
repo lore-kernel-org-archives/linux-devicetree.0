@@ -1,55 +1,102 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 0/4] ARM: dts: uniphier: DTS updates for UniPhier SoCs for
- Linux 4.14-rc1 (2nd try)
-Date: Wed, 21 Oct 2015 20:36:26 +0900
-Message-ID: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH 1/4] ARM: dts: uniphier: use stdout-path instead of console
+Date: Wed, 21 Oct 2015 20:36:27 +0900
+Message-ID: <1445427390-22750-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445427390-22750-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Specifying both console and stdout-path is redundant.  Add options
+":115200n8" to stdout-path and drop "console=ttyS0,115200".
 
-I dropped I2C aliases.
-(I want this policy to be consistent for all the uniphier DTS files.
-2/4 deletes them from existing DTS files too.)
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-Please pull this series for the next merge window.
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  | 3 +--
+ arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 3 +--
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts | 3 +--
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts | 3 +--
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts | 3 +--
+ 5 files changed, 5 insertions(+), 10 deletions(-)
 
-Thanks,
-Masahiro
-
-
-
-Masahiro Yamada (4):
-  ARM: dts: uniphier: use stdout-path instead of console
-  ARM: dts: uniphier: delete i2c aliases
-  ARM: dts: uniphier: add ProXstream2 Gentil board support
-  ARM: dts: uniphier: add ProXstream2 Vodka board support
-
- arch/arm/boot/dts/Makefile                        |  4 +-
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts        |  7 +--
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts       | 10 +--
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts       |  9 +--
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts       |  8 +--
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts       |  7 +--
- arch/arm/boot/dts/uniphier-proxstream2-gentil.dts | 74 +++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-proxstream2-vodka.dts  | 74 +++++++++++++++++++++++
- 8 files changed, 156 insertions(+), 37 deletions(-)
- create mode 100644 arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
- create mode 100644 arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
-
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+index e9722a5..f1e9d40 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+@@ -57,8 +57,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serial0;
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	aliases {
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+index da2d564..5baa9fc 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+@@ -57,8 +57,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serial0;
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	aliases {
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+index 47e2edb..2462668 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+@@ -57,8 +57,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serial0;
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	aliases {
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+index adcbbc6..b7a03215 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+@@ -58,8 +58,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serial0;
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	aliases {
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+index bcf2e7c..fc7250c 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+@@ -57,8 +57,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
+-		stdout-path = &serial0;
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	aliases {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
