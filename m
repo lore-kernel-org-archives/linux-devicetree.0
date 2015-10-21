@@ -1,51 +1,54 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: dt-bindings: Drop unneeded properties rockchip
- i2s/spdif bindings
-Date: Wed, 21 Oct 2015 13:28:43 +0100
-Message-ID: <20151021122843.GD8232@sirena.org.uk>
-References: <1445242539-9098-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 10/19] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Wed, 21 Oct 2015 13:41:13 +0100
+Message-ID: <562787E9.9030606@arm.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+ <1445422216-29375-11-git-send-email-sudeep.holla@arm.com>
+ <5627672D.60108@atmel.com> <56276832.9040006@arm.com>
+ <CAPDyKFq8CfzVPPCz=1AxZM3wsw8pkOPG6Ua_5spDuYa=Gzshrw@mail.gmail.com>
+ <56277372.6080203@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HWvPVVuAAfuRc6SZ"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445242539-9098-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+In-Reply-To: <56277372.6080203-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---HWvPVVuAAfuRc6SZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 19, 2015 at 10:15:39AM +0200, Sjoerd Simons wrote:
-> Neither the rockchip i2s nor the rockchip spdif binding support child
-> devices so #address-cells and #size-cells properties aren't required.
-> Remove these from the bindings.
->=20
-> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+On 21/10/15 12:13, Sudeep Holla wrote:
+> On 21/10/15 12:01, Ulf Hansson wrote:
+>> On 21 October 2015 at 12:25, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
-Please use subject lines matching the style for the subsystem!
+[..]
 
---HWvPVVuAAfuRc6SZ
-Content-Type: application/pgp-signature; name="signature.asc"
+>>>
+>>> Yes that was my intention for splitting the patches per SoC group.
+>>> Many SoC maintainers prefer that.
+>>
+>> Hold on! All patches that changes the DT parsing to accept the
+>> "standardized wakeup-source" binding, need to be merged upstream
+>> before corresponding DTS changes.
+>>
+>
+> Agreed. Sorry for that I forgot about it as there are only few
+> subsystems that needed additions. Most of the input subsystem had
+> already moved to new binding, just that binding documents were left
+> unchanged.
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Having looked at it again, I think at-least this patch has no dependency
+on those driver/sub-system changes. Only patch 11, 13 and 17 has
+dependency. All the other DTS changes are related to input subsystem
+where all the required changes are already there.
 
-iQEcBAEBCAAGBQJWJ4T6AAoJECTWi3JdVIfQDH8H/j6i6DoQFVBR8WxRo8MLyzge
-shApzhJKDtc4fBb5laviTf2F1oDX3347A1Yynn2GLVEjQnL0s5Jty12Swv2fGStZ
-Yr5nssU4Ck27ko9QJClUM8KKF+KZvyZxwljvLSr2guyd10S78M1QUNmfhCZ/h6cM
-HOvlJEdumd24nEjwqxB9Jff8yFQhN2MGjtWoAzHy9ux+Hpfz/kxg/R8u5A0WGp7N
-o3q8PV20J0aCk3hardponMm6aZ5Yn+BubEpK0fMHRmakzCuKfiMCV7KYv9Edrm2Q
-HchiFkgQdpMtkqKzhYrKnVmrxv80y1lHc+fh1nuQ95qr4Rst/DzsUOQhJQpDwWw=
-=mXbM
------END PGP SIGNATURE-----
-
---HWvPVVuAAfuRc6SZ--
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
