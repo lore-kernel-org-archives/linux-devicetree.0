@@ -1,72 +1,122 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 3/4] of: overlay: add per overlay sysfs attributes
-Date: Wed, 21 Oct 2015 16:52:58 -0500
-Message-ID: <CAL_JsqJse8wyRRAf2dbVBYQ9QtxD6JL02kd8zGuFxK3gnY_0rQ@mail.gmail.com>
-References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1445368397-8732-4-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_JsqKFJttTsTfwZdMBPEjzqo_OLV=GpHTYZrDGnsgBjF3Bzg@mail.gmail.com>
- <8A0C91DE-EDF8-449D-918C-95C9807A7616@konsulko.com> <CAL_JsqLeQC7x3fuUFRm=MqHHwvDSLFz6GFxvOTCUToO-=yA0Kg@mail.gmail.com>
- <1148C5AF-CA7C-44CE-9CBD-BCD949C6B5FD@konsulko.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/19] Documentation: devicetree: standardize/consolidate
+ on "wakeup-source" property
+Date: Wed, 21 Oct 2015 17:02:38 -0500
+Message-ID: <CAL_Jsq+8Yeo-Xp4O8qKpvm=_L1c2Go7hk49sLB7sj3_BY_Tf_w@mail.gmail.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com> <1445422216-29375-2-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1148C5AF-CA7C-44CE-9CBD-BCD949C6B5FD@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445422216-29375-2-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 2:37 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> Hi Rob,
+On Wed, Oct 21, 2015 at 5:09 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> Currently different drivers use multiple forms of annotating devices
+> that should be set up as wakeup sources for the system.
 >
->> On Oct 21, 2015, at 00:54 , Rob Herring <robherring2@gmail.com> wrot=
-e:
->>
->> On Tue, Oct 20, 2015 at 4:11 PM, Pantelis Antoniou
->> <pantelis.antoniou@konsulko.com> wrote:
->>> Hi Rob,
->>>
->>>> On Oct 21, 2015, at 00:04 , Rob Herring <robherring2@gmail.com> wr=
-ote:
->>>>
->>>> On Tue, Oct 20, 2015 at 2:13 PM, Pantelis Antoniou
->>>> <pantelis.antoniou@konsulko.com> wrote:
->>>>> * A per overlay can_remove sysfs attribute that reports whether
->>>>> the overlay can be removed or not due to another overlapping over=
-lay.
->>>>>
->>>>> * A target sysfs attribute listing the target of each fragment,
->>>>> in a group named after the name of the fragment.
->>
->> [...]
->>
->>>>> @@ -255,6 +278,17 @@ err_fail:
->>>>>       return -EINVAL;
->>>>> }
->>>>>
->>>>> +static ssize_t target_show(struct kobject *kobj,
->>>>> +               struct fragment_attribute *fattr, char *buf)
->>>>> +{
->>>>> +       struct of_overlay_info *ovinfo =3D fattr->ovinfo;
->>>>> +
->>>>> +       return snprintf(buf, PAGE_SIZE, "%s\n",
->>>>> +                       of_node_full_name(ovinfo->target));
->>>>
->>>> This can be a link to the node itself, can't it?
->>>>
->>>
->>> Yes. Do you want it like this?
->>
->> Yes, hence the suggestion. Unless you see some reason why not.
->>
+> This patch adds a separate binding document inorder to standardize and
+> consolidate to use "wakeup-source" boolean property to mark the devices
+> as wakeup capable.
 >
-> Nope, can=E2=80=99t be done. The sysfs API only allows linking one ko=
-bj to another.
-> The kobj is the overlay but the target is in the fragment attribute g=
-roup.
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 
-Can't we make the fragments kobj's as well?
+Looks good to me.
 
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+>  .../devicetree/bindings/power/wakeup-source.txt    | 71 ++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/wakeup-source.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/wakeup-source.txt b/Documentation/devicetree/bindings/power/wakeup-source.txt
+> new file mode 100644
+> index 000000000000..963c6dfd484d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/wakeup-source.txt
+> @@ -0,0 +1,71 @@
+> +Specifying wakeup capability for devices
+> +============================================
+> +
+> +Any device nodes
+> +----------------
+> +Nodes that describe devices which has wakeup capability must contain an
+> +"wakeup-source" boolean property.
+> +
+> +Also, if device is marked as a wakeup source, then all the primary
+> +interrupt(s) can be used as wakeup interrupt(s).
+> +
+> +However if the devices have dedicated interrupt as the wakeup source
+> +then they need to specify/identify the same using device specific
+> +interrupt name. In such cases only that interrupt can be used as wakeup
+> +interrupt.
+> +
+> +List of legacy properties and respective binding document
+> +---------------------------------------------------------
+> +
+> +1. "enable-sdio-wakeup"                Documentation/devicetree/bindings/mmc/mmc.txt
+> +2. "gpio-key,wakeup"           Documentation/devicetree/bindings/input/gpio-keys{,-polled}.txt
+> +3. "has-tpo"                   Documentation/devicetree/bindings/rtc/rtc-opal.txt
+> +4. "isil,irq2-can-wakeup-machine" Documentation/devicetree/bindings/rtc/isil,isl12057.txt
+> +5. "linux,wakeup"              Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+> +                               Documentation/devicetree/bindings/mfd/tc3589x.txt
+> +                               Documentation/devicetree/bindings/input/ads7846.txt
+> +6. "linux,keypad-wakeup"       Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+> +7. "linux,input-wakeup"                Documentation/devicetree/bindings/input/samsung-keypad.txt
+> +8. "nvidia,wakeup-source"      Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
+> +
+> +Examples
+> +--------
+> +
+> +1. With "wakeup" interrupt name
+> +
+> +       device@10000 {
+> +               compatible      = "vendor,device-id";
+> +               reg             = <0x10000 0x1000>;
+> +               interrupts      = <0 19 4>, <0 21 4>, <0 22 4>;
+> +               interrupt-names = "ack", "err", "wakeup";
+> +               wakeup-source;
+> +       };
+> +
+> +2. Without "wakeup" interrupt name
+> +
+> +       embedded-controller {
+> +               compatible = "google,cros-ec-i2c";
+> +               reg = <0x1e>;
+> +               interrupts = <6 0>;
+> +               interrupt-parent = <&gpx1>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&ec_irq>;
+> +               wakeup-source;
+> +       };
+> +
+> +3. Without interrupts
+> +
+> +       gpio_keys {
+> +               compatible = "gpio-keys";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               button@1 {
+> +                       debounce_interval = <50>;
+> +                       wakeup-source;
+> +                       linux,code = <116>;
+> +                       label = "POWER";
+> +                       gpios = <&iofpga_gpio0 0 0x4>;
+> +               };
+> +               [....]
+> +       };
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
