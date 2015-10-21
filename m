@@ -1,51 +1,54 @@
-From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH v2 2/9] NFC: NCI: export nci_send_frame
- function
-Date: Wed, 21 Oct 2015 08:22:06 +0000
-Message-ID: <DFA9399D-2B41-4EE2-831F-DB7011AB1127@marvell.com>
-References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
- <1443443594-14353-3-git-send-email-cuissard@marvell.com>,<20151021055750.GE11271@zurbaran.home>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 21 Oct 2015 11:31:37 +0300
+Message-ID: <56274D69.1090402@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <560BC0DB.5020205@ti.com> <20151006083346.GL23801@atomide.com>
+ <56139A72.6040600@ti.com> <20151006100000.GN23801@atomide.com>
+ <56139CE9.8020002@ti.com> <5613A256.8000105@ti.com>
+ <20151006110134.GO23801@atomide.com> <5613ABEF.9000904@ti.com>
+ <20151016212510.GF24370@atomide.com> <562496DB.4050803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151021055750.GE11271-nKCvNrh56OoJmsy6czSMtA@public.gmane.org>
-Content-Language: fr-FR
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <562496DB.4050803@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, computersforpeace@gmail.com, dwmw2@infradead.org, fcooper@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
-
-
-
---=20
-Vincent Cuissard
-
-> Le 21 oct. 2015 =E0 07:57, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> a =E9=
-crit :
+On 19/10/15 10:08, Roger Quadros wrote:
+> On 17/10/15 00:25, Tony Lindgren wrote:
+>> * Roger Quadros <rogerq@ti.com> [151006 04:13]:
+>>>
+>>> Fine. The updated series is now at
+>>>
+>>> git@github.com:rogerq/linux.git
+>>>  * [new branch]      for-v4.4/gpmc-v4
+>>
+>> Looks like it produces some build errors, this with RMKs 3430 and 44=
+30
+>> only .configs:
+>>
+>> drivers/memory/omap-gpmc.c:2035:43: error: =E2=80=98struct gpio_chip=
+=E2=80=99 has no
+>> member named =E2=80=98irqdomain=E2=80=99
+>> drivers/memory/omap-gpmc.c:2116:8: error: implicit declaration of
+>> function =E2=80=98gpiochip_irqchip_add=E2=80=99 [-Werror=3Dimplicit-=
+function-declaration]
+>>
 >=20
-> Hi Vincent,
+> Good catch. We'll have to select GPIOLIB_IRQCHIP for this driver.
 >=20
->> On Mon, Sep 28, 2015 at 02:33:07PM +0200, Vincent Cuissard wrote:
->> Export nci_send_frame symbol to allow drivers to use it.
->> This is needed for example if NCI is used during firmware
->> download phase.
-> If what you need is a way to directly send completely custom frames t=
-hen
-> I'd prefer that you export a routine that puts such frame on the
-> cmd_q skb queue and schedule the cmd_work work.
+>> Maybe run randconfig builds on it for overnight?
+>=20
+> OK. I'll do that.
 
-I need this to send frames over our proprietary logical connection for =
-fw download.
+I couldn't run randconfig beyond few iterations as it keeps failing
+everywhere. How do we limit the randconfig options to OMAP only
+platforms?
 
-I will check if I can use the conn create and nci_send_frame instead.
-
-Br,
---=20
-Vincent--
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
