@@ -1,30 +1,54 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v2] dts: keystone: Use new "ti,keystone-i2c" compatible
-Date: Wed, 21 Oct 2015 09:42:25 -0700
-Message-ID: <5627C071.5090108@oracle.com>
-References: <55F68E36.2030609@nokia.com> <56276B3E.3020208@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH RFT] ARM: bcm2835: enable all bcm2835-relevant in
+ defconfig
+Date: Wed, 21 Oct 2015 10:45:09 -0600
+Message-ID: <5627C115.1050305@wwwdotorg.org>
+References: <1444942061-23085-1-git-send-email-stefan.wahren@i2se.com>
+ <5626F934.6090706@wwwdotorg.org> <5627BA5F.104@lategoodbye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <56276B3E.3020208@ti.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Alexander Sverdlin <alexander.sverdlin@nokia.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Sekhar Nori <nsekhar@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5627BA5F.104-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/15 3:38 AM, Grygorii Strashko wrote:
-> On 09/14/2015 12:07 PM, Alexander Sverdlin wrote:
->> Now as "i2c-davinci" driver has special handling for Keystone it's
->> time to switch
->> the device tree to use new "compatible" property. Old one is left for
->> backwards-
->> compatibility.
+On 10/21/2015 10:16 AM, Stefan Wahren wrote:
+> Am 21.10.2015 um 04:32 schrieb Stephen Warren:
+>> On 10/15/2015 02:47 PM, Stefan Wahren wrote:
+>>> Rebuild bcm2835_defconfig using "make bcm2835_defconfig;
+>>> make savedefconfig", and add the following features:
+>>>
+>>> * Enable all bcm2835-relevant drivers (MBOX, WDT, DMA,
+>>>    PWM, SND)
+>>> * Re-enable some features to keep the current settings
+>>>    (stackprotector, LED GPIO, LED triggers)
 >>
->> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
->> ---
+>> Can you explain that second bullet a bit more?
 >
-Will pick it up. Thanks !!
+> Yes, the last update to bcm2835_defconfig was on 25th September 2014.
+> So a little bit changed in the configs like renaming of options.
+> After saving the defconfig i noticed that we "lost" 2 features with
+> the new defconfig:
+>
+> * CONFIG_CC_STACKPROTECTOR because of renaming to
+> CONFIG_CC_STACKPROTECTOR_REGULAR
+>
+> * CONFIG_LEDS_TRIGGER_HEARTBEAT because of the following new dependencies
+>    * CONFIG_NEW_LEDS
+>    * CONFIG_LEDS_CLASS
+>    * CONFIG_LEDS_TRIGGERS
 
-Regards,
-Santosh
+Ah OK. It'd be nice to have that in the patch description.
+
+> Do you want 2 separate patches (first update with re-enable and second
+> with new bcm2835 stuff)?
+
+It's probably fine as a single patch so long as all the changes (and 
+reason why they're made) are described there.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
