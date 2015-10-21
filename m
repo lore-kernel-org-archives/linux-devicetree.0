@@ -1,43 +1,41 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
-Date: Wed, 21 Oct 2015 00:54:05 -0500
-Message-ID: <1445406845.701.55.camel@freescale.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
-	 <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [linux-nfc] [PATCH v2 9/9] NFC: nfcmrvl: update device tree
+ bindings for Marvell NFC
+Date: Wed, 21 Oct 2015 07:57:34 +0200
+Message-ID: <20151021055734.GD11271@zurbaran.home>
+References: <1443443594-14353-1-git-send-email-cuissard@marvell.com>
+ <1443443594-14353-10-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, Hu Mingkai-B21284 <Mingkai.Hu@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1443443594-14353-10-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
-> Instead of trying to match and probe platform and AMBA devices right
-> after each is registered, delay their probes until device_initcall_sync.
-> 
-> This means that devices will start probing once all built-in drivers
-> have registered, and after all platform and AMBA devices from the DT
-> have been registered already.
-> 
-> This allows us to prevent deferred probes by probing dependencies on
-> demand.
-> 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
-> 
-> Changes in v4:
-> - Also defer probes of AMBA devices registered from the DT as they can
->   also request resources.
-> 
->  drivers/of/platform.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+Hi Vincent,
 
-This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF platform 
-device, and it must be probed before pcibios_init() which is a 
-subsys_initcall(), or else the PCI bus never gets scanned.
+On Mon, Sep 28, 2015 at 02:33:14PM +0200, Vincent Cuissard wrote:
+> diff --git a/drivers/nfc/nfcmrvl/i2c.c b/drivers/nfc/nfcmrvl/i2c.c
+> index b48c3ee..aa022e3 100644
+> --- a/drivers/nfc/nfcmrvl/i2c.c
+> +++ b/drivers/nfc/nfcmrvl/i2c.c
+> @@ -273,7 +273,7 @@ static int nfcmrvl_i2c_remove(struct i2c_client *client)
+>  
+>  
+>  static const struct of_device_id of_nfcmrvl_i2c_match[] = {
+> -	{ .compatible = "mrvl,nfc-i2c", },
+> +	{ .compatible = "marvell,nfc-i2c", },
+You can't just replace the old one with the new one as we already
+released kernels with the old compatible string. This is an ABI and we
+have to be backward compatible.
+Please keep both strings.
 
--Scott
-
+Cheers,
+Samuel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
