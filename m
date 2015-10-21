@@ -1,67 +1,36 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
-Date: Wed, 21 Oct 2015 15:25:59 +0200
-Message-ID: <56279267.6030808@osg.samsung.com>
-References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
- <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
- <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
- <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
- <562765F3.9010306@osg.samsung.com> <56276C0F.4090807@fivetechno.de>
- <56276D1A.1070007@samsung.com>
- <CANAwSgRR6OQ3e8RCxB2DQHJNx_LvOwE9CnmCk1oGJMBUuKfeCg@mail.gmail.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] net, phy, smsc: add posibility to disable
+ energy detect mode
+Date: Wed, 21 Oct 2015 06:42:58 -0700 (PDT)
+Message-ID: <20151021.064258.171088607791931068.davem@davemloft.net>
+References: <1445054676-21523-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgRR6OQ3e8RCxB2DQHJNx_LvOwE9CnmCk1oGJMBUuKfeCg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Markus Reichl <m.reichl@fivetechno.de>, Alim Akhtar <alim.akhtar@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445054676-21523-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hs-ynQEQJNshbs@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Georg.Soffel-k21M0aUVSxZWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, lsorense-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Anand and Markus,
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Date: Sat, 17 Oct 2015 06:04:34 +0200
 
-On 10/21/2015 01:46 PM, Anand Moon wrote:
-
-[snip]
-
->>>>
->>>> Markus,
->>>>
->>>> Can you please test following patch [0] on top of Alim's series? If that
->>>> works then it should either be part of Alim's series or the patches will
->>>> have to wait until that patch lands into mainline. I don't have an eMMC
->>>> to test it in XU4 but I'm pretty confident that it will solve the issue.
->>>
->>>
->>> Hi Javier,
->>>
->>> your patch fixes the issue, reboot works now on U3.
->>>
->> Good to know that.
->> Thanks
->>>
->>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->>>
->>> Thanks,
->>> --
->>> Markus
->>>
->>>
->>>>
->>>> Best regards,
->>>>
->>>
+> On some boards the energy enable detect mode leads in
+> trouble with some switches, so make the enabling of
+> this mode configurable through DT.
+> Therefore the property "smsc,disable-energy-detect" is
+> introduced.
 > 
-> Tested on OdroidXU3 emmc. Reboot success.
+> Patch 1 introduces phy-handle support for the ti,cpsw
+> driver. This is needed now for the smsc phy.
 > 
-> Tested-by: Anand Moon <linux.amoon@gmail.com>
-> 
+> Patch 2 adds the disable energy mode functionality
+> to the smsc phy
 
-Thanks a lot to both for testing the patch.
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Series applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
