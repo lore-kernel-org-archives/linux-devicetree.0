@@ -1,59 +1,68 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH] bus: sunxi-rsb: Allow building sunxi-rsb as a module
-Date: Wed, 21 Oct 2015 17:11:05 +0800
-Message-ID: <1445418665-14138-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [git pull] clk: shmobile: Add new Renesas CPG/MSSR DT bindings for
+Date: Wed, 21 Oct 2015 02:27:49 -0700
+Message-ID: <20151021092749.20687.86043@quantum>
+References: <1445367000-11525-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBK5NTWYQKGQEX62XUXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445367000-11525-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner Reduced Serial Bus support is only needed for sun[89]i
-platforms. Having it built-in for multi-platform kernels leads to
-a bigger kernel image, without any benefit for non sun[89]i systems.
+Quoting Geert Uytterhoeven (2015-10-20 11:49:58)
+>         Hi Mike, Stephen,
+> 
+> The following changes since commit 64291f7db5bd8150a74ad2036f1037e6a0428df2:
+> 
+>   Linux 4.2 (2015-08-30 11:34:09 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git clk-shmobile-for-v4.4
 
-The driver already exports the needed symbols and supports module
-loading/unloading. Change the Kconfig symbol to tristate to allow
-the user to build it as a module.
+Pulled.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
+Thanks,
+Mike
 
-Hi Arnd,
-
-Maxime requested we make the RSB driver and subsequent PMIC drivers
-tristate. Please squash this patch into patch 2 of the RSB series
-when you apply them.
-
-
-Thanks
-ChenYu
-
----
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index e921b8c72f8c..78382de19ed9 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -122,7 +122,7 @@ config SIMPLE_PM_BUS
- 	  "External Bus Interface") as found on several Renesas ARM SoCs.
- 
- config SUNXI_RSB
--	bool "Allwinner sunXi Reduced Serial Bus Driver"
-+	tristate "Allwinner sunXi Reduced Serial Bus Driver"
- 	  default MACH_SUN8I || MACH_SUN9I
- 	  depends on ARCH_SUNXI
- 	  select REGMAP
--- 
-2.6.1
+> 
+> for you to fetch changes up to 9d0c3c682033d3f10ac1ad8e72ca0c1b48063409:
+> 
+>   clk: shmobile: Add r8a7795 CPG Core Clock Definitions (2015-10-20 20:36:00 +0200)
+> 
+> Summary:
+>   - clk: shmobile: Add new Renesas CPG/MSSR DT bindings for r8a7795
+> 
+> Thanks for pulling!
+> 
+> ----------------------------------------------------------------
+> Geert Uytterhoeven (2):
+>       clk: shmobile: Add new Renesas CPG/MSSR DT bindings
+>       clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+> 
+>  .../devicetree/bindings/clock/renesas,cpg-mssr.txt | 69 ++++++++++++++++++++++
+>  include/dt-bindings/clock/r8a7795-cpg-mssr.h       | 63 ++++++++++++++++++++
+>  include/dt-bindings/clock/renesas-cpg-mssr.h       | 15 +++++
+>  3 files changed, 147 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+>  create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
+>  create mode 100644 include/dt-bindings/clock/renesas-cpg-mssr.h
+> 
+> Gr{oetje,eeting}s,
+> 
+>                                                 Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                                             -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
