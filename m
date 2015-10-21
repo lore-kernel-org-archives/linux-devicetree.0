@@ -1,56 +1,48 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Which is better to specify console, "console= " or "stdout-path"
- ?
-Date: Wed, 21 Oct 2015 14:06:14 +0100
-Message-ID: <56278DC6.8090601@arm.com>
-References: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg@mail.gmail.com>
- <562753A6.3070107@arm.com> <56278911.9050704@hurleysoftware.com>
- <56278AFD.8000505@arm.com> <56278CF3.9010400@hurleysoftware.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Wed, 21 Oct 2015 18:48:32 +0530
+Message-ID: <20151021131832.GG7784@ubuntu>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+ <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+ <55F72C97.2030306@kernel.org>
+ <20151016002243.GA23912@codeaurora.org>
+ <20151016060227.GS19018@linux>
+ <20151016191658.GA16437@codeaurora.org>
+ <20151017041055.GZ19018@linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56278CF3.9010400-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151017041055.GZ19018@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On 17-10-15, 09:40, Viresh Kumar wrote:
+> Hehe, no.
+> 
+> Okay here is the problem statement:
+> 
+> We have two supplies for a device and the device node will have
+> something like:
+> 
+> name1-supply = <&supply1>;
+> name2-supply = <&supply2>;
+> 
+> And the OPP node needs to have voltages for both of them:
+> 
+> opp-microvolt = <X1 Y1 Z1>, <X2 Y2 Z2>;
+> 
+> Where XYZ(1) are for supply1 and XYZ(2) are for supply2.
+> 
+> Now we need to identify the supplies for which the values are present
+> here and their order as well. How do we do that?
+> 
+> The way I am suggesting is to add a property in opp node which will
+> keep "name1" and "name2" in it.
 
-
-On 21/10/15 14:02, Peter Hurley wrote:
-> On 10/21/2015 08:54 AM, Sudeep Holla wrote:
->> On 21/10/15 13:46, Peter Hurley wrote:
-
-[..]
-
->>> Be aware that options specified via /chosen/stdout-path are
->>> currently ignored by earlycon. There were some hiccups getting the
->>> initial support upstream; when 4.4 hits mainline, I'll resubmit
->>> my series that implements the of_serial i/o properties and
->>> options passthrough to earlycon setup.
->>>
->>
->> Yes I am aware of that.
->
-> The others to which my email was addressed might not know that.
->
-
-True, good that you pointed it out.
-
->> IIUC it's in -next now and works fine for me.
->
-> Well, the fix in -next doesn't actually do anything wrt earlycon baud
-> rate; those changes were part of a larger series that depends on
-> the fix in -next.
->
-
-Ah ok.
+Any more comments? Acks ? I want to close this series :)
 
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
