@@ -1,72 +1,86 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3] extcon: gpio: Add the support for Device tree bindings
-Date: Wed, 21 Oct 2015 17:35:56 -0500
-Message-ID: <CAL_JsqJczcqbNuT50aKK6RZMidJE0X=XQy8o5pe9V6qtKWkoNA@mail.gmail.com>
-References: <1445402226-3912-1-git-send-email-cw00.choi@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/6] remoteproc: dt: Provide bindings for ST's Remote
+ Processor Controller driver
+Date: Wed, 21 Oct 2015 17:41:39 -0500
+Message-ID: <CAL_JsqK6ZxgfO+_XWKzLG1e=Bd2CZP8Fc2ORnn9_LSH17uNJSQ@mail.gmail.com>
+References: <1445428027-26174-1-git-send-email-lee.jones@linaro.org> <1445428027-26174-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445402226-3912-1-git-send-email-cw00.choi@samsung.com>
+In-Reply-To: <1445428027-26174-2-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, myungjoo.ham@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Maxime Coquelin <maxime.coquelin@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, Florian Fainelli <f.fainelli@gmail.com>, Ludovic Barre <ludovic.barre@st.com>, "s-anna@ti.com" <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 11:37 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> This patch adds the support for Device tree bindings of extcon-gpio driver.
-> The extcon-gpio device tree node must include the both 'extcon-id' and
-> 'extcon-gpio' property.
+On Wed, Oct 21, 2015 at 6:47 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-I think this is too tied to the Linux driver. Instead, think about
-what the connector contains. I think you should define a usb connector
-node and compatible (e.g. usb-connector or usb-ab-connector). This
-probably needs to distinguish the connector type as well especially
-with TypeC coming.
+Are all the instances the same or are some fixed to audio processing
+for example? If the latter, I think the compatible strings should
+reflect the function. If the former, then:
 
->
-> For exmaple:
->         usb_cable: extcon-gpio-0 {
->                 compatible = "extcon-gpio";
->                 extcon-id = <EXTCON_USB>;
->                 extcon-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-
-This tied to a Vbus detect circuit?
-
-So "vbus-detect-gpios" in the connector node.
-
-For host side (or OTG host mode), you may also need a vbus-supply
-regulator property. OTG will also need an id-gpios for ID pin.
-
->         }
->
->         ta_cable: extcon-gpio-1 {
-
-This is all the same connector as above?
-
->                 compatible = "extcon-gpio";
->                 extcon-id = <EXTCON_CHG_USB_DCP>;
->                 extcon-gpio = <&gpio3 2 GPIO_ACTIVE_LOW>;
-
-This is just detecting D+ and D- are both pulled high?
-
-So "dcp-detect-gpios" in the connector node.
-
->                 debounce-ms = <50>;     /* 50 millisecond */
->                 wakeup-source;
-
-wakeup-source implies an interrupt as I read Sudeep's series. Either
-gpios need to be allowed or these need to be defined as interrupts.
-
->         }
->
->         &dwc3_usb {
->                 extcon = <&usb_cable>;
->         };
->
->         &charger {
->                 extcon = <&ta_cable>;
-
-Not sure what to do with this. Both can point to a single connector
-node I think.
+Acked-by: Rob Herring <robh@kernel.org>
 
 Rob
+
+> ---
+>  .../devicetree/bindings/remoteproc/st-rproc.txt    | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+> new file mode 100644
+> index 0000000..1031bcd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+> @@ -0,0 +1,41 @@
+> +STMicroelectronics Co-Processor Bindings
+> +----------------------------------------
+> +
+> +This binding provides support for adjunct processors found on ST SoCs.
+> +
+> +Co-processors can be controlled from the bootloader or the primary OS. If
+> +the bootloader starts a co-processor, the primary OS must detect its state
+> +and act accordingly.
+> +
+> +Required properties:
+> +- compatible           Should be one of:
+> +                               "st,st231-rproc"
+> +                               "st,st40-rproc"
+> +- memory-region                Reserved memory (See: ../reserved-memory/reserved-memory.txt)
+> +- resets               Reset lines (See: ../reset/reset.txt)
+> +- reset-names          Must be "sw_reset" and "pwr_reset"
+> +- clocks               Clock for co-processor (See: ../clock/clock-bindings.txt)
+> +- clock-frequency      Clock frequency to set co-processor at if the bootloader
+> +                       hasn't already done so
+> +- st,syscfg            System configuration register which holds the boot vector
+> +                       for the co-processor
+> +                               1st cell: Phandle to syscon block
+> +                               2nd cell: Boot vector register offset
+> +
+> +Example:
+> +
+> +       audio_reserved: rproc@42000000 {
+> +               compatible = "shared-dma-pool";
+> +               reg = <0x42000000 0x01000000>;
+> +               no-map;
+> +       };
+> +
+> +       st231-audio {
+> +               compatible      = "st,st231-rproc";
+> +               memory-region   = <&audio_reserved>;
+> +               resets          = <&softreset STIH407_ST231_AUD_SOFTRESET>;
+> +               reset-names     = "sw_reset";
+> +               clocks          = <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
+> +               clock-frequency = <600000000>;
+> +               st,syscfg       = <&syscfg_core 0x228>;
+> +       };
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
