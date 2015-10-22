@@ -1,102 +1,79 @@
-From: "Yankejian (Hackim Yim)" <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RESEND net-next] net: updates HNS config and documents
-Date: Thu, 22 Oct 2015 10:51:19 +0800
-Message-ID: <56284F27.4010109@huawei.com>
-References: <1445308604-95860-1-git-send-email-yankejian@huawei.com>
- <CAL_JsqJ+4BK2KDX5+t6GGEYv3pPDc+crktiMqgu6QTZi7WDrxw@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: rockchip-thermal: Add the
+ "init" pinctrl in this document
+Date: Wed, 21 Oct 2015 20:45:47 -0700
+Message-ID: <CAD=FV=XdN_Lie9bjbr0M4-=neVGrLiahAAxyUEuE0kO2ZsusfQ@mail.gmail.com>
+References: <1445481048-20789-1-git-send-email-wxt@rock-chips.com>
+ <1445481048-20789-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ+4BK2KDX5+t6GGEYv3pPDc+crktiMqgu6QTZi7WDrxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1445481048-20789-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Caesar,
 
+On Wed, Oct 21, 2015 at 7:30 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> The "init" pinctrl is defined we'll set
+> pinctrl to this state before probe and then "default" after probe.
+>
+> Add the "init" pinctrl as the OTP gpio state, since we need switch
+> the pin to gpio state before the TSADC controller is reset.
+>
+> As I know, the TSADC controller is reset, the tshut polarity will be
+> a *low* signal in a short period of time for some devices.
+>
+> Says:
+> The TSADC get the temperature on rockchip thermal.
+>
+> If T(current temperature) < (setting temperature), the OTP output the
+> *high* signal.
+> If T(current temperature) > (setting temperature), the OTP output the
+> *low* Signal.
+>
+> In some cases, the OTP pin is connected to the PMIC, maybe the
+> PMIC can accept the reset response time to avoid this issue.
+>
+> In other words, the system will be always reboot if we make the
+> OTP pin is connected the others IC to control the power.
+>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>
+> Changes in v2:
+>   - Add the 'init' pinctrl more decription in commit.
+>   - Fix the subject to make more obvious in PATCH[1/2]
+>   - Resend this patch v2 since fix the subject to be specific.
+>
+> Changes in v1:
+>   - As the Doug comments, add the 'init' property to sync document.
+>
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> index ef802de..28e84f7 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
 
-=E5=9C=A8 2015/10/22 9:26, Rob Herring =E5=86=99=E9=81=93:
-> On Mon, Oct 19, 2015 at 9:36 PM, yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wro=
-te:
->> updates the bindings documents and dtsi file according to the review
->> comments from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> Signed-off-by: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->=20
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->=20
+I think Rob wanted something more in the "rockchip-thermal.txt"
+document itself.  Like:
 
-Thanks!
-
->> ---
->>  Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 2 +-
->>  arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi                 | 8 ++=
-+-----
->>  2 files changed, 4 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdi=
-o.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
->> index 9940aa0..9c23fdf 100644
->> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
->> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
->> @@ -12,7 +12,7 @@ Example:
->>           mdio@803c0000 {
->>                     #address-cells =3D <1>;
->>                     #size-cells =3D <0>;
->> -                   compatible =3D "hisilicon,mdio","hisilicon,hns-m=
-dio";
->> +                   compatible =3D "hisilicon,hns-mdio","hisilicon,m=
-dio";
->>                     reg =3D <0x0 0x803c0000 0x0 0x10000>;
->>
->>                     ethernet-phy@0 {
->> diff --git a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi b/arch/arm=
-64/boot/dts/hisilicon/hip05_hns.dtsi
->> index 3500586..606dd5a 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
->> @@ -13,14 +13,12 @@ soc0: soc@000000000 {
->>                 reg =3D <0x0 0x803c0000 0x0 0x10000
->>                        0x0 0x80000000 0x0 0x10000>;
->>
->> -               soc0_phy4: ethernet-phy@4 {
->> +               soc0_phy0: ethernet-phy@0 {
->>                         reg =3D <0x0>;
->> -                       device_type =3D "ethernet-phy";
->>                         compatible =3D "ethernet-phy-ieee802.3-c22";
->>                 };
->> -               soc0_phy5: ethernet-phy@5 {
->> +               soc0_phy1: ethernet-phy@1 {
->>                         reg =3D <0x1>;
->> -                       device_type =3D "ethernet-phy";
->>                         compatible =3D "ethernet-phy-ieee802.3-c22";
->>                 };
->>         };
->> @@ -37,7 +35,7 @@ soc0: soc@000000000 {
->>                        0x0 0xc7000000 0x0 0x60000
->>                        >;
->>
->> -               phy-handle =3D <0 0 0 0 &soc0_phy4 &soc0_phy5 0 0>;
->> +               phy-handle =3D <0 0 0 0 &soc0_phy0 &soc0_phy1 0 0>;
->>                 interrupts =3D <
->>                         /* [14] ge fifo err 8 / xge 6**/
->>                         149 0x4 150 0x4 151 0x4 152 0x4
->> --
->> 1.9.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree=
-" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
-> .
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pinctrl states:
+- During device probe a driver may glitch the output line.  If this is
+not acceptable for your board, you can use the standard "init" and
+"default" pinctrl states.  The "init" state will be set before device
+probe and "default" after.
