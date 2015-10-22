@@ -1,132 +1,87 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Document: DT: Add bindings for mediatek MT2701 SoC Platform
-Date: Wed, 21 Oct 2015 20:25:20 -0500
-Message-ID: <CAL_JsqKPPXfXipARUrUyfk04LaV02AJcP-JUQ2jrxoUz9YCVTQ@mail.gmail.com>
-References: <1445322871-14134-1-git-send-email-erin.lo@mediatek.com> <1445322871-14134-2-git-send-email-erin.lo@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445322871-14134-2-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 3/3] dt-bindings: EXYNOS: Document compatibles from other
+ vendors
+Date: Thu, 22 Oct 2015 10:25:30 +0900
+Message-ID: <1445477130-407-3-git-send-email-k.kozlowski@samsung.com>
+References: <1445477130-407-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1445477130-407-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>, Hakjoo Kim <ruppi.kim@hardkernel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 1:34 AM, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> This adds a DT binding documentation for the MT2701 SoC from Mediatek.
->
-> Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Document compatibles used on other Exynos-based boards (non-Samsung):
+FriendlyARM, Google, Hardkernel and Insignal.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Hakjoo Kim <ruppi.kim@hardkernel.com>
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-> ---
->  Documentation/devicetree/bindings/arm/mediatek.txt         |  4 ++++
->  .../devicetree/bindings/arm/mediatek/mediatek,sysirq.txt   |  1 +
->  Documentation/devicetree/bindings/serial/mtk-uart.txt      | 14 +++++++-------
->  .../devicetree/bindings/timer/mediatek,mtk-timer.txt       |  5 +++--
->  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt     |  6 +++++-
->  5 files changed, 20 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-> index 618a919..54f43bc 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
-> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-> @@ -6,6 +6,7 @@ following property:
->  Required root node property:
->
->  compatible: Must contain one of
-> +   "mediatek,mt2701"
->     "mediatek,mt6580"
->     "mediatek,mt6589"
->     "mediatek,mt6592"
-> @@ -17,6 +18,9 @@ compatible: Must contain one of
->
->  Supported boards:
->
-> +- Evaluation board for MT2701:
-> +    Required root node properties:
-> +      - compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
->  - Evaluation board for MT6580:
->      Required root node properties:
->        - compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> index afef6a8..b8e1674 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> @@ -14,6 +14,7 @@ Required properties:
->         "mediatek,mt6582-sysirq"
->         "mediatek,mt6580-sysirq"
->         "mediatek,mt6577-sysirq"
-> +       "mediatek,mt2701-sysirq"
->  - interrupt-controller : Identifies the node as an interrupt controller
->  - #interrupt-cells : Use the same format as specified by GIC in
->    Documentation/devicetree/bindings/arm/gic.txt
-> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> index 2d47add..a833a01 100644
-> --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> @@ -2,15 +2,15 @@
->
->  Required properties:
->  - compatible should contain:
-> -  * "mediatek,mt8135-uart" for MT8135 compatible UARTS
-> +  * "mediatek,mt2701-uart" for MT2701 compatible UARTS
-> +  * "mediatek,mt6580-uart" for MT6580 compatible UARTS
-> +  * "mediatek,mt6582-uart" for MT6582 compatible UARTS
-> +  * "mediatek,mt6589-uart" for MT6589 compatible UARTS
-> +  * "mediatek,mt6795-uart" for MT6795 compatible UARTS
->    * "mediatek,mt8127-uart" for MT8127 compatible UARTS
-> +  * "mediatek,mt8135-uart" for MT8135 compatible UARTS
->    * "mediatek,mt8173-uart" for MT8173 compatible UARTS
-> -  * "mediatek,mt6795-uart" for MT6795 compatible UARTS
-> -  * "mediatek,mt6589-uart" for MT6589 compatible UARTS
-> -  * "mediatek,mt6582-uart" for MT6582 compatible UARTS
-> -  * "mediatek,mt6580-uart" for MT6580 compatible UARTS
-> -  * "mediatek,mt6577-uart" for all compatible UARTS (MT8173, MT6795,
-> -        MT6589, MT6582, MT6580, MT6577)
-> +  * "mediatek,mt6577-uart" for MT6577 and all of the above
->
->  - reg: The base address of the UART register bank.
->
-> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> index 53a3029..54f858c 100644
-> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> @@ -3,10 +3,11 @@ Mediatek MT6577, MT6572 and MT6589 Timers
->
->  Required properties:
->  - compatible should contain:
-> +       * "mediatek,mt2701-timer" for MT2701 compatible timers
->         * "mediatek,mt6589-timer" for MT6589 compatible timers
->         * "mediatek,mt6580-timer" for MT6580 compatible timers
-> -       * "mediatek,mt6577-timer" for all compatible timers (MT6589, MT6580,
-> -               MT6577)
-> +       * "mediatek,mt6577-timer" for all compatible timers (MT2701, MT6589,
-> +               MT6580, MT6577)
->  - reg: Should contain location and length for timers register.
->  - clocks: Clocks driving the timer hardware. This list should include two
->         clocks. The order is system clock and as second clock the RTC clock.
-> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> index af9eb5b..6a00939 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> @@ -2,7 +2,11 @@ Mediatek SoCs Watchdog timer
->
->  Required properties:
->
-> -- compatible : should be "mediatek,mt6589-wdt"
-> +- compatible should contain:
-> +       * "mediatek,mt2701-wdt" for MT2701 compatible watchdog timers
-> +       * "mediatek,mt6589-wdt" for all compatible watchdog timers (MT2701,
-> +               MT6589)
-> +
->  - reg : Specifies base physical address and size of the registers.
->
->  Example:
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+
+Changes since v1:
+1. Added Javier's reviewed-by
+---
+ .../bindings/arm/samsung/samsung-boards.txt        | 44 +++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+index 43589d2466a7..da078702ae73 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+@@ -16,7 +16,49 @@ Required root node properties:
+ 	- "samsung,sd5v1"	- for Exynos5440-based Samsung board.
+ 	- "samsung,ssdk5440"	- for Exynos5440-based Samsung board.
+ 
+-Optional:
++* Other companies Exynos SoC based
++  * FriendlyARM
++        - "friendlyarm,tiny4412"  - for Exynos4412-based FriendlyARM
++                                    TINY4412 board.
++
++  * Google
++        - "google,pi"             - for Exynos5800-based Google Peach Pi
++                                    Rev 10+ board,
++          also: "google,pi-rev16", "google,pi-rev15", "google,pi-rev14",
++		"google,pi-rev13", "google,pi-rev12", "google,pi-rev11",
++                "google,pi-rev10", "google,peach".
++
++        - "google,pit"            - for Exynos5420-based Google Peach Pit
++                                    Rev 6+ (Exynos5420),
++          also: "google,pit-rev16", "google,pit-rev15", "google,pit-rev14",
++                "google,pit-rev13", "google,pit-rev12", "google,pit-rev11",
++                "google,pit-rev10", "google,pit-rev9", "google,pit-rev8",
++                "google,pit-rev7", "google,pit-rev6", "google,peach".
++
++        - "google,snow-rev4"      - for Exynos5250-based Google Snow board,
++          also: "google,snow"
++        - "google,snow-rev5"      - for Exynos5250-based Google Snow
++                                    Rev 5+ board.
++        - "google,spring"         - for Exynos5250-based Google Spring board.
++
++  * Hardkernel
++        - "hardkernel,odroid-u3"  - for Exynos4412-based Hardkernel Odroid U3.
++        - "hardkernel,odroid-x"   - for Exynos4412-based Hardkernel Odroid X.
++        - "hardkernel,odroid-x2"  - for Exynos4412-based Hardkernel Odroid X2.
++        - "hardkernel,odroid-xu3" - for Exynos5422-based Hardkernel Odroid XU3.
++        - "hardkernel,odroid-xu3-lite" - for Exynos5422-based Hardkernel
++                                         Odroid XU3 Lite board.
++        - "hardkernel,odroid-xu4" - for Exynos5422-based Hardkernel Odroid XU4.
++
++  * Insignal
++        - "insignal,arndale"      - for Exynos5250-based Insignal Arndale board.
++        - "insignal,arndale-octa" - for Exynos5420-based Insignal Arndale
++                                    Octa board.
++        - "insignal,origen"       - for Exynos4210-based Insignal Origen board.
++        - "insignal,origen4412    - for Exynos4412-based Insignal Origen board.
++
++
++Optional nodes:
+     - firmware node, specifying presence and type of secure firmware:
+         - compatible: only "samsung,secure-firmware" is currently supported
+         - reg: address of non-secure SYSRAM used for communication with firmware
+-- 
+1.9.1
