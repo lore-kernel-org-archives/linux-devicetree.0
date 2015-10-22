@@ -1,29 +1,47 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 0/4] add missing of_node_put
-Date: Thu, 22 Oct 2015 10:08:36 -0500
-Message-ID: <CAL_Jsq+MsKSF4r8S50YYaQYH0N0SzQZHJ0sSW6eHK_XXdvAmnQ@mail.gmail.com>
-References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
+Subject: Re: [PATCH] Documentation/devicetree: Update PCI Device Tree bindings
+Date: Thu, 22 Oct 2015 10:09:36 -0500
+Message-ID: <CAL_Jsq+Ea_sKsMgWtXSkLeOUibsDTR0EW7AVsyGvZdHXSdZ6GQ@mail.gmail.com>
+References: <20151020210303.3671.52391.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151020210303.3671.52391.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 4:02 AM, Julia Lawall <Julia.Lawall@lip6.fr> wrote:
-> The various for_each device_node iterators performs an of_node_get on each
-> iteration, so a break out of the loop requires an of_node_put.
-
-> ---
+On Tue, Oct 20, 2015 at 4:03 PM, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> Update broken links to PCI bus and interrupt mapping bindings.
 >
->  drivers/of/irq.c      |    7 +++++--
->  drivers/of/overlay.c  |    5 ++++-
->  drivers/of/platform.c |    8 ++++++--
->  drivers/of/unittest.c |    8 ++++++--
->  4 files changed, 21 insertions(+), 7 deletions(-)
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Series applied, thanks.
+Applied, thanks.
 
 Rob
+
+> ---
+>  Documentation/devicetree/bindings/pci/pci.txt |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index f8fbe9a..08dcfad 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -1,12 +1,12 @@
+>  PCI bus bridges have standardized Device Tree bindings:
+>
+>  PCI Bus Binding to: IEEE Std 1275-1994
+> -http://www.openfirmware.org/ofwg/bindings/pci/pci2_1.pdf
+> +http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
+>
+>  And for the interrupt mapping part:
+>
+>  Open Firmware Recommended Practice: Interrupt Mapping
+> -http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+> +http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
+>
+>  Additionally to the properties specified in the above standards a host bridge
+>  driver implementation may support the following properties:
+>
