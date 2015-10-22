@@ -1,123 +1,60 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] iio: mma8452: support either of the available
- interrupt pins
-Date: Thu, 22 Oct 2015 13:22:50 -0500
-Message-ID: <CAL_Jsq+cd0A7wczT-KC3TT_2UmZDqjr799uRMR_WA_JFfTw6dA@mail.gmail.com>
-References: <1444914632-4486-1-git-send-email-martink@posteo.de>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 3/6] PCI: designware: Add ARM64 support
+Date: Thu, 22 Oct 2015 13:28:53 -0500
+Message-ID: <20151022182853.GC21237@localhost>
+References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
+ <1444991021-109306-4-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444914632-4486-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1444991021-109306-4-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 8:10 AM, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org> wrote:
-> This change is important in order for everyone to be easily able to use the
-> driver for one of the supported accelerometer chips!
->
-> Until now, the driver blindly assumed that the INT1 interrupt line is wired
-> on a user's board. But these devices have 2 interrupt lines and can route
-> their interrupt sources to one of them. Now, if "INT2" is found and matches
-> i2c_client->irq, INT2 will be used.
->
-> The chip's default actually is INT2, which is why probably many boards will
-> have it wired and can make use of this.
->
-> Of course, this also falls back to assuming INT1, so for existing users
-> nothing will break. The new functionality is described in the bindings doc.
->
-> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> ---
-> changelog:
-> v4: use irq that matches client->irq, backwards compatible
-> v3: correctly assign irq if both pins are described in DT
-> v2: don't warn but normally handle if both pins are described in dts
->     thanks Mark Rutland
-> v1: initial post
->
->  .../devicetree/bindings/iio/accel/mma8452.txt       |  6 ++++++
+Hi Zhou,
 
-For the binding:
+On Fri, Oct 16, 2015 at 06:23:38PM +0800, Zhou Wang wrote:
+> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
+> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+> move related operations to dw_pcie_host_init.
+> 
+> This patch also try to use of_pci_get_host_bridge_resources for ARM32 and ARM64
+> according to the suggestion for Gabriele[1]
+> 
+> This patch reverts commit f4c55c5a3f7f ("PCI: designware: Program ATU with
+> untranslated address") based on 1/6 in this series. we delete *_mod_base in
+> pcie-designware. This was discussed in [2]
+> 
+> I have compiled the driver with multi_v7_defconfig. However, I don't have
+> ARM32 PCIe related board to do test. It will be appreciated if someone could
+> help to test it.
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+There's a lot going on this patch.  Can you split it up at all?  For
+example, maybe:
 
->  drivers/iio/accel/mma8452.c                         | 21 +++++++++++++++------
->  2 files changed, 21 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> index e3c3746..3c10e85 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> @@ -7,13 +7,18 @@ Required properties:
->      * "fsl,mma8453"
->      * "fsl,mma8652"
->      * "fsl,mma8653"
-> +
->    - reg: the I2C address of the chip
->
->  Optional properties:
->
->    - interrupt-parent: should be the phandle for the interrupt controller
-> +
->    - interrupts: interrupt mapping for GPIO IRQ
->
-> +  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
-> +                    interrupt line in use.
-> +
->  Example:
->
->         mma8453fc@1d {
-> @@ -21,4 +26,5 @@ Example:
->                 reg = <0x1d>;
->                 interrupt-parent = <&gpio1>;
->                 interrupts = <5 0>;
-> +               interrupt-names = "INT2";
->         };
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 1eccc2d..116a6e4 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -29,6 +29,7 @@
->  #include <linux/iio/events.h>
->  #include <linux/delay.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->
->  #define MMA8452_STATUS                         0x00
->  #define  MMA8452_STATUS_DRDY                   (BIT(2) | BIT(1) | BIT(0))
-> @@ -1130,13 +1131,21 @@ static int mma8452_probe(struct i2c_client *client,
->                                            MMA8452_INT_FF_MT;
->                 int enabled_interrupts = MMA8452_INT_TRANS |
->                                          MMA8452_INT_FF_MT;
-> +               int irq2;
->
-> -               /* Assume wired to INT1 pin */
-> -               ret = i2c_smbus_write_byte_data(client,
-> -                                               MMA8452_CTRL_REG5,
-> -                                               supported_interrupts);
-> -               if (ret < 0)
-> -                       return ret;
-> +               irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
-> +
-> +               if (irq2 == client->irq) {
-> +                       dev_dbg(&client->dev, "using interrupt line INT2\n");
-> +               } else {
-> +                       ret = i2c_smbus_write_byte_data(client,
-> +                                                       MMA8452_CTRL_REG5,
-> +                                                       supported_interrupts);
-> +                       if (ret < 0)
-> +                               return ret;
-> +
-> +                       dev_dbg(&client->dev, "using interrupt line INT1\n");
-> +               }
->
->                 ret = i2c_smbus_write_byte_data(client,
->                                                 MMA8452_CTRL_REG4,
-> --
-> 2.1.4
->
+  - Revert f4c55c5a3f7f (and move to right after the related [1/6]
+    patch
+
+  - Switch to using of_pci_get_host_bridge_resources()
+
+  - Replacing the call of pci_common_init_dev() with equivalent code in
+    pcie-designware.c.  This one in particular needs to be easy to review.
+    It's not clear to me that this new code is equivalent.  For example,
+    pci_common_init_dev() calls pcie_bus_configure_settings(), but I don't
+    see that in your new code.
+
+You already have acks and tested-by, so I assume you probably did all the
+right things, but it will help me out a lot if you can break it into
+bite-sized pieces.  It's always better to make patches too small rather
+than too large, because it's trivial to squash them back together if
+needed.  I think we're going to have some conflicts between this and other
+pcie-designware.c changes, and small patches will also make those easier to
+resolve.
+
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
