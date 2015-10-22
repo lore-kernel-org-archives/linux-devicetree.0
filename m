@@ -1,87 +1,163 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
-Date: Thu, 22 Oct 2015 15:04:59 +0200
-Message-ID: <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
- <1445406845.701.55.camel@freescale.com> <CAL_JsqLhZmc8cEC+tFJ25KLe0bQZsWmrRWGBMQake9VN6OjvdQ@mail.gmail.com>
- <1445467912.701.90.camel@freescale.com>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH 0/4] add missing of_node_put
+Date: Thu, 22 Oct 2015 15:19:43 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1510221517300.2607@hadrien>
+References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr> <CAL_JsqJGS+L=FZAwPs-wBSYiX8kQWqZyaLTGhadYVNT3=Qte_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445467912.701.90.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <CAL_JsqJGS+L=FZAwPs-wBSYiX8kQWqZyaLTGhadYVNT3=Qte_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hu Mingkai-B21284 <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 October 2015 at 00:51, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Wed, 2015-10-21 at 08:44 -0500, Rob Herring wrote:
->> On Wed, Oct 21, 2015 at 12:54 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> wrote:
->> > On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
->> > > Instead of trying to match and probe platform and AMBA devices right
->> > > after each is registered, delay their probes until device_initcall_sync.
->> > >
->> > > This means that devices will start probing once all built-in drivers
->> > > have registered, and after all platform and AMBA devices from the DT
->> > > have been registered already.
->> > >
->> > > This allows us to prevent deferred probes by probing dependencies on
->> > > demand.
->> > >
->> > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> > > ---
->> > >
->> > > Changes in v4:
->> > > - Also defer probes of AMBA devices registered from the DT as they can
->> > >   also request resources.
->> > >
->> > >  drivers/of/platform.c | 11 ++++++++---
->> > >  1 file changed, 8 insertions(+), 3 deletions(-)
->> >
->> > This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF platform
->> > device, and it must be probed before pcibios_init() which is a
->> > subsys_initcall(), or else the PCI bus never gets scanned.
->>
->> Thanks for the report. This is probably getting dropped, but it could
->> be disabled for PPC.
->
-> I don't think that adding another arbitrary arch difference would be the
-> right solution.
 
-I think Rob meant temporarily disable it while things get fixed. At
-least, I don't see any reason why PPC wouldn't benefit from this
-series.
 
-Regards,
+On Thu, 22 Oct 2015, Rob Herring wrote:
 
-Tomeu
+> +Russell who raised issues with these iterators recently.
+>
+> On Thu, Oct 22, 2015 at 4:02 AM, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org> wrote:
+> > The various for_each device_node iterators performs an of_node_get on each
+> > iteration, so a break out of the loop requires an of_node_put.
+>
+> Thanks for this.
+>
+> Are there any plans to use coccinelle as a checker that developers can
+> run to be warned of these problems?
 
->> Any plans to fix this and make PCI hosts hotplugable? For the scanning
->> part, generally the host controller drivers are responsible for
->> scanning their bus now.
+There are three issues I have found so far:
+
+1.  of_node_put before a continue
+2.  missing of_node_put before a break
+3.  missing of_node get before some more permanent storage of the value
+
+The semantic patches for the first two seem to be working pretty well, so
+I could submit them for integration into the kernel.  The third one, I
+have only looked at in an ad hoc way so far.
+
+julia
+
 >
-> Scanning from the host controller driver seems like a reasonable goal, though
+> Rob
 >
-> it'd take a bit of digging to extract whatever other things fsl_pci may
-> depend on from the common PPC PCI code, in particular the various things that
->
-> pcibios_resource_survey() does after all PCI buses have been scanned.
->
-> There's also check_swiotlb_enabled(), another subsys_initcall, which frees
-> the swiotlb memory if ppc_swiotlb_enable hasn't been set.  The PCI host
-> controller probe sets ppc_swiotlb_enable if it wasn't able to create an
-> inbound mapping for all RAM.  Even if we were to change that to a later
-> initcall, there's nothing later than late_initcall that we could use.
->
-> -Scott
->
+> > The complete semantic patch that fixes this problem is
+> > (http://coccinelle.lip6.fr):
+> >
+> > // <smpl>
+> > @r@
+> > local idexpression n;
+> > expression e1,e2;
+> > iterator name for_each_node_by_name, for_each_node_by_type,
+> > for_each_compatible_node, for_each_matching_node,
+> > for_each_matching_node_and_match, for_each_child_of_node,
+> > for_each_available_child_of_node, for_each_node_with_property;
+> > iterator i;
+> > statement S;
+> > expression list [n1] es;
+> > @@
+> >
+> > (
+> > (
+> > for_each_node_by_name(n,e1) S
+> > |
+> > for_each_node_by_type(n,e1) S
+> > |
+> > for_each_compatible_node(n,e1,e2) S
+> > |
+> > for_each_matching_node(n,e1) S
+> > |
+> > for_each_matching_node_and_match(n,e1,e2) S
+> > |
+> > for_each_child_of_node(e1,n) S
+> > |
+> > for_each_available_child_of_node(e1,n) S
+> > |
+> > for_each_node_with_property(n,e1) S
+> > )
+> > &
+> > i(es,n,...) S
+> > )
+> >
+> > @@
+> > local idexpression r.n;
+> > iterator r.i;
+> > expression e;
+> > expression list [r.n1] es;
+> > @@
+> >
+> >  i(es,n,...) {
+> >    ...
+> > (
+> >    of_node_put(n);
+> > |
+> >    e = n
+> > |
+> >    return n;
+> > |
+> > +  of_node_put(n);
+> > ?  return ...;
+> > )
+> >    ...
+> >  }
+> >
+> > @@
+> > local idexpression r.n;
+> > iterator r.i;
+> > expression e;
+> > expression list [r.n1] es;
+> > @@
+> >
+> >  i(es,n,...) {
+> >    ...
+> > (
+> >    of_node_put(n);
+> > |
+> >    e = n
+> > |
+> > +  of_node_put(n);
+> > ?  break;
+> > )
+> >    ...
+> >  }
+> > ... when != n
+> >
+> > @@
+> > local idexpression r.n;
+> > iterator r.i;
+> > expression e;
+> > identifier l;
+> > expression list [r.n1] es;
+> > @@
+> >
+> >  i(es,n,...) {
+> >    ...
+> > (
+> >    of_node_put(n);
+> > |
+> >    e = n
+> > |
+> > +  of_node_put(n);
+> > ?  goto l;
+> > )
+> >    ...
+> >  }
+> > ...
+> > l: ... when != n// </smpl>
+> >
+> > ---
+> >
+> >  drivers/of/irq.c      |    7 +++++--
+> >  drivers/of/overlay.c  |    5 ++++-
+> >  drivers/of/platform.c |    8 ++++++--
+> >  drivers/of/unittest.c |    8 ++++++--
+> >  4 files changed, 21 insertions(+), 7 deletions(-)
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> To unsubscribe from this list: send the line "unsubscribe kernel-janitors" in
 > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
