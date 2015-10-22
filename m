@@ -1,77 +1,30 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v4 5/8] clk: rockchip: Allow the RK3288 SPDIF clocks to change
- their parent
-Date: Thu, 22 Oct 2015 05:10:00 -0700
-Message-ID: <20151022121000.20687.48364@quantum>
-References: <1444311079-2892-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <11755202.f1LLWMlYi0@phil> <1444390555.9895.271.camel@collabora.co.uk>
- <1745884.LUbKvMh2Tj@diego>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: Generic DT binding for IPIs
+Date: Thu, 22 Oct 2015 11:55:51 +0000
+Message-ID: <20151022115551.GI3953@io.lakedaemon.net>
+References: <561E2BE6.2090807@imgtec.com>
+ <5628BE00.4020106@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1745884.LUbKvMh2Tj@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: linux-rockchip@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5628BE00.4020106-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heiko St=C3=BCbner (2015-10-11 03:43:27)
-> Hi Sjoerd,
->=20
-> Am Freitag, 9. Oktober 2015, 13:35:55 schrieb Sjoerd Simons:
-> > On Thu, 2015-10-08 at 17:10 +0200, Heiko Stuebner wrote:
-> > > Am Donnerstag, 8. Oktober 2015, 15:31:16 schrieb Sjoerd Simons:
-> > > > The clock branches leading to sclk_spdif and sclk_spdif_8ch on
-> > > > RK3288
-> > > > SoCs only feed those clocks, allow those clocks to change their
-> > > > parents
-> > > > all the way up the hierarchy.
-> > > >=20
-> > > > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> > >=20
-> > > Just as comment, if I'm seeing that right, this patch needs "clk:
-> > > rockchip:
-> > > handle mux dependency of fractional dividers" and friends [0] to
-> > > apply and
-> > > also actually handle the fractional dividers correctly.
-> > >=20
-> > > For the clock change itself:
-> > > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> >=20
-> > Oh sorry yes, i completely forgot to at that as note on this patch
-> > (series). These are on top of your series as those are required to =
-make
-> > things actually work as expected.
-> >=20
-> > Which reminds me, i was wondering how to best move that forward. Co=
-uld
-> > you pick this one up to include it in the next round of your series=
-?
-> > (Otherwise i'm happy to rebase it once you do a v2)
->=20
-> I guess that will depend on how the core series gets handled. Aka if =
-there=20
-> needs to be a v2 (depending on the clock maintainers) I can pick that=
- up as=20
-> part of it. Otherwise we'll just need to ping the clock-maintainers s=
-eparately=20
-> on this patch if necessary.
+On Thu, Oct 22, 2015 at 11:44:16AM +0100, Qais Yousef wrote:
+> Is there anything more I can do to get more attention about this? I
+> think Marc's suggestion is more generic and future proof, if I send
+> RFC patches for that would this be better?
 
-I've spoken with Heiko on irc about v2 about using the coordinated cloc=
-k
-rates patches for handling the mux/fractional dividers thing. I'd prefe=
-r
-to use the ccr approach, which puts a delay on that series.
+Please do.
 
-Is there anything wrong with merging this patch #5/8 as-is? Will the
-struct clk_core.rate accounting not match the hardware if we set
-CLK_SET_PARENT_RATE on these clocks?
+thx,
 
-Regards,
-Mike
-
->=20
->=20
-> Heiko
->=20
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
