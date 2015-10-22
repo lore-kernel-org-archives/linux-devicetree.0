@@ -1,37 +1,37 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 7/9] MIPS: BMIPS: brcmstb: add I2C node for bcm7358
-Date: Wed, 21 Oct 2015 18:57:11 -0700
-Message-ID: <56284277.4020502@gmail.com>
+Subject: Re: [PATCH 8/9] MIPS: BMIPS: brcmstb: add I2C node for bcm7360
+Date: Wed, 21 Oct 2015 18:57:20 -0700
+Message-ID: <56284280.9070906@gmail.com>
 References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
- <1445395021-4204-8-git-send-email-jaedon.shin@gmail.com>
+ <1445395021-4204-9-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1445395021-4204-8-git-send-email-jaedon.shin@gmail.com>
+In-Reply-To: <1445395021-4204-9-git-send-email-jaedon.shin@gmail.com>
 Sender: linux-i2c-owner@vger.kernel.org
 To: Jaedon Shin <jaedon.shin@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
 Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Le 20/10/2015 19:36, Jaedon Shin a =C3=A9crit :
-> Add I2C device nodes to BMIPS based BCM7358 platform.
+Le 20/10/2015 19:37, Jaedon Shin a =C3=A9crit :
+> Add I2C device nodes to BMIPS based BCM7360 platform.
 >=20
 > Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
 > ---
->  arch/mips/boot/dts/brcm/bcm7358.dtsi     | 62 ++++++++++++++++++++++=
+>  arch/mips/boot/dts/brcm/bcm7360.dtsi     | 62 ++++++++++++++++++++++=
 ++++++++--
->  arch/mips/boot/dts/brcm/bcm97358svmb.dts | 16 +++++++++
+>  arch/mips/boot/dts/brcm/bcm97360svmb.dts | 16 +++++++++
 >  2 files changed, 76 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/arch/mips/boot/dts/brcm/bcm7358.dtsi b/arch/mips/boot/dt=
-s/brcm/bcm7358.dtsi
-> index 277a90adc1a7..8e2501694d03 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7358.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7358.dtsi
+> diff --git a/arch/mips/boot/dts/brcm/bcm7360.dtsi b/arch/mips/boot/dt=
+s/brcm/bcm7360.dtsi
+> index 9e1e571ba346..7e5f76040fb8 100644
+> --- a/arch/mips/boot/dts/brcm/bcm7360.dtsi
+> +++ b/arch/mips/boot/dts/brcm/bcm7360.dtsi
 > @@ -81,14 +81,32 @@
 >  			compatible =3D "brcm,bcm7120-l2-intc";
 >  			reg =3D <0x406600 0x8>;
@@ -114,11 +114,11 @@ s/brcm/bcm7358.dtsi
 >  		enet0: ethernet@430000 {
 >  			phy-mode =3D "internal";
 >  			phy-handle =3D <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm97358svmb.dts b/arch/mips/boo=
-t/dts/brcm/bcm97358svmb.dts
-> index a8dc01e30313..02ce6b429dc4 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97358svmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
+> diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boo=
+t/dts/brcm/bcm97360svmb.dts
+> index eee8b0e32681..d48462e091f1 100644
+> --- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
+> +++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
 > @@ -29,6 +29,22 @@
 >  	status =3D "okay";
 >  };
