@@ -1,64 +1,84 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Thu, 22 Oct 2015 16:02:13 +0100
-Message-ID: <20151022150213.GT32532@n2100.arm.linux.org.uk>
-References: <20151018193757.GA9147@kroah.com>
- <20151018195330.GB14956@sirena.org.uk>
- <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
- <5627B677.5090109@gmail.com>
- <20151021162758.GP32054@sirena.org.uk>
- <5627D6E0.5020708@gmail.com>
- <CAL_Jsq+FPtCuBnte2HTgbdpNYM=v_kLaCRcOC1kMaCQwVC=5Kw@mail.gmail.com>
- <562808AF.7090406@gmail.com>
- <CAAObsKAkyjdvNOS3+nuT0N9sudUFLsZXFtcm6Y038p+HSdsZsg@mail.gmail.com>
- <20151022144405.GC21861@kroah.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Thu, 22 Oct 2015 11:05:26 -0400
+Message-ID: <5628FB36.4010303@ti.com>
+References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151022144405.GC21861-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Terje =?iso-8859-1?Q?Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Jingoo
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 07:44:05AM -0700, Greg Kroah-Hartman wrote:
-> <oops, sent too early...>
-> 
-> On Thu, Oct 22, 2015 at 11:05:11AM +0200, Tomeu Vizoso wrote:
-> > Given that downstreams are already carrying as many hacks as they
-> > could think of to speed total boot up, I think this is effectively
-> > telling them to go away.
-> 
-> No I'm not, I'm asking for real data, not hand-wavy-this-is-going-to
-> solve-the-random-issue-i'm-having type patch by putting random calls in
-> semi-random subsystems all over the kernel.
+On 10/21/2015 08:56 AM, WingMan Kwok wrote:
+> On TI's Keystone platforms, several peripherals such as the
+> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
+> require the use of a SerDes for converting SoC parallel data into
+> serialized data that can be output over a high-speed electrical
+> interface, and also converting high-speed serial input data
+> into parallel data that can be processed by the SoC.  The
+> SerDeses used by those peripherals, though they may be different,
+> are largely similar in functionality and setup.
+>
+> This patch series provides a SerDes phy driver implementation that can be
+> used by the above mentioned peripheral drivers to configure their
+> respective SerDeses.
+>
+> As an example of the using the SerDes driver, this patch series also
+> updates the Keystone PCIe host driver to enable and use its SerDes block.
+>
+> References:
+> [1] KeyStone II Architecture Serializer/Deserializer (SerDes) User's Guide
+>      (http://www.ti.com/lit/ug/spruho3a/spruho3a.pdf)
+>
+> v3:
+> 	- addresses the following review comments
+> 		1. https://lkml.org/lkml/2015/10/19/756
+> 			-- included sizes.h
+> 		2. https://lkml.org/lkml/2015/10/19/781
+> 			-- updated base on Fengguang Wu's suggestions.
+> 		3. https://lkml.org/lkml/2015/10/15/896
+> 			-- clarified here https://lkml.org/lkml/2015/10/20/512
+> 			-- nothing to do.
+>
+> v2:
+> 	- addresses the following review comments on v1:
+> 		1. https://lkml.org/lkml/2015/10/15/896
+> 			-- this does not address the question:
+> 			   "The current code does not do this when compiled,
+> 			    which might be a problem for distributors.
+> 			    Can you clarify the license?"
+> 			-- the question is still under discussion here:
+> 			   https://lkml.org/lkml/2015/10/19/471
+> 		2. https://lkml.org/lkml/2015/10/15/895
+>
+> v1:
+> 	- addresses the following review comments
+> 		1. https://lkml.org/lkml/2015/10/13/803
+> 		2. https://lkml.org/lkml/2015/10/14/613
+> 		3. https://lkml.org/lkml/2015/10/13/818
+>
+> 	- An update to PCIe dts bindings to enable the PCIe SerDes is
+> 	  submitted in a separate patch.
+>
+> WingMan Kwok (2):
+>    phy: keystone: serdes driver for gbe 10gbe and pcie
+>    PCI: keystone: update to use generic keystone serdes driver
+>
+>   Documentation/devicetree/bindings/phy/ti-phy.txt |  239 +++
+>   drivers/pci/host/pci-keystone.c                  |   24 +-
+>   drivers/pci/host/pci-keystone.h                  |    1 +
+>   drivers/phy/Kconfig                              |    8 +
+>   drivers/phy/Makefile                             |    1 +
+>   drivers/phy/phy-keystone-serdes.c                | 2366 ++++++++++++++++++++++
+>   6 files changed, 2629 insertions(+), 10 deletions(-)
+>   create mode 100644 drivers/phy/phy-keystone-serdes.c
+>
+Kishon, Bjorn
 
-+100000000000, fully agree.
-
-There's too much verbal diarrhoea going on in this thread and no facts.
-I've been waiting for real data too, and there's not one shred of it, or
-even a hint that it might appear.  So, the conclusion I'm coming to is
-that there isn't any data to back up the claims made in this thread.
-
-If it was such a problem, then in the _eight_ days that this has been
-discussed so far, _someone_ would have sent some data showing the
-problem.  I think the fact is, there is no data.
-
-Someone prove me wrong.  Someone post the verifiable data showing that
-there is a problem to be solved here.
-
-Someone show what the specific failure cases are that are hampering
-vendors moving forwards.  Someone show the long boot times by way of
-kernel message log.  Someone show some evidence of the problems that
-have been alluded to.
-
-If no one can show some evidence, there isn't a problem here. :)
-
+Who will pick this up? Do we have time to get this in 4.4?
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Murali Karicheri
+Linux Kernel, Keystone
