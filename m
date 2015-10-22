@@ -1,64 +1,81 @@
-From: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] devicetree: add binding for Aurora VLSI NB8800 Ethernet controller
-Date: Thu, 22 Oct 2015 17:28:49 +0100
-Message-ID: <1445531330-17461-1-git-send-email-mans@mansr.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v11 1/6] PCI: designware: move calculation of bus
+ addresses to DRA7xx
+Date: Thu, 22 Oct 2015 11:35:34 -0500
+Message-ID: <20151022163534.GB21237@localhost>
+References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
+ <1444991021-109306-2-git-send-email-wangzhou1@hisilicon.com>
+ <20151021221524.GM1583@localhost>
+ <EE11001F9E5DDD47B7634E2F8A612F2E16274DCC@lhreml503-mbs>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E16274DCC@lhreml503-mbs>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger>
 List-Id: devicetree@vger.kernel.org
 
-This adds a binding for the Aurora VLSI NB8800 Ethernet controller
-using the "aurora,nb8800" compatible string.  When used in Sigma
-Designs chips a few additional control registers are available.
-This variant is indicated by the "sigma,smp8640-ethernet" compatible
-string.
+Hi Gabriele,
 
-Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
----
-Changes:
-- correct order of compatible strings
----
- .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
+On Thu, Oct 22, 2015 at 07:21:41AM +0000, Gabriele Paoloni wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
 
-diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-new file mode 100644
-index 0000000..cf7108d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-@@ -0,0 +1,26 @@
-+* Aurora VLSI AU-NB8800 Ethernet controller
-+
-+Required properties:
-+- compatible: Should be "sigma,smp8640-ethernet", "aurora,nb8800"
-+	The former indicates presence of extra features added by Sigma Designs.
-+- reg: Should be MMIO address space of the device
-+- interrupts: Should contain the interrupt specifier for the device
-+- interrupt-parent: Should be a phandle for the interrupt controller
-+- clocks: Should be a phandle for the clock for the device
-+
-+Common properties described in ethernet.txt:
-+- local-mac-address
-+- mac-address
-+- max-speed
-+- phy-mode
-+
-+Example:
-+
-+ethernet@26000 {
-+	compatible = "aurora,nb8800";
-+	reg = <0x10000 0x800>;
-+	interrupts = <42>;
-+	clocks = <&sys_clk>;
-+	max-speed = <1000>;
-+	phy-connection-type = "rgmii";
-+};
--- 
-2.5.3
+> > >  #define	PCIECTRL_DRA7XX_CONF_PHY_CS			0x010C
+> > >  #define	LINK_UP						BIT(16)
+> > > +#define	CPU_TO_BUS_ADDR					0x0FFFFFFF
+> > 
+> > "CPU_TO_BUS_ADDR" is a very generic name.  Since you do have DRA7XX in
+> > other #defines and static symbols in this file, maybe it could be DRA7XX to
+> > make it obvious that it only applies here?
+> 
+> Ok will change to DRA7XX_CPU_TO_BUS_ADRR in v12
+> ..
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > +	if (pp->io_mod_base)
+> > > +		pp->io_mod_base &= CPU_TO_BUS_ADDR;
+> > 
+> > These are equivalent to
+> > 
+> >   pp->io_mod_base &= CPU_TO_BUS_ADDR;
+> > 
+> > (You don't need to test whether they're zero first.)
+> 
+> Yes agreed, will change in v12
+> ...
+
+> > >  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> > > @@ -415,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  			pp->io_base = range.cpu_addr;
+> > >
+> > >  			/* Find the untranslated IO space address */
+> > > -			pp->io_mod_base = of_read_number(parser.range -
+> > > -							 parser.np + na, ns);
+> > > +			pp->io_mod_base = range.cpu_addr;
+> > 
+> > So apparently
+> > 
+> >   "of_read_number() == range.cpu_addr & CPU_TO_BUS_ADDR" on DRA7xx
+> >   "of_read_number() == range.cpu_addr" everywhere else?
+> 
+> Yes correct
+> 
+> > Is that right?  Is that a valid assumption, i.e., are we assuming
+> > anything about DTs in the field that we shouldn't?
+> 
+> Before I wrote a patch that was generic to accommodate intermediate level
+> of translation between PCI_addr -> BUS_addr -> CPU_addr
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/360922.html
+> 
+> After discussion we agreed to solve it with a bitmask rather than adding
+> a field to of_pci_range to make it generic.
+> The bitmask only applies to DRA7xx
+
+I haven't gotten all the way through this series yet, but don't bother with
+a v12 just for these minor changes.  I can easily fix them up when applying
+it.
+
+Bjorn
