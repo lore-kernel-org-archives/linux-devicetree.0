@@ -1,64 +1,31 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] MT8173 IOMMU SUPPORT
-Date: Thu, 22 Oct 2015 12:40:02 +0800
-Message-ID: <1445488802.27202.67.camel@mhfsdcap03>
-References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
-	<20151014125620.GQ27420@8bytes.org>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 1/3] mailbox/omap: Add ti,mbox-send-noirq quirk to fix
+ AM33xx CPU Idle
+Date: Thu, 22 Oct 2015 10:12:13 +0530
+Message-ID: <CAJe_Zhd4RoVQJKjGN8QKYCeDMWVsuPQhCj4gUpQwkAX_Wqnxxg@mail.gmail.com>
+References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
+	<1442967294-23837-2-git-send-email-d-gerlach@ti.com>
+	<CABb+yY0rCGCj=vkNXP1c9zonX+snBxdKFeQ4JCo2aKb-h6JhCw@mail.gmail.com>
+	<56282833.5010105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20151014125620.GQ27420-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56282833.5010105@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Dave Gerlach <d-gerlach@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Keerty J <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-10-14 at 14:56 +0200, Joerg Roedel wrote:
-> On Fri, Oct 09, 2015 at 10:23:02AM +0800, Yong Wu wrote:
-> > Yong Wu (6):
-> >   dt-bindings: iommu: Add binding for mediatek IOMMU
-> >   dt-bindings: mediatek: Add smi dts binding
-> >   iommu: add ARM short descriptor page table allocator
-> >   memory: mediatek: Add SMI driver
-> >   iommu/mediatek: Add mt8173 IOMMU driver
-> >   dts: mt8173: Add iommu/smi nodes for mt8173
-> > 
-> >  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  61 ++
-> >  .../memory-controllers/mediatek,smi-larb.txt       |  25 +
-> >  .../bindings/memory-controllers/mediatek,smi.txt   |  24 +
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  81 ++
-> >  drivers/iommu/Kconfig                              |  33 +
-> >  drivers/iommu/Makefile                             |   2 +
-> >  drivers/iommu/io-pgtable-arm-short.c               | 827 +++++++++++++++++++++
-> >  drivers/iommu/io-pgtable-arm.c                     |   3 -
-> >  drivers/iommu/io-pgtable.c                         |   3 +
-> >  drivers/iommu/io-pgtable.h                         |  18 +-
-> >  drivers/iommu/mtk_iommu.c                          | 767 +++++++++++++++++++
-> >  drivers/memory/Kconfig                             |   8 +
-> >  drivers/memory/Makefile                            |   1 +
-> >  drivers/memory/mtk-smi.c                           | 274 +++++++
-> >  include/dt-bindings/memory/mt8173-larb-port.h      | 105 +++
-> >  include/soc/mediatek/smi.h                         |  60 ++
-> 
-> So this contains not only IOMMU code. Are the patches dependent on each
-> other or can the iommu parts be merged independently?
-> 
-> 	Joerg
-> 
-Hi Joerg,
-     Sorry for reply late.
-     The ARM short descriptor is independent. This one can be merged
-independently.
+On 22 October 2015 at 05:35, Suman Anna <s-anna@ti.com> wrote:
 
-     But the mtk-iommu depend on the drivers/memory/mtk-smi.c(mtk-iommu
-has called a function of the mtk-smi).
-     So if there is dependence here, How should we do to merge them?
+>>   Anyways I am OK too, if you guys want to fix it with a platform
+>> specific quirk. Let me know I'll pick this patch.
+>
+> I haven't gotten a chance to try #1, and I won't be able to look at it
+> atleast for another month. I suggest that you go ahead and pick this
+> patch up, as a quirk is needed in one form or the other for #2, and #1
+> is anyways a bigger change that will affect all our IPC stacks across
+> all pairs of MPU - remote processors on different SoCs.
+>
+Yeah that is the reason I offered to pick this patch as such.
+OK I'll take this patch.
