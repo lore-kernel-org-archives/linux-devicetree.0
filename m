@@ -1,54 +1,70 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Fri, 23 Oct 2015 01:30:52 +0900
-Message-ID: <20151022163052.GW8232@sirena.org.uk>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH] regulator, dt: add dt support for tps6502x regulator
+Date: Thu, 22 Oct 2015 13:28:35 +0100
+Message-ID: <20151022122835.GE8232@sirena.org.uk>
+References: <1445236033-27747-1-git-send-email-hs@denx.de>
+ <20151021121925.GC8232@sirena.org.uk>
+ <56278AA3.3060109@denx.de>
+ <20151021161732.GO32054@sirena.org.uk>
+ <56286B65.1010209@denx.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RMorpr61ug7CvG36"
+	protocol="application/pgp-signature"; boundary="WBsA/oQW3eTA3LlM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+In-Reply-To: <56286B65.1010209@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
---RMorpr61ug7CvG36
+--WBsA/oQW3eTA3LlM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Sep 11, 2015 at 05:31:57PM +0530, Viresh Kumar wrote:
+On Thu, Oct 22, 2015 at 06:51:49AM +0200, Heiko Schocher wrote:
+> Am 21.10.2015 um 18:17 schrieb Mark Brown:
 
-> +- supply-names: This is a required property, only if multiple supplies are
-> +  available for the device. Otherwise it is optional.
-> +
-> +  This list is used to pass names of all the device supplies. The order of names
-> +  present here is important, as that should match the order in which values are
-> +  present in 'opp-microvolt' and 'opp-microamp' properties.
+> >>arch/arm/boot/dts/tps65217.dtsi
 
-If we were going to add something like this (which I'm really not that
-thrilled about due to their encouragement of bad practice as previously
-discussed) it seems wrong to add it at the level of a specific binding
-rather than as a general facility.  I think I'm not entirely sold on
-this use case though, I'll follow up to a later message in this
-thread...
+> >>but, okay, removed.
 
---RMorpr61ug7CvG36
+> >That too is broken and should be removed :(
+
+> Ok, I have a board which uses this regulator ... can you give me a hint,
+> how to remove it correctly?
+
+> I would do:
+
+> move from arch/arm/boot/dts/tps65217.dtsi into board dts
+
+> &tps {
+> +	compatible = "ti,tps65217";
+> 	[...]
+
+> and the reg and "regulator-compatible" into the corresponding
+> nodes ...
+
+>                 dcdc1_reg: regulator@0 {
+> +                        reg = <0>;
+> +                        regulator-compatible = "dcdc1";
+
+Yes, you should just put everything directly into the board DT.
+
+--WBsA/oQW3eTA3LlM
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWKQ87AAoJECTWi3JdVIfQWe4H/RQDcctlBFVAi9U5euO3pHTv
-ofFDIZ9GBKzFJH/QX2xElyvp5cfhJCA5b6x5uII/x/hRI4rtSqvKjSSEVmBrjqu6
-Dvf+2stIM9bVyn50F4GgVp2yBamXP4FgIq/SyoU53jcLz8Lv9OupRDLvamcxLUao
-vksK67PCALyKYTfGAuakpooryc3AARoy2Trw5HfqtdzKvkZ0y/dfthJrH/h7f3MV
-RrabmJJ21+aCm/NMNUou5lNAG7gTmNXc9EqCdqNahO8Q5+G0uqHEg00tX6dMYKCZ
-ELFLlvqTQyEvx61EX9cJQ6Ob7BWzOJBTnRcexv5BkF49AtC0kLWJNVWzmSfpwp4=
-=hRCS
+iQEcBAEBCAAGBQJWKNZvAAoJECTWi3JdVIfQj2YH+wQNjL2rjfpSHIodQnodkOoh
+kFWZsRkdfdXAdzZaIQ31ZYwbUhDdMhbSMgB5ubR8MCK7XgSB8MLdF5w61eDYBD8V
+CkNfnBAxEm4fBT4I7vmgF+58pjJMxkMDdLhF4cUrdjqB6d5PfrPwqU/IQG0LYQTZ
+d9r9qEF+2sHAKgdMSh6EYHAsDcLrOzNJJEccBeGDyR+52Ofnm7MxFZ1ze44RZOH0
+pnqRArwwZMk8nNDvZl3ElNuiIRXb0OeafRLcBlWP/SUZV2X0I5Pjc9vsU0Cxx7ep
+Ca73dtSoCMYBpUpO6KxxzIh7QoV3naJEvkFFMQ1vwtFV62Mcv+P+SIzD/RKGX0E=
+=NT1Q
 -----END PGP SIGNATURE-----
 
---RMorpr61ug7CvG36--
+--WBsA/oQW3eTA3LlM--
