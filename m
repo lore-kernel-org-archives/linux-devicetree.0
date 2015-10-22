@@ -1,97 +1,75 @@
-From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] Add tune support of Mediatek MMC driver
-Date: Thu, 22 Oct 2015 10:18:49 +0800
-Message-ID: <1445480329.1593.4.camel@mhfsdcap03>
-References: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
-	 <CAPDyKFrTrR5U7QoXpiWj29bUD5SEp4ccbx8qNs9HF0cYxuqdBw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFrTrR5U7QoXpiWj29bUD5SEp4ccbx8qNs9HF0cYxuqdBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kristina Martsenko <kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Stephen Boyd <sboyd@>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [RESEND PATCH v2 0/2] fix the TSHUT issue on rockchip thermal
+Date: Thu, 22 Oct 2015 10:30:46 +0800
+Message-ID: <1445481048-20789-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, dianders@chromium.org, Eduardo Valentin <edubezval@gmail.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-10-20 at 18:41 +0200, Ulf Hansson wrote:
-> On 20 October 2015 at 11:13, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > Change in v2:
-> > Drop the 400mhz and use assigned-clock-parents to instead
-> > Split the original tune patch to several independent patches
-> > Re-write the mmc_send_tuning()
-> > Fix GPD checksum error
-> > Move the HS400 setting to ops->prepare_hs400_tuning()
-> > Modify SD driving settings
-> >
-> > Change in v1:
-> > Add DT bindings for eMMC hardware reset
-> > Add pinctrl of data strobe pin for HS400 mode
-> > Modify eMMC driving settings
-> > Add 400mhz source clock for HS400 mode
-> > Add eMMC HS200/HS400 mode support
-> > Add SD SDR50/SDR104 mode support
-> > Add implement of tune function with CMD19/CMD21
-> >
-> > Chaotian Jing (9):
-> >   mmc: core: Add DT bindings for eMMC hardware reset support
-> >   mmc: dt-bindings: update Mediatek MMC bindings
-> >   mmc: mediatek: make cmd_ints_mask to const
-> >   mmc: mediatek: change the argument "ddr" to "timing"
-> >   mmc: mediatek: fix got GPD checksum error interrupt when data transfer
-> >   mmc: mediatek: add implement of ops->hw_reset()
-> >   mmc: mmc: extend the mmc_send_tuning()
-> >   mmc: mediatek: add HS400 support
-> >   arm64: dts: mediatek: add HS200/HS400/SDR50/SDR104 support
-> >
-> >  Documentation/devicetree/bindings/mmc/mmc.txt    |   1 +
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt |  11 +-
-> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  27 ++-
-> >  drivers/mmc/core/host.c                          |   2 +
-> >  drivers/mmc/core/mmc_ops.c                       |   8 +-
-> >  drivers/mmc/host/dw_mmc-exynos.c                 |   4 +-
-> >  drivers/mmc/host/dw_mmc.c                        |   2 +-
-> >  drivers/mmc/host/dw_mmc.h                        |   2 +-
-> >  drivers/mmc/host/mtk-sd.c                        | 296 ++++++++++++++++++++---
-> >  drivers/mmc/host/sdhci-esdhc-imx.c               |   6 +-
-> >  drivers/mmc/host/sdhci-msm.c                     |   2 +-
-> >  drivers/mmc/host/sdhci-sirf.c                    |   2 +-
-> >  include/linux/mmc/core.h                         |   2 +-
-> >  13 files changed, 314 insertions(+), 51 deletions(-)
-> >
-> > --
-> > 1.8.1.1.dirty
-> 
-> I have reviewed the patches, I think they overall looks good! Some
-> comments though.
-> 
-> You need to split patch 9, the DT parts enabling hw reset shall go in
-> separately.
-> 
-Ok, will separate it at next revision.
+We need the OTP pin is gpio state before resetting the TSADC controller,
+since the tshut polarity will generate a high signal.
 
-> Regarding the hw-reset changes in patch1, patch6 and patch9, I believe
-> I requested you to separate the HW reset changes from $subject
-> patchset as they are unrelated, please do this.
-> 
-As you know, the hw-reset is a part of mmc retune.
-so that I add it to this series.
+Says:
+The TSHUT temperature is setting more than 80 degree, the default
+tshut polarity is HIGH.
 
-> Running checkpatch, it gave me warnings and errors for patch 8.
-> Patch7 didn't apply to my next branch.
-> 
+If T > 80C, the OTP output the High Signal.
+If T < 80C, the OTP output the Low Signal.
 
-I will fix the checkpatch warnings and errors at next revision.
-by the way, I tried to use "git am
-0007-mmc-mmc-extend-the-mmc_send_tuning.patch" in your branch,
-there was no conflict, so why couldn't apply it ?
-Thx!
+On the moment, the TSADC controller is reset, the tshut polarity will be
+Low in a short period of time.
 
-> Kind regards
-> Uffe
+So:
+If T < 80C, the OTP output the High Signal.
+If T > 80C, the OTP output the Low Signal.
+
+In some cases, the OTP pin is connected to the PMIC, maybe the PMIC can
+accept the reset response time to avoid this issue.
+
+In other words, the system will be always reboot if we make the OTP pin
+is connected the others IC to control the power.
+
+This series patchs are depend on Doug's patch.(https://patchwork.kernel.org/patch/7454311/)
+
+This series patchs are based on the Linus master branch.
+
+518cd44 ARM: dts: rockchip: Add the OTP gpio pinctrl
+83e0bab dt-bindings: Add the "init" pinctrl in this document
+150426c drivers/pinctrl: Add the concept of an "init" state
+ce1fad2 Merge branch 'keys-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs
+1099f86 Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+911b79c KEYS: Don't permit request_key() to construct a new keyring
+37850e3 net: bcmgenet: Fix early link interrupt enabling
+afc050d Merge tag 'wireless-drivers-for-davem-2015-10-17' of git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers
+e277de5 tunnels: Don't require remote endpoint or ID during creation.
+740dbc2 openvswitch: Scrub skb between namespaces
+....
+
+Tested on box board.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v2:
+  - Add the 'init' pinctrl more decription in commit.
+  - Fix the subject to make more obvious in PATCH[1/2]
+  - Resend this patch v2 since fix the subject to be specific.
+  - Add some commits for more obvious in PATCH[2/2]
+
+Changes in v1:
+  - As the Doug comments, add the 'init' property to sync document.
+  - As the Doug comments, drop the thermal driver patchs since
+    we can with pinctrl changing to work.
+  - As the Doug's patch to add the 'init' property.
+
+Caesar Wang (2):
+  dt-bindings: rockchip-thermal: Add the "init" pinctrl in this document
+  ARM: dts: rockchip: Add the OTP gpio pinctrl
+
+ Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 5 +++--
+ arch/arm/boot/dts/rk3288.dtsi                                  | 9 +++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+1.9.1
+
