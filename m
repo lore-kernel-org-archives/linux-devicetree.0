@@ -1,153 +1,86 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Thu, 22 Oct 2015 11:05:11 +0200
-Message-ID: <CAAObsKAkyjdvNOS3+nuT0N9sudUFLsZXFtcm6Y038p+HSdsZsg@mail.gmail.com>
-References: <561E1378.6000906@collabora.com> <20151017065750.GA18607@kroah.com>
- <20151018192931.GY14956@sirena.org.uk> <20151018193757.GA9147@kroah.com>
- <20151018195330.GB14956@sirena.org.uk> <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
- <5627B677.5090109@gmail.com> <20151021162758.GP32054@sirena.org.uk>
- <5627D6E0.5020708@gmail.com> <CAL_Jsq+FPtCuBnte2HTgbdpNYM=v_kLaCRcOC1kMaCQwVC=5Kw@mail.gmail.com>
- <562808AF.7090406@gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3 support
+Date: Thu, 22 Oct 2015 11:08:37 +0200
+Message-ID: <5628A795.8000905@redhat.com>
+References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com>
+ <5627E515.6050505@redhat.com> <20151022095857.50e2330b@OPI2>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <562808AF.7090406@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Felipe Balbi <balbi@ti.com>, Jingoo
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBIGPUKYQKGQEWHBP3UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151022095857.50e2330b@OPI2>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhao_steven-Y9sIeH5OGRo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 October 2015 at 23:50, Frank Rowand <frowand.list@gmail.com> wrot=
-e:
-> On 10/21/2015 2:12 PM, Rob Herring wrote:
->> On Wed, Oct 21, 2015 at 1:18 PM, Frank Rowand <frowand.list@gmail.co=
-m> wrote:
->>> On 10/21/2015 9:27 AM, Mark Brown wrote:
->>>> On Wed, Oct 21, 2015 at 08:59:51AM -0700, Frank Rowand wrote:
->>>>> On 10/19/2015 5:34 AM, Tomeu Vizoso wrote:
->>>>
->>>>>> To be clear, I was saying that this series should NOT affect tot=
-al
->>>>>> boot times much.
->>>>
->>>>> I'm confused.  If I understood correctly, improving boot time was
->>>>> the key justification for accepting this patch set.  For example,
->>>>> from "[PATCH v7 0/20] On-demand device probing":
->>>>>
->>>>>    I have a problem with the panel on my Tegra Chromebook taking =
-longer
->>>>>    than expected to be ready during boot (St=C3=A9phane Marchesin=
- reported what
->>>>>    is basically the same issue in [0]), and have looked into orde=
-red
->>>>>    probing as a better way of solving this than moving nodes arou=
-nd in the
->>>>>    DT or playing with initcall levels and linking order.
->>>>>
->>>>>    ...
->>>>>
->>>>>    With this series I get the kernel to output to the panel in 0.=
-5s,
->>>>>    instead of 2.8s.
->>>>
->>>> Overall boot time and time to get some individual built in compone=
-nt up
->>>> and running aren't the same thing - what this'll do is get things =
-up
->>>> more in the link order of the leaf consumers rather than deferring=
- those
->>>> leaf consumers when their dependencies aren't ready yet.
->>>
->>> Thanks!  I read too much into what was being improved.
->>>
->>> So this patch series, which on other merits may be a good idea, is =
-as
->>> a by product solving a specific ordering issue, moving successful p=
-anel
->>> initialization to an earlier point in the boot sequence, if I now
->>> understand more correctly.
->>>
->>> In that context, this seems like yet another ad hoc way of causing =
-the
->>> probe order to change in a way to solves one specific issue?  Could
->>> it just as likely move the boot order of some other driver on some
->>> other board later, to the detriment of somebody else?
+Hi,
+
+On 22-10-15 09:58, Jean-Francois Moine wrote:
+> On Wed, 21 Oct 2015 21:18:45 +0200
+> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>> Great to see that you've started working on this again. Last weekend I
+>> ended up working on this too together with Reinder E.N. de Haan <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+>> (added to the Cc).
 >>
->> Time to display on is important for many products. Having the consol=
-e
->> up as early as possible is another case. CAN bus is another. This is=
- a
->> real problem that is not just bad drivers.
->
-> Yes, I agree.
->
-> What I am seeing is that there continues to be a need for the ability
-> to explicitly order at least some driver initialization (at some
-> granularity), despite the push back against explicit ordering that
-> has been present in the past.
-
-The important point that I have struggled to explain is that right now
-for downstreams to influence the order in which devices are probed,
-they have to carry a substantial amount of patches that cannot be ever
-upstreamed. This fiddling with initcall levels and link order means
-changing files that are very frequently changing, increasing the
-amount of work when rebasing and increasing the probability of
-regressions after a rebase.
-
-This just adds up to other shortcomings of mainline and ends up with
-the net result of vendors getting stuck with 3.4 kernels on SoCs that
-start production in 2015. Another consequence is that vendors don't
-have a chance to upstream their stuff even if they cared. The
-overarching goal of the project I'm in is to reduce those shortcomings
-that downstreams have to workaround, to facilitate their involvement
-upstream.
-
-With this series, the order in which devices are probed becomes the
-order in which they were registered, which is the order in which the
-devices appear in the FW description of the hw or in the board files
-(much more predictable, which makes for a more robust process). For DT
-and board files, which cover a good part of the consumer devices
-shipped today with Linux, the downstream could just change the order
-of device nodes and get their display or whatever to probe before any
-other devices.
-
-And even if downstream's hw has a SoC .dtsi that exists in mainline,
-they could add a step to their build process that automatically
-reorders the nodes to avoid carrying changes to that DT fragment.
-
-But that's moot currently because Greg believes that the time spent
-probing devices at boot time could be reduced enough so that the order
-in which devices are probed becomes irrelevant. IME that would have to
-be under 200ms so that the user doesn't notice and that's unicorn-far
-from any bootlog I have ever seen.
-
-Given that downstreams are already carrying as many hacks as they
-could think of to speed total boot up, I think this is effectively
-telling them to go away.
-
-Sorry for the rant,
-
-Tomeu
-
->> I don't think it is completely ad hoc. Given all devices are
->> registered after drivers, drivers will still probe first in initcall
->> level order and then link order AFAIK. We may not take (more) initca=
-ll
->> level tweak hacks, but that is a much more simple change for
->> downstream. Don't get me wrong, I'd really like to see a way to
->> control order independent of initcall level.
+>> We took a slightly different approach for the gates clocks, see:
 >>
->> Rob
+>> https://github.com/jwrdegoede/linux-sunxi/commits/sunxi-wip
+>>
+>> And specifically:
+>>
+>> https://github.com/jwrdegoede/linux-sunxi/commit/80a1afe319d5d1a0c426d42e75d37f0c64e8ea0b
+>>
+>> Combined with:
+>>
+>> https://github.com/jwrdegoede/linux-sunxi/commit/d508da5feb5048f6674d6b24b58ac9058fb9d877
+>>
+>> This deals with the per gate parents the same way the rockchip
+>> clock code does, and it seems to be quite a bit less code then your solution.
 >
-> Yep, it is not directly ad hoc, just a fortunate side effect in
-> this case.  So just accidently ad hoc. :-)
+> Here is a simpler patch:
 >
-> -Frank
+> diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+> index 6ce9118..8fecaeab 100644
+> --- a/drivers/clk/sunxi/clk-simple-gates.c
+> +++ b/drivers/clk/sunxi/clk-simple-gates.c
+> @@ -35,6 +35,7 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
+>   	void __iomem *reg;
+>   	const __be32 *p;
+>   	int number, i = 0, j;
+> +	bool parent_per_gate;
+>   	u8 clk_bit;
+>   	u32 index;
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> @@ -43,6 +44,7 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
+>   		return;
+>
+>   	clk_parent = of_clk_get_parent_name(node, 0);
+> +	parent_per_gate = of_clk_get_parent_count(node) != 1;
+>
+>   	clk_data = kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
+>   	if (!clk_data)
+> @@ -58,6 +60,8 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
+>   	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
+>   		of_property_read_string_index(node, "clock-output-names",
+>   					      i, &clk_name);
+> +		if (parent_per_gate)
+> +			clk_parent = of_clk_get_parent_name(node, i);
+>
+>   		clk_reg = reg + 4 * (index / 32);
+>   		clk_bit = index % 32;
+>
+>
+
+Yes good one, doing things that way indeed is better.
+
+Regards,
+
+Hans
