@@ -1,83 +1,39 @@
-From: andrew@ncrmnt.org
-Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
-Date: Thu, 22 Oct 2015 10:36:18 +0000
-Message-ID: <93351858f57ca6e1220a0007f98baa25@cloud.ncrmnt.org>
-References: <vnkw8u6xts6n.fsf@codeaurora.org>
- <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
- <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
- <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
- <vnkwh9lwlymo.fsf@codeaurora.org>
- <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <vnkw8u6xts6n.fsf@codeaurora.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Mitchel Humpherys <mitchelh@codeaurora.org>
-Cc: Feng Tang <feng.tang@intel.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devel@driverdev.osuosl.org, Tom Gall <tom.gall@linaro.org>, arve@android.com, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Riley Andrews <riandrews@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, a.bogdanova@module.ru, linux-arm-kernel@lists.infradead.org, Laura Abbott <labbott@fedoraproject.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, a.makarov@module.ru, Laura Abbott <laura@labbott.name>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun4i: Enable audio codec on Marsboard A10.
+Date: Thu, 22 Oct 2015 13:38:56 +0300
+Message-ID: <1445510336-4821-1-git-send-email-mamlinav@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAg0L7QutGC0Y/QsdGA0Y8gMjAxNSDQsy4sIDE5OjM0LCAiTWl0Y2hlbCBIdW1waGVyeXMiIDxt
-aXRjaGVsaEBjb2RlYXVyb3JhLm9yZz4g0L3QsNC/0LjRgdCw0Ls6Cj4gT24gVHVlLCBPY3QgMTMg
-MjAxNSBhdCAxMToxNDoyMyBBTSwgQW5kcmV3IDxhbmRyZXdAbmNybW50Lm9yZz4gd3JvdGU6Cj4g
-Cj4+IE9uIDIwMTUtMTAtMTIgMjE6MzksIE1pdGNoZWwgSHVtcGhlcnlzIHdyb3RlOgo+Pj4gT24g
-VHVlLCBPY3QgMDYgMjAxNSBhdCAwNTozNTo0MSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcy
-QGdtYWlsLmNvbT4KPj4+IHdyb3RlOgo+Pj4+IE9uIFR1ZSwgT2N0IDYsIDIwMTUgYXQgMzo0NyBQ
-TSwgTGF1cmEgQWJib3R0IDxsYWJib3R0QGZlZG9yYXByb2plY3Qub3JnPgo+Pj4+IHdyb3RlOgo+
-Pj4gCj4+PiBbLi4uXQo+Pj4gCj4+Pj4+ICtFeGFtcGxlOgo+Pj4+PiArCj4+Pj4+ICsgaW9uIHsK
-Pj4+Pj4gKyBjb21wYXRiaWxlID0gImxpbnV4LGlvbiI7Cj4+Pj4+ICsgI2FkZHJlc3MtY2VsbHMg
-PSA8MT47Cj4+Pj4+ICsgI3NpemUtY2VsbHMgPSA8MD47Cj4+Pj4+ICsKPj4+Pj4gKyBpb24tc3lz
-dGVtLWhlYXAgewo+Pj4+PiArIGxpbnV4LGlvbi1oZWFwLWlkID0gPDA+Owo+Pj4+PiArIGxpbnV4
-LGlvbi1oZWFwLXR5cGUgPSA8SU9OX1NZU1RFTV9IRUFQX1RZUEU+Owo+Pj4+PiArIGxpbnV4LGlv
-bi1oZWFwLW5hbWUgPSAic3lzdGVtIjsKPj4+PiAKPj4+PiBIb3cgZG9lcyB0aGlzIHZhcnkgYWNy
-b3NzIHBsYXRmb3Jtcz8gSXMgYWxsIG9mIHRoaXMgYmVpbmcgcHVzaGVkIGRvd24KPj4+PiB0byBE
-VCwgYmVjYXVzZSB0aGVyZSBpcyBubyBjb29yZGluYXRpb24gb2YgdGhpcyBhdCB0aGUga2VybmVs
-IEFCSQo+Pj4+IGxldmVsIGFjcm9zcyBwbGF0Zm9ybXMuIEluIG90aGVyIHdvcmRzLCB3aHkgY2Fu
-J3QgaGVhcCAwIGJlIGhhcmRjb2RlZAo+Pj4+IGFzIHN5c3RlbSBoZWFwIGluIHRoZSBkcml2ZXIu
-IEl0IHNlZW1zIHRvIG1lIGFueSAxIG9mIHRoZXNlIDMKPj4+PiBwcm9wZXJ0aWVzIGNvdWxkIGJl
-IHVzZWQgdG8gZGVyaXZlIHRoZSBvdGhlciAyLgo+Pj4gCj4+PiBUaGUgaGVhcC1pZDwtPmhlYXAt
-dHlwZSBtYXBwaW5nIGlzbid0IG5lY2Vzc2FyaWx5IDE6MS4gQXMgTGF1cmEKPj4+IGluZGljYXRl
-ZCBlbHNld2hlcmUgb24gdGhpcyB0aHJlYWQsIGEgZ2l2ZW4gaGVhcCBtaWdodCBuZWVkIHRvIGJl
-Cj4+PiBjb250aWd1b3VzIG9uIG9uZSBwbGF0Zm9ybSBidXQgbm90IG9uIGFub3RoZXIuIEluIHRo
-YXQgY2FzZSB5b3UganVzdAo+Pj4gc3dhcCBvdXQgdGhlIGhlYXAtdHlwZSBoZXJlIGFuZCB0aGVy
-ZSdzIG5vIG5lZWQgZm9yIHVzZXJzcGFjZSB0byBjaGFuZ2UuCj4+PiAKPj4+IFRoZSBoZWFwLW5h
-bWUsIE9UT0gsIGNvdWxkIGJlIGRlcml2ZWQgZnJvbSB0aGUgaGVhcC1pZCwgd2hpY2ggaXMgd2hh
-dCB3ZQo+Pj4gaGFja2lzaGx5IGRvIGhlcmUgWzFdIGFuZCBoZXJlWzJdLgo+PiAKPj4gQnkgdGhl
-IHdheSwgc2luY2Ugd2UgYWdyZWVkIHRoYXQgaGVhcCBpZCBhbmQgaGVhcCB0eXBlIG1hcHBpbmdz
-Cj4+IGFyZSBub3QgMToxIC0gd2UgaGF2ZSBhIHByb2JsZW0gd2l0aCB0aGUgY3VycmVudCBBUEku
-Cj4+IAo+PiBJbiB1c2Vyc3BhY2Ugd2UgY3VycmVudGx5IGhhdmUgdGhpczoKPj4gCj4+IGludCBp
-b25fYWxsb2MoaW50IGZkLCBzaXplX3QgbGVuLCBzaXplX3QgYWxpZ24sIHVuc2lnbmVkIGludCBo
-ZWFwX21hc2ssCj4+IHVuc2lnbmVkIGludCBmbGFncywgaW9uX3VzZXJfaGFuZGxlX3QgKmhhbmRs
-ZSk7Cj4+IAo+PiBXZSBkbyBub3Qgc3BlY2lmeSBoZXJlIHdoYXQgVFlQRSBvZiBoZWFwIHdlIHdh
-bnQgdGhlIGFsbG9jYXRpb24gdG8gY29tZQo+PiBmcm9tLgo+PiBUaGlzIG1heSBsZWFkIHRvIHZl
-cnkgdW5wbGVhc2FudCBzdHVmZiB3aGVuIHBvcnRpbmcgZnJvbSBvbmUgcGxhdGZyb20gdG8KPj4g
-YW5vdGhlci4KCk9rYXksIEkgbWF5IGJlIHRvdGFsbHkgbWlzc2luZyBzb21lIHBvaW50IGhlcmUg
-dGhlbi4KCj4gV2hhdCAidW5wbGVhc2FudCBzdHVmZiIgYXJlIHlvdSByZWZlcnJpbmcgdG8sIGV4
-YWN0bHk/IAoKSXQncyBub3QgcmVhbGx5IGNsZWFyIGZvciBtZSBob3cgKGFuZCBhdCB3aGVyZSAt
-IGtlcm5lbCBvciB1c2Vyc3BhY2UpIAp3ZSBzaG91bGQgcHJvcGVybHkgc29ydCBvdXQgY2FzZXMg
-d2hlbiB0aGUgbmV4dCBkZXZpY2UgdGhlIHBpcGVsaW5lIAppbnRyb2R1Y2VzIHNvbWUgY29uc3Ry
-YWludHMgb24gdGhlIGJ1ZmZlciBpdCBjYW4gdXNlLiAKCkZvciBpbnN0YW5jZTogY2FtZXJhIGNh
-biBzYXZlIGRhdGEgaW50byBhIG5vbi1jb250aWd1b3VzIGJ1ZmZlciwgYnV0IHRoZSAKaW1hZ2Ug
-cHJvY2Vzc2luZyBoYXJkd2FyZSAodGhhdCBtYXkgb3IgbWF5IG5vdCBiZSBpbnZvbHZlZCkgZXhw
-ZWN0cyB0aGUgCmJ1ZmZlciB0byBiZSBjb250aWd1b3VzLgoKPiBBYnN0cmFjdGluZyB0aGUKPiBo
-ZWFwIHR5cGUgYXdheSBmcm9tIHVzZXJzcGFjZSBoYXMgYWN0dWFsbHkgbWFkZSBvdXIgbGl2ZXMg
-ZWFzaWVyIHNpbmNlCj4gdXNlcnNwYWNlIGRvZXNuJ3QgbmVlZCB0byBrbm93IGFueXRoaW5nIGFi
-b3V0IHRoZSBwcm9wZXJ0aWVzIG9mIHRoZQo+IHVuZGVybHlpbmcgcGxhdGZvcm0uIEl0IGp1c3Qg
-YXNrcyBmb3IgYSBidWZmZXIgZnJvbSB0aGUgImNhbWVyYSIgaGVhcCwKPiBmb3IgZXhhbXBsZS4g
-T24gc29tZSBwbGF0Zm9ybXMgdGhhdCdzIGNvbnRpZ3VvdXMsIG9uIG90aGVycyBpdCdzIG5vdC4K
-PiAKPiAtTWl0Y2gKPiAKPiAtLQo+IFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuCj4g
-VGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBD
-b2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9q
-ZWN0CgpSZWdhcmRzLCAKQW5kcmV3Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
-b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaXZlcmRldi1kZXZlbAo=
+Enable on-chip audio codec on the Marsboard A10.
+
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10-marsboard.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+index 9a012db..8e50723 100644
+--- a/arch/arm/boot/dts/sun4i-a10-marsboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+@@ -91,6 +91,10 @@
+ 	status = "okay";
+ };
+ 
++&codec {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+-- 
+2.4.10
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
