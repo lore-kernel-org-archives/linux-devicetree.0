@@ -1,89 +1,174 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
-Date: Thu, 22 Oct 2015 16:27:10 -0500
-Message-ID: <1445549230.701.116.camel@freescale.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
-	 <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
-	 <1445406845.701.55.camel@freescale.com>
-	 <CAL_JsqLhZmc8cEC+tFJ25KLe0bQZsWmrRWGBMQake9VN6OjvdQ@mail.gmail.com>
-	 <1445467912.701.90.camel@freescale.com>
-	 <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Thu, 22 Oct 2015 17:56:46 -0400
+Message-ID: <56295B9E.9030201@ti.com>
+References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com> <5628FB36.4010303@ti.com> <20151022174812.GX32532@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hu Mingkai-B21284 <Mingkai.Hu@freescale.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151022174812.GX32532@n2100.arm.linux.org.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, lho@apm.com
+Cc: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-10-22 at 15:04 +0200, Tomeu Vizoso wrote:
-> On 22 October 2015 at 00:51, Scott Wood <scottwood@freescale.com> wrote:
-> > On Wed, 2015-10-21 at 08:44 -0500, Rob Herring wrote:
-> > > On Wed, Oct 21, 2015 at 12:54 AM, Scott Wood <scottwood@freescale.com>
-> > > wrote:
-> > > > On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
-> > > > > Instead of trying to match and probe platform and AMBA devices right
-> > > > > after each is registered, delay their probes until 
-> > > > > device_initcall_sync.
-> > > > > 
-> > > > > This means that devices will start probing once all built-in drivers
-> > > > > have registered, and after all platform and AMBA devices from the DT
-> > > > > have been registered already.
-> > > > > 
-> > > > > This allows us to prevent deferred probes by probing dependencies on
-> > > > > demand.
-> > > > > 
-> > > > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> > > > > ---
-> > > > > 
-> > > > > Changes in v4:
-> > > > > - Also defer probes of AMBA devices registered from the DT as they 
-> > > > > can
-> > > > >   also request resources.
-> > > > > 
-> > > > >  drivers/of/platform.c | 11 ++++++++---
-> > > > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > > > 
-> > > > This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF 
-> > > > platform
-> > > > device, and it must be probed before pcibios_init() which is a
-> > > > subsys_initcall(), or else the PCI bus never gets scanned.
-> > > 
-> > > Thanks for the report. This is probably getting dropped, but it could
-> > > be disabled for PPC.
-> > 
-> > I don't think that adding another arbitrary arch difference would be the
-> > right solution.
-> 
-> I think Rob meant temporarily disable it while things get fixed. At
-> least, 
+On 10/22/2015 01:48 PM, Russell King - ARM Linux wrote:
+> On Thu, Oct 22, 2015 at 11:05:26AM -0400, Murali Karicheri wrote:
+>> On 10/21/2015 08:56 AM, WingMan Kwok wrote:
+>>> On TI's Keystone platforms, several peripherals such as the
+>>> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
+>>> require the use of a SerDes for converting SoC parallel data into
+>>> serialized data that can be output over a high-speed electrical
+>>> interface, and also converting high-speed serial input data
+>>> into parallel data that can be processed by the SoC.  The
+>>> SerDeses used by those peripherals, though they may be different,
+>>> are largely similar in functionality and setup.
+------------Cut-------------------------------------------------
+>>>
+>>>   Documentation/devicetree/bindings/phy/ti-phy.txt |  239 +++
+>>>   drivers/pci/host/pci-keystone.c                  |   24 +-
+>>>   drivers/pci/host/pci-keystone.h                  |    1 +
+>>>   drivers/phy/Kconfig                              |    8 +
+>>>   drivers/phy/Makefile                             |    1 +
+>>>   drivers/phy/phy-keystone-serdes.c                | 2366 ++++++++++++++++++++++
+>>>   6 files changed, 2629 insertions(+), 10 deletions(-)
+>>>   create mode 100644 drivers/phy/phy-keystone-serdes.c
+>>>
+>> Kishon, Bjorn
+>>
+>> Who will pick this up? Do we have time to get this in 4.4?
+>
+> I've been avoiding this since my initial comments, but if you're wanting
+> to get it into v4.4, then I have to say something.
+Russell,
 
-So, what is the permanent fix for the swiotlb issue (or more generally, the 
-inability to have a late_initcall that runs after non-module, non-hotplug 
-platform devices have been probed)?
+I saw you have raised this point earlier against v1 of the patch series. 
+I have responded as below  (cut-n-pasted from that email)
 
-> I don't see any reason why PPC wouldn't benefit from this
-> series.
+"The serdes on K2 are re-used on multiple hardware blocks as already 
+indicated in this thread. It has got multiple lanes, each lane can be 
+enabled/disabled, shutdown etc. Isn't generic phy framework added to 
+support this type of hardware block? I see some enhancements needed for 
+K2 serdes to support monitoring the serdes link and providing a status 
+to the higher layer device. So I am not clear what different way you 
+would like to handle serdes drivers? Why do you need a new framework?
+"
 
-It's not clear to me what the benefit of this is at all, much less for PPC.   
-What is the fundamental problem with deferred probes?  In the cover letter 
-you say this change saves 2.3 seconds, but where is that time being consumed? 
- Are the drivers taking too long in their probe function trying to initialize 
-and then deferring, rather than checking for dependencies up front?  Or are 
-there really so many devices and such a pessimal ordering that most of the 
-time is spent iterating through and reordering the list, with each defer 
-happening quickly?
+KISHON VIJAY had responded saying
 
-Even if something different does need to be done at this level, forcing all 
-OF platform devices to be probed at the late_initcall level seems quite 
-intrusive.  You limited it to OF because people complained that other things 
-will break.  Things still broke.  Surely there's a better way to address the 
-problem.  Can't the delay be requested by drivers that might otherwise need 
-to defer (which could be done incrementally, focusing on the worst 
-performance problems), rather than enabling it for everything?
+"The PHY framework (in drivers/phy/) already provides a standard
+interface to be used by the controller drivers no?"
 
--Scott
+But I have not seen your response to these questions from us. v2 and v3 
+has gone by and since all of the outstanding comments have been 
+addressed and you have not responded to our questions, I thought this 
+can be merged for 4.4. Good to see you have responded now :)
+>
+> Again, there's other SoCs out there which have serdes.  Adding 2.5k of
+> lines for vendor serdes implementations does not scale - this needs to
+> be re-thought in a way which reduces the code maintanence burden.
+>
+> Other SoCs like Marvell Armada have serdes links which can be configured
+> between SATA, PCIe and Gbe.  Should Armada end up adding another 2.5k
+> lines to support their device too?  What happens when we have 10 of
+> these, and we have 25k lines of code here?
+>
+> Again, this does not scale.  Please look at what can be done to reduce
+> the code size when other implementations come along.
+
+Well, per our understanding, this driver is a Generic phy driver and we 
+have implemented a device driver based on Generic Phy API. This driver 
+is expected to support all of the 3 peripherals :- PCIe, 1G and 10G 
+Ethernet.  You have mentioned about Marvell & Armada . Did Marvell post 
+any patch already? Without seeing their code, how will we be able to 
+investigate what can be factored out to a generic serdes core driver? By 
+making this statement, I assume you are still considering using the 
+Generic Phy driver framework for SerDes drivers. Don't you?
+
+I did a search in the phy folder and these are the top ones that came 
+out in terms of number of lines of code after Phy-core.c.
+
+ls *.[ch] | xargs wc -l | sort -n
+
+    943 phy-core.c
+   1279 phy-miphy28lp.c
+   1735 phy-xgene.c
+   2367 phy-keystone-serdes.c
+
+So focusing on the top 3 drivers (including keystone serdes) under phy.
+
+phy-xgene.c
+-----------
+
+Looking at other drivers under drivers/phy, I could find phy-xgene.c 
+which is close Keystone SerDes driver (. This is called APM X-Gene 
+Multi-Purpose PHY driver. It defines following mode per the driver code
+
+         MODE_SATA       = 0,    /* List them for simple reference */
+         MODE_SGMII      = 1,
+         MODE_PCIE       = 2,
+         MODE_USB        = 3,
+         MODE_XFI        = 4,
+
+But seems to support only MODE_SATA. From the code, it appears, this 
+driver is expected to be enhanced in the future to support additional 
+modes. I have copied the author to this email to participate in this 
+discussion.
+
+Keystone SerDes supports following modes
+----------------------------------------
+	KSERDES_PHY_SGMII,
+	KSERDES_PHY_XGE,
+	KSERDES_PHY_PCIE,
+	KSERDES_PHY_HYPERLINK,
+	KSERDES_PHY_SRIO
+
+And phy-miphy28lp.c
+---------------------
+
++#define PHY_TYPE_SATA          1
++#define PHY_TYPE_PCIE          2
++#define PHY_TYPE_USB2          3
++#define PHY_TYPE_USB3          4
+
+Keystone SerDes hardware is highly parameterized. The init has following 
+steps:-
+   - Configure the Phy to one of the mode (SATA,SGMII,PCIE,USB,XFI)
+   - Configure the Phy to the specific mode
+   - Configure N lanes for the selected mode
+   - Enable N Lanes
+
+So at a high level, I can imagine these kind of Phys require additionally
+
+   - Enable/Disable Lane
+   - check lane status periodically
+
+So there is a scope for enhancing the Phy core API to handle these kinds 
+of phy ops. This might help to re-use some code. But at the lower level 
+driver, we still need to write to vendor specific registers and 
+configure the SerDes which is the major part of the driver and that 
+still will be a major part of these drivers.
+
+I would also like to hear from Kishon (Maintainer) on his ideas for 
+Generic Phy driver to support these kind of SerDes hardwares.
+
+I think it is fair to ask to merge the Keystone SerDes driver right now 
+as we have spend considerable time reviewing the current series and 
+taken care of all other outstanding comments. We are most happy to 
+enhance the Phy core framework to help re-use code across the above and 
+future SerDes driver that supports multiple modes.
+
+Or do you have some other ideas that you would like to share?
+
+Murali
+
+>
+> (I am aware that guys working on Marvell Armada are looking into this
+> problem - but I know they're ready to post anything yet.)
+>
 
 
+-- 
+Murali Karicheri
+Linux Kernel, Keystone
