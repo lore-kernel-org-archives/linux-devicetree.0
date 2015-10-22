@@ -1,19 +1,17 @@
-From: Ingi Kim <ingi2.kim@samsung.com>
+From: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Subject: [PATCH] leds: aat1290: Fix property naming of flash-timeout-us
-Date: Thu, 22 Oct 2015 10:14:07 +0900
-Message-ID: <1445476447-11355-2-git-send-email-ingi2.kim@samsung.com>
-References: <1445476447-11355-1-git-send-email-ingi2.kim@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1445476447-11355-1-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: j.anaszewski@samsung.com, kyungmin.park@samsung.com, sakari.ailus@linux.intel.com, cooloney@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
+Date: Thu, 22 Oct 2015 10:14:06 +0900
+Message-ID: <1445476447-11355-1-git-send-email-ingi2.kim@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 flash-timeout-us property name is changed to flash-max-timeout-us.
 This patch fixes that name
 
-Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+Signed-off-by: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
  Documentation/devicetree/bindings/leds/leds-aat1290.txt | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
@@ -46,3 +44,8 @@ index c05ed91..85c0c58 100644
  
 -- 
 2.0.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
