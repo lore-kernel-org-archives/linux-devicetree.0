@@ -1,81 +1,69 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v3 1/3] mailbox/omap: Add ti,mbox-send-noirq quirk to fix
- AM33xx CPU Idle
-Date: Wed, 21 Oct 2015 19:05:07 -0500
-Message-ID: <56282833.5010105@ti.com>
-References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
- <1442967294-23837-2-git-send-email-d-gerlach@ti.com>
- <CABb+yY0rCGCj=vkNXP1c9zonX+snBxdKFeQ4JCo2aKb-h6JhCw@mail.gmail.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: sunxi: Add H3 clocks support
+Date: Thu, 22 Oct 2015 11:15:39 +1100
+Message-ID: <CAGRGNgWyNEOMVxeDFTAp_wJoaXL471spFjBTn+2s7YuKeJf71g@mail.gmail.com>
+References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com> <1445444007-4260-3-git-send-email-jenskuske@gmail.com>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY0rCGCj=vkNXP1c9zonX+snBxdKFeQ4JCo2aKb-h6JhCw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Dave Gerlach <d-gerlach@ti.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Keerty J <j-keerthy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBP6VUCYQKGQENJ6US7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1445444007-4260-3-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi Jens,
 
-On 10/20/2015 11:44 PM, Jassi Brar wrote:
-> On Wed, Sep 23, 2015 at 5:44 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
->> The mailbox framework controls the transmission queue and requires
->> either its controller implementations or clients to run the state
->> machine for the Tx queue. The OMAP mailbox controller uses a Tx-ready
->> interrupt as the equivalent of a Tx-done interrupt to run this Tx
->> queue state-machine.
->>
->> The WkupM3 processor on AM33xx and AM43xx SoCs is used to offload
->> certain PM tasks, like doing the necessary operations for Device
->> PM suspend/resume or for entering lower c-states during cpuidle.
->>
->> The CPUIdle on AM33xx requires the messages to be sent without
->> having to trigger the Tx-ready interrupts, as the interrupt
->> would immediately terminate the CPUIdle operation. Support for
->> this has been added by introducing a DT quirk, "ti,mbox-send-noirq"
->> and using it to modify the normal OMAP mailbox controller behavior
->> on the sub-mailboxes used to communicate with the WkupM3 remote
->> processor. This also requires the wkup_m3_ipc driver to adjust
->> its mailbox usage logic to run the Tx state machine.
->>
-> Probably Suman already updated you on what was discussed about this
-> patch at Connect-SFO. My suggestion was to drive TX poll-based (I
-> know, I know...) because the "interrupt-driven" is just an impression,
-> it is not really. You get the interrupt as soon as you enable it
-> because it is the "FIFO not-full" interrupt which is always because
-> there is always space left after writing to the fifo. The cons are
-> that it buffers messages hidden from the client while abusing the irq.
-> If you guys could break away from the "interrupt-driven" illusion and
-> use polling which it actually is, everything falls into place and you
-> avoid the "ti,mbox-send-noirq" quirk.
+On Thu, Oct 22, 2015 at 3:13 AM, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The H3 clock control unit is similar to the those of other sun8i family
+> members like the A23.
+>
+> It adds a new bus gates clock similar to the simple gates, but with a
+> different parent clock for each single gate.
+> Some of the gates use the new AHB2 clock as parent, whose clock source
+> is muxable between AHB1 and PLL6/2. The documentation isn't totally clear
+> about which devices belong to AHB2 now, especially USB EHIC/OHIC, so it
+> is mostly based on Allwinner kernel source code.
+>
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
+>  drivers/clk/sunxi/Makefile                        |   1 +
+>  drivers/clk/sunxi/clk-bus-gates.c                 | 105 ++++++++++++++++++++++
+>  drivers/clk/sunxi/clk-sunxi.c                     |  12 ++-
+>  4 files changed, 117 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/clk/sunxi/clk-bus-gates.c
+>
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 7c4aee0..6293c65 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
 
-Looking at this closely, even with that approach, we would still need a
-quirk to deal with the weird behavior of our wakeup m3. Essentially we
-have two independent things:
-1. Tx state machine (currently interrupt driven) for ticking the mailbox
-core tx state machine.
-2. A quirk that we need for dealing with Wakeup M3 behavior, MPU needs
-to take out the message on behalf of WkupM3 processor after transmission
-and clearing the IP-level interrupt intended for WkupM3. This will be
-irrespective of the Tx state machine choice, and this needs to be
-different only on the specific mbox channel used to talk with WkupM3
-processor.
+This hunk should be in patch 1:
 
-Previously, we were doing #2 in the OMAP mailbox regular interrupt
-handler (handles both Rx and Tx interrupts) as part of the Rx interrupt
-handler with the rx mbox variables reflecting those of the WkupM3
-processor. But when we remove the interrupt processing, we now actually
-need to add code to deal with this.
+> @@ -1000,9 +1005,8 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
+>
+>                 for (i = 0; i < SUNXI_DIVS_BASE_NAME_MAX_LEN - 1 &&
+>                                                 clk_name[i] != '_' &&
+> -                                               clk_name[i] != '\0'; i++) {
+> +                                               clk_name[i] != '\0'; i++)
+>                         base_name[i] = clk_name[i];
+> -               }
+>
+>                 base_name[i] = '\0';
+>                 factors.name = base_name;
 
->   Anyways I am OK too, if you guys want to fix it with a platform
-> specific quirk. Let me know I'll pick this patch.
+Thanks,
 
-I haven't gotten a chance to try #1, and I won't be able to look at it
-atleast for another month. I suggest that you go ahead and pick this
-patch up, as a quirk is needed in one form or the other for #2, and #1
-is anyways a bigger change that will affect all our IPC stacks across
-all pairs of MPU - remote processors on different SoCs.
+-- 
+Julian Calaby
 
-regards
-Suman
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
