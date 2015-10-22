@@ -1,60 +1,69 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCHv2 3/3] fpga manager: Adding FPGA Manager support for
- Xilinx Zynq 7000
-Date: Thu, 22 Oct 2015 12:56:51 -0500
-Message-ID: <alpine.DEB.2.02.1510221247360.23148@linuxheads99>
-References: <1445035350-3569-1-git-send-email-moritz.fischer@ettus.com> <1445035350-3569-4-git-send-email-moritz.fischer@ettus.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] devicetree: add binding for Aurora VLSI NB8800
+ Ethernet controller
+Date: Thu, 22 Oct 2015 13:07:45 -0500
+Message-ID: <CAL_Jsq+aiDjoCHASFeMdR8ndJ1zv3UCC3vOBSoKS_sfaPv6_DQ@mail.gmail.com>
+References: <1445531330-17461-1-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445035350-3569-4-git-send-email-moritz.fischer@ettus.com>
+In-Reply-To: <1445531330-17461-1-git-send-email-mans@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mans Rullgard <mans@mansr.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Oct 2015, Moritz Fischer wrote:
+On Thu, Oct 22, 2015 at 11:28 AM, Mans Rullgard <mans@mansr.com> wrote:
+> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
+> using the "aurora,nb8800" compatible string.  When used in Sigma
+> Designs chips a few additional control registers are available.
+> This variant is indicated by the "sigma,smp8640-ethernet" compatible
+> string.
+>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 
-Hi Moritz,
+Acked-by: Rob Herring <robh@kernel.org>
 
-I just noticed a problem regarding private data.  Fortunately
-it is easy to fix.  See below...
-
-> +static int zynq_fpga_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct zynq_fpga_priv *priv;
-> +	struct resource *res;
-> +	int err;
+> ---
+> Changes:
+> - correct order of compatible strings
+> ---
+>  .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> new file mode 100644
+> index 0000000..cf7108d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> @@ -0,0 +1,26 @@
+> +* Aurora VLSI AU-NB8800 Ethernet controller
 > +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
+> +Required properties:
+> +- compatible: Should be "sigma,smp8640-ethernet", "aurora,nb8800"
+> +       The former indicates presence of extra features added by Sigma Designs.
+> +- reg: Should be MMIO address space of the device
+> +- interrupts: Should contain the interrupt specifier for the device
+> +- interrupt-parent: Should be a phandle for the interrupt controller
+> +- clocks: Should be a phandle for the clock for the device
 > +
-> +	platform_set_drvdata(pdev, priv);
-
-fpga-mgr.c uses drvdata for its struct fpga_manager, so this will
-get overwritten.  So remove this platform_set_drvdata().  priv
-is saved in struct fpga_manager during fpga_mgr_register().
-
-...
-
-> +static int zynq_fpga_remove(struct platform_device *pdev)
-> +{
-
-Here you can get a pointer to priv from the fpga_manager struct:
-        struct fpga_manager *mgr = platform_get_drvdata(pdev);
-        struct zynq_fpga_priv *priv = mgr->priv;
-
-Alan
-
-> +	struct zynq_fpga_priv *priv;
+> +Common properties described in ethernet.txt:
+> +- local-mac-address
+> +- mac-address
+> +- max-speed
+> +- phy-mode
 > +
-> +	fpga_mgr_unregister(&pdev->dev);
+> +Example:
 > +
-> +	priv = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(priv->clk);
-> +
-> +	return 0;
-> +}
+> +ethernet@26000 {
+> +       compatible = "aurora,nb8800";
+> +       reg = <0x10000 0x800>;
+> +       interrupts = <42>;
+> +       clocks = <&sys_clk>;
+> +       max-speed = <1000>;
+> +       phy-connection-type = "rgmii";
+> +};
+> --
+> 2.5.3
+>
