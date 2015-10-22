@@ -1,13 +1,12 @@
 From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: sun8i: Add A83T HomletV2 Board
- by Allwinner
-Date: Fri, 23 Oct 2015 07:46:17 +0800
-Message-ID: <1445557577-27383-4-git-send-email-vishnupatekar0510@gmail.com>
+Subject: [PATCH v2 2/3] ARM: dts: sun8i: Add Allwinner A83T dtsi
+Date: Fri, 23 Oct 2015 07:46:16 +0800
+Message-ID: <1445557577-27383-3-git-send-email-vishnupatekar0510@gmail.com>
 References: <1445557577-27383-1-git-send-email-vishnupatekar0510@gmail.com>
 Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBY7KUWYQKGQE6PEGACY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBX7KUWYQKGQEEZGRLFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1445557577-27383-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,31 +19,25 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@publ
 Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-H8Homlet Proto v2.0 Board is A83T Dev Board by Allwinner.
-It has UART, ethernet, USB, HDMI, etc ports on it.
-
-A83T patches are tested on this board.
-It has UART, ethernet, USB, HDMI, etc ports on it.
-
-For FEL mode it needs USB A-A(Male) cable. I used uart0 which
-is multiplexed to microsd pins PF2 and PF4.
-
-Enabled UART0 Header(PB9, PB10 pins).
+Allwinner A83T is new octa-core cortex-a7 SOC.
+This adds the basic dtsi, the clocks differs from
+earlier sun8i SOCs.
 
 Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 247 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 247 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-a83t.dtsi
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
 new file mode 100644
-index 0000000..342e1d3
+index 0000000..e85995f
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-@@ -0,0 +1,64 @@
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -0,0 +1,247 @@
 +/*
 + * Copyright 2015 Vishnu Patekar
++ *
 + * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
 + * This file is dual-licensed: you can use it either under the terms
@@ -84,28 +77,210 @@ index 0000000..342e1d3
 + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 + *     OTHER DEALINGS IN THE SOFTWARE.
++
 + */
 +
-+/dts-v1/;
-+#include "sun8i-a83t.dtsi"
++#include "skeleton.dtsi"
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++#include <dt-bindings/pinctrl/sun4i-a10.h>
 +
 +/ {
-+	model = "Allwinner A83T H8Homlet Proto Dev Board v2.0";
-+	compatible = "allwinner,h8homlet-v2", "allwinner,sun8i-a83t";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
++	interrupt-parent = <&gic>;
 +
 +	chosen {
-+		stdout-path = "serial0:115200n8";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +	};
-+};
 +
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_b>;
-+	status = "okay";
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <1>;
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <2>;
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <3>;
++		};
++		cpu@100 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <4>;
++		};
++
++		cpu@101 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <5>;
++		};
++		cpu@102 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <6>;
++		};
++
++		cpu@103 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <7>;
++		};
++	};
++
++	memory {
++		reg = <0x40000000 0x80000000>;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <24000000>;
++		arm,cpu-registers-not-fw-configured;
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		osc24M: osc24M_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-output-names = "osc24M";
++		};
++
++		osc32k: osc32k_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
++			clock-output-names = "osc32k";
++		};
++	};
++
++	soc@01c00000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		gic: interrupt-controller@01c81000 {
++			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
++			reg = <0x01c81000 0x1000>,
++			      <0x01c82000 0x1000>,
++			      <0x01c84000 0x2000>,
++			      <0x01c86000 0x2000>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++		};
++
++		pio: pinctrl@01c20800 {
++			compatible = "allwinner,sun8i-a83t-pinctrl";
++			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x01c20800 0x400>;
++			clocks = <&osc24M>;
++			gpio-controller;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			#gpio-cells = <3>;
++
++			i2c0_pins_a: i2c0@0 {
++				allwinner,pins = "PH0", "PH1";
++				allwinner,function = "i2c0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c1_pins_a: i2c1@0 {
++				allwinner,pins = "PH2", "PH3";
++				allwinner,function = "i2c1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c2_pins_a: i2c2@0 {
++				allwinner,pins = "PH4", "PH5";
++				allwinner,function = "i2c2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc0_pins_a: mmc0@0 {
++				allwinner,pins = "PF0", "PF1", "PF2",
++						 "PF3", "PF4", "PF5";
++				allwinner,function = "mmc0";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc1_pins_a: mmc1@0 {
++				allwinner,pins = "PG0", "PG1", "PG2",
++						 "PG3", "PG4", "PG5";
++				allwinner,function = "mmc1";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc2_8bit_pins: mmc2_8bit {
++				allwinner,pins = "PC5", "PC6", "PC8",
++						 "PC9", "PC10", "PC11",
++						 "PC12", "PC13", "PC14",
++						 "PC15";
++				allwinner,function = "mmc2";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart0_pins_a: uart0@0 {
++				allwinner,pins = "PF2", "PF4";
++				allwinner,function = "uart0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart0_pins_b: uart0@1 {
++				allwinner,pins = "PB9", "PB10";
++				allwinner,function = "uart0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++		};
++
++		uart0: serial@01c28000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28000 0x400>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&osc24M>;
++			status = "disabled";
++		};
++	};
 +};
 -- 
 1.9.1
