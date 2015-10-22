@@ -1,97 +1,97 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Add document of Rockchip mailbox
-Date: Thu, 22 Oct 2015 10:07:00 +0800
-Message-ID: <562844C4.5040304@gmail.com>
-References: <1442228798-15191-1-git-send-email-wxt@rock-chips.com>
- <1442228798-15191-2-git-send-email-wxt@rock-chips.com>
- <CABb+yY2Z9soGR0OcCRcfr2Ei7zX29qHPhYEKf3LPe+OhAuZMjA@mail.gmail.com>
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Add tune support of Mediatek MMC driver
+Date: Thu, 22 Oct 2015 10:18:49 +0800
+Message-ID: <1445480329.1593.4.camel@mhfsdcap03>
+References: <1445332391-30530-1-git-send-email-chaotian.jing@mediatek.com>
+	 <CAPDyKFrTrR5U7QoXpiWj29bUD5SEp4ccbx8qNs9HF0cYxuqdBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY2Z9soGR0OcCRcfr2Ei7zX29qHPhYEKf3LPe+OhAuZMjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAPDyKFrTrR5U7QoXpiWj29bUD5SEp4ccbx8qNs9HF0cYxuqdBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Howard Chen <ibanezchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kristina Martsenko <kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Stephen Boyd <sboyd@>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jassi,
+On Tue, 2015-10-20 at 18:41 +0200, Ulf Hansson wrote:
+> On 20 October 2015 at 11:13, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Change in v2:
+> > Drop the 400mhz and use assigned-clock-parents to instead
+> > Split the original tune patch to several independent patches
+> > Re-write the mmc_send_tuning()
+> > Fix GPD checksum error
+> > Move the HS400 setting to ops->prepare_hs400_tuning()
+> > Modify SD driving settings
+> >
+> > Change in v1:
+> > Add DT bindings for eMMC hardware reset
+> > Add pinctrl of data strobe pin for HS400 mode
+> > Modify eMMC driving settings
+> > Add 400mhz source clock for HS400 mode
+> > Add eMMC HS200/HS400 mode support
+> > Add SD SDR50/SDR104 mode support
+> > Add implement of tune function with CMD19/CMD21
+> >
+> > Chaotian Jing (9):
+> >   mmc: core: Add DT bindings for eMMC hardware reset support
+> >   mmc: dt-bindings: update Mediatek MMC bindings
+> >   mmc: mediatek: make cmd_ints_mask to const
+> >   mmc: mediatek: change the argument "ddr" to "timing"
+> >   mmc: mediatek: fix got GPD checksum error interrupt when data transfer
+> >   mmc: mediatek: add implement of ops->hw_reset()
+> >   mmc: mmc: extend the mmc_send_tuning()
+> >   mmc: mediatek: add HS400 support
+> >   arm64: dts: mediatek: add HS200/HS400/SDR50/SDR104 support
+> >
+> >  Documentation/devicetree/bindings/mmc/mmc.txt    |   1 +
+> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt |  11 +-
+> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  27 ++-
+> >  drivers/mmc/core/host.c                          |   2 +
+> >  drivers/mmc/core/mmc_ops.c                       |   8 +-
+> >  drivers/mmc/host/dw_mmc-exynos.c                 |   4 +-
+> >  drivers/mmc/host/dw_mmc.c                        |   2 +-
+> >  drivers/mmc/host/dw_mmc.h                        |   2 +-
+> >  drivers/mmc/host/mtk-sd.c                        | 296 ++++++++++++++++++++---
+> >  drivers/mmc/host/sdhci-esdhc-imx.c               |   6 +-
+> >  drivers/mmc/host/sdhci-msm.c                     |   2 +-
+> >  drivers/mmc/host/sdhci-sirf.c                    |   2 +-
+> >  include/linux/mmc/core.h                         |   2 +-
+> >  13 files changed, 314 insertions(+), 51 deletions(-)
+> >
+> > --
+> > 1.8.1.1.dirty
+> 
+> I have reviewed the patches, I think they overall looks good! Some
+> comments though.
+> 
+> You need to split patch 9, the DT parts enabling hw reset shall go in
+> separately.
+> 
+Ok, will separate it at next revision.
 
-Sorry for delay reply.
-=E5=9C=A8 2015=E5=B9=B410=E6=9C=8806=E6=97=A5 18:34, Jassi Brar =E5=86=99=
-=E9=81=93:
-> On Mon, Sep 14, 2015 at 4:36 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wro=
-te:
->> This add the necessary binding documentation for mailbox
->> found on RK3368 SoC.
->>
->> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->>   .../bindings/mailbox/rockchip-mailbox.txt          | 33 ++++++++++=
-++++++++++++
->>   1 file changed, 33 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mailbox/rockc=
-hip-mailbox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/rockchip-mail=
-box.txt b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.tx=
-t
->> new file mode 100644
->> index 0000000..b9b4768
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
->> @@ -0,0 +1,33 @@
->> +Rockchip mailbox
->> +
->> +The Rockchip mailbox is used by the Rockchip CPU cores to communica=
-te
->> +requests to MCU processor.
->> +
->> +Refer to ./mailbox.txt for generic information about mailbox device=
--tree
->> +bindings.
->> +
->> +Required properties:
->> +
->> + - compatible: should be one of the following.
->> +   - "rockchip,rk3368-mbox" for rk3368
->> + - reg: physical base address of the controller and length of memor=
-y mapped
->> +       region.
->> +       physical base address of the share buffer and length of memo=
-ry mapped
->> +       region.
-> Please make shared-sram a property of user drivers.
+> Regarding the hw-reset changes in patch1, patch6 and patch9, I believe
+> I requested you to separate the HW reset changes from $subject
+> patchset as they are unrelated, please do this.
+> 
+As you know, the hw-reset is a part of mmc retune.
+so that I add it to this series.
 
-As Rob points out,
-maybe, don't we need also define it in user drivers.
-As the SRAM binding (misc/sram.txt) had defined.
+> Running checkpatch, it gave me warnings and errors for patch 8.
+> Patch7 didn't apply to my next branch.
+> 
 
-I just make the SCPI protocol client driver to work for mailbox.
->
-> Location and size of shared-memory is a platform property, mailbox
-> controller doesn't need sram to function.
->    For example, protocol on some platform, with this controller, may =
-be
-> trivial enough to not need a shared sram... say only 32-bits wide
-> requests and responses which can be passed via mailbox registers
-> directly.   mbox_client.tx_prepare() is where the user driver sets up
-> the shared-memory.
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+I will fix the checkpatch warnings and errors at next revision.
+by the way, I tried to use "git am
+0007-mmc-mmc-extend-the-mmc_send_tuning.patch" in your branch,
+there was no conflict, so why couldn't apply it ?
+Thx!
 
+> Kind regards
+> Uffe
 
---=20
-Thanks,
-Caesar
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
