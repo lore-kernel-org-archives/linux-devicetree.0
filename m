@@ -1,63 +1,70 @@
-From: "Kwok, WingMan" <w-kwok2@ti.com>
-Subject: RE: [PATCH v3 1/2] phy: keystone: serdes driver for gbe 10gbe and
- pcie
-Date: Thu, 22 Oct 2015 14:22:24 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E0422A2A6@DFLE11.ent.ti.com>
-References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
- <1445432201-16007-2-git-send-email-w-kwok2@ti.com>
- <CAL_JsqKSteJnz53YuBbgR1K9GWQDddkaqFo1aVxd8RsDam5jSw@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800
+ Ethernet controller
+Date: Thu, 22 Oct 2015 09:34:55 -0500
+Message-ID: <CAL_Jsq+UXdX3X4J6JLQhxzfgxm1ZBZ4fVMPsL5X_DzhP1dD+GQ@mail.gmail.com>
+References: <1445522558-5808-1-git-send-email-mans@mansr.com> <1445522558-5808-2-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKSteJnz53YuBbgR1K9GWQDddkaqFo1aVxd8RsDam5jSw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445522558-5808-2-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
-aWx0bzpyb2JoK2R0QGtlcm5lbC5vcmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyMSwg
-MjAxNSA2OjU1IFBNDQo+IFRvOiBLd29rLCBXaW5nTWFuDQo+IENjOiBQYXdlbCBNb2xsOyBNYXJr
-IFJ1dGxhbmQ7IElhbiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgS0lTSE9OIFZJSkFZIEFCUkFIQU07
-DQo+IFF1YWRyb3MsIFJvZ2VyOyBLYXJpY2hlcmksIE11cmFsaWRoYXJhbjsgQmpvcm4gSGVsZ2Fh
-czsgU2FudG9zaCBTaGlsaW1rYXI7DQo+IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eDsgZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8yXSBwaHk6IGtleXN0b25lOiBz
-ZXJkZXMgZHJpdmVyIGZvciBnYmUgMTBnYmUgYW5kDQo+IHBjaWUNCj4gDQo+IE9uIFdlZCwgT2N0
-IDIxLCAyMDE1IGF0IDc6NTYgQU0sIFdpbmdNYW4gS3dvayA8dy1rd29rMkB0aS5jb20+IHdyb3Rl
-Og0KPiA+IE9uIFRJJ3MgS2V5c3RvbmUgcGxhdGZvcm1zLCBzZXZlcmFsIHBlcmlwaGVyYWxzIHN1
-Y2ggYXMgdGhlDQo+ID4gZ2JlIGV0aGVybmV0IHN3aXRjaCwgMTBnYmUgZXRoZXJuZXQgc3dpdGNo
-IGFuZCBQQ0llIGNvbnRyb2xsZXINCj4gPiByZXF1aXJlIHRoZSB1c2Ugb2YgYSBTZXJEZXMgZm9y
-IGNvbnZlcnRpbmcgU29DIHBhcmFsbGVsIGRhdGEgaW50bw0KPiA+IHNlcmlhbGl6ZWQgZGF0YSB0
-aGF0IGNhbiBiZSBvdXRwdXQgb3ZlciBhIGhpZ2gtc3BlZWQgZWxlY3RyaWNhbA0KPiA+IGludGVy
-ZmFjZSwgYW5kIGFsc28gY29udmVydGluZyBoaWdoLXNwZWVkIHNlcmlhbCBpbnB1dCBkYXRhDQo+
-ID4gaW50byBwYXJhbGxlbCBkYXRhIHRoYXQgY2FuIGJlIHByb2Nlc3NlZCBieSB0aGUgU29DLiAg
-VGhlDQo+ID4gU2VyRGVzZXMgdXNlZCBieSB0aG9zZSBwZXJpcGhlcmFscywgdGhvdWdoIHRoZXkg
-bWF5IGJlIGRpZmZlcmVudCwNCj4gPiBhcmUgbGFyZ2VseSBzaW1pbGFyIGluIGZ1bmN0aW9uYWxp
-dHkgYW5kIHNldHVwLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBwcm92aWRlcyBhIFNlckRlcyBwaHkg
-ZHJpdmVyIGltcGxlbWVudGF0aW9uIHRoYXQgY2FuIGJlDQo+ID4gdXNlZCBieSB0aGUgYWJvdmUg
-bWVudGlvbmVkIHBlcmlwaGVyYWwgZHJpdmVycyB0byBjb25maWd1cmUgdGhlaXINCj4gPiByZXNw
-ZWN0aXZlIFNlckRlc2VzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2luZ01hbiBLd29rIDx3
-LWt3b2syQHRpLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3BoeS90aS1waHkudHh0IHwgIDIzOSArKysNCj4gDQo+IEZvciB0aGUgYmluZGluZzoN
-Cj4gDQo+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiANCj4gDQo+
-IE9uZSBvdGhlciBjb21tZW50Og0KPiANCj4gPiArICAgICAgIGlmIChvZl9kZXZpY2VfaXNfY29t
-cGF0aWJsZShucCwgInRpLGtleXN0b25lLXNlcmRlcy1nYmUiKSkgew0KPiA+ICsgICAgICAgICAg
-ICAgICBzYy0+cGh5X3R5cGUgPSBLU0VSREVTX1BIWV9TR01JSTsNCj4gPiArICAgICAgIH0gZWxz
-ZSBpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJ0aSxrZXlzdG9uZS1zZXJkZXMteGdi
-ZSIpKQ0KPiB7DQo+ID4gKyAgICAgICAgICAgICAgIHNjLT5waHlfdHlwZSA9IEtTRVJERVNfUEhZ
-X1hHRTsNCj4gPiArICAgICAgIH0gZWxzZSBpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAs
-ICJ0aSxrZXlzdG9uZS1zZXJkZXMtcGNpZSIpKQ0KPiB7DQo+ID4gKyAgICAgICAgICAgICAgIHNj
-LT5waHlfdHlwZSA9IEtTRVJERVNfUEhZX1BDSUU7DQo+ID4gKyAgICAgICB9IGVsc2Ugew0KPiA+
-ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgInVua25vd24gcGh5IHR5cGVcbiIpOw0KPiA+
-ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArICAgICAgIH0NCj4gDQo+IFVz
-ZSB0aGUgbWF0Y2ggZGF0YSB0byBzZXQgdGhlIHR5cGU6DQo+IA0KDQp3aWxsIGRvLg0KDQo+ID4g
-K3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGtzZXJkZXNfb2ZfbWF0Y2hbXSA9IHsN
-Cj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAidGksa2V5c3RvbmUtc2VyZGVzLWdiZSIgfSwN
-Cj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAidGksa2V5c3RvbmUtc2VyZGVzLXBjaWUiIH0s
-DQo+ID4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gInRpLGtleXN0b25lLXNlcmRlcy14Z2JlIiB9
-LA0KPiA+ICsgICAgICAgeyB9LA0KPiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9m
-LCBrc2VyZGVzX29mX21hdGNoKTsNCj4gDQo+IFJvYg0KDQpUaGFua3MsDQpXaW5nTWFuDQo=
+On Thu, Oct 22, 2015 at 9:02 AM, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> wrote:
+> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
+> using the "aurora,nb8800" compatible string.  When used in Sigma
+> Designs chips a few additional control registers are available.
+> This variant is indicated by the "sigma,smp8640-ethernet" compatible
+> string.
+>
+> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> new file mode 100644
+> index 0000000..c19f615
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> @@ -0,0 +1,26 @@
+> +* Aurora VLSI AU-NB8800 Ethernet controller
+> +
+> +Required properties:
+> +- compatible: Should be "aurora,nb8800", "sigma,smp8640-ethernet"
+> +       The latter indicates presence of extra features added by Sigma Designs.
+
+These should be in opposite order. Most specific comes first.
+
+> +- reg: Should be MMIO address space of the device
+> +- interrupts: Should contain the interrupt specifier for the device
+> +- interrupt-parent: Should be a phandle for the interrupt controller
+> +- clocks: Should be a phandle for the clock for the device
+> +
+> +Common properties described in ethernet.txt:
+> +- local-mac-address
+> +- mac-address
+> +- max-speed
+> +- phy-mode
+> +
+> +Example:
+> +
+> +ethernet@26000 {
+> +       compatible = "aurora,nb8800";
+> +       reg = <0x10000 0x800>;
+> +       interrupts = <42>;
+> +       clocks = <&sys_clk>;
+> +       max-speed = <1000>;
+> +       phy-connection-type = "rgmii";
+> +};
+> --
+> 2.5.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
