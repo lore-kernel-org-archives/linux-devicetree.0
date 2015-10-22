@@ -1,50 +1,28 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: of_mdiobus_register_phy() and deferred probe
-Date: Thu, 22 Oct 2015 23:07:30 +0300
-Message-ID: <56294202.5020507@cogentembedded.com>
-References: <CAMuHMdX+_0Cf0VwmKDtcfMNwaPEN5jvjZQUXg6MKMJa+cvYz3w@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v7 1/6] of: overlay: kobjectify overlay objects
+Date: Thu, 22 Oct 2015 13:17:21 -0700
+Message-ID: <20151022201721.GA27977@kroah.com>
+References: <1445543427-26275-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1445543427-26275-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX+_0Cf0VwmKDtcfMNwaPEN5jvjZQUXg6MKMJa+cvYz3w@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445543427-26275-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Oct 22, 2015 at 10:50:22PM +0300, Pantelis Antoniou wrote:
+> We are going to need the overlays to appear on sysfs with runtime
+> global properties (like master enable) so turn them into kobjects.
+> 
+> They have to be in sysfs so that people can have information about the
+> overlays applied in the system, i.e. where their targets are and whether
+> removal is possible. In a future more attributes can be added
+> in a backwards compatible manner.
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-On 10/22/2015 04:31 PM, Geert Uytterhoeven wrote:
-
-> Due to a probe deferral of an interrupt controller[1], the Micrel
-> Ethernet PHY on
-> r8a7791/koelsch started failing to get its IRQ:
->
->      no irq domain found for /interrupt-controller@e61c0000 !
->
-> However, of_mdiobus_register_phy() uses irq_of_parse_and_map(), which plainly
-> ignores EPROBE_DEFER, and it just continues.
->
-> Later I get:
->
->      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ -1) to driver
-> Micrel KSZ8041RNLI
->
-> instead of
->
->      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ 408) to driver
-> Micrel KSZ8041RNLI
->
-> Ethernet still works, as the interrupt seems to be unneeded(?).
-
-    Yes, the phylib uses PHY polling anyway, IRQ isn't strictly necessary.
-
-> Has anyone already looked into fixing of_mdio to handle deferred probing?
-
-    It's the first time I hear about that. Will have to look into this...
-
-> Gr{oetje,eeting}s,
->                          Geert
-
-MBR, Sergei
+Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
