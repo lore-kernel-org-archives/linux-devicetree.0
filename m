@@ -1,113 +1,50 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v7 2/6] of: overlay: global sysfs enable attribute
-Date: Thu, 22 Oct 2015 22:50:23 +0300
-Message-ID: <1445543427-26275-3-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1445543427-26275-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445543427-26275-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: of_mdiobus_register_phy() and deferred probe
+Date: Thu, 22 Oct 2015 23:07:30 +0300
+Message-ID: <56294202.5020507@cogentembedded.com>
+References: <CAMuHMdX+_0Cf0VwmKDtcfMNwaPEN5jvjZQUXg6MKMJa+cvYz3w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdX+_0Cf0VwmKDtcfMNwaPEN5jvjZQUXg6MKMJa+cvYz3w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-A throw once master enable switch to protect against any
-further overlay applications if the administrator desires so.
+Hello.
 
-A kernel command line option is provided as well.
+On 10/22/2015 04:31 PM, Geert Uytterhoeven wrote:
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/overlay.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
+> Due to a probe deferral of an interrupt controller[1], the Micrel
+> Ethernet PHY on
+> r8a7791/koelsch started failing to get its IRQ:
+>
+>      no irq domain found for /interrupt-controller@e61c0000 !
+>
+> However, of_mdiobus_register_phy() uses irq_of_parse_and_map(), which plainly
+> ignores EPROBE_DEFER, and it just continues.
+>
+> Later I get:
+>
+>      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ -1) to driver
+> Micrel KSZ8041RNLI
+>
+> instead of
+>
+>      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ 408) to driver
+> Micrel KSZ8041RNLI
+>
+> Ethernet still works, as the interrupt seems to be unneeded(?).
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 12c3e47..91f10ed 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -21,6 +21,7 @@
- #include <linux/err.h>
- #include <linux/idr.h>
- #include <linux/sysfs.h>
-+#include <linux/atomic.h>
- 
- #include "of_private.h"
- 
-@@ -55,8 +56,19 @@ struct of_overlay {
- 	struct kobject kobj;
- };
- 
-+/* master enable switch; once set to 0 can't be re-enabled */
-+static atomic_t ov_enable = ATOMIC_INIT(1);
-+
-+static int __init of_overlay_disable_setup(char *str __always_unused)
-+{
-+	atomic_set(&ov_enable, 0);
-+	return 1;
-+}
-+__setup("of_overlay_disable", of_overlay_disable_setup);
-+
- static int of_overlay_apply_one(struct of_overlay *ov,
- 		struct device_node *target, const struct device_node *overlay);
-+static int overlay_removal_is_ok(struct of_overlay *ov);
- 
- static int of_overlay_apply_single_property(struct of_overlay *ov,
- 		struct device_node *target, struct property *prop)
-@@ -339,6 +351,35 @@ void of_overlay_release(struct kobject *kobj)
- 	kfree(ov);
- }
- 
-+static ssize_t enable_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	return snprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&ov_enable));
-+}
-+
-+static ssize_t enable_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	int ret;
-+	bool new_enable;
-+
-+	ret = strtobool(buf, &new_enable);
-+	if (ret != 0)
-+		return ret;
-+	/* if we've disabled it, no going back */
-+	if (atomic_read(&ov_enable) == 0)
-+		return -EPERM;
-+	atomic_set(&ov_enable, (int)new_enable);
-+	return count;
-+}
-+
-+static struct kobj_attribute enable_attr = __ATTR_RW(enable);
-+
-+static const struct attribute *overlay_global_attrs[] = {
-+	&enable_attr.attr,
-+	NULL
-+};
-+
- static struct kobj_type of_overlay_ktype = {
- 	.release = of_overlay_release,
- };
-@@ -360,6 +401,10 @@ int of_overlay_create(struct device_node *tree)
- 	struct of_overlay *ov;
- 	int err, id;
- 
-+	/* administratively disabled */
-+	if (!atomic_read(&ov_enable))
-+		return -EPERM;
-+
- 	/* allocate the overlay structure */
- 	ov = kzalloc(sizeof(*ov), GFP_KERNEL);
- 	if (ov == NULL)
-@@ -594,5 +639,8 @@ int of_overlay_init(void)
- 	if (!ov_kset)
- 		return -ENOMEM;
- 
--	return 0;
-+	rc = sysfs_create_files(&ov_kset->kobj, overlay_global_attrs);
-+	WARN(rc, "%s: error adding global attributes\n", __func__);
-+
-+	return rc;
- }
--- 
-1.7.12
+    Yes, the phylib uses PHY polling anyway, IRQ isn't strictly necessary.
+
+> Has anyone already looked into fixing of_mdio to handle deferred probing?
+
+    It's the first time I hear about that. Will have to look into this...
+
+> Gr{oetje,eeting}s,
+>                          Geert
+
+MBR, Sergei
