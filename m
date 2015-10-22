@@ -1,164 +1,122 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH 0/4] add missing of_node_put
-Date: Thu, 22 Oct 2015 15:19:43 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1510221517300.2607@hadrien>
-References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr> <CAL_JsqJGS+L=FZAwPs-wBSYiX8kQWqZyaLTGhadYVNT3=Qte_Q@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v11 5/6] Documentation: dt-bindings: pci: altera pcie
+ device tree binding
+Date: Thu, 22 Oct 2015 08:20:25 -0500
+Message-ID: <CAL_JsqJg6cqwsgN6yT_9rUJ3ayFWzxa1sU2qN33jRj+nuPvMmA@mail.gmail.com>
+References: <1445506051-21688-1-git-send-email-lftan@altera.com> <1445506051-21688-6-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJGS+L=FZAwPs-wBSYiX8kQWqZyaLTGhadYVNT3=Qte_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1445506051-21688-6-git-send-email-lftan@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ley Foon Tan <lftan.linux@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thu, 22 Oct 2015, Rob Herring wrote:
-
-> +Russell who raised issues with these iterators recently.
+On Thu, Oct 22, 2015 at 4:27 AM, Ley Foon Tan <lftan@altera.com> wrote:
+> This patch adds the bindings for Altera PCIe host controller driver and
+> Altera PCIe MSI driver.
 >
-> On Thu, Oct 22, 2015 at 4:02 AM, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org> wrote:
-> > The various for_each device_node iterators performs an of_node_get on each
-> > iteration, so a break out of the loop requires an of_node_put.
+> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  .../devicetree/bindings/pci/altera-pcie-msi.txt    | 28 +++++++++++++
+>  .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
 >
-> Thanks for this.
->
-> Are there any plans to use coccinelle as a checker that developers can
-> run to be warned of these problems?
-
-There are three issues I have found so far:
-
-1.  of_node_put before a continue
-2.  missing of_node_put before a break
-3.  missing of_node get before some more permanent storage of the value
-
-The semantic patches for the first two seem to be working pretty well, so
-I could submit them for integration into the kernel.  The third one, I
-have only looked at in an ad hoc way so far.
-
-julia
-
->
-> Rob
->
-> > The complete semantic patch that fixes this problem is
-> > (http://coccinelle.lip6.fr):
-> >
-> > // <smpl>
-> > @r@
-> > local idexpression n;
-> > expression e1,e2;
-> > iterator name for_each_node_by_name, for_each_node_by_type,
-> > for_each_compatible_node, for_each_matching_node,
-> > for_each_matching_node_and_match, for_each_child_of_node,
-> > for_each_available_child_of_node, for_each_node_with_property;
-> > iterator i;
-> > statement S;
-> > expression list [n1] es;
-> > @@
-> >
-> > (
-> > (
-> > for_each_node_by_name(n,e1) S
-> > |
-> > for_each_node_by_type(n,e1) S
-> > |
-> > for_each_compatible_node(n,e1,e2) S
-> > |
-> > for_each_matching_node(n,e1) S
-> > |
-> > for_each_matching_node_and_match(n,e1,e2) S
-> > |
-> > for_each_child_of_node(e1,n) S
-> > |
-> > for_each_available_child_of_node(e1,n) S
-> > |
-> > for_each_node_with_property(n,e1) S
-> > )
-> > &
-> > i(es,n,...) S
-> > )
-> >
-> > @@
-> > local idexpression r.n;
-> > iterator r.i;
-> > expression e;
-> > expression list [r.n1] es;
-> > @@
-> >
-> >  i(es,n,...) {
-> >    ...
-> > (
-> >    of_node_put(n);
-> > |
-> >    e = n
-> > |
-> >    return n;
-> > |
-> > +  of_node_put(n);
-> > ?  return ...;
-> > )
-> >    ...
-> >  }
-> >
-> > @@
-> > local idexpression r.n;
-> > iterator r.i;
-> > expression e;
-> > expression list [r.n1] es;
-> > @@
-> >
-> >  i(es,n,...) {
-> >    ...
-> > (
-> >    of_node_put(n);
-> > |
-> >    e = n
-> > |
-> > +  of_node_put(n);
-> > ?  break;
-> > )
-> >    ...
-> >  }
-> > ... when != n
-> >
-> > @@
-> > local idexpression r.n;
-> > iterator r.i;
-> > expression e;
-> > identifier l;
-> > expression list [r.n1] es;
-> > @@
-> >
-> >  i(es,n,...) {
-> >    ...
-> > (
-> >    of_node_put(n);
-> > |
-> >    e = n
-> > |
-> > +  of_node_put(n);
-> > ?  goto l;
-> > )
-> >    ...
-> >  }
-> > ...
-> > l: ... when != n// </smpl>
-> >
-> > ---
-> >
-> >  drivers/of/irq.c      |    7 +++++--
-> >  drivers/of/overlay.c  |    5 ++++-
-> >  drivers/of/platform.c |    8 ++++++--
-> >  drivers/of/unittest.c |    8 ++++++--
-> >  4 files changed, 21 insertions(+), 7 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> new file mode 100644
+> index 0000000..09cd3bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> @@ -0,0 +1,28 @@
+> +* Altera PCIe MSI controller
+> +
+> +Required properties:
+> +- compatible:  should contain "altr,msi-1.0"
+> +- reg:         specifies the physical base address of the controller and
+> +               the length of the memory mapped region.
+> +- reg-names:   must include the following entries:
+> +               "csr": CSR registers
+> +               "vector_slave": vectors slave port region
+> +- interrupt-parent:    interrupt source phandle.
+> +- interrupts:  specifies the interrupt source of the parent interrupt
+> +               controller. The format of the interrupt specifier depends on the
+> +               parent interrupt controller.
+> +- num-vectors: number of vectors, range 1 to 32.
+> +- msi-controller:      indicates that this is MSI controller node
+> +
+> +
+> +Example
+> +msi0: msi@0xFF200000 {
+> +       compatible = "altr,msi-1.0";
+> +       reg = <0xFF200000 0x00000010
+> +               0xFF200010 0x00000080>;
+> +       reg-names = "csr", "vector_slave";
+> +       interrupt-parent = <&hps_0_arm_gic_0>;
+> +       interrupts = <0 42 4>;
+> +       msi-controller;
+> +       num-vectors = <32>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+> new file mode 100644
+> index 0000000..2951a6a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+> @@ -0,0 +1,49 @@
+> +* Altera PCIe controller
+> +
+> +Required properties:
+> +- compatible : should contain "altr,pcie-root-port-1.0"
+> +- reg:         a list of physical base address and length for TXS and CRA.
+> +- reg-names:   must include the following entries:
+> +               "Txs": TX slave port region
+> +               "Cra": Control register access region
+> +- interrupt-parent:    interrupt source phandle.
+> +- interrupts:  specifies the interrupt source of the parent interrupt controller.
+> +               The format of the interrupt specifier depends on the parent interrupt
+> +               controller.
+> +- device_type: must be "pci"
+> +- #address-cells:      set to <3>
+> +- #size-cells: set to <2>
+> +- #interrupt-cells:    set to <1>
+> +- ranges:              describes the translation of addresses for root ports and standard
+> +               PCI regions.
+> +- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+> +               mapping of the PCIe interface to interrupt numbers.
+> +
+> +Optional properties:
+> +- msi-parent:  Link to the hardware entity that serves as the MSI controller for this PCIe
+> +               controller.
+> +- bus-range:   PCI bus numbers covered
+> +
+> +Example
+> +       pcie_0: pcie@0xc00000000 {
+> +               compatible = "altr,pcie-root-port-1.0";
+> +               reg = <0xc0000000 0x20000000>,
+> +                       <0xff220000 0x00004000>;
+> +               reg-names = "Txs", "Cra";
+> +               interrupt-parent = <&hps_0_arm_gic_0>;
+> +               interrupts = <0 40 4>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +               bus-range = <0x0 0xFF>;
+> +               device_type = "pci";
+> +               msi-parent = <&msi_to_gic_gen_0>;
+> +               #address-cells = <3>;
+> +               #size-cells = <2>;
+> +               interrupt-map-mask = <0 0 0 7>;
+> +               interrupt-map = <0 0 0 1 &pcie_0 1>,
+> +                                   <0 0 0 2 &pcie_0 2>,
+> +                                   <0 0 0 3 &pcie_0 3>,
+> +                                   <0 0 0 4 &pcie_0 4>;
+> +               ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+> +                           0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+> +       };
 > --
-> To unsubscribe from this list: send the line "unsubscribe kernel-janitors" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1.8.2.1
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
