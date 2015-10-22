@@ -1,96 +1,58 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH v7 2/6] of: overlay: global sysfs enable attribute
-Date: Thu, 22 Oct 2015 23:25:45 +0300
-Message-ID: <50F12602-3286-4037-B2FB-57A85601CAA7@antoniou-consulting.com>
-References: <1445543427-26275-1-git-send-email-pantelis.antoniou@konsulko.com> <1445543427-26275-3-git-send-email-pantelis.antoniou@konsulko.com> <20151022201911.GB27977@kroah.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151022201911.GB27977-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 3/3] i2c: uniphier: add bindings for UniPhier I2C
+ controllers
+Date: Thu, 22 Oct 2015 23:00:39 +0200
+Message-ID: <20151022210039.GB1516@katana>
+References: <1438243942-26401-1-git-send-email-yamada.masahiro@socionext.com>
+ <1438243942-26401-4-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438243942-26401-4-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
 
-> On Oct 22, 2015, at 23:19 , Greg Kroah-Hartman <gregkh@linuxfoundatio=
-n.org> wrote:
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 30, 2015 at 05:12:22PM +0900, Masahiro Yamada wrote:
+> Device Tree bindings for two I2C controllers embedded in
+> UniPhier SoCs.
 >=20
-> On Thu, Oct 22, 2015 at 10:50:23PM +0300, Pantelis Antoniou wrote:
->> A throw once master enable switch to protect against any
->> further overlay applications if the administrator desires so.
->>=20
->> A kernel command line option is provided as well.
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> ---
->> drivers/of/overlay.c | 50 ++++++++++++++++++++++++++++++++++++++++++=
-+++++++-
->> 1 file changed, 49 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index 12c3e47..91f10ed 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -21,6 +21,7 @@
->> #include <linux/err.h>
->> #include <linux/idr.h>
->> #include <linux/sysfs.h>
->> +#include <linux/atomic.h>
->>=20
->> #include "of_private.h"
->>=20
->> @@ -55,8 +56,19 @@ struct of_overlay {
->> 	struct kobject kobj;
->> };
->>=20
->> +/* master enable switch; once set to 0 can't be re-enabled */
->> +static atomic_t ov_enable =3D ATOMIC_INIT(1);
->> +
->> +static int __init of_overlay_disable_setup(char *str __always_unuse=
-d)
->> +{
->> +	atomic_set(&ov_enable, 0);
->> +	return 1;
->> +}
->> +__setup("of_overlay_disable", of_overlay_disable_setup);
->> +
->> static int of_overlay_apply_one(struct of_overlay *ov,
->> 		struct device_node *target, const struct device_node *overlay);
->> +static int overlay_removal_is_ok(struct of_overlay *ov);
->>=20
->> static int of_overlay_apply_single_property(struct of_overlay *ov,
->> 		struct device_node *target, struct property *prop)
->> @@ -339,6 +351,35 @@ void of_overlay_release(struct kobject *kobj)
->> 	kfree(ov);
->> }
->>=20
->> +static ssize_t enable_show(struct kobject *kobj,
->> +		struct kobj_attribute *attr, char *buf)
->> +{
->> +	return snprintf(buf, PAGE_SIZE, "%d\n", atomic_read(&ov_enable));
->=20
-> Minor nit, you never need to care about the size of the buffer for a
-> sysfs file, if you do, you are doing something wrong.  So this can ju=
-st
-> be:
-> 	return sprintf(buf, "%d\n", atomic_read(&ov_enable));
->=20
->=20
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Nice to know; I have a ingrained habit to avoid standard sprintf, so..
-
-> Anyway, nothing worth keeping this from being merged:
->=20
+Please split this into two files with filenames matching those of the
+drivers. I know they will be very similar but I'd like to keep
+consistent.
 
 
-Thanks!
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->=20
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Regards
+iQIcBAEBAgAGBQJWKU53AAoJEBQN5MwUoCm2D6wP/RJBHbdytX8I5HvQ80klf3M4
+UyJamv5ai+taZBjVQL0egBR8uhKP8eaIB5t2dvQTbpiCM88cVLznl4kFUHL7wHVF
+ogpvAtuvhv5B+pwwX4fWi3/mU3MwzTmA+t5wVk2pUHiS3CevZrOX5NUWLny0C1vn
+Yup+uUHpSaapkYx/gK2ehEg1sMYicWjxCCFhdVGTuJxVDpE7NXMk3RAAZi8AffyU
+xGHBANuDHCy/5P536Z8VylS6C025W+MObVri+Uye6yAM2xgZ5orDcQrCVHhWETN4
+aDlJfsjbUICD+wEH4cgGrpEF9KtVA7z48NNzgN/HaDYRmHW/LKawQ6Pl+1jNBj81
+xcmQvuXjWK0i5fWK+SGN9VQwy+Ch6BVtgrE/nMBF2JLXWAY4DDDHIG0/Apc2GXnU
+LnK4OupMcGZNiioy2e6c5B0JEgn0bC5uLoCSHpM17x0uLri2BK+1Zy+bvxs9Gj1d
+0fx11bUUHDKyrXmiwB0VXcurugj0Dg2sRMMAw36JR121dAGtPXq8Tow6WImjKlfd
+PwL3bAFylrf3BxObKzdxsXAk0OWGq9D2ePVFwQVnNTBZ2RdocAksuH8NE2HU8UW+
+z2eyseV5tJSTgrUTS+L20xS/RDGtFA0togMqbnqBl7jH9/9oLgf3vgy747pxNyq5
+zn3zsMhsFioZ7jdStn7m
+=s1Kg
+-----END PGP SIGNATURE-----
 
-=E2=80=94 Pantelis
+--A6N2fC+uXW/VQSAv--
