@@ -1,69 +1,93 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] clk: sunxi: Add H3 clocks support
-Date: Thu, 22 Oct 2015 11:15:39 +1100
-Message-ID: <CAGRGNgWyNEOMVxeDFTAp_wJoaXL471spFjBTn+2s7YuKeJf71g@mail.gmail.com>
-References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com> <1445444007-4260-3-git-send-email-jenskuske@gmail.com>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Thu, 22 Oct 2015 09:17:49 +0900
+Message-ID: <56282B2D.6000708@samsung.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+ <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+ <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
+ <562765F3.9010306@osg.samsung.com>
+ <CAGOxZ52-ia8uhgGg5CiU9TSYkfAsRD52zvLqq++Y-mr4uaFOpg@mail.gmail.com>
+ <5627A75E.60509@osg.samsung.com>
+ <CAGOxZ537QuzBP4tcG9qh-+iXK-Y=WwZGiJ1-cwtLqwRf0a+wVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBP6VUCYQKGQENJ6US7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445444007-4260-3-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAGOxZ537QuzBP4tcG9qh-+iXK-Y=WwZGiJ1-cwtLqwRf0a+wVA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jens,
+On 22.10.2015 00:01, Alim Akhtar wrote:
+> On Wed, Oct 21, 2015 at 8:25 PM, Javier Martinez Canillas
+> <javier@osg.samsung.com> wrote:
+>> Hello Alim,
+>>
+>> On 10/21/2015 04:50 PM, Alim Akhtar wrote:
+>>
+>> [snip]
+>>
+>>>>
+>>>> [0]:
+>>>> From c9b250ee03bae338339b70693e906145c719f783 Mon Sep 17 00:00:00 2001
+>>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>> Date: Wed, 21 Oct 2015 11:59:44 +0200
+>>>> Subject: [RFT PATCH] mmc: pwrseq: Use highest priority for eMMC restart
+>>>>  handler
+>>>>
+>>>> The pwrseq_emmc driver does a eMMC card reset before a system reboot to
+>>>> allow broken or limited ROM boot-loaders, that don't have an eMMC reset
+>>>> logic, to be able to read the second stage from the eMMC.
+>>>>
+>>>> But this has to be called before a system reboot handler and while most
+>>>> of them use the priority 128, there are other restart handlers (such as
+>>>> the syscon-reboot one) that use a higher priority. So, use the highest
+>>>> priority to make sure that the eMMC hw is reset before a system reboot.
+>>>>
+>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>> ---
+>>> Looks good.
+>>> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>>
+>>
 
-On Thu, Oct 22, 2015 at 3:13 AM, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The H3 clock control unit is similar to the those of other sun8i family
-> members like the A23.
->
-> It adds a new bus gates clock similar to the simple gates, but with a
-> different parent clock for each single gate.
-> Some of the gates use the new AHB2 clock as parent, whose clock source
-> is muxable between AHB1 and PLL6/2. The documentation isn't totally clear
-> about which devices belong to AHB2 now, especially USB EHIC/OHIC, so it
-> is mostly based on Allwinner kernel source code.
->
-> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
->  drivers/clk/sunxi/Makefile                        |   1 +
->  drivers/clk/sunxi/clk-bus-gates.c                 | 105 ++++++++++++++++++++++
->  drivers/clk/sunxi/clk-sunxi.c                     |  12 ++-
->  4 files changed, 117 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/clk/sunxi/clk-bus-gates.c
->
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index 7c4aee0..6293c65 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
++Cc Ulf,
 
-This hunk should be in patch 1:
+Javier,
 
-> @@ -1000,9 +1005,8 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
->
->                 for (i = 0; i < SUNXI_DIVS_BASE_NAME_MAX_LEN - 1 &&
->                                                 clk_name[i] != '_' &&
-> -                                               clk_name[i] != '\0'; i++) {
-> +                                               clk_name[i] != '\0'; i++)
->                         base_name[i] = clk_name[i];
-> -               }
->
->                 base_name[i] = '\0';
->                 factors.name = base_name;
+First of all, thanks Javier for digging into the issue. Actually I have
+Odroid U3 but because of user-space limitations (which I need for other
+work) I cannot test all of mainline patches there.
 
-Thanks,
 
--- 
-Julian Calaby
+>> Thanks, should I post it as a proper patch or are adding it to your
+>> series?
+> Suggest you to post as a patch collecting {Tested, Reviewed}-by (easy
+> for maintainers to pickup ) and probably CCing Ulf for his feedback.
+> 
+>> I think the latter is more reasonable so with an ack from Ulf,
+>> all patches can go through the linux-samsung tree.
+>>
+> yes, that is reasonable, as I said, let Krzysztof and Ulf take a call here.
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+Javier, Alim, Ulf,
+
+I am not grabbing any more patches for v4.4 because I doubt that they
+could be merged to arm-soc for this cycle. My last pull requests for
+v4.4 is still pending...
+
+This means that I plan to pick up these series for v4.5, after closing
+v4.4 merge window (unless Kukjin picks it also). Because of that, we
+have plenty of time, so my idea is:
+1. Wait for some comments from Ulf on Javier's fix.
+2. If the fix goes into v4.4, then problem solved.
+3. If not and it get acked, then it can go with this set.
+4. If not and it get applied by Ulf for v4.5, then a tag from him would
+be a nice way to solve dependency.
+
+Either way we don't have to hurry, I think.
+
+Best regards,
+Krzysztof
