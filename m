@@ -1,82 +1,63 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: Re: [PATCH v3 08/10] clk: ns2: add clock support for Broadcom
- Northstar 2 SoC
-Date: Thu, 22 Oct 2015 10:18:44 -0400
-Message-ID: <20151022141843.GD651@broadcom.com>
-References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-9-git-send-email-jonmason@broadcom.com>
- <56200F39.1060102@broadcom.com>
- <562012A8.8050707@broadcom.com>
- <562014C9.5070708@broadcom.com>
- <20151015211025.GP32089@broadcom.com>
- <56201766.9020206@broadcom.com>
- <562019DD.3000206@broadcom.com>
- <20151022002246.GV19782@codeaurora.org>
+From: "Kwok, WingMan" <w-kwok2@ti.com>
+Subject: RE: [PATCH v3 1/2] phy: keystone: serdes driver for gbe 10gbe and
+ pcie
+Date: Thu, 22 Oct 2015 14:22:24 +0000
+Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E0422A2A6@DFLE11.ent.ti.com>
+References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
+ <1445432201-16007-2-git-send-email-w-kwok2@ti.com>
+ <CAL_JsqKSteJnz53YuBbgR1K9GWQDddkaqFo1aVxd8RsDam5jSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151022002246.GV19782@codeaurora.org>
+In-Reply-To: <CAL_JsqKSteJnz53YuBbgR1K9GWQDddkaqFo1aVxd8RsDam5jSw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, "Quadros, Roger" <rogerq@ti.com>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 05:22:47PM -0700, Stephen Boyd wrote:
-> On 10/15, Scott Branden wrote:
-> > On 15-10-15 02:15 PM, Ray Jui wrote:
-> > >On 10/15/2015 2:10 PM, Jon Mason wrote:
-> > >>On Thu, Oct 15, 2015 at 02:04:09PM -0700, Scott Branden wrote:
-> > >>>On 15-10-15 01:55 PM, Ray Jui wrote:
-> > >>>>On 10/15/2015 1:40 PM, Scott Branden wrote:
-> > >>>>
-> > >>>>If using CONFIG_CLK_NS2, how is it going to be enabled/selected?
-> > >>>
-> > >>>Since CONFIG_ARCH_BCM_NS2 isn't "allowed" to be introduced we will
-> > >>>need to create and select a CONFIG_CLK_BCM_NS2 in the defconfig
-> > >>>instead.
-> > >>
-> > >>Is this better than the binary becoming slightly bigger?  I thought
-> > >>the extra complexity was worse than having an unused chunk of clk code
-> > >>(and Kona is already doing the same thing above).  I believe Ray was
-> > >>in agreement with me during the internal review of this code.
-> > >>
-> > >>Thanks,
-> > >>Jon
-> > >>
-> > >
-> > >Yes, I'm okay with leaving it as it is. I even prefer changing the
-> > >current Makefile to make all iProc based core clock drivers and SoC
-> > >specific clock tables under CONFIG_COMMON_CLK_IPROC, which is what some
-> > >of the other vendors do.
-> > >
-> > I'd leave it exactly as is then rather than pulling in more dead
-> > code when not needed.  This ns2 clock code is very minor compared to
-> > other code bloat in the kernel and drivers.
-> 
-> We should really make these visible options that can be selected
-> by anyone. Having selects in the ARCH config area is simple, but
-> also has some downsides:
-> 
->  1) select is a reverse dependency and is hard for people to
->  understand and can sometimes be a pain to track down
-> 
->  2) build coverage goes down because configs are hidden
-> 
->  3) we get code bloat like is being discussed here
-> 
-> So I'd really like to see someone take a good look at this whole
-> Makefile situation that's going on and clean it up so that
-> they're user visible options and then throw the config options
-> into the defconfig. It isn't going to block this series, but it
-> would be nice to do at some later point.
-
-I'll do a pass at this today and send it out for review.
-
-Thanks,
-Jon
-
-> 
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
+aWx0bzpyb2JoK2R0QGtlcm5lbC5vcmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyMSwg
+MjAxNSA2OjU1IFBNDQo+IFRvOiBLd29rLCBXaW5nTWFuDQo+IENjOiBQYXdlbCBNb2xsOyBNYXJr
+IFJ1dGxhbmQ7IElhbiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgS0lTSE9OIFZJSkFZIEFCUkFIQU07
+DQo+IFF1YWRyb3MsIFJvZ2VyOyBLYXJpY2hlcmksIE11cmFsaWRoYXJhbjsgQmpvcm4gSGVsZ2Fh
+czsgU2FudG9zaCBTaGlsaW1rYXI7DQo+IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eDsgZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8yXSBwaHk6IGtleXN0b25lOiBz
+ZXJkZXMgZHJpdmVyIGZvciBnYmUgMTBnYmUgYW5kDQo+IHBjaWUNCj4gDQo+IE9uIFdlZCwgT2N0
+IDIxLCAyMDE1IGF0IDc6NTYgQU0sIFdpbmdNYW4gS3dvayA8dy1rd29rMkB0aS5jb20+IHdyb3Rl
+Og0KPiA+IE9uIFRJJ3MgS2V5c3RvbmUgcGxhdGZvcm1zLCBzZXZlcmFsIHBlcmlwaGVyYWxzIHN1
+Y2ggYXMgdGhlDQo+ID4gZ2JlIGV0aGVybmV0IHN3aXRjaCwgMTBnYmUgZXRoZXJuZXQgc3dpdGNo
+IGFuZCBQQ0llIGNvbnRyb2xsZXINCj4gPiByZXF1aXJlIHRoZSB1c2Ugb2YgYSBTZXJEZXMgZm9y
+IGNvbnZlcnRpbmcgU29DIHBhcmFsbGVsIGRhdGEgaW50bw0KPiA+IHNlcmlhbGl6ZWQgZGF0YSB0
+aGF0IGNhbiBiZSBvdXRwdXQgb3ZlciBhIGhpZ2gtc3BlZWQgZWxlY3RyaWNhbA0KPiA+IGludGVy
+ZmFjZSwgYW5kIGFsc28gY29udmVydGluZyBoaWdoLXNwZWVkIHNlcmlhbCBpbnB1dCBkYXRhDQo+
+ID4gaW50byBwYXJhbGxlbCBkYXRhIHRoYXQgY2FuIGJlIHByb2Nlc3NlZCBieSB0aGUgU29DLiAg
+VGhlDQo+ID4gU2VyRGVzZXMgdXNlZCBieSB0aG9zZSBwZXJpcGhlcmFscywgdGhvdWdoIHRoZXkg
+bWF5IGJlIGRpZmZlcmVudCwNCj4gPiBhcmUgbGFyZ2VseSBzaW1pbGFyIGluIGZ1bmN0aW9uYWxp
+dHkgYW5kIHNldHVwLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBwcm92aWRlcyBhIFNlckRlcyBwaHkg
+ZHJpdmVyIGltcGxlbWVudGF0aW9uIHRoYXQgY2FuIGJlDQo+ID4gdXNlZCBieSB0aGUgYWJvdmUg
+bWVudGlvbmVkIHBlcmlwaGVyYWwgZHJpdmVycyB0byBjb25maWd1cmUgdGhlaXINCj4gPiByZXNw
+ZWN0aXZlIFNlckRlc2VzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2luZ01hbiBLd29rIDx3
+LWt3b2syQHRpLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BoeS90aS1waHkudHh0IHwgIDIzOSArKysNCj4gDQo+IEZvciB0aGUgYmluZGluZzoN
+Cj4gDQo+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiANCj4gDQo+
+IE9uZSBvdGhlciBjb21tZW50Og0KPiANCj4gPiArICAgICAgIGlmIChvZl9kZXZpY2VfaXNfY29t
+cGF0aWJsZShucCwgInRpLGtleXN0b25lLXNlcmRlcy1nYmUiKSkgew0KPiA+ICsgICAgICAgICAg
+ICAgICBzYy0+cGh5X3R5cGUgPSBLU0VSREVTX1BIWV9TR01JSTsNCj4gPiArICAgICAgIH0gZWxz
+ZSBpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAsICJ0aSxrZXlzdG9uZS1zZXJkZXMteGdi
+ZSIpKQ0KPiB7DQo+ID4gKyAgICAgICAgICAgICAgIHNjLT5waHlfdHlwZSA9IEtTRVJERVNfUEhZ
+X1hHRTsNCj4gPiArICAgICAgIH0gZWxzZSBpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobnAs
+ICJ0aSxrZXlzdG9uZS1zZXJkZXMtcGNpZSIpKQ0KPiB7DQo+ID4gKyAgICAgICAgICAgICAgIHNj
+LT5waHlfdHlwZSA9IEtTRVJERVNfUEhZX1BDSUU7DQo+ID4gKyAgICAgICB9IGVsc2Ugew0KPiA+
+ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgInVua25vd24gcGh5IHR5cGVcbiIpOw0KPiA+
+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArICAgICAgIH0NCj4gDQo+IFVz
+ZSB0aGUgbWF0Y2ggZGF0YSB0byBzZXQgdGhlIHR5cGU6DQo+IA0KDQp3aWxsIGRvLg0KDQo+ID4g
+K3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGtzZXJkZXNfb2ZfbWF0Y2hbXSA9IHsN
+Cj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAidGksa2V5c3RvbmUtc2VyZGVzLWdiZSIgfSwN
+Cj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAidGksa2V5c3RvbmUtc2VyZGVzLXBjaWUiIH0s
+DQo+ID4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gInRpLGtleXN0b25lLXNlcmRlcy14Z2JlIiB9
+LA0KPiA+ICsgICAgICAgeyB9LA0KPiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9m
+LCBrc2VyZGVzX29mX21hdGNoKTsNCj4gDQo+IFJvYg0KDQpUaGFua3MsDQpXaW5nTWFuDQo=
