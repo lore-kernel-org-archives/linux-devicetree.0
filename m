@@ -1,36 +1,83 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v4 2/2] powerpc/512x: add a device tree binding for
- LocalPlus Bus FIFO
-Date: Thu, 22 Oct 2015 15:46:46 +0200
-Message-ID: <20151022154646.590d7b03@crub>
-References: <1444597682-22181-1-git-send-email-alex.popov@linux.com>
-	<1444597682-22181-3-git-send-email-alex.popov@linux.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Consolidate SRAM bindings from all vendors
+Date: Thu, 22 Oct 2015 08:51:02 -0500
+Message-ID: <CAL_Jsq+S6cCSo_rqsr36uGBo4dE8M9wqFdn=eV3XeHgjqS0pkA@mail.gmail.com>
+References: <1445477130-407-1-git-send-email-k.kozlowski@samsung.com>
+ <20151022090529.GV10947@lukather> <5628AA23.5070608@samsung.com> <20151022133447.GZ10947@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444597682-22181-3-git-send-email-alex.popov@linux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Popov <alex.popov@linux.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh@kernel.org>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20151022133447.GZ10947@lukather>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>, Heiko Stuebner <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Oct 2015 00:08:02 +0300
-Alexander Popov <alex.popov@linux.com> wrote:
+On Thu, Oct 22, 2015 at 8:34 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Thu, Oct 22, 2015 at 06:19:31PM +0900, Krzysztof Kozlowski wrote:
+>> On 22.10.2015 18:05, Maxime Ripard wrote:
+>> > Hi,
+>> >
+>> > On Thu, Oct 22, 2015 at 10:25:28AM +0900, Krzysztof Kozlowski wrote:
+>> >> SRAM bindings for various SoCs, using the mmio-sram genalloc
+>> >> API, are spread over different places - per SoC vendor. Since all of
+>> >> these are quite similar (they depend on mmio-sram) move them to a common
+>> >> place.
+>> >>
+>> >> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> >> Cc: Heiko Stuebner <heiko@sntech.de>
+>> >> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+>> >> Cc: Chen-Yu Tsai <wens@csie.org>
+>> >> Cc: Kukjin Kim <kgene@kernel.org>
+>> >> Suggested-by: Rob Herring <robh+dt@kernel.org>
+>> >>
+>> >> ---
+>> >>
+>> >> Changes since v1:
+>> >> 1. New patch. Extended suggestion from Rob.
+>> >> ---
+>> >>  .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt}    | 0
+>> >>  .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt}    | 0
+>> >>  .../bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt}         | 0
+>> >>  Documentation/devicetree/bindings/{misc => sram}/sram.txt                 | 0
+>> >>  .../devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt}       | 0
+>> >>  5 files changed, 0 insertions(+), 0 deletions(-)
+>> >>  rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} (100%)
+>> >>  rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} (100%)
+>> >>  rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt} (100%)
+>> >>  rename Documentation/devicetree/bindings/{misc => sram}/sram.txt (100%)
+>> >>  rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt} (100%)
+>> >
+>> > I'm not sure about that one. The SRAM bindins we have for sunxi is for
+>> > an SRAM controller, that maps the SRAM either to the CPU or to the
+>> > devices.
+>> >
+>> > It's not really related to the other users, and wouldn't it be
+>> > confusing to have a driver in drivers/soc, and a Documentation in
+>> > another sub-directory?
+>>
+>> I guess the only relation to other users is the "mmio-sram". In the same
+>> time this is still similar to e.g. Samsung's sram bindings (where the
+>> memory is mapped to CPU only).
+>>
+>> Being located in drivers/soc is not an issue here - code for other
+>> vendors may be moved there as well in the future.
+>>
+>> Of course I do not insist. Actually Rob's comment was only about moving
+>> sram.txt and Samsung's sram to common place.
 
-> Add a device tree binding for Freescale MPC512x LocalPlus Bus FIFO and
-> introduce the document describing that binding.
-> 
-> Signed-off-by: Alexander Popov <alex.popov@linux.com>
-> ---
->  .../bindings/powerpc/fsl/mpc512x_lpbfifo.txt        | 21 +++++++++++++++++++++
->  arch/powerpc/boot/dts/mpc5121.dtsi                  | 11 +++++++++--
->  arch/powerpc/boot/dts/mpc5125twr.dts                | 11 ++++++++++-
->  3 files changed, 40 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mpc512x_lpbfifo.txt
+I certainly appreciate your finding other instances.
 
-applied to mpc5xxx/next.
+>> Anyway I will be sending v3 of these because while looking more
+>> carefully I found hard-coded paths to bindings/misc/sram.txt. I'll fix
+>> it in next version.
+>
+> I didn't really have the context. If Rob feels like we should do that,
+> then go ahead.
 
-Thanks,
+I'm trying to group by binding type rather than arch or vendor for
+common bindings. I think bindings/sram is fine to host both ctrlr and
+memory range bindings.
 
-Anatolij
+Rob
