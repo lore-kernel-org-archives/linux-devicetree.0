@@ -1,45 +1,54 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/6] regulator: axp20x: Support new AXP223 PMIC
-Date: Thu, 22 Oct 2015 13:50:08 +0100
-Message-ID: <20151022125008.GJ8232@sirena.org.uk>
-References: <1444840342-9233-1-git-send-email-wens@csie.org>
- <1444840342-9233-5-git-send-email-wens@csie.org>
+Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Fri, 23 Oct 2015 01:30:52 +0900
+Message-ID: <20151022163052.GW8232@sirena.org.uk>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+ <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BOmey7/79ja+7F5w"
+	protocol="application/pgp-signature"; boundary="RMorpr61ug7CvG36"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444840342-9233-5-git-send-email-wens@csie.org>
+In-Reply-To: <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---BOmey7/79ja+7F5w
+--RMorpr61ug7CvG36
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Oct 15, 2015 at 12:32:20AM +0800, Chen-Yu Tsai wrote:
-> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-> It is functionally identical to AXP221; only the regulator default
-> voltage/status and the external host interface are different.
+On Fri, Sep 11, 2015 at 05:31:57PM +0530, Viresh Kumar wrote:
 
-Reviwed-by: Mark Brown <broonie@kernel.org>
+> +- supply-names: This is a required property, only if multiple supplies are
+> +  available for the device. Otherwise it is optional.
+> +
+> +  This list is used to pass names of all the device supplies. The order of names
+> +  present here is important, as that should match the order in which values are
+> +  present in 'opp-microvolt' and 'opp-microamp' properties.
 
---BOmey7/79ja+7F5w
+If we were going to add something like this (which I'm really not that
+thrilled about due to their encouragement of bad practice as previously
+discussed) it seems wrong to add it at the level of a specific binding
+rather than as a general facility.  I think I'm not entirely sold on
+this use case though, I'll follow up to a later message in this
+thread...
+
+--RMorpr61ug7CvG36
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWKNuAAAoJECTWi3JdVIfQMNAH/iF1Nm/IywDYLJjXioVBkiP1
-obkm5xCwMYS3XHjsquUFj674obzx0oFVUzZpcRxTNuQvzLDGRHysLRZzEtAtyNur
-huIj+O1sU2RlG/W+nw66LEDWdg2Aply3nPwPlkERCXYh6XLdIwTejTws3YWS9w9K
-J5Jctcc6IAA5ZnPIIdWF41oTjo7bjbt6O+3WM0LqlxCJfhGtjQIajvNJn0ixb0J/
-hRGfmSavQfuLGFmweleFdm4uTUCSc3XOn7vbe1rZduW32qQjg1vGGFkiSKCJuh/s
-VnBRVcSukWA0m8p9af4IVlJWzD3k2jqNDajmFTtxLnPN5uhaJKol6tFwt8wSTcA=
-=+MaE
+iQEcBAEBCAAGBQJWKQ87AAoJECTWi3JdVIfQWe4H/RQDcctlBFVAi9U5euO3pHTv
+ofFDIZ9GBKzFJH/QX2xElyvp5cfhJCA5b6x5uII/x/hRI4rtSqvKjSSEVmBrjqu6
+Dvf+2stIM9bVyn50F4GgVp2yBamXP4FgIq/SyoU53jcLz8Lv9OupRDLvamcxLUao
+vksK67PCALyKYTfGAuakpooryc3AARoy2Trw5HfqtdzKvkZ0y/dfthJrH/h7f3MV
+RrabmJJ21+aCm/NMNUou5lNAG7gTmNXc9EqCdqNahO8Q5+G0uqHEg00tX6dMYKCZ
+ELFLlvqTQyEvx61EX9cJQ6Ob7BWzOJBTnRcexv5BkF49AtC0kLWJNVWzmSfpwp4=
+=hRCS
 -----END PGP SIGNATURE-----
 
---BOmey7/79ja+7F5w--
+--RMorpr61ug7CvG36--
