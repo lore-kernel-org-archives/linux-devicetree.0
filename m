@@ -1,40 +1,75 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH 0/4] Sony Xperia Z dts
-Date: Thu, 22 Oct 2015 11:13:47 -0700
-Message-ID: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH 1/4] ARM: dts: qcom: apq8064: Add hwmutex and SMEM nodes
+Date: Thu, 22 Oct 2015 11:13:48 -0700
+Message-ID: <1445537631-29055-2-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, John Stultz <john.stultz@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series starts by adding hwspinlock, smem, gsbi5 and cleans up the
-8064 regulator definitions.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Based on this it adds the necessary nodes for booting the Sony Xperia Z
-(APQ8064 based) to userspace, with UART, eMMC, uSD, USB gadget and hw
-buttons.
-
-Bjorn Andersson (4):
-  ARM: dts: qcom: apq8064: Add hwmutex and SMEM nodes
-  ARM: dts: qcom: apq8064: Declare all pm8921 regulators
-  ARM: dts: qcom: apq8064: Introduce gsbi5 and gsbi5 serial node
-  ARM: dts: qcom: apq8064: Introduce Sony Xperia Z dts
-
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts        |  16 +-
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts         |  20 +-
- .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts | 436 +++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi                |  97 +++++
- 5 files changed, 552 insertions(+), 18 deletions(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index a4c1762b53ea..1b64723bd8a0 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -11,6 +11,17 @@
+ 	compatible = "qcom,apq8064";
+ 	interrupt-parent = <&intc>;
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		smem_region: smem@80000000 {
++			reg = <0x80000000 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -80,6 +91,19 @@
+ 		interrupts = <1 10 0x304>;
+ 	};
+ 
++	sfpb_mutex: hwmutex {
++		compatible = "qcom,sfpb-mutex";
++		syscon = <&sfpb_wrapper_mutex 0x604 0x4>;
++		#hwlock-cells = <1>;
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_region>;
++
++		hwlocks = <&sfpb_mutex 3>;
++	};
++
+ 	soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -156,6 +180,11 @@
+ 			};
+ 		};
+ 
++		sfpb_wrapper_mutex: syscon@1200000 {
++			compatible = "syscon";
++			reg = <0x01200000 0x8000>;
++		};
++
+ 		intc: interrupt-controller@2000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
 -- 
 2.4.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
