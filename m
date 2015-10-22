@@ -1,67 +1,80 @@
-From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH 1/4] of/overlay: add missing of_node_put
-Date: Thu, 22 Oct 2015 11:02:48 +0200
-Message-ID: <1445504571-19838-2-git-send-email-Julia.Lawall@lip6.fr>
-References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: kernel-janitors@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Thu, 22 Oct 2015 11:14:49 +0200
+Message-ID: <CAAObsKAWS83xkptJY+2V6jYddG8S7KpM1PQoXWoEE=b7wCy7cg@mail.gmail.com>
+References: <20151020153612.GB32054@sirena.org.uk> <Pine.LNX.4.44L0.1510201159400.1855-100000@iolanthe.rowland.org>
+ <CAAObsKChQN4gg91dCWJS_Co_MrYyBrB1J7gxgGo4hsPXNZRp3g@mail.gmail.com> <1757126.NgBN1ISfc9@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1757126.NgBN1ISfc9@vostro.rjw.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.co>
 List-Id: devicetree@vger.kernel.org
 
-for_each_child_of_node performs an of_node_get on each iteration, so
-a break out of the loop requires an of_node_put.
+On 22 October 2015 at 02:54, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Tuesday, October 20, 2015 06:21:55 PM Tomeu Vizoso wrote:
+>> On 20 October 2015 at 18:04, Alan Stern <stern@rowland.harvard.edu> wrote:
+>> > On Tue, 20 Oct 2015, Mark Brown wrote:
+>> >
+>> >> On Tue, Oct 20, 2015 at 10:40:03AM -0400, Alan Stern wrote:
+>> >>
+>> >> > Furthermore, that applies only to devices that use synchronous suspend.
+>> >> > Async suspend is becoming common, and there the only restrictions are
+>> >> > parent-child relations plus whatever explicit requirements that drivers
+>> >> > impose by calling device_pm_wait_for_dev().
+>> >>
+>> >> Hrm, this is the first I'd noticed that feature though I see the initial
+>> >> commit dates from January.
+>> >
+>> > Async suspend and device_pm_wait_for_dev() were added in January 2010,
+>> > not 2015!
+>> >
+>> >>  It looks like most of the users are PCs at
+>> >> the minute but we should be using it more widely for embedded things,
+>> >> there's definitely some cases I'm aware of where it will allow us to
+>> >> remove some open coding.
+>> >>
+>> >> It does seem like we want to be feeding dependency information we
+>> >> discover for probing way into the suspend dependencies...
+>> >
+>> > Rafael has been thinking about a way to do this systematically.
+>> > Nothing concrete has emerged yet.
+>>
+>> This iteration of the series would make this quite easy, as
+>> dependencies are calculated before probes are attempted:
+>>
+>> https://lkml.org/lkml/2015/6/17/311
+>
+> Well, if you know how to represent "links" between devices, the mechanism
+> introduced here doesn't really add much value, because in that case the
+> core knows what the dependencies are in the first place and can only
+> defer the probes that have to be deferred.
 
-A simplified version of the semantic patch that fixes this problem is as
-follows (http://coccinelle.lip6.fr):
+By "here" you mean what you are proposing for ordering device
+suspends, or on-demand probing?
 
-// <smpl>
-@@
-expression root,e;
-local idexpression child;
-@@
+If you meant that probing on-demand is unneeded if we already have
+dependency information, I agree with you and that's why I only pushed
+forward on-demand, as the approach linked above introduced some
+duplication when inferring the dependencies. Maybe that could be
+avoided without too much refactoring.
 
- for_each_child_of_node(root, child) {
-   ... when != of_node_put(child)
-       when != e = child
-(
-   return child;
-|
-+  of_node_put(child);
-?  return ...;
-)
-   ...
- }
-// </smpl>
+In any case, Thierry mentioned the other day in #tegra that one could
+also collect dependency information as a follow up to the on-demand
+series by calling device_depend() or such instead of
+of_device_probe().
 
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Regards,
 
----
- drivers/of/overlay.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Tomeu
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 24e025f..54e5af9 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -149,6 +149,7 @@ static int of_overlay_apply_one(struct of_overlay *ov,
- 			pr_err("%s: Failed to apply single node @%s/%s\n",
- 					__func__, target->full_name,
- 					child->name);
-+			of_node_put(child);
- 			return ret;
- 		}
- 	}
-@@ -417,8 +418,10 @@ static int overlay_subtree_check(struct device_node *tree,
- 		return 1;
- 
- 	for_each_child_of_node(tree, child) {
--		if (overlay_subtree_check(child, dn))
-+		if (overlay_subtree_check(child, dn)) {
-+			of_node_put(child);
- 			return 1;
-+		}
- 	}
- 
- 	return 0;
+> Thanks,
+> Rafael
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
