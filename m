@@ -1,30 +1,62 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: Generic DT binding for IPIs
-Date: Thu, 22 Oct 2015 11:55:51 +0000
-Message-ID: <20151022115551.GI3953@io.lakedaemon.net>
-References: <561E2BE6.2090807@imgtec.com>
- <5628BE00.4020106@imgtec.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+Date: Thu, 22 Oct 2015 14:35:00 +0200
+Message-ID: <CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
+	<56261239.5030007@linaro.org>
+	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5628BE00.4020106-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 11:44:16AM +0100, Qais Yousef wrote:
-> Is there anything more I can do to get more attention about this? I
-> think Marc's suggestion is more generic and future proof, if I send
-> RFC patches for that would this be better?
+On Tue, Oct 20, 2015 at 6:32 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
+> 2015-10-20 12:06 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+>> On 17/10/15 18:23, Maxime Coquelin wrote:
 
-Please do.
+>> I suggesting that, like with the clock driver, there is no need to the
+>> STM32F429_PAXX_FUNC_YYY macros at all.
+>>
+>> Given the way you can enumerate pin config options in stm32f429.dtsi then I
+>> think stm32f429.dtsi is the only file that will ever include this header? If
+>> so then why not just plug the values directly into the pinmux fields. Its
+>> not duplicative and is easier to map back to data sheets.
+>>
+>> ~~~
+>> #define PIN_NO(x) ...
+>> #define PIN_AF(x) ...
+>>
+>> usart1_pins_a: usart1@0 {
+>>                                 pins1 {
+>>                                         pinmux = PIN_NO(9) | PIN_AF(7);
+>>                                         bias-disable;
+>>                                         drive-push-pull;
+>>                                         slew-rate = <0>;
+>>                                 };
+>>                                 ...
+>>                         };
+>> ~~~
+>
+> The advantage with the defines is that you can see easily which pin we
+> are talking about.
+> Moreover, the defines are generated from the datasheet, so it is
+> painless to generate them.
+> And it will be consistent with Mediatek implementation, on which I
+> heavily inspired.
+>
+> Linus, what is your view?
 
-thx,
+I have no strong view of this at all.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would ask the opinion of other people doing numbered muxes
+to see what is generally best for everyone to use,
+Sascha Hauer specifically, or the Mediatek people.
+
+Yours,
+Linus Walleij
