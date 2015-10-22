@@ -1,190 +1,88 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v11 1/6] PCI: designware: move calculation of bus
- addresses to DRA7xx
-Date: Thu, 22 Oct 2015 07:21:41 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E16274DCC@lhreml503-mbs>
-References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
- <1444991021-109306-2-git-send-email-wangzhou1@hisilicon.com>
- <20151021221524.GM1583@localhost>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3 support
+Date: Thu, 22 Oct 2015 09:49:18 +0200
+Message-ID: <562894FE.3040702@gmail.com>
+References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com>
+ <5627E515.6050505@redhat.com>
+Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151021221524.GM1583@localhost>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>, "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.or
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBAFKUKYQKGQEC64BUGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5627E515.6050505-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, zhao_steven-Y9sIeH5OGRo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> Sent: 21 October 2015 23:15
-> To: Wangzhou (B)
-> Cc: Bjorn Helgaas; jingoohan1@gmail.com; pratyush.anand@gmail.com; Arnd
-> Bergmann; linux@arm.linux.org.uk; thomas.petazzoni@free-electrons.com;
-> Gabriele Paoloni; lorenzo.pieralisi@arm.com; james.morse@arm.com;
-> Liviu.Dudau@arm.com; jason@lakedaemon.net; robh@kernel.org;
-> gabriel.fernandez@linaro.org; Minghuan.Lian@freescale.com; linux-
-> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; zhangjukuo;
-> qiuzhenfa; liudongdong (C); qiujiang; xuwei (O); Liguozhu (Kenneth)
-> Subject: Re: [PATCH v11 1/6] PCI: designware: move calculation of bus
-> addresses to DRA7xx
-> 
-> Hi Zhou & Gabriele,
+Hi,
 
-Hi Bjorn, thanks for reviewing
-
+On 21/10/15 21:18, Hans de Goede wrote:
 > 
-> On Fri, Oct 16, 2015 at 06:23:36PM +0800, Zhou Wang wrote:
-> > From: gabriele paoloni <gabriele.paoloni@huawei.com>
-> >
-> > Commit f4c55c5a3f7f ("PCI: designware: Program ATU with untranslated
-> > address") added the calculation of PCI BUS addresses in designware,
-> > storing them in new fields added in "struct pcie_port". This
-> > calculation is done for every designware user even if is only
-> > applicable to DRA7xx.
-> > This patch moves the calculation of the bus addresses to the DRA7xx
-> > driver and is needed to allow the rework of designware to use
-> > the new DT parsing API.
-> >
-> > Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> > Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> > Acked-by: Pratyush Anand <pratyush.anand@gmail.com>
-> > ---
-> >  drivers/pci/host/pci-dra7xx.c      | 13 +++++++++++++
-> >  drivers/pci/host/pcie-designware.c | 15 ++++-----------
-> >  2 files changed, 17 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-> > index 199e29a..ebdffa0 100644
-> > --- a/drivers/pci/host/pci-dra7xx.c
-> > +++ b/drivers/pci/host/pci-dra7xx.c
-> > @@ -62,6 +62,7 @@
-> >
-> >  #define	PCIECTRL_DRA7XX_CONF_PHY_CS			0x010C
-> >  #define	LINK_UP						BIT(16)
-> > +#define	CPU_TO_BUS_ADDR					0x0FFFFFFF
+> Great to see that you've started working on this again. Last weekend I
+> ended up working on this too together with Reinder E.N. de Haan <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> (added to the Cc).
 > 
-> "CPU_TO_BUS_ADDR" is a very generic name.  Since you do have DRA7XX in
-> other #defines and static symbols in this file, maybe it could be DRA7XX to
-> make it obvious that it only applies here?
+> We took a slightly different approach for the gates clocks, see:
+> 
+> https://github.com/jwrdegoede/linux-sunxi/commits/sunxi-wip
+> 
+> And specifically:
+> 
+> https://github.com/jwrdegoede/linux-sunxi/commit/80a1afe319d5d1a0c426d42e75d37f0c64e8ea0b
+> 
+> Combined with:
+> 
+> https://github.com/jwrdegoede/linux-sunxi/commit/d508da5feb5048f6674d6b24b58ac9058fb9d877
+> 
+> This deals with the per gate parents the same way the rockchip
+> clock code does, and it seems to be quite a bit less code then your solution.
+> 
+> So now we've two solutions to chose from :) Since you seem to be back to
+> working on this I'll refrain from doing any further work, at least
+> without coordinating. Maxime, can you let us know which solution for the
+> gates clock parents is best, or tell us if you think both solutions are
+> no good :)
 
-Ok will change to DRA7XX_CPU_TO_BUS_ADRR in v12
+I'd actually prefer your solution. I duplicated the simple-gates code
+when trying a different approach and never revisited that decision.
 
 > 
-> >
-> >  struct dra7xx_pcie {
-> >  	void __iomem		*base;
-> > @@ -151,6 +152,18 @@ static void dra7xx_pcie_enable_interrupts(struct
-> pcie_port *pp)
-> >  static void dra7xx_pcie_host_init(struct pcie_port *pp)
-> >  {
-> >  	dw_pcie_setup_rc(pp);
-> > +
-> > +	if (pp->io_mod_base)
-> > +		pp->io_mod_base &= CPU_TO_BUS_ADDR;
+> (I wanted to get in touch with you about the work done this weekend,
+> but your posting of this v3 has sorta pre-empted that).
 > 
-> These are equivalent to
+> Other then the slightly different solution for the gates, the code in my tree
+> is a straight forward port of your v2.
 > 
->   pp->io_mod_base &= CPU_TO_BUS_ADDR;
+> Thanks for your work on this!
 > 
-> (You don't need to test whether they're zero first.)
+> Regards,
+> 
+> Hans
+> 
+> 
+> p.s.
+> 
+> I'm teaching a kernel driver course at my local hackerspace in the netherlands:
+> 
+> https://revspace.nl/KernelDriverProgrammingCourse2015
+> 
+> Which is where our work on this this weekend originated. The next planned
+> course day is November 1st and I expect Reinder to be working on the H3
+> again then. I think the plan was to tackle USB next. Reinder can you confirm
+> this ?  If you (Jens) want to work on USB before then, that is fine, but please
+> coordinate their is plenty to do, so no need for us to be doing (more) double
+> work.
 > 
 
-Yes agreed, will change in v12
+I don't plan to work on USB soon, my next step would have been Ethernet
+and finishing the basic u-boot support. You know my u-boot H3 wip tree I
+hope? Before we duplicate our work there too...
+https://github.com/jemk/u-boot-sunxi/tree/sunxi/h3
 
-> > +
-> > +	if (pp->mem_mod_base)
-> > +		pp->mem_mod_base &= CPU_TO_BUS_ADDR;
-> > +
-> > +	if (pp->cfg0_mod_base) {
-> > +		pp->cfg0_mod_base &= CPU_TO_BUS_ADDR;
-> > +		pp->cfg1_mod_base &= CPU_TO_BUS_ADDR;
-> > +	}
-> > +
-> >  	dra7xx_pcie_establish_link(pp);
-> >  	if (IS_ENABLED(CONFIG_PCI_MSI))
-> >  		dw_pcie_msi_init(pp);
-> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
-> designware.c
-> > index 52aa6e3..75338a6 100644
-> > --- a/drivers/pci/host/pcie-designware.c
-> > +++ b/drivers/pci/host/pcie-designware.c
-> > @@ -365,14 +365,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >  	struct of_pci_range range;
-> >  	struct of_pci_range_parser parser;
-> >  	struct resource *cfg_res;
-> > -	u32 val, na, ns;
-> > +	u32 val, ns;
-> >  	const __be32 *addrp;
-> >  	int i, index, ret;
-> >
-> > -	/* Find the address cell size and the number of cells in order to get
-> > -	 * the untranslated address.
-> > -	 */
-> > -	of_property_read_u32(np, "#address-cells", &na);
-> >  	ns = of_n_size_cells(np);
-> >
-> >  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> > @@ -415,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >  			pp->io_base = range.cpu_addr;
-> >
-> >  			/* Find the untranslated IO space address */
-> > -			pp->io_mod_base = of_read_number(parser.range -
-> > -							 parser.np + na, ns);
-> > +			pp->io_mod_base = range.cpu_addr;
-> 
-> So apparently
-> 
->   "of_read_number() == range.cpu_addr & CPU_TO_BUS_ADDR" on DRA7xx
->   "of_read_number() == range.cpu_addr" everywhere else?
-
-Yes correct
-
-> 
-> Is that right?  Is that a valid assumption, i.e., are we assuming
-> anything about DTs in the field that we shouldn't?
-
-Before I wrote a patch that was generic to accommodate intermediate level
-of translation between PCI_addr -> BUS_addr -> CPU_addr
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/360922.html
-
-After discussion we agreed to solve it with a bitmask rather than adding
-a field to of_pci_range to make it generic.
-The bitmask only applies to DRA7xx
-
-> 
-> >  		}
-> >  		if (restype == IORESOURCE_MEM) {
-> >  			of_pci_range_to_resource(&range, np, &pp->mem);
-> > @@ -425,8 +420,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >  			pp->mem_bus_addr = range.pci_addr;
-> >
-> >  			/* Find the untranslated MEM space address */
-> > -			pp->mem_mod_base = of_read_number(parser.range -
-> > -							  parser.np + na, ns);
-> > +			pp->mem_mod_base = range.cpu_addr;
-> >  		}
-> >  		if (restype == 0) {
-> >  			of_pci_range_to_resource(&range, np, &pp->cfg);
-> > @@ -436,8 +430,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >  			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
-> >
-> >  			/* Find the untranslated configuration space address */
-> > -			pp->cfg0_mod_base = of_read_number(parser.range -
-> > -							   parser.np + na, ns);
-> > +			pp->cfg0_mod_base = range.cpu_addr;
-> >  			pp->cfg1_mod_base = pp->cfg0_mod_base +
-> >  					    pp->cfg0_size;
-> >  		}
-> > --
-> > 1.9.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > Please read the FAQ at  http://www.tux.org/lkml/
+Jens
