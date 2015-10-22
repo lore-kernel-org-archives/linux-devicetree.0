@@ -1,52 +1,45 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Fri, 23 Oct 2015 01:47:24 +0900
-Message-ID: <20151022164724.GZ8232@sirena.org.uk>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
+Subject: Re: [PATCH 4/6] regulator: axp20x: Support new AXP223 PMIC
+Date: Thu, 22 Oct 2015 13:50:08 +0100
+Message-ID: <20151022125008.GJ8232@sirena.org.uk>
+References: <1444840342-9233-1-git-send-email-wens@csie.org>
+ <1444840342-9233-5-git-send-email-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5FDiZl1vRbLRjwwc"
+	protocol="application/pgp-signature"; boundary="BOmey7/79ja+7F5w"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1443731874-21362-5-git-send-email-afd@ti.com>
+In-Reply-To: <1444840342-9233-5-git-send-email-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---5FDiZl1vRbLRjwwc
+--BOmey7/79ja+7F5w
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Oct 01, 2015 at 03:37:53PM -0500, Andrew F. Davis wrote:
+On Thu, Oct 15, 2015 at 12:32:20AM +0800, Chen-Yu Tsai wrote:
+> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+> It is functionally identical to AXP221; only the regulator default
+> voltage/status and the external host interface are different.
 
-> +static const struct of_device_id tps65912_regulator_of_match_table[] = {
-> +	{ .compatible = "ti,tps65912-regulator", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, tps65912_regulator_of_match_table);
+Reviwed-by: Mark Brown <broonie@kernel.org>
 
-Does this IP block exist outside of the tps65912?  If not why is it
-directly represented in DT?  It seems like this is describing how Linux
-loads drivers not how the hardware is constructed but DT should describe
-the hardware.
-
---5FDiZl1vRbLRjwwc
+--BOmey7/79ja+7F5w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWKRMcAAoJECTWi3JdVIfQSHYH/0HgOh93Kz9laCFWEjnU7LCy
-cYbTBuyM+ES5KjHtXXt/TVbqN06rfZDpC8efLd+cBGtLvpAPGeLmDjO1Ofsp0Da3
-vUKdNAICwoPe6WzI4UEic7X7JS7JQQo97CYKkH/bcRC6IlsGnlMn2G8fwt8vFCSP
-ARyy2/3vzKhwhdvbbdwLfYIl2Fqe1WIzrlHUcdrIE8GC8GxKvdkRAN9Ss4tNL/54
-AH2xGWvQlMehu9lqWKXou2HySJdavQNjZdP5ePxi8MQ+qzMtM1EP5URBWBQRXNkL
-UYZLE/iIMjG4LV+H/D6OS3YoMNH93NTKw+BAgv1lgb68ocS86TbS3cdSMN4c0Rc=
-=kzM9
+iQEcBAEBCAAGBQJWKNuAAAoJECTWi3JdVIfQMNAH/iF1Nm/IywDYLJjXioVBkiP1
+obkm5xCwMYS3XHjsquUFj674obzx0oFVUzZpcRxTNuQvzLDGRHysLRZzEtAtyNur
+huIj+O1sU2RlG/W+nw66LEDWdg2Aply3nPwPlkERCXYh6XLdIwTejTws3YWS9w9K
+J5Jctcc6IAA5ZnPIIdWF41oTjo7bjbt6O+3WM0LqlxCJfhGtjQIajvNJn0ixb0J/
+hRGfmSavQfuLGFmweleFdm4uTUCSc3XOn7vbe1rZduW32qQjg1vGGFkiSKCJuh/s
+VnBRVcSukWA0m8p9af4IVlJWzD3k2jqNDajmFTtxLnPN5uhaJKol6tFwt8wSTcA=
+=+MaE
 -----END PGP SIGNATURE-----
 
---5FDiZl1vRbLRjwwc--
+--BOmey7/79ja+7F5w--
