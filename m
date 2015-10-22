@@ -1,127 +1,92 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: Which is better to specify console, "console= " or "stdout-path" ?
-Date: Thu, 22 Oct 2015 13:20:50 +0900
-Message-ID: <CAK7LNASqjd_Xf53WKa=Ogesf80HQzEoKEyVtw-BMh7JF=jq+xQ@mail.gmail.com>
-References: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg@mail.gmail.com>
-	<562753A6.3070107@arm.com>
-	<56278911.9050704@hurleysoftware.com>
-	<CAK7LNAQ_+_9K-y7bmpdGwcH2u4uqJhJhON1Ew4OvzSSa-amyvw@mail.gmail.com>
-	<5627BCBC.5040701@hurleysoftware.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v4 00/11] exynos-ufs: add support for Exynos
+Date: Thu, 22 Oct 2015 09:54:19 +0530
+Message-ID: <562864F3.9000305@samsung.com>
+References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5627BCBC.5040701-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-reply-to: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: JBottomley@odin.com, vinholikatti@gmail.com, Kishon Vijay Abraham I <kishon@ti.com>, essuuj@gmail.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+A Gentle Reminder !!
 
-2015-10-22 1:26 GMT+09:00 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>:
-> On 10/21/2015 11:38 AM, Masahiro Yamada wrote:
->> Hi Peter.
->>
->> 2015-10-21 21:46 GMT+09:00 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>:
->>> On 10/21/2015 04:58 AM, Sudeep Holla wrote:
->>>> On 21/10/15 06:09, Masahiro Yamada wrote:
->>>>> I think there exist two ways to specify the console port and baudrate.
->>>>>
->>>>>
->>>>> [1] Specify console in bootargs
->>>>>
->>>>>    chosen {
->>>>>          bootargs = "console=ttyS0,115200";
->>>>>    };
->>>>>
->>>>>
->>>>> [2] Specify stdout-path
->>>>>
->>>>>     chosen {
->>>>>           stdout-path = "serial0:115200n8";
->>>>
->>>> This will work for even early/boot console, so this is better than
->>>> option [1]
->>>
->>> Be aware that options specified via /chosen/stdout-path are
->>> currently ignored by earlycon. There were some hiccups getting the
->>> initial support upstream; when 4.4 hits mainline, I'll resubmit
->>> my series that implements the of_serial i/o properties and
->>> options passthrough to earlycon setup.
->>
->>
->> As I said in another thread ("serial: earlycon: allow to specify
->> uartclk in earlycon kernel-parameter"),
->> stdout-path can pass dev->baud, but not port->uartclk.
+On 10/14/2015 06:25 PM, Alim Akhtar wrote:
+> This patch-set introduces UFS (Universal Flash Storage) host support
+> for Samsung Exynos SoC. Mostly, it consists of UFS PHY and host specific driver.
+> And it also contains some quirks handling for Exynos.
 >
-> That's true but I'm not seeing in that thread where you wrote that?
-
-Sorry, I made you confused.  I was talking about the kernel parameter (console=)
-in the thread.
-
-> My replies there were specific to uartclk on the kernel command line,
-> which isn't necessary if the bootloader has already initialized the
-> uart.
+> NOTE: ** This series has a dependency on [4]. **
 >
->> It is usually specified "clocks" phandle, but
->> clk is not ready at the point of earlycon.
->>
->> It seems impossible to set up the baudrate even if the options are passed.
+> -Changes since v3:
+> * Fixed compilation warrings as reported by "Kbuild Test Robot"[5].
+> * Restructure the driver to make it as a platform driver, rebased on top of [4].
+> * Addressed review comments from Arnd Bergmann[5].
+> * Other misc changes and improvements.
 >
-> It's difficult to understand what you're trying to do when I can't
-> see the code you're referring to.  For example, I only recently
-> understood that you're talking about a earlycon implementation
-> that you're working on and not the 8250 earlycon itself.
-
-Sorry again for making you confused.
-
-I was talking both.
-
-Now I am tackling on some ARM board porting.
-
-
-The board has a pure 8250 family device (compatible = "ns16550a") on it.
-
-In addition, there exist 8250-variant IPs inside the SoC.
-(this is similar to 8250, but slightly different.
-drivers/tty/serial/8250/8250_uniphier.c)
-
-
-What I want to do is:
-  [1] To use  drivers/tty/serial/8250/8250_early.c  for the on-board ns16550a.
-  [2] To implement my own EARLYCON_DECLARE() in
-drivers/tty/serial/8250/8250_uniphier.c
-
-
-
-> If you look at other non-8250 earlycons, you'll see they all ignore
-> the baud rate, on the assumption the bootloader already set it up.
-
-OK, I will do so for [2].
-
-
-> The 8250 earlycon is a little different because legacy platforms
-> do not initialize the uart.
-
-
-Make sense.
-
-For legacy platforms, earlycon initializes the uart,
-assuming the hard-coded "port->uartclk = BASE_BAUD * 16"
-is the value.
-
-
-For embedded boards such as ARM, the boot-loader should initialize the UART
-and the earlycon should preserve it because port->uartclk varies from
-board to board.
-(For example, the ns16550a on my board expects   BASE_BAUD is 1228000,
-but it does not match the one in include/asm-generic/serial.h )
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -Changes since v2:
+> * Addressed review comments from Kishon[1] and Rob Herring [2]
+> * Splited ufs dt binding documetation from ufs driver patch
+>
+> -Changes since v1:
+> * Addressed review comments from Alexey[3] and various review comments from Amit.
+> * Updated email id of Seungwon as his samsung id is void now.
+> * Added ufs platform data
+>
+> [1]-> https://lkml.org/lkml/2015/9/18/29
+> [2]-> https://lkml.org/lkml/2015/9/21/668
+> [3]-> https://lkml.org/lkml/2015/8/23/124
+> [4]-> https://lkml.org/lkml/2015/9/2/364
+> [5]-> https://lkml.org/lkml/2015/10/1/402
+>
+> This patch set is tested on exynos7-espresso board.
+>
+> Alim Akhtar (1):
+>    Documentation: samsung-phy: Add dt bindings for UFS
+>
+> Seungwon Jeon (10):
+>    phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
+>    scsi: ufs: add quirk to contain unconformable utrd field
+>    scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
+>    scsi: ufs: add quirk not to allow reset of interrupt aggregation
+>    scsi: ufs: add quirk to enable host controller without hce
+>    scsi: ufs: add specific callback for nexus type
+>    scsi: ufs: add add specific callback for hibern8
+>    scsi: ufs: make ufshcd_config_pwr_mode of non-static func
+>    Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
+>      controller
+>    scsi: ufs-exynos: add UFS host support for Exynos SoCs
+>
+>   .../devicetree/bindings/phy/samsung-phy.txt        |   22 +
+>   .../devicetree/bindings/ufs/ufs-exynos.txt         |  104 ++
+>   drivers/phy/Kconfig                                |    7 +
+>   drivers/phy/Makefile                               |    1 +
+>   drivers/phy/phy-exynos-ufs.c                       |  257 ++++
+>   drivers/phy/phy-exynos-ufs.h                       |   88 ++
+>   drivers/phy/phy-exynos7-ufs.h                      |   89 ++
+>   drivers/scsi/ufs/Kconfig                           |   12 +
+>   drivers/scsi/ufs/Makefile                          |    1 +
+>   drivers/scsi/ufs/ufs-exynos-hw.c                   |  131 ++
+>   drivers/scsi/ufs/ufs-exynos-hw.h                   |   43 +
+>   drivers/scsi/ufs/ufs-exynos.c                      | 1317 ++++++++++++++++++++
+>   drivers/scsi/ufs/ufs-exynos.h                      |  247 ++++
+>   drivers/scsi/ufs/ufshcd.c                          |  168 ++-
+>   drivers/scsi/ufs/ufshcd.h                          |   54 +
+>   drivers/scsi/ufs/ufshci.h                          |   26 +-
+>   drivers/scsi/ufs/unipro.h                          |   47 +
+>   include/linux/phy/phy-exynos-ufs.h                 |  101 ++
+>   18 files changed, 2695 insertions(+), 20 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+>   create mode 100644 drivers/phy/phy-exynos-ufs.c
+>   create mode 100644 drivers/phy/phy-exynos-ufs.h
+>   create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+>   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+>   create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+>   create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+>   create mode 100644 include/linux/phy/phy-exynos-ufs.h
+>
