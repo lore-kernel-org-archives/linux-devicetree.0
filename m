@@ -1,62 +1,83 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [RFC PATCH 0/8] clk: qoriq: Move chip-specific knowledge into
- driver
-Date: Thu, 22 Oct 2015 03:11:16 -0700
-Message-ID: <20151022101116.20687.55089@quantum>
-References: <1434682158-7243-1-git-send-email-scottwood@freescale.com>
- <20150811182535.31346.52965@quantum>
- <1443745589.5336.185.camel@freescale.com>
- <1444435064.5185.16.camel@freescale.com>
+From: andrew@ncrmnt.org
+Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
+Date: Thu, 22 Oct 2015 10:36:18 +0000
+Message-ID: <93351858f57ca6e1220a0007f98baa25@cloud.ncrmnt.org>
+References: <vnkw8u6xts6n.fsf@codeaurora.org>
+ <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
+ <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
+ <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
+ <vnkwh9lwlymo.fsf@codeaurora.org>
+ <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1444435064.5185.16.camel@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: devicetree@vger.kernel.org, Liberman Igal-B31950 <Igal.Liberman@freescale.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Tang Yuantian <Yuantian.Tang@freescale.com>, linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bucur Madalin-Cristian-B32716 <madalin.bucur@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <vnkw8u6xts6n.fsf@codeaurora.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Mitchel Humpherys <mitchelh@codeaurora.org>
+Cc: Feng Tang <feng.tang@intel.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devel@driverdev.osuosl.org, Tom Gall <tom.gall@linaro.org>, arve@android.com, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Riley Andrews <riandrews@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, a.bogdanova@module.ru, linux-arm-kernel@lists.infradead.org, Laura Abbott <labbott@fedoraproject.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, a.makarov@module.ru, Laura Abbott <laura@labbott.name>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Scott Wood (2015-10-09 16:57:44)
-> On Thu, 2015-10-01 at 19:26 -0500, Scott Wood wrote:
-> > [Resending to updated e-mail address]
-> > 
-> > On Tue, 2015-08-11 at 11:25 -0700, Michael Turquette wrote:
-> > > Hi Scott,
-> > > 
-> > > Quoting Scott Wood (2015-06-18 19:49:10)
-> > > > The existing device tree bindings are error-prone and inflexible. 
-> > > > Correct the mistake by moving the knowledge into the driver, which
-> > > > has more flexibility in describing the quirks of each chip.  This leaves
-> > > > the device tree to its proper role of identifying a programming 
-> > > > interface
-> > > > rather than describing its individual registers.
-> > > 
-> > > Sorry for not responding to this one sooner. Fell through the cracks.
-> > > 
-> > > All of the changes to drives/clk/clk-qoriq.c look great to me. I assume
-> > > you need to keep all of these patches together and want to the take
-> > > through the freescale tree? If so feel free to add,
-> > > 
-> > > Acked-by: Michael Turquette <mturquette@baylibre.com>
-> > 
-> > Is the ack still valid for the v3 patchset?
-
-Yes. Looks Stephen beat me to it though.
-
-Regards,
-Mike
-
-> 
-> ping
-> 
-> -Scott
-> 
+MjAg0L7QutGC0Y/QsdGA0Y8gMjAxNSDQsy4sIDE5OjM0LCAiTWl0Y2hlbCBIdW1waGVyeXMiIDxt
+aXRjaGVsaEBjb2RlYXVyb3JhLm9yZz4g0L3QsNC/0LjRgdCw0Ls6Cj4gT24gVHVlLCBPY3QgMTMg
+MjAxNSBhdCAxMToxNDoyMyBBTSwgQW5kcmV3IDxhbmRyZXdAbmNybW50Lm9yZz4gd3JvdGU6Cj4g
+Cj4+IE9uIDIwMTUtMTAtMTIgMjE6MzksIE1pdGNoZWwgSHVtcGhlcnlzIHdyb3RlOgo+Pj4gT24g
+VHVlLCBPY3QgMDYgMjAxNSBhdCAwNTozNTo0MSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcy
+QGdtYWlsLmNvbT4KPj4+IHdyb3RlOgo+Pj4+IE9uIFR1ZSwgT2N0IDYsIDIwMTUgYXQgMzo0NyBQ
+TSwgTGF1cmEgQWJib3R0IDxsYWJib3R0QGZlZG9yYXByb2plY3Qub3JnPgo+Pj4+IHdyb3RlOgo+
+Pj4gCj4+PiBbLi4uXQo+Pj4gCj4+Pj4+ICtFeGFtcGxlOgo+Pj4+PiArCj4+Pj4+ICsgaW9uIHsK
+Pj4+Pj4gKyBjb21wYXRiaWxlID0gImxpbnV4LGlvbiI7Cj4+Pj4+ICsgI2FkZHJlc3MtY2VsbHMg
+PSA8MT47Cj4+Pj4+ICsgI3NpemUtY2VsbHMgPSA8MD47Cj4+Pj4+ICsKPj4+Pj4gKyBpb24tc3lz
+dGVtLWhlYXAgewo+Pj4+PiArIGxpbnV4LGlvbi1oZWFwLWlkID0gPDA+Owo+Pj4+PiArIGxpbnV4
+LGlvbi1oZWFwLXR5cGUgPSA8SU9OX1NZU1RFTV9IRUFQX1RZUEU+Owo+Pj4+PiArIGxpbnV4LGlv
+bi1oZWFwLW5hbWUgPSAic3lzdGVtIjsKPj4+PiAKPj4+PiBIb3cgZG9lcyB0aGlzIHZhcnkgYWNy
+b3NzIHBsYXRmb3Jtcz8gSXMgYWxsIG9mIHRoaXMgYmVpbmcgcHVzaGVkIGRvd24KPj4+PiB0byBE
+VCwgYmVjYXVzZSB0aGVyZSBpcyBubyBjb29yZGluYXRpb24gb2YgdGhpcyBhdCB0aGUga2VybmVs
+IEFCSQo+Pj4+IGxldmVsIGFjcm9zcyBwbGF0Zm9ybXMuIEluIG90aGVyIHdvcmRzLCB3aHkgY2Fu
+J3QgaGVhcCAwIGJlIGhhcmRjb2RlZAo+Pj4+IGFzIHN5c3RlbSBoZWFwIGluIHRoZSBkcml2ZXIu
+IEl0IHNlZW1zIHRvIG1lIGFueSAxIG9mIHRoZXNlIDMKPj4+PiBwcm9wZXJ0aWVzIGNvdWxkIGJl
+IHVzZWQgdG8gZGVyaXZlIHRoZSBvdGhlciAyLgo+Pj4gCj4+PiBUaGUgaGVhcC1pZDwtPmhlYXAt
+dHlwZSBtYXBwaW5nIGlzbid0IG5lY2Vzc2FyaWx5IDE6MS4gQXMgTGF1cmEKPj4+IGluZGljYXRl
+ZCBlbHNld2hlcmUgb24gdGhpcyB0aHJlYWQsIGEgZ2l2ZW4gaGVhcCBtaWdodCBuZWVkIHRvIGJl
+Cj4+PiBjb250aWd1b3VzIG9uIG9uZSBwbGF0Zm9ybSBidXQgbm90IG9uIGFub3RoZXIuIEluIHRo
+YXQgY2FzZSB5b3UganVzdAo+Pj4gc3dhcCBvdXQgdGhlIGhlYXAtdHlwZSBoZXJlIGFuZCB0aGVy
+ZSdzIG5vIG5lZWQgZm9yIHVzZXJzcGFjZSB0byBjaGFuZ2UuCj4+PiAKPj4+IFRoZSBoZWFwLW5h
+bWUsIE9UT0gsIGNvdWxkIGJlIGRlcml2ZWQgZnJvbSB0aGUgaGVhcC1pZCwgd2hpY2ggaXMgd2hh
+dCB3ZQo+Pj4gaGFja2lzaGx5IGRvIGhlcmUgWzFdIGFuZCBoZXJlWzJdLgo+PiAKPj4gQnkgdGhl
+IHdheSwgc2luY2Ugd2UgYWdyZWVkIHRoYXQgaGVhcCBpZCBhbmQgaGVhcCB0eXBlIG1hcHBpbmdz
+Cj4+IGFyZSBub3QgMToxIC0gd2UgaGF2ZSBhIHByb2JsZW0gd2l0aCB0aGUgY3VycmVudCBBUEku
+Cj4+IAo+PiBJbiB1c2Vyc3BhY2Ugd2UgY3VycmVudGx5IGhhdmUgdGhpczoKPj4gCj4+IGludCBp
+b25fYWxsb2MoaW50IGZkLCBzaXplX3QgbGVuLCBzaXplX3QgYWxpZ24sIHVuc2lnbmVkIGludCBo
+ZWFwX21hc2ssCj4+IHVuc2lnbmVkIGludCBmbGFncywgaW9uX3VzZXJfaGFuZGxlX3QgKmhhbmRs
+ZSk7Cj4+IAo+PiBXZSBkbyBub3Qgc3BlY2lmeSBoZXJlIHdoYXQgVFlQRSBvZiBoZWFwIHdlIHdh
+bnQgdGhlIGFsbG9jYXRpb24gdG8gY29tZQo+PiBmcm9tLgo+PiBUaGlzIG1heSBsZWFkIHRvIHZl
+cnkgdW5wbGVhc2FudCBzdHVmZiB3aGVuIHBvcnRpbmcgZnJvbSBvbmUgcGxhdGZyb20gdG8KPj4g
+YW5vdGhlci4KCk9rYXksIEkgbWF5IGJlIHRvdGFsbHkgbWlzc2luZyBzb21lIHBvaW50IGhlcmUg
+dGhlbi4KCj4gV2hhdCAidW5wbGVhc2FudCBzdHVmZiIgYXJlIHlvdSByZWZlcnJpbmcgdG8sIGV4
+YWN0bHk/IAoKSXQncyBub3QgcmVhbGx5IGNsZWFyIGZvciBtZSBob3cgKGFuZCBhdCB3aGVyZSAt
+IGtlcm5lbCBvciB1c2Vyc3BhY2UpIAp3ZSBzaG91bGQgcHJvcGVybHkgc29ydCBvdXQgY2FzZXMg
+d2hlbiB0aGUgbmV4dCBkZXZpY2UgdGhlIHBpcGVsaW5lIAppbnRyb2R1Y2VzIHNvbWUgY29uc3Ry
+YWludHMgb24gdGhlIGJ1ZmZlciBpdCBjYW4gdXNlLiAKCkZvciBpbnN0YW5jZTogY2FtZXJhIGNh
+biBzYXZlIGRhdGEgaW50byBhIG5vbi1jb250aWd1b3VzIGJ1ZmZlciwgYnV0IHRoZSAKaW1hZ2Ug
+cHJvY2Vzc2luZyBoYXJkd2FyZSAodGhhdCBtYXkgb3IgbWF5IG5vdCBiZSBpbnZvbHZlZCkgZXhw
+ZWN0cyB0aGUgCmJ1ZmZlciB0byBiZSBjb250aWd1b3VzLgoKPiBBYnN0cmFjdGluZyB0aGUKPiBo
+ZWFwIHR5cGUgYXdheSBmcm9tIHVzZXJzcGFjZSBoYXMgYWN0dWFsbHkgbWFkZSBvdXIgbGl2ZXMg
+ZWFzaWVyIHNpbmNlCj4gdXNlcnNwYWNlIGRvZXNuJ3QgbmVlZCB0byBrbm93IGFueXRoaW5nIGFi
+b3V0IHRoZSBwcm9wZXJ0aWVzIG9mIHRoZQo+IHVuZGVybHlpbmcgcGxhdGZvcm0uIEl0IGp1c3Qg
+YXNrcyBmb3IgYSBidWZmZXIgZnJvbSB0aGUgImNhbWVyYSIgaGVhcCwKPiBmb3IgZXhhbXBsZS4g
+T24gc29tZSBwbGF0Zm9ybXMgdGhhdCdzIGNvbnRpZ3VvdXMsIG9uIG90aGVycyBpdCdzIG5vdC4K
+PiAKPiAtTWl0Y2gKPiAKPiAtLQo+IFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuCj4g
+VGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBD
+b2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9q
+ZWN0CgpSZWdhcmRzLCAKQW5kcmV3Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qu
+b3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaXZlcmRldi1kZXZlbAo=
