@@ -1,237 +1,124 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 2/4] ARM: dts: qcom: apq8064: Declare all pm8921 regulators
-Date: Thu, 22 Oct 2015 11:13:49 -0700
-Message-ID: <1445537631-29055-3-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] iio: mma8452: support either of the available
+ interrupt pins
+Date: Thu, 22 Oct 2015 13:22:50 -0500
+Message-ID: <CAL_Jsq+cd0A7wczT-KC3TT_2UmZDqjr799uRMR_WA_JFfTw6dA@mail.gmail.com>
+References: <1444914632-4486-1-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444914632-4486-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Consolidate all labeling of regulators into the core 8064 dtsi file to
-make them available from all other dts files.
+On Thu, Oct 15, 2015 at 8:10 AM, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org> wrote:
+> This change is important in order for everyone to be easily able to use the
+> driver for one of the supported accelerometer chips!
+>
+> Until now, the driver blindly assumed that the INT1 interrupt line is wired
+> on a user's board. But these devices have 2 interrupt lines and can route
+> their interrupt sources to one of them. Now, if "INT2" is found and matches
+> i2c_client->irq, INT2 will be used.
+>
+> The chip's default actually is INT2, which is why probably many boards will
+> have it wired and can make use of this.
+>
+> Of course, this also falls back to assuming INT1, so for existing users
+> nothing will break. The new functionality is described in the bindings doc.
+>
+> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> ---
+> changelog:
+> v4: use irq that matches client->irq, backwards compatible
+> v3: correctly assign irq if both pins are described in DT
+> v2: don't warn but normally handle if both pins are described in dts
+>     thanks Mark Rutland
+> v1: initial post
+>
+>  .../devicetree/bindings/iio/accel/mma8452.txt       |  6 ++++++
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 16 +++++-----
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  | 20 ++++++-------
- arch/arm/boot/dts/qcom-apq8064.dtsi         | 46 +++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+), 18 deletions(-)
+For the binding:
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-index 03784f1366e5..21095dad7741 100644
---- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-@@ -54,7 +54,7 @@
- 
- 
- 				/* Buck SMPS */
--				pm8921_s1: s1 {
-+				s1 {
- 					regulator-always-on;
- 					regulator-min-microvolt = <1225000>;
- 					regulator-max-microvolt = <1225000>;
-@@ -62,43 +62,43 @@
- 					bias-pull-down;
- 				};
- 
--				pm8921_s3: s3 {
-+				s3 {
- 					regulator-min-microvolt = <1000000>;
- 					regulator-max-microvolt = <1400000>;
- 					qcom,switch-mode-frequency = <4800000>;
- 				};
- 
--				pm8921_s4: s4 {
-+				s4 {
- 					regulator-min-microvolt	= <1800000>;
- 					regulator-max-microvolt	= <1800000>;
- 					qcom,switch-mode-frequency = <3200000>;
- 				};
- 
--				pm8921_s7: s7 {
-+				s7 {
- 					regulator-min-microvolt = <1300000>;
- 					regulator-max-microvolt = <1300000>;
- 					qcom,switch-mode-frequency = <3200000>;
- 				};
- 
--				pm8921_l3: l3 {
-+				l3 {
- 					regulator-min-microvolt = <3050000>;
- 					regulator-max-microvolt = <3300000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l4: l4 {
-+				l4 {
- 					regulator-min-microvolt = <1000000>;
- 					regulator-max-microvolt = <1800000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l5: l5 {
-+				l5 {
- 					regulator-min-microvolt = <2750000>;
- 					regulator-max-microvolt = <3000000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l23: l23 {
-+				l23 {
- 					regulator-min-microvolt = <1700000>;
- 					regulator-max-microvolt = <1900000>;
- 					bias-pull-down;
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 11ac608b6d50..f40e93f09673 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -64,7 +64,7 @@
- 
- 
- 				/* Buck SMPS */
--				pm8921_s1: s1 {
-+				s1 {
- 					regulator-always-on;
- 					regulator-min-microvolt = <1225000>;
- 					regulator-max-microvolt = <1225000>;
-@@ -72,55 +72,55 @@
- 					bias-pull-down;
- 				};
- 
--				pm8921_s3: s3 {
-+				s3 {
- 					regulator-min-microvolt = <1000000>;
- 					regulator-max-microvolt = <1400000>;
- 					qcom,switch-mode-frequency = <4800000>;
- 				};
- 
--				pm8921_s4: s4 {
-+				s4 {
- 					regulator-min-microvolt	= <1800000>;
- 					regulator-max-microvolt	= <1800000>;
- 					qcom,switch-mode-frequency = <3200000>;
- 				};
- 
--				pm8921_s7: s7 {
-+				s7 {
- 					regulator-min-microvolt = <1300000>;
- 					regulator-max-microvolt = <1300000>;
- 					qcom,switch-mode-frequency = <3200000>;
- 				};
- 
--				pm8921_l3: l3 {
-+				l3 {
- 					regulator-min-microvolt = <3050000>;
- 					regulator-max-microvolt = <3300000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l4: l4 {
-+				l4 {
- 					regulator-min-microvolt = <1000000>;
- 					regulator-max-microvolt = <1800000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l5: l5 {
-+				l5 {
- 					regulator-min-microvolt = <2750000>;
- 					regulator-max-microvolt = <3000000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l6: l6 {
-+				l6 {
- 					regulator-min-microvolt = <2950000>;
- 					regulator-max-microvolt = <2950000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_l23: l23 {
-+				l23 {
- 					regulator-min-microvolt = <1700000>;
- 					regulator-max-microvolt = <1900000>;
- 					bias-pull-down;
- 				};
- 
--				pm8921_lvs1: lvs1 {
-+				lvs1 {
- 					bias-pull-down;
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 1b64723bd8a0..1bc6c4039dea 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -473,9 +473,55 @@
- 			regulators {
- 				compatible = "qcom,rpm-pm8921-regulators";
- 
-+				pm8921_s1: s1 {};
-+				pm8921_s2: s2 {};
-+				pm8921_s3: s3 {};
-+				pm8921_s4: s4 {};
-+				pm8921_s7: s7 {};
-+				pm8921_s8: s8 {};
-+
-+				pm8921_l1: l1 {};
-+				pm8921_l2: l2 {};
-+				pm8921_l3: l3 {};
-+				pm8921_l4: l4 {};
-+				pm8921_l5: l5 {};
-+				pm8921_l6: l6 {};
-+				pm8921_l7: l7 {};
-+				pm8921_l8: l8 {};
-+				pm8921_l9: l9 {};
-+				pm8921_l10: l10 {};
-+				pm8921_l11: l11 {};
-+				pm8921_l12: l12 {};
-+				pm8921_l14: l14 {};
-+				pm8921_l15: l15 {};
-+				pm8921_l16: l16 {};
-+				pm8921_l17: l17 {};
-+				pm8921_l18: l18 {};
-+				pm8921_l21: l21 {};
-+				pm8921_l22: l22 {};
-+				pm8921_l23: l23 {};
-+				pm8921_l24: l24 {};
-+				pm8921_l25: l25 {};
-+				pm8921_l26: l26 {};
-+				pm8921_l27: l27 {};
-+				pm8921_l28: l28 {};
-+				pm8921_l29: l29 {};
-+
-+				pm8921_lvs1: lvs1 {};
-+				pm8921_lvs2: lvs2 {};
-+				pm8921_lvs3: lvs3 {};
-+				pm8921_lvs4: lvs4 {};
-+				pm8921_lvs5: lvs5 {};
-+				pm8921_lvs6: lvs6 {};
-+				pm8921_lvs7: lvs7 {};
-+
-+				pm8921_usb_switch: usb-switch {};
-+
- 				pm8921_hdmi_switch: hdmi-switch {
- 					bias-pull-down;
- 				};
-+
-+				pm8921_ncp: ncp {};
- 			};
- 		};
- 
--- 
-2.4.2
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/iio/accel/mma8452.c                         | 21 +++++++++++++++------
+>  2 files changed, 21 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> index e3c3746..3c10e85 100644
+> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> @@ -7,13 +7,18 @@ Required properties:
+>      * "fsl,mma8453"
+>      * "fsl,mma8652"
+>      * "fsl,mma8653"
+> +
+>    - reg: the I2C address of the chip
+>
+>  Optional properties:
+>
+>    - interrupt-parent: should be the phandle for the interrupt controller
+> +
+>    - interrupts: interrupt mapping for GPIO IRQ
+>
+> +  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
+> +                    interrupt line in use.
+> +
+>  Example:
+>
+>         mma8453fc@1d {
+> @@ -21,4 +26,5 @@ Example:
+>                 reg = <0x1d>;
+>                 interrupt-parent = <&gpio1>;
+>                 interrupts = <5 0>;
+> +               interrupt-names = "INT2";
+>         };
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 1eccc2d..116a6e4 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/iio/events.h>
+>  #include <linux/delay.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>
+>  #define MMA8452_STATUS                         0x00
+>  #define  MMA8452_STATUS_DRDY                   (BIT(2) | BIT(1) | BIT(0))
+> @@ -1130,13 +1131,21 @@ static int mma8452_probe(struct i2c_client *client,
+>                                            MMA8452_INT_FF_MT;
+>                 int enabled_interrupts = MMA8452_INT_TRANS |
+>                                          MMA8452_INT_FF_MT;
+> +               int irq2;
+>
+> -               /* Assume wired to INT1 pin */
+> -               ret = i2c_smbus_write_byte_data(client,
+> -                                               MMA8452_CTRL_REG5,
+> -                                               supported_interrupts);
+> -               if (ret < 0)
+> -                       return ret;
+> +               irq2 = of_irq_get_byname(client->dev.of_node, "INT2");
+> +
+> +               if (irq2 == client->irq) {
+> +                       dev_dbg(&client->dev, "using interrupt line INT2\n");
+> +               } else {
+> +                       ret = i2c_smbus_write_byte_data(client,
+> +                                                       MMA8452_CTRL_REG5,
+> +                                                       supported_interrupts);
+> +                       if (ret < 0)
+> +                               return ret;
+> +
+> +                       dev_dbg(&client->dev, "using interrupt line INT1\n");
+> +               }
+>
+>                 ret = i2c_smbus_write_byte_data(client,
+>                                                 MMA8452_CTRL_REG4,
+> --
+> 2.1.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
