@@ -1,16 +1,16 @@
 From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH 4/4] of/irq: add missing of_node_put
-Date: Thu, 22 Oct 2015 11:02:51 +0200
-Message-ID: <1445504571-19838-5-git-send-email-Julia.Lawall@lip6.fr>
+Subject: [PATCH 1/4] of/overlay: add missing of_node_put
+Date: Thu, 22 Oct 2015 11:02:48 +0200
+Message-ID: <1445504571-19838-2-git-send-email-Julia.Lawall@lip6.fr>
 References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: kernel-janitors@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-for_each_matching_node performs an of_node_get on each iteration, so
+for_each_child_of_node performs an of_node_get on each iteration, so
 a break out of the loop requires an of_node_put.
 
 A simplified version of the semantic patch that fixes this problem is as
@@ -18,61 +18,50 @@ follows (http://coccinelle.lip6.fr):
 
 // <smpl>
 @@
-local idexpression n;
-expression e;
-identifier l;
+expression root,e;
+local idexpression child;
 @@
 
- for_each_matching_node(n,...) {
-   ...
+ for_each_child_of_node(root, child) {
+   ... when != of_node_put(child)
+       when != e = child
 (
-   of_node_put(n);
+   return child;
 |
-   e = n
-|
-+  of_node_put(n);
-?  goto l;
++  of_node_put(child);
+?  return ...;
 )
    ...
  }
-...
-l: ... when != n
 // </smpl>
-
-Besides the issue found by the semantic patch, this code also stores the
-device_node value in a list, which requires an of_node_get, and then cleans
-up the list on exit from the function, which requires an of_node_put.
 
 Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 
 ---
- drivers/of/irq.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/of/overlay.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 171798d..902b89b 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -501,10 +501,12 @@ void __init of_irq_init(const struct of_device_id *matches)
- 		 * pointer, interrupt-parent device_node etc.
- 		 */
- 		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
--		if (WARN_ON(!desc))
-+		if (WARN_ON(!desc)) {
-+			of_node_put(np);
- 			goto err;
-+		}
- 
--		desc->dev = np;
-+		desc->dev = of_node_get(np);
- 		desc->interrupt_parent = of_irq_find_parent(np);
- 		if (desc->interrupt_parent == np)
- 			desc->interrupt_parent = NULL;
-@@ -575,6 +577,7 @@ void __init of_irq_init(const struct of_device_id *matches)
- err:
- 	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
- 		list_del(&desc->list);
-+		of_node_put(desc->dev);
- 		kfree(desc);
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 24e025f..54e5af9 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -149,6 +149,7 @@ static int of_overlay_apply_one(struct of_overlay *ov,
+ 			pr_err("%s: Failed to apply single node @%s/%s\n",
+ 					__func__, target->full_name,
+ 					child->name);
++			of_node_put(child);
+ 			return ret;
+ 		}
  	}
- }
+@@ -417,8 +418,10 @@ static int overlay_subtree_check(struct device_node *tree,
+ 		return 1;
+ 
+ 	for_each_child_of_node(tree, child) {
+-		if (overlay_subtree_check(child, dn))
++		if (overlay_subtree_check(child, dn)) {
++			of_node_put(child);
+ 			return 1;
++		}
+ 	}
+ 
+ 	return 0;
