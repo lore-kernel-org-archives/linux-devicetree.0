@@ -1,125 +1,95 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Consolidate SRAM bindings from all
- vendors
-Date: Thu, 22 Oct 2015 15:34:47 +0200
-Message-ID: <20151022133447.GZ10947@lukather>
-References: <1445477130-407-1-git-send-email-k.kozlowski@samsung.com>
- <20151022090529.GV10947@lukather>
- <5628AA23.5070608@samsung.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Generic DT binding for IPIs
+Date: Thu, 22 Oct 2015 08:43:53 -0500
+Message-ID: <CAL_JsqKb3VFyo+xrWeC99-z=xhKbei0=cETU=Nip79K1xU6FSw@mail.gmail.com>
+References: <561E2BE6.2090807@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="f8lmXUvqnCdFQPaI"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5628AA23.5070608@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>, Heiko Stuebner <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <561E2BE6.2090807-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 14, 2015 at 5:18 AM, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> This is an attempt to revive a discussion on the right list this time with
+> all the correct people hopefully on CC.
 
---f8lmXUvqnCdFQPaI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+devicetree-spec would be more appropriate list for something like this.
 
-On Thu, Oct 22, 2015 at 06:19:31PM +0900, Krzysztof Kozlowski wrote:
-> On 22.10.2015 18:05, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Thu, Oct 22, 2015 at 10:25:28AM +0900, Krzysztof Kozlowski wrote:
-> >> SRAM bindings for various SoCs, using the mmio-sram genalloc
-> >> API, are spread over different places - per SoC vendor. Since all of
-> >> these are quite similar (they depend on mmio-sram) move them to a comm=
-on
-> >> place.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> >> Cc: Heiko Stuebner <heiko@sntech.de>
-> >> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> >> Cc: Chen-Yu Tsai <wens@csie.org>
-> >> Cc: Kukjin Kim <kgene@kernel.org>
-> >> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> >>
-> >> ---
-> >>
-> >> Changes since v1:
-> >> 1. New patch. Extended suggestion from Rob.
-> >> ---
-> >>  .../bindings/{arm/rockchip/pmu-sram.txt =3D> sram/rockchip-pmu-sram.t=
-xt}    | 0
-> >>  .../bindings/{arm/rockchip/smp-sram.txt =3D> sram/rockchip-smp-sram.t=
-xt}    | 0
-> >>  .../bindings/{arm/exynos/smp-sysram.txt =3D> sram/samsung-sram.txt}  =
-       | 0
-> >>  Documentation/devicetree/bindings/{misc =3D> sram}/sram.txt          =
-       | 0
-> >>  .../devicetree/bindings/{soc/sunxi/sram.txt =3D> sram/sunxi-sram.txt}=
-       | 0
-> >>  5 files changed, 0 insertions(+), 0 deletions(-)
-> >>  rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt =
-=3D> sram/rockchip-pmu-sram.txt} (100%)
-> >>  rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt =
-=3D> sram/rockchip-smp-sram.txt} (100%)
-> >>  rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt =
-=3D> sram/samsung-sram.txt} (100%)
-> >>  rename Documentation/devicetree/bindings/{misc =3D> sram}/sram.txt (1=
-00%)
-> >>  rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt =3D> sra=
-m/sunxi-sram.txt} (100%)
-> >=20
-> > I'm not sure about that one. The SRAM bindins we have for sunxi is for
-> > an SRAM controller, that maps the SRAM either to the CPU or to the
-> > devices.
-> >=20
-> > It's not really related to the other users, and wouldn't it be
-> > confusing to have a driver in drivers/soc, and a Documentation in
-> > another sub-directory?
->=20
-> I guess the only relation to other users is the "mmio-sram". In the same
-> time this is still similar to e.g. Samsung's sram bindings (where the
-> memory is mapped to CPU only).
->=20
-> Being located in drivers/soc is not an issue here - code for other
-> vendors may be moved there as well in the future.
->=20
-> Of course I do not insist. Actually Rob's comment was only about moving
-> sram.txt and Samsung's sram to common place.
->=20
-> Anyway I will be sending v3 of these because while looking more
-> carefully I found hard-coded paths to bindings/misc/sram.txt. I'll fix
-> it in next version.
+> While trying to upstream a driver, Thomas and Marc Zyngier pointed out the
+> need for a generic IPI support in the kernel to allow driver to reserve and
+> send ones. Hopefully my latest RFC patch will help to clarify what's being
+> done.
+>
+>     https://lkml.org/lkml/2015/10/13/227
+>
+> We need a generic DT binding support to accompany that to allow a driver to
+> reserve an IPI using this new mechanism.
+>
+> MarcZ had the following suggestion:
+>
+>     https://lkml.org/lkml/2015/8/24/628
+>
+> Which in summary is
+>
+>         mydevice@f0000000 {
+>                 interrupt-source = <&intc INT_SPEC 2 &inttarg1 &inttarg1>;
 
-I didn't really have the context. If Rob feels like we should do that,
-then go ahead.
+What is INT_SPEC and "2"? A drawing of the h/w connections and then
+what the binding looks like would be helpful.
 
-Maxime
+>         };
+>
+>         inttarg1: mydevice@f1000000 {
+>                 interrupt-sink = <&intc HWAFFINITY1>;
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+What is HWAFFINITY1? I want to be able to see if say this value is 1,
+then the affinity is for cpu0.
 
---f8lmXUvqnCdFQPaI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>         };
+>
+>         inttarg2: cpu@1 {
+>                 interrupt-sink = <&intc HWAFFINITY2>;
+>         };
+>
+>
+> interrupt-sink requests to reserve an IPI that it will receive at HWAFFINITY
+> cpumask. interrupt-source will not do any reservation. It will simply
+> connect an IPI reserved by interrupt-sink to the device that will be
+> responsible for generating that IPI. This description should allow
+> connecting any 2 devices.
+> Correct me Marc if I got it wrong please.
+>
+> I suggested a simplification by assuming that IPIs will only be between host
+> OS and a coprocessor which would gives us this form which I think is easier
+> to deal with
+>
+>         coprocessor {
+>              interrupt-source = <&intc INT_SPEC COP_HWAFFINITY>;
+>              interrupt-sink = <&intc INT_SPEC CPU_HWAFFINITY>;
+>         }
+>
+>
+> interrupt-source here reserves an IPI to be sent from host OS to coprocessor
+> at COP_HWAFFINITY. interrupt-sink will reserve an IPI to be received by host
+> OS at CPU_HWAFFINITY. Less generic but I don't know how important it is for
+> host OS to setup IPIs between 2 external coprocessors and whether it should
+> really be doing that.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Could we use the existing interrupts binding for interrupt-sink?
 
-iQIcBAEBAgAGBQJWKOX3AAoJEBx+YmzsjxAggIgP/iBRI8a2YT4JxpscEhidRCuH
-bSsgvwZFt/RryoU8cs44payOvJPooBK3Whe6vm+IZ+zjTusznHOt4Um8hkovFv1u
-kgn1dA2x3UYSufvA6rdcdJI2XL3DOD37DSyhodYf6mpTHukoeqDViNxSixtbA/OW
-OOGyIzyC6QxzcPwffpUrCmB2kAZoacIo4wWu9pYbrCNwRmnBVm6XEKVFm65QB50E
-tdnX68g0DLfGV59FqJsBvU/4X1igiUe8uL/6FiHgD3RaURVmN7K7macMMahYQjhj
-1yRh8PPJaptBr8jvcEuArDNPSLRtoBKyVZzWXL6cG/g7uVzxF11sDYHRgF/LnCLx
-W+KGim4iJvVJPfr/RIFyYUH3CEo+b8YmEI9TiQVh/faAowBEoff3ik31G6ySAi/S
-Ky7QRS+5Dm0mllME+gbGzaVuQCvBlxRgHuuQlxabWEGq69tyg89qh9H1Xpq9ndWp
-Az8PfyK1Z+vE6ayALDg3XvO6cFD0MfrBOxYOHLGA7QtUCqquJ97exv+fkPpFnOSo
-1UM27tyBj81KmiSMEtjcgjH0ZcMrdYyG0oZOUc3EwQGPi6npWqbS6VCG+o2SKvS1
-FBnhLaBCZzFtwFi9tgHy6dFY7cSf6u2uxCKTtm6fZ6fqXY+Sjy2WKhoX5v7K7h/R
-JKPxxSsQlPACPaXc/yAk
-=9Un3
------END PGP SIGNATURE-----
+>
+> What do the DT experts think? Any preference or a better suggestion?
 
---f8lmXUvqnCdFQPaI--
+Depends how you would assign coproc to coproc IPIs in a system. It may
+be fixed in firmware, or more complex coprocs may read the dtb.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
