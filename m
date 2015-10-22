@@ -1,72 +1,68 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/3] dt-bindings: Consolidate SRAM bindings from all vendors
-Date: Thu, 22 Oct 2015 10:25:28 +0900
-Message-ID: <1445477130-407-1-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add the "init" pinctrl in this document
+Date: Thu, 22 Oct 2015 09:25:29 +0800
+Message-ID: <1445477130-17065-2-git-send-email-wxt@rock-chips.com>
+References: <1445477130-17065-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445477130-17065-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, dianders@chromium.org, Eduardo Valentin <edubezval@gmail.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SRAM bindings for various SoCs, using the mmio-sram genalloc
-API, are spread over different places - per SoC vendor. Since all of
-these are quite similar (they depend on mmio-sram) move them to a common
-place.
+The "init" pinctrl is defined we'll set
+pinctrl to this state before probe and then "default" after probe.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add the "init" pinctrl as the OTP gpio state, since we need switch
+the pin to gpio state before the TSADC controller is reset.
 
+As I know, the TSADC controller is reset, the tshut polarity will be
+a *low* signal in a short period of time for some devices.
+
+Says:
+The TSADC get the temperature on rockchip thermal.
+
+If T(current temperature) < (setting temperature), the OTP output the
+*high* signal.
+If T(current temperature) > (setting temperature), the OTP output the
+*low* Signal.
+
+In some cases, the OTP pin is connected to the PMIC, maybe the
+PMIC can accept the reset response time to avoid this issue.
+
+In other words, the system will be always reboot if we make the
+OTP pin is connected the others IC to control the power.
+
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
 
-Changes since v1:
-1. New patch. Extended suggestion from Rob.
----
- .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt}    | 0
- .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt}    | 0
- .../bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt}         | 0
- Documentation/devicetree/bindings/{misc => sram}/sram.txt                 | 0
- .../devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt}       | 0
- 5 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt} (100%)
- rename Documentation/devicetree/bindings/{misc => sram}/sram.txt (100%)
- rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt} (100%)
+Changes in v2:
+  - As the Rob comments, add the 'init' pinctrl more decription in document.
+  - fix the subject to make more obvious in PATCH[1/2]
+Series-changes: 1
+  - As the Doug comments, add the 'init' property to sync document.
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-rename to Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-rename to Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-rename to Documentation/devicetree/bindings/sram/samsung-sram.txt
-diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/misc/sram.txt
-rename to Documentation/devicetree/bindings/sram/sram.txt
-diff --git a/Documentation/devicetree/bindings/soc/sunxi/sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/soc/sunxi/sram.txt
-rename to Documentation/devicetree/bindings/sram/sunxi-sram.txt
+Changes in v1: None
+
+ Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+index ef802de..28e84f7 100644
+--- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+@@ -27,8 +27,9 @@ tsadc: tsadc@ff280000 {
+ 	clock-names = "tsadc", "apb_pclk";
+ 	resets = <&cru SRST_TSADC>;
+ 	reset-names = "tsadc-apb";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&otp_out>;
++	pinctrl-names = "init", "default";
++	pinctrl-0 = <&otp_gpio>;
++	pinctrl-1 = <&otp_out>;
+ 	#thermal-sensor-cells = <1>;
+ 	rockchip,hw-tshut-temp = <95000>;
+ 	rockchip,hw-tshut-mode = <0>;
 -- 
 1.9.1
