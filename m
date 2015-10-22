@@ -1,480 +1,237 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 4/4] ARM: dts: qcom: apq8064: Introduce Sony Xperia Z dts
-Date: Thu, 22 Oct 2015 11:13:51 -0700
-Message-ID: <1445537631-29055-5-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [PATCH 2/4] ARM: dts: qcom: apq8064: Declare all pm8921 regulators
+Date: Thu, 22 Oct 2015 11:13:49 -0700
+Message-ID: <1445537631-29055-3-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andy Gross <agross@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, John Stultz <john.stultz@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This introduces initial support for the Sony Xperia Z smartphone, including
-support for UART, MMC, USB gadget and physical buttons.
+Consolidate all labeling of regulators into the core 8064 dtsi file to
+make them available from all other dts files.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
- arch/arm/boot/dts/Makefile                         |   1 +
- .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts | 436 +++++++++++++++++++++
- 2 files changed, 437 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 16 +++++-----
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts  | 20 ++++++-------
+ arch/arm/boot/dts/qcom-apq8064.dtsi         | 46 +++++++++++++++++++++++++++++
+ 3 files changed, 64 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7d3e495c0897..42a9370d4ad1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -500,6 +500,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) += \
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8064-cm-qs600.dtb \
- 	qcom-apq8064-ifc6410.dtb \
-+	qcom-apq8064-sony-xperia-yuga.dtb \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-apq8084-ifc6540.dtb \
- 	qcom-apq8084-mtp.dtb \
-diff --git a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
-new file mode 100644
-index 000000000000..06b3c76c3e41
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
-@@ -0,0 +1,436 @@
-+#include "qcom-apq8064-v2.0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/qcom-rpm.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+
-+/ {
-+	model = "Sony Xperia Z";
-+	compatible = "sony,xperia-yuga", "qcom,apq8064";
-+
-+	aliases {
-+		serial0 = &gsbi5_serial;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		input-name = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pin_a>;
-+
-+		camera-focus {
-+			label = "camera_focus";
-+			gpios = <&pm8921_gpio 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA_FOCUS>;
-+		};
-+
-+		camera-snapshot {
-+			label = "camera_snapshot";
-+			gpios = <&pm8921_gpio 4 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA>;
-+		};
-+
-+		volume-down {
-+			label = "volume_down";
-+			gpios = <&pm8921_gpio 29 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+		volume-up {
-+			label = "volume_up";
-+			gpios = <&pm8921_gpio 35 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+
-+	soc {
-+		pinctrl@800000 {
-+			gsbi5_uart_pin_a: gsbi5-uart-pin-active {
-+				rx {
-+					pins = "gpio52";
-+					function = "gsbi5";
-+					drive-strength = <2>;
-+					bias-pull-up;
-+				};
-+
-+				tx {
-+					pins = "gpio51";
-+					function = "gsbi5";
-+					drive-strength = <4>;
-+					bias-disable;
-+				};
-+			};
-+
-+			sdcc1_pin_a: sdcc1-pin-active {
-+				clk {
-+					pins = "sdc1_clk";
-+					drive-strengh = <16>;
-+					bias-disable;
-+				};
-+
-+				cmd {
-+					pins = "sdc1_cmd";
-+					drive-strengh = <10>;
-+					bias-pull-up;
-+				};
-+
-+				data {
-+					pins = "sdc1_data";
-+					drive-strengh = <10>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			sdcc3_pin_a: sdcc3-pin-active {
-+				clk {
-+					pins = "sdc3_clk";
-+					drive-strengh = <8>;
-+					bias-disable;
-+				};
-+
-+				cmd {
-+					pins = "sdc3_cmd";
-+					drive-strengh = <8>;
-+					bias-pull-up;
-+				};
-+
-+				data {
-+					pins = "sdc3_data";
-+					drive-strengh = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			sdcc3_cd_pin_a: sdcc3-cd-pin-active {
-+				pins = "gpio26";
-+				function = "gpio";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+
-+		rpm@108000 {
-+			regulators {
-+				vin_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+				vin_lvs_1_3_6-supply = <&pm8921_s4>;
-+				vin_lvs_4_5_7-supply = <&pm8921_s4>;
-+				vin_ncp-supply = <&pm8921_l6>;
-+				vin_lvs2-supply = <&pm8921_s4>;
-+				vin_l24-supply = <&pm8921_s1>;
-+				vin_l25-supply = <&pm8921_s1>;
-+				vin_l27-supply = <&pm8921_s7>;
-+				vin_l28-supply = <&pm8921_s7>;
-+
-+				/* Buck SMPS */
+diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+index 03784f1366e5..21095dad7741 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+@@ -54,7 +54,7 @@
+ 
+ 
+ 				/* Buck SMPS */
+-				pm8921_s1: s1 {
 +				s1 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1225000>;
-+					regulator-max-microvolt = <1225000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+					bias-pull-down;
-+				};
-+
-+				s2 {
-+					regulator-min-microvolt = <1300000>;
-+					regulator-max-microvolt = <1300000>;
-+					qcom,switch-mode-frequency = <1600000>;
-+					bias-pull-down;
-+				};
-+
+ 					regulator-always-on;
+ 					regulator-min-microvolt = <1225000>;
+ 					regulator-max-microvolt = <1225000>;
+@@ -62,43 +62,43 @@
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_s3: s3 {
 +				s3 {
-+					regulator-min-microvolt = <500000>;
-+					regulator-max-microvolt = <1150000>;
-+					qcom,switch-mode-frequency = <4800000>;
-+					bias-pull-down;
-+				};
-+
+ 					regulator-min-microvolt = <1000000>;
+ 					regulator-max-microvolt = <1400000>;
+ 					qcom,switch-mode-frequency = <4800000>;
+ 				};
+ 
+-				pm8921_s4: s4 {
 +				s4 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					qcom,switch-mode-frequency = <1600000>;
-+					bias-pull-down;
-+					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
-+				};
-+
+ 					regulator-min-microvolt	= <1800000>;
+ 					regulator-max-microvolt	= <1800000>;
+ 					qcom,switch-mode-frequency = <3200000>;
+ 				};
+ 
+-				pm8921_s7: s7 {
 +				s7 {
-+					regulator-min-microvolt = <1300000>;
-+					regulator-max-microvolt = <1300000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+				};
-+
-+				s8 {
-+					regulator-min-microvolt = <2200000>;
-+					regulator-max-microvolt = <2200000>;
-+					qcom,switch-mode-frequency = <1600000>;
-+				};
-+
-+				/* PMOS LDO */
-+				l1 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+					bias-pull-down;
-+				};
-+
-+				l2 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					bias-pull-down;
-+				};
-+
+ 					regulator-min-microvolt = <1300000>;
+ 					regulator-max-microvolt = <1300000>;
+ 					qcom,switch-mode-frequency = <3200000>;
+ 				};
+ 
+-				pm8921_l3: l3 {
 +				l3 {
-+					regulator-min-microvolt = <3075000>;
-+					regulator-max-microvolt = <3075000>;
-+					bias-pull-down;
-+				};
-+
+ 					regulator-min-microvolt = <3050000>;
+ 					regulator-max-microvolt = <3300000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l4: l4 {
 +				l4 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
+ 					regulator-min-microvolt = <1000000>;
+ 					regulator-max-microvolt = <1800000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l5: l5 {
 +				l5 {
-+					regulator-min-microvolt = <2950000>;
-+					regulator-max-microvolt = <2950000>;
-+					bias-pull-down;
-+				};
-+
-+				l6 {
-+					regulator-min-microvolt = <2950000>;
-+					regulator-max-microvolt = <2950000>;
-+					bias-pull-down;
-+				};
-+
-+				l7 {
-+					regulator-min-microvolt = <1850000>;
-+					regulator-max-microvolt = <2950000>;
-+					bias-pull-down;
-+				};
-+
-+				l8 {
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					bias-pull-down;
-+				};
-+
-+				l9 {
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					bias-pull-down;
-+				};
-+
-+				l10 {
-+					regulator-min-microvolt = <2900000>;
-+					regulator-max-microvolt = <2900000>;
-+					bias-pull-down;
-+				};
-+
-+				l11 {
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					bias-pull-down;
-+				};
-+
-+				l12 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					bias-pull-down;
-+				};
-+
-+				l14 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				l15 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <2950000>;
-+					bias-pull-down;
-+				};
-+
-+				l16 {
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					bias-pull-down;
-+				};
-+
-+				l17 {
-+					regulator-min-microvolt = <2000000>;
-+					regulator-max-microvolt = <2000000>;
-+					bias-pull-down;
-+				};
-+
-+				l18 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					bias-pull-down;
-+				};
-+
-+				l21 {
-+					regulator-min-microvolt = <1050000>;
-+					regulator-max-microvolt = <1050000>;
-+					bias-pull-down;
-+				};
-+
-+				l22 {
-+					regulator-min-microvolt = <2600000>;
-+					regulator-max-microvolt = <2600000>;
-+					bias-pull-down;
-+				};
-+
+ 					regulator-min-microvolt = <2750000>;
+ 					regulator-max-microvolt = <3000000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l23: l23 {
 +				l23 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				l24 {
-+					regulator-min-microvolt = <750000>;
-+					regulator-max-microvolt = <1150000>;
-+					bias-pull-down;
-+				};
-+
-+				l25 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1250000>;
-+					regulator-max-microvolt = <1250000>;
-+					bias-pull-down;
-+				};
-+
-+				l27 {
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+				};
-+
-+				l28 {
-+					regulator-min-microvolt = <1050000>;
-+					regulator-max-microvolt = <1050000>;
-+					bias-pull-down;
-+				};
-+
-+				l29 {
-+					regulator-min-microvolt = <2000000>;
-+					regulator-max-microvolt = <2000000>;
-+					bias-pull-down;
-+				};
-+
-+				/* Low Voltage Switch */
+ 					regulator-min-microvolt = <1700000>;
+ 					regulator-max-microvolt = <1900000>;
+ 					bias-pull-down;
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 11ac608b6d50..f40e93f09673 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -64,7 +64,7 @@
+ 
+ 
+ 				/* Buck SMPS */
+-				pm8921_s1: s1 {
++				s1 {
+ 					regulator-always-on;
+ 					regulator-min-microvolt = <1225000>;
+ 					regulator-max-microvolt = <1225000>;
+@@ -72,55 +72,55 @@
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_s3: s3 {
++				s3 {
+ 					regulator-min-microvolt = <1000000>;
+ 					regulator-max-microvolt = <1400000>;
+ 					qcom,switch-mode-frequency = <4800000>;
+ 				};
+ 
+-				pm8921_s4: s4 {
++				s4 {
+ 					regulator-min-microvolt	= <1800000>;
+ 					regulator-max-microvolt	= <1800000>;
+ 					qcom,switch-mode-frequency = <3200000>;
+ 				};
+ 
+-				pm8921_s7: s7 {
++				s7 {
+ 					regulator-min-microvolt = <1300000>;
+ 					regulator-max-microvolt = <1300000>;
+ 					qcom,switch-mode-frequency = <3200000>;
+ 				};
+ 
+-				pm8921_l3: l3 {
++				l3 {
+ 					regulator-min-microvolt = <3050000>;
+ 					regulator-max-microvolt = <3300000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l4: l4 {
++				l4 {
+ 					regulator-min-microvolt = <1000000>;
+ 					regulator-max-microvolt = <1800000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l5: l5 {
++				l5 {
+ 					regulator-min-microvolt = <2750000>;
+ 					regulator-max-microvolt = <3000000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l6: l6 {
++				l6 {
+ 					regulator-min-microvolt = <2950000>;
+ 					regulator-max-microvolt = <2950000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_l23: l23 {
++				l23 {
+ 					regulator-min-microvolt = <1700000>;
+ 					regulator-max-microvolt = <1900000>;
+ 					bias-pull-down;
+ 				};
+ 
+-				pm8921_lvs1: lvs1 {
 +				lvs1 {
-+					bias-pull-down;
-+				};
+ 					bias-pull-down;
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 1b64723bd8a0..1bc6c4039dea 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -473,9 +473,55 @@
+ 			regulators {
+ 				compatible = "qcom,rpm-pm8921-regulators";
+ 
++				pm8921_s1: s1 {};
++				pm8921_s2: s2 {};
++				pm8921_s3: s3 {};
++				pm8921_s4: s4 {};
++				pm8921_s7: s7 {};
++				pm8921_s8: s8 {};
 +
-+				lvs2 {
-+					bias-pull-down;
-+				};
++				pm8921_l1: l1 {};
++				pm8921_l2: l2 {};
++				pm8921_l3: l3 {};
++				pm8921_l4: l4 {};
++				pm8921_l5: l5 {};
++				pm8921_l6: l6 {};
++				pm8921_l7: l7 {};
++				pm8921_l8: l8 {};
++				pm8921_l9: l9 {};
++				pm8921_l10: l10 {};
++				pm8921_l11: l11 {};
++				pm8921_l12: l12 {};
++				pm8921_l14: l14 {};
++				pm8921_l15: l15 {};
++				pm8921_l16: l16 {};
++				pm8921_l17: l17 {};
++				pm8921_l18: l18 {};
++				pm8921_l21: l21 {};
++				pm8921_l22: l22 {};
++				pm8921_l23: l23 {};
++				pm8921_l24: l24 {};
++				pm8921_l25: l25 {};
++				pm8921_l26: l26 {};
++				pm8921_l27: l27 {};
++				pm8921_l28: l28 {};
++				pm8921_l29: l29 {};
 +
-+				lvs3 {
-+					bias-pull-down;
-+				};
++				pm8921_lvs1: lvs1 {};
++				pm8921_lvs2: lvs2 {};
++				pm8921_lvs3: lvs3 {};
++				pm8921_lvs4: lvs4 {};
++				pm8921_lvs5: lvs5 {};
++				pm8921_lvs6: lvs6 {};
++				pm8921_lvs7: lvs7 {};
 +
-+				lvs4 {
-+					bias-pull-down;
-+				};
++				pm8921_usb_switch: usb-switch {};
 +
-+				lvs5 {
-+					bias-pull-down;
-+				};
+ 				pm8921_hdmi_switch: hdmi-switch {
+ 					bias-pull-down;
+ 				};
 +
-+				lvs6 {
-+					bias-pull-down;
-+				};
-+
-+				lvs7 {
-+					bias-pull-down;
-+				};
-+
-+				usb-switch {};
-+
-+				hdmi-switch {};
-+
-+				ncp {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					qcom,switch-mode-frequency = <1600000>;
-+				};
-+			};
-+		};
-+
-+		qcom,ssbi@500000 {
-+			pmic@0 {
-+				gpio@150 {
-+					gpio_keys_pin_a: gpio-keys-pin-active {
-+						pins = "gpio3", "gpio4", "gpio29", "gpio35";
-+						function = "normal";
-+
-+						bias-pull-up;
-+						drive-push-pull;
-+						input-enable;
-+						power-source = <2>;
-+						qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+						qcom,pull-up-strength = <0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		phy@12500000 {
-+			status		= "okay";
-+			vddcx-supply	= <&pm8921_s3>;
-+			v3p3-supply	= <&pm8921_l3>;
-+			v1p8-supply	= <&pm8921_l4>;
-+		};
-+
-+		gadget@12500000 {
-+			status = "okay";
-+		};
-+
-+		gsbi@1a200000 {
-+			status = "ok";
-+			qcom,mode = <GSBI_PROT_I2C_UART>;
-+
-+			serial@1a240000 {
-+				status = "ok";
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&gsbi5_uart_pin_a>;
-+			};
-+		};
-+
-+		amba {
-+			sdcc1: sdcc@12400000 {
-+				status = "okay";
-+
-+				vmmc-supply = <&pm8921_l5>;
-+				vqmmc-supply = <&pm8921_s4>;
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&sdcc1_pin_a>;
-+			};
-+
-+			sdcc3: sdcc@12180000 {
-+				status = "okay";
-+
-+				vmmc-supply = <&pm8921_l6>;
-+				cd-gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&sdcc3_pin_a>, <&sdcc3_cd_pin_a>;
-+			};
-+		};
-+	};
-+};
++				pm8921_ncp: ncp {};
+ 			};
+ 		};
+ 
 -- 
 2.4.2
