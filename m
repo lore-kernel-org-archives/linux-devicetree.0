@@ -1,57 +1,81 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: Alternative approach to solve the deferred probe
-Date: Wed, 21 Oct 2015 17:05:21 -0700
-Message-ID: <56282841.3060802@gmail.com>
-References: <20151019131821.GA32532@n2100.arm.linux.org.uk> <CAAObsKDS_+AZ26P_fHc6pvAYrQotsuoO0DEGQUWC514t3DD_jQ@mail.gmail.com> <20151019143045.GE32532@n2100.arm.linux.org.uk> <CAAObsKDWM6A98tdKHqi4fe5DBf0BmB0JeghcZDWan_PYbyshag@mail.gmail.com> <20151019153548.GM32532@n2100.arm.linux.org.uk> <CAMuHMdVv=ieYM-Nehp0qV8CEggHEeJ22j-6i_N09rRA_U=2ePw@mail.gmail.com> <20151020154656.GY32532@n2100.arm.linux.org.uk> <56270D5B.5010902@gmail.com> <20151021081847.GB32532@n2100.arm.linux.org.uk> <5627B0F7.7010600@gmail.com> <20151021203519.GO32532@n2100.arm.linux.org.uk>
-Reply-To: frowand.list@gmail.com
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v3 1/3] mailbox/omap: Add ti,mbox-send-noirq quirk to fix
+ AM33xx CPU Idle
+Date: Wed, 21 Oct 2015 19:05:07 -0500
+Message-ID: <56282833.5010105@ti.com>
+References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com>
+ <1442967294-23837-2-git-send-email-d-gerlach@ti.com>
+ <CABb+yY0rCGCj=vkNXP1c9zonX+snBxdKFeQ4JCo2aKb-h6JhCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151021203519.GO32532@n2100.arm.linux.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwo>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY0rCGCj=vkNXP1c9zonX+snBxdKFeQ4JCo2aKb-h6JhCw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Dave Gerlach <d-gerlach@ti.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Keerty J <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2015 1:35 PM, Russell King - ARM Linux wrote:
-> On Wed, Oct 21, 2015 at 08:36:23AM -0700, Frank Rowand wrote:
->> On 10/21/2015 1:18 AM, Russell King - ARM Linux wrote:
->>> On Tue, Oct 20, 2015 at 08:58:19PM -0700, Frank Rowand wrote:
->>>> On 10/20/2015 8:46 AM, Russell King - ARM Linux wrote:
->>
->> < snip >
->>
->>>>> +
->>>>>  static bool driver_deferred_probe_enable = false;
->>>>> +
->>>>>  /**
->>>>>   * driver_deferred_probe_trigger() - Kick off re-probing deferred devices
->>>>>   *
->>>>> @@ -188,6 +210,13 @@ static int deferred_probe_initcall(void)
->>>>>  	driver_deferred_probe_trigger();
->>>>
->>>> Couldn't you put the "driver_deferred_probe_report = true" here?  And then
->>>> not add another round of probes.
->>>
->>> The idea is not to report anything for drivers that were deferred
->>> during the normal bootup.  The above is part of the normal bootup,
->>> and the deferred activity should not be warned about.
->>
->> The above is currently the last point for probe to succeed or defer
->> (until possibly, as you mentioned, module loading resolves the defer).
->> If a probe defers above, it will defer again below.  The set of defers
->> should be exactly the same above and below.
-> 
-> Why should it?
+Hi Jassi,
 
-My assertion was incorrect.  A probe in the deferral processing can
-result in the driver being placed on the new deferred list, then when
-a later probe of another deferred driver succeeds, the first driver
-will be moved to the active deferred list, and might succeed on
-the second probe attempt (or with the current messages would result
-in a second set of deferred messages).  So yes, placing
-"driver_deferred_probe_report = true" where your patch put it and
-running through the deferred probe processing again is correct.
+On 10/20/2015 11:44 PM, Jassi Brar wrote:
+> On Wed, Sep 23, 2015 at 5:44 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
+>> The mailbox framework controls the transmission queue and requires
+>> either its controller implementations or clients to run the state
+>> machine for the Tx queue. The OMAP mailbox controller uses a Tx-ready
+>> interrupt as the equivalent of a Tx-done interrupt to run this Tx
+>> queue state-machine.
+>>
+>> The WkupM3 processor on AM33xx and AM43xx SoCs is used to offload
+>> certain PM tasks, like doing the necessary operations for Device
+>> PM suspend/resume or for entering lower c-states during cpuidle.
+>>
+>> The CPUIdle on AM33xx requires the messages to be sent without
+>> having to trigger the Tx-ready interrupts, as the interrupt
+>> would immediately terminate the CPUIdle operation. Support for
+>> this has been added by introducing a DT quirk, "ti,mbox-send-noirq"
+>> and using it to modify the normal OMAP mailbox controller behavior
+>> on the sub-mailboxes used to communicate with the WkupM3 remote
+>> processor. This also requires the wkup_m3_ipc driver to adjust
+>> its mailbox usage logic to run the Tx state machine.
+>>
+> Probably Suman already updated you on what was discussed about this
+> patch at Connect-SFO. My suggestion was to drive TX poll-based (I
+> know, I know...) because the "interrupt-driven" is just an impression,
+> it is not really. You get the interrupt as soon as you enable it
+> because it is the "FIFO not-full" interrupt which is always because
+> there is always space left after writing to the fifo. The cons are
+> that it buffers messages hidden from the client while abusing the irq.
+> If you guys could break away from the "interrupt-driven" illusion and
+> use polling which it actually is, everything falls into place and you
+> avoid the "ti,mbox-send-noirq" quirk.
 
--Frank
+Looking at this closely, even with that approach, we would still need a
+quirk to deal with the weird behavior of our wakeup m3. Essentially we
+have two independent things:
+1. Tx state machine (currently interrupt driven) for ticking the mailbox
+core tx state machine.
+2. A quirk that we need for dealing with Wakeup M3 behavior, MPU needs
+to take out the message on behalf of WkupM3 processor after transmission
+and clearing the IP-level interrupt intended for WkupM3. This will be
+irrespective of the Tx state machine choice, and this needs to be
+different only on the specific mbox channel used to talk with WkupM3
+processor.
+
+Previously, we were doing #2 in the OMAP mailbox regular interrupt
+handler (handles both Rx and Tx interrupts) as part of the Rx interrupt
+handler with the rx mbox variables reflecting those of the WkupM3
+processor. But when we remove the interrupt processing, we now actually
+need to add code to deal with this.
+
+>   Anyways I am OK too, if you guys want to fix it with a platform
+> specific quirk. Let me know I'll pick this patch.
+
+I haven't gotten a chance to try #1, and I won't be able to look at it
+atleast for another month. I suggest that you go ahead and pick this
+patch up, as a quirk is needed in one form or the other for #2, and #1
+is anyways a bigger change that will affect all our IPC stacks across
+all pairs of MPU - remote processors on different SoCs.
+
+regards
+Suman
