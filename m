@@ -1,97 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 01/13 v2] ARM: add some L220 DT settings
-Date: Thu, 22 Oct 2015 15:44:53 +0200
-Message-ID: <1445521493-21509-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v4 1/2] powerpc/512x: add LocalPlus Bus FIFO device
+ driver
+Date: Thu, 22 Oct 2015 15:46:07 +0200
+Message-ID: <20151022154607.3a5ebac4@crub>
+References: <1444597682-22181-1-git-send-email-alex.popov@linux.com>
+	<1444597682-22181-2-git-send-email-alex.popov@linux.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1444597682-22181-2-git-send-email-alex.popov@linux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Popov <alex.popov@linux.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh@kernel.org>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@linaro.org>, Vinod Koul <vinod.koul@intel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The RealView ARM11MPCore enables parity, eventmon and shared
-override in the cache controller through its current boardfile,
-but the code and DT bindings for the ARM L220 is currently
-lacking the ability to set this up from DT. Add the required
-bool parameters for parity and shared override, but keep
-eventmon out of it: this should be enabled by the event
-monitor code.
+On Mon, 12 Oct 2015 00:08:01 +0300
+Alexander Popov <alex.popov@linux.com> wrote:
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Drop event monitor setup.
-- Support both parity enable and disable: could be useful.
----
- Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
- arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
- 2 files changed, 26 insertions(+), 4 deletions(-)
+> This driver for Freescale MPC512x LocalPlus Bus FIFO (called SCLPC
+> in the Reference Manual) allows Direct Memory Access transfers
+> between RAM and peripheral devices on LocalPlus Bus.
+> 
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+> ---
+>  arch/powerpc/configs/mpc512x_defconfig        |   1 +
+>  arch/powerpc/include/asm/mpc5121.h            |  59 +++
+>  arch/powerpc/platforms/512x/Kconfig           |   6 +
+>  arch/powerpc/platforms/512x/Makefile          |   1 +
+>  arch/powerpc/platforms/512x/mpc512x_lpbfifo.c | 539 ++++++++++++++++++++++++++
+>  5 files changed, 606 insertions(+)
+>  create mode 100644 arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index 06c88a4d28ac..d181b7c4c522 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -67,12 +67,14 @@ Optional properties:
-   disable if zero.
- - arm,prefetch-offset : Override prefetch offset value. Valid values are
-   0-7, 15, 23, and 31.
--- arm,shared-override : The default behavior of the pl310 cache controller with
--  respect to the shareable attribute is to transform "normal memory
--  non-cacheable transactions" into "cacheable no allocate" (for reads) or
--  "write through no write allocate" (for writes).
-+- arm,shared-override : The default behavior of the L220 or PL310 cache
-+  controllers with respect to the shareable attribute is to transform "normal
-+  memory non-cacheable transactions" into "cacheable no allocate" (for reads)
-+  or "write through no write allocate" (for writes).
-   On systems where this may cause DMA buffer corruption, this property must be
-   specified to indicate that such transforms are precluded.
-+- arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
-+- arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
- - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
-   (forcibly enable), property absent (retain settings set by firmware)
- - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 493692d838c6..3f3008e5c662 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -1060,6 +1060,18 @@ static void __init l2x0_of_parse(const struct device_node *np,
- 		val |= (dirty - 1) << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
- 	}
- 
-+	if (of_property_read_bool(np, "arm,parity-enable")) {
-+		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-+		val |= L2C_AUX_CTRL_PARITY_ENABLE;
-+	} else if (of_property_read_bool(np, "arm,parity-disable")) {
-+		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-+	}
-+
-+	if (of_property_read_bool(np, "arm,shared-override")) {
-+		mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
-+		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
-+	}
-+
- 	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
- 	if (ret)
- 		return;
-@@ -1176,6 +1188,14 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
- 	}
- 
-+	if (of_property_read_bool(np, "arm,parity-enable")) {
-+		*aux_val |= L2C_AUX_CTRL_PARITY_ENABLE;
-+		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-+	} else if (of_property_read_bool(np, "arm,parity-disable")) {
-+		*aux_val &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-+		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-+	}
-+
- 	prefetch = l2x0_saved_regs.prefetch_ctrl;
- 
- 	ret = of_property_read_u32(np, "arm,double-linefill", &val);
--- 
-2.4.3
+extended with MODULE_DEVICE_TABLE() for of_device_id struct and
+applied to mpc5xxx/next.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Anatolij
