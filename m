@@ -1,56 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
-Date: Thu, 22 Oct 2015 11:14:10 +0200
-Message-ID: <20151022091410.GW10947@lukather>
-References: <1445444428-4652-1-git-send-email-jenskuske@gmail.com>
- <1445444428-4652-2-git-send-email-jenskuske@gmail.com>
- <20151022080508.GN10947@lukather>
- <20151022102959.09f0a1f4@OPI2>
- <20151022084735.GR10947@lukather>
- <20151022105745.2cc158a3@OPI2>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WjpOG6URjntW8FAF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBY6RUKYQKGQEZV6GPJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151022105745.2cc158a3@OPI2>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: [PATCH 3/4] of/unittest: add missing of_node_put
+Date: Thu, 22 Oct 2015 11:02:50 +0200
+Message-ID: <1445504571-19838-4-git-send-email-Julia.Lawall@lip6.fr>
+References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445504571-19838-1-git-send-email-Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---WjpOG6URjntW8FAF
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+for_each_child_of_node performs an of_node_get on each iteration, so
+a break out of the loop requires an of_node_put.
 
-On Thu, Oct 22, 2015 at 10:57:45AM +0200, Jean-Francois Moine wrote:
-> On Thu, 22 Oct 2015 10:47:35 +0200
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > Not really. The uart0 reset is the bit 16, in the reset register 4.
-> > 
-> > 4 * 32 + 16 = 44.
-> > 
-> > Not 112, but still not 208 either.
-> 
-> The registers are numbered 1..5, then
-> 
-> (4 - 1) * 32 + 16 = 112
+A simplified version of the semantic patch that fixes this problem is as
+follows (http://coccinelle.lip6.fr):
 
-Not on my version, and even then, UARTs are on the last reset
-register, which would still make 144.
+// <smpl>
+@@
+expression root,e;
+local idexpression child;
+@@
 
-Maxime
+ for_each_child_of_node(root, child) {
+   ... when != of_node_put(child)
+       when != e = child
+(
+   return child;
+|
++  of_node_put(child);
+?  return ...;
+)
+   ...
+ }
+// </smpl>
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---WjpOG6URjntW8FAF--
+Combine the puts into code at the end of the function, for conciseness.
+
+Signed-off-by: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+
+---
+ drivers/of/unittest.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 9f71770..e16ea57 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -205,16 +205,20 @@ static int __init of_unittest_check_node_linkage(struct device_node *np)
+ 		if (child->parent != np) {
+ 			pr_err("Child node %s links to wrong parent %s\n",
+ 				 child->name, np->name);
+-			return -EINVAL;
++			rc = -EINVAL;
++			goto put_child;
+ 		}
+ 
+ 		rc = of_unittest_check_node_linkage(child);
+ 		if (rc < 0)
+-			return rc;
++			goto put_child;
+ 		count += rc;
+ 	}
+ 
+ 	return count + 1;
++put_child:
++	of_node_put(child);
++	return rc;
+ }
+ 
+ static void __init of_unittest_check_tree_linkage(void)
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
