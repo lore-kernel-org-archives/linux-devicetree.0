@@ -1,24 +1,24 @@
-From: sboyd@codeaurora.org (spamassassin system account)
-Subject: Re: [PATCH v3 05/10] clk: iproc: Add PLL base write function
-Date: Wed, 21 Oct 2015 17:02:30 -0700
-Message-ID: <20151022000230.GS19782@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 06/10] clk: iproc: Split off dig_filter
+Date: Wed, 21 Oct 2015 17:04:36 -0700
+Message-ID: <20151022000436.GT19782@codeaurora.org>
 References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
- <1444938513-10758-6-git-send-email-jonmason@broadcom.com>
+ <1444938513-10758-7-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444938513-10758-6-git-send-email-jonmason@broadcom.com>
+In-Reply-To: <1444938513-10758-7-git-send-email-jonmason@broadcom.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: Jon Mason <jonmason@broadcom.com>
 Cc: Michael Turquette <mturquette@baylibre.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
 On 10/15, Jon Mason wrote:
-> All writes to the PLL base address must be flushed if the
-> IPROC_CLK_NEEDS_READ_BACK flag is set.  If we add a function to make the
-> necessary write and reads, we can make sure that any future code which
-> makes PLL base writes will do the correct thing.
+> The PLL loop filter/gain can be located in a separate register on some
+> SoCs.  Split these off into a separate variable, so that an offset can
+> be added if necessary.  Also, make the necessary modifications to the
+> Cygnus and NSP drivers for this change.
 > 
 > Signed-off-by: Jon Mason <jonmason@broadcom.com>
 > ---
