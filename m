@@ -1,93 +1,44 @@
-From: Laura Abbott <laura@labbott.name>
-Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
-Date: Thu, 22 Oct 2015 10:23:15 -0700
-Message-ID: <56291B83.6060208@labbott.name>
-References: <vnkw8u6xts6n.fsf@codeaurora.org>
- <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
- <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
- <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
- <vnkwh9lwlymo.fsf@codeaurora.org>
- <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
- <93351858f57ca6e1220a0007f98baa25@cloud.ncrmnt.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2] ARM: dts: fix gpio-keys wakeup-source property
+Date: Thu, 22 Oct 2015 09:54:11 -0700
+Message-ID: <20151022165411.GD19953@localhost>
+References: <1445011296-29042-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <93351858f57ca6e1220a0007f98baa25@cloud.ncrmnt.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: andrew@ncrmnt.org, Mitchel Humpherys <mitchelh@codeaurora.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Feng Tang <feng.tang@intel.com>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, a.makarov@module.ru, Riley Andrews <riandrews@android.com>, Colin Cross <ccross@google.com>, linux-kernel@vger.kernel.org, a.bogdanova@module.ru, arve@android.com, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, John Stultz <john.stultz@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, linux-arm-kernel@lists.infradead.org, Laura Abbott <labbott@fedoraproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445011296-29042-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arm@kernel.org, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjIvMTUgMzozNiBBTSwgYW5kcmV3QG5jcm1udC5vcmcgd3JvdGU6Cj4gMjAg0L7QutGC
-0Y/QsdGA0Y8gMjAxNSDQsy4sIDE5OjM0LCAiTWl0Y2hlbCBIdW1waGVyeXMiIDxtaXRjaGVsaEBj
-b2RlYXVyb3JhLm9yZz4g0L3QsNC/0LjRgdCw0Ls6Cj4+IE9uIFR1ZSwgT2N0IDEzIDIwMTUgYXQg
-MTE6MTQ6MjMgQU0sIEFuZHJldyA8YW5kcmV3QG5jcm1udC5vcmc+IHdyb3RlOgo+Pgo+Pj4gT24g
-MjAxNS0xMC0xMiAyMTozOSwgTWl0Y2hlbCBIdW1waGVyeXMgd3JvdGU6Cj4+Pj4gT24gVHVlLCBP
-Y3QgMDYgMjAxNSBhdCAwNTozNTo0MSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcyQGdtYWls
-LmNvbT4KPj4+PiB3cm90ZToKPj4+Pj4gT24gVHVlLCBPY3QgNiwgMjAxNSBhdCAzOjQ3IFBNLCBM
-YXVyYSBBYmJvdHQgPGxhYmJvdHRAZmVkb3JhcHJvamVjdC5vcmc+Cj4+Pj4+IHdyb3RlOgo+Pj4+
-Cj4+Pj4gWy4uLl0KPj4+Pgo+Pj4+Pj4gK0V4YW1wbGU6Cj4+Pj4+PiArCj4+Pj4+PiArIGlvbiB7
-Cj4+Pj4+PiArIGNvbXBhdGJpbGUgPSAibGludXgsaW9uIjsKPj4+Pj4+ICsgI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47Cj4+Pj4+PiArICNzaXplLWNlbGxzID0gPDA+Owo+Pj4+Pj4gKwo+Pj4+Pj4gKyBp
-b24tc3lzdGVtLWhlYXAgewo+Pj4+Pj4gKyBsaW51eCxpb24taGVhcC1pZCA9IDwwPjsKPj4+Pj4+
-ICsgbGludXgsaW9uLWhlYXAtdHlwZSA9IDxJT05fU1lTVEVNX0hFQVBfVFlQRT47Cj4+Pj4+PiAr
-IGxpbnV4LGlvbi1oZWFwLW5hbWUgPSAic3lzdGVtIjsKPj4+Pj4KPj4+Pj4gSG93IGRvZXMgdGhp
-cyB2YXJ5IGFjcm9zcyBwbGF0Zm9ybXM/IElzIGFsbCBvZiB0aGlzIGJlaW5nIHB1c2hlZCBkb3du
-Cj4+Pj4+IHRvIERULCBiZWNhdXNlIHRoZXJlIGlzIG5vIGNvb3JkaW5hdGlvbiBvZiB0aGlzIGF0
-IHRoZSBrZXJuZWwgQUJJCj4+Pj4+IGxldmVsIGFjcm9zcyBwbGF0Zm9ybXMuIEluIG90aGVyIHdv
-cmRzLCB3aHkgY2FuJ3QgaGVhcCAwIGJlIGhhcmRjb2RlZAo+Pj4+PiBhcyBzeXN0ZW0gaGVhcCBp
-biB0aGUgZHJpdmVyLiBJdCBzZWVtcyB0byBtZSBhbnkgMSBvZiB0aGVzZSAzCj4+Pj4+IHByb3Bl
-cnRpZXMgY291bGQgYmUgdXNlZCB0byBkZXJpdmUgdGhlIG90aGVyIDIuCj4+Pj4KPj4+PiBUaGUg
-aGVhcC1pZDwtPmhlYXAtdHlwZSBtYXBwaW5nIGlzbid0IG5lY2Vzc2FyaWx5IDE6MS4gQXMgTGF1
-cmEKPj4+PiBpbmRpY2F0ZWQgZWxzZXdoZXJlIG9uIHRoaXMgdGhyZWFkLCBhIGdpdmVuIGhlYXAg
-bWlnaHQgbmVlZCB0byBiZQo+Pj4+IGNvbnRpZ3VvdXMgb24gb25lIHBsYXRmb3JtIGJ1dCBub3Qg
-b24gYW5vdGhlci4gSW4gdGhhdCBjYXNlIHlvdSBqdXN0Cj4+Pj4gc3dhcCBvdXQgdGhlIGhlYXAt
-dHlwZSBoZXJlIGFuZCB0aGVyZSdzIG5vIG5lZWQgZm9yIHVzZXJzcGFjZSB0byBjaGFuZ2UuCj4+
-Pj4KPj4+PiBUaGUgaGVhcC1uYW1lLCBPVE9ILCBjb3VsZCBiZSBkZXJpdmVkIGZyb20gdGhlIGhl
-YXAtaWQsIHdoaWNoIGlzIHdoYXQgd2UKPj4+PiBoYWNraXNobHkgZG8gaGVyZSBbMV0gYW5kIGhl
-cmVbMl0uCj4+Pgo+Pj4gQnkgdGhlIHdheSwgc2luY2Ugd2UgYWdyZWVkIHRoYXQgaGVhcCBpZCBh
-bmQgaGVhcCB0eXBlIG1hcHBpbmdzCj4+PiBhcmUgbm90IDE6MSAtIHdlIGhhdmUgYSBwcm9ibGVt
-IHdpdGggdGhlIGN1cnJlbnQgQVBJLgo+Pj4KPj4+IEluIHVzZXJzcGFjZSB3ZSBjdXJyZW50bHkg
-aGF2ZSB0aGlzOgo+Pj4KPj4+IGludCBpb25fYWxsb2MoaW50IGZkLCBzaXplX3QgbGVuLCBzaXpl
-X3QgYWxpZ24sIHVuc2lnbmVkIGludCBoZWFwX21hc2ssCj4+PiB1bnNpZ25lZCBpbnQgZmxhZ3Ms
-IGlvbl91c2VyX2hhbmRsZV90ICpoYW5kbGUpOwo+Pj4KPj4+IFdlIGRvIG5vdCBzcGVjaWZ5IGhl
-cmUgd2hhdCBUWVBFIG9mIGhlYXAgd2Ugd2FudCB0aGUgYWxsb2NhdGlvbiB0byBjb21lCj4+PiBm
-cm9tLgo+Pj4gVGhpcyBtYXkgbGVhZCB0byB2ZXJ5IHVucGxlYXNhbnQgc3R1ZmYgd2hlbiBwb3J0
-aW5nIGZyb20gb25lIHBsYXRmcm9tIHRvCj4+PiBhbm90aGVyLgo+Cj4gT2theSwgSSBtYXkgYmUg
-dG90YWxseSBtaXNzaW5nIHNvbWUgcG9pbnQgaGVyZSB0aGVuLgo+Cj4+IFdoYXQgInVucGxlYXNh
-bnQgc3R1ZmYiIGFyZSB5b3UgcmVmZXJyaW5nIHRvLCBleGFjdGx5Pwo+Cj4gSXQncyBub3QgcmVh
-bGx5IGNsZWFyIGZvciBtZSBob3cgKGFuZCBhdCB3aGVyZSAtIGtlcm5lbCBvciB1c2Vyc3BhY2Up
-Cj4gd2Ugc2hvdWxkIHByb3Blcmx5IHNvcnQgb3V0IGNhc2VzIHdoZW4gdGhlIG5leHQgZGV2aWNl
-IHRoZSBwaXBlbGluZQo+IGludHJvZHVjZXMgc29tZSBjb25zdHJhaW50cyBvbiB0aGUgYnVmZmVy
-IGl0IGNhbiB1c2UuCj4KPiBGb3IgaW5zdGFuY2U6IGNhbWVyYSBjYW4gc2F2ZSBkYXRhIGludG8g
-YSBub24tY29udGlndW91cyBidWZmZXIsIGJ1dCB0aGUKPiBpbWFnZSBwcm9jZXNzaW5nIGhhcmR3
-YXJlICh0aGF0IG1heSBvciBtYXkgbm90IGJlIGludm9sdmVkKSBleHBlY3RzIHRoZQo+IGJ1ZmZl
-ciB0byBiZSBjb250aWd1b3VzLgo+CgpZb3UndmUganVzdCBoaXQgb24gb25lIG9mIHRoZSBvcGVu
-IHByb2JsZW1zLiBUaGVyZSBpc24ndCBhIGdvb2QgYW5zd2VyCnJpZ2h0IG5vdyBmb3IgaG93IHRo
-YXQgaXMgc3VwcG9zZWQgdG8gd29yay4gU3VtaXQgd2FzIHdvcmtpbmcgb24KY2VuYWxsb2MgYXMg
-YW4gYW5zd2VyIHRvIHNvbWUgb2YgdGhhdC4gSSB0aGluayB3ZSd2ZSBkZWNpZGVkIHRoYXQKbWF5
-IGJlY29tZSBtb3JlIG9mIGEgbG9uZyB0ZXJtIHRoZW9yZXRpY2FsIHByb2JsZW0gdG8gc29sdmUg
-cmF0aGVyCnRoYW4gYSBwcmVzc2luZyBwcmFjdGljYWwgcHJvYmxlbS4gVGhlc2UgZGF5cyBJT01N
-VXMgYW5kIHRoZSBsaWtlIGFyZQptdWNoIG1vcmUgY29tbW9uIGFjcm9zcyB0aGUgZW50aXJlIHN5
-c3RlbSBzbyBpdCdzIGJlY29taW5nIHJhcmVyIHRvCmhhdmUgYSBjYXNlIHdoZXJlIHNvbWUgaGFy
-ZHdhcmUgY2FuIGhhdmUgZGlzY29udGlndW91cyBidWZmZXJzIGJ1dApzb21lIGNhbm5vdC4gVGhp
-cyBpc24ndCB0byBzYXkgaXQncyBub3QgYSBwcm9ibGVtIHRoYXQgbmVlZHMgdG8gYmUKc29sdmVk
-LCBidXQgd2UncmUgZm9jdXNpbmcgb24gb3RoZXIgZWZmb3J0cyBvZiBJb24gcmlnaHQgbm93LgoK
-SW4gZ2VuZXJhbCB0aG91Z2ggd2UncmUgd29ya2luZyBvZmYgdGhlIGFzc3VtcHRpb24gdGhhdCB0
-aGUKa2VybmVsIGtub3dzIHRoZSBjb25zdHJhaW50cyBhbmQgaWYgdXNlcnNwYWNlIGlzIHJlcXVl
-c3RpbmcgbWVtb3J5IGZyb20KYSBwYXJ0aWN1bGFyIGhlYXAgdGhlIGtlcm5lbCB3aWxsIGFsbG9j
-YXRlIHRoZSBjb3JyZWN0IG1lbW9yeS4gVGhpcwptZWFucyB0aGF0IGl0J3MgdXAgdG8gdGhlIGtl
-cm5lbCB0byBzZXQgdXAgdGhlIGhlYXBzIGNvcnJlY3RseSBmb3IKYSBwYXJ0aWN1bGFyIHBsYXRm
-b3JtIChvbmNlIGFnYWluLCBhbiBvcGVuIHByb2JsZW0pLgoKVGhhbmtzLApMYXVyYQoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcg
-bGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhk
-cml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+On Fri, Oct 16, 2015 at 05:01:36PM +0100, Sudeep Holla wrote:
+> The keyboard driver for GPIO buttons(gpio-keys) checks for one of the
+> two boolean properties to enable gpio buttons as wakeup source:
+> 1. "wakeup-source" or
+> 2. the legacy "gpio-key,wakeup"
+> 
+> However juno, ste-snowball and emev2-kzm9d dts file have a undetected
+> "wakeup" property to indictate the wakeup source.
+> 
+> This patch fixes it by making use of "wakeup-source" property.
+> 
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Acked-by: Simon Horman <horms@verge.net.au>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/arm/boot/dts/emev2-kzm9d.dts             |  8 ++++----
+>  arch/arm/boot/dts/ste-snowball.dts            | 10 +++++-----
+>  arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 12 ++++++------
+>  3 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> Hi ARM-SoC group,
+> 
+> Please consider this as a fix for v4.3 if possible.
+
+Applied now, thanks.
+
+
+-Olof
